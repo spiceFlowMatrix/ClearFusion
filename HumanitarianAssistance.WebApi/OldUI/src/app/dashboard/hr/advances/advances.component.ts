@@ -80,7 +80,7 @@ export class AdvancesComponent implements OnInit {
     this.employeeAdvancesForm = {
       AdvancesId: null,
       EmployeeId: null,
-      AdvanceDate: null,
+      AdvanceDate: new Date(),
       CurrencyId: null,
       VoucherReferenceNo: null,
       ApprovedBy: null,

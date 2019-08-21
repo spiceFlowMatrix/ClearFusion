@@ -197,8 +197,8 @@ export class ContractDetailsComponent implements OnInit, OnChanges {
       clientName: new FormControl('', [Validators.required]),
       unitRate: new FormControl(''),
       currency: new FormControl('', [Validators.required]),
-      startDate: new FormControl('', [Validators.required]),
-      endDate: new FormControl('', [Validators.required]),
+      startDate: new FormControl(new Date(), [Validators.required]),
+      endDate: new FormControl(new Date(), [Validators.required]),
       language: new FormControl('', [Validators.required]),
       medium: new FormControl('', [Validators.required]),
       jobNature: new FormControl('', [Validators.required]),
@@ -879,7 +879,8 @@ export class ContractDetailsComponent implements OnInit, OnChanges {
     this.confirmDecline = false;
     this.contractDetailsModel = {};
     this.unitRateModel = {};
-    this.contractDetailsForm.reset();
+    this.initForm();
+    // this.contractDetailsForm.reset();
     this.selectedcontractId = 0;
     this.contractDetailsModel = {};
     this.archiveButton = false;

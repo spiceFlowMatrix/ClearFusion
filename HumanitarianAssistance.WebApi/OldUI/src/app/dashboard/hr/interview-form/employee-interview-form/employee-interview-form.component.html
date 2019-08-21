@@ -169,7 +169,7 @@
                           <dxi-tab title="Training">
 
                             <dx-data-grid id="gridContainer" [dataSource]="trainingListDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
-                              [showRowLines]="true">
+                              [showRowLines]="true" (onInitNewRow)="logEventTraining('InitNewRow',$event)">
                               <dxo-editing [allowAdding]="!interviewFormViewOnly" [allowUpdating]="!interviewFormViewOnly" mode="batch"></dxo-editing>
                               <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
                               <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
@@ -190,10 +190,10 @@
                                 <dxi-validation-rule type="required"></dxi-validation-rule>
                               </dxi-column>
 
-                              <dxi-column dataField="StartDate" caption="Start Date" alignment="right" dataType="date" [editorOptions]="{ displayFormat: 'dd/MM/yyyy' }">
+                              <dxi-column dataField="StartDate" caption="Start Date" alignment="right" dataType="date" [editorOptions]="{ value: trainingListDataSource.StartDate, displayFormat: 'dd/MM/yyyy' }">
                                 <dxi-validation-rule type="required"></dxi-validation-rule>
                               </dxi-column>
-                              <dxi-column dataField="EndDate" caption="End Date" alignment="right" dataType="date" [editorOptions]="{ displayFormat: 'dd/MM/yyyy' }">
+                              <dxi-column dataField="EndDate" caption="End Date" alignment="right" dataType="date" [editorOptions]="{ value: trainingListDataSource.EndDate, displayFormat: 'dd/MM/yyyy' }">
                                 <dxi-validation-rule type="required"></dxi-validation-rule>
                               </dxi-column>
 

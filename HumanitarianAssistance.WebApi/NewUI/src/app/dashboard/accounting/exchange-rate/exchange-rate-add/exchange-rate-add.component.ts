@@ -43,7 +43,7 @@ export class ExchangeRateAddComponent implements OnInit {
   FormInitialize() {
     this.exchangeRateAddModel = this.fb.group({
       CurrencyId: ['', [Validators.required]],
-      Date: ['', [Validators.required]],
+      Date: [new Date(), [Validators.required]],
     });
 
     this.exchangeRateGenerateModel = this.fb.group({

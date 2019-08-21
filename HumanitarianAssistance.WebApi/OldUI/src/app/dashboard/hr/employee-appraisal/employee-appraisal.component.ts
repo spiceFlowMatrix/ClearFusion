@@ -142,7 +142,7 @@ export class EmployeeAppraisalComponent implements OnInit {
       EmployeeEvaluationModelList: null,
       StrongPoints: null,
       WeakPoints: null,
-      CurrentAppraisalDate: null,
+      CurrentAppraisalDate: new Date(),
 
       FinalResultQues1: null,
       FinalResultQues2: null,
@@ -175,7 +175,7 @@ export class EmployeeAppraisalComponent implements OnInit {
       DutyStation: null,
       RecruitmentDate: null,
       AppraisalPeriod: null,
-      CurrentAppraisalDate: null,
+      CurrentAppraisalDate: new Date(),
       OfficeId: null,
       TotalScore: 0,
       EmployeeAppraisalQuestionList: null,
@@ -387,7 +387,7 @@ export class EmployeeAppraisalComponent implements OnInit {
                 DutyStation: element.DutyStation,
                 RecruitmentDate: element.RecruitmentDate,
                 AppraisalPeriod: null,
-                CurrentAppraisalDate: null,
+                CurrentAppraisalDate: new Date(),
                   // tslint:disable-next-line:radix
                   OfficeId: this.selectedOffice,
                 TotalScore: null,
@@ -1188,6 +1188,9 @@ export class EmployeeAppraisalComponent implements OnInit {
     }
 
     onOfficeSelected(officeId: number) {
+
+        this.initializeForm();
+
         this.selectedOffice = officeId
 
         this.getAllEmployeeAppraisalList();
