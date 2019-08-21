@@ -73,9 +73,8 @@ deploy-cleanarch:
     stage: deploy
     image: devth/helm
     environment:
-        name: review
+        name: cleanarch
         url: https://${CF_REVIEW_URL}
-        # url: https://cleantestedg.cha-net.org
     script:
         - init_helm
         - helm upgrade
