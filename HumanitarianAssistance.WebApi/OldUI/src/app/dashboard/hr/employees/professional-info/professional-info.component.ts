@@ -46,8 +46,6 @@ export class ProfessionalInfoComponent implements OnInit {
   assignUnitIsValid = true;
   assignLeaveToEmployee: number;
 
-  currentDate = new Date();
-
   officeId: number;
   OfficeId: number;
   employeeTypeIdCheck: number;
@@ -92,7 +90,7 @@ export class ProfessionalInfoComponent implements OnInit {
     this.GetLeaveReasonTypeDropdown();
     this.getAllDisableCalendarDate(this.employeeId);
     this.GetFinancialYearDropdown();
-    this.getAttendanceGroupList();
+      this.getAttendanceGroupList();
     this.isEditingAllowed = this.common.IsEditingAllowed(
       applicationPages.Employees
     );
@@ -587,9 +585,9 @@ export class ProfessionalInfoComponent implements OnInit {
       OfficeId: value.OfficeId,
       DepartmentId: value.DepartmentId,
       DesignationId: value.DesignationId,
-      EmployeeContractTypeId: value.EmployeeContractTypeId,
-      HiredOn: value.HiredOn,
-      FiredOn: value.FiredOn,
+        EmployeeContractTypeId: value.EmployeeContractTypeId,
+        HiredOn: ((value.HiredOn == null || value.HiredOn == undefined || value.HiredOn == '') && value.EmployeeTypeId == EmployeeType.Prospective) ? new Date() : value.HiredOn,
+        FiredOn: ((value.FiredOn == null || value.FiredOn == undefined || value.FiredOn == '') && value.EmployeeTypeId == EmployeeType.Terminated) ? new Date() : value.FiredOn,
       FiredReason: value.FiredReason,
       ResignationOn: value.ResignationOn,
       ResignationReason: value.ResignationReason,

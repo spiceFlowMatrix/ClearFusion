@@ -21,8 +21,10 @@ export class ProfessionalMoreInfoComponent implements OnInit {
   salaryBudgetsDS: SalaryBudgetsModel[];
   employeeLanguagesDS: EmployeeLanguageModel[];
   languageList: any[];
-  languageSpeakingFluency: any[];
-  @Input() isEditingAllowed: boolean;
+    languageSpeakingFluency: any[];
+    currentDate: any;
+    @Input() isEditingAllowed: boolean;
+
 
   currencyDataSource: any[];
 
@@ -78,7 +80,8 @@ export class ProfessionalMoreInfoComponent implements OnInit {
     this.getAllEmployeeOtherSkills(this.employeeId);
     this.getAllEmployeeSalaryBudgets(this.employeeId);
     this.getAllEmployeeLanguages(this.employeeId);
-    this.getEmployeeLanguageList();
+      this.getEmployeeLanguageList();
+      this.currentDate = new Date();
   }
 
   getEmployeeLanguageList() {
@@ -461,95 +464,97 @@ export class ProfessionalMoreInfoComponent implements OnInit {
   logEventEducation(eventName: string, obj) {
     // tslint:disable-next-line:radix
     const employeeId = parseInt(localStorage.getItem('SelectedEmployee'));
+      if (eventName === 'RowInserting') {
+          const educationAddModel: EducationModel = {
+              EmployeeEducationsId: 0,
+              EducationFrom:
+                  obj.data.EducationFrom != null
+                      ? new Date(
+                          new Date(obj.data.EducationFrom).getFullYear(),
+                          new Date(obj.data.EducationFrom).getMonth(),
+                          new Date(obj.data.EducationFrom).getDate(),
+                          new Date().getHours(),
+                          new Date().getMinutes(),
+                          new Date().getSeconds()
+                      )
+                      : new Date(),
+              EducationTo:
+                  obj.data.EducationTo != null
+                      ? new Date(
+                          new Date(obj.data.EducationTo).getFullYear(),
+                          new Date(obj.data.EducationTo).getMonth(),
+                          new Date(obj.data.EducationTo).getDate(),
+                          new Date().getHours(),
+                          new Date().getMinutes(),
+                          new Date().getSeconds()
+                      )
+                      : new Date(),
+              Degree: obj.data.Degree,
+              FieldOfStudy: obj.data.FieldOfStudy,
+              Institute: obj.data.Institute,
+              EmployeeID: employeeId
+          };
 
-    if (eventName === 'RowInserting') {
-      const educationAddModel: EducationModel = {
-        EmployeeEducationsId: 0,
-        EducationFrom:
-          obj.data.EducationFrom != null
-            ? new Date(
-                new Date(obj.data.EducationFrom).getFullYear(),
-                new Date(obj.data.EducationFrom).getMonth(),
-                new Date(obj.data.EducationFrom).getDate(),
-                new Date().getHours(),
-                new Date().getMinutes(),
-                new Date().getSeconds()
-              )
-            : null,
-        EducationTo:
-          obj.data.EducationTo != null
-            ? new Date(
-                new Date(obj.data.EducationTo).getFullYear(),
-                new Date(obj.data.EducationTo).getMonth(),
-                new Date(obj.data.EducationTo).getDate(),
-                new Date().getHours(),
-                new Date().getMinutes(),
-                new Date().getSeconds()
-              )
-            : null,
-        Degree: obj.data.Degree,
-        FieldOfStudy: obj.data.FieldOfStudy,
-        Institute: obj.data.Institute,
-        EmployeeID: employeeId
-      };
+          const apiLink =
+              this.setting.getBaseUrl() +
+              GLOBAL.API_EmployeeDetail_AddEmployeeEducations;
+          this.add(educationAddModel, apiLink, 'Education');
+      } else if (eventName === 'RowUpdating') {
+          const value = Object.assign(obj.oldData, obj.newData); // Merge old data with new Data
 
-      const apiLink =
-        this.setting.getBaseUrl() +
-        GLOBAL.API_EmployeeDetail_AddEmployeeEducations;
-      this.add(educationAddModel, apiLink, 'Education');
-    } else if (eventName === 'RowUpdating') {
-      const value = Object.assign(obj.oldData, obj.newData); // Merge old data with new Data
+          const educationEditModel: EducationModel = {
+              EmployeeEducationsId: value.EmployeeEducationsId,
+              EducationFrom:
+                  value.EducationFrom != null
+                      ? new Date(
+                          new Date(value.EducationFrom).getFullYear(),
+                          new Date(value.EducationFrom).getMonth(),
+                          new Date(value.EducationFrom).getDate(),
+                          new Date().getHours(),
+                          new Date().getMinutes(),
+                          new Date().getSeconds()
+                      )
+                      : null,
+              EducationTo:
+                  value.EducationTo != null
+                      ? new Date(
+                          new Date(value.EducationTo).getFullYear(),
+                          new Date(value.EducationTo).getMonth(),
+                          new Date(value.EducationTo).getDate(),
+                          new Date().getHours(),
+                          new Date().getMinutes(),
+                          new Date().getSeconds()
+                      )
+                      : null,
+              Degree: value.Degree,
+              FieldOfStudy: value.FieldOfStudy,
+              Institute: value.Institute,
+              EmployeeID: value.EmployeeID
+          };
 
-      const educationEditModel: EducationModel = {
-        EmployeeEducationsId: value.EmployeeEducationsId,
-        EducationFrom:
-          value.EducationFrom != null
-            ? new Date(
-                new Date(value.EducationFrom).getFullYear(),
-                new Date(value.EducationFrom).getMonth(),
-                new Date(value.EducationFrom).getDate(),
-                new Date().getHours(),
-                new Date().getMinutes(),
-                new Date().getSeconds()
-              )
-            : null,
-        EducationTo:
-          value.EducationTo != null
-            ? new Date(
-                new Date(value.EducationTo).getFullYear(),
-                new Date(value.EducationTo).getMonth(),
-                new Date(value.EducationTo).getDate(),
-                new Date().getHours(),
-                new Date().getMinutes(),
-                new Date().getSeconds()
-              )
-            : null,
-        Degree: value.Degree,
-        FieldOfStudy: value.FieldOfStudy,
-        Institute: value.Institute,
-        EmployeeID: value.EmployeeID
-      };
+          const apiLink =
+              this.setting.getBaseUrl() +
+              GLOBAL.API_EmployeeDetail_EditEmployeeEducations;
+          this.edit(educationEditModel, apiLink, 'Education');
+      } else if (eventName === 'RowRemoving') {
+          const educationdeleteModel: EducationModel = {
+              EmployeeEducationsId: obj.data.EmployeeEducationsId,
+              EducationFrom: obj.data.EducationFrom,
+              EducationTo: obj.data.EducationTo,
+              Degree: obj.data.Degree,
+              FieldOfStudy: obj.data.FieldOfStudy,
+              Institute: obj.data.Institute,
+              EmployeeID: obj.data.EmployeeID
+          };
 
-      const apiLink =
-        this.setting.getBaseUrl() +
-        GLOBAL.API_EmployeeDetail_EditEmployeeEducations;
-      this.edit(educationEditModel, apiLink, 'Education');
-    } else if (eventName === 'RowRemoving') {
-      const educationdeleteModel: EducationModel = {
-        EmployeeEducationsId: obj.data.EmployeeEducationsId,
-        EducationFrom: obj.data.EducationFrom,
-        EducationTo: obj.data.EducationTo,
-        Degree: obj.data.Degree,
-        FieldOfStudy: obj.data.FieldOfStudy,
-        Institute: obj.data.Institute,
-        EmployeeID: obj.data.EmployeeID
-      };
-
-      const apiLink =
-        this.setting.getBaseUrl() +
-        GLOBAL.API_EmployeeDetail_DeleteEmployeeEducations;
-      this.delete(educationdeleteModel, apiLink, 'Education');
-    }
+          const apiLink =
+              this.setting.getBaseUrl() +
+              GLOBAL.API_EmployeeDetail_DeleteEmployeeEducations;
+          this.delete(educationdeleteModel, apiLink, 'Education');
+      } else if (eventName === "InitNewRow") {
+          obj.data.EducationTo = new Date,
+          obj.data.EducationFrom = new Date()
+      }
   }
   //#endregion
 
@@ -672,6 +677,9 @@ export class ProfessionalMoreInfoComponent implements OnInit {
         this.setting.getBaseUrl() +
         GLOBAL.API_EmployeeDetail_DeleteEmployeeHistoryOutsideOrganization;
       this.delete(deleteModel, apiLink, 'OutsideOrganization');
+    } else if (eventName === "InitNewRow") {
+        obj.data.EmploymentTo = new Date,
+            obj.data.EmploymentFrom = new Date()
     }
   }
   //#endregion
@@ -795,6 +803,9 @@ export class ProfessionalMoreInfoComponent implements OnInit {
         this.setting.getBaseUrl() +
         GLOBAL.API_EmployeeDetail_DeleteEmployeeHistoryOutsideCountry;
       this.delete(deleteModel, apiLink, 'OutsideCountry');
+    } else if (eventName === "InitNewRow") {
+        obj.data.EmploymentTo = new Date,
+            obj.data.EmploymentFrom = new Date()
     }
   }
   //#endregion

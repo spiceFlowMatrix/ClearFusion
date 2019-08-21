@@ -81,10 +81,11 @@ export class ItemSpecificationMasterComponent implements OnInit {
             data.StatusCode === 200 &&
             data.data.OfficeDetailsList.length > 0
           ) {
+
             const AllOffices = localStorage.getItem('ALLOFFICES').split(',');
 
             data.data.OfficeDetailsList.forEach(element => {
-              const officeFound = AllOffices.indexOf('' + element.OfficeId);
+              const officeFound = AllOffices.indexOf(element.OfficeId.toString());
               if (officeFound !== -1) {
                 this.officeDropdownList.push({
                   OfficeId: element.OfficeId,

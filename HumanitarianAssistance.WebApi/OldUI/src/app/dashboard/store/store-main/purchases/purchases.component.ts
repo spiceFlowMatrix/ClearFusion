@@ -254,7 +254,6 @@ export class PurchasesComponent implements OnInit {
             }
         },
         error => {
-            debugger;
             this.toastr.error(error.Message);
         }
       );
@@ -851,8 +850,8 @@ export class PurchasesComponent implements OnInit {
       PurchaseId: null,
       SerialNo: null, // Barcode Value
       InventoryItem: this.inventoryItemId != null ? this.inventoryItemId : null, // Item Id
-      PurchaseDate: null, // Date Of Purchase
-      DeliveryDate: null, // The date that the item arrived at it's desired location or a service took place.
+      PurchaseDate: new Date(), // Date Of Purchase
+      DeliveryDate: new Date(), // The date that the item arrived at it's desired location or a service took place.
       Currency: null, // Currency ID
       UnitType: null,
       UnitCost: null,
@@ -868,7 +867,7 @@ export class PurchasesComponent implements OnInit {
       VoucherDate: null, // use to determine voucher date
       AssetTypeId: null, // 1.Cash, 2.In Kind
       InvoiceNo: null,
-      InvoiceDate: null,
+      InvoiceDate: new Date(),
       Status: null,
       ReceiptTypeId: null,
       ReceivedFromLocation: null,
@@ -882,9 +881,6 @@ export class PurchasesComponent implements OnInit {
       VerifiedPurchaseVoucherReferenceNo: null,
       TimezoneOffset: null
       };
-      debugger;
-
-     
 
     this.showAddPurchaseFormPopupVisible();
   }
@@ -1138,7 +1134,6 @@ export class PurchasesComponent implements OnInit {
     }
 
     onAddPurchasePopUpHide() {
-        debugger;
         this.imageUploader.instance.reset();
         this.invoiceUploader.instance.reset();
     }
