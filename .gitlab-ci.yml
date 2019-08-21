@@ -58,6 +58,8 @@ publish-container:
         - docker:dind
     stage: integration
     script:
+        - rm HumanitarianAssistance.WebApi/release/NewUI
+        - rm HumanitarianAssistance.WebApi/release/OldUI
         - mkdir HumanitarianAssistance.WebApi/release/NewUI
         - mkdir HumanitarianAssistance.WebApi/release/OldUI
         - cp -r HumanitarianAssistance.WebApi/NewUI/dist/ HumanitarianAssistance.WebApi/release/NewUI/dist
