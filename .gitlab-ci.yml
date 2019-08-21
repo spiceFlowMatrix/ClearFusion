@@ -69,11 +69,11 @@ publish-container:
         - docker build --cache-from ${CF_APP_IMAGE} -t ${CF_APP_IMAGE} -f ./Dockerfile .
         - docker push ${CF_APP_IMAGE}
 
-deploy-review:
+deploy-cleanarch:
     stage: deploy
     image: devth/helm
     environment:
-        name: cleanarch
+        name: review
         url: https://${CF_REVIEW_URL}
         # url: https://cleantestedg.cha-net.org
     script:
