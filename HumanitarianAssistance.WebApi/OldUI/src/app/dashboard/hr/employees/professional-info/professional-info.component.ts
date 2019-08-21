@@ -595,7 +595,8 @@ export class ProfessionalInfoComponent implements OnInit {
       ResignationReason: value.ResignationReason,
       JobDescription: value.JobDescription,
       TrainingBenefits: value.TrainingBenefits,
-      EmployeeId: this.employeeId
+        EmployeeId: this.employeeId,
+        AttendanceGroupId: value.AttendanceGroupId
     };
 
     this.popupProfesionalinfoVisible = true;

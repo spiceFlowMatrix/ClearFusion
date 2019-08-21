@@ -1188,6 +1188,9 @@ export class EmployeeAppraisalComponent implements OnInit {
     }
 
     onOfficeSelected(officeId: number) {
+
+        this.initializeForm();
+
         this.selectedOffice = officeId
 
         this.getAllEmployeeAppraisalList();
