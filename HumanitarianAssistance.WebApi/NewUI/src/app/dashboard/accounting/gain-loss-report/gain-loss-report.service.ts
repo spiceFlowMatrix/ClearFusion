@@ -17,7 +17,7 @@ export class GainLossReportService {
   //#region "GetGainLossReportList"
   GetGainLossReportList(data: any) {
     return this.globalService
-      .post(this.appurl.getApiUrl() + GLOBAL.API_FinancialReport_GetExchangeGainLossReport, data)
+      .post(this.appurl.getApiUrl() + GLOBAL.API_GainLossReport_GetExchangeGainLossReport, data)
       .pipe(
         map(x => {
           const responseData: IResponseData = {

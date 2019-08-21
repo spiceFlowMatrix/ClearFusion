@@ -267,7 +267,7 @@ ResetFormOnAddNewClient() {
   }
 
   AddNewClient() {
-    
+
     this.clientsService.EditClient(this.clientDetails)
       .subscribe((result:IResponseData) => {
         if (result.statusCode === 200) {

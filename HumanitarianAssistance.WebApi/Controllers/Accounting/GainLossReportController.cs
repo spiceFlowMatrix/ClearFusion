@@ -1,7 +1,9 @@
-﻿using DataAccess.DbEntities;
-using HumanitarianAssistance.Service.APIResponses;
-using HumanitarianAssistance.Service.interfaces.AccountingNew;
-using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.Application.Accounting.Commands.Create;
+using HumanitarianAssistance.Application.Accounting.Commands.Delete;
+using HumanitarianAssistance.Application.Accounting.Queries;
+using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Enums;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,64 +16,51 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
 {
     [Produces("application/json")]
     [Route("api/GainLossReport/[Action]/")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class GainLossReportController : Controller
+    [ApiExplorerSettings(GroupName = nameof(SwaggerGrouping.Accounting))]
+    [Authorize]
+    public class GainLossReportController : BaseController
     {
-        private readonly UserManager<AppUser> _userManager;
-        private IAccountBalance _iaccountBalanceService;
-        private IVoucherNewService _iVoucherNewService;
 
-        public GainLossReportController(
-            UserManager<AppUser> userManager,
-            IAccountBalance iaccountBalanceService,
-            IVoucherNewService iVoucherNewService
-        )
+        [HttpGet]
+        public async Task<ApiResponse> GetExchangeGainLossFilterAccountList()
         {
-            _userManager = userManager;
-            _iaccountBalanceService = iaccountBalanceService;
-            _iVoucherNewService = iVoucherNewService;
+            return await _mediator.Send(new GetExchangeGainLossFilterAccountListQuery());
         }
 
         [HttpGet]
-        public async Task<APIResponse> GetExchangeGainLossFilterAccountList()
+        public async Task<ApiResponse> GetExchangeGainLossVoucherList()
         {
-            APIResponse response = new APIResponse();
-            response = await _iaccountBalanceService.GetExchangeGainLossFilterAccountList();
-            return response;
-        }
-
-        [HttpGet]
-        public async Task<APIResponse> GetExchangeGainLossVoucherList()
-        {
-            APIResponse response = await _iVoucherNewService.GetExchangeGainLossVoucherList();
-            return response;
+            return await _mediator.Send(new GetExchangeGainLossVoucherListQuery());
         }
 
         [HttpPost]
-        public async Task<APIResponse> AddExchangeGainLossVoucher([FromBody] ExchangeGainLossVoucherDetails model)
+        public async Task<ApiResponse> GetExchangeGainLossReport([FromBody]GetExchangeGainLossReportQuery model)
         {
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            return await _mediator.Send(model);
+        }
 
-            if (user != null)
+        [HttpPost]
+        public async Task<ApiResponse> AddExchangeGainLossVoucher([FromBody] ExchangeGainLossVoucherDetailsCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> DeleteGainLossVoucherTransaction([FromBody]long id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            return await _mediator.Send(new DeleteGainLossVoucherTransactionCommand
             {
-                var id = user.Id;
-                model.CreatedById = id;
-                model.IsDeleted = false;
-                model.CreatedDate = DateTime.UtcNow;
-            }
-
-            APIResponse response = await _iVoucherNewService.CreateGainLossTransaction(model, user.Id);
-
-            return response;
-        }
-
-        [HttpPost]
-        public async Task<APIResponse> DeleteGainLossVoucherTransaction([FromBody]long id)
-        {
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            APIResponse response = await _iVoucherNewService.DeleteGainLossVoucherTransaction(id, user.Id);
-            return response;
+                VoucherNo = id,
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow
+            });
         }
 
     }

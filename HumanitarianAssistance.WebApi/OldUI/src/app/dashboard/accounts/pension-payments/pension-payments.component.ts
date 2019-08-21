@@ -25,7 +25,7 @@ export class PensionPaymentsComponent implements OnInit {
   journalDropdown: any[];
   voucherTypeArr: any;
   subscription: Subscription;
-  officecodelist: any[]= [];
+  officecodelist: any[] = [];
 
   currencyDataSource: CurrencyCode[];
   employeeListDataSource: EmployeeListModel[];
@@ -85,7 +85,7 @@ export class PensionPaymentsComponent implements OnInit {
     this.employeePensionForm = {
       CreditAccount: null,
       CurrencyId: null,
-     // DebitAccount: null,
+      // DebitAccount: null,
       EmployeeId: null,
       EmployeeName: null,
       OfficeId: null,
@@ -153,7 +153,7 @@ export class PensionPaymentsComponent implements OnInit {
       )
       .subscribe(
         data => {
-          const AllOffices = localStorage.getItem('ALLOFFICES').split(',');
+          const AllOffices = localStorage.getItem('ALLOFFICES') != null ? localStorage.getItem('ALLOFFICES').split(',') : [];
           this.officecodelist = [];
           if (
             data.StatusCode === 200 &&
@@ -225,7 +225,7 @@ export class PensionPaymentsComponent implements OnInit {
             }
           }
         },
-        error => {}
+        error => { }
       );
   }
   //#endregion
@@ -245,13 +245,13 @@ export class PensionPaymentsComponent implements OnInit {
             });
           }
         },
-        error => {}
+        error => { }
       );
   }
   //#endregion
 
   //#region "Get All Employee List By OfficeId"
-  getAllEmployeeListByOfficeId(officeId:number) {
+  getAllEmployeeListByOfficeId(officeId: number) {
     // tslint:disable-next-line:radix
     // const officeId = parseInt(localStorage.getItem('ACCOUNTINGOFFICEID'));
     this.hrService
@@ -304,7 +304,7 @@ export class PensionPaymentsComponent implements OnInit {
         EmployeeId: model.EmployeeId,
         CurrencyId: model.CurrencyId,
         CreditAccount: model.CreditAccount,
-       // DebitAccount: model.DebitAccount,
+        // DebitAccount: model.DebitAccount,
         PensionAmount: model.PensionAmount,
         // tslint:disable-next-line:radix
         OfficeId: this.selectedOffice,
@@ -320,7 +320,7 @@ export class PensionPaymentsComponent implements OnInit {
       this.codeService
         .AddEditDetails(
           this.setting.getBaseUrl() +
-            GLOBAL.API_Account_AddEmployeePensionPayment,
+          GLOBAL.API_Account_AddEmployeePensionPayment,
           pensionModel
         )
         .subscribe(
@@ -369,7 +369,7 @@ export class PensionPaymentsComponent implements OnInit {
       this.hrService
         .GetDataByEmployeeIdAndOfficeId(
           this.setting.getBaseUrl() +
-            GLOBAL.API_EmployeeHR_GetEmployeePensionHistoryDetail,
+          GLOBAL.API_EmployeeHR_GetEmployeePensionHistoryDetail,
           employeeId,
           officeId
         )
@@ -393,8 +393,8 @@ export class PensionPaymentsComponent implements OnInit {
               // tslint:disable-next-line:curly
               if (data.StatusCode === 400)
                 this.toastr.error('Something went wrong!');
-                this.hidePensionLoader();
-                this.pensionHistoryDataSource= null;
+              this.hidePensionLoader();
+              this.pensionHistoryDataSource = null;
             }
             this.hidePensionLoader();
           },
@@ -419,7 +419,7 @@ export class PensionPaymentsComponent implements OnInit {
     this.accountservice
       .GetAccountDetails(
         this.setting.getBaseUrl() +
-          GLOBAL.API_Accounting_GetLevelFourAccountDetails
+        GLOBAL.API_Accounting_GetAllInputLevelAccountCode
       )
       .subscribe(
         data => {
@@ -442,7 +442,7 @@ export class PensionPaymentsComponent implements OnInit {
             }
           }
         },
-        error => {}
+        error => { }
       );
   }
   //#endregion
@@ -459,22 +459,27 @@ export class PensionPaymentsComponent implements OnInit {
 
           if (
             data.StatusCode === 200 &&
-            data.data.JournalDetailList.length > 0
+            data.data.JournalDetailList != null
           ) {
-            data.data.JournalDetailList.forEach(element => {
-              this.journalDropdown.push({
-                JournalCode: element.JournalCode,
-                JournalName: element.JournalName
+            if (
+              data.StatusCode === 200 &&
+              data.data.JournalDetailList.length > 0
+            ) {
+              data.data.JournalDetailList.forEach(element => {
+                this.journalDropdown.push({
+                  JournalCode: element.JournalCode,
+                  JournalName: element.JournalName
+                });
               });
-            });
 
-            this.commonService.sortDropdown(
-              this.journalDropdown,
-              'JournalName'
-            );
+              this.commonService.sortDropdown(
+                this.journalDropdown,
+                'JournalName'
+              );
+            }
           }
         },
-        error => {}
+        error => { }
       );
   }
   //#endregion
@@ -496,7 +501,7 @@ export class PensionPaymentsComponent implements OnInit {
       CurrencyId: data.key.CurrencyId,
       PensionBalanceAmount: data.key.BalancePensionAmount,
       CreditAccount: null,
-     // DebitAccount: null,
+      // DebitAccount: null,
       OfficeId: null,
       PensionAmount: null,
       JournalCode: null,
@@ -565,7 +570,6 @@ class CurrencyCode {
   CurrencyId: number;
   CurrencyCode: string;
   CurrencyName: string;
-  CurrencyRate: DoubleRange;
 }
 
 class EmployeeListModel {

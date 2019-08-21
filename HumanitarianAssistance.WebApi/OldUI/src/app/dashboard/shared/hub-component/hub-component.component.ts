@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./hub-component.component.css']
 })
 export class HubComponentComponent implements OnInit {
-  private _hubConnection: HubConnection | undefined;
+  // private _hubConnection: HubConnection | undefined;
   public async: any;
   message = '';
   messages: string[] = [];
@@ -20,25 +20,25 @@ export class HubComponentComponent implements OnInit {
   public sendMessage(): void {
       const data = `Sent: ${this.message}`;
 
-      if (this._hubConnection) {
-          this._hubConnection.invoke('Send', data);
-      }
-      this.messages.push(data);
+      // if (this._hubConnection) {
+      //     this._hubConnection.invoke('Send', data);
+      // }
+      // this.messages.push(data);
   }
 
   ngOnInit() {
-      this._hubConnection = new signalR.HubConnectionBuilder()
-          .withUrl('https://localhost:5000/loopy')
-          .configureLogging(signalR.LogLevel.Information)
-          .build();
+      // this._hubConnection = new signalR.HubConnectionBuilder()
+      //     .withUrl('https://localhost:5000/loopy')
+      //     .configureLogging(signalR.LogLevel.Information)
+      //     .build();
 
-      this._hubConnection.start().catch(err => console.error(err.toString()));
+      // this._hubConnection.start().catch(err => console.error(err.toString()));
 
-      this._hubConnection.on('Send', (data: any) => {
-        this.toastr.success(data);
-          const received = `Received: ${data}`;
-          this.messages.push(received);
-      });
+      // this._hubConnection.on('Send', (data: any) => {
+      //   this.toastr.success(data);
+      //     const received = `Received: ${data}`;
+      //     this.messages.push(received);
+      // });
   }
 
 }

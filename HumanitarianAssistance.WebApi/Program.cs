@@ -1,14 +1,12 @@
 using System;
-using System.IO;
-using DataAccess.Data;
-using DataAccess.DbEntities;
-using HumanitarianAssistance.Entities;
+using HumanitarianAssistance.Domain.Entities;
+using HumanitarianAssistance.Persistence;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
 
 namespace HumanitarianAssistance.WebApi
 {
@@ -16,19 +14,22 @@ namespace HumanitarianAssistance.WebApi
     {
         public static void Main(string[] args)
         {
-            var host = CreateWebHostBuilder(args)
-                            .Build();
+            var host = CreateWebHostBuilder(args).Build();
 
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 try
                 {
-                    services.GetRequiredService<ApplicationDbContext>();
-                    services.GetRequiredService<UserManager<AppUser>>();
-                    services.GetRequiredService<RoleManager<IdentityRole>>();
-                    services.GetRequiredService<ILogger<DbInitializer>>();
-                    // DbInitializer.Initialize(context, userManager, roleManager, dbInitializerLogger).Wait();
+                    var context = services.GetRequiredService<HumanitarianAssistanceDbContext>();
+                    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    var dbInitializerLogger = services.GetRequiredService<ILogger<HumanitarianAssistanceInitializer>>();
+
+                    if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Equals("Development"))
+                        context.Database.Migrate(); // apply all migrations
+
+                    HumanitarianAssistanceInitializer.Initialize(context, userManager, roleManager, dbInitializerLogger).Wait();
                 }
                 catch (Exception ex)
                 {
@@ -41,7 +42,6 @@ namespace HumanitarianAssistance.WebApi
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                    .UseStartup<Startup>();
-        //.UseUrls("http://*:5004");
+                .UseStartup<Startup>();
     }
 }

@@ -151,6 +151,7 @@ export class LeavereasonTypeComponent implements OnInit {
         },
         error => {
           // error message
+          this.leaveReasonPopupLoading = false;
         }
       );
   }

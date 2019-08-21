@@ -197,7 +197,7 @@ export class QualificationTypeComponent implements OnInit {
     this.codeservice
       .AddEditDetails(
         this.setting.getBaseUrl() + GLOBAL.API_Code_DeleteQualifactionDetails,
-        this.qualificationData
+        this.qualificationData.QualificationId
       )
       .subscribe(data => {
         if (data.StatusCode === 200) {

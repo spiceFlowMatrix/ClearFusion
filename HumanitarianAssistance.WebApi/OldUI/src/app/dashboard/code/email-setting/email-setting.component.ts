@@ -139,7 +139,6 @@ export class EmailSettingComponent implements OnInit {
 
   AddEmailSetting(model) {
     this.emailSettingPopupLoading = true;
-    const obj: any = {};
     const addemailsetting: EmailSetting = {
       EmailId: 0,
       SenderEmail: model.SenderEmail,

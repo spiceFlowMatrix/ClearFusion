@@ -24,6 +24,8 @@ export class EmployeeAppraisalComponent implements OnInit {
 
   questionSourceData: EmployeeAppraisalQuestionList[];
   remarksList: RemarkModel[];
+    officeDropdownList: any[] = [];
+    officecodelist: any[];
 
   employeeListDataSource: EmployeeListModel[];
   employeeDetailListData: EmployeeDetailListModel[];
@@ -46,7 +48,8 @@ export class EmployeeAppraisalComponent implements OnInit {
   // Appraisal
   approveRejectEmployeeAppraisalDetailsId: number;
   currentAppraisalApproveReject: boolean;
-  popupAppraisalFormConfVisible = false;
+    popupAppraisalFormConfVisible = false;
+    selectedOffice: number;
 
   // Evaluation
   approveRejectEmployeeEvaluationId: number;
@@ -86,7 +89,6 @@ export class EmployeeAppraisalComponent implements OnInit {
   constructor(
     private hrService: HrService,
     private codeService: CodeService,
-    private router: Router,
     private setting: AppSettingsService,
     private toastr: ToastrService,
     private commonService: CommonService
@@ -104,11 +106,13 @@ export class EmployeeAppraisalComponent implements OnInit {
       PeriodDuration: 'Probationary'
     }];
 
-    this.commonService.getEmployeeOfficeId().subscribe(data => {
-      this.getAllEmployeeAppraisalList();
-      this.getAllEmployeeAppraisalMoreDetails();
-      this.getAllEmployeeListByOfficeId();
-    });
+    //this.commonService.getEmployeeOfficeId().subscribe(data => {
+    //  this.getAllEmployeeAppraisalList();
+    //  this.getAllEmployeeAppraisalMoreDetails();
+    //  this.getAllEmployeeListByOfficeId();
+    //  });
+
+      this.getOfficeCodeList();
 
     this.getAllRemarks();
 
@@ -118,7 +122,7 @@ export class EmployeeAppraisalComponent implements OnInit {
     this.getAllAppraisalQuestions();
     this.initializeForm();
 
-    this.getAllEmployeeListByOfficeId();
+    // this.getAllEmployeeListByOfficeId();
 
     this.getAllEmployeeAppraisalMoreDetails();
     this.getAllEmployeeAppraisalList();
@@ -212,8 +216,8 @@ export class EmployeeAppraisalComponent implements OnInit {
   //#region "Get All Employee Appraisal List"
   getAllEmployeeAppraisalList() {
     this.showEmpAppraisalLoader();
-    // tslint:disable-next-line:radix
-    const officeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
+      // tslint:disable-next-line:radix
+      const officeId = this.selectedOffice;
     this.hrService
       .GetAllDetailsByOfficeId(
         this.setting.getBaseUrl() +
@@ -253,8 +257,8 @@ export class EmployeeAppraisalComponent implements OnInit {
 
   //#region "Get All Appraisal Questions"
   getAllAppraisalQuestions() {
-    // tslint:disable-next-line:radix
-    const officeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
+      // tslint:disable-next-line:radix
+      const officeId = this.selectedOffice;
     this.codeService
       .GetAppraisalQuestions(
         this.setting.getBaseUrl() + GLOBAL.API_Code_GetAppraisalQuestions,
@@ -305,9 +309,10 @@ export class EmployeeAppraisalComponent implements OnInit {
   //#endregion
 
   //#region "Get All Employee List By OfficeId"
-  getAllEmployeeListByOfficeId() {
+    getAllEmployeeListByOfficeId() {
+        debugger;
     // tslint:disable-next-line:radix
-    const officeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
+      const officeId = this.selectedOffice;
     this.hrService
       .GetAllDetail(
         this.setting.getBaseUrl() + GLOBAL.API_Code_GetEmployeeDetailByOfficeId,
@@ -384,8 +389,8 @@ export class EmployeeAppraisalComponent implements OnInit {
                 RecruitmentDate: element.RecruitmentDate,
                 AppraisalPeriod: null,
                 CurrentAppraisalDate: null,
-                // tslint:disable-next-line:radix
-                OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID')),
+                  // tslint:disable-next-line:radix
+                  OfficeId: this.selectedOffice,
                 TotalScore: null,
                 EmployeeAppraisalQuestionList: this.questionSourceData,
                 AppraisalStatus: element.AppraisalStatus
@@ -462,7 +467,7 @@ export class EmployeeAppraisalComponent implements OnInit {
   getAllEmployeeAppraisalMoreDetails() {
     this.showEmpAppraisalLoader();
     // tslint:disable-next-line:radix
-    const officeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
+      const officeId = this.selectedOffice;
     this.hrService
       .GetAllDetail(
         this.setting.getBaseUrl() +
@@ -804,7 +809,8 @@ export class EmployeeAppraisalComponent implements OnInit {
   //#endregion
 
   //#region "On Add Form Submit"
-  onAddFormSubmit(data: EmployeeAppraisalModel) {
+    onAddFormSubmit(data: EmployeeAppraisalModel) {
+        debugger;
     const appraisalData: EmployeeAppraisalModel = {
       EmployeeAppraisalDetailsId: 0,
       EmployeeId: data.EmployeeId,
@@ -832,8 +838,8 @@ export class EmployeeAppraisalComponent implements OnInit {
         new Date().getMinutes(),
         new Date().getSeconds()
       ),
-      // tslint:disable-next-line:radix
-      OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID')),
+        // tslint:disable-next-line:radix
+        OfficeId: this.selectedOffice,
       TotalScore: data.TotalScore,
       EmployeeAppraisalQuestionList: this.questionSourceData,
       AppraisalStatus: false
@@ -885,8 +891,8 @@ export class EmployeeAppraisalComponent implements OnInit {
         new Date().getMinutes(),
         new Date().getSeconds()
       ),
-      // tslint:disable-next-line:radix
-      OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID')),
+        // tslint:disable-next-line:radix
+        OfficeId: this.selectedOffice,
       TotalScore: data.TotalScore,
       EmployeeAppraisalQuestionList: this.questionSourceData,
       AppraisalStatus: data.AppraisalStatus
@@ -949,8 +955,8 @@ export class EmployeeAppraisalComponent implements OnInit {
       CommentsByEmployee: data.CommentsByEmployee,
       EmployeeId: this.onEmployeeMoreDetailValue,
       EvaluationStatus: null,
-      // tslint:disable-next-line:radix
-      OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID'))
+        // tslint:disable-next-line:radix
+        OfficeId: this.selectedOffice
     };
     this.addEmployeeAppraisalMoreDetails(dataModel);
   }
@@ -996,8 +1002,8 @@ export class EmployeeAppraisalComponent implements OnInit {
       CommentsByEmployee: data.CommentsByEmployee,
       EmployeeId: data.EmployeeId,
       EvaluationStatus: data.EvaluationStatus,
-      // tslint:disable-next-line:radix
-      OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID'))
+        // tslint:disable-next-line:radix
+        OfficeId: this.selectedOffice
     };
 
     this.editEmployeeAppraisalMoreDetails(dataModel);
@@ -1162,8 +1168,8 @@ export class EmployeeAppraisalComponent implements OnInit {
         EvaluationStatus: keyValue.EvaluationStatus,
 
         EmployeeId: keyValue.EmployeeId,
-        // tslint:disable-next-line:radix
-        OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID'))
+          // tslint:disable-next-line:radix
+          OfficeId: this.selectedOffice
       };
       this.showEditAppraisalMoreDetails();
     }
@@ -1181,7 +1187,86 @@ export class EmployeeAppraisalComponent implements OnInit {
           : (this.currentAppraisalApproveReject = false);
       }
     }
-  }
+    }
+
+    onOfficeSelected(officeId: number) {
+        this.selectedOffice = officeId
+
+        this.getAllEmployeeAppraisalList();
+        this.getAllEmployeeAppraisalMoreDetails();
+        this.getAllEmployeeListByOfficeId();
+    }
+
+    getOfficeCodeList() {
+        this.codeService
+            .GetAllCodeList(
+                this.setting.getBaseUrl() + GLOBAL.API_OfficeCode_GetAllOfficeDetails
+            )
+            .subscribe(
+                data => {
+                    this.officecodelist = [];
+                    if (
+                        data.StatusCode === 200 &&
+                        data.data.OfficeDetailsList.length > 0
+                    ) {
+                        data.data.OfficeDetailsList.forEach(element => {
+                            this.officecodelist.push({
+                                Office: element.OfficeId,
+                                OfficeCode: element.OfficeCode,
+                                OfficeName: element.OfficeName,
+                                SupervisorName: element.SupervisorName,
+                                PhoneNo: element.PhoneNo,
+                                FaxNo: element.FaxNo,
+                                OfficeKey: element.OfficeKey
+                            });
+                        });
+
+                        const AllOffices = localStorage.getItem('ALLOFFICES').split(',');
+
+                        data.data.OfficeDetailsList.forEach(element => {
+                            const officeFound = AllOffices.indexOf('' + element.OfficeId);
+                            if (officeFound !== -1) {
+                                this.officeDropdownList.push({
+                                    OfficeId: element.OfficeId,
+                                    OfficeCode: element.OfficeCode,
+                                    OfficeName: element.OfficeName,
+                                    SupervisorName: element.SupervisorName,
+                                    PhoneNo: element.PhoneNo,
+                                    FaxNo: element.FaxNo,
+                                    OfficeKey: element.OfficeKey
+                                });
+                            }
+                        });
+
+                        debugger;
+                       
+                        this.selectedOffice =
+                            (this.selectedOffice === null || this.selectedOffice == undefined)
+                                    ? this.officeDropdownList[0].OfficeId
+                                : this.selectedOffice;
+
+                        this.getAllEmployeeListByOfficeId();
+                        this.getAllEmployeeAppraisalList();
+                        this.getAllEmployeeAppraisalMoreDetails();
+
+                        // tslint:disable-next-line:curly
+                    } else if (data.StatusCode === 400)
+                        this.toastr.error('Something went wrong!');
+                },
+                error => {
+                    if (error.StatusCode === 500) {
+                        this.toastr.error('Internal Server Error....');
+                    } else if (error.StatusCode === 401) {
+                        this.toastr.error('Unauthorized Access Error....');
+                    } else if (error.StatusCode === 403) {
+                        this.toastr.error('Forbidden Error....');
+                    } else {
+                    }
+                }
+            );
+    }
+
+
   onApproveAppraisalConfirmClick() {
     this.approvalOrRejectEmployeeAppraisal(
       this.approveRejectEmployeeAppraisalDetailsId,

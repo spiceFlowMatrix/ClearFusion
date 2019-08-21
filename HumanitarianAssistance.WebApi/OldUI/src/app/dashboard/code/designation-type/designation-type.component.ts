@@ -58,7 +58,8 @@ export class DesignationTypeComponent implements OnInit {
       .subscribe(
         data => {
           this.designationList = [];
-          if (data.StatusCode === 200 && data.data.DesignationList.length > 0) {
+          if (data.StatusCode === 200 && data.data.DesignationList != null) {
+            if (data.data.DesignationList.length > 0) {
             data.data.DesignationList.forEach(element => {
               this.designationList.push({
                 DesignationId: element.DesignationId,
@@ -66,6 +67,7 @@ export class DesignationTypeComponent implements OnInit {
               });
             });
           }
+        }
           this.showHideDesignationTypeListLoading(false);
         },
         error => {

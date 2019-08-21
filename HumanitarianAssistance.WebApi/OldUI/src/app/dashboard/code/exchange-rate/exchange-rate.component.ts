@@ -96,7 +96,7 @@ export class ExchangeRateComponent implements OnInit {
             });
           }
         },
-        error => {}
+        error => { }
       );
   }
   //#endregion
@@ -192,8 +192,7 @@ export class ExchangeRateComponent implements OnInit {
               FromCurrency: element.CurrencyId,
               ToCurrency: element.CurrencyId,
               CurrencyCode: element.CurrencyCode,
-              CurrencyName: element.CurrencyName,
-              CurrencyRate: element.CurrencyRate
+              CurrencyName: element.CurrencyName
             });
           });
         },

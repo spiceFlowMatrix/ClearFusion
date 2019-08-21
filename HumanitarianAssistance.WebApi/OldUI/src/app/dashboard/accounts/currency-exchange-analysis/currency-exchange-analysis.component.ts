@@ -31,7 +31,7 @@ export class CurrencyExchangeAnalysisComponent implements OnInit {
     private setting: AppSettingsService,
     private commonService: CommonService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initializeForm();
@@ -109,20 +109,24 @@ export class CurrencyExchangeAnalysisComponent implements OnInit {
 
           if (
             data.StatusCode === 200 &&
-            data.data.JournalDetailList.length > 0
+            data.data.JournalDetailList != null
           ) {
-            data.data.JournalDetailList.forEach(element => {
-              this.journalDropdown.push({
-                JournalCode: element.JournalCode,
-                JournalName: element.JournalName
+            if (
+              data.data.JournalDetailList.length > 0
+            ) {
+              data.data.JournalDetailList.forEach(element => {
+                this.journalDropdown.push({
+                  JournalCode: element.JournalCode,
+                  JournalName: element.JournalName
+                });
               });
-            });
 
-            // sort in Asc
-            this.journalDropdown = this.commonService.sortDropdown(
-              this.journalDropdown,
-              'JournalName'
-            );
+              // sort in Asc
+              this.journalDropdown = this.commonService.sortDropdown(
+                this.journalDropdown,
+                'JournalName'
+              );
+            }
           }
         },
         error => {
@@ -236,7 +240,7 @@ export class CurrencyExchangeAnalysisComponent implements OnInit {
   //#endregion
 
   //#region "onApplyingFilter"
-  onApplyingFilter(data: any) {}
+  onApplyingFilter(data: any) { }
   //#endregion
 
   //#region "onFieldValueChanged"

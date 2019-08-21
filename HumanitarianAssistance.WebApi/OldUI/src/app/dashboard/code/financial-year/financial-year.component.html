@@ -26,7 +26,7 @@
                     </div>
                     <dxi-column caption="Action" alignment="center" [width]="100" cellTemplate="CellTemplateEdit" *ngIf="isEditingAllowed"></dxi-column>
                     <div *dxTemplate="let data of 'CellTemplateEdit'">
-                        <a href="javascript:void()" (click)="GetFinancialYearDetailById(data)">Edit</a>
+                        <a href="javascript:void(0)" (click)="GetFinancialYearDetailById(data)">Edit</a>
                     </div>
 
                     <dxo-paging [pageSize]="10"></dxo-paging>

@@ -51,7 +51,7 @@ export class EmployeeSalarySlipComponent implements OnInit, OnChanges {
     private setting: AppSettingsService,
     private toastr: ToastrService,
     private commonService: CommonService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // this.salaryPaymentDetails = [];
@@ -80,7 +80,7 @@ export class EmployeeSalarySlipComponent implements OnInit, OnChanges {
     this.accountservice
       .GetEmployeeSalaryVoucher(
         this.setting.getBaseUrl() +
-          GLOBAL.API_Accounting_GetEmployeeSalaryVoucher,
+        GLOBAL.API_Accounting_GetEmployeeSalaryVoucher,
         this.employeeId,
         Month,
         Year
@@ -94,7 +94,7 @@ export class EmployeeSalarySlipComponent implements OnInit, OnChanges {
             }
           }
         },
-        error => {}
+        error => { }
       );
   }
 
@@ -123,20 +123,20 @@ export class EmployeeSalarySlipComponent implements OnInit, OnChanges {
                       ? this.employeeSalaryDetail.NetSalary
                       : element.PayrollHeadId ===
                         PayrollHeadName.AdvanceDeduction
-                      ? this.employeeSalaryDetail.AdvanceRecoveryAmount
-                      : element.PayrollHeadId === PayrollHeadName.GrossSalary
-                      ? this.employeeSalaryDetail.GrossSalary
-                      : element.PayrollHeadId === PayrollHeadName.Pension
-                      ? this.employeeSalaryDetail.PensionAmount
-                      : element.PayrollHeadId === PayrollHeadName.SalaryTax
-                      ? this.employeeSalaryDetail.SalaryTax
-                      : 0
+                        ? this.employeeSalaryDetail.AdvanceRecoveryAmount
+                        : element.PayrollHeadId === PayrollHeadName.GrossSalary
+                          ? this.employeeSalaryDetail.GrossSalary
+                          : element.PayrollHeadId === PayrollHeadName.Pension
+                            ? this.employeeSalaryDetail.PensionAmount
+                            : element.PayrollHeadId === PayrollHeadName.SalaryTax
+                              ? this.employeeSalaryDetail.SalaryTax
+                              : 0
                 });
               });
             }
           }
         },
-        error => {}
+        error => { }
       );
   }
   //#endregion
@@ -153,20 +153,24 @@ export class EmployeeSalarySlipComponent implements OnInit, OnChanges {
 
           if (
             data.StatusCode === 200 &&
-            data.data.JournalDetailList.length > 0
+            data.data.JournalDetailList != null
           ) {
-            data.data.JournalDetailList.forEach(element => {
-              this.journalDropdown.push({
-                JournalCode: element.JournalCode,
-                JournalName: element.JournalName
+            if (
+              data.data.JournalDetailList.length > 0
+            ) {
+              data.data.JournalDetailList.forEach(element => {
+                this.journalDropdown.push({
+                  JournalCode: element.JournalCode,
+                  JournalName: element.JournalName
+                });
               });
-            });
 
-            // sort in Asc
-            this.journalDropdown = this.commonService.sortDropdown(
-              this.journalDropdown,
-              'JournalName'
-            );
+              // sort in Asc
+              this.journalDropdown = this.commonService.sortDropdown(
+                this.journalDropdown,
+                'JournalName'
+              );
+            }
           }
         },
         error => {
@@ -194,7 +198,7 @@ export class EmployeeSalarySlipComponent implements OnInit, OnChanges {
     this.accountservice
       .ReverseEmployeeSalaryVoucher(
         this.setting.getBaseUrl() +
-          GLOBAL.API_Accounting_ReverseEmployeeSalaryVoucher,
+        GLOBAL.API_Accounting_ReverseEmployeeSalaryVoucher,
         VoucherNo
       )
       .subscribe(
@@ -274,40 +278,39 @@ export class EmployeeSalarySlipComponent implements OnInit, OnChanges {
     this.salaryPaymentDetails.JournalCode = this.journalCode;
     this.salaryPaymentDetails.PresentHours = this.employeeSalaryDetail.PresentHours;
 
-    if(this.journalCode != undefined)
-    {
+    if (this.journalCode != undefined) {
       this.accountservice
-      .GetAllDetailsByModel(
-        this.setting.getBaseUrl() + GLOBAL.API_Accounting_GenerateSalaryVoucher,
-        this.salaryPaymentDetails
-      )
-      .subscribe(
-        data => {
-          if (data.StatusCode === 200) {
-            this.empSalaryLoading = false;
-            this.referenceNo = data.data.VoucherReferenceNo;
-            this.voucherNo = data.data.VoucherNo;
+        .GetAllDetailsByModel(
+          this.setting.getBaseUrl() + GLOBAL.API_Accounting_GenerateSalaryVoucher,
+          this.salaryPaymentDetails
+        )
+        .subscribe(
+          data => {
+            if (data.StatusCode === 200) {
+              this.empSalaryLoading = false;
+              this.referenceNo = data.data.VoucherReferenceNo;
+              this.voucherNo = data.data.VoucherNo;
 
-            this.showEmployeeSalaryPaymentPopup.emit({
-              showEmployeeSalaryPaymentPopup: false
-            });
-          } else {
+              this.showEmployeeSalaryPaymentPopup.emit({
+                showEmployeeSalaryPaymentPopup: false
+              });
+            } else {
+              this.empSalaryLoading = false;
+              this.toastr.error(data.Message);
+            }
+          },
+          error => {
             this.empSalaryLoading = false;
-            this.toastr.error(data.Message);
           }
-        },
-        error => {
-          this.empSalaryLoading = false;
-        }
-      );      
+        );
     } else {
       this.toastr.warning("Journal Not Selected");
       this.empSalaryLoading = false;
     }
   }
 
-   //#region "getLocalDate"
-   getLocalDate(date: any) {
+  //#region "getLocalDate"
+  getLocalDate(date: any) {
     return new Date(
       new Date(date).getFullYear(),
       new Date(date).getMonth(),

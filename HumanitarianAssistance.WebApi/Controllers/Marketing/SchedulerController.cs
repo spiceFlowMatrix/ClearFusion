@@ -1,181 +1,150 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using DataAccess.DbEntities;
-using HumanitarianAssistance.Service.APIResponses;
-using HumanitarianAssistance.Service.interfaces.Marketing;
-using HumanitarianAssistance.ViewModels.Models.Marketing;
+using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Application.Marketing.Commands.Common;
+using HumanitarianAssistance.Application.Marketing.Commands.Delete;
+using HumanitarianAssistance.Application.Marketing.Queries;
+using HumanitarianAssistance.Domain.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace HumanitarianAssistance.WebApi.Controllers.Marketing
 {
-  [Produces("application/json")]
-  [Route("api/Scheduler/[Action]")]
-  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-  public class SchedulerController : Controller
-  {
-    private readonly JsonSerializerSettings _serializerSettings;
-    private readonly UserManager<AppUser> _userManager;
-    private ISchedulerService _iScheduleService;
-    private IMasterPageService _iMasterPageService;
-    public SchedulerController(UserManager<AppUser> userManager, ISchedulerService iSchedulerService, IMasterPageService iMasterPageService)
+    [Produces("application/json")]
+    [Route("api/Scheduler/[Action]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public class SchedulerController : Controller
     {
-      _userManager = userManager;
-      _iScheduleService = iSchedulerService;
-      _iMasterPageService = iMasterPageService;
-      _serializerSettings = new JsonSerializerSettings
-      {
-        Formatting = Formatting.Indented,
-        NullValueHandling = NullValueHandling.Ignore
-      };
+        private readonly JsonSerializerSettings _serializerSettings;
+        private readonly UserManager<AppUser> _userManager;
+        private IMediator _mediator;
+        public SchedulerController(UserManager<AppUser> userManager, IMediator mediator)
+        {
+            _userManager = userManager;
+            _mediator = mediator;
+            _serializerSettings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                NullValueHandling = NullValueHandling.Ignore
+            };
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> GetAllPolicyScheduleList(string text)
+        {
+            return await _mediator.Send(new GetAllPolicyScheduleListQuery
+            {
+                text = text
+            });
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> GetScheduleDetailsById([FromBody] int model)
+        {
+            return await _mediator.Send(new GetScheduleDetailsByIdQuery
+            {
+                model = model
+            });
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> GetChannelById([FromBody]int model)
+        {
+            return await _mediator.Send(new GetChannelByIdQuery
+            {
+                model = model
+            });
+        }
+
+        [HttpGet]
+        public async Task<ApiResponse> GetAllChannelList()
+        {
+            return await _mediator.Send(new GetAllChannelListQuery());
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> AddChannel([FromBody]AddEditChannelCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> DeleteChannel([FromBody]int model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return await _mediator.Send(new DeleteChannelCommand
+            {
+                model=model,
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow
+            });
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> GetAllChannelListByMedium([FromBody]int model)
+        {
+            return await _mediator.Send(new GetAllChannelListByMediumQuery
+            {
+                model = model
+            });
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> AddSchedule([FromBody]AddEditScheduleCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> DeleteSchedule([FromBody]int model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return await _mediator.Send(new DeleteScheduleCommand
+            {
+                model = model,
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow
+            });
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> GetAllScheduleList(string text)
+        {
+            return await _mediator.Send(new GetAllScheduleListQuery());
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> FilterScheduleList([FromBody]FilterScheduleListQuery model)
+        {
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> AddPlayoutMinute([FromBody]AddEditPlayoutMinutesCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
     }
-
-    [HttpPost]
-    public async Task<APIResponse> GetAllPolicyScheduleList(string text)
-    {
-      APIResponse apiRespone = null;
-      apiRespone = await _iScheduleService.GetAllPolicyScheduleList();
-      return apiRespone;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> GetScheduleDetailsById([FromBody] int model)
-    {
-      APIResponse apiRespone = null;
-      apiRespone = await _iScheduleService.GetScheduleDetailsById(model);
-      return apiRespone;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> GetChannelById([FromBody]int model)
-    {
-      APIResponse apiResponse = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        apiResponse = await _iMasterPageService.GetChannelById(model, id);
-      }
-      return apiResponse;
-    }
-
-    /// <summary>
-    /// Get Activity Type List
-    /// </summary>
-    /// <returns></returns>
-    [HttpGet]
-    public async Task<APIResponse> GetAllChannelList()
-    {
-      APIResponse apiresponse = await _iMasterPageService.GetAllChannels();
-      return apiresponse;
-    }
-
-    /// <summary>
-    /// Add New Activity Type
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    [HttpPost]
-    public async Task<APIResponse> AddChannel([FromBody]ChannelModel model)
-    {
-      APIResponse apiResponse = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        apiResponse = await _iMasterPageService.AddEditChannel(model, id);
-      }
-      return apiResponse;
-    }
-
-    /// <summary>
-    /// Delete Selected Activity Type
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    [HttpPost]
-    public async Task<APIResponse> DeleteChannel([FromBody]int model)
-    {
-      APIResponse apiRespone = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        apiRespone = await _iMasterPageService.DeleteChannel(model, id);
-      }
-      return apiRespone;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> GetAllChannelListByMedium([FromBody]int model)
-    {
-      APIResponse apiRespone = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        apiRespone = await _iMasterPageService.GetChannelListByMediumId(model);
-      }
-      return apiRespone;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> AddSchedule([FromBody]SchedulerModel model)
-    {
-      APIResponse apiRespone = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        apiRespone = await _iScheduleService.AddEditSchedule(model, id);
-      }
-      return apiRespone;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> DeleteSchedule([FromBody]int model)
-    {
-      APIResponse apiRespone = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        apiRespone = await _iScheduleService.DeleteSchedule(model, id);
-      }
-      return apiRespone;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> GetAllScheduleList(string text)
-    {
-      APIResponse apiRespone = null;
-      apiRespone = await _iScheduleService.GetAllScheduleList();
-      return apiRespone;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> FilterScheduleList([FromBody]FilterSchedulerModel mediumId)
-    {
-      APIResponse apiRespone = null;
-      apiRespone = await _iScheduleService.FilterScheduleList(mediumId);
-      return apiRespone;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> AddPlayoutMinute([FromBody]PlayoutMinutesModel model)
-    {
-      APIResponse apiRespone = null;
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-      if (user != null)
-      {
-        var id = user.Id;
-        apiRespone = await _iScheduleService.AddEditPlayoutMinutes(model, id);
-      }     
-      return apiRespone;
-    }  
-
-  }
 }

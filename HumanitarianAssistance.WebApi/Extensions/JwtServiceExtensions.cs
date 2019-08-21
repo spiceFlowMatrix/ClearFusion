@@ -42,8 +42,6 @@ namespace HumanitarianAssistance.WebApi.Extensions
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
                     RequireExpirationTime = true,
                     ClockSkew = TimeSpan.Zero
-
-
                 };
             });
 

@@ -1,10 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
-
-namespace HumanitarianAssistance.Common.Enums
+﻿namespace HumanitarianAssistance.Common.Enums
 {
+    public enum SwaggerGrouping
+    {
+        Accounting = 1,
+        Configuration = 2,
+        Hr = 3,
+        Store = 4,
+        Project = 5,
+        Marketing = 6
+    }
+
+
 
     public enum BalanceType
     {
@@ -12,7 +18,7 @@ namespace HumanitarianAssistance.Common.Enums
         DR = 2,
         CR = 3
     }
-    public enum AccountType
+    public enum AccountTypeEnum
     {
 
         CapitalAssetsWrittenOff = 1,
@@ -98,16 +104,11 @@ namespace HumanitarianAssistance.Common.Enums
         EmployeeUpdate = 5,
         EmployeeDeleted = 6
     }
-    public enum AssetType
-    {
-        Cash = 1,
-        InKind = 2
-    }
 
     public enum Currency
     {
-        AFG = 1, 
-        EUR = 2, 
+        AFG = 1,
+        EUR = 2,
         PKR = 3,
         USD = 4
     }
@@ -169,21 +170,6 @@ namespace HumanitarianAssistance.Common.Enums
         SubLevel = 999,
         InputLevel = 999999
     }
-    public enum ProposalDocumentType
-    {
-        [Description("EOI")]
-        edifile,
-        [Description("BUDGET")]
-        budgetfile,
-        [Description("CONCEPT")]
-        conceptfile,
-        [Description("PRESENTATION")]
-        presentationfile
-        //edifile = "EOI",
-        //budgetfile = 'BUDGET',
-        //conceptfile = 'CONCEPT',
-        //presentationfile = 'PRESENTATION'
-    }
 
     public struct Weekdays
     {
@@ -196,16 +182,4 @@ namespace HumanitarianAssistance.Common.Enums
         public const string Sunday = "Sunday";
     }
 
-    public enum FileSourceEntityTypes
-    {
-        Voucher = 1,
-        Account = 2,
-        ProjectDetail = 3,
-        ProjectProposal = 4,
-        ProjectProposalSupportingDoc = 5,
-        ProjectActivityImplementation = 6,
-        ProjectActivityMonitoring = 7,
-        ProjectActivityPlanning = 8,
-        DonorDetail = 9,
-    }
 }

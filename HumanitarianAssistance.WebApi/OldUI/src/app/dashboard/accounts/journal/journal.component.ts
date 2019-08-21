@@ -260,7 +260,7 @@ export class JournalComponent implements OnInit {
     this.accountservice
       .GetAllJournalDetails(
         this.setting.getBaseUrl() +
-          GLOBAL.API_AccountReports_GetJournalVoucherDetailsByCondition,
+          GLOBAL.API_AccountReports_GetJournalVoucherDetails,
         this.journalFilter
       )
       .subscribe(
@@ -320,25 +320,29 @@ export class JournalComponent implements OnInit {
 
           if (
             data.StatusCode === 200 &&
-            data.data.JournalDetailList.length > 0
+            data.data.JournalDetailList != null
           ) {
-            data.data.JournalDetailList.forEach(element => {
-              this.journalDropdown.push({
-                JournalCode: element.JournalCode,
-                JournalName: element.JournalName
+            if (
+              data.data.JournalDetailList.length > 0
+            ) {
+              data.data.JournalDetailList.forEach(element => {
+                this.journalDropdown.push({
+                  JournalCode: element.JournalCode,
+                  JournalName: element.JournalName
+                });
               });
-            });
 
-            this.selectedJournal = [];
-            const JournalCodes = [];
-            this.journalDropdown.forEach(x => {
-              JournalCodes.push(x.JournalCode);
-            });
+              this.selectedJournal = [];
+              const JournalCodes = [];
+              this.journalDropdown.forEach(x => {
+                JournalCodes.push(x.JournalCode);
+              });
 
-            this.selectedJournal = JournalCodes;
+              this.selectedJournal = JournalCodes;
 
-            // Initial Page Loading
-            this.intialFlagValue += 1;
+              // Initial Page Loading
+              this.intialFlagValue += 1;
+            }
           }
         },
         error => {
@@ -439,9 +443,9 @@ export class JournalComponent implements OnInit {
   }
   //#endregion
   customizeValue(data: any) {
-    if(data.value != 0)
-    return parseFloat(data.value).toFixed(4);
-}
+    if (data.value != 0)
+      return parseFloat(data.value).toFixed(4);
+  }
 }
 
 class JournalModel {

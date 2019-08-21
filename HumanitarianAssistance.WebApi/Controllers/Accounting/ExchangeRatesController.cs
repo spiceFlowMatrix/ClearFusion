@@ -1,79 +1,62 @@
-﻿using DataAccess.DbEntities;
-using HumanitarianAssistance.Service.APIResponses;
-using HumanitarianAssistance.Service.interfaces;
-using HumanitarianAssistance.ViewModels.Models.AccountingNew;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
+using HumanitarianAssistance.Application.Accounting.Commands.Create;
+using HumanitarianAssistance.Application.Accounting.Commands.Delete;
+using HumanitarianAssistance.Application.Accounting.Commands.Update;
+using HumanitarianAssistance.Application.Accounting.Models;
+using HumanitarianAssistance.Application.Accounting.Queries;
+using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Enums;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HumanitarianAssistance.WebApi.Controllers.Accounting
 {
     [Produces("application/json")]
     [Route("api/ExchangeRates/[Action]/")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class ExchangeRatesController : Controller
+    [ApiExplorerSettings(GroupName = nameof(SwaggerGrouping.Accounting))]
+    [Authorize]
+    public class ExchangeRatesController : BaseController
     {
-        private readonly UserManager<AppUser> _userManager;
-        private IExchangeRate _iExchangeRate;
 
-        public ExchangeRatesController(
-            UserManager<AppUser> userManager,
-            IExchangeRate iExchangeRate
-        )
+        [HttpPost]
+        public async Task<ApiResponse> GetSavedExchangeRates([FromBody] GetSavedExchangeRatesQuery filter)
         {
-            _userManager = userManager;
-            _iExchangeRate = iExchangeRate;
+            return await _mediator.Send(filter);
         }
 
         [HttpPost]
-        public APIResponse GetSavedExchangeRates([FromBody] ExchangeRateVerificationFilter filter)
+        public async Task<ApiResponse> SaveSystemGeneratedExchangeRates([FromBody] List<GenerateExchangeRateModel> model)
         {
-            APIResponse response = _iExchangeRate.GetSavedExchangeRates(filter);
-            return response;
+            return await _mediator.Send(new AddExchangeRateCommand
+            {
+                GenerateExchangeRateModel = model
+            });
         }
 
         [HttpPost]
-        public async Task<APIResponse> SaveSystemGeneratedExchangeRates([FromBody] List<GenerateExchangeRateViewModel> exchangeRateList)
+        public async Task<ApiResponse> GetExchangeRatesDetail([FromBody] GetExchangeRatesDetailQuery model)
         {
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            APIResponse response = await _iExchangeRate.GenerateExchangeRates(exchangeRateList, user.Id);
-            return response;
+            return await _mediator.Send(model);
         }
 
         [HttpPost]
-        public async Task<APIResponse> GetExchangeRatesDetail([FromBody] ExchangeRateDetailModel exchangeRateDetailModel)
+        public async Task<ApiResponse> SaveExchangeRatesForAllOffices([FromBody] SaveExchangeRatesForAllOfficesCommand officeExchangeRateViewModel)
         {
-            APIResponse response = await _iExchangeRate.GetExchangeRatesDetail(exchangeRateDetailModel);
-            return response;
+            return await _mediator.Send(officeExchangeRateViewModel);
         }
 
         [HttpPost]
-        public async Task<APIResponse> SaveExchangeRatesForAllOffices([FromBody] OfficeExchangeRateViewModel officeExchangeRateViewModel)
+        public async Task<ApiResponse> VerifyExchangeRates([FromBody] DateTime model)
         {
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            APIResponse response = await _iExchangeRate.SaveExchangeRatesForOffice(officeExchangeRateViewModel, user.Id);
-            return response;
+            return await _mediator.Send(new VerifyExchangeRatesCommand { ExchangeRateDate = model });
         }
 
         [HttpPost]
-        public async Task<APIResponse> VerifyExchangeRates([FromBody] DateTime ExchangeRateDate)
+        public async Task<ApiResponse> DeleteExchangeRates([FromBody] DateTime model)
         {
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            APIResponse response = await _iExchangeRate.VerifyExchangeRates(ExchangeRateDate, user.Id);
-            return response;
-        }
-
-        [HttpPost]
-        public async Task<APIResponse> DeleteExchangeRates([FromBody] DateTime ExchangeRateDate)
-        {
-            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            APIResponse response = await _iExchangeRate.DeleteExchangeRates(ExchangeRateDate, user.Id);
-            return response;
+            return await _mediator.Send(new DeleteExchangeRatesCommand { ExchangeRateDate = model });
         }
     }
 }

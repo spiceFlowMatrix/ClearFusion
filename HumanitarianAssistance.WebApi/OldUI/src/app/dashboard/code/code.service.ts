@@ -297,16 +297,12 @@ export class CurrencyData {
   CurrencyId: any;
   CurrencyCode: string;
   CurrencyName: string;
-  CurrencyRate: DoubleRange;
-  Status: boolean;
 }
 
 const currencydata: CurrencyData = {
   CurrencyId: '',
   CurrencyCode: '',
-  CurrencyName: '',
-  CurrencyRate: null,
-  Status: false
+  CurrencyName: ''
 };
 
 export class OfficeData {
@@ -451,7 +447,7 @@ const departmentdata: Department = {
 
 @Injectable()
 export class CodeService {
-  constructor(private http: Http) {}
+  constructor(private http: Http) { }
 
   getHeadType(): HeadType[] {
     return headTypeDropdown;
@@ -522,7 +518,6 @@ export class CodeService {
     currencydata.CurrencyId = '';
     currencydata.CurrencyCode = '';
     currencydata.CurrencyName = '';
-    currencydata.CurrencyRate = null;
     return currencydata;
   }
 
@@ -668,10 +663,10 @@ export class CodeService {
     return this.http
       .get(
         url +
-          '?financialyearid=' +
-          FinancialYearID +
-          '&currencyid=' +
-          CurrencyId,
+        '?financialyearid=' +
+        FinancialYearID +
+        '&currencyid=' +
+        CurrencyId,
         options
       )
       .map((response: Response) => {
@@ -750,10 +745,10 @@ export class CodeService {
     return this.http
       .get(
         url +
-          '?officeId=' +
-          officeId +
-          '&EmployeeContractTypeId=' +
-          selectedTab,
+        '?officeId=' +
+        officeId +
+        '&EmployeeContractTypeId=' +
+        selectedTab,
         options
       )
       .map((response: Response) => {
@@ -823,12 +818,12 @@ export class CodeService {
     return this.http
       .get(
         url +
-          '?projectId=' +
-          projectId +
-          '&budgetlineid=' +
-          budgetlineid +
-          '&receivableId=' +
-          receivableId,
+        '?projectId=' +
+        projectId +
+        '&budgetlineid=' +
+        budgetlineid +
+        '&receivableId=' +
+        receivableId,
         options
       )
       .map((response: Response) => {
@@ -855,12 +850,12 @@ export class CodeService {
     return this.http
       .get(
         url +
-          '?projectId=' +
-          projectId +
-          '&budgetLineId=' +
-          budgetlineid +
-          '&payableId=' +
-          payableId,
+        '?projectId=' +
+        projectId +
+        '&budgetLineId=' +
+        budgetlineid +
+        '&payableId=' +
+        payableId,
         options
       )
       .map((response: Response) => {
@@ -881,13 +876,10 @@ export class CodeService {
     Myheaders.append('Content-Type', 'application/json');
     const options = new RequestOptions({ headers: Myheaders });
 
-    const a = new RequestOptions();
     const b = {
       CurrencyId: model.CurrencyId,
       CurrencyCode: model.CurrencyCode,
-      CurrencyName: model.CurrencyName,
-      CurrencyRate: model.CurrencyRate,
-      Status: model.Status
+      CurrencyName: model.CurrencyName
     };
 
     return this.http
@@ -1002,7 +994,7 @@ export class CodeService {
     };
 
     return this.http
-      .post(url, JSON.stringify(b), options)
+      .post(url, b, options)
       .map((response: Response) => {
         const journal = response.json();
         if (journal) {
@@ -1365,7 +1357,7 @@ export class CodeService {
   }
 
   AddEditProfessionDetail(url: string, model: Profession) {
-     
+
     const Myheaders = new Headers();
     Myheaders.append(
       'Authorization',
@@ -1502,7 +1494,7 @@ export class CodeService {
       })
       .catch(this.handleError);
   }
-  
+
   private handleError(error: Response) {
     return Observable.throw(error.json().error || 'Server error');
   }

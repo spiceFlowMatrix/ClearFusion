@@ -102,53 +102,6 @@ export class AppraisalQuestionsComponent implements OnInit {
   }
   //#endregion
 
-  //#region "Get all Office Details"
-  // getOfficeCodeList() {
-  //   this.codeService
-  //     .GetAllCodeList(
-  //       this.setting.getBaseUrl() + GLOBAL.API_OfficeCode_GetAllOfficeDetails
-  //     )
-  //     .subscribe(
-  //       data => {
-  //         const AllOffices = localStorage.getItem('ALLOFFICES').split(',');
-  //         this.officecodelist = [];
-  //         if (
-  //           data.StatusCode === 200 &&
-  //           data.data.OfficeDetailsList.length > 0
-  //         ) {
-  //           data.data.OfficeDetailsList.forEach(element => {
-  //             const officeFound = AllOffices.indexOf('' + element.OfficeId);
-  //             if (officeFound !== -1) {
-  //               this.officecodelist.push({
-  //                 OfficeId: element.OfficeId,
-  //                 OfficeCode: element.OfficeCode,
-  //                 OfficeName: element.OfficeName,
-  //                 SupervisorName: element.SupervisorName,
-  //                 PhoneNo: element.PhoneNo,
-  //                 FaxNo: element.FaxNo,
-  //                 OfficeKey: element.OfficeKey
-  //               });
-  //             }
-  //           });
-  //           // tslint:disable-next-line:radix
-  //           this.selectedOffice = this.selectedOffice == undefined? this.officecodelist[0].OfficeId: this.selectedOffice;
-  //           this.getAllAppraisalQuestions();
-  //         }
-  //       },
-  //       error => {
-  //         if (error.StatusCode === 500) {
-  //           this.toastr.error('Internal Server Error....');
-  //         } else if (error.StatusCode === 401) {
-  //           this.toastr.error('Unauthorized Access Error....');
-  //         } else if (error.StatusCode === 403) {
-  //           this.toastr.error('Forbidden Error....');
-  //         } else {
-  //         }
-  //       }
-  //     );
-  // }
-  //#endregion
-
   //#region "Add Appraisal Questions"
   AddAppraisalQuestions(model: appraisalQuestionsModel) {
     const questionModel: appraisalQuestionsModel = {
