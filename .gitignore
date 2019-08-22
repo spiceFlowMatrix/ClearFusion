@@ -258,6 +258,7 @@ paket-files/
 # CodeRush
 .cr/
 
+
 obj/*
 bin/*
 */obj/*
@@ -273,6 +274,7 @@ HumanitarianAssistance/.sonarqube/
 HumanitarianAssistance.WebApi/OldUI/package-lock.json
 HumanitarianAssistance.WebApi/NewUI/package-lock.json
 /.vscode
+
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
