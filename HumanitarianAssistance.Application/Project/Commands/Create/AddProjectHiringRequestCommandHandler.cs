@@ -74,6 +74,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                             Unit = request.TotalVacancies.Value
                         };
                         await _dbContext.JobHiringDetails.AddAsync(jobDetail);
+                        await _dbContext.SaveChangesAsync();
                         if (jobDetail.JobId != 0)
                         {
                             jobDetail.JobCode = "JC" + String.Format("{0:D4}", jobDetail.JobId);

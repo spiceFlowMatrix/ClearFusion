@@ -44,13 +44,13 @@ namespace HumanitarianAssistance.Application.HR.Queries
                               where ept.EmployeeID == request.EmployeeId && ept.IsDeleted == false && financialYear.Select(x=> x.StartDate.Year).Contains(ept.PayrollYear.Value)  && ept.OfficeId == request.OfficeId && ept.IsApproved == true
                               select new
                               {
-                                  EmployeeName = ed.EmployeeName,
-                                  CurrentAddress = ed.CurrentAddress,
-                                  Phone = ed.Phone,
-                                  Email = ed.Email,
+                                  ed.EmployeeName,
+                                  ed.CurrentAddress,
+                                  ed.Phone,
+                                  ed.Email,
                                   Year = ept.PayrollYear,
-                                  NetSalary = ept.NetSalary,
-                                  SalaryTax = ept.SalaryTax,
+                                  ept.NetSalary,
+                                  ept.SalaryTax,
                                   EmployeeTaxpayerIdentification = epd.TinNumber
                               }).ToList();
 

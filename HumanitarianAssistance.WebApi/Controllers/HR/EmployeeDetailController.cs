@@ -67,7 +67,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
 
         public async Task<ApiResponse> GetAllEmployeeHistoryOutsideCountry([FromQuery]int EmployeeId)
         {
-            return await _mediator.Send(new GetEmployeeHistoryOutsideOrganizationQuery { EmployeeId = EmployeeId });
+            return await _mediator.Send(new GetAllEmployeeHistoryOutsideCountryQuery { EmployeeId = EmployeeId });
         }
 
         [HttpPost]
@@ -236,7 +236,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpGet]
         public async Task<ApiResponse> GetAllEmployeeSalaryBudgets([FromQuery]int EmployeeId)
         {
-            return await _mediator.Send(new GetAllEmployeeOtherSkillsQuery { EmployeeId = EmployeeId });
+            return await _mediator.Send(new GetAllEmployeeSalaryBudgetsQuery { EmployeeId = EmployeeId });
         }
         [HttpPost]
         public async Task<ApiResponse> AddEmployeeSalaryBudgets([FromBody]AddEmployeeSalaryBudgetsCommand model)
@@ -315,7 +315,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpGet]
         public async Task<ApiResponse> GetAllEmployeeSalaryAnalyticalInfo([FromQuery]int EmployeeId)
         {
-            return await _mediator.Send(new GetAllEmployeeEducationsQuery { EmployeeId = EmployeeId });
+            return await _mediator.Send(new GetSalaryAnalyticalInfoQuery { EmployeeId = EmployeeId });
         }
 
         [HttpPost]
@@ -376,7 +376,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpGet]
         public async Task<ApiResponse> GetEmployeeHealthQuestion([FromQuery]int EmployeeId)
         {
-            return await _mediator.Send(new GetEmployeeHealthInfoQuery { EmployeeId = EmployeeId });
+            return await _mediator.Send(new GetEmployeeHealthQuestionQuery { EmployeeId = EmployeeId });
         }
 
         [HttpPost]
@@ -517,7 +517,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         }
 
         [HttpDelete]
-        public async Task<ApiResponse> DeleteEmployeeHistoryDetail([FromBody] int HistoryId)
+        public async Task<ApiResponse> DeleteEmployeeHistoryDetail(int HistoryId)
         {
             DeleteEmployeeHistoryCommand model = new DeleteEmployeeHistoryCommand();
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;

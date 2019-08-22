@@ -351,6 +351,7 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public double? TotalGrossSalary { get; set; }
         public double? TotalDeductions { get; set; }
         public double? TotalAllowances { get; set; }
+        public List<EmployeeHealthQuestion> EmployeeHealthQuestionList { get; set; }
 
         public IList<InterviewScheduleModel> InterviewApprovedEmployeeList { get; set; }
 

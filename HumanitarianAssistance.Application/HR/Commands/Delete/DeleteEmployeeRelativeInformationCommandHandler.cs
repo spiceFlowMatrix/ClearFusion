@@ -33,7 +33,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Delete
                     existRecord.IsDeleted = true;
                     existRecord.ModifiedById = request.ModifiedById;
                     existRecord.ModifiedDate = DateTime.Now;
-                    _mapper.Map(request, existRecord);
+                    //_mapper.Map(request, existRecord);
                     await _dbContext.SaveChangesAsync();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";

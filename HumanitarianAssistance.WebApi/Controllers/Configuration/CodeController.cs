@@ -399,7 +399,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
 
         #region "GetAllProvinceDetails"
         [HttpGet]
-        public async Task<ApiResponse> GetAllProvinceDetails([FromBody] int countryId)
+        public async Task<ApiResponse> GetAllProvinceDetails(int countryId)
         {
 
             return await _mediator.Send(new GetAllProvinceDetailsQuery { CountryId = countryId });
@@ -674,7 +674,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
             model.ModifiedDate = DateTime.UtcNow;
             return await _mediator.Send(model);
         }
-        [HttpPost]
+        [HttpGet]
         public async Task<ApiResponse> GetAllEmployeeAppraisalMoreDetails([FromQuery] int OfficeId)
         {
             return await _mediator.Send(new GetAllEmployeeAppraisalMoreDetailsQuery { OfficeId = OfficeId });

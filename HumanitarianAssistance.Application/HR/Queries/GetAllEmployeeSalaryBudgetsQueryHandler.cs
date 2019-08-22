@@ -10,7 +10,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 namespace HumanitarianAssistance.Application.HR.Queries
 {
-    public class GetAllEmployeeSalaryBudgetsQueryHandler : IRequestHandler<GetAllEmployeeOtherSkillsQuery, ApiResponse>
+    public class GetAllEmployeeSalaryBudgetsQueryHandler : IRequestHandler<GetAllEmployeeSalaryBudgetsQuery, ApiResponse>
     {
         private HumanitarianAssistanceDbContext _dbContext;
 
@@ -19,7 +19,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
             _dbContext = dbContext;
         }
 
-        public async Task<ApiResponse> Handle(GetAllEmployeeOtherSkillsQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Handle(GetAllEmployeeSalaryBudgetsQuery request, CancellationToken cancellationToken)
         {
             ApiResponse response = new ApiResponse();
             try

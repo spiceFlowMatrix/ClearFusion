@@ -33,20 +33,22 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                 obj.IsDeleted = false;
                 await _dbContext.EmployeeDetail.AddAsync(obj);
                 await _dbContext.SaveChangesAsync();
-                var OfficeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.OfficeId == request.OfficeId);
-                var emp = await _dbContext.EmployeeDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.EmployeeID == obj.EmployeeID);
+                OfficeDetail OfficeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.OfficeId == request.OfficeId && x.IsDeleted == false);
+                EmployeeDetail emp = await _dbContext.EmployeeDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.EmployeeID == obj.EmployeeID);
                 emp.EmployeeCode = "E" + obj.EmployeeID;
                  _dbContext.EmployeeDetail.Update(emp);
                 await _dbContext.SaveChangesAsync();
-                EmployeeProfessionalDetailModel empprofessional = new EmployeeProfessionalDetailModel();
-                empprofessional.EmployeeId = obj.EmployeeID;
-                empprofessional.EmployeeTypeId = request.EmployeeTypeId;
-                empprofessional.OfficeId = request.OfficeId;
-                empprofessional.CreatedById = request.CreatedById;
-                empprofessional.CreatedDate = request.CreatedDate;
-                empprofessional.IsDeleted = request.IsDeleted;
-                empprofessional.ProfessionId = request.ProfessionId;
-                empprofessional.TinNumber = request.TinNumber;
+                EmployeeProfessionalDetailModel empprofessional = new EmployeeProfessionalDetailModel
+                {
+                    EmployeeId = obj.EmployeeID,
+                    EmployeeTypeId = request.EmployeeTypeId,
+                    OfficeId = request.OfficeId,
+                    CreatedById = request.CreatedById,
+                    CreatedDate = request.CreatedDate,
+                    IsDeleted = request.IsDeleted,
+                    ProfessionId = request.ProfessionId,
+                    TinNumber = request.TinNumber
+                };
                 EmployeeProfessionalDetail obj1 = _mapper.Map<EmployeeProfessionalDetail>(empprofessional);
                 await _dbContext.EmployeeProfessionalDetail.AddAsync(obj1);
                 await _dbContext.SaveChangesAsync();

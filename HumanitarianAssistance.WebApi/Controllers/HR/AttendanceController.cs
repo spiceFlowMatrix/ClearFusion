@@ -26,7 +26,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpPost]
         public async Task<ApiResponse> GetAllPayrollMonthlyHourDetail([FromBody] GetPayrollMonthlyHourQuery model)
         {
-            return await _mediator.Send(new GetPayrollMonthlyHourQuery());
+            return await _mediator.Send(model);
         }
 
         [HttpPost]
@@ -144,7 +144,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpGet]
         public async Task<ApiResponse> GetEmployeeApplyLeaveDetailById(int employeeid)
         {
-            return await _mediator.Send(new GetEmployeeAssignLeaveQuery { EmployeeId = employeeid });
+            return await _mediator.Send(new GetEmployeeAppliedLeaveByIdQuery { EmployeeId = employeeid });
         }
 
         [HttpGet]
@@ -171,7 +171,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpPost]
         public async Task<object> RejectEmployeeLeave([FromBody]List<ApproveLeaveModel> model)
         {
-            ApproveEmployeeLeaveCommand command = new ApproveEmployeeLeaveCommand();
+            RejectEmployeeLeaveCommand command = new RejectEmployeeLeaveCommand();
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             command.AppliedLeave = model;

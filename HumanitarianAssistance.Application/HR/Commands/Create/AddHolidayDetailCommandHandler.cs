@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Application.HR.Commands.Create
 {
-    public class AddHolidayDetailCommandHandler: BaseModel, IRequest<ApiResponse>
+    public class AddHolidayDetailCommandHandler: BaseModel, IRequestHandler<AddHolidayDetailCommand,ApiResponse>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IMapper _mapper;

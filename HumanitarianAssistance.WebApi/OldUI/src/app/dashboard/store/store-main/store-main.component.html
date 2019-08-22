@@ -7,9 +7,10 @@
             <h3 class="page-headin">Store</h3>
         </div>
         <div class="col-sm-4 main-heading clearfix" style="padding-top: 16px;">
-            <dx-select-box [dataSource]="officecodelist" placeholder="Choose Office" (onItemClick)="onOfficeSelected($event.itemData.OfficeId)"
-            displayExpr="OfficeName" valueExpr="OfficeId" [value]="selectedOffice" [searchEnabled]="true">
-        </dx-select-box>
+            <span class="margin-top">Office </span>
+            <dx-select-box  class="margin-lft" [dataSource]="officecodelist" placeholder="Choose Office" (onItemClick)="onOfficeSelected($event.itemData.OfficeId)"
+                           displayExpr="OfficeName" valueExpr="OfficeId" [value]="selectedOffice" [searchEnabled]="true">
+            </dx-select-box>
         </div>
         
       </div>

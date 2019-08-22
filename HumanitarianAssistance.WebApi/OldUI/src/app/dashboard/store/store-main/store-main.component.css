@@ -9,3 +9,5 @@
 
 .text-ellip .col-sm-10 {overflow: hidden; text-overflow: ellipsis;}
 .store-card-left-bx .text-ellip { overflow: hidden; text-overflow: ellipsis;}
+.margin-top { margin-top: 8px; position: fixed;}
+.margin-lft {margin-left: 45px;}

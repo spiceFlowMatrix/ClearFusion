@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Application.HR.Queries
 {
-    public class GetSalaryByEmployeeIdQueryHandler: BaseModel, IRequest<ApiResponse>
+    public class GetSalaryByEmployeeIdQueryHandler: BaseModel, IRequestHandler<GetSalaryByEmployeeIdQuery,ApiResponse>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         public GetSalaryByEmployeeIdQueryHandler(HumanitarianAssistanceDbContext dbContext)
