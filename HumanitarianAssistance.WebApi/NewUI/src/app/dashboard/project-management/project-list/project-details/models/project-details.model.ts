@@ -201,6 +201,25 @@ export interface CurrencyModel {
   CurrencyId?: number;
   CurrencyCode?: string;
 }
+
+export interface ProposalFileDetailsModel {
+  ProjectProposaldetailId?: number;
+  FolderName?: string;
+  ProposalFileName?: string;
+  ProjectId ?: number;
+  ProposalWebLink?: string;
+  FileType?: string;
+  ProposalExtType?: string;
+  ProposalStartDate?: any;
+  ProposalBudget?: string;
+  ProposalDueDate?: any;
+  ProjectAssignTo?: string;
+  IsProposalAccept?: string;
+  CurrencyId?: number;
+  UserId?: number;
+  CreatedDate?: any;
+}
+
 export interface ProposalDocModel {
   ProjectId?: number;
   UserId?: number;
@@ -515,4 +534,7 @@ export interface IProjectOtherDetailPdf {
     Security?: string;
     SecurityConsideration?: string;
     SecurityRemarks?: string;
+  }
+  export interface FileTypes {
+    value: string;
   }

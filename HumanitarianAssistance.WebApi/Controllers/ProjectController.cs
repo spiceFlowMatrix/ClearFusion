@@ -1778,7 +1778,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
                 string fileName = Request.Form.Files[0].FileName;
 
                 string ext = System.IO.Path.GetExtension(fileName).ToLower();
-                if (ext == ".doc" || ext == ".docx")
+                if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
                 {
                     var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
                     if (user != null)

@@ -2510,7 +2510,7 @@ namespace HumanitarianAssistance.Service.Classes
                     {
                         // --------------------code to get response credential from environment variables.
                         string obj = await GCBucket.UploadOtherProposalDocuments(BucketName, folderWithProposalFile, file, fileName, ext);
-                        proposaldata = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == projectid && x.IsDeleted == false);
+                        proposaldata = await _uow.GetDbContext().ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == projectid && x.ProposalFileName == fileName && x.IsDeleted == false);
                         Console.WriteLine($"Final bucket response : {obj}");
 
                         if (obj != null)
@@ -2523,10 +2523,11 @@ namespace HumanitarianAssistance.Service.Classes
                                 proposaldata.ProposalWebLink = obj;
                                 proposaldata.ProjectId = projectid;
                                 proposaldata.IsDeleted = false;
-                                proposaldata.ProposalExtType = ".docx";
+                                proposaldata.ProposalExtType = ext;
                                 proposaldata.CreatedById = userid;
                                 proposaldata.CreatedDate = DateTime.UtcNow;
                                 proposaldata.ProposalStartDate = DateTime.UtcNow;
+                                proposaldata.EDIFileExtType = ProposalType;
                                 await _uow.ProjectProposalDetailRepository.AddAsyn(proposaldata);
                             }
                             else
@@ -2536,10 +2537,11 @@ namespace HumanitarianAssistance.Service.Classes
                                 proposaldata.ProposalWebLink = obj;
                                 proposaldata.ProjectId = projectid;
                                 proposaldata.IsDeleted = false;
-                                proposaldata.ProposalExtType = ".docx";
+                                proposaldata.ProposalExtType = ext;
                                 proposaldata.ModifiedDate = DateTime.UtcNow;
                                 proposaldata.ModifiedById = userid;
                                 proposaldata.ProposalStartDate = DateTime.UtcNow;
+                                proposaldata.EDIFileExtType = ProposalType;
                                 await _uow.ProjectProposalDetailRepository.UpdateAsyn(proposaldata);
                             }
                         }
@@ -3032,46 +3034,35 @@ namespace HumanitarianAssistance.Service.Classes
         public APIResponse GetProjectproposalsById(long Projectid)
         {
             APIResponse response = new APIResponse();
-            ProjectProposalModel obj = new ProjectProposalModel();
             try
             {
-                var detail = _uow.GetDbContext().ProjectProposalDetail.FirstOrDefault(x => x.ProjectId == Projectid && x.IsDeleted == false);
                 var Projectdetail = _uow.GetDbContext().ApproveProjectDetails.FirstOrDefault(x => x.ProjectId == Projectid && x.IsDeleted == false);
-                if (detail != null)
-                {
+                List<ProjectProposalModelNew> obj = new List<ProjectProposalModelNew>();                
+                obj = (from d in _uow.GetDbContext().ProjectProposalDetail
+                       where d.ProjectId == Projectid && d.IsDeleted == false
+                       select new ProjectProposalModelNew
+                       {
+                           ProjectProposaldetailId = d.ProjectProposaldetailId,
+                           FolderName = d.FolderName,
+                           ProposalFileName = d.ProposalFileName,
+                           ProjectId = d.ProjectId,
+                           ProposalWebLink = d.ProposalWebLink,
+                           FileType = d.EDIFileExtType,
+                           ProposalExtType = d.ProposalExtType,
+                           ProposalStartDate = d.ProposalStartDate,
+                           ProposalBudget = d.ProposalBudget,
+                           ProposalDueDate = d.ProposalDueDate,
+                           ProjectAssignTo = d.ProjectAssignTo,
+                           IsProposalAccept = d.IsProposalAccept,
+                           CurrencyId = d.CurrencyId,
+                           UserId = d.UserId,
+                           CreatedDate = d.CreatedDate
+                       }).ToList();
 
-                    obj.ProjectProposaldetailId = detail.ProjectProposaldetailId;
-                    obj.FolderName = detail.FolderName;
-                    obj.FolderId = detail.FolderId;
-                    obj.ProposalFileName = detail.ProposalFileName;
-                    obj.ProjectId = detail.ProjectId;
-                    obj.ProposalFileId = detail.ProposalFileId;
-                    obj.EDIFileName = detail.EDIFileName;
-                    obj.EdiFileId = detail.EdiFileId;
-                    obj.BudgetFileName = detail.BudgetFileName;
-                    obj.BudgetFileId = detail.BudgetFileId;
-                    obj.ConceptFileName = detail.ConceptFileName;
-                    obj.ConceptFileId = detail.ConceptFileId;
-                    obj.PresentationFileName = detail.PresentationFileName;
-                    obj.ProposalWebLink = detail.ProposalWebLink;
-                    obj.EDIFileWebLink = detail.EDIFileWebLink;
-                    obj.BudgetFileWebLink = detail.BudgetFileWebLink;
-                    obj.ConceptFileWebLink = detail.ConceptFileWebLink;
-                    obj.PresentationFileWebLink = detail.PresentationFileWebLink;
-                    obj.ProposalExtType = detail.ProposalExtType;
-                    obj.EDIFileExtType = detail.EDIFileExtType;
-                    obj.BudgetFileExtType = detail.BudgetFileExtType;
-                    obj.ConceptFileExtType = detail.ConceptFileExtType;
-                    obj.PresentationExtType = detail.PresentationExtType;
-                    obj.ProposalStartDate = detail.ProposalStartDate;
-                    obj.ProposalBudget = detail.ProposalBudget;
-                    obj.ProposalDueDate = detail.ProposalDueDate;
-                    obj.ProjectAssignTo = detail.ProjectAssignTo;
-                    obj.IsProposalAccept = detail.IsProposalAccept;
-                    obj.CurrencyId = detail.CurrencyId;
-                    obj.UserId = detail.UserId;
-                    obj.IsApproved = Projectdetail?.IsApproved;
-                    response.data.ProjectProposalModel = obj;
+                //Projectdetail?.IsApproved;
+                if (obj != null)
+                {
+                    response.data.ProjectProposalModelNew = obj;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
@@ -3382,14 +3373,14 @@ namespace HumanitarianAssistance.Service.Classes
 
             return response;
         }
-        public  async Task<APIResponse> AddEditEligibilityCriteriaDetail(EligibilityCriteriaDetailModel model, string UserId)
+        public async Task<APIResponse> AddEditEligibilityCriteriaDetail(EligibilityCriteriaDetailModel model, string UserId)
         {
             APIResponse response = new APIResponse();
             EligibilityCriteriaDetail _detail = new EligibilityCriteriaDetail();
             try
             {
-                _detail =await _uow.GetDbContext().EligibilityCriteriaDetail.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId &&
-                                                                                            x.IsDeleted == false);
+                _detail = await _uow.GetDbContext().EligibilityCriteriaDetail.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId &&
+                                                                                             x.IsDeleted == false);
                 if (_detail == null)
                 {
                     _detail = new EligibilityCriteriaDetail
@@ -3402,7 +3393,7 @@ namespace HumanitarianAssistance.Service.Classes
                         CreatedById = UserId,
                         CreatedDate = DateTime.UtcNow
                     };
-                  await  _uow.EligibilityCriteriaDetailRepository.AddAsyn(_detail);
+                    await _uow.EligibilityCriteriaDetailRepository.AddAsyn(_detail);
                 }
                 else
                 {
@@ -3471,7 +3462,7 @@ namespace HumanitarianAssistance.Service.Classes
                         CreatedById = UserId,
                         CreatedDate = DateTime.UtcNow
                     };
-                   await _uow.FeasibilityCriteriaDetailRepository.AddAsyn(_detail);
+                    await _uow.FeasibilityCriteriaDetailRepository.AddAsyn(_detail);
                 }
                 else
                 {
@@ -3504,7 +3495,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.UtcNow;
-                   await  _uow.FeasibilityCriteriaDetailRepository.UpdateAsyn(_detail);
+                    await _uow.FeasibilityCriteriaDetailRepository.UpdateAsyn(_detail);
                     _uow.GetDbContext().SaveChanges();
                 }
                 response.StatusCode = StaticResource.successStatusCode;
@@ -3541,9 +3532,9 @@ namespace HumanitarianAssistance.Service.Classes
                      from financial in fi.DefaultIfEmpty()
                      join risk in _uow.GetDbContext().RiskCriteriaDetail on obj.ProjectId equals risk.ProjectId into ri
                      from risk in ri.DefaultIfEmpty()
-                      join currency in _uow.GetDbContext().ProjectProposalDetail on obj.ProjectId equals currency.ProjectId into cr
+                     join currency in _uow.GetDbContext().ProjectProposalDetail on obj.ProjectId equals currency.ProjectId into cr
                      from currency in cr.DefaultIfEmpty()
-                     
+
 
                      select new CriteriaEveluationModel
                      {
@@ -3693,7 +3684,7 @@ namespace HumanitarianAssistance.Service.Classes
                          Ethnicity = risk.Ethnicity,
                          Culture = risk.Culture,
                          ReligiousBeliefs = risk.ReligiousBeliefs,
-                         CurrencyId =  currency.CurrencyId,
+                         CurrencyId = currency.CurrencyId,
 
                          //ProjectSelectionId = selected.ProjectSelectionId,
 
@@ -3808,7 +3799,7 @@ namespace HumanitarianAssistance.Service.Classes
                         CreatedById = UserId,
                         CreatedDate = DateTime.UtcNow
                     };
-                   await _uow.FinancialCriteriaDetailRepository.AddAsyn(_detail);
+                    await _uow.FinancialCriteriaDetailRepository.AddAsyn(_detail);
                 }
                 else
                 {
@@ -3924,7 +3915,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.ModifiedDate = DateTime.UtcNow;
                     await _uow.RiskCriteriaDetailRepository.UpdateAsyn(_detail);
                     await _uow.GetDbContext().SaveChangesAsync();
-                   
+
                 }
 
 
@@ -3999,7 +3990,7 @@ namespace HumanitarianAssistance.Service.Classes
                         CreatedById = UserId,
                         CreatedDate = DateTime.UtcNow
                     };
-                   await _uow.TargetBeneficiaryDetailRepository.AddAsyn(_detail);
+                    await _uow.TargetBeneficiaryDetailRepository.AddAsyn(_detail);
                 }
                 else
                 {
@@ -4009,7 +4000,7 @@ namespace HumanitarianAssistance.Service.Classes
                     _detail.IsDeleted = false;
                     _detail.ModifiedById = UserId;
                     _detail.ModifiedDate = DateTime.UtcNow;
-                    await  _uow.TargetBeneficiaryDetailRepository.UpdateAsyn(_detail);
+                    await _uow.TargetBeneficiaryDetailRepository.UpdateAsyn(_detail);
                     await _uow.GetDbContext().SaveChangesAsync();
                 }
                 response.CommonId.LongId = _detail.TargetId;
@@ -4880,7 +4871,7 @@ namespace HumanitarianAssistance.Service.Classes
             APIResponse response = new APIResponse();
 
             var projectDetail = await _uow.GetDbContext().ProjectDetail
-                                                         .FirstOrDefaultAsync(x => x.ProjectId == projectId && 
+                                                         .FirstOrDefaultAsync(x => x.ProjectId == projectId &&
                                                                                    x.IsDeleted == false);
             if (projectDetail != null)
             {

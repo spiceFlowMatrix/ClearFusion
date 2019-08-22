@@ -20,8 +20,10 @@ import {
 } from 'ngx-file-drop';
 import {
   ProposalDocModel,
+  ProposalFileDetailsModel,
   CurrencyModel,
-  UserListModel
+  UserListModel,
+  FileTypes
 } from '../project-details/models/project-details.model';
 import { FormControl } from '@angular/forms';
 import { ProposalDocument_Enum } from 'src/app/shared/enum';
@@ -41,6 +43,17 @@ import { NgOnChangesFeature } from '@angular/core/src/render3';
 })
 export class ProposalComponent implements OnInit, OnDestroy {
   // private httpSubscription: Subscription;
+  SelectedFileType: string;
+  ProposalFileTypes: FileTypes[] = [
+    {value: 'PROP'},
+    {value: 'EOI'},
+    {value: 'Budget'},
+    {value: 'Concept'},
+    {value: 'Presentation'},
+  ];
+
+  fileToUpload: File = null;
+
   ProjectId: number;
   public files: UploadFile[] = [];
   proposalWebLink = '';
@@ -62,6 +75,7 @@ export class ProposalComponent implements OnInit, OnDestroy {
   IsProposalSubmit = null;
   proposalSubmitnull = false;
   ProposalModel: ProposalDocModel;
+  FileDetailsModel: ProposalFileDetailsModel[];
   IsproposalStart = false;
   CurrencyList: CurrencyModel[];
   UserList: UserListModel[];
@@ -113,6 +127,7 @@ export class ProposalComponent implements OnInit, OnDestroy {
     // this.ProjectId = +this.routeActive.snapshot.paramMap.get('id');
     this.GetProposal(this.ProjectId);
     this.initProposalDocModel();
+    this.initFileDetailsModel();
     this.GetAllCurrency();
     this.getScreenSize();
     this.isEditingAllowed = this.localStorageService.IsEditingAllowed(
@@ -120,6 +135,7 @@ export class ProposalComponent implements OnInit, OnDestroy {
     );
   }
 
+  // tslint:disable-next-line: use-life-cycle-interface
   ngOnChanges() {
     this.GetAllUserList();
   }
@@ -136,6 +152,25 @@ export class ProposalComponent implements OnInit, OnDestroy {
     };
   }
   //#endregion
+  initFileDetailsModel() {
+    this.FileDetailsModel = [{
+      ProjectProposaldetailId: 0,
+      FolderName: null,
+      ProposalFileName: null,
+      ProjectId: 0,
+      ProposalWebLink: null,
+      FileType: null,
+      ProposalExtType: null,
+      ProposalStartDate: null,
+      ProposalBudget: null,
+      ProposalDueDate: null,
+      ProjectAssignTo: null,
+      IsProposalAccept: null,
+      CurrencyId: 0,
+      UserId: null,
+      CreatedDate: null
+    }];
+  }
 
   initProposalDocModel() {
     this.ProposalModel = {
@@ -160,10 +195,9 @@ export class ProposalComponent implements OnInit, OnDestroy {
       .subscribe(response => {
         if (response != null) {
           if (response.StatusCode === 200) {
-            if (response.data.ProjectProposalModel != null) {
-              const dataItem = response.data.ProjectProposalModel;
-
-              // proposal
+            if (response.data.ProjectProposalModelNew != null) {
+              const dataItem = response.data.ProjectProposalModelNew;
+              this.FileDetailsModel = dataItem;
               this.proposalWebLink = dataItem.ProposalWebLink;
 
               // EDI File
@@ -206,17 +240,17 @@ export class ProposalComponent implements OnInit, OnDestroy {
               if (this.PresentationExtType === undefined) {
                 this.PresentationExtType = null;
               }
-              this.ProposalModel.ProposalDueDate = dataItem.ProposalDueDate;
-              this.ProposalModel.ProposalStartDate = dataItem.ProposalStartDate;
-              this.ProposalModel.ProposalBudget = dataItem.ProposalBudget;
+              this.ProposalModel.ProposalDueDate = dataItem[0].ProposalDueDate;
+              this.ProposalModel.ProposalStartDate = dataItem[0].ProposalStartDate;
+              this.ProposalModel.ProposalBudget = dataItem[0].ProposalBudget;
               this.IsApproved = dataItem.IsApproved; // ==null?false:dataItem.IsApproved;
 
-              if (dataItem.UserId != null) {
-                this.ProposalModel.UserId = dataItem.UserId;
+              if (dataItem[0].UserId != null) {
+                this.ProposalModel.UserId = dataItem[0].UserId;
               }
-              this.IsProposalSubmit = dataItem.IsProposalAccept; // == null ? this.proposalSubmitnull :dataItem.IsProposalAccept ;
-              if (dataItem.CurrencyId > 0) {
-                this.ProposalModel.CurrencyId = dataItem.CurrencyId;
+              this.IsProposalSubmit = dataItem[0].IsProposalAccept; // == null ? this.proposalSubmitnull :dataItem.IsProposalAccept ;
+              if (dataItem[0].CurrencyId > 0) {
+                this.ProposalModel.CurrencyId = dataItem[0].CurrencyId;
               }
               if (this.proposalWebLink !== '') {
                 this.IsproposalStart = true;
@@ -434,8 +468,7 @@ export class ProposalComponent implements OnInit, OnDestroy {
       this._cdr.detectChanges();
     }
   }
-//#endregion
-  //#region start proposal drag and drop
+
   public startProposalDragFile(event: UploadEvent, data: any) {
     this.files = event.files;
     if (data === ProposalDocument_Enum.proposal) {
@@ -511,7 +544,7 @@ export class ProposalComponent implements OnInit, OnDestroy {
       }
     }
   }
-  //#endregion
+
   ProposalDetailsChange(ev, data: any) {
     if (data != null && data !== '' && data !== undefined) {
       if (ev === 'proposalStartDate') {
@@ -723,4 +756,69 @@ export class ProposalComponent implements OnInit, OnDestroy {
     this.destroyed$.next(true);
     this.destroyed$.complete();
   }
+
+UploadProposalFile(files: FileList) {
+  this.fileToUpload = files.item(0);
+const selectedFileType = this.SelectedFileType;
+
+this.uploadProposalDocument(this.fileToUpload, selectedFileType);
+
+}
+uploadProposalDocument(fileToUpload: File, selectedFileType: string) {
+const formData = new FormData();
+formData.append('filesData', fileToUpload, fileToUpload.name);
+formData.append('projectId', this.ProjectId.toString());
+formData.append('data', selectedFileType);
+
+          this.projectListService
+            .uploadEDIFile(
+              this.appurl.getApiUrl() +
+                GLOBAL.API_Project_StartProposalDragAndDropFile,
+              this.ProjectId,
+              formData
+            )
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe(
+              res => {
+                if (res.StatusCode === 200) {
+                  if (res.data.ProjectProposalDetail != null) {
+                    if (
+                      res.data.ProjectProposalDetail.ProposalWebLink != null
+                    ) {
+                      // this.GetProposal(this.ProjectId);
+                      this._cdr.detectChanges();
+                      this.proposalWebLink =
+                        res.data.ProjectProposalDetail.ProposalWebLink;
+
+                      if (this.proposalWebLink !== '') {
+                        this.IsproposalStart = true;
+                      }
+                      // this.GetProposal(this.ProjectId);
+                      this.startProposalLoader = false;
+                    }
+                    this.ProposalModel.ProposalStartDate =
+                      res.data.ProjectProposalDetail.ProposalStartDate;
+                  }
+                } else if (res.StatusCode === 4440) {
+                  this._cdr.detectChanges();
+                  this.toastr.warning('Document type is invalid');
+                  this.startProposalLoader = false;
+                  this._cdr.detectChanges();
+                }
+                this.startProposalLoader = false;
+                this._cdr.detectChanges();
+              },
+              error => {
+
+                this.startProposalLoader = false;
+                this.toastr.warning('Some error occured. Try Again');
+                this._cdr.detectChanges();
+              }
+            );
+        this.startProposalLoader = false;
+        this.startEDIFileLoader = false;
+        this.startBudgetFileLoader = false;
+        this.startConceptFileLoader = false;
+        this.startPresentationFileLoader = false;
+      }
 }

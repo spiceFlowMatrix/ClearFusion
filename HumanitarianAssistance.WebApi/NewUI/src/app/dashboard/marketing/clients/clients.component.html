@@ -47,7 +47,7 @@
                               {{contract.ClientName}}
                             </mat-option>
                           </mat-select>
-                        </mat-form-field>                      
+                        </mat-form-field>
                       </div>
                     </div>
                     <div class="row">
@@ -88,12 +88,14 @@
                   <mat-icon>settings</mat-icon>
                 </button>
               </div>
-            </div>           
+            </div>
           </div>
           <div class="row">
             <div *ngIf="clienttListLoaderFlag; else clientListTemplate" class="col-sm-12"><br /><br /><br />
               <mat-spinner class="center_loader" diameter="50"></mat-spinner>
             </div>
+
+
             <ng-template #clientListTemplate>
               <div class="col-sm-12">
                 <div class="responsive_table-responsive">
@@ -136,6 +138,8 @@
                 </div>
               </div>
             </ng-template>
+
+
           </div>
      </mat-card>
       </div>
