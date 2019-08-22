@@ -4,14 +4,16 @@ using HumanitarianAssistance.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190820052903_addProjectDetailReference")]
+    partial class addProjectDetailReference
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -9681,42 +9683,6 @@ namespace DataAccess.Migrations
                     b.ToTable("ProjectProposalDetail");
                 });
 
-            modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectProposalDocument", b =>
-                {
-                    b.Property<long>("ProjectProposalDocumnetId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool?>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<long>("ProjectId");
-
-                    b.Property<string>("ProposalDocumentName");
-
-                    b.Property<int>("ProposalDocumentTypeId");
-
-                    b.Property<string>("ProposalExtType");
-
-                    b.Property<string>("ProposalWebLink");
-
-                    b.HasKey("ProjectProposalDocumnetId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("ProjectProposalDocument");
-                });
-
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectSector", b =>
                 {
                     b.Property<long>("ProjectSectorId")
@@ -15584,22 +15550,6 @@ namespace DataAccess.Migrations
                 });
 
             modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectProposalDetail", b =>
-                {
-                    b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("DataAccess.DbEntities.AppUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("DataAccess.DbEntities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DataAccess.DbEntities.Project.ProjectProposalDocument", b =>
                 {
                     b.HasOne("DataAccess.DbEntities.AppUser", "CreatedBy")
                         .WithMany()

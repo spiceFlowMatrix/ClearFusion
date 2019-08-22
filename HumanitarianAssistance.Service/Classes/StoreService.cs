@@ -802,6 +802,7 @@ namespace HumanitarianAssistance.Service.Classes
         public async Task<APIResponse> AddPurchase(ItemPurchaseModel model)
         {
             var response = new APIResponse();
+
             try
             {
                 if (model != null)
@@ -817,8 +818,8 @@ namespace HumanitarianAssistance.Service.Classes
                         string ex = str[0].Split("/")[1].Split(";")[0];
                         string guidname = Guid.NewGuid().ToString();
                         string filename = guidname + "." + ex;
-                        var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-                        File.WriteAllBytes(@"Documents/" + filename, filepath);
+                        var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/") + filename;
+                        File.WriteAllBytes(@"wwwroot/" + filename, filepath);
 
                         purchase.ImageFileName = guidname;
                         purchase.ImageFileType = "." + ex;
@@ -840,8 +841,8 @@ namespace HumanitarianAssistance.Service.Classes
                             ex = "txt";
                         string guidname = Guid.NewGuid().ToString();
                         string filename = guidname + "." + ex;
-                        var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-                        File.WriteAllBytes(@"Documents/" + filename, filepath);
+                        var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/") + filename;
+                        File.WriteAllBytes(@"wwwroot/" + filename, filepath);
 
                         purchase.InvoiceFileName = guidname;
                         purchase.InvoiceFileType = "." + ex;
@@ -898,8 +899,8 @@ namespace HumanitarianAssistance.Service.Classes
                                 string ex = str[0].Split("/")[1].Split(";")[0];
                                 string guidname = Guid.NewGuid().ToString();
                                 string filename = guidname + "." + ex;
-                                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-                                File.WriteAllBytes(@"Documents/" + filename, filepath);
+                                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/") + filename;
+                                File.WriteAllBytes(@"wwwroot/" + filename, filepath);
 
                                 purchaseRecord.ImageFileName = guidname;
                                 purchaseRecord.ImageFileType = "." + ex;
@@ -1053,11 +1054,11 @@ namespace HumanitarianAssistance.Service.Classes
 
                 foreach (var item in purchasesModel)
                 {
-                    var exchangeRate = _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x=> x.Date).FirstOrDefault(x => x.IsDeleted == false && x.Date <= item.PurchaseDate && x.FromCurrency == item.Currency && x.ToCurrency == (int)Currency.USD);
+                    var exchangeRate = _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x=> x.Date).FirstOrDefault(x => x.IsDeleted == false && x.Date.Date <= item.PurchaseDate.Date && x.FromCurrency == item.Currency && x.ToCurrency == (int)Currency.USD);
 
                     if (exchangeRate == null)
                     {
-                        throw new Exception($"Exchange Rates not defined for Date {item.PurchaseDate.Date}");
+                        throw new Exception($"Exchange Rates not defined for Date {item.PurchaseDate.Date.ToString("dd/MM/yyyy")}");
                     }
 
                     item.TotalCostUSD = item.TotalCost * (double)exchangeRate.Rate;
@@ -1133,7 +1134,7 @@ namespace HumanitarianAssistance.Service.Classes
                 string guidName = Guid.NewGuid().ToString();
 
                 string fileName = "purchaseDoc." + guidName + "." + model.DocumentName + "." + ex;
-                File.WriteAllBytes(@"Documents\" + fileName, file);
+                File.WriteAllBytes(@"wwwroot\" + fileName, file);
 
                 // Add database entry for document
                 ItemPurchaseDocument doc = new ItemPurchaseDocument();
@@ -1734,8 +1735,8 @@ namespace HumanitarianAssistance.Service.Classes
                 string guidname = Guid.NewGuid().ToString();
                 //byte[] filepath = Encoding.UTF8.GetBytes(str[1]);
                 string filename = guidname + "." + ex;
-                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-                File.WriteAllBytes(@"Documents/" + filename, filepath);
+                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/") + filename;
+                File.WriteAllBytes(@"wwwroot/" + filename, filepath);
 
                 var employeeinfo = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.IsDeleted == false && x.PurchaseId == model.PurchaseId);
                 if (employeeinfo != null)

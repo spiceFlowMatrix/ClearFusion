@@ -66,6 +66,7 @@ export class ProjectDetailsComponent implements OnInit {
    // this.setHeaderMenu();
   // this.getProjectWinLossDetail(this.projectId);
   // this.getCriteriaEvaluationApprovedDetail(this.projectId);
+
   }
   ngOnInit() {
     this.getMultipleApiReuest().subscribe((res) => {

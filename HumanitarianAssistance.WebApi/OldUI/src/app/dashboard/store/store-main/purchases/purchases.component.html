@@ -92,7 +92,7 @@
 
 <!-- Add -->
 <dx-popup class="popup" [width]="800" [height]="650" [showTitle]="true" title="Purchase" [dragEnabled]="false" [closeOnOutsideClick]="true"
-  [(visible)]="addPurchaseFormPopupVisible">
+  [(visible)]="addPurchaseFormPopupVisible" (onHiding)="onAddPurchasePopUpHide()">
   <div *dxTemplate="let data of 'content'">
 
     <dx-scroll-view showScrollbar="always" direction="both">
@@ -149,7 +149,7 @@
             <dxi-item dataField="ImageFileName">
               <div id="fileuploader-container">
                 <dxo-label text="Image"></dxo-label>
-                <dx-file-uploader selectButtonText="Select Image" labelText="" accept="*" uploadMode="useForm" (onValueChanged)="onPurchaseImageSelect($event)"
+                <dx-file-uploader #imageUploader selectButtonText="Select Image" labelText="" accept="*" uploadMode="useForm" (onValueChanged)="onPurchaseImageSelect($event)"
                   [multiple]="false">
                 </dx-file-uploader>
               </div>
@@ -158,7 +158,7 @@
             <dxi-item dataField="Invoice">
               <div id="fileuploader-container">
                 <dxo-label text="Invoice"></dxo-label>
-                <dx-file-uploader selectButtonText="Select Invoice" labelText="" accept="*" uploadMode="useForm" (onValueChanged)="onPurchaseInvoiceSelect($event)"
+                <dx-file-uploader #invoiceUploader selectButtonText="Select Invoice" labelText="" accept="*" uploadMode="useForm" (onValueChanged)="onPurchaseInvoiceSelect($event)"
                   [multiple]="false">
                 </dx-file-uploader>
               </div>

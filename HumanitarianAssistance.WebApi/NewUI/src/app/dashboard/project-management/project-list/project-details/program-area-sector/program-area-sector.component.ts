@@ -277,6 +277,8 @@ export class ProgramAreaSectorComponent implements OnInit {
     this.getProjectAreaById(this.ProjectId);
     this.getProjectProgramById(this.ProjectId);
     this.getProjectSectorById(this.ProjectId);
+    this.StartDate = new Date();
+    this.EndDate= new Date();
   }
 
   // ngOnchanges() {
@@ -305,6 +307,10 @@ export class ProgramAreaSectorComponent implements OnInit {
       InDirectBeneficiaryFemale: 0,
       InDirectBeneficiaryMale: 0,
       OpportunityType: null,
+      StartDate: new Date(),
+      EndDate: new Date(),
+      REOIReceiveDate: new Date(),
+      SubmissionDate: new Date()
     };
   }
 
