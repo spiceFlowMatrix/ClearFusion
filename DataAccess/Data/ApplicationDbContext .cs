@@ -301,6 +301,7 @@ namespace HumanitarianAssistance.Entities
         public DbSet<AccountFilterType> AccountFilterType { get; set; }
         public DbSet<ChartOfAccountNew> ChartOfAccountNew { get; set; }
         public DbSet<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
+        public DbSet<ProjectProposalDocument> ProjectProposalDocument { get; set; }
 
         #endregion
 

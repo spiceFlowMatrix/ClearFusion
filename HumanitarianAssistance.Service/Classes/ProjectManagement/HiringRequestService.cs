@@ -269,7 +269,9 @@ namespace HumanitarianAssistance.Service.Classes.ProjectManagement
             try
             {
                 response.data.EmployeeDetailListData = await _uow.GetDbContext().EmployeeDetail.Where(x => x.EmployeeTypeId != (int)EmployeeTypeStatus.Terminated &&
-                                                                                                           x.IsDeleted == false).Select(x => new EmployeeDetailList
+                                                                                                           x.IsDeleted == false && 
+                                                                                                           x.EmployeeProfessionalDetail.OfficeId != null)
+                                                                                                           .Select(x => new EmployeeDetailList
                                                                                                            {
                                                                                                                EmployeeId = x.EmployeeID,
                                                                                                                EmployeeName = x.EmployeeName

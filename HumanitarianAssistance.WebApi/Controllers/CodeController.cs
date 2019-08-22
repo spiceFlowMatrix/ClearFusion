@@ -141,7 +141,7 @@ namespace HumanitarianAssistance.Controllers
 
     }
 
-    [HttpGet]
+    [HttpGet] //not used
     public async Task<object> GetOfficeDetailsByOfficeCode(string OfficeCode)
     {
       APIResponse apiRespone = null;
@@ -259,7 +259,7 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
+    [HttpGet] // -------------------- not used
     public async Task<object> GetJournalDetailByCode(int JournalCode)
     {
       APIResponse apiRespone = null;
@@ -267,14 +267,15 @@ namespace HumanitarianAssistance.Controllers
       return apiRespone;
     }
 
-    [HttpGet]
+    [HttpGet] //--------------------- not used
     public async Task<object> GetJournalDetailByName(string JournalName)
     {
       APIResponse apiRespone = null;
       apiRespone = await _ijournalDetail.GetJournalDetailByName(JournalName);
       return apiRespone;
     }
-    //Journal Details Module Controller
+  
+     //Journal Details Module Controller
 
 
     //Email Setting Details Module Controller
@@ -576,7 +577,7 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpPost]
+    [HttpPost] // not used
     public async Task<APIResponse> AddProjectDetails([FromBody] ProjectDetailModel model)
     {
       try
@@ -609,7 +610,7 @@ namespace HumanitarianAssistance.Controllers
       }
     }
 
-    [HttpPost]
+    [HttpPost] //not used
     public async Task<APIResponse> EditProjectDetails([FromBody] ProjectDetailModel model)
     {
       if (ModelState.IsValid)
@@ -686,7 +687,7 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
+    [HttpGet] //not used
     public async Task<APIResponse> GetAllNationality()
     {
       APIResponse response = await _icode.GetAllNationality();
@@ -700,7 +701,7 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpGet]
+    [HttpGet] //not used
     public async Task<APIResponse> GetAllInterviewRoundList()
     {
       APIResponse response = await _icode.GetAllInterviewRoundList();
@@ -769,7 +770,7 @@ namespace HumanitarianAssistance.Controllers
       return response;
     }
 
-    [HttpPost]
+    [HttpPost] //not used
     public async Task<APIResponse> AddBudgetLineType([FromBody] BudgetLineTypeModel model)
     {
       APIResponse response = null;

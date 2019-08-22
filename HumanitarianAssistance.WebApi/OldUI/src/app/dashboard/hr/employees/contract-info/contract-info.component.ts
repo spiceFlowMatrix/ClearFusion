@@ -819,7 +819,10 @@ export class ContractInfoComponent implements OnInit {
     this.contractListLoading = flag;
   }
 
-  showAddContractPopup() {
+    showAddContractPopup() {
+        this.employeeContractForm.ContractEndDate = new Date();
+        this.employeeContractForm.ContractStartDate = new Date();
+        
     this.popupContractVisible = true;
   }
   hideAddContractPopup() {

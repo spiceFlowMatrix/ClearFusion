@@ -27,7 +27,8 @@ export class FinancialYearComponent implements OnInit {
 
   // loader
   financialYearListLoading = false;
-  financialYearPopupLoading = false;
+    financialYearPopupLoading = false;
+    currentDate: any;
 
   constructor(
     private router: Router,
@@ -46,7 +47,18 @@ export class FinancialYearComponent implements OnInit {
     this.getFinancialYearList();
     this.isEditingAllowed = this.commonservice.IsEditingAllowed(
       applicationPages.FinancialYear
-    );
+      );
+
+      //this.financialyeardata = {
+      //    Description: '',
+      //    EndDate: new Date(),
+      //    FinancialYearId: 0,
+      //    FinancialYearName: '',
+      //    IsDefault: false,
+      //    StartDate: new Date()
+      //}
+
+      this.currentDate = new Date();
   }
 
   getFinancialYearList() {
@@ -87,7 +99,8 @@ export class FinancialYearComponent implements OnInit {
       );
   }
 
-  showPopup() {
+    showPopup() {
+        this.currentDate = new Date();
     this.financialyeardata = this.codeservice.getFinancialYearData();
     this.popupVisible = true;
   }

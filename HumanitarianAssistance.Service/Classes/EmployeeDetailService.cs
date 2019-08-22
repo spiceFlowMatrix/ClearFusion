@@ -1135,15 +1135,16 @@ namespace HumanitarianAssistance.Service.Classes
             try
             {
                 //EmployeeHealthQuestion obj = _mapper.Map<EmployeeHealthQuestion>(model);
-                EmployeeHealthQuestion obj = new EmployeeHealthQuestion();
+                EmployeeHealthQuestion obj = new EmployeeHealthQuestion
+                {
+                    EmployeeId = model.EmployeeId,
+                    Question = model.Question,
+                    Answer = model.Answer,
 
-                obj.EmployeeId = model.EmployeeId;
-                obj.Question = model.Question;
-                obj.Answer = model.Answer;
-
-                obj.IsDeleted = false;
-                obj.CreatedById = UserId;
-                obj.CreatedDate = DateTime.Now;
+                    IsDeleted = false,
+                    CreatedById = UserId,
+                    CreatedDate = DateTime.Now
+                };
 
 
                 await _uow.EmployeeHealthQuestionRepository.AddAsyn(obj);
@@ -1232,11 +1233,11 @@ namespace HumanitarianAssistance.Service.Classes
 
         #region "Employee Languages"
 
-        /// <summary>
-        /// Get all languages that an employee can speak and understand
-        /// </summary>
-        /// <param name="EmployeeId"></param>
-        /// <returns>List of languages that employee understands</returns>
+            /// <summary>
+            /// Get all languages that an employee can speak and understand
+            /// </summary>
+            /// <param name="EmployeeId"></param>
+            /// <returns>List of languages that employee understands</returns>
         public async Task<APIResponse> GetAllEmployeeLanguages(int EmployeeId)
         {
             APIResponse response = new APIResponse();
