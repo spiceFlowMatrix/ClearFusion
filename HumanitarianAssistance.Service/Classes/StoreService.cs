@@ -811,53 +811,54 @@ namespace HumanitarianAssistance.Service.Classes
 
                     // For Image 
 
-                    if (model.ImageFileName != null && model.ImageFileName != "")
-                    {
-                        string[] str = model.ImageFileName.Split(",");
-                        byte[] filepath = Convert.FromBase64String(str[1]);
-                        string ex = str[0].Split("/")[1].Split(";")[0];
-                        string guidname = Guid.NewGuid().ToString();
-                        string filename = guidname + "." + ex;
-                        var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/") + filename;
-                        File.WriteAllBytes(@"wwwroot/" + filename, filepath);
+                    //if (model.ImageFileName != null && model.ImageFileName != "")
+                    //{
+                    //    string[] str = model.ImageFileName.Split(",");
+                    //    byte[] filepath = Convert.FromBase64String(str[1]);
+                    //    string ex = str[0].Split("/")[1].Split(";")[0];
+                    //    string guidname = Guid.NewGuid().ToString();
+                    //    string filename = guidname + "." + ex;
+                    //    var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/") + filename;
+                    //    File.WriteAllBytes(@"wwwroot/" + filename, filepath);
 
-                        purchase.ImageFileName = guidname;
-                        purchase.ImageFileType = "." + ex;
-                    }
-                    else
-                    {
-                        purchase.ImageFileName = null;
-                        purchase.ImageFileType = null;
-                    }
+                    //    purchase.ImageFileName = guidname;
+                    //    purchase.ImageFileType = "." + ex;
+                    //}
+                    //else
+                    //{
+                    //    purchase.ImageFileName = null;
+                    //    purchase.ImageFileType = null;
+                    //}
 
                     // For invoice 
 
-                    if (model.InvoiceFileName != null && model.InvoiceFileName != "")
-                    {
-                        string[] str = model.InvoiceFileName.Split(",");
-                        byte[] filepath = Convert.FromBase64String(str[1]);
-                        string ex = str[0].Split("/")[1].Split(";")[0];
-                        if (ex == "plain")
-                            ex = "txt";
-                        string guidname = Guid.NewGuid().ToString();
-                        string filename = guidname + "." + ex;
-                        var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/") + filename;
-                        File.WriteAllBytes(@"wwwroot/" + filename, filepath);
+                    //if (model.InvoiceFileName != null && model.InvoiceFileName != "")
+                    //{
+                    //    string[] str = model.InvoiceFileName.Split(",");
+                    //    byte[] filepath = Convert.FromBase64String(str[1]);
+                    //    string ex = str[0].Split("/")[1].Split(";")[0];
+                    //    if (ex == "plain")
+                    //        ex = "txt";
+                    //    string guidname = Guid.NewGuid().ToString();
+                    //    string filename = guidname + "." + ex;
+                    //    var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/") + filename;
+                    //    File.WriteAllBytes(@"wwwroot/" + filename, filepath);
 
-                        purchase.InvoiceFileName = guidname;
-                        purchase.InvoiceFileType = "." + ex;
-                    }
-                    else
-                    {
-                        purchase.InvoiceFileName = null;
-                        purchase.InvoiceFileType = null;
-                    }
+                    //    purchase.InvoiceFileName = guidname;
+                    //    purchase.InvoiceFileType = "." + ex;
+                    //}
+                    //else
+                    //{
+                    //    purchase.InvoiceFileName = null;
+                    //    purchase.InvoiceFileType = null;
+                    //}
 
                     purchase.IsDeleted = false;
 
                     await _uow.StoreItemPurchaseRepository.AddAsyn(purchase);
                     //await _uow.SaveAsync();
 
+                    response.ResponseData = new {PurchaseId = purchase.PurchaseId };
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }

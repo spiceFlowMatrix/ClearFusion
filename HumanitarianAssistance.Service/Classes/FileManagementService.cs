@@ -68,7 +68,7 @@ namespace HumanitarianAssistance.Service.Classes
                     TimeSpan.FromMinutes(10),
                     HttpMethod.Put,
                     contentHeaders: new Dictionary<string, IEnumerable<string>> {
-                    { "Content-Type", new[] { "text/plain" } } }
+                    { "Content-Type", new[] { model.FileType } } }
                     );
 
                 response.StatusCode = StaticResource.successStatusCode;

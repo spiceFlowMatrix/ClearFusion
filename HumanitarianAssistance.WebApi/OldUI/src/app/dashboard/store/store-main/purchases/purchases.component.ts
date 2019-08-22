@@ -15,6 +15,8 @@ import { CodeService } from '../../../code/code.service';
 import { CommonService } from '../../../../service/common.service';
 import { AppSettingsService } from '../../../../service/app-settings.service';
 import { DxFileUploaderComponent } from 'devextreme-angular';
+import { FileManagementService } from '../../../../shared/FileManagement/file-management.service';
+import { FileSourceEntityTypes } from '../../../../shared/enums';
 
 @Component({
   selector: 'app-purchases',
@@ -41,7 +43,9 @@ export class PurchasesComponent implements OnInit {
   receiptTypeDropdown: any[];
   deleteDataModel: PurchaseModel;
   storeLocationDropdown: any[];
-  paymentTypesDataSource: any[];
+    paymentTypesDataSource: any[];
+    purchaseFileImage: File;
+    purchaseInvoiceImage: File;
 
 
   imageFlag = true;
@@ -96,7 +100,8 @@ export class PurchasesComponent implements OnInit {
     private commonService: CommonService,
     private setting: AppSettingsService,
     private toastr: ToastrService,
-    private codeservice: CodeService
+    private codeservice: CodeService,
+    private fileManagementService: FileManagementService
   ) {}
 
   ngOnInit() {
@@ -579,8 +584,15 @@ export class PurchasesComponent implements OnInit {
       .subscribe(
         data => {
           if (data.StatusCode === 200) {
-            this.toastr.success('Purchase Item Added Successfully!');
-            // this.getAllPurchaseList();
+            debugger;
+
+            this.fileManagementService.uploadFile(FileSourceEntityTypes.StorePurchase,
+              data.ResponseData.PurchaseId,
+              this.purchaseFileImage);
+
+              // this.toastr.success('Purchase Item Added Successfully!');
+
+
           } else {
             this.toastr.error(data.Message);
           }
@@ -591,8 +603,8 @@ export class PurchasesComponent implements OnInit {
           this.getAllPurchaseList(
             localStorage.getItem('SelectedInventoryItem')
             );
-           this.imageUploader.instance.reset();
-          this.hideAddPurchaseFormPopupVisible();
+            this.imageUploader.instance.reset();
+            this.hideAddPurchaseFormPopupVisible();
           this.hideAddPurchaseFormPopupLoading();
         },
         error => {
@@ -666,7 +678,7 @@ export class PurchasesComponent implements OnInit {
   //#endregion
 
   //#region "onPurchaseFormSubmit"
-  onPurchaseFormSubmit(data: PurchaseModel) {
+    onPurchaseFormSubmit(data: PurchaseModel) {
     if (data != null) {
       if (data.PurchaseId == null) {
         if (data.InventoryItem != null) {
@@ -1222,12 +1234,12 @@ export class PurchasesComponent implements OnInit {
   //#endregion
 
   //#region "onPurchaseImageSelect"
-  onPurchaseImageSelect(event) {
+    onPurchaseImageSelect(event) {
     this.purchaseDetailsFormImageFileName = null;
-    if (event.value != null) {
-      const fileImage: File = event.value[0];
+        if (event.value != null) {
+            this.purchaseFileImage = event.value[0];
       const myReaderImage: FileReader = new FileReader();
-      myReaderImage.readAsDataURL(fileImage);
+            myReaderImage.readAsDataURL(this.purchaseFileImage);
 
       myReaderImage.onloadend = e => {
         this.purchaseDetailsFormImageFileName = myReaderImage.result;
@@ -1237,12 +1249,12 @@ export class PurchasesComponent implements OnInit {
   //#endregion
 
   //#region "onPurchaseInvoiceSelect"
-  onPurchaseInvoiceSelect(eventInvoice) {
+    onPurchaseInvoiceSelect(eventInvoice) {
     this.purchaseDetailsFormInvoice = null;
-    if (eventInvoice.value != null) {
-      const fileInvoice: File = eventInvoice.value[0];
+        if (eventInvoice.value != null) {
+            this.purchaseInvoiceImage = eventInvoice.value[0];
       const myReaderInvoice: FileReader = new FileReader();
-      myReaderInvoice.readAsDataURL(fileInvoice);
+            myReaderInvoice.readAsDataURL(this.purchaseInvoiceImage);
       myReaderInvoice.onloadend = e => {
         this.purchaseDetailsFormInvoice = myReaderInvoice.result;
       };
