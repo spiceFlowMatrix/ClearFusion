@@ -28,9 +28,9 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
 
     public class StoreItemPurchaseViewModel : BaseModel
     {
-        public string PurchaseId { get; set; }
+        public long PurchaseId { get; set; }
         public string SerialNo { get; set; }                    // Barcode Value
-        public string InventoryItem { get; set; }               // Item Id
+        public long InventoryItem { get; set; }               // Item Id
         public DateTime PurchaseDate { get; set; }              // Date Of Purchase
         public DateTime DeliveryDate { get; set; }              // The date that the item arrived at it's desired location or a service took place.		
         public int Currency { get; set; }                       // Currency ID
@@ -65,6 +65,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
         public int? JournalCode { get; set; }
         public string VerifiedPurchaseVoucherReferenceNo { get; set; }
         public double TotalCostUSD { get; set; }
+        public long? ImageDocumentId { get; set; }
+        public long? InvoiceDocumentId { get; set; }
     }
 
     public class ItemPurchaseWithDataModel
@@ -80,7 +82,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
 
     public class StoreItemPurchaseDocumentModel : BaseModel
     {
-        public string PurchaseId { get; set; }
+        public long PurchaseId { get; set; }
         public string DocumentName { get; set; }
         public string File { get; set; }
         public string FileType { get; set; }

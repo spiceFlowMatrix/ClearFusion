@@ -207,7 +207,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
     }
 
     [HttpGet]
-    public async Task<APIResponse> GetAllPurchasesByItem(string itemId)
+    public async Task<APIResponse> GetAllPurchasesByItem(long itemId)
     {
       APIResponse apiresponse = await _iStore.GetAllPurchasesByItem(itemId);
       return apiresponse;
@@ -283,7 +283,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
     }
 
     [HttpGet]
-    public async Task<APIResponse> GetAllItemsOrder(string ItemId)
+    public async Task<APIResponse> GetAllItemsOrder(long ItemId)
     {
       APIResponse apiresponse = await _iStore.GetAllItemsOrder(ItemId);
       return apiresponse;
@@ -349,7 +349,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
 
 
     [HttpGet]
-    public async Task<APIResponse> GetItemAmounts(string ItemId)
+    public async Task<APIResponse> GetItemAmounts(long ItemId)
     {
       APIResponse apiresponse = await _iStore.GetItemAmounts(ItemId);
       return apiresponse;
@@ -383,7 +383,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
     }
 
     [HttpGet]
-    public async Task<APIResponse> GetAllPurchaseInvoices([FromQuery]string PurchaseId)
+    public async Task<APIResponse> GetAllPurchaseInvoices([FromQuery]long PurchaseId)
     {
       APIResponse apiresponse = await _iStore.GetAllPurchaseInvoices(PurchaseId);
       return apiresponse;
@@ -668,7 +668,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
     }
 
     [HttpGet]
-    public async Task<APIResponse> GetStoreGroupItemCode([FromQuery] string Id)
+    public async Task<APIResponse> GetStoreGroupItemCode([FromQuery] long Id)
     {
       APIResponse apiresponse = new APIResponse();
 
@@ -714,7 +714,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
     }
 
     [HttpGet]
-    public async Task<APIResponse> GetAllStoreItemGroups([FromQuery]string Id)
+    public async Task<APIResponse> GetAllStoreItemGroups([FromQuery]long Id)
     {
       APIResponse apiresponse = new APIResponse();
 

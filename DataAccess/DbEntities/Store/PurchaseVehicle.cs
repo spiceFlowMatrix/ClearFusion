@@ -9,7 +9,7 @@ namespace DataAccess.DbEntities.Store
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1, TypeName = "serial")]
         public int VehicleId { get; set; }
-        public string Purchase { get; set; }
+        public long PurchaseId { get; set; }
 
         public string VehicleDescription { get; set; }
 
@@ -23,7 +23,7 @@ namespace DataAccess.DbEntities.Store
         public string VehicleImageFileName { get; set; }
         public string VehicleImageFileType { get; set; }
         
-        [ForeignKey("Purchase")]
+        [ForeignKey("PurchaseId")]
         public StoreItemPurchase ItemPurchase { get; set; }
     }
 }

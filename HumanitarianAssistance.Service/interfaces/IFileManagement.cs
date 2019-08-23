@@ -14,5 +14,6 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> SaveUploadedFileInfo(FileManagementModel model);
         Task<APIResponse> GetDocumentFiles(FileModel model);
         Task<APIResponse> DeleteDocumentFile(FileModel model);
+        Task<APIResponse> UpdateUploadedFileInfo(FileManagementModel model);
     }
 }

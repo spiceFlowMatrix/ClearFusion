@@ -15,61 +15,76 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HumanitarianAssistance.WebApi.Controllers
 {
-  [Produces("application/json")]
-  [Route("api/FileManagement/[Action]")]
-  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-  public class FileManagementController : Controller
-  {
-    private readonly UserManager<AppUser> _userManager;
-    private IFileManagement _iFileManagement;
-
-    public FileManagementController(
-      UserManager<AppUser> userManager,
-      IFileManagement iFileManagement)
+    [Produces("application/json")]
+    [Route("api/FileManagement/[Action]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public class FileManagementController : Controller
     {
-      _userManager = userManager;
-      _iFileManagement = iFileManagement;
+        private readonly UserManager<AppUser> _userManager;
+        private IFileManagement _iFileManagement;
+
+        public FileManagementController(
+          UserManager<AppUser> userManager,
+          IFileManagement iFileManagement)
+        {
+            _userManager = userManager;
+            _iFileManagement = iFileManagement;
+        }
+
+        [HttpPost]
+        public async Task<APIResponse> SaveUploadedFileInfo([FromBody] FileManagementModel model)
+        {
+            APIResponse response = null;
+
+            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (user != null)
+            {
+                model.CreatedById = user.Id;
+                response = await _iFileManagement.SaveUploadedFileInfo(model);
+            }
+
+            return response;
+        }
+
+        [HttpPost]
+        public APIResponse GetSignedURL([FromBody] DownloadObjectGCBucketModel model)
+        {
+            APIResponse apiresponse = new APIResponse();
+            apiresponse = _iFileManagement.GetSignedURL(model);
+            return apiresponse;
+        }
+
+        [HttpPost]
+        public async Task<APIResponse> GetDocumentFiles([FromBody] FileModel model)
+        {
+            APIResponse apiresponse = new APIResponse();
+            apiresponse = await _iFileManagement.GetDocumentFiles(model);
+            return apiresponse;
+        }
+
+        [HttpPost]
+        public async Task<APIResponse> DeleteDocumentFiles([FromBody] FileModel model)
+        {
+            APIResponse apiresponse = new APIResponse();
+            apiresponse = await _iFileManagement.DeleteDocumentFile(model);
+            return apiresponse;
+        }
+
+        [HttpPost]
+        public async Task<APIResponse> UpdateUploadedFileInfo([FromBody] FileManagementModel model)
+        {
+            APIResponse response = null;
+
+            var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (user != null)
+            {
+                model.ModifiedById = user.Id;
+                response = await _iFileManagement.UpdateUploadedFileInfo(model);
+            }
+
+            return response;
+        }
     }
-
-    [HttpPost]
-    public async Task<APIResponse> SaveUploadedFileInfo([FromBody] FileManagementModel model)
-    {
-      APIResponse response = null;
-
-      var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-      if (user != null)
-      {
-        model.CreatedById = user.Id;
-        response = await _iFileManagement.SaveUploadedFileInfo(model);
-      }
-
-      return response;
-    }
-
-    [HttpPost]
-    public APIResponse GetSignedURL([FromBody] DownloadObjectGCBucketModel model)
-    {
-      APIResponse apiresponse = new APIResponse();
-      apiresponse = _iFileManagement.GetSignedURL(model);
-      return apiresponse;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> GetDocumentFiles([FromBody] FileModel model)
-    {
-      APIResponse apiresponse = new APIResponse();
-      apiresponse = await _iFileManagement.GetDocumentFiles(model);
-      return apiresponse;
-    }
-
-    [HttpPost]
-    public async Task<APIResponse> DeleteDocumentFiles([FromBody] FileModel model)
-    {
-      APIResponse apiresponse = new APIResponse();
-      apiresponse = await _iFileManagement.DeleteDocumentFile(model);
-      return apiresponse;
-    }
-
-  }
 }

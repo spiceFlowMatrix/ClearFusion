@@ -9,7 +9,7 @@ namespace DataAccess.DbEntities.Store
     {
         [Key]
         public string FuelId { get; set; }
-        public string Order { get; set; }
+        public long Order { get; set; }
         public int Vehicle { get; set; } // We should never be able to select a vehicle AND generator for a part. Only one should be selected. This should be taken care of by front-end
         public int Generator { get; set; }
 

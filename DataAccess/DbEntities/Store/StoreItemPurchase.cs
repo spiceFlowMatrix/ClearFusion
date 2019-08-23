@@ -9,11 +9,13 @@ namespace DataAccess.DbEntities.Store
     public class StoreItemPurchase : BaseEntityWithoutId
     {
         [Key]
-        public string PurchaseId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column(Order = 1)]
+        public long PurchaseId { get; set; }
         [Required]
         public string SerialNo { get; set; }
         [Required]
-        public string InventoryItem { get; set; }
+        public long InventoryItem { get; set; }
 
         public DateTime PurchaseDate { get; set; }
         public DateTime DeliveryDate { get; set; } // The date that the item arrived at it's desired location or a service took place.

@@ -7,7 +7,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
     public class DepreciationReportModel
     {
         public string ItemName { get; set; }
-        public string PurchaseId { get; set; }
+        public long PurchaseId { get; set; }
         public double HoursSincePurchase { get; set; }
         public double DepreciationRate { get; set; }
         public double DepreciationAmount { get; set; }
