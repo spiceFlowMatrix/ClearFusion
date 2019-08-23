@@ -92,13 +92,13 @@ exchangeRateList: any[];
     this.exchangeRateLoader = true;
     const officeExchangeRateModels: IOfficeExchangeRateModels = {
     OfficeId: 0,
-    GenerateExchangeRateModel: [],
+    ExchangeRatesViewModel: [],
     SaveForAllOffices: false
     };
 
     if (this.exchangeRateList != null && this.exchangeRateList !== undefined) {
        this.exchangeRateList.forEach(x =>
-        officeExchangeRateModels.GenerateExchangeRateModel.push({
+        officeExchangeRateModels.ExchangeRatesViewModel.push({
           FromCurrencyId: x.FromCurrencyId,
           ToCurrencyId: x.ToCurrencyId,
           Rate: x.Rate,

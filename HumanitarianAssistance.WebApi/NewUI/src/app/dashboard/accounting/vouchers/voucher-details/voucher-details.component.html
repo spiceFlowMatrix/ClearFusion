@@ -172,8 +172,7 @@
                             <strong>Debits</strong>
                             <span>Total Debits: {{ totalDebits }}</span>
                           </h6>
-                          <button mat-icon-button (click)="onAddTransactionDebit()"
-                            *ngIf="isEditingAllowed && !voucherDetail.IsVoucherVerified">
+                          <button mat-icon-button (click)="onAddTransactionDebit()" *ngIf="isEditingAllowed">
                             <mat-icon aria-label="icon-button add icon">add</mat-icon>
                           </button>
                         </div>
@@ -299,8 +298,7 @@
                             <strong>Credits</strong>
                             <span> Total Credits : {{ totalCredits }}</span>
                           </h6>
-                          <button mat-icon-button (click)="onAddTransactionCredit()"
-                            *ngIf="isEditingAllowed && !voucherDetail.IsVoucherVerified">
+                          <button mat-icon-button (click)="onAddTransactionCredit()" *ngIf="isEditingAllowed">
                             <mat-icon aria-label="icon-button add icon">add</mat-icon>
                           </button>
                         </div>
