@@ -415,6 +415,29 @@ namespace HumanitarianAssistance.Persistence
             }
         }
 
+
+        public static async Task AddAccountLevel(HumanitarianAssistanceDbContext context)
+        {
+            try
+            {
+                List<AccountLevel> list = new List<AccountLevel>
+                {
+                   new AccountLevel { AccountLevelId = 1, AccountLevelName = "Main Level Accounts" },
+                new AccountLevel { AccountLevelId = 2, AccountLevelName = "Control Level Accounts" },
+                new AccountLevel { AccountLevelId = 3, AccountLevelName = "Sub Level Accounts" },
+                new AccountLevel { AccountLevelId = 4, AccountLevelName = "Input Level Accounts" }
+                            };
+                await context.AccountLevel.AddRangeAsync(list);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
+
         public static async Task AddJobGrades(HumanitarianAssistanceDbContext context)
         {
             try

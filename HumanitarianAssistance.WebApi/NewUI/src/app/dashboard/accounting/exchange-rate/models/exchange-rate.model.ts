@@ -35,7 +35,7 @@ export interface IExchangeRateAddModel {
     }
 
 export interface IOfficeExchangeRateModels {
-    ExchangeRatesViewModel: IExchangeRateModels[];
+    GenerateExchangeRateModel: IExchangeRateModels[];
     OfficeId: number;
     SaveForAllOffices: boolean;
 }
