@@ -1,0 +1,96 @@
+<div class="row">
+  <div class="col-sm-3">
+    <mat-form-field class="example-full-width">
+      <mat-select
+        [(ngModel)]="selectedFileType"
+        name="FileTypes"
+        placeholder="Select File Type"
+      >
+        <mat-option *ngFor="let item of proposalFileTypes" [value]="item.Id">
+          {{ item.Name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="col-sm-1">
+    <label
+      *ngIf="!documentFileLoader; else uploadFileTemplate"
+      class="btn-floating btn-lg pink lighten-1 mt-0 float-left"
+    >
+      <mat-icon
+        class="icon_cursor padding_top_5"
+        aria-label="icon-button done icon"
+        pTooltip="Upload File"
+        tooltipPosition="top"
+        >add</mat-icon
+      >
+      <input
+        type="file"
+        #fileInput
+        id="file"
+        (click)="fileInput.value = null"
+        value=""
+        style="display: none;"
+        (change)="uploadProposalFile($event.target.files)"
+      />
+    </label>
+
+    <ng-template #uploadFileTemplate>
+      <mat-spinner class="center_loader" diameter="20"> </mat-spinner>
+    </ng-template>
+  </div>
+</div>
+<div class="row">
+  <div
+    *ngIf="documentListingLoader; else proposalDocumentListingTemplate"
+    class="col-sm-12"
+  >
+    <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+  </div>
+  <ng-template #proposalDocumentListingTemplate>
+    <div class="col-sm-12">
+      <div class="responsive_table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th width="1%" class="text-center"></th>
+              <th width="20%" class="text-left">
+                File Name
+              </th>
+              <th width="10%" class="text-left">
+                File Type
+              </th>
+              <th width="10%" class="text-center">
+                Uploaded Date
+              </th>
+              <th width="15%" class="text-center">
+                Uploaded By
+              </th>
+              <th width="1%" class="text-center"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of fileDetailsModel">
+              <td width="1%" class="text-center"></td>
+              <td width="20%" text-align="text-center">
+                <a (click)="onGetProposalDoc(data.ProposalWebLink)">
+                  {{ data.ProposalDocumentName }}</a
+                >
+              </td>
+              <td width="10%" text-align="text-center">
+                {{ data.ProposalDocumentType }}
+              </td>
+              <td width="10%" class="text-center">
+                {{ data.CreatedDate | date: "short" }}
+              </td>
+              <td width="15%" class="text-center">
+                {{ data.UserName }}
+              </td>
+              <td width="1%" class="text-center"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-template>
+</div>

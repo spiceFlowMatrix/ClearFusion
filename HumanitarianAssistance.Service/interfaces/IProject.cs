@@ -112,7 +112,8 @@ namespace HumanitarianAssistance.Service.interfaces
 
         //Task<APIResponse> AddEditProjectproposals(long projectId, string UserId,string logginUserEmailId);
         APIResponse GetProjectproposalsById(long projectId);
-
+        APIResponse GetProjectproposalDocumentsById(long projectId);
+             
         APIResponse AddEditProjectotherDetail(ProjectOtherDetailModel otherDetail, string UserId);
         //APIResponse UploadOtherProposalFile(IFormFile file, string UserId);
         Task<APIResponse> UploadOtherDocuments(IFormFile file, string UserId, long projectid, string fileName, string logginUserEmailId, string ProposalType, string ext);
@@ -218,8 +219,8 @@ namespace HumanitarianAssistance.Service.interfaces
         #endregion
 
         #region start proposal 25/03/219
-        Task<APIResponse> StartProposal(long Projectid, string userid, string logginUserEmailId);
-        Task<APIResponse> StartProposalDragAndDrop(IFormFile file, string userid, long projectid, string fileName, string logginUserEmailId, string ProposalType, string ext);
+        Task<APIResponse> StartProposal(long Projectid, string userid, string logginUserEmailId); 
+        Task<APIResponse> StartProposalDragAndDrop(IFormFile file, string userid, long projectid, string fileName, string logginUserEmailId, int ProposalTypeId, string ext);
         //Task<APIResponse> UploadOtherDocuments(IFormFile file, string UserId, long projectid, string fileName, string logginUserEmailId, string ProposalType, string ext);
         Task<APIResponse> UploadReviewDragAndDrop(IFormFile file, string userid, long projectid, string fileName, string logginUserEmailId, string ext, ApproveProjectDetailModel model);
         Task<APIResponse> UploadFinalizeDragAndDrop(IFormFile file, string userid, long projectid, string fileName, string logginUserEmailId, string ext, WinApprovalProjectModel model);
@@ -235,6 +236,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> GetProjectIndicatorQuestionsById(long id);
         //void GetExcelFile(IFormFile fileKey, string UserId);
         Task<APIResponse> GetExcelFile(Stream file, string UserId, long projectId);
+        //Task<APIResponse> DeleteDocument(long id, string UserId);        
 
     }
 }

@@ -405,6 +405,10 @@ export class ProjectListService {
   GetProjectproposalById(url: string, Id: any) {
     return this.globalService.getListById(url, Id);
   }
+
+  GetProjectproposalDocumentById(url: string, Id: any) {
+    return this.globalService.getListById(url, Id);
+  }
   //#endregion
   //#region "uploadEDIFile"
   uploadEDIFile(url: string, Id: number, Formdata: any): any {
@@ -644,6 +648,7 @@ export class ProjectListService {
         })
       );
   }
+
   //#endregion
 
 
@@ -890,6 +895,21 @@ export class ProjectListService {
   }
   //#endregion
 
-
-
+  DeleteDocument(id: number): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_Project_DeleteDocument,
+        id
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: null,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
 }

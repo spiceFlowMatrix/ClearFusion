@@ -204,29 +204,20 @@ export interface CurrencyModel {
 
 export interface ProposalFileDetailsModel {
   ProjectProposaldetailId?: number;
-  FolderName?: string;
-  ProposalFileName?: string;
+  ProposalDocumentName?: string;
   ProjectId ?: number;
   ProposalWebLink?: string;
-  FileType?: string;
   ProposalExtType?: string;
-  ProposalStartDate?: any;
-  ProposalBudget?: string;
-  ProposalDueDate?: any;
-  ProjectAssignTo?: string;
-  IsProposalAccept?: string;
-  CurrencyId?: number;
-  UserId?: number;
+  UserName?: number;
   CreatedDate?: any;
+  ProposalDocumentType?: string;
 }
 
 export interface ProposalDocModel {
   ProjectId?: number;
-  UserId?: number;
   ProposalStartDate?: any;
-  ProposalBudget?: any;
   ProposalDueDate?: any;
-  ProjectAssignTo?: number;
+  ProposalBudget?: any;
   IsProposalAccept?: any;
   CurrencyId?: any;
   IsApproved?: boolean;
@@ -536,5 +527,6 @@ export interface IProjectOtherDetailPdf {
     SecurityRemarks?: string;
   }
   export interface FileTypes {
-    value: string;
+    Id: Number;
+    Name: string;
   }

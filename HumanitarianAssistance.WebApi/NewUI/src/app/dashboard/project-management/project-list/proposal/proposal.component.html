@@ -11,15 +11,18 @@
                   class="pull-right"
                   *ngIf="
                     startSubmitProposalLoader;
-                    else stopSubmitProposalLoder
+                    else stopSubmitProposalLoader
                   "
                 >
                   <mat-spinner [diameter]="20"></mat-spinner>
                 </a>
-                <ng-template #stopSubmitProposalLoder>
+                <ng-template #stopSubmitProposalLoader>
                   <button
                     mat-icon-button
-                    *ngIf="!IsproposalStart; else proposalStartedTemplate"
+                    *ngIf="
+                      !isProposalDocumentAvailable;
+                      else proposalStartedTemplate
+                    "
                     class="pull-right"
                     matTooltip="Please Start Proposal"
                     matTooltipPosition="left"
@@ -36,12 +39,8 @@
                         else proposalSubmitedTemplate
                       "
                       class="pull-right"
-                      (click)="ProposalDetailsChange('proposalAccept', true)"
-                      [matTooltip]="
-                        IsCompleteAllDoc == true
-                          ? 'Click Here to Submit'
-                          : 'Please Complete All Documents'
-                      "
+                      (click)="proposalDetailsChange('proposalAccept', true)"
+                      matTooltip="Click Here to Submit"
                       matTooltipPosition="left"
                     >
                       <mat-icon aria-label="approve" class="grey_color"
@@ -69,7 +68,7 @@
                           mat-icon-button
                           class="pull-right"
                           (click)="
-                            ProposalDetailsChange('proposalAccept', true)
+                            proposalDetailsChange('proposalAccept', true)
                           "
                           matTooltip="Please Submit Document Again"
                           matTooltipPosition="left"
@@ -96,13 +95,13 @@
                         <mat-select
                           placeholder="Cur"
                           name="currency"
-                          [value]="ProposalModel.CurrencyId"
+                          [value]="proposalModel.CurrencyId"
                           (selectionChange)="
                             currencyDetailsChange($event.value)
                           "
                         >
                           <mat-option
-                            *ngFor="let item of CurrencyList"
+                            *ngFor="let item of currencyList"
                             [value]="item.CurrencyId"
                           >
                             {{ item.CurrencyCode }}
@@ -119,14 +118,14 @@
                         <input
                           matInput
                           #ProposalBudget
-                          type="text"
-                          [(ngModel)]="ProposalModel.ProposalBudget"
+                          type="number"
+                          [(ngModel)]="proposalModel.ProposalBudget"
                           maxlength="150"
                           placeholder="Budget"
                           name="proposalBudget"
-                          (keypress)="numberOnly($event)"
+                          appNumberOnly="true"
                           (focusout)="
-                            ProposalDetailsChange(
+                            proposalDetailsChange(
                               'proposalBudget',
                               ProposalBudget.value
                             )
@@ -150,7 +149,7 @@
                     <mat-form-field>
                       <mat-datepicker-toggle
                         [ngClass]="{
-                          blue_date: ProposalModel.ProposalDueDate != null
+                          blue_date: proposalModel.ProposalDueDate != null
                         }"
                         matSuffix
                         [for]="dueDatePicker"
@@ -158,17 +157,17 @@
                       <mat-datepicker #dueDatePicker></mat-datepicker>
                       <input
                         matInput
-                        [(ngModel)]="ProposalModel.ProposalDueDate"
-                        [min]="ProposalModel.ProposalStartDate"
+                        [(ngModel)]="proposalModel.ProposalDueDate"
+                        [min]="proposalModel.ProposalStartDate"
                         [matDatepicker]="dueDatePicker"
                         (dateChange)="
-                          ProposalDetailsChange(
+                          proposalDetailsChange(
                             'dueDate',
-                            ProposalModel.ProposalDueDate
+                            proposalModel.ProposalDueDate
                           )
                         "
                         placeholder="Due Date"
-                        [disabled]="ProposalModel.ProposalStartDate == null"
+                        [disabled]="proposalModel.ProposalStartDate == null"
                       />
                     </mat-form-field>
                   </div>
@@ -180,7 +179,7 @@
                     <mat-form-field>
                       <mat-datepicker-toggle
                         [ngClass]="{
-                          blue_date: ProposalModel.ProposalStartDate != null
+                          blue_date: proposalModel.ProposalStartDate != null
                         }"
                         matSuffix
                         [for]="startDatePicker"
@@ -188,7 +187,7 @@
                       <mat-datepicker #startDatePicker></mat-datepicker>
                       <input
                         matInput
-                        [(ngModel)]="ProposalModel.ProposalStartDate"
+                        [(ngModel)]="proposalModel.ProposalStartDate"
                         [matDatepicker]="startDatePicker"
                         placeholder="Start Date"
                         [disabled]="true"
@@ -199,84 +198,15 @@
               </div>
             </div>
             <br />
-            <div class="row">
-              <div class="col-sm-3">
-                <mat-form-field class="example-full-width">
-                  <mat-select
-                    [(ngModel)]="SelectedFileType"
-                    name="FileTypes"
-                    placeholder="Select File Type"
-                  >
-                    <mat-option
-                      *ngFor="let type of ProposalFileTypes"
-                      [value]="type.value"
-                    >
-                      {{ type.value }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <div class="col-sm-1">
+          </div>
+        </div>
 
-                  <label class="btn-floating btn-lg pink lighten-1 mt-0 float-left">
-                      <mat-icon class="icon_cursor padding_top_5" aria-label="icon-button done icon" pTooltip="Upload File"
-                        tooltipPosition="top">add</mat-icon>
-                      <input type="file" #fileInput id="file" (click)="fileInput.value = null" value="" style="display: none;"
-                      (change)="UploadProposalFile($event.target.files)"
-                      >
-                    </label>
-              </div>
-            </div>
-            <div class="row">
-              <div
-                *ngIf="currencyDetailLoader; else ProposelListTemplate"
-                class="col-sm-12"
-              >
-                <mat-spinner class="center_loader" diameter="50"></mat-spinner>
-              </div>
-              <ng-template #ProposelListTemplate>
-                <div class="col-sm-12">
-                  <div class="responsive_table-responsive">
-                    <table class="table table-bordered">
-                      <tbody>
-                        <tr>
-                          <td width="1%"><p class="width_8"></p></td>
-                          <td width="10%" class="text-left">
-                            File Name
-                          </td>
-                          <td width="10%" class="text-left">
-                            Type Of File
-                          </td>
-                          <td width="20%" class="text-center">
-                            Upload Date
-                          </td>
-                          <td width="5%" class="text-center">
-                            Uploaded By
-                          </td>
-                          <td width="1%" class="text-center"></td>
-                        </tr>
-                        <tr *ngFor="let data of FileDetailsModel">
-                          <td width="1%"><p class="width_8"></p></td>
-                          <td width="10%" text-align="text-center">
-                              {{data.ProposalFileName}}
-                          </td>
-                          <td width="10%" text-align="text-center">
-                              {{data.FileType}}
-                          </td>
-                          <td width="20%" class="text-center">
-                              {{data.CreatedDate}}
-                          </td>
-                          <td width="5%" class="text-center">
-                              {{data.UserId}}
-                          </td>
-                          <td width="1%" class="text-center"></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </ng-template>
-            </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <app-proposal-document
+              (isProposalDocumentAvailable)="changeDocumentAvailableFlag($event)"
+              (changeStartDate)="changeStartDate($event)"
+            ></app-proposal-document>
           </div>
         </div>
       </div>
