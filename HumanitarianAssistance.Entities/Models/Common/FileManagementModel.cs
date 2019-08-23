@@ -12,6 +12,8 @@ namespace HumanitarianAssistance.ViewModels.Models.Common
         public int PageId { get; set; }
         public long RecordId { get; set; }
         public string FilePath { get; set; }
+        public int? DocumentTypeId { get; set; }
+        public long DocumentFileId { get; set; }
     }
 
     public class FileModel
@@ -19,6 +21,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Common
         public int PageId { get; set; }
         public long? RecordId { get; set; }
         public long? DocumentFileId { get; set; }
+        public int? DocumentTypeId { get; set; }
     }
 
     public class FileListModel
@@ -27,5 +30,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Common
         public string FileSignedURL { get; set; }
         public string FilePath { get; set; }
         public long? DocumentFileId { get; set; }
+        public int? DocumentTypeId { get; set; }
+
     }
 }

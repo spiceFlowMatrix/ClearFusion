@@ -25,16 +25,10 @@ namespace HumanitarianAssistance.Service.Classes
     public class FileManagementService : IFileManagement
     {
         IUnitOfWork _uow;
-        IMapper _mapper;
-        UserManager<AppUser> _userManager;
-        private IHostingEnvironment _hostingEnvironment;
 
-        public FileManagementService(IUnitOfWork uow, IMapper mapper, UserManager<AppUser> userManager, IHostingEnvironment hostingEnvironment)
+        public FileManagementService(IUnitOfWork uow)
         {
             this._uow = uow;
-            this._mapper = mapper;
-            this._userManager = userManager;
-            _hostingEnvironment = hostingEnvironment;
         }
 
         public APIResponse GetSignedURL(DownloadObjectGCBucketModel model)
@@ -90,35 +84,34 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 if (model != null)
                 {
-                    DocumentFileDetail fileDetail = new DocumentFileDetail();
-                    fileDetail.IsDeleted = false;
-                    fileDetail.CreatedDate = DateTime.UtcNow;
-                    fileDetail.CreatedById = model.CreatedById;
-                    fileDetail.Name = model.FileName;
-                    fileDetail.RawFileSizeBytes = model.FileSize;
-                    fileDetail.RawFileMimeType = model.FileType;
-                    fileDetail.Description= model.FileName;
-                    fileDetail.PageId = model.PageId;
-                    fileDetail.StorageDirectoryPath = model.FilePath;
+                    DocumentFileDetail fileDetail = new DocumentFileDetail
+                    {
+                        IsDeleted = false,
+                        CreatedDate = DateTime.UtcNow,
+                        CreatedById = model.CreatedById,
+                        Name = model.FileName,
+                        RawFileSizeBytes = model.FileSize,
+                        RawFileMimeType = model.FileType,
+                        Description = model.FileName,
+                        PageId = model.PageId,
+                        StorageDirectoryPath = model.FilePath,
+                        DocumentTypeId= model.DocumentTypeId
+                    };
 
                     await _uow.GetDbContext().DocumentFileDetail.AddAsync(fileDetail);
                     await _uow.GetDbContext().SaveChangesAsync();
 
-                    //switch (model.PageId)
-                    //{
-                    //    case (int)FileSourceEntityTypes.Voucher:
+                    EntitySourceDocumentDetail docDetail = new EntitySourceDocumentDetail
+                    {
+                        CreatedDate = DateTime.UtcNow,
+                        CreatedById = model.CreatedById,
+                        DocumentFileId = fileDetail.DocumentFileId,
+                        EntityId = model.RecordId,
+                        IsDeleted = false
+                    };
 
-                            //add entry to voucherdocumentdetail table
-                            EntitySourceDocumentDetail docDetail = new EntitySourceDocumentDetail();
-                    docDetail.CreatedDate = DateTime.UtcNow;
-                    docDetail.CreatedById = model.CreatedById;
-                    docDetail.DocumentFileId = fileDetail.DocumentFileId;
-                    docDetail.EntityId = model.RecordId;
-                    docDetail.IsDeleted = false;
-                     await _uow.GetDbContext().EntitySourceDocumentDetails.AddAsync(docDetail);
-                     await _uow.GetDbContext().SaveChangesAsync();
-                            //break;
-                    //}
+                    await _uow.GetDbContext().EntitySourceDocumentDetails.AddAsync(docDetail);
+                    await _uow.GetDbContext().SaveChangesAsync();
                 }
                
                 response.StatusCode = StaticResource.successStatusCode;
@@ -143,10 +136,6 @@ namespace HumanitarianAssistance.Service.Classes
 
                     List<FileListModel> fileList = new List<FileListModel>();
 
-                    //switch (model.PageId)
-                    //{
-                    //    case (int)FileSourceEntityTypes.Voucher:
-
                     fileList = await _uow.GetDbContext().EntitySourceDocumentDetails
                                        .Include(x => x.DocumentFileDetail)
                                        .Where(x => x.IsDeleted == false && x.EntityId == model.RecordId
@@ -155,10 +144,9 @@ namespace HumanitarianAssistance.Service.Classes
                                        {
                                            FileName = x.DocumentFileDetail.Name,
                                            FilePath = x.DocumentFileDetail.StorageDirectoryPath,
-                                           DocumentFileId = x.DocumentFileId
+                                           DocumentFileId = x.DocumentFileId,
+                                           DocumentTypeId = x.DocumentFileDetail.DocumentTypeId
                                        }).ToListAsync();
-                    //        break;
-                    //}
 
                     if (fileList.Any())
                     {
@@ -212,6 +200,52 @@ namespace HumanitarianAssistance.Service.Classes
         }
         #endregion
 
+        #region GetSignedURLStore
+
+        public async Task<StoreDocumentModel> GetFilesByRecordIdAndDocumentType(FileModel model)
+        {
+            StoreDocumentModel documentModel = new StoreDocumentModel();
+
+            try
+            {
+                if (model != null)
+                {
+
+                    FileListModel fileModel = new FileListModel();
+
+                    fileModel = await _uow.GetDbContext().EntitySourceDocumentDetails
+                                       .Include(x => x.DocumentFileDetail)
+                                       .Where(x => x.IsDeleted == false && x.EntityId == model.RecordId
+                                              && x.DocumentFileDetail.PageId == model.PageId &&
+                                              x.DocumentFileDetail.DocumentTypeId == model.DocumentTypeId)
+                                       .Select(x => new FileListModel
+                                       {
+                                           FileName = x.DocumentFileDetail.Name,
+                                           FilePath = x.DocumentFileDetail.StorageDirectoryPath,
+                                           DocumentFileId = x.DocumentFileId,
+                                           DocumentTypeId = x.DocumentFileDetail.DocumentTypeId
+                                       }).FirstOrDefaultAsync();
+
+                    if (fileModel != null)
+                    {
+                        DownloadObjectGCBucketModel bucketModel = new DownloadObjectGCBucketModel();
+                        bucketModel.ObjectName = fileModel.FilePath;
+                        APIResponse responses = await DownloadFileFromBucket(bucketModel);
+
+                        documentModel.SignedURL = responses.data.SignedUrl;
+                        documentModel.DocumentFileId = fileModel.DocumentFileId ?? 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return documentModel;
+        }
+
+        #endregion
+
         #region "DeleteDocumentFile"
         public async Task<APIResponse> DeleteDocumentFile(FileModel model)
         {
@@ -258,6 +292,39 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex;
+            }
+            return response;
+        }
+        #endregion
+
+        #region UpdateSavedFileInfo
+        public async Task<APIResponse> UpdateUploadedFileInfo(FileManagementModel model)
+        {
+            APIResponse response = new APIResponse();
+
+            try
+            {
+                if (model != null)
+                {
+                    DocumentFileDetail docDetail = await _uow.GetDbContext().DocumentFileDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.DocumentFileId == model.DocumentFileId);
+
+                    docDetail.ModifiedById = model.ModifiedById;
+                    docDetail.ModifiedDate = DateTime.UtcNow;
+                    docDetail.Name = model.FileName;
+                    docDetail.RawFileMimeType = model.FileType;
+                    docDetail.RawFileSizeBytes = model.FileSize;
+                    docDetail.StorageDirectoryPath = model.FilePath;
+
+                    await _uow.GetDbContext().SaveChangesAsync();
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
             }
             return response;
         }

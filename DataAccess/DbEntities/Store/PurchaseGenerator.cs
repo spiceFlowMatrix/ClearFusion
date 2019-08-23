@@ -8,14 +8,14 @@ namespace DataAccess.DbEntities.Store
         [Key]
         public int GeneratorId { get; set; }
         [Required]
-        public string Purchase { get; set; }
+        public long PurchaseId { get; set; }
 
         public string GeneratorBrand { get; set; }
         public string GeneratorModel { get; set; }
         public string MakeYear { get; set; }
         public string SerialBarCode { get; set; }
 
-        [ForeignKey("Purchase")]
+        [ForeignKey("PurchaseId")]
         public StoreItemPurchase ItemPurchase { get; set; }
     }
 }

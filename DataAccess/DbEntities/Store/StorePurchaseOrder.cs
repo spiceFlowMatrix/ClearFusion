@@ -8,9 +8,10 @@ namespace DataAccess.DbEntities.Store
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string OrderId { get; set; }
-        public string Purchase { get; set; }
-        public string InventoryItem { get; set; }
+        [Column(Order = 1)]
+        public long OrderId { get; set; }
+        public long PurchaseId { get; set; }
+        public long InventoryItem { get; set; }
 
         public int IssuedQuantity { get; set; }
         public bool MustReturn { get; set; }
@@ -19,7 +20,7 @@ namespace DataAccess.DbEntities.Store
         public DateTime IssueDate { get; set; }
         public DateTime? ReturnedDate { get; set; }
 
-        [ForeignKey("Purchase")]
+        [ForeignKey("PurchaseId")]
         public StoreItemPurchase StoreItemPurchase { get; set; }
         [ForeignKey("InventoryItem")]
         public StoreInventoryItem StoreInventoryItem { get; set; }

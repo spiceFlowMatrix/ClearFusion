@@ -31,7 +31,7 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddPurchase(ItemPurchaseModel model);
         Task<APIResponse> EditPurchase(ItemPurchaseModel model);
         Task<APIResponse> DeletePurchase(ItemPurchaseModel model);
-        Task<APIResponse> GetAllPurchasesByItem(string itemId);
+        Task<APIResponse> GetAllPurchasesByItem(long itemId);
         Task<APIResponse> GetSerialNumber(string serialNumber);
 
 
@@ -45,15 +45,15 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> AddItemOrder(ItemOrderModel model);
         Task<APIResponse> EditItemOrder(ItemOrderModel model);
         Task<APIResponse> DeleteItemOrder(ItemOrderModel model);
-        Task<APIResponse> GetAllItemsOrder(string ItemId);
+        Task<APIResponse> GetAllItemsOrder(long ItemId);
 
 
-        Task<APIResponse> GetItemAmounts(string ItemId);
+        Task<APIResponse> GetItemAmounts(long ItemId);
         Task<APIResponse> GetProcurementSummary(int EmployeeId, int CurrencyId);
         Task<APIResponse> GetAllDepreciationByFilter(DepreciationReportFilter depretiationFilter);
 
         Task<APIResponse> UpdateInvoice(UpdatePurchaseInvoiceModel model, string UserId);
-        Task<APIResponse> GetAllPurchaseInvoices(string PurchaseId);
+        Task<APIResponse> GetAllPurchaseInvoices(long PurchaseId);
 
         Task<APIResponse> UpdatePurchaseImage(UpdatePurchaseInvoiceModel model, string UserId);
 
@@ -79,9 +79,9 @@ namespace HumanitarianAssistance.Service.interfaces
         Task<APIResponse> EditPaymentTypes(PaymentTypes model, string UserId);
         Task<APIResponse> DeletePaymentTypes(int PaymentId, string UserId);
         Task<APIResponse> AddStoreItemGroup(StoreItemGroupModel storeGroupItem, string userId);
-        Task<APIResponse> GetStoreGroupItemCode(string inventoryId);
+        Task<APIResponse> GetStoreGroupItemCode(long inventoryId);
         Task<APIResponse> EditStoreItemGroup(StoreItemGroupModel storeGroupItem, string userId);
         Task<APIResponse> GetStoreItemCode(long groupItemId);
-        Task<APIResponse> GetAllStoreItemGroups(string inventoryId);
+        Task<APIResponse> GetAllStoreItemGroups(long inventoryId);
     }
 }

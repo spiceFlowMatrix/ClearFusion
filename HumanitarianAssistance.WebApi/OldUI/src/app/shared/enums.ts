@@ -155,3 +155,8 @@ export enum FileSourceEntityTypes {
   DonorDetail = 9,
   StorePurchase= 10
 }
+
+export enum DocumentFileTypes {
+    PurchaseImage = 1,
+    PurchaseInvoice =2
+}

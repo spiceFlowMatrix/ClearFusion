@@ -9,9 +9,9 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
         //Must filter on store name, inventory, item, and purchase
 
         public int? StoreId { get; set; }
-        public string InventoryId { get; set; }
-        public string ItemId { get; set; }
-        public string PurchaseId { get; set; }
+        public long InventoryId { get; set; }
+        public long ItemId { get; set; }
+        public long PurchaseId { get; set; }
         public long ItemGroupId { get; set; }
         public DateTime CurrentDate { get; set; }
     }

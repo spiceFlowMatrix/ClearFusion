@@ -207,5 +207,12 @@ namespace HumanitarianAssistance.Common.Enums
         ProjectActivityMonitoring = 7,
         ProjectActivityPlanning = 8,
         DonorDetail = 9,
+        StorePurchase = 10
+    }
+
+    public enum DocumentFileTypes
+    {
+        PurchaseImage = 1,
+        PurchaseInvoice = 2
     }
 }
