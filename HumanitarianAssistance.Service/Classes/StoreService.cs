@@ -1744,7 +1744,7 @@ namespace HumanitarianAssistance.Service.Classes
                 {
                     PageId = (int)FileSourceEntityTypes.StorePurchase,
                     RecordId = PurchaseId,
-                    DocumentTypeId = (int)DocumentFileTypes.PurchaseImage
+                    DocumentTypeId = (int)DocumentFileTypes.PurchaseInvoice
                 };
 
                 StoreDocumentModel documentModel = new StoreDocumentModel();
