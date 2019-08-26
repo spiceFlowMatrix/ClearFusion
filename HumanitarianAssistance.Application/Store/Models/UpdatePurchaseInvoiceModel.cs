@@ -6,7 +6,7 @@ namespace HumanitarianAssistance.Application.Store.Models
 {
     public class UpdatePurchaseInvoiceModel
     {
-        public string PurchaseId { get; set; }
+        public long PurchaseId { get; set; }
         public string Invoice { get; set; }
     }
 }

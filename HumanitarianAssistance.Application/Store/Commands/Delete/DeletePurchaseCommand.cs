@@ -5,6 +5,6 @@ namespace HumanitarianAssistance.Application.Store.Commands.Delete
 {
     public class DeletePurchaseCommand : BaseModel, IRequest<ApiResponse>
     {
-        public string PurchaseId { get; set; }
+        public long PurchaseId { get; set; }
     }
 }

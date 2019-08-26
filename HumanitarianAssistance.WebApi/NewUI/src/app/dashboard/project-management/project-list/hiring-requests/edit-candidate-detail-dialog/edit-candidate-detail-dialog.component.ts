@@ -54,7 +54,7 @@ employeeType = {
     this.candidateDetailForm = this.fb.group({
       EmployeeContractTypeId: ['', Validators.required],
       Id: ['', [Validators.required]],
-      HiredOn: ['', Validators.required],
+      HiredOn: [new Date(), Validators.required],
     });
   }
   //#endregion

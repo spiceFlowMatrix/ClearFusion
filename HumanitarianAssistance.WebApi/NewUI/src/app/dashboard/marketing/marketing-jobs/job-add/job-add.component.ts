@@ -38,7 +38,7 @@ export class JobAddComponent implements OnInit {
   initForm() {
     this.jobDetailsForm = new FormGroup({
       jobname: new FormControl('', [Validators.required]),
-      endDate: new FormControl('', [Validators.required]),
+      endDate: new FormControl(new Date(), [Validators.required]),
       contractname: new FormControl('', [Validators.required]),
       minutes: new FormControl('', [Validators.required, Validators.min(0)]),
       rate: new FormControl('', [Validators.required, Validators.min(0)]),

@@ -19,5 +19,6 @@ namespace HumanitarianAssistance.Domain.Entities
         public long RawFileSizeBytes { get; set; }
         public string StorageDirectoryPath { get; set; }
         public bool? Active { get; set; }
+        public int? DocumentTypeId { get; set; }
     }
 }

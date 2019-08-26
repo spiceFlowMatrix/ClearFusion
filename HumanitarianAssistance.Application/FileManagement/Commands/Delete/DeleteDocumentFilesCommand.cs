@@ -8,5 +8,6 @@ namespace HumanitarianAssistance.Application.FileManagement.Commands.Delete
         public int PageId { get; set; }
         public long? RecordId { get; set; }
         public long? DocumentFileId { get; set; }
+        public int? DocumentTypeId { get; set; }
     }
 }

@@ -141,3 +141,23 @@ export enum EmployeeType {
   Active = 2,
   Terminated = 3
 }
+
+//#region "FileSourceEntityTypes"
+export enum FileSourceEntityTypes {
+  Voucher = 1,
+  Account = 2,
+  ProjectDetail = 3,
+  ProjectProposal = 4,
+  ProjectProposalSupportingDoc = 5,
+  ProjectActivityImplementation = 6,
+  ProjectActivityMonitoring = 7,
+  ProjectActivityPlanning = 8,
+  DonorDetail = 9,
+  StorePurchase= 10
+}
+
+export enum DocumentFileTypes {
+    PurchaseImage = 1,
+    PurchaseInvoice =2
+}
+

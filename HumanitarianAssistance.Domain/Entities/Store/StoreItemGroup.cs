@@ -16,7 +16,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public string ItemGroupCode { get; set; }
         public string ItemGroupName { get; set; }
         public string Description { get; set; }
-        public string InventoryId { get; set; }
+        public long InventoryId { get; set; }
         [ForeignKey("InventoryId")]
         public StoreInventory StoreInventory { get; set; }
     }

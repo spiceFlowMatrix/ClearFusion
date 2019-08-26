@@ -19,8 +19,10 @@ namespace HumanitarianAssistance.Domain.Entities.Store
     public class StoreInventoryItem : BaseEntity
     {
         [Key]
-        public string ItemId { get; set; }
-        public string ItemInventory { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column(Order = 1)]
+        public long ItemId { get; set; }
+        public long ItemInventory { get; set; }
         public string ItemName { get; set; }
         public string ItemCode { get; set; }
         public string Description { get; set; }
