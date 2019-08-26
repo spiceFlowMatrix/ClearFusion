@@ -85,7 +85,11 @@ export class GLOBAL {
 
   // public static API_Hr_GetAllEmployees = 'HREmployee/GetAllEmployeeDetail';
   public static API_Hr_GetAllEmployeeDetail = 'EmployeeDetail/GetAllEmployeeDetail';
+<<<<<<< HEAD
+    public static API_HR_EmployeeDocumentAdd = 'EmployeeDetail/AddDocumentDetail';
+=======
   public static API_HR_EmployeeDocumentAdd = 'HREmployee/AddDocumentDetail';
+>>>>>>> 283e4aad2a4f32a5e1f5bbe3a3e24be5174a685f
 
   public static API_Hr_AddEmployees = 'EmployeeDetail/AddNewEmployee';
   // public static API_Hr_EditEmployees = 'HREmployee/EditEmployeeDetail';
@@ -425,7 +429,7 @@ export class GLOBAL {
   public static API_Store_DeletePaymentTypes = 'Store/DeletePaymentTypes';
 
   // public static API_Hr_GetAllEmployeeMonthlyPayrollListApproved = 'HREmployee/GetAllEmployeeMonthlyPayrollListApproved';
-  public static API_EmployeeHr_GetAllEmployeeMonthlyPayrollListApproved = 'EmployeeHR/GetAllEmployeeMonthlyPayrollListApproved';
+    public static API_EmployeeHr_GetAllEmployeeMonthlyPayrollListApproved = 'EmployeePayroll/GetAllEmployeeMonthlyPayrollListApproved';
 
   // public static API_Hr_EmployeePaymentTypeReportForSaveOnly = 'HREmployee/EmployeePaymentTypeReportForSaveOnly'; //old
     public static API_EmployeeHr_EmployeePaymentTypeReportForSaveOnly = 'EmployeePayroll/EmployeePaymentTypeReportForSaveOnly'; // new

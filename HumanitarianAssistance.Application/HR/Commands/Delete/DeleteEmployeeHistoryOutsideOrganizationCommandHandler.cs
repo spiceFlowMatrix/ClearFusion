@@ -33,7 +33,11 @@ namespace HumanitarianAssistance.Application.HR.Commands.Delete
                     existRecord.IsDeleted = true;
                     existRecord.ModifiedById = request.ModifiedById;
                     existRecord.ModifiedDate = DateTime.Now;
+<<<<<<< HEAD
+                    //_mapper.Map(request, existRecord);
+=======
                     _mapper.Map(request, existRecord);
+>>>>>>> 283e4aad2a4f32a5e1f5bbe3a3e24be5174a685f
 
                     _dbContext.EmployeeHistoryOutsideOrganization.Update(existRecord);
                     await _dbContext.SaveChangesAsync();

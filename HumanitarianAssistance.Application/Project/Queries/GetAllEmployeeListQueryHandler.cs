@@ -26,7 +26,12 @@ namespace HumanitarianAssistance.Application.Project.Queries
             try
             {
                 response.data.EmployeeDetailListData = await _dbContext.EmployeeDetail.Where(x => x.EmployeeTypeId != (int)EmployeeTypeStatus.Terminated &&
+<<<<<<< HEAD
+                                                                                                           x.IsDeleted == false &&
+                                                                                                           x.EmployeeProfessionalDetail.OfficeId != null).Select(x => new EmployeeDetailListModel
+=======
                                                                                                            x.IsDeleted == false).Select(x => new EmployeeDetailListModel
+>>>>>>> 283e4aad2a4f32a5e1f5bbe3a3e24be5174a685f
                                                                                                            {
                                                                                                                EmployeeId = x.EmployeeID,
                                                                                                                EmployeeName = x.EmployeeName
