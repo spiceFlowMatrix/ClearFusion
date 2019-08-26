@@ -67,11 +67,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
 
         public async Task<ApiResponse> GetAllEmployeeHistoryOutsideCountry([FromQuery]int EmployeeId)
         {
-<<<<<<< HEAD
             return await _mediator.Send(new GetAllEmployeeHistoryOutsideCountryQuery { EmployeeId = EmployeeId });
-=======
-            return await _mediator.Send(new GetEmployeeHistoryOutsideOrganizationQuery { EmployeeId = EmployeeId });
->>>>>>> 283e4aad2a4f32a5e1f5bbe3a3e24be5174a685f
         }
 
         [HttpPost]
@@ -240,11 +236,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpGet]
         public async Task<ApiResponse> GetAllEmployeeSalaryBudgets([FromQuery]int EmployeeId)
         {
-<<<<<<< HEAD
             return await _mediator.Send(new GetAllEmployeeSalaryBudgetsQuery { EmployeeId = EmployeeId });
-=======
-            return await _mediator.Send(new GetAllEmployeeOtherSkillsQuery { EmployeeId = EmployeeId });
->>>>>>> 283e4aad2a4f32a5e1f5bbe3a3e24be5174a685f
         }
         [HttpPost]
         public async Task<ApiResponse> AddEmployeeSalaryBudgets([FromBody]AddEmployeeSalaryBudgetsCommand model)
@@ -323,11 +315,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpGet]
         public async Task<ApiResponse> GetAllEmployeeSalaryAnalyticalInfo([FromQuery]int EmployeeId)
         {
-<<<<<<< HEAD
             return await _mediator.Send(new GetSalaryAnalyticalInfoQuery { EmployeeId = EmployeeId });
-=======
-            return await _mediator.Send(new GetAllEmployeeEducationsQuery { EmployeeId = EmployeeId });
->>>>>>> 283e4aad2a4f32a5e1f5bbe3a3e24be5174a685f
         }
 
         [HttpPost]
@@ -388,11 +376,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpGet]
         public async Task<ApiResponse> GetEmployeeHealthQuestion([FromQuery]int EmployeeId)
         {
-<<<<<<< HEAD
             return await _mediator.Send(new GetEmployeeHealthQuestionQuery { EmployeeId = EmployeeId });
-=======
-            return await _mediator.Send(new GetEmployeeHealthInfoQuery { EmployeeId = EmployeeId });
->>>>>>> 283e4aad2a4f32a5e1f5bbe3a3e24be5174a685f
         }
 
         [HttpPost]
@@ -533,11 +517,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         }
 
         [HttpDelete]
-<<<<<<< HEAD
         public async Task<ApiResponse> DeleteEmployeeHistoryDetail(int HistoryId)
-=======
-        public async Task<ApiResponse> DeleteEmployeeHistoryDetail([FromBody] int HistoryId)
->>>>>>> 283e4aad2a4f32a5e1f5bbe3a3e24be5174a685f
         {
             DeleteEmployeeHistoryCommand model = new DeleteEmployeeHistoryCommand();
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
