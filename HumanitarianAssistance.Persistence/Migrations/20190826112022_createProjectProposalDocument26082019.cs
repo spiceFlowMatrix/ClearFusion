@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
-    public partial class InitialMigration19082019 : Migration
+    public partial class createProjectProposalDocument26082019 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -3516,6 +3516,34 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     table.PrimaryKey("PK_ProjectProposalDetail", x => x.ProjectProposaldetailId);
                     table.ForeignKey(
                         name: "FK_ProjectProposalDetail_ProjectDetail_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "ProjectDetail",
+                        principalColumn: "ProjectId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectProposalDocument",
+                columns: table => new
+                {
+                    ProjectProposalDocumnetId = table.Column<long>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    CreatedDate = table.Column<DateTime>(nullable: true),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    CreatedById = table.Column<string>(nullable: true),
+                    ModifiedById = table.Column<string>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    ProposalDocumentName = table.Column<string>(nullable: true),
+                    ProjectId = table.Column<long>(nullable: false),
+                    ProposalWebLink = table.Column<string>(nullable: true),
+                    ProposalExtType = table.Column<string>(nullable: true),
+                    ProposalDocumentTypeId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectProposalDocument", x => x.ProjectProposalDocumnetId);
+                    table.ForeignKey(
+                        name: "FK_ProjectProposalDocument_ProjectDetail_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "ProjectDetail",
                         principalColumn: "ProjectId",
@@ -7562,6 +7590,11 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProjectProposalDocument_ProjectId",
+                table: "ProjectProposalDocument",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProjectSector_ProjectId",
                 table: "ProjectSector",
                 column: "ProjectId");
@@ -8164,6 +8197,9 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProjectProposalDetail");
+
+            migrationBuilder.DropTable(
+                name: "ProjectProposalDocument");
 
             migrationBuilder.DropTable(
                 name: "ProjectSector");

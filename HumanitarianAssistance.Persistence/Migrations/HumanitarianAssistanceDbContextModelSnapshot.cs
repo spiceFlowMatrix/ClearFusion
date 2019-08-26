@@ -6900,6 +6900,38 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.ToTable("ProjectProposalDetail");
                 });
 
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectProposalDocument", b =>
+                {
+                    b.Property<long>("ProjectProposalDocumnetId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<long>("ProjectId");
+
+                    b.Property<string>("ProposalDocumentName");
+
+                    b.Property<int>("ProposalDocumentTypeId");
+
+                    b.Property<string>("ProposalExtType");
+
+                    b.Property<string>("ProposalWebLink");
+
+                    b.HasKey("ProjectProposalDocumnetId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectProposalDocument");
+                });
+
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectSector", b =>
                 {
                     b.Property<long>("ProjectSectorId")
@@ -9464,6 +9496,14 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectProposalDetail", b =>
+                {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectDetail", "ProjectDetail")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectProposalDocument", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectDetail", "ProjectDetail")
                         .WithMany()
