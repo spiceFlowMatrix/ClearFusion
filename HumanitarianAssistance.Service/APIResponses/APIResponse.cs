@@ -324,7 +324,10 @@ namespace HumanitarianAssistance.Service.APIResponses
 
 
         public ProjectProposalModel ProjectProposalModel { get; set; }
+        public List<ProjectProposalModelList> ProjectProposalModelList { get; set; }
+        public ProjectProposalModelList ProjectProposalDocumentModel { get; set; } 
         public ProjectProposalDetail ProjectProposalDetail { get; set; }
+        public ProjectProposalDocument ProjectProposalDocument { get; set; } 
         public ApproveProjectDetails ApproveProjectDetails { get; set; }
         public WinProjectDetails WinProjectDetails { get; set; }
 

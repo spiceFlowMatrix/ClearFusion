@@ -81,6 +81,7 @@ import { AddCandidateDaialogComponent } from './project-list/hiring-requests/add
 import { EditCandidateDetailDialogComponent } from './project-list/hiring-requests/edit-candidate-detail-dialog/edit-candidate-detail-dialog.component';
 import { ProjectOtherDetailPdfService } from './project-list/project-details/program-area-sector/project-other-detail-pdf.service';
 import { MatTabsModule } from '@angular/material/tabs';
+import { ProposalDocumentComponent } from './project-list/proposal/proposal-document/proposal-document.component';
 
 @NgModule({
   imports: [
@@ -161,7 +162,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     HiringRequestDetailsComponent,
     HiringRequestsListingComponent,
     AddCandidateDaialogComponent,
-    EditCandidateDetailDialogComponent
+    EditCandidateDetailDialogComponent,
+    ProposalDocumentComponent
 
   ],
   providers: [

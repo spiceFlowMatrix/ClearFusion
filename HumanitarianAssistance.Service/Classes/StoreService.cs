@@ -290,7 +290,7 @@ namespace HumanitarianAssistance.Service.Classes
             string ItemGroupCode = "";
             try
             {
-                if (inventoryId != null)
+                if (inventoryId != 0)
                 {
                     StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups
                                                                              .OrderByDescending(x => x.CreatedDate)
@@ -398,7 +398,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 List<StoreItemGroupModel> storeItemGroupList = new List<StoreItemGroupModel>();
 
-                if (inventoryId != null)
+                if (inventoryId != 0)
                 {
                     storeItemGroupList = await _uow.GetDbContext().StoreItemGroups.Where(x => x.IsDeleted == false && x.InventoryId == inventoryId).Select(x => new StoreItemGroupModel
                     {
@@ -1734,13 +1734,33 @@ namespace HumanitarianAssistance.Service.Classes
         public async Task<APIResponse> GetAllPurchaseInvoices(long PurchaseId)
         {
             APIResponse response = new APIResponse();
+
+            FileManagementService fileManagementService = new FileManagementService(_uow);
+
             try
             {
-                var Invoices = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.PurchaseId == PurchaseId);
-                UpdatePurchaseInvoiceModel obj = new UpdatePurchaseInvoiceModel();
-                obj.PurchaseId = Invoices.PurchaseId;
-                obj.Invoice = Invoices.InvoiceFileName + Invoices.InvoiceFileType;
-                response.data.UpdatePurchaseInvoiceModel = obj;
+
+                FileModel model = new FileModel()
+                {
+                    PageId = (int)FileSourceEntityTypes.StorePurchase,
+                    RecordId = PurchaseId,
+                    DocumentTypeId = (int)DocumentFileTypes.PurchaseInvoice
+                };
+
+                StoreDocumentModel documentModel = new StoreDocumentModel();
+
+                //get Saved Document ID and Signed URL For Purchase Image
+                documentModel = await fileManagementService.GetFilesByRecordIdAndDocumentType(model);
+
+                if (documentModel != null)
+                {
+                    response.data.UpdatePurchaseInvoiceModel = new UpdatePurchaseInvoiceModel()
+                    {
+                        Invoice = documentModel.SignedURL,
+                        PurchaseId = PurchaseId
+                    };
+                }
+
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

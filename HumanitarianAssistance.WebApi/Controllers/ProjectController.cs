@@ -823,9 +823,14 @@ namespace HumanitarianAssistance.WebApi.Controllers
             return apiRespone;
         }
 
-
-
-
+        [HttpPost]
+        public APIResponse GetProjectproposalDocumentsById([FromBody]long ProjectId)
+        {
+            APIResponse apiRespone = null;
+            apiRespone = _iProject.GetProjectproposalDocumentsById(ProjectId);
+            return apiRespone;
+        } 
+        
         /// <summary>
         /// upload other proposal document using service account credentails new 26/03/2019 poonam
         /// </summary>
@@ -1765,7 +1770,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
         #region start proposal drag and drop pk 26/03/2019 
 
         [HttpPost, DisableRequestSizeLimit]
-        public async Task<APIResponse> StartProposalDragAndDropFile([FromForm] IFormFile filesData, string projectId, string data)
+        public async Task<APIResponse> StartProposalDragAndDropFile([FromForm] IFormFile filesData, string projectId, int data)
         {
             APIResponse apiRespone = new APIResponse();
             string localFolderfullPath = string.Empty;
@@ -1774,18 +1779,18 @@ namespace HumanitarianAssistance.WebApi.Controllers
 
                 var file = Request.Form.Files[0];
                 long ProjectId = Convert.ToInt64(projectId);
-                string ProposalType = data;
+                int ProposalTypeId = data;
                 string fileName = Request.Form.Files[0].FileName;
 
                 string ext = System.IO.Path.GetExtension(fileName).ToLower();
-                if (ext == ".doc" || ext == ".docx")
+                if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
                 {
                     var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
                     if (user != null)
                     {
-                        string logginUserEmailId = user.Email;
+                        string logginUserEmailId = user.Email; 
                         var id = user.Id;
-                        apiRespone = await _iProject.StartProposalDragAndDrop(file, id, ProjectId, fileName, logginUserEmailId, ProposalType, ext);
+                        apiRespone = await _iProject.StartProposalDragAndDrop(file, id, ProjectId, fileName, logginUserEmailId, ProposalTypeId, ext);
 
                     }
                 }
@@ -2329,5 +2334,18 @@ namespace HumanitarianAssistance.WebApi.Controllers
         }
         #endregion
 
+        //[HttpPost]
+        //public async Task<APIResponse> DeleteDocument([FromBody]long id)
+        //{
+        //    APIResponse apiRespone = null;
+        //    var user = await _userManager.FindByNameAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        //    if (user != null)
+        //    { 
+        //        var UserId = user.Id; 
+
+        //        apiRespone = await _iProject.DeleteDocument(id, UserId);
+        //    }
+        //    return apiRespone;
+        //}        
     }
 }

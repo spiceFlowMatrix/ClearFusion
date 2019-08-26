@@ -160,6 +160,10 @@ export class GLOBAL {
 
   public static API_Project_AddEditProjectproposals = 'Project/AddEditProjectproposals';
   public static API_Project_GetProjectproposalsById = 'Project/GetProjectproposalsById';
+
+  public static API_Project_GetProjectproposalDocumnetsById = 'Project/GetProjectproposalDocumentsById';
+
+
   public static API_Project_UploadEDIProposalFile = 'Project/UploadEDIProposalFile';
   public static API_Project_StartProposalDragAndDropFile = 'Project/StartProposalDragAndDropFile';
   public static API_Project_UploadReviewFile = 'Project/UploadReviewFile';
@@ -411,7 +415,7 @@ export class GLOBAL {
   public static API_Chat_AddMessage = 'Chat/AddMessage';
 
   //#endregion
-
+  public static API_Project_DeleteDocument = 'Project/DeleteDocument';
 }
 
 
