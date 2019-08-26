@@ -42,7 +42,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
                 // var nodes = CreateHierarchy(accountList);
 
-                var nodes = DisplayTree(accountList);
+                var nodes = GetAccountsHierarchy(accountList, null);
 
                 response.ResponseData = nodes;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -57,45 +57,26 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
             return response;
         }
 
-        private ChartOfAccountNode CreateHierarchy(IEnumerable<ChartOfAccountModel> objects)
+        private List<ChartOfAccountNode> GetAccountsHierarchy(IEnumerable<ChartOfAccountModel> elements, long? id)
         {
-            var families = objects.ToLookup(x => x.ParentID);
-            Console.WriteLine(families[0]);
-            var topmost = families[0].SingleOrDefault();
+            // if (id == null) {
+            //     var parentList = elements.Where(x => x.ChartOfAccountId == x.ParentID).ToList();
+            // }
 
-            Func<long, IList<ChartOfAccountNode>> Children = null;
-
-            Children = (parentID) => families[parentID]
-                .OrderBy(x => x.ChartOfAccountId)
-                .Select(x => new ChartOfAccountNode(x, Children(x.ChartOfAccountId))).ToList();
-
-            return new ChartOfAccountNode(topmost, Children(topmost.ChartOfAccountId));
-        }
-
-        private List<dynamic> DisplayTree(IEnumerable<ChartOfAccountModel> elements)
-        {
-            var res = new List<dynamic>();
-            foreach (var element in elements)
-            {
-                var children = DisplayTree(elements.Where(e => e.ParentID == element.ChartOfAccountId)).ToArray();
-                if (children.Length != 0)
-                {
-                    res.Add(new
+            var sdf = elements
+                    // .Where(c => c.ParentID == c.ChartOfAccountId)
+                    .Where(c => c.ParentID == (id == null ? c.ChartOfAccountId : id))
+                    .Select(c => new ChartOfAccountNode
                     {
-                        name = element.AccountName
-                    ,
-                        children = children
-                    });
-                }
-                else
-                {
-                    res.Add(new
-                    {
-                        name = element.AccountName
-                    });
-              }
-            }
-            return res;
+                        ChartOfAccountId = c.ChartOfAccountId,
+                        ChartOfAccountCode = c.ChartOfAccountCode,
+                        AccountName = c.AccountName,
+                        ParentID = c.ParentID,
+                        AccountLevelId = c.AccountLevelId,
+                        ChildAccounts = GetAccountsHierarchy(elements, c.ChartOfAccountId)
+                    })
+                    .ToList();
+            return sdf;
         }
 
     }
