@@ -10,7 +10,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:5001/api/',
+  apiUrl: '/api/',
   docUrl: '/Docs/',
   hubUrl: '/chathub/',
   oldUiUrl: '/oldui/#/',
