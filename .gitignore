@@ -22,8 +22,5 @@ HumanitarianAssistance.Persistence/obj
 HumanitarianAssistance.Persistence/bin
 HumanitarianAssistance.WebApi/ClientApp/package-lock.json
 HumanitarianAssistance.WebApi/NewUI/package-lock.json
-<<<<<<< HEAD
 HumanitarianAssistance.WebApi/OldUI/package-lock.json
 HumanitarianAssistance.WebApi/OldUI/package-lock.json
-=======
->>>>>>> 283e4aad2a4f32a5e1f5bbe3a3e24be5174a685f

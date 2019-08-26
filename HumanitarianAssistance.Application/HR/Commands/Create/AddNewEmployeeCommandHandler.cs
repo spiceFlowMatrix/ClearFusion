@@ -33,7 +33,6 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                 obj.IsDeleted = false;
                 await _dbContext.EmployeeDetail.AddAsync(obj);
                 await _dbContext.SaveChangesAsync();
-<<<<<<< HEAD
                 OfficeDetail OfficeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.OfficeId == request.OfficeId && x.IsDeleted == false);
                 EmployeeDetail emp = await _dbContext.EmployeeDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.EmployeeID == obj.EmployeeID);
                 emp.EmployeeCode = "E" + obj.EmployeeID;
@@ -50,22 +49,6 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     ProfessionId = request.ProfessionId,
                     TinNumber = request.TinNumber
                 };
-=======
-                var OfficeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.OfficeId == request.OfficeId);
-                var emp = await _dbContext.EmployeeDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.EmployeeID == obj.EmployeeID);
-                emp.EmployeeCode = "E" + obj.EmployeeID;
-                 _dbContext.EmployeeDetail.Update(emp);
-                await _dbContext.SaveChangesAsync();
-                EmployeeProfessionalDetailModel empprofessional = new EmployeeProfessionalDetailModel();
-                empprofessional.EmployeeId = obj.EmployeeID;
-                empprofessional.EmployeeTypeId = request.EmployeeTypeId;
-                empprofessional.OfficeId = request.OfficeId;
-                empprofessional.CreatedById = request.CreatedById;
-                empprofessional.CreatedDate = request.CreatedDate;
-                empprofessional.IsDeleted = request.IsDeleted;
-                empprofessional.ProfessionId = request.ProfessionId;
-                empprofessional.TinNumber = request.TinNumber;
->>>>>>> 283e4aad2a4f32a5e1f5bbe3a3e24be5174a685f
                 EmployeeProfessionalDetail obj1 = _mapper.Map<EmployeeProfessionalDetail>(empprofessional);
                 await _dbContext.EmployeeProfessionalDetail.AddAsync(obj1);
                 await _dbContext.SaveChangesAsync();

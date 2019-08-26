@@ -85,11 +85,7 @@ export class GLOBAL {
 
   // public static API_Hr_GetAllEmployees = 'HREmployee/GetAllEmployeeDetail';
   public static API_Hr_GetAllEmployeeDetail = 'EmployeeDetail/GetAllEmployeeDetail';
-<<<<<<< HEAD
     public static API_HR_EmployeeDocumentAdd = 'EmployeeDetail/AddDocumentDetail';
-=======
-  public static API_HR_EmployeeDocumentAdd = 'HREmployee/AddDocumentDetail';
->>>>>>> 283e4aad2a4f32a5e1f5bbe3a3e24be5174a685f
 
   public static API_Hr_AddEmployees = 'EmployeeDetail/AddNewEmployee';
   // public static API_Hr_EditEmployees = 'HREmployee/EditEmployeeDetail';
