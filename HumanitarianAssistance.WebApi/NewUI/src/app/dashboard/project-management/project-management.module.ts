@@ -57,8 +57,6 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { ProjectDetailComponent } from './project-list/project-details/project-detail/project-detail.component';
 import { SubActivitiesComponent } from './project-list/project-activities/project-activity-phase/sub-activities/sub-activities.component';
 import { MonitoringComponent } from './project-list/project-activities/project-activity-phase/monitoring/monitoring.component';
-import { ProjectIndicatorsComponent } from './project-indicators/project-indicators.component';
-import { ProjectIndicatorDetailComponent } from './project-indicators/project-indicator-detail/project-indicator-detail.component';
 import { PeopleComponent } from './project-list/project-details/people/people.component';
 import { OpportunityControlComponent } from './project-list/project-details/people/opportunity-control/opportunity-control.component';
 import { LogisticsControlComponent } from './project-list/project-details/people/logistics-control/logistics-control.component';
@@ -81,6 +79,8 @@ import { AddCandidateDaialogComponent } from './project-list/hiring-requests/add
 import { EditCandidateDetailDialogComponent } from './project-list/hiring-requests/edit-candidate-detail-dialog/edit-candidate-detail-dialog.component';
 import { ProjectOtherDetailPdfService } from './project-list/project-details/program-area-sector/project-other-detail-pdf.service';
 import { MatTabsModule } from '@angular/material/tabs';
+import { ProjectIndicatorsComponent } from './project-list/project-indicators/project-indicators.component';
+import { ProjectIndicatorDetailComponent } from './project-list/project-indicators/project-indicator-detail/project-indicator-detail.component';
 
 @NgModule({
   imports: [
@@ -104,7 +104,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     Ng5SliderModule,
     ListingDeleteModule,
     MatTabsModule
-    
+
   ],
   declarations: [
     ProjectManagementComponent,
