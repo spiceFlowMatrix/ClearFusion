@@ -1,7 +1,6 @@
 import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { ProjectListService } from '../service/project-list.service';
 import { IMenuList } from 'src/app/shared/dbheader/dbheader.component';
-import { projectPagesMaster } from 'src/app/shared/applicationpagesenum';
 import { LocalStorageService } from 'src/app/shared/services/localstorage.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectDetailComponent } from './project-detail/project-detail.component';
@@ -55,6 +54,8 @@ export class ProjectDetailsComponent implements OnInit {
       });
     });
 
+    // this.menuList = this.projectListService.getAllProjectMenu();
+
     this.menuList.map(
       x => (x.Link = this.router.url.substr(0, this.router.url.lastIndexOf('/') + 1) + x.Link)
     ); // important for routing
@@ -66,6 +67,7 @@ export class ProjectDetailsComponent implements OnInit {
    // this.setHeaderMenu();
   // this.getProjectWinLossDetail(this.projectId);
   // this.getCriteriaEvaluationApprovedDetail(this.projectId);
+
   }
   ngOnInit() {
     this.getMultipleApiReuest().subscribe((res) => {

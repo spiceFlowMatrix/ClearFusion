@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Application.Project.Models;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Domain.Entities.HR;
@@ -56,43 +57,57 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
                     //Console.WriteLine("--------- check For upload----- ----------");
                     string folderWithProposalFile = StaticResource.ProjectsFolderName + "/" + folderName + "/" + request.FileName;
 
-                    ProjectProposalDetail proposaldata = new ProjectProposalDetail();
+                    ProjectProposalDocument proposaldata = new ProjectProposalDocument();
                     try
                     {
                         // --------------------code to get response credential from environment variables.
                         string obj = await GCBucket.UploadOtherProposalDocuments(BucketName, folderWithProposalFile, request.file, request.FileName, request.ext);
-                        proposaldata = await _dbContext.ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == request.ProjectId && x.IsDeleted == false);
+                        var details = await _dbContext.ProjectProposalDetail.FirstOrDefaultAsync(x => x.ProjectId == request.ProjectId && x.IsDeleted == false);
+                        if (details == null)
+                        {
+                            ProjectProposalDetail objDetails = new ProjectProposalDetail()
+                            {
+                                ProjectId = request.ProjectId,
+                                ProposalStartDate = DateTime.UtcNow
+                            };
+                            await _dbContext.ProjectProposalDetail.AddAsync(objDetails);
+                            await _dbContext.SaveChangesAsync();
+                        }
+                        proposaldata = await _dbContext.ProjectProposalDocument.FirstOrDefaultAsync(x => x.ProjectId == request.ProjectId && x.ProposalDocumentName == request.FileName && x.IsDeleted == false);
                         Console.WriteLine($"Final bucket response : {obj}");
 
                         if (obj != null)
                         {
                             if (proposaldata == null)
                             {
-                                proposaldata = new ProjectProposalDetail();
-                                proposaldata.FolderName = folderName;
-                                proposaldata.ProposalFileName = request.FileName;
+                                proposaldata = new ProjectProposalDocument();
+                                proposaldata.ProposalDocumentName = request.FileName;
                                 proposaldata.ProposalWebLink = obj;
                                 proposaldata.ProjectId = request.ProjectId;
                                 proposaldata.IsDeleted = false;
-                                proposaldata.ProposalExtType = ".docx";
+                                proposaldata.ProposalExtType = request.ext;
                                 proposaldata.CreatedById = request.CreatedById;
                                 proposaldata.CreatedDate = request.CreatedDate;
-                                proposaldata.ProposalStartDate = DateTime.UtcNow;
-                                await _dbContext.ProjectProposalDetail.AddAsync(proposaldata);
+                                proposaldata.ProposalDocumentTypeId = request.ProposalTypeId;
+                                await _dbContext.ProjectProposalDocument.AddAsync(proposaldata);
                                 await _dbContext.SaveChangesAsync();
-                            }
-                            else
-                            {
-                                proposaldata.FolderName = folderName;
-                                proposaldata.ProposalFileName = request.FileName;
-                                proposaldata.ProposalWebLink = obj;
-                                proposaldata.ProjectId = request.ProjectId;
-                                proposaldata.IsDeleted = false;
-                                proposaldata.ProposalExtType = ".docx";
-                                proposaldata.ModifiedDate = request.ModifiedDate;
-                                proposaldata.ModifiedById = request.ModifiedById;
-                                proposaldata.ProposalStartDate = DateTime.UtcNow;
-                                await _dbContext.SaveChangesAsync();
+                                var username = (from u in _dbContext.UserDetails
+                                                where u.AspNetUserId == request.CreatedById && u.IsDeleted == false
+                                                select (u.FirstName + ' ' + u.LastName)).FirstOrDefault();
+                                ProjectProposalModelList objProposalModel = new ProjectProposalModelList()
+                                {
+                                    ProjectProposaldetailId = proposaldata.ProjectProposalDocumnetId,
+                                    ProposalDocumentName = proposaldata.ProposalDocumentName,
+                                    ProposalWebLink = proposaldata.ProposalWebLink,
+                                    ProjectId = proposaldata.ProjectId,
+                                    ProposalExtType = proposaldata.ProposalExtType,
+                                    CreatedDate = proposaldata.CreatedDate,
+                                    ProposalDocumentTypeId = proposaldata.ProposalDocumentTypeId,
+                                    UserName = username.ToString()
+                                };
+                                response.data.ProjectProposalDocumentModel = objProposalModel;
+                                response.StatusCode = StaticResource.successStatusCode;
+                                response.Message = "Success";
                             }
                         }
                         else
@@ -104,15 +119,9 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
                     {
                         Console.WriteLine("Upload using Environment variable failed");
                         Console.WriteLine($"--------------Using environment variable exception--: {ex}");
-
                     }
-
-                    response.data.ProjectProposalDetail = proposaldata;
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
                 }
             }
-
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
