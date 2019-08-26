@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HumanitarianAssistance.Application.Configuration.Commands.Create;
+using HumanitarianAssistance.Application.Configuration.Models;
 using HumanitarianAssistance.Application.HR.Commands.Create;
 using HumanitarianAssistance.Application.HR.Commands.Delete;
 using HumanitarianAssistance.Application.HR.Commands.Update;
@@ -36,6 +37,8 @@ namespace HumanitarianAssistance.WebApi.Infrastructure
             CreateMap<AddExitInterviewCommand, ExistInterviewDetails>().ReverseMap();
             CreateMap<AddEmployeeAppraisalCommand, EmployeeAppraisalDetails>().ReverseMap();
             CreateMap<AddJobHiringDetailCommand, JobHiringDetails>().ReverseMap();
+            CreateMap<ExistInterviewDetails, ExitInterviewModel>().ReverseMap();
+            CreateMap<RatingBasedCriteriaModel, RatingBasedCriteria>().ReverseMap();
         }
     }
 }
