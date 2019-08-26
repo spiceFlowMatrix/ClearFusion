@@ -21,10 +21,9 @@ import { ProposalComponent } from './project-list/proposal/proposal.component';
 import { ProjectDetailComponent } from './project-list/project-details/project-detail/project-detail.component';
 import { BudgetLineListingComponent } from './project-list/budgetlines/budget-line-listing/budget-line-listing.component';
 import { ProjectActivitiesComponent } from './project-list/project-activities/project-activities.component';
-import { ProjectIndicatorsComponent } from 'src/app/dashboard/project-management/project-indicators/project-indicators.component';
 import { PeopleComponent } from './project-list/project-details/people/people.component';
 import { HiringRequestsComponent } from './project-list/hiring-requests/hiring-requests.component';
-import { HiringRequestsListingComponent } from './project-list/hiring-requests/hiring-requests-listing/hiring-requests-listing.component';
+import { ProjectIndicatorsComponent } from './project-list/project-indicators/project-indicators.component';
 
 const moduleId: number = ApplicationModule.Projects;
 
@@ -78,15 +77,7 @@ const routes: Routes = [
           page: projectPagesMaster.ProposalReport
         }
       },
-      {
-        path: 'project-indicators',
-        component: ProjectIndicatorsComponent,
-        canActivate: [RoleGuardService],
-        data: {
-          module: moduleId,
-          page: projectPagesMaster.ProposalReport
-        }
-      },
+
       {
         path: 'file-upload-demo',
         component: FileUploadDemoComponent
@@ -111,6 +102,7 @@ const routes: Routes = [
           {
             path: 'criteria-evaluation',
             component: CriteriaEvaluationComponent,
+            canActivate: [RoleGuardService],
             data: {
               module: moduleId,
               page: projectPagesMaster.CriteriaEvaluation
@@ -119,13 +111,16 @@ const routes: Routes = [
           {
             path: 'proposal',
             component: ProposalComponent,
+            canActivate: [RoleGuardService],
             data: {
               module: moduleId,
               page: projectPagesMaster.Proposal
             }
-          }, {
+          },
+          {
             path: 'project-jobs',
             component: ProjectJobsComponent,
+            canActivate: [RoleGuardService],
             data: {
               module: moduleId,
               page: projectPagesMaster.ProjectJobs
@@ -134,6 +129,7 @@ const routes: Routes = [
           {
             path: 'budget-lines',
             component: BudgetLineListingComponent,
+            canActivate: [RoleGuardService],
             data: {
               module: moduleId,
               page: projectPagesMaster.ProjectBudgetLine
@@ -142,6 +138,7 @@ const routes: Routes = [
           {
             path: 'project-activities',
             component: ProjectActivitiesComponent,
+            canActivate: [RoleGuardService],
             data: {
               module: moduleId,
               page: projectPagesMaster.ProjectActivities
@@ -164,7 +161,16 @@ const routes: Routes = [
               module: moduleId,
               page: projectPagesMaster.HiringRequests
             }
-          }
+          },
+          {
+            path: 'project-indicators',
+            component: ProjectIndicatorsComponent,
+            canActivate: [RoleGuardService],
+            data: {
+              module: moduleId,
+              page: projectPagesMaster.ProjectIndicators
+            }
+          },
         ]
       }
     ]

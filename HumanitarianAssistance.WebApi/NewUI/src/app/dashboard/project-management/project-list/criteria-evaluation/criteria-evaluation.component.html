@@ -76,15 +76,14 @@
         <ng-template #CETemplate>
           <div class=row>
             <div class="col-sm-6">
-             <p class="p-class"> Project allowed by law</p>
+                <span class="p-class"> Project allowed by law</span>
               <mat-slide-toggle class="pull-right" (change)="onProjectallowedByLawChange($event)"
                 [(ngModel)]="feasibilityForm.ProjectAllowedBylaw"></mat-slide-toggle>
               <div *ngIf="
                       feasibilityForm.ProjectAllowedBylaw == false ||
                       feasibilityForm.ProjectAllowedBylaw == null
                     ">
-                <span class="note_text">" Warning: Project should be allowed by law
-                  "</span>
+                <span class="note_text mr-left">"Warning: Project should be allowed by law"</span>
               </div>
             </div>
             <div class="col-sm-4">
@@ -315,7 +314,7 @@
                         <div class="col-sm-6">Real Cost Of Project</div>
                         <div class="col-sm-6">
                           <mat-form-field class="pull-right">
-                            <input matInput [(ngModel)]="feasibilityForm.ProjectRealCost" name="projectRealCost"
+                            <input matInput [(ngModel)]="feasibilityForm.ProjectRealCost" name="projectRealCost" min="0"
                               (focusout)="
                                 onProjectRealCostChange(
                                   feasibilityForm.ProjectRealCost
@@ -337,7 +336,7 @@
                         <div class="col-sm-6">%OF COST GREATER THAN BUDGET</div>
                         <div class="col-sm-6">
                           <mat-form-field class="pull-right">
-                            <input matInput [(ngModel)]="
+                            <input matInput min="0" [(ngModel)]="
                                 feasibilityForm.PerCostGreaterthenBudget
                               " name="PerCostGreaterthenBudget" (focusout)="
                                 onCostGreaterBudgetChange(
@@ -896,7 +895,7 @@
                         </div>
                         <div class="col-sm-3">
                           <mat-checkbox (change)="onValueChainChange($event)"
-                            [(ngModel)]="productAndServiceForm.Awareness">
+                            [(ngModel)]="productAndServiceForm.ValueChain">
                             Value Chain
                           </mat-checkbox>
                         </div>
@@ -1130,7 +1129,7 @@
                 <div class="col-sm-3">
                   <!-- <label>Project Activities</label> -->
                   <mat-form-field class="pull-right">
-                    <input matInput [(ngModel)]="financialForm.ProjectActivities" placeholder="Direct Costs" (focusout)="
+                    <input matInput min= "0" [(ngModel)]="financialForm.ProjectActivities" placeholder="Direct Costs" (focusout)="
                     onProjectActivityChange(
                       'projectActivity',
                       financialForm.ProjectActivities
@@ -1140,7 +1139,7 @@
                 </div>
                 <div class="col-sm-3">
                   <mat-form-field class="pull-right">
-                    <input matInput [(ngModel)]="financialForm.Operational" placeholder="Operational" (focusout)="
+                    <input matInput min= "0" [(ngModel)]="financialForm.Operational" placeholder="Operational Overhead" (focusout)="
                     onProjectActivityChange(
                       'operational',
                       financialForm.Operational
@@ -1161,7 +1160,7 @@
 
                 <div class="col-sm-3">
                   <mat-form-field class="pull-right">
-                    <input matInput name="overheadAdmin" placeholder="Admin Overhead "
+                    <input matInput min= "0" name="overheadAdmin" placeholder="Admin Overhead "
                       [(ngModel)]="financialForm.Overhead_Admin" (focusout)="
                     onProjectActivityChange(
                       'overheadAdmin',
@@ -1180,7 +1179,7 @@
                 <div class="col-sm-3">
                   <!-- <label>Lump Sum (From Organisation)</label> -->
                   <mat-form-field class="pull-right">
-                    <input matInput name="lumpsum" placeholder="Organizational Contribution"
+                    <input matInput min= "0" name="lumpsum" placeholder="Organizational Contribution"
                       [(ngModel)]="financialForm.Lump_Sum" (focusout)="
                     onProjectActivityChange('lumpsum', financialForm.Lump_Sum)
                   " type="number" />

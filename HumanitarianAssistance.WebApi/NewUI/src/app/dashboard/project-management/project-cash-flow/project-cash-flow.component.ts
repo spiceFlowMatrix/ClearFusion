@@ -73,12 +73,12 @@ export class ProjectCashFlowComponent implements OnInit, OnDestroy{
       Text: 'Proposal Report',
       Link: '/project/proposal-report'
     },
-    {
-      Id: 6,
-      PageId: projectPagesMaster.ProjectIndicators,
-      Text: 'Project Indicators',
-      Link: '/project/project-indicators'
-    }
+    // {
+    //   Id: 6,
+    //   PageId: projectPagesMaster.ProjectIndicators,
+    //   Text: 'Project Indicators',
+    //   Link: '/project/project-indicators'
+    // }
   ];
   authorizedMenuList: IMenuList[] = [];
 
@@ -167,8 +167,8 @@ export class ProjectCashFlowComponent implements OnInit, OnDestroy{
       // ProjectId: [[], Validators.required],
       CurrencyId: [null, Validators.required],
       ProjectId: [null, Validators.required],
-      ProjectCashFlowStartDate: [null, Validators.required],
-      ProjectCashFlowEndDate: [null, Validators.required],
+      ProjectCashFlowStartDate: [new Date(), Validators.required],
+      ProjectCashFlowEndDate: [new Date(), Validators.required],
       DonorID: [null]
     });
 
@@ -176,8 +176,8 @@ export class ProjectCashFlowComponent implements OnInit, OnDestroy{
       ProjectId: [null, Validators.required],
       BudgetLineId: [[]],
       CurrencyId: [null, Validators.required],
-      BudgetLineStartDate: [null, Validators.required],
-      BudgetLineEndDate: [null, Validators.required]
+      BudgetLineStartDate: [new Date(), Validators.required],
+      BudgetLineEndDate: [new Date(), Validators.required]
     });
     this.GetAllProjectList();
     this.GetAllDonorList();

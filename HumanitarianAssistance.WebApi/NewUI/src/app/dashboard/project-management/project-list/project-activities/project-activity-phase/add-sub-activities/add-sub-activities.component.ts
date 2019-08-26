@@ -45,8 +45,8 @@ export class AddSubActivitiesComponent implements OnInit {
   initForm() {
     this.projectSubActivityForm = this.fb.group({
       ActivityDescription: ['', Validators.required],
-      PlannedStartDate: [null, [Validators.required]],
-      PlannedEndDate: [null, Validators.required],
+      PlannedStartDate: [new Date(), [Validators.required]],
+      PlannedEndDate: [new Date(), Validators.required],
       EmployeeID: [null, Validators.required],
       Target: [0, Validators.required],
       SubActivityTitle: [null, Validators.required]

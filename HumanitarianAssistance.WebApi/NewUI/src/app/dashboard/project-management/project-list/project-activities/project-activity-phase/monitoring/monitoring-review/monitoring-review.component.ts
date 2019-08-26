@@ -5,12 +5,9 @@ import { ToastrService } from 'ngx-toastr';
 import { ProjectListService } from '../../../../service/project-list.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
-import {
-  ProjectIndicatorFilterModel,
-  ProjectIndicatorModel,
-  IndicatorQuestionModel
-} from 'src/app/dashboard/project-management/project-indicators/project-indicators-model';
+
 import { MonitoringModel } from 'src/app/dashboard/project-management/project-list/project-activities/project-activity-phase/monitoring/monitoring-model';
+import { ProjectIndicatorFilterModel, ProjectIndicatorModel, IndicatorQuestionModel } from '../../../../project-indicators/project-indicators-model';
 
 @Component({
   selector: 'app-monitoring-review',

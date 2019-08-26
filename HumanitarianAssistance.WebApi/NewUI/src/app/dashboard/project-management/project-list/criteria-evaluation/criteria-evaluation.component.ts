@@ -43,7 +43,6 @@ import {
 } from 'src/app/shared/enum';
 import { IMenuList } from 'src/app/shared/dbheader/dbheader.component';
 import { ProjectListService } from '../service/project-list.service';
-import { forkJoin, Observable } from 'rxjs';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { LocalStorageService } from 'src/app/shared/services/localstorage.service';
 @Component({
@@ -51,7 +50,8 @@ import { LocalStorageService } from 'src/app/shared/services/localstorage.servic
   templateUrl: './criteria-evaluation.component.html',
   styleUrls: ['./criteria-evaluation.component.scss']
 })
-export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, OnDestroy {
+export class CriteriaEvaluationComponent
+  implements OnInit, AfterViewChecked, OnDestroy {
   //#region  agegroup and occupation
   inputFieldAgeFlag = false;
   inputFieldOccupationFlag = false;
@@ -67,7 +67,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   selectedprojectSelction: string[] = [];
 
   projectAllowedByLaw = false; // add one more property
-
 
   //#region "Variables"
   methodOfFundingList = [
@@ -209,7 +208,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   authorizedMenuList: IMenuList[] = [];
   setProjectHeader = 'Project';
 
-
   // screen
   screenHeight: any;
   screenWidth: any;
@@ -227,13 +225,12 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     public criteriaEvalService: CriteriaEvaluationService,
     public toastr: ToastrService,
     private cdRef: ChangeDetectorRef,
+
     private globalService: GlobalSharedService,
     private localStorageService: LocalStorageService,
     public projectListService: ProjectListService,
     private router: Router
-
   ) {
-
     // set menu header for project listing
     this.menuList = [];
     this.projectListService.menuList.forEach(x => {
@@ -246,13 +243,15 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     });
 
     this.menuList.map(
-      x => (x.Link = this.router.url.substr(0, this.router.url.lastIndexOf('/') + 1) + x.Link)
+      x =>
+        (x.Link =
+          this.router.url.substr(0, this.router.url.lastIndexOf('/') + 1) +
+          x.Link)
     ); // important for routing
 
     // Set Menu Header Name
     this.globalService.setMenuHeaderName(this.setProjectHeader);
   }
-
 
   ngOnInit() {
     this.routeActive.parent.params.subscribe(params => {
@@ -260,6 +259,7 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     });
     // this.getData();
     this.getScreenSize();
+    this.GetCriteraiEvaluationDetailById(this.ProjectId);
     this.initializeList();
     this.initilizeDonorEligibilityList();
     this.initDonorCEModel();
@@ -272,7 +272,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     this.initProjectSelctionModel();
     this.initIsSubmitCE();
     this.initCurrencyDetailModel();
-     this.GetCriteraiEvaluationDetailById(this.ProjectId);
     this.CostOfCompensation = new FormControl('', [
       Validators.max(12),
       Validators.min(1)
@@ -283,18 +282,18 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     this.getAssumptionByprojectId(this.ProjectId);
     this.GetAgegroupByProjectId(this.ProjectId);
     this.getFeasibilityExpertByProjectId(this.ProjectId);
+    this.GetOccupationByProjectId(this.ProjectId);
     this.GetDonorEligibilityCriteriaByProjectId(this.ProjectId);
   }
-
+  // to show warning message if the total score is less than 30 -->
   ngAfterViewChecked() {
     const projectAllowedByLaw = this.feasibilityForm.ProjectAllowedBylaw;
-    if (projectAllowedByLaw !== this.projectAllowedByLaw) { // check if it change, tell CD update view
+    if (projectAllowedByLaw !== this.projectAllowedByLaw) {
+      // check if it change, tell CD update view
       this.projectAllowedByLaw = projectAllowedByLaw;
       this.cdRef.detectChanges();
     }
   }
-
-
 
   //#region "Dynamic Scroll"
   @HostListener('window:resize', ['$event'])
@@ -557,8 +556,8 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
 
   initCurrencyDetailModel() {
     this.currencyDetailModel = {
- ProjectId: null,
- CurrencyId: null,
+      ProjectId: null,
+      CurrencyId: null
     };
   }
   //#endregion
@@ -585,7 +584,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
       this.donorCEForm.OtherDeliverableType = null;
       this.donorCEForm.ProjectId = this.ProjectId;
       this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
-
     }
     this.donorCEForm.PastFundingExperience = value.checked;
     this.AddEditDonorCEForm(this.donorCEForm);
@@ -632,7 +630,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   }
 
   onOtherDeliverablesChange(value) {
-
     this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
     this.donorCEForm.OtherDeliverable = value.checked;
     this.AddEditDonorCEForm(this.donorCEForm);
@@ -658,7 +655,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
       this.donorCEForm.MoneyAllocation = false;
       this.donorCEForm.Accountability = false;
       this.donorCEForm.DeliverableQuality = false;
-
     }
     this.donorCEForm.PastWorkingExperience = value.checked;
     this.AddEditDonorCEForm(this.donorCEForm);
@@ -1104,7 +1100,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     // if (data != null && data != undefined && data != "" && data >= 5000) {
     if (ev === 'CostOfCompensationMoney') {
       this.feasibilityForm.CostOfCompensationMoney = data;
-      // this.costOfCompensationMoney = -1 * data / 5000;
       this.AddEditFeasibilityCEForm(this.feasibilityForm);
     }
     // }
@@ -1167,9 +1162,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
       this.enoughTimeQuality =
         criteriaEvaluationScores.enoughTimeForQualityWork_Yes;
     } else {
-      // this.toastr.warning(
-      //   'ratio of *(time delay) over total time should be less than 0.33))'
-      // );
       this.enoughTimeQuality =
         criteriaEvaluationScores.enoughTimeForQualityWork_No;
     }
@@ -1185,10 +1177,9 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
     } else if (value.checked === true) {
       this.projectallowedByLaw =
         criteriaEvaluationScores.projectAllowedByLaw_Yes;
-        this.isExpanded = true;
+      this.isExpanded = true;
       this.disableCriteriaEvaluationForm = false;
     } else {
-      // this.toastr.warning('Project should be allowed by law');
       this.projectallowedByLaw =
         criteriaEvaluationScores.projectAllowedByLaw_No;
     }
@@ -1246,10 +1237,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
       this.eNoughTimetoPrepare =
         criteriaEvaluationScores.enoughTimeToPrepareproposal_Yes;
     } else {
-      // this.toastr.warning(
-      //   'Minimum time to submit the proposal for old Project is 2 weeks'
-      // );
-
       this.eNoughTimetoPrepare =
         criteriaEvaluationScores.enoughTimeToPrepareproposal_No;
     }
@@ -1261,14 +1248,9 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   onCostGreaterThanBudgetChange(value) {
     if (value.checked === true) {
       this.isCostGreaterThanBudget = false;
-
-      // this.costGreaterThanBudget =
-      // criteriaEvaluationScores.costGreaterThanBudget_Yes;
     } else {
       this.isCostGreaterThanBudget = true;
       this.feasibilityForm.PerCostGreaterthenBudget = 0;
-      // this.costGreaterThanBudget =
-      // criteriaEvaluationScores.costGreaterThanBudget_No;
     }
     this.feasibilityForm.IsCostGreaterthenBudget = value.checked;
     this.AddEditFeasibilityCEForm(this.feasibilityForm);
@@ -1300,11 +1282,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   }
   // disabling conditions
   onSecurityChange(value) {
-    if (value.checked === true) {
-      // this.disablingSecurity = criteriaEvaluationScores.disablingSecurity_Yes;
-    } else {
-      // this.disablingSecurity = criteriaEvaluationScores.disablingSecurity_No;
-    }
     this.feasibilityForm.IsSecurity = value.checked;
     this.AddEditFeasibilityCEForm(this.feasibilityForm);
   }
@@ -1462,10 +1439,8 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   onPriorityOthersChange(value) {
     if (value.checked === true) {
       this.isPriorityOther = true;
-      //   this.priorityOthers = criteriaEvaluationScores.other_Yes
     } else {
       this.isPriorityOther = false;
-      // this.priorityOthers = criteriaEvaluationScores.other_No
     }
     this.priorityForm.Others = value.checked;
     this.AddEditPriorityCEForm(this.priorityForm);
@@ -1476,7 +1451,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
       this.projectExpensionGoal =
         criteriaEvaluationScores.projectInlineWithOrganisalGoal_Yes;
     } else {
-      // this.toastr.warning('Out of strategic goal');
       this.projectExpensionGoal =
         criteriaEvaluationScores.projectInlineWithOrganisalGoal_No;
     }
@@ -1488,7 +1462,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   //#region Financial profitability form
   onProjectActivityChange(ev, data: any) {
     if (data != null && data !== '' && data !== undefined) {
-      // var total = data;
       if (ev === 'projectActivity') {
         this.financialForm.ProjectActivities = data;
         this.projectactivity = data;
@@ -1518,7 +1491,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   onRiskSecurityChange(value) {
     if (value.checked === true) {
       this.isDisabledRisk = false;
-      // this.riskSecurity = criteriaEvaluationScores.riskSecurity_Yes
     } else {
       this.isDisabledRisk = true;
       this.riskForm.Staff = false;
@@ -1526,7 +1498,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
       this.riskForm.Suppliers = false;
       this.riskForm.Beneficiaries = false;
       this.riskForm.OverallOrganization = false;
-      // this.riskSecurity = criteriaEvaluationScores.riskSecurity_No
     }
     this.riskForm.Security = value.checked;
     this.AddEditRiskSecurityCEForm(this.riskForm);
@@ -1560,7 +1531,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   onRiskReputationChange(value) {
     if (value.checked === true) {
       this.isDisabledReputation = false;
-      // this.riskReputation = criteriaEvaluationScores.riskSecurity_Yes
     } else {
       this.isDisabledReputation = true;
       this.riskForm.Religious = false;
@@ -1575,7 +1545,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
       this.riskForm.Culture = false;
       this.riskForm.ReligiousBeliefs = false;
       this.riskForm.FocusDivertingrisk = false;
-      // this.riskReputation = criteriaEvaluationScores.riskSecurity_No
     }
     this.riskForm.Reputation = value.checked;
     this.AddEditRiskSecurityCEForm(this.riskForm);
@@ -1606,23 +1575,27 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
       if (ev === 'Geographical') {
         this.riskForm.Geographical = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
-      } if (ev === 'Insecurity') {
+      }
+      if (ev === 'Insecurity') {
         this.riskForm.Insecurity = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
-      } if (ev === 'Season') {
+      }
+      if (ev === 'Season') {
         this.riskForm.Season = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
-      } if (ev === 'Ethnicity') {
+      }
+      if (ev === 'Ethnicity') {
         this.riskForm.Ethnicity = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
-      } if (ev === 'Culture') {
+      }
+      if (ev === 'Culture') {
         this.riskForm.Culture = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
-      } if (ev === 'ReligiousBeliefs') {
+      }
+      if (ev === 'ReligiousBeliefs') {
         this.riskForm.ReligiousBeliefs = data;
         this.AddEditRiskSecurityCEForm(this.riskForm);
       }
-
     }
   }
 
@@ -1634,13 +1607,11 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   onDeliveryFailureChange(value) {
     if (value.checked === true) {
       this.isDisabledDelivery = false;
-      // this.deliveryFailure = criteriaEvaluationScores.deliveryFailure_Yes
     } else {
       this.isDisabledDelivery = true;
       this.riskForm.PrematureSeizure = false;
       this.riskForm.GovernmentConfiscation = false;
       this.riskForm.DesctructionByTerroristActivity = false;
-      // this.deliveryFailure = criteriaEvaluationScores.deliveryFailure_No
     }
     this.riskForm.DeliveryFaiLure = value.checked;
     this.AddEditRiskSecurityCEForm(this.riskForm);
@@ -1663,22 +1634,15 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   }
 
   onFinancialLossesChange(value) {
-    // if (value.checked === true) {
-    //   this.financialLoses = criteriaEvaluationScores.financialLosses_Yes
-    // } else {
-    //   this.financialLoses = criteriaEvaluationScores.financialLosses_No
-    // }
     this.riskForm.Financiallosses = value.checked;
     this.AddEditRiskSecurityCEForm(this.riskForm);
   }
   onOpportunityLossChange(value) {
     if (value.checked === true) {
       this.isOpportunityLoss = false;
-      // this.opportunityLoses = criteriaEvaluationScores.opportunityLoss_Yes
     } else {
       this.isOpportunityLoss = true;
       this.riskForm.ProjectSelectionId = null;
-      // this.opportunityLoses = criteriaEvaluationScores.opportunityLoss_No
     }
     this.riskForm.Opportunityloss = value.checked;
     this.AddEditRiskSecurityCEForm(this.riskForm);
@@ -1693,7 +1657,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   }
 
   onProbabilityDelayChange(value) {
-
     this.riskForm.Probablydelaysinfunding = value.checked;
     this.AddEditRiskSecurityCEForm(this.riskForm);
   }
@@ -1701,10 +1664,8 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   onOtherOrgHarmsChange(value) {
     if (value.checked === true) {
       this.IsOtherOrganizationalHarms = false;
-      // this.otherOrganisationHarm = criteriaEvaluationScores.otherWayToHarmOrg_Yes
     } else {
       this.IsOtherOrganizationalHarms = true;
-      // this.otherOrganisationHarm = criteriaEvaluationScores.otherWayToHarmOrg_No
       this.riskForm.OrganizationalDescription = null;
     }
     this.riskForm.OtherOrganizationalHarms = value.checked;
@@ -1739,8 +1700,6 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
                 label: element.ProjectName
               });
             });
-
-            // this.GetCriteraiEvaluationDetailById(this.ProjectId);
           }
         }
       });
@@ -1748,35 +1707,28 @@ export class CriteriaEvaluationComponent implements OnInit, AfterViewChecked, On
   //#endregion
 
   //#region "getAllcurrency"
-GetAllCurrency() {
-  // this.currencyDetailLoader = true;
-  this.CurrencyList = [];
-  this.criteriaEvalService
-    .GetAllCurrency(this.appurl.getApiUrl() + GLOBAL.API_code_GetAllCurrency)
-    .subscribe(
-      data => {
-        if (data != null && data.StatusCode === 200) {
-          if (data.data.CurrencyList != null) {
-            data.data.CurrencyList.forEach(element => {
-              this.CurrencyList.push({
-                CurrencyId: element.CurrencyId,
-                CurrencyCode: element.CurrencyCode
+  GetAllCurrency() {
+    this.CurrencyList = [];
+    this.criteriaEvalService
+      .GetAllCurrency(this.appurl.getApiUrl() + GLOBAL.API_code_GetAllCurrency)
+      .subscribe(
+        data => {
+          if (data != null && data.StatusCode === 200) {
+            if (data.data.CurrencyList != null) {
+              data.data.CurrencyList.forEach(element => {
+                this.CurrencyList.push({
+                  CurrencyId: element.CurrencyId,
+                  CurrencyCode: element.CurrencyCode
+                });
               });
-            });
+            }
           }
-        }
-        // this._cdr.detectChanges();
-        // this.currencyDetailLoader = false;
-      },
-      error => {
-        // this.currencyDetailLoader = false;
-      }
-    );
-}
+        },
+        error => {}
+      );
+  }
 
-
-//#endregion
-
+  //#endregion
 
   //#region Get Criteria evaluation by ProjectId Donor
   GetCriteraiEvaluationDetailById(ProjectId: number) {
@@ -1886,8 +1838,8 @@ GetAllCurrency() {
                   data.data.CriteriaEveluationModel.InfantandYoungChildFeeding;
                 this.productAndServiceForm.Nutrition =
                   data.data.CriteriaEveluationModel.Nutrition;
-                this.productAndServiceForm.CommunicableDisease =
-                  data.data.CriteriaEveluationModel.CommunicableDisease;
+                // this.productAndServiceForm.CommunicableDisease =
+                //   data.data.CriteriaEveluationModel.CommunicableDisease;
                 this.productAndServiceForm.Hygiene =
                   data.data.CriteriaEveluationModel.Hygiene;
                 this.productAndServiceForm.EnvironmentalHealth =
@@ -2145,11 +2097,6 @@ GetAllCurrency() {
                   this.isDisabledRisk = false;
                 } else {
                   this.isDisabledRisk = true;
-                  // this.riskForm.Staff = false;
-                  // this.riskForm.ProjectAssets = false;
-                  // this.riskForm.Suppliers = false;
-                  // this.riskForm.Beneficiaries = false;
-                  // this.riskForm.OverallOrganization = false;
                 }
 
                 this.riskForm.Staff = data.data.CriteriaEveluationModel.Staff;
@@ -2189,18 +2136,18 @@ GetAllCurrency() {
                 this.riskForm.Social = data.data.CriteriaEveluationModel.Social;
                 this.riskForm.Traditional =
                   data.data.CriteriaEveluationModel.Traditional;
-                  this.riskForm.Geographical =
+                this.riskForm.Geographical =
                   data.data.CriteriaEveluationModel.Geographical;
-                  this.riskForm.Insecurity =
+                this.riskForm.Insecurity =
                   data.data.CriteriaEveluationModel.Insecurity;
-                  this.riskForm.Season =
-                  data.data.CriteriaEveluationModel.Season;
-                  this.riskForm.Ethnicity =
+                this.riskForm.Season = data.data.CriteriaEveluationModel.Season;
+                this.riskForm.Ethnicity =
                   data.data.CriteriaEveluationModel.Ethnicity;
-                  this.riskForm.Culture =
+                this.riskForm.Culture =
                   data.data.CriteriaEveluationModel.Culture;
-                  this.currencyDetailModel.CurrencyId = data.data.CriteriaEveluationModel.CurrencyId;
-                  this.riskForm.ReligiousBeliefs =
+                this.currencyDetailModel.CurrencyId =
+                  data.data.CriteriaEveluationModel.CurrencyId;
+                this.riskForm.ReligiousBeliefs =
                   data.data.CriteriaEveluationModel.ReligiousBeliefs;
                 this.riskForm.FocusDivertingrisk =
                   data.data.CriteriaEveluationModel.FocusDivertingrisk;
@@ -2376,9 +2323,6 @@ GetAllCurrency() {
             this.eligibilityForm.DonorCriteriaMet =
               response.data.eligibilityCriteriaDetail.DonorCriteriaMet;
             if (this.eligibilityForm.DonorCriteriaMet == false) {
-              // this.toastr.warning(
-              //   '* warning Donor eligibility criteria is must)'
-              // );
             }
           }
         });
@@ -2462,10 +2406,15 @@ GetAllCurrency() {
           this.appurl.getApiUrl() + GLOBAL.API_Project_AddEditPriorityCriteria,
           obj
         )
-        .subscribe(response => {
-          if (response.StatusCode === 200) {
+        .subscribe(
+          response => {
+            if (response.StatusCode === 200) {
+            }
+          },
+          error => {
+            this.toastr.error('Something went wrong! Please try Agian');
           }
-        });
+        );
     }
   }
   //#endregion
@@ -2546,52 +2495,55 @@ GetAllCurrency() {
           this.appurl.getApiUrl() + GLOBAL.API_Project_AddEditRiskCriteria,
           obj
         )
-        .subscribe(response => {
-          if (response.StatusCode === 200) {
+        .subscribe(
+          response => {
+            if (response.StatusCode === 200) {
+            }
+          },
+          error => {
+            this.toastr.error('Something went wrong! Please try Agian');
           }
-        });
+        );
     }
   }
   //#endregion
 
-//#region "currencyDetailsChange"
-currencyDetailsChange(value) {
-  this.currencyDetailModel.CurrencyId = value;
-  this.currencyDetailModel.ProjectId = this.ProjectId;
-  this.AddEditProjectProposal(this.currencyDetailModel);
+  //#region "currencyDetailsChange"
+  currencyDetailsChange(value) {
+    this.currencyDetailModel.CurrencyId = value;
+    this.currencyDetailModel.ProjectId = this.ProjectId;
+    this.AddEditProjectProposal(this.currencyDetailModel);
   }
 
-//#endregion
+  //#endregion
 
-//#region  add/edit other project
-AddEditProjectProposal(model: any) {
-  const currencyModel: CurrencyDetailModel = {
-    ProjectId: model.ProjectId,
-    CurrencyId: model.CurrencyId,
-  };
+  //#region  add/edit other project
+  AddEditProjectProposal(model: any) {
+    const currencyModel: CurrencyDetailModel = {
+      ProjectId: model.ProjectId,
+      CurrencyId: model.CurrencyId
+    };
 
-  this.projectListService
-    .AddEditProjectProposalDetail(
-      this.appurl.getApiUrl() +
-        GLOBAL.API_Project_AddEditProjectProposalDetail,
+    this.projectListService
+      .AddEditProjectProposalDetail(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Project_AddEditProjectProposalDetail,
         currencyModel
-    )
-    .pipe()
-    .subscribe(
-      response => {
-        if (response.StatusCode === 200) {
-          if (response.data.ProjectProposalDetail != null) {
-
+      )
+      .pipe()
+      .subscribe(
+        response => {
+          if (response.StatusCode === 200) {
+            if (response.data.ProjectProposalDetail != null) {
+            }
           }
+        },
+        error => {
+          this.toastr.error('Something went wrong! Please try Agian');
         }
-
-      },
-      error => {
-
-      }
-    );
-}
-//#endregion
+      );
+  }
+  //#endregion
 
   //#region to calculate total value
   get totalValue() {
@@ -2957,13 +2909,24 @@ AddEditProjectProposal(model: any) {
       (this.riskForm.Reputation === true || this.riskForm.Reputation == null
         ? criteriaEvaluationScores.riskReputation_Yes
         : criteriaEvaluationScores.riskReputation_No) +
-        (this.riskForm.Geographical === true ? criteriaEvaluationScores.Geographical_Yes : criteriaEvaluationScores.Geographical_No) +
-        (this.riskForm.Insecurity === true ? criteriaEvaluationScores.Insecurity_Yes : criteriaEvaluationScores.Insecurity_No) +
-        (this.riskForm.Season === true ? criteriaEvaluationScores.Season_Yes : criteriaEvaluationScores.Season_No) +
-        (this.riskForm.Ethnicity === true ? criteriaEvaluationScores.Ethnicity_Yes : criteriaEvaluationScores.Ethnicity_No) +
-        (this.riskForm.Culture === true ? criteriaEvaluationScores.Culture_Yes : criteriaEvaluationScores.Culture_No) +
-        (this.riskForm.ReligiousBeliefs === true ? criteriaEvaluationScores.ReligiousBeliefs_Yes :
-           criteriaEvaluationScores.ReligiousBeliefs_No) +
+      (this.riskForm.Geographical === true
+        ? criteriaEvaluationScores.Geographical_Yes
+        : criteriaEvaluationScores.Geographical_No) +
+      (this.riskForm.Insecurity === true
+        ? criteriaEvaluationScores.Insecurity_Yes
+        : criteriaEvaluationScores.Insecurity_No) +
+      (this.riskForm.Season === true
+        ? criteriaEvaluationScores.Season_Yes
+        : criteriaEvaluationScores.Season_No) +
+      (this.riskForm.Ethnicity === true
+        ? criteriaEvaluationScores.Ethnicity_Yes
+        : criteriaEvaluationScores.Ethnicity_No) +
+      (this.riskForm.Culture === true
+        ? criteriaEvaluationScores.Culture_Yes
+        : criteriaEvaluationScores.Culture_No) +
+      (this.riskForm.ReligiousBeliefs === true
+        ? criteriaEvaluationScores.ReligiousBeliefs_Yes
+        : criteriaEvaluationScores.ReligiousBeliefs_No) +
       (this.riskForm.FocusDivertingrisk === true
         ? criteriaEvaluationScores.focusDeliveryRisk_Yes
         : criteriaEvaluationScores.focusDeliveryRisk_No) +
@@ -2982,9 +2945,7 @@ AddEditProjectProposal(model: any) {
 
     return this.totalScore.toFixed(2);
   }
-//#endregion
-
-
+  //#endregion
 
   //#region "show / hide"
   toggleInputFieldAge() {
@@ -3105,19 +3066,24 @@ AddEditProjectProposal(model: any) {
             GLOBAL.API_GetAllPriorityOtherDetailByProjectId,
           ProjectId
         )
-        .subscribe(data => {
-          if (data != null) {
-            if (data.data.PriorityOtherDetail != null) {
-              data.data.PriorityOtherDetail.forEach(element => {
-                this.priorityOtherList.push({
-                  PriorityOtherDetailId: element.PriorityOtherDetailId,
-                  Name: element.Name,
-                  ProjectId: this.ProjectId
+        .subscribe(
+          data => {
+            if (data != null) {
+              if (data.data.PriorityOtherDetail != null) {
+                data.data.PriorityOtherDetail.forEach(element => {
+                  this.priorityOtherList.push({
+                    PriorityOtherDetailId: element.PriorityOtherDetailId,
+                    Name: element.Name,
+                    ProjectId: this.ProjectId
+                  });
                 });
-              });
+              }
             }
+          },
+          error => {
+            this.toastr.error('Something went wrong. Please try again.');
           }
-        });
+        );
     }
   }
   //#endregion
@@ -4361,7 +4327,7 @@ AddEditProjectProposal(model: any) {
 
   //#region to check the isCriteiaEvaluationSUBMIT
   OnCriteriaEvaluationSubmitChange(ev) {
-    if ( this.ProjectId != null) {
+    if (this.ProjectId != null) {
       if (ev === 'IsCESubmit') {
         this.startCriteriaEvaluationSubmitLoader = true;
         this.IsSubmitCEform.IsCriteriaEvaluationSubmit = true;
@@ -4369,16 +4335,15 @@ AddEditProjectProposal(model: any) {
         this.startCriteriaEvaluationSubmitLoader = true;
         this.IsSubmitCEform.IsCriteriaEvaluationSubmit = false;
       }
+
       this.setHeaderMenu();
       this.IsSubmitCEform.ProjectId = this.ProjectId;
       this.AddIsSubmitCEDetail(this.IsSubmitCEform);
-
     }
-
   }
   //#endregion
 
-//#region "setHeaderMenu"
+  //#region "setHeaderMenu"
   setHeaderMenu() {
     // check weather the criteria evaluation is approved
     this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
@@ -4390,7 +4355,7 @@ AddEditProjectProposal(model: any) {
     // Set Menu Header List
     this.globalService.setMenuList(this.authorizedMenuList);
   }
-//#endregion
+  //#endregion
 
   //#region AddIsDeletedEligibilityDetail
   AddIsSubmitCEDetail(model: ICEisCESubmitModel) {
