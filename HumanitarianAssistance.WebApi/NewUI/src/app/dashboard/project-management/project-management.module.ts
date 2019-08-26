@@ -81,6 +81,7 @@ import { ProjectOtherDetailPdfService } from './project-list/project-details/pro
 import { MatTabsModule } from '@angular/material/tabs';
 import { ProjectIndicatorsComponent } from './project-list/project-indicators/project-indicators.component';
 import { ProjectIndicatorDetailComponent } from './project-list/project-indicators/project-indicator-detail/project-indicator-detail.component';
+import { ProposalDocumentComponent } from './project-list/proposal/proposal-document/proposal-document.component';
 
 @NgModule({
   imports: [
@@ -161,7 +162,8 @@ import { ProjectIndicatorDetailComponent } from './project-list/project-indicato
     HiringRequestDetailsComponent,
     HiringRequestsListingComponent,
     AddCandidateDaialogComponent,
-    EditCandidateDetailDialogComponent
+    EditCandidateDetailDialogComponent,
+    ProposalDocumentComponent
 
   ],
   providers: [

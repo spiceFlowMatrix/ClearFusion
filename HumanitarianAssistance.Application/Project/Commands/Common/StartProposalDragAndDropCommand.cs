@@ -13,7 +13,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
         public IFormFile file { get; set; }
         public long ProjectId { get; set; }
         public string FileName { get; set; }
-        public string ProposalType { get; set; } 
+        public int ProposalTypeId { get; set; }   
 
     }
 }
