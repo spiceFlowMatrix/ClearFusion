@@ -184,7 +184,7 @@ export class GLOBAL {
   public static API_ChartOfAccount_DeleteChartOfAccount = 'ChartOfAccount/DeleteChartOfAccount';
 
   // Financial Report
-  public static API_FinancialReport_GetAllAccountBalancesByCategory = 'FinancialReport/GetAllAccountBalancesByCategory';
+  public static API_FinancialReport_GetAllAccountBalancesByCategory = 'AccountReports/GetAllAccountBalancesByCategory';
   public static API_FinancialReport_GetAllAccountIncomeExpensesByCategory = 'AccountReports/GetAllAccountIncomeExpensesByCategory';
 
   // Voucher Transaction

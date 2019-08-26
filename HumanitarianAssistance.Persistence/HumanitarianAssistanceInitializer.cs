@@ -82,6 +82,11 @@ namespace HumanitarianAssistance.Persistence
                 await AddCurrencyDetails(context);
             }
 
+            if (!context.AccountLevel.Any())
+            {
+                await AddAccountLevel(context);
+            }
+
             if (!context.PayrollAccountHead.Any())
             {
                 await AddPayrollAccountHead(context);
@@ -422,11 +427,11 @@ namespace HumanitarianAssistance.Persistence
             {
                 List<AccountLevel> list = new List<AccountLevel>
                 {
-                   new AccountLevel { AccountLevelId = 1, AccountLevelName = "Main Level Accounts" },
-                new AccountLevel { AccountLevelId = 2, AccountLevelName = "Control Level Accounts" },
-                new AccountLevel { AccountLevelId = 3, AccountLevelName = "Sub Level Accounts" },
-                new AccountLevel { AccountLevelId = 4, AccountLevelName = "Input Level Accounts" }
-                            };
+                    new AccountLevel { AccountLevelId = 1, AccountLevelName = "Main Level Accounts", CreatedDate = DateTime.UtcNow},
+                    new AccountLevel { AccountLevelId = 2, AccountLevelName = "Control Level Accounts", CreatedDate = DateTime.UtcNow },
+                    new AccountLevel { AccountLevelId = 3, AccountLevelName = "Sub Level Accounts", CreatedDate = DateTime.UtcNow },
+                    new AccountLevel { AccountLevelId = 4, AccountLevelName = "Input Level Accounts", CreatedDate = DateTime.UtcNow }
+                };
                 await context.AccountLevel.AddRangeAsync(list);
                 await context.SaveChangesAsync();
             }

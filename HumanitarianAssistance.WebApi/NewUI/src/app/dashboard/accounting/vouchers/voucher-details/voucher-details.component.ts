@@ -51,7 +51,6 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
   @Input() officeList: IOfficeListModel;
   @Input() projectList: IProjectListModel;
   @Input() voucherTypeList: IVoucherListModel;
-  @Input() inputLevelAccountList: IAccountListModel[];
   @Input() isEditingAllowed: boolean;
   @Output() voucherDetailChanged = new EventEmitter<IVoucherDetailModel>();
 
@@ -95,7 +94,7 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.initForm();
-    this.accountDataSource = [];
+    this.getInputLevelAccountList();
   }
 
   //#region "ngOnChanges"
@@ -111,12 +110,6 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
       this.getTransactionByVoucherId(this.voucherId);
       this.getAllProjectJobDetail();
     }
-    this.inputLevelAccountList.forEach(x => {
-      this.accountDataSource.push({
-        Id: x.AccountCode,
-        Name: x.AccountName
-      });
-    });
   }
   //#endregion
 
@@ -154,138 +147,161 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
   }
   //#endregion
 
+  //#region "getInputLevelAccountList"
+  getInputLevelAccountList() {
+    this.voucherService.GetInputLevelAccountList().subscribe(
+      (response: IResponseData) => {
+        this.accountDataSource = [];
+        if (response.statusCode === 200 && response.data !== null) {
+          response.data.forEach(element => {
+            this.accountDataSource.push({
+              Id: element.AccountCode,
+              Name: element.AccountName
+            });
+          });
+          console.log(this.accountDataSource);
+        }
+      },
+      error => {}
+    );
+  }
+  //#endregion
+
   //#region "getVoucherDetailById"
   getVoucherDetailById(id: number) {
     this.voucherDetailLoader = true;
 
-    this.voucherService.GetVoucherDetailById(id)
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe(
-      (response: IResponseData) => {
-        this.voucherDetail = null;
+    this.voucherService
+      .GetVoucherDetailById(id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        (response: IResponseData) => {
+          this.voucherDetail = null;
 
-        if (response.statusCode === 200 && response.data !== null) {
-          this.voucherDetail = {
-            VoucherNo: response.data.VoucherNo,
+          if (response.statusCode === 200 && response.data !== null) {
+            this.voucherDetail = {
+              VoucherNo: response.data.VoucherNo,
 
-            ReferenceNo: response.data.ReferenceNo,
-            Description: response.data.Description,
-            VoucherDate: new Date(
-              new Date(response.data.VoucherDate).getTime() -
-                new Date().getTimezoneOffset() * 60000
-            ),
-            CurrencyId: response.data.CurrencyId,
-            JournalCode: response.data.JournalCode,
-            ChequeNo: response.data.ChequeNo,
+              ReferenceNo: response.data.ReferenceNo,
+              Description: response.data.Description,
+              VoucherDate: new Date(
+                new Date(response.data.VoucherDate).getTime() -
+                  new Date().getTimezoneOffset() * 60000
+              ),
+              CurrencyId: response.data.CurrencyId,
+              JournalCode: response.data.JournalCode,
+              ChequeNo: response.data.ChequeNo,
 
-            VoucherTypeId: response.data.VoucherTypeId,
-            OfficeId: response.data.OfficeId,
-            ProjectId: response.data.ProjectId,
-            BudgetLineId: response.data.BudgetLineId,
-            FinancialYearId: response.data.FinancialYearId,
-            IsVoucherVerified: response.data.IsVoucherVerified
-          };
-        } else if (response.statusCode === 400 && response.data === null) {
-          this.toastr.warning(response.message);
+              VoucherTypeId: response.data.VoucherTypeId,
+              OfficeId: response.data.OfficeId,
+              ProjectId: response.data.ProjectId,
+              BudgetLineId: response.data.BudgetLineId,
+              FinancialYearId: response.data.FinancialYearId,
+              IsVoucherVerified: response.data.IsVoucherVerified
+            };
+          } else if (response.statusCode === 400 && response.data === null) {
+            this.toastr.warning(response.message);
+          }
+          this.voucherDetailLoader = false;
+        },
+        error => {
+          this.voucherDetailLoader = false;
         }
-        this.voucherDetailLoader = false;
-      },
-      error => {
-        this.voucherDetailLoader = false;
-      }
-    );
+      );
   }
   //#endregion
 
   //#region "getTransactionByVoucherId"
   getTransactionByVoucherId(id: number) {
-
     this.transactionListTEMP = [];
     this.transactionCreditList = [];
     this.transactionDebitList = [];
 
-
-    this.voucherService.GetTransactionByVoucherId(id)
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe(
-      (response: IResponseData) => {
-        if (response.statusCode === 200 && response.data !== null) {
-          this.transactionCreditList = response.data.filter(
-            x => x.Credit !== 0
-          );
-          this.transactionDebitList = response.data.filter(x => x.Debit !== 0);
-        } else if (response.statusCode === 400 && response.data === null) {
-          this.toastr.warning(response.message);
-        }
-      },
-      error => {
-      }
-    );
+    this.voucherService
+      .GetTransactionByVoucherId(id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        (response: IResponseData) => {
+          if (response.statusCode === 200 && response.data !== null) {
+            this.transactionCreditList = response.data.filter(
+              x => x.Credit !== 0
+            );
+            this.transactionDebitList = response.data.filter(
+              x => x.Debit !== 0
+            );
+          } else if (response.statusCode === 400 && response.data === null) {
+            this.toastr.warning(response.message);
+          }
+        },
+        error => {}
+      );
   }
   //#endregion
 
   //#region "GetallBudgetLine list"
   getAllBudgetDetail() {
     this.voucherDetailLoader = true;
-    this.voucherService.GetBudgetLineList()
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe(
-      (response: IResponseData) => {
-        this.budgetLineDetailList = [];
-        if (response.statusCode === 200 && response.data !== null) {
-          response.data.forEach(element => {
-            this.budgetLineDetailList.push({
-              ProjectJobId: element.ProjectJobId,
-              ProjectJobCode: element.ProjectJobCode,
-              ProjectJobName: element.ProjectJobName,
-              BudgetCode: element.BudgetCode,
-              BudgetLineId: element.BudgetLineId,
-              BudgetName: element.BudgetName,
-              CurrencyId: element.CurrencyId,
-              CurrencyName: element.CurrencyName,
-              InitialBudget: element.InitialBudget,
-              ProjectId: element.ProjectId,
-              CreatedDate: element.CreatedDate,
-              DebitPercentage: element.DebitPercentage,
+    this.voucherService
+      .GetBudgetLineList()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        (response: IResponseData) => {
+          this.budgetLineDetailList = [];
+          if (response.statusCode === 200 && response.data !== null) {
+            response.data.forEach(element => {
+              this.budgetLineDetailList.push({
+                ProjectJobId: element.ProjectJobId,
+                ProjectJobCode: element.ProjectJobCode,
+                ProjectJobName: element.ProjectJobName,
+                BudgetCode: element.BudgetCode,
+                BudgetLineId: element.BudgetLineId,
+                BudgetName: element.BudgetName,
+                CurrencyId: element.CurrencyId,
+                CurrencyName: element.CurrencyName,
+                InitialBudget: element.InitialBudget,
+                ProjectId: element.ProjectId,
+                CreatedDate: element.CreatedDate,
+                DebitPercentage: element.DebitPercentage
+              });
             });
-          });
-        } else if (response.statusCode === 400 && response.data === null) {
-          this.toastr.warning(response.message);
+          } else if (response.statusCode === 400 && response.data === null) {
+            this.toastr.warning(response.message);
+          }
+          this.voucherDetailLoader = false;
+        },
+        error => {
+          this.voucherDetailLoader = false;
         }
-        this.voucherDetailLoader = false;
-      },
-      error => {
-        this.voucherDetailLoader = false;
-      }
-    );
+      );
   }
   //#endregion
 
   //#region "GetallBudgetLine list"
   getAllProjectJobDetail() {
     this.voucherDetailLoader = true;
-    this.voucherService.GetProjectobList()
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe(
-      (response: IResponseData) => {
-        this.projectJobList = [];
-        if (response.statusCode === 200 && response.data !== null) {
-          response.data.forEach(element => {
-            this.projectJobList.push({
-              ProjectJobId: element.ProjectJobId,
-              ProjectJobCode: element.ProjectJobCode,
-              ProjectJobName: element.ProjectJobName
+    this.voucherService
+      .GetProjectobList()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        (response: IResponseData) => {
+          this.projectJobList = [];
+          if (response.statusCode === 200 && response.data !== null) {
+            response.data.forEach(element => {
+              this.projectJobList.push({
+                ProjectJobId: element.ProjectJobId,
+                ProjectJobCode: element.ProjectJobCode,
+                ProjectJobName: element.ProjectJobName
+              });
             });
-          });
-        } else if (response.statusCode === 400 && response.data === null) {
-          // this.toastr.warning(response.message);
+          } else if (response.statusCode === 400 && response.data === null) {
+            // this.toastr.warning(response.message);
+          }
+          this.voucherDetailLoader = false;
+        },
+        error => {
+          this.voucherDetailLoader = false;
         }
-        this.voucherDetailLoader = false;
-      },
-      error => {
-        this.voucherDetailLoader = false;
-      }
-    );
+      );
   }
   //#endregion
 
@@ -299,27 +315,28 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
 
       this.checkTransactionFlag = true;
 
-      this.voucherService.AddEditTransactionList(transactionModel)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(
-        (response: IResponseData) => {
-          // this.voucherDetail = null;
-          if (response.statusCode === 200) {
-            this.toastr.success('Transaction Updated Successfully');
-            this.getTransactionByVoucherId(this.voucherId);
-          } else if (response.statusCode === 400) {
-            this.toastr.warning(response.message);
-          }
-          this.commonLoader.hideLoader();
+      this.voucherService
+        .AddEditTransactionList(transactionModel)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(
+          (response: IResponseData) => {
+            // this.voucherDetail = null;
+            if (response.statusCode === 200) {
+              this.toastr.success('Transaction Updated Successfully');
+              this.getTransactionByVoucherId(this.voucherId);
+            } else if (response.statusCode === 400) {
+              this.toastr.warning(response.message);
+            }
+            this.commonLoader.hideLoader();
 
-          this.checkTransactionFlag = false;
-        },
-        error => {
-          this.commonLoader.hideLoader();
-          this.toastr.error('Someting went wrong');
-          this.checkTransactionFlag = false;
-        }
-      );
+            this.checkTransactionFlag = false;
+          },
+          error => {
+            this.commonLoader.hideLoader();
+            this.toastr.error('Someting went wrong');
+            this.checkTransactionFlag = false;
+          }
+        );
     } else {
       this.toastr.error('Voucher is undefined');
     }
@@ -347,23 +364,23 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
       TimezoneOffset: new Date().getTimezoneOffset()
     };
 
-    this.voucherService.EditVoucherDetailById(voucherDetails)
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe(
-      (response: IResponseData) => {
-
-        if (response.statusCode === 200) {
-          this.voucherDetailChanged.emit(voucherDetails);
-        } else if (response.statusCode === 400) {
-          this.toastr.warning(response.message);
+    this.voucherService
+      .EditVoucherDetailById(voucherDetails)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        (response: IResponseData) => {
+          if (response.statusCode === 200) {
+            this.voucherDetailChanged.emit(voucherDetails);
+          } else if (response.statusCode === 400) {
+            this.toastr.warning(response.message);
+          }
+          this.checkTransactionFlag = false;
+        },
+        error => {
+          this.toastr.error('Someting went wrong');
+          this.checkTransactionFlag = false;
         }
-        this.checkTransactionFlag = false;
-      },
-      error => {
-        this.toastr.error('Someting went wrong');
-        this.checkTransactionFlag = false;
-      }
-    );
+      );
   }
   //#endregion
 
@@ -372,26 +389,28 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
     if (voucherNo !== undefined) {
       // this.checkTransactionFlag = true;
 
-      this.voucherDetail.IsVoucherVerified = !this.voucherDetail.IsVoucherVerified;
+      this.voucherDetail.IsVoucherVerified = !this.voucherDetail
+        .IsVoucherVerified;
 
-      this.voucherService.VoucherVerify(voucherNo)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(
-        (response: IResponseData) => {
-          if (response.statusCode === 200) {
-            // this.voucherDetail.IsVoucherVerified = response.data !== null ? response.data : false;
-            // this.toastr.success(response.message);
-          } else if (response.statusCode === 400) {
-            this.toastr.warning(response.message);
+      this.voucherService
+        .VoucherVerify(voucherNo)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(
+          (response: IResponseData) => {
+            if (response.statusCode === 200) {
+              // this.voucherDetail.IsVoucherVerified = response.data !== null ? response.data : false;
+              // this.toastr.success(response.message);
+            } else if (response.statusCode === 400) {
+              this.toastr.warning(response.message);
+            }
+
+            // this.checkTransactionFlag = false;
+          },
+          error => {
+            this.toastr.error('Someting went wrong');
+            // this.checkTransactionFlag = false;
           }
-
-          // this.checkTransactionFlag = false;
-        },
-        error => {
-          this.toastr.error('Someting went wrong');
-          // this.checkTransactionFlag = false;
-        }
-      );
+        );
     }
   }
   //#endregion
@@ -666,7 +685,6 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
   }
   //#endregion
 
-
   //#region "openDocumentsDialog"
   openDocumentsDialog() {
     const dialogRef = this.dialog.open(DocumentListingComponent, {
@@ -674,8 +692,7 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
       minHeight: '300px',
       maxHeight: '500px',
       autoFocus: false,
-      data: {pageId: FileSourceEntityTypes.Voucher,
-             recordId: this.voucherId}
+      data: { pageId: FileSourceEntityTypes.Voucher, recordId: this.voucherId }
     });
 
     // delete
@@ -700,7 +717,6 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {});
   }
   //#endregion
-
 
   openedChange(event: any, Item: IEditTransactionModel) {
     Item.AccountNo = event.Value !== undefined ? event.Value : Item.AccountNo;
@@ -734,7 +750,7 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * this is used to trigger the input
    */
-  openInput(){
+  openInput() {
     // your can use ElementRef for this later
     document.getElementById('fileInput').click();
   }
@@ -743,9 +759,11 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
     if (files.length > 0) {
       this.fileUploadLoader = true;
 
-      for (let i = 0; i < files.length; i++ ) {
-        this.globalSharedService.uploadFile(FileSourceEntityTypes.Voucher, this.voucherId, files[i])
-        .pipe(takeUntil(this.destroyed$)).subscribe(x => this.fileUploadLoader = false);
+      for (let i = 0; i < files.length; i++) {
+        this.globalSharedService
+          .uploadFile(FileSourceEntityTypes.Voucher, this.voucherId, files[i])
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(x => (this.fileUploadLoader = false));
       }
     }
   }
@@ -754,5 +772,4 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
     this.destroyed$.next(true);
     this.destroyed$.complete();
   }
-
 }
