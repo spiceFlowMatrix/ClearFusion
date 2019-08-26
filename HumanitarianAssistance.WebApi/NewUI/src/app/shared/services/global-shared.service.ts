@@ -95,7 +95,8 @@ export class GlobalSharedService {
 
     const DownloadObjectGCBucketModel = {
       ObjectName: objectName,
-      FileName: file.name
+      FileName: file.name,
+      FileType: file.type
     };
 
      return this.globalService

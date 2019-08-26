@@ -9,7 +9,7 @@ namespace DataAccess.DbEntities.Store
     {
         [Key]
         public string MaintenanceId { get; set; }
-        public string Order { get; set; }
+        public long Order { get; set; }
         public int Generator { get; set; }
         public int Vehicle { get; set; }
 

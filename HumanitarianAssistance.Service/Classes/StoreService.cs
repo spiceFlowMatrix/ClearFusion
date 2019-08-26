@@ -7,6 +7,7 @@ using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Service.APIResponses;
 using HumanitarianAssistance.Service.interfaces;
 using HumanitarianAssistance.ViewModels.Models;
+using HumanitarianAssistance.ViewModels.Models.Common;
 using HumanitarianAssistance.ViewModels.Models.Store;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -283,13 +284,13 @@ namespace HumanitarianAssistance.Service.Classes
 
         #region Store Item Group
 
-        public async Task<APIResponse> GetStoreGroupItemCode(string inventoryId)
+        public async Task<APIResponse> GetStoreGroupItemCode(long inventoryId)
         {
             APIResponse response = new APIResponse();
             string ItemGroupCode = "";
             try
             {
-                if (inventoryId != null)
+                if (inventoryId != 0)
                 {
                     StoreItemGroup storeItemGroup = await _uow.GetDbContext().StoreItemGroups
                                                                              .OrderByDescending(x => x.CreatedDate)
@@ -389,7 +390,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllStoreItemGroups(string inventoryId)
+        public async Task<APIResponse> GetAllStoreItemGroups(long inventoryId)
         {
             APIResponse response = new APIResponse();
 
@@ -397,7 +398,7 @@ namespace HumanitarianAssistance.Service.Classes
             {
                 List<StoreItemGroupModel> storeItemGroupList = new List<StoreItemGroupModel>();
 
-                if (inventoryId != null)
+                if (inventoryId != 0)
                 {
                     storeItemGroupList = await _uow.GetDbContext().StoreItemGroups.Where(x => x.IsDeleted == false && x.InventoryId == inventoryId).Select(x => new StoreItemGroupModel
                     {
@@ -811,53 +812,54 @@ namespace HumanitarianAssistance.Service.Classes
 
                     // For Image 
 
-                    if (model.ImageFileName != null && model.ImageFileName != "")
-                    {
-                        string[] str = model.ImageFileName.Split(",");
-                        byte[] filepath = Convert.FromBase64String(str[1]);
-                        string ex = str[0].Split("/")[1].Split(";")[0];
-                        string guidname = Guid.NewGuid().ToString();
-                        string filename = guidname + "." + ex;
-                        var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/") + filename;
-                        File.WriteAllBytes(@"wwwroot/" + filename, filepath);
+                    //if (model.ImageFileName != null && model.ImageFileName != "")
+                    //{
+                    //    string[] str = model.ImageFileName.Split(",");
+                    //    byte[] filepath = Convert.FromBase64String(str[1]);
+                    //    string ex = str[0].Split("/")[1].Split(";")[0];
+                    //    string guidname = Guid.NewGuid().ToString();
+                    //    string filename = guidname + "." + ex;
+                    //    var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/") + filename;
+                    //    File.WriteAllBytes(@"wwwroot/" + filename, filepath);
 
-                        purchase.ImageFileName = guidname;
-                        purchase.ImageFileType = "." + ex;
-                    }
-                    else
-                    {
-                        purchase.ImageFileName = null;
-                        purchase.ImageFileType = null;
-                    }
+                    //    purchase.ImageFileName = guidname;
+                    //    purchase.ImageFileType = "." + ex;
+                    //}
+                    //else
+                    //{
+                    //    purchase.ImageFileName = null;
+                    //    purchase.ImageFileType = null;
+                    //}
 
                     // For invoice 
 
-                    if (model.InvoiceFileName != null && model.InvoiceFileName != "")
-                    {
-                        string[] str = model.InvoiceFileName.Split(",");
-                        byte[] filepath = Convert.FromBase64String(str[1]);
-                        string ex = str[0].Split("/")[1].Split(";")[0];
-                        if (ex == "plain")
-                            ex = "txt";
-                        string guidname = Guid.NewGuid().ToString();
-                        string filename = guidname + "." + ex;
-                        var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/") + filename;
-                        File.WriteAllBytes(@"wwwroot/" + filename, filepath);
+                    //if (model.InvoiceFileName != null && model.InvoiceFileName != "")
+                    //{
+                    //    string[] str = model.InvoiceFileName.Split(",");
+                    //    byte[] filepath = Convert.FromBase64String(str[1]);
+                    //    string ex = str[0].Split("/")[1].Split(";")[0];
+                    //    if (ex == "plain")
+                    //        ex = "txt";
+                    //    string guidname = Guid.NewGuid().ToString();
+                    //    string filename = guidname + "." + ex;
+                    //    var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/") + filename;
+                    //    File.WriteAllBytes(@"wwwroot/" + filename, filepath);
 
-                        purchase.InvoiceFileName = guidname;
-                        purchase.InvoiceFileType = "." + ex;
-                    }
-                    else
-                    {
-                        purchase.InvoiceFileName = null;
-                        purchase.InvoiceFileType = null;
-                    }
+                    //    purchase.InvoiceFileName = guidname;
+                    //    purchase.InvoiceFileType = "." + ex;
+                    //}
+                    //else
+                    //{
+                    //    purchase.InvoiceFileName = null;
+                    //    purchase.InvoiceFileType = null;
+                    //}
 
                     purchase.IsDeleted = false;
 
                     await _uow.StoreItemPurchaseRepository.AddAsyn(purchase);
                     //await _uow.SaveAsync();
 
+                    response.ResponseData = new {PurchaseId = purchase.PurchaseId };
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
@@ -964,7 +966,7 @@ namespace HumanitarianAssistance.Service.Classes
                     var purchaseRecord = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.PurchaseId == model.PurchaseId);
                     if (purchaseRecord != null)
                     {
-                        var isOrderExist = _uow.GetDbContext().StorePurchaseOrders.Where(x => x.Purchase == model.PurchaseId && x.IsDeleted == false).Count();
+                        var isOrderExist = _uow.GetDbContext().StorePurchaseOrders.Where(x => x.PurchaseId == model.PurchaseId && x.IsDeleted == false).Count();
 
                         if (isOrderExist > 0)
                         {
@@ -1005,9 +1007,12 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllPurchasesByItem(string itemId)
+        public async Task<APIResponse> GetAllPurchasesByItem(long itemId)
         {
             var response = new APIResponse();
+
+            FileManagementService fileManagementService = new FileManagementService(_uow);
+
             try
             {
                 var purchases = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.PurchaseOrders)
@@ -1054,6 +1059,37 @@ namespace HumanitarianAssistance.Service.Classes
 
                 foreach (var item in purchasesModel)
                 {
+                    FileModel model = new FileModel()
+                    {
+                        PageId = (int)FileSourceEntityTypes.StorePurchase,
+                        RecordId = item.PurchaseId,
+                        DocumentTypeId = (int)DocumentFileTypes.PurchaseImage
+                    };
+
+                    StoreDocumentModel documentModel = new StoreDocumentModel();
+
+                    //get Saved Document ID and Signed URL For Purchase Image
+                    documentModel = await fileManagementService.GetFilesByRecordIdAndDocumentType(model);
+
+                    if (documentModel != null)
+                    {
+                        item.ImageFileName = documentModel.SignedURL;
+                        item.ImageDocumentId = documentModel.DocumentFileId;
+                    }
+
+                    model.DocumentTypeId = (int)DocumentFileTypes.PurchaseInvoice;
+
+                    documentModel = new StoreDocumentModel();
+
+                    //get Saved Document ID and Signed URL For Purchase Invoice
+                    documentModel = await fileManagementService.GetFilesByRecordIdAndDocumentType(model);
+
+                    if (documentModel != null)
+                    {
+                        item.Invoice = documentModel.SignedURL;
+                        item.InvoiceDocumentId = documentModel.DocumentFileId;
+                    }
+
                     var exchangeRate = _uow.GetDbContext().ExchangeRateDetail.OrderByDescending(x=> x.Date).FirstOrDefault(x => x.IsDeleted == false && x.Date.Date <= item.PurchaseDate.Date && x.FromCurrency == item.Currency && x.ToCurrency == (int)Currency.USD);
 
                     if (exchangeRate == null)
@@ -1145,7 +1181,7 @@ namespace HumanitarianAssistance.Service.Classes
                 doc.File = null;
                 doc.FileType = ex;
                 doc.FileName = fileName;
-                doc.Purchase = model.PurchaseId;
+                doc.PurchaseId = model.PurchaseId;
                 doc.IsDeleted = false;
 
                 await _uow.ItemPurchaseDocumentRepository.AddAsyn(doc);
@@ -1252,7 +1288,7 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllItemsOrder(string ItemId)
+        public async Task<APIResponse> GetAllItemsOrder(long ItemId)
         {
             APIResponse response = new APIResponse();
             try
@@ -1275,7 +1311,7 @@ namespace HumanitarianAssistance.Service.Classes
                     MustReturn = x.MustReturn,
                     Returned = x.Returned,
                     OrderId = x.OrderId,
-                    Purchase = x.Purchase,
+                    Purchase = x.PurchaseId,
                     ReturnedDate = x.ReturnedDate,
                     IssedToLocation = x.IssedToLocation,
                     IssueVoucherNo = x.IssueVoucherNo.ToString(),
@@ -1435,7 +1471,7 @@ namespace HumanitarianAssistance.Service.Classes
 
         #region "Item Amount"
 
-        public async Task<APIResponse> GetItemAmounts(string ItemId)
+        public async Task<APIResponse> GetItemAmounts(long ItemId)
         {
             APIResponse response = new APIResponse();
             try
@@ -1584,27 +1620,27 @@ namespace HumanitarianAssistance.Service.Classes
 
                     List<StoreItemPurchase> storeItemPurchased = new List<StoreItemPurchase>();
 
-                    if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != null && depretiationFilter.ItemId != null)
+                    if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != 0 && depretiationFilter.ItemId != 0)
                     {
                         storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x=> x.StoreItemGroup).ThenInclude(x=> x.StoreInventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true  && x.InventoryItem== depretiationFilter.ItemId && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == depretiationFilter.StoreId).ToListAsync();
                     }
-                    else if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != null && depretiationFilter.ItemId == null && depretiationFilter.ItemGroupId !=0)
+                    else if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != 0 && depretiationFilter.ItemId == 0 && depretiationFilter.ItemGroupId !=0)
                     {
                         storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.StoreItemGroup).ThenInclude(x => x.StoreInventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.Inventory.InventoryId == depretiationFilter.InventoryId && x.StoreInventoryItem.ItemGroupId== depretiationFilter.ItemGroupId).ToListAsync();
                     }
-                    else if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != null && depretiationFilter.ItemId == null && depretiationFilter.ItemGroupId == 0)
+                    else if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId != 0 && depretiationFilter.ItemId == 0 && depretiationFilter.ItemGroupId == 0)
                     {
                         storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.StoreItemGroup).ThenInclude(x => x.StoreInventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.ItemInventory == depretiationFilter.InventoryId).ToListAsync();
                     }
-                    else if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId == null && depretiationFilter.ItemId == null && depretiationFilter.ItemGroupId !=0)
+                    else if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId == 0 && depretiationFilter.ItemId == 0 && depretiationFilter.ItemGroupId !=0)
                     {
                         storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.Inventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == depretiationFilter.StoreId && x.StoreInventoryItem.ItemGroupId== depretiationFilter.ItemGroupId).ToListAsync();
                     }
-                    else if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId == null && depretiationFilter.ItemId == null && depretiationFilter.ItemGroupId == 0)
+                    else if (depretiationFilter.StoreId != null && depretiationFilter.InventoryId == 0 && depretiationFilter.ItemId == 0 && depretiationFilter.ItemGroupId == 0)
                     {
                         storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.Inventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == depretiationFilter.StoreId).ToListAsync();
                     }
-                    else if (depretiationFilter.StoreId == null && depretiationFilter.InventoryId == null && depretiationFilter.ItemId == null)
+                    else if (depretiationFilter.StoreId == null && depretiationFilter.InventoryId == 0 && depretiationFilter.ItemId == 0)
                     {
                         storeItemPurchased = await _uow.GetDbContext().StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.Inventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true).ToListAsync();
                     }
@@ -1695,16 +1731,36 @@ namespace HumanitarianAssistance.Service.Classes
             return response;
         }
 
-        public async Task<APIResponse> GetAllPurchaseInvoices(string PurchaseId)
+        public async Task<APIResponse> GetAllPurchaseInvoices(long PurchaseId)
         {
             APIResponse response = new APIResponse();
+
+            FileManagementService fileManagementService = new FileManagementService(_uow);
+
             try
             {
-                var Invoices = await _uow.StoreItemPurchaseRepository.FindAsync(x => x.PurchaseId == PurchaseId);
-                UpdatePurchaseInvoiceModel obj = new UpdatePurchaseInvoiceModel();
-                obj.PurchaseId = Invoices.PurchaseId;
-                obj.Invoice = Invoices.InvoiceFileName + Invoices.InvoiceFileType;
-                response.data.UpdatePurchaseInvoiceModel = obj;
+
+                FileModel model = new FileModel()
+                {
+                    PageId = (int)FileSourceEntityTypes.StorePurchase,
+                    RecordId = PurchaseId,
+                    DocumentTypeId = (int)DocumentFileTypes.PurchaseInvoice
+                };
+
+                StoreDocumentModel documentModel = new StoreDocumentModel();
+
+                //get Saved Document ID and Signed URL For Purchase Image
+                documentModel = await fileManagementService.GetFilesByRecordIdAndDocumentType(model);
+
+                if (documentModel != null)
+                {
+                    response.data.UpdatePurchaseInvoiceModel = new UpdatePurchaseInvoiceModel()
+                    {
+                        Invoice = documentModel.SignedURL,
+                        PurchaseId = PurchaseId
+                    };
+                }
+
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

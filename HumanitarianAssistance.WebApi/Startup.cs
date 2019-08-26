@@ -148,7 +148,6 @@ namespace HumanitarianAssistance.WebApi
             //    RequestPath = new PathString("/Docs")
             //});
             app.UseStaticFiles();
-
             app.UseCookiePolicy();
             app.UseCors(defaultCorsPolicyName);
             app.UseAuthentication();

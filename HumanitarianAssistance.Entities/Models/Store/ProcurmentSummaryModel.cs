@@ -10,7 +10,7 @@ namespace HumanitarianAssistance.ViewModels.Models.Store
 		{
 			TotalCostDetails = new TotalCostDetails();
 		}
-		public string ProcurementId { get; set; }           // Order ID
+		public long ProcurementId { get; set; }           // Order ID
 		public DateTime ProcurementDate { get; set; }       // IssueDate
 		public string EmployeeName { get; set; }
 		public int? Store { get; set; }                      // Names in front-end because there is no master for it

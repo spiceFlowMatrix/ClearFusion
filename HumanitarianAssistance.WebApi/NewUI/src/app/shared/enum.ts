@@ -500,6 +500,7 @@ export enum ProjectActivityPhases {
 //#endregion
 
 //#region "FileSourceEntityTypes"
+// note: any change in this enum should also change in oldui enum
 export enum FileSourceEntityTypes {
   Voucher = 1,
   Account = 2,
@@ -509,7 +510,8 @@ export enum FileSourceEntityTypes {
   ProjectActivityImplementation = 6,
   ProjectActivityMonitoring = 7,
   ProjectActivityPlanning = 8,
-  DonorDetail = 9
+  DonorDetail = 9,
+  StorePurchase= 10
 }
 //#endregion
 //#region "EmployeeType"
