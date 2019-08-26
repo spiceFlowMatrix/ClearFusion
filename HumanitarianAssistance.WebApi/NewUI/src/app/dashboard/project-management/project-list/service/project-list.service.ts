@@ -406,6 +406,11 @@ export class ProjectListService {
     return this.globalService.getListById(url, Id);
   }
   //#endregion
+    //#region "GetProjectproposalDocumentById"
+  GetProjectproposalDocumentById(url: string, Id: any) {
+    return this.globalService.getListById(url, Id);
+  }
+ //#endregion
   //#region "uploadEDIFile"
   uploadEDIFile(url: string, Id: number, Formdata: any): any {
     return this.globalService.post(url, Formdata);
