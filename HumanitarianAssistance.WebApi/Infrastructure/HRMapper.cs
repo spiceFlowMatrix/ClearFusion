@@ -39,6 +39,7 @@ namespace HumanitarianAssistance.WebApi.Infrastructure
             CreateMap<AddJobHiringDetailCommand, JobHiringDetails>().ReverseMap();
             CreateMap<ExistInterviewDetails, ExitInterviewModel>().ReverseMap();
             CreateMap<RatingBasedCriteriaModel, RatingBasedCriteria>().ReverseMap();
+            CreateMap<AssignLeaveToEmployeeModel, AssignLeaveToEmployee>().ReverseMap();
         }
     }
 }
