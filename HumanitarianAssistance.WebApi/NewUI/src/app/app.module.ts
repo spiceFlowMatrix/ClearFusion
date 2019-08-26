@@ -34,6 +34,7 @@ import { AngularSplitModule } from 'angular-split';
 import { SignalRService } from './shared/services/signal-r.service';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { ProposalDocumentComponent } from './proposal-document/proposal-document.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 
     // component
     DbstyleGuideComponent,
+
+    ProposalDocumentComponent,
 
 
   ],

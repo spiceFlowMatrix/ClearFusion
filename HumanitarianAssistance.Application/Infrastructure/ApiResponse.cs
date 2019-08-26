@@ -225,6 +225,8 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public ProjectIndicatorViewModel ProjectIndicator { get; set; }
         public List<IndicatorQuestions> Questions { get; set; }
         public List<SPProjectProposalReportModel> ProjectProposalReportList { get; set; }
+        public List<ProjectProposalModelList> ProjectProposalModelList { get; set; }
+        public ProjectProposalModelList ProjectProposalDocumentModel { get; set; }
 
 
         //Web Link Url 05082019

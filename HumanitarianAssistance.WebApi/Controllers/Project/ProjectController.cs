@@ -652,8 +652,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         {
             return await _mediator.Send(new GetProjectproposalsByIdQuery { ProjectId = ProjectId });
         }
-        #endregion
 
+        [HttpPost]
+        public async Task<ApiResponse> GetProjectproposalDocumentsById([FromBody] long ProjectId)
+        {
+            return await _mediator.Send(new GetProjectproposalDocumentsByIdQuery { ProjectId = ProjectId });
+        }
+        #endregion 
+   
         #region "UploadEDIProposalFile"
         /// <summary>
         /// upload other proposal document using service account credentails new 26/03/2019 poonam
@@ -1462,7 +1468,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         #region "Start Proposal Drag and Drop PK 26/03/2019" 
 
         [HttpPost, DisableRequestSizeLimit]
-        public async Task<ApiResponse> StartProposalDragAndDropFile([FromForm] IFormFile filesData,[FromForm] string projectId, [FromForm] string data)
+        public async Task<ApiResponse> StartProposalDragAndDropFile([FromForm] IFormFile filesData,[FromForm] string projectId, [FromForm] int data)
         {
             ApiResponse apiRespone = new ApiResponse();
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -1471,11 +1477,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
 
                 var file = Request.Form.Files[0];
                 long ProjectId = Convert.ToInt64(projectId);
-                string ProposalType = data;
+                int ProposalTypeId = data;
                 string fileName = Request.Form.Files[0].FileName;
 
                 string ext = Path.GetExtension(fileName).ToLower();
-                if (ext == ".doc" || ext == ".docx")
+                if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
                 {
                     var user = await _userManager.FindByIdAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                     if (user != null)
@@ -1487,7 +1493,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
                             file = file,
                             ProjectId = ProjectId,
                             FileName = fileName,
-                            ProposalType = ProposalType,
+                            ProposalTypeId = ProposalTypeId,
                             ext = ext,
                             logginUserEmailId = logginUserEmailId,
                             CreatedById = userId,
