@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+<<<<<<< HEAD
 using HumanitarianAssistance.Application.Configuration.Commands.Create;
 using HumanitarianAssistance.Application.Configuration.Models;
 using HumanitarianAssistance.Application.HR.Commands.Create;
@@ -6,6 +7,10 @@ using HumanitarianAssistance.Application.HR.Commands.Delete;
 using HumanitarianAssistance.Application.HR.Commands.Update;
 using HumanitarianAssistance.Application.HR.Models;
 using HumanitarianAssistance.Domain.Entities;
+=======
+using HumanitarianAssistance.Application.HR.Commands.Create;
+using HumanitarianAssistance.Application.HR.Models;
+>>>>>>> 283e4aad2a4f32a5e1f5bbe3a3e24be5174a685f
 using HumanitarianAssistance.Domain.Entities.HR;
 
 namespace HumanitarianAssistance.WebApi.Infrastructure
@@ -19,6 +24,7 @@ namespace HumanitarianAssistance.WebApi.Infrastructure
             CreateMap<AddAdvanceCommand,Advances>().ReverseMap();
             CreateMap<AddNewEmployeeCommand, EmployeeDetail>().ReverseMap();
             CreateMap<EmployeeProfessionalDetailModel, EmployeeProfessionalDetail>().ReverseMap();
+<<<<<<< HEAD
             CreateMap<AddEmployeeHistoryCommand, EmployeeHistoryDetail>().ReverseMap();
             CreateMap<AddLeaveToEmployeeCommand, AssignLeaveToEmployee>().ReverseMap();
             CreateMap<AddEmployeeHealthInfoCommand, EmployeeHealthInfo>().ReverseMap();
@@ -39,6 +45,8 @@ namespace HumanitarianAssistance.WebApi.Infrastructure
             CreateMap<AddJobHiringDetailCommand, JobHiringDetails>().ReverseMap();
             CreateMap<ExistInterviewDetails, ExitInterviewModel>().ReverseMap();
             CreateMap<RatingBasedCriteriaModel, RatingBasedCriteria>().ReverseMap();
+=======
+>>>>>>> 283e4aad2a4f32a5e1f5bbe3a3e24be5174a685f
         }
     }
 }

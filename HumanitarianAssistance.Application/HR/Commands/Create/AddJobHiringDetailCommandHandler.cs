@@ -35,7 +35,10 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     obj.CreatedById = request.CreatedById;
                     obj.CreatedDate = request.CreatedDate;
                     await _dbContext.JobHiringDetails.AddAsync(obj);
+<<<<<<< HEAD
                     await _dbContext.SaveChangesAsync();
+=======
+>>>>>>> 283e4aad2a4f32a5e1f5bbe3a3e24be5174a685f
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }

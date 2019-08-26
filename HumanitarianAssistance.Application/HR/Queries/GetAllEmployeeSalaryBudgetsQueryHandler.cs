@@ -10,7 +10,11 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 namespace HumanitarianAssistance.Application.HR.Queries
 {
+<<<<<<< HEAD
     public class GetAllEmployeeSalaryBudgetsQueryHandler : IRequestHandler<GetAllEmployeeSalaryBudgetsQuery, ApiResponse>
+=======
+    public class GetAllEmployeeSalaryBudgetsQueryHandler : IRequestHandler<GetAllEmployeeOtherSkillsQuery, ApiResponse>
+>>>>>>> 283e4aad2a4f32a5e1f5bbe3a3e24be5174a685f
     {
         private HumanitarianAssistanceDbContext _dbContext;
 
@@ -19,7 +23,11 @@ namespace HumanitarianAssistance.Application.HR.Queries
             _dbContext = dbContext;
         }
 
+<<<<<<< HEAD
         public async Task<ApiResponse> Handle(GetAllEmployeeSalaryBudgetsQuery request, CancellationToken cancellationToken)
+=======
+        public async Task<ApiResponse> Handle(GetAllEmployeeOtherSkillsQuery request, CancellationToken cancellationToken)
+>>>>>>> 283e4aad2a4f32a5e1f5bbe3a3e24be5174a685f
         {
             ApiResponse response = new ApiResponse();
             try

@@ -44,6 +44,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                               where ept.EmployeeID == request.EmployeeId && ept.IsDeleted == false && financialYear.Select(x=> x.StartDate.Year).Contains(ept.PayrollYear.Value)  && ept.OfficeId == request.OfficeId && ept.IsApproved == true
                               select new
                               {
+<<<<<<< HEAD
                                   ed.EmployeeName,
                                   ed.CurrentAddress,
                                   ed.Phone,
@@ -51,6 +52,15 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                   Year = ept.PayrollYear,
                                   ept.NetSalary,
                                   ept.SalaryTax,
+=======
+                                  EmployeeName = ed.EmployeeName,
+                                  CurrentAddress = ed.CurrentAddress,
+                                  Phone = ed.Phone,
+                                  Email = ed.Email,
+                                  Year = ept.PayrollYear,
+                                  NetSalary = ept.NetSalary,
+                                  SalaryTax = ept.SalaryTax,
+>>>>>>> 283e4aad2a4f32a5e1f5bbe3a3e24be5174a685f
                                   EmployeeTaxpayerIdentification = epd.TinNumber
                               }).ToList();
 
