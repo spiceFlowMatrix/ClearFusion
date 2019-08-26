@@ -70,8 +70,8 @@ export class ProjectActivityAddComponent implements OnInit, OnDestroy {
   initForm() {
     this.projectActivityForm = this.fb.group({
       ActivityDescription: [null, Validators.required],
-      PlannedStartDate: [null, [Validators.required]],
-      PlannedEndDate: [null, Validators.required],
+      PlannedStartDate: [new Date(), [Validators.required]],
+      PlannedEndDate: [new Date(), Validators.required],
       BudgetLineId: [null, Validators.required],
       EmployeeID: [null, Validators.required],
       OfficeId: [null],
