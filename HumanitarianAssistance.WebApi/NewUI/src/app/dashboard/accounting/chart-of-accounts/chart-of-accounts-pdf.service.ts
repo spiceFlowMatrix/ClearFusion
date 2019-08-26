@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { GlobalService } from 'src/app/shared/services/global-services.service';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
+import { GLOBAL } from 'src/app/shared/global';
+import { IResponseData } from '../vouchers/models/status-code.model';
+import { map } from 'rxjs/internal/operators/map';
 
 declare const require: any;
 const jsPDF = require('jspdf');
@@ -19,12 +24,29 @@ export class ChartOfAccountsPdfService {
 
   dataSource = [];
 
-  constructor() {}
+  constructor(
+    private globalService: GlobalService,
+    private appurl: AppUrlService
+  ) {}
 
   ExportChartOfAccountPdf() {
-    console.log('Chart of account');
+    return this.globalService
+      .getList(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Pdf_GetAllChartOfAccountHierarchyPdf
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.ResponseData,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
 
-    this.exportToPdf('data');
+    // this.exportToPdf("data");
   }
 
   private exportToPdf(data): void {
@@ -81,7 +103,12 @@ export class ChartOfAccountsPdfService {
       textCurrentLocationYAxis += linePadding;
     }
 
-    doc.line(this.margins.left, textCurrentLocationYAxis, pageWidth - this.margins.right, textCurrentLocationYAxis);
+    doc.line(
+      this.margins.left,
+      textCurrentLocationYAxis,
+      pageWidth - this.margins.right,
+      textCurrentLocationYAxis
+    );
 
     doc.setFontSize(11);
 
@@ -117,7 +144,12 @@ export class ChartOfAccountsPdfService {
       textCurrentLocationYAxis += linePadding;
     }
 
-    doc.line(this.margins.left, textCurrentLocationYAxis, pageWidth - this.margins.right, textCurrentLocationYAxis);
+    doc.line(
+      this.margins.left,
+      textCurrentLocationYAxis,
+      pageWidth - this.margins.right,
+      textCurrentLocationYAxis
+    );
     textCurrentLocationYAxis += linePadding;
 
     // main level
@@ -252,7 +284,6 @@ export class ChartOfAccountsPdfService {
         }
       }
     }
-
 
     doc.save('chart-of-account.pdf');
   }

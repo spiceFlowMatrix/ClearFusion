@@ -1796,7 +1796,19 @@ export class ChartOfAccountDetailComponent implements OnInit, OnChanges {
 
 
   onExportPdf() {
-    this.cofPdfService.ExportChartOfAccountPdf();
+    this.cofPdfService.ExportChartOfAccountPdf().subscribe(
+      response => {
+        if (response.statusCode === 200) {
+          // do something
+          console.log(response.data);
+
+        } else if (response.statusCode === 400) {
+          this.toastr.error(response.message);
+        }
+      },
+      error => {
+
+      });
   }
 
 
