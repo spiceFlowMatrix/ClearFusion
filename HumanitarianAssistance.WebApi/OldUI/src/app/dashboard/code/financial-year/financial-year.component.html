@@ -46,11 +46,11 @@
                     <dxi-validation-rule type="required" message="FinancialYear Name is required">
                     </dxi-validation-rule>
                 </dxi-item>
-                <dxi-item dataField="StartDate" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy' }">
+                <dxi-item dataField="StartDate" editorType="dxDateBox" [editorOptions]="{type: 'date', value: currentDate, displayFormat: 'dd/MM/yyyy' }">
                     <dxi-validation-rule type="required" message="StartDate is required">
                     </dxi-validation-rule>
                 </dxi-item>
-                <dxi-item dataField="EndDate" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy' }">
+                <dxi-item dataField="EndDate" editorType="dxDateBox" [editorOptions]="{type: 'date', value: currentDate, displayFormat: 'dd/MM/yyyy' }">
                     <dxi-validation-rule type="required" message="EndDate is required">
                     </dxi-validation-rule>
                 </dxi-item>

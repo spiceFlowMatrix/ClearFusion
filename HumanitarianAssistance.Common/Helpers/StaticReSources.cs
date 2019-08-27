@@ -392,6 +392,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string FinancialYearAlreadyExists = "Financial Year Already exists!";
         public const string FinancialYearNotFound = "Financial Year not found";
         public const string officeCodeNotFound = "Office Code Not Found";
+        public const string AttendanceGroupNotFound = "Attendance Group Record Not Found";
         public const string TransactionNotFound = "Transaction Not Found";
         public const string AccountNotFound = "Account Not Found";
         public const string DeleteAllTransactions = "Transactions Exist";

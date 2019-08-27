@@ -8,6 +8,6 @@ namespace HumanitarianAssistance.Application.Store.Queries
 {
     public class GetAllPurchaseInvoicesQuery:IRequest<ApiResponse>
     {
-        public string PurchaseId { get; set; }
+        public long PurchaseId { get; set; }
     }
 }

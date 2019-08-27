@@ -36,27 +36,27 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                     List<StoreItemPurchase> storeItemPurchased = new List<StoreItemPurchase>();
 
-                    if (request.StoreId != null && request.InventoryId != null && request.ItemId != null)
+                    if (request.StoreId != null && request.InventoryId != 0 && request.ItemId != 0)
                     {
                         storeItemPurchased = await _dbContext.StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.StoreItemGroup).ThenInclude(x => x.StoreInventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.InventoryItem == request.ItemId && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == request.StoreId).ToListAsync();
                     }
-                    else if (request.StoreId != null && request.InventoryId != null && request.ItemId == null && request.ItemGroupId != 0)
+                    else if (request.StoreId != null && request.InventoryId != 0 && request.ItemId == 0 && request.ItemGroupId != 0)
                     {
                         storeItemPurchased = await _dbContext.StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.StoreItemGroup).ThenInclude(x => x.StoreInventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == request.StoreId && x.StoreInventoryItem.Inventory.InventoryId == request.InventoryId && x.StoreInventoryItem.ItemGroupId == request.ItemGroupId).ToListAsync();
                     }
-                    else if (request.StoreId != null && request.InventoryId != null && request.ItemId == null && request.ItemGroupId == 0)
+                    else if (request.StoreId != null && request.InventoryId != 0 && request.ItemId == 0 && request.ItemGroupId == 0)
                     {
                         storeItemPurchased = await _dbContext.StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.StoreItemGroup).ThenInclude(x => x.StoreInventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == request.StoreId && x.StoreInventoryItem.ItemInventory == request.InventoryId).ToListAsync();
                     }
-                    else if (request.StoreId != null && request.InventoryId == null && request.ItemId == null && request.ItemGroupId != 0)
+                    else if (request.StoreId != null && request.InventoryId == 0 && request.ItemId == 0 && request.ItemGroupId != 0)
                     {
                         storeItemPurchased = await _dbContext.StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.Inventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == request.StoreId && x.StoreInventoryItem.ItemGroupId == request.ItemGroupId).ToListAsync();
                     }
-                    else if (request.StoreId != null && request.InventoryId == null && request.ItemId == null && request.ItemGroupId == 0)
+                    else if (request.StoreId != null && request.InventoryId == 0 && request.ItemId == 0 && request.ItemGroupId == 0)
                     {
                         storeItemPurchased = await _dbContext.StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.Inventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true && x.StoreInventoryItem.StoreItemGroup.StoreInventory.AssetType == request.StoreId).ToListAsync();
                     }
-                    else if (request.StoreId == null && request.InventoryId == null && request.ItemId == null)
+                    else if (request.StoreId == null && request.InventoryId == 0 && request.ItemId == 0)
                     {
                         storeItemPurchased = await _dbContext.StoreItemPurchases.Include(x => x.StoreInventoryItem).ThenInclude(x => x.Inventory).Where(x => x.IsDeleted == false && x.ApplyDepreciation == true).ToListAsync();
                     }

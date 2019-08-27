@@ -13,7 +13,9 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         }
 
         [Key]
-        public string InventoryId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column(Order = 1)]
+        public long InventoryId { get; set; }
         public string InventoryCode { get; set; }
         public string InventoryName { get; set; }
         public string InventoryDescription { get; set; }

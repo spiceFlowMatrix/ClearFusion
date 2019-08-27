@@ -15,7 +15,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public string FileType { get; set; }
         public string FileName { get; set; }
         public string DocumentGuid { get; set; }
-        public string Purchase { get; set; }
+        public long PurchaseId { get; set; }    
 
         [ForeignKey("Purchase")]
         public StoreItemPurchase ItemPurchase { get; set; }

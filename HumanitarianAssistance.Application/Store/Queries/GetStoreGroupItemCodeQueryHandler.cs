@@ -28,12 +28,12 @@ namespace HumanitarianAssistance.Application.Store.Queries
             string ItemGroupCode = "";
             try
             {
-                if (request.inventoryId != null)
+                if (request.InventoryId != null)
                 {
                     StoreItemGroup storeItemGroup = await _dbContext.StoreItemGroups
                                                                              .OrderByDescending(x => x.CreatedDate)
                                                                              .Include(x => x.StoreInventory)
-                                                                             .FirstOrDefaultAsync(x => x.IsDeleted == false && x.InventoryId == request.inventoryId);
+                                                                             .FirstOrDefaultAsync(x => x.IsDeleted == false && x.InventoryId == request.InventoryId);
                     if (storeItemGroup != null)
                     {
                         long count = Convert.ToInt64(storeItemGroup.ItemGroupCode.Substring(4));
@@ -41,7 +41,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     }
                     else
                     {
-                        StoreInventory storeInventory = await _dbContext.StoreInventories.FirstOrDefaultAsync(x => x.IsDeleted == false && x.InventoryId == request.inventoryId);
+                        StoreInventory storeInventory = await _dbContext.StoreInventories.FirstOrDefaultAsync(x => x.IsDeleted == false && x.InventoryId == request.InventoryId);
 
                         ItemGroupCode = storeInventory.InventoryCode + "-" + String.Format("{0:D2}", 1);
                     }

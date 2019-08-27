@@ -103,6 +103,7 @@ export class SchedulerComponent implements OnInit {
   }
 
   onAppointmentRendered(event) {
+    event.appointmentElement.style.backgroundColor = '#FF0000';
     event.cancel = true;
   }
 

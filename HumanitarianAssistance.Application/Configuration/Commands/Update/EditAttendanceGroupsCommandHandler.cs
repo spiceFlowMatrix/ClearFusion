@@ -25,6 +25,7 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Update
         public async Task<ApiResponse> Handle(EditAttendanceGroupsCommand request, CancellationToken cancellationToken)
         {
             ApiResponse response = new ApiResponse();
+
             try
             {
                 if (request != null)
@@ -38,16 +39,23 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Update
                         throw new Exception($"Attendance Group with Name '{request.Name}' already exists");
                     }
 
-                    AttendanceGroupMaster attendanceGroupMaster = attendanceGroupMasterList.FirstOrDefault(x => x.IsDeleted == false && x.AttendanceGroupId == request.Id);
+                   // AttendanceGroupMaster attendanceGroupMaster = attendanceGroupMasterList.FirstOrDefault(x => x.IsDeleted == false && x.AttendanceGroupId == model.Id);
 
-                    if (attendanceGroupMaster != null)
+                    AttendanceGroupMaster record = await _dbContext.AttendanceGroupMaster.FirstOrDefaultAsync(x => x.IsDeleted == false && x.AttendanceGroupId == request.Id);
+
+                    if (record != null)
                     {
-                        attendanceGroupMaster.Description = request.Description;
-                        attendanceGroupMaster.Name = request.Name;
-                        attendanceGroupMaster.ModifiedById = request.ModifiedById;
-                        attendanceGroupMaster.ModifiedDate = request.ModifiedDate;
-                        
+                        record.Description = request.Description;
+                        record.Name = request.Name;
+                        record.ModifiedById = request.ModifiedById;
+                        record.ModifiedDate = DateTime.UtcNow;
+
+                        _dbContext.AttendanceGroupMaster.Update(record);
                         await _dbContext.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        throw new Exception(StaticResource.AttendanceGroupNotFound);
                     }
 
                     response.StatusCode = StaticResource.successStatusCode;

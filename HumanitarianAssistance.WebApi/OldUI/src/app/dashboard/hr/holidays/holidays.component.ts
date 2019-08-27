@@ -102,8 +102,7 @@ export class HolidaysComponent implements OnInit {
 
   onAppointmentRendered(event) {
     event.cancel = true;
-    event.appointmentElement.style.backgroundColor =
-      event.appointmentData.color;
+    event.appointmentElement.style.backgroundColor = '#FF0000';
   }
 
   onAppointmentClick(e) {}

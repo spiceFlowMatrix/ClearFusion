@@ -8,7 +8,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
 {
     public class UpdateInvoiceCommand:BaseModel,IRequest<ApiResponse>
     {
-        public string PurchaseId { get; set; }
+        public long PurchaseId { get; set; }
         public string Invoice { get; set; }
     }
 }

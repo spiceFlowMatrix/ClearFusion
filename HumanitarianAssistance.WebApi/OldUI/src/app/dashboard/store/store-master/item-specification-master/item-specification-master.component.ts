@@ -33,7 +33,7 @@ export class ItemSpecificationMasterComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.itemSpecificationDataSource = [];
+      this.itemSpecificationDataSource = [];
     this.getAllInventoryItemTypeDetails();
     this.getOfficeCodeList();
   }
@@ -81,23 +81,31 @@ export class ItemSpecificationMasterComponent implements OnInit {
             data.StatusCode === 200 &&
             data.data.OfficeDetailsList.length > 0
           ) {
-            const AllOffices = localStorage.getItem('ALLOFFICES') != null ? localStorage.getItem('ALLOFFICES').split(',') : [];
+              this.officeDropdownList = [];
 
-            data.data.OfficeDetailsList.forEach(element => {
-              const officeFound = AllOffices.indexOf('' + element.OfficeId);
-              if (officeFound !== -1) {
-                this.officeDropdownList.push({
-                  OfficeId: element.OfficeId,
-                  OfficeCode: element.OfficeCode,
-                  OfficeName: element.OfficeName,
-                  SupervisorName: element.SupervisorName,
-                  PhoneNo: element.PhoneNo,
-                  FaxNo: element.FaxNo,
-                  OfficeKey: element.OfficeKey
-                });
-              }
+            const AllOffices = localStorage.getItem('ALLOFFICES').split(',');
 
-              this.selectedOffice = this.officeDropdownList[0].OfficeId;
+              data.data.OfficeDetailsList.forEach(e => {
+
+                  if (e.OfficeId != undefined) {
+                      const officeFound = AllOffices.indexOf(e.OfficeId.toString());
+                      if (officeFound !== -1) {
+                          this.officeDropdownList.push({
+                              OfficeId: e.OfficeId,
+                              OfficeCode: e.OfficeCode,
+                              OfficeName: e.OfficeName,
+                              SupervisorName: e.SupervisorName,
+                              PhoneNo: e.PhoneNo,
+                              FaxNo: e.FaxNo,
+                              OfficeKey: e.OfficeKey
+                          });
+                      }
+                  }
+
+                if (this.officeDropdownList != undefined && this.officeDropdownList != null &&
+                    this.officeDropdownList.length > 0) {
+                    this.selectedOffice = this.officeDropdownList[0].OfficeId;
+                }
             });
 
           // tslint:disable-next-line:curly
