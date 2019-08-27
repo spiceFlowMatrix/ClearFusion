@@ -310,7 +310,6 @@ export class EmployeeAppraisalComponent implements OnInit {
 
   //#region "Get All Employee List By OfficeId"
     getAllEmployeeListByOfficeId() {
-        debugger;
     // tslint:disable-next-line:radix
       const officeId = this.selectedOffice;
     this.hrService
@@ -810,7 +809,6 @@ export class EmployeeAppraisalComponent implements OnInit {
 
   //#region "On Add Form Submit"
     onAddFormSubmit(data: EmployeeAppraisalModel) {
-        debugger;
     const appraisalData: EmployeeAppraisalModel = {
       EmployeeAppraisalDetailsId: 0,
       EmployeeId: data.EmployeeId,
@@ -1238,8 +1236,6 @@ export class EmployeeAppraisalComponent implements OnInit {
                             }
                         });
 
-                        debugger;
-                       
                         this.selectedOffice =
                             (this.selectedOffice === null || this.selectedOffice == undefined)
                                     ? this.officeDropdownList[0].OfficeId

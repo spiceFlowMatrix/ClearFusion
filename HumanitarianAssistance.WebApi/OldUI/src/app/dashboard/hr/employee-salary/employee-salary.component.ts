@@ -172,7 +172,7 @@ export class EmployeeSalaryComponent implements OnInit {
   //#region "initializeForm"
   initializeForm() {
     this.employeeePayrollFilterData = {
-      Date: this.currentDate,
+      Date: new Date(),
       Month: 0,
       Year: 0,
       SelectedPaymentType: 1
@@ -201,7 +201,7 @@ export class EmployeeSalaryComponent implements OnInit {
     };
 
     this.employeeApprovedSalaryFormFilter = {
-      Date: this.currentDate,
+      Date: new Date(),
       Month: 0,
       Year: 0,
       SelectedPaymentType: 1
@@ -278,10 +278,10 @@ export class EmployeeSalaryComponent implements OnInit {
             element.IsAdvanceApproved === true ? element.AdvanceAmount : 0,
           IsAdvanceRecovery: element.IsAdvanceRecovery, // Opposite of flag (here false means TRUE and true means means FALSE)
           AdvanceRecoveryAmount: element.AdvanceRecoveryAmount,
-          employeepayrolllist: element.employeepayrolllist,
+          EmployeePayrollList: element.EmployeePayrollList,
           Year: this.employeeePayrollFilterData.Date.getFullYear(),
           Month: this.employeeePayrollFilterData.Date.getMonth() + 1,
-          pensionRate: element.employeepayrolllist[0].PensionRate
+          pensionRate: element.EmployeePayrollList[0].PensionRate
         });
       });
     }
@@ -383,7 +383,7 @@ export class EmployeeSalaryComponent implements OnInit {
           item.OfficeId = this.selectedOffice;
           item.CurrencyId = item.CurrencyId;
           item.FinancialYearDate = this.selectedDate;
-          item.pensionRate = item.employeepayrolllist[0].PensionRate;
+          item.pensionRate = item.EmployeePayrollList[0].PensionRate;
           item.Year = this.employeeePayrollFilterData.Date.getFullYear();
           item.Month = this.employeeePayrollFilterData.Date.getMonth() + 1;
         }
@@ -517,7 +517,9 @@ export class EmployeeSalaryComponent implements OnInit {
   onEmployeePayrollFilter(model: EmployeePayrollFilterModel) {
     this.showEmployeeSalaryLoader();
 
-    model.Month = model.Date.getMonth() + 1;
+    if (this.selectedOffice !== undefined && this.selectedOffice != null && model.Date !== undefined && model.Date != null ) {
+
+      model.Month = model.Date.getMonth() + 1;
     model.Year = model.Date.getFullYear();
     model.SelectedPaymentType = this.selectedPaymentType;
     this.selectedDate = model.Date;
@@ -546,6 +548,7 @@ export class EmployeeSalaryComponent implements OnInit {
                 ? this.employeePayrollByFixedBased.push(element)
                 : this.employeePayrollByHourlyBased.push(element);
             });
+
             if (this.selectedPaymentType === 1) {
               this.employeePayrollByHourlyBased = [];
             } else {
@@ -558,6 +561,9 @@ export class EmployeeSalaryComponent implements OnInit {
         },
         error => {}
       );
+    } else {
+      this.hideEmployeeSalaryLoader();
+    }
   }
   //#endregion
 
@@ -614,36 +620,36 @@ export class EmployeeSalaryComponent implements OnInit {
     const totalHours = data.PresentDays + data.OverTimeHours + data.LeaveHours;
 
     if (data != null) {
-      for (let i = 0; i < data.employeepayrolllist.length; i++) {
-        data.employeepayrolllist[
+      for (let i = 0; i < data.EmployeePayrollList.length; i++) {
+        data.EmployeePayrollList[
           i
         ].PensionRate = this.empSalaryForm.PensionRate;
-        data.employeepayrolllist[
+        data.EmployeePayrollList[
           i
         ].PaymentType = this.empSalaryForm.PaymentType;
         // tslint:disable-next-line:curly
-        if (data.employeepayrolllist[i].HeadTypeId === 1)
+        if (data.EmployeePayrollList[i].HeadTypeId === 1)
           // Allowance
           totalAllowance =
-            totalAllowance + data.employeepayrolllist[i].MonthlyAmount;
+            totalAllowance + data.EmployeePayrollList[i].MonthlyAmount;
         // tslint:disable-next-line:curly
-        if (data.employeepayrolllist[i].HeadTypeId === 2)
+        if (data.EmployeePayrollList[i].HeadTypeId === 2)
           // Deduction
           deductionAllowance =
-            deductionAllowance + data.employeepayrolllist[i].MonthlyAmount;
+            deductionAllowance + data.EmployeePayrollList[i].MonthlyAmount;
         // tslint:disable-next-line:curly
-        if (data.employeepayrolllist[i].HeadTypeId === 3)
+        if (data.EmployeePayrollList[i].HeadTypeId === 3)
           // General (Basic Salary)
           totalBasicSalary =
-            totalBasicSalary + data.employeepayrolllist[i].MonthlyAmount;
+            totalBasicSalary + data.EmployeePayrollList[i].MonthlyAmount;
       }
 
       if (baseId === 2) {
         const itemIndex = this.employeePayrollByHourlyBased.findIndex(
           item => item.EmployeeId === data.EmployeeId
         );
-        this.employeePayrollByHourlyBased[itemIndex].employeepayrolllist =
-          data.employeepayrolllist;
+        this.employeePayrollByHourlyBased[itemIndex].EmployeePayrollList =
+          data.EmployeePayrollList;
         this.employeePayrollByHourlyBased[
           itemIndex
         ].TotalAllowance = totalAllowance;
@@ -652,7 +658,7 @@ export class EmployeeSalaryComponent implements OnInit {
 
         this.employeePayrollByHourlyBased[itemIndex].PensionAmount =
           this.employeePayrollByHourlyBased[itemIndex].GrossSalary *
-          data.employeepayrolllist[0].PensionRate;
+          data.EmployeePayrollList[0].PensionRate;
         this.employeePayrollByHourlyBased[
           itemIndex
         ].TotalDeduction = deductionAllowance;
@@ -707,9 +713,9 @@ export class EmployeeSalaryComponent implements OnInit {
     this.empSalaryForm.EmployeeId = e.EmployeeId;
     this.empSalaryForm.PaymentType = e.PaymentType;
 
-    this.empSalaryForm.PensionRate = this.fixedBasedSetPayrollList.employeepayrolllist[0].PensionRate;
-    this.empSalaryForm.CurrencyId = this.fixedBasedSetPayrollList.employeepayrolllist[0].CurrencyId;
-    this.empSalaryForm.PaymentType = this.fixedBasedSetPayrollList.employeepayrolllist[0].PaymentType;
+    this.empSalaryForm.PensionRate = this.fixedBasedSetPayrollList.EmployeePayrollList[0].PensionRate;
+    this.empSalaryForm.CurrencyId = this.fixedBasedSetPayrollList.EmployeePayrollList[0].CurrencyId;
+    this.empSalaryForm.PaymentType = this.fixedBasedSetPayrollList.EmployeePayrollList[0].PaymentType;
   }
   //#endregion
 
@@ -740,8 +746,8 @@ export class EmployeeSalaryComponent implements OnInit {
 
     this.empSalaryForm.CurrencyId = this.selectedCurrencyId;
 
-    this.empSalaryForm.PensionRate = this.hourlyBasedSetPayrollList.employeepayrolllist[0].PensionRate;
-    this.empSalaryForm.PaymentType = this.hourlyBasedSetPayrollList.employeepayrolllist[0].PaymentType;
+    this.empSalaryForm.PensionRate = this.hourlyBasedSetPayrollList.EmployeePayrollList[0].PensionRate;
+    this.empSalaryForm.PaymentType = this.hourlyBasedSetPayrollList.EmployeePayrollList[0].PaymentType;
   }
   //#endregion
 
@@ -1250,7 +1256,7 @@ export class EmployeePayRollModel {
   PensionRate?: any;
   CurrencyId?: number;
 
-  employeepayrolllist: EmployeepayrollListModel[];
+  EmployeePayrollList: EmployeepayrollListModel[];
   IsApproved?: boolean;
 
   AdvanceAmount?: any;
