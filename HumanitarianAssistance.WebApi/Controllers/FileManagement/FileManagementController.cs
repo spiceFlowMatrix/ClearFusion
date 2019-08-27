@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.FileManagement.Commands.Create;
 using HumanitarianAssistance.Application.FileManagement.Commands.Delete;
+using HumanitarianAssistance.Application.FileManagement.Commands.Update;
 using HumanitarianAssistance.Application.FileManagement.Queries;
 using HumanitarianAssistance.Application.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
@@ -39,6 +40,15 @@ namespace HumanitarianAssistance.WebApi.Controllers.FileManagement
 
         [HttpPost]
         public async Task<ApiResponse> DeleteDocumentFiles([FromBody]DeleteDocumentFilesCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.ModifiedById = userId;
+            command.ModifiedDate = DateTime.UtcNow; 
+            return await _mediator.Send(command);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> UpdateUploadedFileInfo([FromBody] UpdateUploadedFileInfoCommand command)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             command.ModifiedById = userId;

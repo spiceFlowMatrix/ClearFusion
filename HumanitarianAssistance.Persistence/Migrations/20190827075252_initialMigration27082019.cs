@@ -367,7 +367,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     RawFileMimeType = table.Column<string>(nullable: true),
                     RawFileSizeBytes = table.Column<long>(nullable: false),
                     StorageDirectoryPath = table.Column<string>(nullable: true),
-                    Active = table.Column<bool>(nullable: true)
+                    Active = table.Column<bool>(nullable: true),
+                    DocumentTypeId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -2534,7 +2535,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     ModifiedById = table.Column<string>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     ItemSpecificationMasterId = table.Column<int>(nullable: false),
-                    ItemId = table.Column<string>(nullable: true),
+                    ItemId = table.Column<long>(nullable: false),
                     ItemSpecificationValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -3927,7 +3928,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 name: "StoreInventories",
                 columns: table => new
                 {
-                    InventoryId = table.Column<string>(nullable: false),
+                    InventoryId = table.Column<long>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     CreatedDate = table.Column<DateTime>(nullable: true),
                     ModifiedDate = table.Column<DateTime>(nullable: true),
                     CreatedById = table.Column<string>(nullable: true),
@@ -5163,7 +5165,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     ItemGroupCode = table.Column<string>(nullable: true),
                     ItemGroupName = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    InventoryId = table.Column<string>(nullable: true)
+                    InventoryId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -5173,7 +5175,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         column: x => x.InventoryId,
                         principalTable: "StoreInventories",
                         principalColumn: "InventoryId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -5817,13 +5819,14 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 name: "InventoryItems",
                 columns: table => new
                 {
-                    ItemId = table.Column<string>(nullable: false),
+                    ItemId = table.Column<long>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     CreatedDate = table.Column<DateTime>(nullable: true),
                     ModifiedDate = table.Column<DateTime>(nullable: true),
                     CreatedById = table.Column<string>(nullable: true),
                     ModifiedById = table.Column<string>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    ItemInventory = table.Column<string>(nullable: true),
+                    ItemInventory = table.Column<long>(nullable: false),
                     ItemName = table.Column<string>(nullable: true),
                     ItemCode = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
@@ -5845,7 +5848,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         column: x => x.ItemInventory,
                         principalTable: "StoreInventories",
                         principalColumn: "InventoryId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_InventoryItems_InventoryItemType_ItemType",
                         column: x => x.ItemType,
@@ -6258,14 +6261,15 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 name: "StoreItemPurchases",
                 columns: table => new
                 {
-                    PurchaseId = table.Column<string>(nullable: false),
+                    PurchaseId = table.Column<long>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     CreatedDate = table.Column<DateTime>(nullable: true),
                     ModifiedDate = table.Column<DateTime>(nullable: true),
                     CreatedById = table.Column<string>(nullable: true),
                     ModifiedById = table.Column<string>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     SerialNo = table.Column<string>(nullable: false),
-                    InventoryItem = table.Column<string>(nullable: false),
+                    InventoryItem = table.Column<long>(nullable: false),
                     PurchaseDate = table.Column<DateTime>(nullable: false),
                     DeliveryDate = table.Column<DateTime>(nullable: false),
                     Currency = table.Column<int>(nullable: false),
@@ -6396,14 +6400,15 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 name: "StorePurchaseOrders",
                 columns: table => new
                 {
-                    OrderId = table.Column<string>(nullable: false),
+                    OrderId = table.Column<long>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     CreatedDate = table.Column<DateTime>(nullable: true),
                     ModifiedDate = table.Column<DateTime>(nullable: true),
                     CreatedById = table.Column<string>(nullable: true),
                     ModifiedById = table.Column<string>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    Purchase = table.Column<string>(nullable: true),
-                    InventoryItem = table.Column<string>(nullable: true),
+                    PurchaseId = table.Column<long>(nullable: false),
+                    InventoryItem = table.Column<long>(nullable: false),
                     IssuedQuantity = table.Column<int>(nullable: false),
                     MustReturn = table.Column<bool>(nullable: false),
                     Returned = table.Column<bool>(nullable: false),
@@ -6424,7 +6429,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         column: x => x.InventoryItem,
                         principalTable: "InventoryItems",
                         principalColumn: "ItemId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_StorePurchaseOrders_EmployeeDetail_IssuedToEmployeeId",
                         column: x => x.IssuedToEmployeeId,
@@ -6432,11 +6437,11 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         principalColumn: "EmployeeID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StorePurchaseOrders_StoreItemPurchases_Purchase",
-                        column: x => x.Purchase,
+                        name: "FK_StorePurchaseOrders_StoreItemPurchases_PurchaseId",
+                        column: x => x.PurchaseId,
                         principalTable: "StoreItemPurchases",
                         principalColumn: "PurchaseId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -7750,9 +7755,9 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 column: "IssuedToEmployeeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StorePurchaseOrders_Purchase",
+                name: "IX_StorePurchaseOrders_PurchaseId",
                 table: "StorePurchaseOrders",
-                column: "Purchase");
+                column: "PurchaseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StoreSourceCodeDetail_CodeTypeId",

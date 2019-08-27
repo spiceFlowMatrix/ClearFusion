@@ -35,7 +35,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public string VoucherNo { get; set; }
         public DateTime? PurchaseDate { get; set; }
         [StringLength(50)]
-        public string PurchaseOrderNo { get; set; }
+        public long PurchaseOrderNo { get; set; }
         public DateTime? PurchaseOrderDate { get; set; }
         [StringLength(50)]
         public string ModelType { get; set; }

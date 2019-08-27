@@ -32,10 +32,6 @@ namespace HumanitarianAssistance.Application.FileManagement.Queries
 
                     List<FileListModel> fileList = new List<FileListModel>();
 
-                    //switch (model.PageId)
-                    //{
-                    //    case (int)FileSourceEntityTypes.Voucher:
-
                     fileList = await _dbContext.EntitySourceDocumentDetails
                                        .Include(x => x.DocumentFileDetail)
                                        .Where(x => x.IsDeleted == false && x.EntityId == request.RecordId
@@ -44,10 +40,9 @@ namespace HumanitarianAssistance.Application.FileManagement.Queries
                                        {
                                            FileName = x.DocumentFileDetail.Name,
                                            FilePath = x.DocumentFileDetail.StorageDirectoryPath,
-                                           DocumentFileId = x.DocumentFileId
+                                           DocumentFileId = x.DocumentFileId,
+                                           DocumentTypeId = x.DocumentFileDetail.DocumentTypeId
                                        }).ToListAsync();
-                    //        break;
-                    //}
 
                     if (fileList.Any())
                     {

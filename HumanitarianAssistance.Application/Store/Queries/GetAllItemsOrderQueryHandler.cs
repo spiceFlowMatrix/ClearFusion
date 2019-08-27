@@ -44,7 +44,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     MustReturn = x.MustReturn,
                     Returned = x.Returned,
                     OrderId = x.OrderId,
-                    Purchase = x.Purchase,
+                    Purchase = x.PurchaseId,
                     ReturnedDate = x.ReturnedDate,
                     IssedToLocation = x.IssedToLocation,
                     IssueVoucherNo = x.IssueVoucherNo.ToString(),

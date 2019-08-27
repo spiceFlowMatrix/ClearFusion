@@ -13,7 +13,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public int ItemSpecificationDetailsId { get; set; }
         public int ItemSpecificationMasterId { get; set; }
         public ItemSpecificationMaster ItemSpecificationMaster { get; set; }
-        public string ItemId { get; set; }
+        public long ItemId { get; set; }
         public string ItemSpecificationValue { get; set; }
     }
 }
