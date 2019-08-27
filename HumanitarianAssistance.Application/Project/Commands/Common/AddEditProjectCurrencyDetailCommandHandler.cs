@@ -13,16 +13,14 @@ using System.Threading.Tasks;
 
 namespace HumanitarianAssistance.Application.Project.Commands.Common
 {
-    public class AddEditProjectproposalsCommandHandler : IRequestHandler<AddEditProjectproposalsCommand, ApiResponse>
+    public class AddEditProjectCurrencyDetailCommandHandler : IRequestHandler<AddEditProjectCurrencyDetailCommand, ApiResponse>
     {
         private HumanitarianAssistanceDbContext _dbContext;
-        private IMapper _mapper;
-        public AddEditProjectproposalsCommandHandler(HumanitarianAssistanceDbContext dbContext, IMapper mapper)
+        public AddEditProjectCurrencyDetailCommandHandler(HumanitarianAssistanceDbContext dbContext)
         {
             _dbContext = dbContext;
-            _mapper = mapper;
         }
-        public async Task<ApiResponse> Handle(AddEditProjectproposalsCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Handle(AddEditProjectCurrencyDetailCommand request, CancellationToken cancellationToken)
         {
             ApiResponse response = new ApiResponse();
             ProjectProposalDetail details = new ProjectProposalDetail();
@@ -34,12 +32,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
                 {
                     details = new ProjectProposalDetail
                     {
-                        ProposalDueDate = request.ProposalDueDate,
-                        ProjectAssignTo = request.UserId,
-                        IsProposalAccept = request.IsProposalAccept,
                         ProjectId = request.ProjectId.Value,
                         CurrencyId = request.CurrencyId,
-                        UserId = request.UserId,
                         IsDeleted = false,
                         CreatedById = request.CreatedById,
                         CreatedDate = DateTime.UtcNow
@@ -49,31 +43,11 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
                 }
                 else
                 {
-                    details.ProposalBudget = request.ProposalBudget;
-                    details.ProposalDueDate = request.ProposalDueDate;
-                    details.ProjectAssignTo = request.UserId;
-                    details.IsProposalAccept = request.IsProposalAccept;
                     details.ProjectId = request.ProjectId.Value;
                     details.CurrencyId = request.CurrencyId;
-                    details.UserId = request.UserId;
                     details.ModifiedById = request.ModifiedById;
                     details.ModifiedDate = DateTime.UtcNow;
                     await _dbContext.SaveChangesAsync();
-
-                    // Note: check proposal is accepted then make false entry for isApproved
-                    if (details.IsProposalAccept == true)
-                    {
-                        ApproveProjectDetails obj = await _dbContext.ApproveProjectDetails.FirstOrDefaultAsync(x => x.ProjectId == request.ProjectId &&
-                                                                                                                            x.IsDeleted == false);
-                        if (obj != null)
-                        {
-                            obj.IsApproved = obj.IsApproved == false ? null : obj.IsApproved;
-                            _dbContext.ApproveProjectDetails.Update(obj);
-                            await _dbContext.SaveChangesAsync();
-
-                        }
-
-                    }
                 }
                 response.data.ProjectProposalDetail = details;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -85,6 +59,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
             return response;
-        }
+        }    
     }
 }

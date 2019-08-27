@@ -863,7 +863,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
         [HttpGet]
         public async Task<ApiResponse> GetAllLanguages()
         {
-            return await _mediator.Send(new GetAttendanceGroupsQuery());
+            return await _mediator.Send(new GetAllLanguagesQuery());
         }
 
         [HttpPost]

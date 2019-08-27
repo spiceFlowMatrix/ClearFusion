@@ -39,6 +39,18 @@ namespace HumanitarianAssistance.WebApi.Infrastructure
             CreateMap<AddJobHiringDetailCommand, JobHiringDetails>().ReverseMap();
             CreateMap<ExistInterviewDetails, ExitInterviewModel>().ReverseMap();
             CreateMap<RatingBasedCriteriaModel, RatingBasedCriteria>().ReverseMap();
+            CreateMap<AssignLeaveToEmployeeModel, AssignLeaveToEmployee>().ReverseMap();
+            CreateMap<EditEmployeeEducationsCommand, EmployeeEducations>().ReverseMap();
+            CreateMap<EditEmployeeHistoryOutsideOrganizationCommand, EmployeeHistoryOutsideOrganization>().ReverseMap();
+            CreateMap<EditEmployeeHistoryOutsideCountryCommand, EmployeeHistoryOutsideCountry>().ReverseMap();
+            CreateMap<EditEmployeeRelativeInformationCommand, EmployeeRelativeInfo>().ReverseMap();
+            CreateMap<EditEmployeeInfoReferencesCommand, EmployeeInfoReferences>().ReverseMap();
+            CreateMap<EditEmployeeOtherSkillsCommand, EmployeeOtherSkills>().ReverseMap();
+            CreateMap<AddEmployeeRelativeInformationCommand, EmployeeRelativeInfo>().ReverseMap();
+            CreateMap<EditEmployeeRelativeInformationCommand, EmployeeRelativeInfo>().ReverseMap();
+            CreateMap<EditEmployeeHealthInfoCommand, EmployeeHealthInfo>().ReverseMap();
+            CreateMap<AddEmployeeInfoReferencesCommand, EmployeeInfoReferences>().ReverseMap();
+            CreateMap<EditEmployeeSalaryBudgetsCommand, EmployeeSalaryBudget>().ReverseMap();
         }
     }
 }
