@@ -7,7 +7,8 @@
         Hr = 3,
         Store = 4,
         Project = 5,
-        Marketing = 6
+        Marketing = 6,
+        PdfExport = 7
     }
 
 

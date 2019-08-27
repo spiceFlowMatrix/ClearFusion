@@ -9,7 +9,7 @@ require('jspdf-autotable');
   providedIn: 'root'
 })
 export class ProjectOtherDetailPdfService {
-  
+
   margins = {
     top: 40,
     bottom: 40,
@@ -20,16 +20,16 @@ export class ProjectOtherDetailPdfService {
 
   constructor() { }
 
-  
+
   onExportPdf(projectOtherDetailPdf: IProjectOtherDetailPdf) {
 
     const doc = new jsPDF('p', 'pt', 'a4');
 
     const pageHeight = doc.internal.pageSize.height;
     const pageWidth = doc.internal.pageSize.width;
-   
+
     doc.setFontSize(11);
-    
+
     // doc.fromHTML(
     //   document.getElementById('projectOtherDetailHeaderPdfTemplate'),
     //   this.margins.left, // x coord
@@ -51,7 +51,7 @@ export class ProjectOtherDetailPdfService {
     let textCurrentLocationYAxis = this.margins.top;
 
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.ProjectName, this.margins.width);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -59,10 +59,10 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
+
     // Project Description
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.Description, this.margins.width);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -70,17 +70,17 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
-    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Opportunity Details");
-    
+
+    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'Opportunity Details');
+
     // OpportunityType & Donor
-    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Opportunity Type");
-    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, "Donor");
+    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'Opportunity Type');
+    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, 'Donor');
 
     // col 1
     let inlineHeaderContentColSm6 = textCurrentLocationYAxis += linePadding;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.OpportunityType, this.margins.width - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -88,12 +88,12 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
+
     // col 2
     // use to start the 2nd column content from 1st column content y-axis
     textCurrentLocationYAxis = inlineHeaderContentColSm6;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.Donor, this.margins.width  - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -101,16 +101,16 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
-    
+
+
     // OpportunityNo & Opportunity
-    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Opportunity No");
-    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, "Opportunity");
+    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'Opportunity No');
+    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, 'Opportunity');
 
     // col 1
     inlineHeaderContentColSm6 = textCurrentLocationYAxis += linePadding;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.OpportunityNo, this.margins.width - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -118,12 +118,12 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
+
     // col 2
     // use to start the 2nd column content from 1st column content y-axis
     textCurrentLocationYAxis = inlineHeaderContentColSm6;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.Opportunity, this.margins.width  - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -134,10 +134,10 @@ export class ProjectOtherDetailPdfService {
 
 
     // Opportunity Description
-    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Opportunity Description");
+    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'Opportunity Description');
     textCurrentLocationYAxis += linePadding;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.OpportunityDescription, this.margins.width);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -147,15 +147,15 @@ export class ProjectOtherDetailPdfService {
     }
 
 
-    
+
     // OpportunityNo & Opportunity
-    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Country");
-    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, "Province");
+    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'Country');
+    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, 'Province');
 
     // col 1
     inlineHeaderContentColSm6 = textCurrentLocationYAxis += linePadding;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.Country, this.margins.width - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -163,12 +163,12 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
+
     // col 2
     // use to start the 2nd column content from 1st column content y-axis
     textCurrentLocationYAxis = inlineHeaderContentColSm6;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.Province, this.margins.width  - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -177,15 +177,15 @@ export class ProjectOtherDetailPdfService {
         textCurrentLocationYAxis += linePadding;
     }
 
-    
+
     // District & Office
-    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "District");
-    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, "Office");
+    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'District');
+    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, 'Office');
 
     // col 1
     inlineHeaderContentColSm6 = textCurrentLocationYAxis += linePadding;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.District, this.margins.width - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -193,12 +193,12 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
+
     // col 2
     // use to start the 2nd column content from 1st column content y-axis
     textCurrentLocationYAxis = inlineHeaderContentColSm6;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.Office, this.margins.width  - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -209,13 +209,13 @@ export class ProjectOtherDetailPdfService {
 
 
     // Sector & Program
-    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Sector");
-    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, "Program");
+    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'Sector');
+    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, 'Program');
 
     // col 1
     inlineHeaderContentColSm6 = textCurrentLocationYAxis += linePadding;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.Sector, this.margins.width - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -223,12 +223,12 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
+
     // col 2
     // use to start the 2nd column content from 1st column content y-axis
     textCurrentLocationYAxis = inlineHeaderContentColSm6;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.Sector, this.margins.width  - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -238,13 +238,13 @@ export class ProjectOtherDetailPdfService {
     }
 
     // Start Date & End Date
-    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Start Date");
-    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, "End Date");
+    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'Start Date');
+    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, 'End Date');
 
     // col 1
     inlineHeaderContentColSm6 = textCurrentLocationYAxis += linePadding;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.StartDate, this.margins.width - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -252,12 +252,12 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
+
     // col 2
     // use to start the 2nd column content from 1st column content y-axis
     textCurrentLocationYAxis = inlineHeaderContentColSm6;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.EndDate, this.margins.width  - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -267,19 +267,19 @@ export class ProjectOtherDetailPdfService {
     }
 
     doc.addPage();
-    textCurrentLocationYAxis = linePadding
+    textCurrentLocationYAxis = linePadding;
 
      // Project Objective & Goal
-    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Project Objective & Goal");
-    
+    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'Project Objective & Goal');
+
     // Project Goal & Project Objective
-    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Project Goal");
-    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, "Project Objective");
+    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'Project Goal');
+    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, 'Project Objective');
 
     // col 1
     inlineHeaderContentColSm6 = textCurrentLocationYAxis += linePadding;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.ProjectGoal, this.margins.width - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -287,12 +287,12 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
+
     // col 2
     // use to start the 2nd column content from 1st column content y-axis
     textCurrentLocationYAxis = inlineHeaderContentColSm6;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.ProjectObjective, this.margins.width  - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -300,16 +300,16 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
-    
+
+
     // Main Activity & REOI Receive Date
-    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Main Activity");
-    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, "REOI Receive Date");
+    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'Main Activity');
+    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, 'REOI Receive Date');
 
     // col 1
     inlineHeaderContentColSm6 = textCurrentLocationYAxis += linePadding;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.MainActivities, this.margins.width - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -317,12 +317,12 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
+
     // col 2
     // use to start the 2nd column content from 1st column content y-axis
     textCurrentLocationYAxis = inlineHeaderContentColSm6;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.REOIReceiveDate, this.margins.width  - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -332,7 +332,7 @@ export class ProjectOtherDetailPdfService {
     }
 
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.SubmissionDate, this.margins.width - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -340,19 +340,19 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
+
 
     // Beneficiary Details
-    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Beneficiary Details");
-    
+    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'Beneficiary Details');
+
     // Direct Beneficiary Male & In-Direct Beneficiary Male
-    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Direct Beneficiary Male");
-    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, "In-Direct Beneficiary Male");
+    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'Direct Beneficiary Male');
+    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, 'In-Direct Beneficiary Male');
 
     // col 1
     inlineHeaderContentColSm6 = textCurrentLocationYAxis += linePadding;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.DirectbeneficiarMale, this.margins.width - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -360,12 +360,12 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
+
     // col 2
     // use to start the 2nd column content from 1st column content y-axis
     textCurrentLocationYAxis = inlineHeaderContentColSm6;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.InDirectbeneficiarMale, this.margins.width  - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -373,16 +373,16 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
+
 
     // Direct Beneficiary Male & In-Direct Beneficiary Male
-    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Direct Beneficiary Female");
-    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, "In-Direct Beneficiary Female");
+    doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'Direct Beneficiary Female');
+    doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, 'In-Direct Beneficiary Female');
 
     // col 1
     inlineHeaderContentColSm6 = textCurrentLocationYAxis += linePadding;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.DirectbeneficiarFemale, this.margins.width - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -390,12 +390,12 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
+
     // col 2
     // use to start the 2nd column content from 1st column content y-axis
     textCurrentLocationYAxis = inlineHeaderContentColSm6;
     splitTitle = doc.splitTextToSize(projectOtherDetailPdf.InDirectbeneficiarFemale, this.margins.width  - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -403,12 +403,12 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
+
 
     // col 1
     inlineHeaderContentColSm6 = textCurrentLocationYAxis += linePadding;
     splitTitle = doc.splitTextToSize('Total Direct Beneficaiary: ' + projectOtherDetailPdf.TotalDirectBeneficiary, this.margins.width - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -416,12 +416,12 @@ export class ProjectOtherDetailPdfService {
         doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
         textCurrentLocationYAxis += linePadding;
     }
-    
+
     // col 2
     // use to start the 2nd column content from 1st column content y-axis
     textCurrentLocationYAxis = inlineHeaderContentColSm6;
     splitTitle = doc.splitTextToSize('Total InDirect Beneficaiary: ' + projectOtherDetailPdf.TotalInDirectBeneficiary, this.margins.width  - pageMiddle);
-    for (let i = 0; i < splitTitle.length; i++) {                
+    for (let i = 0; i < splitTitle.length; i++) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
         textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -431,18 +431,18 @@ export class ProjectOtherDetailPdfService {
     }
 
 
-    
+
      // Gender Consideration
-     doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Gender Consideration");
-    
+     doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'Gender Consideration');
+
      // Strength Consideration & Gender Consideration
-     doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Strength Consideration");
-     doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, "Gender Consideration");
- 
+     doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'Strength Consideration');
+     doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, 'Gender Consideration');
+
      // col 1
      inlineHeaderContentColSm6 = textCurrentLocationYAxis += linePadding;
      splitTitle = doc.splitTextToSize(projectOtherDetailPdf.StrengthConsideration, this.margins.width - pageMiddle);
-     for (let i = 0; i < splitTitle.length; i++) {                
+     for (let i = 0; i < splitTitle.length; i++) {
        if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
          textCurrentLocationYAxis = this.margins.top;
            doc.addPage();
@@ -450,12 +450,12 @@ export class ProjectOtherDetailPdfService {
          doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
          textCurrentLocationYAxis += linePadding;
      }
-     
+
      // col 2
      // use to start the 2nd column content from 1st column content y-axis
      textCurrentLocationYAxis = inlineHeaderContentColSm6;
      splitTitle = doc.splitTextToSize(projectOtherDetailPdf.GenderConsideration, this.margins.width  - pageMiddle);
-     for (let i = 0; i < splitTitle.length; i++) {                
+     for (let i = 0; i < splitTitle.length; i++) {
        if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
          textCurrentLocationYAxis = this.margins.top;
            doc.addPage();
@@ -464,10 +464,10 @@ export class ProjectOtherDetailPdfService {
          textCurrentLocationYAxis += linePadding;
      }
 
-     doc.text(this.margins.left, textCurrentLocationYAxis, "Gender Remark");
+     doc.text(this.margins.left, textCurrentLocationYAxis, 'Gender Remark');
      textCurrentLocationYAxis += linePadding,
      splitTitle = doc.splitTextToSize(projectOtherDetailPdf.GenderConsideration, this.margins.width);
-     for (let i = 0; i < splitTitle.length; i++) {                
+     for (let i = 0; i < splitTitle.length; i++) {
        if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
          textCurrentLocationYAxis = this.margins.top;
            doc.addPage();
@@ -475,21 +475,21 @@ export class ProjectOtherDetailPdfService {
          doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
          textCurrentLocationYAxis += linePadding;
      }
-     
-    
-     
+
+
+
 
      // Security Consideration
-     doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Security Consideration");
-    
+     doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'Security Consideration');
+
      // Security & Security Consideration
-     doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, "Security");
-     doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, "Security Consideration");
- 
+     doc.text(this.margins.left, textCurrentLocationYAxis += linePadding, 'Security');
+     doc.text(this.margins.left + pageMiddle, textCurrentLocationYAxis, 'Security Consideration');
+
      // col 1
      inlineHeaderContentColSm6 = textCurrentLocationYAxis += linePadding;
      splitTitle = doc.splitTextToSize(projectOtherDetailPdf.Security, this.margins.width - pageMiddle);
-     for (let i = 0; i < splitTitle.length; i++) {                
+     for (let i = 0; i < splitTitle.length; i++) {
        if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
          textCurrentLocationYAxis = this.margins.top;
            doc.addPage();
@@ -497,12 +497,12 @@ export class ProjectOtherDetailPdfService {
          doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
          textCurrentLocationYAxis += linePadding;
      }
-     
+
      // col 2
      // use to start the 2nd column content from 1st column content y-axis
      textCurrentLocationYAxis = inlineHeaderContentColSm6;
      splitTitle = doc.splitTextToSize(projectOtherDetailPdf.SecurityConsideration, this.margins.width  - pageMiddle);
-     for (let i = 0; i < splitTitle.length; i++) {                
+     for (let i = 0; i < splitTitle.length; i++) {
        if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
          textCurrentLocationYAxis = this.margins.top;
            doc.addPage();
@@ -511,10 +511,10 @@ export class ProjectOtherDetailPdfService {
          textCurrentLocationYAxis += linePadding;
      }
 
-     doc.text(this.margins.left, textCurrentLocationYAxis, "Security Remark");
+     doc.text(this.margins.left, textCurrentLocationYAxis, 'Security Remark');
      textCurrentLocationYAxis += linePadding,
      splitTitle = doc.splitTextToSize(projectOtherDetailPdf.SecurityRemarks, this.margins.width);
-     for (let i = 0; i < splitTitle.length; i++) {                
+     for (let i = 0; i < splitTitle.length; i++) {
        if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
          textCurrentLocationYAxis = this.margins.top;
            doc.addPage();
@@ -522,11 +522,11 @@ export class ProjectOtherDetailPdfService {
          doc.text(this.margins.left, textCurrentLocationYAxis, splitTitle[i]);
          textCurrentLocationYAxis += linePadding;
      }
-     
-    
 
 
-    doc.save('abc.pdf');
+
+
+    doc.save('project-other-detail.pdf');
   }
 
 

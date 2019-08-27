@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
-    public partial class createProjectProposalDocument26082019 : Migration
+    public partial class initialMigration27082019 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

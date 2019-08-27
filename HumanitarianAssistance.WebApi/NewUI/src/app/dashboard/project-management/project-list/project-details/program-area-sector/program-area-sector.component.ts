@@ -2051,8 +2051,8 @@ export class ProgramAreaSectorComponent implements OnInit {
 
     this.projectOtherDetailPdf = {
       // Opportunity Details
-      ProjectName : this.data.projectName,
-      Description : this.data.description,
+      ProjectName : this.data.projectName != null ?  this.data.projectName : '',
+      Description : this.data.description != null ?  this.data.description : '',
       OpportunityType: this.OpportunityTypeList.find(x => x.Id === this.projectotherDetail.OpportunityType) != null ? this.OpportunityTypeList.find(x => x.Id === this.projectotherDetail.OpportunityType).Name : '',
       Donor: this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId) != null ? this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId).Name : '',
       OpportunityNo:  this.projectotherDetail.opportunityNo != null ? this.projectotherDetail.opportunityNo : '',
@@ -2063,8 +2063,8 @@ export class ProgramAreaSectorComponent implements OnInit {
       Province: this.provinceMultiSelectModel.ProvinceId.map(x => this.ProvinceSelectionList.filter(y => y.value === x).map(z => z.label)).toString(),
       District: this.districtMultiSelctModel.DistrictID.map(x => this.DistrictMultiSelectList.filter(y => y.value === x).map(z => z.label)).toString(),
       Office: this.donorDataSource.find(x => x.Id === this.projectotherDetail.OfficeId) != null ? this.officeDataSource.find(x => x.Id === this.projectotherDetail.OfficeId).Name : '',
-      Sector: this.Sector.toString(),
-      Program: this.Program.toString(),
+      Sector: this.Sector != null ? this.Sector.toString() : '',
+      Program: this.Program != null ? this.Program.toString() : '',
       StartDate: this.projectotherDetail.StartDate != null ? this.projectotherDetail.StartDate : '',
       EndDate: this.projectotherDetail.EndDate != null ? this.projectotherDetail.EndDate : '',
 

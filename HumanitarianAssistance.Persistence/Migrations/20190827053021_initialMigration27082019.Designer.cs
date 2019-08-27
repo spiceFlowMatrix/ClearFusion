@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    [Migration("20190826112022_createProjectProposalDocument26082019")]
-    partial class createProjectProposalDocument26082019
+    [Migration("20190827053021_initialMigration27082019")]
+    partial class initialMigration27082019
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -36,7 +36,6 @@ export class VoucherListingComponent implements OnInit {
   officeList: IOfficeListModel[] = [];
   projectList: IProjectListModel[] = [];
   budgetLineList: ICurrencyListModel[] = [];
-  inputLevelAccountList: IAccountListModel[] = [];
   voucherFilter: IVoucherListFilterModel;
   selectedVoucherId: number;
   voucherListLoaderFlag = false;
@@ -88,7 +87,6 @@ export class VoucherListingComponent implements OnInit {
 
   ngOnInit() {
     this.initVoucherFilter();
-    this.getInputLevelAccountList();
     this.getVoucherTypeList();
     this.getJournalList();
     this.getCurrencyList();
@@ -273,25 +271,6 @@ export class VoucherListingComponent implements OnInit {
   }
   //#endregion
 
-  //#region "getInputLevelAccountList"
-  getInputLevelAccountList() {
-    this.voucherService.GetInputLevelAccountList().subscribe(
-      (response: IResponseData) => {
-        this.inputLevelAccountList = [];
-        if (response.statusCode === 200 && response.data !== null) {
-          response.data.forEach(element => {
-            this.inputLevelAccountList.push({
-              AccountCode: element.AccountCode,
-              AccountName: element.AccountName,
-              ChartOfAccountNewCode: element.ChartOfAccountNewCode
-            });
-          });
-        }
-      },
-      error => {}
-    );
-  }
-  //#endregion
 
   //#region "onFilterApplied"
   onFilterApplied() {

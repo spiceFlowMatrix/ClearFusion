@@ -26,8 +26,7 @@ namespace HumanitarianAssistance.WebApi
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     var dbInitializerLogger = services.GetRequiredService<ILogger<HumanitarianAssistanceInitializer>>();
 
-                    if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Equals("Development"))
-                        context.Database.Migrate(); // apply all migrations
+                    context.Database.Migrate(); // apply all migrations
 
                     HumanitarianAssistanceInitializer.Initialize(context, userManager, roleManager, dbInitializerLogger).Wait();
                 }

@@ -62,10 +62,6 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
                         await _dbContext.ChartOfAccountNew.AddAsync(obj);
                         await _dbContext.SaveChangesAsync();
 
-                        obj.ParentID = obj.ChartOfAccountNewId;
-
-                        await _dbContext.SaveChangesAsync();
-
                         response.data.ChartOfAccountNewDetail = obj;
                         response.StatusCode = StaticResource.successStatusCode;
                         response.Message = StaticResource.SuccessText;
@@ -250,7 +246,7 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
             return response;
         }
