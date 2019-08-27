@@ -515,7 +515,7 @@ export class EmployeeInterviewFormComponent implements OnInit {
 
       // Recommendation
       Status: model.Status,
-      Interviewers: model.Interviewers,
+      Interviewers: this.Interviewers,
       InterviewStatus: model.InterviewStatus
     };
 

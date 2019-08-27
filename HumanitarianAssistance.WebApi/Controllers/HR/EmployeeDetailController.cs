@@ -568,7 +568,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
 
 
         [HttpPost]
-        public async Task<ApiResponse> ChangeEmployeeImage([FromQuery] UpdateEmployeeImageCommand model)
+        public async Task<ApiResponse> ChangeEmployeeImage([FromBody] UpdateEmployeeImageCommand model)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             model.ModifiedById = userId;

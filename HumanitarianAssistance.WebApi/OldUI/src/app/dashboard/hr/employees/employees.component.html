@@ -362,46 +362,6 @@
 </div>
 
 
-<!-- ADD DOC POPUP-->
-<dx-popup class="popup" [width]="600" [height]="800" [showTitle]="true" title="Add Document Details"
-    [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupAddDocumentVisible">
-
-    <div *dxTemplate="let data of 'content'">
-        <form action="your-action" (submit)="addDocumentDetails(empDocuments)">
-            <dx-form id="form" [formData]="empDocuments" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true"
-                [showValidationSummary]="true" validationGroup="docgeneralDetails">
-
-                <dxi-item dataField="DocumentName">
-                    <dxi-validation-rule type="required" message="Document Name is required">
-                    </dxi-validation-rule>
-                    <dxi-validation-rule type="stringLength" [min]="2" message="Name must have at least 2 symbols">
-                    </dxi-validation-rule>
-                </dxi-item>
-
-                <dxi-item dataField="DocumentDate" editorType="dxDateBox">
-                    <dxi-validation-rule type="required" message="Document Date is required">
-                    </dxi-validation-rule>
-                </dxi-item>
-
-                <dxi-item dataField="DocumentFilePath" class="add-from-upload-btn">
-                    <dxo-label text="Document File"></dxo-label>
-                    <dx-file-uploader selectButtonText="Select file" labelText="" accept="*" uploadMode="useForm"
-                        (onValueChanged)="onDocSelect($event)" [multiple]="false">
-                    </dx-file-uploader>
-                    <dxi-validation-rule type="required" message="Document is required">
-                    </dxi-validation-rule>
-                </dxi-item>
-            </dx-form>
-            <div class="btn-grp-wrap">
-                <dx-button text="Save" type="success" validationGroup="docgeneralDetails" [useSubmitBehavior]="true">
-                </dx-button>
-                <dx-button text="Cancel" (click)="HideAddDocPopup()"></dx-button>
-            </div>
-        </form>
-    </div>
-
-</dx-popup>
-
 <!-- Document Popup -->
 <dx-popup class="popup doc-popup-content" [width]="800" [height]="600" [showTitle]="false" [dragEnabled]="false"
     [closeOnOutsideClick]="true" [(visible)]="popupVisibleDocument" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)">
@@ -418,7 +378,7 @@
             <div class="doc-popftr" *ngIf="isEditingAllowed">
                 <div class="doc-popftr-inside">
                     <div class="doc-popup-dwnload-icon">
-                        <a [href]="docpath" target="_blank" [download]="filePathUrl">
+                        <a [href]="docpath" target="_blank">
                             <i class="fa fa-download"></i>
                         </a>
                     </div>
