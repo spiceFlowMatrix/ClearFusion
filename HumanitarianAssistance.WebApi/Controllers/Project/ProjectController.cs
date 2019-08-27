@@ -644,8 +644,18 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(command);
         }
 
+        [HttpPost]
+        public async Task<ApiResponse> AddEditProjectCurrencyDetail([FromBody]AddEditProjectCurrencyDetailCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;  
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            command.ModifiedById = userId;
+            command.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+        }
         #endregion
-
+        
         #region "GetProjectproposalsById"
         [HttpPost]
         public async Task<ApiResponse> GetProjectproposalsById([FromBody] long ProjectId)

@@ -170,6 +170,8 @@ export class GLOBAL {
 
 
   public static API_Project_AddEditProjectProposalDetail = 'Project/AddEditProjectProposalDetail';
+  public static API_Project_AddEditProjectCurrencyDetail = 'Project/AddEditProjectCurrencyDetail';
+
   public static API_Account_GetAllUserDetails = 'Account/GetAllUserList';
   public static API_Project_AddEditTargetBeneficiary = 'Project/AddEditTargetBeneficiary';
 

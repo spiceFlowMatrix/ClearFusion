@@ -73,6 +73,11 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
                             await _dbContext.ProjectProposalDetail.AddAsync(objDetails);
                             await _dbContext.SaveChangesAsync();
                         }
+                        else if (details.ProposalStartDate == null)
+                        {
+                            details.ProposalStartDate = DateTime.UtcNow;
+                            await _dbContext.SaveChangesAsync();
+                        }
                         proposaldata = await _dbContext.ProjectProposalDocument.FirstOrDefaultAsync(x => x.ProjectId == request.ProjectId && x.ProposalDocumentName == request.FileName && x.IsDeleted == false);
                         Console.WriteLine($"Final bucket response : {obj}");
 
