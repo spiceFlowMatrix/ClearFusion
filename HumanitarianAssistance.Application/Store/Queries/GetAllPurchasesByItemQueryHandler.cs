@@ -1,4 +1,6 @@
-﻿using HumanitarianAssistance.Application.Infrastructure;
+﻿using HumanitarianAssistance.Application.CommonServicesInterface;
+using HumanitarianAssistance.Application.FileManagement.Models;
+using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Application.Store.Models;
 using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
@@ -15,20 +17,23 @@ namespace HumanitarianAssistance.Application.Store.Queries
     public class GetAllPurchasesByItemQueryHandler : IRequestHandler<GetAllPurchasesByItemQuery, ApiResponse>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
+        private readonly IFileManagementService _fileManagement;
 
-        public GetAllPurchasesByItemQueryHandler(HumanitarianAssistanceDbContext dbContext)
+        public GetAllPurchasesByItemQueryHandler(HumanitarianAssistanceDbContext dbContext, IFileManagementService fileManagement)
         {
             _dbContext = dbContext;
+            _fileManagement = fileManagement;
         }
 
         public async Task<ApiResponse> Handle(GetAllPurchasesByItemQuery request, CancellationToken cancellationToken)
         {
             ApiResponse response = new ApiResponse();
+
             try
             {
                 var purchases = await _dbContext.StoreItemPurchases.Include(x => x.PurchaseOrders)
                                                                             .Include(x => x.StoreInventoryItem)
-                                                                            .Where(x => x.InventoryItem == request.itemId && x.IsDeleted == false).ToListAsync();
+                                                                            .Where(x => x.InventoryItem == request.ItemId && x.IsDeleted == false).ToListAsync();
 
 
                 var purchasesModel = purchases.Select(v => new StoreItemPurchaseViewModel
@@ -69,6 +74,37 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                 foreach (var item in purchasesModel)
                 {
+                    FileModel model = new FileModel()
+                    {
+                        PageId = (int)FileSourceEntityTypes.StorePurchase,
+                        RecordId = item.PurchaseId,
+                        DocumentTypeId = (int)DocumentFileTypes.PurchaseImage
+                    };
+
+                    StoreDocumentModel documentModel = new StoreDocumentModel();
+
+                    //get Saved Document ID and Signed URL For Purchase Image
+                    documentModel = await _fileManagement.GetFilesByRecordIdAndDocumentType(model);
+
+                    if (documentModel != null)
+                    {
+                        item.ImageFileName = documentModel.SignedURL;
+                        item.ImageDocumentId = documentModel.DocumentFileId;
+                    }
+
+                    model.DocumentTypeId = (int)DocumentFileTypes.PurchaseInvoice;
+
+                    documentModel = new StoreDocumentModel();
+
+                    //get Saved Document ID and Signed URL For Purchase Invoice
+                    documentModel = await _fileManagement.GetFilesByRecordIdAndDocumentType(model);
+
+                    if (documentModel != null)
+                    {
+                        item.Invoice = documentModel.SignedURL;
+                        item.InvoiceDocumentId = documentModel.DocumentFileId;
+                    }
+
                     var exchangeRate = _dbContext.ExchangeRateDetail.OrderByDescending(x=> x.Date).FirstOrDefault(x => x.IsDeleted == false && x.Date.Date <= item.PurchaseDate.Date && x.FromCurrency == item.Currency && x.ToCurrency == (int)Currency.USD);
 
                     if (exchangeRate == null)

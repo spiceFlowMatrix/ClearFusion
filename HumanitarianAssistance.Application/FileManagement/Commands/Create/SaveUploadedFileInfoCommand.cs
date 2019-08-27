@@ -11,5 +11,7 @@ namespace HumanitarianAssistance.Application.FileManagement.Commands.Create
         public int PageId { get; set; }
         public long RecordId { get; set; }
         public string FilePath { get; set; }
+        public int? DocumentTypeId { get; set; }
+        public long DocumentFileId { get; set; }
     }
 }

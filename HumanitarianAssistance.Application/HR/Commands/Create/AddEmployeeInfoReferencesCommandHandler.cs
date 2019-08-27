@@ -26,11 +26,11 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
             ApiResponse response = new ApiResponse();
             try
             {
-                EmployeeInfoReferences obj = _mapper.Map<EmployeeInfoReferences>(request);
+                EmployeeRelativeInfo obj = _mapper.Map<EmployeeRelativeInfo>(request);
                 obj.IsDeleted = false;
                 obj.CreatedById = request.CreatedById;
                 obj.CreatedDate = DateTime.Now;
-                await _dbContext.EmployeeInfoReferences.AddAsync(obj);
+                await _dbContext.EmployeeRelativeInfo.AddAsync(obj);
                 await _dbContext.SaveChangesAsync();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

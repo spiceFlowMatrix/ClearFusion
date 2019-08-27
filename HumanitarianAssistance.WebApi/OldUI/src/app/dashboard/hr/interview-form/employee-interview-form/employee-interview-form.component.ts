@@ -214,7 +214,7 @@ export class EmployeeInterviewFormComponent implements OnInit {
       Ques3: null,
       PreferedLocation: null,
       NoticePeriod: null,
-      JoiningDate: null,
+      JoiningDate: new Date(),
 
       InterviewLanguageModelList: [],
       InterviewTrainingModelList: [],
@@ -515,7 +515,7 @@ export class EmployeeInterviewFormComponent implements OnInit {
 
       // Recommendation
       Status: model.Status,
-      Interviewers: model.Interviewers,
+      Interviewers: this.Interviewers,
       InterviewStatus: model.InterviewStatus
     };
 
@@ -742,6 +742,13 @@ export class EmployeeInterviewFormComponent implements OnInit {
     }
   }
   //#endregion
+
+   //#region "Add Training"
+   logEventTraining(eventName, obj) {
+    obj.data.StartDate = new Date();
+    obj.data.EndDate = new Date();
+}
+//#endregion
 
   //#region "Show / hide"
   showAddEmpInterviewForm() {

@@ -39,7 +39,7 @@ export class VoucherAddComponent implements OnInit {
       this.addVoucherForm = this.fb.group({
         CurrencyId: [''],
         ChequeNo: [''],
-        VoucherDate: ['', [Validators.required]],
+        VoucherDate: [new Date(), [Validators.required]],
         Description: ['', [Validators.required]],
         JournalCode: ['', [Validators.required]],
         VoucherTypeId: ['', [Validators.required]],

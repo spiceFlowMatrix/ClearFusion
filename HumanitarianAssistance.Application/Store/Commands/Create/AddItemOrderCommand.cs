@@ -9,7 +9,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
     public class AddItemOrderCommand:BaseModel,IRequest<ApiResponse>
     {
         public string OrderId { get; set; }
-        public string Purchase { get; set; }                                // PurchaseID DropDown
+        public long Purchase { get; set; }                                // PurchaseID DropDown
         public string InventoryItem { get; set; }                           // InventoryID DropDown
         public int IssuedQuantity { get; set; }                             // Text Box
         public bool MustReturn { get; set; }                                // CheckBox

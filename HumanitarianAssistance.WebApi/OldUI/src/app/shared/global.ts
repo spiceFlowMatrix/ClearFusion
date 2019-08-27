@@ -528,7 +528,10 @@ export class GLOBAL {
   public static API_AccountReports_GetTrialBalanceReport = 'AccountReports/GetTrialBalanceReport';
   public static API_AccountReports_GetJournalVoucherDetails= 'AccountReports/GetJournalVoucherDetails';
 
-
+// FileManagement
+public static API_FileManagement_GetSignedURL = 'FileManagement/GetSignedURL';
+public static API_FileManagement_SaveUploadedFileInfo = 'FileManagement/SaveUploadedFileInfo';
+public static API_FileManagement_UpdateUploadedFileInfo = 'FileManagement/UpdateUploadedFileInfo';
 
 
 

@@ -6,9 +6,9 @@ namespace HumanitarianAssistance.Application.Store.Commands.Common
 {
     public class UnverifyPurchaseCommand : BaseModel, IRequest<ApiResponse>
     {
-        public string PurchaseId { get; set; }
+        public long PurchaseId { get; set; }
         public string SerialNo { get; set; }                    // Barcode Value
-        public string InventoryItem { get; set; }               // Item Id
+        public long InventoryItem { get; set; }               // Item Id
         public DateTime PurchaseDate { get; set; }              // Date Of Purchase
         public DateTime DeliveryDate { get; set; }              // The date that the item arrived at it's desired location or a service took place.		
         public int Currency { get; set; }                       // Currency ID

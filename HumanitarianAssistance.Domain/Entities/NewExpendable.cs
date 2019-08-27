@@ -36,9 +36,9 @@ namespace HumanitarianAssistance.Domain.Entities
         [StringLength(255)]
         public string VoucherDate { get; set; }
         [StringLength(255)]
-        public string PurchaseOrderNo { get; set; }
+        public long PurchaseOrderNo { get; set; }
         [StringLength(255)]
-        public string PurchaseOrderDate { get; set; }
+        public long PurchaseOrderDate { get; set; }
         [StringLength(255)]
         public string ModelType { get; set; }
         [StringLength(255)]

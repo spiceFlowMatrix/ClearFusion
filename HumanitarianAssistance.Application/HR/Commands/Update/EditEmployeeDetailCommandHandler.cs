@@ -30,7 +30,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                 if (employeeinfo != null)
                 {
                     var OfficeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.OfficeId == request.OfficeId && x.IsDeleted == false);
-                    employeeinfo.EmployeeCode = OfficeDetail.OfficeCode + employeeinfo.EmployeeID;
+                    //employeeinfo.EmployeeCode = OfficeDetail.OfficeCode + employeeinfo.EmployeeID;
                     employeeinfo.EmployeeTypeId = request.EmployeeTypeId;
                     employeeinfo.EmployeeName = request.EmployeeName;
                     employeeinfo.IDCard = request.IDCard;

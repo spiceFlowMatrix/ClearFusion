@@ -10,5 +10,6 @@ namespace HumanitarianAssistance.Application.FileManagement.Models
         public string FileSignedURL { get; set; }
         public string FilePath { get; set; }
         public long? DocumentFileId { get; set; }
+        public int? DocumentTypeId { get; set; }
     }
 }

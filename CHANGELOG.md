@@ -2,37 +2,19 @@
 Humanitarian Assistance ERP project features/bug fixes [Live site](http://34.90.15.30)
 
 <a name="unreleased"></a>
-## [Unreleased] New Features in pipeline
+## [Unreleased] New In-progress features/bugs in pipeline
 
 ### Features
-    - Project Other detail pdf export
-    - Changes to proposal view
-    - Project activities management rework
-    - Project activity breakdown tooltip on mouse-hover
-    - Currency exchange gain loss consolidation management panel
-    - PDF Export for Chart of Accounts
-    - PDF Export for Voucher Summary report
-    - Enhancement to journal report
-    - Enhancement to trial balance reporting functionality
-    - Enhancements to employee details and management functionality
-    - Add default behaviour for all date selections in web ui
-    - Enhancements to appraisals functionality
-    - Employee contract rework
-    - Enhancements to employee interviews functionality
-    - Employee exit interview rework and implementation in new interface
+- Project Other detail pdf export
+- PDF Export for Chart of Accounts `(21 - 26 Aug, 2019)`
 
 ### Bug Fixes
-
+- Null
 
 
 
 <a name="released"></a>
 ## [Released]
-
-<a name="1.0.0"></a>
-## [0.2.0] - 2019-07-30
-### Features
-- Clean Architecture Setup
 
 <a name="0.2.0"></a>
 ## [0.2.0] - 2019-07-30

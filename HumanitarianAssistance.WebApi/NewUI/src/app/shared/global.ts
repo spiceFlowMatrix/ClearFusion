@@ -163,13 +163,14 @@ export class GLOBAL {
   public static API_Project_GetProjectproposalDocumnetsById = 'Project/GetProjectproposalDocumentsById';
 
 
-  public static API_Project_UploadEDIProposalFile = 'Project/UploadEDIProposalFile';
   public static API_Project_StartProposalDragAndDropFile = 'Project/StartProposalDragAndDropFile';
   public static API_Project_UploadReviewFile = 'Project/UploadReviewFile';
   public static API_Project_UploadFinalizeFile = 'Project/UploadFinalizeFile';
 
 
   public static API_Project_AddEditProjectProposalDetail = 'Project/AddEditProjectProposalDetail';
+  public static API_Project_AddEditProjectCurrencyDetail = 'Project/AddEditProjectCurrencyDetail';
+
   public static API_Account_GetAllUserDetails = 'Account/GetAllUserList';
   public static API_Project_AddEditTargetBeneficiary = 'Project/AddEditTargetBeneficiary';
 
@@ -186,9 +187,14 @@ export class GLOBAL {
   public static API_ChartOfAccount_EditChartOfAccount = 'ChartOfAccount/EditChartOfAccount';
   public static API_ChartOfAccount_DeleteChartOfAccount = 'ChartOfAccount/DeleteChartOfAccount';
 
-  // Financial Report
-  public static API_FinancialReport_GetAllAccountBalancesByCategory = 'FinancialReport/GetAllAccountBalancesByCategory';
+  // Account Reports
+  public static API_FinancialReport_GetAllAccountBalancesByCategory = 'AccountReports/GetAllAccountBalancesByCategory';
   public static API_FinancialReport_GetAllAccountIncomeExpensesByCategory = 'AccountReports/GetAllAccountIncomeExpensesByCategory';
+  public static API_FinancialReport_SaveGainLossAccountList = 'AccountReports/SaveGainLossAccountList';
+  public static API_FinancialReport_GetDetailOfNotes = 'AccountReports/GetDetailOfNotes';
+  public static API_AccountReports_GetVoucherSummaryReportList = 'AccountReports/GetVoucherSummaryReportList';
+  public static API_AccountReports_GetVoucherTransactionList = 'AccountReports/GetVoucherTransactionList';
+
 
   // Voucher Transaction
   public static API_VoucherTransaction_GetAllVoucherList = 'VoucherTransaction/GetAllVoucherList';
@@ -213,14 +219,6 @@ export class GLOBAL {
   public static API_GainLossReport_GetExchangeGainLossVoucherList = 'GainLossReport/GetExchangeGainLossVoucherList';
   public static API_GainLossReport_AddExchangeGainLossVoucher = 'GainLossReport/AddExchangeGainLossVoucher';
   public static API_GainLossReport_DeleteGainLossVoucherTransaction = 'GainLossReport/DeleteGainLossVoucherTransaction';
-
-  // Financial Report
-  public static API_FinancialReport_SaveGainLossAccountList = 'AccountReports/SaveGainLossAccountList';
-  public static API_FinancialReport_GetDetailOfNotes = 'AccountReports/GetDetailOfNotes';
-
-  // Voucher Summary Report
-  public static API_AccountReports_GetVoucherSummaryReportList = 'AccountReports/GetVoucherSummaryReportList';
-  public static API_AccountReports_GetVoucherTransactionList = 'AccountReports/GetVoucherTransactionList';
 
   public static API_Account_GetAllAccountFilter = 'Account/GetAllAccountFilter';
   public static API_Account_GetAllVoucherType = 'Account/GetAllVoucherType';
@@ -297,7 +295,6 @@ export class GLOBAL {
 
    public static API_BudgetLine_GetProjectBudgetLineDetail = 'Project/GetProjectBudgetLineDetail';
    public static API_BudgetLine_GetBudgetLineDetailByBudgetId = 'Project/GetBudgetLineDetailByBudgetId';
-   public static API_BudgetLine_GetTransactionListByProjectId = 'Project/GetTransactionListByProjectId';
    public static API_BudgetLine_GetTransactionList = 'Project/GetTransactionList';
    public static API_BudgetLine_GetAllBudgetLineList = 'Project/GetAllBudgetLineList';
    public static API_BudgetLine_ExcelImportOfBudgetLine = 'Project/ExcelImportOfBudgetLine';
@@ -412,6 +409,9 @@ export class GLOBAL {
   public static API_HREmployee_EditEmployeeProfessionalDetail = 'EmployeeDetail/EditEmployeeProfessionalDetail';
   public static API_HiringRequest_DeleteCandidatDetail = 'HiringRequest/DeleteCandidatDetail';
   public static API_Chat_AddMessage = 'Chat/AddMessage';
+
+
+  public static API_Pdf_GetAllChartOfAccountHierarchyPdf = 'Pdf/GetAllChartOfAccountHierarchyPdf';
 
   //#endregion
 

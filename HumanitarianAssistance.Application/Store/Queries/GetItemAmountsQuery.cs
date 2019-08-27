@@ -8,6 +8,6 @@ namespace HumanitarianAssistance.Application.Store.Queries
 {
     public class GetItemAmountsQuery:IRequest<ApiResponse>
     {
-        public string ItemId { get; set; }
+        public long ItemId { get; set; }
     }
 }

@@ -40,56 +40,6 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                     List<LedgerModel> finalTrialBalanceList = new List<LedgerModel>();
 
                     ICollection<CurrencyDetails> allCurrencies = await _dbContext.CurrencyDetails.Where(x => x.IsDeleted == false).ToListAsync();
-                    //CurrencyDetails baseCurrency = allCurrencies.FirstOrDefault(x => x.Status == true);
-
-                    //ICollection<ChartOfAccountNew> accountDetail = await _uow.ChartOfAccountNewRepository.FindAllAsync(x => model.accountLists.Contains(x.ChartOfAccountNewId));
-
-                    #region Commented code for selecting 4th level accounts from level 1, 2, 3 Accounts when UI dropdown contains All Accounts(Level 1, 2, 3, 4)
-
-                    //List<long> accountLevel4 = new List<long>();     //level 4
-
-                    //foreach (var accountItem in accountDetail)
-                    //{
-                    //    if (accountItem.AccountLevelId == 4)
-                    //    {
-                    //        // Gets the fourth level accounts  
-                    //        var fourL = await _uow.GetDbContext().ChartAccountDetail.Where(x => accountItem.AccountCode == x.AccountCode && x.AccountLevelId == 4).Select(x => x.ChartOfAccountCode).ToListAsync();
-
-                    //        accountLevel4.AddRange(fourL);
-                    //    }
-                    //    else if (accountItem.AccountLevelId == 3)
-                    //    {
-                    //        var threeL = await _uow.GetDbContext().ChartAccountDetail.Where(x => x.ParentID == accountItem.AccountCode && x.AccountLevelId == 4).Select(x => x.ChartOfAccountCode).ToListAsync();
-
-                    //        accountLevel4.AddRange(threeL);
-                    //    }
-                    //    else if (accountItem.AccountLevelId == 2)
-                    //    {
-                    //        // Gets the third level accounts
-                    //        var thirdL = await _uow.GetDbContext().ChartAccountDetail.Where(x => x.ParentID == accountItem.AccountCode && x.AccountLevelId == 3).Select(x => x.ChartOfAccountCode).ToListAsync();
-                    //        // Gets the fourth level accounts
-                    //        var fourL = await _uow.GetDbContext().ChartAccountDetail.Where(x => x.AccountLevelId == 4 && thirdL.Contains(x.ParentID)).Select(x => x.ChartOfAccountCode).ToListAsync();
-
-                    //        accountLevel4.AddRange(fourL);
-                    //    }
-                    //    else if (accountItem.AccountLevelId == 1)
-                    //    {
-                    //        // Gets the second level accounts
-                    //        var secondL = await _uow.GetDbContext().ChartAccountDetail.Where(x => x.ParentID == accountItem.AccountCode && x.AccountLevelId == 2).Select(x => x.ChartOfAccountCode).ToListAsync();
-
-                    //        // Gets the level 3rd accounts
-                    //        var thirdL = await _uow.GetDbContext().ChartAccountDetail.Where(x => secondL.Contains(x.ParentID) && x.AccountLevelId == 3).Select(x => x.ChartOfAccountCode).ToListAsync();
-
-                    //        // Gets the fourth level accounts
-                    //        var fourthL = await _uow.GetDbContext().ChartAccountDetail.Where(x => thirdL.Contains(x.ParentID) && x.AccountLevelId == 4).Select(x => x.ChartOfAccountCode).ToListAsync();
-
-
-                    //        accountLevel4.AddRange(fourthL);
-                    //    }
-
-                    //}
-
-                    #endregion
 
                     var accountFourthLevel = model.accountLists;
 

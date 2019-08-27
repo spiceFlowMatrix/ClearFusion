@@ -12,6 +12,7 @@ namespace HumanitarianAssistance.WebApi.Extensions
             services.AddTransient<IAccountingServices, AccountingServices>();
             services.AddTransient<IProjectServices, ProjectServices>();
             services.AddTransient<IStoreServices, StoreServices>();
+            services.AddTransient<IFileManagementService, FileManagementService>();
 
             return services;
         }

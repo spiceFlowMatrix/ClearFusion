@@ -6,7 +6,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
 {
     public class EditPurchaseCommand : BaseModel, IRequest<ApiResponse>
     {
-        public string PurchaseId { get; set; }
+        public long PurchaseId { get; set; }
         public string SerialNo { get; set; }                    // Barcode Value
         public string InventoryItem { get; set; }               // Item Id
         public DateTime PurchaseDate { get; set; }              // Date Of Purchase

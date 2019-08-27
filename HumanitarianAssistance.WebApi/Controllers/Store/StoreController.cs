@@ -134,9 +134,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         }
 
         [HttpGet]
-        public async Task<ApiResponse> GetAllPurchasesByItem(string itemId)
+        public async Task<ApiResponse> GetAllPurchasesByItem(long itemId)
         {
-            return await _mediator.Send(new GetAllPurchasesByItemQuery { itemId = itemId });
+            return await _mediator.Send(new GetAllPurchasesByItemQuery { ItemId = itemId });
         }
 
         [HttpPost]
@@ -197,7 +197,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         }
 
         [HttpGet]
-        public async Task<ApiResponse> GetAllItemsOrder(string ItemId)
+        public async Task<ApiResponse> GetAllItemsOrder(long ItemId)
         {
             return await _mediator.Send(new GetAllItemsOrderQuery
             {
@@ -248,7 +248,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         #region "Others"
 
         [HttpGet]
-        public async Task<ApiResponse> GetItemAmounts(string ItemId)
+        public async Task<ApiResponse> GetItemAmounts(long ItemId)
         {
             return await _mediator.Send(new GetItemAmountsQuery
             {
@@ -282,7 +282,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         }
 
         [HttpGet]
-        public async Task<ApiResponse> GetAllPurchaseInvoices([FromQuery]string PurchaseId)
+        public async Task<ApiResponse> GetAllPurchaseInvoices([FromQuery]long PurchaseId)
         {
             return await _mediator.Send(new GetAllPurchaseInvoicesQuery()
             {
@@ -321,7 +321,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         }
 
         [HttpGet]
-        public async Task<ApiResponse> GetAllItemSpecificationsDetails([FromQuery]string ItemId, int ItemTypeId, int OfficeId)
+        public async Task<ApiResponse> GetAllItemSpecificationsDetails([FromQuery]long ItemId, int ItemTypeId, int OfficeId)
         {
             return await _mediator.Send(new GetAllItemSpecificationsDetailsQuery
             {
@@ -502,9 +502,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         }
 
         [HttpGet]
-        public async Task<ApiResponse> GetStoreGroupItemCode([FromQuery]string Id)
+        public async Task<ApiResponse> GetStoreGroupItemCode([FromQuery]long Id)
         {
-            return await _mediator.Send(new GetStoreGroupItemCodeQuery { inventoryId = Id });
+            return await _mediator.Send(new GetStoreGroupItemCodeQuery { InventoryId = Id });
         }
 
         [HttpPost]
@@ -517,9 +517,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         }
 
         [HttpGet]
-        public async Task<ApiResponse> GetAllStoreItemGroups([FromQuery]string Id)
+        public async Task<ApiResponse> GetAllStoreItemGroups([FromQuery]long Id)
         {
-            return await _mediator.Send(new GetAllStoreItemGroupsQuery { inventoryId = Id });
+            return await _mediator.Send(new GetAllStoreItemGroupsQuery { InventoryId = Id });
         }
 
         #endregion 

@@ -22,29 +22,37 @@ namespace HumanitarianAssistance.Application.FileManagement.Commands.Create
         public async Task<ApiResponse> Handle(SaveUploadedFileInfoCommand request, CancellationToken cancellationToken)
         {
             ApiResponse response = new ApiResponse();
+            
             try
             {
                 if (request != null)
                 {
-                    DocumentFileDetail fileDetail = new DocumentFileDetail();
-                    fileDetail.IsDeleted = false;
-                    fileDetail.CreatedDate = request.CreatedDate;
-                    fileDetail.CreatedById = request.CreatedById;
-                    fileDetail.Name = request.FileName;
-                    fileDetail.RawFileSizeBytes = request.FileSize;
-                    fileDetail.RawFileMimeType = request.FileType;
-                    fileDetail.Description = request.FileName;
-                    fileDetail.PageId = request.PageId;
-                    fileDetail.StorageDirectoryPath = request.FilePath;
+                    DocumentFileDetail fileDetail = new DocumentFileDetail
+                    {
+                        IsDeleted = false,
+                        CreatedDate = DateTime.UtcNow,
+                        CreatedById = request.CreatedById,
+                        Name = request.FileName,
+                        RawFileSizeBytes = request.FileSize,
+                        RawFileMimeType = request.FileType,
+                        Description = request.FileName,
+                        PageId = request.PageId,
+                        StorageDirectoryPath = request.FilePath,
+                        DocumentTypeId= request.DocumentTypeId
+                    };
 
                     await _dbContext.DocumentFileDetail.AddAsync(fileDetail);
                     await _dbContext.SaveChangesAsync();
-                    EntitySourceDocumentDetail docDetail = new EntitySourceDocumentDetail();
-                    docDetail.CreatedDate = request.CreatedDate;
-                    docDetail.CreatedById = request.CreatedById;
-                    docDetail.DocumentFileId = fileDetail.DocumentFileId;
-                    docDetail.EntityId = request.RecordId;
-                    docDetail.IsDeleted = false;
+
+                     EntitySourceDocumentDetail docDetail = new EntitySourceDocumentDetail
+                    {
+                        CreatedDate = DateTime.UtcNow,
+                        CreatedById = request.CreatedById,
+                        DocumentFileId = fileDetail.DocumentFileId,
+                        EntityId = request.RecordId,
+                        IsDeleted = false
+                    };
+
                     await _dbContext.EntitySourceDocumentDetails.AddAsync(docDetail);
                     await _dbContext.SaveChangesAsync();
                 }

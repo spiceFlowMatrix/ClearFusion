@@ -27,6 +27,7 @@ export class PayrollMonthlyHoursComponent implements OnInit {
   editPayrollMonthlyPopupLoading = false;
   isEditingAllowed = false;
   attendanceGroupList: IAttendanceGroup[];
+  currentDate: any;
 
   // loader
   addPayrollMonthlyPopupLoading: boolean;
@@ -372,6 +373,7 @@ export class PayrollMonthlyHoursComponent implements OnInit {
   //#region "showHidePopup"
   showHidePopup() {
     this.monthlyhoursdata = {};
+    this.monthlyhoursdata.Date = !this.addPayrollMonthlyHoursPopupVisible ? new Date() : null;
     this.addPayrollMonthlyHoursPopupVisible = !this
       .addPayrollMonthlyHoursPopupVisible;
   }

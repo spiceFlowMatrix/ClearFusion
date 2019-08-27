@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProjectIndicatorsComponent } from './project-indicators.component';
+import { SubHeaderTemplateComponent } from './sub-header-template.component';
 
-describe('ProjectIndicatorsComponent', () => {
-  let component: ProjectIndicatorsComponent;
-  let fixture: ComponentFixture<ProjectIndicatorsComponent>;
+describe('SubHeaderTemplateComponent', () => {
+  let component: SubHeaderTemplateComponent;
+  let fixture: ComponentFixture<SubHeaderTemplateComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProjectIndicatorsComponent ]
+      declarations: [ SubHeaderTemplateComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProjectIndicatorsComponent);
+    fixture = TestBed.createComponent(SubHeaderTemplateComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

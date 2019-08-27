@@ -2046,13 +2046,13 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   //#endregion
 
-  
+
   setProjectOtherDetailValueForPdf() {
 
     this.projectOtherDetailPdf = {
       // Opportunity Details
-      ProjectName : this.data.projectName,
-      Description : this.data.description,
+      ProjectName : this.data.projectName != null ?  this.data.projectName : '',
+      Description : this.data.description != null ?  this.data.description : '',
       OpportunityType: this.OpportunityTypeList.find(x => x.Id === this.projectotherDetail.OpportunityType) != null ? this.OpportunityTypeList.find(x => x.Id === this.projectotherDetail.OpportunityType).Name : '',
       Donor: this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId) != null ? this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId).Name : '',
       OpportunityNo:  this.projectotherDetail.opportunityNo != null ? this.projectotherDetail.opportunityNo : '',
@@ -2062,33 +2062,33 @@ export class ProgramAreaSectorComponent implements OnInit {
       Country: this.CountrySelectionList.find(x => x.value === this.countryMultiSelectModel.CountryId) != null ? this.CountrySelectionList.find(x => x.value === this.countryMultiSelectModel.CountryId).label : '',
       Province: this.provinceMultiSelectModel.ProvinceId.map(x => this.ProvinceSelectionList.filter(y => y.value === x).map(z => z.label)).toString(),
       District: this.districtMultiSelctModel.DistrictID.map(x => this.DistrictMultiSelectList.filter(y => y.value === x).map(z => z.label)).toString(),
-      Office: this.donorDataSource.find(x => x.Id === this.projectotherDetail.OfficeId) != null ? this.officeDataSource.find(x => x.Id === this.projectotherDetail.OfficeId).Name : '', 
-      Sector: this.Sector.toString(),
-      Program: this.Program.toString(),
+      Office: this.donorDataSource.find(x => x.Id === this.projectotherDetail.OfficeId) != null ? this.officeDataSource.find(x => x.Id === this.projectotherDetail.OfficeId).Name : '',
+      Sector: this.Sector != null ? this.Sector.toString() : '',
+      Program: this.Program != null ? this.Program.toString() : '',
       StartDate: this.projectotherDetail.StartDate != null ? this.projectotherDetail.StartDate : '',
       EndDate: this.projectotherDetail.EndDate != null ? this.projectotherDetail.EndDate : '',
-  
+
       // Project Objective & Goal
       ProjectGoal: this.projectotherDetail.projectGoal != null ? this.projectotherDetail.projectGoal : '',
       ProjectObjective: this.projectotherDetail.projectObjective != null ? this.projectotherDetail.projectObjective : '',
       MainActivities: this.projectotherDetail.mainActivities != null ? this.projectotherDetail.mainActivities : '',
       REOIReceiveDate: this.projectotherDetail.REOIReceiveDate != null ? this.projectotherDetail.REOIReceiveDate : '',
       SubmissionDate: this.projectotherDetail.SubmissionDate != null ? this.projectotherDetail.SubmissionDate : '',
-  
+
       // Beneficiary Details
       DirectbeneficiarMale: this.projectotherDetail.beneficiaryMale != null ?  this.projectotherDetail.beneficiaryMale.toString() : '',
       InDirectbeneficiarMale: this.projectotherDetail.InDirectBeneficiaryMale != null ?  this.projectotherDetail.InDirectBeneficiaryMale.toString() : '',
       DirectbeneficiarFemale: this.projectotherDetail.beneficiaryFemale != null ?  this.projectotherDetail.beneficiaryFemale.toString() : '',
       InDirectbeneficiarFemale: this.projectotherDetail.InDirectBeneficiaryFemale != null ?  this.projectotherDetail.InDirectBeneficiaryFemale.toString() : '',
-     
+
       TotalDirectBeneficiary: this.projectotherDetail.beneficiaryFemale != null && this.projectotherDetail.beneficiaryMale != null ? (this.projectotherDetail.beneficiaryFemale + this.projectotherDetail.beneficiaryMale).toString() : '',
       TotalInDirectBeneficiary: this.projectotherDetail.InDirectBeneficiaryMale != null && this.projectotherDetail.InDirectBeneficiaryFemale != null ? (this.projectotherDetail.InDirectBeneficiaryMale + this.projectotherDetail.InDirectBeneficiaryFemale).toString() : '',
-  
+
       // Gender Consideration
       StrengthConsideration: this.projectotherDetail.StrengthConsiderationId != null ? (this.strengthDataSource.find(x => x.Id === this.projectotherDetail.StrengthConsiderationId) ?  this.strengthDataSource.find(x => x.Id === this.projectotherDetail.StrengthConsiderationId).Name : '') : '',
       GenderConsideration:  this.projectotherDetail.GenderConsiderationId != null ? this.GenderConsiderationvaluelist.find(x => x.GenderConsiderationId === this.projectotherDetail.GenderConsiderationId).GenderConsiderationName : '',
       GenderRemarks: this.projectotherDetail.GenderRemarks != null ? this.projectotherDetail.GenderRemarks : '',
-  
+
       // Security Consideration
       Security: this.projectotherDetail.StrengthConsiderationId != null ? this.Securitylist.find(x => x.SecurityId === this.projectotherDetail.SecurityId).SecurityName : '',
       SecurityConsideration: this.securityConsiderationMultiselect.SecurityConsiderationId.map(x => this.securityConsDataSource.filter(y => y.Id === x).map(z => z.Name)).toString(),
@@ -2102,7 +2102,7 @@ export class ProgramAreaSectorComponent implements OnInit {
     // set your pdf values here
 
     this.setProjectOtherDetailValueForPdf();
-    
+
     console.log(this.projectOtherDetailPdf);
 
     this.pDetailPdfService.onExportPdf(this.projectOtherDetailPdf);

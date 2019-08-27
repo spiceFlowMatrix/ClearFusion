@@ -280,9 +280,9 @@ export class CriteriaEvaluationComponent
     this.GetAllCurrency();
     this.getPriorityListByProjectId(this.ProjectId);
     this.getAssumptionByprojectId(this.ProjectId);
-    this.GetAgegroupByProjectId(this.ProjectId);
+    // this.GetAgegroupByProjectId(this.ProjectId);
     this.getFeasibilityExpertByProjectId(this.ProjectId);
-    this.GetOccupationByProjectId(this.ProjectId);
+   // this.GetOccupationByProjectId(this.ProjectId);
     this.GetDonorEligibilityCriteriaByProjectId(this.ProjectId);
   }
   // to show warning message if the total score is less than 30 -->
@@ -1838,8 +1838,8 @@ export class CriteriaEvaluationComponent
                   data.data.CriteriaEveluationModel.InfantandYoungChildFeeding;
                 this.productAndServiceForm.Nutrition =
                   data.data.CriteriaEveluationModel.Nutrition;
-                // this.productAndServiceForm.CommunicableDisease =
-                //   data.data.CriteriaEveluationModel.CommunicableDisease;
+                 this.productAndServiceForm.CommunicableDisease =
+                   data.data.CriteriaEveluationModel.CommunicableDisease;
                 this.productAndServiceForm.Hygiene =
                   data.data.CriteriaEveluationModel.Hygiene;
                 this.productAndServiceForm.EnvironmentalHealth =
@@ -2228,6 +2228,7 @@ export class CriteriaEvaluationComponent
 
   //#region  add edit purpose of initialting
   AddEditPurposeOfInitiatingForm(model: any) {
+
     if (model != null) {
       const obj: ProductAndServiceCEModel = {
         ProjectId: this.ProjectId,
@@ -2512,22 +2513,22 @@ export class CriteriaEvaluationComponent
   currencyDetailsChange(value) {
     this.currencyDetailModel.CurrencyId = value;
     this.currencyDetailModel.ProjectId = this.ProjectId;
-    this.AddEditProjectProposal(this.currencyDetailModel);
+    this.AddEditProjectCurrency(this.currencyDetailModel);
   }
 
   //#endregion
 
   //#region  add/edit other project
-  AddEditProjectProposal(model: any) {
+  AddEditProjectCurrency(model: any) {
     const currencyModel: CurrencyDetailModel = {
       ProjectId: model.ProjectId,
       CurrencyId: model.CurrencyId
     };
 
     this.projectListService
-      .AddEditProjectProposalDetail(
+      .AddEditProjectCurrencyDetail(
         this.appurl.getApiUrl() +
-          GLOBAL.API_Project_AddEditProjectProposalDetail,
+          GLOBAL.API_Project_AddEditProjectCurrencyDetail,
         currencyModel
       )
       .pipe()
