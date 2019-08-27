@@ -1536,6 +1536,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<string>("Description");
 
+                    b.Property<int?>("DocumentTypeId");
+
                     b.Property<bool>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
@@ -7537,7 +7539,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<string>("ItemId");
+                    b.Property<long>("ItemId");
 
                     b.Property<int>("ItemSpecificationMasterId");
 
@@ -7676,7 +7678,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.StoreInventory", b =>
                 {
-                    b.Property<string>("InventoryId")
+                    b.Property<long>("InventoryId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AssetType");
@@ -7712,7 +7714,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.StoreInventoryItem", b =>
                 {
-                    b.Property<string>("ItemId")
+                    b.Property<long>("ItemId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("CreatedById");
@@ -7727,7 +7729,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<long?>("ItemGroupId");
 
-                    b.Property<string>("ItemInventory");
+                    b.Property<long>("ItemInventory");
 
                     b.Property<string>("ItemName");
 
@@ -7761,7 +7763,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("InventoryId");
+                    b.Property<long>("InventoryId");
 
                     b.Property<bool>("IsDeleted");
 
@@ -7782,7 +7784,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.StoreItemPurchase", b =>
                 {
-                    b.Property<string>("PurchaseId")
+                    b.Property<long>("PurchaseId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<bool>("ApplyDepreciation");
@@ -7805,8 +7807,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<string>("ImageFileType");
 
-                    b.Property<string>("InventoryItem")
-                        .IsRequired();
+                    b.Property<long>("InventoryItem");
 
                     b.Property<DateTime?>("InvoiceDate");
 
@@ -7880,14 +7881,14 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.StorePurchaseOrder", b =>
                 {
-                    b.Property<string>("OrderId")
+                    b.Property<long>("OrderId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<string>("InventoryItem");
+                    b.Property<long>("InventoryItem");
 
                     b.Property<bool>("IsDeleted");
 
@@ -7909,7 +7910,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<long>("Project");
 
-                    b.Property<string>("Purchase");
+                    b.Property<long>("PurchaseId");
 
                     b.Property<string>("Remarks");
 
@@ -7925,7 +7926,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasIndex("IssuedToEmployeeId");
 
-                    b.HasIndex("Purchase");
+                    b.HasIndex("PurchaseId");
 
                     b.ToTable("StorePurchaseOrders");
                 });
@@ -9645,7 +9646,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreInventory", "Inventory")
                         .WithMany("InventoryItems")
-                        .HasForeignKey("ItemInventory");
+                        .HasForeignKey("ItemInventory")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.InventoryItemType", "ItemTypes")
                         .WithMany()
@@ -9657,7 +9659,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreInventory", "StoreInventory")
                         .WithMany()
-                        .HasForeignKey("InventoryId");
+                        .HasForeignKey("InventoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.StoreItemPurchase", b =>
@@ -9703,7 +9706,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreInventoryItem", "StoreInventoryItem")
                         .WithMany()
-                        .HasForeignKey("InventoryItem");
+                        .HasForeignKey("InventoryItem")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
                         .WithMany()
@@ -9712,7 +9716,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreItemPurchase", "StoreItemPurchase")
                         .WithMany("PurchaseOrders")
-                        .HasForeignKey("Purchase");
+                        .HasForeignKey("PurchaseId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.StoreSourceCodeDetail", b =>
