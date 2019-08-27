@@ -52,7 +52,7 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
 
                         obj.AccountLevelId = (int)AccountLevels.MainLevel;
                         obj.AccountHeadTypeId = request.AccountHeadTypeId;
-                        obj.ParentID = -1;
+                        obj.ParentID = 0;
                         obj.AccountName = request.AccountName;
                         obj.ChartOfAccountNewCode = request.ChartOfAccountNewCode;
                         obj.CreatedById = request.CreatedById;

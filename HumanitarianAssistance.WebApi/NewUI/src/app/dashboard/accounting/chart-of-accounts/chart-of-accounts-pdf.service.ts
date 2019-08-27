@@ -22,7 +22,7 @@ export class ChartOfAccountsPdfService {
     width: 480
   };
 
-  dataSource = [];
+  dataSource: any = [];
 
   constructor(
     private globalService: GlobalService,
@@ -45,30 +45,15 @@ export class ChartOfAccountsPdfService {
           return responseData;
         })
       );
-
-    // this.exportToPdf("data");
   }
 
-  private exportToPdf(data): void {
-    console.log('exported:', data);
+  public ExportToPdf(): void {
 
     const doc = new jsPDF('p', 'pt', 'a4');
     doc.setFontSize(50);
-    // doc.headerBackgroundColor();
 
     const pageHeight = doc.internal.pageSize.height;
     const pageWidth = doc.internal.pageSize.width;
-
-    // doc.fromHTML(
-    //   document.getElementById('customers'),
-    //   this.margins.left, // x coord
-    //   this.margins.top,
-    //   {
-    //     // y coord
-    //     width: this.margins.width
-    //   },
-    //   this.margins
-    // );
 
     doc.setFontSize(14);
 
@@ -152,6 +137,7 @@ export class ChartOfAccountsPdfService {
     );
     textCurrentLocationYAxis += linePadding;
 
+
     // main level
     for (const itemMain of this.dataSource) {
       if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
@@ -164,7 +150,7 @@ export class ChartOfAccountsPdfService {
       doc.text(
         this.margins.left,
         textCurrentLocationYAxis,
-        itemMain.AccountCode
+        itemMain.ChartOfAccountCode
       );
       textCurrentLocationYAxis += linePadding;
 
@@ -181,7 +167,7 @@ export class ChartOfAccountsPdfService {
           textCurrentLocationYAxis,
           splitTitle[i]
         );
-        textCurrentLocationYAxis += linePadding + 5;
+        textCurrentLocationYAxis += linePadding;
         if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
           textCurrentLocationYAxis = this.margins.top;
           doc.addPage();
@@ -195,7 +181,7 @@ export class ChartOfAccountsPdfService {
         doc.text(
           this.margins.left,
           textCurrentLocationYAxis,
-          itemControl.AccountCode
+          itemControl.ChartOfAccountCode
         );
         textCurrentLocationYAxis += linePadding;
 
@@ -212,7 +198,7 @@ export class ChartOfAccountsPdfService {
             textCurrentLocationYAxis,
             splitTitle[i]
           );
-          textCurrentLocationYAxis += linePadding + 5;
+          textCurrentLocationYAxis += linePadding;
           if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
             textCurrentLocationYAxis = this.margins.top;
             doc.addPage();
@@ -226,7 +212,7 @@ export class ChartOfAccountsPdfService {
           doc.text(
             this.margins.left,
             textCurrentLocationYAxis,
-            itemSub.AccountCode
+            itemSub.ChartOfAccountCode
           );
           textCurrentLocationYAxis += linePadding;
 
@@ -243,7 +229,7 @@ export class ChartOfAccountsPdfService {
               textCurrentLocationYAxis,
               splitTitle[i]
             );
-            textCurrentLocationYAxis += linePadding + 5;
+            textCurrentLocationYAxis += linePadding;
             if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
               textCurrentLocationYAxis = this.margins.top;
               doc.addPage();
@@ -257,7 +243,7 @@ export class ChartOfAccountsPdfService {
             doc.text(
               this.margins.left,
               textCurrentLocationYAxis,
-              itemInput.AccountCode
+              itemInput.ChartOfAccountCode
             );
             textCurrentLocationYAxis += linePadding;
 
@@ -274,7 +260,7 @@ export class ChartOfAccountsPdfService {
                 textCurrentLocationYAxis,
                 splitTitle[i]
               );
-              textCurrentLocationYAxis += linePadding + 5;
+              textCurrentLocationYAxis += linePadding;
               if (textCurrentLocationYAxis > pageHeight - this.margins.bottom) {
                 textCurrentLocationYAxis = this.margins.top;
                 doc.addPage();
@@ -283,6 +269,7 @@ export class ChartOfAccountsPdfService {
           }
         }
       }
+      textCurrentLocationYAxis += 20;
     }
 
     doc.save('chart-of-account.pdf');
