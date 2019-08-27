@@ -32,7 +32,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                                       .Select(c => new AccountDetailModel
                                                       {
                                                           AccountCode = c.ChartOfAccountNewId,
-                                                          AccountName = c.ChartOfAccountNewId + " - " + c.ChartOfAccountNewCode,
+                                                          AccountName = c.ChartOfAccountNewCode + " - " + c.AccountName,
                                                           ChartOfAccountNewCode = c.ChartOfAccountNewCode
                                                       }).OrderBy(x => x.AccountName).ToListAsync();
 
