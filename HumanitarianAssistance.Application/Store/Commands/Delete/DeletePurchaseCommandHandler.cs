@@ -32,7 +32,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Delete
                     var purchaseRecord = await _dbContext.StoreItemPurchases.FirstOrDefaultAsync(x => x.PurchaseId == request.PurchaseId);
                     if (purchaseRecord != null)
                     {
-                        var isOrderExist = _dbContext.StorePurchaseOrders.Where(x => x.Purchase == request.PurchaseId && x.IsDeleted == false).Count();
+                        var isOrderExist = _dbContext.StorePurchaseOrders.Where(x => x.PurchaseId == request.PurchaseId && x.IsDeleted == false).Count();
 
                         if (isOrderExist > 0)
                         {

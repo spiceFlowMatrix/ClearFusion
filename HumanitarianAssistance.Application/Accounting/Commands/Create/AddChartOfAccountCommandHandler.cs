@@ -52,7 +52,7 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
 
                         obj.AccountLevelId = (int)AccountLevels.MainLevel;
                         obj.AccountHeadTypeId = request.AccountHeadTypeId;
-                        obj.ParentID = -1;
+                        obj.ParentID = 0;
                         obj.AccountName = request.AccountName;
                         obj.ChartOfAccountNewCode = request.ChartOfAccountNewCode;
                         obj.CreatedById = request.CreatedById;
@@ -60,10 +60,6 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
                         obj.IsDeleted = false;
 
                         await _dbContext.ChartOfAccountNew.AddAsync(obj);
-                        await _dbContext.SaveChangesAsync();
-
-                        obj.ParentID = obj.ChartOfAccountNewId;
-
                         await _dbContext.SaveChangesAsync();
 
                         response.data.ChartOfAccountNewDetail = obj;
@@ -250,7 +246,7 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
+                response.Message = ex.Message;
             }
             return response;
         }

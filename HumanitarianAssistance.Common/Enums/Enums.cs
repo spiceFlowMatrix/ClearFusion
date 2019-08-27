@@ -7,7 +7,8 @@
         Hr = 3,
         Store = 4,
         Project = 5,
-        Marketing = 6
+        Marketing = 6,
+        PdfExport = 7
     }
 
 
@@ -180,6 +181,26 @@
         public const string Friday = "Friday";
         public const string Saturday = "Saturday";
         public const string Sunday = "Sunday";
+    }
+
+    public enum FileSourceEntityTypes
+    {
+        Voucher = 1,
+        Account = 2,
+        ProjectDetail = 3,
+        ProjectProposal = 4,
+        ProjectProposalSupportingDoc = 5,
+        ProjectActivityImplementation = 6,
+        ProjectActivityMonitoring = 7,
+        ProjectActivityPlanning = 8,
+        DonorDetail = 9,
+        StorePurchase = 10
+    }
+
+    public enum DocumentFileTypes
+    {
+        PurchaseImage = 1,
+        PurchaseInvoice = 2
     }
 
 }

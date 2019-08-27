@@ -21,6 +21,7 @@ import { StoreDepreciationReportComponent } from './store-depreciation-report/st
 import { ItemSpecificationMasterComponent } from './store-master/item-specification-master/item-specification-master.component';
 import { StoreSourceCodesComponent } from './store-source-codes/store-source-codes.component';
 import { PaymentTypesComponent } from './payment-types/payment-types.component';
+import { FileManagementService } from '../../shared/FileManagement/file-management.service';
 
 @NgModule({
   imports: [
@@ -80,7 +81,8 @@ import { PaymentTypesComponent } from './payment-types/payment-types.component';
     PaymentTypesComponent
   ],
   providers:[
-    StoreService
+    StoreService,
+    FileManagementService
   ]
 })
 export class StoreModule { }

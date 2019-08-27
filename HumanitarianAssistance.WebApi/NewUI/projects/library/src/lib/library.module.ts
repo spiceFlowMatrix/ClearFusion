@@ -42,7 +42,7 @@ import { DocumentListingComponent } from './components/document-listing/document
     DragAndDropComponent,
     SearchDropdownComponent,
     ListingDeleteComponent,
-    DocumentListingComponent
+    DocumentListingComponent,
   ],
   exports: [
     LibraryComponent,

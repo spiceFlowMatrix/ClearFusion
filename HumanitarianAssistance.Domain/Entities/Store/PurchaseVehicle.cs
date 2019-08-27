@@ -9,7 +9,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1)]
         public int VehicleId { get; set; }
-        public string Purchase { get; set; }
+        public long Purchase { get; set; }
 
         public string VehicleDescription { get; set; }
 

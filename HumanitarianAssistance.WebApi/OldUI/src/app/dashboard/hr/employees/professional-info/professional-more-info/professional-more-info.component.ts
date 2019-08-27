@@ -22,6 +22,7 @@ export class ProfessionalMoreInfoComponent implements OnInit {
   employeeLanguagesDS: EmployeeLanguageModel[];
   languageList: any[];
   languageSpeakingFluency: any[];
+  currentDate: any;
   @Input() isEditingAllowed: boolean;
 
   currencyDataSource: any[];
@@ -64,6 +65,7 @@ export class ProfessionalMoreInfoComponent implements OnInit {
     this.otherSkillsDS = [];
     this.salaryBudgetsDS = [];
     this.employeeLanguagesDS = [];
+    this.currentDate = new Date();
 
     // tslint:disable-next-line:radix
     this.employeeId = parseInt(localStorage.getItem('SelectedEmployee'));
@@ -474,7 +476,7 @@ export class ProfessionalMoreInfoComponent implements OnInit {
                 new Date().getMinutes(),
                 new Date().getSeconds()
               )
-            : null,
+            : new Date(),
         EducationTo:
           obj.data.EducationTo != null
             ? new Date(
@@ -485,7 +487,7 @@ export class ProfessionalMoreInfoComponent implements OnInit {
                 new Date().getMinutes(),
                 new Date().getSeconds()
               )
-            : null,
+            : new Date(),
         Degree: obj.data.Degree,
         FieldOfStudy: obj.data.FieldOfStudy,
         Institute: obj.data.Institute,
@@ -548,7 +550,10 @@ export class ProfessionalMoreInfoComponent implements OnInit {
         this.setting.getBaseUrl() +
         GLOBAL.API_EmployeeDetail_DeleteEmployeeEducations;
       this.delete(educationdeleteModel, apiLink, 'Education');
-    }
+    } else if (eventName === "InitNewRow") {
+      obj.data.EducationTo = new Date,
+      obj.data.EducationFrom = new Date()
+  }
   }
   //#endregion
 
@@ -671,7 +676,10 @@ export class ProfessionalMoreInfoComponent implements OnInit {
         this.setting.getBaseUrl() +
         GLOBAL.API_EmployeeDetail_DeleteEmployeeHistoryOutsideOrganization;
       this.delete(deleteModel, apiLink, 'OutsideOrganization');
-    }
+    }else if (eventName === "InitNewRow") {
+      obj.data.EmploymentTo = new Date,
+          obj.data.EmploymentFrom = new Date()
+  }
   }
   //#endregion
 
@@ -794,7 +802,10 @@ export class ProfessionalMoreInfoComponent implements OnInit {
         this.setting.getBaseUrl() +
         GLOBAL.API_EmployeeDetail_DeleteEmployeeHistoryOutsideCountry;
       this.delete(deleteModel, apiLink, 'OutsideCountry');
-    }
+    } else if (eventName === "InitNewRow") {
+      obj.data.EmploymentTo = new Date,
+          obj.data.EmploymentFrom = new Date()
+  }
   }
   //#endregion
 

@@ -28,10 +28,10 @@
 
           <dxi-column dataField="EmployeeID" caption="EmployeeID" [visible]="false" [editorOptions]="{ readOnly: true }"></dxi-column>
 
-          <dxi-column dataField="EducationFrom" dataType="date" format="dd/MM/yyyy" alignment="right">
+          <dxi-column dataField="EducationFrom" dataType="date" value="currentDate" format="dd/MM/yyyy" alignment="right">
             <dxi-validation-rule type="required"> </dxi-validation-rule>
           </dxi-column>
-          <dxi-column dataField="EducationTo" dataType="date" format="dd/MM/yyyy" alignment="right">
+          <dxi-column dataField="EducationTo" dataType="date" value="currentDate" format="dd/MM/yyyy" alignment="right">
             <dxi-validation-rule type="required"> </dxi-validation-rule>
           </dxi-column>
 

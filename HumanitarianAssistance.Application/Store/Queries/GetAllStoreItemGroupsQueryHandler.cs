@@ -29,9 +29,9 @@ namespace HumanitarianAssistance.Application.Store.Queries
             {
                 List<StoreItemGroupModel> storeItemGroupList = new List<StoreItemGroupModel>();
 
-                if (request.inventoryId != null)
+                if (request.InventoryId != 0)
                 {
-                    storeItemGroupList = await _dbContext.StoreItemGroups.Where(x => x.IsDeleted == false && x.InventoryId == request.inventoryId).Select(x => new StoreItemGroupModel
+                    storeItemGroupList = await _dbContext.StoreItemGroups.Where(x => x.IsDeleted == false && x.InventoryId == request.InventoryId).Select(x => new StoreItemGroupModel
                     {
                         Description = x.Description,
                         InventoryId = x.InventoryId,

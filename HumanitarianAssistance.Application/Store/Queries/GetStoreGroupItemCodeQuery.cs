@@ -5,6 +5,6 @@ namespace HumanitarianAssistance.Application.Store.Queries
 {
     public class GetStoreGroupItemCodeQuery : IRequest<ApiResponse>
     {
-        public string inventoryId { get; set; }  
+        public long InventoryId { get; set; }  
     }
 }

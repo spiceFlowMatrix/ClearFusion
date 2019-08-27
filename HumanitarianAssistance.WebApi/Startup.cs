@@ -38,8 +38,8 @@ namespace HumanitarianAssistance.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             //get and set environment variable at run time
-            string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
             string DefaultCorsPolicyUrl = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
+            string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
             // string DefaultsPolicyName = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_NAME");
 
             defaultCorsPolicyName = Configuration["DEFAULT_CORS_POLICY_NAME"];
@@ -128,14 +128,14 @@ namespace HumanitarianAssistance.WebApi
 
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            //app.UseStaticFiles(new StaticFileOptions()
-            //{
-            //    FileProvider = new PhysicalFileProvider(
-            //    Path.Combine(Directory.GetCurrentDirectory(), @"Documents")),
-            //    RequestPath = new PathString("/Docs")
-            //});
+            // app.UseStaticFiles(new StaticFileOptions()
+            // {
+            //     FileProvider = new PhysicalFileProvider(
+            //     Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
+            //     RequestPath = new PathString("/Docs")
+            // });
 
+            app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseCors(defaultCorsPolicyName);
             app.UseAuthentication();
@@ -184,7 +184,7 @@ namespace HumanitarianAssistance.WebApi
                     if (env.IsDevelopment())
                     {
                         // it will use package.json & will search for start command to run
-                        spa.UseAngularCliServer(npmScript: "start");
+                        //spa.UseAngularCliServer(npmScript: "start");
                     }
                     else
                     {
@@ -210,7 +210,7 @@ namespace HumanitarianAssistance.WebApi
                 if (env.IsDevelopment())
                 {
                     // it will use package.json & will search for start command to run
-                    spa.UseAngularCliServer(npmScript: "start");
+                    //spa.UseAngularCliServer(npmScript: "start");
                 }
                 else
                 {

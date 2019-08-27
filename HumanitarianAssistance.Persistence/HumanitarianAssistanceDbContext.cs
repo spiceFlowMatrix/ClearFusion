@@ -242,6 +242,7 @@ namespace HumanitarianAssistance.Persistence
 
 
         #region "Accounting New"
+        public DbSet<AccountLevel> AccountLevel { get; set; }
         public DbSet<AccountFilterType> AccountFilterType { get; set; }
         public DbSet<ChartOfAccountNew> ChartOfAccountNew { get; set; }
         public DbSet<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }

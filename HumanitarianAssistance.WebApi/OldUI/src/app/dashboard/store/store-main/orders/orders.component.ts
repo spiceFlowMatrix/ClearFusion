@@ -555,7 +555,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
       MustReturn: false,
       Returned: false,
       IssuedToEmployeeId: null,
-      IssueDate: null,
+      IssueDate: new Date(),
       ReturnedDate: null,
 
       IssueVoucherNo: null,

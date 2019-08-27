@@ -1,11 +1,17 @@
 <div class="voucher-detail-main">
-  <app-voucher-summary [currentCredit]="totalCredits" [currentDebit]="totalDebits"></app-voucher-summary>
+  <app-voucher-summary
+    [currentCredit]="totalCredits"
+    [currentDebit]="totalDebits"
+  ></app-voucher-summary>
 
   <br />
 
-  <mat-card [ngStyle]="scrollStyles">
+  <mat-card >
     <div class="row">
-      <div class="col-sm-12" *ngIf="voucherDetailLoader; else voucherDetailtemplate">
+      <div
+        class="col-sm-12"
+        *ngIf="voucherDetailLoader; else voucherDetailtemplate"
+      >
         <mat-spinner class="center_loader" diameter="50"></mat-spinner>
       </div>
 
@@ -16,15 +22,34 @@
               <div class="border_bottom padding_bottom_10">
                 <div class="row">
                   <div class="col-sm-5">
-                    <button *ngIf="voucherDetail.IsVoucherVerified" mat-raised-button color="accent"
-                      pTooltip="Voucher validated" tooltipPosition="top" aria-label="Voucher validated"
-                      (click)="onVoucherVerify()">
-                      <mat-icon aria-label="icon-button done icon" class="margin_left_minus_5">done</mat-icon>
+                    <button
+                      *ngIf="voucherDetail.IsVoucherVerified"
+                      mat-raised-button
+                      color="accent"
+                      pTooltip="Voucher validated"
+                      tooltipPosition="top"
+                      aria-label="Voucher validated"
+                      (click)="onVoucherVerify()"
+                    >
+                      <mat-icon
+                        aria-label="icon-button done icon"
+                        class="margin_left_minus_5"
+                        >done</mat-icon
+                      >
                       Validate
                     </button>
-                    <button *ngIf="!voucherDetail.IsVoucherVerified" mat-stroked-button pTooltip="Validate voucher"
-                      tooltipPosition="top" aria-label="Verify voucher" (click)="onVoucherVerify()">
-                      <mat-icon aria-label="icon-button done icon" class="margin_left_minus_5">
+                    <button
+                      *ngIf="!voucherDetail.IsVoucherVerified"
+                      mat-stroked-button
+                      pTooltip="Validate voucher"
+                      tooltipPosition="top"
+                      aria-label="Verify voucher"
+                      (click)="onVoucherVerify()"
+                    >
+                      <mat-icon
+                        aria-label="icon-button done icon"
+                        class="margin_left_minus_5"
+                      >
                         done
                       </mat-icon>
                       Invalidate
@@ -32,21 +57,38 @@
                   </div>
 
                   <div class="col-sm-1 pull-right ">
-
                     <!-- Filter -->
                     <div *ngIf="!fileUploadLoader; else documentUploadtemplate">
-                      <mat-icon class="icon_cursor padding_top_5" aria-label="icon-button done icon"
-                        pTooltip="Documents" tooltipPosition="top" [matMenuTriggerFor]="menu">attach_file</mat-icon>
+                      <mat-icon
+                        class="icon_cursor padding_top_5"
+                        aria-label="icon-button done icon"
+                        pTooltip="Documents"
+                        tooltipPosition="top"
+                        [matMenuTriggerFor]="menu"
+                        >attach_file</mat-icon
+                      >
                     </div>
                     <ng-template #documentUploadtemplate>
-                      <mat-spinner class="center_loader" diameter="15" *ngIf="fileUploadLoader"></mat-spinner>
+                      <mat-spinner
+                        class="center_loader"
+                        diameter="15"
+                        *ngIf="fileUploadLoader"
+                      ></mat-spinner>
                     </ng-template>
                     <mat-menu #menu="matMenu">
-                      <input id="fileInput" style="display: contents;" hidden type="file"
-                        (change)="fileChange($event.target.files)">
-                      <button mat-button (click)="openInput()">Upload Document
+                      <input
+                        id="fileInput"
+                        style="display: contents;"
+                        hidden
+                        type="file"
+                        (change)="fileChange($event.target.files)"
+                      />
+                      <button mat-button (click)="openInput()">
+                        Upload Document
                       </button>
-                      <button mat-button (click)="openDocumentsDialog()">View Documents</button>
+                      <button mat-button (click)="openDocumentsDialog()">
+                        View Documents
+                      </button>
                     </mat-menu>
                   </div>
                 </div>
@@ -62,8 +104,13 @@
               <div class="row">
                 <div class="col-sm-6">
                   <mat-form-field class="example-full-width">
-                    <textarea matInput placeholder="Leave a comment" [(ngModel)]="voucherDetail.Description"
-                      (change)="onVoucherValuechange()" [disabled]="!isEditingAllowed"></textarea>
+                    <textarea
+                      matInput
+                      placeholder="Leave a comment"
+                      [(ngModel)]="voucherDetail.Description"
+                      (change)="onVoucherValuechange()"
+                      [disabled]="!isEditingAllowed"
+                    ></textarea>
                   </mat-form-field>
                 </div>
               </div>
@@ -71,10 +118,18 @@
                 <!-- Voucher date -->
                 <div class="col-sm-4">
                   <mat-form-field class="example-full-width">
-                    <input matInput [matDatepicker]="voucherDatepicker" placeholder="Voucher Date"
-                      [(ngModel)]="voucherDetail.VoucherDate" (dateChange)="onVoucherValuechange()"
-                      [disabled]="!isEditingAllowed" />
-                    <mat-datepicker-toggle matSuffix [for]="voucherDatepicker"></mat-datepicker-toggle>
+                    <input
+                      matInput
+                      [matDatepicker]="voucherDatepicker"
+                      placeholder="Voucher Date"
+                      [(ngModel)]="voucherDetail.VoucherDate"
+                      (dateChange)="onVoucherValuechange()"
+                      [disabled]="!isEditingAllowed"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="voucherDatepicker"
+                    ></mat-datepicker-toggle>
                     <mat-datepicker #voucherDatepicker></mat-datepicker>
                   </mat-form-field>
                 </div>
@@ -82,9 +137,16 @@
                 <!-- Currency -->
                 <div class="col-sm-4">
                   <mat-form-field class="example-full-width">
-                    <mat-select placeholder="Currency" [(ngModel)]="voucherDetail.CurrencyId"
-                      (selectionChange)="onVoucherValuechange()" [disabled]="!isEditingAllowed">
-                      <mat-option *ngFor="let item of currencyList" [value]="item.CurrencyId">
+                    <mat-select
+                      placeholder="Currency"
+                      [(ngModel)]="voucherDetail.CurrencyId"
+                      (selectionChange)="onVoucherValuechange()"
+                      [disabled]="!isEditingAllowed"
+                    >
+                      <mat-option
+                        *ngFor="let item of currencyList"
+                        [value]="item.CurrencyId"
+                      >
                         {{ item.CurrencyName }}
                       </mat-option>
                     </mat-select>
@@ -94,9 +156,16 @@
                 <!-- Journal -->
                 <div class="col-sm-4">
                   <mat-form-field class="example-full-width">
-                    <mat-select placeholder="Journal" [(ngModel)]="voucherDetail.JournalCode"
-                      (selectionChange)="onVoucherValuechange()" [disabled]="!isEditingAllowed">
-                      <mat-option *ngFor="let item of journalList" [value]="item.JournalCode">
+                    <mat-select
+                      placeholder="Journal"
+                      [(ngModel)]="voucherDetail.JournalCode"
+                      (selectionChange)="onVoucherValuechange()"
+                      [disabled]="!isEditingAllowed"
+                    >
+                      <mat-option
+                        *ngFor="let item of journalList"
+                        [value]="item.JournalCode"
+                      >
                         {{ item.JournalName }}
                       </mat-option>
                     </mat-select>
@@ -108,9 +177,16 @@
                 <!-- Voucher Type -->
                 <div class="col-sm-4">
                   <mat-form-field class="example-full-width">
-                    <mat-select placeholder="Voucher Type" [(ngModel)]="voucherDetail.VoucherTypeId"
-                      (selectionChange)="onVoucherValuechange()" [disabled]="!isEditingAllowed">
-                      <mat-option *ngFor="let item of voucherTypeList" [value]="item.VoucherTypeId">
+                    <mat-select
+                      placeholder="Voucher Type"
+                      [(ngModel)]="voucherDetail.VoucherTypeId"
+                      (selectionChange)="onVoucherValuechange()"
+                      [disabled]="!isEditingAllowed"
+                    >
+                      <mat-option
+                        *ngFor="let item of voucherTypeList"
+                        [value]="item.VoucherTypeId"
+                      >
                         {{ item.VoucherTypeName }}
                       </mat-option>
                     </mat-select>
@@ -119,9 +195,16 @@
                 <!-- Office -->
                 <div class="col-sm-4">
                   <mat-form-field class="example-full-width">
-                    <mat-select placeholder="Office" [(ngModel)]="voucherDetail.OfficeId"
-                      (selectionChange)="onVoucherValuechange()" [disabled]="!isEditingAllowed">
-                      <mat-option *ngFor="let item of officeList" [value]="item.OfficeId">
+                    <mat-select
+                      placeholder="Office"
+                      [(ngModel)]="voucherDetail.OfficeId"
+                      (selectionChange)="onVoucherValuechange()"
+                      [disabled]="!isEditingAllowed"
+                    >
+                      <mat-option
+                        *ngFor="let item of officeList"
+                        [value]="item.OfficeId"
+                      >
                         {{ item.OfficeName }}
                       </mat-option>
                     </mat-select>
@@ -131,8 +214,14 @@
                 <!-- Check No -->
                 <div class="col-sm-12">
                   <mat-form-field class="example-form-field">
-                    <input matInput type="text" placeholder="Cheque No" [(ngModel)]="voucherDetail.ChequeNo"
-                      (change)="onVoucherValuechange()" [disabled]="!isEditingAllowed" />
+                    <input
+                      matInput
+                      type="text"
+                      placeholder="Cheque No"
+                      [(ngModel)]="voucherDetail.ChequeNo"
+                      (change)="onVoucherValuechange()"
+                      [disabled]="!isEditingAllowed"
+                    />
                   </mat-form-field>
                 </div>
               </div>
@@ -141,24 +230,32 @@
               <div class="row">
                 <div class="col-sm-12">
                   <div class="transaction-main">
-                    <div class="row border_bottom">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="border_bottom">
+                          <br />
+                          <h4 class="display_inline">TRANSACTIONS</h4>
 
-                      <br />
-                      <div class="col-sm-3">
-                        <h4>TRANSACTIONS</h4>
-                      </div>
-                      <div class="col-sm-2">
-                        <div class="inside_btn pull-right margin_top_10">
-                          <div *ngIf="
+                          <div
+                            *ngIf="
                               checkTransactionFlag;
                               else checkTransactionTemplate
-                            ">
+                            "
+                          >
                             <mat-spinner diameter="20"></mat-spinner>
                           </div>
                           <ng-template #checkTransactionTemplate>
-                            <button mat-icon-button color="accent" pTooltip="Save Transaction" tooltipPosition="top"
-                              (click)="onTransactionListVerify()" *ngIf="isEditingAllowed">
-                              <mat-icon aria-label="icon-button done icon">done</mat-icon>
+                            <button
+                              class="pull-right"
+                              mat-stroked-button
+                              color="accent"
+                              pTooltip="Save Transaction"
+                              tooltipPosition="top"
+                              (click)="onTransactionListVerify()"
+                              *ngIf="isEditingAllowed"
+                            >
+                              <mat-icon aria-label="done icon">done</mat-icon>
+                              Save
                             </button>
                           </ng-template>
                         </div>
@@ -172,9 +269,14 @@
                             <strong>Debits</strong>
                             <span>Total Debits: {{ totalDebits }}</span>
                           </h6>
-                          <button mat-icon-button (click)="onAddTransactionDebit()"
-                            *ngIf="isEditingAllowed && !voucherDetail.IsVoucherVerified">
-                            <mat-icon aria-label="icon-button add icon">add</mat-icon>
+                          <button
+                            mat-icon-button
+                            (click)="onAddTransactionDebit()"
+                            *ngIf="isEditingAllowed"
+                          >
+                            <mat-icon aria-label="icon-button add icon"
+                              >add</mat-icon
+                            >
                           </button>
                         </div>
 
@@ -203,63 +305,111 @@
                                       </mat-select>
                                     </mat-form-field> -->
 
-                                      <lib-search-dropdown placeholder="Accounts" [multiSelect]="false"
+                                      <lib-search-dropdown
+                                        placeholder="Accounts"
+                                        [multiSelect]="false"
                                         placeholderSearchLabel="Find Account..."
-                                        noEntriesFoundLabel="No matching account found" [dataSource]="accountDataSource"
-                                        [selectedValue]="item.AccountNo" (openedChange)="
+                                        noEntriesFoundLabel="No matching account found"
+                                        [dataSource]="accountDataSource"
+                                        [selectedValue]="item.AccountNo"
+                                        (openedChange)="
                                           openedChange($event, item)
-                                        ">
+                                        "
+                                      >
                                       </lib-search-dropdown>
                                     </td>
-                                    <td width="16%" class="text-center" text-align="left">
-                                      <mat-form-field class="example-form-field">
-                                        <input matInput type="text" placeholder="Description"
-                                          [(ngModel)]="item.Description" (change)="
+                                    <td
+                                      width="16%"
+                                      class="text-center"
+                                      text-align="left"
+                                    >
+                                      <mat-form-field
+                                        class="example-form-field"
+                                      >
+                                        <input
+                                          matInput
+                                          type="text"
+                                          placeholder="Description"
+                                          [(ngModel)]="item.Description"
+                                          (change)="
                                             onTransactionDetailChanged(
                                               item,
                                               'Description'
                                             )
-                                          " [disabled]="!isEditingAllowed" />
+                                          "
+                                          [disabled]="!isEditingAllowed"
+                                        />
                                       </mat-form-field>
                                     </td>
-                                    <td width="12%" class="text-center" text-align="left">
-                                      <mat-form-field class="example-form-field">
-                                        <input matInput min="0" type="number" placeholder="Amount"
-                                          [(ngModel)]="item.Debit" (change)="
+                                    <td
+                                      width="12%"
+                                      class="text-center"
+                                      text-align="left"
+                                    >
+                                      <mat-form-field
+                                        class="example-form-field"
+                                      >
+                                        <input
+                                          matInput
+                                          min="0"
+                                          type="number"
+                                          placeholder="Amount"
+                                          [(ngModel)]="item.Debit"
+                                          (change)="
                                             onTransactionDetailChanged(
                                               item,
                                               'Debit'
                                             )
-                                          " [disabled]="!isEditingAllowed" />
+                                          "
+                                          [disabled]="!isEditingAllowed"
+                                        />
                                       </mat-form-field>
                                     </td>
                                     <td width="12%" class="text-center">
-                                      <mat-form-field class="example-full-width">
-                                        <mat-select placeholder="Project" [(ngModel)]="item.ProjectId"
+                                      <mat-form-field
+                                        class="example-full-width"
+                                      >
+                                        <mat-select
+                                          placeholder="Project"
+                                          [(ngModel)]="item.ProjectId"
                                           (selectionChange)="
                                             onTransactionDetailChanged(
                                               item,
                                               'Project'
                                             )
-                                          " [disabled]="!isEditingAllowed">
-                                          <mat-option *ngFor="let i of projectList" [value]="i.ProjectId">
+                                          "
+                                          [disabled]="!isEditingAllowed"
+                                        >
+                                          <mat-option
+                                            *ngFor="let i of projectList"
+                                            [value]="i.ProjectId"
+                                          >
                                             {{ i.ProjectNameCode }}
                                           </mat-option>
                                         </mat-select>
                                       </mat-form-field>
                                     </td>
                                     <td width="12%" class="text-center">
-                                      <mat-form-field class="example-full-width">
-                                        <mat-select placeholder="Budget Line" [(ngModel)]="item.BudgetLineId"
+                                      <mat-form-field
+                                        class="example-full-width"
+                                      >
+                                        <mat-select
+                                          placeholder="Budget Line"
+                                          [(ngModel)]="item.BudgetLineId"
                                           (selectionChange)="
                                             onTransactionDetailChanged(
                                               item,
                                               'BudgetLine'
                                             )
-                                          " [disabled]="!isEditingAllowed">
-                                          <mat-option *ngFor="
+                                          "
+                                          [disabled]="!isEditingAllowed"
+                                        >
+                                          <mat-option
+                                            *ngFor="
                                               let i of item.BudgetLineList
-                                            " [value]="i.BudgetLineId">
+                                            "
+                                            [value]="i.BudgetLineId"
+                                          >
                                             {{ i.BudgetName }}
                                           </mat-option>
                                         </mat-select>
@@ -275,12 +425,22 @@
                                       </mat-select>
                                     </mat-form-field> -->
                                     </td>
-                                    <td width="12%" class="text-center" text-align="left">
-                                      <button mat-icon-button (click)="onTransactionDebitDelete(item)" *ngIf="
+                                    <td
+                                      width="12%"
+                                      class="text-center"
+                                      text-align="left"
+                                    >
+                                      <button
+                                        mat-icon-button
+                                        (click)="onTransactionDebitDelete(item)"
+                                        *ngIf="
                                           isEditingAllowed &&
                                           !voucherDetail.IsVoucherVerified
-                                        ">
-                                        <mat-icon aria-label="delete">delete</mat-icon>
+                                        "
+                                      >
+                                        <mat-icon aria-label="delete"
+                                          >delete</mat-icon
+                                        >
                                       </button>
                                     </td>
 
@@ -299,9 +459,14 @@
                             <strong>Credits</strong>
                             <span> Total Credits : {{ totalCredits }}</span>
                           </h6>
-                          <button mat-icon-button (click)="onAddTransactionCredit()"
-                            *ngIf="isEditingAllowed && !voucherDetail.IsVoucherVerified">
-                            <mat-icon aria-label="icon-button add icon">add</mat-icon>
+                          <button
+                            mat-icon-button
+                            (click)="onAddTransactionCredit()"
+                            *ngIf="isEditingAllowed"
+                          >
+                            <mat-icon aria-label="icon-button add icon"
+                              >add</mat-icon
+                            >
                           </button>
                         </div>
 
@@ -312,7 +477,9 @@
                               <table class="table table-bordered">
                                 <tbody>
                                   <!-- <tr *ngFor="let item in transactionCreditList"> -->
-                                  <tr *ngFor="let item of transactionCreditList">
+                                  <tr
+                                    *ngFor="let item of transactionCreditList"
+                                  >
                                     <td width="1%">
                                       <p class="width_8"></p>
                                     </td>
@@ -329,63 +496,111 @@
                                         </mat-option>
                                       </mat-select>
                                     </mat-form-field> -->
-                                      <lib-search-dropdown placeholder="Accounts" [multiSelect]="false"
+                                      <lib-search-dropdown
+                                        placeholder="Accounts"
+                                        [multiSelect]="false"
                                         placeholderSearchLabel="Find Account..."
-                                        noEntriesFoundLabel="No matching account found" [dataSource]="accountDataSource"
-                                        [selectedValue]="item.AccountNo" (openedChange)="
+                                        noEntriesFoundLabel="No matching account found"
+                                        [dataSource]="accountDataSource"
+                                        [selectedValue]="item.AccountNo"
+                                        (openedChange)="
                                           openedChange($event, item)
-                                        ">
+                                        "
+                                      >
                                       </lib-search-dropdown>
                                     </td>
-                                    <td width="16%" class="text-center" text-align="left">
-                                      <mat-form-field class="example-form-field">
-                                        <input matInput type="text" placeholder="Description"
-                                          [(ngModel)]="item.Description" (change)="
+                                    <td
+                                      width="16%"
+                                      class="text-center"
+                                      text-align="left"
+                                    >
+                                      <mat-form-field
+                                        class="example-form-field"
+                                      >
+                                        <input
+                                          matInput
+                                          type="text"
+                                          placeholder="Description"
+                                          [(ngModel)]="item.Description"
+                                          (change)="
                                             onTransactionDetailChanged(
                                               item,
                                               'Description'
                                             )
-                                          " [disabled]="!isEditingAllowed" />
+                                          "
+                                          [disabled]="!isEditingAllowed"
+                                        />
                                       </mat-form-field>
                                     </td>
-                                    <td width="12%" class="text-center" text-align="left">
-                                      <mat-form-field class="example-form-field">
-                                        <input matInput min="0" type="number" placeholder="Amount"
-                                          [(ngModel)]="item.Credit" (change)="
+                                    <td
+                                      width="12%"
+                                      class="text-center"
+                                      text-align="left"
+                                    >
+                                      <mat-form-field
+                                        class="example-form-field"
+                                      >
+                                        <input
+                                          matInput
+                                          min="0"
+                                          type="number"
+                                          placeholder="Amount"
+                                          [(ngModel)]="item.Credit"
+                                          (change)="
                                             onTransactionDetailChanged(
                                               item,
                                               'Credit'
                                             )
-                                          " [disabled]="!isEditingAllowed" />
+                                          "
+                                          [disabled]="!isEditingAllowed"
+                                        />
                                       </mat-form-field>
                                     </td>
                                     <td width="12%" class="text-center">
-                                      <mat-form-field class="example-full-width">
-                                        <mat-select placeholder="Project" [(ngModel)]="item.ProjectId"
+                                      <mat-form-field
+                                        class="example-full-width"
+                                      >
+                                        <mat-select
+                                          placeholder="Project"
+                                          [(ngModel)]="item.ProjectId"
                                           (selectionChange)="
                                             onTransactionDetailChanged(
                                               item,
                                               'Project'
                                             )
-                                          " [disabled]="!isEditingAllowed">
-                                          <mat-option *ngFor="let i of projectList" [value]="i.ProjectId">
+                                          "
+                                          [disabled]="!isEditingAllowed"
+                                        >
+                                          <mat-option
+                                            *ngFor="let i of projectList"
+                                            [value]="i.ProjectId"
+                                          >
                                             {{ i.ProjectNameCode }}
                                           </mat-option>
                                         </mat-select>
                                       </mat-form-field>
                                     </td>
                                     <td width="12%" class="text-center">
-                                      <mat-form-field class="example-full-width">
-                                        <mat-select placeholder="Budget Line" [(ngModel)]="item.BudgetLineId"
+                                      <mat-form-field
+                                        class="example-full-width"
+                                      >
+                                        <mat-select
+                                          placeholder="Budget Line"
+                                          [(ngModel)]="item.BudgetLineId"
                                           (selectionChange)="
                                             onTransactionDetailChanged(
                                               item,
                                               'BudgetLine'
                                             )
-                                          " [disabled]="!isEditingAllowed">
-                                          <mat-option *ngFor="
+                                          "
+                                          [disabled]="!isEditingAllowed"
+                                        >
+                                          <mat-option
+                                            *ngFor="
                                               let i of item.BudgetLineList
-                                            " [value]="i.BudgetLineId">
+                                            "
+                                            [value]="i.BudgetLineId"
+                                          >
                                             {{ i.BudgetName }}
                                           </mat-option>
                                         </mat-select>
@@ -401,14 +616,24 @@
                                       </mat-select>
                                     </mat-form-field> -->
                                     </td>
-                                    <td width="12%" class="text-center" text-align="left">
-                                      <button mat-icon-button (click)="
+                                    <td
+                                      width="12%"
+                                      class="text-center"
+                                      text-align="left"
+                                    >
+                                      <button
+                                        mat-icon-button
+                                        (click)="
                                           onTransactionCreditDelete(item)
-                                        " *ngIf="
+                                        "
+                                        *ngIf="
                                           isEditingAllowed &&
                                           !voucherDetail.IsVoucherVerified
-                                        ">
-                                        <mat-icon aria-label="delete">delete</mat-icon>
+                                        "
+                                      >
+                                        <mat-icon aria-label="delete"
+                                          >delete</mat-icon
+                                        >
                                       </button>
                                     </td>
 
