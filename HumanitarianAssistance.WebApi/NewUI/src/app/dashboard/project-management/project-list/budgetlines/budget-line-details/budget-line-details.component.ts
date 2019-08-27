@@ -180,39 +180,6 @@ export class BudgetLineDetailsComponent implements OnInit, OnChanges {
   }
   //#endregion
 
-  //#region "getProjectTransactionList" pk comment
-  // getProjectTransactionList(projecId) {
-  //   debugger;
-  //   this.transactionDetailList = [];
-  //   this.budgetService.GetTransationListByProjectId(projecId).subscribe(
-  //     (response: IResponseData) => {
-  //       if (response.statusCode === 200 && response.data !== null) {
-  //         console.log(response.data);
-  //         response.data.forEach((element: ITransactionDetailModel) => {
-  //           this.transactionDetailList.push({
-  //             UserName: element.UserName,
-  //             Credit: element.Credit,
-  //             Debit: element.Debit,
-  //             CurrencyName: element.CurrencyName,
-  //             CurrencyId: element.CurrencyId,
-  //             TransactionDate:
-  //               element.TransactionDate != null
-  //                 ? new Date(
-  //                     new Date(element.TransactionDate).getTime() -
-  //                       new Date().getTimezoneOffset() * 60000
-  //                   )
-  //                 : null
-  //           });
-  //         });
-  //       }
-  //       // this.BudgetListLoaderFlag = false;
-  //     },
-  //     error => {
-  //       // this.BudgetListLoaderFlag = false;
-  //     }
-  //   );
-  // }
-  //#endregion
 
   //#region "getProjectTransactionList"
   getTransactionList(BudgetLineDetailList) {
