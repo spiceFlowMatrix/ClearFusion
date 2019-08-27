@@ -26,7 +26,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
             try
             {
 
-               List<InterviewScheduleModel> empList = _dbContext.InterviewScheduleDetails
+               List<InterviewScheduleModel> empList = await _dbContext.InterviewScheduleDetails
                    .Include(i => i.JobGrade)
                    .Include(i => i.EmployeeDetails)
                    .Include(i => i.JobHiringDetails)
@@ -45,7 +45,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     Approval2 = x.Approval2,    //For Director (Grade > 1)
                     Approval3 = x.Approval3,    //For General Admin (Approval1 == true || Approval2 == true)
                     Approval4 = x.Approval4     //For Field Office (Approval1 == true || Approval2 == true)
-                }).ToList();
+                }).ToListAsync();
                 response.data.InterviewScheduleGeneralAssemblylist = empList.Where(x => x.GradeId == 1 && x.Approval1 == null).ToList();
                 response.data.InterviewScheduleDirectorlist = empList.Where(x => x.GradeId > 1 && x.Approval2 == null).ToList();
                 response.data.InterviewScheduleGeneralAdminlist = empList.Where(x => x.IsDeleted == false && ((x.Approval1 == true || x.Approval2 == true) && x.Approval3 == null)).ToList();
