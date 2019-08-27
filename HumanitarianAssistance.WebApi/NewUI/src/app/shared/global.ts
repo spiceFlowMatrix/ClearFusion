@@ -163,7 +163,6 @@ export class GLOBAL {
   public static API_Project_GetProjectproposalDocumnetsById = 'Project/GetProjectproposalDocumentsById';
 
 
-  public static API_Project_UploadEDIProposalFile = 'Project/UploadEDIProposalFile';
   public static API_Project_StartProposalDragAndDropFile = 'Project/StartProposalDragAndDropFile';
   public static API_Project_UploadReviewFile = 'Project/UploadReviewFile';
   public static API_Project_UploadFinalizeFile = 'Project/UploadFinalizeFile';
@@ -296,7 +295,6 @@ export class GLOBAL {
 
    public static API_BudgetLine_GetProjectBudgetLineDetail = 'Project/GetProjectBudgetLineDetail';
    public static API_BudgetLine_GetBudgetLineDetailByBudgetId = 'Project/GetBudgetLineDetailByBudgetId';
-   public static API_BudgetLine_GetTransactionListByProjectId = 'Project/GetTransactionListByProjectId';
    public static API_BudgetLine_GetTransactionList = 'Project/GetTransactionList';
    public static API_BudgetLine_GetAllBudgetLineList = 'Project/GetAllBudgetLineList';
    public static API_BudgetLine_ExcelImportOfBudgetLine = 'Project/ExcelImportOfBudgetLine';

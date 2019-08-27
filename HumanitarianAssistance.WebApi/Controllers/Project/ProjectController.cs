@@ -631,16 +631,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         [HttpPost]
         public async Task<ApiResponse> AddEditProjectProposalDetail([FromBody]AddEditProjectproposalsCommand command)
         {
-            var user = await _userManager.FindByIdAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var id = user.Id;
-
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
             command.CreatedById = userId;
             command.CreatedDate = DateTime.UtcNow;
             command.ModifiedById = userId;
             command.ModifiedDate = DateTime.UtcNow;
-            command.Id = user.Id;
-            command.logginUserEmailId = user.Email;
+            command.Id = userId;
+            // command.logginUserEmailId = user.Email;
             return await _mediator.Send(command);
         }
 
@@ -670,66 +668,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         }
         #endregion 
    
-        #region "UploadEDIProposalFile"
-        /// <summary>
-        /// upload other proposal document using service account credentails new 26/03/2019 poonam
-        /// </summary>
-        [HttpPost, DisableRequestSizeLimit]
-
-        public async Task<ApiResponse> UploadEDIProposalFile([FromForm] IFormFile filesData,[FromForm] string projectId, [FromForm] string data)
-        {
-
-            ApiResponse apiRespone = new ApiResponse();
-            string localFolderfullPath = string.Empty;
-            try
-            {
-
-                var file = Request.Form.Files[0];
-                long ProjectId = Convert.ToInt64(projectId);
-                string ProposalType = data;
-                string fileName = Request.Form.Files[0].FileName;
-
-                string ext = Path.GetExtension(fileName).ToLower();
-                if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
-                {
-                    var user = await _userManager.FindByIdAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-                    if (user != null)
-                    {
-                        string logginUserEmailId = user.Email;
-                      
-                        return await _mediator.Send(new UploadEDIProposalFileCommand
-                        {  
-                            file = file ,
-                            ProjectId = ProjectId,
-                            fileName = fileName,
-                            logginUserEmailId = logginUserEmailId,
-                            ProposalType = ProposalType,
-                            ext = ext,
-                            CreatedById=user.Id,
-                            CreatedDate =DateTime.UtcNow,
-                            ModifiedById= user.Id,
-                            ModifiedDate=DateTime.UtcNow
-
-                        });
-
-                    }
-                }
-                else
-                {
-                    apiRespone.StatusCode = StaticResource.FileNotSupported;
-                    apiRespone.Message = StaticResource.FileText;
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return apiRespone;
-        }
-        #endregion
-
         #region "Criteria evaluation form 2nd Aug 2019" 
 
         #region add/edit
@@ -1366,10 +1304,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
                 command.ext = System.IO.Path.GetExtension(command.FileName).ToLower();
                 if (command.ext != ".jpeg" && command.ext != ".png" && command.ext != ".jpg" && command.ext != ".gif")
                 {
-                    var user = await _userManager.FindByIdAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                    if (user != null)
+                  
+                    if (userId != null)
                     {
-                        command.logginUserEmailId = user.Email;
                         return await _mediator.Send(command);
                     }
                 }
@@ -1393,13 +1330,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         public async Task<ApiResponse> UploadReviewFile([FromForm] IFormFile filesData, [FromForm] ApproveProjectDetailModel model)
         {
             ApiResponse apiRespone = new ApiResponse();
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             try
             {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
                 if (filesData == null)
                 {
-                    var user = await _userManager.FindByIdAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                    if (user != null)
+
+                    if (userId != null)
                     {
                         return await _mediator.Send(new AddApprovalDetailCommand
                         {
@@ -1432,10 +1370,8 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
                     string ext = System.IO.Path.GetExtension(fileName).ToLower();
                     if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
                     {
-                        var user = await _userManager.FindByIdAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                        if (user != null)
+                        if (userId != null)
                         {
-                            string logginUserEmailId = user.Email;
                             // apiRespone = await _iProject.UploadReviewDragAndDrop(file, id, ProjectId, fileName, logginUserEmailId, ext, model);
                             return await _mediator.Send(new UploadReviewDragAndDropCommand
                             {
@@ -1451,7 +1387,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
                                 CreatedDate = DateTime.UtcNow,
                                 ModifiedById = userId,
                                 ModifiedDate = DateTime.UtcNow,
-                                logginUserEmailId = logginUserEmailId,
                                 file = file,
                                 ext = ext,
                             });
@@ -1482,6 +1417,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         {
             ApiResponse apiRespone = new ApiResponse();
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            
             try
             {
 
@@ -1493,10 +1429,8 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
                 string ext = Path.GetExtension(fileName).ToLower();
                 if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
                 {
-                    var user = await _userManager.FindByIdAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                    if (user != null)
+                    if (userId != null)
                     {
-                        string logginUserEmailId = user.Email;
 
                         return await _mediator.Send(new StartProposalDragAndDropCommand
                         {
@@ -1505,7 +1439,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
                             FileName = fileName,
                             ProposalTypeId = ProposalTypeId,
                             ext = ext,
-                            logginUserEmailId = logginUserEmailId,
                             CreatedById = userId,
                             CreatedDate = DateTime.UtcNow,
                             ModifiedById = userId,
@@ -1521,7 +1454,8 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             }
             catch (Exception ex)
             {
-                throw ex;
+                apiRespone.StatusCode = StaticResource.failStatusCode;
+                apiRespone.Message = ex.Message;
             }
             return apiRespone;
         }
@@ -1572,7 +1506,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            string localFolderfullPath1 = string.Empty;
             try
             {
                 long monitoringID = monitoringId != null ? Convert.ToInt64(monitoringId) : 0;
@@ -1583,10 +1516,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
                 string ext = Path.GetExtension(fileName).ToLower();
                 if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
                 {
-                    var user = await _userManager.FindByIdAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                    if (user != null)
+                 
+                    if (userId != null)
                     {
-                        string logginUserEmailId = user.Email;
                         return await _mediator.Send(new UploadProjectActivityDocumentFileCommand
                         {
                             File = file,
@@ -1701,23 +1633,13 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             //query.ProjectId = projectId;
             return await _mediator.Send(query);
         }
-        [HttpPost]
-        public async Task<ApiResponse> GetTransactionListByProjectId([FromBody] long projectId)
-        {
-            var user = await _userManager.FindByIdAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var UserName = user.UserName;
-            return await _mediator.Send(new GetTransactionListByProjectIdQuery
-            {
-                ProjectId = projectId,
-                UserName = UserName
-            });
-        }
 
         [HttpPost]
         public async Task<ApiResponse> GetTransactionList([FromBody]GetTransactionListQuery query)
         {
-            var user = await _userManager.FindByIdAsync(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var UserName = user.UserName;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var user = await _userManager.FindByIdAsync(userId);
+            query.UserName = user.UserName;
             return await _mediator.Send(query);
         }
         #endregion

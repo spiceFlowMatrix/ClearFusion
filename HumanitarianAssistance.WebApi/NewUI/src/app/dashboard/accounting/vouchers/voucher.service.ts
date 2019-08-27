@@ -260,7 +260,7 @@ export class VoucherService {
   }
   //#endregion
 
- 
+
 
   //#region "AddEditTransactionList"
   AddEditTransactionList(data: AddEditTransactionModel): any {
@@ -316,23 +316,4 @@ export class VoucherService {
   }
   //#endregion
 
-  //#region "UploadVoucherDocument"
-  UploadVoucherDocument(data: any) {
-    return this.globalService
-      .post(
-        this.appurl.getApiUrl() + GLOBAL.API_Project_UploadProjectDocumnentFile,
-        data
-      )
-      .pipe(
-        map(x => {
-          const responseData: IResponseData = {
-            data: x.data.activityDocumnentDetail,
-            statusCode: x.StatusCode,
-            message: x.Message
-          };
-          return responseData;
-        })
-      );
-  }
-  //#endregion
 }
