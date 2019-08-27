@@ -44,9 +44,9 @@ export class ProposalReportFilterComponent implements OnInit {
   resetForm() {
     this.reportFilter = {
       ProjectName: '',
-      DueDate: null,
+      DueDate: new Date(),
       DueDateFilterOption: null,
-      StartDate: null,
+      StartDate: new Date(),
       StartDateFilterOption: null,
       CurrencyId: null,
       Amount: null,

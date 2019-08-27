@@ -92,7 +92,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                          Immunization = purpose.Immunization,
                          InfantandYoungChildFeeding = purpose.InfantandYoungChildFeeding,
                          Nutrition = purpose.Nutrition,
-                         CommunicableDisease = purpose.CommunityBasedEducation,
+                         CommunicableDisease = purpose.CommunicableDisease,
                          Hygiene = purpose.Hygiene,
                          EnvironmentalHealth = purpose.EnvironmentalHealth,
                          MentalHealthandDisabilityService = purpose.MentalHealthandDisabilityService,

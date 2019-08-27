@@ -248,7 +248,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
 
         #endregion
-
+        public DbSet<ProjectProposalDocument> ProjectProposalDocument { get; set; }
         //Added by Saksham
         public DbSet<PurchaseUnitType> PurchaseUnitType { get; set; }
 

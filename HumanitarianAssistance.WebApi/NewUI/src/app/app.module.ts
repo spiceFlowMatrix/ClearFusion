@@ -42,7 +42,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     CommonLoaderComponent,
 
     // component
-    DbstyleGuideComponent,
+    DbstyleGuideComponent
 
 
   ],

@@ -425,7 +425,7 @@ export class GLOBAL {
   public static API_Store_DeletePaymentTypes = 'Store/DeletePaymentTypes';
 
   // public static API_Hr_GetAllEmployeeMonthlyPayrollListApproved = 'HREmployee/GetAllEmployeeMonthlyPayrollListApproved';
-  public static API_EmployeeHr_GetAllEmployeeMonthlyPayrollListApproved = 'EmployeeHR/GetAllEmployeeMonthlyPayrollListApproved';
+    public static API_EmployeeHr_GetAllEmployeeMonthlyPayrollListApproved = 'EmployeePayroll/GetAllEmployeeMonthlyPayrollListApproved';
 
   // public static API_Hr_EmployeePaymentTypeReportForSaveOnly = 'HREmployee/EmployeePaymentTypeReportForSaveOnly'; //old
     public static API_EmployeeHr_EmployeePaymentTypeReportForSaveOnly = 'EmployeePayroll/EmployeePaymentTypeReportForSaveOnly'; // new

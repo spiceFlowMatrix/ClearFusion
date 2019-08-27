@@ -24,10 +24,7 @@ import {
   DonorDetailModel,
   DonorFilterModel
 } from '../../project-donor/donor-master/Models/donar-detail.model';
-import {
-  ProjectIndicatorFilterModel,
-  IndicatorDetailModel
-} from 'src/app/dashboard/project-management/project-indicators/project-indicators-model';
+
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
 import { MonitoringModel } from 'src/app/dashboard/project-management/project-list/project-activities/project-activity-phase/monitoring/monitoring-model';
@@ -36,6 +33,7 @@ import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/stat
 import { IProjectRoles } from '../project-details/models/project-people.model';
 import { IMenuList } from 'src/app/shared/dbheader/dbheader.component';
 import { projectPagesMaster } from 'src/app/shared/applicationpagesenum';
+import { ProjectIndicatorFilterModel, IndicatorDetailModel } from '../project-indicators/project-indicators-model';
 @Injectable({
   providedIn: 'root'
 })
@@ -126,7 +124,6 @@ export class ProjectListService {
     }
   ];
 
-
   menuList: IMenuList[] = [
     {
       Id: 1,
@@ -175,6 +172,12 @@ export class ProjectListService {
       PageId: projectPagesMaster.HiringRequests,
       Text: 'Hiring Requests',
       Link: 'hiring-request'
+    },
+    {
+      Id: 9,
+      PageId: projectPagesMaster.ProjectIndicators,
+      Text: 'Project Indicators',
+      Link: 'project-indicators'
     }
   ];
 
@@ -184,7 +187,7 @@ export class ProjectListService {
   ) {}
 
   //#region "AddProjectDetail"
-  getAllProjectMenu(): IMenuList[]  {
+  getAllProjectMenu(): IMenuList[] {
     return this.menuList;
   }
   //#endregion
@@ -369,8 +372,8 @@ export class ProjectListService {
     return this.globalService.getListByListId(url, Id);
   }
   //#endregion
-   //#region "GetAllDistrictvalueByProvinceId"
-   getAllProvinceListByCountryId(url: string, Id: any) {
+  //#region "GetAllDistrictvalueByProvinceId"
+  getAllProvinceListByCountryId(url: string, Id: any) {
     return this.globalService.getListByListId(url, Id);
   }
   //#endregion
@@ -406,6 +409,11 @@ export class ProjectListService {
     return this.globalService.getListById(url, Id);
   }
   //#endregion
+    //#region "GetProjectproposalDocumentById"
+  GetProjectproposalDocumentById(url: string, Id: any) {
+    return this.globalService.getListById(url, Id);
+  }
+ //#endregion
   //#region "uploadEDIFile"
   uploadEDIFile(url: string, Id: number, Formdata: any): any {
     return this.globalService.post(url, Formdata);
@@ -419,18 +427,18 @@ export class ProjectListService {
 
   //#region "GetAllUserList"
   GetAllUserList() {
-
-    return this.globalService.getList(this.appurl.getApiUrl() + GLOBAL.API_Account_GetAllUserDetails)
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.data.UserDetailList,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
+    return this.globalService
+      .getList(this.appurl.getApiUrl() + GLOBAL.API_Account_GetAllUserDetails)
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.UserDetailList,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
   }
   //#endregion
 
@@ -569,40 +577,42 @@ export class ProjectListService {
   //#region "GetOpportunityControl"
   GetOpportunityControl(data: any) {
     return this.globalService
-    .post(
-      this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_GetOpportunityControlList,
-      data
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.data.OpportunityControlList,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_ProjectPeople_GetOpportunityControlList,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.OpportunityControlList,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
   }
   //#endregion
 
   //#region "AddUserForOpportunityControl"
   AddUserForOpportunityControl(data: any) {
     return this.globalService
-    .post(
-      this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_AddOpportunityControl,
-      data
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.CommonId.LongId,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_ProjectPeople_AddOpportunityControl,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.CommonId.LongId,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
   }
   //#endregion
 
@@ -610,7 +620,8 @@ export class ProjectListService {
   EditUserForOpportunityControl(data: any) {
     return this.globalService
       .post(
-        this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_EditOpportunityControl,
+        this.appurl.getApiUrl() +
+          GLOBAL.API_ProjectPeople_EditOpportunityControl,
         data
       )
       .pipe(
@@ -630,7 +641,8 @@ export class ProjectListService {
   DeleteUserForOpportunityControl(data: number) {
     return this.globalService
       .post(
-        this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_DeleteOpportunityControl,
+        this.appurl.getApiUrl() +
+          GLOBAL.API_ProjectPeople_DeleteOpportunityControl,
         data
       )
       .pipe(
@@ -646,44 +658,44 @@ export class ProjectListService {
   }
   //#endregion
 
-
   //#region "GetLogisticsControl"
   GetLogisticsControl(data: any) {
     return this.globalService
-    .post(
-      this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_GetLogisticsControlList,
-      data
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.data.LogisticsControlList,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_ProjectPeople_GetLogisticsControlList,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.LogisticsControlList,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
   }
   //#endregion
 
   //#region "AddUserForLogisticsControl"
   AddUserForLogisticsControl(data: any) {
     return this.globalService
-    .post(
-      this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_AddLogisticsControl,
-      data
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.CommonId.LongId,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_AddLogisticsControl,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.CommonId.LongId,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
   }
   //#endregion
 
@@ -711,7 +723,8 @@ export class ProjectListService {
   DeleteUserForLogisticsControl(data: number) {
     return this.globalService
       .post(
-        this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_DeleteLogisticsControl,
+        this.appurl.getApiUrl() +
+          GLOBAL.API_ProjectPeople_DeleteLogisticsControl,
         data
       )
       .pipe(
@@ -727,44 +740,43 @@ export class ProjectListService {
   }
   //#endregion
 
-
   //#region "GetActivityControl"
   GetActivityControl(data: any) {
     return this.globalService
-    .post(
-      this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_GetActivitiesControl,
-      data
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.data.ActivitiesControlList,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_GetActivitiesControl,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.ActivitiesControlList,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
   }
   //#endregion
 
   //#region "AddUserForActivitiesControl"
   AddUserForActivitiesControl(data: any) {
     return this.globalService
-    .post(
-      this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_AddActivitiesControl,
-      data
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.CommonId.LongId,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_AddActivitiesControl,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.CommonId.LongId,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
   }
   //#endregion
 
@@ -772,7 +784,8 @@ export class ProjectListService {
   EditUserForActivitiesControl(data: any) {
     return this.globalService
       .post(
-        this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_EditActivitiesControl,
+        this.appurl.getApiUrl() +
+          GLOBAL.API_ProjectPeople_EditActivitiesControl,
         data
       )
       .pipe(
@@ -792,7 +805,8 @@ export class ProjectListService {
   DeleteUserForActivitiesControl(data: number) {
     return this.globalService
       .post(
-        this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_DeleteActivitiesControl,
+        this.appurl.getApiUrl() +
+          GLOBAL.API_ProjectPeople_DeleteActivitiesControl,
         data
       )
       .pipe(
@@ -808,45 +822,43 @@ export class ProjectListService {
   }
   //#endregion
 
-
-
   //#region "GetHiringControl"
   GetHiringControl(data: any) {
     return this.globalService
-    .post(
-      this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_GetHiringControl,
-      data
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.data.HiringControlList,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_GetHiringControl,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.HiringControlList,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
   }
   //#endregion
 
   //#region "AddUserForHiringControl"
   AddUserForHiringControl(data: any) {
     return this.globalService
-    .post(
-      this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_AddHiringControl,
-      data
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.CommonId.LongId,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_AddHiringControl,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.CommonId.LongId,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
   }
   //#endregion
 
@@ -889,7 +901,4 @@ export class ProjectListService {
       );
   }
   //#endregion
-
-
-
 }
