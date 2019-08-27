@@ -424,7 +424,11 @@ export class ProjectListService {
     return this.globalService.post(url, data);
   }
   //#endregion
-
+    //#region "AddEditProjectCurrencyDetail"
+    AddEditProjectCurrencyDetail(url: string, data: ProposalDocModel) {
+      return this.globalService.post(url, data);
+    }
+    //#endregion
   //#region "GetAllUserList"
   GetAllUserList() {
     return this.globalService

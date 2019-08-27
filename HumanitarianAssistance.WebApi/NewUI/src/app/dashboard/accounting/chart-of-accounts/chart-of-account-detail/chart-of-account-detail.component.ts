@@ -60,7 +60,7 @@ export class ChartOfAccountDetailComponent implements OnInit, OnChanges {
 
     this.scrollStyles = {
       'overflow-y': 'auto',
-      'height': this.screenHeight - 110 + 'px',
+      'height': this.screenHeight - 160 + 'px',
       'overflow-x': 'hidden'
     };
   }
