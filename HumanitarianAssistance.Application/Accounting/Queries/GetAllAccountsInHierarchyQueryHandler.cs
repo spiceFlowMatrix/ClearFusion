@@ -42,7 +42,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
                 // var nodes = CreateHierarchy(accountList);
 
-                var nodes = GetAccountsHierarchy(accountList, null);
+                var nodes = GetAccountsHierarchy(accountList);
 
                 response.ResponseData = nodes;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -57,15 +57,11 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
             return response;
         }
 
-        private List<ChartOfAccountNode> GetAccountsHierarchy(IEnumerable<ChartOfAccountModel> elements, long? id)
+        private List<ChartOfAccountNode> GetAccountsHierarchy(IEnumerable<ChartOfAccountModel> elements, long id = 0)
         {
-            // if (id == null) {
-            //     var parentList = elements.Where(x => x.ChartOfAccountId == x.ParentID).ToList();
-            // }
 
-            var sdf = elements
-                    // .Where(c => c.ParentID == c.ChartOfAccountId)
-                    .Where(c => c.ParentID == (id == null ? c.ChartOfAccountId : id))
+            return elements
+                    .Where(c => c.ParentID == id)
                     .Select(c => new ChartOfAccountNode
                     {
                         ChartOfAccountId = c.ChartOfAccountId,
@@ -76,7 +72,6 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                         ChildAccounts = GetAccountsHierarchy(elements, c.ChartOfAccountId)
                     })
                     .ToList();
-            return sdf;
         }
 
     }
