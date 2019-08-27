@@ -72,7 +72,7 @@ export class GLOBAL {
   public static API_Accounting_GetAllBudgetLineDetails = 'ProjectPipeLining/GetAllProjectBudgetLineByProjectId';
   public static API_BudgetLine_GetProjectBudgetTransactions = 'Account/GetAllVoucherTransactionDetailByBudgetLine';
   public static API_Accounting_GetProjectAndBudgetLine = 'Account/GetProjectAndBudgetLine';
-  public static API_Accounting_GetPrimarySalaryHeads = 'EmployeeHR/GetPrimarySalaryHeads';
+  public static API_EmployeeDetail_GetPrimarySalaryHeads = 'EmployeeDetail/GetPrimarySalaryHeads';
   public static API_Accounting_GenerateSalaryVoucher = 'Account/GenerateSalaryVoucher';
   public static API_Accounting_GetEmployeeSalaryVoucher = 'Account/GetEmployeeSalaryVoucher';
   public static API_Accounting_ReverseEmployeeSalaryVoucher = 'Account/ReverseEmployeeSalaryVoucher';

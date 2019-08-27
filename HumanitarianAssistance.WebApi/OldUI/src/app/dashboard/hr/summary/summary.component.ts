@@ -68,7 +68,7 @@ export class SummaryComponent implements OnInit {
       DeductionId: null,
       EmployeeTypeId: null,
       // FinancialYearId: null,
-      Year: null,
+      Year: new Date(),
       Month: new Date(),
       RecordTypeId: 1
     };
@@ -186,7 +186,7 @@ export class SummaryComponent implements OnInit {
       Year: new Date(data.Year).getFullYear(),
       // FinancialYearId: data.FinancialYearId,
       Month:
-        data.MonthId == null ? null : new Date(data.MonthId).getMonth() + 1,
+        data.Month == null ? null : new Date(data.Month).getMonth() + 1,
       RecordTypeId: data.RecordTypeId,
       OfficeId: officeId
     };
