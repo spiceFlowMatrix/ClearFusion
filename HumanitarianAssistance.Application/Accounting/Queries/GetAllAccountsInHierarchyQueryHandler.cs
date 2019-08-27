@@ -40,8 +40,6 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                                       AccountLevelId = x.AccountLevelId,
                                                   }).ToListAsync();
 
-                // var nodes = CreateHierarchy(accountList);
-
                 var nodes = GetAccountsHierarchy(accountList);
 
                 response.ResponseData = nodes;
@@ -59,7 +57,6 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
         private List<ChartOfAccountNode> GetAccountsHierarchy(IEnumerable<ChartOfAccountModel> elements, long id = 0)
         {
-
             return elements
                     .Where(c => c.ParentID == id)
                     .Select(c => new ChartOfAccountNode

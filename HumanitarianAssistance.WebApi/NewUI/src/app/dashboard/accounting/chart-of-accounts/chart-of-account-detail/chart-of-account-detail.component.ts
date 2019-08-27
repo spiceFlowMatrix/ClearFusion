@@ -1,5 +1,5 @@
-import { Component, OnInit, HostListener, Input, ChangeDetectionStrategy, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
-import { AccountHeadTypes_Enum, AccountLevelLimits, AccountLevels } from 'src/app/shared/enum';
+import { Component, OnInit, HostListener, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { AccountLevelLimits, AccountLevels } from 'src/app/shared/enum';
 import { ChartOfAccountModel, AccountFilterTypeModel, AccountTypeModel } from '../models/chart-of-account.model';
 import { ApplicationPages } from 'src/app/shared/applicationpagesenum';
 import { MatDialog } from '@angular/material/dialog';
@@ -152,7 +152,7 @@ export class ChartOfAccountDetailComponent implements OnInit, OnChanges {
 
           // Main Level
           const mainLevelItem = this.chartOfAccountList.find(
-            x => x.ParentID === mainLevel.ChartOfAccountNewId
+            x => x.ChartOfAccountNewId === mainLevel.ChartOfAccountNewId
           );
           const mainLevelIndex = this.chartOfAccountList.indexOf(
             mainLevelItem
@@ -227,7 +227,7 @@ export class ChartOfAccountDetailComponent implements OnInit, OnChanges {
 
                 // Main Level
                 const mainLevelItem = this.chartOfAccountList.find(
-                  x => x.ParentID === mainLevel.ChartOfAccountNewId
+                  x => x.ChartOfAccountNewId === mainLevel.ChartOfAccountNewId
                 );
                 const mainLevelIndex = this.chartOfAccountList.indexOf(
                   mainLevelItem
@@ -1801,6 +1801,11 @@ export class ChartOfAccountDetailComponent implements OnInit, OnChanges {
         if (response.statusCode === 200) {
           // do something
           console.log(response.data);
+
+          // set dataSouce value for pdf
+          this.cofPdfService.dataSource = response.data;
+
+          this.cofPdfService.ExportToPdf();
 
         } else if (response.statusCode === 400) {
           this.toastr.error(response.message);
