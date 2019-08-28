@@ -246,12 +246,12 @@ export class OrdersComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region "getStoreLocationList"
-  // Get all Source Code Data Details
+  // typeId=0 to Get all Source Code Data Details
   getSourceCodeDatalist() {
     this.storeService
       .GetSourceCode(
         this.setting.getBaseUrl() + GLOBAL.API_Store_GetAllStoreSourceCode,
-        null
+        0
       )
       .subscribe(
         data => {

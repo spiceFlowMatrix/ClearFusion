@@ -173,6 +173,7 @@ export class PurchasesComponent implements OnInit {
 
     //#region "getAllPurchaseList"
     getAllPurchaseList(itemId: any) {
+        this.purchaseDataSource = [];
         this.flag = 0;
         this.inventoryItemId = itemId;
         this.datePipe = new DatePipe('en-US');
@@ -185,9 +186,9 @@ export class PurchasesComponent implements OnInit {
             )
             .subscribe(
                 data => {
-                    this.purchaseDataSource = [];
                     if (data.data.StoreItemsPurchaseViewList != null) {
                         if (data.data.StoreItemsPurchaseViewList.length > 0) {
+                            this.purchaseDataSource = [];
                             data.data.StoreItemsPurchaseViewList.forEach(element => {
                                 this.purchaseDataSource.push({
                                     PurchaseId: element.PurchaseId,
@@ -296,10 +297,13 @@ export class PurchasesComponent implements OnInit {
     //#region "getStoreLocationList"
     // Get all Source Code Data Details
     getSourceCodeDatalist() {
+         
+
+        // type=0 to get all sourcecodes
         this.storeService
             .GetSourceCode(
                 this.setting.getBaseUrl() + GLOBAL.API_Store_GetAllStoreSourceCode,
-                null
+                0
             )
             .subscribe(
                 data => {
@@ -587,44 +591,63 @@ export class PurchasesComponent implements OnInit {
             .subscribe(
                 data => {
                     if (data.StatusCode === 200) {
+                        let dataModelImage: UploadModel;
+                        let dataModelPurchase: UploadModel;
 
-                        let dataModelImage: UploadModel = {
-                            DocumentTypeId: DocumentFileTypes.PurchaseImage,
-                            PageId: FileSourceEntityTypes.StorePurchase,
-                            EntityId: data.ResponseData.PurchaseId,
-                            File: this.purchaseFileImage,
-                            DocumentFileId: null
-                        };
+                        if (this.purchaseFileImage != null && this.purchaseFileImage !== undefined) {
+                            dataModelImage = {
+                                DocumentTypeId: DocumentFileTypes.PurchaseImage,
+                                PageId: FileSourceEntityTypes.StorePurchase,
+                                EntityId: data.ResponseData.PurchaseId,
+                                File: this.purchaseFileImage,
+                                DocumentFileId: null
+                            };
 
-                        let dataModelPurchase: UploadModel = {
-                            DocumentTypeId: DocumentFileTypes.PurchaseInvoice,
-                            PageId: FileSourceEntityTypes.StorePurchase,
-                            EntityId: data.ResponseData.PurchaseId,
-                            File: this.purchaseFileImage,
-                            DocumentFileId: null
-                        };
+                            this.fileManagementService.uploadFile(dataModelImage).subscribe(x => {
+                            });
+                        }
 
-                        this.fileManagementService.uploadFile(dataModelImage).subscribe(x => {
-                        });
+                        if (this.purchaseInvoiceImage != null && this.purchaseInvoiceImage  !== undefined) {
+                            dataModelPurchase = {
+                                DocumentTypeId: DocumentFileTypes.PurchaseInvoice,
+                                PageId: FileSourceEntityTypes.StorePurchase,
+                                EntityId: data.ResponseData.PurchaseId,
+                                File: this.purchaseFileImage,
+                                DocumentFileId: null
+                            };
 
-                        this.fileManagementService.uploadFile(dataModelPurchase).subscribe(x => {
-                            // Parent call
-                            this.getItemAmounts.emit(
-                                localStorage.getItem('SelectedInventoryItem')
-                            );
-                            this.getAllPurchaseList(
-                                localStorage.getItem('SelectedInventoryItem')
-                            );
-                            this.imageUploader.instance.reset();
-                            this.hideAddPurchaseFormPopupVisible();
-                            this.hideAddPurchaseFormPopupLoading();
-                            this.toastr.success('Purchase Item Added Successfully!');
-                        });
-                       
+                            this.fileManagementService.uploadFile(dataModelPurchase).subscribe(x => {
+                                 
+                                // Parent call
+                                this.getItemAmounts.emit(
+                                    localStorage.getItem('SelectedInventoryItem')
+                                );
+                                this.getAllPurchaseList(
+                                    localStorage.getItem('SelectedInventoryItem')
+                                );
+                                this.imageUploader.instance.reset();
+                                this.hideAddPurchaseFormPopupVisible();
+                                this.hideAddPurchaseFormPopupLoading();
+                                this.toastr.success('Purchase Item Added Successfully!');
+                            });
+                        }
+
+                        if ((this.purchaseFileImage == null || this.purchaseFileImage === undefined) &&
+                            (this.purchaseInvoiceImage  == null || this.purchaseInvoiceImage  === undefined)) {
+                                this.imageUploader.instance.reset();
+                                this.hideAddPurchaseFormPopupVisible();
+                                this.hideAddPurchaseFormPopupLoading();
+                                this.getItemAmounts.emit(
+                                    localStorage.getItem('SelectedInventoryItem')
+                                );
+                                this.getAllPurchaseList(
+                                    localStorage.getItem('SelectedInventoryItem')
+                                );
+                            }
                     } else {
                         this.toastr.error(data.Message);
+                        this.hideAddPurchaseFormPopupLoading();
                     }
-                    
                 },
                 error => {
                     this.hideAddPurchaseFormPopupLoading();
@@ -1325,7 +1348,7 @@ export class PurchasesComponent implements OnInit {
 
     //#region "Profile Image Change Service call"
     ChangeEmployeeImage() {
-        debugger;
+         
         this.imageFlag = true;
         this.profileImageChangePopupLoading = true;
         //const changeEmployeeImage: any = {
@@ -1342,7 +1365,7 @@ export class PurchasesComponent implements OnInit {
         };
 
         this.fileManagementService.uploadFile(dataModel).subscribe(x=> {
-        //    debugger;
+        //     
             this.popupImageUpdateVisible = false;
             this.getAllPurchaseList(localStorage.getItem('SelectedInventoryItem'));
             this.profileImageChangePopupLoading = false;
@@ -1350,7 +1373,7 @@ export class PurchasesComponent implements OnInit {
        
 
         //    .subscribe(x => {
-        //    debugger;
+        //     
         //});
 
 

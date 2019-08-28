@@ -213,6 +213,7 @@ export class ContractInfoComponent implements OnInit {
               data.StatusCode === 200 &&
               data.data.EmployeeContractDetails != null
             ) {
+               
               if (data.data.EmployeeContractDetails.length > 0) {
                 this.contractInfoDataSource = data.data.EmployeeContractDetails;
               }
@@ -457,6 +458,7 @@ export class ContractInfoComponent implements OnInit {
 
   //#region "onemployeeContractFormSubmit"
   onEmployeeContractFormSubmit(data: any) {
+     
      
     const dataModel: EmployeeContractModel = {
       EmployeeId: data.EmployeeId,

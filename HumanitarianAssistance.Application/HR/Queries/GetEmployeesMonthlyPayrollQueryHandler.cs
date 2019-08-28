@@ -31,11 +31,16 @@ namespace HumanitarianAssistance.Application.HR.Queries
             {
                 ICollection<EmployeeMonthlyAttendance> empPayrollAttendanceList = await _dbContext.EmployeeMonthlyAttendance
                                                                                                   .Include(x => x.EmployeeDetails)
+                                                                                                  .Include(x=> x.EmployeeDetails.EmployeeProfessionalDetail)
                                                                                                   .Where(x => x.OfficeId == request.OfficeId &&
                                                                                                   x.Month == request.Month && x.Year == request.Year 
                                                                                                   && x.IsDeleted == false && x.IsApproved == false 
                                                                                                   && x.EmployeeDetails.IsDeleted== false)
                                                                                                   .ToListAsync();
+
+                // ICollection<AttendanceGroupMaster> attendanceGroup =  await _dbContext.AttendanceGroupMaster.Where(x=> x.IsDeleted== false).ToListAsync();   
+
+                ICollection<PayrollMonthlyHourDetail> payrollHours = await _dbContext.PayrollMonthlyHourDetail.Where(x=> x.IsDeleted== false && x.OfficeId == request.OfficeId && x.PayrollMonth== request.Month && x.PayrollYear== request.Year).ToListAsync();                                                                            
 
                 //Note: default 0.045 i.e. (4.5 %)
                 double? pensionRate = _dbContext.EmployeePensionRate.FirstOrDefault(x => x.IsDefault == true && x.IsDeleted == false)?.PensionRate;
@@ -50,7 +55,14 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                     if (payroll.Any(x => x.AccountNo == null))
                     {
-                        throw new Exception($"Payroll details not set for Employee code: {payrollAttendance.EmployeeDetails.EmployeeCode}");
+                        throw new Exception(StaticResource.PayrollNotSet+" "+ payrollAttendance.EmployeeDetails.EmployeeCode);
+                    }
+
+                    PayrollMonthlyHourDetail payrollHour = payrollHours.FirstOrDefault(x=> x.AttendanceGroupId == payrollAttendance.EmployeeDetails.EmployeeProfessionalDetail.AttendanceGroupId);
+
+                    if(payrollHour == null)
+                    {
+                       throw new Exception(StaticResource.AttendanceGroupNotSet+" "+ payrollAttendance.EmployeeDetails.EmployeeCode); 
                     }
 
                     payrollDetail = payroll.Select(x => new EmployeePayrollModel
@@ -87,7 +99,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                             obj.PresentDays = payrollAttendance.AttendanceHours == null ? 0 : payrollAttendance.AttendanceHours.Value + Convert.ToInt32(Math.Floor((float)payrollAttendance.AttendanceMinutes / 60f));
                             obj.LeaveHours = payrollAttendance.LeaveHours == null ? 0 : payrollAttendance.LeaveHours.Value;
                             obj.WorkingDays = payrollAttendance.AttendanceHours == null ? 0 : payrollAttendance.AttendanceHours.Value + Convert.ToInt32(Math.Floor((float)payrollAttendance.AttendanceMinutes / 60f));
-                            obj.TotalWorkHours = payrollAttendance.TotalDuration == null ? 0 : payrollAttendance.TotalDuration.Value;
+                            obj.TotalWorkHours = payrollHour.WorkingTime;
                             obj.OverTimeHours = payrollAttendance.OvertimeHours == null ? 0 : payrollAttendance.OvertimeHours.Value + Math.Floor(((float)payrollAttendance.OverTimeMinutes / 60f));
                             obj.IsAdvanceRecovery = payrollAttendance.IsAdvanceRecovery;
                             obj.AdvanceAmount = payrollAttendance.AdvanceAmount;
@@ -98,7 +110,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                             if (obj.TotalGeneralAmount == 0)
                             {
-                                throw new Exception($"Basic Pay not defined for Employee Code-{payrollAttendance.EmployeeDetails.EmployeeCode}");
+                                throw new Exception(StaticResource.BasicPayNotSet+ " "+ payrollAttendance.EmployeeDetails.EmployeeCode);
                             }
 
                             double convertMinutesToHours = Math.Round(((double)(payrollAttendance.OverTimeMinutes + payrollAttendance.AttendanceMinutes) / 60d),2);
@@ -125,7 +137,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                 {
                                     string currencyCode = _dbContext.CurrencyDetails.FirstOrDefault(x => x.IsDeleted == false && x.CurrencyId == iCurrencyId).CurrencyCode;
 
-                                    throw new Exception($"Exchange Rate Not Defined from {currencyCode} to AFG");
+                                    throw new Exception(StaticResource.ExchagneRateNotDefined);
                                 }
                                 else
                                 {
