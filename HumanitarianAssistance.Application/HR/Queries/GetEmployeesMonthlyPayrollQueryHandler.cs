@@ -72,8 +72,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                     if (payrollDetail.Count > 0)
                     {
-                        if (payrollAttendance.GrossSalary == 0 || payrollAttendance.GrossSalary == null)
-                        {
+                        // if (payrollAttendance.GrossSalary == 0 || payrollAttendance.GrossSalary == null)
+                        // {
                             int iCurrencyId = payrollDetail.FirstOrDefault(x => x.HeadTypeId == 3).CurrencyId;
 
                             EmployeeMonthlyPayrollModel obj = new EmployeeMonthlyPayrollModel();
@@ -143,6 +143,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                             //Net Salary  = (Gross + Allowances) - Deductions
                             obj.NetSalary = Math.Round((double)(obj.GrossSalary - (obj.TotalDeduction != null ? obj.TotalDeduction : 0) - (obj.SalaryTax != null ? obj.SalaryTax : 0) - payrollAttendance.AdvanceRecoveryAmount - (obj.PensionAmount != null ? obj.PensionAmount : 0)),2);
 
+                            obj.EmployeePayrollList = obj.EmployeePayrollList==null? new List<EmployeePayrollModel>(): obj.EmployeePayrollList;
+
                             obj.EmployeePayrollList.AddRange(payrollDetail);
 
                             payrollFinal.Add(obj);
@@ -179,39 +181,41 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                 obj.AdvanceAmount = 0;
                                 obj.IsAdvanceApproved = false;
                             }
-                        }
-                        else
-                        {
-                            EmployeeMonthlyPayrollModel obj = new EmployeeMonthlyPayrollModel();
-                            obj.AbsentDays = payrollAttendance.AbsentHours == null ? 0 : payrollAttendance.AbsentHours.Value;
-                            obj.OverTimeHours = payrollAttendance.OvertimeHours;
-                            obj.AdvanceAmount = payrollAttendance.AdvanceAmount;
-                            obj.AdvanceRecoveryAmount = payrollAttendance.AdvanceRecoveryAmount;
-                            obj.CurrencyId = payrollDetail[0].CurrencyId;
-                            obj.EmployeeId = payrollAttendance.EmployeeId.Value;
-                            obj.EmployeeCode = payrollAttendance.EmployeeDetails.EmployeeCode;
-                            obj.EmployeeName = payrollAttendance.EmployeeDetails.EmployeeName;
-                            obj.GrossSalary = payrollAttendance.GrossSalary == null ? 0 : payrollAttendance.GrossSalary;
-                            obj.IsAdvanceApproved = payrollAttendance.IsAdvanceApproved;
-                            obj.IsAdvanceRecovery = payrollAttendance.IsAdvanceRecovery;
-                            obj.LeaveDays = payrollAttendance.LeaveHours == null ? 0 : payrollAttendance.LeaveHours.Value;
-                            obj.LeaveHours = payrollAttendance.LeaveHours == null ? 0 : payrollAttendance.LeaveHours.Value;
-                            obj.NetSalary = payrollAttendance.NetSalary == null ? 0 : payrollAttendance.NetSalary;
-                            obj.PaymentType = 2;
-                            obj.PensionAmount = payrollAttendance.PensionAmount == null ? 0 : payrollAttendance.PensionAmount;
-                            obj.PresentDays = payrollAttendance.AttendanceHours == null ? 0 : payrollAttendance.AttendanceHours.Value;
-                            obj.SalaryTax = payrollAttendance.SalaryTax == null ? 0 : payrollAttendance.SalaryTax.Value;
-                            obj.TotalAllowance = payrollAttendance.TotalAllowance == null ? 0 : payrollAttendance.TotalAllowance.Value;
-                            obj.TotalDeduction = payrollAttendance.TotalDeduction == null ? 0 : payrollAttendance.TotalDeduction.Value;
-                            obj.TotalGeneralAmount = payrollAttendance.TotalGeneralAmount == null ? 0 : payrollAttendance.TotalGeneralAmount.Value;
-                            obj.WorkingDays = payrollAttendance.AttendanceHours == null ? 0 : payrollAttendance.AttendanceHours.Value;
-                            obj.TotalWorkHours = payrollAttendance.TotalDuration == null ? 0 : payrollAttendance.TotalDuration.Value;
-                            obj.OvertimeMinutes= payrollAttendance.OverTimeMinutes; // eliminate hours and only show minutes
-                            obj.WorkingMinutes= payrollAttendance.AttendanceMinutes; // eliminate hours and only show minutes
+                        // }
+                        // else
+                        // {
+                        //     EmployeeMonthlyPayrollModel obj = new EmployeeMonthlyPayrollModel();
+                        //     obj.AbsentDays = payrollAttendance.AbsentHours == null ? 0 : payrollAttendance.AbsentHours.Value;
+                        //     obj.OverTimeHours = payrollAttendance.OvertimeHours;
+                        //     obj.AdvanceAmount = payrollAttendance.AdvanceAmount;
+                        //     obj.AdvanceRecoveryAmount = payrollAttendance.AdvanceRecoveryAmount;
+                        //     obj.CurrencyId = payrollDetail[0].CurrencyId;
+                        //     obj.EmployeeId = payrollAttendance.EmployeeId.Value;
+                        //     obj.EmployeeCode = payrollAttendance.EmployeeDetails.EmployeeCode;
+                        //     obj.EmployeeName = payrollAttendance.EmployeeDetails.EmployeeName;
+                        //     obj.GrossSalary = payrollAttendance.GrossSalary == null ? 0 : payrollAttendance.GrossSalary;
+                        //     obj.IsAdvanceApproved = payrollAttendance.IsAdvanceApproved;
+                        //     obj.IsAdvanceRecovery = payrollAttendance.IsAdvanceRecovery;
+                        //     obj.LeaveDays = payrollAttendance.LeaveHours == null ? 0 : payrollAttendance.LeaveHours.Value;
+                        //     obj.LeaveHours = payrollAttendance.LeaveHours == null ? 0 : payrollAttendance.LeaveHours.Value;
+                        //     obj.NetSalary = payrollAttendance.NetSalary == null ? 0 : payrollAttendance.NetSalary;
+                        //     obj.PaymentType = 2;
+                        //     obj.PensionAmount = payrollAttendance.PensionAmount == null ? 0 : payrollAttendance.PensionAmount;
+                        //     obj.PresentDays = payrollAttendance.AttendanceHours == null ? 0 : payrollAttendance.AttendanceHours.Value;
+                        //     obj.SalaryTax = payrollAttendance.SalaryTax == null ? 0 : payrollAttendance.SalaryTax.Value;
+                        //     obj.TotalAllowance = payrollAttendance.TotalAllowance == null ? 0 : payrollAttendance.TotalAllowance.Value;
+                        //     obj.TotalDeduction = payrollAttendance.TotalDeduction == null ? 0 : payrollAttendance.TotalDeduction.Value;
+                        //     obj.TotalGeneralAmount = payrollAttendance.TotalGeneralAmount == null ? 0 : payrollAttendance.TotalGeneralAmount.Value;
+                        //     obj.WorkingDays = payrollAttendance.AttendanceHours == null ? 0 : payrollAttendance.AttendanceHours.Value;
+                        //     obj.TotalWorkHours = payrollAttendance.TotalDuration == null ? 0 : payrollAttendance.TotalDuration.Value;
+                        //     obj.OvertimeMinutes= payrollAttendance.OverTimeMinutes; // eliminate hours and only show minutes
+                        //     obj.WorkingMinutes= payrollAttendance.AttendanceMinutes; // eliminate hours and only show minutes
 
-                            obj.EmployeePayrollList.AddRange(payrollDetail.Where(x => x.EmployeeId == obj.EmployeeId));
-                            payrollFinal.Add(obj);
-                        }
+                        //     obj.EmployeePayrollList = obj.EmployeePayrollList== null? new List<EmployeePayrollModel>() : obj.EmployeePayrollList;
+
+                        //     obj.EmployeePayrollList.AddRange(payrollDetail.Where(x => x.EmployeeId == obj.EmployeeId));
+                        //     payrollFinal.Add(obj);
+                        // }
                     }
                     else
                     {

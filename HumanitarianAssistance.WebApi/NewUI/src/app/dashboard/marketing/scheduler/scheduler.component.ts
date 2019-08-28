@@ -418,6 +418,7 @@ GetAllSchedulerList() {
    this.GetMedium();
    this.GetAllList();
    this.GetAllSchedulerList();
+   this.dateForm.startDate = new Date();
   }
 
   PermissionAction(ev, element) {

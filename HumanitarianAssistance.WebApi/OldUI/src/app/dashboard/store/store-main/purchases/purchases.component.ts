@@ -587,7 +587,6 @@ export class PurchasesComponent implements OnInit {
             .subscribe(
                 data => {
                     if (data.StatusCode === 200) {
-                        debugger;
 
                         let dataModelImage: UploadModel = {
                             DocumentTypeId: DocumentFileTypes.PurchaseImage,
@@ -606,11 +605,9 @@ export class PurchasesComponent implements OnInit {
                         };
 
                         this.fileManagementService.uploadFile(dataModelImage).subscribe(x => {
-                            debugger;
                         });
 
                         this.fileManagementService.uploadFile(dataModelPurchase).subscribe(x => {
-                            debugger;
                             // Parent call
                             this.getItemAmounts.emit(
                                 localStorage.getItem('SelectedInventoryItem')
@@ -1293,7 +1290,6 @@ export class PurchasesComponent implements OnInit {
 
     //#region "Image Update"
     onImageSelectUpdate(event: any, rowData) {
-        debugger;
         if (this.flag === 0) {
 
             this.flag = 1;

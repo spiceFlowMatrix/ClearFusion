@@ -303,17 +303,17 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
                         response.data.VoucherReferenceNo = obj.ReferenceNo;
                         response.data.VoucherNo = obj.VoucherNo;
 
-                        var user = await _dbContext.UserDetails.FirstOrDefaultAsync(x => x.AspNetUserId == request.CreatedById);
+                        //var user = await _dbContext.UserDetails.FirstOrDefaultAsync(x => x.AspNetUserId == request.CreatedById);
 
-                        LoggerDetailsModel loggerObj = new LoggerDetailsModel();
-                        loggerObj.NotificationId = (int)LoggerEnum.VoucherCreated;
-                        loggerObj.IsRead = false;
-                        loggerObj.UserName = user.FirstName + " " + user.LastName;
-                        loggerObj.UserId = request.CreatedById;
-                        loggerObj.LoggedDetail = "Voucher " + obj.ReferenceNo + " Created";
-                        loggerObj.CreatedDate = DateTime.Now;
+                        // LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+                        // loggerObj.NotificationId = (int)LoggerEnum.VoucherCreated;
+                        // loggerObj.IsRead = false;
+                        // loggerObj.UserName = user.FirstName + " " + user.LastName;
+                        // loggerObj.UserId = request.CreatedById;
+                        // loggerObj.LoggedDetail = "Voucher " + obj.ReferenceNo + " Created";
+                        // loggerObj.CreatedDate = DateTime.Now;
 
-                        response.LoggerDetailsModel = loggerObj;
+                        // response.LoggerDetailsModel = loggerObj;
                         response.StatusCode = StaticResource.successStatusCode;
                         response.Message = "Success";
                     }

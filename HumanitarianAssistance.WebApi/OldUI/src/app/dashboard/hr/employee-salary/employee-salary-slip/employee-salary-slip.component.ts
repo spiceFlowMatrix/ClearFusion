@@ -100,9 +100,10 @@ export class EmployeeSalarySlipComponent implements OnInit, OnChanges {
 
   //#region  "Get all Primary Salary Heads"
   getPrimarySalaryHeads(EmployeeId: number) {
+  
     this.accountservice
       .GetEmployeePayrollDetails(
-        this.setting.getBaseUrl() + GLOBAL.API_Accounting_GetPrimarySalaryHeads,
+        this.setting.getBaseUrl() + GLOBAL.API_EmployeeDetail_GetPrimarySalaryHeads,
         EmployeeId
       )
       .subscribe(
