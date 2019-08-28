@@ -33,7 +33,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                 List<StoreSourceCodeDetail> StoreSourceCodeDetailList = new List<StoreSourceCodeDetail>();
 
                 //Get Store Source Code Detail based on source code type selected
-                if (request.typeId != null)
+                if (request.typeId != null && request.typeId != 0)
                 {
                     obj= await _dbContext.StoreSourceCodeDetail.Where(x => x.IsDeleted == false && x.CodeTypeId == request.typeId).Select(y => new StoreSourceCodeDetailModel
                     {

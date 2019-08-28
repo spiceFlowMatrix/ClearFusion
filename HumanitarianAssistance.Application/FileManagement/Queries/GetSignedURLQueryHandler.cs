@@ -25,21 +25,16 @@ namespace HumanitarianAssistance.Application.FileManagement.Queries
         public async Task<ApiResponse> Handle(GetSignedURLQuery request, CancellationToken cancellationToken)
         {
             ApiResponse response = new ApiResponse();
+            
             try
             {
                 string bucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
-                string googleCredientials = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
-
-                if (string.IsNullOrEmpty(googleCredientials))
-                {
-                    throw new Exception(StaticResource.googleCredentialNotFound);
-                }
 
                 var scopes = new string[] { "https://www.googleapis.com/auth/devstorage.read_write" };
 
                 ServiceAccountCredential cred;
 
-                using (var stream = new FileStream(googleCredientials, FileMode.Open, FileAccess.Read))
+                using (var stream = new FileStream(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"), FileMode.Open, FileAccess.Read))
                 {
                     cred = GoogleCredential.FromStream(stream)
                                            .CreateScoped(scopes)
@@ -56,7 +51,7 @@ namespace HumanitarianAssistance.Application.FileManagement.Queries
                     TimeSpan.FromMinutes(10),
                     HttpMethod.Put,
                     contentHeaders: new Dictionary<string, IEnumerable<string>> {
-                    { "Content-Type", new[] { "text/plain" } } }
+                    { "Content-Type", new[] { request.FileType } } }
                     );
 
                 response.StatusCode = StaticResource.successStatusCode;
@@ -65,8 +60,7 @@ namespace HumanitarianAssistance.Application.FileManagement.Queries
             catch (Exception exception)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = exception.Message;
-                await Task.Delay(0);
+                response.Message = StaticResource.SomethingWrong + exception.Message;
             }
             return response;
         }

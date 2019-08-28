@@ -67,7 +67,7 @@ export class SignalRService {
 
 // //#region "activityPermissionChanged - invoke"
 // public AddMessageInvoke(data: any): void {
-//   debugger;
+//
 //   this.hubConnection.start();
 //   this.hubConnection.invoke('AddMessage', data);
 
