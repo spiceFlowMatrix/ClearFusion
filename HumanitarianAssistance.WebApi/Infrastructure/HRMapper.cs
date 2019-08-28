@@ -51,6 +51,7 @@ namespace HumanitarianAssistance.WebApi.Infrastructure
             CreateMap<EditEmployeeHealthInfoCommand, EmployeeHealthInfo>().ReverseMap();
             CreateMap<AddEmployeeInfoReferencesCommand, EmployeeInfoReferences>().ReverseMap();
             CreateMap<EditEmployeeSalaryBudgetsCommand, EmployeeSalaryBudget>().ReverseMap();
+            CreateMap<EditExitInterviewCommand,ExistInterviewDetails>().ReverseMap();
         }
     }
 }
