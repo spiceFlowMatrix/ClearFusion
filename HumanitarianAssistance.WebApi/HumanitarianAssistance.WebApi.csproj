@@ -37,12 +37,6 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="NativeLibraries\**" />
-    <Content Remove="NativeLibraries\**" />
-    <EmbeddedResource Remove="NativeLibraries\**" />
-    <None Remove="NativeLibraries\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Update="PDFNative\32bit\libwkhtmltox.dll">

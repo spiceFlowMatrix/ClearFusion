@@ -15,20 +15,20 @@ using RazorLight;
 
 namespace HumanitarianAssistance.Application.Accounting.Queries
 {
-    public class GetAllVoucherSummaryReportQueryHandler : IRequestHandler<GetAllVoucherSummaryReportQuery, byte[]>
+    public class GetAllVoucherSummaryReportPdfQueryHandler : IRequestHandler<GetAllVoucherSummaryReportPdfQuery, byte[]>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IRazorLightEngine _razorEngine;
         private readonly IConverter _pdfConverter;
 
-        public GetAllVoucherSummaryReportQueryHandler(HumanitarianAssistanceDbContext dbContext, IRazorLightEngine razorEngine, IConverter pdfConverter)
+        public GetAllVoucherSummaryReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IRazorLightEngine razorEngine, IConverter pdfConverter)
         {
             _dbContext = dbContext;
             _razorEngine = razorEngine;
             _pdfConverter = pdfConverter;
         }
 
-        public async Task<byte[]> Handle(GetAllVoucherSummaryReportQuery request, CancellationToken cancellationToken)
+        public async Task<byte[]> Handle(GetAllVoucherSummaryReportPdfQuery request, CancellationToken cancellationToken)
         {
             try
             {
