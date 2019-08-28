@@ -7,5 +7,6 @@ namespace HumanitarianAssistance.Application.FileManagement.Queries
     {
         public string ObjectName { get; set; }
         public string FileName { get; set; }
+        public string FileType { get; set; }
     }
 }

@@ -77,7 +77,8 @@ export class PurchasesDocumentComponent implements OnDestroy, OnChanges {
   }
   //#endregion
 
-  selectDoc(e) {
+    selectDoc(e) {
+         
     this.filePathUrl = this.purchaseDocumentDataSource.filter(
       x => x.DocumentGUID === e.value
     )[0].DocumentName;
@@ -119,7 +120,8 @@ export class PurchasesDocumentComponent implements OnDestroy, OnChanges {
   }
 
   //#region "getPurchasesDocumentList"
-  getPurchasesDocumentList(PurchaseId) {
+    getPurchasesDocumentList(PurchaseId) {
+         
     this.docpath = null;
     this.storeService
       .GetAllPurchaseInvoices(
@@ -138,7 +140,6 @@ export class PurchasesDocumentComponent implements OnDestroy, OnChanges {
                     this.setting.getDocUrl() + 'nodoc.pdf'
                   )
                 : this._DomSanitizer.bypassSecurityTrustResourceUrl(
-                    this.setting.getDocUrl() +
                       data.data.UpdatePurchaseInvoiceModel.Invoice
                   );
             this.defaultObj.PurchaseId =

@@ -520,10 +520,10 @@ namespace HumanitarianAssistance.Application.Infrastructure
             }
             else if (ext == ".pdf")
             {
-                //mimeType = "application/vnd.google-apps.file";
-                Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(ext);
-                if (regKey != null && regKey.GetValue("Content Type") != null)
-                    mimeType = regKey.GetValue("Content Type").ToString();
+                mimeType = "application/pdf";
+                // Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(ext);
+                // if (regKey != null && regKey.GetValue("Content Type") != null)
+                //     mimeType = regKey.GetValue("Content Type").ToString();
             }
             else if (ext == ".xlsx" || ext == ".xls" || ext == ".csv")
             {

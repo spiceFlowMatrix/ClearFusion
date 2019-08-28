@@ -539,7 +539,7 @@ export class HolidaysComponent implements OnInit {
   //#endregion
 
     onFormSubmit(holidayType: number, data: any) {
-        debugger;
+         
     // Date wise
     if (holidayType === 1) {
       const finalData: any = {
