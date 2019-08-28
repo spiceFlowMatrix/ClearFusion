@@ -51,7 +51,10 @@ namespace HumanitarianAssistance.Application.FileManagement.Queries
                     TimeSpan.FromMinutes(10),
                     HttpMethod.Put,
                     contentHeaders: new Dictionary<string, IEnumerable<string>> {
-                    { "Content-Type", new[] { request.FileType } } }
+                    { 
+                        "Content-Type", new[] { request.FileType } 
+                    
+                    } }
                     );
 
                 response.StatusCode = StaticResource.successStatusCode;
