@@ -192,7 +192,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        //[ApiExplorerSettings(GroupName = "accounting")]
         public async Task<ApiResponse> GetAllAccountIncomeExpensesByCategory([FromBody]GetAllAccountIncomeExpensesByCategoryQuery model)
         {
             return await _mediator.Send(model);
@@ -212,7 +211,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         /// <param name="accountIds"></param>
         /// <returns></returns>
         [HttpPost]
-        //[ApiExplorerSettings(GroupName = "accounting")]
         public async Task<ApiResponse> SaveGainLossAccountList([FromBody] List<long> accountIds)
         {
             return await _mediator.Send(new SaveGainLossAccountListCommand { AccountIds= accountIds } );
@@ -251,11 +249,56 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        //[ApiExplorerSettings(GroupName = "accounting")]
         public async Task<ApiResponse> GetDetailOfNotes([FromBody] GetDetailOfNotesQuery model)
         {
             return await _mediator.Send(model);
         }
-        
+                
+        /// <summary>
+        /// Get Voucher Summary Report
+        /// </summary>
+        /// <remarks>
+        /// Sample input:
+        ///
+        ///     POST /GetVoucherSummaryReportList
+        ///     {
+        ///              "Accounts": [ 0 ],
+        ///              "BudgetLines": [ 0 ],
+        ///              "Currency": 0,
+        ///              "Journals": [ 0 ],
+        ///              "Offices": [ 0 ],
+        ///              "ProjectJobs": [ 0 ],
+        ///              "Projects": [ 0 ],
+        ///              "RecordType": 0,
+        ///              "PageIndex": 0,
+        ///              "PageSize": 10,
+        ///              "TotalCount": 0
+        ///     }            
+        ///
+        /// Sample output:
+        ///
+        ///      {
+        ///          "StatusCode": 200,
+        ///          "Message": "Success",
+        ///          "data": {
+        ///               VoucherSummaryList: [
+        ///                     {
+        ///                         VoucherCode: "A0001-AFG-6-1-19"
+        ///                         VoucherDate: "2019-06-07 12:22:07.853753"
+        ///                         VoucherDescription: "Pension Payment Done On 6/7/2019"
+        ///                         VoucherNo: 253
+        ///                     }
+        ///               ]
+        ///           }
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="voucherSummaryFilter"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ApiResponse> GetVoucherSummaryReportList([FromBody] GetVoucherSummaryReportListQuery model)
+        {
+            return await _mediator.Send(model);
+        }
     }
 }
