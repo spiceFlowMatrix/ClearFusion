@@ -10,6 +10,9 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using HumanitarianAssistance.Application.CommonServicesInterface;
+using HumanitarianAssistance.Application.FileManagement.Models;
+using HumanitarianAssistance.Application.Store.Models;
 
 namespace HumanitarianAssistance.Application.HR.Queries
 {
@@ -17,11 +20,13 @@ namespace HumanitarianAssistance.Application.HR.Queries
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IFileManagementService _fileManagement;
 
-        public GetEmployeeDetailsByIdQueryHandler(HumanitarianAssistanceDbContext dbContext, IMapper mapper)
+        public GetEmployeeDetailsByIdQueryHandler(HumanitarianAssistanceDbContext dbContext, IMapper mapper, IFileManagementService fileManagement)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _fileManagement = fileManagement;
         }
 
         public async Task<ApiResponse> Handle(GetEmployeeDetailsByIdQuery request, CancellationToken cancellationToken)
@@ -30,6 +35,14 @@ namespace HumanitarianAssistance.Application.HR.Queries
             ApiResponse response = new ApiResponse();
             try
             {
+                FileModel model = new FileModel()
+                {
+                    PageId = (int)FileSourceEntityTypes.EmployeeProfile,
+                    RecordId = request.EmployeeId,
+                    DocumentTypeId = (int)DocumentFileTypes.EmployeeProfile
+                };
+                 StoreDocumentModel documentModel = new StoreDocumentModel();
+                 documentModel = await _fileManagement.GetFilesByRecordIdAndDocumentType(model);
                 var employeelist =
                      await _dbContext.EmployeeDetail
                         .Include(e => e.EmployeeType)
@@ -70,7 +83,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                             ExperienceYear = x.ExperienceYear,
                             ExperienceMonth = x.ExperienceMonth,
                             Resume = x.Resume,
-                            EmployeePhoto = x.EmployeePhoto,
+                            EmployeePhoto = documentModel.SignedURL,
                             DocumentGUID = x.DocumentGUID + x.Extension,
                             MaritalStatus = x.MaritalStatusId,
                             University = x.University,
