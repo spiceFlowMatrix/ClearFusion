@@ -4,10 +4,12 @@ using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Application.Store.Models;
 using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Domain.Entities.Accounting;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -70,7 +72,15 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     VerifiedPurchaseVoucher = v.VerifiedPurchaseVoucher,
                     JournalCode = v.JournalCode,
                     VerifiedPurchaseVoucherReferenceNo = v.VerifiedPurchaseVoucher != null ? _dbContext.VoucherDetail.FirstOrDefault(x => x.IsDeleted == false && x.VoucherNo == v.VerifiedPurchaseVoucher).ReferenceNo : null
-                }).ToList();
+                }).OrderByDescending(x=> x.PurchaseDate).ToList();
+
+                List<ExchangeRateDetail> exchangeRate= new List<ExchangeRateDetail>();
+
+                if(purchasesModel.Any())
+                {
+                    exchangeRate = await _dbContext.ExchangeRateDetail.OrderByDescending(x=> x.Date).Where(x => x.IsDeleted == false && x.Date.Date <= purchasesModel.First().PurchaseDate.Date && x.Date.Date >= purchasesModel[purchasesModel.Count-1].PurchaseDate.Date).ToListAsync();
+
+                }
 
                 foreach (var item in purchasesModel)
                 {
@@ -105,14 +115,17 @@ namespace HumanitarianAssistance.Application.Store.Queries
                         item.InvoiceDocumentId = documentModel.DocumentFileId;
                     }
 
-                    var exchangeRate = _dbContext.ExchangeRateDetail.OrderByDescending(x=> x.Date).FirstOrDefault(x => x.IsDeleted == false && x.Date.Date <= item.PurchaseDate.Date && x.FromCurrency == item.Currency && x.ToCurrency == (int)Currency.USD);
+
+                   var exRate = exchangeRate.OrderByDescending(x=> x.Date).FirstOrDefault(x => x.IsDeleted == false && x.Date.Date <= item.PurchaseDate.Date && x.FromCurrency == item.Currency && x.ToCurrency == (int)Currency.USD);
+
+                   //var exchangeRate = _dbContext.ExchangeRateDetail.OrderByDescending(x=> x.Date).FirstOrDefault(x => x.IsDeleted == false && x.Date.Date <= item.PurchaseDate.Date && x.FromCurrency == item.Currency && x.ToCurrency == (int)Currency.USD);
 
                     if (exchangeRate == null)
                     {
                         throw new Exception($"Exchange Rates not defined for Date {item.PurchaseDate.Date.ToString("dd/MM/yyyy")}");
                     }
 
-                    item.TotalCostUSD = item.TotalCost * (double)exchangeRate.Rate;
+                    item.TotalCostUSD = item.TotalCost * (double)exRate.Rate;
                 }
 
                 response.data.StoreItemsPurchaseViewList = purchasesModel;

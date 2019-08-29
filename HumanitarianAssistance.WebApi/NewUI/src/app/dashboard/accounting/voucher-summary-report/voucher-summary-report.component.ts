@@ -351,7 +351,7 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
   //   ).subscribe(
   //     (response: any) => {
   //       if (response.statusCode === 200 && response.data !== null) {
-  //         debugger;
+  //
   //         this.demoSignedURL = response.data;
 
   //         this.voucherSummaryService.upload(this.demoSignedURL, formData)
