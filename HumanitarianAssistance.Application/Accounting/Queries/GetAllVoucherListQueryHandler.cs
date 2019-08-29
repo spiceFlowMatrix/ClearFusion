@@ -8,6 +8,7 @@ using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace HumanitarianAssistance.Application.Accounting.Queries
 {
@@ -25,11 +26,13 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
             ApiResponse response = new ApiResponse();
 
+            DateTime parsedDateTime;
             string voucherNoValue = null;
             string referenceNoValue = null;
             string descriptionValue = null;
             string journalNameValue = null;
             string dateValue = null;
+            string formattedDate = null;
 
             if (!string.IsNullOrEmpty(request.FilterValue))
             {
@@ -38,6 +41,17 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                 descriptionValue = request.DescriptionFlag ? request.FilterValue.ToLower().Trim() : null;
                 journalNameValue = request.JournalNameFlag ? request.FilterValue.ToLower().Trim() : null;
                 dateValue = request.DateFlag ? request.FilterValue.ToLower().Trim() : null;
+                if(DateTime.TryParseExact(dateValue, "dd/mm/yyyy", 
+                    CultureInfo.InvariantCulture, 
+                    DateTimeStyles.None, 
+                    out parsedDateTime))
+                {
+                    formattedDate = parsedDateTime.ToString("yyyy-mm-dd");
+                }
+                else
+                {
+                    formattedDate =dateValue;
+                }
             }
 
             try
@@ -50,7 +64,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                                v.ReferenceNo.Trim().ToLower().Contains(referenceNoValue) ||
                                                v.Description.Trim().ToLower().Contains(descriptionValue) ||
                                                v.JournalDetails.JournalName.Trim().ToLower().Contains(journalNameValue) ||
-                                               v.VoucherDate.ToString().Trim().Contains(dateValue)
+                                               v.VoucherDate.ToString().Trim().Contains(formattedDate)
                                                ) : true
                                        )
                                       .AsNoTracking()
@@ -63,7 +77,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                                    v.ReferenceNo.Trim().ToLower().Contains(referenceNoValue) ||
                                                    v.Description.Trim().ToLower().Contains(descriptionValue) ||
                                                    v.JournalDetails.JournalName.Trim().ToLower().Contains(journalNameValue) ||
-                                                   v.VoucherDate.ToString().Trim().ToLower().Contains(dateValue)
+                                                   v.VoucherDate.ToString().Trim().Contains(formattedDate)
                                                    ) : true
                                        )
                                       .OrderByDescending(x => x.CreatedDate)

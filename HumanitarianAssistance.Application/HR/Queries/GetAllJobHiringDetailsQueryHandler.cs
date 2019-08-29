@@ -36,6 +36,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 foreach (var item in jobhiringdetailslist)
                 {
                     JobHiringDetailsModel obj = _mapper.Map<JobHiringDetailsModel>(item);
+                    obj.ApprovedInterviews= _dbContext.InterviewDetails.Count(x=>x.JobId==item.JobId && x.InterviewStatus=="approved");
                     JobHiringInfo.Add(obj);
                 }
 

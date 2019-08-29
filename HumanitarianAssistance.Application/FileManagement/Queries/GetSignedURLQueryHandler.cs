@@ -40,6 +40,7 @@ namespace HumanitarianAssistance.Application.FileManagement.Queries
                                            .CreateScoped(scopes)
                                            .UnderlyingCredential as ServiceAccountCredential;
                 }
+                
 
                 //var urlSigner = UrlSigner.FromServiceAccountCredential(cred);
 

@@ -17,6 +17,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
+    <PackageReference Include="RazorLight" Version="2.0.0-beta1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,5 +26,47 @@
     <ProjectReference Include="..\HumanitarianAssistance.Persistence\HumanitarianAssistance.Persistence.csproj" />
     <ProjectReference Include="..\HumanitarianAssistance.Infrastructure\HumanitarianAssistance.Infrastructure.csproj" />
   </ItemGroup>
+
+
+
+  
+  <!-- Use of Pdf export -->
+  <ItemGroup>
+    <Content Update="PdfTemplates\CarPdf.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="NativeLibraries\**" />
+    <Content Remove="NativeLibraries\**" />
+    <EmbeddedResource Remove="NativeLibraries\**" />
+    <None Remove="NativeLibraries\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="PDFNative\32bit\libwkhtmltox.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="PDFNative\32bit\libwkhtmltox.dylib">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="PDFNative\32bit\libwkhtmltox.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="PDFNative\64bit\libwkhtmltox.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="PDFNative\64bit\libwkhtmltox.dylib">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="PDFNative\64bit\libwkhtmltox.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <!-- Use of Pdf export -->
+
+
+
 
 </Project>

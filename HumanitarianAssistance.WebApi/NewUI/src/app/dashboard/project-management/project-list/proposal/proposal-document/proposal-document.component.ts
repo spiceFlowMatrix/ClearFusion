@@ -10,6 +10,7 @@ import { ProjectListService } from '../../service/project-list.service';
 import { GLOBAL } from 'src/app/shared/global';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
 
 @Component({
   selector: 'app-proposal-document',
@@ -85,7 +86,7 @@ export class ProposalDocumentComponent implements OnInit, OnDestroy {
                       ProposalWebLink: element.ProposalWebLink,
                       ProposalExtType: element.ProposalExtType,
                       UserName: element.UserName,
-                      CreatedDate: element.CreatedDate,
+                      CreatedDate: StaticUtilities.setLocalDate(element.CreatedDate),
                       ProposalDocumentType: this.getFileTypeName(
                         element.ProposalDocumentTypeId
                       )
@@ -172,7 +173,7 @@ export class ProposalDocumentComponent implements OnInit, OnDestroy {
                   ProposalWebLink: responseData.ProposalWebLink,
                   ProposalExtType: responseData.ProposalExtType,
                   UserName: responseData.UserName,
-                  CreatedDate: responseData.CreatedDate,
+                  CreatedDate: StaticUtilities.setLocalDate(responseData.CreatedDate),
                   ProposalDocumentType: this.getFileTypeName(
                     responseData.ProposalDocumentTypeId
                   )
