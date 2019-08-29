@@ -197,5 +197,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         {
             return await _mediator.Send(model);
         }
+
+        [HttpPost]
+        public async Task<ApiResponse> DisapproveEmployeeApprovedSalary([FromBody]DisapproveEmployeeApprovedSalaryCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
     }
 }

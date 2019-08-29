@@ -19,5 +19,10 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string TenureWithCHA { get; set; }
         public string Gender { get; set; }
         public int? OfficeId { get; set; }
+        public int? CountryId { get; set; }
+        public int? ProvinceId { get; set; }
+        public int? DesignationId { get; set; }
+        public long? ProjectId { get; set; }
+        public long? BudgetLineId { get; set; }
     }
 }

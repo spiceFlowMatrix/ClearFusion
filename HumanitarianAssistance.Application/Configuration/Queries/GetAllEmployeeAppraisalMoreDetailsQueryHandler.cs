@@ -34,7 +34,7 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                 {
                     EmployeeAppraisalDetailsModel objAppraisal = new EmployeeAppraisalDetailsModel();
 
-                    var empDetails = await _dbContext.EmployeeEvaluation.Where(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId && (x.EvaluationStatus == null || x.EvaluationStatus == "approved")).ToListAsync();
+                    var empDetails = await _dbContext.EmployeeEvaluation.Where(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId).ToListAsync();
 
                     List<EmployeeEvaluationTrainingModel> trainingList = new List<EmployeeEvaluationTrainingModel>();
                     List<int> appraisalTeamMemberList = new List<int>();

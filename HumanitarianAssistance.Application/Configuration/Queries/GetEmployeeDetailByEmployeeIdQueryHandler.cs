@@ -28,7 +28,15 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
             ApiResponse response = new ApiResponse();
             try
             {
-                response.data.EmployeeDetailListData = await _dbContext.EmployeeDetail.Include(x => x.EmployeeProfessionalDetail).Include(x => x.EmployeeProfessionalDetail.OfficeDetail).Include(x => x.EmployeeProfessionalDetail.Department).Include(x => x.QualificationDetails).Include(x => x.EmployeeProfessionalDetail.DesignationDetails).Where(x => x.EmployeeID == request.EmployeeId).Select(x => new EmployeeDetailListModel
+                response.data.EmployeeDetailListData = 
+                await _dbContext.EmployeeDetail
+                                .Include(x => x.EmployeeProfessionalDetail)
+                                .Include(x => x.EmployeeProfessionalDetail.OfficeDetail)
+                                .Include(x => x.EmployeeProfessionalDetail.Department)
+                                .Include(x => x.QualificationDetails)
+                                .Include(x => x.EmployeeProfessionalDetail.DesignationDetails)
+                                .Where(x => x.EmployeeID == request.EmployeeId)
+                                .Select(x => new EmployeeDetailListModel
                 {
                     EmployeeId = x.EmployeeID,
                     EmployeeName = x.EmployeeName,
@@ -40,7 +48,12 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                     DutyStation = x.EmployeeProfessionalDetail.OfficeDetail.OfficeName,
                     RecruitmentDate = x.EmployeeProfessionalDetail.HiredOn,
                     TenureWithCHA = (DateTime.Now.Date - x.EmployeeProfessionalDetail.HiredOn.Value.Date).Days.ToString() + " Days",
-                    Gender = x.SexId == 1 ? "Male" : x.SexId == 2 ? "Female" : "Other"
+                    Gender = x.SexId == 1 ? "Male" : x.SexId == 2 ? "Female" : "Other",
+                    DesignationId = x.EmployeeProfessionalDetail.DesignationId,
+                    CountryId= x.CountryId,
+                    ProvinceId = x.ProvinceId,
+                    ProjectId = x.ProjectId,
+                    BudgetLineId = x.BudgetLineId
                 }).ToListAsync();
 
 

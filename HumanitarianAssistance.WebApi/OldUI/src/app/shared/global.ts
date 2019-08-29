@@ -281,7 +281,7 @@ export class GLOBAL {
   public static API_HR_EmployeesSalarySummary = 'EmployeePayroll/EmployeesSalarySummary';
   // public static API_HR_EmployeesPayrollRegisterApproval = 'HREmployee/EmployeePaymentTypeReport';
   public static API_HR_EmployeesPayrollRegisterApproval = 'EmployeePayroll/EmployeePaymentTypeReport';
-  public static API_Account_DisapproveEmployeeApprovedSalary = 'Account/DisapproveEmployeeApprovedSalary';
+  public static API_Account_DisapproveEmployeeApprovedSalary = 'EmployeePayroll/DisapproveEmployeeApprovedSalary';
 
   public static API_HR_RemoveApprovedList = 'HREmployee/RemoveApprovedList';
 
