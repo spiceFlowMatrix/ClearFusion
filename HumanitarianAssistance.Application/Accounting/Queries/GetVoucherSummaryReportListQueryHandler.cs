@@ -48,7 +48,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
             catch (Exception exception)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + exception.Message;
+                response.Message = exception.Message;
             }
 
             return response;
