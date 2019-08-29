@@ -73,6 +73,7 @@ import { ProfessionalMoreInfoComponent } from './employees/professional-info/pro
 import { HealthComponent } from './employees/health/health.component';
 import { ContractInfoComponent } from './employees/contract-info/contract-info.component';
 import { EmployeeSalarySlipComponent } from './employee-salary/employee-salary-slip/employee-salary-slip.component';
+import { FileManagementService } from '../../shared/FileManagement/file-management.service';
 
 @NgModule({
   declarations: [
@@ -165,7 +166,8 @@ import { EmployeeSalarySlipComponent } from './employee-salary/employee-salary-s
     EmployeeSalaryService,
     ProjectsService,
     TranslateService,
-    HttpClient
+    HttpClient,
+    FileManagementService
   ]
 })
 export class HrModule {}
