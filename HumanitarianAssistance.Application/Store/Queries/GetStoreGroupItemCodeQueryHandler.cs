@@ -28,7 +28,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
             string ItemGroupCode = "";
             try
             {
-                if (request.InventoryId != null)
+                if (request.InventoryId != 0)
                 {
                     StoreItemGroup storeItemGroup = await _dbContext.StoreItemGroups
                                                                              .OrderByDescending(x => x.CreatedDate)

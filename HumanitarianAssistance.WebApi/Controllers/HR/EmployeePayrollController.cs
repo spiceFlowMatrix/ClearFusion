@@ -34,7 +34,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpGet]
         public async Task<ApiResponse> GetAllEmployeeMonthlyPayrollList(int officeid, int currencyid, int month, int year, int paymentType)
         {
-            return await _mediator.Send(new GetApprovedPayrollByMonthQuery
+            return await _mediator.Send(new GetEmployeesMonthlyPayrollQuery
             {
                 Month = month,
                 OfficeId = officeid,
@@ -61,7 +61,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            SaveEmployeePayrollPaymentCommand command = new SaveEmployeePayrollPaymentCommand();
+            EmployeeApprovePayrollCommand command = new EmployeeApprovePayrollCommand();
             command.EmployeeMonthlyPayroll = model;
             command.ModifiedById = userId;
             command.ModifiedDate = DateTime.UtcNow;

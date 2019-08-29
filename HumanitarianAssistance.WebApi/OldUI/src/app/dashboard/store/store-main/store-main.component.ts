@@ -86,7 +86,7 @@ export class StoreMainComponent implements OnInit, OnDestroy {
   itemTypeDataSource: any[];
   voucherDataSource: any[];
   accountsList: any[];
-  officecodelist: any[] =[];
+  officecodelist: any[] = [];
   inventoryCode: string;
   inventoryItemCode: string;
   selectedOffice: any;
@@ -202,8 +202,8 @@ export class StoreMainComponent implements OnInit, OnDestroy {
                 this.inventoryList.push(element);
                 });
 
-                if (this.inventoryList != null && this.inventoryList != undefined) {
-                    this.selectedInventoryId= this.inventoryList[0].InventoryId
+                if (this.inventoryList != null && this.inventoryList !== undefined) {
+                    this.selectedInventoryId = this.inventoryList[0].InventoryId;
                 }
 
                 this.getAllItemGroupList(this.selectedInventoryId);
@@ -245,8 +245,6 @@ export class StoreMainComponent implements OnInit, OnDestroy {
                 if (this.itemGroupDataSource != null && this.itemGroupDataSource != undefined) {
                     this.selectedItemGroupId = this.itemGroupDataSource[0].ItemGroupId;
                 }
-                
-                                                                     
               this.getAllInventoryItemList(
                 this.selectedItemGroupId
               );

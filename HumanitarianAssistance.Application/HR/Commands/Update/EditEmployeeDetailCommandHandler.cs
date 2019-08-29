@@ -30,7 +30,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                 if (employeeinfo != null)
                 {
                     var OfficeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.OfficeId == request.OfficeId && x.IsDeleted == false);
-                    employeeinfo.EmployeeCode = OfficeDetail.OfficeCode + employeeinfo.EmployeeID;
+                    //employeeinfo.EmployeeCode = OfficeDetail.OfficeCode + employeeinfo.EmployeeID;
                     employeeinfo.EmployeeTypeId = request.EmployeeTypeId;
                     employeeinfo.EmployeeName = request.EmployeeName;
                     employeeinfo.IDCard = request.IDCard;
@@ -72,21 +72,21 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                     _dbContext.EmployeeProfessionalDetail.Update(employeeprofessionalinfo);
                     await _dbContext.SaveChangesAsync();
 
-                    var user = await _dbContext.UserDetails.FirstOrDefaultAsync(x => x.AspNetUserId == request.ModifiedById);
+                    // var user = await _dbContext.UserDetails.FirstOrDefaultAsync(x => x.AspNetUserId == request.ModifiedById);
 
-                    LoggerDetailsModel loggerObj = new LoggerDetailsModel
-                    {
-                        NotificationId = (int)Common.Enums.LoggerEnum.EmployeeUpdate,
-                        IsRead = false,
-                        UserName = user.FirstName + " " + user.LastName,
-                        UserId = request.ModifiedById,
-                        LoggedDetail = "Employee " + employeeinfo.EmployeeName + " Updated",
-                        CreatedDate = request.CreatedDate
-                    };
+                    // LoggerDetailsModel loggerObj = new LoggerDetailsModel
+                    // {
+                    //     NotificationId = (int)Common.Enums.LoggerEnum.EmployeeUpdate,
+                    //     IsRead = false,
+                    //     UserName = user.FirstName + " " + user.LastName,
+                    //     UserId = request.ModifiedById,
+                    //     LoggedDetail = "Employee " + employeeinfo.EmployeeName + " Updated",
+                    //     CreatedDate = request.CreatedDate
+                    // };
 
-                    response.LoggerDetailsModel = loggerObj;
+                    // response.LoggerDetailsModel = loggerObj;
 
-                    await _dbContext.SaveChangesAsync();
+                    // await _dbContext.SaveChangesAsync();
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";

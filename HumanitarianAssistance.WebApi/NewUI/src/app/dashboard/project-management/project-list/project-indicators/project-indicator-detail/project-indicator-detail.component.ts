@@ -127,8 +127,7 @@ setIndicatorFormValue() {
   }
 
   public OnSubmit(formValue: any) {
-    debugger;
-    this.EditLoaderFlag = true;
+    this.EditLoaderFlag= true;
 
     if (formValue.ProjectIndicatorName != null && formValue.ProjectIndicatorName != '') {
       const model: IndicatorDetailModel = {

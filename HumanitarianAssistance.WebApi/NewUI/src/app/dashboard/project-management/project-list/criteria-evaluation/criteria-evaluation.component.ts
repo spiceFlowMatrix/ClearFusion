@@ -2513,22 +2513,22 @@ export class CriteriaEvaluationComponent
   currencyDetailsChange(value) {
     this.currencyDetailModel.CurrencyId = value;
     this.currencyDetailModel.ProjectId = this.ProjectId;
-    this.AddEditProjectProposal(this.currencyDetailModel);
+    this.AddEditProjectCurrency(this.currencyDetailModel);
   }
 
   //#endregion
 
   //#region  add/edit other project
-  AddEditProjectProposal(model: any) {
+  AddEditProjectCurrency(model: any) {
     const currencyModel: CurrencyDetailModel = {
       ProjectId: model.ProjectId,
       CurrencyId: model.CurrencyId
     };
 
     this.projectListService
-      .AddEditProjectProposalDetail(
+      .AddEditProjectCurrencyDetail(
         this.appurl.getApiUrl() +
-          GLOBAL.API_Project_AddEditProjectProposalDetail,
+          GLOBAL.API_Project_AddEditProjectCurrencyDetail,
         currencyModel
       )
       .pipe()

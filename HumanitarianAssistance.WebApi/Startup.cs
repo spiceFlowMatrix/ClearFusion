@@ -40,8 +40,6 @@ namespace HumanitarianAssistance.WebApi
             //get and set environment variable at run time
             string DefaultCorsPolicyUrl = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
             string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
-            // string DefaultsPolicyName = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_NAME");
-
             defaultCorsPolicyName = Configuration["DEFAULT_CORS_POLICY_NAME"];
 
             // Database connection
@@ -103,11 +101,14 @@ namespace HumanitarianAssistance.WebApi
             services.AddSignalR();
 
 
-            // Jwt Config
+            // Jwt configuration
             services.AddJwtAuthentication(Configuration);
 
             // swagger configuration
             services.AddSwaggerDocumentation();
+
+            // pdf configuration
+          //  services.AddPdfExtension();
 
 
         }
@@ -184,7 +185,7 @@ namespace HumanitarianAssistance.WebApi
                     if (env.IsDevelopment())
                     {
                         // it will use package.json & will search for start command to run
-                        //spa.UseAngularCliServer(npmScript: "start");
+                        // spa.UseAngularCliServer(npmScript: "start");
                     }
                     else
                     {
@@ -210,7 +211,7 @@ namespace HumanitarianAssistance.WebApi
                 if (env.IsDevelopment())
                 {
                     // it will use package.json & will search for start command to run
-                    //spa.UseAngularCliServer(npmScript: "start");
+                    // spa.UseAngularCliServer(npmScript: "start");
                 }
                 else
                 {

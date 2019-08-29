@@ -168,27 +168,6 @@ export class BudgetLineService {
   }
   //#endregion
 
-  //#region "GetTransationListByProjectId"
-  GetTransationListByProjectId(projecId: number): any {
-    return this.globalService
-      .getListById(
-        this.appurl.getApiUrl() +
-          GLOBAL.API_BudgetLine_GetTransactionListByProjectId,
-        projecId
-      )
-      .pipe(
-        map(x => {
-          const responseData: IResponseData = {
-            data: x.data.TransactionBudgetModelList,
-            statusCode: x.StatusCode,
-            message: x.Message
-          };
-          return responseData;
-        })
-      );
-  }
-  //#endregion
-
   //#region "GetTransactionList"
   GetTransationList(data: ITransactionModel): any {
     return this.globalService
