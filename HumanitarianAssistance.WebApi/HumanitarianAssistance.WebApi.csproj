@@ -11,6 +11,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="PdfTemplates\VoucherSummaryReport.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="PdfTemplates\VoucherSummaryReport.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
@@ -31,11 +41,22 @@
 
   
   <!-- Use of Pdf export -->
-  <ItemGroup>
+  <!-- <ItemGroup>
     <Content Update="PdfTemplates\CarPdf.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  <None Update="PdfTemplates\**\*">
+     <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+     <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+  </None>
+  </ItemGroup> -->
+  <ItemGroup>
+    <Content Update="PdfTemplates\**\*">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
+
 
 
   <ItemGroup>
