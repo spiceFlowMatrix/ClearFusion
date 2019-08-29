@@ -2,28 +2,27 @@
   <div class="col-sm-12">
     <mat-card [ngStyle]="scrollStyles">
       <div class="row">
-<!--
+        <!--
         <div class="loader-mr-left pull-right" *ngIf="updateRecordLoader;else showDeleteIcon">
           <mat-spinner diameter="20"></mat-spinner>
         </div> -->
         <!-- <ng-template #showDeleteIcon> -->
-          <div class="col-sm-12">
-            <div class="row">
-              <div class="col-sm-12">
-                <h4 class="main_heading">PROJECT INDICATOR DETAILS</h4>
-              </div>
+        <div class="col-sm-8">
+          <div class="row">
+            <div class="col-sm-12">
+              <h4 class="main_heading">PROJECT INDICATOR DETAILS</h4>
             </div>
           </div>
+        </div>
+        <div class="col-sm-4">
+          <button mat-raised-button color="primary" (click)="onIndicatorEditClick()">
+            Edit Indicator Detail
+          </button></div>
         <!-- </ng-template> -->
       </div>
       <div class="row">
         <div class="col-sm-12">
-          <form [formGroup]="indicatorForm" (ngSubmit)="OnSubmit(indicatorForm.value)">
-            <div class="col-sm-8">
-              <mat-form-field class="example-full-width">
-                <input matInput formControlName="indicatorName" placeholder="Indicator Name">
-              </mat-form-field>
-            </div>
+          <!-- <form [formGroup]="indicatorForm" (ngSubmit)="OnSubmit(indicatorForm.value)">
             <div class="col-sm-2">
               <button mat-icon-button pTooltip="Add Question" type="button" tooltipPosition="top" (click)="addItem()" *ngIf="!NewIndicatorLoaderFlag; else indicatorChangeLoaderTemplate">
                 <mat-icon aria-label="Add">add</mat-icon>
@@ -65,7 +64,7 @@
               </button>
             </div>
 
-          </form>
+          </form> -->
         </div>
       </div>
     </mat-card>

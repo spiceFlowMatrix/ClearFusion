@@ -1,5 +1,4 @@
-import { ICurrencyList } from "src/app/dashboard/accounting/gain-loss-report/gain-loss-report.model";
-import { INTERNAL_BROWSER_PLATFORM_PROVIDERS } from "@angular/platform-browser/src/browser";
+import { ICurrencyList } from 'src/app/dashboard/accounting/gain-loss-report/gain-loss-report.model';
 
 export interface IHiringReuestDataSource {
   EmployeeList: IEmployeeListModel[];
@@ -121,7 +120,7 @@ export interface ISelectedCandidateModel {
   HiringRequestId: number;
   IsSelected: boolean;
 }
-export interface IAttendaneGroupModel{
+export interface IAttendaneGroupModel {
   Description: string;
   Id: number;
   Name: number;
@@ -137,7 +136,7 @@ export interface IEmployeeContractList {
   EmployeeContractTypeId: number;
   EmployeeContractTypeName: string;
 }
-export interface CandidateDetailModel{
+export interface CandidateDetailModel {
   EmployeeContractTypeId: number;
   AttendanceGroupId: number;
   ProjectId?: number;

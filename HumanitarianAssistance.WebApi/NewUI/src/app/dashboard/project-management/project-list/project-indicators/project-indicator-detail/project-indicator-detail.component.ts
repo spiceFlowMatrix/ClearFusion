@@ -4,41 +4,32 @@ import {
   Input,
   Output,
   EventEmitter,
-  HostListener
+  HostListener,
+  OnChanges
 } from '@angular/core';
 
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ProjectListService } from 'src/app/dashboard/project-management/project-list/service/project-list.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { MatDialog } from '@angular/material/dialog';
 import { GLOBAL } from 'src/app/shared/global';
 import { ToastrService } from 'ngx-toastr';
-import { ProjectIndicatorModel, IndicatorDetailModel } from '../project-indicators-model';
+import {
+  ProjectIndicatorModel,
+  IndicatorDetailModel
+} from '../project-indicators-model';
+import { AddProjectIndicatorComponent } from '../add-project-indicator/add-project-indicator.component';
 
 @Component({
   selector: 'app-project-indicator-detail',
   templateUrl: './project-indicator-detail.component.html',
   styleUrls: ['./project-indicator-detail.component.scss']
 })
-export class ProjectIndicatorDetailComponent implements OnInit {
-
-  constructor(
-    public router: Router,
-    public dialog: MatDialog,
-    private fb: FormBuilder,
-    public projectListService: ProjectListService,
-    private appurl: AppUrlService,
-    public toastr: ToastrService
-  ) {
-    this.getScreenSize();
-  }
-
-  get questions(): FormArray {
-    return this.indicatorForm.get('questions') as FormArray;
-  }
-
-  indicatorDetail: ProjectIndicatorModel;
+export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
+  @Output() indicatorListRefresh = new EventEmitter();
+  @Input() ProjectindicatorDetail: any;
+  projectId: number;
 
   // screen
   scrollStyles: any;
@@ -46,8 +37,8 @@ export class ProjectIndicatorDetailComponent implements OnInit {
   screenWidth: any;
 
   // boolean flag
-  EditLoaderFlag= false;
-  NewIndicatorLoaderFlag= false;
+  EditLoaderFlag = false;
+  NewIndicatorLoaderFlag = false;
 
   // Input/Output properties
   @Input() indicatorId: number;
@@ -58,19 +49,51 @@ export class ProjectIndicatorDetailComponent implements OnInit {
   //#endregion
 
   public indicatorForm: FormGroup;
+  constructor(
+    public router: Router,
+    public dialog: MatDialog,
+    private fb: FormBuilder,
+    public projectListService: ProjectListService,
+    private appurl: AppUrlService,
+    public toastr: ToastrService,
+    private routeActive: ActivatedRoute
+  ) {
+    this.getScreenSize();
+  }
+
+  ngOnInit() {
+    this.initializeModel();
+    this.routeActive.parent.params.subscribe(params => {
+      this.projectId = +params['id'];
+    });
+  }
+
+  ngOnChanges() {
+  if (
+    this.ProjectindicatorDetail != null &&
+    this.ProjectindicatorDetail !== 0 &&
+    this.ProjectindicatorDetail !== undefined
+  ) {
+  this.setIndicatorFormValue();
+  }
+}
+// set popup value
+setIndicatorFormValue() {
+  this.indicatorForm = this.fb.group({
+    IndicatorName: this.ProjectindicatorDetail.IndicatorName,
+    Description : this.ProjectindicatorDetail.Description,
+    ProjectIndicatorId: this.ProjectindicatorDetail.ProjectIndicatorId
+  });
+}
+  get questions(): FormArray {
+    return this.indicatorForm.get('questions') as FormArray;
+  }
 
   initializeModel() {
     this.indicatorForm = this.fb.group({
-      indicatorName: ['', Validators.required],
-      id: 0,
-      questions: this.fb.array([])
+      ProjectIndicatorName: ['', Validators.required],
+      Description: ['', Validators.required]
     });
-
-    this.indicatorDetail = {
-      projectIndicatorCode: '',
-      projectIndicatorId: 0,
-      projectIndicatorName: ''
-    };
   }
 
   //#region "Dynamic Scroll"
@@ -92,10 +115,6 @@ export class ProjectIndicatorDetailComponent implements OnInit {
     // this.initializeModel();
   }
 
-  ngOnInit() {
-    this.initializeModel();
-  }
-
   createItem(): FormGroup {
     return this.fb.group({
       questionid: 0,
@@ -109,12 +128,12 @@ export class ProjectIndicatorDetailComponent implements OnInit {
 
   public OnSubmit(formValue: any) {
     debugger;
-    this.EditLoaderFlag= true;
+    this.EditLoaderFlag = true;
 
-    if (formValue.indicatorName != null && formValue.indicatorName != '') {
+    if (formValue.ProjectIndicatorName != null && formValue.ProjectIndicatorName != '') {
       const model: IndicatorDetailModel = {
         indicatorId: this.indicatorId,
-        indicatorName: formValue.indicatorName,
+        indicatorName: formValue.ProjectIndicatorName,
         indicatorQuestions: []
       };
 
@@ -130,103 +149,119 @@ export class ProjectIndicatorDetailComponent implements OnInit {
           this.appurl.getApiUrl() + GLOBAL.API_Project_EditProjectIndicator,
           model
         )
-        .subscribe(response => {
-          if(response.StatusCode == 200 && response.data.ProjectIndicator != null){
-
-            this.indicatorDetail.projectIndicatorCode= response.data.ProjectIndicator.IndicatorCode;
-            this.indicatorDetail.projectIndicatorId= response.data.ProjectIndicator.ProjectIndicatorId;
-            this.indicatorDetail.projectIndicatorName= response.data.ProjectIndicator.IndicatorName;
-            this.editIndicator.emit(this.indicatorDetail);
-            this.EditLoaderFlag= false;
-            this.toastr.success('Project Indicator Updated Successfully');
-          }
-        },
-          (error) => {
+        .subscribe(
+          response => {
+            if (
+              response.StatusCode == 200 &&
+              response.data.ProjectIndicator != null
+            ) {
+              // this.indicatorDetail.projectIndicatorCode =
+              //   response.data.ProjectIndicator.IndicatorCode;
+              // this.indicatorDetail.projectIndicatorId =
+              //   response.data.ProjectIndicator.ProjectIndicatorId;
+              // this.indicatorDetail.projectIndicatorName =
+              //   response.data.ProjectIndicator.IndicatorName;
+              // this.editIndicator.emit(this.indicatorDetail);
+              this.EditLoaderFlag = false;
+              this.toastr.success('Project Indicator Updated Successfully');
+            }
+          },
+          error => {
             this.EditLoaderFlag = false;
             this.toastr.success('Something went wrong');
-          });
-    }
-    else{
+          }
+        );
+    } else {
       this.EditLoaderFlag = false;
     }
   }
 
-  ngOnChanges(): void {
+  // ngOnChanges(): void {
+  //   if (this.indicatorId !== 0 && this.indicatorId !== undefined) {
+  //     this.GetProjectIndicatorDetailById(this.indicatorId);
+  //   }
+  // }
 
-    if (this.indicatorId !== 0 && this.indicatorId !== undefined) {
+  GetProjectIndicatorDetailById(id) {
+    this.NewIndicatorLoaderFlag = true;
 
-       this.GetProjectIndicatorDetailById(this.indicatorId);
-    }
-  }
-
-  GetProjectIndicatorDetailById(id){
-    this.NewIndicatorLoaderFlag= true;
-
-    if(id !=0 && id !=undefined && id !=null){
+    if (id != 0 && id != undefined && id != null) {
       this.projectListService
-      .GetProjectIndicatorById(
-        this.appurl.getApiUrl() + GLOBAL.API_Project_GetProjectIndicatorDetailById,id)
-       .subscribe(response => {
-        if (response.StatusCode == 200) {
-          this.initializeModel();
-          const control = <FormArray>this.indicatorForm.controls.questions;
-          response.data.IndicatorModel.IndicatorQuestions.forEach(x => {
-            control.push(
-              this.fb.group({
-              questionid: x.QuestionId,
-              question: x.QuestionText,
-              }));
-          });
+        .GetProjectIndicatorById(
+          this.appurl.getApiUrl() +
+            GLOBAL.API_Project_GetProjectIndicatorDetailById,
+          id
+        )
+        .subscribe(
+          response => {
+            if (response.StatusCode == 200) {
+              this.initializeModel();
+              const control = <FormArray>this.indicatorForm.controls.questions;
+              response.data.IndicatorModel.IndicatorQuestions.forEach(x => {
+                control.push(
+                  this.fb.group({
+                    questionid: x.QuestionId,
+                    question: x.QuestionText
+                  })
+                );
+              });
 
-          this.indicatorForm.patchValue({
-            indicatorName: response.data.IndicatorModel.IndicatorName,
-            id: response.data.IndicatorModel.IndicatorId,
-          })
-          this.NewIndicatorLoaderFlag= false;
-          this.EditLoaderFlag= false;
-        }
-        if (response.StatusCode == 400) {
-          this.toastr.error(response.Message);
-          this.EditLoaderFlag= false;
-        }
-      },
-      (error) => {
-        this.NewIndicatorLoaderFlag = false;
-        this.EditLoaderFlag= false;
-        this.toastr.error('Something went wrong');
-      });
+              this.indicatorForm.patchValue({
+                indicatorName: response.data.IndicatorModel.IndicatorName,
+                id: response.data.IndicatorModel.IndicatorId
+              });
+              this.NewIndicatorLoaderFlag = false;
+              this.EditLoaderFlag = false;
+            }
+            if (response.StatusCode == 400) {
+              this.toastr.error(response.Message);
+              this.EditLoaderFlag = false;
+            }
+          },
+          error => {
+            this.NewIndicatorLoaderFlag = false;
+            this.EditLoaderFlag = false;
+            this.toastr.error('Something went wrong');
+          }
+        );
     }
   }
 
-  CreateProjectIndicatorOnAddNew() {
-    debugger;
-    this.initializeModel();
-    this.indicatorDetail.projectIndicatorId = 0;
-    this.projectListService
-      .AddProjectIndicatorQuestions(
-        this.appurl.getApiUrl() + GLOBAL.API_Project_AddProjectIndicator
-      )
-      .subscribe(response => {
-        if (response.StatusCode == 200) {
-          this.indicatorId= response.data.ProjectIndicator.ProjectIndicatorId;
-
-          const projectIndicatorModel: ProjectIndicatorModel = {
-            projectIndicatorCode: response.data.ProjectIndicator.IndicatorCode,
-            projectIndicatorId:
-              response.data.ProjectIndicator.ProjectIndicatorId,
-            projectIndicatorName: ''
-          };
-
-          this.addIndicator.emit({
-            projectIndicator: projectIndicatorModel,
-            count: response.data.TotalCount
-          });
-        }
-      });
-  }
-
-  onDelete(index:number){
+  onDelete(index: number) {
     const control = <FormArray>this.indicatorForm.controls['questions'];
     control.removeAt(index);
   }
+
+  onIndicatorEditClick() {
+    this.openIndicatorDialog();
+  }
+
+  //#region "openHiringRequestDialog"
+  openIndicatorDialog(): void {
+    debugger;
+    // NOTE: It passed the data into the Add Activity Model
+    const dialogRef = this.dialog.open(AddProjectIndicatorComponent, {
+      width: '550px',
+      autoFocus: false,
+      data: {
+        ProjectId: this.projectId,
+        ProjectindicatorDetail: this.indicatorForm.value
+      }
+    });
+
+    // refresh the list after new request created
+    dialogRef.componentInstance.onUpdateIndicatorListRefresh.subscribe(
+      (data: any) => {
+        this.indicatorListRefresh.emit(data);
+        this.indicatorForm = this.fb.group({
+          IndicatorName: [data.IndicatorName],
+          Description: [data.Description],
+          ProjectIndicatorId: [data.ProjectIndicatorId]
+        });
+      }
+    );
+
+    dialogRef.afterClosed().subscribe(result => {});
+  }
+  //#endregion
 }

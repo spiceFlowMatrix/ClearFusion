@@ -1,0 +1,40 @@
+<div>
+  <h1 mat-dialog-title>
+    Project Indicator
+    <button mat-icon-button [mat-dialog-close]="data" class="pull-right">
+      <mat-icon aria-label="clear">clear</mat-icon>
+    </button>
+  </h1>
+  <form class="example-form" [formGroup]="indicatorForm" (ngSubmit)="onFormSubmit(indicatorForm.value)">
+    <div mat-dialog-content>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="row">
+            <div class="col-lg-6 col-sm-6">
+              <mat-form-field class="example-full-width">
+                <input matInput formControlName="IndicatorName" placeholder="Indicator Name">
+              </mat-form-field>
+            </div>
+            <div class="col-lg-12 col-sm-12">
+              <mat-form-field class="example-full-width">
+                <textarea matInput formControlName="Description" placeholder="Description" matTextareaAutosize
+                  matAutosizeMinRows="5" matAutosizeMaxRows="7"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div mat-dialog-actions class="pull-right">
+      <button mat-raised-button [mat-dialog-close]="data">Cancel</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="addIndicatorLoader">
+        <span *ngIf="!addIndicatorLoader; else indicatorAddLoaderTemplate">Save</span>
+        <ng-template #indicatorAddLoaderTemplate>
+          <div class="spinner_center padding_top_5 padding_bottom_5">
+            <mat-spinner [diameter]="25"> </mat-spinner>
+          </div>
+        </ng-template>
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ProjectIndicatorDetailComponent } from './project-indicator-detail/project-indicator-detail.component';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
@@ -8,8 +8,11 @@ import { ProjectListService } from '../service/project-list.service';
 import { GLOBAL } from 'src/app/shared/global';
 import {
   ProjectIndicatorFilterModel,
-  ProjectIndicatorModel
+  ProjectIndicatorModel,
+  IProjectIndicatorModel
 } from './project-indicators-model';
+import { MatDialog } from '@angular/material';
+import { AddProjectIndicatorComponent } from './add-project-indicator/add-project-indicator.component';
 
 @Component({
   selector: 'app-project-indicators',
@@ -18,9 +21,11 @@ import {
 })
 export class ProjectIndicatorsComponent implements OnInit {
   //#region "variables"
-  indicatorFilterModel: ProjectIndicatorFilterModel;
-
   @ViewChild(ProjectIndicatorDetailComponent) child;
+
+  ProjectindicatorDetail: any;
+  indicatorFilterModel: ProjectIndicatorFilterModel;
+  projectId: number;
 
   projectIndicatorId: number;
   selectedRowID: number;
@@ -41,7 +46,9 @@ export class ProjectIndicatorsComponent implements OnInit {
     private appurl: AppUrlService,
     public projectListService: ProjectListService,
     public router: Router,
-    public toastr: ToastrService
+    public toastr: ToastrService,
+    public dialog: MatDialog,
+    private routeActive: ActivatedRoute
   ) {
     this.getScreenSize();
   }
@@ -50,9 +57,12 @@ export class ProjectIndicatorsComponent implements OnInit {
     this.indicatorFilterModel = {
       pageIndex: 0,
       pageSize: 10,
-      totalCount: 0
+      totalCount: 0,
+      ProjectId: null
     };
-
+    this.routeActive.parent.params.subscribe(params => {
+      this.projectId = +params['id'];
+    });
     this.getAllProjectIndicatorList();
   }
 
@@ -70,17 +80,19 @@ export class ProjectIndicatorsComponent implements OnInit {
   }
   //#endregion
 
-  onItemClick(id: number) {
-    this.projectIndicatorId = id;
+  onItemClick(item: any) {
+    this.projectIndicatorId = item.ProjectIndicatorId;
     if (
       this.projectIndicatorId === 0 ||
       this.projectIndicatorId === undefined ||
       this.projectIndicatorId === null
     ) {
-      this.child.formReset();
-      this.child.CreateProjectIndicatorOnAddNew();
+      // this.child.formReset();
+      // this.child.CreateProjectIndicatorOnAddNew();
     }
-    this.selectedRowID = id;
+    this.selectedRowID = item.ProjectIndicatorId;
+    this.ProjectindicatorDetail = item;
+    console.log('detail',this.ProjectindicatorDetail);
     this.showProjectDetailPanel();
   }
 
@@ -99,8 +111,10 @@ export class ProjectIndicatorsComponent implements OnInit {
 
   //#region "getAllProjectIndicatorList"
   getAllProjectIndicatorList() {
+    if (this.projectId != null && this.projectId != undefined) {
     this.projectIndicatorListLoaderFlag = true;
     this.indicatorFilterModel.totalCount = 0;
+    this.indicatorFilterModel.ProjectId = this.projectId;
     this.projectListService
       .GetProjectIndicatorsList(
         this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProjectIndicators,
@@ -119,9 +133,11 @@ export class ProjectIndicatorsComponent implements OnInit {
             data.data.ProjectIndicatorList.ProjectIndicators.forEach(
               element => {
                 this.projectIndicatorList.push({
-                  projectIndicatorId: element.ProjectIndicatorId,
-                  projectIndicatorName: element.IndicatorName,
-                  projectIndicatorCode: element.IndicatorCode
+                  ProjectIndicatorId: element.ProjectIndicatorId,
+                  IndicatorName: element.IndicatorName,
+                  ProjectIndicatorCode: element.IndicatorCode,
+                  Description: element.Description,
+                  Questions: element.Questions
                 });
                 // this.DonorDetailModel = this.donorList;
               }
@@ -139,6 +155,7 @@ export class ProjectIndicatorsComponent implements OnInit {
         }
       );
   }
+}
   //#endregion
 
   addProjectIndicator(e) {
@@ -148,7 +165,7 @@ export class ProjectIndicatorsComponent implements OnInit {
 
   editIndicatorList(e) {
     const index = this.projectIndicatorList.findIndex(
-      r => r.projectIndicatorId === e.projectIndicatorId
+      r => r.ProjectIndicatorId === e.projectIndicatorId
     );
     if (index !== -1) {
       this.projectIndicatorList[index] = e;
@@ -166,4 +183,40 @@ export class ProjectIndicatorsComponent implements OnInit {
     this.colsm6 = this.showJobDetail ? 'col-sm-6' : 'col-sm-10 col-sm-offset-1';
   }
   //#endregion
+
+  //#region "onAddNewIndicator"
+  onAddNewIndicator() {
+    this.openIndicatorDialog();
+  }
+
+  openIndicatorDialog(): void {
+    // NOTE: It passed the data into the AddProjectIndicatorComponent Model
+    const dialogRef = this.dialog.open(AddProjectIndicatorComponent, {
+      width: '550px',
+      autoFocus: false,
+      data: {
+        ProjectId: this.projectId
+      }
+    });
+
+    // refresh the list after new request created
+    dialogRef.componentInstance.onIndicatorListRefresh.subscribe(() => {
+      // do something
+      this.getAllProjectIndicatorList();
+    });
+
+    dialogRef.afterClosed().subscribe(result => {});
+  }
+  //#endregion
+//#region "Listupdate After update"
+  OnindicatorListRefresh(event: any){
+    debugger
+    const data = this.projectIndicatorList.find(
+      x => x.ProjectIndicatorId === event.ProjectIndicatorId
+    );
+    const indexOfIndicatorList = this.projectIndicatorList.indexOf(data);
+    this.projectIndicatorList[indexOfIndicatorList] = event;
+  }
+  //#endregion
+
 }

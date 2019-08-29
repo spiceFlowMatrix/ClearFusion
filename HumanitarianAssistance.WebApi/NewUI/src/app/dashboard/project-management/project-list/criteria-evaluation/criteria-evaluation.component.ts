@@ -2413,7 +2413,7 @@ export class CriteriaEvaluationComponent
             }
           },
           error => {
-            this.toastr.error('Something went wrong! Please try Agian');
+            this.toastr.error('Something went wrong! Please try Again');
           }
         );
     }
@@ -2447,7 +2447,7 @@ export class CriteriaEvaluationComponent
             }
           },
           error => {
-            this.toastr.error('Something went wrong! Please try Agian');
+            this.toastr.error('Something went wrong! Please try Again');
           }
         );
     }
@@ -2502,7 +2502,7 @@ export class CriteriaEvaluationComponent
             }
           },
           error => {
-            this.toastr.error('Something went wrong! Please try Agian');
+            this.toastr.error('Something went wrong! Please try Again');
           }
         );
     }
@@ -2540,7 +2540,7 @@ export class CriteriaEvaluationComponent
           }
         },
         error => {
-          this.toastr.error('Something went wrong! Please try Agian');
+          this.toastr.error('Something went wrong! Please try Again');
         }
       );
   }
