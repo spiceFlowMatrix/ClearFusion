@@ -52,8 +52,7 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                     DesignationId = x.EmployeeProfessionalDetail.DesignationId,
                     CountryId= x.CountryId,
                     ProvinceId = x.ProvinceId,
-                    ProjectId = x.ProjectId,
-                    BudgetLineId = x.BudgetLineId
+                    ProjectId = x.ProjectId
                 }).ToListAsync();
 
 
