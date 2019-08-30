@@ -5,13 +5,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DinkToPdf;
-using DinkToPdf.Contracts;
 using HumanitarianAssistance.Application.Accounting.Models;
-using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Persistence;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using RazorLight;
 
 namespace HumanitarianAssistance.Application.Accounting.Queries
@@ -20,14 +16,11 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IRazorLightEngine _razorEngine;
-        private readonly IConverter _pdfConverter;
 
-        public GetAllVoucherSummaryReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IRazorLightEngine razorEngine, IConverter pdfConverter)
-        // public GetAllVoucherSummaryReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IConverter pdfConverter)
+        public GetAllVoucherSummaryReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IRazorLightEngine razorEngine)
         {
             _dbContext = dbContext;
             _razorEngine = razorEngine;
-            _pdfConverter = pdfConverter;
         }
 
         public async Task<byte[]> Handle(GetAllVoucherSummaryReportPdfQuery request, CancellationToken cancellationToken)
@@ -49,7 +42,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                 Console.WriteLine(templatePath);
 
                 string template = await _razorEngine.CompileRenderAsync(templatePath, model);
-                // Console.WriteLine(template);
+                Console.WriteLine(template);
 
                 var sb = new StringBuilder();
                 sb.Append(@"
@@ -74,31 +67,31 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
                 Console.WriteLine(sb.ToString());
 
-                var globalSettings = new GlobalSettings
-                {
-                    ColorMode = ColorMode.Color,
-                    Orientation = Orientation.Portrait,
-                    PaperSize = PaperKind.A4,
-                    Margins = new MarginSettings() { Top = 10, Bottom = 10, Left = 10, Right = 10 },
-                    DocumentTitle = "Simple PDF document",
-                };
-                var objectSettings = new ObjectSettings
-                {
-                    PagesCount = true,
-                    HtmlContent = template,
-                    // HtmlContent = sb.ToString(),
-                    WebSettings = { DefaultEncoding = "utf-8" },
-                    HeaderSettings = { FontName = "Arial", FontSize = 12, Line = true, Center = "Fun pdf document" },
-                    FooterSettings = { FontName = "Arial", FontSize = 12, Line = true, Right = "Page [page] of [toPage]" }
-                };
-                var pdf = new HtmlToPdfDocument()
-                {
-                    GlobalSettings = globalSettings,
-                    Objects = { objectSettings }
-                };
-                byte[] file = _pdfConverter.Convert(pdf);
+                // var globalSettings = new GlobalSettings
+                // {
+                //     ColorMode = ColorMode.Color,
+                //     Orientation = Orientation.Portrait,
+                //     PaperSize = PaperKind.A4,
+                //     Margins = new MarginSettings() { Top = 10, Bottom = 10, Left = 10, Right = 10 },
+                //     DocumentTitle = "Simple PDF document",
+                // };
+                // var objectSettings = new ObjectSettings
+                // {
+                //     PagesCount = true,
+                //     HtmlContent = template,
+                //     // HtmlContent = sb.ToString(),
+                //     WebSettings = { DefaultEncoding = "utf-8" },
+                //     HeaderSettings = { FontName = "Arial", FontSize = 12, Line = true, Center = "Fun pdf document" },
+                //     FooterSettings = { FontName = "Arial", FontSize = 12, Line = true, Right = "Page [page] of [toPage]" }
+                // };
+                // var pdf = new HtmlToPdfDocument()
+                // {
+                //     GlobalSettings = globalSettings,
+                //     Objects = { objectSettings }
+                // };
+                // byte[] file = _pdfConverter.Convert(pdf);
 
-                // byte[] file = new byte[10];
+                byte[] file = new byte[10];
 
                 return file;
 
