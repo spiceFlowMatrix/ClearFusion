@@ -246,7 +246,6 @@ export class ContractInfoComponent implements OnInit {
             data.StatusCode === 200 &&
             data.data.EmployeeDetailListData != null
           ) {
-            debugger;
             if (data.data.EmployeeDetailListData.length > 0) {
               data.data.EmployeeDetailListData.forEach(element => {
                 this.selectedEmployeeDetails.push(element);
@@ -545,9 +544,6 @@ export class ContractInfoComponent implements OnInit {
     if (e != null) {
       let fieldName = '';
       let value = '';
-
-      debugger;
-      
       switch (e.dataField) {
         case 'Project': {
           if (e.value != null && e.value !== 0) {

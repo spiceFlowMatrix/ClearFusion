@@ -47,7 +47,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     Purchase = x.PurchaseId,
                     ReturnedDate = x.ReturnedDate,
                     IssedToLocation = x.IssedToLocation,
-                    IssueVoucherNo = x.IssueVoucherNo.ToString(),
+                    // IssueVoucherNo = x.IssueVoucherNo.ToString(),
                     Project = x.Project,
                     Remarks = x.Remarks,
                     StatusAtTimeOfIssue = x.StatusAtTimeOfIssue

@@ -57,8 +57,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     PurchasedById = v.PurchasedById,
                     InventoryItem = v.InventoryItem,
                     //Newly added fields
-                    VoucherId = v.VoucherId,
-                    VoucherDate = v.VoucherDate,
+                   // VoucherId = v.VoucherId,
+                   // VoucherDate = v.VoucherDate,
                     AssetTypeId = v.AssetTypeId,
                     InvoiceNo = v.InvoiceNo,
                     InvoiceDate = v.InvoiceDate,
@@ -68,10 +68,10 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     ProjectId = v.ProjectId,
                     BudgetLineId = v.BudgetLineId,
                     PaymentTypeId = v.PaymentTypeId,
-                    IsPurchaseVerified = v.IsPurchaseVerified,
-                    VerifiedPurchaseVoucher = v.VerifiedPurchaseVoucher,
+                   // IsPurchaseVerified = v.IsPurchaseVerified,
+                   // VerifiedPurchaseVoucher = v.VerifiedPurchaseVoucher,
                     JournalCode = v.JournalCode,
-                    VerifiedPurchaseVoucherReferenceNo = v.VerifiedPurchaseVoucher != null ? _dbContext.VoucherDetail.FirstOrDefault(x => x.IsDeleted == false && x.VoucherNo == v.VerifiedPurchaseVoucher).ReferenceNo : null
+                   // VerifiedPurchaseVoucherReferenceNo = v.VerifiedPurchaseVoucher != null ? _dbContext.VoucherDetail.FirstOrDefault(x => x.IsDeleted == false && x.VoucherNo == v.VerifiedPurchaseVoucher).ReferenceNo : null
                 }).OrderByDescending(x=> x.PurchaseDate).ToList();
 
                 List<ExchangeRateDetail> exchangeRate= new List<ExchangeRateDetail>();
@@ -120,7 +120,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                    //var exchangeRate = _dbContext.ExchangeRateDetail.OrderByDescending(x=> x.Date).FirstOrDefault(x => x.IsDeleted == false && x.Date.Date <= item.PurchaseDate.Date && x.FromCurrency == item.Currency && x.ToCurrency == (int)Currency.USD);
 
-                    if (exchangeRate == null)
+                    if (exRate == null)
                     {
                         throw new Exception($"Exchange Rates not defined for Date {item.PurchaseDate.Date.ToString("dd/MM/yyyy")}");
                     }

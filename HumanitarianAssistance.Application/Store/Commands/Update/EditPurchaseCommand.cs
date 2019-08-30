@@ -23,8 +23,8 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
 
 
         //Newly Added Fields
-        public long? VoucherId { get; set; }
-        public DateTime VoucherDate { get; set; }
+       // public long? VoucherId { get; set; }
+       // public DateTime VoucherDate { get; set; }
         public int? AssetTypeId { get; set; } // 1. Cash , 2. In Kind
         public string InvoiceNo { get; set; }
         public DateTime? InvoiceDate { get; set; }
@@ -34,11 +34,11 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
         public long? ProjectId { get; set; }
         public long? BudgetLineId { get; set; }
         public int? PaymentTypeId { get; set; }
-        public bool? IsPurchaseVerified { get; set; }
-        public long? VerifiedPurchaseVoucher { get; set; }
+       // public bool? IsPurchaseVerified { get; set; }
+      //  public long? VerifiedPurchaseVoucher { get; set; }
         public int? OfficeId { get; set; }
         public int? JournalCode { get; set; }
-        public string VerifiedPurchaseVoucherReferenceNo { get; set; }
+      //  public string VerifiedPurchaseVoucherReferenceNo { get; set; }
         public int? TimezoneOffset { get; set; }
     }
 }

@@ -185,7 +185,7 @@ namespace HumanitarianAssistance.WebApi
                     if (env.IsDevelopment())
                     {
                         // it will use package.json & will search for start command to run
-                        // spa.UseAngularCliServer(npmScript: "start");
+                         spa.UseAngularCliServer(npmScript: "start");
                     }
                     else
                     {
@@ -211,7 +211,7 @@ namespace HumanitarianAssistance.WebApi
                 if (env.IsDevelopment())
                 {
                     // it will use package.json & will search for start command to run
-                    // spa.UseAngularCliServer(npmScript: "start");
+                     spa.UseAngularCliServer(npmScript: "start");
                 }
                 else
                 {
