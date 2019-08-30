@@ -19,7 +19,18 @@ namespace HumanitarianAssistance.WebApi.Extensions
             // }
 
             var pdfcontext = new CustomPdfContext();
-            pdfcontext.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), $"PDFNative/{processSufix}/libwkhtmltox.dll"));
+
+            var templatePath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), $"PDFNative/{processSufix}/libwkhtmltox.dll");
+            Console.WriteLine("Temp path: ", templatePath);
+
+
+            // var path = Path.Combine(Directory.GetCurrentDirectory(), $"PDFNative/{processSufix}/libwkhtmltox.dll");
+            var path = Path.Combine($"PDFNative/{processSufix}/libwkhtmltox.dll");
+            Console.WriteLine("Dll path: ",path);
+
+
+
+            pdfcontext.LoadUnmanagedLibrary(path);
 
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
