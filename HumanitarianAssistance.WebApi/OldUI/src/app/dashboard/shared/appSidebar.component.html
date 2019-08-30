@@ -201,9 +201,9 @@
                         <li (click)="toggleSideFun()" *ngIf="displayModulePages(Store.StoreSourceCodes)">
                             <a href="javascript:void(0)" (click)="navigateToPath('store/store-source-codes')">Store Source Codes</a>
                         </li>
-                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Store.PaymentTypes)">
+                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(Store.PaymentTypes)">
                             <a href="javascript:void(0)" (click)="navigateToPath('store/payment-types')">Payment Types</a>
-                        </li>
+                        </li> -->
                         <li role="separator" class="divider" *ngIf="displaySeparator([Store.Store,Store.ProcurementSummary,Store.DepreciationReport])"></li>
                         <li (click)="toggleSideFun()" *ngIf="displayModulePages(Store.Store)">
                             <a href="javascript:void(0)" (click)="navigateToPath('store/store-main')">Store</a>

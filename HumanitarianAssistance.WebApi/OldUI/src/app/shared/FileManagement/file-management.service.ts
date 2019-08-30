@@ -45,7 +45,7 @@ export class FileManagementService {
 
     PutByModel(url: string, model: any) {
         const Myheaders = new Headers();
-          Myheaders.append('Content-Type', model.type);
+           Myheaders.append('Content-Type', model.type);
         const options = new RequestOptions({ headers: Myheaders, });
         return this.http
           .put(url, model, options)
@@ -124,6 +124,7 @@ export class FileManagementService {
         }), concatMap(res1 => {
 
                if (res1['status'] === 200) {
+                 debugger;
                     const data: FileModel = {
                         FileName: dataModel.File.name,
                         FilePath: this.objectName,

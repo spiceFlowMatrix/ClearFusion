@@ -25,8 +25,8 @@
         <dxi-column dataField="ReturnedDate" [visible]="true" dataType="date" format="dd/MM/yyyy"> </dxi-column>
 
 
-        <dxi-column dataField="IssueVoucherNo">
-        </dxi-column>
+        <!-- <dxi-column dataField="IssueVoucherNo">
+        </dxi-column> -->
         <dxi-column dataField="Project" caption="Project">
           <dxo-lookup [dataSource]="projectList" valueExpr="ProjectId" displayExpr="ProjectName"></dxo-lookup>
         </dxi-column>
@@ -97,11 +97,11 @@
               <dxo-label alignment="left"></dxo-label>
               <dxi-validation-rule type="required"> </dxi-validation-rule>
             </dxi-item>
-
+<!-- 
             <dxi-item dataField="IssueVoucherNo">
               <dxo-label text="Issue Voucher No" alignment="left"></dxo-label>
               <dxi-validation-rule type="required"> </dxi-validation-rule>
-            </dxi-item>
+            </dxi-item> -->
 
             <dxi-item dataField="Project" editorType="dxSelectBox" [editorOptions]="{ dataSource: projectList, valueExpr: 'ProjectId', displayExpr: 'ProjectName', searchEnabled: true, showClearButton: false  }">
               <dxi-validation-rule type="required"> </dxi-validation-rule>

@@ -31,6 +31,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                 if (request != null)
                 {
                     StorePurchaseOrder obj = _mapper.Map<StorePurchaseOrder>(request);
+                    obj.PurchaseId = request.Purchase;
 
                     obj.IsDeleted = false;
 
