@@ -58,7 +58,10 @@ export class ProjectIndicatorsComponent implements OnInit {
       pageIndex: 0,
       pageSize: 10,
       totalCount: 0,
-      ProjectId: null
+      ProjectId: null,
+      Description: null,
+      ProjectIndicatorId: null,
+      Questions: null
     };
     this.routeActive.parent.params.subscribe(params => {
       this.projectId = +params['id'];
@@ -135,9 +138,9 @@ export class ProjectIndicatorsComponent implements OnInit {
                 this.projectIndicatorList.push({
                   ProjectIndicatorId: element.ProjectIndicatorId,
                   IndicatorName: element.IndicatorName,
-                  ProjectIndicatorCode: element.IndicatorCode,
+                  IndicatorCode: element.IndicatorCode,
                   Description: element.Description,
-                  Questions: element.Questions
+                  Questions: element.Questions,
                 });
                 // this.DonorDetailModel = this.donorList;
               }

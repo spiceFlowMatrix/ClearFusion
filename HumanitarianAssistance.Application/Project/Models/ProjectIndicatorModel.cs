@@ -45,4 +45,5 @@ namespace HumanitarianAssistance.Application.Project.Models
         public bool? IsDeleted { get; set; }
     }
 
+
 }

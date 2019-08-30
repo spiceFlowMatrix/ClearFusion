@@ -1219,9 +1219,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(query);
         }
         [HttpPost]
-        public async Task<ApiResponse> GetProjectIndicatorDetailById([FromBody]long indicatorId)
+        public async Task<ApiResponse> GetIndicatorQuestionDetailById([FromBody]long indicatorId)
         {
-            return await _mediator.Send(new GetProjectIndicatorDetailByIdQuery { indicatorId = indicatorId });
+            return await _mediator.Send(new GetIndicatorQuestionDetailByIdQuery { indicatorId = indicatorId });
         }
         [HttpPost]
         public async Task<ApiResponse> AddProjectIndicator([FromBody] AddProjectIndicatorCommand command)
@@ -1242,6 +1242,19 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             command.ModifiedDate = DateTime.UtcNow;
             return await _mediator.Send(command);
         }
+
+        [HttpPost]
+        public async Task<ApiResponse> AddProjectIndicatorQuestions([FromBody]AddProjectIndicatorQuestionsCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+        }
+
+
+
+
         [HttpPost]
         public async Task<ApiResponse> GetProjectIndicatorQuestionsById([FromBody]long indicatorId)
         {

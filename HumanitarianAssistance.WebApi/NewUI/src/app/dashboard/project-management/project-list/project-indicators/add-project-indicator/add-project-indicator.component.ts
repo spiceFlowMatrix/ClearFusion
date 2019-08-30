@@ -37,7 +37,6 @@ export class AddProjectIndicatorComponent implements OnInit {
   ) {
     this.projectId = data.ProjectId;
     this.IndicatorDetail = data.ProjectindicatorDetail;
-    console.log('indica projectid', this.projectId);
   }
 
   ngOnInit() {
@@ -88,7 +87,7 @@ export class AddProjectIndicatorComponent implements OnInit {
             this.toastr.error(response.message);
           }
           this.onCancelPopup();
-          this.indicatorListRefresh();
+          this.indicatorListRefresh(indicatorDetail);
 
           this.addIndicatorLoader = false;
         },
@@ -138,8 +137,8 @@ export class AddProjectIndicatorComponent implements OnInit {
   //#endregion
 
   //#region "hiringRequestListRefresh"
-  indicatorListRefresh() {
-    this.onIndicatorListRefresh.emit();
+  indicatorListRefresh(indicatorDetail: any) {
+    this.onIndicatorListRefresh.emit(indicatorDetail);
   }
 
   indicatorListRefreshOnUpdate(data: any) {

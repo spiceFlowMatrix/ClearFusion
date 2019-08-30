@@ -13,7 +13,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         [Column(Order = 1)]
         public long IndicatorQuestionId { get; set; }
         public string IndicatorQuestion { get; set; }
-        public bool? QuestionType { get; set; }
+        public int? QuestionType { get; set; }
         public long ProjectIndicatorId { get; set; }
         [ForeignKey("ProjectIndicatorId")]
         public ProjectIndicators ProjectIndicators { get; set; }

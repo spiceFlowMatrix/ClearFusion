@@ -83,6 +83,7 @@ import { ProjectIndicatorsComponent } from './project-list/project-indicators/pr
 import { ProjectIndicatorDetailComponent } from './project-list/project-indicators/project-indicator-detail/project-indicator-detail.component';
 import { ProposalDocumentComponent } from './project-list/proposal/proposal-document/proposal-document.component';
 import { AddProjectIndicatorComponent } from './project-list/project-indicators/add-project-indicator/add-project-indicator.component';
+import { AddQuestionsDialogComponent } from './project-list/project-indicators/add-questions-dialog/add-questions-dialog.component';
 
 @NgModule({
   imports: [
@@ -165,7 +166,8 @@ import { AddProjectIndicatorComponent } from './project-list/project-indicators/
     AddCandidateDaialogComponent,
     EditCandidateDetailDialogComponent,
     ProposalDocumentComponent,
-    AddProjectIndicatorComponent
+    AddProjectIndicatorComponent,
+    AddQuestionsDialogComponent
 
   ],
   providers: [
@@ -192,7 +194,8 @@ import { AddProjectIndicatorComponent } from './project-list/project-indicators/
     AddHiringRequestsComponent,
     AddCandidateDaialogComponent,
     EditCandidateDetailDialogComponent,
-    AddProjectIndicatorComponent
+    AddProjectIndicatorComponent,
+    AddQuestionsDialogComponent
   ]
 })
 export class ProjectManagementModule {}

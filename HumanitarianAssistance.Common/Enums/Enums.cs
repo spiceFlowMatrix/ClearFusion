@@ -203,4 +203,26 @@
         PurchaseInvoice = 2
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public enum QuestionType
+    {
+        Qualitative = 1,
+        Quantitative = 2
+    }
 }
