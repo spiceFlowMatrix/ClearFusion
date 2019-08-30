@@ -6,6 +6,11 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
 
+    <!-- set up for pdf functionality -->
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>   
+    <!-- <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish> -->
+
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
   </PropertyGroup>
@@ -27,43 +32,27 @@
     <ProjectReference Include="..\HumanitarianAssistance.Infrastructure\HumanitarianAssistance.Infrastructure.csproj" />
   </ItemGroup>
 
-
-
   
   <!-- Use of Pdf export -->
   <ItemGroup>
-    <Content Update="PdfTemplates\CarPdf.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Update="PdfTemplates\**\*">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="NativeLibraries\**" />
-    <Content Remove="NativeLibraries\**" />
-    <EmbeddedResource Remove="NativeLibraries\**" />
-    <None Remove="NativeLibraries\**" />
+    <Content Remove="PdfTemplates\VoucherSummaryReport.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="PDFNative\32bit\libwkhtmltox.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PDFNative\32bit\libwkhtmltox.dylib">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PDFNative\32bit\libwkhtmltox.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PDFNative\64bit\libwkhtmltox.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PDFNative\64bit\libwkhtmltox.dylib">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PDFNative\64bit\libwkhtmltox.so">
+    <None Include="PdfTemplates\VoucherSummaryReport.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+
+
   <!-- Use of Pdf export -->
 
 
