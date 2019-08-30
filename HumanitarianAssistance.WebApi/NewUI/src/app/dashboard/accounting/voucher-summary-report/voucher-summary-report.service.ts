@@ -21,7 +21,7 @@ export class VoucherSummaryReportService {
              .pipe(
               map(x => {
                 const responseData: IResponseData = {
-                  data: x.data.VoucherSummaryList,
+                  data: x.ResponseData,
                   statusCode: x.StatusCode,
                   message: x.Message,
                   total: x.data.TotalCount

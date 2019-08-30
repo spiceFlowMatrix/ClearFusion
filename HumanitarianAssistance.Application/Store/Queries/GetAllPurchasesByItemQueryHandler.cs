@@ -120,7 +120,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                    //var exchangeRate = _dbContext.ExchangeRateDetail.OrderByDescending(x=> x.Date).FirstOrDefault(x => x.IsDeleted == false && x.Date.Date <= item.PurchaseDate.Date && x.FromCurrency == item.Currency && x.ToCurrency == (int)Currency.USD);
 
-                    if (exchangeRate == null)
+                    if (exRate == null)
                     {
                         throw new Exception($"Exchange Rates not defined for Date {item.PurchaseDate.Date.ToString("dd/MM/yyyy")}");
                     }
