@@ -32,19 +32,8 @@
     <ProjectReference Include="..\HumanitarianAssistance.Infrastructure\HumanitarianAssistance.Infrastructure.csproj" />
   </ItemGroup>
 
-
-
   
   <!-- Use of Pdf export -->
-  <!-- <ItemGroup>
-    <Content Update="PdfTemplates\CarPdf.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  <None Update="PdfTemplates\**\*">
-     <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-     <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-  </None>
-  </ItemGroup> -->
   <ItemGroup>
     <Content Update="PdfTemplates\**\*">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -65,23 +54,17 @@
 
 
   <ItemGroup>
-    <None Update="PDFNative\32bit\libwkhtmltox.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PDFNative\32bit\libwkhtmltox.dylib">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PDFNative\32bit\libwkhtmltox.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="PDFNative\64bit\libwkhtmltox.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
     </None>
     <None Update="PDFNative\64bit\libwkhtmltox.dylib">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
     </None>
     <None Update="PDFNative\64bit\libwkhtmltox.so">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
     </None>
   </ItemGroup>
   <!-- Use of Pdf export -->
