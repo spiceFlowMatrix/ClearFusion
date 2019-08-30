@@ -37,12 +37,12 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                 new CarModel{NameOfCar="BMW",FirstRegistration = DateTime.UtcNow,MaxSpeed = 200,NumberOfDoors = 4},
         };
                 // var templatePath = $"./PdfTemplates/VoucherSummaryReport.cshtml";
-                var templatePath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), $"PdfTemplates/VoucherSummaryReport.cshtml");
+                // var templatePath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), $"PdfTemplates/VoucherSummaryReport.cshtml");
 
-                Console.WriteLine(templatePath);
+                // Console.WriteLine(templatePath);
 
-                string template = await _razorEngine.CompileRenderAsync(templatePath, model);
-                Console.WriteLine(template);
+                // string template = await _razorEngine.CompileRenderAsync(templatePath, model);
+                // Console.WriteLine(template);
 
                 var sb = new StringBuilder();
                 sb.Append(@"
