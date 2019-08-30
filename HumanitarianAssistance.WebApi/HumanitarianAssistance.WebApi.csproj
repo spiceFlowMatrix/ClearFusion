@@ -7,7 +7,7 @@
     <IsPackable>false</IsPackable>
 
     <!-- set up for pdf functionality -->
-    <!-- <PreserveCompilationContext>true</PreserveCompilationContext> -->
+    <PreserveCompilationContext>true</PreserveCompilationContext>
     <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>   
     <!-- <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish> -->
 

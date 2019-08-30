@@ -2,7 +2,7 @@ using MediatR;
 
 namespace HumanitarianAssistance.Application.Accounting.Queries
 {
-    public class GetAllVoucherSummaryReportPdfQuery : IRequest<byte[]>
+    public class GetAllVoucherSummaryReportPdfQuery : IRequest<string>
     {
 
     }
