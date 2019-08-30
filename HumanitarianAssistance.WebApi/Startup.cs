@@ -109,7 +109,7 @@ namespace HumanitarianAssistance.WebApi
 
             // Dev: AG
             // pdf configuration 
-            services.AddPdfExtension();
+           // services.AddPdfExtension();
 
 
         }
