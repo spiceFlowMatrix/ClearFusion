@@ -12,7 +12,7 @@ using RazorLight;
 
 namespace HumanitarianAssistance.Application.Accounting.Queries
 {
-    public class GetAllVoucherSummaryReportPdfQueryHandler : IRequestHandler<GetAllVoucherSummaryReportPdfQuery, byte[]>
+    public class GetAllVoucherSummaryReportPdfQueryHandler : IRequestHandler<GetAllVoucherSummaryReportPdfQuery, string>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IRazorLightEngine _razorEngine;
@@ -23,7 +23,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
             _razorEngine = razorEngine;
         }
 
-        public async Task<byte[]> Handle(GetAllVoucherSummaryReportPdfQuery request, CancellationToken cancellationToken)
+        public async Task<string> Handle(GetAllVoucherSummaryReportPdfQuery request, CancellationToken cancellationToken)
         {
             try
             {
@@ -66,34 +66,8 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
 
                 Console.WriteLine(sb.ToString());
-
-                // var globalSettings = new GlobalSettings
-                // {
-                //     ColorMode = ColorMode.Color,
-                //     Orientation = Orientation.Portrait,
-                //     PaperSize = PaperKind.A4,
-                //     Margins = new MarginSettings() { Top = 10, Bottom = 10, Left = 10, Right = 10 },
-                //     DocumentTitle = "Simple PDF document",
-                // };
-                // var objectSettings = new ObjectSettings
-                // {
-                //     PagesCount = true,
-                //     HtmlContent = template,
-                //     // HtmlContent = sb.ToString(),
-                //     WebSettings = { DefaultEncoding = "utf-8" },
-                //     HeaderSettings = { FontName = "Arial", FontSize = 12, Line = true, Center = "Fun pdf document" },
-                //     FooterSettings = { FontName = "Arial", FontSize = 12, Line = true, Right = "Page [page] of [toPage]" }
-                // };
-                // var pdf = new HtmlToPdfDocument()
-                // {
-                //     GlobalSettings = globalSettings,
-                //     Objects = { objectSettings }
-                // };
-                // byte[] file = _pdfConverter.Convert(pdf);
-
-                byte[] file = new byte[10];
-
-                return file;
+              
+                return sb.ToString();
 
             }
             catch (Exception ex)
