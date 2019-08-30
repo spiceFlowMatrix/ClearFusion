@@ -11,6 +11,8 @@ import {FileSourceEntityTypes } from '../enums';
       break;
       case FileSourceEntityTypes.StorePurchase:
       objectName = 'storepurchase/' + entityId + '/';
+      case FileSourceEntityTypes.EmployeeProfile:
+      objectName = 'employeeprofileimage/' + entityId + '/';
     }
 
     return objectName;

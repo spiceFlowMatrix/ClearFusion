@@ -107,7 +107,7 @@ export class ProcurmentSummaryComponent implements OnInit {
 
   //#region "employeeSelectedValue"
   onEmployeeSelectedValue(res) {
-    if (res != null) {
+    if (res != null && res !== undefined) {
       if (res.element.id === 'employeedropdown') {
         this.selectedEmployeeId = res.value;
       } else {
@@ -157,12 +157,15 @@ export class ProcurmentSummaryComponent implements OnInit {
 
               if (data.data.StatusCode === 400) {
                 this.toastr.warning(data.data.Message);
+                this.hideProcurementSummaryLoading();
               }
             }
 
             this.hideProcurementSummaryLoading();
           },
-          error => {}
+          error => {
+            this.hideProcurementSummaryLoading();
+          }
         );
     }
   }
