@@ -12,11 +12,11 @@ namespace HumanitarianAssistance.WebApi.Extensions
     {
         public static IServiceCollection AddPdfExtension(this IServiceCollection services)
         {
-            var processSufix = "32bit";
-            if (Environment.Is64BitProcess && IntPtr.Size == 8)
-            {
-                processSufix = "64bit";
-            }
+            var processSufix = "64bit";
+            // if (Environment.Is64BitProcess && IntPtr.Size == 8)
+            // {
+            //     processSufix = "64bit";
+            // }
 
             var pdfcontext = new CustomPdfContext();
             pdfcontext.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), $"PDFNative/{processSufix}/libwkhtmltox.dll"));
