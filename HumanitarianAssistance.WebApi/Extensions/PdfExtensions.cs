@@ -23,15 +23,15 @@ namespace HumanitarianAssistance.WebApi.Extensions
 
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
-            // // razon services
-            // services.AddScoped<IRazorLightEngine>(sp =>
-            // {
-            //     var engine = new RazorLightEngineBuilder()
-            //         .UseFilesystemProject(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location))
-            //         .UseMemoryCachingProvider()
-            //         .Build();
-            //     return engine;
-            // });
+            // razon services
+            services.AddScoped<IRazorLightEngine>(sp =>
+            {
+                var engine = new RazorLightEngineBuilder()
+                    .UseFilesystemProject(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location))
+                    .UseMemoryCachingProvider()
+                    .Build();
+                return engine;
+            });
 
            
 

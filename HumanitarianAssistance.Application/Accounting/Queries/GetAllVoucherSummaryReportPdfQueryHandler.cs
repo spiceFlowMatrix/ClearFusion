@@ -19,14 +19,14 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
     public class GetAllVoucherSummaryReportPdfQueryHandler : IRequestHandler<GetAllVoucherSummaryReportPdfQuery, byte[]>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
-        // private readonly IRazorLightEngine _razorEngine;
+        private readonly IRazorLightEngine _razorEngine;
         private readonly IConverter _pdfConverter;
 
-        // public GetAllVoucherSummaryReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IRazorLightEngine razorEngine, IConverter pdfConverter)
-        public GetAllVoucherSummaryReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IConverter pdfConverter)
+        public GetAllVoucherSummaryReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IRazorLightEngine razorEngine, IConverter pdfConverter)
+        // public GetAllVoucherSummaryReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IConverter pdfConverter)
         {
             _dbContext = dbContext;
-            // _razorEngine = razorEngine;
+            _razorEngine = razorEngine;
             _pdfConverter = pdfConverter;
         }
 
@@ -48,7 +48,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
                 Console.WriteLine(templatePath);
 
-                // string template = await _razorEngine.CompileTemplateAsync(templatePath, model);
+                string template = await _razorEngine.CompileRenderAsync(templatePath, model);
                 // Console.WriteLine(template);
 
                 var sb = new StringBuilder();
@@ -85,8 +85,8 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                 var objectSettings = new ObjectSettings
                 {
                     PagesCount = true,
-                    // HtmlContent = template,
-                    HtmlContent = sb.ToString(),
+                    HtmlContent = template,
+                    // HtmlContent = sb.ToString(),
                     WebSettings = { DefaultEncoding = "utf-8" },
                     HeaderSettings = { FontName = "Arial", FontSize = 12, Line = true, Center = "Fun pdf document" },
                     FooterSettings = { FontName = "Arial", FontSize = 12, Line = true, Right = "Page [page] of [toPage]" }

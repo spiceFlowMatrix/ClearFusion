@@ -107,7 +107,8 @@ namespace HumanitarianAssistance.WebApi
             // swagger configuration
             services.AddSwaggerDocumentation();
 
-            // pdf configuration
+            // Dev: AG
+            // pdf configuration 
             services.AddPdfExtension();
 
 
