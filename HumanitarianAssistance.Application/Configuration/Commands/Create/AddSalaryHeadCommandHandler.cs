@@ -40,19 +40,21 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Create
                                                                        .ToListAsync();
 
                 if (employeeIds.Any())
-                {
+                {   
+
                     List<EmployeePayroll> employeePayrollList = new List<EmployeePayroll>();
 
                     foreach (int employeeid in employeeIds)
                     {
                         EmployeePayroll employeePayroll = new EmployeePayroll();
+                        employeePayroll.EmployeeID = employeeid;
                         employeePayroll.IsDeleted = false;
                         employeePayroll.AccountNo = request.AccountNo;
                         employeePayroll.SalaryHeadId = obj.SalaryHeadId;
                         employeePayroll.HeadTypeId = request.HeadTypeId;
                         employeePayroll.AccountNo = request.AccountNo;
                         employeePayroll.TransactionTypeId = request.TransactionTypeId;
-                        employeePayroll.MonthlyAmount = (double)request.MonthlyAmount;
+                        employeePayroll.MonthlyAmount = (request.MonthlyAmount == null)?0:(double)request.MonthlyAmount;
                         employeePayrollList.Add(employeePayroll);
                     }
 
