@@ -6,6 +6,7 @@ using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Application.Project.Models;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Persistence;
+using HumanitarianAssistance.Persistence.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,17 +27,21 @@ namespace HumanitarianAssistance.Application.Project.Queries
             ApiResponse response = new ApiResponse();
             try
             {
-                var TransList = await _dbContext.VoucherTransactions
-                                          .Include(c => c.CurrencyDetails)
-                                          .Where(x => x.IsDeleted == false && x.VoucherDetails.CurrencyId == request.CurrencyId && x.BudgetLineId == request.BudgetLineId)
-                                          .OrderByDescending(x => x.Debit)
-                                          .ToListAsync();
+                //var TransList = await _dbContext.VoucherTransactions
+                //                          .Include(c => c.CurrencyDetails)
+                //                          .Where(x => x.IsDeleted == false && x.VoucherDetails.CurrencyId == request.CurrencyId && x.BudgetLineId == request.BudgetLineId)
+                //                          .OrderByDescending(x => x.Debit)
+                //                          .ToListAsync();
+                var TransList = await _dbContext.LoadStoredProc("get_transaction_list")
+                                     .WithSqlParam("budgetline_id", request.BudgetLineId)
+                                     .WithSqlParam("currency_id", request.CurrencyId)
+                                     .ExecuteStoredProc<spTransactionBudgetModel>();  
 
                 var budgetDetaillist = TransList.Select(b => new TransactionBudgetModel
                 {
 
-                    CurrencyId = b.CurrencyDetails?.CurrencyId ?? null,
-                    CurrencyName = b.CurrencyDetails?.CurrencyName ?? null,
+                    CurrencyId = b.CurrencyId ?? null,
+                    CurrencyName = b.CurrencyName ?? null,
                     Credit = b.Credit,
                     Debit = b.Debit,
                     TransactionDate = b.TransactionDate,
