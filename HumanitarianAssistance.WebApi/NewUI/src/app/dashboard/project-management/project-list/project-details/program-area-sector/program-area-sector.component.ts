@@ -792,7 +792,6 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
 
   //#region AddSectorDeatil
   AddSectorDeatil(data: any) {
-    debugger;
     if (data.value != null) {
       this.sectorListFlag = true;
       const sectorModel: SectorModel = {
@@ -851,7 +850,6 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
 
   //#region getProjectSectorById
   getProjectSectorById(projectId: any) {
-    debugger;
     const Id = projectId;
     const obj = this.Sectorlist;
     this.projectListService
@@ -896,7 +894,6 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
 
   //#region AddeditSelectSectorvalue when choose from dropdown
   AddeditSelectSectorvalue(event: any) {
-    debugger;
     // this.sectorListFlag = true;
     if (event != null && event !== undefined) {
       const projectSectorModel: ProjectSectorModel = {
@@ -1226,7 +1223,6 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
 
   //#region  securityConsSelction Multiselect
   GetSecurityConsiderationByProjectId(ProjectId: number) {
-    debugger;
     if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.projectListService
         .GetOtherSecurityConsiByProjectId(

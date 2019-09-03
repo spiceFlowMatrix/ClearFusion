@@ -213,7 +213,6 @@ export class ProjectIndicatorsComponent implements OnInit {
   //#endregion
 //#region "Listupdate After update"
   OnindicatorListRefresh(event: any){
-    debugger
     const data = this.projectIndicatorList.find(
       x => x.ProjectIndicatorId === event.ProjectIndicatorId
     );
