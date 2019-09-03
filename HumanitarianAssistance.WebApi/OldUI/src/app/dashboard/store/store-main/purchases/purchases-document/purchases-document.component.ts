@@ -107,7 +107,6 @@ export class PurchasesDocumentComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   addDocument() {
-    debugger
     this.addNewDocument = {
       DocumentName: null,
       DocumentFilePath: null,
@@ -136,7 +135,6 @@ export class PurchasesDocumentComponent implements OnInit, OnDestroy, OnChanges 
     this.docpath = null;
 
     this.fileManagementService.getSignedURLByDocumenFileId(DocumentFileId).subscribe(x => {
-      debugger;
       if (x.StatusCode === 200) {
 
         if (x.data.SignedUrl !== undefined && x.data.SignedUrl !== null) {

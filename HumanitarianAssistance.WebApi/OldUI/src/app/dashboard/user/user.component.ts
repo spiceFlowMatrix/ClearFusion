@@ -921,6 +921,7 @@ export class UserComponent implements OnInit, OnDestroy {
           if (data.StatusCode === 200) {
             // Success
             this.toastr.success('User Updated Successfully!!!');
+            localStorage.setItem('ALLOFFICES', model.OfficeId.toString());
             this.getUserList();
           } else {
             this.toastr.error('Error!!!');

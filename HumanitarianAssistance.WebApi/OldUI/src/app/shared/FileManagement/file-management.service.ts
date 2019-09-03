@@ -55,7 +55,6 @@ export class FileManagementService {
     }
 
     GetById(url: string, Id: number) {
-        debugger;
         const Myheaders = new Headers();
         Myheaders.append(
           'Authorization',
@@ -106,7 +105,6 @@ export class FileManagementService {
         }), concatMap(res1 => {
 
             if (res1['status'] === 200) {
-                debugger;
                 const data: FileModel = {
                     FileName: dataModel.File.name,
                     FilePath: this.objectName,

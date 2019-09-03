@@ -1,7 +1,10 @@
 <div class="main-procurment-summary">
   <div class="row">
 
-    <div class="col-sm-12 text-right">
+    <div class="col-sm-12">
+        <div class="main-heading clearfix">
+            <h3 class="page-headin">Procurement Summary</h3>
+          </div>
       <br>
       <div class="col-sm-5" style="max-width: 30rem;">
         <dx-select-box [dataSource]="employeeList" id="employeedropdown" placeholder="Select Employee" (onValueChanged)="onEmployeeSelectedValue($event)" displayExpr="CodeEmployeeName"
@@ -64,13 +67,13 @@
         <dxi-column dataField="Returned" [visible]="true">
           <dxi-validation-rule type="required"></dxi-validation-rule>
         </dxi-column>
-        <dxi-column dataField="VoucherDate" [visible]="true" dataType="date" [format]="{ type: 'dd/MM/yyyy' }">
+        <!-- <dxi-column dataField="VoucherDate" [visible]="true" dataType="date" [format]="{ type: 'dd/MM/yyyy' }">
           <dxi-validation-rule type="required"></dxi-validation-rule>
         </dxi-column>
         <dxi-column caption="Action" alignment="center" [width]="100" cellTemplate="CellTemplateEdit" *ngIf="isEditingAllowed"></dxi-column>
         <div *dxTemplate="let data of 'CellTemplateEdit'">
             <a href="javascript:void(0)" (click)="NaviageToVoucherDetail(data)">Go to Voucher</a>
-        </div>
+        </div> -->
 
         <dxo-summary>
           <dxi-total-item column="TotalCost" summaryType="sum">
