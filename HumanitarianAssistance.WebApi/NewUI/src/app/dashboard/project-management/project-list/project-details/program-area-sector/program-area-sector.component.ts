@@ -16,7 +16,7 @@ import {
   IProjectOtherDetailPdf
 } from './../models/project-details.model';
 import { Validators } from '@angular/forms';
-import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Inject, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { ProjectListService } from '../../service/project-list.service';
@@ -38,13 +38,14 @@ import { ApplicationPages } from 'src/app/shared/applicationpagesenum';
 import { LocalStorageService } from 'src/app/shared/services/localstorage.service';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { ProjectOtherDetailPdfService } from './project-other-detail-pdf.service';
+import { _def } from '@angular/core/src/view/provider';
 
 @Component({
   selector: 'app-program-area-sector',
   templateUrl: './program-area-sector.component.html',
   styleUrls: ['./program-area-sector.component.scss']
 })
-export class ProgramAreaSectorComponent implements OnInit {
+export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
   //#region variables
 
   projectOtherDetailPdf: IProjectOtherDetailPdf = {
@@ -91,9 +92,8 @@ export class ProgramAreaSectorComponent implements OnInit {
     SecurityRemarks: ''
   };
 
-
   opportunityNo = new FormControl('', [
-    Validators.required,
+    Validators.required
     // Validators.pattern(this.unamePattern)
   ]);
   opportunity = new FormControl('', [Validators.required]);
@@ -133,7 +133,7 @@ export class ProgramAreaSectorComponent implements OnInit {
   isEditingAllowed = false;
   pageId = ApplicationPages.ProjectDetails;
 
-  Sectorlist: SectorModel[] = [];
+  Sectorlist: SectorModel[];
   Programlist: ProgramModel[];
   Arealist: AreaModel[];
   Area: string[];
@@ -141,13 +141,11 @@ export class ProgramAreaSectorComponent implements OnInit {
   Sector: string[];
   Programvalue: any[];
   Areavalue: any[];
-  Sectorvalue: any[];
 
   AreaName: string;
   ProgramName: string;
   ProgramId: number;
   AreaId: number;
-  SectorId: number;
   ProjectId: number;
   Provincevalue: any[];
   // ProjectProvinceModel:ProjectProvinceModel[];
@@ -232,9 +230,8 @@ export class ProgramAreaSectorComponent implements OnInit {
     private pDetailPdfService: ProjectOtherDetailPdfService,
     private _cdr: ChangeDetectorRef,
 
-
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.ProjectId = this.data.id;
@@ -247,9 +244,8 @@ export class ProgramAreaSectorComponent implements OnInit {
     this.GetAllProgramList();
     this.GetAllAreaList();
     this.GetAllSectorList();
-
     this.getAllCountryList();
-   // this.getAllProvinceList();
+    // this.getAllProvinceList();
     this.GetAllCurrency();
     this.GetAllStrengthConsiderationDetails();
     this.GetAllSecurityDetails();
@@ -274,11 +270,15 @@ export class ProgramAreaSectorComponent implements OnInit {
     this.initSectorModel();
     this.initProjectSectorModel();
     this.GetOtherProjectDetailById(this.ProjectId);
-    this.getProjectAreaById(this.ProjectId);
-    this.getProjectProgramById(this.ProjectId);
-    this.getProjectSectorById(this.ProjectId);
+
+
+     // call to selected sect
+     this.getProjectSectorById(this.ProjectId);
+     this.getProjectProgramById(this.ProjectId);
+     this.getProjectAreaById(this.ProjectId);
+
     this.StartDate = new Date();
-    this.EndDate= new Date();
+    this.EndDate = new Date();
   }
 
   // ngOnchanges() {
@@ -458,9 +458,11 @@ export class ProgramAreaSectorComponent implements OnInit {
                 }
               }
               if (filtered.length > 0) {
+                this._cdr.detectChanges();
                 this.Program = filtered[0].ProgramName;
                 // return this.Programvalue = this.getProgramSaveValue(filtered[0].ProgramName);
               }
+              this._cdr.detectChanges();
             }
             if (data.StatusCode === 400) {
               this.toastr.error(data.Message);
@@ -530,7 +532,8 @@ export class ProgramAreaSectorComponent implements OnInit {
       if (
         programModel.ProgramName !== undefined &&
         programModel.ProgramName !== '' &&
-        programModel.ProgramName !== ' ' && programModel.ProgramName !== null
+        programModel.ProgramName !== ' ' &&
+        programModel.ProgramName !== null
       ) {
         this.projectListService
           .AddProgramDetail(
@@ -652,9 +655,11 @@ export class ProgramAreaSectorComponent implements OnInit {
                 }
               }
               if (filtered.length > 0) {
+                this._cdr.detectChanges();
                 this.Area = filtered[0].AreaName;
                 // return this.Areavalue = this.getAreaSaveValue(filtered[0].AreaName);
               }
+              this._cdr.detectChanges();
             }
           }
           if (data.StatusCode === 400) {
@@ -743,6 +748,9 @@ export class ProgramAreaSectorComponent implements OnInit {
         data => {
           if (data != null) {
             if (data.data.sectorDetails != null) {
+
+
+              console.log(data.data.sectorDetails);
               data.data.sectorDetails.forEach(element => {
                 this.Sectorlist.push({
                   SectorId: element.SectorId,
@@ -782,20 +790,21 @@ export class ProgramAreaSectorComponent implements OnInit {
   }
   //#endregion
 
-
-
-
   //#region AddSectorDeatil
   AddSectorDeatil(data: any) {
+    debugger;
     if (data.value != null) {
       this.sectorListFlag = true;
       const sectorModel: SectorModel = {
         SectorName: data.value,
         ProjectId: this.ProjectId
       };
-      if (sectorModel.SectorName !== undefined &&
+      if (
+        sectorModel.SectorName !== undefined &&
         sectorModel.SectorName !== '' &&
-        sectorModel.SectorName !== ' ' && sectorModel.SectorName !== null) {
+        sectorModel.SectorName !== ' ' &&
+        sectorModel.SectorName !== null
+      ) {
         this.projectListService
           .AddSectorDetail(
             this.appurl.getApiUrl() + GLOBAL.API_Project_AddSectorDetails,
@@ -842,6 +851,7 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   //#region getProjectSectorById
   getProjectSectorById(projectId: any) {
+    debugger;
     const Id = projectId;
     const obj = this.Sectorlist;
     this.projectListService
@@ -854,19 +864,23 @@ export class ProgramAreaSectorComponent implements OnInit {
           if (data != null) {
             if (data.data.projectSector != null && data.StatusCode === 200) {
               const filtered: any[] = [];
+
+              this._cdr.detectChanges();
               for (let i = 0; i < obj.length; i++) {
-                if (
-                  data.data.projectSector.SectorId ===
-                  obj[i].SectorId
-                ) {
+                if (data.data.projectSector.SectorId === obj[i].SectorId) {
                   filtered.push(obj[i]);
                 }
               }
+
+              this._cdr.detectChanges();
               if (filtered.length > 0) {
+                this._cdr.detectChanges();
                 this.Sector = filtered[0].SectorName;
-               // console.log(this.Sector);
+                console.log(this.Sector);
                 // return this.Sectorvalue = this.getSectorSaveValue(filtered[0].SectorName);
               }
+              this._cdr.detectChanges();
+
             }
             if (data.StatusCode === 400) {
               this.toastr.error(data.Message);
@@ -882,6 +896,7 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   //#region AddeditSelectSectorvalue when choose from dropdown
   AddeditSelectSectorvalue(event: any) {
+    debugger;
     // this.sectorListFlag = true;
     if (event != null && event !== undefined) {
       const projectSectorModel: ProjectSectorModel = {
@@ -957,20 +972,21 @@ export class ProgramAreaSectorComponent implements OnInit {
         .subscribe(data => {
           if (data != null) {
             if (data.data.CountryMultiSelectById != null) {
-              [this.countryMultiSelectModel.CountryId] =
-                data.data.CountryMultiSelectById;
-              this.getAllProvinceListByCountryId(
-                [this.countryMultiSelectModel.CountryId]
-              );
+              [
+                this.countryMultiSelectModel.CountryId
+              ] = data.data.CountryMultiSelectById;
+              this.getAllProvinceListByCountryId([
+                this.countryMultiSelectModel.CountryId
+              ]);
             }
           }
         });
     }
   }
 
-   // add province by id
+  // add province by id
 
-   onCountryDetailsChange(ev, data: number) {
+  onCountryDetailsChange(ev, data: number) {
     // this.countryDistrictFlag = true;
     this.ProvinceSelectionList = [];
     if (ev === 'countrySelction' && data != null) {
@@ -990,15 +1006,15 @@ export class ProgramAreaSectorComponent implements OnInit {
       this.projectListService
         .AddEditCountryMultiSelect(
           this.appurl.getApiUrl() +
-          GLOBAL.API_Project_AddEditMultiSelectCountry,
+            GLOBAL.API_Project_AddEditMultiSelectCountry,
           obj
         )
         .subscribe(
           response => {
             if (response.StatusCode === 200) {
-              this.getAllProvinceListByCountryId(
-                [this.countryMultiSelectModel.CountryId]
-              );
+              this.getAllProvinceListByCountryId([
+                this.countryMultiSelectModel.CountryId
+              ]);
             }
             this.countryDistrictFlag = false;
             this.provinceSelectedFlag = false;
@@ -1018,7 +1034,8 @@ export class ProgramAreaSectorComponent implements OnInit {
     this.ProvinceSelectionList = [];
     this.projectListService
       .getAllProvinceListByCountryId(
-        this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProvinceDetailsByCountryId,
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Project_GetAllProvinceDetailsByCountryId,
         id
       )
       .subscribe(
@@ -1089,7 +1106,7 @@ export class ProgramAreaSectorComponent implements OnInit {
       this.projectListService
         .AddEditProvinceMultiSelect(
           this.appurl.getApiUrl() +
-          GLOBAL.API_Project_AddEditMultiSelectProvince,
+            GLOBAL.API_Project_AddEditMultiSelectProvince,
           obj
         )
         .subscribe(
@@ -1117,7 +1134,7 @@ export class ProgramAreaSectorComponent implements OnInit {
     this.projectListService
       .GetAllDistrictvalueByProvinceId(
         this.appurl.getApiUrl() +
-        GLOBAL.API_Project_GetAllDistrictvalueByProvinceId,
+          GLOBAL.API_Project_GetAllDistrictvalueByProvinceId,
         id
       )
       .subscribe(
@@ -1189,14 +1206,15 @@ export class ProgramAreaSectorComponent implements OnInit {
       this.projectListService
         .AddEditDistrictMultiSelect(
           this.appurl.getApiUrl() +
-          GLOBAL.API_Project_AddEditMultiSelectDistrict,
+            GLOBAL.API_Project_AddEditMultiSelectDistrict,
           obj
         )
-        .subscribe(response => {
-          if (response.StatusCode === 200) {
-            this.districtFlag = false;
-          }
-        },
+        .subscribe(
+          response => {
+            if (response.StatusCode === 200) {
+              this.districtFlag = false;
+            }
+          },
           error => {
             this.districtFlag = false;
           }
@@ -1208,6 +1226,7 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   //#region  securityConsSelction Multiselect
   GetSecurityConsiderationByProjectId(ProjectId: number) {
+    debugger;
     if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.projectListService
         .GetOtherSecurityConsiByProjectId(
@@ -1230,7 +1249,7 @@ export class ProgramAreaSectorComponent implements OnInit {
     this.projectListService
       .GetAllSecurityConsideration(
         this.appurl.getApiUrl() +
-        GLOBAL.API_Project_GetAllSecurityConsiderationDetails
+          GLOBAL.API_Project_GetAllSecurityConsiderationDetails
       )
       .subscribe(data => {
         if (data != null) {
@@ -1264,7 +1283,6 @@ export class ProgramAreaSectorComponent implements OnInit {
   }
 
   AddEditSecurityCMultiSelect(model: any) {
-
     if (model != null) {
       const obj: securityConsiderationMultiSelectModel = {
         // SecurityConsiderationMultiSelectId:model.SecurityConsiderationMultiSelectId,
@@ -1274,7 +1292,7 @@ export class ProgramAreaSectorComponent implements OnInit {
       this.projectListService
         .AddEditSecurityMultiSelect(
           this.appurl.getApiUrl() +
-          GLOBAL.API_Project_AddEditMultiSelectSecurityConsideration,
+            GLOBAL.API_Project_AddEditMultiSelectSecurityConsideration,
           obj
         )
         .subscribe(response => {
@@ -1292,7 +1310,7 @@ export class ProgramAreaSectorComponent implements OnInit {
     this.projectListService
       .GetAllStrengthConsiderationDetails(
         this.appurl.getApiUrl() +
-        GLOBAL.API_Project_GetAllStrengthConsiderationDetails
+          GLOBAL.API_Project_GetAllStrengthConsiderationDetails
       )
       .subscribe(data => {
         if (data != null) {
@@ -1383,7 +1401,7 @@ export class ProgramAreaSectorComponent implements OnInit {
     this.projectListService
       .GetAllGender(
         this.appurl.getApiUrl() +
-        GLOBAL.API_Project_GetAllGenderConsiderationDetails
+          GLOBAL.API_Project_GetAllGenderConsiderationDetails
       )
       .subscribe(data => {
         if (data != null) {
@@ -1483,11 +1501,11 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   //#region "openedChange" for project donor detail change
   openedChange(event: any, data: any) {
-    this.projectotherDetail.DonorId = event.Value !== undefined ? event.Value : this.projectotherDetail.DonorId;
+    this.projectotherDetail.DonorId =
+      event.Value !== undefined ? event.Value : this.projectotherDetail.DonorId;
     // let obj = this.donorDataSource.findIndex(x => x.Id == event.Value);
     // this.onProjectotherDetailsChange(data, this.donorDataSource[obj].Name);
     this.onProjectotherDetailsChange(data, event.Value);
-
   }
 
   //#endregion
@@ -1508,8 +1526,7 @@ export class ProgramAreaSectorComponent implements OnInit {
                 DonorId: element.DonorId,
                 Name: element.Name
               });
-            }
-            );
+            });
             data.data.DonorDetail.forEach(x => {
               this.donorDataSource.push({
                 Id: x.DonorId,
@@ -1555,142 +1572,156 @@ export class ProgramAreaSectorComponent implements OnInit {
           this.appurl.getApiUrl() + GLOBAL.API_GetProjectOtherDetailById,
           ProjectId
         )
-        .subscribe(data => {
-          if (data != null) {
-            this.projectOtherDetailPageFlag = false;
-            this.opportunityFlag = false;
-            if (data.data.OtherProjectDetailById != null) {
-              this.projectotherDetail.ProjectOtherDetailId =
-                data.data.OtherProjectDetailById.ProjectOtherDetailId;
-              this.projectotherDetail.opportunityNo =
-                data.data.OtherProjectDetailById.opportunityNo;
-              this.projectotherDetail.opportunity =
-                data.data.OtherProjectDetailById.opportunity;
-              this.projectotherDetail.opportunitydescription =
-                data.data.OtherProjectDetailById.opportunitydescription;
-              this.projectotherDetail.ProjectId =
-                data.data.OtherProjectDetailById.ProjectId;
-              this.projectotherDetail.ProvinceId =
-                data.data.OtherProjectDetailById.ProvinceId;
-              this.projectotherDetail.DistrictID =
-                data.data.OtherProjectDetailById.DistrictID;
-              this.projectotherDetail.StartDate =
-                data.data.OtherProjectDetailById.StartDate;
-              this.projectotherDetail.EndDate =
-                data.data.OtherProjectDetailById.EndDate;
-              this.projectotherDetail.OpportunityType =
-                data.data.OtherProjectDetailById.OpportunityType;
-              this.projectotherDetail.InDirectBeneficiaryFemale =
-                data.data.OtherProjectDetailById.InDirectBeneficiaryFemale;
-              if (this.projectotherDetail.InDirectBeneficiaryFemale === undefined
-                ? 0 : this.projectotherDetail.InDirectBeneficiaryFemale) {
-                this.projectotherDetail.InDirectBeneficiaryMale =
-                  data.data.OtherProjectDetailById.InDirectBeneficiaryMale;
-              }
-              if (this.projectotherDetail.InDirectBeneficiaryMale === undefined
-                ? 0 : this.projectotherDetail.InDirectBeneficiaryMale) {
-                this.projectotherDetail.OfficeId =
-                  data.data.OtherProjectDetailById.OfficeId;
-              }
-              // if (data.data.OtherProjectDetailById.OfficeId != null &&
-              //   data.data.OtherProjectDetailById.OfficeId != undefined) {
-              //   this.OfficeName = this.Officelist.find(
-              //     x => x.OfficeId === data.data.OtherProjectDetailById.OfficeId
-              //   ).OfficeName;
-              // }
-              // this.projectotherDetail.CurrencyId = data.data.OtherProjectDetailById.CurrencyId;
-              this.projectotherDetail.DonorId =
-                data.data.OtherProjectDetailById.DonorId;
-              this.projectotherDetail.StrengthConsiderationId =
-                data.data.OtherProjectDetailById.StrengthConsiderationId;
-              this.projectotherDetail.beneficiaryMale =
-                data.data.OtherProjectDetailById.beneficiaryMale;
-              if (this.projectotherDetail.beneficiaryMale === undefined
-                ? 0 : this.projectotherDetail.beneficiaryMale) {
-                this.projectotherDetail.beneficiaryFemale =
-                  data.data.OtherProjectDetailById.beneficiaryFemale;
-              }
-              if (this.projectotherDetail.beneficiaryFemale === undefined
-                ? 0 : this.projectotherDetail.beneficiaryFemale) {
-                this.projectotherDetail.beneficiaryFemale =
-                  data.data.OtherProjectDetailById.beneficiaryFemale;
-              }
-              this.projectotherDetail.projectGoal =
-              data.data.OtherProjectDetailById.projectGoal;
-              this.projectotherDetail.projectObjective =
-                data.data.OtherProjectDetailById.projectObjective;
-              this.projectotherDetail.mainActivities =
-                data.data.OtherProjectDetailById.mainActivities;
-              this.projectotherDetail.SubmissionDate =
-                data.data.OtherProjectDetailById.SubmissionDate;
-              this.projectotherDetail.REOIReceiveDate =
-                data.data.OtherProjectDetailById.REOIReceiveDate;
-              this.projectotherDetail.GenderConsiderationId =
-                data.data.OtherProjectDetailById.GenderConsiderationId;
-              // if (
-              //   data.data.OtherProjectDetailById.GenderConsiderationId != null
-              // ) {
-              //   this.GenderConsiderationName = this.GenderConsiderationvaluelist.find(
-              //     x =>
-              //       x.GenderConsiderationId ===
-              //       data.data.OtherProjectDetailById.GenderConsiderationId
-              //   ).GenderConsiderationName;
-              // }
-              this.projectotherDetail.GenderRemarks =
-                data.data.OtherProjectDetailById.GenderRemarks;
-              this.projectotherDetail.SecurityId =
-                data.data.OtherProjectDetailById.SecurityId;
-              // if (data.data.OtherProjectDetailById.SecurityId != null) {
-              //   this.SecurityName = this.Securitylist.find(
-              //     x =>
-              //       x.SecurityId === data.data.OtherProjectDetailById.SecurityId
-              //   ).SecurityName;
-              // }
-              this.projectotherDetail.SecurityConsiderationId =
-                data.data.OtherProjectDetailById.SecurityConsiderationId;
-
-              this.projectotherDetail.SecurityRemarks =
-                data.data.OtherProjectDetailById.SecurityRemarks;
-              if (this.projectotherDetail.SecurityConsiderationId != null) {
-                const selectedSecurityConsideration = data.data.OtherProjectDetailById.SecurityConsiderationId.split(
-                  ','
-                );
-                this.selectedSecurityConsideration = [];
-                if (selectedSecurityConsideration.length > 0) {
-                  selectedSecurityConsideration.forEach(element => {
-                    this.selectedSecurityConsideration.push(element);
-                  });
+        .subscribe(
+          data => {
+            if (data != null) {
+              this.projectOtherDetailPageFlag = false;
+              this.opportunityFlag = false;
+              if (data.data.OtherProjectDetailById != null) {
+                this.projectotherDetail.ProjectOtherDetailId =
+                  data.data.OtherProjectDetailById.ProjectOtherDetailId;
+                this.projectotherDetail.opportunityNo =
+                  data.data.OtherProjectDetailById.opportunityNo;
+                this.projectotherDetail.opportunity =
+                  data.data.OtherProjectDetailById.opportunity;
+                this.projectotherDetail.opportunitydescription =
+                  data.data.OtherProjectDetailById.opportunitydescription;
+                this.projectotherDetail.ProjectId =
+                  data.data.OtherProjectDetailById.ProjectId;
+                this.projectotherDetail.ProvinceId =
+                  data.data.OtherProjectDetailById.ProvinceId;
+                this.projectotherDetail.DistrictID =
+                  data.data.OtherProjectDetailById.DistrictID;
+                this.projectotherDetail.StartDate =
+                  data.data.OtherProjectDetailById.StartDate;
+                this.projectotherDetail.EndDate =
+                  data.data.OtherProjectDetailById.EndDate;
+                this.projectotherDetail.OpportunityType =
+                  data.data.OtherProjectDetailById.OpportunityType;
+                this.projectotherDetail.InDirectBeneficiaryFemale =
+                  data.data.OtherProjectDetailById.InDirectBeneficiaryFemale;
+                if (
+                  this.projectotherDetail.InDirectBeneficiaryFemale ===
+                  undefined
+                    ? 0
+                    : this.projectotherDetail.InDirectBeneficiaryFemale
+                ) {
+                  this.projectotherDetail.InDirectBeneficiaryMale =
+                    data.data.OtherProjectDetailById.InDirectBeneficiaryMale;
                 }
-              }
-              // if(data.data.OtherProjectDetailById.ProvinceId!=null){
-              //   // to get multiselect value of province
-              //  // var selectedprovince = data.data.OtherProjectDetailById.ProvinceId.split(',');
-              //   this.selectedProvince=[];
-              //   if (selectedprovince.length > 0) {
-              //     selectedprovince.forEach(element => {
-              //       this.selectedProvince.push(element);
-              //     });
-              //     // this.selectedProvince=[data.data.OtherProjectDetailById.ProvinceId];
-              //   }
-              // }
-              if (data.data.OtherProjectDetailById.DistrictID != null) {
-                const selectedDist = data.data.OtherProjectDetailById.DistrictID.split(
-                  ','
-                );
-                this.selectedDistrict = [];
-                if (selectedDist.length > 0) {
-                  selectedDist.forEach(element => {
-                    this.selectedDistrict.push(element);
-                  });
+                if (
+                  this.projectotherDetail.InDirectBeneficiaryMale === undefined
+                    ? 0
+                    : this.projectotherDetail.InDirectBeneficiaryMale
+                ) {
+                  this.projectotherDetail.OfficeId =
+                    data.data.OtherProjectDetailById.OfficeId;
+                }
+                // if (data.data.OtherProjectDetailById.OfficeId != null &&
+                //   data.data.OtherProjectDetailById.OfficeId != undefined) {
+                //   this.OfficeName = this.Officelist.find(
+                //     x => x.OfficeId === data.data.OtherProjectDetailById.OfficeId
+                //   ).OfficeName;
+                // }
+                // this.projectotherDetail.CurrencyId = data.data.OtherProjectDetailById.CurrencyId;
+                this.projectotherDetail.DonorId =
+                  data.data.OtherProjectDetailById.DonorId;
+                this.projectotherDetail.StrengthConsiderationId =
+                  data.data.OtherProjectDetailById.StrengthConsiderationId;
+                this.projectotherDetail.beneficiaryMale =
+                  data.data.OtherProjectDetailById.beneficiaryMale;
+                if (
+                  this.projectotherDetail.beneficiaryMale === undefined
+                    ? 0
+                    : this.projectotherDetail.beneficiaryMale
+                ) {
+                  this.projectotherDetail.beneficiaryFemale =
+                    data.data.OtherProjectDetailById.beneficiaryFemale;
+                }
+                if (
+                  this.projectotherDetail.beneficiaryFemale === undefined
+                    ? 0
+                    : this.projectotherDetail.beneficiaryFemale
+                ) {
+                  this.projectotherDetail.beneficiaryFemale =
+                    data.data.OtherProjectDetailById.beneficiaryFemale;
+                }
+                this.projectotherDetail.projectGoal =
+                  data.data.OtherProjectDetailById.projectGoal;
+                this.projectotherDetail.projectObjective =
+                  data.data.OtherProjectDetailById.projectObjective;
+                this.projectotherDetail.mainActivities =
+                  data.data.OtherProjectDetailById.mainActivities;
+                this.projectotherDetail.SubmissionDate =
+                  data.data.OtherProjectDetailById.SubmissionDate;
+                this.projectotherDetail.REOIReceiveDate =
+                  data.data.OtherProjectDetailById.REOIReceiveDate;
+                this.projectotherDetail.GenderConsiderationId =
+                  data.data.OtherProjectDetailById.GenderConsiderationId;
+                // if (
+                //   data.data.OtherProjectDetailById.GenderConsiderationId != null
+                // ) {
+                //   this.GenderConsiderationName = this.GenderConsiderationvaluelist.find(
+                //     x =>
+                //       x.GenderConsiderationId ===
+                //       data.data.OtherProjectDetailById.GenderConsiderationId
+                //   ).GenderConsiderationName;
+                // }
+                this.projectotherDetail.GenderRemarks =
+                  data.data.OtherProjectDetailById.GenderRemarks;
+                this.projectotherDetail.SecurityId =
+                  data.data.OtherProjectDetailById.SecurityId;
+                // if (data.data.OtherProjectDetailById.SecurityId != null) {
+                //   this.SecurityName = this.Securitylist.find(
+                //     x =>
+                //       x.SecurityId === data.data.OtherProjectDetailById.SecurityId
+                //   ).SecurityName;
+                // }
+                this.projectotherDetail.SecurityConsiderationId =
+                  data.data.OtherProjectDetailById.SecurityConsiderationId;
+
+                this.projectotherDetail.SecurityRemarks =
+                  data.data.OtherProjectDetailById.SecurityRemarks;
+                if (this.projectotherDetail.SecurityConsiderationId != null) {
+                  const selectedSecurityConsideration = data.data.OtherProjectDetailById.SecurityConsiderationId.split(
+                    ','
+                  );
+                  this.selectedSecurityConsideration = [];
+                  if (selectedSecurityConsideration.length > 0) {
+                    selectedSecurityConsideration.forEach(element => {
+                      this.selectedSecurityConsideration.push(element);
+                    });
+                  }
+                }
+                // if(data.data.OtherProjectDetailById.ProvinceId!=null){
+                //   // to get multiselect value of province
+                //  // var selectedprovince = data.data.OtherProjectDetailById.ProvinceId.split(',');
+                //   this.selectedProvince=[];
+                //   if (selectedprovince.length > 0) {
+                //     selectedprovince.forEach(element => {
+                //       this.selectedProvince.push(element);
+                //     });
+                //     // this.selectedProvince=[data.data.OtherProjectDetailById.ProvinceId];
+                //   }
+                // }
+                if (data.data.OtherProjectDetailById.DistrictID != null) {
+                  const selectedDist = data.data.OtherProjectDetailById.DistrictID.split(
+                    ','
+                  );
+                  this.selectedDistrict = [];
+                  if (selectedDist.length > 0) {
+                    selectedDist.forEach(element => {
+                      this.selectedDistrict.push(element);
+                    });
+                  }
                 }
               }
             }
-          }
-          if (data.StatusCode === 400) {
-            this.toastr.error('No data found');
-            this.opportunityFlag = false;
-          }
-        },
+            if (data.StatusCode === 400) {
+              this.toastr.error('No data found');
+              this.opportunityFlag = false;
+            }
+          },
           error => {
             // this.toastr.error('Something went wrong! Please try again');
             this.opportunityFlag = false;
@@ -1763,12 +1794,6 @@ export class ProgramAreaSectorComponent implements OnInit {
               this.commonLoaderService.hideLoader();
             }
 
-            // let projectname = this.projectDetail.ProjectName;
-            // let projectDes = this.projectDetail.ProjectDescription;
-            // this.snackBar.open("Project other Details Added Successfully!!!", "action", {
-            //   duration: 2000,
-            // });
-            // this.selectedProvince=["59"];
           }
           if (response.StatusCode === 400) {
             this.toastr.error(response.Message);
@@ -1930,48 +1955,68 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   //#region "openedOfficeChange" for project oddice detail change
   openeOpportunityChange(event: any, data: any) {
-    this.projectotherDetail.OpportunityType = event.Value !== undefined ? event.Value : this.projectotherDetail.OpportunityType;
-    this.onProjectotherDetailsChange(data, this.projectotherDetail.OpportunityType);
+    this.projectotherDetail.OpportunityType =
+      event.Value !== undefined
+        ? event.Value
+        : this.projectotherDetail.OpportunityType;
+    this.onProjectotherDetailsChange(
+      data,
+      this.projectotherDetail.OpportunityType
+    );
   }
   //#endregion
 
   //#region "openedOfficeChange" for project oddice detail change
   openedOfficeChange(event: any, data: any) {
-    this.projectotherDetail.OfficeId = event.Value !== undefined ? event.Value : this.projectotherDetail.OfficeId;
+    this.projectotherDetail.OfficeId =
+      event.Value !== undefined
+        ? event.Value
+        : this.projectotherDetail.OfficeId;
     this.onProjectotherDetailsChange(data, this.projectotherDetail.OfficeId);
   }
   //#endregion
 
   //#region "openedOfficeChange" for project oddice detail change
   openedStrengthChange(event: any, data: any) {
-    this.projectotherDetail.StrengthConsiderationId = event.Value !== undefined ?
-      event.Value : this.projectotherDetail.StrengthConsiderationId;
-    this.onProjectotherDetailsChange(data, this.projectotherDetail.StrengthConsiderationId);
+    this.projectotherDetail.StrengthConsiderationId =
+      event.Value !== undefined
+        ? event.Value
+        : this.projectotherDetail.StrengthConsiderationId;
+    this.onProjectotherDetailsChange(
+      data,
+      this.projectotherDetail.StrengthConsiderationId
+    );
   }
   //#endregion
 
   //#region "openedGenderChange"
   openedGenderChange(event: any, data: any) {
-    this.projectotherDetail.GenderConsiderationId = event.Value !== undefined ? event.Value : this.projectotherDetail.GenderConsiderationId;
-    this.onProjectotherDetailsChange(data, this.projectotherDetail.GenderConsiderationId);
+    this.projectotherDetail.GenderConsiderationId =
+      event.Value !== undefined
+        ? event.Value
+        : this.projectotherDetail.GenderConsiderationId;
+    this.onProjectotherDetailsChange(
+      data,
+      this.projectotherDetail.GenderConsiderationId
+    );
   }
   //#endregion
 
-
   openedSecurityChange(event: any, data: any) {
-    this.projectotherDetail.SecurityId = event.Value !== undefined ? event.Value : this.projectotherDetail.SecurityId;
+    this.projectotherDetail.SecurityId =
+      event.Value !== undefined
+        ? event.Value
+        : this.projectotherDetail.SecurityId;
     this.onProjectotherDetailsChange(data, this.projectotherDetail.SecurityId);
-
   }
-
 
   openedSecurityConsChange(event: any, data: any) {
-    this.projectotherDetail.SecurityConsiderationId = event.Value !== undefined ?
-      event.Value : this.projectotherDetail.SecurityConsiderationId;
+    this.projectotherDetail.SecurityConsiderationId =
+      event.Value !== undefined
+        ? event.Value
+        : this.projectotherDetail.SecurityConsiderationId;
     this.onProjectSecurityConsiderationMultiChange(data, event.Value);
   }
-
-
 
   // #region to GetAllOfficeList
   // to unsbscribe the the service code
@@ -2046,56 +2091,173 @@ export class ProgramAreaSectorComponent implements OnInit {
 
   //#endregion
 
-
   setProjectOtherDetailValueForPdf() {
-
     this.projectOtherDetailPdf = {
       // Opportunity Details
-      ProjectName : this.data.projectName != null ?  this.data.projectName : '',
-      Description : this.data.description != null ?  this.data.description : '',
-      OpportunityType: this.OpportunityTypeList.find(x => x.Id === this.projectotherDetail.OpportunityType) != null ? this.OpportunityTypeList.find(x => x.Id === this.projectotherDetail.OpportunityType).Name : '',
-      Donor: this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId) != null ? this.donorDataSource.find(x => x.Id === this.projectotherDetail.DonorId).Name : '',
-      OpportunityNo:  this.projectotherDetail.opportunityNo != null ? this.projectotherDetail.opportunityNo : '',
-      Opportunity:  this.projectotherDetail.opportunity != null ? this.projectotherDetail.opportunity : '',
-      OpportunityDescription: this.projectotherDetail.opportunitydescription != null ? this.projectotherDetail.opportunitydescription : '',
+      ProjectName: this.data.projectName != null ? this.data.projectName : '',
+      Description: this.data.description != null ? this.data.description : '',
+      OpportunityType:
+        this.OpportunityTypeList.find(
+          x => x.Id === this.projectotherDetail.OpportunityType
+        ) != null
+          ? this.OpportunityTypeList.find(
+              x => x.Id === this.projectotherDetail.OpportunityType
+            ).Name
+          : '',
+      Donor:
+        this.donorDataSource.find(
+          x => x.Id === this.projectotherDetail.DonorId
+        ) != null
+          ? this.donorDataSource.find(
+              x => x.Id === this.projectotherDetail.DonorId
+            ).Name
+          : '',
+      OpportunityNo:
+        this.projectotherDetail.opportunityNo != null
+          ? this.projectotherDetail.opportunityNo
+          : '',
+      Opportunity:
+        this.projectotherDetail.opportunity != null
+          ? this.projectotherDetail.opportunity
+          : '',
+      OpportunityDescription:
+        this.projectotherDetail.opportunitydescription != null
+          ? this.projectotherDetail.opportunitydescription
+          : '',
 
-      Country: this.CountrySelectionList.find(x => x.value === this.countryMultiSelectModel.CountryId) != null ? this.CountrySelectionList.find(x => x.value === this.countryMultiSelectModel.CountryId).label : '',
-      Province: this.provinceMultiSelectModel.ProvinceId.map(x => this.ProvinceSelectionList.filter(y => y.value === x).map(z => z.label)).toString(),
-      District: this.districtMultiSelctModel.DistrictID.map(x => this.DistrictMultiSelectList.filter(y => y.value === x).map(z => z.label)).toString(),
-      Office: this.donorDataSource.find(x => x.Id === this.projectotherDetail.OfficeId) != null ? this.officeDataSource.find(x => x.Id === this.projectotherDetail.OfficeId).Name : '',
+      Country:
+        this.CountrySelectionList.find(
+          x => x.value === this.countryMultiSelectModel.CountryId
+        ) != null
+          ? this.CountrySelectionList.find(
+              x => x.value === this.countryMultiSelectModel.CountryId
+            ).label
+          : '',
+      Province: this.provinceMultiSelectModel.ProvinceId.map(x =>
+        this.ProvinceSelectionList.filter(y => y.value === x).map(z => z.label)
+      ).toString(),
+      District: this.districtMultiSelctModel.DistrictID.map(x =>
+        this.DistrictMultiSelectList.filter(y => y.value === x).map(
+          z => z.label
+        )
+      ).toString(),
+      Office:
+        this.donorDataSource.find(
+          x => x.Id === this.projectotherDetail.OfficeId
+        ) != null
+          ? this.officeDataSource.find(
+              x => x.Id === this.projectotherDetail.OfficeId
+            ).Name
+          : '',
       Sector: this.Sector != null ? this.Sector.toString() : '',
       Program: this.Program != null ? this.Program.toString() : '',
-      StartDate: this.projectotherDetail.StartDate != null ? this.projectotherDetail.StartDate : '',
-      EndDate: this.projectotherDetail.EndDate != null ? this.projectotherDetail.EndDate : '',
+      StartDate:
+        this.projectotherDetail.StartDate != null
+          ? this.projectotherDetail.StartDate
+          : '',
+      EndDate:
+        this.projectotherDetail.EndDate != null
+          ? this.projectotherDetail.EndDate
+          : '',
 
       // Project Objective & Goal
-      ProjectGoal: this.projectotherDetail.projectGoal != null ? this.projectotherDetail.projectGoal : '',
-      ProjectObjective: this.projectotherDetail.projectObjective != null ? this.projectotherDetail.projectObjective : '',
-      MainActivities: this.projectotherDetail.mainActivities != null ? this.projectotherDetail.mainActivities : '',
-      REOIReceiveDate: this.projectotherDetail.REOIReceiveDate != null ? this.projectotherDetail.REOIReceiveDate : '',
-      SubmissionDate: this.projectotherDetail.SubmissionDate != null ? this.projectotherDetail.SubmissionDate : '',
+      ProjectGoal:
+        this.projectotherDetail.projectGoal != null
+          ? this.projectotherDetail.projectGoal
+          : '',
+      ProjectObjective:
+        this.projectotherDetail.projectObjective != null
+          ? this.projectotherDetail.projectObjective
+          : '',
+      MainActivities:
+        this.projectotherDetail.mainActivities != null
+          ? this.projectotherDetail.mainActivities
+          : '',
+      REOIReceiveDate:
+        this.projectotherDetail.REOIReceiveDate != null
+          ? this.projectotherDetail.REOIReceiveDate
+          : '',
+      SubmissionDate:
+        this.projectotherDetail.SubmissionDate != null
+          ? this.projectotherDetail.SubmissionDate
+          : '',
 
       // Beneficiary Details
-      DirectbeneficiarMale: this.projectotherDetail.beneficiaryMale != null ?  this.projectotherDetail.beneficiaryMale.toString() : '',
-      InDirectbeneficiarMale: this.projectotherDetail.InDirectBeneficiaryMale != null ?  this.projectotherDetail.InDirectBeneficiaryMale.toString() : '',
-      DirectbeneficiarFemale: this.projectotherDetail.beneficiaryFemale != null ?  this.projectotherDetail.beneficiaryFemale.toString() : '',
-      InDirectbeneficiarFemale: this.projectotherDetail.InDirectBeneficiaryFemale != null ?  this.projectotherDetail.InDirectBeneficiaryFemale.toString() : '',
+      DirectbeneficiarMale:
+        this.projectotherDetail.beneficiaryMale != null
+          ? this.projectotherDetail.beneficiaryMale.toString()
+          : '',
+      InDirectbeneficiarMale:
+        this.projectotherDetail.InDirectBeneficiaryMale != null
+          ? this.projectotherDetail.InDirectBeneficiaryMale.toString()
+          : '',
+      DirectbeneficiarFemale:
+        this.projectotherDetail.beneficiaryFemale != null
+          ? this.projectotherDetail.beneficiaryFemale.toString()
+          : '',
+      InDirectbeneficiarFemale:
+        this.projectotherDetail.InDirectBeneficiaryFemale != null
+          ? this.projectotherDetail.InDirectBeneficiaryFemale.toString()
+          : '',
 
-      TotalDirectBeneficiary: this.projectotherDetail.beneficiaryFemale != null && this.projectotherDetail.beneficiaryMale != null ? (this.projectotherDetail.beneficiaryFemale + this.projectotherDetail.beneficiaryMale).toString() : '',
-      TotalInDirectBeneficiary: this.projectotherDetail.InDirectBeneficiaryMale != null && this.projectotherDetail.InDirectBeneficiaryFemale != null ? (this.projectotherDetail.InDirectBeneficiaryMale + this.projectotherDetail.InDirectBeneficiaryFemale).toString() : '',
+      TotalDirectBeneficiary:
+        this.projectotherDetail.beneficiaryFemale != null &&
+        this.projectotherDetail.beneficiaryMale != null
+          ? (
+              this.projectotherDetail.beneficiaryFemale +
+              this.projectotherDetail.beneficiaryMale
+            ).toString()
+          : '',
+      TotalInDirectBeneficiary:
+        this.projectotherDetail.InDirectBeneficiaryMale != null &&
+        this.projectotherDetail.InDirectBeneficiaryFemale != null
+          ? (
+              this.projectotherDetail.InDirectBeneficiaryMale +
+              this.projectotherDetail.InDirectBeneficiaryFemale
+            ).toString()
+          : '',
 
       // Gender Consideration
-      StrengthConsideration: this.projectotherDetail.StrengthConsiderationId != null ? (this.strengthDataSource.find(x => x.Id === this.projectotherDetail.StrengthConsiderationId) ?  this.strengthDataSource.find(x => x.Id === this.projectotherDetail.StrengthConsiderationId).Name : '') : '',
-      GenderConsideration:  this.projectotherDetail.GenderConsiderationId != null ? this.GenderConsiderationvaluelist.find(x => x.GenderConsiderationId === this.projectotherDetail.GenderConsiderationId).GenderConsiderationName : '',
-      GenderRemarks: this.projectotherDetail.GenderRemarks != null ? this.projectotherDetail.GenderRemarks : '',
+      StrengthConsideration:
+        this.projectotherDetail.StrengthConsiderationId != null
+          ? this.strengthDataSource.find(
+              x => x.Id === this.projectotherDetail.StrengthConsiderationId
+            )
+            ? this.strengthDataSource.find(
+                x => x.Id === this.projectotherDetail.StrengthConsiderationId
+              ).Name
+            : ''
+          : '',
+      GenderConsideration:
+        this.projectotherDetail.GenderConsiderationId != null
+          ? this.GenderConsiderationvaluelist.find(
+              x =>
+                x.GenderConsiderationId ===
+                this.projectotherDetail.GenderConsiderationId
+            ).GenderConsiderationName
+          : '',
+      GenderRemarks:
+        this.projectotherDetail.GenderRemarks != null
+          ? this.projectotherDetail.GenderRemarks
+          : '',
 
       // Security Consideration
-      Security: this.projectotherDetail.StrengthConsiderationId != null ? this.Securitylist.find(x => x.SecurityId === this.projectotherDetail.SecurityId).SecurityName : '',
-      SecurityConsideration: this.securityConsiderationMultiselect.SecurityConsiderationId.map(x => this.securityConsDataSource.filter(y => y.Id === x).map(z => z.Name)).toString(),
-      SecurityRemarks: this.projectotherDetail.SecurityRemarks != null ? this.projectotherDetail.SecurityRemarks : ''
+      Security:
+        this.projectotherDetail.StrengthConsiderationId != null
+          ? this.Securitylist.find(
+              x => x.SecurityId === this.projectotherDetail.SecurityId
+            ).SecurityName
+          : '',
+      SecurityConsideration: this.securityConsiderationMultiselect.SecurityConsiderationId.map(
+        x =>
+          this.securityConsDataSource.filter(y => y.Id === x).map(z => z.Name)
+      ).toString(),
+      SecurityRemarks:
+        this.projectotherDetail.SecurityRemarks != null
+          ? this.projectotherDetail.SecurityRemarks
+          : ''
     };
   }
-
 
   //#region "onExportPdf"
   onExportPdf() {
@@ -2109,4 +2271,7 @@ export class ProgramAreaSectorComponent implements OnInit {
   }
   //#endregion
 
+  ngOnDestroy() {
+    this._cdr.detach();
+  }
 }

@@ -104,10 +104,6 @@ export class AddHiringRequestsComponent implements OnInit , OnChanges {
 
   //#region "AddHiringRequest"
   AddHiringRequest(data: IHiringRequestDetailModel) {
-    console.log('projectId'
-    + this.projectId);
-    const project =  this.projectId;
-    console.log(' const' + project);
     if (this.hiringRequestForm.valid) {
       this.addHiringRequestLoader = true;
       const hiringRequestDetail: IHiringRequestDetailModel = {
@@ -158,11 +154,12 @@ export class AddHiringRequestsComponent implements OnInit , OnChanges {
   hiringRequestListRefresh() {
     this.onHiringRequestListRefresh.emit();
   }
-  //#endregion
 
-hiringRequestListRefreshOnUpdate(data: any) {
-  this.onUpdateHiringRequestListRefresh.emit(data);
-}
+  hiringRequestListRefreshOnUpdate(data: any) {
+    this.onUpdateHiringRequestListRefresh.emit(data);
+  }
+
+  //#endregion
 
   //#region "setHirectingrequestDetail"
   setHirectingrequestDetail() {

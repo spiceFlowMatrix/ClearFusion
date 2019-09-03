@@ -263,13 +263,13 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.ModifiedDate = DateTime.UtcNow;
             model.CreatedById = userId;
             model.CreatedDate = DateTime.UtcNow;
-            return await  _mediator.Send(model);
+            return await _mediator.Send(model);
         }
 
         [HttpPost]
         public async Task<ApiResponse> DeleteProjectDetail([FromBody]long ProjectId)
         {
-            DeleteProjectDetailCommand model= new DeleteProjectDetailCommand();
+            DeleteProjectDetailCommand model = new DeleteProjectDetailCommand();
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             model.ModifiedById = userId;
@@ -292,16 +292,16 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         [HttpPost]
         public async Task<ApiResponse> GetProjectListById([FromBody]long Id)
         {
-            return await _mediator.Send(new GetProjectListByIdQuery{ Id= Id }); 
+            return await _mediator.Send(new GetProjectListByIdQuery { Id = Id });
         }
 
         [HttpPost]
         public async Task<ApiResponse> GetProjectOtherDetailById([FromBody]long Id)
         {
-            return await _mediator.Send(new GetProjectOtherDetailByIdQuery{ Id= Id });
+            return await _mediator.Send(new GetProjectOtherDetailByIdQuery { Id = Id });
         }
 
-    #endregion
+        #endregion
 
         #region Add/Update Assign Employee to Project 
 
@@ -327,7 +327,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(model);
         }
 
-     #endregion
+        #endregion
 
         #region Add/Edit Project Program to Current Project
 
@@ -345,13 +345,13 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         [HttpPost]
         public async Task<ApiResponse> getProjectProgramById([FromBody]long ProjectId)
         {
-            return await _mediator.Send(new GetProjectProgramByIdQuery { ProjectId= ProjectId });
+            return await _mediator.Send(new GetProjectProgramByIdQuery { ProjectId = ProjectId });
         }
 
         [HttpPost]
         public async Task<ApiResponse> AddEditProjectArea([FromBody]AddEditProjectAreaCommand model)
         {
-           var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             model.ModifiedById = userId;
             model.ModifiedDate = DateTime.UtcNow;
             model.CreatedById = userId;
@@ -362,16 +362,16 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         [HttpPost]
         public async Task<ApiResponse> getProjectAreaById([FromBody]long ProjectId)
         {
-            return await _mediator.Send(new GetProjectAreaByIdQuery { ProjectId= ProjectId });
+            return await _mediator.Send(new GetProjectAreaByIdQuery { ProjectId = ProjectId });
         }
 
-         [HttpPost]
+        [HttpPost]
         public async Task<ApiResponse> getProjectSectorById([FromBody]long ProjectId)
         {
-            return await _mediator.Send(new GetProjectAreaByIdQuery { ProjectId= ProjectId });
+            return await _mediator.Send(new GetProjectSectorByIdQuery { ProjectId = ProjectId });
         }
 
-         [HttpPost]
+        [HttpPost]
         public async Task<ApiResponse> DeleteProjectProgram([FromBody]DeleteProjectProgramCommand model)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -382,7 +382,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(model);
         }
 
-     #endregion
+        #endregion
 
         #region Add/Edit Project Sector Area to Current Project
 
@@ -394,10 +394,10 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.ModifiedDate = DateTime.UtcNow;
             model.CreatedById = userId;
             model.CreatedDate = DateTime.UtcNow;
-            return await _mediator.Send(model); 
+            return await _mediator.Send(model);
         }
         [HttpPost]
-        public async Task<ApiResponse> DeleteProjectSector([FromBody]DeleteProjectSectorCommand model) 
+        public async Task<ApiResponse> DeleteProjectSector([FromBody]DeleteProjectSectorCommand model)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             model.ModifiedById = userId;
@@ -407,7 +407,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         [HttpPost]
         public async Task<ApiResponse> DeleteProjectArea([FromBody]DeleteProjectAreaCommand model)
         {
-           var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             model.ModifiedById = userId;
             model.ModifiedDate = DateTime.UtcNow;
             model.CreatedById = userId;
@@ -424,17 +424,17 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         [HttpPost]
         public async Task<ApiResponse> GetProjectWinLossStatus([FromBody]long ProjectId)
         {
-            return await _mediator.Send(new GetProjectWinLossStatusQuery { ProjectId= ProjectId });
+            return await _mediator.Send(new GetProjectWinLossStatusQuery { ProjectId = ProjectId });
         }
 
-     #endregion
+        #endregion
 
         #region Other Details dropdown
 
         [HttpGet]
         public async Task<ApiResponse> GetAllStrengthConsiderationDetails()
         {
-           return await _mediator.Send(new GetAllStrengthConsiderationDetailsQuery());
+            return await _mediator.Send(new GetAllStrengthConsiderationDetailsQuery());
         }
 
         [HttpGet]
@@ -459,25 +459,25 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         public async Task<ApiResponse> GetAllProvinceDetailsByCountryId([FromBody]int[] countryId)
         {
 
-            return await _mediator.Send(new GetAllProvincesByCountryIdQuery { CountryId= countryId });
+            return await _mediator.Send(new GetAllProvincesByCountryIdQuery { CountryId = countryId });
         }
 
         [HttpPost]
         public async Task<ApiResponse> GetCountryMultiSelectByProjectId([FromBody]long Id)
         {
-            return await _mediator.Send(new GetCountryByProjectIdQuery { ProjectId= Id });
+            return await _mediator.Send(new GetCountryByProjectIdQuery { ProjectId = Id });
         }
 
         [HttpPost]
         public async Task<ApiResponse> GetProvinceMultiSelectByProjectId([FromBody]long Id)
         {
-           return await _mediator.Send(new GetSelectedProvinceByProjectIdQuery { ProjectId= Id });
+            return await _mediator.Send(new GetSelectedProvinceByProjectIdQuery { ProjectId = Id });
         }
 
         [HttpPost]
         public async Task<ApiResponse> GetDistrictMultiSelectByProjectId([FromBody]long Id)
         {
-            return await _mediator.Send(new GetSelectedDistrictByProjectIdQuery { ProjectId= Id });
+            return await _mediator.Send(new GetSelectedDistrictByProjectIdQuery { ProjectId = Id });
         }
 
         [HttpPost]
@@ -492,7 +492,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         }
 
         [HttpPost]
-        public async Task<ApiResponse> AddEditCountryMultiselect([FromBody]AddEditCountryByProjectIdCommand model) 
+        public async Task<ApiResponse> AddEditCountryMultiselect([FromBody]AddEditCountryByProjectIdCommand model)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             model.ModifiedById = userId;
@@ -516,10 +516,10 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         [HttpPost]
         public async Task<ApiResponse> GetAllDistrictvalueByProvinceId([FromBody]int[] ProvinceId)
         {
-            return await _mediator.Send(new GetAllDistrictByProvinceIdQuery { ProvinceId= ProvinceId });
+            return await _mediator.Send(new GetAllDistrictByProvinceIdQuery { ProvinceId = ProvinceId });
         }
 
-         [HttpPost]
+        [HttpPost]
         public async Task<ApiResponse> AddEditProjectotherDetail([FromBody]AddEditProjectOtherDetailCommand model)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -533,13 +533,13 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         [HttpGet]
         public async Task<ApiResponse> GetAllSecurityConsiderationDetails()
         {
-             return await _mediator.Send(new GetSecurityConsiderationDetailQuery());
+            return await _mediator.Send(new GetSecurityConsiderationDetailQuery());
         }
 
         [HttpPost]
         public async Task<ApiResponse> GetSecurityConsiMultiSelectByProjectId([FromBody]long Id)
         {
-             return await _mediator.Send(new GetSecurityConsiderationByProjectIdQuery());
+            return await _mediator.Send(new GetSecurityConsiderationByProjectIdQuery{ ProjectId = Id });
         }
 
         [HttpPost]
@@ -552,7 +552,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.CreatedDate = DateTime.UtcNow;
             return await _mediator.Send(model);
         }
-     #endregion
+        #endregion
 
         #region "BudgetLineExcelImport"
         [HttpPost, DisableRequestSizeLimit]
@@ -578,10 +578,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
                         var id = user;
                         //var userName = user.UserName;
                         long projectID = Convert.ToInt64(projectId);
-                        return await _mediator.Send(new ExcelImportOfBudgetLineQuery {
-                            ProjectId= projectID,
-                            File= stream,
-                            UserId= id
+                        return await _mediator.Send(new ExcelImportOfBudgetLineQuery
+                        {
+                            ProjectId = projectID,
+                            File = stream,
+                            UserId = id
                         });
                     }
                     else
@@ -594,7 +595,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return apiRespone;
         }
         #endregion
-    
+
         #region  "ApprovalProjectDetail"
         [HttpPost]
         public async Task<ApiResponse> AddApprovalProjectDetail([FromBody]AddApprovalProjectDetailCommand command)
@@ -868,7 +869,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
 
             return await _mediator.Send(model);
         }
- 
+
 
         #endregion
 
@@ -1047,7 +1048,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         #endregion
 
         #endregion
-       
+
         #region "Voucher summary reports"
         [HttpPost]
         public async Task<ApiResponse> GetProjectJobsByProjectIds([FromBody] List<long> projectIds)
@@ -1218,19 +1219,18 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(query);
         }
         [HttpPost]
-        public async Task<ApiResponse> GetProjectIndicatorDetailById([FromBody]long indicatorId)
+        public async Task<ApiResponse> GetIndicatorQuestionDetailById([FromBody]long indicatorId)
         {
-            return await _mediator.Send(new GetProjectIndicatorDetailByIdQuery { indicatorId = indicatorId });
+            return await _mediator.Send(new GetIndicatorQuestionDetailByIdQuery { indicatorId = indicatorId });
         }
         [HttpPost]
-        public async Task<ApiResponse> AddProjectIndicator()
+        public async Task<ApiResponse> AddProjectIndicator([FromBody] AddProjectIndicatorCommand command)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            return await _mediator.Send(new AddProjectIndicatorCommand
-            {
-                CreatedById = userId,
-                CreatedDate = DateTime.UtcNow,
-            });
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+
         }
         [HttpPost]
         public async Task<ApiResponse> EditProjectIndicator([FromBody]EditProjectIndicatorCommand command)
@@ -1242,6 +1242,19 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             command.ModifiedDate = DateTime.UtcNow;
             return await _mediator.Send(command);
         }
+
+        [HttpPost]
+        public async Task<ApiResponse> AddProjectIndicatorQuestions([FromBody]AddProjectIndicatorQuestionsCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+        }
+
+
+
+
         [HttpPost]
         public async Task<ApiResponse> GetProjectIndicatorQuestionsById([FromBody]long indicatorId)
         {
@@ -1413,7 +1426,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         #region "Start Proposal Drag and Drop PK 26/03/2019" 
 
         [HttpPost, DisableRequestSizeLimit]
-        public async Task<ApiResponse> StartProposalDragAndDropFile([FromForm] IFormFile filesData,[FromForm] string projectId, [FromForm] int data)
+        public async Task<ApiResponse> StartProposalDragAndDropFile([FromForm] IFormFile filesData, [FromForm] string projectId, [FromForm] int data)
         {
             ApiResponse apiRespone = new ApiResponse();
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -1594,7 +1607,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             });
         }
         [HttpPost]
-        public async Task<ApiResponse> AllActivityStatus([FromBody]long projectId) 
+        public async Task<ApiResponse> AllActivityStatus([FromBody]long projectId)
         {
             return await _mediator.Send(new AllProjectActivityStatusQuery { ProjectId = projectId });
         }
@@ -1701,7 +1714,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         #region "Create and Download Excel format"
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult CreateAndDownloadExcelFormat() 
+        public IActionResult CreateAndDownloadExcelFormat()
         {
 
             ApiResponse apiRespone = new ApiResponse();
@@ -1746,7 +1759,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
                    contentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                    fileDownloadName: "Budget-Line-Excel-Import-Sample.xlsx"
                );
-            }         
+            }
         }
         #endregion
 

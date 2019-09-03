@@ -212,6 +212,8 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<HiringRequestCandidates> HiringRequestCandidates { get; set; }
         public DbSet<CountryMultiSelectDetails> CountryMultiSelectDetails { get; set; }
 
+        public DbSet<VerificationSources> VerificationSources { get; set; }
+
         #endregion
 
         #region Marketing

@@ -11,7 +11,7 @@ namespace HumanitarianAssistance.Application.Project.Models
             Recurring = false;
             RecurringCount = 0;
         }
-        public int ActivityId { get; set; }
+        public long ActivityId { get; set; }
         public string ActivityName { get; set; }
         public string ActivityDescription { get; set; }
         public DateTime PlannedStartDate { get; set; }

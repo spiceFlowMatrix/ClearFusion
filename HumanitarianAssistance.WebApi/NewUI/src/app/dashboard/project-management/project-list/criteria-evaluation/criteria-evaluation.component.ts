@@ -66,7 +66,7 @@ export class CriteriaEvaluationComponent
   ProjectSelectionList: SelectItem[];
   selectedprojectSelction: string[] = [];
 
-  projectAllowedByLaw = false; // add one more property
+  AllowedByLaw = false; // add one more property
 
   //#region "Variables"
   methodOfFundingList = [
@@ -287,14 +287,13 @@ export class CriteriaEvaluationComponent
   }
   // to show warning message if the total score is less than 30 -->
   ngAfterViewChecked() {
-    const projectAllowedByLaw = this.feasibilityForm.ProjectAllowedBylaw;
-    if (projectAllowedByLaw !== this.projectAllowedByLaw) {
+    const isAllowedByLaw = this.feasibilityForm.ProjectAllowedBylaw;
+    if (isAllowedByLaw !== this.AllowedByLaw) {
       // check if it change, tell CD update view
-      this.projectAllowedByLaw = projectAllowedByLaw;
+      this.AllowedByLaw = isAllowedByLaw;
       this.cdRef.detectChanges();
     }
   }
-
   //#region "Dynamic Scroll"
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
@@ -2413,7 +2412,7 @@ export class CriteriaEvaluationComponent
             }
           },
           error => {
-            this.toastr.error('Something went wrong! Please try Agian');
+            this.toastr.error('Something went wrong! Please try Again');
           }
         );
     }
@@ -2447,7 +2446,7 @@ export class CriteriaEvaluationComponent
             }
           },
           error => {
-            this.toastr.error('Something went wrong! Please try Agian');
+            this.toastr.error('Something went wrong! Please try Again');
           }
         );
     }
@@ -2502,7 +2501,7 @@ export class CriteriaEvaluationComponent
             }
           },
           error => {
-            this.toastr.error('Something went wrong! Please try Agian');
+            this.toastr.error('Something went wrong! Please try Again');
           }
         );
     }
@@ -2540,7 +2539,7 @@ export class CriteriaEvaluationComponent
           }
         },
         error => {
-          this.toastr.error('Something went wrong! Please try Agian');
+          this.toastr.error('Something went wrong! Please try Again');
         }
       );
   }

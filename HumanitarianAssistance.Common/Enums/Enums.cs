@@ -19,6 +19,12 @@
         DR = 2,
         CR = 3
     }
+
+    public enum UserStatus {
+        InActive,
+        Active
+    } 
+
     public enum AccountTypeEnum
     {
 
@@ -205,4 +211,26 @@
         EmployeeProfile = 3
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public enum QuestionType
+    {
+        Qualitative = 1,
+        Quantitative = 2
+    }
 }
