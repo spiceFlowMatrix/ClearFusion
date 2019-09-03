@@ -6,7 +6,7 @@ import {
     Response,
     RequestOptions,
     RequestOptionsArgs
-  } from '@angular/http';
+} from '@angular/http';
 import { GLOBAL } from '../global';
 import { FileModel, UploadModel } from './file-management-model';
 import { Observable } from 'rxjs/Observable';
@@ -24,38 +24,57 @@ export class FileManagementService {
     objectName: any;
 
     PostByModel(url: string, model: any) {
-         
+        const Myheaders = new Headers();
+        Myheaders.append(
+            'Authorization',
+            'Bearer ' + localStorage.getItem('authenticationtoken')
+        );
+        Myheaders.append('Content-Type', 'application/json');
+        const options = new RequestOptions({ headers: Myheaders });
+        return this.http
+            .post(url, JSON.stringify(model), options)
+            .map((response: Response) => {
+                const journal = response.json();
+                if (journal) {
+                    return journal;
+                }
+            })
+            .catch(this.handleError);
+    }
+
+    PutByModel(url: string, model: any) {
+        const Myheaders = new Headers();
+        Myheaders.append('Content-Type', model.type);
+        const options = new RequestOptions({ headers: Myheaders, });
+        return this.http
+            .put(url, model, options)
+            .map((response: Response) => {
+                return response;
+            })
+            .catch(this.handleError);
+    }
+
+    GetById(url: string, Id: number) {
+        debugger;
         const Myheaders = new Headers();
         Myheaders.append(
           'Authorization',
           'Bearer ' + localStorage.getItem('authenticationtoken')
         );
-        Myheaders.append('Content-Type', 'application/json');
         const options = new RequestOptions({ headers: Myheaders });
         return this.http
-          .post(url, JSON.stringify(model), options)
+          .get(
+            url + '?Id=' + Id,
+            options
+          )
           .map((response: Response) => {
-            const journal = response.json();
-            if (journal) {
-              return journal;
+            const codelist = response.json();
+            if (codelist) {
+              return codelist;
             }
           })
           .catch(this.handleError);
       }
-
-    PutByModel(url: string, model: any) {
-        const Myheaders = new Headers();
-           Myheaders.append('Content-Type', model.type);
-        const options = new RequestOptions({ headers: Myheaders, });
-        return this.http
-          .put(url, model, options)
-          .map((response: Response) => {
-               
-
-            return response;
-          })
-          .catch(this.handleError);
-    }
 
     getSignedURL(dataModel: UploadModel) {
         this.objectName = SignedUrlObjectName.getSignedURLObjectName(dataModel.PageId, dataModel.EntityId);
@@ -76,46 +95,9 @@ export class FileManagementService {
         return this.PostByModel(url, DownloadObjectGCBucketModel);
     }
 
-    //#region "uploadFile"
-//    uploadFile(dataModel: UploadModel) {
-//     
-//        this.getSignedURL(dataModel).subscribe(x => {
-
-//        if (x.StatusCode === 200) {
-//             
-//            this.uploadFileBySignedUrl(x.data.SignedUrl, dataModel.File)
-//                .subscribe((response: any) => {
-//                    if (response.status === 200) {
-//                         
-//                        const data: FileModel = {
-//                            FileName: dataModel.File.name,
-//                            FilePath: this.objectName,
-//                            FileSize: dataModel.File.size,
-//                            FileType: dataModel.File.type,
-//                            PageId: dataModel.PageId,
-//                            RecordId: dataModel.EntityId,
-//                            DocumentTypeId: dataModel.DocumentTypeId,
-//                            DocumentFileId: dataModel.DocumentFileId
-//                        };
-
-//                        if (dataModel.DocumentFileId == null || dataModel.DocumentFileId == 0 || dataModel.DocumentFileId== undefined) {
-//                             this.saveUploadedFileInfo(data).subscribe(x => { })
-                                
-//                        } else {
-//                             this.updateUploadedFileInfo(data).subscribe(x => { })
-                                
-//                        }
-//                    }
-//                });
-//        } else {
-//            throw new Error('Could not get signed URL');
-//        }
-//    });
-//}
-
-
+    // #uploadFile
     uploadFile(dataModel: UploadModel) {
-       return this.getSignedURL(dataModel).pipe(concatMap(res => {
+        return this.getSignedURL(dataModel).pipe(concatMap(res => {
             if (res['StatusCode'] === 200) {
                 return this.uploadFileBySignedUrl(res['data'].SignedUrl, dataModel.File)
             } else {
@@ -123,44 +105,43 @@ export class FileManagementService {
             }
         }), concatMap(res1 => {
 
-               if (res1['status'] === 200) {
-                 debugger;
-                    const data: FileModel = {
-                        FileName: dataModel.File.name,
-                        FilePath: this.objectName,
-                        FileSize: dataModel.File.size,
-                        FileType: dataModel.File.type,
-                        PageId: dataModel.PageId,
-                        RecordId: dataModel.EntityId,
-                        DocumentTypeId: dataModel.DocumentTypeId,
-                        DocumentFileId: dataModel.DocumentFileId
-                    };
+            if (res1['status'] === 200) {
+                debugger;
+                const data: FileModel = {
+                    FileName: dataModel.File.name,
+                    FilePath: this.objectName,
+                    FileSize: dataModel.File.size,
+                    FileType: dataModel.File.type,
+                    PageId: dataModel.PageId,
+                    RecordId: dataModel.EntityId,
+                    DocumentTypeId: dataModel.DocumentTypeId,
+                    DocumentFileId: dataModel.DocumentFileId
+                };
 
-                    if (dataModel.DocumentFileId == null || dataModel.DocumentFileId == 0 || dataModel.DocumentFileId == undefined) {
-                         
-                        return this.saveUploadedFileInfo(data);
+                if (dataModel.DocumentFileId == null || dataModel.DocumentFileId == 0 || dataModel.DocumentFileId == undefined) {
+                    return this.saveUploadedFileInfo(data);
 
-                        } else {
-                        return this.updateUploadedFileInfo(data);
-                        }
+                } else {
+                    return this.updateUploadedFileInfo(data);
                 }
-            }))
+            }
+        }));
     }
-//#endregion
+    //#endregion
 
-//#region "uploadFileBySignedUrl"
-uploadFileBySignedUrl(url: string, data: any, options?: any) {
-    return this.PutByModel(url, data);
-}
-//#endregion
+    //#region "uploadFileBySignedUrl"
+    uploadFileBySignedUrl(url: string, data: any, options?: any) {
+        return this.PutByModel(url, data);
+    }
+    //#endregion
 
-//#region "saveUploadedFileInfo"
+    //#region "saveUploadedFileInfo"
     saveUploadedFileInfo(data: FileModel) {
 
-    const url = this.settings.getBaseUrl() + GLOBAL.API_FileManagement_SaveUploadedFileInfo;
-    return this.PostByModel(url, data);
-}
-//#endregion
+        const url = this.settings.getBaseUrl() + GLOBAL.API_FileManagement_SaveUploadedFileInfo;
+        return this.PostByModel(url, data);
+    }
+    //#endregion
 
     //#region "saveUploadedFileInfo"
     updateUploadedFileInfo(data: FileModel) {
@@ -168,10 +149,18 @@ uploadFileBySignedUrl(url: string, data: any, options?: any) {
         const url = this.settings.getBaseUrl() + GLOBAL.API_FileManagement_UpdateUploadedFileInfo;
         return this.PostByModel(url, data);
     }
-//#endregion
+    //#endregion
 
-private handleError(error: Response) {
-    return Observable.throw(error || 'Server error');
-  }
+    //#region "saveUploadedFileInfo"
+    getSignedURLByDocumenFileId(id: number) {
+
+        const url = this.settings.getBaseUrl() + GLOBAL.API_FileManagement_GetSignedURLByDocumentFileId;
+        return this.GetById(url, id);
+    }
+    //#endregion
+
+    private handleError(error: Response) {
+        return Observable.throw(error || 'Server error');
+    }
 
 }
