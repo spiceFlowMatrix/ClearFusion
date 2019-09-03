@@ -100,7 +100,6 @@ export class AddProjectIndicatorComponent implements OnInit {
   }
 
   EditProjectIndicator(data: IProjectIndicatorModel) {
-    debugger;
     if (this.indicatorForm.valid) {
       this.addIndicatorLoader = true;
       const indicatorDetail: IProjectIndicatorModel = {

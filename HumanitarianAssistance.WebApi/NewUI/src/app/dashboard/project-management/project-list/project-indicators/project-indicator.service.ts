@@ -21,7 +21,6 @@ export class ProjectIndicatorService {
 
   //#region "AddbudgetLineDetailList"
   AddIndicatorDetail(data: IProjectIndicatorModel) {
-    debugger;
     return this.globalService
       .post(
         this.appurl.getApiUrl() + GLOBAL.API_Project_AddProjectIndicator,
@@ -82,7 +81,6 @@ export class ProjectIndicatorService {
   //#endregion
   //#region "GetIndicatorQuestionById"
   GetIndicatorQuestionById(id: number) {
-    debugger
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
