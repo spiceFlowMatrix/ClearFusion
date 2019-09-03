@@ -108,7 +108,6 @@ export class ProjectIndicatorDetailComponent implements OnInit {
   }
 
   public OnSubmit(formValue: any) {
-    debugger;
     this.EditLoaderFlag= true;
 
     if (formValue.indicatorName != null && formValue.indicatorName != '') {
@@ -199,7 +198,6 @@ export class ProjectIndicatorDetailComponent implements OnInit {
   }
 
   CreateProjectIndicatorOnAddNew() {
-    debugger;
     this.initializeModel();
     this.indicatorDetail.projectIndicatorId = 0;
     this.projectListService

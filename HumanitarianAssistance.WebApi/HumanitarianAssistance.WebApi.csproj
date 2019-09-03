@@ -6,6 +6,11 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
 
+    <!-- set up for pdf functionality -->
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>   
+    <!-- <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish> -->
+
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
   </PropertyGroup>
@@ -17,6 +22,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
+    <PackageReference Include="RazorLight" Version="2.0.0-beta1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,5 +31,31 @@
     <ProjectReference Include="..\HumanitarianAssistance.Persistence\HumanitarianAssistance.Persistence.csproj" />
     <ProjectReference Include="..\HumanitarianAssistance.Infrastructure\HumanitarianAssistance.Infrastructure.csproj" />
   </ItemGroup>
+
+  
+  <!-- Use of Pdf export -->
+  <ItemGroup>
+    <Content Update="PdfTemplates\**\*">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="PdfTemplates\VoucherSummaryReport.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="PdfTemplates\VoucherSummaryReport.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+
+
+  <!-- Use of Pdf export -->
+
+
+
 
 </Project>

@@ -80,6 +80,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.orderDataSource = [];
     this.storeLocationDropdown = [];
+    this.getAllOrderDetails();
 
     this.initializeForm();
     this.getAllVoucherList();
@@ -103,7 +104,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
       IssueDate: null,
       ReturnedDate: null,
 
-      IssueVoucherNo: null,
+      // IssueVoucherNo: null,
       Remarks: null,
       Project: null,
       IssedToLocation: null,
@@ -121,7 +122,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
       IssueDate: null,
       ReturnedDate: null,
 
-      IssueVoucherNo: null,
+     // IssueVoucherNo: null,
       Remarks: null,
       Project: null,
       IssedToLocation: null,
@@ -246,12 +247,12 @@ export class OrdersComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region "getStoreLocationList"
-  // Get all Source Code Data Details
+  // typeId=0 to Get all Source Code Data Details
   getSourceCodeDatalist() {
     this.storeService
       .GetSourceCode(
         this.setting.getBaseUrl() + GLOBAL.API_Store_GetAllStoreSourceCode,
-        null
+        0
       )
       .subscribe(
         data => {
@@ -486,7 +487,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
                   )
                 : null,
 
-            IssueVoucherNo: data.IssueVoucherNo,
+           // IssueVoucherNo: data.IssueVoucherNo,
             Remarks: data.Remarks,
             Project: data.Project,
             IssedToLocation: data.IssedToLocation,
@@ -525,7 +526,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
                   )
                 : null,
 
-            IssueVoucherNo: data.IssueVoucherNo,
+           // IssueVoucherNo: data.IssueVoucherNo,
             Remarks: data.Remarks,
             Project: data.Project,
             IssedToLocation: data.IssedToLocation,
@@ -558,7 +559,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
       IssueDate: new Date(),
       ReturnedDate: null,
 
-      IssueVoucherNo: null,
+     // IssueVoucherNo: null,
       Remarks: null,
       Project: null,
       IssedToLocation: null,
@@ -583,7 +584,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
       IssueDate: data.IssueDate,
       ReturnedDate: data.ReturnedDate,
 
-      IssueVoucherNo: data.IssueVoucherNo,
+     // IssueVoucherNo: data.IssueVoucherNo,
       Remarks: data.Remarks,
       Project: data.Project,
       IssedToLocation:
@@ -622,7 +623,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
       IssueDate: null,
       ReturnedDate: null,
 
-      IssueVoucherNo: null,
+      // IssueVoucherNo: null,
       Remarks: null,
       Project: null,
       IssedToLocation: null,
@@ -640,7 +641,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
       IssueDate: data.IssueDate,
       ReturnedDate: data.ReturnedDate,
 
-      IssueVoucherNo: data.IssueVoucherNo,
+      // IssueVoucherNo: data.IssueVoucherNo,
       Remarks: data.Remarks,
       Project: data.Project,
       IssedToLocation: data.IssedToLocation,
@@ -774,7 +775,7 @@ class OrderModel {
   IssueDate: any;
   ReturnedDate: any;
 
-  IssueVoucherNo: number;
+  // IssueVoucherNo: number;
   Remarks: string;
   Project: number;
   IssedToLocation: any;

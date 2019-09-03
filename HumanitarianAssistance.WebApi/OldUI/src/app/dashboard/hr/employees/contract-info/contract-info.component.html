@@ -104,18 +104,18 @@
   <div *dxTemplate="let data of 'content'">
     <dx-scroll-view showScrollbar="always" direction="both">
 
-      <form action="your-action" (submit)="onEmployeeContractFormSubmit(employeeContractForm)">
+      <form action="your-action" (submit)="onEmployeeContractFormSubmit(employeeContractForm)" autocomplete="off">
         <div class="text-right">
 
         </div>
         <dx-form id="form" [formData]="employeeContractForm" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true" 
-          [showValidationSummary]="true" (onFieldDataChanged)="onFieldDataChanged($event)">
+          [showValidationSummary]="true" (onFieldDataChanged)="onFieldDataChanged($event)" validationGroup="contractData">
 
           <dxi-item itemType="group" [colSpan]="2" [colCount]="2">
 
             <dxi-item dataField="EmployeeId" [visible]="false" editorType="dxSelectBox" [editorOptions]="{readOnly: true, value: employeeContractForm.EmployeeId, dataSource: employeeListDataSource, displayExpr: 'CodeEmployeeName', valueExpr: 'EmployeeId', searchEnabled: true}">
               <dxo-label text="Employee"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="FatherName" [editorOptions]="{ readOnly: true}">
@@ -134,99 +134,98 @@
               <dxo-label text="کود نمبر کارمند"></dxo-label>
             </dxi-item>
 
-            <dxi-item dataField="Designation" editorType="dxSelectBox" [editorOptions]="{dataSource: designationDropdown, displayExpr: 'Designation', valueExpr: 'DesignationId', searchEnabled: true}">
+            <dxi-item dataField="Designation" editorType="dxSelectBox" [editorOptions]="{dataSource: designationDropdown, value:employeeContractForm.DesignationId,  displayExpr: 'Designation', valueExpr: 'DesignationId', searchEnabled: true}">
               <dxo-label text="Designation"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="DesignationDari">
               <dxo-label text="وظیفه"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="ContractStartDate" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', max: employeeContractForm.ContractStartDate, value:employeeContractForm.ContractStartDate, showClearButton: true }">
               <dxo-label text="Contract Start Date"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="ContractStartDate" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', max: employeeContractForm.ContractStartDate, value:employeeContractForm.ContractStartDate, showClearButton: true }">
               <dxo-label text="تاریخ شروع قرارداد"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="ContractEndDate" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', min: employeeContractForm.ContractEndDate, value:employeeContractForm.ContractEndDate,  showClearButton: true }">
               <dxo-label text="Contract End Date"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="ContractEndDate" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', min: employeeContractForm.ContractEndDate, value:employeeContractForm.ContractEndDate,  showClearButton: true }">
               <dxo-label text="تاریخ ختم قرارداد"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="DurationOfContract" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.DurationOfContract , showSpinButtons: true}">
               <dxo-label text="Duration Of Contract"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="DurationOfContract" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.DurationOfContract , showSpinButtons: true}">
               <dxo-label text="مدت قرارداد"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="Salary" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.Salary , showSpinButtons: true}">
               <dxo-label text="Salary"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="Salary" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.Salary , showSpinButtons: true}">
               <dxo-label text="معاش"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="Grade" editorType="dxSelectBox" [editorOptions]="{dataSource: gradeDropDown, displayExpr: 'GradeName', valueExpr: 'GradeId', searchEnabled: true}">
               <dxo-label text="Grade"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="GradeDari">
               <dxo-label text="گرید"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="DutyStation" editorType="dxSelectBox" [editorOptions]="{dataSource: officeListDataSource, displayExpr: 'OfficeName', valueExpr: 'OfficeId', searchEnabled: true}">
               <dxo-label text="Duty Station"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="DutyStationDari">
               <dxo-label text="محل وظیفه"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
-            <dxi-item dataField="Country" editorType="dxSelectBox" [editorOptions]="{dataSource: countryDropdown, displayExpr: 'CountryName', valueExpr: 'CountryId', searchEnabled: true}">
+            <dxi-item dataField="Country" editorType="dxSelectBox" [editorOptions]="{dataSource: countryDropdown, value:employeeContractForm.CountryId, displayExpr: 'CountryName', valueExpr: 'CountryId', searchEnabled: true}">
               <dxo-label text="Country"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="CountryDari">
               <dxo-label text="کشور"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
-            <dxi-item dataField="Province" editorType="dxSelectBox" [editorOptions]="{dataSource: stateDropdown, displayExpr: 'ProvinceName', valueExpr: 'ProvinceId', searchEnabled: true}">
+            <dxi-item dataField="Province" editorType="dxSelectBox" [editorOptions]="{dataSource: stateDropdown, displayExpr: 'ProvinceName', value:employeeContractForm.ProvinceId, valueExpr: 'ProvinceId', searchEnabled: true}">
               <dxo-label text="Province"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="ProvinceDari">
               <dxo-label text="ولایت"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <dxi-validation-rule type="required"></dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="Project" (change)="getAllBudgetLineDetails(projectDataSource.ProjectId)" editorType="dxSelectBox" [editorOptions]="{dataSource: projectDataSource, displayExpr: 'ProjectNameCode', valueExpr: 'ProjectId', searchEnabled: true}">
               <dxo-label text="Project Name"></dxo-label>
-              <!-- <dxi-validation-rule type="required"> </dxi-validation-rule> -->
             </dxi-item>
 
             <dxi-item dataField="ProjectNameDari">
@@ -236,7 +235,6 @@
 
             <dxi-item dataField="BudgetLine" editorType="dxSelectBox" [editorOptions]="{dataSource: projectBudgetLineDataSource, displayExpr: 'BudgetCodeName', valueExpr: 'BudgetLineId', searchEnabled: true}">
               <dxo-label text="Budget Line"></dxo-label>
-              <!-- <dxi-validation-rule type="required"> </dxi-validation-rule> -->
             </dxi-item>
 
             <dxi-item dataField="BudgetLineDari">
@@ -246,32 +244,26 @@
 
             <dxi-item dataField="Job">
               <dxo-label text="Job"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="JobDari">
               <dxo-label text="کار"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="WorkTime" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.WorkTime, showSpinButtons: true}">
               <dxo-label text="Work Time"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="WorkTime" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.WorkTime, showSpinButtons: true}">
               <dxo-label text="وقت کاری"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="WorkDayHours" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.WorkDayHours, showSpinButtons: true}">
               <dxo-label text="Work Day (Hours)"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
             </dxi-item>
 
             <dxi-item dataField="WorkDayHours" editortype="dxNumberBox" [editorOptions]="{value: employeeContractForm.WorkDayHours, showSpinButtons: true}">
               <dxo-label text="ساعات کاری"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
             </dxi-item>
 
           </dxi-item>
@@ -279,7 +271,7 @@
         </dx-form>
         <br>
         <div class="btn-grp-wrap">
-          <dx-button text="Save" type="success" validationGroup="historyDetails" [useSubmitBehavior]="true"></dx-button>
+          <dx-button text="Save" type="success" validationGroup="contractData" [useSubmitBehavior]="true"></dx-button>
           <dx-button text="Cancel" (click)="hideAddContractPopup()"></dx-button>
         </div>
 

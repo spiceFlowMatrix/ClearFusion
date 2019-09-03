@@ -84,6 +84,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                         ratingObj.CreatedDate = request.CreatedDate;
                         ratingObj.IsDeleted = false;
                         await _dbContext.RatingBasedCriteria.AddAsync(ratingObj);
+                        await _dbContext.SaveChangesAsync();
                     }
 
 
@@ -104,6 +105,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                         IL.CreatedDate = request.CreatedDate;
                         IL.IsDeleted = false;
                         await _dbContext.InterviewLanguages.AddAsync(IL);
+                        await _dbContext.SaveChangesAsync();
                     }
 
                     var technicalRecord = await _dbContext.InterviewTechnicalQuestion.Where(x => x.InterviewDetailsId == request.InterviewDetailsId).ToListAsync();
@@ -119,6 +121,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                         itq.CreatedDate = request.CreatedDate;
                         itq.IsDeleted = false;
                         await _dbContext.InterviewTechnicalQuestion.AddAsync(itq);
+                        await _dbContext.SaveChangesAsync();
                     }
 
                     var trainingRecords = await _dbContext.InterviewTrainings.Where(x => x.InterviewDetailsId == request.InterviewDetailsId).ToListAsync();
@@ -137,6 +140,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                         it.CreatedDate = request.CreatedDate;
                         it.IsDeleted = false;
                         await _dbContext.InterviewTrainings.AddAsync(it);
+                        await _dbContext.SaveChangesAsync();
                     }
 
                     if (request.Interviewers.Any())
@@ -153,6 +157,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                             hRJobInterviewers.InterviewDetailsId = request.InterviewDetailsId;
                             hRJobInterviewers.IsDeleted = false;
                             await _dbContext.HRJobInterviewers.AddAsync(hRJobInterviewers);
+                            await _dbContext.SaveChangesAsync();
                         }
                     }
 

@@ -53,19 +53,19 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                 await _dbContext.EmployeeProfessionalDetail.AddAsync(obj1);
                 await _dbContext.SaveChangesAsync();
 
-                UserDetails user = await _dbContext.UserDetails.FirstOrDefaultAsync(x => x.AspNetUserId == request.CreatedById && x.IsDeleted == false);
+                // UserDetails user = await _dbContext.UserDetails.FirstOrDefaultAsync(x => x.AspNetUserId == request.CreatedById && x.IsDeleted == false);
 
-                LoggerDetailsModel loggerObj = new LoggerDetailsModel();
-                loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.EmployeeCreated;
-                loggerObj.IsRead = false;
-                loggerObj.UserName = user.FirstName + " " + user.LastName;
-                loggerObj.UserId = request.CreatedById;
-                loggerObj.LoggedDetail = "Employee " + obj.EmployeeName + " Created";
-                loggerObj.CreatedDate = request.CreatedDate;
+                // LoggerDetailsModel loggerObj = new LoggerDetailsModel();
+                // loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.EmployeeCreated;
+                // loggerObj.IsRead = false;
+                // loggerObj.UserName = user.FirstName + " " + user.LastName;
+                // loggerObj.UserId = request.CreatedById;
+                // loggerObj.LoggedDetail = "Employee " + obj.EmployeeName + " Created";
+                // loggerObj.CreatedDate = request.CreatedDate;
 
-                response.LoggerDetailsModel = loggerObj;
+                // response.LoggerDetailsModel = loggerObj;
 
-                await _dbContext.SaveChangesAsync();
+                // await _dbContext.SaveChangesAsync();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

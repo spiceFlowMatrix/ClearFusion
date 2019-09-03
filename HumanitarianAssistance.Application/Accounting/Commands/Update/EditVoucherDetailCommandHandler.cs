@@ -46,99 +46,93 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Update
 
                 List<ExchangeRateDetail> exchangeRatePresent = await exchangeRatePresentTask;
 
-                if (CheckExchangeRateIsPresent(currencyList, exchangeRatePresent))
+                // check exchange rate
+                if (!CheckExchangeRateIsPresent(currencyList, exchangeRatePresent))
                 {
-                    VoucherDetail voucherdetailInfo = await voucherDetailTask;
+                    throw new Exception(StaticResource.ExchagneRateNotDefined);
+                }
 
-                    string currencyCode = currencyDetailsList.FirstOrDefault(x => x.CurrencyId == request.CurrencyId).CurrencyCode;
+                VoucherDetail voucherdetailInfo = await voucherDetailTask;
 
-                    int voucherCount = await _dbContext.VoucherDetail.Where(x => x.VoucherDate.Month == filterVoucherDate.Month && x.OfficeId == request.OfficeId && x.VoucherDate.Year == filterVoucherDate.Year).CountAsync();
+                string currencyCode = currencyDetailsList.FirstOrDefault(x => x.CurrencyId == request.CurrencyId).CurrencyCode;
 
-                    if (voucherdetailInfo != null)
+                int voucherCount = await _dbContext.VoucherDetail.Where(x => x.VoucherDate.Month == filterVoucherDate.Month && x.OfficeId == request.OfficeId && x.VoucherDate.Year == filterVoucherDate.Year).CountAsync();
+
+                // check voucher detail
+                if (voucherdetailInfo == null)
+                {
+                    throw new Exception(StaticResource.VoucherNotPresent);
+                }
+
+                OfficeDetail officeDetail = await officeDetailTask;
+
+                if (request.VoucherDate.Date != voucherdetailInfo.VoucherDate.Date || request.OfficeId != voucherdetailInfo.OfficeId || voucherdetailInfo.CurrencyCode != request.CurrencyCode)
+                {
+                    string referenceNo = AccountingUtility.GenerateVoucherReferenceCode(filterVoucherDate, voucherCount, currencyCode, officeDetail.OfficeCode);
+
+                    if (!string.IsNullOrEmpty(referenceNo))
                     {
-                        OfficeDetail officeDetail = await officeDetailTask;
+                        //check if same sequence number is already present in the voucher table
+                        int sameVoucherReferenceNoCount = 0;
 
-                        if (request.VoucherDate.Date != voucherdetailInfo.VoucherDate.Date || request.OfficeId != voucherdetailInfo.OfficeId || voucherdetailInfo.CurrencyCode != request.CurrencyCode)
+                        do
                         {
-                            string referenceNo = AccountingUtility.GenerateVoucherReferenceCode(filterVoucherDate, voucherCount, currencyCode, officeDetail.OfficeCode);
+                            sameVoucherReferenceNoCount = await _dbContext.VoucherDetail.Where(x => x.ReferenceNo == referenceNo).CountAsync();
 
-                            if (!string.IsNullOrEmpty(referenceNo))
+                            if (sameVoucherReferenceNoCount == 0)
                             {
-                                //check if same sequence number is already present in the voucher table
-                                int sameVoucherReferenceNoCount = 0;
-
-                                do
-                                {
-                                    sameVoucherReferenceNoCount = await _dbContext.VoucherDetail.Where(x => x.ReferenceNo == referenceNo).CountAsync();
-
-                                    if (sameVoucherReferenceNoCount == 0)
-                                    {
-                                        voucherdetailInfo.ReferenceNo = referenceNo;
-                                    }
-                                    else
-                                    {
-                                        var refNo = referenceNo.Split('-');
-                                        int count = Convert.ToInt32(refNo[3]);
-                                        referenceNo = AccountingUtility.GenerateVoucherReferenceCode(request.VoucherDate, count, currencyCode, officeDetail.OfficeCode);
-                                    }
-                                }
-                                while (sameVoucherReferenceNoCount != 0);
-                            }
-                        }
-                        else if (request.CurrencyId != voucherdetailInfo.CurrencyId)
-                        {
-                            if (string.IsNullOrEmpty(voucherdetailInfo.ReferenceNo))
-                            {
-                                var refNo = voucherdetailInfo.ReferenceNo.Split('-');
-                                refNo[1] = currencyCode;
-                                voucherdetailInfo.ReferenceNo = refNo[0] + "-" + refNo[1] + "-" + refNo[2] + "-" + refNo[3] + "-" + refNo[4];
+                                voucherdetailInfo.ReferenceNo = referenceNo;
                             }
                             else
                             {
-                                throw new Exception("Reference No cannot be set");
+                                var refNo = referenceNo.Split('-');
+                                int count = Convert.ToInt32(refNo[3]);
+                                referenceNo = AccountingUtility.GenerateVoucherReferenceCode(request.VoucherDate, count, currencyCode, officeDetail.OfficeCode);
                             }
                         }
-
-                        voucherdetailInfo.CurrencyId = request.CurrencyId;
-                        voucherdetailInfo.OfficeId = request.OfficeId;
-                        voucherdetailInfo.VoucherDate = request.VoucherDate;
-                        voucherdetailInfo.ChequeNo = request.ChequeNo;
-                        voucherdetailInfo.JournalCode = request.JournalCode;
-                        voucherdetailInfo.FinancialYearId = request.FinancialYearId;
-                        voucherdetailInfo.VoucherTypeId = request.VoucherTypeId;
-                        voucherdetailInfo.Description = request.Description;
-                        voucherdetailInfo.ModifiedById = request.ModifiedById;
-                        voucherdetailInfo.ModifiedDate = request.ModifiedDate;
-
-                        _dbContext.VoucherDetail.Update(voucherdetailInfo);
-                        await _dbContext.SaveChangesAsync();
-
-                        if (await _dbContext.VoucherTransactions.AnyAsync(x => x.VoucherNo == voucherdetailInfo.VoucherNo))
-                        {
-                            var voucherTransactions = await _dbContext.VoucherTransactions.Where(x => x.VoucherNo == voucherdetailInfo.VoucherNo).ToListAsync();
-                            foreach (var transaction in voucherTransactions)
-                            {
-                                transaction.TransactionDate = voucherdetailInfo.VoucherDate;
-                            }
-
-                            _dbContext.VoucherTransactions.UpdateRange(voucherTransactions);
-                            await _dbContext.SaveChangesAsync();
-                        }
-
-                        response.StatusCode = StaticResource.successStatusCode;
-                        response.Message = StaticResource.SuccessText;
-                    }
-                    else
-                    {
-                        response.StatusCode = StaticResource.failStatusCode;
-                        response.Message = StaticResource.VoucherNotPresent;
+                        while (sameVoucherReferenceNoCount != 0);
                     }
                 }
-                else
+                else if (request.CurrencyId != voucherdetailInfo.CurrencyId)
                 {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = StaticResource.ExchagneRateNotDefined;
+                    if (string.IsNullOrEmpty(voucherdetailInfo.ReferenceNo))
+                    {
+                        throw new Exception("Reference No cannot be set");
+                    }
+
+                    var refNo = voucherdetailInfo.ReferenceNo.Split('-');
+                    refNo[1] = currencyCode;
+                    voucherdetailInfo.ReferenceNo = refNo[0] + "-" + refNo[1] + "-" + refNo[2] + "-" + refNo[3] + "-" + refNo[4];
                 }
+
+                voucherdetailInfo.CurrencyId = request.CurrencyId;
+                voucherdetailInfo.OfficeId = request.OfficeId;
+                voucherdetailInfo.VoucherDate = request.VoucherDate;
+                voucherdetailInfo.ChequeNo = request.ChequeNo;
+                voucherdetailInfo.JournalCode = request.JournalCode;
+                voucherdetailInfo.FinancialYearId = request.FinancialYearId;
+                voucherdetailInfo.VoucherTypeId = request.VoucherTypeId;
+                voucherdetailInfo.Description = request.Description;
+                voucherdetailInfo.ModifiedById = request.ModifiedById;
+                voucherdetailInfo.ModifiedDate = request.ModifiedDate;
+
+                _dbContext.VoucherDetail.Update(voucherdetailInfo);
+                await _dbContext.SaveChangesAsync();
+
+                if (await _dbContext.VoucherTransactions.AnyAsync(x => x.VoucherNo == voucherdetailInfo.VoucherNo))
+                {
+                    var voucherTransactions = await _dbContext.VoucherTransactions.Where(x => x.VoucherNo == voucherdetailInfo.VoucherNo).ToListAsync();
+                    foreach (var transaction in voucherTransactions)
+                    {
+                        transaction.TransactionDate = voucherdetailInfo.VoucherDate;
+                    }
+
+                    _dbContext.VoucherTransactions.UpdateRange(voucherTransactions);
+                    await _dbContext.SaveChangesAsync();
+                }
+
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
             }
             catch (Exception ex)
             {

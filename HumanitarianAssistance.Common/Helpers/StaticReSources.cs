@@ -367,6 +367,9 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string PurchaseVoucherCreated = "Purchase Voucher Created";
         public const string PurchaseVoucherUnverified = "Reverse Purchase Payments";
         public const string NoPension = "Pension Record Not Found";
+        public const string PayrollNotSet= "Payroll details not set for Employee code: ";
+        public const string AttendanceGroupNotSet= "Attendance Group not set for Employee code: ";
+        public const string BasicPayNotSet= "Basic Pay not set for Employee Code: ";
 
         public const string NameExist = "Name Already Exist";
         public const string SuccessText = "Success";

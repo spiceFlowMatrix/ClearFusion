@@ -290,14 +290,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
             });
         }
 
-        [HttpPost]
-        public async Task<ApiResponse> UpdatePurchaseImage([FromBody]UpdatePurchaseImageCommand command)
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            command.ModifiedById = userId;
-            command.ModifiedDate = DateTime.UtcNow;
-            return await _mediator.Send(command);
-        }
+        // [HttpPost]
+        // public async Task<ApiResponse> UpdatePurchaseImage([FromBody]UpdatePurchaseImageCommand command)
+        // {
+        //     var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        //     command.ModifiedById = userId;
+        //     command.ModifiedDate = DateTime.UtcNow;
+        //     return await _mediator.Send(command);
+        // }
 
         //[HttpPost]
         //public async Task<ApiResponse> AddItemSpecificationsDetails([FromBody]List<ItemSpecificationDetailModel> model)

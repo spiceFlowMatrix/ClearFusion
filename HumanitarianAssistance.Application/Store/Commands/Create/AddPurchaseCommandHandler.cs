@@ -29,58 +29,14 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                 {
                     StoreItemPurchase purchase = _mapper.Map<StoreItemPurchase>(request);
 
-                    // For Image 
-
-                    if (request.ImageFileName != null && request.ImageFileName != "")
-                    {
-                        string[] str = request.ImageFileName.Split(",");
-                        byte[] filepath = Convert.FromBase64String(str[1]);
-                        string ex = str[0].Split("/")[1].Split(";")[0];
-                        string guidname = Guid.NewGuid().ToString();
-                        string filename = guidname + "." + ex;
-                        var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-                        File.WriteAllBytes(@"Documents/" + filename, filepath);
-
-                        purchase.ImageFileName = guidname;
-                        purchase.ImageFileType = "." + ex;
-                    }
-                    else
-                    {
-                        purchase.ImageFileName = null;
-                        purchase.ImageFileType = null;
-                    }
-
-                    // For invoice 
-
-                    if (request.InvoiceFileName != null && request.InvoiceFileName != "")
-                    {
-                        string[] str = request.InvoiceFileName.Split(",");
-                        byte[] filepath = Convert.FromBase64String(str[1]);
-                        string ex = str[0].Split("/")[1].Split(";")[0];
-                        if (ex == "plain")
-                            ex = "txt";
-                        string guidname = Guid.NewGuid().ToString();
-                        string filename = guidname + "." + ex;
-                        var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-                        File.WriteAllBytes(@"Documents/" + filename, filepath);
-
-                        purchase.InvoiceFileName = guidname;
-                        purchase.InvoiceFileType = "." + ex;
-                    }
-                    else
-                    {
-                        purchase.InvoiceFileName = null;
-                        purchase.InvoiceFileType = null;
-                    }
-
                     purchase.IsDeleted = false;
                     purchase.CreatedById = request.CreatedById;
                     purchase.CreatedDate = request.CreatedDate;
 
                     await _dbContext.StoreItemPurchases.AddAsync(purchase);
                     await _dbContext.SaveChangesAsync();
-                    //await _uow.SaveAsync();
 
+                    response.ResponseData = new {PurchaseId = purchase.PurchaseId };
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }

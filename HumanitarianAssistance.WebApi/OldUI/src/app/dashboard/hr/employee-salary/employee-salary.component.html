@@ -786,8 +786,8 @@
 
 
           <dxi-item itemType="group" [colSpan]="1" [colCount]="3">
-            <dxi-item dataField="PensionRate" editorType="dxNumberBox" [colSpan]="1" [editorOptions]="{ value: empSalaryForm.PensionRate }">
               <dxo-label text="Pension Rate"></dxo-label>
+              <div style="padding-right: 831px;">{{empSalaryForm.PensionRate}}</div>
               <dxi-validation-rule type="required"> </dxi-validation-rule>
             </dxi-item>
 
@@ -800,11 +800,9 @@
             <dxo-label text="Salary Type"></dxo-label>
             <dxi-validation-rule type="required"> </dxi-validation-rule>
           </dxi-item> -->
-
-
-          </dxi-item>
+          
           <dxi-item itemType="group">
-            <dx-data-grid id="gridContainer" keyExpr="PayrollId" [dataSource]="hourlyBasedSetPayrollList.employeepayrolllist"
+            <dx-data-grid id="gridContainer" keyExpr="PayrollId" [dataSource]="hourlyBasedSetPayrollList.EmployeePayrollList"
               [allowColumnReordering]="true" [allowColumnResizing]="true" [showRowLines]="true">
               <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
               <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
@@ -845,12 +843,11 @@
 
 
           <dxi-item itemType="group" [colSpan]="1" [colCount]="3">
-            <dxi-item dataField="PensionRate" editorType="dxNumberBox" [colSpan]="1" [editorOptions]="{ value: empSalaryForm.PensionRate }">
-              <dxo-label text="Pension Rate"></dxo-label>
-              <dxi-validation-rule type="required"> </dxi-validation-rule>
-            </dxi-item>
-
+            <dxo-label text="Pension Rate"></dxo-label>
+            <div style="padding-right: 831px;">{{empSalaryForm.PensionRate}}</div>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
           </dxi-item>
+          
           <dxi-item itemType="group">
             <dx-data-grid id="gridContainer" keyExpr="PayrollId" [dataSource]="approvedHourlySalaryDataSource.EmployeePayrollList"
               [allowColumnReordering]="true" [allowColumnResizing]="true" [showRowLines]="true">

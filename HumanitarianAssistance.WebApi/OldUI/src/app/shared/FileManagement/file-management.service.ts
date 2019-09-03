@@ -24,7 +24,7 @@ export class FileManagementService {
     objectName: any;
 
     PostByModel(url: string, model: any) {
-        debugger;
+         
         const Myheaders = new Headers();
         Myheaders.append(
           'Authorization',
@@ -45,12 +45,12 @@ export class FileManagementService {
 
     PutByModel(url: string, model: any) {
         const Myheaders = new Headers();
-          Myheaders.append('Content-Type', model.type);
+           Myheaders.append('Content-Type', model.type);
         const options = new RequestOptions({ headers: Myheaders, });
         return this.http
           .put(url, model, options)
           .map((response: Response) => {
-              debugger;
+               
 
             return response;
           })
@@ -78,15 +78,15 @@ export class FileManagementService {
 
     //#region "uploadFile"
 //    uploadFile(dataModel: UploadModel) {
-//    debugger;
+//     
 //        this.getSignedURL(dataModel).subscribe(x => {
 
 //        if (x.StatusCode === 200) {
-//            debugger;
+//             
 //            this.uploadFileBySignedUrl(x.data.SignedUrl, dataModel.File)
 //                .subscribe((response: any) => {
 //                    if (response.status === 200) {
-//                        debugger;
+//                         
 //                        const data: FileModel = {
 //                            FileName: dataModel.File.name,
 //                            FilePath: this.objectName,
@@ -124,6 +124,7 @@ export class FileManagementService {
         }), concatMap(res1 => {
 
                if (res1['status'] === 200) {
+                 debugger;
                     const data: FileModel = {
                         FileName: dataModel.File.name,
                         FilePath: this.objectName,
@@ -136,13 +137,13 @@ export class FileManagementService {
                     };
 
                     if (dataModel.DocumentFileId == null || dataModel.DocumentFileId == 0 || dataModel.DocumentFileId == undefined) {
+                         
                         return this.saveUploadedFileInfo(data);
 
                         } else {
                         return this.updateUploadedFileInfo(data);
                         }
                 }
-                
             }))
     }
 //#endregion

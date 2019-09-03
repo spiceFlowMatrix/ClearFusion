@@ -9,6 +9,9 @@ import { CodeService } from '../../code/code.service';
 import { applicationPages } from '../../../shared/application-pages-enum';
 import { CommonService } from '../../../service/common.service';
 import { AppSettingsService } from '../../../service/app-settings.service';
+import { UploadModel } from '../../../shared/FileManagement/file-management-model';
+import { DocumentFileTypes, FileSourceEntityTypes } from '../../../shared/enums';
+import { FileManagementService } from '../../../shared/FileManagement/file-management.service';
 
 @Component({
   selector: 'app-employees',
@@ -68,7 +71,7 @@ export class EmployeesComponent implements OnInit {
   // hiredOnDate: any;
 
   // for edit form (two way binding)
-  
+
   CountryId: number;
   ProvinceId: number;
   SexId: number;
@@ -145,6 +148,7 @@ export class EmployeesComponent implements OnInit {
   selectedProfileImage: any[] = [];
 
   maritalStatusDropdown: any[];
+  employeeImage: File;
 
   //#endregion "VARIABLES"
 
@@ -175,7 +179,8 @@ export class EmployeesComponent implements OnInit {
     private toastr: ToastrService,
     private _DomSanitizer: DomSanitizer,
     public commonService: CommonService,
-    private codeservice: CodeService
+    private codeservice: CodeService,
+    private fileManagementService: FileManagementService
   ) {
     this.allFormInitialize();
     this.firstTabValue = this.showInfoTabsMain[0].text;
@@ -210,7 +215,9 @@ export class EmployeesComponent implements OnInit {
       Phone: null,
       Email: null,
       SexId: null,
-      DateOfBirth: null,
+      DateOfBirth: new Date(new Date().getFullYear() - 18,
+        new Date().getMonth(),
+        new Date().getDate()),
       Age: null,
       CurrentAddress: null,
       EmployeePhoto: null,
@@ -363,6 +370,7 @@ export class EmployeesComponent implements OnInit {
   onImageSelectUpdate(event: any) {
     if (this.imageFlag) {
       const file: File = event.value[0];
+      this.employeeImage = file;
       const myReader: FileReader = new FileReader();
       myReader.readAsDataURL(file);
       myReader.onloadend = () => {
@@ -379,23 +387,29 @@ export class EmployeesComponent implements OnInit {
   //#region "Profile Image Change Service call"
   ChangeEmployeeImage() {
     this.imageFlag = true;
-
+    let dataModelImage: UploadModel;
     this.profileImageChangePopupLoading = true;
     const changeEmployeeImage: any = {
       EmployeeId: this.employeeId,
       EmployeeImage: this.imageURL
     };
-    this.hrService
-      .EditEmployeeImage(
-        this.setting.getBaseUrl() + GLOBAL.API_HR_ChangeEmployeeImage,
-        changeEmployeeImage
-      )
+   
+    dataModelImage = {
+      DocumentTypeId: DocumentFileTypes.EmployeeProfile,
+      PageId: FileSourceEntityTypes.EmployeeProfile,
+      EntityId: this.employeeId,
+      File: this.employeeImage,
+      DocumentFileId: null
+  };
+    this.fileManagementService.uploadFile(dataModelImage)
       .subscribe(
         data => {
           if (data.StatusCode === 200) {
             this.toastr.success('Image Updated Successfully!');
             this.showData.EmployeePhoto = this.imageURL;
-
+            console.log(data)
+          
+    
             if (this.tabEventValue === 1) {
               const itemIndex = this.prospectiveEmployeeInfo.findIndex(
                 i => i.EmployeeID === this.employeeId
@@ -711,10 +725,10 @@ export class EmployeesComponent implements OnInit {
           this.professionTypeDropdown = [];
           data != null || data !== undefined
             ? data.data.ProfessionList.forEach(element => {
-                this.professionTypeDropdown.push(element);
-              })
+              this.professionTypeDropdown.push(element);
+            })
             : // tslint:disable-next-line:no-unused-expression
-              null;
+            null;
         },
         error => {
           if (error.StatusCode === 500) {
@@ -740,10 +754,10 @@ export class EmployeesComponent implements OnInit {
           this.qualificationTypeDropdown = [];
           data != null || data !== undefined
             ? data.data.QualificationDetailsList.forEach(element => {
-                this.qualificationTypeDropdown.push(element);
-              })
+              this.qualificationTypeDropdown.push(element);
+            })
             : // tslint:disable-next-line:no-unused-expression
-              null;
+            null;
         },
         error => {
           if (error.StatusCode === 500) {
@@ -767,10 +781,10 @@ export class EmployeesComponent implements OnInit {
           this.countryTypeDropdown = [];
           data != null || data !== undefined
             ? data.data.CountryDetailsList.forEach(element => {
-                this.countryTypeDropdown.push(element);
-              })
+              this.countryTypeDropdown.push(element);
+            })
             : // tslint:disable-next-line:no-unused-expression
-              null;
+            null;
         },
         error => {
           if (error.StatusCode === 500) {
@@ -800,10 +814,10 @@ export class EmployeesComponent implements OnInit {
           this.stateTypeDropdown = [];
           data != null || data !== undefined
             ? data.data.ProvinceDetailsList.forEach(element => {
-                this.stateTypeDropdown.push(element);
-              })
+              this.stateTypeDropdown.push(element);
+            })
             : // tslint:disable-next-line:no-unused-expression
-              null;
+            null;
         },
         error => {
           if (error.StatusCode === 500) {
@@ -1021,11 +1035,12 @@ export class EmployeesComponent implements OnInit {
                 this.employeeListDetail.push(element);
               });
               this.showData = this.employeeListDetail[0];
-              this.showData.EmployeePhoto =
-                this.showData.DocumentGUID != null &&
-                this.showData.DocumentGUID !== ''
-                  ? this.setting.getDocUrl() + this.showData.DocumentGUID
-                  : null;
+              // this.showData.EmployeePhoto =
+              //   this.showData.DocumentGUID != null &&
+              //     this.showData.DocumentGUID !== ''
+              //     ? this.setting.getDocUrl() + this.showData.DocumentGUID
+              //     : null;
+              
               this.getAllDocumentDetails(this.employeeId);
               localStorage.setItem(
                 'SelectedEmployee',
@@ -1374,7 +1389,7 @@ export class EmployeesComponent implements OnInit {
               this.disabledDates.push(
                 new Date(
                   new Date(element.Date).getTime() -
-                    new Date().getTimezoneOffset() * 60000
+                  new Date().getTimezoneOffset() * 60000
                 )
               );
             });
@@ -1528,11 +1543,11 @@ export class EmployeesComponent implements OnInit {
               this.financialYearDropdown.push({
                 StartDate: new Date(
                   new Date(element.StartDate).getTime() -
-                    new Date().getTimezoneOffset() * 60000
+                  new Date().getTimezoneOffset() * 60000
                 ),
                 EndDate: new Date(
                   new Date(element.EndDate).getTime() -
-                    new Date().getTimezoneOffset() * 60000
+                  new Date().getTimezoneOffset() * 60000
                 ),
                 FinancialYearId: element.FinancialYearId,
                 FinancialYearName: element.FinancialYearName
@@ -1594,13 +1609,13 @@ export class EmployeesComponent implements OnInit {
   //#endregion
 
   saveEmployeeLeave() {
-      this.addEmployeePopupLoading = true;
+    this.addEmployeePopupLoading = true;
 
-      if (this.selectedLeaveList == undefined) {
-          this.toastr.warning('Select leaves to save');
-          this.addEmployeePopupLoading = false;
-          return;
-      }
+    if (this.selectedLeaveList == undefined) {
+      this.toastr.warning('Select leaves to save');
+      this.addEmployeePopupLoading = false;
+      return;
+    }
 
     this.selectedLeaveList.forEach(
       x => (x.employeeId = this.assignLeaveToEmployee)
@@ -1609,7 +1624,7 @@ export class EmployeesComponent implements OnInit {
     this.hrService
       .AddByModel(
         this.setting.getBaseUrl() +
-          GLOBAL.API_EmployeeHR_AddEmployeeLeaveDetails,
+        GLOBAL.API_EmployeeHR_AddEmployeeLeaveDetails,
         this.selectedLeaveList
       )
       .subscribe(
@@ -1683,7 +1698,7 @@ export class EmployeesComponent implements OnInit {
   onFieldDataChanged(e) {
     if (e.dataField === 'Phone') {
       if (e.value !== undefined) {
-        const phone =  e.value.toString();
+        const phone = e.value.toString();
         if (phone.length > 14 || phone.length < 10) {
           this.toastr.warning('Phone Number should be between 10-14 digits!!!');
         }
