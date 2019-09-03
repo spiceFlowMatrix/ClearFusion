@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Collections.Generic;
 using HumanitarianAssistance.Application.Accounting.Models;
+using HumanitarianAssistance.Common.Enums;
 
 namespace HumanitarianAssistance.Application.Accounting.Commands.Common
 {
@@ -72,6 +73,15 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Common
                 {
                     throw new Exception(StaticResource.InvalidUserCredentials);
                 }
+
+                var userDetail = _dbContext.UserDetails.AsNoTracking().FirstOrDefault(x => x.IsDeleted == false && x.AspNetUserId == user.Id);
+                var offices = _dbContext.UserDetailOffices.Where(x => x.IsDeleted == false && x.UserId == userDetail.UserID).Select(x => x.OfficeId).ToList();
+
+                // TODO: check if user is currently active or not
+                // if (userDetail.Status != (int)UserStatus.Active)
+                // {
+                //     throw new Exception(StaticResource.UserAccountIsInActive);
+                // }
 
                 List<UserRolePermissionsModel> userRolePermissionsList = new List<UserRolePermissionsModel>();
                 List<RolePermissionModel> RolePermissionModelList = new List<RolePermissionModel>();
@@ -299,9 +309,7 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Common
                 #endregion
 
                 #region "Set responses"
-                var User = _dbContext.UserDetails.AsNoTracking().FirstOrDefault(x => x.IsDeleted == false && x.AspNetUserId == user.Id);
-                var Offices = _dbContext.UserDetailOffices.Where(x => x.IsDeleted == false && x.UserId == User.UserID).Select(x => x.OfficeId).ToList();
-
+                
                 response.data.AspNetUserId = user.Id;
                 response.data.Token = token;
                 response.data.Roles = roles.ToList();
@@ -309,7 +317,7 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Common
                 response.data.ApproveRejectPermissionsInRole = ApproveRejectRolePermissionModelList;
                 response.data.AgreeDisagreePermissionsInRole = AgreeDisagreeRolePermissionModelList;
                 response.data.OrderSchedulePermissionsInRole = OrderSchedulePermissionModelList;
-                response.data.UserOfficeList = Offices.Count > 0 ? Offices : null;
+                response.data.UserOfficeList = offices.Count > 0 ? offices : null;
 
                 response.StatusCode = 200;
                 response.Message = StaticResource.SuccessText;

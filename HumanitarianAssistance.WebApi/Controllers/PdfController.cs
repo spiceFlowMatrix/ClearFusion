@@ -20,11 +20,11 @@ namespace HumanitarianAssistance.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllVoucherSummaryReportPdf()
+        public async Task<ApiResponse> GetAllVoucherSummaryReportPdf()
         {
-            var file = await _mediator.Send(new GetAllVoucherSummaryReportPdfQuery());
+            return await _mediator.Send(new GetAllVoucherSummaryReportPdfQuery());
             // return File(file, "application/pdf", "VoucherSummaryReport.pdf");
-            return Ok(file);
+            // return Ok(file);
         }
 
     }

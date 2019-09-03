@@ -19,6 +19,12 @@
         DR = 2,
         CR = 3
     }
+
+    public enum UserStatus {
+        InActive,
+        Active
+    } 
+
     public enum AccountTypeEnum
     {
 
