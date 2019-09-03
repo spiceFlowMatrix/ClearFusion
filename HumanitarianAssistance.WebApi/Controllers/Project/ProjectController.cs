@@ -368,7 +368,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         [HttpPost]
         public async Task<ApiResponse> getProjectSectorById([FromBody]long ProjectId)
         {
-            return await _mediator.Send(new GetProjectAreaByIdQuery { ProjectId = ProjectId });
+            return await _mediator.Send(new GetProjectSectorByIdQuery { ProjectId = ProjectId });
         }
 
         [HttpPost]
@@ -539,7 +539,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         [HttpPost]
         public async Task<ApiResponse> GetSecurityConsiMultiSelectByProjectId([FromBody]long Id)
         {
-            return await _mediator.Send(new GetSecurityConsiderationByProjectIdQuery());
+            return await _mediator.Send(new GetSecurityConsiderationByProjectIdQuery{ ProjectId = Id });
         }
 
         [HttpPost]

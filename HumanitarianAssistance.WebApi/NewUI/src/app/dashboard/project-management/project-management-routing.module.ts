@@ -162,15 +162,15 @@ const routes: Routes = [
               page: projectPagesMaster.HiringRequests
             }
           },
-          {
-            path: 'project-indicators',
-            component: ProjectIndicatorsComponent,
-            canActivate: [RoleGuardService],
-            data: {
-              module: moduleId,
-              page: projectPagesMaster.ProjectIndicators
-            }
-          },
+          // {
+          //   path: 'project-indicators',
+          //   component: ProjectIndicatorsComponent,
+          //   canActivate: [RoleGuardService],
+          //   data: {
+          //     module: moduleId,
+          //     page: projectPagesMaster.ProjectIndicators
+          //   }
+          // },
         ]
       }
     ]

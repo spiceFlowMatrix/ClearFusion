@@ -87,7 +87,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                         IndicatorQuestionId = indicator.IndicatorQuestionId,
                         QuestionType = indicator.QuestionType,
                         VerificationSources = sourceModel,
-                        QuestionTypeName= indicator.QuestionType == (int)QuestionType.Qualitative ? "Qualitative" : x.QuestionType == (int)QuestionType.Quantitative ? "Quantitative": null,
+                        QuestionTypeName= indicator.QuestionType == (int)QuestionType.Qualitative ? "Qualitative" : indicator.QuestionType == (int)QuestionType.Quantitative ? "Quantitative": null,
 
                     };
 
