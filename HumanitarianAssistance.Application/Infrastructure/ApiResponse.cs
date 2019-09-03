@@ -241,6 +241,7 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public ProjectActivityStatusModel ProjectActivityStatusModel { get; set; }
         public IList<ProjectBudgetLineDetailsModel> ProjectBudgetLineDetailByBudgetId { get; set; }
         public IList<ProjectBudgetLineDetailsModel> ProjectBudgetLineList { get; set; }
+        public IList<spProjectBudgetLineDetailsModel> spProjectBudgetLineList { get; set; }
         public IList<TransactionBudgetModel> TransactionBudgetModelList { get; set; }
         public List<ProjectJobDetailModel> ProjectJobDetailModel { get; set; }
         public ProjectJobDetailModel ProjectJobModel { get; set; }

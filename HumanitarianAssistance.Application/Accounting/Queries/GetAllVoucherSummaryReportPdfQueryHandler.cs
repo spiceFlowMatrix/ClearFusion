@@ -1,18 +1,17 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using HumanitarianAssistance.Application.Accounting.Models;
+using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Persistence;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using RazorLight;
 
 namespace HumanitarianAssistance.Application.Accounting.Queries
 {
-    public class GetAllVoucherSummaryReportPdfQueryHandler : IRequestHandler<GetAllVoucherSummaryReportPdfQuery, string>
+    public class GetAllVoucherSummaryReportPdfQueryHandler : IRequestHandler<GetAllVoucherSummaryReportPdfQuery, ApiResponse>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IRazorLightEngine _razorEngine;
@@ -23,57 +22,25 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
             _razorEngine = razorEngine;
         }
 
-        public async Task<string> Handle(GetAllVoucherSummaryReportPdfQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Handle(GetAllVoucherSummaryReportPdfQuery request, CancellationToken cancellationToken)
         {
+            ApiResponse response = new ApiResponse();
             try
             {
-                var model = new List<CarModel>()
-            {
-                new CarModel{NameOfCar="Audi Q7",FirstRegistration = DateTime.UtcNow.AddYears(-3),MaxSpeed = 200,NumberOfDoors = 4},
-                new CarModel{NameOfCar="Audi A5",FirstRegistration = DateTime.UtcNow,MaxSpeed = 180,NumberOfDoors = 4},
-                new CarModel{NameOfCar="Audi Q3",FirstRegistration = DateTime.UtcNow,MaxSpeed = 245,NumberOfDoors = 2},
-                new CarModel{NameOfCar="Mercedes SLI",FirstRegistration = DateTime.UtcNow,MaxSpeed = 150,NumberOfDoors = 4},
-                new CarModel{NameOfCar="Chevrolet",FirstRegistration = DateTime.UtcNow,MaxSpeed = 220,NumberOfDoors = 4},
-                new CarModel{NameOfCar="BMW",FirstRegistration = DateTime.UtcNow,MaxSpeed = 200,NumberOfDoors = 4},
-        };
-                // var templatePath = $"./PdfTemplates/VoucherSummaryReport.cshtml";
-                var templatePath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), $"PdfTemplates/VoucherSummaryReport.cshtml");
-
-                Console.WriteLine(templatePath);
-
-                string template = await _razorEngine.CompileRenderAsync(templatePath, model);
-                Console.WriteLine(template);
-
-                var sb = new StringBuilder();
-                sb.Append(@"
-                        <html>
-                            <head>
-                            </head>
-                            <body>
-                                <div class='header'><h1>This is the generated PDF report!!!</h1></div>
-                                <table align='center'>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>LastName</th>
-                                        <th>Age</th>
-                                        <th>Gender</th>
-                                    </tr>");
-
-                sb.Append(@"
-                                </table>
-                            </body>
-                        </html>");
+                var voucherSummaryList = await _dbContext.VoucherDetail.Where(x => !x.IsDeleted).ToListAsync();
 
 
-                Console.WriteLine(sb.ToString());
-              
-                return sb.ToString();
 
+                response.ResponseData = voucherSummaryList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
             }
+            return response;
         }
     }
 }
