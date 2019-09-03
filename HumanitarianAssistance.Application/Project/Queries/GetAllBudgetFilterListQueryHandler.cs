@@ -111,6 +111,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                 {
                     BudgetLineId = b.BudgetLineId,
                     BudgetCode = b.BudgetCode,
+                    BudgetName = b.BudgetName,
                     InitialBudget = b.InitialBudget,
                     ProjectId = b.ProjectId,
                     ProjectJobId = b.ProjectJobId,
