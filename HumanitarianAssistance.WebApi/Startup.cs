@@ -68,11 +68,8 @@ namespace HumanitarianAssistance.WebApi
             // AutoMapper will scan our assembly and look for classes that inherit from Profile, then load their mapping configurations.
             services.AddAutoMapper();
 
-            // api user claim policy
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("Trust", policy => policy.RequireClaim("Roles", "Admin", "SuperAdmin", "Accounting Manager", "HR Manager", "Project Manager", "Administrator"));
-            });
+            // add authorization
+            services.AddAuthorization();
 
 
             //For Cors Setting
