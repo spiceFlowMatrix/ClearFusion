@@ -23,8 +23,8 @@ build-newui:
         - npm install
     script:
         # - npm run build --prod
-        - HumanitarianAssistance.WebApi/NewUI/
-        - node_modules/@angular/cli/bin/ng build --progress false --prod
+        
+        - ./node_modules/@angular/cli/bin/ng build --progress false --prod
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/NewUI/dist/
@@ -38,8 +38,7 @@ build-oldui:
         - npm install
     script:
        # - npm run build --prod
-       - cd HumanitarianAssistance.WebApi/OldUI/
-       - node_modules/@angular/cli/bin/ng build --progress false --prod
+       - ./node_modules/@angular/cli/bin/ng build --progress false --prod
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/OldUI/dist/
