@@ -159,7 +159,10 @@ export class ContractInfoComponent implements OnInit {
       EmployeeNameDari: '',
       GradeName: '',
       ProjectNameDari: '',
-      BudgetLineDari: ''
+      BudgetLineDari: '',
+      CountryId: null,
+      DesignationId: null,
+      ProvinceId: null
     };
 
     this.contractDetails = {
@@ -253,6 +256,9 @@ export class ContractInfoComponent implements OnInit {
               this.employeeContractForm.ContractStartDate = this.selectedEmployeeDetails[0].ContractStartDate;
               this.employeeContractForm.DutyStation = this.selectedEmployeeDetails[0].DutyStation;
               this.employeeContractForm.OfficeId = this.selectedEmployeeDetails[0].officeId;
+              this.employeeContractForm.DesignationId = this.selectedEmployeeDetails[0].DesignationId;
+              this.employeeContractForm.CountryId = this.selectedEmployeeDetails[0].CountryId;
+              this.employeeContractForm.ProvinceId = this.selectedEmployeeDetails[0].ProvinceId;
             }
           }
         },
@@ -359,6 +365,12 @@ export class ContractInfoComponent implements OnInit {
                 this.stateDropdown.push(element);
               });
 
+              const province = this.stateDropdown.find(x => x.ProvinceId === this.employeeContractForm.ProvinceId);
+              
+              if (province !== undefined && province != null) {
+                this.googleTranslate(province.ProvinceName, 'Province');
+              }
+
               this.stateDropdown = this.commonService.sortDropdown(
                 this.stateDropdown,
                 'ProvinceName'
@@ -416,9 +428,18 @@ export class ContractInfoComponent implements OnInit {
             data.data.ProjectBudgetLineDetailList != null &&
             data.StatusCode === 200
           ) {
-            data.data.ProjectBudgetLineDetailList.forEach(element => {
-              this.projectBudgetLineDataSource.push(element);
-            });
+
+            if (data.data.ProjectBudgetLineDetailList.length > 0 ) {
+              data.data.ProjectBudgetLineDetailList.forEach(element => {
+                this.projectBudgetLineDataSource.push(element);
+              });
+
+              const budgetLine = this.projectBudgetLineDataSource.find(x => x.BudgetLineId === this.employeeContractForm.BudgetLine);
+
+              if (budgetLine !== undefined && budgetLine != null) {
+                this.googleTranslate(budgetLine.BudgetCodeName , 'BudgetLine');
+              }
+            }
           }
         },
         error => {}
@@ -458,8 +479,6 @@ export class ContractInfoComponent implements OnInit {
 
   //#region "onemployeeContractFormSubmit"
   onEmployeeContractFormSubmit(data: any) {
-     
-     
     const dataModel: EmployeeContractModel = {
       EmployeeId: data.EmployeeId,
       FatherName: data.FatherName,
@@ -510,7 +529,10 @@ export class ContractInfoComponent implements OnInit {
       EmployeeNameDari: data.EmployeeNameDari,
       GradeName: data.GradeName,
       ProjectNameDari: data.ProjectNameDari,
-      BudgetLineDari: data.BudgetLineDari
+      BudgetLineDari: data.BudgetLineDari,
+      CountryId: data.Country,
+      DesignationId: data.Designation,
+      ProvinceId: data.Province,
     };
 
     this.AddEmployeeContract(dataModel);
@@ -519,11 +541,9 @@ export class ContractInfoComponent implements OnInit {
 
   //#region "onFieldDataChanged"
   onFieldDataChanged(e) {
-     
     if (e != null) {
       let fieldName = '';
       let value = '';
-
       switch (e.dataField) {
         case 'Project': {
           if (e.value != null && e.value !== 0) {
@@ -674,7 +694,10 @@ export class ContractInfoComponent implements OnInit {
       EmployeeNameDari: null,
       GradeName: null,
       ProjectNameDari: null,
-      BudgetLineDari: null
+      BudgetLineDari: null,
+      CountryId: null,
+      DesignationId: null,
+      ProvinceId: null
     };
 
     this.selectedEmployeeDetails = [];
@@ -945,6 +968,9 @@ class EmployeeContractModel {
   GradeName: any;
   ProjectNameDari: any;
   BudgetLineDari: any;
+  DesignationId: any;
+  CountryId: any;
+  ProvinceId: any;
 }
 
 class EmployeeContractDetails {

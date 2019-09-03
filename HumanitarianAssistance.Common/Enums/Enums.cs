@@ -19,6 +19,12 @@
         DR = 2,
         CR = 3
     }
+
+    public enum UserStatus {
+        InActive,
+        Active
+    } 
+
     public enum AccountTypeEnum
     {
 
@@ -194,13 +200,15 @@
         ProjectActivityMonitoring = 7,
         ProjectActivityPlanning = 8,
         DonorDetail = 9,
-        StorePurchase = 10
+        StorePurchase = 10,
+        EmployeeProfile = 11
     }
 
     public enum DocumentFileTypes
     {
         PurchaseImage = 1,
-        PurchaseInvoice = 2
+        PurchaseInvoice = 2,
+        EmployeeProfile = 3
     }
 
 

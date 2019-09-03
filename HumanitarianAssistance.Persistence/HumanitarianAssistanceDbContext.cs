@@ -251,7 +251,7 @@ namespace HumanitarianAssistance.Persistence
 
         #endregion
         public DbSet<ProjectProposalDocument> ProjectProposalDocument { get; set; }
-        //Added by Saksham
+
         public DbSet<PurchaseUnitType> PurchaseUnitType { get; set; }
 
 

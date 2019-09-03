@@ -36,9 +36,7 @@
 
                             </dx-form>
                           </div>
-                          <div class="col-sm-1 text-left">
-                            <dx-button text="Filter" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
-                          </div>
+                        
                           <div class="col-sm-1" style="padding-top: 7px;">
                             Office:
                           </div>
@@ -47,6 +45,9 @@
                             displayExpr="OfficeName" valueExpr="OfficeId" [value]="selectedOffice" [searchEnabled]="true">
                         </dx-select-box>
                           </div>
+                          <div class="col-sm-1 text-left">
+                              <dx-button text="Filter" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+                            </div>
                         </div>
                       </form>
                     </div>

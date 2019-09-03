@@ -5,8 +5,7 @@ import { FormBuilder } from '@angular/forms';
 import { GLOBAL } from '../../../shared/global';
 import { CodeService } from '../code.service';
 import {
-  applicationPages,
-  applicationModule
+  applicationPages
 } from '../../../shared/application-pages-enum';
 import { AppSettingsService } from '../../../service/app-settings.service';
 import { CommonService } from '../../../service/common.service';
@@ -29,7 +28,6 @@ export class PensionRateComponent implements OnInit {
   financialYearLoading = false;
 
   constructor(
-    private router: Router,
     private toastr: ToastrService,
     private codeservice: CodeService,
     private fb: FormBuilder,
@@ -50,7 +48,7 @@ export class PensionRateComponent implements OnInit {
       FinancialYearId: null,
       FinancialYearName: null,
       IsDefault: false,
-      PensionRate: null
+      PensionRate: 4.5
     };
   }
 
@@ -193,6 +191,6 @@ export class PensionRateComponent implements OnInit {
 interface PensionModel {
   FinancialYearId: number;
   FinancialYearName: string;
-  PensionRate: DoubleRange;
+  PensionRate: number;
   IsDefault: boolean;
 }

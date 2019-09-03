@@ -91,7 +91,7 @@
 
 
 <!-- Add -->
-<dx-popup class="popup" [width]="800" [height]="650" [showTitle]="true" title="Purchase" [dragEnabled]="false" [closeOnOutsideClick]="true"
+<dx-popup class="popup" [width]="800" [height]="600" [showTitle]="true" title="Add Purchase" [dragEnabled]="false" [closeOnOutsideClick]="true"
   [(visible)]="addPurchaseFormPopupVisible" (onHiding)="onAddPurchasePopUpHide()">
   <div *dxTemplate="let data of 'content'">
 
@@ -168,7 +168,7 @@
 
           <dxi-item itemType="group" [colCount]="2">
 
-            <dxi-item dataField="VoucherId" editorType="dxSelectBox" [editorOptions]="{ dataSource: voucherDataSource, valueExpr: 'VoucherNo', displayExpr: 'ReferenceNo', showClearButton: false , searchEnabled: true }">
+            <!-- <dxi-item dataField="VoucherId" editorType="dxSelectBox" [editorOptions]="{ dataSource: voucherDataSource, valueExpr: 'VoucherNo', displayExpr: 'ReferenceNo', showClearButton: false , searchEnabled: true }">
               <dxo-label text="Voucher" alignment="left"></dxo-label>
               <dxi-validation-rule type="required"> </dxi-validation-rule>
             </dxi-item>
@@ -177,7 +177,7 @@
               <dxo-label text="VoucherDate"></dxo-label>
               <div>{{purchaseDetailsForm.VoucherDate| date: 'yyyy/MM/dd'}}</div>
               <dxi-validation-rule type="required"> </dxi-validation-rule>
-            </dxi-item>
+            </dxi-item> -->
 
             <dxi-item dataField="AssetTypeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: assetTypeDropdown, valueExpr: 'AssetTypeId', displayExpr: 'AssetTypeName', showClearButton: false , searchEnabled: true }">
               <dxo-label text="Asset Type" alignment="left"></dxo-label>
@@ -226,7 +226,7 @@
             </dxi-item>
           </dxi-item>
 
-            <dxi-item itemType="group" caption="Accounting (Voucher Creation)" [colCount]="2">
+            <!-- <dxi-item itemType="group" caption="Accounting (Voucher Creation)" [colCount]="2">
 
                 <dxi-item dataField="PaymentTypeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: paymentTypesDataSource, value: purchaseDetailsForm.PaymentTypeId, valueExpr: 'Id', displayExpr: 'Name', searchEnabled: true, showClearButton: false  }">
                     <dxo-label text="Payment Type" alignment="left"></dxo-label>
@@ -236,7 +236,7 @@
                       <dxo-label text="Journal" alignment="left"></dxo-label>
                   </dxi-item>
               
-            </dxi-item>
+            </dxi-item> -->
           
         </dx-form>
 
@@ -254,11 +254,11 @@
 </dx-popup>
 
 <!-- Edit-->
-<dx-popup class="popup" [width]="800" [height]="650" [showTitle]="false" title="Purchase" [dragEnabled]="false" [closeOnOutsideClick]="true"
+<dx-popup class="popup" [width]="800" [height]="550" [showTitle]="true" title="Edit Purchase" [dragEnabled]="false" [closeOnOutsideClick]="true"
   [(visible)]="editPurchaseFormPopupVisible">
   <div *dxTemplate="let data of 'content'">
       <dx-scroll-view  showScrollbar="always" direction="both">
-    <div class="row text-left">
+    <!-- <div class="row text-left">
       <div *ngIf="purchaseDetailsForm.IsPurchaseVerified">
           <div class="col-sm-6">
               <button (click)="UnverifyPurchase()" class="btn btn-danger">Unverify Purchase</button>
@@ -270,14 +270,12 @@
 
       <div class="col-sm-11" *ngIf="!purchaseDetailsForm.IsPurchaseVerified">
           <button (click)="verifyPurchase()" class="btn btn-success">Verify Purchase</button>
-      </div>
+      </div> 
       
         <div class="col-sm-1">
           <span (click)="hideEditPurchaseFormPopupVisible()">X</span>
         </div>
-    </div>
-<br>        
-
+    </div> -->
       <form action="your-action" (submit)="onPurchaseFormSubmit(purchaseDetailsForm)">
         <dx-form id="form" [formData]="purchaseDetailsForm" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
           validationGroup="editPurchaseData" (onFieldDataChanged)="onFieldDataChanged($event)">
@@ -327,7 +325,7 @@
 
           <dxi-item itemType="group" [colCount]="2">
 
-            <dxi-item dataField="VoucherId" editorType="dxSelectBox" (onValueChanged)="getVoucherDate($event.value)" [editorOptions]="{ dataSource: voucherDataSource, valueExpr: 'VoucherNo', displayExpr: 'ReferenceNo', showClearButton: false , searchEnabled: true }">
+            <!-- <dxi-item dataField="VoucherId" editorType="dxSelectBox" (onValueChanged)="getVoucherDate($event.value)" [editorOptions]="{ dataSource: voucherDataSource, valueExpr: 'VoucherNo', displayExpr: 'ReferenceNo', showClearButton: false , searchEnabled: true }">
               <dxo-label text="Voucher" alignment="left"></dxo-label>
               <dxi-validation-rule type="required"> </dxi-validation-rule>
             </dxi-item>
@@ -336,7 +334,7 @@
               <dxo-label alignment="left"></dxo-label>
               <div>{{purchaseDetailsForm.VoucherDate | date: 'yyyy/MM/dd'}}</div>
               <dxi-validation-rule type="required"> </dxi-validation-rule>
-            </dxi-item>
+            </dxi-item> -->
 
             <dxi-item dataField="AssetTypeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: assetTypeDropdown, valueExpr: 'AssetTypeId', displayExpr: 'AssetTypeName', showClearButton: false , searchEnabled: true }">
               <dxo-label text="Asset Type" alignment="left"></dxo-label>
@@ -384,7 +382,7 @@
                 </dxi-item>
           </dxi-item>
 
-          <dxi-item itemType="group" caption="Accounting (Voucher Creation)" [colCount]="2">
+          <!-- <dxi-item itemType="group" caption="Accounting (Voucher Creation)" [colCount]="2">
 
             <dxi-item dataField="PaymentTypeId" editorType="dxSelectBox" [editorOptions]="{ dataSource: paymentTypesDataSource, value: purchaseDetailsForm.PaymentTypeId, valueExpr: 'Id', displayExpr: 'Name', searchEnabled: true, showClearButton: false  }">
                 <dxo-label text="Payment Type" alignment="left"></dxo-label>
@@ -401,7 +399,7 @@
 
           <dxi-item dataField="VerifiedPurchaseVoucher" [visible]="false">
               <dxo-label text="Verified Purchase Voucher" alignment="left"></dxo-label>
-            </dxi-item>
+            </dxi-item> -->
 
         </dx-form>
 

@@ -116,7 +116,7 @@ export class BudgetLineService {
       .pipe(
         map(x => {
           const responseData: IResponseData = {
-            data: x.data.ProjectBudgetLineList,
+            data: x.data.spProjectBudgetLineList,
             total: x.data.TotalCount,
             statusCode: x.StatusCode,
             message: x.Message
