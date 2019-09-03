@@ -150,8 +150,8 @@ export class PurchasesComponent implements OnInit {
             PurchasedById: null,
 
             // newly added fields
-            VoucherId: null,
-            VoucherDate: null, // use to determine voucher date
+           // VoucherId: null,
+           // VoucherDate: null, // use to determine voucher date
             AssetTypeId: null, // 1.Cash, 2.In Kind
             InvoiceNo: null,
             InvoiceDate: null,
@@ -161,11 +161,11 @@ export class PurchasesComponent implements OnInit {
             ProjectId: null,
             BudgetLineId: null,
             PaymentTypeId: null,
-            IsPurchaseVerified: false,
-            VerifiedPurchaseVoucher: 0,
+           // IsPurchaseVerified: false,
+           // VerifiedPurchaseVoucher: 0,
             OfficeId: 0,
             JournalCode: 0,
-            VerifiedPurchaseVoucherReferenceNo: null,
+           // VerifiedPurchaseVoucherReferenceNo: null,
             TimezoneOffset: null
         };
     }
@@ -221,14 +221,14 @@ export class PurchasesComponent implements OnInit {
                                     PurchasedById: element.PurchasedById,
                                     InventoryItem: element.InventoryItem,
                                     // newly added fields
-                                    VoucherId: element.VoucherId,
-                                    VoucherDate:
-                                        element.VoucherDate != null
-                                            ? new Date(
-                                                new Date(element.VoucherDate).getTime() -
-                                                new Date().getTimezoneOffset() * 60000
-                                            )
-                                            : null, // mandatory
+                                    // VoucherId: element.VoucherId,
+                                    // VoucherDate:
+                                    //     element.VoucherDate != null
+                                    //         ? new Date(
+                                    //             new Date(element.VoucherDate).getTime() -
+                                    //             new Date().getTimezoneOffset() * 60000
+                                    //         )
+                                    //         : null, // mandatory
                                     AssetTypeId: element.AssetTypeId, // 1.Cash, 2.In Kind
                                     InvoiceNo: element.InvoiceNo,
                                     InvoiceDate:
@@ -244,12 +244,12 @@ export class PurchasesComponent implements OnInit {
                                     ProjectId: element.ProjectId,
                                     BudgetLineId: element.BudgetLineId,
                                     PaymentTypeId: element.PaymentTypeId,
-                                    IsPurchaseVerified: element.IsPurchaseVerified,
-                                    VerifiedPurchaseVoucher: element.VerifiedPurchaseVoucher,
+                                    // IsPurchaseVerified: element.IsPurchaseVerified,
+                                    // VerifiedPurchaseVoucher: element.VerifiedPurchaseVoucher,
                                     OfficeId: element.OfficeId,
                                     JournalCode: element.JournalCode,
-                                    VerifiedPurchaseVoucherReferenceNo:
-                                        element.VerifiedPurchaseVoucherReferenceNo,
+                                    // VerifiedPurchaseVoucherReferenceNo:
+                                    //     element.VerifiedPurchaseVoucherReferenceNo,
                                     TimezoneOffset: new Date().getTimezoneOffset(),
                                     ImageDocumentId: element.ImageDocumentId,
                                     InvoiceDocumentId: element.InvoiceDocumentId
@@ -724,7 +724,7 @@ export class PurchasesComponent implements OnInit {
         if (data != null) {
             if (data.PurchaseId == null) {
                 if (data.InventoryItem != null) {
-                    const voucherDate = new Date(data.VoucherDate);
+                    // const voucherDate = new Date(data.VoucherDate);
 
                     const addDataModel: PurchaseModel = {
                         PurchaseId: null,
@@ -764,18 +764,18 @@ export class PurchasesComponent implements OnInit {
                         PurchasedById: data.PurchasedById,
 
                         // newly added fields
-                        VoucherId: data.VoucherId,
-                        VoucherDate:
-                            data.VoucherDate != null
-                                ? new Date(
-                                    new Date(data.VoucherDate).getFullYear(),
-                                    new Date(data.VoucherDate).getMonth(),
-                                    new Date(data.VoucherDate).getDate(),
-                                    new Date().getHours(),
-                                    new Date().getMinutes(),
-                                    new Date().getSeconds()
-                                )
-                                : null,
+                        // VoucherId: data.VoucherId,
+                        // VoucherDate:
+                        //     data.VoucherDate != null
+                        //         ? new Date(
+                        //             new Date(data.VoucherDate).getFullYear(),
+                        //             new Date(data.VoucherDate).getMonth(),
+                        //             new Date(data.VoucherDate).getDate(),
+                        //             new Date().getHours(),
+                        //             new Date().getMinutes(),
+                        //             new Date().getSeconds()
+                        //         )
+                        //         : null,
                         AssetTypeId: data.AssetTypeId, // 1.Cash, 2.In Kind
                         InvoiceNo: data.InvoiceNo,
                         InvoiceDate:
@@ -795,13 +795,13 @@ export class PurchasesComponent implements OnInit {
                         ProjectId: data.ProjectId,
                         BudgetLineId: data.BudgetLineId,
                         PaymentTypeId: data.PaymentTypeId,
-                        IsPurchaseVerified: data.IsPurchaseVerified,
-                        VerifiedPurchaseVoucher: data.VerifiedPurchaseVoucher,
+                        // IsPurchaseVerified: data.IsPurchaseVerified,
+                        // VerifiedPurchaseVoucher: data.VerifiedPurchaseVoucher,
                         // tslint:disable-next-line:radix
                         OfficeId: parseInt(localStorage.getItem('STOREOFFICEID')),
                         JournalCode: data.JournalCode,
-                        VerifiedPurchaseVoucherReferenceNo:
-                            data.VerifiedPurchaseVoucherReferenceNo,
+                        // VerifiedPurchaseVoucherReferenceNo:
+                        //     data.VerifiedPurchaseVoucherReferenceNo,
                         TimezoneOffset: new Date().getTimezoneOffset()
                     };
 
@@ -843,18 +843,18 @@ export class PurchasesComponent implements OnInit {
                         PurchasedById: data.PurchasedById,
 
                         // newly added fields
-                        VoucherId: data.VoucherId,
-                        VoucherDate:
-                            data.VoucherDate != null
-                                ? new Date(
-                                    new Date(data.VoucherDate).getFullYear(),
-                                    new Date(data.VoucherDate).getMonth(),
-                                    new Date(data.VoucherDate).getDate(),
-                                    new Date().getHours(),
-                                    new Date().getMinutes(),
-                                    new Date().getSeconds()
-                                )
-                                : null,
+                        // VoucherId: data.VoucherId,
+                        // VoucherDate:
+                        //     data.VoucherDate != null
+                        //         ? new Date(
+                        //             new Date(data.VoucherDate).getFullYear(),
+                        //             new Date(data.VoucherDate).getMonth(),
+                        //             new Date(data.VoucherDate).getDate(),
+                        //             new Date().getHours(),
+                        //             new Date().getMinutes(),
+                        //             new Date().getSeconds()
+                        //         )
+                        //         : null,
                         AssetTypeId: data.AssetTypeId, // 1.Cash, 2.In Kind
                         InvoiceNo: data.InvoiceNo,
                         InvoiceDate:
@@ -874,13 +874,13 @@ export class PurchasesComponent implements OnInit {
                         ProjectId: data.ProjectId,
                         BudgetLineId: data.BudgetLineId,
                         PaymentTypeId: data.PaymentTypeId,
-                        IsPurchaseVerified: data.IsPurchaseVerified,
-                        VerifiedPurchaseVoucher: data.VerifiedPurchaseVoucher,
+                        // IsPurchaseVerified: data.IsPurchaseVerified,
+                        // VerifiedPurchaseVoucher: data.VerifiedPurchaseVoucher,
                         // tslint:disable-next-line:radix
                         OfficeId: parseInt(localStorage.getItem('STOREOFFICEID')),
                         JournalCode: data.JournalCode,
-                        VerifiedPurchaseVoucherReferenceNo:
-                            data.VerifiedPurchaseVoucherReferenceNo,
+                        // VerifiedPurchaseVoucherReferenceNo:
+                        //     data.VerifiedPurchaseVoucherReferenceNo,
                         TimezoneOffset: new Date().getTimezoneOffset(),
                         ImageDocumentId: data.ImageDocumentId,
                         InvoiceDocumentId: data.InvoiceDocumentId
@@ -906,8 +906,22 @@ export class PurchasesComponent implements OnInit {
             PurchaseId: null,
             SerialNo: null, // Barcode Value
             InventoryItem: this.inventoryItemId != null ? this.inventoryItemId : null, // Item Id
-            PurchaseDate: new Date(), // Date Of Purchase
-            DeliveryDate: new Date(), // The date that the item arrived at it's desired location or a service took place.
+            PurchaseDate: new Date(
+                new Date().getFullYear(),
+                                    new Date().getMonth(),
+                                    new Date().getDate(),
+                                    new Date().getHours(),
+                                    new Date().getMinutes(),
+                                    new Date().getSeconds()
+            ), // Date Of Purchase
+            DeliveryDate: new Date(
+                new Date().getFullYear(),
+                                    new Date().getMonth(),
+                                    new Date().getDate(),
+                                    new Date().getHours(),
+                                    new Date().getMinutes(),
+                                    new Date().getSeconds()
+            ), // The date that the item arrived at it's desired location or a service took place.
             Currency: null, // Currency ID
             UnitType: null,
             UnitCost: null,
@@ -919,22 +933,29 @@ export class PurchasesComponent implements OnInit {
             PurchasedById: null,
 
             // newly added fields
-            VoucherId: null,
-            VoucherDate: null, // use to determine voucher date
+            // VoucherId: null,
+           // VoucherDate: null, // use to determine voucher date
             AssetTypeId: null, // 1.Cash, 2.In Kind
             InvoiceNo: null,
-            InvoiceDate: new Date(),
+            InvoiceDate: new Date(
+                new Date().getFullYear(),
+                                    new Date().getMonth(),
+                                    new Date().getDate(),
+                                    new Date().getHours(),
+                                    new Date().getMinutes(),
+                                    new Date().getSeconds()
+            ),
             Status: null,
             ReceiptTypeId: null,
             ReceivedFromLocation: null,
             ProjectId: null,
             BudgetLineId: null,
             PaymentTypeId: null,
-            IsPurchaseVerified: false,
-            VerifiedPurchaseVoucher: null,
+           // IsPurchaseVerified: false,
+           // VerifiedPurchaseVoucher: null,
             OfficeId: null,
             JournalCode: null,
-            VerifiedPurchaseVoucherReferenceNo: null,
+           // VerifiedPurchaseVoucherReferenceNo: null,
             TimezoneOffset: null
         };
 
@@ -964,8 +985,8 @@ export class PurchasesComponent implements OnInit {
                 PurchasedById: data.data.PurchasedById,
 
                 // newly added fields
-                VoucherId: data.data.VoucherId,
-                VoucherDate: data.data.VoucherDate, // use to determine voucher date
+               // VoucherId: data.data.VoucherId,
+                // VoucherDate: data.data.VoucherDate, // use to determine voucher date
                 AssetTypeId: data.data.AssetTypeId, // 1.Cash, 2.In Kind
                 InvoiceNo: data.data.InvoiceNo,
                 InvoiceDate: data.data.InvoiceDate,
@@ -979,12 +1000,12 @@ export class PurchasesComponent implements OnInit {
                 ProjectId: data.data.ProjectId,
                 BudgetLineId: data.data.BudgetLineId,
                 PaymentTypeId: data.data.PaymentTypeId,
-                IsPurchaseVerified: data.data.IsPurchaseVerified,
-                VerifiedPurchaseVoucher: data.data.VerifiedPurchaseVoucher,
+               // IsPurchaseVerified: data.data.IsPurchaseVerified,
+               // VerifiedPurchaseVoucher: data.data.VerifiedPurchaseVoucher,
                 OfficeId: data.data.OfficeId,
                 JournalCode: data.data.JournalCode,
-                VerifiedPurchaseVoucherReferenceNo:
-                    data.data.VerifiedPurchaseVoucherReferenceNo,
+                // VerifiedPurchaseVoucherReferenceNo:
+                //     data.data.VerifiedPurchaseVoucherReferenceNo,
                 TimezoneOffset: new Date().getTimezoneOffset()
             };
 
@@ -1037,14 +1058,15 @@ export class PurchasesComponent implements OnInit {
         } else if (event.value != null && event.dataField === 'ProjectId') {
             // backend call and verify
             this.getAllBudgetLineDetails(event.value);
-        } else if (event.value != null && event.dataField === 'VoucherId') {
-            const voucherData = this.voucherDataSource.filter(
-                x => x.VoucherNo === event.value
-            );
-            this.purchaseDetailsForm.VoucherDate = this.voucherDataSource.filter(
-                x => x.VoucherNo === event.value
-            )[0].VoucherDate;
         }
+        // else if (event.value != null && event.dataField === 'VoucherId') {
+        //     const voucherData = this.voucherDataSource.filter(
+        //         x => x.VoucherNo === event.value
+        //     );
+        //     this.purchaseDetailsForm.VoucherDate = this.voucherDataSource.filter(
+        //         x => x.VoucherNo === event.value
+        //     )[0].VoucherDate;
+        // }
     }
     //#endregion
 
@@ -1083,8 +1105,8 @@ export class PurchasesComponent implements OnInit {
                 PurchasedById: data.PurchasedById,
 
                 // newly added fields
-                VoucherId: data.VoucherId,
-                VoucherDate: data.VoucherDate,
+               // VoucherId: data.VoucherId,
+               // VoucherDate: data.VoucherDate,
                 AssetTypeId: data.AssetTypeId, // 1.Cash, 2.In Kind
                 InvoiceNo: data.InvoiceNo,
                 InvoiceDate: data.InvoiceDate,
@@ -1094,12 +1116,12 @@ export class PurchasesComponent implements OnInit {
                 ProjectId: data.ProjectId,
                 BudgetLineId: data.BudgetLineId,
                 PaymentTypeId: data.PaymentTypeId,
-                IsPurchaseVerified: data.IsPurchaseVerified,
-                VerifiedPurchaseVoucher: data.VerifiedPurchaseVoucher,
+                // IsPurchaseVerified: data.IsPurchaseVerified,
+                // VerifiedPurchaseVoucher: data.VerifiedPurchaseVoucher,
                 OfficeId: data.OfficeId,
                 JournalCode: data.JournalCode,
-                VerifiedPurchaseVoucherReferenceNo:
-                    data.VerifiedPurchaseVoucherReferenceNo,
+                // VerifiedPurchaseVoucherReferenceNo:
+                //     data.VerifiedPurchaseVoucherReferenceNo,
                 TimezoneOffset: new Date().getTimezoneOffset()
             };
 
@@ -1116,7 +1138,7 @@ export class PurchasesComponent implements OnInit {
             this.purchaseDetailsForm.PaymentTypeId != null &&
             this.purchaseDetailsForm.PaymentTypeId !== 0
         ) {
-            this.purchaseDetailsForm.IsPurchaseVerified = true;
+            // this.purchaseDetailsForm.IsPurchaseVerified = true;
             // tslint:disable-next-line:radix
             this.purchaseDetailsForm.OfficeId = parseInt(
                 localStorage.getItem('STOREOFFICEID')
@@ -1155,7 +1177,7 @@ export class PurchasesComponent implements OnInit {
     //#endregion
 
     UnverifyPurchase() {
-        this.purchaseDetailsForm.IsPurchaseVerified = false;
+        // this.purchaseDetailsForm.IsPurchaseVerified = false;
         // tslint:disable-next-line:radix
         this.purchaseDetailsForm.OfficeId = parseInt(
             localStorage.getItem('STOREOFFICEID')
@@ -1348,15 +1370,10 @@ export class PurchasesComponent implements OnInit {
 
     //#region "Profile Image Change Service call"
     ChangeEmployeeImage() {
-         
         this.imageFlag = true;
         this.profileImageChangePopupLoading = true;
-        //const changeEmployeeImage: any = {
-        //    PurchaseId: this.selectedPurchaseId,
-        //    PurchaseImage: this.updatedImage
-        //};
 
-        let dataModel: UploadModel = {
+        const dataModel: UploadModel = {
             DocumentTypeId: DocumentFileTypes.PurchaseImage,
             PageId: FileSourceEntityTypes.StorePurchase,
             EntityId: this.selectedPurchaseId,
@@ -1364,46 +1381,11 @@ export class PurchasesComponent implements OnInit {
             DocumentFileId: this.selectedImageDocumentId
         };
 
-        this.fileManagementService.uploadFile(dataModel).subscribe(x=> {
-        //     
+        this.fileManagementService.uploadFile(dataModel).subscribe(x => {
             this.popupImageUpdateVisible = false;
             this.getAllPurchaseList(localStorage.getItem('SelectedInventoryItem'));
             this.profileImageChangePopupLoading = false;
         });
-       
-
-        //    .subscribe(x => {
-        //     
-        //});
-
-
-        //this.storeService
-        //    .AddEditByModel(
-        //        this.setting.getBaseUrl() + GLOBAL.API_Store_UpdatePurchaseImage,
-        //        changeEmployeeImage
-        //    )
-        //    .subscribe(
-        //        data => {
-        //            if (data.StatusCode === 200) {
-        //                this.toastr.success('Item Image Updated Successfully!!!');
-        //            }
-        //            this.getAllPurchaseList(
-        //                localStorage.getItem('SelectedInventoryItem')
-        //            );
-        //            this.popupImageUpdateVisible = false;
-        //            this.profileImageChangePopupLoading = false;
-        //        },
-        //        error => {
-        //            if (error.StatusCode === 500) {
-        //                this.toastr.error('Internal Server Error....');
-        //            } else if (error.StatusCode === 401) {
-        //                this.toastr.error('Unauthorized Access Error....');
-        //            } else if (error.StatusCode === 403) {
-        //                this.toastr.error('Forbidden Error....');
-        //            } else {
-        //            }
-        //        }
-            //);
     }
     //#endregion
 
@@ -1460,8 +1442,8 @@ class PurchaseModel {
     PurchasedById: any; // Employee ID
 
     // newly added fields
-    VoucherId: number;
-    VoucherDate: any; // use to determine voucher date
+    // VoucherId: number;
+    // VoucherDate: any; // use to determine voucher date
     AssetTypeId: number; // 1.Cash, 2.In Kind
     InvoiceNo?: any;
     InvoiceDate?: any;
@@ -1471,11 +1453,11 @@ class PurchaseModel {
     ProjectId: number;
     BudgetLineId: number;
     PaymentTypeId: number;
-    IsPurchaseVerified: boolean;
-    VerifiedPurchaseVoucher: number;
+    // IsPurchaseVerified: boolean;
+    // VerifiedPurchaseVoucher: number;
     OfficeId?: number;
     JournalCode?: number;
-    VerifiedPurchaseVoucherReferenceNo: string;
+    // VerifiedPurchaseVoucherReferenceNo: string;
     TimezoneOffset: number;
     InvoiceDocumentId?: number;
     ImageDocumentId?: number;

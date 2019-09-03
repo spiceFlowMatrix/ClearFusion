@@ -1,112 +1,46 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DinkToPdf;
-using DinkToPdf.Contracts;
-using HumanitarianAssistance.Application.Accounting.Models;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Persistence;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RazorLight;
 
 namespace HumanitarianAssistance.Application.Accounting.Queries
 {
-    public class GetAllVoucherSummaryReportPdfQueryHandler : IRequestHandler<GetAllVoucherSummaryReportPdfQuery, byte[]>
+    public class GetAllVoucherSummaryReportPdfQueryHandler : IRequestHandler<GetAllVoucherSummaryReportPdfQuery, ApiResponse>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IRazorLightEngine _razorEngine;
-        private readonly IConverter _pdfConverter;
 
-        public GetAllVoucherSummaryReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IRazorLightEngine razorEngine, IConverter pdfConverter)
-        // public GetAllVoucherSummaryReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IConverter pdfConverter)
+        public GetAllVoucherSummaryReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IRazorLightEngine razorEngine)
         {
             _dbContext = dbContext;
             _razorEngine = razorEngine;
-            _pdfConverter = pdfConverter;
         }
 
-        public async Task<byte[]> Handle(GetAllVoucherSummaryReportPdfQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Handle(GetAllVoucherSummaryReportPdfQuery request, CancellationToken cancellationToken)
         {
+            ApiResponse response = new ApiResponse();
             try
             {
-                var model = new List<CarModel>()
-            {
-                new CarModel{NameOfCar="Audi Q7",FirstRegistration = DateTime.UtcNow.AddYears(-3),MaxSpeed = 200,NumberOfDoors = 4},
-                new CarModel{NameOfCar="Audi A5",FirstRegistration = DateTime.UtcNow,MaxSpeed = 180,NumberOfDoors = 4},
-                new CarModel{NameOfCar="Audi Q3",FirstRegistration = DateTime.UtcNow,MaxSpeed = 245,NumberOfDoors = 2},
-                new CarModel{NameOfCar="Mercedes SLI",FirstRegistration = DateTime.UtcNow,MaxSpeed = 150,NumberOfDoors = 4},
-                new CarModel{NameOfCar="Chevrolet",FirstRegistration = DateTime.UtcNow,MaxSpeed = 220,NumberOfDoors = 4},
-                new CarModel{NameOfCar="BMW",FirstRegistration = DateTime.UtcNow,MaxSpeed = 200,NumberOfDoors = 4},
-        };
-                // var templatePath = $"./PdfTemplates/VoucherSummaryReport.cshtml";
-                var templatePath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), $"PdfTemplates/VoucherSummaryReport.cshtml");
-
-                Console.WriteLine(templatePath);
-
-                string template = await _razorEngine.CompileRenderAsync(templatePath, model);
-                // Console.WriteLine(template);
-
-                var sb = new StringBuilder();
-                sb.Append(@"
-                        <html>
-                            <head>
-                            </head>
-                            <body>
-                                <div class='header'><h1>This is the generated PDF report!!!</h1></div>
-                                <table align='center'>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>LastName</th>
-                                        <th>Age</th>
-                                        <th>Gender</th>
-                                    </tr>");
-
-                sb.Append(@"
-                                </table>
-                            </body>
-                        </html>");
+                var voucherSummaryList = await _dbContext.VoucherDetail.Where(x => !x.IsDeleted).ToListAsync();
 
 
-                Console.WriteLine(sb.ToString());
 
-                var globalSettings = new GlobalSettings
-                {
-                    ColorMode = ColorMode.Color,
-                    Orientation = Orientation.Portrait,
-                    PaperSize = PaperKind.A4,
-                    Margins = new MarginSettings() { Top = 10, Bottom = 10, Left = 10, Right = 10 },
-                    DocumentTitle = "Simple PDF document",
-                };
-                var objectSettings = new ObjectSettings
-                {
-                    PagesCount = true,
-                    HtmlContent = template,
-                    // HtmlContent = sb.ToString(),
-                    WebSettings = { DefaultEncoding = "utf-8" },
-                    HeaderSettings = { FontName = "Arial", FontSize = 12, Line = true, Center = "Fun pdf document" },
-                    FooterSettings = { FontName = "Arial", FontSize = 12, Line = true, Right = "Page [page] of [toPage]" }
-                };
-                var pdf = new HtmlToPdfDocument()
-                {
-                    GlobalSettings = globalSettings,
-                    Objects = { objectSettings }
-                };
-                byte[] file = _pdfConverter.Convert(pdf);
-
-                // byte[] file = new byte[10];
-
-                return file;
-
+                response.ResponseData = voucherSummaryList;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
             }
+            return response;
         }
     }
 }

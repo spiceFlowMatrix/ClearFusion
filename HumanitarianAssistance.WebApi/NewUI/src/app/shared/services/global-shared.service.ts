@@ -8,7 +8,7 @@ import { Subject } from 'rxjs/internal/Subject';
 import { IMenuList } from '../dbheader/dbheader.component';
 import { FileManagementModel, FileModel } from '../file-management/file-management-model';
 import { SignedUrlObjectName } from '../file-management/signed-url-object-name';
-import { HttpResponse } from '@angular/common/http';
+import { HttpResponse, HttpHeaders } from '@angular/common/http';
 
 
 @Injectable({
@@ -68,7 +68,8 @@ export class GlobalSharedService {
   //#region "uploadFileBySignedUrl"
   uploadFileBySignedUrl(url: string, data: any, options?: any) {
     return this.globalService
-      .put(url, data, { observe: 'response' })
+      .put(url, data, { observe: 'response',
+      'Content-Type': data.type})
       .pipe(
         map(x => {
           console.log(x.status);
@@ -95,7 +96,8 @@ export class GlobalSharedService {
 
     const DownloadObjectGCBucketModel = {
       ObjectName: objectName,
-      FileName: file.name
+      FileName: file.name,
+      FileType: file.type
     };
 
      return this.globalService

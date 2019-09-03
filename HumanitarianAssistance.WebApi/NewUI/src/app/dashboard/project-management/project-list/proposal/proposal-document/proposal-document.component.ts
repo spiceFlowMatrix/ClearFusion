@@ -86,7 +86,7 @@ export class ProposalDocumentComponent implements OnInit, OnDestroy {
                       ProposalWebLink: element.ProposalWebLink,
                       ProposalExtType: element.ProposalExtType,
                       UserName: element.UserName,
-                      CreatedDate: StaticUtilities.setLocalDate(element.CreatedDate),
+                      CreatedDate: StaticUtilities.setLocalDate(element.CreatedDate ),
                       ProposalDocumentType: this.getFileTypeName(
                         element.ProposalDocumentTypeId
                       )
@@ -165,26 +165,27 @@ export class ProposalDocumentComponent implements OnInit, OnDestroy {
 
                 // Step 2
                 // Add to list
-                const responseData = res.data.ProjectProposalDocumentModel;
-                this.fileDetailsModel.unshift({
-                  ProjectProposaldetailId: responseData.ProjectProposaldetailId,
-                  ProposalDocumentName: responseData.ProposalDocumentName,
-                  ProjectId: responseData.ProjectId,
-                  ProposalWebLink: responseData.ProposalWebLink,
-                  ProposalExtType: responseData.ProposalExtType,
-                  UserName: responseData.UserName,
-                  CreatedDate: StaticUtilities.setLocalDate(responseData.CreatedDate),
-                  ProposalDocumentType: this.getFileTypeName(
-                    responseData.ProposalDocumentTypeId
-                  )
-                });
-
+                // const responseData = res.data.ProjectProposalDocumentModel;
+                // var createdDate = StaticUtilities.setLocalDate(responseData.CreatedDate);
+                // this.fileDetailsModel.unshift({
+                //   ProjectProposaldetailId: responseData.ProjectProposaldetailId,
+                //   ProposalDocumentName: responseData.ProposalDocumentName,
+                //   ProjectId: responseData.ProjectId,
+                //   ProposalWebLink: responseData.ProposalWebLink,
+                //   ProposalExtType: responseData.ProposalExtType,
+                //   UserName: responseData.UserName,
+                //   CreatedDate: createdDate,
+                //   ProposalDocumentType: this.getFileTypeName(
+                //     responseData.ProposalDocumentTypeId
+                //   )
+                // });
+                 this.getProposalDocuments(this.projectId);
                 if (this.fileDetailsModel.length === 1) {
                   this.onFirstFileUploaded();
                 }
 
               }
-            } else if (res.StatusCode === 400) {
+            } else if (res.StatusCode === 4440) {
               this.toastr.warning(res.Message);
             }
 

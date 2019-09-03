@@ -57,8 +57,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     PurchasedById = v.PurchasedById,
                     InventoryItem = v.InventoryItem,
                     //Newly added fields
-                    VoucherId = v.VoucherId,
-                    VoucherDate = v.VoucherDate,
+                   // VoucherId = v.VoucherId,
+                   // VoucherDate = v.VoucherDate,
                     AssetTypeId = v.AssetTypeId,
                     InvoiceNo = v.InvoiceNo,
                     InvoiceDate = v.InvoiceDate,
@@ -68,10 +68,10 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     ProjectId = v.ProjectId,
                     BudgetLineId = v.BudgetLineId,
                     PaymentTypeId = v.PaymentTypeId,
-                    IsPurchaseVerified = v.IsPurchaseVerified,
-                    VerifiedPurchaseVoucher = v.VerifiedPurchaseVoucher,
+                   // IsPurchaseVerified = v.IsPurchaseVerified,
+                   // VerifiedPurchaseVoucher = v.VerifiedPurchaseVoucher,
                     JournalCode = v.JournalCode,
-                    VerifiedPurchaseVoucherReferenceNo = v.VerifiedPurchaseVoucher != null ? _dbContext.VoucherDetail.FirstOrDefault(x => x.IsDeleted == false && x.VoucherNo == v.VerifiedPurchaseVoucher).ReferenceNo : null
+                   // VerifiedPurchaseVoucherReferenceNo = v.VerifiedPurchaseVoucher != null ? _dbContext.VoucherDetail.FirstOrDefault(x => x.IsDeleted == false && x.VoucherNo == v.VerifiedPurchaseVoucher).ReferenceNo : null
                 }).OrderByDescending(x=> x.PurchaseDate).ToList();
 
                 List<ExchangeRateDetail> exchangeRate= new List<ExchangeRateDetail>();

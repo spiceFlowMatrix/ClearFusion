@@ -34,41 +34,6 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                     {
                         _mapper.Map(request, purchaseRecord);
 
-                        if (!string.IsNullOrEmpty(request.ImageFileName))
-                        {
-                            if (request.ImageFileName.Contains(","))
-                            {
-                                string[] str = request.ImageFileName.Split(",");
-                                byte[] filepath = Convert.FromBase64String(str[1]);
-                                string ex = str[0].Split("/")[1].Split(";")[0];
-                                string guidname = Guid.NewGuid().ToString();
-                                string filename = guidname + "." + ex;
-                                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-                                File.WriteAllBytes(@"Documents/" + filename, filepath);
-
-                                purchaseRecord.ImageFileName = guidname;
-                                purchaseRecord.ImageFileType = "." + ex;
-
-                            }
-                        }
-
-                        if (request.InvoiceFileName != null && request.InvoiceFileName != "")
-                        {
-                            if (request.InvoiceFileName.Contains(","))
-                            {
-                                string[] str = request.InvoiceFileName.Split(",");
-                                byte[] filepath = Convert.FromBase64String(str[1]);
-                                string ex = str[0].Split("/")[1].Split(";")[0];
-                                string guidname = Guid.NewGuid().ToString();
-                                string filename = guidname + "." + ex;
-                                var pathFile = Path.Combine(Directory.GetCurrentDirectory(), @"Documents/") + filename;
-                                File.WriteAllBytes(@"Documents/" + filename, filepath);
-
-                                purchaseRecord.InvoiceFileName = guidname;
-                                purchaseRecord.InvoiceFileType = "." + ex;
-                            }
-                        }
-
                         purchaseRecord.IsDeleted = false;
                         purchaseRecord.ModifiedById = request.ModifiedById;
                         purchaseRecord.ModifiedDate = request.ModifiedDate;

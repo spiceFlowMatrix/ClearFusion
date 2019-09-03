@@ -337,52 +337,11 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
   }
   //#endregion
 
-  //#region "getProjectList"
-  // getSignedURL(event: any) {
 
-  //   const files = event.srcElement.files[0];
+  //#region "onExportPdf"
+  onExportPdf() {
 
-  //   const formData = new FormData();
-  //         formData.append('file', files);
-
-  //   this.voucherSummaryService.getSignedURLDemo()
-  //   .pipe(
-  //     takeUntil(this.destroyed$)
-  //   ).subscribe(
-  //     (response: any) => {
-  //       if (response.statusCode === 200 && response.data !== null) {
-  //
-  //         this.demoSignedURL = response.data;
-
-  //         this.voucherSummaryService.upload(this.demoSignedURL, formData)
-  //         .pipe(
-  //           takeUntil(this.destroyed$)
-  //         ).subscribe(
-  //           (response: any) => {
-  //           });
-
-  //         // window.open(this.demoSignedURL, '_blank');
-
-  //         // const xhr  = new XMLHttpRequest();
-  //         // xhr.open('PUT', this.demoSignedURL, true);
-  //         // xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  //         // xhr.withCredentials = false;
-  //         // xhr.setRequestHeader('Content-Type', 'text/plain');
-  //         // xhr.send(formData);
-
-  //         // req.onload = function(event) {
-  //         //     this.loadFileList();
-  //         // }.bind(this);
-  //         // this.documentName = droppedFile.relativePath;
-  //         // const formData = new FormData();
-  //         // formData.append('filesData', file, droppedFile.relativePath);
-  //         // formData.append('activityId', this.projectActivityId.toString());
-
-  //       }
-  //     },
-  //     error => {}
-  //   );
-  // }
+  }
   //#endregion
 
   //#region "pageEvent"
