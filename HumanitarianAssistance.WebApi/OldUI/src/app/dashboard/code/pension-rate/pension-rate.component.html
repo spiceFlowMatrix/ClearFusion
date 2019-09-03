@@ -44,10 +44,10 @@
             <dxi-validation-rule type="required" message="Fiscal Year is required">
             </dxi-validation-rule>
           </dxi-item>
-          <dxi-item dataField="PensionRate" caption="Pension Rate">
+          <dxi-item dataField="PensionRate" caption="Pension Rate" [editorOptions]="{ placeholder: 'Enter value in % (ex. 4.5)' }">
             <dxi-validation-rule type="required" message="Pension Rate is required">
             </dxi-validation-rule>
-          </dxi-item>
+          </dxi-item> %
           <dxi-item dataField="IsDefault" alignment="right"></dxi-item>
         </dx-form>
         <br />
@@ -73,7 +73,7 @@
             <dxi-validation-rule type="required" message="Fiscal Year is required">
             </dxi-validation-rule>
           </dxi-item>
-          <dxi-item dataField="PensionRate" caption="Pension Rate">
+          <dxi-item dataField="PensionRate" caption="Pension Rate" [editorOptions]="{ placeholder: 'Enter value in % (ex. 4.5)' }">
             <dxi-validation-rule type="required" message="Pension Rate is required">
             </dxi-validation-rule>
           </dxi-item>

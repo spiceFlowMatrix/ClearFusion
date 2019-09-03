@@ -38,12 +38,13 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                  ProposalExtType = d.ProposalExtType,
                                  ProposalDocumentTypeId = d.ProposalDocumentTypeId,
                                  CreatedDate = d.CreatedDate,
-                                 UserName = ud.Select(x => new
-                                 {
-                                     FullName = x.FirstName + " " + x.LastName,
-                                     x.AspNetUserId,
-                                     x.IsDeleted
-                                 }).FirstOrDefault(a => a.AspNetUserId == d.CreatedById && a.IsDeleted == false).FullName
+                                 UserName = u.FirstName + ' '+ u.LastName
+                                 //UserName = ud.Select(x => new
+                                 //{
+                                 //    FullName = x.FirstName + " " + x.LastName,
+                                 //    x.AspNetUserId,
+                                 //    x.IsDeleted
+                                 //}).FirstOrDefault(a => a.AspNetUserId == d.CreatedById && a.IsDeleted == false).FullName
                              }).ToListAsync();
                 if (obj.Count() != 0)
                 {

@@ -56,7 +56,14 @@ export class StoreDepreciationReportComponent implements OnInit {
       InventoryId: null,
       ItemGroupId: null,
       ItemId: null,
-      CurrentDate: null
+      CurrentDate: new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        new Date().getDate(),
+        new Date().getHours(),
+        new Date().getMinutes(),
+        new Date().getMinutes()
+      )
     };
   }
 

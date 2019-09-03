@@ -55,5 +55,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.FileManagement
             command.ModifiedDate = DateTime.UtcNow; 
             return await _mediator.Send(command);
         }
+
+        [HttpGet]
+        public async Task<ApiResponse> GetSignedURLByDocumentFileId(long id)
+        {
+            return await _mediator.Send(new GetSignedURLByDocumentFileIdQuery { DocumentFileId= id });
+        }
     }    
 }

@@ -73,8 +73,10 @@ export class PurchasesDocumentComponent implements OnInit, OnDestroy, OnChanges 
 
   ngOnChanges() {
     // TODO: Refresh (Parent call)
-    this.docpath = (this.defaultObj == null || this.defaultObj === undefined) ? '' :
-    this._DomSanitizer.bypassSecurityTrustResourceUrl(this.defaultObj.InvoiceFileName);
+    // this.docpath = (this.defaultObj == null || this.defaultObj === undefined) ? '' :
+    // this._DomSanitizer.bypassSecurityTrustResourceUrl(this.defaultObj.InvoiceFileName);
+
+    this.getPurchasesDocumentList(this.defaultObj.InvoiceDocumentId);
   }
 
   //#region "show / hide"
@@ -105,7 +107,6 @@ export class PurchasesDocumentComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   addDocument() {
-    debugger
     this.addNewDocument = {
       DocumentName: null,
       DocumentFilePath: null,
@@ -128,37 +129,47 @@ export class PurchasesDocumentComponent implements OnInit, OnDestroy, OnChanges 
     this.AddVoucherDocument(data);
   }
 
-  //#region "getPurchasesDocumentList"
-  // getPurchasesDocumentList(PurchaseId) {
+  // #region "getPurchasesDocumentList"
+  getPurchasesDocumentList(DocumentFileId) {
 
-  //   this.docpath = null;
-  //   this.storeService
-  //     .GetAllPurchaseInvoices(
-  //       this.setting.getBaseUrl() + GLOBAL.API_Store_GetAllPurchaseInvoices,
-  //       PurchaseId
-  //     )
-  //     .subscribe(
-  //       data => {
-  //         if (
-  //           data.StatusCode === 200 &&
-  //           data.data.UpdatePurchaseInvoiceModel != null
-  //         ) {
-  //           this.docpath =
-  //             data.data.UpdatePurchaseInvoiceModel.Invoice === ''
-  //               ? this._DomSanitizer.bypassSecurityTrustResourceUrl(
-  //                 this.setting.getDocUrl() + 'nodoc.pdf'
-  //               )
-  //               : this._DomSanitizer.bypassSecurityTrustResourceUrl(
-  //                 data.data.UpdatePurchaseInvoiceModel.Invoice
-  //               );
-  //           this.defaultObj.PurchaseId =
-  //             data.data.UpdatePurchaseInvoiceModel.PurchaseId;
-  //         }
-  //       },
-  //       error => { }
-  //     );
-  // }
-  // //#endregion
+    this.docpath = null;
+
+    this.fileManagementService.getSignedURLByDocumenFileId(DocumentFileId).subscribe(x => {
+      if (x.StatusCode === 200) {
+
+        if (x.data.SignedUrl !== undefined && x.data.SignedUrl !== null) {
+          this.docpath = this._DomSanitizer.bypassSecurityTrustResourceUrl(x.data.SignedUrl);
+        }
+      }
+    });
+
+    // this.storeService
+    //   .GetAllPurchaseInvoices(
+    //     this.setting.getBaseUrl() + GLOBAL.API_Store_GetAllPurchaseInvoices,
+    //     DocumentFileId
+    //   )
+    //   .subscribe(
+    //     data => {
+    //       if (
+    //         data.StatusCode === 200 &&
+    //         data.data.UpdatePurchaseInvoiceModel != null
+    //       ) {
+    //         this.docpath =
+    //           data.data.UpdatePurchaseInvoiceModel.Invoice === ''
+    //             ? this._DomSanitizer.bypassSecurityTrustResourceUrl(
+    //               this.setting.getDocUrl() + 'nodoc.pdf'
+    //             )
+    //             : this._DomSanitizer.bypassSecurityTrustResourceUrl(
+    //               data.data.UpdatePurchaseInvoiceModel.Invoice
+    //             );
+    //         this.defaultObj.PurchaseId =
+    //           data.data.UpdatePurchaseInvoiceModel.PurchaseId;
+    //       }
+    //     },
+    //     error => { }
+    //   );
+  }
+  //#endregion
 
   //#region  "Add New Purchase Document"
   AddVoucherDocument(dataSource) {
@@ -177,35 +188,6 @@ export class PurchasesDocumentComponent implements OnInit, OnDestroy, OnChanges 
       this.cancelDeletePurchase();
       this.showHideAddPurchaseDocPopupLoading();
     });
-
-
-    // this.storeService
-    //   .AddEditByModel(
-    //     this.setting.getBaseUrl() + GLOBAL.API_Store_UpdateInvoice,
-    //     dataSource
-    //   )
-    //   .subscribe(
-    //     data => {
-    //       if (data.StatusCode === 200) {
-    //         this.toastr.success('Invoice Updated Successfully!!!');
-    //       }
-    //       this.getPurchasesDocumentList(dataSource.PurchaseId);
-    //       this.cancelDeletePurchase();
-    //       this.showHideAddPurchaseDocPopupLoading();
-    //     },
-    //     error => {
-    //       if (error.StatusCode === 500) {
-    //         this.toastr.error('Internal Server Error....');
-    //       } else if (error.StatusCode === 401) {
-    //         this.toastr.error('Unauthorized Access Error....');
-    //       } else if (error.StatusCode === 403) {
-    //         this.toastr.error('Forbidden Error....');
-    //       } else {
-    //       }
-    //       this.cancelDeletePurchase();
-    //       this.showHideAddPurchaseDocPopupLoading();
-    //     }
-    //   );
   }
   //#endregion
 }

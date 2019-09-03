@@ -906,8 +906,22 @@ export class PurchasesComponent implements OnInit {
             PurchaseId: null,
             SerialNo: null, // Barcode Value
             InventoryItem: this.inventoryItemId != null ? this.inventoryItemId : null, // Item Id
-            PurchaseDate: new Date(), // Date Of Purchase
-            DeliveryDate: new Date(), // The date that the item arrived at it's desired location or a service took place.
+            PurchaseDate: new Date(
+                new Date().getFullYear(),
+                                    new Date().getMonth(),
+                                    new Date().getDate(),
+                                    new Date().getHours(),
+                                    new Date().getMinutes(),
+                                    new Date().getSeconds()
+            ), // Date Of Purchase
+            DeliveryDate: new Date(
+                new Date().getFullYear(),
+                                    new Date().getMonth(),
+                                    new Date().getDate(),
+                                    new Date().getHours(),
+                                    new Date().getMinutes(),
+                                    new Date().getSeconds()
+            ), // The date that the item arrived at it's desired location or a service took place.
             Currency: null, // Currency ID
             UnitType: null,
             UnitCost: null,
@@ -923,7 +937,14 @@ export class PurchasesComponent implements OnInit {
            // VoucherDate: null, // use to determine voucher date
             AssetTypeId: null, // 1.Cash, 2.In Kind
             InvoiceNo: null,
-            InvoiceDate: new Date(),
+            InvoiceDate: new Date(
+                new Date().getFullYear(),
+                                    new Date().getMonth(),
+                                    new Date().getDate(),
+                                    new Date().getHours(),
+                                    new Date().getMinutes(),
+                                    new Date().getSeconds()
+            ),
             Status: null,
             ReceiptTypeId: null,
             ReceivedFromLocation: null,
