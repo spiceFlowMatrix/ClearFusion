@@ -1,17 +1,28 @@
 <div class="row">
   <div class="col-sm-12">
     <div class="main-heading clearfix">
-      <h3 class="page-heading">Job Hiring Details</h3>
-      <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="showHideAddJobHiringPopup()" 
-      *ngIf="isEditingAllowed"></dx-button>
+      <div class="col-sm-2">
+        <h3 class="page-heading">Job Hiring Details</h3>
+      </div>
+      <div class="col-sm-1 mr-top-padding-lft">Office</div>
+      <div class="col-sm-2 mr-top">
+
+        <dx-select-box [dataSource]="officeDropdownList" placeholder="Choose Office"
+          (onItemClick)="onOfficeSelected($event.itemData.OfficeId)" displayExpr="OfficeName" valueExpr="OfficeId"
+          [value]="selectedOffice" [searchEnabled]="true">
+        </dx-select-box>
+      </div>
+
+      <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="showHideAddJobHiringPopup()"
+        *ngIf="isEditingAllowed"></dx-button>
     </div>
     <div>
-      <dx-data-grid id="gridContainer" [dataSource]="jobHiringDetails" [allowColumnReordering]="true" [allowColumnResizing]="true"
-        [columnAutoWidth]="true" (onRowUpdating)="logEvent('onRowUpdating',$event)">
+      <dx-data-grid id="gridContainer" [dataSource]="jobHiringDetails" [allowColumnReordering]="true"
+        [allowColumnResizing]="true" [columnAutoWidth]="true" (onRowUpdating)="logEvent('onRowUpdating',$event)">
 
-        <dxo-editing mode="popup" [allowUpdating]="true" 
-        *ngIf="isEditingAllowed">
-          <dxo-popup title="Job Hiring" [showTitle]="true" [width]="700" [height]="345" [dragEnabled]="false" [closeOnOutsideClick]="true">
+        <dxo-editing mode="popup" [allowUpdating]="true" *ngIf="isEditingAllowed">
+          <dxo-popup title="Job Hiring" [showTitle]="true" [width]="700" [height]="345" [dragEnabled]="false"
+            [closeOnOutsideClick]="true">
           </dxo-popup>
         </dxo-editing>
 
@@ -33,7 +44,8 @@
           </dxo-lookup>
         </dxi-column>
         <dxi-column dataField="Unit" caption="Vacancies" [width]="120"></dxi-column>
-        <dxi-column dataField="ApprovedInterviews" caption="Approved Interviews" [width]="120" [editorOptions]="{readOnly: true }"></dxi-column>
+        <dxi-column dataField="ApprovedInterviews" caption="Approved Interviews" [width]="120"
+          [editorOptions]="{readOnly: true }"></dxi-column>
 
 
         <dxi-column dataField="IsActive" caption="Active" [width]="90"></dxi-column>
@@ -45,13 +57,13 @@
 </div>
 
 <!-- Add Job Hiring Details -->
-<dx-popup class="popup" [width]="600" [height]="510" [showTitle]="true" title="Job Hiring" [dragEnabled]="false" [closeOnOutsideClick]="true"
-  [(visible)]="popupAddJobHiringVisible">
+<dx-popup class="popup" [width]="600" [height]="510" [showTitle]="true" title="Job Hiring" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="popupAddJobHiringVisible">
   <div *dxTemplate="let data of 'content'">
     <dx-scroll-view [height]="460" showScrollbar="always" direction="both">
       <form action="your-action" (submit)="onFormSubmit('addJobHiringDetails',jobHiringForm)">
-        <dx-form id="form" [formData]="jobHiringForm" [colCount]="1" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
-          validationGroup="jobHiringData">
+        <dx-form id="form" [formData]="jobHiringForm" [colCount]="1" [readOnly]="false" [showColonAfterLabel]="true"
+          [showValidationSummary]="true" validationGroup="jobHiringData">
           <dxi-item dataField="JobCode" [editorOptions]="{ width: '100%', max: 100, readOnly: true}">
             <dxi-validation-rule type="required" message="JobCode is required">
             </dxi-validation-rule>
@@ -99,7 +111,8 @@
         </div>
       </form>
 
-      <ngx-loading [show]="addJobHiringPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+      <ngx-loading [show]="addJobHiringPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }">
+      </ngx-loading>
     </dx-scroll-view>
   </div>
 </dx-popup>

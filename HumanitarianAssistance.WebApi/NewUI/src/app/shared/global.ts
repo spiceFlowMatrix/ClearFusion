@@ -80,8 +80,10 @@ export class GLOBAL {
   public static API_Project_EditProjectMonitoringByMonitoringId = 'Project/EditProjectMonitoringByMonitoringId';
   public static API_Project_GetProjectIndicatorQuestionsById = 'Project/GetProjectIndicatorQuestionsById';
   public static API_Project_AddProjectIndicator = 'Project/AddProjectIndicator';
-  public static API_Project_GetProjectIndicatorDetailById = 'Project/GetProjectIndicatorDetailById';
+  public static API_Project_GetIndicatorQuestionDetailById = 'Project/GetIndicatorQuestionDetailById';
+  public static API_Project_DeleteIndicatorQuestionDetail = 'Project/DeleteIndicatorQuestionDetail';
   public static API_Project_EditProjectIndicator = 'Project/EditProjectIndicator';
+  public static API_Project_AddProjectIndicatorQuestions = 'Project/AddProjectIndicatorQuestions';
   public static API_Project_GetDonarListById = 'Project/GetDonarListById';
   public static API_Project_DeleteDonorDetails = 'Project/DeleteDonorDetails';
   public static API_Code_GetAllAccountTypeByCategory = 'Code/GetAllAccountTypeByCategory';

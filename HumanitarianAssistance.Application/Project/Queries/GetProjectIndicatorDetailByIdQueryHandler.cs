@@ -8,11 +8,12 @@ using HumanitarianAssistance.Persistence;
 using MediatR;
 using System.Threading;
 using HumanitarianAssistance.Application.Project.Models;
+using HumanitarianAssistance.Common.Enums;
 
 namespace HumanitarianAssistance.Application.Project.Queries
 {
 
-        public class GetProjectIndicatorDetailByIdQueryHandler : IRequestHandler<GetProjectIndicatorDetailByIdQuery, ApiResponse>
+        public class GetProjectIndicatorDetailByIdQueryHandler : IRequestHandler<GetIndicatorQuestionDetailByIdQuery, ApiResponse>
         {
             private HumanitarianAssistanceDbContext _dbContext;
 
@@ -20,7 +21,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
             {
                 _dbContext = dbContext;
             }
-            public async Task<ApiResponse> Handle(GetProjectIndicatorDetailByIdQuery request, CancellationToken cancellationToken)
+            public async Task<ApiResponse> Handle(GetIndicatorQuestionDetailByIdQuery request, CancellationToken cancellationToken)
             {
                 ApiResponse response = new ApiResponse();
             ProjectIndicatorModel projectIndicators = new ProjectIndicatorModel();
@@ -32,25 +33,29 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     throw new Exception("Project Indicator Id Cannot be 0");
                 }
 
-                var indicators = await _dbContext.ProjectIndicators.Include(x => x.ProjectIndicatorQuestions)
-                                                .Select(x => new EditIndicatorModel
+                var indicators = await _dbContext.ProjectIndicatorQuestions
+                                                .Include(x => x.VerificationSources)
+                                                .Where(x => x.IsDeleted == false && x.ProjectIndicatorId == request.indicatorId)
+                                                .Select(x => new ProjectIndicatorQuestionsModel
                                                 {
-                                                    IndicatorCode = x.IndicatorCode,
-                                                    IndicatorName = x.IndicatorName,
-                                                    IndicatorId = x.ProjectIndicatorId,
+                                                    IndicatorQuestionId = x.IndicatorQuestionId,
+                                                    IndicatorQuestion = x.IndicatorQuestion,
+                                                    QuestionType = x.QuestionType,
+                                                    QuestionTypeName= x.QuestionType == (int)QuestionType.Qualitative ? "Qualitative" : x.QuestionType == (int)QuestionType.Quantitative ? "Quantitative": null,
+                                                    ProjectIndicatorId =x.ProjectIndicatorId,
                                                     IsDeleted = x.IsDeleted,
-                                                    IndicatorQuestions = x.ProjectIndicatorQuestions.Select(y => new IndicatorQuestions
+                                                    VerificationSources = x.VerificationSources.Select(y => new VerificationSourcesModel
                                                     {
-                                                        QuestionId = y.IndicatorQuestionId,
-                                                        QuestionText = y.IndicatorQuestion,
+                                                        VerificationSourceId = y.VerificationSourceId,
+                                                        VerificationSourceName= y.VerificationSourceName,
                                                         IsDeleted = y.IsDeleted
                                                     }).Where(y => y.IsDeleted == false).ToList()
                                                 })
-                                               .FirstOrDefaultAsync(x => x.IsDeleted == false && x.IndicatorId == request.indicatorId);
+                                               .ToListAsync();
 
                 if (indicators != null)
                 {
-                    response.data.IndicatorModel = indicators;
+                    response.ResponseData = indicators;
                 }
 
                 response.StatusCode = StaticResource.successStatusCode;

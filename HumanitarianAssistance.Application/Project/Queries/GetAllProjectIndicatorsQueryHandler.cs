@@ -28,12 +28,14 @@ namespace HumanitarianAssistance.Application.Project.Queries
             {
                 var indicators = _dbContext.ProjectIndicators
                                                .OrderByDescending(x => x.CreatedDate)
-                                               .Where(x => x.IsDeleted == false)
+                                               .Where(x => x.IsDeleted == false && x.ProjectId == request.ProjectId)
                                                .Select(x => new ProjectIndicatorViewModel
                                                {
                                                    IndicatorCode = x.IndicatorCode,
                                                    IndicatorName = x.IndicatorName,
-                                                   ProjectIndicatorId = x.ProjectIndicatorId
+                                                   ProjectIndicatorId = x.ProjectIndicatorId,
+                                                   Description= x.Description,
+                                                   Questions= x.ProjectIndicatorQuestions.Count
                                                }).AsQueryable();
 
 
@@ -47,6 +49,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                               .Where(x => x.IsDeleted == false).CountAsync();
 
                 var indicatorList = await indicators.ToListAsync();
+              
 
                 if (indicatorList.Any())
                 {

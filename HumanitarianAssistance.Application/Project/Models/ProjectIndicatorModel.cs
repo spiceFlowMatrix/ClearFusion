@@ -10,6 +10,8 @@ namespace HumanitarianAssistance.Application.Project.Models
         public long ProjectIndicatorId { get; set; }
         public string IndicatorName { get; set; }
         public string IndicatorCode { get; set; }
+        public string Description { get; set; }
+        public int Questions { get; set; }
     }
 
     public class ProjectIndicatorModel
@@ -42,5 +44,6 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string QuestionText { get; set; }
         public bool? IsDeleted { get; set; }
     }
+
 
 }

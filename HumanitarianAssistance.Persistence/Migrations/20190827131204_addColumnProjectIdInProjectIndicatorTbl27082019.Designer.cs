@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190827131204_addColumnProjectIdInProjectIndicatorTbl27082019")]
+    partial class addColumnProjectIdInProjectIndicatorTbl27082019
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -6445,8 +6447,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<long>("ProjectIndicatorId");
 
-                    b.Property<int?>("QuestionType");
-
                     b.HasKey("IndicatorQuestionId");
 
                     b.HasIndex("ProjectIndicatorId");
@@ -6462,8 +6462,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<string>("Description");
 
                     b.Property<string>("IndicatorCode");
 
@@ -7364,32 +7362,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasKey("TargetId");
 
                     b.ToTable("TargetBeneficiaryDetail");
-                });
-
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.VerificationSources", b =>
-                {
-                    b.Property<long>("VerificationSourceId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<long>("IndicatorQuestionId");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("VerificationSourceName");
-
-                    b.HasKey("VerificationSourceId");
-
-                    b.HasIndex("IndicatorQuestionId");
-
-                    b.ToTable("VerificationSources");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.WinProjectDetails", b =>
@@ -9614,14 +9586,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.SecurityConsiderationDetail", "SecurityConsiderationDetail")
                         .WithMany()
                         .HasForeignKey("SecurityConsiderationId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.VerificationSources", b =>
-                {
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectIndicatorQuestions", "ProjectIndicatorQuestions")
-                        .WithMany("VerificationSources")
-                        .HasForeignKey("IndicatorQuestionId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

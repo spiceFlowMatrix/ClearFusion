@@ -14,6 +14,10 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public long ProjectIndicatorId { get; set; }
         public string IndicatorName { get; set; }
         public string IndicatorCode { get; set; }
+        public string Description { get; set; }
         public List<ProjectIndicatorQuestions> ProjectIndicatorQuestions { get; set; }
+        [ForeignKey("ProjectId")]
+        public long ProjectId { get; set; }
+        public ProjectDetail ProjectDetail { get; set; }
     }
 }

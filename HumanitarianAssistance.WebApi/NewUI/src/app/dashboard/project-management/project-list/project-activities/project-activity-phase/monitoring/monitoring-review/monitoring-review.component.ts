@@ -50,7 +50,11 @@ export class MonitoringReviewComponent implements OnInit {
     this.indicatorFilterModel = {
       pageIndex: 0,
       pageSize: 0,
-      totalCount: 0
+      totalCount: 0,
+      ProjectIndicatorId: null,
+      Description: null,
+      Questions: null,
+      ProjectId: null
     };
 
     this.getAllProjectIndicatorList();
@@ -129,9 +133,11 @@ export class MonitoringReviewComponent implements OnInit {
             data.data.ProjectIndicatorList.ProjectIndicators.forEach(
               element => {
                 this.projectIndicatorList.push({
-                  projectIndicatorId: element.ProjectIndicatorId,
-                  projectIndicatorName: element.IndicatorName,
-                  projectIndicatorCode: element.IndicatorCode
+                  ProjectIndicatorId: element.ProjectIndicatorId,
+                  IndicatorName: element.IndicatorName,
+                  IndicatorCode: element.IndicatorCode,
+                  Questions: element.Questions,
+                  Description: element.Description
                 });
               }
             );

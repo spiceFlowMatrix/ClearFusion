@@ -31,19 +31,14 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                 indicator.CreatedById = request.CreatedById;
                 indicator.IsDeleted = false;
                 indicator.CreatedDate = request.CreatedDate;
-
+                indicator.IndicatorName = request.IndicatorName;
+                indicator.Description = request.Description;
+                indicator.ProjectId = request.ProjectId;
                 await _dbContext.ProjectIndicators.AddAsync(indicator);
                 await _dbContext.SaveChangesAsync();
 
                 indicator.IndicatorCode = ProjectUtility.GenerateCode(indicator.ProjectIndicatorId);
                 await _dbContext.SaveChangesAsync();
-
-                int count = await _dbContext.ProjectIndicators.Where(x => x.IsDeleted == false).CountAsync();
-
-                response.data.ProjectIndicator = new ProjectIndicatorViewModel();
-                response.data.TotalCount = count;
-                response.data.ProjectIndicator.ProjectIndicatorId = indicator.ProjectIndicatorId;
-                response.data.ProjectIndicator.IndicatorCode = indicator.IndicatorCode;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
             }
