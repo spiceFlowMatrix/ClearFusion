@@ -3,7 +3,10 @@ import { Routes, RouterModule } from '@angular/router';
 import { ChartOfAccountsComponent } from './chart-of-accounts.component';
 import { AssetsComponent } from './assets/assets.component';
 import { RoleGuardService } from 'src/app/shared/services/role-guard';
-import { accountingNewMaster, ApplicationModule } from 'src/app/shared/applicationpagesenum';
+import {
+  accountingNewMaster,
+  ApplicationModule
+} from 'src/app/shared/applicationpagesenum';
 import { LiabilitiesComponent } from './liabilities/liabilities.component';
 import { FundsComponent } from './funds/funds.component';
 import { IncomeComponent } from './income/income.component';
@@ -16,6 +19,11 @@ const routes: Routes = [
     path: '',
     component: ChartOfAccountsComponent,
     children: [
+      {
+        path: '',
+        redirectTo: 'assets',
+        pathMatch: 'full'
+      },
       {
         path: 'assets',
         component: AssetsComponent,
