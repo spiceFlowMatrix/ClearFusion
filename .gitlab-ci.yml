@@ -36,7 +36,8 @@ build-oldui:
         - cd HumanitarianAssistance.WebApi/OldUI/
         - npm install
     script:
-        - npm run build --prod
+       # - npm run build --prod
+       - HumanitarianAssistance.WebApi/OldUI/node_modules/@angular/cli/bin/ng build --progress false --prod
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/OldUI/dist/
