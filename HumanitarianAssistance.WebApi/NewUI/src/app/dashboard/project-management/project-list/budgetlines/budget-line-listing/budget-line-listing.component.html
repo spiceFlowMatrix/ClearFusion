@@ -118,7 +118,7 @@
                         {{ item.InitialBudget }}
                       </td>
                       <td width="10%">
-                        {{ item.Expenditure }}
+                        {{ item.Expenditure | number:'2.1-3' }}
                       </td>
 
                       <td width="1%" class="text-center"><i *ngIf="selectedBudgetId == item.BudgetLineId"

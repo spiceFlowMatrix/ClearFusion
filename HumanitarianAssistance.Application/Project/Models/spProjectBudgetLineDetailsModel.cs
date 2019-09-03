@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HumanitarianAssistance.Application.Project.Models
 {
-    public class ProjectBudgetLineDetailsModel
+    public class spProjectBudgetLineDetailsModel
     {
         public long? BudgetLineId { get; set; }
         public string BudgetCode { get; set; }
@@ -16,9 +16,8 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string ProjectJobCode { get; set; }
         public int? CurrencyId { get; set; }
         public string CurrencyName { get; set; }
-        public string BudgetCodeName { get; set; }
         public double? DebitPercentage { get; set; }
         public DateTime? CreatedDate { get; set; }
-        public double? Expenditure { get; set; } 
+        public double? Expenditure { get; set; }
     }
 }

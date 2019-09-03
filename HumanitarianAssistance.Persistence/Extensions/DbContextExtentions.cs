@@ -79,7 +79,7 @@ namespace HumanitarianAssistance.Persistence.Extensions
                 {
                     command.Connection.Close();
                 }
-            }
+            } 
         }
     }
 

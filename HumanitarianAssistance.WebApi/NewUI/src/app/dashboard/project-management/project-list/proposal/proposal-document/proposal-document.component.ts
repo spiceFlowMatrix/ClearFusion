@@ -86,7 +86,7 @@ export class ProposalDocumentComponent implements OnInit, OnDestroy {
                       ProposalWebLink: element.ProposalWebLink,
                       ProposalExtType: element.ProposalExtType,
                       UserName: element.UserName,
-                      CreatedDate: StaticUtilities.setLocalDate(element.CreatedDate),
+                      CreatedDate: StaticUtilities.setLocalDate(element.CreatedDate ),
                       ProposalDocumentType: this.getFileTypeName(
                         element.ProposalDocumentTypeId
                       )
@@ -184,7 +184,7 @@ export class ProposalDocumentComponent implements OnInit, OnDestroy {
                 }
 
               }
-            } else if (res.StatusCode === 400) {
+            } else if (res.StatusCode === 4440) {
               this.toastr.warning(res.Message);
             }
 
