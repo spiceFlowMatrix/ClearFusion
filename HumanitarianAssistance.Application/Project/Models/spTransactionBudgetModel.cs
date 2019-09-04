@@ -11,5 +11,6 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string CurrencyName { get; set; }
         public int? CurrencyId { get; set; }
         public DateTime? TransactionDate { get; set; }
+        public DateTime? CreatedDate { get; set; }  
     }
 }

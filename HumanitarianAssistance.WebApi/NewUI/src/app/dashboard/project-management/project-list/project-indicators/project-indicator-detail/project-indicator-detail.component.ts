@@ -80,7 +80,6 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
     }
 
   ngOnChanges() {
-    debugger;
   if (
     this.ProjectindicatorDetail != null &&
     this.ProjectindicatorDetail !== 0 &&
@@ -220,7 +219,6 @@ setIndicatorFormValue() {
           response => {
             this.indicatorQuestionList = [];
             if (response.statusCode === 200) {
-              debugger;
               response.data.forEach(element => {
                 this.indicatorQuestionList.push(element);
                 });
@@ -251,7 +249,6 @@ setIndicatorFormValue() {
 
   //#region "openHiringRequestDialog"
   openIndicatorDialog(): void {
-    debugger;
     // NOTE: It passed the data into the Add Activity Model
     const dialogRef = this.dialog.open(AddProjectIndicatorComponent, {
       width: '550px',
@@ -286,7 +283,6 @@ onQuestionsClick(){
 
 //#region "openHiringRequestDialog"
 openQuestionDialog(): void {
-  debugger;
   // NOTE: It passed the data into the Add Activity Model
   const dialogRef = this.dialog.open(AddQuestionsDialogComponent, {
     width: '550px',
@@ -310,7 +306,6 @@ openQuestionDialog(): void {
 
 //#region "Listupdate After update"
 OnQuestionListRefresh(event: IQuestionDetailModel) {
-  debugger
   this.indicatorQuestionList.unshift(event);
 }
 //#endregion

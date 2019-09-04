@@ -100,7 +100,6 @@ export class JobHiringDetailsComponent implements OnInit {
   //#endregion
 
   onOfficeSelected(officeId: number) {
-    debugger
     this.selectedOffice = officeId
     this.getJobHiringDetails();
 }
@@ -116,7 +115,6 @@ export class JobHiringDetailsComponent implements OnInit {
 
   //#region "Get All Office"
   getOfficeCodeList() {
-    debugger;
     this.jobHiringService
       .GetAllDetails(
         this.setting.getBaseUrl() + GLOBAL.API_OfficeCode_GetAllOfficeDetails
@@ -245,7 +243,6 @@ export class JobHiringDetailsComponent implements OnInit {
 
   //#region Get All Job Hiring
   getJobHiringDetails() {
-    debugger
     const officeId = this.selectedOffice;
 
     // tslint:disable-next-line:radix
