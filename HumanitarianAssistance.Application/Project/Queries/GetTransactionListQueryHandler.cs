@@ -45,7 +45,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     Credit = b.Credit,
                     Debit = b.Debit,
                     TransactionDate = b.TransactionDate,
-                    UserName = request.UserName
+                    UserName = request.UserName,
+                    CreatedDate = b.CreatedDate
                 }).ToList();
 
                 response.data.TransactionBudgetModelList = budgetDetaillist;
