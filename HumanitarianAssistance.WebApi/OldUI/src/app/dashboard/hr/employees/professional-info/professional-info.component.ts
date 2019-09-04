@@ -588,14 +588,17 @@ export class ProfessionalInfoComponent implements OnInit {
       DepartmentId: value.DepartmentId,
       DesignationId: value.DesignationId,
       EmployeeContractTypeId: value.EmployeeContractTypeId,
-      HiredOn: ((value.HiredOn == null || value.HiredOn == undefined || value.HiredOn == '') && value.EmployeeTypeId == EmployeeType.Prospective) ? new Date() : value.HiredOn,
-        FiredOn: ((value.FiredOn == null || value.FiredOn == undefined || value.FiredOn == '') && value.EmployeeTypeId == EmployeeType.Terminated) ? new Date() : value.FiredOn,
+      HiredOn: ((value.HiredOn == null || value.HiredOn === undefined ||
+        value.HiredOn === '') && value.EmployeeTypeId === EmployeeType.Prospective) ? new Date() : value.HiredOn,
+        FiredOn: ((value.FiredOn == null || value.FiredOn === undefined ||
+          value.FiredOn === '') && value.EmployeeTypeId === EmployeeType.Terminated) ? new Date() : value.FiredOn,
       FiredReason: value.FiredReason,
       ResignationOn: value.ResignationOn,
       ResignationReason: value.ResignationReason,
       JobDescription: value.JobDescription,
       TrainingBenefits: value.TrainingBenefits,
-      EmployeeId: this.employeeId
+      EmployeeId: this.employeeId,
+      AttendanceGroupId: value.AttendanceGroupId
     };
 
     this.popupProfesionalinfoVisible = true;

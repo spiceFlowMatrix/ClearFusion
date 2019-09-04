@@ -35,6 +35,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                                                                                   .Where(x => x.OfficeId == request.OfficeId &&
                                                                                                   x.Month == request.Month && x.Year == request.Year 
                                                                                                   && x.IsDeleted == false && x.IsApproved == false 
+                                                                                                  && x.EmployeeDetails.EmployeeTypeId != (int)EmployeeTypeStatus.Terminated
+                                                                                                  && x.EmployeeDetails.EmployeeProfessionalDetail.EmployeeTypeId != (int)EmployeeTypeStatus.Terminated 
                                                                                                   && x.EmployeeDetails.IsDeleted== false)
                                                                                                   .ToListAsync();
 

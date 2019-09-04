@@ -52,10 +52,14 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
   @Input() districtMultiSelectList: any[] = [];
   @Input() districtLoaderFlag: boolean;
 
+  @Output() updateActivity = new EventEmitter<any>();
+  @Output() refreshProjectSummary = new EventEmitter();
+
   extensionList: IActivityExtensionMode[] = [];
 
   projectActivityForm: FormGroup;
   activityListLoader = false;
+  editActivityLoader = false;
 
   // lib datasource
   tableHeaderList: string[] = [
@@ -251,14 +255,6 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
                 Description: element.Description
               });
 
-              // this.extensionList.map(x => {
-              //   if (x.StartDate != null) {
-              //     x.StartDate = ;
-              //   }
-              //   if (x.EndDate != null) {
-              //     x.EndDate = this.datePipe.transform( x.EndDate, 'dd-MM-yyyy');
-              //   }
-              // });
             });
           }
         },
@@ -288,12 +284,74 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
   }
   //#endregion
 
+
+  //#region "editProjectActivity"
+  editProjectActivity(data: any) {
+    this.editActivityLoader = true;
+
+    const projectActivityDetail: IProjectActivityDetail = {
+      // Planning
+      ActivityId: data.ActivityId,
+      ActivityName: data.ActivityName,
+      ActivityDescription: data.ActivityDescription,
+      PlannedStartDate: data.PlannedStartDate,
+      PlannedEndDate: data.PlannedEndDate,
+      BudgetLineId: data.BudgetLineId,
+      EmployeeID: data.EmployeeID,
+      OfficeId: data.OfficeId,
+      StatusId: data.StatusId,
+      Recurring: data.Recurring,
+      RecurringCount: data.RecurringCount,
+      RecurrinTypeId: data.RecurrinTypeId,
+      DistrictID: data.DistrictID,
+      ProvinceId: data.ProvinceId,
+      ParentId: data.ParentId,
+
+      ActualStartDate: data.ActualStartDate,
+      ActualEndDate: data.ActualEndDate,
+
+    };
+
+    this.activitiesService
+      .EditProjectActivity(projectActivityDetail)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        (response: IResponseData) => {
+          if (response.statusCode === 200) {
+            this.toastr.success('Activity updated successfully');
+            this.updateActivity.emit(projectActivityDetail);
+          } else {
+            this.toastr.error(response.message);
+          }
+          this.editActivityLoader = false;
+          this.refreshProjectSummary.emit();
+        },
+        error => {
+          this.toastr.error('Someting went wrong');
+          this.editActivityLoader = false;
+        }
+      );
+  }
+  //#endregion
+
+
   //#region  "emit province detailchanges"
   onProvinceDetailChange(event: any) {
     this.selectedProvinceId.emit(event.value);
   }
   //#endregion
 
+  //#region "onSaveProjectActivity"
+  onSaveProjectActivity() {
+    if (
+      this.projectActivityForm.valid
+    ) {
+      this.editProjectActivity(this.activityDetail);
+    } else {
+      this.toastr.warning('Please fill the correct values');
+    }
+  }
+  //#endregion
 
 
   //#region "onDistrictDetailsChange"

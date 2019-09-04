@@ -5,7 +5,7 @@
       <!-- ActivityName -->
     </div>
     <div class="col-sm-2">
-      <button
+      <!-- <button
     mat-raised-button
     color="primary"
         [disabled]="editActivityLoader"
@@ -18,7 +18,7 @@
       <mat-spinner [diameter]="15"></mat-spinner>
     </span>
     Save
-  </button>
+  </button> -->
       <br />
       <br />
     </div>
@@ -35,6 +35,8 @@
       [recurringTypeList]="recurringTypeList"
       [districtLoaderFlag]="districtLoaderFlag"
       (selectedProvinceId)="onSelectedProvinceId($event)"
+      (updateActivity)="updateActivityEvent($event)"
+      (refreshProjectSummary)="refreshProjectSummaryEvent()"
 
     ></app-project-planning>
     <br />

@@ -104,7 +104,27 @@ DeleteQuestionDetail(id: number) {
   return this.globalService
   .post(
     this.appurl.getApiUrl() +
-      GLOBAL.API_Project_GetIndicatorQuestionDetailById,
+      GLOBAL.API_Project_DeleteIndicatorQuestionDetail,
+    id
+  )
+  .pipe(
+    map(x => {
+      const responseData: IResponseData = {
+        data: x.ResponseData,
+        statusCode: x.StatusCode,
+        message: x.Message
+      };
+      return responseData;
+    })
+  );
+}
+//#endregion
+//#region "DeleteIndicatorDetail"
+DeleteIndicatorDetail(id: number) {
+  return this.globalService
+  .post(
+    this.appurl.getApiUrl() +
+      GLOBAL.API_Project_DeleteProjectIndicatorDetail,
     id
   )
   .pipe(

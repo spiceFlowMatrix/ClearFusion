@@ -33,15 +33,19 @@ namespace HumanitarianAssistance.WebApi.Controllers.Chat
         public async Task<ApiResponse> AddMessage([FromBody]AddMessageCommand command)
         {
 
-            ApiResponse Response = null;
+            ApiResponse Response = new ApiResponse();
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
             if (userId != null)
             {
                 command.CreatedById = userId;
                 command.IsDeleted = false;
                 command.CreatedDate = DateTime.UtcNow;
+
                 Response = await _mediator.Send(command);
+
                 command = (AddMessageCommand)Response.ResponseData;
+
                 if (Response.StatusCode == 200)
                 {
                     ChatModel obj = new ChatModel()

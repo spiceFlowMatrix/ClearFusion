@@ -138,7 +138,7 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
   Arealist: AreaModel[];
   Area: string[];
   Program: string[];
-  Sector: string[];
+  Sector: string;
   Programvalue: any[];
   Areavalue: any[];
 
@@ -271,20 +271,10 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
     this.initProjectSectorModel();
     this.GetOtherProjectDetailById(this.ProjectId);
 
-
-     // call to selected sect
-     this.getProjectSectorById(this.ProjectId);
-     this.getProjectProgramById(this.ProjectId);
-     this.getProjectAreaById(this.ProjectId);
-
     this.StartDate = new Date();
     this.EndDate = new Date();
   }
 
-  // ngOnchanges() {
-  //   this.getProjectSectorById(this.ProjectId);
-  //   this.getProjectProgramById(this.ProjectId);
-  // }
   //#region  initialize model
   initProjectOtherDetail() {
     this.projectotherDetail = {
@@ -425,6 +415,7 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
                 )
               );
             }
+            this.getProjectProgramById(this.ProjectId);
             this.programListFlag = false;
           }
         },
@@ -606,6 +597,7 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
                   AreaName ? this._filterArea(AreaName) : this.Arealist.slice()
                 )
               );
+               this.getProjectAreaById(this.ProjectId);
               this.areaListFlag = false;
             }
             if (data.StatusCode === 400) {
@@ -748,9 +740,6 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
         data => {
           if (data != null) {
             if (data.data.sectorDetails != null) {
-
-
-              console.log(data.data.sectorDetails);
               data.data.sectorDetails.forEach(element => {
                 this.Sectorlist.push({
                   SectorId: element.SectorId,
@@ -770,6 +759,7 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
                 )
               );
             }
+            this.getProjectSectorById(this.ProjectId);
             this.sectorListFlag = false;
           }
         },
@@ -862,23 +852,9 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
           if (data != null) {
             if (data.data.projectSector != null && data.StatusCode === 200) {
               const filtered: any[] = [];
-
-              this._cdr.detectChanges();
-              for (let i = 0; i < obj.length; i++) {
-                if (data.data.projectSector.SectorId === obj[i].SectorId) {
-                  filtered.push(obj[i]);
-                }
-              }
-
-              this._cdr.detectChanges();
-              if (filtered.length > 0) {
-                this._cdr.detectChanges();
-                this.Sector = filtered[0].SectorName;
-                console.log(this.Sector);
-                // return this.Sectorvalue = this.getSectorSaveValue(filtered[0].SectorName);
-              }
-              this._cdr.detectChanges();
-
+              const _sector = data.data.projectSector;
+              const index = this.Sectorlist.findIndex(x=>x.SectorId == _sector.SectorId);
+              this.Sector = this.Sectorlist[index].SectorName;
             }
             if (data.StatusCode === 400) {
               this.toastr.error(data.Message);
@@ -1026,7 +1002,6 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
 
   getAllProvinceListByCountryId(model: any) {
     const id = model;
-    console.log(id);
     this.provinceDistrictFlag = true;
     this.ProvinceSelectionList = [];
     this.projectListService
@@ -2260,14 +2235,11 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
     // set your pdf values here
 
     this.setProjectOtherDetailValueForPdf();
-
-    console.log(this.projectOtherDetailPdf);
-
     this.pDetailPdfService.onExportPdf(this.projectOtherDetailPdf);
   }
   //#endregion
 
   ngOnDestroy() {
-    this._cdr.detach();
-  }
+    // this._cdr.detach();
+}
 }
