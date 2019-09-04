@@ -16,6 +16,7 @@ export class SearchDropdownComponent implements OnInit, OnChanges {
   @ViewChild('allSelected') private allSelected: MatOption;
 
   @Input() dataSource: IDataSource[] = [];
+  @Input() required = false;
   @Input() placeholder = '';
   @Input() placeholderSearchLabel = 'Search ...';
   @Input() multiSelect: boolean;

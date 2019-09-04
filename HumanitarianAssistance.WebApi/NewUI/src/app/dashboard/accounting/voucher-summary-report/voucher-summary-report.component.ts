@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ViewChild } from '@angular/core';
 import { VoucherSummaryReportService } from './voucher-summary-report.service';
 import { VoucherSummaryFilterModel, ReportVoucherModel, BudgetlineListModel,
   VoucherSummaryTransactionModel } from './voucher-summary-model';
@@ -17,6 +17,7 @@ import { BudgetLineService } from '../../project-management/project-list/budgetl
 import { IDataSource, IOpenedChange } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { IResponseData } from '../vouchers/models/status-code.model';
+import { VoucherSummaryFilterComponent } from './voucher-summary-filter/voucher-summary-filter.component';
 
 @Component({
   selector: 'app-voucher-summary-report',
@@ -24,6 +25,10 @@ import { IResponseData } from '../vouchers/models/status-code.model';
   styleUrls: ['./voucher-summary-report.component.scss']
 })
 export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
+
+  //#region "variables"
+
+  @ViewChild(VoucherSummaryFilterComponent) filter: VoucherSummaryFilterComponent;
 
   // filter
   filterData: VoucherSummaryFilterModel;
@@ -68,6 +73,9 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
   // subscription destroy
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
+  //#endregion
+
+
   constructor(
     private voucherSummaryService: VoucherSummaryReportService,
     private appUrl: AppUrlService,
@@ -97,13 +105,11 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
       {id: 2, name: 'Consolidated'}
     ];
 
-    // this.getVoucherSummaryList(data);
     this.GetAllCurrency();
     this.getOfficeList();
     this.getInputLevelAccountList();
     this.getJournalList();
     this.getProjectList();
-    // this.getProjectJobList();
   }
 
   onInitialize() {
@@ -123,6 +129,9 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
 
   //#region "getVoucherSummaryList"
   getVoucherSummaryList(data: VoucherSummaryFilterModel) {
+
+    this.filter.filterLoaderFlag = true;
+
     this.voucherSummaryReport = [];
     this.voucherSummaryService.voucherSummaryReportList(data).pipe(
       takeUntil(this.destroyed$)
@@ -141,8 +150,11 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
 
           this.totalCount = response.total;
         }
+        this.filter.filterLoaderFlag = false;
       },
-      error => {}
+      error => {
+        this.filter.filterLoaderFlag = false;
+      }
     );
   }
   //#endregion
@@ -162,6 +174,10 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
                 CurrencyCode: element.CurrencyCode
               });
             });
+
+            // child component: set selected currency
+            this.filter.selectedCurrency = this.currencyList[0].CurrencyId;
+
           }
         }
       } else if (data.StatusCode === 400) {
@@ -188,6 +204,9 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
               Name: element.OfficeName
             });
           });
+
+            // child component: set selected office
+            this.filter.officeFilter = this.multiOfficesList.map(x => x.Id);
         }
       },
       error => {}
@@ -216,6 +235,9 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
               Name: element.AccountName
             });
           });
+
+            // child component: set selected account
+            this.filter.accountFilter = this.multiAccountsList.map(x => x.Id);
         }
       },
       error => {}
@@ -244,6 +266,9 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
               Name: element.JournalName
             });
           });
+
+            // child component: set selected joural
+            this.filter.journalFilter = this.multiJournalList.map(x => x.Id);
         }
       },
       error => {}
@@ -273,6 +298,7 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
               Name: element.ProjectCode + '-' + element.ProjectName
             });
           });
+
         }
       },
       error => {}

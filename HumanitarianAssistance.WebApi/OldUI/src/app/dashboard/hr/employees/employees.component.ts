@@ -12,6 +12,8 @@ import { AppSettingsService } from '../../../service/app-settings.service';
 import { UploadModel } from '../../../shared/FileManagement/file-management-model';
 import { DocumentFileTypes, FileSourceEntityTypes } from '../../../shared/enums';
 import { FileManagementService } from '../../../shared/FileManagement/file-management.service';
+import { JobHiringService } from '../job-hiring-details/job-hiring.service';
+import { IDatasource } from '../../../shared/pipes/job-grade.pipe';
 
 @Component({
   selector: 'app-employees',
@@ -25,6 +27,7 @@ export class EmployeesComponent implements OnInit {
   addEmployeeLoadingPopup = false;
   isEditingAllowed = false;
   selectedOffice = null;
+  jobGradeTypeDropdown: IDatasource[];
 
   officeDropdownList: any[] = [];
   documentTypeList: any;
@@ -161,6 +164,7 @@ export class EmployeesComponent implements OnInit {
     this.getCountryType();
     this.GetFinancialYearDropdown();
     this.GetLeaveReasonTypeDropdown();
+    this.getAllJobGrade();
     this.commonService.getEmployeeOfficeId().subscribe(() => {
       this.Flag = 0; // to set tabs 1
       this.tabOnClick(this.tabEventValue);
@@ -180,7 +184,8 @@ export class EmployeesComponent implements OnInit {
     private _DomSanitizer: DomSanitizer,
     public commonService: CommonService,
     private codeservice: CodeService,
-    private fileManagementService: FileManagementService
+    private fileManagementService: FileManagementService,
+    private jobHiringService: JobHiringService
   ) {
     this.allFormInitialize();
     this.firstTabValue = this.showInfoTabsMain[0].text;
@@ -230,7 +235,8 @@ export class EmployeesComponent implements OnInit {
       Remarks: null,
       ReferBy: null,
       OfficeId: null,
-      TinNumber: null
+      TinNumber: null,
+      GradeId: null
     };
 
     this.empDocuments = {
@@ -550,7 +556,8 @@ export class EmployeesComponent implements OnInit {
       PassportNo: this.showData.PassportNo,
       IssuePlace: this.showData.IssuePlace,
       BirthPlace: this.showData.BirthPlace,
-      TinNumber: this.showData.TinNumber
+      TinNumber: this.showData.TinNumber,
+      GradeId: this.showData.GradeId
     };
 
     this.popupEmployeeInfoVisible = true;
@@ -1028,19 +1035,19 @@ export class EmployeesComponent implements OnInit {
           data => {
             if (
               data.StatusCode === 200 &&
-              data.data.EmployeeDetailList != null
+              data.data.EmployeeDetailList != null && data.data.EmployeeDetailList.length > 0
             ) {
               this.employeeListDetail = [];
               data.data.EmployeeDetailList.forEach(element => {
                 this.employeeListDetail.push(element);
               });
+              debugger;
               this.showData = this.employeeListDetail[0];
               // this.showData.EmployeePhoto =
               //   this.showData.DocumentGUID != null &&
               //     this.showData.DocumentGUID !== ''
               //     ? this.setting.getDocUrl() + this.showData.DocumentGUID
               //     : null;
-              
               this.getAllDocumentDetails(this.employeeId);
               localStorage.setItem(
                 'SelectedEmployee',
@@ -1112,7 +1119,8 @@ export class EmployeesComponent implements OnInit {
       BirthPlace: value.BirthPlace,
       MaritalStatusId: value.MaritalStatus,
       PlaceOfBirth: value.BirthPlace,
-      TinNumber: value.TinNumber
+      TinNumber: value.TinNumber,
+      GradeId: value.GradeId
     };
 
     this.hrService
@@ -1151,6 +1159,7 @@ export class EmployeesComponent implements OnInit {
 
   //#region "EDIT EMPLOYEE"
   EditEmployeeDetails(value) {
+    debugger;
     this.editEmployeePopupLoading = true;
 
     const editGeneralInfo: any = {
@@ -1182,7 +1191,8 @@ export class EmployeesComponent implements OnInit {
       IssuePlace: value.IssuePlace,
       BirthPlace: value.BirthPlace,
       MaritalStatus: value.MaritalStatus,
-      TinNumber: value.TinNumber
+      TinNumber: value.TinNumber,
+      GradeId: value.GradeId
     };
     this.hrService
       .EditEmployee(
@@ -1363,9 +1373,11 @@ export class EmployeesComponent implements OnInit {
   }
 
   fireNotification(model) {
+    if (model !== undefined) {
     model.CreatedDate = new Date();
     model.NotificationPath = './hr/employees';
     this.commonService.sendMessage(model);
+    }
   }
 
   //#region "Get All Holidays & Already applied leave"
@@ -1695,6 +1707,34 @@ export class EmployeesComponent implements OnInit {
   }
   //#endregion
 
+  //#region "Get All JobGrade"
+  getAllJobGrade() {
+    this.jobHiringService
+      .GetAllDetails(this.setting.getBaseUrl() + GLOBAL.API_HR_GetAllJobGrade)
+      .subscribe(
+        data => {
+          this.jobGradeTypeDropdown = [];
+          data.data.JobGradeList.forEach(element => {
+            this.jobGradeTypeDropdown.push({
+              Id: element.GradeId,
+              Name: element.GradeName
+            });
+          });
+        },
+        error => {
+          if (error.StatusCode === 500) {
+            this.toastr.error('Internal Server Error....');
+          } else if (error.StatusCode === 401) {
+            this.toastr.error('Unauthorized Access Error....');
+          } else if (error.StatusCode === 403) {
+            this.toastr.error('Forbidden Error....');
+          } else {
+          }
+        }
+      );
+  }
+  //#endregion "Get All JobGrade"
+
   onFieldDataChanged(e) {
     if (e.dataField === 'Phone') {
       if (e.value !== undefined) {
@@ -1760,6 +1800,7 @@ export class GeneralShowData {
   IssuePlace: string;
   MaritalStatus: number;
   TinNumber: string;
+  GradeId: number;
 }
 
 export class LeaveInfoData {

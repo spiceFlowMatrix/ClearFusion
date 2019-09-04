@@ -1,5 +1,5 @@
 <mat-form-field class="example-full-width">
-  <mat-select [placeholder]="placeholder" [multiple]="multiSelect" [(value)]="selectedValue" (openedChange)="onOpenedChange($event)"
+  <mat-select [placeholder]="placeholder" [required]="required" [multiple]="multiSelect" [(value)]="selectedValue" (openedChange)="onOpenedChange($event)"
     (selectionChange)="onSelectionChanged()">
 
     <ngx-mat-select-search [formControl]="dataSourceFilterCtrl" [placeholderLabel]="placeholderSearchLabel"
