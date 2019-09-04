@@ -109,10 +109,12 @@ export class LedgerComponent implements OnInit {
   ngOnInit() {
     this.initForm();
 
+    // get all api response
     const currencyRequest = this.getCurrencyCodeListResponse();
     const officeRequest = this.getOfficeCodeListResponse();
     const accountResponse = this.GetAccountDetailsResponse();
 
+    // perform filter when we get all api responses 
     forkJoin([currencyRequest, officeRequest, accountResponse]).subscribe(
       results => {
         this.getCurrencyCodeList(results[0]);
