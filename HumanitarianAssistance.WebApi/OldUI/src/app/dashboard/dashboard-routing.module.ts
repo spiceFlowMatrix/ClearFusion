@@ -37,18 +37,6 @@ const routes: Routes = [
         }
       },
       {
-        path: 'project-management',
-        loadChildren:
-          './project-management/project-management.module#ProjectManagementModule',
-        canActivate: [NgxPermissionsGuard],
-        data: {
-          permissions: {
-            // only: ['Admin', 'SuperAdmin', 'Project Manager'],
-            // except: ['Guest']
-          }
-        }
-      },
-      {
         path: 'hr',
         loadChildren: './hr/hr.module#HrModule',
         canActivate: [NgxPermissionsGuard],

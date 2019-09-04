@@ -7,7 +7,7 @@ import { ICurrencyList } from 'src/app/dashboard/accounting/gain-loss-report/gai
 export class CurrencyCodePipe implements PipeTransform {
 
   transform(value: number, currencyList: ICurrencyList[]): any {
-    if (value !== null && currencyList.length > 0) {
+    if (value !== null && value !== undefined && currencyList.length > 0) {
       if (currencyList.findIndex(x => x.CurrencyId === value) > -1) {
         return currencyList.find(x => x.CurrencyId === value).CurrencyCode;
       }

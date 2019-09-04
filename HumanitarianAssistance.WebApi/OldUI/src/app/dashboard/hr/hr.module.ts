@@ -74,6 +74,7 @@ import { HealthComponent } from './employees/health/health.component';
 import { ContractInfoComponent } from './employees/contract-info/contract-info.component';
 import { EmployeeSalarySlipComponent } from './employee-salary/employee-salary-slip/employee-salary-slip.component';
 import { FileManagementService } from '../../shared/FileManagement/file-management.service';
+import { JobGradePipe } from '../../shared/pipes/job-grade.pipe';
 
 @NgModule({
   declarations: [
@@ -107,7 +108,8 @@ import { FileManagementService } from '../../shared/FileManagement/file-manageme
     ProfessionalMoreInfoComponent,
     HealthComponent,
     ContractInfoComponent,
-    EmployeeSalarySlipComponent
+    EmployeeSalarySlipComponent,
+    JobGradePipe
   ],
   imports: [
     CalendarModule,

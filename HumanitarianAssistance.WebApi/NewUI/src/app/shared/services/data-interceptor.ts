@@ -41,15 +41,15 @@ export class DataInterceptor implements HttpInterceptor {
     }
 
     // PUT
-    // if (req.method === 'PUT') {
-    //   debugger;
-    //   req = req.clone({
-    //     headers: req.headers
-    //       // .set('Accept', 'application/json')
-    //               //  .append('Content-Type', 'text/plain')
-    //   });
-    //   return next.handle(req);
-    // }
+    if (req.method === 'PUT') {
+      debugger;
+      req = req.clone({
+        headers: req.headers
+           // .set('Accept', 'application/json')
+                  //  .append('Content-Type', 'text/plain')
+      });
+      return next.handle(req);
+    }
 
     // DELETE
     if (req.method === 'DELETE') {
