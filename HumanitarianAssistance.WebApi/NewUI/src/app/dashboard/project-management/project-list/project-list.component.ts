@@ -55,12 +55,12 @@ export class ProjectListComponent implements OnInit {
       Text: 'Proposal Report',
       Link: '/project/proposal-report'
     },
-    {
-      Id: 6,
-      PageId: projectPagesMaster.ProjectIndicators,
-      Text: 'Project Indicators',
-      Link: '/project/project-indicators'
-    }
+    // {
+    //   Id: 6,
+    //   PageId: projectPagesMaster.ProjectIndicators,
+    //   Text: 'Project Indicators',
+    //   Link: '/project/project-indicators'
+    // }
   ];
   authorizedMenuList: IMenuList[] = [];
 

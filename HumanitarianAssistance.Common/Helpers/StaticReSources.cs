@@ -420,6 +420,8 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string LogisticsControlNotfound = "Logistics Control not found";
         public const string ActivitiesControlNotfound = "Activities Control not found";
         public const string HiringControlNotfound = "Hiring Control not found";
+        public const string IndicatorQuestionNotfound = "Indicator Question not found";
+
 
         public const string sameRoleAlreadyExistForTheUser = "Same Role already exist for this user";
         public const string NoTransactionToUpDate = "No Transaction To UpDate";
