@@ -130,6 +130,9 @@ export class LedgerComponent implements OnInit {
           OfficeIdList: this.selectedOffices
         };
         this.onApplyingFilter(obj);
+      },
+      error => {
+          this.toastr.error('Internal server error');
       }
     );
 
@@ -369,23 +372,11 @@ export class LedgerComponent implements OnInit {
             AccountName: element.AccountName
           });
         });
-        this.selectedAccounts.push(
-          response.data.AccountDetailList[
-            response.data.AccountDetailList.length - 1
-          ].AccountCode
-        );
 
-        // this.initialFlag += 1;
-        // if (this.initialFlag === 2) {
-        //   const obj = {
-        //     CurrencyId: this.selectedCurrency,
-        //     accountLists: this.selectedAccounts,
-        //     RecordType: this.defaultRecordType,
-        //     FromDate: null,
-        //     ToDate: null
-        //   };
-        //   this.onApplyingFilter(obj);
-        // }
+          this.accountDropdown.map(x => {
+            this.selectedAccounts.push(x.AccountCode);
+          });
+
       }
     } else {
       this.toastr.error(response.Message);
