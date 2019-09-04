@@ -103,7 +103,7 @@ export class HiringRequestsService {
   }
   //#endregion
 
-   //#region "AddbudgetLineDetailList"
+   //#region "AddHiringRequestDetail"
   AddHiringRequestDetail(data: IHiringRequestDetailModel) {
     return this.globalService
       .post(
@@ -142,7 +142,8 @@ export class HiringRequestsService {
     );
 }
 //#endregion
- //#region "EditHiringRequestDetail"
+
+//#region "EditCandidateDetail"
  EditCandidateDetail(data: CandidateDetailModel) {
   return this.globalService
     .post(

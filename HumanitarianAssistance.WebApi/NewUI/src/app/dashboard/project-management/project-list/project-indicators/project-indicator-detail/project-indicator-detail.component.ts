@@ -4,41 +4,37 @@ import {
   Input,
   Output,
   EventEmitter,
-  HostListener
+  HostListener,
+  OnChanges
 } from '@angular/core';
 
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ProjectListService } from 'src/app/dashboard/project-management/project-list/service/project-list.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { MatDialog } from '@angular/material/dialog';
 import { GLOBAL } from 'src/app/shared/global';
 import { ToastrService } from 'ngx-toastr';
-import { ProjectIndicatorModel, IndicatorDetailModel } from '../project-indicators-model';
+import {
+  ProjectIndicatorModel,
+  IndicatorDetailModel,
+  IQuestionDetailModel
+} from '../project-indicators-model';
+import { AddProjectIndicatorComponent } from '../add-project-indicator/add-project-indicator.component';
+import { AddQuestionsDialogComponent } from '../add-questions-dialog/add-questions-dialog.component';
+import { ProjectIndicatorService } from '../project-indicator.service';
+import { DeleteConfirmationComponent } from 'projects/library/src/lib/components/delete-confirmation/delete-confirmation.component';
+import { Delete_Confirmation_Texts } from 'src/app/shared/enum';
 
 @Component({
   selector: 'app-project-indicator-detail',
   templateUrl: './project-indicator-detail.component.html',
   styleUrls: ['./project-indicator-detail.component.scss']
 })
-export class ProjectIndicatorDetailComponent implements OnInit {
-
-  constructor(
-    public router: Router,
-    public dialog: MatDialog,
-    private fb: FormBuilder,
-    public projectListService: ProjectListService,
-    private appurl: AppUrlService,
-    public toastr: ToastrService
-  ) {
-    this.getScreenSize();
-  }
-
-  get questions(): FormArray {
-    return this.indicatorForm.get('questions') as FormArray;
-  }
-
-  indicatorDetail: ProjectIndicatorModel;
+export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
+  @Output() indicatorListRefresh = new EventEmitter();
+  @Input() ProjectindicatorDetail: any;
+  projectId: number;
 
   // screen
   scrollStyles: any;
@@ -46,8 +42,8 @@ export class ProjectIndicatorDetailComponent implements OnInit {
   screenWidth: any;
 
   // boolean flag
-  EditLoaderFlag= false;
-  NewIndicatorLoaderFlag= false;
+  EditLoaderFlag = false;
+  NewIndicatorLoaderFlag = false;
 
   // Input/Output properties
   @Input() indicatorId: number;
@@ -58,19 +54,80 @@ export class ProjectIndicatorDetailComponent implements OnInit {
   //#endregion
 
   public indicatorForm: FormGroup;
+  public questionForm: FormGroup;
+  questionDetailModel: IQuestionDetailModel;
+  indicatorQuestionList: IQuestionDetailModel[];
+  constructor(
+    public router: Router,
+    public dialog: MatDialog,
+    private fb: FormBuilder,
+    public projectListService: ProjectListService,
+    private appurl: AppUrlService,
+    public toastr: ToastrService,
+    private routeActive: ActivatedRoute,
+    public indicatorService: ProjectIndicatorService
+
+  ) {
+    this.getScreenSize();
+  }
+
+  ngOnInit() {
+    this.initializeModel();
+    this.routeActive.parent.params.subscribe(params => {
+      this.projectId = +params['id'];
+    });
+    this.initQuestionModel();
+    }
+
+  ngOnChanges() {
+  if (
+    this.ProjectindicatorDetail != null &&
+    this.ProjectindicatorDetail !== 0 &&
+    this.ProjectindicatorDetail !== undefined
+  ) {
+  this.setIndicatorFormValue();
+  this.GetIndicatorQuestionDetailById(this.ProjectindicatorDetail.ProjectIndicatorId);
+  }
+
+}
+
+
+initQuestionModel() {
+  this.questionForm = this.fb.group({
+    IndicatorQuestion: ['', Validators.required],
+    IndicatorQuestionId: null,
+    ProjectIndicatorId: null,
+    QuestionType: ['', Validators.required],
+    VerificationSources: this.fb.array([])
+  });
+
+  this.questionDetailModel = {
+    IndicatorQuestionId: null,
+    IndicatorQuestion: null,
+    QuestionType: null,
+    ProjectIndicatorId: null,
+    QuestionTypeName: null,
+    VerificationSources: []
+  };
+}
+
+// set popup value
+setIndicatorFormValue() {
+  this.indicatorForm = this.fb.group({
+    IndicatorName: this.ProjectindicatorDetail.IndicatorName,
+    Description : this.ProjectindicatorDetail.Description,
+    ProjectIndicatorId: this.ProjectindicatorDetail.ProjectIndicatorId
+  });
+}
+  get questions(): FormArray {
+    return this.indicatorForm.get('questions') as FormArray;
+  }
 
   initializeModel() {
     this.indicatorForm = this.fb.group({
-      indicatorName: ['', Validators.required],
-      id: 0,
-      questions: this.fb.array([])
+      ProjectIndicatorName: ['', Validators.required],
+      Description: ['', Validators.required]
     });
-
-    this.indicatorDetail = {
-      projectIndicatorCode: '',
-      projectIndicatorId: 0,
-      projectIndicatorName: ''
-    };
   }
 
   //#region "Dynamic Scroll"
@@ -92,10 +149,6 @@ export class ProjectIndicatorDetailComponent implements OnInit {
     // this.initializeModel();
   }
 
-  ngOnInit() {
-    this.initializeModel();
-  }
-
   createItem(): FormGroup {
     return this.fb.group({
       questionid: 0,
@@ -110,10 +163,10 @@ export class ProjectIndicatorDetailComponent implements OnInit {
   public OnSubmit(formValue: any) {
     this.EditLoaderFlag= true;
 
-    if (formValue.indicatorName != null && formValue.indicatorName != '') {
+    if (formValue.ProjectIndicatorName != null && formValue.ProjectIndicatorName != '') {
       const model: IndicatorDetailModel = {
         indicatorId: this.indicatorId,
-        indicatorName: formValue.indicatorName,
+        indicatorName: formValue.ProjectIndicatorName,
         indicatorQuestions: []
       };
 
@@ -129,102 +182,198 @@ export class ProjectIndicatorDetailComponent implements OnInit {
           this.appurl.getApiUrl() + GLOBAL.API_Project_EditProjectIndicator,
           model
         )
-        .subscribe(response => {
-          if(response.StatusCode == 200 && response.data.ProjectIndicator != null){
-
-            this.indicatorDetail.projectIndicatorCode= response.data.ProjectIndicator.IndicatorCode;
-            this.indicatorDetail.projectIndicatorId= response.data.ProjectIndicator.ProjectIndicatorId;
-            this.indicatorDetail.projectIndicatorName= response.data.ProjectIndicator.IndicatorName;
-            this.editIndicator.emit(this.indicatorDetail);
-            this.EditLoaderFlag= false;
-            this.toastr.success('Project Indicator Updated Successfully');
-          }
-        },
-          (error) => {
+        .subscribe(
+          response => {
+            if (
+              response.StatusCode == 200 &&
+              response.data.ProjectIndicator != null
+            ) {
+              this.EditLoaderFlag = false;
+              this.toastr.success('Project Indicator Updated Successfully');
+            }
+          },
+          error => {
             this.EditLoaderFlag = false;
             this.toastr.success('Something went wrong');
-          });
-    }
-    else{
+          }
+        );
+    } else {
       this.EditLoaderFlag = false;
     }
   }
 
-  ngOnChanges(): void {
+  // ngOnChanges(): void {
+  //   if (this.indicatorId !== 0 && this.indicatorId !== undefined) {
+  //     this.GetProjectIndicatorDetailById(this.indicatorId);
+  //   }
+  // }
 
-    if (this.indicatorId !== 0 && this.indicatorId !== undefined) {
-
-       this.GetProjectIndicatorDetailById(this.indicatorId);
-    }
+  GetIndicatorQuestionDetailById(id: number) {
+    this.NewIndicatorLoaderFlag = true;
+    if (id != 0 && id != undefined && id != null) {
+      this.indicatorService
+        .GetIndicatorQuestionById(
+          id
+        )
+        .subscribe(
+          response => {
+            this.indicatorQuestionList = [];
+            if (response.statusCode === 200) {
+              response.data.forEach(element => {
+                this.indicatorQuestionList.push(element);
+                });
+              }
+            if (response.statusCode === 400) {
+              this.toastr.error(response.message);
+              this.EditLoaderFlag = false;
+            }
+            this.EditLoaderFlag = false;
+          },
+          error => {
+            this.NewIndicatorLoaderFlag = false;
+            this.EditLoaderFlag = false;
+            this.toastr.error('Something went wrong');
+          }
+         );
+     }
   }
 
-  GetProjectIndicatorDetailById(id){
-    this.NewIndicatorLoaderFlag= true;
-
-    if(id !=0 && id !=undefined && id !=null){
-      this.projectListService
-      .GetProjectIndicatorById(
-        this.appurl.getApiUrl() + GLOBAL.API_Project_GetProjectIndicatorDetailById,id)
-       .subscribe(response => {
-        if (response.StatusCode == 200) {
-          this.initializeModel();
-          const control = <FormArray>this.indicatorForm.controls.questions;
-          response.data.IndicatorModel.IndicatorQuestions.forEach(x => {
-            control.push(
-              this.fb.group({
-              questionid: x.QuestionId,
-              question: x.QuestionText,
-              }));
-          });
-
-          this.indicatorForm.patchValue({
-            indicatorName: response.data.IndicatorModel.IndicatorName,
-            id: response.data.IndicatorModel.IndicatorId,
-          })
-          this.NewIndicatorLoaderFlag= false;
-          this.EditLoaderFlag= false;
-        }
-        if (response.StatusCode == 400) {
-          this.toastr.error(response.Message);
-          this.EditLoaderFlag= false;
-        }
-      },
-      (error) => {
-        this.NewIndicatorLoaderFlag = false;
-        this.EditLoaderFlag= false;
-        this.toastr.error('Something went wrong');
-      });
-    }
-  }
-
-  CreateProjectIndicatorOnAddNew() {
-    this.initializeModel();
-    this.indicatorDetail.projectIndicatorId = 0;
-    this.projectListService
-      .AddProjectIndicatorQuestions(
-        this.appurl.getApiUrl() + GLOBAL.API_Project_AddProjectIndicator
-      )
-      .subscribe(response => {
-        if (response.StatusCode == 200) {
-          this.indicatorId= response.data.ProjectIndicator.ProjectIndicatorId;
-
-          const projectIndicatorModel: ProjectIndicatorModel = {
-            projectIndicatorCode: response.data.ProjectIndicator.IndicatorCode,
-            projectIndicatorId:
-              response.data.ProjectIndicator.ProjectIndicatorId,
-            projectIndicatorName: ''
-          };
-
-          this.addIndicator.emit({
-            projectIndicator: projectIndicatorModel,
-            count: response.data.TotalCount
-          });
-        }
-      });
-  }
-
-  onDelete(index:number){
+  onDelete(index: number) {
     const control = <FormArray>this.indicatorForm.controls['questions'];
     control.removeAt(index);
   }
+
+  onIndicatorEditClick() {
+    this.openIndicatorDialog();
+  }
+
+  //#region "openHiringRequestDialog"
+  openIndicatorDialog(): void {
+    // NOTE: It passed the data into the Add Activity Model
+    const dialogRef = this.dialog.open(AddProjectIndicatorComponent, {
+      width: '550px',
+      autoFocus: false,
+      data: {
+        ProjectId: this.projectId,
+        ProjectindicatorDetail: this.indicatorForm.value
+      }
+    });
+
+    // refresh the list after new request created
+    dialogRef.componentInstance.onIndicatorListRefresh.subscribe(
+      (data: any) => {
+        this.OnQuestionListRefresh(data);
+        this.indicatorForm = this.fb.group({
+          IndicatorName: [data.IndicatorName],
+          Description: [data.Description],
+          ProjectIndicatorId: [data.ProjectIndicatorId]
+        });
+      }
+    );
+
+    dialogRef.afterClosed().subscribe(result => {});
+  }
+  //#endregion
+
+// #region "Question"
+// onQuestionsClick
+onQuestionsClick(){
+  this.openQuestionDialog();
+}
+
+//#region "openHiringRequestDialog"
+openQuestionDialog(): void {
+  // NOTE: It passed the data into the Add Activity Model
+  const dialogRef = this.dialog.open(AddQuestionsDialogComponent, {
+    width: '550px',
+    autoFocus: false,
+    data: {
+      ProjectId: this.projectId,
+      ProjectindicatorDetail: this.indicatorForm.value
+    }
+  });
+
+ // refresh the list after new question created
+  dialogRef.componentInstance.onAddQuestionListRefresh.subscribe(
+    (data: any) => {
+      this.OnQuestionListRefresh(data);
+    }
+  );
+
+  dialogRef.afterClosed().subscribe(result => {});
+}
+//#endregion
+
+//#region "Listupdate After update"
+OnQuestionListRefresh(event: IQuestionDetailModel) {
+  this.indicatorQuestionList.unshift(event);
+}
+//#endregion
+
+//#region "onDelete"
+onDeleteQuestion(item: any){
+  const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
+    width: '300px',
+    height: '250px',
+    data: 'delete',
+    disableClose: false
+  });
+
+  dialogRef.componentInstance.confirmMessage =
+    Delete_Confirmation_Texts.deleteText1;
+
+  dialogRef.componentInstance.confirmText =
+    Delete_Confirmation_Texts.yesText;
+
+  dialogRef.componentInstance.cancelText =
+    Delete_Confirmation_Texts.noText;
+
+  dialogRef.afterClosed().subscribe(result => {
+  });
+  dialogRef.componentInstance.confirmDelete.subscribe(res => {
+    dialogRef.componentInstance.isLoading = true;
+    if (
+      item.IndicatorQuestionId != null &&
+      item.IndicatorQuestionId !== undefined &&
+      item.IndicatorQuestionId !== 0
+    ) {
+      this.indicatorService
+        .DeleteQuestionDetail(
+          item.IndicatorQuestionId
+        )
+        .subscribe(response => {
+          // if (response.StatusCode === 200) {
+          //   this.totalcount = response.data.TotalCount;
+          //   this.deleteDonor.emit({ id: this.donorId, count: this.totalcount });
+          //   dialogRef.componentInstance.onCancelPopup();
+          //   this.toastr.success('Donor detail deleted successfully');
+
+          // }
+          dialogRef.componentInstance.isLoading = false;
+        },
+      error => {
+        this.toastr.error('Someting went wrong');
+        dialogRef.componentInstance.isLoading = false;
+      });
+    }
+  });
+}
+//#endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//#endregion
+
+
 }

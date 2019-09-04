@@ -3,7 +3,7 @@ using MediatR;
 
 namespace HumanitarianAssistance.Application.Project.Queries
 {
-    public class GetProjectIndicatorDetailByIdQuery : IRequest<ApiResponse>
+    public class GetIndicatorQuestionDetailByIdQuery : IRequest<ApiResponse>
     {
         public long indicatorId { get; set; }  
     }

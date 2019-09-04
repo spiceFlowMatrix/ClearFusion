@@ -82,6 +82,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { ProjectIndicatorsComponent } from './project-list/project-indicators/project-indicators.component';
 import { ProjectIndicatorDetailComponent } from './project-list/project-indicators/project-indicator-detail/project-indicator-detail.component';
 import { ProposalDocumentComponent } from './project-list/proposal/proposal-document/proposal-document.component';
+import { AddProjectIndicatorComponent } from './project-list/project-indicators/add-project-indicator/add-project-indicator.component';
+import { AddQuestionsDialogComponent } from './project-list/project-indicators/add-questions-dialog/add-questions-dialog.component';
 
 @NgModule({
   imports: [
@@ -163,7 +165,9 @@ import { ProposalDocumentComponent } from './project-list/proposal/proposal-docu
     HiringRequestsListingComponent,
     AddCandidateDaialogComponent,
     EditCandidateDetailDialogComponent,
-    ProposalDocumentComponent
+    ProposalDocumentComponent,
+    AddProjectIndicatorComponent,
+    AddQuestionsDialogComponent
 
   ],
   providers: [
@@ -189,7 +193,9 @@ import { ProposalDocumentComponent } from './project-list/proposal/proposal-docu
     BudgetLineImportPopupLoaderComponent,
     AddHiringRequestsComponent,
     AddCandidateDaialogComponent,
-    EditCandidateDetailDialogComponent
+    EditCandidateDetailDialogComponent,
+    AddProjectIndicatorComponent,
+    AddQuestionsDialogComponent
   ]
 })
 export class ProjectManagementModule {}

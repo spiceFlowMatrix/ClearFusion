@@ -1,0 +1,73 @@
+<div>
+  <h1 mat-dialog-title>
+    New Question Form
+    <button mat-icon-button [mat-dialog-close]="data" class="pull-right">
+      <mat-icon aria-label="clear">clear</mat-icon>
+    </button>
+  </h1>
+  <form [formGroup]="questionForm" (ngSubmit)="OnSubmit(questionForm.value)">
+    <div mat-dialog-content>
+
+      <div class="col-sm-12">
+        <mat-form-field class="example-full-width">
+          <input matInput formControlName="IndicatorQuestion" placeholder="Question Name">
+        </mat-form-field>
+      </div>
+
+      <div class="col-sm-12">
+        <h5> Is this a Qualitative or Quantitative question?</h5>
+        <mat-radio-group aria-labelledby="example-radio-group-label"
+        class="example-radio-group" formControlName="QuestionType"
+          [value]="questionDetailModel.QuestionType">
+          <mat-radio-button class="example-radio-button" *ngFor="let item of questionType" [value]="item.Id">
+            {{ item.Name }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <br>
+      <br>
+      <div class="col-sm-12">
+        <h4>Verification Sources
+          <button mat-icon-button pTooltip="Add Verification Source" type="button" tooltipPosition="top"
+            (click)="addItem()" *ngIf="!verificationSounceLoaderFlag; else verificationSounceLoaderFlagTemplate">
+            <mat-icon aria-label="Add">add</mat-icon>
+          </button></h4>
+        <ng-template #verificationSounceLoaderFlagTemplate>
+          <div class="spinner_center padding_top_5 padding_bottom_5">
+            <mat-spinner [diameter]="25"></mat-spinner>
+          </div>
+        </ng-template>
+      </div>
+      <hr>
+      <div formArrayName="VerificationSources" *ngFor="let item of verificationSources.controls; let i = index;">
+        <div [formGroupName]="i" class="col-sm-11">
+          <mat-form-field class="example-full-width">
+            <textarea matInput formControlName="VerificationSourceName"
+              placeholder="Verification Source {{i+1}}"></textarea>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-1">
+          <mat-icon class="icon_cursor small_icon tp_15 icon_width" color="warn" (click)="onDelete(i)">
+            delete
+          </mat-icon>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div mat-dialog-actions class="pull-right">
+        <button mat-raised-button [mat-dialog-close]="data">Cancel</button>
+        <button mat-raised-button color="primary"
+          [disabled]="!questionForm.valid || EditLoaderFlag"
+          type="submit">
+          <span *ngIf="!EditLoaderFlag; else editIndicatorLoaderTemplate">Save</span>
+          <ng-template #editIndicatorLoaderTemplate>
+            <div class="spinner_center padding_top_5 padding_bottom_5">
+              <mat-spinner [diameter]="25"></mat-spinner>
+            </div>
+          </ng-template>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

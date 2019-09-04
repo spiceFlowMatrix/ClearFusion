@@ -158,7 +158,7 @@ onFilterApplied() {
 
   //#region "openHiringRequestDialog"
   openHiringRequestDialog(): void {
-    // NOTE: It passed the data into the Add Activity Model
+    // NOTE: It passed the data into the AddHiringRequestsComponent Model
     const dialogRef = this.dialog.open(AddHiringRequestsComponent, {
       width: '550px',
       autoFocus: false,

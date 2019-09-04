@@ -173,12 +173,12 @@ export class ProjectListService {
       Text: 'Hiring Requests',
       Link: 'hiring-request'
     },
-    {
-      Id: 9,
-      PageId: projectPagesMaster.ProjectIndicators,
-      Text: 'Project Indicators',
-      Link: 'project-indicators'
-    }
+    // {
+    //   Id: 9,
+    //   PageId: projectPagesMaster.ProjectIndicators,
+    //   Text: 'Project Indicators',
+    //   Link: 'project-indicators'
+    // }
   ];
 
   constructor(

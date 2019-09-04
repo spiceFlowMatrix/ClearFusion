@@ -34,6 +34,10 @@ export class JobHiringDetailsComponent implements OnInit {
 
   jobHiringForm: JobHiringDetailsModel;
   OfficeId: any;
+  selectedOffice: number;
+  officecodelist: any[];
+  officeDropdownList: any[] = [];
+
 
   // loader
   addJobHiringPopupLoading: boolean;
@@ -48,18 +52,16 @@ export class JobHiringDetailsComponent implements OnInit {
     this.initialize();
 
     // dropdowns
-    this.getOfficeCodeList();
     this.getAllProfession();
     this.getAllJobGrade();
 
     // dataSource
-    this.getJobHiringDetails();
   }
 
   ngOnInit() {
     // Office Id
+    this.getOfficeCodeList();
     this.commonService.getEmployeeOfficeId().subscribe(data => {
-      this.getJobHiringDetails();
     });
     this.isEditingAllowed = this.commonService.IsEditingAllowed(
       applicationPages.Jobs
@@ -97,6 +99,11 @@ export class JobHiringDetailsComponent implements OnInit {
   }
   //#endregion
 
+  onOfficeSelected(officeId: number) {
+    this.selectedOffice = officeId
+    this.getJobHiringDetails();
+}
+
   //#region  "onRowUpdating"
   logEvent(eventName: string, obj) {
     if (eventName === 'onRowUpdating') {
@@ -114,31 +121,47 @@ export class JobHiringDetailsComponent implements OnInit {
       )
       .subscribe(
         data => {
-          this.officeTypeDropdown = [];
-
-          const allOffices = [];
-          const officeIds: any[] =
-            localStorage.getItem('ALLOFFICES') != null
-              ? localStorage.getItem('ALLOFFICES').split(',')
-              : null;
+          this.officecodelist = [];
+          if (
+            data.StatusCode === 200 &&
+            data.data.OfficeDetailsList.length > 0
+        ) {
 
           data.data.OfficeDetailsList.forEach(element => {
-            allOffices.push(element);
-          });
+            this.officecodelist.push({
+                Office: element.OfficeId,
+                OfficeCode: element.OfficeCode,
+                OfficeName: element.OfficeName,
+                SupervisorName: element.SupervisorName,
+                PhoneNo: element.PhoneNo,
+                FaxNo: element.FaxNo,
+                OfficeKey: element.OfficeKey
+            });
+        });
 
-          officeIds.forEach(x => {
-            const officeData = allOffices.filter(
-              // tslint:disable-next-line:radix
-              e => e.OfficeId === parseInt(x)
-            )[0];
-            this.officeTypeDropdown.push(officeData);
-          });
+        const AllOffices = localStorage.getItem('ALLOFFICES').split(',');
 
-          // sort in Asc
-          this.commonService.sortDropdown(
-            this.officeTypeDropdown,
-            'OfficeName'
-          );
+        data.data.OfficeDetailsList.forEach(element => {
+            const officeFound = AllOffices.indexOf('' + element.OfficeId);
+            if (officeFound !== -1) {
+                this.officeDropdownList.push({
+                    OfficeId: element.OfficeId,
+                    OfficeCode: element.OfficeCode,
+                    OfficeName: element.OfficeName,
+                    SupervisorName: element.SupervisorName,
+                    PhoneNo: element.PhoneNo,
+                    FaxNo: element.FaxNo,
+                    OfficeKey: element.OfficeKey
+                });
+            }
+        });
+
+        this.selectedOffice =
+            (this.selectedOffice === null || this.selectedOffice == undefined)
+                    ? this.officeDropdownList[0].OfficeId
+                : this.selectedOffice;
+        }
+        this.getJobHiringDetails();
         },
         error => {
           if (error.StatusCode === 500) {
@@ -153,6 +176,11 @@ export class JobHiringDetailsComponent implements OnInit {
       );
   }
   //#endregion
+
+  
+
+
+
 
   //#region "Get All Profession"
   getAllProfession() {
@@ -215,13 +243,15 @@ export class JobHiringDetailsComponent implements OnInit {
 
   //#region Get All Job Hiring
   getJobHiringDetails() {
+    const officeId = this.selectedOffice;
+
     // tslint:disable-next-line:radix
-    this.OfficeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
+   // this.OfficeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
 
     this.jobHiringService
       .GetJobHiringDetailByOfficeId(
         this.setting.getBaseUrl() + GLOBAL.API_HR_GetAllJobHiringDetails,
-        this.OfficeId
+        officeId
       )
       .subscribe(
         data => {

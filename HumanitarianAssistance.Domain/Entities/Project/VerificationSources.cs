@@ -6,18 +6,15 @@ using System.Text;
 
 namespace HumanitarianAssistance.Domain.Entities.Project
 {
-    public class ProjectIndicatorQuestions : BaseEntity
+   public class VerificationSources: BaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1)]
+        public long VerificationSourceId { get; set; }
+        public string VerificationSourceName { get; set; }
+        [ForeignKey("IndicatorQuestionId")]
         public long IndicatorQuestionId { get; set; }
-        public string IndicatorQuestion { get; set; }
-        public int? QuestionType { get; set; }
-        public long ProjectIndicatorId { get; set; }
-        [ForeignKey("ProjectIndicatorId")]
-        public ProjectIndicators ProjectIndicators { get; set; }
-        public List<VerificationSources> VerificationSources { get; set; }
-
+        public ProjectIndicatorQuestions ProjectIndicatorQuestions { get; set; }
     }
 }
