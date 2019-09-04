@@ -24,3 +24,5 @@ HumanitarianAssistance.WebApi/ClientApp/package-lock.json
 HumanitarianAssistance.WebApi/NewUI/package-lock.json
 HumanitarianAssistance.WebApi/OldUI/package-lock.json
 HumanitarianAssistance.WebApi/OldUI/package-lock.json
+HumanitarianAssistance.WebApi/NewUI/src/environments/environment.ts
+HumanitarianAssistance.WebApi/OldUI/src/environments/environment.ts
