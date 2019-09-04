@@ -1440,7 +1440,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
                 string fileName = Request.Form.Files[0].FileName;
 
                 string ext = Path.GetExtension(fileName).ToLower();
-                if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
+                if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif" && ext != ".rtf")
                 {
                     if (userId != null)
                     {

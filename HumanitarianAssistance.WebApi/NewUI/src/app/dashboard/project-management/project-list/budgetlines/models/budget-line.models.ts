@@ -52,6 +52,7 @@ export interface ITransactionDetailModel {
   CurrencyId: number;
   TransactionDate: any;
   DebitPercentage: number;
+  CreatedDate: any;
 }
 
 export interface ITransactionModel {

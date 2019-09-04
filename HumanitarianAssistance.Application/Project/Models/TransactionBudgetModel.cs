@@ -25,5 +25,6 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string ProjectJobName { get; set; }
         public string ProjectJobCode { get; set; }
         public string BudgetCodeName { get; set; }
+        public DateTime? CreatedDate { get; set; } 
     }
 }

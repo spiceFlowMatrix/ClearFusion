@@ -169,7 +169,7 @@
                   <li> {{ item.CurrencyId | currencyCode : currencyList }}</li>
                   <li *ngIf="item.Debit == 0"> credited {{ item.Credit | number:'2.1-3'}} </li>
                   <li *ngIf="item.Credit == 0"> debited {{ item.Debit | number:'2.1-3'}}</li>
-                  <li> {{ item.TransactionDate | date: 'medium'  }}</li>
+                  <li> {{ item.CreatedDate | date: 'medium'  }}</li>
                   <!-- <li >{{( item.Debit/budgetLineDetail.InitialBudget ) * 100}}%</li> -->
                 </ul>
                 <!-- <tbody>

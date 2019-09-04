@@ -66,7 +66,6 @@ export class AddQuestionsDialogComponent implements OnInit {
 
   //#region "OnSubmit"
   OnSubmit(formValue: any) {
-    debugger;
     this.EditLoaderFlag = true;
     const indicatorId = this.IndicatorDetail.ProjectIndicatorId;
     if (formValue.IndicatorQuestion != null && formValue.IndicatorQuestion != '') {
@@ -114,7 +113,6 @@ export class AddQuestionsDialogComponent implements OnInit {
   }
 
   createItem(): FormGroup {
-    debugger;
     return this.fb.group({
       VerificationSourceId: 0,
       VerificationSourceName: ''
@@ -123,14 +121,12 @@ export class AddQuestionsDialogComponent implements OnInit {
 
   //#region "On add verification source"
   addItem() {
-    debugger;
     this.verificationSources.push(this.createItem());
   }
   //#endregion
 
   //#region "onDelete"
   onDelete(index: number) {
-    debugger;
     const control = <FormArray>this.questionForm.controls['VerificationSources'];
     control.removeAt(index);
   }
