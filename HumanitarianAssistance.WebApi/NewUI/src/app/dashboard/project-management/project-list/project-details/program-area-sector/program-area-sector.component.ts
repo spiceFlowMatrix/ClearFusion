@@ -2272,6 +2272,6 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
   //#endregion
 
   ngOnDestroy() {
-    this._cdr.detach();
+    // this._cdr.detach();
   }
 }
