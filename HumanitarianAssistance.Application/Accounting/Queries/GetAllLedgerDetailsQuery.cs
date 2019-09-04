@@ -2,13 +2,16 @@
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace HumanitarianAssistance.Application.Accounting.Queries
 {
     public class GetAllLedgerDetailsQuery:IRequest<ApiResponse>
     {
-        public List<int> OfficesList { get; set; }
+        public GetAllLedgerDetailsQuery()
+        {
+            OfficeIdList = new List<int>();
+            accountLists = new List<long>();
+        }
         public List<int> OfficeIdList { get; set; }
         public int CurrencyId { get; set; }
         public DateTime fromdate { get; set; }
