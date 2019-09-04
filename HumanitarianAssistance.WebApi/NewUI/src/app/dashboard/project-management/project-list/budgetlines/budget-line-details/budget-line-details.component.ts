@@ -17,6 +17,7 @@ import { BudgetLineService } from '../budget-line.service';
 import { ToastrService } from 'ngx-toastr';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { MatDialog } from '@angular/material/dialog';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
 
 @Component({
   selector: 'app-budget-line-details',
@@ -133,7 +134,7 @@ export class BudgetLineDetailsComponent implements OnInit, OnChanges {
               ProjectJobCode: element.ProjectJobCode,
               ProjectJobId: element.ProjectJobId,
               ProjectJobName: element.ProjectJobName,
-              CreatedDate: element.CreatedDate,
+              CreatedDate: StaticUtilities.setLocalDate(element.CreatedDate),
               DebitPercentage: element.DebitPercentage
             };
             this.selectedCurrency = this.budgetLineDetail.CurrencyId;
@@ -197,13 +198,13 @@ export class BudgetLineDetailsComponent implements OnInit, OnChanges {
                 DebitPercentage: this.getDebitPercentage,
                 CurrencyName: element.CurrencyName,
                 CurrencyId: element.CurrencyId,
-                TransactionDate:
-                  element.TransactionDate != null
-                    ? new Date(
-                        new Date(element.TransactionDate).getTime() -
-                          new Date().getTimezoneOffset() * 60000
-                      )
-                    : null,
+                TransactionDate: element.TransactionDate != null
+                  ? new Date(
+                      new Date(element.TransactionDate).getTime() -
+                        new Date().getTimezoneOffset() * 60000
+                    )
+                  : null,
+                CreatedDate: StaticUtilities.setLocalDate(element.CreatedDate)
               });
             });
             this.transactiondetail.emit(this.transactionDetailList);
