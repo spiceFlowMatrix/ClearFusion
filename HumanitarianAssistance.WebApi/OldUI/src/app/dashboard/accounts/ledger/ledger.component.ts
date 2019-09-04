@@ -5,6 +5,7 @@ import { GLOBAL } from '../../../shared/global';
 import { CodeService } from '../../code/code.service';
 import { AppSettingsService } from '../../../service/app-settings.service';
 import { CommonService } from '../../../service/common.service';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 interface LedgerFilter {
   CurrencyId: number;
@@ -107,9 +108,29 @@ export class LedgerComponent implements OnInit {
 
   ngOnInit() {
     this.initForm();
-    this.getCurrencyCodeList();
-    this.getOfficeCodeList();
-    this.GetAccountDetails();
+
+    const currencyRequest = this.getCurrencyCodeListResponse();
+    const officeRequest = this.getOfficeCodeListResponse();
+    const accountResponse = this.GetAccountDetailsResponse();
+
+    forkJoin([currencyRequest, officeRequest, accountResponse]).subscribe(
+      results => {
+        this.getCurrencyCodeList(results[0]);
+        this.getOfficeCodeList(results[1]);
+        this.GetAccountDetails(results[2]);
+
+        const obj = {
+          CurrencyId: this.selectedCurrency,
+          accountLists: this.selectedAccounts,
+          RecordType: this.defaultRecordType,
+          FromDate: null,
+          ToDate: null,
+          OfficeIdList: this.selectedOffices
+        };
+        this.onApplyingFilter(obj);
+      }
+    );
+
   }
 
   //#region "intiForm"
@@ -126,148 +147,248 @@ export class LedgerComponent implements OnInit {
   //#endregion
 
   //#region "getCurrencyCodeList"
-  getCurrencyCodeList() {
-    this.codeservice
-      .GetAllCodeList(
-        this.setting.getBaseUrl() + GLOBAL.API_CurrencyCodes_GetAllCurrency
-      )
-      .subscribe(
-        data => {
-          this.currencyDropdown = [];
-          if (data.data.CurrencyList != null) {
-            data.data.CurrencyList.forEach(element => {
-              this.currencyDropdown.push(element);
-            });
-            this.selectedCurrency = this.currencyDropdown[0].CurrencyId;
+  getCurrencyCodeListResponse() {
+    return this.codeservice.GetAllCodeList(
+      this.setting.getBaseUrl() + GLOBAL.API_CurrencyCodes_GetAllCurrency
+    );
+    // .subscribe(
+    //   data => {
+    //     this.currencyDropdown = [];
+    //     if (data.data.CurrencyList != null) {
+    //       data.data.CurrencyList.forEach(element => {
+    //         this.currencyDropdown.push(element);
+    //       });
+    //       this.selectedCurrency = this.currencyDropdown[0].CurrencyId;
 
-            this.initialFlag += 1;
-            if (this.initialFlag === 2) {
-              const obj = {
-                CurrencyId: this.selectedCurrency,
-                accountLists: this.selectedAccounts,
-                RecordType: this.defaultRecordType,
-                FromDate: null,
-                ToDate: null
-              };
-              this.onApplyingFilter(obj);
-            }
-          }
-        },
-        error => {
-          if (error.StatusCode === 500) {
-            this.toastr.error('Internal Server Error....');
-          } else if (error.StatusCode === 401) {
-            this.toastr.error('Unauthorized Access Error....');
-          } else if (error.StatusCode === 403) {
-            this.toastr.error('Forbidden Error....');
-          }
-        }
-      );
+    //       this.initialFlag += 1;
+    //       if (this.initialFlag === 2) {
+    //         const obj = {
+    //           CurrencyId: this.selectedCurrency,
+    //           accountLists: this.selectedAccounts,
+    //           RecordType: this.defaultRecordType,
+    //           FromDate: null,
+    //           ToDate: null
+    //         };
+    //         this.onApplyingFilter(obj);
+    //       }
+    //     }
+    //   },
+    //   error => {
+    //     if (error.StatusCode === 500) {
+    //       this.toastr.error('Internal Server Error....');
+    //     } else if (error.StatusCode === 401) {
+    //       this.toastr.error('Unauthorized Access Error....');
+    //     } else if (error.StatusCode === 403) {
+    //       this.toastr.error('Forbidden Error....');
+    //     }
+    //   }
+    // );
   }
   //#endregion
 
   //#region  "Get Office Code in Add, Edit Dropdown"
-  getOfficeCodeList() {
-    this.codeservice
-      .GetAllCodeList(
-        this.setting.getBaseUrl() + GLOBAL.API_OfficeCode_GetAllOfficeDetails
-      )
-      .subscribe(
-        data => {
-          if (data.data.OfficeDetailsList != null) {
-            this.officeDropdown = [];
-            data.data.OfficeDetailsList.forEach(element => {
-              this.officeDropdown.push(element);
-            });
+  getOfficeCodeListResponse() {
+    return this.codeservice.GetAllCodeList(
+      this.setting.getBaseUrl() + GLOBAL.API_OfficeCode_GetAllOfficeDetails
+    );
+    // .subscribe(
+    //   data => {
+    //     if (data.data.OfficeDetailsList != null) {
+    //       this.officeDropdown = [];
+    //       data.data.OfficeDetailsList.forEach(element => {
+    //         this.officeDropdown.push(element);
+    //       });
 
-            const officeIds: any[] =
-              localStorage.getItem('ALLOFFICES') != null
-                ? localStorage.getItem('ALLOFFICES').split(',')
-                : null;
+    //       const officeIds: any[] =
+    //         localStorage.getItem('ALLOFFICES') != null
+    //           ? localStorage.getItem('ALLOFFICES').split(',')
+    //           : null;
 
-            // fetch only allowed office
-            officeIds.forEach(x => {
-              const officeData = this.officeDropdown.filter(
-                // tslint:disable-next-line:radix
-                e => e.OfficeId === parseInt(x)
-              )[0];
-              // this.officeDropdown.push(officeData);
-            });
+    //       // fetch only allowed office
+    //       officeIds.forEach(x => {
+    //         const officeData = this.officeDropdown.filter(
+    //           // tslint:disable-next-line:radix
+    //           e => e.OfficeId === parseInt(x)
+    //         )[0];
+    //         // this.officeDropdown.push(officeData);
+    //       });
 
-            this.selectedOffices = [];
-            officeIds.forEach(x => {
-              // tslint:disable-next-line:radix
-              this.selectedOffices.push(parseInt(x));
-            });
-          }
-        },
-        error => {
-          if (error.StatusCode === 500) {
-            this.toastr.error('Internal Server Error....');
-          } else if (error.StatusCode === 401) {
-            this.toastr.error('Unauthorized Access Error....');
-          } else if (error.StatusCode === 403) {
-            this.toastr.error('Forbidden Error....');
-          }
-        }
-      );
+    //       this.selectedOffices = [];
+    //       officeIds.forEach(x => {
+    //         // tslint:disable-next-line:radix
+    //         this.selectedOffices.push(parseInt(x));
+    //       });
+    //     }
+    //   },
+    //   error => {
+    //     if (error.StatusCode === 500) {
+    //       this.toastr.error('Internal Server Error....');
+    //     } else if (error.StatusCode === 401) {
+    //       this.toastr.error('Unauthorized Access Error....');
+    //     } else if (error.StatusCode === 403) {
+    //       this.toastr.error('Forbidden Error....');
+    //     }
+    //   }
+    // );
   }
   //#endregion
 
   //#region  "GetAccountDetails"
-  GetAccountDetails() {
-    this.accountservice
-      .GetAccountDetails(
-        this.setting.getBaseUrl() + GLOBAL.API_Accounting_GetAccountDetails
-      )
-      .subscribe(
-        data => {
-          this.accountDropdown = [];
-          this.selectedAccounts = [];
-          if (data.StatusCode === 200 && data.data.AccountDetailList != null) {
-            data.data.AccountDetailList = data.data.AccountDetailList.filter(
-              x => x.AccountLevelId === 4
-            );
-            if (data.data.AccountDetailList.length > 0) {
-              data.data.AccountDetailList.forEach(element => {
-                this.accountDropdown.push({
-                  AccountCode: element.AccountCode,
-                  AccountName: element.AccountName
-                });
-              });
-              this.selectedAccounts.push(
-                data.data.AccountDetailList[
-                  data.data.AccountDetailList.length - 1
-                ].AccountCode
-              );
+  GetAccountDetailsResponse() {
+    return this.accountservice.GetAccountDetails(
+      this.setting.getBaseUrl() + GLOBAL.API_Accounting_GetAccountDetails
+    );
+    // .subscribe(
+    //   data => {
+    //     this.accountDropdown = [];
+    //     this.selectedAccounts = [];
+    //     if (data.StatusCode === 200 && data.data.AccountDetailList != null) {
+    //       data.data.AccountDetailList = data.data.AccountDetailList.filter(
+    //         x => x.AccountLevelId === 4
+    //       );
+    //       if (data.data.AccountDetailList.length > 0) {
+    //         data.data.AccountDetailList.forEach(element => {
+    //           this.accountDropdown.push({
+    //             AccountCode: element.AccountCode,
+    //             AccountName: element.AccountName
+    //           });
+    //         });
+    //         this.selectedAccounts.push(
+    //           data.data.AccountDetailList[
+    //             data.data.AccountDetailList.length - 1
+    //           ].AccountCode
+    //         );
 
-              this.initialFlag += 1;
-              if (this.initialFlag === 2) {
-                const obj = {
-                  CurrencyId: this.selectedCurrency,
-                  accountLists: this.selectedAccounts,
-                  RecordType: this.defaultRecordType,
-                  FromDate: null,
-                  ToDate: null
-                };
-                this.onApplyingFilter(obj);
-              }
-            }
-          }
-        },
-        error => {
-          if (error.StatusCode === 500) {
-            this.toastr.error('Internal Server Error....');
-          } else if (error.StatusCode === 401) {
-            this.toastr.error('Unauthorized Access Error....');
-          } else if (error.StatusCode === 403) {
-            this.toastr.error('Forbidden Error....');
-          } else {
-          }
-        }
-      );
+    //         this.initialFlag += 1;
+    //         if (this.initialFlag === 2) {
+    //           const obj = {
+    //             CurrencyId: this.selectedCurrency,
+    //             accountLists: this.selectedAccounts,
+    //             RecordType: this.defaultRecordType,
+    //             FromDate: null,
+    //             ToDate: null
+    //           };
+    //           this.onApplyingFilter(obj);
+    //         }
+    //       }
+    //     }
+    //   },
+    //   error => {
+    //     if (error.StatusCode === 500) {
+    //       this.toastr.error('Internal Server Error....');
+    //     } else if (error.StatusCode === 401) {
+    //       this.toastr.error('Unauthorized Access Error....');
+    //     } else if (error.StatusCode === 403) {
+    //       this.toastr.error('Forbidden Error....');
+    //     } else {
+    //     }
+    //   }
+    // );
   }
   //#endregion
+
+  getCurrencyCodeList(response: any) {
+    console.log(response);
+    if (response.StatusCode === 200 && response.data.CurrencyList != null) {
+      this.currencyDropdown = [];
+      response.data.CurrencyList.forEach(element => {
+        this.currencyDropdown.push(element);
+      });
+      this.selectedCurrency = this.currencyDropdown[0].CurrencyId;
+
+      // this.initialFlag += 1;
+      // if (this.initialFlag === 2) {
+      //   const obj = {
+      //     CurrencyId: this.selectedCurrency,
+      //     accountLists: this.selectedAccounts,
+      //     RecordType: this.defaultRecordType,
+      //     FromDate: null,
+      //     ToDate: null
+      //   };
+      //   this.onApplyingFilter(obj);
+      // }
+    } else {
+      this.toastr.error(response.Message);
+    }
+  }
+
+  getOfficeCodeList(response: any) {
+    console.log(response);
+
+    if (
+      response.StatusCode === 200 &&
+      response.data.OfficeDetailsList != null
+    ) {
+      this.officeDropdown = [];
+      response.data.OfficeDetailsList.forEach(element => {
+        this.officeDropdown.push(element);
+      });
+
+      const officeIds: any[] =
+        localStorage.getItem('ALLOFFICES') != null
+          ? localStorage.getItem('ALLOFFICES').split(',')
+          : null;
+
+      // fetch only allowed office
+      officeIds.forEach(x => {
+        const officeData = this.officeDropdown.filter(
+          // tslint:disable-next-line:radix
+          e => e.OfficeId === parseInt(x)
+        )[0];
+        // this.officeDropdown.push(officeData);
+      });
+
+      this.selectedOffices = [];
+      officeIds.forEach(x => {
+        // tslint:disable-next-line:radix
+        this.selectedOffices.push(parseInt(x));
+      });
+    } else {
+      this.toastr.error(response.Message);
+    }
+  }
+
+  GetAccountDetails(response: any) {
+    console.log(response);
+
+    this.accountDropdown = [];
+    this.selectedAccounts = [];
+    if (
+      response.StatusCode === 200 &&
+      response.data.AccountDetailList != null
+    ) {
+      response.data.AccountDetailList = response.data.AccountDetailList.filter(
+        x => x.AccountLevelId === 4
+      );
+      if (response.data.AccountDetailList.length > 0) {
+        response.data.AccountDetailList.forEach(element => {
+          this.accountDropdown.push({
+            AccountCode: element.AccountCode,
+            AccountName: element.AccountName
+          });
+        });
+        this.selectedAccounts.push(
+          response.data.AccountDetailList[
+            response.data.AccountDetailList.length - 1
+          ].AccountCode
+        );
+
+        // this.initialFlag += 1;
+        // if (this.initialFlag === 2) {
+        //   const obj = {
+        //     CurrencyId: this.selectedCurrency,
+        //     accountLists: this.selectedAccounts,
+        //     RecordType: this.defaultRecordType,
+        //     FromDate: null,
+        //     ToDate: null
+        //   };
+        //   this.onApplyingFilter(obj);
+        // }
+      }
+    } else {
+      this.toastr.error(response.Message);
+    }
+  }
 
   //#region "onApplyingFilter"
   onApplyingFilter(value: any) {
@@ -310,7 +431,8 @@ export class LedgerComponent implements OnInit {
 
     this.accountservice
       .GetAllLedgerDetails(
-        this.setting.getBaseUrl() + GLOBAL.API_AccountReports_GetAllLedgerDetails,
+        this.setting.getBaseUrl() +
+          GLOBAL.API_AccountReports_GetAllLedgerDetails,
         journalFilter
       )
       .subscribe(
@@ -402,5 +524,5 @@ export class LedgerComponent implements OnInit {
 
   customizeValue(data: any) {
     return parseFloat(data.value).toFixed(4);
-}
+  }
 }
