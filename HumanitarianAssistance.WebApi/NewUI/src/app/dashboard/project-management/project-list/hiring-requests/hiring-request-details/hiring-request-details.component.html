@@ -55,20 +55,22 @@
                   </div>
                   <div class="col-lg-6 col-sm-6">
                     <mat-form-field class="example-full-width">
-                      <mat-select placeholder="Profession" formControlName="ProfessionId">
+                      <!-- <mat-select placeholder="Profession" formControlName="ProfessionId">
                         <mat-option *ngFor="let item of professionList" [value]="item.ProfessionId">
                           {{ item.ProfessionName }}
                         </mat-option>
-                      </mat-select>
+                      </mat-select> -->
+                      <input matInput formControlName="ProfessionName" placeholder="Profession" readonly>
                     </mat-form-field>
                   </div>
                   <div class="col-lg-6 col-sm-6">
                     <mat-form-field class="example-full-width">
-                      <mat-select placeholder="Budget Line" formControlName="BudgetLineId" readonly>
+                      <!-- <mat-select placeholder="Budget Line" formControlName="BudgetLineId" readonly>
                         <mat-option *ngFor="let item of budgetLineList" [value]="item.BudgetLineId">
                           {{ item.BudgetName }}
                         </mat-option>
-                      </mat-select>
+                      </mat-select> -->
+                      <input matInput formControlName="BudgetLineName" placeholder="Budget Line" readonly>
                     </mat-form-field>
                   </div>
                   <div class="col-lg-6 col-sm-6">
@@ -78,11 +80,12 @@
                   </div>
                   <div class="col-lg-6 col-sm-6">
                     <mat-form-field class="example-full-width">
-                      <mat-select placeholder="Office" formControlName="OfficeId" readonly>
+                      <!-- <mat-select placeholder="Office" formControlName="OfficeId" readonly>
                         <mat-option *ngFor="let item of officeList" [value]="item.OfficeId">
                           {{ item.OfficeName }}
                         </mat-option>
-                      </mat-select>
+                      </mat-select> -->
+                      <input matInput formControlName="OfficeName" placeholder="Office" readonly>
                     </mat-form-field>
                   </div>
                   <div class="col-lg-6 col-sm-6">
@@ -97,11 +100,12 @@
                   </div>
                   <div class="col-lg-6 col-sm-6">
                     <mat-form-field class="example-full-width">
-                      <mat-select placeholder="Job Grade" formControlName="GradeId" readonly>
+                      <!-- <mat-select placeholder="Job Grade" formControlName="GradeId" readonly>
                         <mat-option *ngFor="let item of jobGradeList" [value]="item.GradeId">
                           {{ item.GradeName }}
                         </mat-option>
-                      </mat-select>
+                      </mat-select> -->
+                      <input matInput formControlName="GradeName" placeholder="Job Grade" readonly>
                     </mat-form-field>
                   </div>
                 </div>
