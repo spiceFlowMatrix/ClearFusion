@@ -1,12 +1,15 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { IOpenedChange, IDataSource } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
-import { IOfficeListModel } from '../../vouchers/models/voucher.model';
+import {
+  IOpenedChange,
+  IDataSource
+} from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
 import { CurrencyModel } from 'src/app/dashboard/project-management/project-list/project-details/models/project-details.model';
 import { VoucherSummaryReportService } from '../voucher-summary-report.service';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
-import { IProjectJobModel } from 'src/app/dashboard/project-management/project-list/budgetlines/models/budget-line.models';
-import { BudgetlineListModel, VoucherSummaryFilterModel } from '../voucher-summary-model';
+import {
+  VoucherSummaryFilterModel
+} from '../voucher-summary-model';
 import { ToastrService } from 'ngx-toastr';
 import { IResponseData } from '../../vouchers/models/status-code.model';
 
@@ -16,38 +19,40 @@ import { IResponseData } from '../../vouchers/models/status-code.model';
   styleUrls: ['./voucher-summary-filter.component.scss']
 })
 export class VoucherSummaryFilterComponent implements OnInit {
-
-  // projectJobList: IProjectJobModel[] = [];
-  // budgetLineList: BudgetlineListModel[] = [];
   filterModel: VoucherSummaryFilterModel;
   selectedCurrency: any = null;
   selectedRecordType: any = null;
   @Output() filterApplied = new EventEmitter<VoucherSummaryFilterModel>();
 
-// Input Properties
-@Input() multiAccountsList: IDataSource[];
-@Input() multiOfficesList: IDataSource[];
-@Input() multiJournalList: IDataSource[];
-@Input() multiProjectList: IDataSource[];
-@Input() currencyList: CurrencyModel[];
-@Input() recordType: any[];
+  // Input Properties
+  @Input() multiAccountsList: IDataSource[];
+  @Input() multiOfficesList: IDataSource[];
+  @Input() multiJournalList: IDataSource[];
+  @Input() multiProjectList: IDataSource[];
+  @Input() currencyList: CurrencyModel[];
+  @Input() recordType: any[];
 
-multiBudgetLineList: IDataSource[];
-multiProjectJobList: IDataSource[];
+  multiBudgetLineList: IDataSource[];
+  multiProjectJobList: IDataSource[];
 
-// subscription destroy
-private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  // subscription destroy
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-// dropdown multiselect resultset
-public accountFilter: any[] = [];
-public officeFilter: any[] = [];
-public journalFilter: any[] = [];
-public projectFilter: any[] = [];
-public budgetLineFilter: any[] = [];
-public projectJobFilter: any[] = [];
+  // dropdown multiselect resultset
+  public accountFilter: any[] = [];
+  public officeFilter: any[] = [];
+  public journalFilter: any[] = [];
+  public projectFilter: any[] = [];
+  public budgetLineFilter: any[] = [];
+  public projectJobFilter: any[] = [];
 
-  constructor(private voucherSummaryService: VoucherSummaryReportService,
-               private toastr: ToastrService) { }
+  // flag
+  filterLoaderFlag = false;
+
+  constructor(
+    private voucherSummaryService: VoucherSummaryReportService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit() {
     this.initializeModel();
@@ -67,70 +72,64 @@ public projectJobFilter: any[] = [];
       pageSize: 10
     };
 
-    this.accountFilter = [];
+    this.accountFilter =  [];
     this.budgetLineFilter = [];
     this.officeFilter = [];
     this.journalFilter = [];
     this.projectFilter = [];
     this.projectJobFilter = [];
     this.selectedCurrency = null;
-    this.selectedRecordType = null;
+    this.selectedRecordType = this.recordType[0].id;
     this.multiBudgetLineList = [];
     this.multiProjectJobList = [];
   }
 
   //#region "getProjectJobList"
   getProjectJobList(projectIds: number[]) {
-    this.voucherSummaryService.getProjectJobList(projectIds).pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (response: IResponseData) => {
-        if (response.statusCode === 200 && response.data !== null) {
-          //this.projectJobList = [];
-          response.data.forEach(element => {
-            // this.projectJobList.push({
-            //   ProjectJobCode: element.ProjectJobCode,
-            //   ProjectJobId: element.ProjectJobId,
-            //   ProjectJobName: element.ProjectJobName
-            // });
-
-            this.multiProjectJobList.push({
-              Id: element.ProjectJobId,
-              Name: element.ProjectJobName
+    this.voucherSummaryService
+      .getProjectJobList(projectIds)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        (response: IResponseData) => {
+          if (response.statusCode === 200 && response.data !== null) {
+            response.data.forEach(element => {
+              this.multiProjectJobList.push({
+                Id: element.ProjectJobId,
+                Name: element.ProjectJobName
+              });
             });
-
-          });
-        }
-      },
-      error => {}
-    );
+          }
+        },
+        error => {}
+      );
   }
   //#endregion
 
   //#region "getProjectJobList"
   getProjectBudgetLineList(projectJobIds: number[]) {
-    this.voucherSummaryService.getProjectBudgetLineList(projectJobIds).pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (response: IResponseData) => {
-        if (response.statusCode === 200 && response.data !== null) {
-          // this.budgetLineList = [];
-          response.data.forEach(element => {
-            // this.budgetLineList.push({
-            //   BudgetCode: element.BudgetCode,
-            //   BudgetLineId: element.BudgetLineId,
-            //   BudgetName: element.BudgetName
-            // });
+    this.voucherSummaryService
+      .getProjectBudgetLineList(projectJobIds)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        (response: IResponseData) => {
+          if (response.statusCode === 200 && response.data !== null) {
+            // this.budgetLineList = [];
+            response.data.forEach(element => {
+              // this.budgetLineList.push({
+              //   BudgetCode: element.BudgetCode,
+              //   BudgetLineId: element.BudgetLineId,
+              //   BudgetName: element.BudgetName
+              // });
 
-            this.multiBudgetLineList.push({
-              Id: element.BudgetLineId,
-              Name: element.BudgetName
+              this.multiBudgetLineList.push({
+                Id: element.BudgetLineId,
+                Name: element.BudgetName
+              });
             });
-          });
-        }
-      },
-      error => {}
-    );
+          }
+        },
+        error => {}
+      );
   }
   //#endregion
 
@@ -190,7 +189,10 @@ public projectJobFilter: any[] = [];
       return;
     }
 
-    if (this.selectedRecordType !== null && this.selectedRecordType !== undefined) {
+    if (
+      this.selectedRecordType !== null &&
+      this.selectedRecordType !== undefined
+    ) {
       this.filterModel.RecordType = this.selectedRecordType;
     } else {
       this.toastr.warning('Record type not selected');
@@ -221,7 +223,7 @@ public projectJobFilter: any[] = [];
   // #region "onOpenedProjectMultiSelectChange"
   onOpenedProjectMultiSelectChange(event: IOpenedChange) {
     this.projectFilter = event.Value;
-    if (this.projectFilter.length > 0 ) {
+    if (this.projectFilter.length > 0) {
       this.getProjectJobList(this.projectFilter);
     }
   }
@@ -236,10 +238,9 @@ public projectJobFilter: any[] = [];
   // #region "onOpenedProjectJobMultiSelectChange"
   onOpenedProjectJobMultiSelectChange(event: IOpenedChange) {
     this.projectJobFilter = event.Value;
-    if (this.projectJobFilter.length > 0 ) {
+    if (this.projectJobFilter.length > 0) {
       this.getProjectBudgetLineList(this.projectJobFilter);
     }
   }
   // #endregion
-
 }
