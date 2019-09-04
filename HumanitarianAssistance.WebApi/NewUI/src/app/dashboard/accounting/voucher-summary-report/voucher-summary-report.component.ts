@@ -129,6 +129,9 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
 
   //#region "getVoucherSummaryList"
   getVoucherSummaryList(data: VoucherSummaryFilterModel) {
+
+    this.filter.filterLoaderFlag = true;
+
     this.voucherSummaryReport = [];
     this.voucherSummaryService.voucherSummaryReportList(data).pipe(
       takeUntil(this.destroyed$)
@@ -147,8 +150,11 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
 
           this.totalCount = response.total;
         }
+        this.filter.filterLoaderFlag = false;
       },
-      error => {}
+      error => {
+        this.filter.filterLoaderFlag = false;
+      }
     );
   }
   //#endregion

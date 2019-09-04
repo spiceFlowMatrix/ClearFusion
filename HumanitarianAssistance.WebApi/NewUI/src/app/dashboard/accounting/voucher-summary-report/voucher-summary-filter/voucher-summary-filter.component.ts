@@ -158,29 +158,33 @@ export class VoucherSummaryFilterComponent implements OnInit {
       return;
     }
 
-    if (this.projectFilter.length > 0) {
-      this.filterModel.Projects = [];
       this.filterModel.Projects = this.projectFilter;
-    } else {
-      this.toastr.warning('Project not selected');
-      return;
-    }
-
-    if (this.projectJobFilter.length > 0) {
-      this.filterModel.ProjectJobs = [];
       this.filterModel.ProjectJobs = this.projectJobFilter;
-    } else {
-      this.toastr.warning('Project Job not selected');
-      return;
-    }
-
-    if (this.budgetLineFilter.length > 0) {
-      this.filterModel.BudgetLines = [];
       this.filterModel.BudgetLines = this.budgetLineFilter;
-    } else {
-      this.toastr.warning('Budgetline not selected');
-      return;
-    }
+
+    // if (this.projectFilter.length > 0) {
+    //   this.filterModel.Projects = [];
+    //   this.filterModel.Projects = this.projectFilter;
+    // } else {
+    //   this.toastr.warning('Project not selected');
+    //   return;
+    // }
+
+    // if (this.projectJobFilter.length > 0) {
+    //   this.filterModel.ProjectJobs = [];
+    //   this.filterModel.ProjectJobs = this.projectJobFilter;
+    // } else {
+    //   this.toastr.warning('Project Job not selected');
+    //   return;
+    // }
+
+    // if (this.budgetLineFilter.length > 0) {
+    //   this.filterModel.BudgetLines = [];
+    //   this.filterModel.BudgetLines = this.budgetLineFilter;
+    // } else {
+    //   this.toastr.warning('Budgetline not selected');
+    //   return;
+    // }
 
     if (this.selectedCurrency !== null && this.selectedCurrency !== undefined) {
       this.filterModel.Currency = this.selectedCurrency;
