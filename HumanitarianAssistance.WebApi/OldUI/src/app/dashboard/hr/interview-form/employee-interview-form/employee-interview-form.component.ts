@@ -260,11 +260,11 @@ export class EmployeeInterviewFormComponent implements OnInit {
             });
           } else {
             // tslint:disable-next-line:curly
-            if (data.data.InterviewDetailList == null)
-              this.toastr.warning('No record found!');
-            // tslint:disable-next-line:curly
-            else if (data.StatusCode === 400)
+            if (data.data.InterviewDetailList == null) {
+                // this.toastr.warning('No record found!');
+            } else if (data.StatusCode === 400) {
               this.toastr.error('Something went wrong!');
+            }
           }
           this.empInterviewFormLoader = false;
         },
@@ -309,11 +309,11 @@ export class EmployeeInterviewFormComponent implements OnInit {
             );
           } else {
             // tslint:disable-next-line:curly
-            if (data.data.EmployeeDetailListData == null)
-              this.toastr.warning('No record found!');
-            // tslint:disable-next-line:curly
-            else if (data.StatusCode === 400)
+            if (data.data.EmployeeDetailListData == null) {
+              // this.toastr.warning('No record found!');
+            } else if (data.StatusCode === 400) {
               this.toastr.error('Something went wrong!');
+            }
           }
         },
         error => {

@@ -1405,7 +1405,8 @@ export interface GeneralInfo {
   IssuePlace: string;
   MaritalStatusId: number;
   PlaceOfBirth: string;
-  TinNumber: number;
+  TinNumber: string;
+  GradeId: number; 
 }
 
 export class Documents {
