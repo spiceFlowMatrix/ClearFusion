@@ -16,7 +16,7 @@ export const environment = {
 //   oldUiUrl: '/oldui/#/',
 //   notifyHubUrl: 'http://localhost:5000/notifyhub/',
 //   uploadUrl: 'https://storage.cloud.google.com/' // proposal doc
-};
+// };
 
 
 
