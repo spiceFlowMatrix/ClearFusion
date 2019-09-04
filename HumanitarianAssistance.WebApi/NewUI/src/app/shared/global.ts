@@ -82,6 +82,7 @@ export class GLOBAL {
   public static API_Project_AddProjectIndicator = 'Project/AddProjectIndicator';
   public static API_Project_GetIndicatorQuestionDetailById = 'Project/GetIndicatorQuestionDetailById';
   public static API_Project_DeleteIndicatorQuestionDetail = 'Project/DeleteIndicatorQuestionDetail';
+  public static API_Project_DeleteProjectIndicatorDetail = 'Project/DeleteProjectIndicatorDetail';
   public static API_Project_EditProjectIndicator = 'Project/EditProjectIndicator';
   public static API_Project_AddProjectIndicatorQuestions = 'Project/AddProjectIndicatorQuestions';
   public static API_Project_GetDonarListById = 'Project/GetDonarListById';

@@ -25,7 +25,7 @@ export class ProjectDetailsComponent implements OnInit {
   isCEApproved = false;
   menuList: IMenuList[] ;
   authorizedMenuList: IMenuList[] = [];
-
+  isSuperadmin = false;
   // screen scroll
   screenHeight: number;
   screenWidth: number;
@@ -86,22 +86,27 @@ export class ProjectDetailsComponent implements OnInit {
 
 
   setHeaderMenu() {
-    // check weather the criteria evaluation is approved
-    if (this.isProjectWin === true) {
+    // check weather user is superadmin
+ this.isSuperadmin = this.localStorageService.GetSuperAdminDetail();
+ if (this.isSuperadmin) {
+  this.globalService.setMenuList(this.menuList);
+   // check weather the criteria evaluation is approved and project is win
+ } else if (this.isProjectWin === true) {
       this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
         this.isProjectWin
           ? this.menuList
           : this.menuList.filter((i, index) => index < 3)
       );
+      this.globalService.setMenuList(this.authorizedMenuList);
     } else {
     this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
       this.isCEApproved
         ? this.menuList.filter((i, index) => index < 3)
         : this.menuList.filter((i, index) => index < 2)
     );
+    this.globalService.setMenuList(this.authorizedMenuList);
     }
     // Set Menu Header List
-    this.globalService.setMenuList(this.authorizedMenuList);
   }
 
   //#region "Dynamic Scroll"
@@ -125,18 +130,7 @@ export class ProjectDetailsComponent implements OnInit {
         this.appurl.getApiUrl() + GLOBAL.API_Project_GetProjectWinLossStatus,
         projectId
       );
-      // .subscribe(
-      //   data => {
-      //     if (data != null) {
-      //       if (data.data.ProjectWinLoss != null) {
-      //         // check weather the project is win or loss
-      //         this.isProjectWin = data.data.ProjectWinLoss;
-      //         this.setHeaderMenu();
-      //       }
-      //     }
-      //   },
-      //   error => {}
-      // );
+
   }
   //#endregion
 
@@ -148,18 +142,6 @@ export class ProjectDetailsComponent implements OnInit {
         this.appurl.getApiUrl() + GLOBAL.API_Project_GetIsApprovedCriteriaEvaluationStatus,
         projectId
       );
-      // .subscribe(
-      //   data => {
-      //     if (data != null) {
-      //       if (data.data.IsApprovedCriteriaEvaluation != null) {
-      //         // check weather the project is win or loss
-      //         this.isCEApproved = data.data.IsApprovedCriteriaEvaluation;
-      //         this.setHeaderMenu();
-      //       }
-      //     }
-      //   },
-      //   error => {}
-      // );
   }
   //#endregion
 

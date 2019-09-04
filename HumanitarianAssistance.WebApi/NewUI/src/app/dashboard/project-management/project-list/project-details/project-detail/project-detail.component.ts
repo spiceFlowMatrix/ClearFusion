@@ -28,6 +28,8 @@ import {
 import { ProjectListService } from '../../service/project-list.service';
 import { DonorMasterComponent } from '../../../project-donor/donor-master/donor-master.component';
 import { ProgramAreaSectorComponent } from '../program-area-sector/program-area-sector.component';
+import { IMenuList } from 'src/app/shared/dbheader/dbheader.component';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 
 @Component({
   selector: 'app-project-detail',
@@ -44,7 +46,11 @@ export class ProjectDetailComponent implements OnInit {
   activityChild: ProjectActivitiesComponent;
   @ViewChild(AcceptProposalComponent)
   acceptProposalChild: AcceptProposalComponent;
-  @Output() isWinFlag  = new EventEmitter();
+  @Output() isWinFlag = new EventEmitter();
+
+  menuList: IMenuList[] = [];
+  authorizedMenuList: IMenuList[] = [];
+  setProjectHeader = 'Project';
 
   projectJobList: any[] = [];
 
@@ -82,10 +88,32 @@ export class ProjectDetailComponent implements OnInit {
     public dialog: MatDialog,
     public projectListService: ProjectListService,
     private appurl: AppUrlService,
+    private router: Router,
     private localStorageService: LocalStorageService,
+    private globalService: GlobalSharedService
   ) {
     this.getScreenSize();
     this.initProjectDetail();
+    // set menu header for project listing
+    this.menuList = [];
+    this.projectListService.menuList.forEach(x => {
+      this.menuList.push({
+        Id: x.Id,
+        PageId: x.PageId,
+        Text: x.Text,
+        Link: x.Link
+      });
+    });
+
+    this.menuList.map(
+      x =>
+        (x.Link =
+          this.router.url.substr(0, this.router.url.lastIndexOf('/') + 1) +
+          x.Link)
+    ); // important for routing
+
+    // Set Menu Header Name
+    this.globalService.setMenuHeaderName(this.setProjectHeader);
   }
 
   ngOnInit() {
@@ -181,10 +209,10 @@ export class ProjectDetailComponent implements OnInit {
     const dialogRef = this.dialog.open(ProgramAreaSectorComponent, {
       height: '600px',
       width: '800px',
-      data: { 
+      data: {
         id: this.projectId,
         projectName: this.projectDetail.ProjectName,
-        description: this.projectDetail.ProjectDescription,
+        description: this.projectDetail.ProjectDescription
       }
     });
     dialogRef.afterClosed().subscribe(result => {});
@@ -239,21 +267,19 @@ export class ProjectDetailComponent implements OnInit {
   GetAllUserList() {
     this.detailsLoaderFlag = true;
     this.UserList = [];
-    this.projectListService
-      .GetAllUserList()
-      .subscribe(response => {
-        if (response.data != null) {
-          if (response.data.length > 0) {
-            response.data.forEach((element: any) => {
-              this.UserList.push({
-                UserID: element.UserID,
-                Username: element.FirstName + ' ' + element.LastName
-              });
+    this.projectListService.GetAllUserList().subscribe(response => {
+      if (response.data != null) {
+        if (response.data.length > 0) {
+          response.data.forEach((element: any) => {
+            this.UserList.push({
+              UserID: element.UserID,
+              Username: element.FirstName + ' ' + element.LastName
             });
-          }
+          });
         }
-        this.detailsLoaderFlag = false;
-      });
+      }
+      this.detailsLoaderFlag = false;
+    });
   }
   //#endregion
 
@@ -445,35 +471,21 @@ export class ProjectDetailComponent implements OnInit {
         .subscribe(
           response => {
             if (response.StatusCode === 200) {
-              // this.snackBar.open("Project approved  Successfully!!!", "action", {
-              // duration: 2000,
               this.winapprovalDetail.IsWin =
                 response.data.WinProjectDetails.IsWin;
               this.openProposalcompcheck = false;
               this.isWinFlag.emit(response.data.WinProjectDetails.IsWin);
 
               this.GetProjectDetail(this.projectDetail.ProjectId);
-              // if (this.winapprovalDetail.IsWin == true) {
-              //   this.assignedTowin = true;
-              //   this.assignedTowinBlue = false;
-              //   this.assignToUsershow = true;
-              //   //  this.assignToBlueclicked = true;
-              //   this.openProposalcompcheck = false;
-              // }
-              // else if (this.winapprovalDetail.IsWin == false) {
-              //   this.openProposalcompcheck = false;
-              // }
-              // if (projectname != null && projectDes != null) {
-              // this.router.navigate(['projects']);
-
-              // }
+              if (this.winapprovalDetail.IsWin === true) {
+                // set projectr header list
+                this.setHeaderMenu();
+              }
             }
             // this.IswinFlag.emit(this.projectDetail.IsWin);
             this.acceptProposalChild.commonWinLossFlag = false;
-            // this.commonLoader.hideLoader();
           },
           error => {
-            // this.commonLoader.hideLoader();
             this.acceptProposalChild.commonLoaderFlag = false;
           }
         );
@@ -610,5 +622,21 @@ export class ProjectDetailComponent implements OnInit {
   }
   //#endregion
 
+  //#endregion
+
+  //#region ""
+  //#region "setHeaderMenu"
+  setHeaderMenu() {
+    // check weather the project win
+    this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
+      this.winapprovalDetail.IsWin
+      ? this.menuList
+      : this.menuList.filter((i, index) => index < 3)
+    );
+
+    // Set Menu Header List
+    this.globalService.setMenuList(this.authorizedMenuList);
+  }
+  //#endregion
   //#endregion
 }

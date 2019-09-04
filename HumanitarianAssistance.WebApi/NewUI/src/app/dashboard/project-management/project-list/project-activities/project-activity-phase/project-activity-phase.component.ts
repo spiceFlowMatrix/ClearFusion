@@ -175,68 +175,6 @@ export class ProjectActivityPhaseComponent
   //#endregion
 
 
-
-  //#region "editProjectActivity"
-  editProjectActivity(data: any) {
-    this.editActivityLoader = true;
-
-    const projectActivityDetail: IProjectActivityDetail = {
-      // Planning
-      ActivityId: data.ActivityId,
-      ActivityName: data.ActivityName,
-      ActivityDescription: data.ActivityDescription,
-      PlannedStartDate: data.PlannedStartDate,
-      PlannedEndDate: data.PlannedEndDate,
-      BudgetLineId: data.BudgetLineId,
-      EmployeeID: data.EmployeeID,
-      OfficeId: data.OfficeId,
-      StatusId: data.StatusId,
-      Recurring: data.Recurring,
-      RecurringCount: data.RecurringCount,
-      RecurrinTypeId: data.RecurrinTypeId,
-      DistrictID: data.DistrictID,
-      ProvinceId: data.ProvinceId,
-      ParentId: data.ParentId,
-
-      ActualStartDate: data.ActualStartDate,
-      ActualEndDate: data.ActualEndDate,
-
-    };
-
-    this.activitiesService
-      .EditProjectActivity(projectActivityDetail)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(
-        (response: IResponseData) => {
-          if (response.statusCode === 200) {
-            this.toastr.success('Activity updated successfully');
-            this.updateActivity.emit(projectActivityDetail);
-          } else {
-            this.toastr.error(response.message);
-          }
-          this.editActivityLoader = false;
-          this.refreshProjectSummary.emit();
-        },
-        error => {
-          this.toastr.error('Someting went wrong');
-          this.editActivityLoader = false;
-        }
-      );
-  }
-  //#endregion
-
-  //#region "onSaveProjectActivity"
-  onSaveProjectActivity() {
-    if (
-      this.planningChild.projectActivityForm.valid
-    ) {
-      this.editProjectActivity(this.activityDetail);
-    } else {
-      this.toastr.warning('Please fill the correct values');
-    }
-  }
-  //#endregion
-
   //#region "selectedProvinceId emit event to activity listing"
   onSelectedProvinceId(event: any) {
     this.selectedProvinceDetailId.emit(event);
@@ -319,6 +257,13 @@ export class ProjectActivityPhaseComponent
     });
   }
 
+  updateActivityEvent(data: any) {
+    this.updateActivity.emit(data);
+  }
+
+  refreshProjectSummaryEvent() {
+    this.refreshProjectSummary.emit();
+  }
 
   //#region "ngOnDestroy"
   ngOnDestroy() {
