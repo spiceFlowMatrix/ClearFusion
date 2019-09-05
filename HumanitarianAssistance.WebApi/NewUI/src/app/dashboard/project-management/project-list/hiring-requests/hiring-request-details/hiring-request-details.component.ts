@@ -461,7 +461,8 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       this.addCandidateInterviewLoader = true;
       const interviewCandidatModel: IitervireCandidateModel = {
         EmployeeID: event.EmployeeID,
-        JobDescription: this.hiringRequestForm.get('Description').value
+        JobDescription: this.hiringRequestForm.get('Description').value,
+        OfficeId: this.hiringRequestForm.get('OfficeId').value
       };
       this.hiringRequestService
         .AddInterViewCandidateDetail(interviewCandidatModel)

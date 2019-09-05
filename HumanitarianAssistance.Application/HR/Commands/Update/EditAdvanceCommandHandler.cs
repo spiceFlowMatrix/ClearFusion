@@ -35,6 +35,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                     record.ModifiedById = request.ModifiedById;
                     record.ModifiedDate = request.ModifiedDate;
                     record.OfficeId = request.OfficeId;
+                    record.Description= request.Description;
                     record.NumberOfInstallments = request.NumberOfInstallments;
                     record.RequestAmount = request.RequestAmount.Value;
                     record.VoucherReferenceNo = request.VoucherReferenceNo.Value;

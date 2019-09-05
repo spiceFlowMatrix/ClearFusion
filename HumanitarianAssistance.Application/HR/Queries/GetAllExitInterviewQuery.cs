@@ -5,5 +5,6 @@ namespace HumanitarianAssistance.Application.HR.Queries
 {
     public class GetAllExitInterviewQuery : IRequest<ApiResponse>
     {
+        public int OfficeId { get; set; }
     }
 }

@@ -36,7 +36,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                                          .Include(x => x.InterviewTrainingsList)
                                                          .Include(x => x.HRJobInterviewersList)
                                                          .Include(x => x.InterviewTechnicalQuestionList)
-                                                         .Where(x => x.IsDeleted == false)
+                                                         .Include(x=> x.JobHiringDetail)
+                                                         .Where(x => x.IsDeleted == false && x.JobHiringDetail.OfficeId == request.OfficeId)
                                                          .ToListAsync();
                 foreach (var model in recordLst)
                 {
@@ -137,6 +138,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                     obj.EmployeeID = model.EmployeeID;
                     obj.CandidateName = empDetail.EmployeeName;
+                    // obj.OfficeId = model.OfficeId;
 
                     obj.JobId = model.JobId;
                     obj.DutyStation = jobDetail.OfficeDetails?.OfficeName;

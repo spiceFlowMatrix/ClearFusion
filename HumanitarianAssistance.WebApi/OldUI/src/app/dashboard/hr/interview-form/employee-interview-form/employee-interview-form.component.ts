@@ -1,6 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { HrService } from '../../hr.service';
-import { CodeService } from '../../../code/code.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GLOBAL } from '../../../../shared/global';
@@ -12,7 +11,7 @@ import { CommonService } from '../../../../service/common.service';
   templateUrl: './employee-interview-form.component.html',
   styleUrls: ['./employee-interview-form.component.css']
 })
-export class EmployeeInterviewFormComponent implements OnInit {
+export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
   //#region "Variables"
 
   // Data Source
@@ -30,6 +29,7 @@ export class EmployeeInterviewFormComponent implements OnInit {
   currentInterviewDetailsId: number;
   currentApproveReject: boolean;
   interviewFormViewOnly: boolean;
+  @Input() officeId: any;
 
   yesNoRadioGroup: any[];
   interviewFormRadioGroup: any[];
@@ -59,7 +59,6 @@ export class EmployeeInterviewFormComponent implements OnInit {
 
   constructor(
     private hrService: HrService,
-    private codeService: CodeService,
     private router: Router,
     private setting: AppSettingsService,
     private toastr: ToastrService,
@@ -67,10 +66,16 @@ export class EmployeeInterviewFormComponent implements OnInit {
   ) {}
   ngOnInit() {
     this.initializeForm();
-    this.getAllEmployeeListByOfficeId();
-    this.getjobCodeList();
+  }
 
-    this.getAllInterviewDetails();
+  ngOnChanges(changes: SimpleChanges) {
+
+    if (changes !== undefined && changes.officeId !== undefined) {
+      this.officeId = changes.officeId.currentValue;
+      this.getAllEmployeeListByOfficeId();
+      this.getAllInterviewDetails();
+      this.getjobCodeList();
+    }
   }
 
   initializeForm() {
@@ -241,11 +246,13 @@ export class EmployeeInterviewFormComponent implements OnInit {
 
   //#region "getAllInterviewDetails"
   getAllInterviewDetails() {
-    this.empInterviewFormLoader = true;
+    if (this.officeId !== undefined) {
+      this.empInterviewFormLoader = true;
 
     this.hrService
-      .GetAllDetails(
-        this.setting.getBaseUrl() + GLOBAL.API_Hr_GetAllInterviewDetails
+      .GetAllDetailsByOfficeId(
+        this.setting.getBaseUrl() + GLOBAL.API_Hr_GetAllInterviewDetails,
+        this.officeId
       )
       .subscribe(
         data => {
@@ -255,6 +262,7 @@ export class EmployeeInterviewFormComponent implements OnInit {
             data.data.InterviewDetailList != null &&
             data.data.InterviewDetailList.length > 0
           ) {
+            debugger;
             data.data.InterviewDetailList.forEach(element => {
               this.interviewDataSource.push(element);
             });
@@ -279,13 +287,14 @@ export class EmployeeInterviewFormComponent implements OnInit {
           this.empInterviewFormLoader = false;
         }
       );
+    }
   }
   //#endregion
 
   //#region "Get All Employee List By OfficeId"
   getAllEmployeeListByOfficeId() {
     // tslint:disable-next-line:radix
-    const officeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
+    const officeId = this.officeId;
     this.hrService
       .GetAllDetail(
         this.setting.getBaseUrl() + GLOBAL.API_Code_GetEmployeeDetailByOfficeId,
@@ -331,8 +340,9 @@ export class EmployeeInterviewFormComponent implements OnInit {
 
   //#region "Get All Job Code"
   getjobCodeList() {
-    // tslint:disable-next-line:radix
-    const officeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
+    if (this.officeId !== undefined) {
+      // tslint:disable-next-line:radix
+    const officeId = this.officeId;
     this.hrService
       .GetAllDetail(
         this.setting.getBaseUrl() + GLOBAL.API_HR_GetAllJobHiringDetails,
@@ -373,6 +383,7 @@ export class EmployeeInterviewFormComponent implements OnInit {
           }
         }
       );
+    }
   }
   //#endregion "Get All Job Code"
 
@@ -701,6 +712,9 @@ export class EmployeeInterviewFormComponent implements OnInit {
   }
 
   //#endregion
+
+  
+
 
   //#region "onIsInterviewFormApprovedValueChanged"
   onIsInterviewFormApprovedValueChanged(cellData: any, e: any) {

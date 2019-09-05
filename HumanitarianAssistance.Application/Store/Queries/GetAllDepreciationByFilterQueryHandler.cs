@@ -73,11 +73,12 @@ namespace HumanitarianAssistance.Application.Store.Queries
                         }
 
                         DepreciationReportModel obj = new DepreciationReportModel();
+                        double daysSincePurchase= Math.Ceiling(request.CurrentDate.Subtract(item.PurchaseDate).TotalDays);
 
                         obj.ItemName = item.StoreInventoryItem.ItemName;
                         obj.PurchaseId = item.PurchaseId;
                         obj.PurchaseDate = item.PurchaseDate;
-                        obj.HoursSincePurchase = Math.Round(Math.Abs(request.CurrentDate.Subtract(item.PurchaseDate).TotalHours), 4);
+                        obj.HoursSincePurchase = (daysSincePurchase) * 24; //Multiply total hours in a day for the day purchase was made count purchase day as well(need not to count hours but only days)
                         obj.DepreciationRate = item.DepreciationRate;
                         obj.DepreciationAmount = Math.Round(((obj.HoursSincePurchase * item.DepreciationRate * item.UnitCost) / 100) * (double)dollarExchangeRate.Rate, 4);
                         obj.CurrentValue = Math.Round((item.UnitCost - obj.DepreciationAmount) * (double)dollarExchangeRate.Rate, 4);
