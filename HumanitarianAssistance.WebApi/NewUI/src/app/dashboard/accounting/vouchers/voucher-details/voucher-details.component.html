@@ -234,30 +234,24 @@
                       <div class="col-sm-12">
                         <div class="border_bottom">
                           <br />
-                          <h4 class="display_inline">TRANSACTIONS</h4>
+                          <h4 class="display_inline_block">TRANSACTIONS</h4>
 
-                          <div
-                            *ngIf="
-                              checkTransactionFlag;
-                              else checkTransactionTemplate
-                            "
-                          >
-                            <mat-spinner diameter="20"></mat-spinner>
-                          </div>
-                          <ng-template #checkTransactionTemplate>
-                            <button
-                              class="pull-right"
-                              mat-stroked-button
-                              color="accent"
-                              pTooltip="Save Transaction"
-                              tooltipPosition="top"
-                              (click)="onTransactionListVerify()"
-                              *ngIf="isEditingAllowed"
-                            >
-                              <mat-icon aria-label="done icon">done</mat-icon>
-                              Save
-                            </button>
-                          </ng-template>
+                          <button
+                          mat-stroked-button
+                          color="accent"
+                          class="pull-right"
+                          pTooltip="Save Transaction"
+                          tooltipPosition="top"
+                          (click)="onTransactionListVerify()"
+                          *ngIf="isEditingAllowed"
+                          [disabled]="checkTransactionFlag">
+                            <span class="display_inline_block">
+                              <mat-spinner *ngIf="checkTransactionFlag" [diameter]="15"></mat-spinner>
+                            </span>
+                            <mat-icon  *ngIf="!checkTransactionFlag"  aria-label="done">done</mat-icon>
+                            Save
+                          </button>
+
                         </div>
                       </div>
                     </div>

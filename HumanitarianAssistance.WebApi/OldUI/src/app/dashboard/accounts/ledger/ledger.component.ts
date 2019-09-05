@@ -114,7 +114,7 @@ export class LedgerComponent implements OnInit {
     const officeRequest = this.getOfficeCodeListResponse();
     const accountResponse = this.GetAccountDetailsResponse();
 
-    // perform filter when we get all api responses 
+    // perform filter when we get all api responses
     forkJoin([currencyRequest, officeRequest, accountResponse]).subscribe(
       results => {
         this.getCurrencyCodeList(results[0]);
@@ -130,6 +130,9 @@ export class LedgerComponent implements OnInit {
           OfficeIdList: this.selectedOffices
         };
         this.onApplyingFilter(obj);
+      },
+      error => {
+          this.toastr.error('Internal server error');
       }
     );
 
@@ -153,38 +156,6 @@ export class LedgerComponent implements OnInit {
     return this.codeservice.GetAllCodeList(
       this.setting.getBaseUrl() + GLOBAL.API_CurrencyCodes_GetAllCurrency
     );
-    // .subscribe(
-    //   data => {
-    //     this.currencyDropdown = [];
-    //     if (data.data.CurrencyList != null) {
-    //       data.data.CurrencyList.forEach(element => {
-    //         this.currencyDropdown.push(element);
-    //       });
-    //       this.selectedCurrency = this.currencyDropdown[0].CurrencyId;
-
-    //       this.initialFlag += 1;
-    //       if (this.initialFlag === 2) {
-    //         const obj = {
-    //           CurrencyId: this.selectedCurrency,
-    //           accountLists: this.selectedAccounts,
-    //           RecordType: this.defaultRecordType,
-    //           FromDate: null,
-    //           ToDate: null
-    //         };
-    //         this.onApplyingFilter(obj);
-    //       }
-    //     }
-    //   },
-    //   error => {
-    //     if (error.StatusCode === 500) {
-    //       this.toastr.error('Internal Server Error....');
-    //     } else if (error.StatusCode === 401) {
-    //       this.toastr.error('Unauthorized Access Error....');
-    //     } else if (error.StatusCode === 403) {
-    //       this.toastr.error('Forbidden Error....');
-    //     }
-    //   }
-    // );
   }
   //#endregion
 
@@ -193,45 +164,6 @@ export class LedgerComponent implements OnInit {
     return this.codeservice.GetAllCodeList(
       this.setting.getBaseUrl() + GLOBAL.API_OfficeCode_GetAllOfficeDetails
     );
-    // .subscribe(
-    //   data => {
-    //     if (data.data.OfficeDetailsList != null) {
-    //       this.officeDropdown = [];
-    //       data.data.OfficeDetailsList.forEach(element => {
-    //         this.officeDropdown.push(element);
-    //       });
-
-    //       const officeIds: any[] =
-    //         localStorage.getItem('ALLOFFICES') != null
-    //           ? localStorage.getItem('ALLOFFICES').split(',')
-    //           : null;
-
-    //       // fetch only allowed office
-    //       officeIds.forEach(x => {
-    //         const officeData = this.officeDropdown.filter(
-    //           // tslint:disable-next-line:radix
-    //           e => e.OfficeId === parseInt(x)
-    //         )[0];
-    //         // this.officeDropdown.push(officeData);
-    //       });
-
-    //       this.selectedOffices = [];
-    //       officeIds.forEach(x => {
-    //         // tslint:disable-next-line:radix
-    //         this.selectedOffices.push(parseInt(x));
-    //       });
-    //     }
-    //   },
-    //   error => {
-    //     if (error.StatusCode === 500) {
-    //       this.toastr.error('Internal Server Error....');
-    //     } else if (error.StatusCode === 401) {
-    //       this.toastr.error('Unauthorized Access Error....');
-    //     } else if (error.StatusCode === 403) {
-    //       this.toastr.error('Forbidden Error....');
-    //     }
-    //   }
-    // );
   }
   //#endregion
 
@@ -240,52 +172,6 @@ export class LedgerComponent implements OnInit {
     return this.accountservice.GetAccountDetails(
       this.setting.getBaseUrl() + GLOBAL.API_Accounting_GetAccountDetails
     );
-    // .subscribe(
-    //   data => {
-    //     this.accountDropdown = [];
-    //     this.selectedAccounts = [];
-    //     if (data.StatusCode === 200 && data.data.AccountDetailList != null) {
-    //       data.data.AccountDetailList = data.data.AccountDetailList.filter(
-    //         x => x.AccountLevelId === 4
-    //       );
-    //       if (data.data.AccountDetailList.length > 0) {
-    //         data.data.AccountDetailList.forEach(element => {
-    //           this.accountDropdown.push({
-    //             AccountCode: element.AccountCode,
-    //             AccountName: element.AccountName
-    //           });
-    //         });
-    //         this.selectedAccounts.push(
-    //           data.data.AccountDetailList[
-    //             data.data.AccountDetailList.length - 1
-    //           ].AccountCode
-    //         );
-
-    //         this.initialFlag += 1;
-    //         if (this.initialFlag === 2) {
-    //           const obj = {
-    //             CurrencyId: this.selectedCurrency,
-    //             accountLists: this.selectedAccounts,
-    //             RecordType: this.defaultRecordType,
-    //             FromDate: null,
-    //             ToDate: null
-    //           };
-    //           this.onApplyingFilter(obj);
-    //         }
-    //       }
-    //     }
-    //   },
-    //   error => {
-    //     if (error.StatusCode === 500) {
-    //       this.toastr.error('Internal Server Error....');
-    //     } else if (error.StatusCode === 401) {
-    //       this.toastr.error('Unauthorized Access Error....');
-    //     } else if (error.StatusCode === 403) {
-    //       this.toastr.error('Forbidden Error....');
-    //     } else {
-    //     }
-    //   }
-    // );
   }
   //#endregion
 
@@ -297,18 +183,6 @@ export class LedgerComponent implements OnInit {
         this.currencyDropdown.push(element);
       });
       this.selectedCurrency = this.currencyDropdown[0].CurrencyId;
-
-      // this.initialFlag += 1;
-      // if (this.initialFlag === 2) {
-      //   const obj = {
-      //     CurrencyId: this.selectedCurrency,
-      //     accountLists: this.selectedAccounts,
-      //     RecordType: this.defaultRecordType,
-      //     FromDate: null,
-      //     ToDate: null
-      //   };
-      //   this.onApplyingFilter(obj);
-      // }
     } else {
       this.toastr.error(response.Message);
     }
@@ -369,23 +243,11 @@ export class LedgerComponent implements OnInit {
             AccountName: element.AccountName
           });
         });
-        this.selectedAccounts.push(
-          response.data.AccountDetailList[
-            response.data.AccountDetailList.length - 1
-          ].AccountCode
-        );
 
-        // this.initialFlag += 1;
-        // if (this.initialFlag === 2) {
-        //   const obj = {
-        //     CurrencyId: this.selectedCurrency,
-        //     accountLists: this.selectedAccounts,
-        //     RecordType: this.defaultRecordType,
-        //     FromDate: null,
-        //     ToDate: null
-        //   };
-        //   this.onApplyingFilter(obj);
-        // }
+          this.accountDropdown.map(x => {
+            this.selectedAccounts.push(x.AccountCode);
+          });
+
       }
     } else {
       this.toastr.error(response.Message);

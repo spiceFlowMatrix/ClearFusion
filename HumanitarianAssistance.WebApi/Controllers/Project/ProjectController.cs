@@ -1252,7 +1252,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(command);
         }
 
-
+        [HttpPost]
+        public async Task<ApiResponse> DeleteProjectIndicatorDetail([FromBody]long indicatorId)
+        {
+            return await _mediator.Send(new DeleteProjectIndicatorDetailCommand {  IndicatorId = indicatorId });
+        }
 
 
         [HttpPost]
@@ -1261,6 +1265,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(new GetProjectIndicatorQuestionsByIdQuery { indicatorId = indicatorId });
         }
 
+        [HttpPost]
+        public async Task<ApiResponse> DeleteIndicatorQuestionDetail([FromBody]long indicatorId)
+        {
+            return await _mediator.Send(new DeleteIndicatorQuestionDetailCommand { IndicatorQuestionId = indicatorId });
+        }
         #endregion
 
         #region "GetProjectProposalReport"

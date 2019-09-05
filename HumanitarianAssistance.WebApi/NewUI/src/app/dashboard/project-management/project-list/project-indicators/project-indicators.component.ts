@@ -13,6 +13,9 @@ import {
 } from './project-indicators-model';
 import { MatDialog } from '@angular/material';
 import { AddProjectIndicatorComponent } from './add-project-indicator/add-project-indicator.component';
+import { DeleteConfirmationComponent } from 'projects/library/src/lib/components/delete-confirmation/delete-confirmation.component';
+import { Delete_Confirmation_Texts } from 'src/app/shared/enum';
+import { ProjectIndicatorService } from './project-indicator.service';
 
 @Component({
   selector: 'app-project-indicators',
@@ -48,7 +51,8 @@ export class ProjectIndicatorsComponent implements OnInit {
     public router: Router,
     public toastr: ToastrService,
     public dialog: MatDialog,
-    private routeActive: ActivatedRoute
+    private routeActive: ActivatedRoute,
+    public indicatorService: ProjectIndicatorService
   ) {
     this.getScreenSize();
   }
@@ -168,7 +172,7 @@ export class ProjectIndicatorsComponent implements OnInit {
 
   editIndicatorList(e) {
     const index = this.projectIndicatorList.findIndex(
-      r => r.ProjectIndicatorId === e.projectIndicatorId
+      r => r.ProjectIndicatorId === e.ProjectIndicatorId
     );
     if (index !== -1) {
       this.projectIndicatorList[index] = e;
@@ -221,4 +225,60 @@ export class ProjectIndicatorsComponent implements OnInit {
   }
   //#endregion
 
+  //#region "onIndicatorEditClick"
+  onDeleteIndicator(data: any) {
+    const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
+      width: '300px',
+      height: '250px',
+      data: 'delete',
+      disableClose: false
+    });
+
+    dialogRef.componentInstance.confirmMessage =
+      Delete_Confirmation_Texts.deleteText1;
+
+    dialogRef.componentInstance.confirmText =
+      Delete_Confirmation_Texts.yesText;
+
+    dialogRef.componentInstance.cancelText =
+      Delete_Confirmation_Texts.noText;
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+    dialogRef.componentInstance.confirmDelete.subscribe(res => {
+      dialogRef.componentInstance.isLoading = true;
+      if (
+        data.ProjectIndicatorId != null &&
+        data.ProjectIndicatorId !== undefined &&
+        data.ProjectIndicatorId !== 0
+      ) {
+        this.indicatorService
+          .DeleteIndicatorDetail(
+            data.ProjectIndicatorId
+          )
+          .subscribe(response => {
+             if (response.statusCode === 200) {
+               //to rerfresh the question page list
+               this.child.questionListOnindicatorDelete(data.ProjectIndicatorId) ;
+               this.deletedListRefresh(data.ProjectIndicatorId);
+             }
+            dialogRef.componentInstance.isLoading = false;
+            dialogRef.componentInstance.onCancelPopup();
+          },
+        error => {
+          this.toastr.error('Someting went wrong');
+          dialogRef.componentInstance.isLoading = false;
+          dialogRef.componentInstance.onCancelPopup();
+        });
+      }
+    });
+  }
+  //#endregion
+  // refresh list after delete
+deletedListRefresh(item: number) {
+  const findIndex = this.projectIndicatorList.findIndex(
+    x => x.ProjectIndicatorId === item
+  );
+  this.projectIndicatorList.splice(findIndex, 1);
+}
 }

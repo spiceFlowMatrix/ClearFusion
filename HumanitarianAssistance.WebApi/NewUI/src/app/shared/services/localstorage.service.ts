@@ -1,13 +1,14 @@
 import { IMenuList } from '../dbheader/dbheader.component';
 
 export class LocalStorageService {
-
-//#region
+  //#region
   GetAuthorizedPages(menuList: IMenuList[]): IMenuList[] {
     let isSuperAdmin = false;
     let roles: any;
     const menuListFiltered: IMenuList[] = [];
-    const pagesPermissionList: IPagePermissions[] = JSON.parse(localStorage.getItem('RolePermissions'));
+    const pagesPermissionList: IPagePermissions[] = JSON.parse(
+      localStorage.getItem('RolePermissions')
+    );
     const userRole = localStorage.getItem('UserRoles');
 
     if (userRole != null) {
@@ -18,7 +19,7 @@ export class LocalStorageService {
           for (let i = 0; i < roles.length; i++) {
             if (roles[i].toLowerCase() === 'superadmin') {
               isSuperAdmin = true;
-             return menuList;
+              return menuList;
             }
           }
         }
@@ -26,9 +27,8 @@ export class LocalStorageService {
     }
 
     if (!isSuperAdmin && pagesPermissionList !== null) {
-
       menuList.forEach((x: IMenuList) => {
-        if (pagesPermissionList.findIndex(p => p.PageId ===  x.PageId) !== -1) {
+        if (pagesPermissionList.findIndex(p => p.PageId === x.PageId) !== -1) {
           menuListFiltered.push(x);
         }
       });
@@ -40,10 +40,28 @@ export class LocalStorageService {
   }
   //#endregion
 
+  //#region "getSuperadminDetail"
+  GetSuperAdminDetail() {
+    let isSuperAdmin = false;
+    let roles: any;
+    const userRole = localStorage.getItem('UserRoles');
 
+    if (userRole != null) {
+      roles = userRole.split(',');
 
-
-
+      if (roles != null && roles !== undefined) {
+        if (roles.length > 0 && roles != null) {
+          for (let i = 0; i < roles.length; i++) {
+            if (roles[i].toLowerCase() === 'superadmin') {
+              isSuperAdmin = true;
+              return isSuperAdmin;
+            }
+          }
+        }
+      }
+    }
+  }
+  //#endregion
 
   //#region "Check if permission to view/edit page exists for a role"
   displayModulePages(pageId: number): boolean {
@@ -240,89 +258,92 @@ export class LocalStorageService {
   }
 
   public IsAgreeDisagreeAllowed(pageId: number): boolean {
+    let isSuperadmin = false;
+    let roles: any;
 
-  let isSuperadmin = false;
-  let roles: any;
+    const userRole = localStorage.getItem('UserRoles');
 
-  const userRole = localStorage.getItem('UserRoles');
-
-  if (userRole != null) {
+    if (userRole != null) {
       roles = userRole.split(',');
-  }
+    }
 
-  if (roles.length > 0 && roles != null) {
-
+    if (roles.length > 0 && roles != null) {
       for (let i = 0; i < roles.length; i++) {
-
-          if (roles[i].toLowerCase() === 'superadmin') {
-
-              isSuperadmin = true;
-          }
+        if (roles[i].toLowerCase() === 'superadmin') {
+          isSuperadmin = true;
+        }
       }
-  }
+    }
 
-  if (!isSuperadmin) {// when role is not superadmin then check for permission
+    if (!isSuperadmin) {
+      // when role is not superadmin then check for permission
 
-      const permissionList: any[] = JSON.parse(localStorage.getItem('AgreeDisagreeRolePermissions'));
+      const permissionList: any[] = JSON.parse(
+        localStorage.getItem('AgreeDisagreeRolePermissions')
+      );
 
       const modulePageExists = permissionList.find(x => x.PageId === pageId);
 
-      if (modulePageExists != null) { // if user has permission for the page to view/edit
-          if (modulePageExists.Agree || modulePageExists.Disagree) {
-              return true;
-          } else {
-              return false;
-          }
-      } else {// if user is not having permission then return false
+      if (modulePageExists != null) {
+        // if user has permission for the page to view/edit
+        if (modulePageExists.Agree || modulePageExists.Disagree) {
+          return true;
+        } else {
           return false;
+        }
+      } else {
+        // if user is not having permission then return false
+        return false;
       }
-  } else {// if superadmin then return editing true
+    } else {
+      // if superadmin then return editing true
       return isSuperadmin;
+    }
   }
-}
 
-public IsOrderScheduleAllowed(pageId: number): boolean {
+  public IsOrderScheduleAllowed(pageId: number): boolean {
+    let isSuperadmin = false;
+    let roles: any;
 
-  let isSuperadmin = false;
-  let roles: any;
+    const userRole = localStorage.getItem('UserRoles');
 
-  const userRole = localStorage.getItem('UserRoles');
-
-  if (userRole != null) {
+    if (userRole != null) {
       roles = userRole.split(',');
-  }
+    }
 
-  if (roles.length > 0 && roles != null) {
-
+    if (roles.length > 0 && roles != null) {
       for (let i = 0; i < roles.length; i++) {
-
-          if (roles[i].toLowerCase() === 'superadmin') {
-
-              isSuperadmin = true;
-          }
+        if (roles[i].toLowerCase() === 'superadmin') {
+          isSuperadmin = true;
+        }
       }
-  }
+    }
 
-  if (!isSuperadmin) {// when role is not superadmin then check for permission
+    if (!isSuperadmin) {
+      // when role is not superadmin then check for permission
 
-      const permissionList: any[] = JSON.parse(localStorage.getItem('OrderScheduleRolePermissions'));
+      const permissionList: any[] = JSON.parse(
+        localStorage.getItem('OrderScheduleRolePermissions')
+      );
 
       const modulePageExists = permissionList.find(x => x.PageId === pageId);
 
-      if (modulePageExists != null) { // if user has permission for the page to view/edit
-          if (modulePageExists.OrderSchedule) {
-              return true;
-          } else {
-              return false;
-          }
-      } else {// if user is not having permission then return false
+      if (modulePageExists != null) {
+        // if user has permission for the page to view/edit
+        if (modulePageExists.OrderSchedule) {
+          return true;
+        } else {
           return false;
+        }
+      } else {
+        // if user is not having permission then return false
+        return false;
       }
-  } else {// if superadmin then return editing true
+    } else {
+      // if superadmin then return editing true
       return isSuperadmin;
+    }
   }
-}
-
 }
 export interface IPagePermissions {
   ModuleId: number;

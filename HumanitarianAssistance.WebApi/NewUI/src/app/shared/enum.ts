@@ -44,8 +44,8 @@ export enum AccountLevelLimits {
 }
 
 export enum Activities {
-  Broadcasting = "Broadcasting",
-  Production = "Production"
+  Broadcasting = 'Broadcasting',
+  Production = 'Production'
 }
 
 //#region "Criteria Evaluation"
@@ -459,19 +459,19 @@ export enum TargetBeneficiaryTypes_Enum {
 
 //#region "ProposalDocument_Enum"
 export enum ProposalDocument_Enum {
-  proposal = "Proposal",
-  edifile = "EOI",
-  budgetfile = "BUDGET",
-  conceptfile = "CONCEPT",
-  presentationfile = "PRESENTATION"
+  proposal = 'Proposal',
+  edifile = 'EOI',
+  budgetfile = 'BUDGET',
+  conceptfile = 'CONCEPT',
+  presentationfile = 'PRESENTATION'
 }
 //#endregion
 
 //#region "Delete_Confirmation_Texts"
 export enum Delete_Confirmation_Texts {
-  deleteText1 = "Are you sure ?",
-  yesText = "Confirm",
-  noText = "cancel"
+  deleteText1 = 'Are you sure ?',
+  yesText = 'Confirm',
+  noText = 'cancel'
 }
 //#endregion
 
