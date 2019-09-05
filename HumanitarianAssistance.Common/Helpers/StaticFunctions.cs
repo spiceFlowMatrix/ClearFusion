@@ -58,4 +58,13 @@ namespace HumanitarianAssistance.Common.Helpers
     {
         public static float DefaultPensionRate = 4.5f;
     }
+
+    public static class PurchaseCode
+    {
+        public static string GetPurchaseCode(DateTime purchaseDate, string purchaseName, long purchaseId)
+        {
+
+            return purchaseName+"-"+purchaseDate.Date.ToShortDateString()+"-"+purchaseId;
+        }
+    }
 }

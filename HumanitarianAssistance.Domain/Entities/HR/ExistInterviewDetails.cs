@@ -72,5 +72,6 @@ namespace HumanitarianAssistance.Domain.Entities.HR
 
         public bool Question { get; set; }
         public string Explain { get; set; }
+        public int OfficeId { get; set; }
     }
 }

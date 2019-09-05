@@ -66,12 +66,13 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                          ProfessionId = hr.ProfessionId,
                                          ProfessionName = p.ProfessionName,
                                          TotalVacancies = hr.TotalVacancies,
-                                         RequestedBy = ud.Select(x => new
-                                         {
-                                             FullName = x.FirstName + " " + x.LastName,
-                                             x.AspNetUserId,
-                                             x.IsDeleted
-                                         }).FirstOrDefault(a => a.AspNetUserId == hr.CreatedById && a.IsDeleted == false).FullName
+                                        //  RequestedBy = ud.Select(x => new
+                                        //  {
+                                        //      FullName = x.FirstName + " " + x.LastName,
+                                        //      x.AspNetUserId,
+                                        //      x.IsDeleted
+                                        //  }).FirstOrDefault(a => a.AspNetUserId == hr.CreatedById && a.IsDeleted == false).FullName
+                                        RequestedBy = u.FirstName + " "+ u.LastName
 
                                      })
                                      .Skip(request.pageSize.Value * request.pageIndex.Value)

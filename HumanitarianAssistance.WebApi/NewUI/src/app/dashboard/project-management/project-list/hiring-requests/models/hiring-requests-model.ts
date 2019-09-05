@@ -124,6 +124,7 @@ export interface IitervireCandidateModel {
   JobId?: number;
   Status?: string;
   JobDescription: string;
+  OfficeId?: number;
 }
 export interface ISelectedCandidateModel {
   BudgetLineId?: number;

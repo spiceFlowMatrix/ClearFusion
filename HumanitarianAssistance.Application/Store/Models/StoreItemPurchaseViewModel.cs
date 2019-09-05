@@ -45,5 +45,7 @@ namespace HumanitarianAssistance.Application.Store.Models
         public double TotalCostUSD { get; set; }
         public long ImageDocumentId { get; set;}
         public long InvoiceDocumentId {get; set; }
+        public string PurchaseName { get; set; }
+        public string PurchaseCode { get; set; }
     }
 }

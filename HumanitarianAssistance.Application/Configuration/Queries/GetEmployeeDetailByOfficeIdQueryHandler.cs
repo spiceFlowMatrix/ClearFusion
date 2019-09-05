@@ -1,5 +1,6 @@
 ﻿using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Application.Project.Models;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Persistence;
 using MediatR;
@@ -26,7 +27,7 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
             {
                 var OfficeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.OfficeId == request.OfficeId);
 
-                response.data.EmployeeDetailListData = await _dbContext.EmployeeDetail.Include(x => x.EmployeeProfessionalDetail).Where(x => x.EmployeeProfessionalDetail.OfficeId == request.OfficeId && x.EmployeeTypeId != 1 && x.IsDeleted == false).Select(x => new EmployeeDetailListModel
+                response.data.EmployeeDetailListData = await _dbContext.EmployeeDetail.Include(x => x.EmployeeProfessionalDetail).Where(x => x.EmployeeProfessionalDetail.OfficeId == request.OfficeId && x.EmployeeTypeId != (int)EmployeeTypeStatus.Terminated && x.IsDeleted == false).Select(x => new EmployeeDetailListModel
                 {
                     EmployeeId = x.EmployeeID,
                     EmployeeName = x.EmployeeName,

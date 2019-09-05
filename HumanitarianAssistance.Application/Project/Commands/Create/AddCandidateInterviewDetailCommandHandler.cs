@@ -42,6 +42,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                         obj.IsDeleted = false;
                         obj.JobId = Jobdetail.JobId;
                         obj.EmployeeID = request.EmployeeID;
+                        // obj.OfficeId = request.OfficeId;
+                        
                         await _dbContext.InterviewDetails.AddAsync(obj);
                         await _dbContext.SaveChangesAsync();
                     }
