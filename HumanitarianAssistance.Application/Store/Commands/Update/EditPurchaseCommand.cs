@@ -40,5 +40,6 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
         public int? JournalCode { get; set; }
       //  public string VerifiedPurchaseVoucherReferenceNo { get; set; }
         public int? TimezoneOffset { get; set; }
+        public string PurchaseName { get; set; }
     }
 }

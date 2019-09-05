@@ -71,6 +71,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                    // IsPurchaseVerified = v.IsPurchaseVerified,
                    // VerifiedPurchaseVoucher = v.VerifiedPurchaseVoucher,
                     JournalCode = v.JournalCode,
+                    PurchaseName= v.PurchaseName,
+                    PurchaseCode= PurchaseCode.GetPurchaseCode(v.PurchaseDate, v.PurchaseName, v.PurchaseId)
                    // VerifiedPurchaseVoucherReferenceNo = v.VerifiedPurchaseVoucher != null ? _dbContext.VoucherDetail.FirstOrDefault(x => x.IsDeleted == false && x.VoucherNo == v.VerifiedPurchaseVoucher).ReferenceNo : null
                 }).OrderByDescending(x=> x.PurchaseDate).ToList();
 

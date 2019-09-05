@@ -107,6 +107,11 @@
               <dxi-validation-rule type="required"> </dxi-validation-rule>
             </dxi-item>
 
+            <dxi-item dataField="PurchaseName">
+                <dxo-label alignment="left"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
             <dxi-item dataField="Currency" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencyModel, value: purchaseDetailsForm.Currency, valueExpr: 'CurrencyId', displayExpr: 'CurrencyCode', searchEnabled: true, showClearButton: false  }">
               <dxo-label text="Currency" alignment="left"></dxo-label>
               <dxi-validation-rule type="required"> </dxi-validation-rule>
@@ -285,6 +290,11 @@
               <dxo-label alignment="left"></dxo-label>
               <dxi-validation-rule type="required"> </dxi-validation-rule>
             </dxi-item>
+
+            <dxi-item dataField="PurchaseName">
+                <dxo-label alignment="left"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
 
             <dxi-item dataField="Currency" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencyModel, value: purchaseDetailsForm.Currency, valueExpr: 'CurrencyId', displayExpr: 'CurrencyCode', searchEnabled: true, showClearButton: false  }">
               <dxo-label text="Currency" alignment="left"></dxo-label>

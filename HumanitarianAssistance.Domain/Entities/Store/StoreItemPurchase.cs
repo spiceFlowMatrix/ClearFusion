@@ -55,6 +55,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public long? VerifiedPurchaseVoucher { get; set; }
         public int? OfficeId { get; set; }
         public int? JournalCode { get; set; }
+        public string PurchaseName { get; set; }
 
 
         [ForeignKey("InventoryItem")]
