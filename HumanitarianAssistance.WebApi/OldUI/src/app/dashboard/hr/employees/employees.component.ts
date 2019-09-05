@@ -236,7 +236,8 @@ export class EmployeesComponent implements OnInit {
       ReferBy: null,
       OfficeId: null,
       TinNumber: null,
-      GradeId: null
+      GradeId: null,
+      OpeningPension: 0
     };
 
     this.empDocuments = {
@@ -1120,7 +1121,8 @@ export class EmployeesComponent implements OnInit {
       MaritalStatusId: value.MaritalStatus,
       PlaceOfBirth: value.BirthPlace,
       TinNumber: value.TinNumber,
-      GradeId: value.GradeId
+      GradeId: value.GradeId,
+      OpeningPension: value.OpeningPension
     };
 
     this.hrService

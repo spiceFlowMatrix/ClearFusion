@@ -63,9 +63,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return await _mediator.Send(command);
         }
         [HttpGet]
-        public async Task<ApiResponse> GetAllInterviewDetails()
+        public async Task<ApiResponse> GetAllInterviewDetails([FromQuery] int OfficeId)
         {
-            return await _mediator.Send(new GetAllInterviewDetailsQuery()); 
+            return await _mediator.Send(new GetAllInterviewDetailsQuery { OfficeId = OfficeId }); 
         }
 
         [HttpGet]

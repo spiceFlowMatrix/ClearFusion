@@ -21,6 +21,9 @@ export class EmployeeInterviewFormComponent implements OnInit {
   trainingListDataSource: InterviewTrainingModel[];
   technicalQuestionsListDataSource: InterviewTechnicalQuestionModel[];
   Interviewers: any[]= [];
+  officeDropdownList: any[] = [];
+  selectedOffice: any;
+  officecodelist: any[];
 
   employeeListDataSource: EmployeeListModel[];
   genderTypesDropdown: any[];
@@ -67,10 +70,7 @@ export class EmployeeInterviewFormComponent implements OnInit {
   ) {}
   ngOnInit() {
     this.initializeForm();
-    this.getAllEmployeeListByOfficeId();
-    this.getjobCodeList();
-
-    this.getAllInterviewDetails();
+    this.getOfficeCodeList();
   }
 
   initializeForm() {
@@ -244,8 +244,9 @@ export class EmployeeInterviewFormComponent implements OnInit {
     this.empInterviewFormLoader = true;
 
     this.hrService
-      .GetAllDetails(
-        this.setting.getBaseUrl() + GLOBAL.API_Hr_GetAllInterviewDetails
+      .GetAllDetailsByOfficeId(
+        this.setting.getBaseUrl() + GLOBAL.API_Hr_GetAllInterviewDetails,
+        this.selectedOffice
       )
       .subscribe(
         data => {
@@ -285,7 +286,7 @@ export class EmployeeInterviewFormComponent implements OnInit {
   //#region "Get All Employee List By OfficeId"
   getAllEmployeeListByOfficeId() {
     // tslint:disable-next-line:radix
-    const officeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
+    const officeId = this.selectedOffice;
     this.hrService
       .GetAllDetail(
         this.setting.getBaseUrl() + GLOBAL.API_Code_GetEmployeeDetailByOfficeId,
@@ -332,7 +333,7 @@ export class EmployeeInterviewFormComponent implements OnInit {
   //#region "Get All Job Code"
   getjobCodeList() {
     // tslint:disable-next-line:radix
-    const officeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
+    const officeId = this.selectedOffice;
     this.hrService
       .GetAllDetail(
         this.setting.getBaseUrl() + GLOBAL.API_HR_GetAllJobHiringDetails,
@@ -729,6 +730,76 @@ export class EmployeeInterviewFormComponent implements OnInit {
     if (data) {
     }
   }
+  //#endregion
+
+    //#region  "getOfficeCodeList"
+  getOfficeCodeList() {
+    this.codeService
+        .GetAllCodeList(
+            this.setting.getBaseUrl() + GLOBAL.API_OfficeCode_GetAllOfficeDetails
+        )
+        .subscribe(
+            data => {
+                this.officecodelist = [];
+                if (
+                    data.StatusCode === 200 &&
+                    data.data.OfficeDetailsList.length > 0
+                ) {
+                    data.data.OfficeDetailsList.forEach(element => {
+                        this.officecodelist.push({
+                            Office: element.OfficeId,
+                            OfficeCode: element.OfficeCode,
+                            OfficeName: element.OfficeName,
+                            SupervisorName: element.SupervisorName,
+                            PhoneNo: element.PhoneNo,
+                            FaxNo: element.FaxNo,
+                            OfficeKey: element.OfficeKey
+                        });
+                    });
+
+                    const AllOffices = localStorage.getItem('ALLOFFICES').split(',');
+
+                    data.data.OfficeDetailsList.forEach(element => {
+                        const officeFound = AllOffices.indexOf('' + element.OfficeId);
+                        if (officeFound !== -1) {
+                            this.officeDropdownList.push({
+                                OfficeId: element.OfficeId,
+                                OfficeCode: element.OfficeCode,
+                                OfficeName: element.OfficeName,
+                                SupervisorName: element.SupervisorName,
+                                PhoneNo: element.PhoneNo,
+                                FaxNo: element.FaxNo,
+                                OfficeKey: element.OfficeKey
+                            });
+                        }
+                    });
+
+                    this.selectedOffice =
+                        (this.selectedOffice === null || this.selectedOffice == undefined)
+                                ? this.officeDropdownList[0].OfficeId
+                            : this.selectedOffice;
+
+                    this.getAllEmployeeListByOfficeId();
+                    this.getjobCodeList();
+                    this.getAllInterviewDetails();
+                    // this.getAllEmployeeAppraisalMoreDetails();
+
+                    // tslint:disable-next-line:curly
+                } else if (data.StatusCode === 400)
+                    this.toastr.error('Something went wrong!');
+            },
+            error => {
+                if (error.StatusCode === 500) {
+                    this.toastr.error('Internal Server Error....');
+                } else if (error.StatusCode === 401) {
+                    this.toastr.error('Unauthorized Access Error....');
+                } else if (error.StatusCode === 403) {
+                    this.toastr.error('Forbidden Error....');
+                } else {
+                }
+            }
+        );
+}
   //#endregion
 
   //#region "on Back Button Click"
