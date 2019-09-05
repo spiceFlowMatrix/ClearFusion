@@ -261,7 +261,7 @@ export class VoucherListingComponent implements OnInit {
               ProjectId: element.ProjectId,
               ProjectCode: element.ProjectCode,
               ProjectName: element.ProjectName,
-              ProjectNameCode: element.ProjectCode+"-"+element.ProjectName
+              ProjectNameCode: element.ProjectCode + ' - ' + element.ProjectName
             });
           });
         }

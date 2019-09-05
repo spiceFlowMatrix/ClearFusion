@@ -133,26 +133,19 @@
     <div mat-dialog-actions class="pull-right">
       <button mat-raised-button [mat-dialog-close]="data.data">Cancel</button>
 
-      <!-- <button mat-raised-button color="primary" type="submit" [disabled]="!addVoucherForm.valid || addVoucherLoader" cdkFocusInitial>
-     <span class="pull-left spinner_center" *ngIf="addVoucherLoader"><mat-spinner [diameter]="15"></mat-spinner></span>
-    Create
-  </button> -->
-
       <button
         mat-raised-button
         color="accent"
         type="submit"
         [disabled]="!addVoucherForm.valid || addVoucherLoader"
         cdkFocusInitial
+        [disabled]="addVoucherLoader"
       >
-        <span *ngIf="!addVoucherLoader; else addVoucherLoaderTemplate"
-          >Create</span
-        >
-        <ng-template #addVoucherLoaderTemplate>
-          <div class="spinner_center padding_bottom_5">
-            <mat-spinner [diameter]="25"> </mat-spinner>
-          </div>
-        </ng-template>
+        <span class="display_inline_block">
+          <mat-spinner *ngIf="addVoucherLoader" [diameter]="15"></mat-spinner>
+        </span>
+        <mat-icon *ngIf="!addVoucherLoader" aria-label="done">done</mat-icon>
+        Create
       </button>
     </div>
   </form>
