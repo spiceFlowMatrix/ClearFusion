@@ -96,7 +96,7 @@ export class IncomeExpenseViewComponent implements OnInit {
 
     this.scrollStyles = {
       'overflow-y': 'auto',
-      height: this.screenHeight - 110 + 'px',
+      height: this.screenHeight - 150 + 'px',
       'overflow-x': 'hidden'
     };
   }
