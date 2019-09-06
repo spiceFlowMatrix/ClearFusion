@@ -134,7 +134,6 @@ onFilterApplied() {
 
   //#region "onItemClick"
   onItemClick(item: any) {
-    console.log(item);
     this.selectedHiringRequestId = item.HiringRequestId;
     this.hiringRequestDetail = item;
     this.showHiringRequestDetailPanel();

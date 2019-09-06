@@ -39,11 +39,12 @@ namespace HumanitarianAssistance.WebApi.Controllers
         [Produces(contentType:"application/pdf")]
         public IActionResult CreatePdf()
         {
+            var result = _mediator.Send(new GetAllVoucherSummaryReportPdfQuery());
             var _stream = new MemoryStream();
             using (var pdfWriter = new PdfWriter(_stream))
             {
                 pdfWriter.SetCloseStream(false);
-                using (var document = HtmlConverter.ConvertToDocument(new FileStream(_hosting.WebRootPath + "/test.html",FileMode.Open), pdfWriter))
+                using (var document = HtmlConverter.ConvertToDocument(result.Result.ResponseData, pdfWriter))
                 {
                   
                 }
