@@ -220,7 +220,7 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
   //#region "Get All Employee List By OfficeId"
   getAllEmployeeListByOfficeId() {
     // tslint:disable-next-line:radix
-    const officeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
+    const officeId = this.officeId;
     this.hrService
       .GetAllDetailsByOfficeId(
         this.setting.getBaseUrl() + GLOBAL.API_Code_GetEmployeeDetailByOfficeId,
