@@ -59,7 +59,7 @@ export class ProjectIndicatorService {
   }
   //#endregion
 
-  //#region "EditProjectIndicatorQuestions"
+  //#region "AddProjectIndicatorQuestions"
   AddProjectIndicatorQuestions(model: IQuestionDetailModel) {
     return this.globalService
       .post(
@@ -79,6 +79,29 @@ export class ProjectIndicatorService {
       );
   }
   //#endregion
+
+  //#region "EditProjectIndicatorQuestions"
+  EditProjectIndicatorQuestions(model: IQuestionDetailModel) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Project_EditProjectIndicatorQuestions,
+        model
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.ResponseData,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
+
   //#region "GetIndicatorQuestionById"
   GetIndicatorQuestionById(id: number) {
     return this.globalService
@@ -99,44 +122,46 @@ export class ProjectIndicatorService {
       );
   }
   //#endregion
-//#region "DeleteQuestionDetail"
-DeleteQuestionDetail(id: number) {
-  return this.globalService
-  .post(
-    this.appurl.getApiUrl() +
-      GLOBAL.API_Project_DeleteIndicatorQuestionDetail,
-    id
-  )
-  .pipe(
-    map(x => {
-      const responseData: IResponseData = {
-        data: x.ResponseData,
-        statusCode: x.StatusCode,
-        message: x.Message
-      };
-      return responseData;
-    })
-  );
-}
-//#endregion
-//#region "DeleteIndicatorDetail"
-DeleteIndicatorDetail(id: number) {
-  return this.globalService
-  .post(
-    this.appurl.getApiUrl() +
-      GLOBAL.API_Project_DeleteProjectIndicatorDetail,
-    id
-  )
-  .pipe(
-    map(x => {
-      const responseData: IResponseData = {
-        data: x.ResponseData,
-        statusCode: x.StatusCode,
-        message: x.Message
-      };
-      return responseData;
-    })
-  );
-}
-//#endregion
+
+  //#region "DeleteQuestionDetail"
+  DeleteQuestionDetail(id: number) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Project_DeleteIndicatorQuestionDetail,
+        id
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.ResponseData,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
+  //#region "DeleteIndicatorDetail"
+  DeleteIndicatorDetail(id: number) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Project_DeleteProjectIndicatorDetail,
+        id
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.ResponseData,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
 }

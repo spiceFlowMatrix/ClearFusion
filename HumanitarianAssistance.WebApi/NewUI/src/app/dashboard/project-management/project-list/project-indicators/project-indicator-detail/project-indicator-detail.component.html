@@ -1,64 +1,69 @@
 <div class="row">
-  <div class="col-sm-12">
     <mat-card [ngStyle]="scrollStyles">
       <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-4">
           <div class="row">
             <div class="col-sm-6">
-              <h4 class="font_x_large">Questions </h4>
+              <P class="font_x_large">Questions </P>
             </div>
             <div class="col-sm-6">
-              <button mat-raised-button color="primary" (click)="onQuestionsClick()">
-               Add New Question
+              <button mat-icon-button (click)="onQuestionsClick()">
+                <mat-icon class ="plus_icon" aria-label="Add Question"  pTooltip="Add Question">add</mat-icon>
               </button>
             </div>
           </div>
         </div>
-        <div class="col-sm-4">
+        <!-- <div class="col-sm-4">
+            <button mat-raised-button color="primary" (click)="onQuestionEditClick()">
+              Edit Question Details
+            </button>
+          </div> -->
+        <div class="col-sm-4 pull-right">
           <button mat-raised-button color="primary" (click)="onIndicatorEditClick()">
-            Edit Indicator Detail
+            Edit Indicator Details
           </button>
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-12">
-                <mat-accordion displayMode="flat" multi class="mat-table">
-                  <section matSort class="mat-elevation-z2 mat-header-row">
-                    <span class="mat-header-cell" mat-sort-header="voucherCode">Question</span>
-                    <span class="mat-header-cell" mat-sort-header="voucherDescription">Question Type</span>
-                  </section>
-
-                  <mat-expansion-panel *ngFor="let item of indicatorQuestionList"
-                    >
-                    <mat-expansion-panel-header class="mat-row">
-                      <span class="mat-cell">{{item.IndicatorQuestion}}</span>
-                      <span class="mat-cell">{{item.QuestionTypeName}}</span>
-                      <span> <mat-icon class="icon_cursor small_icon tp_15 icon_width" color="warn" (click)="onDeleteQuestion(item)">
-                        delete
-                      </mat-icon></span>
-                    </mat-expansion-panel-header>
-
-                    <h5> Verification Sources </h5>
-                    <ul *ngFor="let i of item.VerificationSources">
-                      <li>{{i.VerificationSourceName}}</li>
-                    </ul>
-
-
-                  </mat-expansion-panel>
-                </mat-accordion>
+        <div class="col-sm-12" *ngIf="IndicatorDetailLoaderFlag; else indicatorQuestionTemplate">
+          <mat-spinner class="center_loader" diameter="50"></mat-spinner>
         </div>
+        <ng-template #indicatorQuestionTemplate>
+
+            <mat-accordion displayMode="flat" multi class="mat-table">
+              <section matSort class="mat-elevation-z2 mat-header-row">
+                <span class="mat-header-cell" mat-sort-header="Question">Question</span>
+                <span class="mat-header-cell" mat-sort-header="Question Type">Question Type</span>
+              </section>
+
+              <mat-expansion-panel *ngFor="let item of indicatorQuestionList; let j= index;" [expanded]="step === j" (opened)="setStep(j)" hideToggle>
+                <mat-expansion-panel-header class="mat-row">
+                  <span class="mat-cell">{{item.IndicatorQuestion}}</span>
+                  <span class="mat-cell">{{item.QuestionTypeName}}</span>
+                  <span>
+                    <button mat-icon-button (click)="onQuestionEditClick(item)">
+                      <mat-icon class="icon_cursor small_icon tp_15 icon_width mr_btm" aria-label="Edit Question">edit
+                      </mat-icon>
+                    </button>
+                  </span>
+                  <span>
+                    <mat-icon class="icon_cursor small_icon tp_15 icon_width" color="warn"
+                      (click)="onDeleteQuestion(item)">
+                      delete
+                    </mat-icon>
+                  </span>
+                </mat-expansion-panel-header>
+                <hr>
+                <h4> Verification Sources </h4>
+                <ul *ngFor="let i of item.VerificationSources">
+                  <li>{{i.VerificationSourceName}}</li>
+                </ul>
+
+
+              </mat-expansion-panel>
+            </mat-accordion>
+        </ng-template>
       </div>
     </mat-card>
-  </div>
 </div>
-<div class="container-fluid">
-  <div class="row">
-    <div class="row">
-      <div class="col-sm-8">
-        <div class="top-header clearfix">
-          <h3></h3>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+

@@ -7,9 +7,10 @@
           <div class="row">
             <div class="col-sm-12">
               <span class="font_x_large">Project Indicators</span> &nbsp;
-              <button mat-raised-button color="primary" (click)="onAddNewIndicator()">
-                Add New Indicators
-              </button>
+              <button mat-icon-button (click)="onAddNewIndicator()">
+                  <mat-icon aria-label="Add New Indicators">add</mat-icon>
+                </button>
+
             </div>
           </div>
           <div class="row">
@@ -26,7 +27,7 @@
                         <td width="1%">
                           <p class="width_8"></p>
                         </td>
-                        <td width="5%"></td>
+                        <td width="3%"></td>
                         <td width="30%">Name</td>
                         <td width="40%">Description</td>
                         <td width="10%">Questions</td>
@@ -38,7 +39,7 @@
                         <td width="1%">
                           <p class="width_8"></p>
                         </td>
-                        <td class="grey-text" width="5%"></td>
+                        <td class="grey-text" width="3%"></td>
                         <td width="30%" text-align="left">
                           <p class="diamond">{{ list.IndicatorName }}</p>
                         </td>
@@ -73,7 +74,7 @@
             (hideDetailPanel)="hideProjectDetailPanel($event)" [donorId]="donorId"></app-donor-master> -->
         <app-project-indicator-detail [indicatorId]="projectIndicatorId" (addIndicator)="addProjectIndicator($event)"
           [ProjectindicatorDetail]="ProjectindicatorDetail" (indicatorListRefresh)="OnindicatorListRefresh($event)"
-          (editIndicator)="editIndicatorList($event)"></app-project-indicator-detail>
+          (editIndicator)="editIndicatorList($event)" (questionDetailListRefresh)=OnQuestionDetailListRefresh($event)></app-project-indicator-detail>
       </div>
     </div>
   </div>
