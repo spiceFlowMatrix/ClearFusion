@@ -10,6 +10,7 @@ export interface IHiringReuestDataSource {
   HiringRequestDetail: any;
   HiringRequestId: number;
   ProfessionList: IProfessionList[];
+  officeSelectionFlag: boolean;
 }
 export interface ICurrencyListModel {
   CurrencyId: number;

@@ -1308,7 +1308,6 @@ export class PurchasesComponent implements OnInit {
 
     //#region "onPurchaseImageSelect"
     onPurchaseImageSelect(event) {
-        debugger;
         this.purchaseDetailsFormImageFileName = null;
 
         if (event.value != null && event.value.length > 0) {
