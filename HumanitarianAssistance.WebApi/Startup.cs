@@ -104,11 +104,6 @@ namespace HumanitarianAssistance.WebApi
             // swagger configuration
             services.AddSwaggerDocumentation();
 
-            // Dev: AG
-            // pdf configuration 
-            services.AddPdfExtension();
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -17,11 +17,6 @@ namespace HumanitarianAssistance.WebApi.Controllers
     //[Authorize]
     public class PdfController : BaseController
     {
-        private readonly IHostingEnvironment _hosting;
-        public PdfController(IHostingEnvironment hosting)
-        {
-            _hosting = hosting;
-        }
         [HttpGet]
         public async Task<ApiResponse> GetAllChartOfAccountHierarchyPdf()
         {
@@ -29,29 +24,11 @@ namespace HumanitarianAssistance.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ApiResponse> GetAllVoucherSummaryReportPdf()
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetAllVoucherSummaryReportPdf()
         {
-            return await _mediator.Send(new GetAllVoucherSummaryReportPdfQuery());
-            // return File(file, "application/pdf", "VoucherSummaryReport.pdf");
-            // return Ok(file);
+            var file = await _mediator.Send(new GetAllVoucherSummaryReportPdfQuery());
+            return File(file, "application/pdf", "VoucherSummaryReport.pdf");
         }
-        [HttpGet]
-        [Produces(contentType:"application/pdf")]
-        public IActionResult CreatePdf()
-        {
-            var result = _mediator.Send(new GetAllVoucherSummaryReportPdfQuery());
-            var _stream = new MemoryStream();
-            using (var pdfWriter = new PdfWriter(_stream))
-            {
-                pdfWriter.SetCloseStream(false);
-                using (var document = HtmlConverter.ConvertToDocument(result.Result.ResponseData, pdfWriter))
-                {
-                  
-                }
-            }
-            _stream.Position = 0;
-            return File(_stream.ToArray(), "application/pdf", "TestFile.pdf");
-        }
-
     }
 }

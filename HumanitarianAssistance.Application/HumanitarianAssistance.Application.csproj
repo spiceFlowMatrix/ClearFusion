@@ -19,8 +19,9 @@
     <PackageReference Include="Google.Cloud.Storage.V1" Version="2.3.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.0.1" />
-    <PackageReference Include="RazorLight" Version="2.0.0-beta1" />
-    <!-- <PackageReference Include="DinkToPdf" Version="1.0.8" /> -->
+
+    <PackageReference Include="itext7" Version="7.1.7" /> 
+    <PackageReference Include="itext7.pdfhtml" Version="2.1.4" />
   </ItemGroup>
 
   <ItemGroup>
