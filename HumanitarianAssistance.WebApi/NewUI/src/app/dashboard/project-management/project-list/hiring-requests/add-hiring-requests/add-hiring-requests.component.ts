@@ -40,7 +40,7 @@ export class AddHiringRequestsComponent implements OnInit , OnChanges {
 
   projectId: number;
   activityId: number;
-
+  officeSelectionFlag = false;
   // loader
   addHiringRequestLoader = false;
   //#endregion
@@ -60,6 +60,7 @@ export class AddHiringRequestsComponent implements OnInit , OnChanges {
     this.projectId = data.ProjectId;
     this.hiringRequestDetail = data.HiringRequestDetail;
     this.professionList = data.ProfessionList;
+    this.officeSelectionFlag = data.officeSelectionFlag;
   }
 
   ngOnInit() {

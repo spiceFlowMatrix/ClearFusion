@@ -75,6 +75,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   isCompletedFlag = false;
   isshortlistedLoaderFlag = false;
   isCompleted = false;
+  officeSelectionFlag = false;
 
   // screen scroll
   screenHeight: number;
@@ -207,6 +208,9 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   //#region "openHiringRequestDialog"
   openHiringRequestDialog(): void {
+    if (this.candidateList.length > 0) {
+    this.officeSelectionFlag = true;
+    }
     // NOTE: It passed the data into the Add Activity Model
     const dialogRef = this.dialog.open(AddHiringRequestsComponent, {
       width: '550px',
@@ -218,7 +222,8 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
         JobGradeList: this.jobGradeList,
         HiringRequestDetail: this.hiringRequestForm.value,
         ProfessionList: this.professionList,
-        ProjectId: this.projectId
+        ProjectId: this.projectId,
+        officeSelectionFlag: this.officeSelectionFlag
       }
     });
 
@@ -231,7 +236,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           HiringRequestId: [data.HiringRequestId],
           HiringRequestCode: [data.HiringRequestCode],
           Position: [data.Position],
-          Profession: [data.ProfessionId],
+          ProfessionId: [data.ProfessionId],
           TotalVacancies: [data.TotalVacancies],
           FilledVacancies: [data.FilledVacancies],
           BasicPay: [data.BasicPay],
@@ -254,11 +259,11 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           BasicPay: data.BasicPay,
           jobGrade: this.jobGradeList.find(x => x.GradeId === data.GradeId).GradeName
         };
-        this.GetEmployeeListByOfficeId(data.OfficeId);
+        this.GetEmployeeListByOfficeId(this.hiringRequestForm.value.OfficeId);
       }
     );
 
-    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.afterClosed().subscribe(result => {this.officeSelectionFlag = false; });
   }
   //#endregion
 

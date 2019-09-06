@@ -57,9 +57,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.FileManagement
         }
 
         [HttpGet]
-        public async Task<ApiResponse> GetSignedURLByDocumentFileId(long id)
+        public async Task<ApiResponse> GetSignedURLByDocumentFileId([FromQuery] long Id)
         {
-            return await _mediator.Send(new GetSignedURLByDocumentFileIdQuery { DocumentFileId= id });
+            return await _mediator.Send(new GetSignedURLByDocumentFileIdQuery { DocumentFileId= Id });
         }
     }    
 }

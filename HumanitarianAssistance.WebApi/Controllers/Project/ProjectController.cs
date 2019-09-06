@@ -539,7 +539,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         [HttpPost]
         public async Task<ApiResponse> GetSecurityConsiMultiSelectByProjectId([FromBody]long Id)
         {
-            return await _mediator.Send(new GetSecurityConsiderationByProjectIdQuery{ ProjectId = Id });
+            return await _mediator.Send(new GetSecurityConsiderationByProjectIdQuery { ProjectId = Id });
         }
 
         [HttpPost]
@@ -646,7 +646,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         [HttpPost]
         public async Task<ApiResponse> AddEditProjectCurrencyDetail([FromBody]AddEditProjectCurrencyDetailCommand command)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;  
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             command.CreatedById = userId;
             command.CreatedDate = DateTime.UtcNow;
             command.ModifiedById = userId;
@@ -654,7 +654,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(command);
         }
         #endregion
-        
+
         #region "GetProjectproposalsById"
         [HttpPost]
         public async Task<ApiResponse> GetProjectproposalsById([FromBody] long ProjectId)
@@ -667,8 +667,8 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         {
             return await _mediator.Send(new GetProjectproposalDocumentsByIdQuery { ProjectId = ProjectId });
         }
-        #endregion 
-   
+        #endregion
+
         #region "Criteria evaluation form 2nd Aug 2019" 
 
         #region add/edit
@@ -1253,9 +1253,18 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         }
 
         [HttpPost]
+        public async Task<ApiResponse> EditProjectIndicatorQuestions([FromBody]EditProjectIndicatorQuestionsCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.ModifiedById = userId;
+            command.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+        }
+
+        [HttpPost]
         public async Task<ApiResponse> DeleteProjectIndicatorDetail([FromBody]long indicatorId)
         {
-            return await _mediator.Send(new DeleteProjectIndicatorDetailCommand {  IndicatorId = indicatorId });
+            return await _mediator.Send(new DeleteProjectIndicatorDetailCommand { IndicatorId = indicatorId });
         }
 
 
@@ -1326,7 +1335,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
                 command.ext = System.IO.Path.GetExtension(command.FileName).ToLower();
                 if (command.ext != ".jpeg" && command.ext != ".png" && command.ext != ".jpg" && command.ext != ".gif")
                 {
-                  
+
                     if (userId != null)
                     {
                         return await _mediator.Send(command);
@@ -1439,7 +1448,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         {
             ApiResponse apiRespone = new ApiResponse();
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            
+
             try
             {
 
@@ -1538,7 +1547,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
                 string ext = Path.GetExtension(fileName).ToLower();
                 if (ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif")
                 {
-                 
+
                     if (userId != null)
                     {
                         return await _mediator.Send(new UploadProjectActivityDocumentFileCommand

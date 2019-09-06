@@ -43,6 +43,7 @@ export interface IProjectIndicatorModel {
 export interface IQuestionsDataSource {
   ProjectId: number;
   ProjectindicatorDetail: any;
+  QuestionDetail: any;
  }
  export interface IQuestionDetailModel {
   IndicatorQuestionId?: number;

@@ -16,7 +16,7 @@ namespace HumanitarianAssistance.Application.Store.Models
         public int? Store { get; set; }                      // Names in front-end because there is no master for it
         public string Inventory { get; set; }               // Inventory Name
         public string Item { get; set; }                    // Item Name
-        public decimal? TotalCost { get; set; }
+        public double? TotalCost { get; set; }
         public string MustReturn { get; set; }
         public string Returned { get; set; }
         public DateTime VoucherDate { get; set; }
@@ -28,7 +28,7 @@ namespace HumanitarianAssistance.Application.Store.Models
     {
         public string UnitType { get; set; }                // Unit Type Name
         public int Amount { get; set; }                     // Quantity Purchase table Name
-        public decimal UnitCost { get; set; }                  // Purchase Table
+        public double UnitCost { get; set; }                  // Purchase Table
         public string Currency { get; set; }                // Currency Name
     }
 }

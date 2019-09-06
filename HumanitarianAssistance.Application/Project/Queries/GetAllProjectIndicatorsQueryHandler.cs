@@ -35,7 +35,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                    IndicatorName = x.IndicatorName,
                                                    ProjectIndicatorId = x.ProjectIndicatorId,
                                                    Description= x.Description,
-                                                   Questions= x.ProjectIndicatorQuestions.Count
+                                                   Questions= x.ProjectIndicatorQuestions.Where(y => y.IsDeleted==false).Count()
                                                }).AsQueryable();
 
 

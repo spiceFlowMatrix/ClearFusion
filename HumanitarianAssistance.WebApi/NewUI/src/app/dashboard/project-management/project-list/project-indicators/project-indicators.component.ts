@@ -99,7 +99,7 @@ export class ProjectIndicatorsComponent implements OnInit {
     }
     this.selectedRowID = item.ProjectIndicatorId;
     this.ProjectindicatorDetail = item;
-    console.log('detail',this.ProjectindicatorDetail);
+    console.log('detail', this.ProjectindicatorDetail);
     this.showProjectDetailPanel();
   }
 
@@ -119,50 +119,50 @@ export class ProjectIndicatorsComponent implements OnInit {
   //#region "getAllProjectIndicatorList"
   getAllProjectIndicatorList() {
     if (this.projectId != null && this.projectId != undefined) {
-    this.projectIndicatorListLoaderFlag = true;
-    this.indicatorFilterModel.totalCount = 0;
-    this.indicatorFilterModel.ProjectId = this.projectId;
-    this.projectListService
-      .GetProjectIndicatorsList(
-        this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProjectIndicators,
-        this.indicatorFilterModel
-      )
-      .subscribe(
-        data => {
-          this.projectIndicatorList = [];
-          if (
-            data.data.ProjectIndicatorList !== undefined &&
-            data.data.ProjectIndicatorList.ProjectIndicators !== undefined &&
-            data.data.ProjectIndicatorList.ProjectIndicators !== null &&
-            data.data.ProjectIndicatorList.ProjectIndicators.length > 0 &&
-            data.StatusCode === 200
-          ) {
-            data.data.ProjectIndicatorList.ProjectIndicators.forEach(
-              element => {
-                this.projectIndicatorList.push({
-                  ProjectIndicatorId: element.ProjectIndicatorId,
-                  IndicatorName: element.IndicatorName,
-                  IndicatorCode: element.IndicatorCode,
-                  Description: element.Description,
-                  Questions: element.Questions,
-                });
-                // this.DonorDetailModel = this.donorList;
-              }
-            );
+      this.projectIndicatorListLoaderFlag = true;
+      this.indicatorFilterModel.totalCount = 0;
+      this.indicatorFilterModel.ProjectId = this.projectId;
+      this.projectListService
+        .GetProjectIndicatorsList(
+          this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProjectIndicators,
+          this.indicatorFilterModel
+        )
+        .subscribe(
+          data => {
+            this.projectIndicatorList = [];
+            if (
+              data.data.ProjectIndicatorList !== undefined &&
+              data.data.ProjectIndicatorList.ProjectIndicators !== undefined &&
+              data.data.ProjectIndicatorList.ProjectIndicators !== null &&
+              data.data.ProjectIndicatorList.ProjectIndicators.length > 0 &&
+              data.StatusCode === 200
+            ) {
+              data.data.ProjectIndicatorList.ProjectIndicators.forEach(
+                element => {
+                  this.projectIndicatorList.push({
+                    ProjectIndicatorId: element.ProjectIndicatorId,
+                    IndicatorName: element.IndicatorName,
+                    IndicatorCode: element.IndicatorCode,
+                    Description: element.Description,
+                    Questions: element.Questions
+                  });
+                  // this.DonorDetailModel = this.donorList;
+                }
+              );
 
-            this.indicatorFilterModel.totalCount =
-              data.data.ProjectIndicatorList.IndicatorRecordCount;
+              this.indicatorFilterModel.totalCount =
+                data.data.ProjectIndicatorList.IndicatorRecordCount;
+            }
+
+            this.projectIndicatorListLoaderFlag = false;
+          },
+          error => {
+            this.projectIndicatorListLoaderFlag = false;
+            this.toastr.error('Something went wrong');
           }
-
-          this.projectIndicatorListLoaderFlag = false;
-        },
-        error => {
-          this.projectIndicatorListLoaderFlag = false;
-          this.toastr.error('Something went wrong');
-        }
-      );
+        );
+    }
   }
-}
   //#endregion
 
   addProjectIndicator(e) {
@@ -215,8 +215,8 @@ export class ProjectIndicatorsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {});
   }
   //#endregion
-//#region "Listupdate After update"
-  OnindicatorListRefresh(event: any){
+  //#region "Listupdate After update"
+  OnindicatorListRefresh(event: any) {
     const data = this.projectIndicatorList.find(
       x => x.ProjectIndicatorId === event.ProjectIndicatorId
     );
@@ -237,14 +237,11 @@ export class ProjectIndicatorsComponent implements OnInit {
     dialogRef.componentInstance.confirmMessage =
       Delete_Confirmation_Texts.deleteText1;
 
-    dialogRef.componentInstance.confirmText =
-      Delete_Confirmation_Texts.yesText;
+    dialogRef.componentInstance.confirmText = Delete_Confirmation_Texts.yesText;
 
-    dialogRef.componentInstance.cancelText =
-      Delete_Confirmation_Texts.noText;
+    dialogRef.componentInstance.cancelText = Delete_Confirmation_Texts.noText;
 
-    dialogRef.afterClosed().subscribe(result => {
-    });
+    dialogRef.afterClosed().subscribe(result => {});
     dialogRef.componentInstance.confirmDelete.subscribe(res => {
       dialogRef.componentInstance.isLoading = true;
       if (
@@ -253,32 +250,46 @@ export class ProjectIndicatorsComponent implements OnInit {
         data.ProjectIndicatorId !== 0
       ) {
         this.indicatorService
-          .DeleteIndicatorDetail(
-            data.ProjectIndicatorId
-          )
-          .subscribe(response => {
-             if (response.statusCode === 200) {
-               //to rerfresh the question page list
-               this.child.questionListOnindicatorDelete(data.ProjectIndicatorId) ;
-               this.deletedListRefresh(data.ProjectIndicatorId);
-             }
-            dialogRef.componentInstance.isLoading = false;
-            dialogRef.componentInstance.onCancelPopup();
-          },
-        error => {
-          this.toastr.error('Someting went wrong');
-          dialogRef.componentInstance.isLoading = false;
-          dialogRef.componentInstance.onCancelPopup();
-        });
+          .DeleteIndicatorDetail(data.ProjectIndicatorId)
+          .subscribe(
+            response => {
+              if (response.statusCode === 200) {
+                // to rerfresh the question page list
+                this.child.refreshQuestionListOnIndicatorDelete(
+                  data.ProjectIndicatorId
+                );
+                this.deletedListRefresh(data.ProjectIndicatorId);
+              }
+              dialogRef.componentInstance.isLoading = false;
+              dialogRef.componentInstance.onCancelPopup();
+            },
+            error => {
+              this.toastr.error('Someting went wrong');
+              dialogRef.componentInstance.isLoading = false;
+              dialogRef.componentInstance.onCancelPopup();
+            }
+          );
       }
     });
   }
   //#endregion
   // refresh list after delete
-deletedListRefresh(item: number) {
-  const findIndex = this.projectIndicatorList.findIndex(
-    x => x.ProjectIndicatorId === item
-  );
-  this.projectIndicatorList.splice(findIndex, 1);
-}
+  deletedListRefresh(item: number) {
+    const findIndex = this.projectIndicatorList.findIndex(
+      x => x.ProjectIndicatorId === item
+    );
+    this.projectIndicatorList.splice(findIndex, 1);
+  }
+  //#region common "refresh projectIndicatorList if added or deleted question"
+  OnQuestionDetailListRefresh(obj: any) {
+    if (obj != null && obj !== undefined) {
+      const index = this.projectIndicatorList.findIndex(
+        e => e.ProjectIndicatorId === obj.ProjectIndicatorId
+      );
+      if (index > -1) {
+        this.projectIndicatorList[index].Questions = obj.Count;
+      }
+    }
+    //#endregion
+  }
 }

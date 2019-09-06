@@ -42,7 +42,6 @@ export class DataInterceptor implements HttpInterceptor {
 
     // PUT
     if (req.method === 'PUT') {
-      debugger;
       req = req.clone({
         headers: req.headers
            // .set('Accept', 'application/json')

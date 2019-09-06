@@ -15,13 +15,15 @@ import {
   styleUrls: ['./add-questions-dialog.component.scss']
 })
 export class AddQuestionsDialogComponent implements OnInit {
-
- @Output() onAddQuestionListRefresh = new EventEmitter();
-
+  // tslint:disable-next-line: no-output-on-prefix
+  @Output() onAddQuestionListRefresh = new EventEmitter();
+  // tslint:disable-next-line: no-output-on-prefix
+  @Output() onUpdatedQuestionListRefresh = new EventEmitter();
   //#region  "variables"
   public questionForm: FormGroup;
   questionDetailModel: IQuestionDetailModel;
   IndicatorDetail: any;
+  questionDetail: any;
   // flag
   EditLoaderFlag = false;
   // data-Source
@@ -39,10 +41,15 @@ export class AddQuestionsDialogComponent implements OnInit {
     public indicatorService: ProjectIndicatorService
   ) {
     this.IndicatorDetail = data.ProjectindicatorDetail;
+    this.questionDetail = data.QuestionDetail;
+    console.log('wwhuh', this.questionDetail);
   }
 
   ngOnInit() {
     this.initializeModel();
+    if (this.questionDetail != null && this.questionDetail !== undefined) {
+      this.setIndicatorQuestionDetail();
+    }
   }
 
   initializeModel() {
@@ -63,49 +70,127 @@ export class AddQuestionsDialogComponent implements OnInit {
       QuestionTypeName: null
     };
   }
+  // set details after edit question
+  setIndicatorQuestionDetail() {
+    this.questionForm = this.fb.group({
+      IndicatorQuestion: [this.questionDetail.IndicatorQuestion],
+      IndicatorQuestionId: [this.questionDetail.IndicatorQuestionId],
+      ProjectIndicatorId: [this.questionDetail.ProjectIndicatorId],
+      QuestionType: [this.questionDetail.QuestionType]
+    });
+    this.questionForm.setControl(
+      'VerificationSources',
+      this.setVerificationSource(this.questionDetail.VerificationSources)
+    );
+  }
 
+  setVerificationSource(sources: IVerificationSourceModel[]): FormArray {
+    const formArray = new FormArray([]);
+    sources.forEach(s => {
+      formArray.push(
+        this.fb.group({
+          VerificationSourceId: s.VerificationSourceId,
+          VerificationSourceName: s.VerificationSourceName
+        })
+      );
+    });
+
+    return formArray;
+  }
   //#region "OnSubmit"
   OnSubmit(formValue: any) {
+    if (
+      formValue.IndicatorQuestionId != null &&
+      formValue.IndicatorQuestionId !== undefined
+    ) {
+      this.EditIndicatorQuestion(formValue);
+    } else {
+      this.AddIndicatorQuestion(formValue);
+    }
+  }
+  //#region "AddIndicatorQuestion"
+  AddIndicatorQuestion(formValue: any) {
     this.EditLoaderFlag = true;
     const indicatorId = this.IndicatorDetail.ProjectIndicatorId;
-    if (formValue.IndicatorQuestion != null && formValue.IndicatorQuestion != '') {
+    if (
+      formValue.IndicatorQuestion != null &&
+      formValue.IndicatorQuestion != ''
+    ) {
       const model: IQuestionDetailModel = {
         ProjectIndicatorId: indicatorId,
         IndicatorQuestion: formValue.IndicatorQuestion,
         QuestionType: formValue.QuestionType,
-        VerificationSources: [],
+        VerificationSources: []
       };
 
       formValue.VerificationSources.forEach(element => {
         model.VerificationSources.push({
           VerificationSourceId: element.VerificationSourceId,
-          VerificationSourceName: element.VerificationSourceName,
+          VerificationSourceName: element.VerificationSourceName
         });
       });
 
-      this.indicatorService
-        .AddProjectIndicatorQuestions(model)
-        .subscribe(response => {
+      this.indicatorService.AddProjectIndicatorQuestions(model).subscribe(
+        response => {
           if (response.statusCode === 200 && response.data != null) {
-          this.IndicatorQuestionListRefresh(response.data);
+            this.IndicatorQuestionListRefresh(response.data);
             this.toastr.success('Project Indicator Updated Successfully');
           }
           this.EditLoaderFlag = false;
           this.onCancelPopup();
-
         },
-          (error) => {
-            this.EditLoaderFlag = false;
-            this.toastr.success('Something went wrong');
-          });
-    }
-    else {
+        error => {
+          this.EditLoaderFlag = false;
+          this.toastr.success('Something went wrong');
+        }
+      );
+    } else {
       this.EditLoaderFlag = false;
     }
-
-
-
   }
+
+  EditIndicatorQuestion(formValue: any) {
+    this.EditLoaderFlag = true;
+    const indicatorId = this.IndicatorDetail.ProjectIndicatorId;
+    if (
+      formValue.IndicatorQuestion != null &&
+      formValue.IndicatorQuestion != ''
+    ) {
+      const model: IQuestionDetailModel = {
+        ProjectIndicatorId: indicatorId,
+        IndicatorQuestionId: formValue.IndicatorQuestionId,
+        IndicatorQuestion: formValue.IndicatorQuestion,
+        QuestionType: formValue.QuestionType,
+        VerificationSources: []
+      };
+
+      formValue.VerificationSources.forEach(element => {
+        model.VerificationSources.push({
+          VerificationSourceId: element.VerificationSourceId,
+          VerificationSourceName: element.VerificationSourceName
+        });
+      });
+
+      this.indicatorService.EditProjectIndicatorQuestions(model).subscribe(
+        response => {
+          if (response.statusCode === 200 && response.data != null) {
+            this.UpdatedQuestionListRefresh(response.data);
+            this.toastr.success('Project Indicator Updated Successfully');
+          }
+          this.EditLoaderFlag = false;
+          this.onCancelPopup();
+        },
+        error => {
+          this.EditLoaderFlag = false;
+          this.toastr.success('Something went wrong');
+        }
+      );
+    } else {
+      this.EditLoaderFlag = false;
+    }
+  }
+
+  //#endregion
   //#endregion
   // to get verication sources controls html
   get verificationSources(): FormArray {
@@ -127,7 +212,9 @@ export class AddQuestionsDialogComponent implements OnInit {
 
   //#region "onDelete"
   onDelete(index: number) {
-    const control = <FormArray>this.questionForm.controls['VerificationSources'];
+    const control = <FormArray>(
+      this.questionForm.controls['VerificationSources']
+    );
     control.removeAt(index);
   }
   //#endregion
@@ -138,11 +225,15 @@ export class AddQuestionsDialogComponent implements OnInit {
   }
   //#endregion
 
-//#region "indicatorListRefresh"
-IndicatorQuestionListRefresh(data: any) {
-  this.onAddQuestionListRefresh.emit(data);
+  //#region "indicatorListRefresh"
+  IndicatorQuestionListRefresh(data: any) {
+    this.onAddQuestionListRefresh.emit(data);
+  }
+  //#endregion
 
-}
-//#endregion
-
+  //#region "UpdatedQuestionListRefresh"
+  UpdatedQuestionListRefresh(data: any) {
+    this.onUpdatedQuestionListRefresh.emit(data);
+  }
+  //#endregion
 }
