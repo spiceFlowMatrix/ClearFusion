@@ -231,7 +231,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           HiringRequestId: [data.HiringRequestId],
           HiringRequestCode: [data.HiringRequestCode],
           Position: [data.Position],
-          Profession: [data.ProfessionId],
+          ProfessionId: [data.ProfessionId],
           TotalVacancies: [data.TotalVacancies],
           FilledVacancies: [data.FilledVacancies],
           BasicPay: [data.BasicPay],
