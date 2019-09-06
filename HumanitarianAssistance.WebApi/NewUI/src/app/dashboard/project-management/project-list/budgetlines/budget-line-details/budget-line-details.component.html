@@ -149,11 +149,9 @@
 
       <div class="col-sm-12">
         <mat-card [ngStyle]="scrollStyles">
-
-          <!-- <button mat-raised-button (click)="openAddBudgetLineDialog()">
-            Add
-          </button> -->
-
+          <div style="padding-bottom: 15px;">
+            <b>( Tansaction are converted to selected curreny )</b>
+          </div>
           <div class="row">
             <div *ngIf="transactionListLoaderFlag; else transactionListTemplate;" class="col-sm-12">
               <mat-spinner class="center_loader" diameter="50"></mat-spinner>

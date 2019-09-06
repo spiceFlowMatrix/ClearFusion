@@ -149,6 +149,15 @@ const hr_Router: Routes = [
           page: HR.Interview
         }
       },
+      {
+        path: 'interview-form/:id',
+        component: InterviewFormComponent,
+        canActivate: [RoleGuardService],
+        data: {
+          module: HRModule.ModuleId,
+          page: HR.Interview
+        }
+      },
       { path: 'advance-deduction', component: AdvanceDeductionComponent }
       // { path: 'pension-payments', component: PensionPaymentsComponent }
     ]
