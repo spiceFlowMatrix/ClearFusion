@@ -74,7 +74,6 @@ export class AcceptProposalComponent implements OnInit {
 
   //#region  click to emit event of approval to parent
   isApproved(text: any) {
-    debugger;
     this.commonLoaderFlag = true;
 
    // ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif" && ext != ".rtf"
@@ -122,14 +121,14 @@ export class AcceptProposalComponent implements OnInit {
   // drag and drop review documents 27/03/2019
   //#region start proposal drag and drop
   public UploadReviewDragAndDropFile(event: UploadEvent) {
-    debugger;
     this.files = event.files;
-    this.FileName = this.files[0].relativePath;
     if ((/\.(gif|jpg|jpeg|tiff|png)$/i).test(this.files[0].relativePath)) {
 
       this.toastr.warning('File format is not correct.');
       return;
     }
+    this.FileName = this.files[0].relativePath;
+
     for (const droppedFile of event.files) {
       // Is it a file?
       if (droppedFile.fileEntry.isFile) {
