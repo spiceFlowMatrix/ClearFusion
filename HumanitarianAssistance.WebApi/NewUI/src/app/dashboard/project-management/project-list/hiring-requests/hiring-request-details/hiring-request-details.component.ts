@@ -504,8 +504,8 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region "seeCandidateDetail page of old Ui"
-  seeCandidateDetail(path: string) {
-    window.open(this.appurl.getOldUiUrl() + path, '_blank');
+  seeCandidateDetail(path: string, empId) {
+    window.open(this.appurl.getOldUiUrl() + path + empId, '_blank');
   }
   //#endregion
 
