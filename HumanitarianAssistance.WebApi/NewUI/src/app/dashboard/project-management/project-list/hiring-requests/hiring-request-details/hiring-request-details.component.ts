@@ -20,7 +20,7 @@ import {
   IHiringReuestCandidateModel,
   IAttendaneGroupModel,
   IEmployeeContractList,
-  HiringRequestModel
+  IHiringRequestModel
 } from '../models/hiring-requests-model';
 import { MatDialog } from '@angular/material';
 import { AddHiringRequestsComponent } from '../add-hiring-requests/add-hiring-requests.component';
@@ -52,7 +52,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   //#endregion
 
   // Model:
-  hiringRequestModel: HiringRequestModel;
+  hiringRequestModel: IHiringRequestModel;
   employeeList: IEmployeeListModel[] = [];
   attendanceGroupList: IAttendaneGroupModel[] = [];
   candidateList: IReuestedCandidateDetailModel[] = [];
@@ -103,7 +103,6 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.initForm();
-    this.GetAllEmployeeList();
     this.GetAllEmployeeContractTypelist();
     this.GetAllAttendanceGrouplist();
     this.routeActive.parent.params.subscribe(params => {
@@ -150,12 +149,19 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       GradeId: [null, Validators.required],
       RequestedBy: [null],
       ProjectId: [null],
-      IsCompleted: [null],
-      OfficeName: [''],
-      BudgetLineName: [''],
-      GradeName: [''],
-      ProfessionName: ['']
+      IsCompleted: [null]
     });
+    this.hiringRequestModel = {
+      Description: '',
+      Position: '',
+      Profession: '',
+      BudgetLine: '',
+      TotalVacancies: '',
+      Office: '',
+      FilledVacancies: '',
+      BasicPay: '',
+      jobGrade: ''
+    };
   }
   //#endregion
 
@@ -177,11 +183,20 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       ProjectId: [this.hiringRequestDetail.ProjectId],
       RequestedBy: [this.hiringRequestDetail.RequestedBy],
       IsCompleted: [this.hiringRequestDetail.IsCompleted],
-      OfficeName: [this.officeList.find(x => x.OfficeId === this.hiringRequestDetail.OfficeId).OfficeName],
-      BudgetLineName: [this.budgetLineList.find(x => x.BudgetLineId === this.hiringRequestDetail.BudgetLineId).BudgetName],
-      GradeName: [this.jobGradeList.find(x => x.GradeId === this.hiringRequestDetail.GradeId).GradeName],
-      ProfessionName: [this.professionList.find(x => x.ProfessionId === this.hiringRequestDetail.ProfessionId).ProfessionName]
     });
+
+    this.hiringRequestModel = {
+      Description : this.hiringRequestForm.value.Description,
+      Position: this.hiringRequestForm.value.Position,
+      Profession: this.professionList.find(x => x.ProfessionId === this.hiringRequestForm.value.ProfessionId).ProfessionName,
+      BudgetLine: this.budgetLineList.find(x => x.BudgetLineId === this.hiringRequestForm.value.BudgetLineId).BudgetName,
+      TotalVacancies: this.hiringRequestForm.value.TotalVacancies,
+      Office: this.officeList.find(x => x.OfficeId === this.hiringRequestForm.value.OfficeId).OfficeName,
+      FilledVacancies: this.hiringRequestForm.value.FilledVacancies,
+      BasicPay: this.hiringRequestForm.value.BasicPay,
+      jobGrade: this.jobGradeList.find(x => x.GradeId === this.hiringRequestForm.value.GradeId).GradeName
+    };
+    this.GetEmployeeListByOfficeId(this.hiringRequestForm.value.OfficeId);
   }
 
   //#region "onAddNewRequestClicked"
@@ -210,7 +225,6 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     // refresh the list after new request created
     dialogRef.componentInstance.onUpdateHiringRequestListRefresh.subscribe(
       (data: any) => {
-        console.log('emitter', data);
         this.UpdatedHRListRefresh.emit(data);
         this.hiringRequestForm = this.fb.group({
           Description: [data.Description],
@@ -228,11 +242,19 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           GradeId: [data.GradeId],
           ProjectId: [data.ProjectId],
           RequestedBy: [data.RequestedBy],
-          OfficeName: [this.officeList.find(x => x.OfficeId === data.OfficeId).OfficeName],
-          BudgetLineName: [this.budgetLineList.find(x => x.BudgetLineId === data.BudgetLineId).BudgetName],
-          GradeName: [this.jobGradeList.find(x => x.GradeId === data.GradeId).GradeName],
-          ProfessionName: [this.professionList.find(x => x.ProfessionId === data.ProfessionId).ProfessionName]
         });
+        this.hiringRequestModel = {
+          Description : data.Description,
+          Position: data.Position,
+          Profession: this.professionList.find(x => x.ProfessionId === data.ProfessionId).ProfessionName,
+          BudgetLine: this.budgetLineList.find(x => x.BudgetLineId === data.BudgetLineId).BudgetName,
+          TotalVacancies: data.TotalVacancies,
+          Office: this.officeList.find(x => x.OfficeId === data.OfficeId).OfficeName,
+          FilledVacancies: data.FilledVacancies,
+          BasicPay: data.BasicPay,
+          jobGrade: this.jobGradeList.find(x => x.GradeId === data.GradeId).GradeName
+        };
+        this.GetEmployeeListByOfficeId(data.OfficeId);
       }
     );
 
@@ -242,6 +264,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   //#region "onAddEmployeeClicked"
   onAddCandidateClicked() {
+
     this.filteredEmployeeList = [];
 
     this.filteredEmployeeList = this.employeeList.filter(employee =>
@@ -266,8 +289,11 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region "GetEmployeeDetail"
-  GetAllEmployeeList() {
-    this.hiringRequestService.GetAllEmployeeList().subscribe(
+  GetEmployeeListByOfficeId(OfficeId: number) {
+    if (OfficeId == null) {
+     // this.toastr.warning('Office Can not be null');
+    } else {
+    this.hiringRequestService.GetEmployeeListByOfficeId(OfficeId).subscribe(
       (response: IResponseData) => {
         this.employeeList = [];
         if (response.statusCode === 200 && response.data !== null) {
@@ -281,6 +307,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       },
       error => {}
     );
+    }
   }
   //#endregion
 

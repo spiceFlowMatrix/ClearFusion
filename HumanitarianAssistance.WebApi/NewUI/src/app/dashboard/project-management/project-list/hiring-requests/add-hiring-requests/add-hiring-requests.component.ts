@@ -64,7 +64,7 @@ export class AddHiringRequestsComponent implements OnInit , OnChanges {
 
   ngOnInit() {
     this.initForm();
-    console.log('check', this.hiringRequestDetail);
+
     if (
       this.hiringRequestDetail != null &&
       this.hiringRequestDetail !== undefined
@@ -73,7 +73,6 @@ export class AddHiringRequestsComponent implements OnInit , OnChanges {
     }
   }
   ngOnChanges() {
-    console.log('openvalue', this.hiringRequestDetail);
     this.initForm();
   }
   //#region "initForm"

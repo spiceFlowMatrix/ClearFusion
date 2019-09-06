@@ -49,7 +49,7 @@ export interface IHiringRequestDetailModel {
   CurrencyId: number;
   RequestedBy?: string;
 }
-export interface HiringRequestModel {
+export interface IHiringRequestModel {
   Description: string;
   Position: string;
   Profession: string;
