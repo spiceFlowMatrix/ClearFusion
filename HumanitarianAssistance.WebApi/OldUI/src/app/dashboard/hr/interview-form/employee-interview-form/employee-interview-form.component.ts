@@ -273,7 +273,6 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
             data.data.InterviewDetailList != null &&
             data.data.InterviewDetailList.length > 0
           ) {
-            debugger;
             data.data.InterviewDetailList.forEach(element => {
               this.interviewDataSource.push(element);
             });
