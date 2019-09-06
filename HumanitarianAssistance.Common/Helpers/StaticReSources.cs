@@ -375,7 +375,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string NameExist = "Name Already Exist";
         public const string SuccessText = "Success";
         public const string FileText = "File Not Supported";
-        public const int FileNotSupported = 4440;
+        public const int FileNotSupported = 415;
 
         #region "Project"
         public const string ActivityNotFound = "Activity Not Found";
