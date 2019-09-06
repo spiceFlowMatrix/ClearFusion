@@ -83,11 +83,12 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
 
                     ProjectIndicatorQuestionsModel questionModel = new ProjectIndicatorQuestionsModel()
                     {
+                        ProjectIndicatorId=indicator.ProjectIndicatorId,
                         IndicatorQuestion = indicator.IndicatorQuestion,
                         IndicatorQuestionId = indicator.IndicatorQuestionId,
                         QuestionType = indicator.QuestionType,
                         VerificationSources = sourceModel,
-                        QuestionTypeName= indicator.QuestionType == (int)QuestionType.Qualitative ? "Qualitative" : indicator.QuestionType == (int)QuestionType.Quantitative ? "Quantitative": null,
+                        QuestionTypeName= indicator.QuestionType == (int)QuestionType.Qualitative ? nameof(QuestionType.Qualitative) : indicator.QuestionType == (int)QuestionType.Quantitative ? nameof(QuestionType.Quantitative): null,
 
                     };
 
