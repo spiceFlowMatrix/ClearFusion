@@ -147,7 +147,7 @@
                     <td width="25%"> <span
                         *ngIf="item.EmployeeTypeId == employeeType.Active || item.IsInterViewed == false">None</span>
                       <a *ngIf="(item.IsInterViewed == true || interviewCompleteCheckFlag == true) && item.EmployeeTypeId == employeeType.Candidate"
-                        (click)="seeCandidateDetail('dashboard/hr/interview-form')">See Interview Details</a>
+                        (click)="seeCandidateDetail('dashboard/hr/interview-form/',item.EmployeeID)">See Interview Details</a>
                     </td>
                     <td width="25%">{{ item.EmployeeTypeName }}
                       <a *ngIf="item.EmployeeTypeId == employeeType.Candidate &&
