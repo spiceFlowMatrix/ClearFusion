@@ -16,9 +16,8 @@
 
       <div class="col-sm-12">
         <h5> Is this a Qualitative or Quantitative question?</h5>
-        <mat-radio-group aria-labelledby="example-radio-group-label"
-        class="example-radio-group" formControlName="QuestionType"
-          [value]="questionDetailModel.QuestionType">
+        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+          formControlName="QuestionType" [value]="questionDetailModel.QuestionType">
           <mat-radio-button class="example-radio-button" *ngFor="let item of questionType" [value]="item.Id">
             {{ item.Name }}
           </mat-radio-button>
@@ -57,9 +56,7 @@
     <div class="modal-footer">
       <div mat-dialog-actions class="pull-right">
         <button mat-raised-button [mat-dialog-close]="data">Cancel</button>
-        <button mat-raised-button color="primary"
-          [disabled]="!questionForm.valid || EditLoaderFlag"
-          type="submit">
+        <button mat-raised-button color="primary" [disabled]="!questionForm.valid || EditLoaderFlag" type="submit">
           <span *ngIf="!EditLoaderFlag; else editIndicatorLoaderTemplate">Save</span>
           <ng-template #editIndicatorLoaderTemplate>
             <div class="spinner_center padding_top_5 padding_bottom_5">
@@ -67,6 +64,12 @@
             </div>
           </ng-template>
         </button>
+        <!-- <button mat-raised-button color="primary" [disabled]="!questionForm.valid || EditLoaderFlag">
+            <span class="display_inline_block">
+              <mat-spinner *ngIf="!EditLoaderFlag;" [diameter]="15"></mat-spinner>
+            </span>
+            Save
+          </button> -->
       </div>
     </div>
   </form>

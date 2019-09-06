@@ -6,34 +6,39 @@ import {
   EventEmitter,
   HostListener,
   OnChanges
-} from "@angular/core";
+} from '@angular/core';
 
-import { Router, ActivatedRoute } from "@angular/router";
-import { FormBuilder, FormGroup, Validators, FormArray } from "@angular/forms";
-import { ProjectListService } from "src/app/dashboard/project-management/project-list/service/project-list.service";
-import { AppUrlService } from "src/app/shared/services/app-url.service";
-import { MatDialog } from "@angular/material/dialog";
-import { GLOBAL } from "src/app/shared/global";
-import { ToastrService } from "ngx-toastr";
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { ProjectListService } from 'src/app/dashboard/project-management/project-list/service/project-list.service';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
+import { MatDialog } from '@angular/material/dialog';
+import { GLOBAL } from 'src/app/shared/global';
+import { ToastrService } from 'ngx-toastr';
 import {
   ProjectIndicatorModel,
   IndicatorDetailModel,
   IQuestionDetailModel
-} from "../project-indicators-model";
-import { AddProjectIndicatorComponent } from "../add-project-indicator/add-project-indicator.component";
-import { AddQuestionsDialogComponent } from "../add-questions-dialog/add-questions-dialog.component";
-import { ProjectIndicatorService } from "../project-indicator.service";
-import { DeleteConfirmationComponent } from "projects/library/src/lib/components/delete-confirmation/delete-confirmation.component";
-import { Delete_Confirmation_Texts } from "src/app/shared/enum";
+} from '../project-indicators-model';
+import { AddProjectIndicatorComponent } from '../add-project-indicator/add-project-indicator.component';
+import { AddQuestionsDialogComponent } from '../add-questions-dialog/add-questions-dialog.component';
+import { ProjectIndicatorService } from '../project-indicator.service';
+import { DeleteConfirmationComponent } from 'projects/library/src/lib/components/delete-confirmation/delete-confirmation.component';
+import { Delete_Confirmation_Texts } from 'src/app/shared/enum';
+import { flattenStyles } from '@angular/platform-browser/src/dom/dom_renderer';
 
 @Component({
-  selector: "app-project-indicator-detail",
-  templateUrl: "./project-indicator-detail.component.html",
-  styleUrls: ["./project-indicator-detail.component.scss"]
+  selector: 'app-project-indicator-detail',
+  templateUrl: './project-indicator-detail.component.html',
+  styleUrls: ['./project-indicator-detail.component.scss']
 })
 export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
   @Output() indicatorListRefresh = new EventEmitter();
   @Input() ProjectindicatorDetail: any;
+  panelOpenState = false;
+  step = 0;
+
+
   projectId: number;
 
   // screen
@@ -44,12 +49,12 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
   // boolean flag
   EditLoaderFlag = false;
   NewIndicatorLoaderFlag = false;
-
+  IndicatorDetailLoaderFlag = false;
   // Input/Output properties
   @Input() indicatorId: number;
   @Output() addIndicator = new EventEmitter<any>();
   @Output() editIndicator = new EventEmitter<any>();
-
+  @Output() questionDetailListRefresh = new EventEmitter<any>();
   totalCount: number;
   //#endregion
 
@@ -73,7 +78,7 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.initializeModel();
     this.routeActive.parent.params.subscribe(params => {
-      this.projectId = +params["id"];
+      this.projectId = +params['id'];
     });
     this.initQuestionModel();
   }
@@ -89,14 +94,18 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
         this.ProjectindicatorDetail.ProjectIndicatorId
       );
     }
+    //this.togglePanel();
   }
 
+//   togglePanel() {
+//     this.panelOpenState = !this.panelOpenState;
+// }
   initQuestionModel() {
     this.questionForm = this.fb.group({
-      IndicatorQuestion: ["", Validators.required],
+      IndicatorQuestion: ['', Validators.required],
       IndicatorQuestionId: null,
       ProjectIndicatorId: null,
-      QuestionType: ["", Validators.required],
+      QuestionType: ['', Validators.required],
       VerificationSources: this.fb.array([])
     });
 
@@ -119,26 +128,26 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
     });
   }
   get questions(): FormArray {
-    return this.indicatorForm.get("questions") as FormArray;
+    return this.indicatorForm.get('questions') as FormArray;
   }
 
   initializeModel() {
     this.indicatorForm = this.fb.group({
-      ProjectIndicatorName: ["", Validators.required],
-      Description: ["", Validators.required]
+      ProjectIndicatorName: ['', Validators.required],
+      Description: ['', Validators.required]
     });
   }
 
   //#region "Dynamic Scroll"
-  @HostListener("window:resize", ["$event"])
+  @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
 
     this.scrollStyles = {
-      "overflow-y": "auto",
-      height: this.screenHeight - 110 + "px",
-      "overflow-x": "hidden"
+      'overflow-y': 'auto',
+      height: this.screenHeight - 110 + 'px',
+      'overflow-x': 'hidden'
     };
   }
   //#endregion
@@ -151,7 +160,7 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
   createItem(): FormGroup {
     return this.fb.group({
       questionid: 0,
-      question: ""
+      question: ''
     });
   }
 
@@ -164,7 +173,7 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
 
     if (
       formValue.ProjectIndicatorName != null &&
-      formValue.ProjectIndicatorName != ""
+      formValue.ProjectIndicatorName != ''
     ) {
       const model: IndicatorDetailModel = {
         indicatorId: this.indicatorId,
@@ -191,12 +200,12 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
               response.data.ProjectIndicator != null
             ) {
               this.EditLoaderFlag = false;
-              this.toastr.success("Project Indicator Updated Successfully");
+              this.toastr.success('Project Indicator Updated Successfully');
             }
           },
           error => {
             this.EditLoaderFlag = false;
-            this.toastr.success("Something went wrong");
+            this.toastr.success('Something went wrong');
           }
         );
     } else {
@@ -211,7 +220,7 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
   // }
 
   GetIndicatorQuestionDetailById(id: number) {
-    this.NewIndicatorLoaderFlag = true;
+    this.IndicatorDetailLoaderFlag = true;
     if (id != 0 && id != undefined && id != null) {
       this.indicatorService.GetIndicatorQuestionById(id).subscribe(
         response => {
@@ -223,21 +232,19 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
           }
           if (response.statusCode === 400) {
             this.toastr.error(response.message);
-            this.EditLoaderFlag = false;
           }
-          this.EditLoaderFlag = false;
+    this.IndicatorDetailLoaderFlag = false;
         },
         error => {
-          this.NewIndicatorLoaderFlag = false;
-          this.EditLoaderFlag = false;
-          this.toastr.error("Something went wrong");
+          this.IndicatorDetailLoaderFlag = false;
+          this.toastr.error('Something went wrong');
         }
       );
     }
   }
 
   onDelete(index: number) {
-    const control = <FormArray>this.indicatorForm.controls["questions"];
+    const control = <FormArray>this.indicatorForm.controls['questions'];
     control.removeAt(index);
   }
 
@@ -245,11 +252,11 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
     this.openIndicatorDialog();
   }
 
-  //#region "openHiringRequestDialog"
+  //#region "openIndicatorDialog"
   openIndicatorDialog(): void {
     // NOTE: It passed the data into the Add Activity Model
     const dialogRef = this.dialog.open(AddProjectIndicatorComponent, {
-      width: "550px",
+      width: '550px',
       autoFocus: false,
       data: {
         ProjectId: this.projectId,
@@ -274,7 +281,7 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
   }
   //#endregion
 
-  // #region "Question"
+  // #region " Add New Question"
   // onQuestionsClick
   onQuestionsClick() {
     this.openQuestionDialog();
@@ -284,7 +291,7 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
   openQuestionDialog(): void {
     // NOTE: It passed the data into the Add Activity Model
     const dialogRef = this.dialog.open(AddQuestionsDialogComponent, {
-      width: "550px",
+      width: '550px',
       autoFocus: false,
       data: {
         ProjectId: this.projectId,
@@ -295,7 +302,7 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
     // refresh the list after new question created
     dialogRef.componentInstance.onAddQuestionListRefresh.subscribe(
       (data: any) => {
-        this.OnQuestionListRefresh(data);
+        this.questionListRefresh(data);
       }
     );
 
@@ -304,17 +311,27 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region "Listupdate After update"
-  OnQuestionListRefresh(event: IQuestionDetailModel) {
+  questionListRefresh(event: IQuestionDetailModel) {
     this.indicatorQuestionList.unshift(event);
+    this.questionCount();
   }
   //#endregion
+
+  questionCount () {
+    const obj = {
+      Count:  this.indicatorQuestionList.length,
+      ProjectIndicatorId: this.ProjectindicatorDetail.ProjectIndicatorId
+    };
+    this.questionDetailListRefresh.emit(obj);
+  }
+
 
   //#region "onDelete"
   onDeleteQuestion(item: any) {
     const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
-      width: "300px",
-      height: "250px",
-      data: "delete",
+      width: '300px',
+      height: '250px',
+      data: 'delete',
       disableClose: false
     });
 
@@ -341,12 +358,13 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
             response => {
               if (response.statusCode === 200) {
                 this.deletedListRefresh(item.IndicatorQuestionId);
+                this.questionCount();
               }
               dialogRef.componentInstance.isLoading = false;
               dialogRef.componentInstance.onCancelPopup();
             },
             error => {
-              this.toastr.error("Someting went wrong");
+              this.toastr.error('Someting went wrong');
               dialogRef.componentInstance.isLoading = false;
               dialogRef.componentInstance.onCancelPopup();
             }
@@ -356,7 +374,7 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
   }
   //#endregion
 
-  // refresh list after delete
+  //#region refresh list after delete
   deletedListRefresh(item: number) {
     const findIndex = this.indicatorQuestionList.findIndex(
       x => x.IndicatorQuestionId === item
@@ -364,16 +382,70 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
     this.indicatorQuestionList.splice(findIndex, 1);
   }
 
-  questionListOnindicatorDelete(projectIndicatorId: any) {
-    if (projectIndicatorId != null && projectIndicatorId != undefined) {
-    const findIndex = this.indicatorQuestionList.findIndex(
-      x => (x.ProjectIndicatorId = projectIndicatorId)
-    );
-   //const countn = this.indicatorQuestionList.
-    this.indicatorQuestionList.splice(findIndex, 1);
+  refreshQuestionListOnIndicatorDelete(projectIndicatorId: any) {
+    if (projectIndicatorId != null && projectIndicatorId !== undefined) {
+      this.indicatorQuestionList = [];
     }
-
   }
 
   //#endregion
+
+  //#region "on Question EditClick"
+
+  onQuestionEditClick(item: any) {
+    this.questionForm = this.fb.group({
+      IndicatorQuestion: [item.IndicatorQuestion],
+      IndicatorQuestionId: [item.IndicatorQuestionId],
+      ProjectIndicatorId: [item.ProjectIndicatorId],
+      QuestionType: [item.QuestionType],
+      VerificationSources: [item.VerificationSources]
+    });
+    this.openEditQuestionDialog(this.questionForm);
+  }
+  //#endregion
+
+  openEditQuestionDialog(item: FormGroup): void {
+    // NOTE: It passed the data into the Add Activity Model
+    const dialogRef = this.dialog.open(AddQuestionsDialogComponent, {
+      width: '550px',
+      autoFocus: false,
+      data: {
+        ProjectId: this.projectId,
+        QuestionDetail: item.value,
+        ProjectindicatorDetail: this.ProjectindicatorDetail
+      }
+    });
+
+    // refresh the list after new question created
+    dialogRef.componentInstance.onUpdatedQuestionListRefresh.subscribe(
+      (data: any) => {
+        this.OnUpdatesQuestionListRefresh(data);
+       // this.questionDetailListRefresh.emit(data);
+      }
+    );
+
+    dialogRef.afterClosed().subscribe(result => {});
+  }
+  // update questionalist refresh
+  OnUpdatesQuestionListRefresh(data: IQuestionDetailModel) {
+    const index = this.indicatorQuestionList.findIndex(
+      r => r.IndicatorQuestionId === data.IndicatorQuestionId
+    );
+    if (index !== -1) {
+      this.indicatorQuestionList[index] = data;
+    }
+  }
+
+  // Accordian hide and show Steps
+  setStep(index: number) {
+    this.step = index;
+  }
+
+  nextStep() {
+    this.step++;
+  }
+
+  prevStep() {
+    this.step--;
+  }
 }

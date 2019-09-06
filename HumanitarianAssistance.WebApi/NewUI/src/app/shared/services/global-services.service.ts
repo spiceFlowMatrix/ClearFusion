@@ -51,6 +51,16 @@ export class GlobalService {
   }
 
   //#region "GET_LIST_BY_ID"
+  getDataById(url: string): Observable<any> {
+    return this.http.get<any>(url).pipe(
+      map((response) => response),
+      finalize(() => {
+        // this.loader.hideLoader();
+      })
+    );
+  }
+
+  //#region "GET_LIST_BY_ID"
   getListByIdAndDate(url: string, data): Observable<any> {
     return this.http.post(url, data).pipe(
       map((response) => response),

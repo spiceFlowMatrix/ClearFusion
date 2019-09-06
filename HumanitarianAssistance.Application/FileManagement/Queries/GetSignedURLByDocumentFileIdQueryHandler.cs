@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.CommonServices;
+using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Application.FileManagement.Models;
 using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Common.Helpers;
@@ -16,9 +17,9 @@ namespace HumanitarianAssistance.Application.FileManagement.Queries
     {
 
         private HumanitarianAssistanceDbContext _dbContext;
-        private readonly FileManagementService _fileManagementService;
+        private readonly IFileManagementService _fileManagementService;
 
-        public GetSignedURLByDocumentFileIdQueryHandler(HumanitarianAssistanceDbContext dbContext, FileManagementService fileManagementService)
+        public GetSignedURLByDocumentFileIdQueryHandler(HumanitarianAssistanceDbContext dbContext, IFileManagementService fileManagementService)
         {
             _dbContext = dbContext;
             _fileManagementService= fileManagementService;
@@ -60,7 +61,6 @@ namespace HumanitarianAssistance.Application.FileManagement.Queries
                 response.Message = StaticResource.SomethingWrong + exception.Message;
             }
             return response;
-        }
-        
     }
+}
 }
