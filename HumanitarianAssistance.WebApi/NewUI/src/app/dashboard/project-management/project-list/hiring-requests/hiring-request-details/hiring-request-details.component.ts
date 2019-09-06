@@ -259,6 +259,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           BasicPay: data.BasicPay,
           jobGrade: this.jobGradeList.find(x => x.GradeId === data.GradeId).GradeName
         };
+        this.GetEmployeeListByOfficeId(this.hiringRequestForm.value.OfficeId);
       }
     );
 
