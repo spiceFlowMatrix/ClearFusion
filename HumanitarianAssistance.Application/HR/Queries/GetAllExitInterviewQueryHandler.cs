@@ -30,7 +30,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
             ApiResponse response = new ApiResponse();
             try
             {
-                var exitInterviewList = await _dbContext.ExistInterviewDetails.Where(x => x.IsDeleted == false).ToListAsync();
+                var exitInterviewList = await _dbContext.ExistInterviewDetails.Where(x => x.IsDeleted == false && x.OfficeId == request.OfficeId).ToListAsync();
                 List<ExitInterviewModel> lst = new List<ExitInterviewModel>();
                 foreach (var item in exitInterviewList)
                 {

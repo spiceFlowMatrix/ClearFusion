@@ -29,7 +29,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         public async Task<ApiResponse> GetAllEmployeeList()
         {
             return await _mediator.Send(new GetAllEmployeeListQuery());
-        }
+        }   
         [HttpPost]
         public async Task<ApiResponse> GetHiringCandidatesListById([FromBody]GetAllCandidateListQuery query)
         {

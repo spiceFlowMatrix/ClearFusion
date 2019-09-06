@@ -86,7 +86,7 @@ export class ProjectListService {
     }
   ];
 
-  activitiesControlRoles: IProjectRoles[] = [
+   activitiesControlRoles: IProjectRoles[] = [
     {
       Id: 1,
       Role: 'Planning Officer'

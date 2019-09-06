@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { HrService } from '../../hr.service';
 import { CodeService } from '../../../code/code.service';
 import { Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { CommonService } from '../../../../service/common.service';
   templateUrl: './employee-exit-interview-form.component.html',
   styleUrls: ['./employee-exit-interview-form.component.css']
 })
-export class EmployeeExitInterviewFormComponent implements OnInit {
+export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
   //#region "Variables"
 
   // Data Sources
@@ -26,6 +26,7 @@ export class EmployeeExitInterviewFormComponent implements OnInit {
 
   employeeSelectedValue: number;
   employeeSelectedValueFlag = false;
+  @Input() officeId: any;
   @Input() isEditingAllowed;
   // selectedEmployee: number;
 
@@ -55,9 +56,7 @@ export class EmployeeExitInterviewFormComponent implements OnInit {
     private commonService: CommonService
   ) {}
   ngOnInit() {
-    this.GetAllExitInterview();
     this.initializeForm();
-    this.getAllEmployeeListByOfficeId();
   }
 
   initializeForm() {
@@ -159,17 +158,29 @@ export class EmployeeExitInterviewFormComponent implements OnInit {
       ProvidedDevelopment: null,
 
       Question: 'No',
-      Explain: null
+      Explain: null,
+      OfficeId: null
     };
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+
+    if (changes !== undefined && changes.officeId !== undefined) {
+      this.officeId = changes.officeId.currentValue;
+
+      this.getAllEmployeeListByOfficeId();
+      this.GetAllExitInterviewByOfficeId();
+    }
+  }
+
   //#region "GetAllExitInterview"
-  GetAllExitInterview() {
+  GetAllExitInterviewByOfficeId() {
     this.empInterviewExitFormLoader = true;
 
     this.hrService
-      .GetAllDetails(
-        this.setting.getBaseUrl() + GLOBAL.API_Code_GetAllExitInterview
+      .GetAllDetailsByOfficeId(
+        this.setting.getBaseUrl() + GLOBAL.API_Code_GetAllExitInterview,
+        this.officeId
       )
       .subscribe(
         data => {
@@ -209,7 +220,7 @@ export class EmployeeExitInterviewFormComponent implements OnInit {
   //#region "Get All Employee List By OfficeId"
   getAllEmployeeListByOfficeId() {
     // tslint:disable-next-line:radix
-    const officeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
+    const officeId = this.officeId;
     this.hrService
       .GetAllDetailsByOfficeId(
         this.setting.getBaseUrl() + GLOBAL.API_Code_GetEmployeeDetailByOfficeId,
@@ -385,7 +396,8 @@ export class EmployeeExitInterviewFormComponent implements OnInit {
 
       Question:
         model.Question.toLowerCase() === 'Yes'.toLowerCase() ? true : false,
-      Explain: model.Explain
+      Explain: model.Explain,
+      OfficeId: this.officeId
     };
 
     this.hrService
@@ -403,7 +415,7 @@ export class EmployeeExitInterviewFormComponent implements OnInit {
               this.toastr.warning('Something went wrong!');
           }
           this.hideAddEmpExitInterviewForm();
-          this.GetAllExitInterview();
+          this.GetAllExitInterviewByOfficeId();
         },
         error => {
           if (error.StatusCode === 500) {
@@ -494,7 +506,8 @@ export class EmployeeExitInterviewFormComponent implements OnInit {
 
       Question:
         model.Question.toLowerCase() === 'Yes'.toLowerCase() ? true : false,
-      Explain: model.Explain
+      Explain: model.Explain,
+      OfficeId: this.officeId
     };
 
     this.hrService
@@ -512,7 +525,7 @@ export class EmployeeExitInterviewFormComponent implements OnInit {
               this.toastr.warning('Something went wrong!');
           }
           this.hideAddEmpExitInterviewForm();
-          this.GetAllExitInterview();
+          this.GetAllExitInterviewByOfficeId();
         },
         error => {
           if (error.StatusCode === 500) {
@@ -627,7 +640,8 @@ export class EmployeeExitInterviewFormComponent implements OnInit {
         ProvidedDevelopment: modelData.ProvidedDevelopment,
 
         Question: modelData.Question === true ? 'Yes' : 'No',
-        Explain: modelData.Explain
+        Explain: modelData.Explain,
+        OfficeId: modelData.OfficeId
       };
     }
 
@@ -685,7 +699,7 @@ export class EmployeeExitInterviewFormComponent implements OnInit {
                 this.toastr.warning('Something went wrong!');
             }
             this.hideDeleteConfVisiblePopup();
-            this.GetAllExitInterview();
+            this.GetAllExitInterviewByOfficeId();
           },
           error => {
             if (error.StatusCode === 500) {
@@ -743,6 +757,7 @@ class EmpExitInterviewFormModel {
   Department: any;
   TenureWithCHA: any;
   Gender: any;
+  OfficeId: any;
 
   // FeelingAboutEmployee
   DutiesOfJob: any;

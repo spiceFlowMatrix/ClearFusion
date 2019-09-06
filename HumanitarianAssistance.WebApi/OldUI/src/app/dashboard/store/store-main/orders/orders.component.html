@@ -75,7 +75,7 @@
           validationGroup="addOrderData" (onFieldDataChanged)="onFieldDataChanged($event)">
           <dxi-item itemType="group" [colCount]="2">
 
-            <dxi-item dataField="Purchase" editorType="dxSelectBox" [editorOptions]="{ dataSource: purchaseDataSource, valueExpr: 'PurchaseId', displayExpr: 'PurchaseId', searchEnabled: true, showClearButton: false  }">
+            <dxi-item dataField="Purchase" editorType="dxSelectBox" [editorOptions]="{ dataSource: purchaseDataSource, valueExpr: 'PurchaseId', displayExpr: 'PurchaseCode', searchEnabled: true, showClearButton: false  }">
               <dxo-label text="Purchase" alignment="left"></dxo-label>
               <dxi-validation-rule type="required"> </dxi-validation-rule>
             </dxi-item>
