@@ -76,6 +76,7 @@
                       ></mat-spinner>
                     </ng-template>
                     <mat-menu #menu="matMenu">
+                      <div>
                       <input
                         id="fileInput"
                         style="display: contents;"
@@ -83,12 +84,15 @@
                         type="file"
                         (change)="fileChange($event.target.files)"
                       />
-                      <button mat-button (click)="openInput()">
+                      <button mat-menu-item (click)="openInput()">
+                          <i class="fa fa-upload" aria-hidden="true"></i> &nbsp;
                         Upload Document
                       </button>
-                      <button mat-button (click)="openDocumentsDialog()">
+                      <button mat-menu-item (click)="openDocumentsDialog()">
+                          <i class="fa fa-eye" aria-hidden="true"></i> &nbsp;
                         View Documents
                       </button>
+                    </div>
                     </mat-menu>
                   </div>
                 </div>
@@ -236,28 +240,22 @@
                           <br />
                           <h4 class="display_inline_block">TRANSACTIONS</h4>
 
-                          <div
-                            *ngIf="
-                              checkTransactionFlag;
-                              else checkTransactionTemplate
-                            "
-                          >
-                            <mat-spinner diameter="20"></mat-spinner>
-                          </div>
-                          <ng-template #checkTransactionTemplate>
-                            <button
-                              class="pull-right"
-                              mat-stroked-button
-                              color="accent"
-                              pTooltip="Save Transaction"
-                              tooltipPosition="top"
-                              (click)="onTransactionListVerify()"
-                              *ngIf="isEditingAllowed"
-                            >
-                              <mat-icon aria-label="done icon">done</mat-icon>
-                              Save
-                            </button>
-                          </ng-template>
+                          <button
+                          mat-stroked-button
+                          color="accent"
+                          class="pull-right"
+                          pTooltip="Save Transaction"
+                          tooltipPosition="top"
+                          (click)="onTransactionListVerify()"
+                          *ngIf="isEditingAllowed"
+                          [disabled]="checkTransactionFlag">
+                            <span class="display_inline_block">
+                              <mat-spinner *ngIf="checkTransactionFlag" [diameter]="15"></mat-spinner>
+                            </span>
+                            <mat-icon  *ngIf="!checkTransactionFlag"  aria-label="done">done</mat-icon>
+                            Save
+                          </button>
+
                         </div>
                       </div>
                     </div>

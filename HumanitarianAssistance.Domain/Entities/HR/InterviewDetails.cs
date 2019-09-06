@@ -47,6 +47,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public string TotalMarksObtained { get; set; }
 
         public string Status { get; set; }
+        // public int OfficeId { get; set; }
 
         public string Interviewer1 { get; set; }
         public string Interviewer2 { get; set; }
@@ -61,5 +62,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public List<InterviewTrainings> InterviewTrainingsList { get; set; }
         public List<InterviewTechnicalQuestion> InterviewTechnicalQuestionList { get; set; }
         public List<HRJobInterviewers> HRJobInterviewersList { get; set; }
+        [ForeignKey("JobId")]
+        public JobHiringDetails JobHiringDetail { get; set; }
     }
 }

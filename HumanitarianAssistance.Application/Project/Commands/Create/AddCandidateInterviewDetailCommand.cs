@@ -10,5 +10,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
         public long? JobId { get; set; }
         public string Status { get; set; }
         public string JobDescription { get; set; }
+        public int OfficeId { get; set; }
     }
 }

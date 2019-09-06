@@ -504,7 +504,8 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       this.addCandidateInterviewLoader = true;
       const interviewCandidatModel: IitervireCandidateModel = {
         EmployeeID: event.EmployeeID,
-        JobDescription: this.hiringRequestForm.get('Description').value
+        JobDescription: this.hiringRequestForm.get('Description').value,
+        OfficeId: this.hiringRequestForm.get('OfficeId').value
       };
       this.hiringRequestService
         .AddInterViewCandidateDetail(interviewCandidatModel)
@@ -530,8 +531,8 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region "seeCandidateDetail page of old Ui"
-  seeCandidateDetail(path: string) {
-    window.open(this.appurl.getOldUiUrl() + path, '_blank');
+  seeCandidateDetail(path: string, empId) {
+    window.open(this.appurl.getOldUiUrl() + path + empId, '_blank');
   }
   //#endregion
 

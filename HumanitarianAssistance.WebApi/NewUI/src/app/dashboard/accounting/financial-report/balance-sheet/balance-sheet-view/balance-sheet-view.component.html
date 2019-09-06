@@ -55,10 +55,7 @@
                         (click)="showa = !showa"
                       >
                         {{ item.NoteName }}
-                        <img
-                          src="src/assets/img/elipses.png"
-                          style="height:6px; padding-left:10px;"
-                        />
+                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                       </td>
                       <td
                         class="font_caps_12 right_align"
@@ -97,13 +94,13 @@
                 >
                   <table class="collapsed table table-bordered">
                     <tr>
-                      <td class="font_caps_12" style="width:100%">
+                      <td
+                        class="font_caps_12"
+                        style="width:100%"
+                        (click)="showb = !showb"
+                      >
                         {{ item.NoteName }}
-                        <a (click)="showb = !showb"
-                          ><img
-                            src="src/assets/img/elipses.png"
-                            style="height:6px; padding-left:10px;"
-                        /></a>
+                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                       </td>
                       <td class="font_caps_12 right_align">
                         {{ item.NoteBalance | number: "5.2-3" }}
