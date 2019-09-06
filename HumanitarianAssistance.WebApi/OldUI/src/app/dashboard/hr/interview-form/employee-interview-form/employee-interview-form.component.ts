@@ -1,7 +1,5 @@
 import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { HrService } from '../../hr.service';
-import { Router } from '@angular/router';
-import { CodeService } from '../../../code/code.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GLOBAL } from '../../../../shared/global';
@@ -274,12 +272,11 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
             data.data.InterviewDetailList != null &&
             data.data.InterviewDetailList.length > 0
           ) {
-            debugger;
             data.data.InterviewDetailList.forEach(element => {
               this.interviewDataSource.push(element);
             });
             if (this.employeeId > 0) {
-              var interviewDetailbyId = this.interviewDataSource.find(r => r.EmployeeID == this.employeeId);
+              const interviewDetailbyId = this.interviewDataSource.find(r => r.EmployeeID === this.employeeId);
               this.onEditEmpInterviewShowForm(interviewDetailbyId, false);
             }
 
@@ -729,8 +726,6 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
   }
 
   //#endregion
-
-  
 
 
   //#region "onIsInterviewFormApprovedValueChanged"
