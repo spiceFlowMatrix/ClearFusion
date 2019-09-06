@@ -53,7 +53,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                         obj.Store = item.StoreInventoryItem?.Inventory?.AssetType ?? 0;
                         obj.Inventory = item.StoreInventoryItem?.Inventory?.InventoryName ?? null;
                         obj.Item = item.StoreInventoryItem?.ItemName ?? null;
-                        obj.TotalCost = (item.IssuedQuantity) * (item.StoreItemPurchase?.UnitCost ?? 0);
+                        obj.TotalCost = item.IssuedQuantity * (item.StoreItemPurchase?.UnitCost ?? 0);
                         obj.MustReturn = item.MustReturn == true ? "Yes" : "No";
                         obj.Returned = item.Returned == true ? "Yes" : "No";
                         obj.TotalCostDetails.UnitType = item.StoreItemPurchase?.PurchaseUnitType?.UnitTypeName ?? null;
@@ -80,7 +80,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             //If Exchange rate is available on voucher date
                             if (exchangeRateDetail.Any())
                             {
-                                lst.ForEach(x => x.TotalCostDetails.UnitCost *= exchangeRateDetail.FirstOrDefault(y => y.Date.Date == x.VoucherDate.Date && y.FromCurrency == x.CurrencyId && y.ToCurrency == request.CurrencyId).Rate);
+                                lst.ForEach(x => x.TotalCostDetails.UnitCost *= (double)exchangeRateDetail.FirstOrDefault(y => y.Date.Date == x.VoucherDate.Date && y.FromCurrency == x.CurrencyId && y.ToCurrency == request.CurrencyId).Rate);
                                 lst.ForEach(x => x.TotalCost = x.TotalCostDetails.Amount * x.TotalCostDetails.UnitCost);
                                 lst.ForEach(x => x.TotalCostDetails.Currency = currencyDetails.CurrencyName);
                             }
@@ -91,7 +91,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                     var exchangeRate = await _dbContext.ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == obj.CurrencyId && x.ToCurrency == request.CurrencyId && x.Date.Date <= obj.VoucherDate.Date);
                                     if (exchangeRate != null)
                                     {
-                                        obj.TotalCostDetails.UnitCost *= exchangeRate.Rate;
+                                        obj.TotalCostDetails.UnitCost *= (double)exchangeRate.Rate;
                                         obj.TotalCost = obj.TotalCostDetails.Amount * obj.TotalCostDetails.UnitCost;
                                         lst.ForEach(x => x.TotalCostDetails.Currency = currencyDetails.CurrencyName);
                                     }
