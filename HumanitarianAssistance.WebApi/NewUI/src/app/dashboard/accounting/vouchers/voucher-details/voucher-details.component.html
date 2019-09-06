@@ -76,6 +76,7 @@
                       ></mat-spinner>
                     </ng-template>
                     <mat-menu #menu="matMenu">
+                      <div>
                       <input
                         id="fileInput"
                         style="display: contents;"
@@ -83,12 +84,15 @@
                         type="file"
                         (change)="fileChange($event.target.files)"
                       />
-                      <button mat-button (click)="openInput()">
+                      <button mat-menu-item (click)="openInput()">
+                          <i class="fa fa-upload" aria-hidden="true"></i> &nbsp;
                         Upload Document
                       </button>
-                      <button mat-button (click)="openDocumentsDialog()">
+                      <button mat-menu-item (click)="openDocumentsDialog()">
+                          <i class="fa fa-eye" aria-hidden="true"></i> &nbsp;
                         View Documents
                       </button>
+                    </div>
                     </mat-menu>
                   </div>
                 </div>

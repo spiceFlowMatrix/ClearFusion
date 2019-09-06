@@ -166,7 +166,8 @@ export class PurchasesComponent implements OnInit {
             OfficeId: 0,
             JournalCode: 0,
            // VerifiedPurchaseVoucherReferenceNo: null,
-            TimezoneOffset: null
+            TimezoneOffset: null,
+            PurchaseName: null
         };
     }
     //#endregion
@@ -252,7 +253,8 @@ export class PurchasesComponent implements OnInit {
                                     //     element.VerifiedPurchaseVoucherReferenceNo,
                                     TimezoneOffset: new Date().getTimezoneOffset(),
                                     ImageDocumentId: element.ImageDocumentId,
-                                    InvoiceDocumentId: element.InvoiceDocumentId
+                                    InvoiceDocumentId: element.InvoiceDocumentId,
+                                    PurchaseName: element.PurchaseName
                                 });
                             });
                         }
@@ -802,7 +804,8 @@ export class PurchasesComponent implements OnInit {
                         JournalCode: data.JournalCode,
                         // VerifiedPurchaseVoucherReferenceNo:
                         //     data.VerifiedPurchaseVoucherReferenceNo,
-                        TimezoneOffset: new Date().getTimezoneOffset()
+                        TimezoneOffset: new Date().getTimezoneOffset(),
+                        PurchaseName: data.PurchaseName
                     };
 
                     this.addPurchaseItemDetail(addDataModel);
@@ -883,7 +886,8 @@ export class PurchasesComponent implements OnInit {
                         //     data.VerifiedPurchaseVoucherReferenceNo,
                         TimezoneOffset: new Date().getTimezoneOffset(),
                         ImageDocumentId: data.ImageDocumentId,
-                        InvoiceDocumentId: data.InvoiceDocumentId
+                        InvoiceDocumentId: data.InvoiceDocumentId,
+                        PurchaseName: data.PurchaseName
                     };
 
                     this.editPurchaseItemDetail(editDataModel);
@@ -956,7 +960,8 @@ export class PurchasesComponent implements OnInit {
             OfficeId: null,
             JournalCode: null,
            // VerifiedPurchaseVoucherReferenceNo: null,
-            TimezoneOffset: null
+            TimezoneOffset: null,
+            PurchaseName: null
         };
 
         this.showAddPurchaseFormPopupVisible();
@@ -1006,7 +1011,8 @@ export class PurchasesComponent implements OnInit {
                 JournalCode: data.data.JournalCode,
                 // VerifiedPurchaseVoucherReferenceNo:
                 //     data.data.VerifiedPurchaseVoucherReferenceNo,
-                TimezoneOffset: new Date().getTimezoneOffset()
+                TimezoneOffset: new Date().getTimezoneOffset(),
+                PurchaseName: data.data.PurchaseName
             };
 
         if (data.data.ProjectId != null || data.data.ProjectId === 0) {
@@ -1122,7 +1128,8 @@ export class PurchasesComponent implements OnInit {
                 JournalCode: data.JournalCode,
                 // VerifiedPurchaseVoucherReferenceNo:
                 //     data.VerifiedPurchaseVoucherReferenceNo,
-                TimezoneOffset: new Date().getTimezoneOffset()
+                TimezoneOffset: new Date().getTimezoneOffset(),
+                PurchaseName: data.PurchaseName
             };
 
             this.ShowConfirmationPopup();
@@ -1461,4 +1468,5 @@ class PurchaseModel {
     TimezoneOffset: number;
     InvoiceDocumentId?: number;
     ImageDocumentId?: number;
+    PurchaseName: string;
 }

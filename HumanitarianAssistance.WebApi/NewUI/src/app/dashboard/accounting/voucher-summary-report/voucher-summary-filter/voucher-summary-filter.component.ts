@@ -86,6 +86,7 @@ export class VoucherSummaryFilterComponent implements OnInit {
 
   //#region "getProjectJobList"
   getProjectJobList(projectIds: number[]) {
+    this.multiProjectJobList = [];
     this.voucherSummaryService
       .getProjectJobList(projectIds)
       .pipe(takeUntil(this.destroyed$))
@@ -107,6 +108,7 @@ export class VoucherSummaryFilterComponent implements OnInit {
 
   //#region "getProjectJobList"
   getProjectBudgetLineList(projectJobIds: number[]) {
+    this.multiBudgetLineList = [];
     this.voucherSummaryService
       .getProjectBudgetLineList(projectJobIds)
       .pipe(takeUntil(this.destroyed$))
@@ -229,6 +231,9 @@ export class VoucherSummaryFilterComponent implements OnInit {
     this.projectFilter = event.Value;
     if (this.projectFilter.length > 0) {
       this.getProjectJobList(this.projectFilter);
+    } else {
+      this.multiBudgetLineList = [];
+      this.multiProjectJobList = [];
     }
   }
   // #endregion
@@ -244,6 +249,8 @@ export class VoucherSummaryFilterComponent implements OnInit {
     this.projectJobFilter = event.Value;
     if (this.projectJobFilter.length > 0) {
       this.getProjectBudgetLineList(this.projectJobFilter);
+    } else {
+      this.multiBudgetLineList = [];
     }
   }
   // #endregion
