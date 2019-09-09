@@ -2271,6 +2271,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("NationalityId");
 
+                    b.Property<double>("OpeningPension");
+
                     b.Property<string>("OtherSkillList");
 
                     b.Property<string>("Passport");
