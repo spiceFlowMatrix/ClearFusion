@@ -48,6 +48,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                 existrecord.MembershipSupportInPoliticalParty = request.MembershipSupportInPoliticalParty;
                 existrecord.ModifiedById = request.ModifiedById;
                 existrecord.ModifiedDate = request.ModifiedDate;
+                existrecord.DutyStation=  request.DutyStation;
+                
                 await _dbContext.SaveChangesAsync();
 
                 var employeeinfo = await _dbContext.EmployeeDetail.FirstOrDefaultAsync(x => x.EmployeeID == request.EmployeeId && x.IsDeleted == false);

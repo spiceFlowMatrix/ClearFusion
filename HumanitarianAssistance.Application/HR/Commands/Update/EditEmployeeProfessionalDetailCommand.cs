@@ -34,5 +34,6 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
         public string TinNumber { get; set; }
         public long? AttendanceGroupId { get; set; }
         public string AttendanceGroupName { get; set; }
+        public int? DutyStation { get; set; }
     }
 }

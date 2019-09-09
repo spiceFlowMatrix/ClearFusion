@@ -56,6 +56,7 @@ export class ProjectActivityDocumentsComponent implements OnInit, OnDestroy {
     this.projectPhaseId = data.ProjectPhaseId;
     this.projectActivityId = data.ProjectActivityId;
     this.monitoringId = data.MonitoringId;
+    console.log(data.MonitoringId);
   }
 
   ngOnInit() {

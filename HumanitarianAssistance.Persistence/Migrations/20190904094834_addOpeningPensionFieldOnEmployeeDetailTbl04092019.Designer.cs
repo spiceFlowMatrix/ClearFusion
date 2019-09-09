@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190904094834_addOpeningPensionFieldOnEmployeeDetailTbl04092019")]
+    partial class addOpeningPensionFieldOnEmployeeDetailTbl04092019
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3165,8 +3167,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("DesignationId");
 
-                    b.Property<int?>("DutyStation");
-
                     b.Property<int?>("EmployeeContractTypeId");
 
                     b.Property<int?>("EmployeeId");
@@ -3509,8 +3509,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<bool>("NotChallenged");
 
-                    b.Property<int>("OfficeId");
-
                     b.Property<string>("OpportunityAdvancement");
 
                     b.Property<string>("OverallJobSatisfaction");
@@ -3746,8 +3744,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasKey("InterviewDetailsId");
 
                     b.HasIndex("EmployeeID");
-
-                    b.HasIndex("JobId");
 
                     b.ToTable("InterviewDetails");
                 });
@@ -7877,8 +7873,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime>("PurchaseDate");
 
-                    b.Property<string>("PurchaseName");
-
                     b.Property<int>("PurchasedById");
 
                     b.Property<int>("Quantity");
@@ -7892,7 +7886,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("Status");
 
-                    b.Property<double>("UnitCost");
+                    b.Property<long>("UnitCost");
 
                     b.Property<int>("UnitType");
 
@@ -8815,11 +8809,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
                         .WithMany("InterviewDetails")
                         .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.JobHiringDetails", "JobHiringDetail")
-                        .WithMany()
-                        .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

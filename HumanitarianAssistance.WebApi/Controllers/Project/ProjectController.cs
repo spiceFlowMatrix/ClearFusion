@@ -556,7 +556,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
 
         #region "BudgetLineExcelImport"
         [HttpPost, DisableRequestSizeLimit]
-        public async Task<ApiResponse> ExcelImportOfBudgetLine([FromForm] IFormFile fileKey, string projectId)
+        public async Task<ApiResponse> ExcelImportOfBudgetLine([FromForm] IFormFile fileKey, [FromForm] string projectId)
         {
             ApiResponse apiRespone = new ApiResponse();
 
@@ -1531,7 +1531,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         #region Upload Files for Activity Documents 28/03/2019
 
         [HttpPost, DisableRequestSizeLimit]
-        public async Task<ApiResponse> UploadProjectDocumnentFile([FromForm] IFormFile filesData, string activityId, string statusId, string monitoringId)
+        public async Task<ApiResponse> UploadProjectDocumnentFile([FromForm] IFormFile filesData, [FromForm]string activityId, [FromForm] string statusId, [FromForm] string monitoringId)
         {
             ApiResponse apiRespone = new ApiResponse();
 

@@ -37,7 +37,11 @@
             <h4>Attendance Group:</h4>
             <span>{{professionalDetails.AttendanceGroupName == null ? "" : professionalDetails.AttendanceGroupName}}</span>
           </li>
-  
+
+          <li>
+            <h4>Duty Station:</h4>
+            <span>{{professionalDetails.DutyStation == null ? "" : professionalDetails.DutyStation | jobGrade: officeTypeDropdown }}</span>
+          </li>
 
         <li>
           <h4>Fired On:</h4>
@@ -103,8 +107,8 @@
           <dxi-item dataField="OfficeId">
             <dxi-validation-rule type="required"> </dxi-validation-rule>
             <dxo-label text="Office"></dxo-label>
-            <dx-select-box (onValueChanged)="getDepartmentType($event.value)" [dataSource]="officeTypeDropdown" valueExpr="OfficeId"
-              displayExpr="OfficeName" [(value)]="OfficeId">
+            <dx-select-box (onValueChanged)="getDepartmentType($event.value)" [dataSource]="officeTypeDropdown" valueExpr="Id"
+              displayExpr="Name" [(value)]="OfficeId">
             </dx-select-box>
           </dxi-item>
 
@@ -143,7 +147,15 @@
           <dxi-item dataField="ResignationOn" editorType="dxDateBox" [editorOptions]="{ disabled: resignationOnFlag, max : currentDate, displayFormat: 'dd/MM/yyyy' }">
           </dxi-item>
 
-          <dxi-item dataField="TrainingBenefits" [colSpan]="2">
+          <dxi-item dataField="DutyStation" editorType="dxSelectBox" [editorOptions]="{
+            dataSource: officeTypeDropdown, 
+            displayExpr: 'Name',
+            valueExpr: 'Id'}">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+            <dxo-label text="Duty Station"></dxo-label>
+          </dxi-item>
+
+          <dxi-item dataField="TrainingBenefits">
             <dxo-label text="Training / Benefits"></dxo-label>
           </dxi-item>
 
