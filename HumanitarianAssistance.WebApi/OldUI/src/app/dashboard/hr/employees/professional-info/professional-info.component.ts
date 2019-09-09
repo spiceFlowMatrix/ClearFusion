@@ -365,7 +365,6 @@ export class ProfessionalInfoComponent implements OnInit {
 
   //#region "Edit Professional Info"
   EditProfessionalDetails(model: any) {
-    debugger;
     this.editProfessionalInfoPopupLoading = true;
     const profDetails: ProfessionalDetails = {
       EmployeeProfessionalId: model.EmployeeProfessionalId,
