@@ -1,9 +1,5 @@
 import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { HrService } from '../../hr.service';
-<<<<<<< HEAD
-=======
-import { CodeService } from '../../../code/code.service';
->>>>>>> 45638621df4c0e1d598fb6f4bfab563226829bc9
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GLOBAL } from '../../../../shared/global';
