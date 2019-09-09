@@ -512,6 +512,10 @@
                         <dxi-validation-rule type="required"> </dxi-validation-rule>
                       </dxi-item>
 
+                      <dxi-item dataField="OpeningPension" editorType="dxNumberBox" dataType="number"
+                        [editorOptions]="{min: 0, value:0 }">
+                    </dxi-item>
+
                     <dxi-item dataField="Phone" editorType="dxNumberBox"
                         [editorOptions]="{  mode: 'number', minLength:10, maxLength: 14}">
                         <dxi-validation-rule type="custom"

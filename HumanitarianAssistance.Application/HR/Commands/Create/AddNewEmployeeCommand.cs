@@ -57,5 +57,6 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
         public string IssuePlace { get; set; }
         public int? MaritalStatusId { get; set; }
         public string TinNumber { get; set; }
+        public double OpeningPension { get; set; }
     }
 }

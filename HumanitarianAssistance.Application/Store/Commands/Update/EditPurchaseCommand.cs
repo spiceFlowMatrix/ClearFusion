@@ -13,7 +13,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
         public DateTime DeliveryDate { get; set; }              // The date that the item arrived at it's desired location or a service took place.		
         public int Currency { get; set; }                       // Currency ID
         public int UnitType { get; set; }
-        public long UnitCost { get; set; }
+        public double UnitCost { get; set; }
         public int Quantity { get; set; }
         public bool ApplyDepreciation { get; set; }
         public double DepreciationRate { get; set; }

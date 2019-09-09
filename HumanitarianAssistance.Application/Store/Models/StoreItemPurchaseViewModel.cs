@@ -13,7 +13,7 @@ namespace HumanitarianAssistance.Application.Store.Models
         public DateTime DeliveryDate { get; set; }              // The date that the item arrived at it's desired location or a service took place.		
         public int Currency { get; set; }                       // Currency ID
         public int UnitType { get; set; }
-        public long UnitCost { get; set; }
+        public double UnitCost { get; set; }
         public int Quantity { get; set; }
         public bool ApplyDepreciation { get; set; }
         public double DepreciationRate { get; set; }
@@ -21,7 +21,7 @@ namespace HumanitarianAssistance.Application.Store.Models
         public string Invoice { get; set; }                     // Invoice String
         public int PurchasedById { get; set; }
         public long ItemId { get; set; }
-        public long TotalCost { get; set; }
+        public double TotalCost { get; set; }
         public int CurrentQuantity { get; set; }
         public int ItemType { get; set; }
         public int PurchasedBy { get; set; }

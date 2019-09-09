@@ -138,7 +138,8 @@ export class ProfessionalInfoComponent implements OnInit {
       DesignationName: null,
       DepartmentName: null,
       EmployeeTypeName: null,
-      AttendanceGroupId: null
+      AttendanceGroupId: null,
+      DutyStation: null
     };
   }
 
@@ -227,7 +228,10 @@ export class ProfessionalInfoComponent implements OnInit {
             data.data.OfficeDetailsList.length > 0
           ) {
             data.data.OfficeDetailsList.forEach(element => {
-              this.officeTypeDropdown.push(element);
+              this.officeTypeDropdown.push({
+                Id: element.OfficeId,
+                Name: element.OfficeName
+              });
             });
           // tslint:disable-next-line:curly
           } else if (data.StatusCode === 400)
@@ -408,7 +412,8 @@ export class ProfessionalInfoComponent implements OnInit {
             ),
       ResignationReason: model.ResignationReason,
       Status: model.Status,
-      TrainingBenefits: model.TrainingBenefits
+      TrainingBenefits: model.TrainingBenefits,
+      DutyStation: model.DutyStation
     };
     this.assignLeaveToEmployee = this.employeeId;
     this.hrService
@@ -510,7 +515,8 @@ export class ProfessionalInfoComponent implements OnInit {
       JobDescription: model.JobDescription,
       ResignationReason: model.ResignationReason,
       Status: model.Status,
-      TrainingBenefits: model.TrainingBenefits
+      TrainingBenefits: model.TrainingBenefits,
+      DutyStation: model.DutyStation
     };
     this.assignLeaveToEmployee = this.employeeId;
     this.hrService
@@ -598,7 +604,8 @@ export class ProfessionalInfoComponent implements OnInit {
       JobDescription: value.JobDescription,
       TrainingBenefits: value.TrainingBenefits,
       EmployeeId: this.employeeId,
-      AttendanceGroupId: value.AttendanceGroupId
+      AttendanceGroupId: value.AttendanceGroupId,
+      DutyStation: value.DutyStation
     };
 
     this.popupProfesionalinfoVisible = true;
@@ -817,4 +824,5 @@ export class ProfessionalDetails {
   EmployeeTypeName?: string;
   AttendanceGroupId?: number;
   AttendanceGroupName?: string;
+  DutyStation: number;
 }
