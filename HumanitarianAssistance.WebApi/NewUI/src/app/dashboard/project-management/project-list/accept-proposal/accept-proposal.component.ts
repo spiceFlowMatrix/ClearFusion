@@ -12,6 +12,7 @@ import {
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { ProjectListService } from '../service/project-list.service';
 import { IApproveRejectModel } from '../project-details/models/project-details.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-accept-proposal',
@@ -58,7 +59,8 @@ export class AcceptProposalComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private appurl: AppUrlService,
-    public projectListService: ProjectListService
+    public projectListService: ProjectListService,
+    private toastr: ToastrService
   ) {
     this.uploadUrl = this.appurl.getUploadDocUrl();
   }
@@ -73,6 +75,8 @@ export class AcceptProposalComponent implements OnInit {
   //#region  click to emit event of approval to parent
   isApproved(text: any) {
     this.commonLoaderFlag = true;
+
+   // ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif" && ext != ".rtf"
     // data = this.imageUrl;
     // this.appovalData.emit({ text, tr, data });
     const obj: IApproveRejectModel = {
@@ -118,7 +122,13 @@ export class AcceptProposalComponent implements OnInit {
   //#region start proposal drag and drop
   public UploadReviewDragAndDropFile(event: UploadEvent) {
     this.files = event.files;
+    if ((/\.(gif|jpg|jpeg|tiff|png)$/i).test(this.files[0].relativePath)) {
+
+      this.toastr.warning('File format is not correct.');
+      return;
+    }
     this.FileName = this.files[0].relativePath;
+
     for (const droppedFile of event.files) {
       // Is it a file?
       if (droppedFile.fileEntry.isFile) {
@@ -195,9 +205,17 @@ export class AcceptProposalComponent implements OnInit {
 
   // drag and drop review documents 27/03/2019
   //#region start proposal drag and drop
-  public UploadWinLossDragAndDropFile(event: UploadEvent) {
+  public UploadWinLossDragAndDropFile(event: any) {
     this.files = event.files;
+
+    if ((/\.(gif|jpg|jpeg|tiff|png)$/i).test(this.files[0].relativePath)) {
+
+      this.toastr.warning('File format is not correct.');
+      return;
+    }
+
     this.winLossFileName = this.files[0].relativePath;
+
     for (const droppedFile of event.files) {
       // Is it a file?
       if (droppedFile.fileEntry.isFile) {
