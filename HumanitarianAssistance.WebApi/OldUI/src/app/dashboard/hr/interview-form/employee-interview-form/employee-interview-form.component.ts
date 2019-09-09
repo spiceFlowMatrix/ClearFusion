@@ -20,6 +20,9 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
   trainingListDataSource: InterviewTrainingModel[];
   technicalQuestionsListDataSource: InterviewTechnicalQuestionModel[];
   Interviewers: any[] = [];
+  officecodelist: any[] = [];
+  officeDropdownList: any[];
+  selectedOffice; any;
 
   employeeListDataSource: EmployeeListModel[];
   genderTypesDropdown: any[];
@@ -66,13 +69,16 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
     private setting: AppSettingsService,
     private toastr: ToastrService,
     private commonService: CommonService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private codeService: CodeService
   ) { }
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      this.employeeId = params.id;
+    this.route.queryParams.subscribe(params => {
 
-    });
+      this.employeeId = params['empId'];
+      this.officeId = params['officeId'];
+      this.getAllInterviewDetails();
+    })
     this.initializeForm();
   }
 
@@ -257,48 +263,48 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
     if (this.officeId !== undefined) {
       this.empInterviewFormLoader = true;
 
-    this.hrService
-      .GetAllDetailsByOfficeId(
-        this.setting.getBaseUrl() + GLOBAL.API_Hr_GetAllInterviewDetails,
-        this.officeId
-      )
-      .subscribe(
-        data => {
-          this.interviewDataSource = [];
-          if (
-            data.StatusCode === 200 &&
-            data.data.InterviewDetailList != null &&
-            data.data.InterviewDetailList.length > 0
-          ) {
-            data.data.InterviewDetailList.forEach(element => {
-              this.interviewDataSource.push(element);
-            });
-            if (this.employeeId > 0) {
-              const interviewDetailbyId = this.interviewDataSource.find(r => r.EmployeeID === this.employeeId);
-              this.onEditEmpInterviewShowForm(interviewDetailbyId, false);
-            }
+      this.hrService
+        .GetAllDetailsByOfficeId(
+          this.setting.getBaseUrl() + GLOBAL.API_Hr_GetAllInterviewDetails,
+          this.officeId
+        )
+        .subscribe(
+          data => {
+            this.interviewDataSource = [];
+            if (
+              data.StatusCode === 200 &&
+              data.data.InterviewDetailList != null &&
+              data.data.InterviewDetailList.length > 0
+            ) {
+              data.data.InterviewDetailList.forEach(element => {
+                this.interviewDataSource.push(element);
+              });
+              if (this.employeeId > 0) {
+                var interviewDetailbyId = this.interviewDataSource.find(r => r.EmployeeID == this.employeeId);
+                this.onEditEmpInterviewShowForm(interviewDetailbyId, false);
+              }
 
-          } else {
-            // tslint:disable-next-line:curly
-            if (data.data.InterviewDetailList == null) {
-              // this.toastr.warning('No record found!');
-            } else if (data.StatusCode === 400) {
-              this.toastr.error('Something went wrong!');
+            } else {
+              // tslint:disable-next-line:curly
+              if (data.data.InterviewDetailList == null) {
+                // this.toastr.warning('No record found!');
+              } else if (data.StatusCode === 400) {
+                this.toastr.error('Something went wrong!');
+              }
             }
+            this.empInterviewFormLoader = false;
+          },
+          error => {
+            if (error.StatusCode === 500) {
+              this.toastr.error('Internal Server Error....');
+            } else if (error.StatusCode === 401) {
+              this.toastr.error('Unauthorized Access Error....');
+            } else if (error.StatusCode === 403) {
+              this.toastr.error('Forbidden Error....');
+            }
+            this.empInterviewFormLoader = false;
           }
-          this.empInterviewFormLoader = false;
-        },
-        error => {
-          if (error.StatusCode === 500) {
-            this.toastr.error('Internal Server Error....');
-          } else if (error.StatusCode === 401) {
-            this.toastr.error('Unauthorized Access Error....');
-          } else if (error.StatusCode === 403) {
-            this.toastr.error('Forbidden Error....');
-          }
-          this.empInterviewFormLoader = false;
-        }
-      );
+        );
     }
   }
   //#endregion
@@ -354,47 +360,47 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
   getjobCodeList() {
     if (this.officeId !== undefined) {
       // tslint:disable-next-line:radix
-    const officeId = this.officeId;
-    this.hrService
-      .GetAllDetail(
-        this.setting.getBaseUrl() + GLOBAL.API_HR_GetAllJobHiringDetails,
-        officeId
-      )
-      .subscribe(
-        data => {
-          this.jobCodeDropdown = [];
-          if (
-            data.data.JobHiringDetailsList != null &&
-            data.data.JobHiringDetailsList.length > 0
-          ) {
-            data.data.JobHiringDetailsList.forEach(element => {
-              // Need only Active job
-              if (element.IsActive === true) {
-                this.jobCodeDropdown.push({
-                  JobId: element.JobId,
-                  JobCode: element.JobCode,
-                  ProfessionId: element.ProfessionId,
-                  ProfessionName: element.ProfessionName,
-                  GradeId: element.GradeId,
-                  GradeName: element.GradeName
-                });
-              }
-            });
-            // tslint:disable-next-line:curly
-          } else if (data.StatusCode === 400)
-            this.toastr.error('Something went wrong!');
-        },
-        error => {
-          if (error.StatusCode === 500) {
-            this.toastr.error('Internal Server Error....');
-          } else if (error.StatusCode === 401) {
-            this.toastr.error('Unauthorized Access Error....');
-          } else if (error.StatusCode === 403) {
-            this.toastr.error('Forbidden Error....');
-          } else {
+      const officeId = this.officeId;
+      this.hrService
+        .GetAllDetail(
+          this.setting.getBaseUrl() + GLOBAL.API_HR_GetAllJobHiringDetails,
+          officeId
+        )
+        .subscribe(
+          data => {
+            this.jobCodeDropdown = [];
+            if (
+              data.data.JobHiringDetailsList != null &&
+              data.data.JobHiringDetailsList.length > 0
+            ) {
+              data.data.JobHiringDetailsList.forEach(element => {
+                // Need only Active job
+                if (element.IsActive === true) {
+                  this.jobCodeDropdown.push({
+                    JobId: element.JobId,
+                    JobCode: element.JobCode,
+                    ProfessionId: element.ProfessionId,
+                    ProfessionName: element.ProfessionName,
+                    GradeId: element.GradeId,
+                    GradeName: element.GradeName
+                  });
+                }
+              });
+              // tslint:disable-next-line:curly
+            } else if (data.StatusCode === 400)
+              this.toastr.error('Something went wrong!');
+          },
+          error => {
+            if (error.StatusCode === 500) {
+              this.toastr.error('Internal Server Error....');
+            } else if (error.StatusCode === 401) {
+              this.toastr.error('Unauthorized Access Error....');
+            } else if (error.StatusCode === 403) {
+              this.toastr.error('Forbidden Error....');
+            } else {
+            }
           }
-        }
-      );
+        );
     }
   }
   //#endregion "Get All Job Code"
@@ -726,6 +732,8 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
   //#endregion
 
 
+
+
   //#region "onIsInterviewFormApprovedValueChanged"
   onIsInterviewFormApprovedValueChanged(cellData: any, e: any) {
     this.showInterviewApprovalConfirmation();
@@ -752,6 +760,76 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
   onEmployeeSelectedValue(data: any) {
     if (data) {
     }
+  }
+  //#endregion
+
+  //#region  "getOfficeCodeList"
+  getOfficeCodeList() {
+    this.codeService
+      .GetAllCodeList(
+        this.setting.getBaseUrl() + GLOBAL.API_OfficeCode_GetAllOfficeDetails
+      )
+      .subscribe(
+        data => {
+          this.officecodelist = [];
+          if (
+            data.StatusCode === 200 &&
+            data.data.OfficeDetailsList.length > 0
+          ) {
+            data.data.OfficeDetailsList.forEach(element => {
+              this.officecodelist.push({
+                Office: element.OfficeId,
+                OfficeCode: element.OfficeCode,
+                OfficeName: element.OfficeName,
+                SupervisorName: element.SupervisorName,
+                PhoneNo: element.PhoneNo,
+                FaxNo: element.FaxNo,
+                OfficeKey: element.OfficeKey
+              });
+            });
+
+            const AllOffices = localStorage.getItem('ALLOFFICES').split(',');
+
+            data.data.OfficeDetailsList.forEach(element => {
+              const officeFound = AllOffices.indexOf('' + element.OfficeId);
+              if (officeFound !== -1) {
+                this.officeDropdownList.push({
+                  OfficeId: element.OfficeId,
+                  OfficeCode: element.OfficeCode,
+                  OfficeName: element.OfficeName,
+                  SupervisorName: element.SupervisorName,
+                  PhoneNo: element.PhoneNo,
+                  FaxNo: element.FaxNo,
+                  OfficeKey: element.OfficeKey
+                });
+              }
+            });
+
+            this.selectedOffice =
+              (this.selectedOffice === null || this.selectedOffice == undefined)
+                ? this.officeDropdownList[0].OfficeId
+                : this.selectedOffice;
+
+            this.getAllEmployeeListByOfficeId();
+            this.getjobCodeList();
+            this.getAllInterviewDetails();
+            // this.getAllEmployeeAppraisalMoreDetails();
+
+            // tslint:disable-next-line:curly
+          } else if (data.StatusCode === 400)
+            this.toastr.error('Something went wrong!');
+        },
+        error => {
+          if (error.StatusCode === 500) {
+            this.toastr.error('Internal Server Error....');
+          } else if (error.StatusCode === 401) {
+            this.toastr.error('Unauthorized Access Error....');
+          } else if (error.StatusCode === 403) {
+            this.toastr.error('Forbidden Error....');
+          } else {
+          }
+        }
+      );
   }
   //#endregion
 

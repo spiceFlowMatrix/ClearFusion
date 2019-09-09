@@ -54,7 +54,9 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                           JobDescription = x.JobDescription,
                                           TrainingBenefits = x.TrainingBenefits,
                                           AttendanceGroupId = x.AttendanceGroupId,
-                                          AttendanceGroupName = x.AttendanceGroupMaster == null ? "" : x.AttendanceGroupMaster.Name
+                                          AttendanceGroupName = x.AttendanceGroupMaster == null ? "" : x.AttendanceGroupMaster.Name,
+                                          DutyStation = x.DutyStation
+
                                       }).ToListAsync();
                                        response.data.EmployeeProfessionalList = employeeProfessionallist;
                                        response.StatusCode = StaticResource.successStatusCode;
