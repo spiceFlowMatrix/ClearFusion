@@ -759,7 +759,7 @@ namespace HumanitarianAssistance.Persistence
                     new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceId = 31, ProvinceName = "Takhar" },
                     new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceId = 32, ProvinceName = "Urozgan" },
                     new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceId = 33, ProvinceName = "Zabul" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceId = 34, ProvinceName = "Alabama" },
+                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceId = 34, ProvinceName = "Alabama" },
                     new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceId = 35, ProvinceName = "Alaska" },
                     new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceId = 36, ProvinceName = "Arizona" },
                     new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceId = 37, ProvinceName = "Arkansas" },

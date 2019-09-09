@@ -30,15 +30,18 @@ namespace HumanitarianAssistance.Application.HR.Queries
             try
             {
 
-                var financialYear = await _dbContext.FinancialYearDetail.Where(x => x.IsDeleted == false && request.FinancialYearId.Contains(x.FinancialYearId)).ToListAsync();
+                List<FinancialYearDetail> financialYear = await _dbContext.FinancialYearDetail.Where(x => x.IsDeleted == false && request.FinancialYearId.Contains(x.FinancialYearId)).ToListAsync();
 
                 if (financialYear.Any())
                 {
+                    // take distinct startyear and endyear else records may repeat itself
+                    var distinctFinancialYears= financialYear.Select(x=> new { StartYear= x.StartDate.Year, EndYear= x.EndDate.Year}).Distinct();
+
                     List<SalaryTaxReportModel> salaryTaxReportListFinal = new List<SalaryTaxReportModel>();
 
-                    foreach (FinancialYearDetail financialYearDetail in financialYear)
+                    foreach (var financialYearDetail in distinctFinancialYears)
                     {
-                        List<SalaryTaxReportModel> salaryTaxReportList = _dbContext.EmployeePaymentTypes.Where(x => x.IsDeleted == false && x.IsApproved == true && x.OfficeId == request.OfficeId && x.EmployeeID == request.EmployeeId && x.PayrollYear == financialYearDetail.StartDate.Date.Year)
+                        List<SalaryTaxReportModel> salaryTaxReportList = _dbContext.EmployeePaymentTypes.Where(x => x.IsDeleted == false && x.IsApproved == true && x.OfficeId == request.OfficeId && x.EmployeeID == request.EmployeeId && x.PayrollYear == financialYearDetail.StartYear)
                         .Select(x => new SalaryTaxReportModel
                         {
                             Currency = _dbContext.CurrencyDetails.Where(o => o.CurrencyId == x.CurrencyId).FirstOrDefault().CurrencyName,

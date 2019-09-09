@@ -84,6 +84,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public ProvinceDetails ProvinceDetails { get; set; }
         public string Resume { get; set; }
         public int? MaritalStatusId { get; set; }
+        public double OpeningPension { get; set; }
         public  virtual ICollection<InterviewDetails> InterviewDetails { get; set; }
     }
 }
