@@ -7,7 +7,10 @@ using MediatR;
 using System;
 using System.IO;
 using System.Threading;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using HumanitarianAssistance.Common.Enums;
 
 namespace HumanitarianAssistance.Application.Store.Commands.Create
 {
@@ -27,6 +30,13 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
             {
                 if (request != null)
                 {
+                    var exRate = await _dbContext.ExchangeRateDetail.OrderByDescending(x=> x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.Date.Date <= request.PurchaseDate.Date && x.FromCurrency == request.Currency && x.ToCurrency == (int)Currency.USD);
+
+                    if (exRate == null)
+                    {
+                        throw new Exception($"Exchange Rates not defined for Date {request.PurchaseDate.Date.ToString("dd/MM/yyyy")}");
+                    }
+
                     StoreItemPurchase purchase = _mapper.Map<StoreItemPurchase>(request);
 
                     purchase.IsDeleted = false;

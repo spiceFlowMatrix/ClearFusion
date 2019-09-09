@@ -34,12 +34,14 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                     inventoryItemsList = await _dbContext.InventoryItems
                                                    .Where(x => x.IsDeleted == false && x.ItemGroupId == request.ItemGroupId)
+                                                   .OrderByDescending(x=> x.CreatedDate)
                                                    .ToListAsync();
                 }
                 else
                 {
                     inventoryItemsList = await _dbContext.InventoryItems
                                                    .Where(x => x.IsDeleted == false)
+                                                   .OrderByDescending(x=> x.CreatedDate)
                                                    .ToListAsync(); 
                 }
 

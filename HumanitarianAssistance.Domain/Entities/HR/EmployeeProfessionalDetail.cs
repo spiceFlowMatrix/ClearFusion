@@ -49,6 +49,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public string TinNumber { get; set; }
         public int? ProfessionId { get; set; }
         public long? AttendanceGroupId { get; set; }
+        public int? DutyStation { get; set; }
         [ForeignKey("AttendanceGroupId")]
         public AttendanceGroupMaster AttendanceGroupMaster { get; set; }
         [ForeignKey("ProfessionId")]

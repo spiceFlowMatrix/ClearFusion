@@ -39,7 +39,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     obj.IsApproved = request.IsApproved;
                     obj.IsDeleted = false;
                     obj.CreatedById = request.CreatedById;
-                    obj.CreatedDate = request.ModifiedDate;
+                    obj.CreatedDate = request.CreatedDate;
                     obj.ReviewCompletionDate = DateTime.UtcNow;
                     await _dbContext.ApproveProjectDetails.AddAsync(obj);
                     await _dbContext.SaveChangesAsync();

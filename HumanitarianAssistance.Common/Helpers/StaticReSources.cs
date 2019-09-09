@@ -357,6 +357,8 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string PensionPaymentCreated = "Pension Payment Done On {0} for {1}";
         public const string NoAttendanceToAdd ="No Attendance to Add";
         public const string PensionPayment = "Pension Payment";
+        public const string EmployeeRecordNotFound= "Employee Record Not Found";
+        public const string EmployeePayrollCurrencyNotSet= "Employee Payroll Currency Not Set";
         // Marketing
         public const string unitRateNotFound = "Unit Rate does not exists. Please try other combinations..";
 
@@ -375,7 +377,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string NameExist = "Name Already Exist";
         public const string SuccessText = "Success";
         public const string FileText = "File Not Supported";
-        public const int FileNotSupported = 4440;
+        public const int FileNotSupported = 415;
 
         #region "Project"
         public const string ActivityNotFound = "Activity Not Found";
