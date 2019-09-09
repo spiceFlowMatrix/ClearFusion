@@ -187,7 +187,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     });
 
     this.hiringRequestModel = {
-      Description : this.hiringRequestForm.value.Description,
+      Description: this.hiringRequestForm.value.Description,
       Position: this.hiringRequestForm.value.Position,
       Profession: this.professionList.find(x => x.ProfessionId === this.hiringRequestForm.value.ProfessionId).ProfessionName,
       BudgetLine: this.budgetLineList.find(x => x.BudgetLineId === this.hiringRequestForm.value.BudgetLineId).BudgetName,
@@ -209,7 +209,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   //#region "openHiringRequestDialog"
   openHiringRequestDialog(): void {
     if (this.candidateList.length > 0) {
-    this.officeSelectionFlag = true;
+      this.officeSelectionFlag = true;
     }
     // NOTE: It passed the data into the Add Activity Model
     const dialogRef = this.dialog.open(AddHiringRequestsComponent, {
@@ -249,7 +249,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           RequestedBy: [data.RequestedBy],
         });
         this.hiringRequestModel = {
-          Description : data.Description,
+          Description: data.Description,
           Position: data.Position,
           Profession: this.professionList.find(x => x.ProfessionId === data.ProfessionId).ProfessionName,
           BudgetLine: this.budgetLineList.find(x => x.BudgetLineId === data.BudgetLineId).BudgetName,
@@ -263,7 +263,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       }
     );
 
-    dialogRef.afterClosed().subscribe(result => {this.officeSelectionFlag = false; });
+    dialogRef.afterClosed().subscribe(result => { this.officeSelectionFlag = false; });
   }
   //#endregion
 
@@ -289,29 +289,29 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     dialogRef.componentInstance.selectedEmployeId.subscribe((data: any) => {
       this.GetSelectedEmployeeDetail(data);
     });
-    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.afterClosed().subscribe(result => { });
   }
   //#endregion
 
   //#region "GetEmployeeDetail"
   GetEmployeeListByOfficeId(OfficeId: number) {
     if (OfficeId == null) {
-     // this.toastr.warning('Office Can not be null');
+      // this.toastr.warning('Office Can not be null');
     } else {
-    this.hiringRequestService.GetEmployeeListByOfficeId(OfficeId).subscribe(
-      (response: IResponseData) => {
-        this.employeeList = [];
-        if (response.statusCode === 200 && response.data !== null) {
-          response.data.forEach(element => {
-            this.employeeList.push({
-              EmployeeId: element.EmployeeId,
-              EmployeeName: element.EmployeeName
+      this.hiringRequestService.GetEmployeeListByOfficeId(OfficeId).subscribe(
+        (response: IResponseData) => {
+          this.employeeList = [];
+          if (response.statusCode === 200 && response.data !== null) {
+            response.data.forEach(element => {
+              this.employeeList.push({
+                EmployeeId: element.EmployeeId,
+                EmployeeName: element.EmployeeName
+              });
             });
-          });
-        }
-      },
-      error => {}
-    );
+          }
+        },
+        error => { }
+      );
     }
   }
   //#endregion
@@ -419,7 +419,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           });
         }
       },
-      error => {}
+      error => { }
     );
   }
   //#endregion
@@ -453,7 +453,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
               }
             }
           );
-          dialogRef.afterClosed().subscribe(result => {});
+          dialogRef.afterClosed().subscribe(result => { });
         } else {
           this.EditselectedCandidate(data);
         }
@@ -537,7 +537,8 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   //#region "seeCandidateDetail page of old Ui"
   seeCandidateDetail(path: string, empId) {
-    window.open(this.appurl.getOldUiUrl() + path + empId, '_blank');
+    const officeId = this.hiringRequestForm.controls['OfficeId'].value;
+    window.open(this.appurl.getOldUiUrl() + path + '?empId=' + empId + '&officeId=' + officeId + '', '_blank');
   }
   //#endregion
 
@@ -582,7 +583,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
     dialogRef.componentInstance.cancelText = Delete_Confirmation_Texts.noText;
 
-    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.afterClosed().subscribe(result => { });
     dialogRef.componentInstance.confirmDelete.subscribe(
       res => {
         dialogRef.componentInstance.isLoading = true;
