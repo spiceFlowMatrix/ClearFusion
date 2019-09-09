@@ -111,7 +111,7 @@ export class CriteriaEvaluationComponent
 
   donorCEForm: DonorCEModel;
   eligibilityForm: EligibilityCEModel;
-  feasibilityForm: FeasibilityCEModel = {};
+  feasibilityForm: FeasibilityCEModel;
   priorityForm: PriorityCEmodel;
   financialForm: FinancialProfitabilityModel;
   riskForm: RiskSecurityModel;
@@ -261,7 +261,7 @@ export class CriteriaEvaluationComponent
       this.ProjectId = +params['id'];
     });
     // this.getData();
-   
+
     this.getScreenSize();
     this.GetCriteraiEvaluationDetailById(this.ProjectId);
     this.initializeList();
@@ -1974,7 +1974,7 @@ export class CriteriaEvaluationComponent
                 this.feasibilityForm.EnoughTimeForProject =
                   data.data.CriteriaEveluationModel.EnoughTimeForProject;
                 this.feasibilityForm.ProjectAllowedBylaw =
-                  (data.data.CriteriaEveluationModel.ProjectAllowedBylaw?data.data.CriteriaEveluationModel.ProjectAllowedBylaw:false);
+                  (data.data.CriteriaEveluationModel.ProjectAllowedBylaw ? data.data.CriteriaEveluationModel.ProjectAllowedBylaw : false);
                 if (this.feasibilityForm.ProjectAllowedBylaw === false) {
                   this.disableCriteriaEvaluationForm = true;
                   this.isExpanded = false;
