@@ -397,6 +397,10 @@ export class ProjectDetailComponent implements OnInit {
     this.winProjectFlag = false;
   }
 
+  openAcceptProposalComponent() {
+    this.openProposalcompcheck = !this.openProposalcompcheck;
+    this.winProjectFlag = false;
+  }
   openPropsalWinComponent() {
     this.openProposalcompcheck = !this.openProposalcompcheck;
     this.winProjectFlag = true;
@@ -511,6 +515,8 @@ export class ProjectDetailComponent implements OnInit {
         this.formdata = data.data;
         this.formdata.append('CommentText', data.text);
         this.formdata.append('IsApproved', 'false');
+        this.formdata.append('ProjectId', this.projectId.toString());
+
         this.projectListService
           .uploadReviewFile(
             this.appurl.getApiUrl() + GLOBAL.API_Project_UploadReviewFile,
@@ -525,7 +531,7 @@ export class ProjectDetailComponent implements OnInit {
                   response.data.ApproveProjectDetails.IsApproved;
                 this.openProposalcompcheck = false;
                 // this.proposalChild.GetProposal(this.projectId);
-                this.proposalChild.IsApproved = this.approvalDetail.IsApproved;
+                const proposalIsApproved = this.approvalDetail.IsApproved;
               }
 
               this.acceptProposalChild.commonLoaderFlag = false;

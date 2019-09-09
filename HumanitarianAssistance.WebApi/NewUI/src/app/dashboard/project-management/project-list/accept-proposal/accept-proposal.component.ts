@@ -1,14 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import {
-  FormGroup,
-  Validators,
-  FormBuilder
-} from '@angular/forms';
-import {
-  UploadEvent,
-  FileSystemFileEntry,
-  UploadFile
-} from 'ngx-file-drop';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { UploadEvent, FileSystemFileEntry, UploadFile } from 'ngx-file-drop';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { ProjectListService } from '../service/project-list.service';
 import { IApproveRejectModel } from '../project-details/models/project-details.model';
@@ -70,13 +62,15 @@ export class AcceptProposalComponent implements OnInit {
     this.FileName = null;
     this.winLossMessage = '';
     this.winLossFileName = '';
+    // this.getApprovedProjectDetail(this.projectId);
+   // this.getProjectWinLossDetailById(this.projectId);
   }
 
   //#region  click to emit event of approval to parent
   isApproved(text: any) {
     this.commonLoaderFlag = true;
 
-   // ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif" && ext != ".rtf"
+    // ext != ".jpeg" && ext != ".png" && ext != ".jpg" && ext != ".gif" && ext != ".rtf"
     // data = this.imageUrl;
     // this.appovalData.emit({ text, tr, data });
     const obj: IApproveRejectModel = {
@@ -122,8 +116,7 @@ export class AcceptProposalComponent implements OnInit {
   //#region start proposal drag and drop
   public UploadReviewDragAndDropFile(event: UploadEvent) {
     this.files = event.files;
-    if ((/\.(gif|jpg|jpeg|tiff|png)$/i).test(this.files[0].relativePath)) {
-
+    if (/\.(gif|jpg|jpeg|tiff|png)$/i.test(this.files[0].relativePath)) {
       this.toastr.warning('File format is not correct.');
       return;
     }
@@ -208,8 +201,7 @@ export class AcceptProposalComponent implements OnInit {
   public UploadWinLossDragAndDropFile(event: any) {
     this.files = event.files;
 
-    if ((/\.(gif|jpg|jpeg|tiff|png)$/i).test(this.files[0].relativePath)) {
-
+    if (/\.(gif|jpg|jpeg|tiff|png)$/i.test(this.files[0].relativePath)) {
       this.toastr.warning('File format is not correct.');
       return;
     }
@@ -246,6 +238,45 @@ export class AcceptProposalComponent implements OnInit {
       return true;
     } else {
       return false;
+    }
+  }
+  //#endregion
+
+  //#region "getApprovedProjectDetail"
+  getApprovedProjectDetail(projectId: number) {
+    if (projectId != null && projectId !== undefined) {
+      this.projectListService.GetApprovalProjectDetailById(projectId).subscribe(response => {
+        if (response.data != null) {
+          if (response.data.length > 0 && response.data === 200) {
+            response.data.forEach((element: any) => {
+              this.approvalForm = this.fb.group({
+                CommentText: response.data.CommentText,
+                file: response.data.file
+              });
+
+            });
+          }
+        }
+      });
+    }
+  }
+  //#endregion
+
+  //#region "getwinLossProjectDetail"
+  getProjectWinLossDetailById(projectId: number) {
+    if (projectId != null && projectId != undefined) {
+      this.projectListService.GetProjectWinLossDetailById(projectId).subscribe(response => {
+        if (response.data != null) {
+          if (response.data.length > 0) {
+            response.data.forEach((element: any) => {
+              // this.UserList.push({
+              //   UserID: element.UserID,
+              //   Username: element.FirstName + " " + element.LastName
+              // });
+            });
+          }
+        }
+      });
     }
   }
   //#endregion

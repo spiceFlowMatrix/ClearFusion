@@ -170,6 +170,11 @@ export class GLOBAL {
   public static API_Project_StartProposalDragAndDropFile = 'Project/StartProposalDragAndDropFile';
   public static API_Project_UploadReviewFile = 'Project/UploadReviewFile';
   public static API_Project_UploadFinalizeFile = 'Project/UploadFinalizeFile';
+  public static API_Project_GetApprovalProjectDetailById = 'Project/GetApprovalProjectDetailById';
+  public static API_Project_GetProjectWinLossStatusById = 'Project/GetProjectWinLossStatusById';
+
+
+
 
 
   public static API_Project_AddEditProjectProposalDetail = 'Project/AddEditProjectProposalDetail';
