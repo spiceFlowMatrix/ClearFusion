@@ -26,6 +26,9 @@ button { font-weight: 400 !important;}
 .font_size_smaller { font-size: smaller;}
 .background_grey { background: #f3f3f3;}
 
+// display
+.display_inline_block { display: inline-block;}
+
 .spinner_content { display: inline-flex;}
 .ui-table-tbody tr td, .ui-table-thead tr th {  padding: 8px;}
 
@@ -161,3 +164,4 @@ button { font-weight: 400 !important;}
 //   display: none !important;
 // }
 .main_sub_headng{  font-weight: 500; color: rgb(113, 113, 113);font-size: 18px;}
+.span-display-contents{display: contents;}

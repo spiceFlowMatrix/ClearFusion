@@ -1042,7 +1042,6 @@ export class EmployeesComponent implements OnInit {
               data.data.EmployeeDetailList.forEach(element => {
                 this.employeeListDetail.push(element);
               });
-              debugger;
               this.showData = this.employeeListDetail[0];
               // this.showData.EmployeePhoto =
               //   this.showData.DocumentGUID != null &&
@@ -1161,7 +1160,6 @@ export class EmployeesComponent implements OnInit {
 
   //#region "EDIT EMPLOYEE"
   EditEmployeeDetails(value) {
-    debugger;
     this.editEmployeePopupLoading = true;
 
     const editGeneralInfo: any = {

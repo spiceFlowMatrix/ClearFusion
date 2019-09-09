@@ -34,11 +34,8 @@ export class PayrollMonthlyHoursComponent implements OnInit {
   payrollMonthlyHourLoader = false;
 
   constructor(
-    private router: Router,
     private toastr: ToastrService,
-    private fb: FormBuilder,
     private setting: AppSettingsService,
-    private modalService: BsModalService,
     private hrservice: HrService,
     private codeservice: CodeService,
     private commonService: CommonService
@@ -64,7 +61,14 @@ export class PayrollMonthlyHoursComponent implements OnInit {
       TotalWorkingHours: 0,
       AttendanceGroupId: null
     };
-    this.setPayrollHoursFilter = {};
+    this.setPayrollHoursFilter = {
+      Year: new Date( new Date().getFullYear(),
+      0,
+      new Date().getDate(),
+      0,
+      0,
+      0)
+    };
   }
 
   //#region "getPayrollMonthlyHoursList"

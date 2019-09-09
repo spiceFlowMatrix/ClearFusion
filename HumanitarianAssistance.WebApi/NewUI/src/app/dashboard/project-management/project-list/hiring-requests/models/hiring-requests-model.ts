@@ -10,6 +10,7 @@ export interface IHiringReuestDataSource {
   HiringRequestDetail: any;
   HiringRequestId: number;
   ProfessionList: IProfessionList[];
+  officeSelectionFlag: boolean;
 }
 export interface ICurrencyListModel {
   CurrencyId: number;
@@ -49,6 +50,18 @@ export interface IHiringRequestDetailModel {
   CurrencyId: number;
   RequestedBy?: string;
 }
+export interface IHiringRequestModel {
+  Description: string;
+  Position: string;
+  Profession: string;
+  BudgetLine: string;
+  TotalVacancies: string;
+  Office: string;
+  FilledVacancies: string;
+  BasicPay: string;
+  jobGrade: string;
+}
+
 export interface ProjectHiringRequestFilterModel {
   FilterValue: string;
   pageIndex?: number;
@@ -112,6 +125,7 @@ export interface IitervireCandidateModel {
   JobId?: number;
   Status?: string;
   JobDescription: string;
+  OfficeId?: number;
 }
 export interface ISelectedCandidateModel {
   BudgetLineId?: number;

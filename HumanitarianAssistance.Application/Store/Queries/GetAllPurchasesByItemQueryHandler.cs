@@ -45,7 +45,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     Currency = v.Currency,
                     UnitCost = v.UnitCost,
                     Quantity = v.Quantity,
-                    TotalCost = v.UnitCost * v.Quantity,
+                    TotalCost = Math.Round(v.UnitCost * v.Quantity, 4) ,
                     UnitType = v.UnitType,
                     CurrentQuantity = v.Quantity - (v.PurchaseOrders != null ? v.PurchaseOrders.Sum(q => q.IssuedQuantity) : 0),
                     ImageFileName = v.ImageFileName + v.ImageFileType,
@@ -71,6 +71,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                    // IsPurchaseVerified = v.IsPurchaseVerified,
                    // VerifiedPurchaseVoucher = v.VerifiedPurchaseVoucher,
                     JournalCode = v.JournalCode,
+                    PurchaseName= v.PurchaseName,
+                    PurchaseCode= PurchaseCode.GetPurchaseCode(v.PurchaseDate, v.PurchaseName, v.PurchaseId)
                    // VerifiedPurchaseVoucherReferenceNo = v.VerifiedPurchaseVoucher != null ? _dbContext.VoucherDetail.FirstOrDefault(x => x.IsDeleted == false && x.VoucherNo == v.VerifiedPurchaseVoucher).ReferenceNo : null
                 }).OrderByDescending(x=> x.PurchaseDate).ToList();
 
@@ -125,7 +127,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                         throw new Exception($"Exchange Rates not defined for Date {item.PurchaseDate.Date.ToString("dd/MM/yyyy")}");
                     }
 
-                    item.TotalCostUSD = item.TotalCost * (double)exRate.Rate;
+                    item.TotalCostUSD = Math.Round(item.TotalCost * (double)exRate.Rate, 4) ;
                 }
 
                 response.data.StoreItemsPurchaseViewList = purchasesModel;

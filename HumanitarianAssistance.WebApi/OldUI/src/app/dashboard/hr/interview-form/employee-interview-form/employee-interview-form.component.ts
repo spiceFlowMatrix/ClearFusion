@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { HrService } from '../../hr.service';
 import { CodeService } from '../../../code/code.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GLOBAL } from '../../../../shared/global';
 import { AppSettingsService } from '../../../../service/app-settings.service';
@@ -12,7 +12,7 @@ import { CommonService } from '../../../../service/common.service';
   templateUrl: './employee-interview-form.component.html',
   styleUrls: ['./employee-interview-form.component.css']
 })
-export class EmployeeInterviewFormComponent implements OnInit {
+export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
   //#region "Variables"
 
   // Data Source
@@ -20,10 +20,10 @@ export class EmployeeInterviewFormComponent implements OnInit {
   languagesListDataSource: InterviewLanguagesModel[];
   trainingListDataSource: InterviewTrainingModel[];
   technicalQuestionsListDataSource: InterviewTechnicalQuestionModel[];
-  Interviewers: any[]= [];
-  officeDropdownList: any[] = [];
-  selectedOffice: any;
-  officecodelist: any[];
+  Interviewers: any[] = [];
+  officecodelist: any[] = [];
+  officeDropdownList: any[];
+  selectedOffice; any;
 
   employeeListDataSource: EmployeeListModel[];
   genderTypesDropdown: any[];
@@ -33,6 +33,7 @@ export class EmployeeInterviewFormComponent implements OnInit {
   currentInterviewDetailsId: number;
   currentApproveReject: boolean;
   interviewFormViewOnly: boolean;
+  @Input() officeId: any;
 
   yesNoRadioGroup: any[];
   interviewFormRadioGroup: any[];
@@ -58,19 +59,38 @@ export class EmployeeInterviewFormComponent implements OnInit {
   // loader
   empInterviewFormLoader = false;
 
+  // for details
+  employeeId = 0;
+
   //#endregion
 
   constructor(
     private hrService: HrService,
-    private codeService: CodeService,
     private router: Router,
     private setting: AppSettingsService,
     private toastr: ToastrService,
-    private commonService: CommonService
-  ) {}
+    private commonService: CommonService,
+    private route: ActivatedRoute,
+    private codeService: CodeService
+  ) { }
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      this.employeeId = params.id;
+
+    });
     this.initializeForm();
-    this.getOfficeCodeList();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+
+    this.getAllInterviewDetails();
+
+    if (changes !== undefined && changes.officeId !== undefined) {
+      this.officeId = changes.officeId.currentValue;
+      this.getAllEmployeeListByOfficeId();
+      this.getAllInterviewDetails();
+      this.getjobCodeList();
+    }
   }
 
   initializeForm() {
@@ -241,12 +261,13 @@ export class EmployeeInterviewFormComponent implements OnInit {
 
   //#region "getAllInterviewDetails"
   getAllInterviewDetails() {
-    this.empInterviewFormLoader = true;
+    if (this.officeId !== undefined) {
+      this.empInterviewFormLoader = true;
 
     this.hrService
       .GetAllDetailsByOfficeId(
         this.setting.getBaseUrl() + GLOBAL.API_Hr_GetAllInterviewDetails,
-        this.selectedOffice
+        this.officeId
       )
       .subscribe(
         data => {
@@ -259,10 +280,15 @@ export class EmployeeInterviewFormComponent implements OnInit {
             data.data.InterviewDetailList.forEach(element => {
               this.interviewDataSource.push(element);
             });
+            if (this.employeeId > 0) {
+              var interviewDetailbyId = this.interviewDataSource.find(r => r.EmployeeID == this.employeeId);
+              this.onEditEmpInterviewShowForm(interviewDetailbyId, false);
+            }
+
           } else {
             // tslint:disable-next-line:curly
             if (data.data.InterviewDetailList == null) {
-                // this.toastr.warning('No record found!');
+              // this.toastr.warning('No record found!');
             } else if (data.StatusCode === 400) {
               this.toastr.error('Something went wrong!');
             }
@@ -280,13 +306,14 @@ export class EmployeeInterviewFormComponent implements OnInit {
           this.empInterviewFormLoader = false;
         }
       );
+    }
   }
   //#endregion
 
   //#region "Get All Employee List By OfficeId"
   getAllEmployeeListByOfficeId() {
     // tslint:disable-next-line:radix
-    const officeId = this.selectedOffice;
+    const officeId = this.officeId;
     this.hrService
       .GetAllDetail(
         this.setting.getBaseUrl() + GLOBAL.API_Code_GetEmployeeDetailByOfficeId,
@@ -332,8 +359,9 @@ export class EmployeeInterviewFormComponent implements OnInit {
 
   //#region "Get All Job Code"
   getjobCodeList() {
-    // tslint:disable-next-line:radix
-    const officeId = this.selectedOffice;
+    if (this.officeId !== undefined) {
+      // tslint:disable-next-line:radix
+    const officeId = this.officeId;
     this.hrService
       .GetAllDetail(
         this.setting.getBaseUrl() + GLOBAL.API_HR_GetAllJobHiringDetails,
@@ -359,7 +387,7 @@ export class EmployeeInterviewFormComponent implements OnInit {
                 });
               }
             });
-          // tslint:disable-next-line:curly
+            // tslint:disable-next-line:curly
           } else if (data.StatusCode === 400)
             this.toastr.error('Something went wrong!');
         },
@@ -374,6 +402,7 @@ export class EmployeeInterviewFormComponent implements OnInit {
           }
         }
       );
+    }
   }
   //#endregion "Get All Job Code"
 
@@ -468,8 +497,8 @@ export class EmployeeInterviewFormComponent implements OnInit {
   //#endregion
 
   //#region "on Edit Exit Interview Form Submit"
-    onEditInterviewFormSubmit(model: any) {
-        
+  onEditInterviewFormSubmit(model: any) {
+
     const interviewFormModel: EmpInterviewFormModel = {
       InterviewDetailsId: model.InterviewDetailsId,
       EmployeeID: model.EmployeeID,
@@ -485,7 +514,7 @@ export class EmployeeInterviewFormComponent implements OnInit {
 
       Experience: model.Experience,
 
-        RatingBasedCriteriaList: this.ratingBasedCriteriaDataSource,
+      RatingBasedCriteriaList: this.ratingBasedCriteriaDataSource,
 
       ProfessionalCriteriaMarks: model.ProfessionalCriteriaMarks,
 
@@ -498,9 +527,9 @@ export class EmployeeInterviewFormComponent implements OnInit {
       NoticePeriod: model.NoticePeriod,
       JoiningDate: model.JoiningDate,
 
-        InterviewLanguageModelList: this.languagesListDataSource,
-        InterviewTrainingModelList: this.trainingListDataSource,
-        InterviewTechQuesModelList: this.technicalQuestionsListDataSource,
+      InterviewLanguageModelList: this.languagesListDataSource,
+      InterviewTrainingModelList: this.trainingListDataSource,
+      InterviewTechQuesModelList: this.technicalQuestionsListDataSource,
 
       // Compensation
       CurrentBase: model.CurrentBase,
@@ -558,7 +587,7 @@ export class EmployeeInterviewFormComponent implements OnInit {
   //#endregion
 
   //#region "onEditEmpInterviewShowForm"
-    onEditEmpInterviewShowForm(model: EmpInterviewFormModel, viewOnly: boolean) {
+  onEditEmpInterviewShowForm(model: EmpInterviewFormModel, viewOnly: boolean) {
     if (model != null) {
       this.disableSelectEmpDropdownFlag();
       this.interviewFormViewOnly = viewOnly;
@@ -644,7 +673,7 @@ export class EmployeeInterviewFormComponent implements OnInit {
       this.hrService
         .ApprovalAndRejectionInterviewForm(
           this.setting.getBaseUrl() +
-            GLOBAL.API_Code_ApproveEmployeeInterviewRequest,
+          GLOBAL.API_Code_ApproveEmployeeInterviewRequest,
           InterviewDetailsId
         )
         .subscribe(
@@ -673,7 +702,7 @@ export class EmployeeInterviewFormComponent implements OnInit {
       this.hrService
         .ApprovalAndRejectionInterviewForm(
           this.setting.getBaseUrl() +
-            GLOBAL.API_Code_RejectEmployeeInterviewRequest,
+          GLOBAL.API_Code_RejectEmployeeInterviewRequest,
           InterviewDetailsId
         )
         .subscribe(
@@ -702,6 +731,9 @@ export class EmployeeInterviewFormComponent implements OnInit {
   }
 
   //#endregion
+
+  
+
 
   //#region "onIsInterviewFormApprovedValueChanged"
   onIsInterviewFormApprovedValueChanged(cellData: any, e: any) {
@@ -814,12 +846,12 @@ export class EmployeeInterviewFormComponent implements OnInit {
   }
   //#endregion
 
-   //#region "Add Training"
-   logEventTraining(eventName, obj) {
+  //#region "Add Training"
+  logEventTraining(eventName, obj) {
     obj.data.StartDate = new Date();
     obj.data.EndDate = new Date();
-}
-//#endregion
+  }
+  //#endregion
 
   //#region "Show / hide"
   showAddEmpInterviewForm() {

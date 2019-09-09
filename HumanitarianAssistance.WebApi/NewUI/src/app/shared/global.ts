@@ -82,8 +82,10 @@ export class GLOBAL {
   public static API_Project_AddProjectIndicator = 'Project/AddProjectIndicator';
   public static API_Project_GetIndicatorQuestionDetailById = 'Project/GetIndicatorQuestionDetailById';
   public static API_Project_DeleteIndicatorQuestionDetail = 'Project/DeleteIndicatorQuestionDetail';
+  public static API_Project_DeleteProjectIndicatorDetail = 'Project/DeleteProjectIndicatorDetail';
   public static API_Project_EditProjectIndicator = 'Project/EditProjectIndicator';
   public static API_Project_AddProjectIndicatorQuestions = 'Project/AddProjectIndicatorQuestions';
+  public static API_Project_EditProjectIndicatorQuestions = 'Project/EditProjectIndicatorQuestions';
   public static API_Project_GetDonarListById = 'Project/GetDonarListById';
   public static API_Project_DeleteDonorDetails = 'Project/DeleteDonorDetails';
   public static API_Code_GetAllAccountTypeByCategory = 'Code/GetAllAccountTypeByCategory';
@@ -400,6 +402,7 @@ export class GLOBAL {
   public static API_HiringRequest_GetProjectHiringRequestDetail = 'HiringRequest/GetProjectHiringRequestDetail';
   public static API_HiringRequest_EditHiringRequestDetail = 'HiringRequest/EditHiringRequestDetail';
   public static API_HiringRequest_GetAllEmployeeList = 'HiringRequest/GetAllEmployeeList';
+  public static API_HiringRequest_GetEmployeeListByOfficeId = 'Code/GetEmployeeDetailByOfficeId';
   public static API_HiringRequest_AddHiringRequestCandidate = 'HiringRequest/AddHiringRequestCandidate';
   public static API_HiringRequest_GetHiringCandidatesListById = 'HiringRequest/GetHiringCandidatesListById';
   public static API_HiringRequest_AddCandidateInterviewDetail = 'HiringRequest/AddCandidateInterviewDetail';

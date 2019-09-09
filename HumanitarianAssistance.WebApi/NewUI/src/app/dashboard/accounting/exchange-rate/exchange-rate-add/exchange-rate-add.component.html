@@ -118,29 +118,23 @@
                   Back
                 </button>
                 &nbsp;
-                <!-- <button mat-raised-button (click)='SaveSelectedCurrencyExchangeRates()' type="submit" [disabled]="addExchangeRateLoader">
-                          <span class="pull-left spinner_center" *ngIf="addExchangeRateLoader"><mat-spinner [diameter]="15"></mat-spinner></span>Save</button> -->
 
                 <button
                   mat-raised-button
                   color="accent"
-                  [disabled]="!exchangeRateGenerateModel.valid || addExchangeRateLoader"
+                  [disabled]="
+                    !exchangeRateGenerateModel.valid || addExchangeRateLoader
+                  "
                   (click)="SaveSelectedCurrencyExchangeRates()"
-                  type="submit" style="
-                  position: absolute;"
+                  type="submit"
                 >
-                  <span
-                    *ngIf="
-                      !addExchangeRateLoader;
-                      else exchangeRateAddLoaderTemplate
-                    "
-                    >Save</span
-                  >
-                  <ng-template #exchangeRateAddLoaderTemplate>
-                    <div class="spinner_center padding_top_5 padding_bottom_5">
-                      <mat-spinner [diameter]="25"></mat-spinner>
-                    </div>
-                  </ng-template>
+                  <span class="display_inline_block">
+                    <mat-spinner
+                      *ngIf="addExchangeRateLoader"
+                      [diameter]="15"
+                    ></mat-spinner>
+                  </span>
+                  Save
                 </button>
               </div>
             </form>
@@ -149,5 +143,5 @@
       </div>
     </div>
   </div>
-  <div mat-dialog-actions class="pull-right"></div>
+  <!-- <div mat-dialog-actions class="pull-right"></div> -->
 </div>

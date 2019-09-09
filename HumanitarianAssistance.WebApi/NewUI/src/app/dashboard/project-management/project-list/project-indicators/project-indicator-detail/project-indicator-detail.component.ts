@@ -25,6 +25,7 @@ import { AddQuestionsDialogComponent } from '../add-questions-dialog/add-questio
 import { ProjectIndicatorService } from '../project-indicator.service';
 import { DeleteConfirmationComponent } from 'projects/library/src/lib/components/delete-confirmation/delete-confirmation.component';
 import { Delete_Confirmation_Texts } from 'src/app/shared/enum';
+import { flattenStyles } from '@angular/platform-browser/src/dom/dom_renderer';
 
 @Component({
   selector: 'app-project-indicator-detail',
@@ -34,6 +35,10 @@ import { Delete_Confirmation_Texts } from 'src/app/shared/enum';
 export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
   @Output() indicatorListRefresh = new EventEmitter();
   @Input() ProjectindicatorDetail: any;
+  panelOpenState = false;
+  step = 0;
+
+
   projectId: number;
 
   // screen
@@ -44,12 +49,12 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
   // boolean flag
   EditLoaderFlag = false;
   NewIndicatorLoaderFlag = false;
-
+  IndicatorDetailLoaderFlag = false;
   // Input/Output properties
   @Input() indicatorId: number;
   @Output() addIndicator = new EventEmitter<any>();
   @Output() editIndicator = new EventEmitter<any>();
-
+  @Output() questionDetailListRefresh = new EventEmitter<any>();
   totalCount: number;
   //#endregion
 
@@ -66,7 +71,6 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
     public toastr: ToastrService,
     private routeActive: ActivatedRoute,
     public indicatorService: ProjectIndicatorService
-
   ) {
     this.getScreenSize();
   }
@@ -77,48 +81,52 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
       this.projectId = +params['id'];
     });
     this.initQuestionModel();
-    }
-
-  ngOnChanges() {
-  if (
-    this.ProjectindicatorDetail != null &&
-    this.ProjectindicatorDetail !== 0 &&
-    this.ProjectindicatorDetail !== undefined
-  ) {
-  this.setIndicatorFormValue();
-  this.GetIndicatorQuestionDetailById(this.ProjectindicatorDetail.ProjectIndicatorId);
   }
 
-}
+  ngOnChanges() {
+    if (
+      this.ProjectindicatorDetail != null &&
+      this.ProjectindicatorDetail !== 0 &&
+      this.ProjectindicatorDetail !== undefined
+    ) {
+      this.setIndicatorFormValue();
+      this.GetIndicatorQuestionDetailById(
+        this.ProjectindicatorDetail.ProjectIndicatorId
+      );
+    }
+    //this.togglePanel();
+  }
 
+//   togglePanel() {
+//     this.panelOpenState = !this.panelOpenState;
+// }
+  initQuestionModel() {
+    this.questionForm = this.fb.group({
+      IndicatorQuestion: ['', Validators.required],
+      IndicatorQuestionId: null,
+      ProjectIndicatorId: null,
+      QuestionType: ['', Validators.required],
+      VerificationSources: this.fb.array([])
+    });
 
-initQuestionModel() {
-  this.questionForm = this.fb.group({
-    IndicatorQuestion: ['', Validators.required],
-    IndicatorQuestionId: null,
-    ProjectIndicatorId: null,
-    QuestionType: ['', Validators.required],
-    VerificationSources: this.fb.array([])
-  });
+    this.questionDetailModel = {
+      IndicatorQuestionId: null,
+      IndicatorQuestion: null,
+      QuestionType: null,
+      ProjectIndicatorId: null,
+      QuestionTypeName: null,
+      VerificationSources: []
+    };
+  }
 
-  this.questionDetailModel = {
-    IndicatorQuestionId: null,
-    IndicatorQuestion: null,
-    QuestionType: null,
-    ProjectIndicatorId: null,
-    QuestionTypeName: null,
-    VerificationSources: []
-  };
-}
-
-// set popup value
-setIndicatorFormValue() {
-  this.indicatorForm = this.fb.group({
-    IndicatorName: this.ProjectindicatorDetail.IndicatorName,
-    Description : this.ProjectindicatorDetail.Description,
-    ProjectIndicatorId: this.ProjectindicatorDetail.ProjectIndicatorId
-  });
-}
+  // set popup value
+  setIndicatorFormValue() {
+    this.indicatorForm = this.fb.group({
+      IndicatorName: this.ProjectindicatorDetail.IndicatorName,
+      Description: this.ProjectindicatorDetail.Description,
+      ProjectIndicatorId: this.ProjectindicatorDetail.ProjectIndicatorId
+    });
+  }
   get questions(): FormArray {
     return this.indicatorForm.get('questions') as FormArray;
   }
@@ -161,9 +169,12 @@ setIndicatorFormValue() {
   }
 
   public OnSubmit(formValue: any) {
-    this.EditLoaderFlag= true;
+    this.EditLoaderFlag = true;
 
-    if (formValue.ProjectIndicatorName != null && formValue.ProjectIndicatorName != '') {
+    if (
+      formValue.ProjectIndicatorName != null &&
+      formValue.ProjectIndicatorName != ''
+    ) {
       const model: IndicatorDetailModel = {
         indicatorId: this.indicatorId,
         indicatorName: formValue.ProjectIndicatorName,
@@ -209,33 +220,27 @@ setIndicatorFormValue() {
   // }
 
   GetIndicatorQuestionDetailById(id: number) {
-    this.NewIndicatorLoaderFlag = true;
+    this.IndicatorDetailLoaderFlag = true;
     if (id != 0 && id != undefined && id != null) {
-      this.indicatorService
-        .GetIndicatorQuestionById(
-          id
-        )
-        .subscribe(
-          response => {
-            this.indicatorQuestionList = [];
-            if (response.statusCode === 200) {
-              response.data.forEach(element => {
-                this.indicatorQuestionList.push(element);
-                });
-              }
-            if (response.statusCode === 400) {
-              this.toastr.error(response.message);
-              this.EditLoaderFlag = false;
-            }
-            this.EditLoaderFlag = false;
-          },
-          error => {
-            this.NewIndicatorLoaderFlag = false;
-            this.EditLoaderFlag = false;
-            this.toastr.error('Something went wrong');
+      this.indicatorService.GetIndicatorQuestionById(id).subscribe(
+        response => {
+          this.indicatorQuestionList = [];
+          if (response.statusCode === 200) {
+            response.data.forEach(element => {
+              this.indicatorQuestionList.push(element);
+            });
           }
-         );
-     }
+          if (response.statusCode === 400) {
+            this.toastr.error(response.message);
+          }
+    this.IndicatorDetailLoaderFlag = false;
+        },
+        error => {
+          this.IndicatorDetailLoaderFlag = false;
+          this.toastr.error('Something went wrong');
+        }
+      );
+    }
   }
 
   onDelete(index: number) {
@@ -247,7 +252,7 @@ setIndicatorFormValue() {
     this.openIndicatorDialog();
   }
 
-  //#region "openHiringRequestDialog"
+  //#region "openIndicatorDialog"
   openIndicatorDialog(): void {
     // NOTE: It passed the data into the Add Activity Model
     const dialogRef = this.dialog.open(AddProjectIndicatorComponent, {
@@ -260,9 +265,10 @@ setIndicatorFormValue() {
     });
 
     // refresh the list after new request created
-    dialogRef.componentInstance.onIndicatorListRefresh.subscribe(
+    dialogRef.componentInstance.onUpdateIndicatorListRefresh.subscribe(
       (data: any) => {
-        this.OnQuestionListRefresh(data);
+        this.editIndicator.emit(data);
+        // this.OnQuestionListRefresh(data);
         this.indicatorForm = this.fb.group({
           IndicatorName: [data.IndicatorName],
           Description: [data.Description],
@@ -275,105 +281,171 @@ setIndicatorFormValue() {
   }
   //#endregion
 
-// #region "Question"
-// onQuestionsClick
-onQuestionsClick(){
-  this.openQuestionDialog();
-}
+  // #region " Add New Question"
+  // onQuestionsClick
+  onQuestionsClick() {
+    this.openQuestionDialog();
+  }
 
-//#region "openHiringRequestDialog"
-openQuestionDialog(): void {
-  // NOTE: It passed the data into the Add Activity Model
-  const dialogRef = this.dialog.open(AddQuestionsDialogComponent, {
-    width: '550px',
-    autoFocus: false,
-    data: {
-      ProjectId: this.projectId,
-      ProjectindicatorDetail: this.indicatorForm.value
+  //#region "openHiringRequestDialog"
+  openQuestionDialog(): void {
+    // NOTE: It passed the data into the Add Activity Model
+    const dialogRef = this.dialog.open(AddQuestionsDialogComponent, {
+      width: '550px',
+      autoFocus: false,
+      data: {
+        ProjectId: this.projectId,
+        ProjectindicatorDetail: this.indicatorForm.value
+      }
+    });
+
+    // refresh the list after new question created
+    dialogRef.componentInstance.onAddQuestionListRefresh.subscribe(
+      (data: any) => {
+        this.questionListRefresh(data);
+      }
+    );
+
+    dialogRef.afterClosed().subscribe(result => {});
+  }
+  //#endregion
+
+  //#region "Listupdate After update"
+  questionListRefresh(event: IQuestionDetailModel) {
+    this.indicatorQuestionList.unshift(event);
+    this.questionCount();
+  }
+  //#endregion
+
+  questionCount () {
+    const obj = {
+      Count:  this.indicatorQuestionList.length,
+      ProjectIndicatorId: this.ProjectindicatorDetail.ProjectIndicatorId
+    };
+    this.questionDetailListRefresh.emit(obj);
+  }
+
+
+  //#region "onDelete"
+  onDeleteQuestion(item: any) {
+    const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
+      width: '300px',
+      height: '250px',
+      data: 'delete',
+      disableClose: false
+    });
+
+    dialogRef.componentInstance.confirmMessage =
+      Delete_Confirmation_Texts.deleteText1;
+
+    dialogRef.componentInstance.confirmText = Delete_Confirmation_Texts.yesText;
+
+    dialogRef.componentInstance.cancelText = Delete_Confirmation_Texts.noText;
+
+    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.componentInstance.confirmDelete.subscribe(res => {
+      dialogRef.componentInstance.isLoading = true;
+      // Note : delete candidate from list
+
+      if (
+        item.IndicatorQuestionId != null &&
+        item.IndicatorQuestionId !== undefined &&
+        item.IndicatorQuestionId !== 0
+      ) {
+        this.indicatorService
+          .DeleteQuestionDetail(item.IndicatorQuestionId)
+          .subscribe(
+            response => {
+              if (response.statusCode === 200) {
+                this.deletedListRefresh(item.IndicatorQuestionId);
+                this.questionCount();
+              }
+              dialogRef.componentInstance.isLoading = false;
+              dialogRef.componentInstance.onCancelPopup();
+            },
+            error => {
+              this.toastr.error('Someting went wrong');
+              dialogRef.componentInstance.isLoading = false;
+              dialogRef.componentInstance.onCancelPopup();
+            }
+          );
+      }
+    });
+  }
+  //#endregion
+
+  //#region refresh list after delete
+  deletedListRefresh(item: number) {
+    const findIndex = this.indicatorQuestionList.findIndex(
+      x => x.IndicatorQuestionId === item
+    );
+    this.indicatorQuestionList.splice(findIndex, 1);
+  }
+
+  refreshQuestionListOnIndicatorDelete(projectIndicatorId: any) {
+    if (projectIndicatorId != null && projectIndicatorId !== undefined) {
+      this.indicatorQuestionList = [];
     }
-  });
+  }
 
- // refresh the list after new question created
-  dialogRef.componentInstance.onAddQuestionListRefresh.subscribe(
-    (data: any) => {
-      this.OnQuestionListRefresh(data);
+  //#endregion
+
+  //#region "on Question EditClick"
+
+  onQuestionEditClick(item: any) {
+    this.questionForm = this.fb.group({
+      IndicatorQuestion: [item.IndicatorQuestion],
+      IndicatorQuestionId: [item.IndicatorQuestionId],
+      ProjectIndicatorId: [item.ProjectIndicatorId],
+      QuestionType: [item.QuestionType],
+      VerificationSources: [item.VerificationSources]
+    });
+    this.openEditQuestionDialog(this.questionForm);
+  }
+  //#endregion
+
+  openEditQuestionDialog(item: FormGroup): void {
+    // NOTE: It passed the data into the Add Activity Model
+    const dialogRef = this.dialog.open(AddQuestionsDialogComponent, {
+      width: '550px',
+      autoFocus: false,
+      data: {
+        ProjectId: this.projectId,
+        QuestionDetail: item.value,
+        ProjectindicatorDetail: this.ProjectindicatorDetail
+      }
+    });
+
+    // refresh the list after new question created
+    dialogRef.componentInstance.onUpdatedQuestionListRefresh.subscribe(
+      (data: any) => {
+        this.OnUpdatesQuestionListRefresh(data);
+       // this.questionDetailListRefresh.emit(data);
+      }
+    );
+
+    dialogRef.afterClosed().subscribe(result => {});
+  }
+  // update questionalist refresh
+  OnUpdatesQuestionListRefresh(data: IQuestionDetailModel) {
+    const index = this.indicatorQuestionList.findIndex(
+      r => r.IndicatorQuestionId === data.IndicatorQuestionId
+    );
+    if (index !== -1) {
+      this.indicatorQuestionList[index] = data;
     }
-  );
+  }
 
-  dialogRef.afterClosed().subscribe(result => {});
-}
-//#endregion
+  // Accordian hide and show Steps
+  setStep(index: number) {
+    this.step = index;
+  }
 
-//#region "Listupdate After update"
-OnQuestionListRefresh(event: IQuestionDetailModel) {
-  this.indicatorQuestionList.unshift(event);
-}
-//#endregion
+  nextStep() {
+    this.step++;
+  }
 
-//#region "onDelete"
-onDeleteQuestion(item: any){
-  const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
-    width: '300px',
-    height: '250px',
-    data: 'delete',
-    disableClose: false
-  });
-
-  dialogRef.componentInstance.confirmMessage =
-    Delete_Confirmation_Texts.deleteText1;
-
-  dialogRef.componentInstance.confirmText =
-    Delete_Confirmation_Texts.yesText;
-
-  dialogRef.componentInstance.cancelText =
-    Delete_Confirmation_Texts.noText;
-
-  dialogRef.afterClosed().subscribe(result => {
-  });
-  dialogRef.componentInstance.confirmDelete.subscribe(res => {
-    dialogRef.componentInstance.isLoading = true;
-    if (
-      item.IndicatorQuestionId != null &&
-      item.IndicatorQuestionId !== undefined &&
-      item.IndicatorQuestionId !== 0
-    ) {
-      this.indicatorService
-        .DeleteQuestionDetail(
-          item.IndicatorQuestionId
-        )
-        .subscribe(response => {
-          // if (response.StatusCode === 200) {
-          //   this.totalcount = response.data.TotalCount;
-          //   this.deleteDonor.emit({ id: this.donorId, count: this.totalcount });
-          //   dialogRef.componentInstance.onCancelPopup();
-          //   this.toastr.success('Donor detail deleted successfully');
-
-          // }
-          dialogRef.componentInstance.isLoading = false;
-        },
-      error => {
-        this.toastr.error('Someting went wrong');
-        dialogRef.componentInstance.isLoading = false;
-      });
-    }
-  });
-}
-//#endregion
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//#endregion
-
-
+  prevStep() {
+    this.step--;
+  }
 }

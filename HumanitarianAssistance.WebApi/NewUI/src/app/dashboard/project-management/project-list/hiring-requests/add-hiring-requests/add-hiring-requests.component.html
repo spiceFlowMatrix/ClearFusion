@@ -46,7 +46,7 @@
             </div>
             <div class="col-lg-6 col-sm-6">
               <mat-form-field class="example-full-width">
-                <mat-select placeholder="Office" formControlName="OfficeId">
+                <mat-select placeholder="Office" formControlName="OfficeId" [disabled]="officeSelectionFlag">
                   <mat-option *ngFor="let item of officeList" [value]="item.OfficeId">
                     {{ item.OfficeName }}
                   </mat-option>

@@ -10,7 +10,6 @@ namespace HumanitarianAssistance.WebApi.Extensions
     {
         public static IServiceCollection AddPdfExtension(this IServiceCollection services)
         {
-
             // razon services
             services.AddScoped<IRazorLightEngine>(sp =>
             {

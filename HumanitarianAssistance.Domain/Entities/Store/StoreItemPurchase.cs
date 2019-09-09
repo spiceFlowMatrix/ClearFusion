@@ -25,7 +25,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         [Required]
         public int Currency { get; set; }
         public int UnitType { get; set; }
-        public long UnitCost { get; set; }
+        public double UnitCost { get; set; }
         public int Quantity { get; set; }
 
         public bool ApplyDepreciation { get; set; }
@@ -55,6 +55,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public long? VerifiedPurchaseVoucher { get; set; }
         public int? OfficeId { get; set; }
         public int? JournalCode { get; set; }
+        public string PurchaseName { get; set; }
 
 
         [ForeignKey("InventoryItem")]

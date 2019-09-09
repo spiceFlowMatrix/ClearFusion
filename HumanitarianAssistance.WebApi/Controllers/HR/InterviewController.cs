@@ -65,7 +65,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpGet]
         public async Task<ApiResponse> GetAllInterviewDetails([FromQuery] int OfficeId)
         {
-            return await _mediator.Send(new GetAllInterviewDetailsQuery { OfficeId = OfficeId }); 
+            return await _mediator.Send(new GetAllInterviewDetailsQuery { OfficeId = OfficeId});
         }
 
         [HttpGet]
@@ -81,9 +81,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         }
 
         [HttpGet]
-        public async Task<ApiResponse> GetAllExitInterview()
+        public async Task<ApiResponse> GetAllExitInterview([FromQuery] int OfficeId)
         {
-            return await _mediator.Send(new GetAllExitInterviewQuery());
+            return await _mediator.Send(new GetAllExitInterviewQuery { OfficeId = OfficeId });
         }
 
         #region "AddExitInterview"

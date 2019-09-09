@@ -19,7 +19,8 @@ import {
   IitervireCandidateModel,
   IHiringReuestCandidateModel,
   IAttendaneGroupModel,
-  IEmployeeContractList
+  IEmployeeContractList,
+  IHiringRequestModel
 } from '../models/hiring-requests-model';
 import { MatDialog } from '@angular/material';
 import { AddHiringRequestsComponent } from '../add-hiring-requests/add-hiring-requests.component';
@@ -43,14 +44,15 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   @Input() hiringRequestId: number;
   @Input() currencyList: ICurrencyList[] = [];
   @Input() hiringRequestDetail: any;
-  @Input() budgetLineList: IBudgetLineModel;
-  @Input() officeList: IOfficeListModel;
-  @Input() jobGradeList: IJobGradeModel;
-  @Input() professionList: IProfessionList;
+  @Input() budgetLineList: IBudgetLineModel[];
+  @Input() officeList: IOfficeListModel[];
+  @Input() jobGradeList: IJobGradeModel[];
+  @Input() professionList: IProfessionList[];
   @Output() UpdatedHRListRefresh = new EventEmitter<any[]>();
   //#endregion
 
   // Model:
+  hiringRequestModel: IHiringRequestModel;
   employeeList: IEmployeeListModel[] = [];
   attendanceGroupList: IAttendaneGroupModel[] = [];
   candidateList: IReuestedCandidateDetailModel[] = [];
@@ -73,6 +75,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   isCompletedFlag = false;
   isshortlistedLoaderFlag = false;
   isCompleted = false;
+  officeSelectionFlag = false;
 
   // screen scroll
   screenHeight: number;
@@ -101,14 +104,12 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.initForm();
-    this.GetAllEmployeeList();
     this.GetAllEmployeeContractTypelist();
     this.GetAllAttendanceGrouplist();
     this.routeActive.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
   }
-
   ngOnChanges() {
     if (
       this.hiringRequestDetail != null &&
@@ -151,6 +152,17 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       ProjectId: [null],
       IsCompleted: [null]
     });
+    this.hiringRequestModel = {
+      Description: '',
+      Position: '',
+      Profession: '',
+      BudgetLine: '',
+      TotalVacancies: '',
+      Office: '',
+      FilledVacancies: '',
+      BasicPay: '',
+      jobGrade: ''
+    };
   }
   //#endregion
 
@@ -171,8 +183,21 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       GradeId: [this.hiringRequestDetail.GradeId],
       ProjectId: [this.hiringRequestDetail.ProjectId],
       RequestedBy: [this.hiringRequestDetail.RequestedBy],
-      IsCompleted: [this.hiringRequestDetail.IsCompleted]
+      IsCompleted: [this.hiringRequestDetail.IsCompleted],
     });
+
+    this.hiringRequestModel = {
+      Description : this.hiringRequestForm.value.Description,
+      Position: this.hiringRequestForm.value.Position,
+      Profession: this.professionList.find(x => x.ProfessionId === this.hiringRequestForm.value.ProfessionId).ProfessionName,
+      BudgetLine: this.budgetLineList.find(x => x.BudgetLineId === this.hiringRequestForm.value.BudgetLineId).BudgetName,
+      TotalVacancies: this.hiringRequestForm.value.TotalVacancies,
+      Office: this.officeList.find(x => x.OfficeId === this.hiringRequestForm.value.OfficeId).OfficeName,
+      FilledVacancies: this.hiringRequestForm.value.FilledVacancies,
+      BasicPay: this.hiringRequestForm.value.BasicPay,
+      jobGrade: this.jobGradeList.find(x => x.GradeId === this.hiringRequestForm.value.GradeId).GradeName
+    };
+    this.GetEmployeeListByOfficeId(this.hiringRequestForm.value.OfficeId);
   }
 
   //#region "onAddNewRequestClicked"
@@ -183,6 +208,9 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
 
   //#region "openHiringRequestDialog"
   openHiringRequestDialog(): void {
+    if (this.candidateList.length > 0) {
+    this.officeSelectionFlag = true;
+    }
     // NOTE: It passed the data into the Add Activity Model
     const dialogRef = this.dialog.open(AddHiringRequestsComponent, {
       width: '550px',
@@ -194,21 +222,21 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
         JobGradeList: this.jobGradeList,
         HiringRequestDetail: this.hiringRequestForm.value,
         ProfessionList: this.professionList,
-        ProjectId: this.projectId
+        ProjectId: this.projectId,
+        officeSelectionFlag: this.officeSelectionFlag
       }
     });
 
     // refresh the list after new request created
     dialogRef.componentInstance.onUpdateHiringRequestListRefresh.subscribe(
       (data: any) => {
-        console.log('emitter', data);
         this.UpdatedHRListRefresh.emit(data);
         this.hiringRequestForm = this.fb.group({
           Description: [data.Description],
           HiringRequestId: [data.HiringRequestId],
           HiringRequestCode: [data.HiringRequestCode],
           Position: [data.Position],
-          Profession: [data.Profession],
+          ProfessionId: [data.ProfessionId],
           TotalVacancies: [data.TotalVacancies],
           FilledVacancies: [data.FilledVacancies],
           BasicPay: [data.BasicPay],
@@ -218,21 +246,37 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           EmployeeID: [data.EmployeeID],
           GradeId: [data.GradeId],
           ProjectId: [data.ProjectId],
-          RequestedBy: [data.RequestedBy]
+          RequestedBy: [data.RequestedBy],
         });
+        this.hiringRequestModel = {
+          Description : data.Description,
+          Position: data.Position,
+          Profession: this.professionList.find(x => x.ProfessionId === data.ProfessionId).ProfessionName,
+          BudgetLine: this.budgetLineList.find(x => x.BudgetLineId === data.BudgetLineId).BudgetName,
+          TotalVacancies: data.TotalVacancies,
+          Office: this.officeList.find(x => x.OfficeId === data.OfficeId).OfficeName,
+          FilledVacancies: data.FilledVacancies,
+          BasicPay: data.BasicPay,
+          jobGrade: this.jobGradeList.find(x => x.GradeId === data.GradeId).GradeName
+        };
+        this.GetEmployeeListByOfficeId(this.hiringRequestForm.value.OfficeId);
       }
     );
 
-    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.afterClosed().subscribe(result => {this.officeSelectionFlag = false; });
   }
   //#endregion
 
   //#region "onAddEmployeeClicked"
   onAddCandidateClicked() {
+
     this.filteredEmployeeList = [];
 
-    this.filteredEmployeeList = this.employeeList.filter((employee) =>
-    this.candidateList.every((candidate) => employee.EmployeeId !== candidate.EmployeeID));
+    this.filteredEmployeeList = this.employeeList.filter(employee =>
+      this.candidateList.every(
+        candidate => employee.EmployeeId !== candidate.EmployeeID
+      )
+    );
     const dialogRef = this.dialog.open(AddCandidateDaialogComponent, {
       width: '420px',
       autoFocus: false,
@@ -250,8 +294,11 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region "GetEmployeeDetail"
-  GetAllEmployeeList() {
-    this.hiringRequestService.GetAllEmployeeList().subscribe(
+  GetEmployeeListByOfficeId(OfficeId: number) {
+    if (OfficeId == null) {
+     // this.toastr.warning('Office Can not be null');
+    } else {
+    this.hiringRequestService.GetEmployeeListByOfficeId(OfficeId).subscribe(
       (response: IResponseData) => {
         this.employeeList = [];
         if (response.statusCode === 200 && response.data !== null) {
@@ -265,6 +312,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       },
       error => {}
     );
+    }
   }
   //#endregion
 
@@ -461,7 +509,8 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       this.addCandidateInterviewLoader = true;
       const interviewCandidatModel: IitervireCandidateModel = {
         EmployeeID: event.EmployeeID,
-        JobDescription: this.hiringRequestForm.get('Description').value
+        JobDescription: this.hiringRequestForm.get('Description').value,
+        OfficeId: this.hiringRequestForm.get('OfficeId').value
       };
       this.hiringRequestService
         .AddInterViewCandidateDetail(interviewCandidatModel)
@@ -487,8 +536,8 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region "seeCandidateDetail page of old Ui"
-  seeCandidateDetail(path: string) {
-    window.open(this.appurl.getOldUiUrl() + path, '_blank');
+  seeCandidateDetail(path: string, empId) {
+    window.open(this.appurl.getOldUiUrl() + path + empId, '_blank');
   }
   //#endregion
 
@@ -551,7 +600,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           const candidateModel: IHiringReuestCandidateModel = {
             HiringRequestId: this.hiringRequestForm.get('HiringRequestId')
               .value,
-              CandidateId: item.CandidateId
+            CandidateId: item.CandidateId
           };
           this.hiringRequestService
             .DeleteCandidateDetailDetail(candidateModel)
@@ -567,8 +616,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
               },
               error => {
                 this.toastr.error('Someting went wrong');
-              dialogRef.componentInstance.onCancelPopup();
-
+                dialogRef.componentInstance.onCancelPopup();
               }
             );
         }

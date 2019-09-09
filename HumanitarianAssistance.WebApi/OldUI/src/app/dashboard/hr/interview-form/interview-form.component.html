@@ -1,9 +1,18 @@
 <div class="main-interview-form">
 
   <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-3">
       <div class="main-heading clearfix">
-        <h3 class="page-headin">Employee Interview Form</h3>
+        <h3 class="page-headin" style="display: inline-block;">Employee Interview Form</h3>
+        <div style="display: flex">
+            <h5 class="page-headin">Office</h5>
+            <span style="padding-left: 10px;">
+                <dx-select-box [dataSource]="officeDropdownList" placeholder="Choose Office"
+                (onItemClick)="onOfficeSelected($event.itemData.OfficeId)" displayExpr="OfficeName"
+                valueExpr="OfficeId" [value]="selectedOffice" [searchEnabled]="true">
+                </dx-select-box>
+            </span>
+        </div>
       </div>
     </div>
   </div>
@@ -19,7 +28,7 @@
             <div *ngIf="interviewFormTabFlag == true; else exitInterviewTabFlag">
               <div class="dx-field">
 
-                <app-employee-interview-form [isEditingAllowed]="isEditingAllowed"></app-employee-interview-form>
+                <app-employee-interview-form [officeId]= "selectedOffice" [isEditingAllowed]="isEditingAllowed"></app-employee-interview-form>
 
               </div>
             </div>
@@ -27,7 +36,7 @@
             <ng-template #exitInterviewTabFlag>
               <div class="dx-field">
 
-                <app-employee-exit-interview-form [isEditingAllowed]="isEditingAllowed"></app-employee-exit-interview-form>
+                <app-employee-exit-interview-form [officeId]= "selectedOffice" [isEditingAllowed]="isEditingAllowed"></app-employee-exit-interview-form>
 
               </div>
             </ng-template>

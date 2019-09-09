@@ -3507,6 +3507,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<bool>("NotChallenged");
 
+                    b.Property<int>("OfficeId");
+
                     b.Property<string>("OpportunityAdvancement");
 
                     b.Property<string>("OverallJobSatisfaction");
@@ -3742,6 +3744,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasKey("InterviewDetailsId");
 
                     b.HasIndex("EmployeeID");
+
+                    b.HasIndex("JobId");
 
                     b.ToTable("InterviewDetails");
                 });
@@ -7871,6 +7875,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime>("PurchaseDate");
 
+                    b.Property<string>("PurchaseName");
+
                     b.Property<int>("PurchasedById");
 
                     b.Property<int>("Quantity");
@@ -7884,7 +7890,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("Status");
 
-                    b.Property<long>("UnitCost");
+                    b.Property<double>("UnitCost");
 
                     b.Property<int>("UnitType");
 
@@ -8807,6 +8813,11 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
                         .WithMany("InterviewDetails")
                         .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.JobHiringDetails", "JobHiringDetail")
+                        .WithMany()
+                        .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

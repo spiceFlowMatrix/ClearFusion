@@ -75,7 +75,7 @@
           validationGroup="addOrderData" (onFieldDataChanged)="onFieldDataChanged($event)">
           <dxi-item itemType="group" [colCount]="2">
 
-            <dxi-item dataField="Purchase" editorType="dxSelectBox" [editorOptions]="{ dataSource: purchaseDataSource, valueExpr: 'PurchaseId', displayExpr: 'PurchaseId', searchEnabled: true, showClearButton: false  }">
+            <dxi-item dataField="Purchase" editorType="dxSelectBox" [editorOptions]="{ dataSource: purchaseDataSource, valueExpr: 'PurchaseId', displayExpr: 'PurchaseCode', searchEnabled: true, showClearButton: false  }">
               <dxo-label text="Purchase" alignment="left"></dxo-label>
               <dxi-validation-rule type="required"> </dxi-validation-rule>
             </dxi-item>
@@ -120,11 +120,11 @@
               <dxo-label alignment="left" text="Must Return"></dxo-label>
             </dxi-item>
 
-            <dxi-item dataField="Returned">
+            <dxi-item dataField="Returned" [visible]="(orderDetailsForm.OrderId !=null && orderDetailsForm.OrderId !=0)">
               <dxo-label alignment="left" text="Returned"></dxo-label>
             </dxi-item>
 
-            <dxi-item dataField="ReturnedDate" editorType="dxDateBox" [editorOptions]="{ type: 'date', readOnly: !orderDetailsForm.Returned ,displayFormat: 'dd/MM/yyyy' }">
+            <dxi-item dataField="ReturnedDate" [visible]="(orderDetailsForm.OrderId !=null && orderDetailsForm.OrderId !=0)" editorType="dxDateBox" [editorOptions]="{ type: 'date', readOnly: !orderDetailsForm.Returned ,displayFormat: 'dd/MM/yyyy' }">
               <dxo-label alignment="left"></dxo-label>
             </dxi-item>
           </dxi-item>

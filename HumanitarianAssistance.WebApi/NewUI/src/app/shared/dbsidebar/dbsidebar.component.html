@@ -11,7 +11,7 @@
   <div class="menu-list">
 
     <ul id="menu-content" class="menu-content collapse " >
-      <li [ngClass]="selectedLink == 1 ? 'active' : ''" (click)="onsideBarLinkClicked('project/project-dashboard', 1)" *ngIf="displayChildModule(ModulesProject.Project)">
+      <li [ngClass]="selectedLink == 1 ? 'active' : ''" (click)="onsideBarLinkClicked('project/my-projects', 1)" *ngIf="displayChildModule(ModulesProject.Project)">
         <a class="projects">Projects</a>
       </li>
 
@@ -120,7 +120,7 @@
         <li [ngClass]="{'active': selectedLink == 53 }" (click)="onOldUiPageClick('dashboard/store/store-source-codes', 53)" *ngIf="displayModulePages(StorePages.StoreSourceCodes)"><a>Store Source Codes</a></li>
         <!-- <li [ngClass]="{'active': selectedLink == 54 }" (click)="onOldUiPageClick('dashboard/store/payment-types', 54)" *ngIf="displayModulePages(StorePages.PaymentTypes)"><a>Payment Types</a></li> -->
         <li [ngClass]="{'active': selectedLink == 55 }" (click)="onOldUiPageClick('dashboard/store/store-main', 55)" *ngIf="displayModulePages(StorePages.Store)"><a>Store</a></li>
-        <li [ngClass]="{'active': selectedLink == 56 }" (click)="onOldUiPageClick('dashboard/store/procurment-summary', 56)" *ngIf="displayModulePages(StorePages.ProcurementSummary)"><a>Procurment Summary</a></li>
+        <li [ngClass]="{'active': selectedLink == 56 }" (click)="onOldUiPageClick('dashboard/store/procurment-summary', 56)" *ngIf="displayModulePages(StorePages.ProcurementSummary)"><a>Procurement Summary</a></li>
         <li [ngClass]="{'active': selectedLink == 57 }" (click)="onOldUiPageClick('dashboard/store/store-depreciation-report', 57)" *ngIf="displayModulePages(StorePages.DepreciationReport)"><a>Depreciation Report</a></li>
       </ul>
 

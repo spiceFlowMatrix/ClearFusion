@@ -201,6 +201,22 @@ GetAllEmployeeList(): any {
     );
 }
 //#endregion
+//#region "GetEmployeeListByOfficeId"
+GetEmployeeListByOfficeId(OfficeId: number) {
+  return this.globalService
+    .getDataById(this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetEmployeeListByOfficeId + '?OfficeId=' + OfficeId)
+    .pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x.data.EmployeeDetailListData,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+}
+//#endregion
 //#region "GetAllEmployeeList"
 GetAllAttendanceGroupList(): any {
   return this.globalService
@@ -217,7 +233,6 @@ GetAllAttendanceGroupList(): any {
     );
 }
 //#endregion
-
 //#region "GetAllEmloyeeContractList"
 GetAllEmloyeeContractList(): any {
   return this.globalService
