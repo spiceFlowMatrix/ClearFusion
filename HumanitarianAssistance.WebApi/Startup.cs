@@ -78,7 +78,7 @@ namespace HumanitarianAssistance.WebApi
                 options.AddPolicy(defaultCorsPolicyName, p =>
                 {
                     //todo: Get from configuration
-                    p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                    p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("Content-Disposition");
 
                 });
             });
@@ -93,6 +93,13 @@ namespace HumanitarianAssistance.WebApi
                 c.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
                 c.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
+
+            // // 406 (Not Acceptable) 
+            // // use to return files from Controller
+            // services.AddMvc(options =>
+            // {
+            //     options.ReturnHttpNotAcceptable = true;
+            // });
 
             services.AddRouting();
             services.AddSignalR();
