@@ -26,11 +26,14 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
         public async Task<ApiResponse> Handle(AddPurchaseCommand request, CancellationToken cancellationToken)
         {
             ApiResponse response = new ApiResponse();
+
+            request.PurchaseDate = request.TimezoneOffset == null? request.PurchaseDate : request.PurchaseDate.AddMinutes(Math.Abs((double)request.TimezoneOffset));
+
             try
             {
                 if (request != null)
                 {
-                    var exRate = await _dbContext.ExchangeRateDetail.OrderByDescending(x=> x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.Date.Date <= request.PurchaseDate.Date && x.FromCurrency == request.Currency && x.ToCurrency == (int)Currency.USD);
+                    var exRate = await _dbContext.ExchangeRateDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.Date.Date == request.PurchaseDate.Date && x.FromCurrency == request.Currency && x.ToCurrency == (int)Currency.USD);
 
                     if (exRate == null)
                     {
