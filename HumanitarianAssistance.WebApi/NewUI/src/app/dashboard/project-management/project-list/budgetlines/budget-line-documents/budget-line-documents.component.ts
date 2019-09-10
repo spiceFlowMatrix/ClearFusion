@@ -59,7 +59,7 @@ export class BudgetLineDocumentsComponent implements OnInit {
         if (response.statusCode === 200) {
           this.toastr.success('Excel import successfully');
           this.budgetLineListRefresh.emit(response.statusCode);
-        } else if (response.statusCode === 4440) {
+        } else if (response.statusCode === 415) {
           this.toastr.warning('Please check the format');
         } else if (response.statusCode === 120) {
           this.toastr.warning(

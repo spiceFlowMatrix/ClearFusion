@@ -67,6 +67,8 @@ export class CriteriaEvaluationComponent
   selectedprojectSelction: string[] = [];
 
   AllowedByLaw = false; // add one more property
+  isSuperadmin = false;
+
 
   //#region "Variables"
   methodOfFundingList = [
@@ -109,7 +111,7 @@ export class CriteriaEvaluationComponent
 
   donorCEForm: DonorCEModel;
   eligibilityForm: EligibilityCEModel;
-  feasibilityForm: FeasibilityCEModel = {};
+  feasibilityForm: FeasibilityCEModel;
   priorityForm: PriorityCEmodel;
   financialForm: FinancialProfitabilityModel;
   riskForm: RiskSecurityModel;
@@ -251,6 +253,7 @@ export class CriteriaEvaluationComponent
 
     // Set Menu Header Name
     this.globalService.setMenuHeaderName(this.setProjectHeader);
+    //this.initFeasibilityModel();
   }
 
   ngOnInit() {
@@ -258,7 +261,7 @@ export class CriteriaEvaluationComponent
       this.ProjectId = +params['id'];
     });
     // this.getData();
-   
+
     this.getScreenSize();
     this.GetCriteraiEvaluationDetailById(this.ProjectId);
     this.initializeList();
@@ -285,6 +288,7 @@ export class CriteriaEvaluationComponent
     this.getFeasibilityExpertByProjectId(this.ProjectId);
     // this.GetOccupationByProjectId(this.ProjectId);
     this.GetDonorEligibilityCriteriaByProjectId(this.ProjectId);
+  //  this.onProjectallowedByLawChange(this.feasibilityForm.ProjectAllowedBylaw);
   }
   // to show warning message if the total score is less than 30 -->
   ngAfterViewChecked() {
@@ -1970,7 +1974,7 @@ export class CriteriaEvaluationComponent
                 this.feasibilityForm.EnoughTimeForProject =
                   data.data.CriteriaEveluationModel.EnoughTimeForProject;
                 this.feasibilityForm.ProjectAllowedBylaw =
-                  (data.data.CriteriaEveluationModel.ProjectAllowedBylaw?data.data.CriteriaEveluationModel.ProjectAllowedBylaw:false);
+                  (data.data.CriteriaEveluationModel.ProjectAllowedBylaw ? data.data.CriteriaEveluationModel.ProjectAllowedBylaw : false);
                 if (this.feasibilityForm.ProjectAllowedBylaw === false) {
                   this.disableCriteriaEvaluationForm = true;
                   this.isExpanded = false;
@@ -4346,6 +4350,11 @@ export class CriteriaEvaluationComponent
 
   //#region "setHeaderMenu"
   setHeaderMenu() {
+    this.isSuperadmin = this.localStorageService.GetSuperAdminDetail();
+ if (this.isSuperadmin) {
+  this.globalService.setMenuList(this.menuList);
+   // check weather the criteria evaluation is approved and project is win
+ } else if (this.IsSubmitCEform.IsCriteriaEvaluationSubmit === true) {
     // check weather the criteria evaluation is approved
     this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
       this.IsSubmitCEform.IsCriteriaEvaluationSubmit
@@ -4357,7 +4366,7 @@ export class CriteriaEvaluationComponent
     this.globalService.setMenuList(this.authorizedMenuList);
   }
   //#endregion
-
+  }
   //#region AddIsDeletedEligibilityDetail
   AddIsSubmitCEDetail(model: ICEisCESubmitModel) {
     const obj: ICEisCESubmitModel = {
