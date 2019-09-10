@@ -38,7 +38,7 @@
             </button>
             <ng-template #approveRejectFlag>
               <a class="asign_check assign_custom">
-                <button disabled="false" class="asign_check assign_custom " *ngIf="
+                <button disabled="false" class="asign_check assign_custom " (click)= "openAcceptProposalComponent()" *ngIf="
                       projectDetail.IsApproved == false;
                       else approvedGreen
                     " mat-button [matTooltip]="
@@ -53,7 +53,7 @@
                 </button>
 
                 <ng-template #approvedGreen>
-                  <button disabled="false" class="asign_check assign_custom " mat-button [matTooltip]="
+                  <button disabled="false" class="asign_check assign_custom " (click)= "openAcceptProposalComponent()" mat-button [matTooltip]="
                         projectDetail.IsApproved == true
                           ? 'Your Proposal Is Approved'
                           : ''
@@ -94,7 +94,7 @@
               Finalize
             </button>
 
-            <button disabled="false" mat-button *ngIf="
+            <button disabled="false" (click)= "openPropsalWinComponent()" mat-button  *ngIf="
                   projectDetail.IsWin == false;
                   else winGreen
                 " class="asign_check assign_custom" [matTooltip]="
@@ -107,7 +107,7 @@
             </button>
 
             <ng-template #winGreen>
-              <button disabled="false" mat-button *ngIf="projectDetail.IsWin == true" class="asign_check assign_custom"
+              <button disabled="false" mat-button (click)= "openPropsalWinComponent()" *ngIf="projectDetail.IsWin == true" class="asign_check assign_custom"
                 [matTooltip]="
                     projectDetail.IsWin == true
                       ? 'You win the Project.'

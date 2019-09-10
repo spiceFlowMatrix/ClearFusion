@@ -51,7 +51,7 @@
                     placeholder="Type Here.." formControlName="CommentText">
                   </textarea>
                   <a [href]="imageUrl">
-                    <file-drop *ngIf="FileName==null" class="custom_drop" headertext="Drop file here"
+                    <file-drop *ngIf="FileName == null"  class="custom_drop" headertext="Drop file here"
                       (onFileDrop)="UploadReviewDragAndDropFile($event)" (onFileOver)="fileOver($event)"
                       (onFileLeave)="fileLeave($event)">
                       <i class="material-icons">
