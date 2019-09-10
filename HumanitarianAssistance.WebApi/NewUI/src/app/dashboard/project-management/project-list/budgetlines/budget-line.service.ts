@@ -190,6 +190,8 @@ export class BudgetLineService {
 
   //#region "postBudgetLineDocument"
   postBudgetLineDocument(data: any) {
+    debugger;
+    console.log(data);
     return this.globalService
       .post(
         this.appurl.getApiUrl() + GLOBAL.API_BudgetLine_ExcelImportOfBudgetLine,

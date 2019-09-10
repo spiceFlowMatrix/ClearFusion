@@ -30,6 +30,7 @@ import { DonorMasterComponent } from '../../../project-donor/donor-master/donor-
 import { ProgramAreaSectorComponent } from '../program-area-sector/program-area-sector.component';
 import { IMenuList } from 'src/app/shared/dbheader/dbheader.component';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-project-detail',
@@ -90,7 +91,8 @@ export class ProjectDetailComponent implements OnInit {
     private appurl: AppUrlService,
     private router: Router,
     private localStorageService: LocalStorageService,
-    private globalService: GlobalSharedService
+    private globalService: GlobalSharedService,
+    private toastr: ToastrService
   ) {
     this.getScreenSize();
     this.initProjectDetail();
@@ -395,6 +397,10 @@ export class ProjectDetailComponent implements OnInit {
     this.winProjectFlag = false;
   }
 
+  openAcceptProposalComponent() {
+    this.openProposalcompcheck = !this.openProposalcompcheck;
+    this.winProjectFlag = false;
+  }
   openPropsalWinComponent() {
     this.openProposalcompcheck = !this.openProposalcompcheck;
     this.winProjectFlag = true;
@@ -430,8 +436,10 @@ export class ProjectDetailComponent implements OnInit {
                 response.data.ApproveProjectDetails.IsApproved;
               this.openProposalcompcheck = false;
               this.GetProjectDetail(this.projectDetail.ProjectId);
-            }
+            } else if (response.StatusCode === 415) {
+              this.toastr.warning('File format is not correct.');
 
+            }
             this.acceptProposalChild.commonLoaderFlag = false;
           },
           error => {
@@ -507,6 +515,8 @@ export class ProjectDetailComponent implements OnInit {
         this.formdata = data.data;
         this.formdata.append('CommentText', data.text);
         this.formdata.append('IsApproved', 'false');
+        this.formdata.append('ProjectId', this.projectId.toString());
+
         this.projectListService
           .uploadReviewFile(
             this.appurl.getApiUrl() + GLOBAL.API_Project_UploadReviewFile,
@@ -521,7 +531,7 @@ export class ProjectDetailComponent implements OnInit {
                   response.data.ApproveProjectDetails.IsApproved;
                 this.openProposalcompcheck = false;
                 // this.proposalChild.GetProposal(this.projectId);
-                this.proposalChild.IsApproved = this.approvalDetail.IsApproved;
+                const proposalIsApproved = this.approvalDetail.IsApproved;
               }
 
               this.acceptProposalChild.commonLoaderFlag = false;
@@ -630,8 +640,8 @@ export class ProjectDetailComponent implements OnInit {
     // check weather the project win
     this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
       this.winapprovalDetail.IsWin
-      ? this.menuList
-      : this.menuList.filter((i, index) => index < 3)
+        ? this.menuList
+        : this.menuList.filter((i, index) => index < 3)
     );
 
     // Set Menu Header List

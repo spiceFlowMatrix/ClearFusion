@@ -7,7 +7,10 @@ using MediatR;
 using System;
 using System.IO;
 using System.Threading;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using HumanitarianAssistance.Common.Enums;
 
 namespace HumanitarianAssistance.Application.Store.Commands.Create
 {
@@ -23,10 +26,20 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
         public async Task<ApiResponse> Handle(AddPurchaseCommand request, CancellationToken cancellationToken)
         {
             ApiResponse response = new ApiResponse();
+
+            request.PurchaseDate = request.TimezoneOffset == null? request.PurchaseDate : request.PurchaseDate.AddMinutes(Math.Abs((double)request.TimezoneOffset));
+
             try
             {
                 if (request != null)
                 {
+                    var exRate = await _dbContext.ExchangeRateDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.Date.Date == request.PurchaseDate.Date && x.FromCurrency == request.Currency && x.ToCurrency == (int)Currency.USD);
+
+                    if (exRate == null)
+                    {
+                        throw new Exception($"Exchange Rates not defined for Date {request.PurchaseDate.Date.ToString("dd/MM/yyyy")}");
+                    }
+
                     StoreItemPurchase purchase = _mapper.Map<StoreItemPurchase>(request);
 
                     purchase.IsDeleted = false;

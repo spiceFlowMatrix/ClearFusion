@@ -143,8 +143,9 @@ namespace HumanitarianAssistance.Application.CommonServices
             long projectjobCount = await _dbContext.ProjectBudgetLineDetail
                                                             .LongCountAsync(x => x.ProjectId == model.ProjectId &&
                                                                                  x.IsDeleted == false);
+            long id = projectjobCount + 1;
 
-            return ProjectUtility.GenerateProjectBudgetLineCode(projectDetail.ProjectCode, projectjobCount++);
+            return ProjectUtility.GenerateProjectBudgetLineCode(projectDetail.ProjectCode,id);
         }
 
         public async Task<string> GetProjectJobCode(ProjectJobDetail model)
