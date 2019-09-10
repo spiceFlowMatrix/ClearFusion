@@ -1,0 +1,9 @@
+.padding-top-padding-right {
+    padding-top: 7px;
+    padding-right: 17px;
+}
+
+.flex-padding-top {
+    display: flex;
+    padding-top: 10px;
+}

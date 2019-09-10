@@ -113,6 +113,11 @@
                   </dxo-lookup>
                 </dxi-column>
 
+                <dxi-column [allowFiltering]="true" dataField="DepartmentId" [editorOptions]="{allowEditing: false}">
+                    <dxo-lookup [dataSource]="departmentTypeDropdown" valueExpr="DepartmentId" displayExpr="DepartmentName">
+                      </dxo-lookup>
+                </dxi-column>
+
                 <dxi-column dataField="CurrentAppraisalDate" caption="Evaluation Date" dataType="date" format="dd/MM/yyyy">
                 </dxi-column>
 

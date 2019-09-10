@@ -107,7 +107,10 @@
                         <a href="javascript:void(0)" (click)="onEmployeeNameClicked(data)">{{data.data.EmployeeName}}</a>
                       </div>
                       <dxi-column dataField="EmployeeCode" [allowEditing]="false"> </dxi-column>
-
+                      <dxi-column [allowFiltering]="true" dataField="DepartmentId" caption="Department" [allowEditing]="false">
+                          <dxo-lookup [dataSource]="departmentTypeDropdown" valueExpr="DepartmentId" displayExpr="DepartmentName">
+                            </dxo-lookup>
+                      </dxi-column>
                       <dxi-column dataField="CurrencyId" caption="Currency" [allowEditing]="false">
                         <dxo-lookup [dataSource]="currencyTypeDropdown" valueExpr="CurrencyId" displayExpr="CurrencyName"
                           valueExpr="CurrencyId"></dxo-lookup>
@@ -263,6 +266,10 @@
                     <div *dxTemplate="let data of 'CellTemplateEdit'">{{data.data.EmployeeName}}
                     </div>
                     <dxi-column dataField="EmployeeCode"> </dxi-column>
+                    <dxi-column [allowFiltering]="true" dataField="DepartmentId" caption="Department" [allowEditing]="false">
+                        <dxo-lookup [dataSource]="departmentTypeDropdown" valueExpr="DepartmentId" displayExpr="DepartmentName">
+                          </dxo-lookup>
+                    </dxi-column>
                     <dxi-column dataField="CurrencyId" caption="Currency">
                       <dxo-lookup [dataSource]="currencyTypeDropdown" valueExpr="CurrencyId" displayExpr="CurrencyName"
                         valueExpr="CurrencyId"></dxo-lookup>

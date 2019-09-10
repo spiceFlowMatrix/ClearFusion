@@ -8,6 +8,7 @@ import { GLOBAL } from '../../../shared/global';
 import { ToastrService } from 'ngx-toastr';
 import { CodeService } from '../../code/code.service';
 import { AppSettingsService } from '../../../service/app-settings.service';
+import { HrService } from '../hr.service';
 
 @Component({
   selector: 'app-interview-form',
@@ -40,6 +41,7 @@ export class InterviewFormComponent implements OnInit {
     private toastr: ToastrService,
     private codeService: CodeService,
     private setting: AppSettingsService,
+    private hrService: HrService
   ) {}
 
   ngOnInit() {
@@ -95,7 +97,7 @@ export class InterviewFormComponent implements OnInit {
                     });
 
                     this.selectedOffice =
-                        (this.selectedOffice === null || this.selectedOffice == undefined)
+                        (this.selectedOffice === null || this.selectedOffice === undefined)
                                 ? this.officeDropdownList[0].OfficeId
                             : this.selectedOffice;
 
@@ -122,7 +124,6 @@ export class InterviewFormComponent implements OnInit {
 onOfficeSelected(officeId: number) {
   this.selectedOffice = officeId;
 }
-
   //#region "On tab Select"
   selectTab(e) {
     e.itemData.id === 1

@@ -31,6 +31,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 List<InterviewDetailModel> lst = new List<InterviewDetailModel>();
                 var recordLst = await _dbContext.InterviewDetails
                                                          .Include(x => x.EmployeeDetail)
+                                                         .ThenInclude(x=> x.EmployeeProfessionalDetail)
                                                          .Include(x => x.RatingBasedCriteriaList)
                                                          .Include(x => x.InterviewLanguagesList)
                                                          .Include(x => x.InterviewTrainingsList)
@@ -159,7 +160,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     obj.PreferedLocation = model.PreferedLocation;
                     obj.NoticePeriod = model.NoticePeriod;
                     obj.JoiningDate = model.JoiningDate;
-
+                    obj.DepartmentId = model.EmployeeDetail.EmployeeProfessionalDetail.DepartmentId;
                     obj.CurrentBase = model.CurrentBase;
                     obj.CurrentTransportation = model.CurrentTransportation;
                     obj.CurrentMeal = model.CurrentMeal;

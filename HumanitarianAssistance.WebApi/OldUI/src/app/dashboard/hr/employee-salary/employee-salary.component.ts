@@ -29,6 +29,7 @@ export class EmployeeSalaryComponent implements OnInit {
   currencyTypeDropdown: CurrencyTypeDropdown[];
   levelFourAccounts: any;
   isEditingAllowed = false;
+  departmentTypeDropdown: any[];
 
  advanceRecoveryAmountDifference = 0;
 
@@ -1106,8 +1107,9 @@ export class EmployeeSalaryComponent implements OnInit {
               }
             });
 
-
               this.selectedOffice = this.selectedOffice === null ? this.officeDropdownList[0].OfficeId : this.selectedOffice;
+
+              this.getDepartmentType(this.selectedOffice);
           // tslint:disable-next-line:curly
           } else if (data.StatusCode === 400)
             this.toastr.error('Something went wrong!');
@@ -1120,6 +1122,40 @@ export class EmployeeSalaryComponent implements OnInit {
           } else if (error.StatusCode === 403) {
             this.toastr.error('Forbidden Error....');
           } else {
+          }
+        }
+      );
+  }
+  //#endregion
+
+  //#region "Get Department Type"
+  getDepartmentType(eventId: any) {
+    this.hrService
+      .GetDepartmentDropdown(
+        this.setting.getBaseUrl() + GLOBAL.API_Code_GetDepartmentsByOfficeId,
+        eventId
+      )
+      .subscribe(
+        data => {
+          this.departmentTypeDropdown = [];
+          if (
+            data.data.Departments != null &&
+            data.data.Departments.length > 0
+          ) {
+            data.data.Departments.forEach(element => {
+              this.departmentTypeDropdown.push(element);
+            });
+          // tslint:disable-next-line:curly
+          } else if (data.StatusCode === 400)
+            this.toastr.error('Something went wrong!');
+        },
+        error => {
+          if (error.StatusCode === 500) {
+            this.toastr.error('Internal Server Error....');
+          } else if (error.StatusCode === 401) {
+            this.toastr.error('Unauthorized Access Error....');
+          } else if (error.StatusCode === 403) {
+            this.toastr.error('Forbidden Error....');
           }
         }
       );
@@ -1264,6 +1300,7 @@ export class EmployeePayRollModel {
 
   AdvanceRecoveryAmount?: any;
   IsAdvanceRecovery?: boolean;
+  DepartmentId?: number;
 }
 
 export class EmployeepayrollListModel {
