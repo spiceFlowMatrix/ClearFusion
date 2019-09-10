@@ -8,6 +8,7 @@ import { GLOBAL } from '../../../shared/global';
 import { ToastrService } from 'ngx-toastr';
 import { CodeService } from '../../code/code.service';
 import { AppSettingsService } from '../../../service/app-settings.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-interview-form',
@@ -40,10 +41,13 @@ export class InterviewFormComponent implements OnInit {
     private toastr: ToastrService,
     private codeService: CodeService,
     private setting: AppSettingsService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
-
+    this.route.queryParams.subscribe(params => {
+      this.selectedOffice = Number(params['officeId']);
+    })
     this.getOfficeCodeList();
   }
 
