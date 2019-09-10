@@ -9,5 +9,6 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string FilePath { get; set; }
         public bool? IsApproved { get; set; }
         public byte[] UploadedFile { get; set; }
+        public bool? IsProposalRejected { get; set; }        
     }
 }
