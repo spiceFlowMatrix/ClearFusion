@@ -78,20 +78,20 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
     this.route.queryParams.subscribe(params => {
 
       this.employeeId = params['empId'];
-      this.officeId = params['officeId'];
-      this.getAllInterviewDetails();
+      //this.getAllInterviewDetails();
     })
     this.initializeForm();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-
-    this.getAllInterviewDetails();
+   
+   // this.getAllInterviewDetails();
 
     if (changes !== undefined && changes.officeId !== undefined) {
       this.officeId = changes.officeId.currentValue;
+      console.log(changes.officeId.currentValue);
       this.getAllEmployeeListByOfficeId();
-      this.getAllInterviewDetails();
+    //  this.getAllInterviewDetails();
       this.getjobCodeList();
       this.getDepartmentType(this.officeId);
     }
@@ -339,6 +339,7 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
               this.employeeListDataSource,
               'CodeEmployeeName'
             );
+            this.getAllInterviewDetails();
           } else {
             // tslint:disable-next-line:curly
             if (data.data.EmployeeDetailListData == null) {

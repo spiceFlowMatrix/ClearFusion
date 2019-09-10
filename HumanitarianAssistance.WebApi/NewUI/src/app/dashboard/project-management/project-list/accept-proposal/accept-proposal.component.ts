@@ -1,5 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import {
+  FormGroup,
+  Validators,
+  FormBuilder,
+  FormControl
+} from '@angular/forms';
 import { UploadEvent, FileSystemFileEntry, UploadFile } from 'ngx-file-drop';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { ProjectListService } from '../service/project-list.service';
@@ -12,10 +17,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./accept-proposal.component.scss']
 })
 export class AcceptProposalComponent implements OnInit {
-  approvalForm = this.fb.group({
-    CommentText: ['', Validators.required],
-    file: ['']
-  });
+  approvalForm: FormGroup;
 
   //#region variables
   ProjectDescription: any;
@@ -34,6 +36,8 @@ export class AcceptProposalComponent implements OnInit {
 
   commonLoaderFlag = false;
   commonWinLossFlag = false;
+  disableApprovedButton = false;
+  diableWinLossButton = false;
   //#endregion
 
   //#region  input/output emit
@@ -58,14 +62,21 @@ export class AcceptProposalComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.initForm();
     // this.Projectid = + this.routeActive.snapshot.paramMap.get('id');
     this.FileName = null;
     this.winLossMessage = '';
     this.winLossFileName = '';
-    // this.getApprovedProjectDetail(this.projectId);
-   // this.getProjectWinLossDetailById(this.projectId);
+    this.getApprovedProjectDetail(this.projectId);
+    this.getProjectWinLossDetailById(this.projectId);
   }
 
+  initForm() {
+    this.approvalForm = new FormGroup({
+      CommentText: new FormControl('', [Validators.required]),
+      FileName: new FormControl('')
+    });
+  }
   //#region  click to emit event of approval to parent
   isApproved(text: any) {
     this.commonLoaderFlag = true;
@@ -146,7 +157,11 @@ export class AcceptProposalComponent implements OnInit {
 
   buttonDisabled() {
     // if (this.rejectLoaderFlag || this.commonLoaderFlag) {
-    if (this.commonLoaderFlag || !this.approvalForm.valid) {
+    if (
+      this.commonLoaderFlag ||
+      !this.approvalForm.valid ||
+      this.disableApprovedButton === true
+    ) {
       return true;
     } else {
       return false;
@@ -233,7 +248,7 @@ export class AcceptProposalComponent implements OnInit {
     if (
       this.winLossFileName === '' ||
       this.winLossMessage === '' ||
-      this.commonWinLossFlag
+      this.commonWinLossFlag || this.diableWinLossButton === true
     ) {
       return true;
     } else {
@@ -245,38 +260,39 @@ export class AcceptProposalComponent implements OnInit {
   //#region "getApprovedProjectDetail"
   getApprovedProjectDetail(projectId: number) {
     if (projectId != null && projectId !== undefined) {
-      this.projectListService.GetApprovalProjectDetailById(projectId).subscribe(response => {
-        if (response.data != null) {
-          if (response.data.length > 0 && response.data === 200) {
-            response.data.forEach((element: any) => {
-              this.approvalForm = this.fb.group({
-                CommentText: response.data.CommentText,
-                file: response.data.file
-              });
+      this.projectListService
+        .GetApprovalProjectDetailById(projectId)
+        .subscribe(response => {
+          if (response.data != null && response.statusCode === 200) {
+            this.approvalForm.controls['CommentText'].setValue(
+              response.data.CommentText
+            );
+            // to bind the filename value
+            this.FileName = response.data.FileName;
+            // check if isapproved is true then only we disable the button
 
-            });
+             if (response.data.IsApproved === true || response.data.IsProposalRejected === false) {
+              this.disableApprovedButton = true;
+            }
           }
-        }
-      });
+        });
     }
   }
   //#endregion
 
   //#region "getwinLossProjectDetail"
   getProjectWinLossDetailById(projectId: number) {
-    if (projectId != null && projectId != undefined) {
-      this.projectListService.GetProjectWinLossDetailById(projectId).subscribe(response => {
-        if (response.data != null) {
-          if (response.data.length > 0) {
-            response.data.forEach((element: any) => {
-              // this.UserList.push({
-              //   UserID: element.UserID,
-              //   Username: element.FirstName + " " + element.LastName
-              // });
-            });
+    if (projectId != null && projectId !== undefined) {
+      this.projectListService
+        .GetProjectWinLossDetailById(projectId)
+        .subscribe(response => {
+          if (response.data != null && response.statusCode === 200) {
+            this.winLossMessage = response.data.CommentText;
+            this.winLossFileName = response.data.FileName;
+              this.diableWinLossButton = true;
+
           }
-        }
-      });
+        });
     }
   }
   //#endregion
