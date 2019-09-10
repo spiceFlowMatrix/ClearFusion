@@ -130,8 +130,13 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
     this.activitiesService.activityPermissionSubject
       .pipe(takeUntil(this.destroyed$))
       .subscribe(data => {
+
+        // get user permission/role
         this.projectPermissions = data;
+
+        // get all permissions/role
         this.actualProjectPermissions = this.projectListService.GetActivitiesControlRole();
+
         if (this.projectPermissions.length > 0) {
           // Mark complete permission
           this.markCompletePermission = this.checkMarkCompletePermission();
@@ -163,6 +168,7 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
       ? true
       : false;
   }
+
   //#endregion
 
   //#region "editProjectSubActivity"

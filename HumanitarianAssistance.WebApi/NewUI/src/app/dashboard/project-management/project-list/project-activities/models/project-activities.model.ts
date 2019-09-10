@@ -198,7 +198,7 @@ export interface IAddProjectSubActivityModel {
   SubActivityTitle: string;
 }
 export interface IEditProjectSubActivityModel {
-  ActivityId?:number;
+  ActivityId?: number;
   ActivityDescription: string;
   PlannedStartDate: any;
   PlannedEndDate: any;
@@ -207,15 +207,15 @@ export interface IEditProjectSubActivityModel {
   BudgetLineId?: number;
   ParentId?: number;
   Achieved?: number;
-  ChallengesAndSolutions?:string;
-  IsComplete?:boolean;
-  ActualStartDate?:any;
-  ActualEndDate?:any;
+  ChallengesAndSolutions?: string;
+  IsComplete?: boolean;
+  ActualStartDate?: any;
+  ActualEndDate?: any;
   SubActivityTitle: string;
 }
 
 export interface IProjectSubActivityListingModel {
-  ActivityId?:number;
+  ActivityId?: number;
   ActivityDescription: string;
   PlannedStartDate: any;
   PlannedEndDate: any;
@@ -224,10 +224,10 @@ export interface IProjectSubActivityListingModel {
   BudgetLineId?: number;
   ParentId?: number;
   Achieved?: number;
-  ChallengesAndSolutions?:string;
-  IsCompleted?:boolean;
-  ActualStartDate?:any;
-  ActualEndDate?:any;
+  ChallengesAndSolutions?: string;
+  IsCompleted?: boolean;
+  ActualStartDate?: any;
+  ActualEndDate?: any;
   SubActivityTitle: string;
 }
 export interface IAddExtensionDataSources {
