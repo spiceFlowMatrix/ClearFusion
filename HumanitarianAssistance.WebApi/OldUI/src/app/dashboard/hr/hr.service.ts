@@ -21,6 +21,7 @@ export class EmployeeAttendanceList {
   TotalWorkTime: string;
   LeaveStatus: boolean;
   OfficeId: number;
+  DepartmentId?: number;
 }
 
 //#region "Attendance Type"
