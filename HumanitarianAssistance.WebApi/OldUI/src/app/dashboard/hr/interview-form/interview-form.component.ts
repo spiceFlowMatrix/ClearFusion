@@ -99,7 +99,7 @@ export class InterviewFormComponent implements OnInit {
                     });
 
                     this.selectedOffice =
-                        (this.selectedOffice === null || this.selectedOffice == undefined)
+                        (this.selectedOffice === null || this.selectedOffice === undefined)
                                 ? this.officeDropdownList[0].OfficeId
                             : this.selectedOffice;
 
@@ -126,7 +126,6 @@ export class InterviewFormComponent implements OnInit {
 onOfficeSelected(officeId: number) {
   this.selectedOffice = officeId;
 }
-
   //#region "On tab Select"
   selectTab(e) {
     e.itemData.id === 1

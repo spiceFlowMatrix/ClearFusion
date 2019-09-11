@@ -251,9 +251,8 @@ namespace HumanitarianAssistance.Persistence
 
         #endregion
         public DbSet<ProjectProposalDocument> ProjectProposalDocument { get; set; }
-
         public DbSet<PurchaseUnitType> PurchaseUnitType { get; set; }
-
+        public DbSet<ErrorLogger> ErrorLogger { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

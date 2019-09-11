@@ -40,8 +40,6 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                                                                                   && x.EmployeeDetails.IsDeleted== false)
                                                                                                   .ToListAsync();
 
-                // ICollection<AttendanceGroupMaster> attendanceGroup =  await _dbContext.AttendanceGroupMaster.Where(x=> x.IsDeleted== false).ToListAsync();   
-
                 ICollection<PayrollMonthlyHourDetail> payrollHours = await _dbContext.PayrollMonthlyHourDetail.Where(x=> x.IsDeleted== false && x.OfficeId == request.OfficeId && x.PayrollMonth== request.Month && x.PayrollYear== request.Year).ToListAsync();                                                                            
 
                 //Note: default 0.045 i.e. (4.5 %)
@@ -93,6 +91,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                             EmployeeMonthlyPayrollModel obj = new EmployeeMonthlyPayrollModel();
 
                             obj.EmployeeId = payrollAttendance.EmployeeId.Value;
+                            obj.DepartmentId = payrollAttendance.EmployeeDetails.EmployeeProfessionalDetail.DepartmentId;
                             obj.EmployeeCode = payrollAttendance.EmployeeDetails.EmployeeCode;
                             obj.EmployeeName = payrollAttendance.EmployeeDetails.EmployeeName;
                             obj.PaymentType = 2;

@@ -30,8 +30,7 @@ import { IProjectJobModel } from '../../project-management/project-list/budgetli
 import { ToastrService } from 'ngx-toastr';
 import { BudgetLineService } from '../../project-management/project-list/budgetlines/budget-line.service';
 import {
-  IDataSource,
-  IOpenedChange
+  IDataSource
 } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { IResponseData } from '../vouchers/models/status-code.model';
@@ -43,6 +42,27 @@ import { VoucherSummaryFilterComponent } from './voucher-summary-filter/voucher-
   styleUrls: ['./voucher-summary-report.component.scss']
 })
 export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
+
+  //#endregion
+
+  constructor(
+    private voucherSummaryService: VoucherSummaryReportService,
+    private appUrl: AppUrlService,
+    private globalService: GlobalService,
+    private exchangeRateService: ExchangeRateService,
+    private voucherService: VoucherService,
+    public toastr: ToastrService,
+    public budgetService: BudgetLineService,
+    private globalSharedService: GlobalSharedService,
+    private appurl: AppUrlService
+  ) {
+    // Set Menu Header Name
+    this.globalSharedService.setMenuHeaderName(this.setProjectHeader);
+
+    // Set Menu Header List
+    this.globalSharedService.setMenuList([]);
+    this.getScreenSize();
+  }
   //#region "variables"
 
   @ViewChild(VoucherSummaryFilterComponent)
@@ -90,26 +110,9 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
 
   // subscription destroy
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-
   //#endregion
 
-  constructor(
-    private voucherSummaryService: VoucherSummaryReportService,
-    private appUrl: AppUrlService,
-    private globalService: GlobalService,
-    private exchangeRateService: ExchangeRateService,
-    private voucherService: VoucherService,
-    public toastr: ToastrService,
-    public budgetService: BudgetLineService,
-    private globalSharedService: GlobalSharedService
-  ) {
-    // Set Menu Header Name
-    this.globalSharedService.setMenuHeaderName(this.setProjectHeader);
-
-    // Set Menu Header List
-    this.globalSharedService.setMenuList([]);
-    this.getScreenSize();
-  }
+  progress = 20;
 
   ngOnInit() {
     this.onInitialize();
@@ -398,10 +401,16 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
       'overflow-x': 'hidden'
     };
   }
-  //#endregion
 
   //#region "onExportPdf"
-  onExportPdf() {}
+  onExportPdf() {
+    this.globalSharedService
+      .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetAllVoucherSummaryReportPdf,
+                this.filter.filterModel
+      )
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe();
+  }
   //#endregion
 
   //#region "pageEvent"

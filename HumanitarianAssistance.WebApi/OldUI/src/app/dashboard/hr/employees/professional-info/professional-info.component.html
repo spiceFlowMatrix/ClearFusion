@@ -2,7 +2,8 @@
   <div>
 
     <div class="btn-grp-wrap">
-      <div *ngIf="tabEventValue != 3">
+      <!-- <div *ngIf="tabEventValue != 3"> -->
+        <div>
         <dx-button text="Edit" type="success" (click)="showProfEditForm(professionalDetails)" *ngIf="isEditingAllowed"></dx-button>
       </div>
     </div>
@@ -77,7 +78,7 @@
   </div>
 
   <br>
-  <div *ngIf="tabEventValue == 2">
+  <div *ngIf="tabEventValue == 2 || tabEventValue == 3">
 
     <!-- <app-employee-contract></app-employee-contract> -->
     <app-professional-more-info [isEditingAllowed]="isEditingAllowed"></app-professional-more-info>

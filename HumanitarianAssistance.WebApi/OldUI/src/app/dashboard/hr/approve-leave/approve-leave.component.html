@@ -5,10 +5,32 @@
     </div>
   </div>
   <div class="main-heading clearfix" *ngIf="isEditingAllowed">
-    <dx-button class="button-info btn btn-default btn-green" text="Reject" (click)="showApproveRejectPopup('Reject')" >
-    </dx-button>
-    <dx-button class="button-info btn btn-default btn-green" text="Approve" (click)="showApproveRejectPopup('Approve')" >
-    </dx-button>
+      <div class="row">
+        <div class="col-sm-8">
+
+        </div>
+        <div class="col-sm-2" style="
+        display: inline-flex;
+    ">
+            <span style="
+            padding-right: inherit;
+            padding-top: 6px;
+        ">Office</span>
+            <dx-select-box id="officeSelectBox" [dataSource]="officeDropdownList" placeholder="Choose Office"
+            (onItemClick)="onOfficeSelected($event.itemData.OfficeId)" displayExpr="OfficeName"
+            valueExpr="OfficeId" [value]="selectedOffice" [searchEnabled]="true">
+           </dx-select-box>
+        </div>
+        <div class="col-sm-1">
+            <dx-button class="button-info btn btn-default btn-green" text="Reject" (click)="showApproveRejectPopup('Reject')" >
+              </dx-button>
+        </div>
+
+        <div class="col-sm-1">
+            <dx-button class="button-info btn btn-default btn-green" text="Approve" (click)="showApproveRejectPopup('Approve')" >
+              </dx-button>
+        </div>
+      </div>
   </div>
 
   <div class="right">
@@ -32,6 +54,11 @@
 
       <dxi-column dataField="EmployeeCode" [width]="250" caption="Employee Code">
         <dxi-validation-rule type="required"></dxi-validation-rule>
+      </dxi-column>
+
+      <dxi-column [allowFiltering]="true" dataField="DepartmentId">
+          <dxo-lookup [dataSource]="departmentTypeDropdown" valueExpr="DepartmentId" displayExpr="DepartmentName">
+            </dxo-lookup>
       </dxi-column>
 
       <dxi-column dataField="FromDate" caption="Date" dataType="date" format="dd/MM/yyyy" [width]="150">

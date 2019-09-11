@@ -26,6 +26,10 @@
 
           <dxi-column dataField="InterviewDetailsId" [visible]="false"></dxi-column>
           <dxi-column dataField="CandidateName" [visible]="true"></dxi-column>
+          <dxi-column [allowFiltering]="true" dataField="DepartmentId" [editorOptions]="{allowEditing: false}">
+              <dxo-lookup [dataSource]="departmentTypeDropdown" valueExpr="DepartmentId" displayExpr="DepartmentName">
+                </dxo-lookup>
+          </dxi-column>
           <dxi-column dataField="DutyStation"></dxi-column>
           <dxi-column caption="Action" alignment="center" cellTemplate="CellTemplateEdit" *ngIf="isEditingAllowed"></dxi-column>
           <div *dxTemplate="let data of 'CellTemplateEdit'">

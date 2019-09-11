@@ -23,7 +23,7 @@ export class ProjectDetailsComponent implements OnInit {
   setProjectHeader = 'Project';
   isProjectWin = false;
   isCEApproved = false;
-  menuList: IMenuList[] ;
+  menuList: IMenuList[];
   authorizedMenuList: IMenuList[] = [];
   isSuperadmin = false;
   // screen scroll
@@ -64,9 +64,9 @@ export class ProjectDetailsComponent implements OnInit {
     this.globalService.setMenuHeaderName(this.setProjectHeader);
     this.globalService.setMenuList(this.menuList.filter((i, index) => index < 2));
 
-   // this.setHeaderMenu();
-  // this.getProjectWinLossDetail(this.projectId);
-  // this.getCriteriaEvaluationApprovedDetail(this.projectId);
+    // this.setHeaderMenu();
+    // this.getProjectWinLossDetail(this.projectId);
+    // this.getCriteriaEvaluationApprovedDetail(this.projectId);
 
   }
   ngOnInit() {
@@ -74,11 +74,11 @@ export class ProjectDetailsComponent implements OnInit {
       this.getResponseProjectWinLossDetail(res[0]);
       this.getResponseCriteriaEvaluationApproved(res[1]);
       this.setHeaderMenu();
-     });
+    });
   }
 
-// fork join to get multiple api response
-  getMultipleApiReuest(): Observable<any>{
+  // fork join to get multiple api response
+  getMultipleApiReuest(): Observable<any> {
     const projectDetailResp = this.getProjectWinLossDetail(this.projectId);
     const approvedCEResp = this.getCriteriaEvaluationApprovedDetail(this.projectId);
     return forkJoin([projectDetailResp, approvedCEResp]);
@@ -87,11 +87,11 @@ export class ProjectDetailsComponent implements OnInit {
 
   setHeaderMenu() {
     // check weather user is superadmin
- this.isSuperadmin = this.localStorageService.GetSuperAdminDetail();
- if (this.isSuperadmin) {
-  this.globalService.setMenuList(this.menuList);
-   // check weather the criteria evaluation is approved and project is win
- } else if (this.isProjectWin === true) {
+    this.isSuperadmin = this.localStorageService.GetSuperAdminDetail();
+    if (this.isSuperadmin) {
+      this.globalService.setMenuList(this.menuList);
+      // check weather the criteria evaluation is approved and project is win
+    } else if (this.isProjectWin === true) {
       this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
         this.isProjectWin
           ? this.menuList
@@ -99,12 +99,26 @@ export class ProjectDetailsComponent implements OnInit {
       );
       this.globalService.setMenuList(this.authorizedMenuList);
     } else {
-    this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
-      this.isCEApproved
-        ? this.menuList.filter((i, index) => index < 3)
-        : this.menuList.filter((i, index) => index < 2)
-    );
-    this.globalService.setMenuList(this.authorizedMenuList);
+
+
+
+      this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
+        this.isCEApproved
+          ? this.menuList.filter((i, index) => index < 3)
+          : this.menuList.filter((i, index) => index < 2)
+      
+      );
+
+      // this.authorizedMenuList =
+      //   this.isCEApproved
+      //     ? this.menuList.filter(res => {
+      //       return pages1.findIndex(m => m === res.Id) > -1
+      //     })
+      //     : this.menuList.filter(res => {
+      //       return pages2.findIndex(m => m === res.Id) > -1
+      //     })
+      this.authorizedMenuList.push(this.menuList.find(r=>r.Id===7));
+      this.globalService.setMenuList(this.authorizedMenuList);
     }
     // Set Menu Header List
   }
@@ -145,26 +159,26 @@ export class ProjectDetailsComponent implements OnInit {
   }
   //#endregion
 
-//#region "getResponseProjectWinLossDetail"
-getResponseProjectWinLossDetail(res) {
-  if (res != null) {
-    if (res.data.ProjectWinLoss != null) {
-      // check weather the project is win or loss
-      this.isProjectWin = res.data.ProjectWinLoss;
+  //#region "getResponseProjectWinLossDetail"
+  getResponseProjectWinLossDetail(res) {
+    if (res != null) {
+      if (res.data.ProjectWinLoss != null) {
+        // check weather the project is win or loss
+        this.isProjectWin = res.data.ProjectWinLoss;
+      }
     }
+
   }
 
-}
-
-//#endregion
-//#region "getResponseCriteriaEvaluationApproved"
-getResponseCriteriaEvaluationApproved(data) {
-  if (data != null) {
-    if (data.data.IsApprovedCriteriaEvaluation != null) {
-      // check weather the project is win or loss
-      this.isCEApproved = data.data.IsApprovedCriteriaEvaluation;
+  //#endregion
+  //#region "getResponseCriteriaEvaluationApproved"
+  getResponseCriteriaEvaluationApproved(data) {
+    if (data != null) {
+      if (data.data.IsApprovedCriteriaEvaluation != null) {
+        // check weather the project is win or loss
+        this.isCEApproved = data.data.IsApprovedCriteriaEvaluation;
+      }
     }
   }
-}
-//#endregion
+  //#endregion
 }

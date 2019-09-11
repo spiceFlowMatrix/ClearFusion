@@ -30,6 +30,7 @@ export class EmployeeAppraisalComponent implements OnInit {
   employeeListDataSource: EmployeeListModel[];
   employeeDetailListData: EmployeeDetailListModel[];
   employeeAppraisalPeriod: any[];
+  departmentTypeDropdown: any[];
 
   // Appraisal More Details
   evaluationOfEmployees: any[];
@@ -105,12 +106,6 @@ export class EmployeeAppraisalComponent implements OnInit {
       PeriodId: 2,
       PeriodDuration: 'Probationary'
     }];
-
-    //this.commonService.getEmployeeOfficeId().subscribe(data => {
-    //  this.getAllEmployeeAppraisalList();
-    //  this.getAllEmployeeAppraisalMoreDetails();
-    //  this.getAllEmployeeListByOfficeId();
-    //  });
 
       this.getOfficeCodeList();
 
@@ -1188,11 +1183,11 @@ export class EmployeeAppraisalComponent implements OnInit {
     }
 
     onOfficeSelected(officeId: number) {
-        this.selectedOffice = officeId
-
+        this.selectedOffice = officeId;
         this.getAllEmployeeAppraisalList();
         this.getAllEmployeeAppraisalMoreDetails();
         this.getAllEmployeeListByOfficeId();
+        this.getDepartmentType(this.selectedOffice);
     }
 
     getOfficeCodeList() {
@@ -1244,6 +1239,7 @@ export class EmployeeAppraisalComponent implements OnInit {
                         this.getAllEmployeeListByOfficeId();
                         this.getAllEmployeeAppraisalList();
                         this.getAllEmployeeAppraisalMoreDetails();
+                        this.getDepartmentType(this.selectedOffice);
 
                         // tslint:disable-next-line:curly
                     } else if (data.StatusCode === 400)
@@ -1313,6 +1309,40 @@ export class EmployeeAppraisalComponent implements OnInit {
       this.employeeAppraisalListFlag = true;
     }
   }
+
+  //#region "Get Department Type"
+  getDepartmentType(eventId: any) {
+    this.hrService
+      .GetDepartmentDropdown(
+        this.setting.getBaseUrl() + GLOBAL.API_Code_GetDepartmentsByOfficeId,
+        eventId
+      )
+      .subscribe(
+        data => {
+          this.departmentTypeDropdown = [];
+          if (
+            data.data.Departments != null &&
+            data.data.Departments.length > 0
+          ) {
+            data.data.Departments.forEach(element => {
+              this.departmentTypeDropdown.push(element);
+            });
+          // tslint:disable-next-line:curly
+          } else if (data.StatusCode === 400)
+            this.toastr.error('Something went wrong!');
+        },
+        error => {
+          if (error.StatusCode === 500) {
+            this.toastr.error('Internal Server Error....');
+          } else if (error.StatusCode === 401) {
+            this.toastr.error('Unauthorized Access Error....');
+          } else if (error.StatusCode === 403) {
+            this.toastr.error('Forbidden Error....');
+          }
+        }
+      );
+  }
+  //#endregion
 
   // Evaluation Add
   onEvaluationAdding(data: any) {

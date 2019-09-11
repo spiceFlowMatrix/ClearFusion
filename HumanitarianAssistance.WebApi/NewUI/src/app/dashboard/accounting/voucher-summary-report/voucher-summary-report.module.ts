@@ -15,6 +15,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { FormsModule } from '@angular/forms';
 import { LibraryModule } from '../../../../../projects/library/src/public_api';
+import { TooltipModule } from 'primeng/components/tooltip/tooltip';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { LibraryModule } from '../../../../../projects/library/src/public_api';
     MatMenuModule,
     MatProgressSpinnerModule,
     MatExpansionModule,
+    TooltipModule,
     VoucherSummaryReportRoutingModule
   ],
   providers: [

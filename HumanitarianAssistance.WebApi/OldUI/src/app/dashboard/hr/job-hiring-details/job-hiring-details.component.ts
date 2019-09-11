@@ -37,6 +37,7 @@ export class JobHiringDetailsComponent implements OnInit {
   selectedOffice: number;
   officecodelist: any[];
   officeDropdownList: any[] = [];
+  jobsLoading= false;
 
 
   // loader
@@ -243,6 +244,7 @@ export class JobHiringDetailsComponent implements OnInit {
 
   //#region Get All Job Hiring
   getJobHiringDetails() {
+    this.jobsLoading = true;
     const officeId = this.selectedOffice;
 
     // tslint:disable-next-line:radix
@@ -256,16 +258,20 @@ export class JobHiringDetailsComponent implements OnInit {
       .subscribe(
         data => {
           this.jobHiringDetails = [];
-          // tslint:disable-next-line:curly
-          if (data.data.JobHiringDetailsList.length > 0)
-            this.jobHiringDetails = data.data.JobHiringDetailsList;
-          // tslint:disable-next-line:curly
-          else if (data.StatusCode === 400)
-            this.toastr.error('Something went wrong!');
+          if (data.data.JobHiringDetailsList.length > 0) {
 
+            this.jobsLoading = false;
+            this.jobHiringDetails = data.data.JobHiringDetailsList;
+          } else if (data.StatusCode === 400) {
+            this.toastr.error('Something went wrong!');
+            this.jobsLoading = false;
+          } else {
+            this.jobsLoading = false;
+          }
           this.commonService.setLoader(false);
         },
         error => {
+          this.jobsLoading = false;
           if (error.StatusCode === 500) {
             this.toastr.error('Internal Server Error....');
           } else if (error.StatusCode === 401) {

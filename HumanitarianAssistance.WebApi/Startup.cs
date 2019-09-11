@@ -78,7 +78,7 @@ namespace HumanitarianAssistance.WebApi
                 options.AddPolicy(defaultCorsPolicyName, p =>
                 {
                     //todo: Get from configuration
-                    p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                    p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("Content-Disposition");
 
                 });
             });
@@ -94,6 +94,13 @@ namespace HumanitarianAssistance.WebApi
                 c.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
 
+            // // 406 (Not Acceptable) 
+            // // use to return files from Controller
+            // services.AddMvc(options =>
+            // {
+            //     options.ReturnHttpNotAcceptable = true;
+            // });
+
             services.AddRouting();
             services.AddSignalR();
 
@@ -104,11 +111,6 @@ namespace HumanitarianAssistance.WebApi
             // swagger configuration
             services.AddSwaggerDocumentation();
 
-            // Dev: AG
-            // pdf configuration 
-            services.AddPdfExtension();
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -116,6 +118,7 @@ namespace HumanitarianAssistance.WebApi
         {
             if (env.IsDevelopment())
             {
+                app.UseExceptionHandler("/Error");
                 app.UseDeveloperExceptionPage();
             }
             else

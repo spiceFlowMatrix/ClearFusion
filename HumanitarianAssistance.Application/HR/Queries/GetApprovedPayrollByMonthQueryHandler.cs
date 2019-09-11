@@ -34,7 +34,9 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                                                         x.PayrollYear == request.Year && 
                                                                         x.OfficeId == request.OfficeId && 
                                                                         x.IsDeleted == false)
-                                                                        .Include(x => x.EmployeeDetail).ToListAsync();
+                                                                        .Include(x => x.EmployeeDetail)
+                                                                        .ThenInclude(x=> x.EmployeeProfessionalDetail)
+                                                                        .ToListAsync();
 
 
                 List<EmployeeMonthlyPayrollModel> userList = new List<EmployeeMonthlyPayrollModel>();
@@ -67,7 +69,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                         IsAdvanceRecovery = item.IsAdvanceRecovery == true ? false : true,
                         CurrencyCode = item.CurrencyCode,
                         CurrencyId = item.CurrencyId,
-                        EmployeeCode = item.EmployeeDetail.EmployeeCode
+                        EmployeeCode = item.EmployeeDetail.EmployeeCode,
+                        DepartmentId = item.EmployeeDetail.EmployeeProfessionalDetail.DepartmentId
 
                     };
 

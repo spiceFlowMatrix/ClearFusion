@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { HrService } from '../../hr.service';
-import { CodeService } from '../../../code/code.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GLOBAL } from '../../../../shared/global';
 import { AppSettingsService } from '../../../../service/app-settings.service';
 import { CommonService } from '../../../../service/common.service';
+import { CodeService } from '../../../code/code.service';
 
 @Component({
   selector: 'app-employee-interview-form',
@@ -29,6 +29,7 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
   genderTypesDropdown: any[];
   ratingBasedDropDown: any[];
   trainingTypeDropdown: any[];
+  departmentTypeDropdown: any[];
 
   currentInterviewDetailsId: number;
   currentApproveReject: boolean;
@@ -92,6 +93,7 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
       this.getAllEmployeeListByOfficeId();
     //  this.getAllInterviewDetails();
       this.getjobCodeList();
+      this.getDepartmentType(this.officeId);
     }
   }
 
@@ -810,13 +812,14 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
             });
 
             this.selectedOffice =
-              (this.selectedOffice === null || this.selectedOffice == undefined)
+              (this.selectedOffice === null || this.selectedOffice === undefined)
                 ? this.officeDropdownList[0].OfficeId
                 : this.selectedOffice;
 
             this.getAllEmployeeListByOfficeId();
             this.getjobCodeList();
             this.getAllInterviewDetails();
+            this.getDepartmentType(this.selectedOffice);
             // this.getAllEmployeeAppraisalMoreDetails();
 
             // tslint:disable-next-line:curly
@@ -848,6 +851,40 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
     }
   }
   //#endregion
+
+  //#region "Get Department Type"
+getDepartmentType(eventId: any) {
+  this.hrService
+    .GetDepartmentDropdown(
+      this.setting.getBaseUrl() + GLOBAL.API_Code_GetDepartmentsByOfficeId,
+      eventId
+    )
+    .subscribe(
+      data => {
+        this.departmentTypeDropdown = [];
+        if (
+          data.data.Departments != null &&
+          data.data.Departments.length > 0
+        ) {
+          data.data.Departments.forEach(element => {
+            this.departmentTypeDropdown.push(element);
+          });
+        // tslint:disable-next-line:curly
+        } else if (data.StatusCode === 400)
+          this.toastr.error('Something went wrong!');
+      },
+      error => {
+        if (error.StatusCode === 500) {
+          this.toastr.error('Internal Server Error....');
+        } else if (error.StatusCode === 401) {
+          this.toastr.error('Unauthorized Access Error....');
+        } else if (error.StatusCode === 403) {
+          this.toastr.error('Forbidden Error....');
+        }
+      }
+    );
+}
+//#endregion
 
   //#region "Add Training"
   logEventTraining(eventName, obj) {

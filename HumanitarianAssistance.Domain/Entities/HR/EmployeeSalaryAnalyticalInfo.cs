@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using HumanitarianAssistance.Domain.Entities.Accounting;
 using HumanitarianAssistance.Domain.Entities.Project;
 
 namespace HumanitarianAssistance.Domain.Entities.HR
@@ -13,7 +14,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1)]
         public int EmployeeSalaryAnalyticalInfoId { get; set; }
-        public int? AccountCode { get; set; }
+        public long? AccountNo { get; set; }
         public long ProjectId { get; set; }
         public ProjectDetail ProjectDetail { get; set; }
         public long BudgetlineId { get; set; }
@@ -23,5 +24,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public EmployeeDetail EmployeeDetail { get; set; }
         public long? HiringRequestId { get; set; }
         public ProjectHiringRequestDetail ProjectHiringRequestDetail { get; set; }
+        [ForeignKey("AccountNo")]
+        public ChartOfAccountNew ChartOfAccountNew { get; set; }
     }
 }

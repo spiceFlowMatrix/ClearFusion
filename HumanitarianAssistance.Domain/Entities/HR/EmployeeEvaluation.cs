@@ -15,6 +15,8 @@ namespace HumanitarianAssistance.Domain.Entities.HR
 		public DateTime CurrentAppraisalDate { get; set; }
 		public int EmployeeId { get; set; }
 
+		public EmployeeDetail EmployeeDetail { get; set;}
+
 
 		//public string TrainingProgram { get; set; }
 		//public string Program { get; set; }

@@ -414,9 +414,6 @@ export class EmployeesComponent implements OnInit {
           if (data.StatusCode === 200) {
             this.toastr.success('Image Updated Successfully!');
             this.showData.EmployeePhoto = this.imageURL;
-            console.log(data)
-          
-    
             if (this.tabEventValue === 1) {
               const itemIndex = this.prospectiveEmployeeInfo.findIndex(
                 i => i.EmployeeID === this.employeeId
@@ -697,9 +694,8 @@ export class EmployeesComponent implements OnInit {
                   ? this.officeDropdownList[0].OfficeId
                   : this.selectedOffice;
             } else {
-              this.selectedOffice = parseInt(
-                localStorage.getItem('EMPLOYEEOFFICEID')
-              );
+                // tslint:disable-next-line:radix
+              this.selectedOffice = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
             }
 
             this.tabOnClick(2); // default selected value
@@ -924,15 +920,17 @@ export class EmployeesComponent implements OnInit {
               this.showInfoTabs = this.showInfoTabsMain;
               this.activeEmployeeInfo = this.showData;
             } else if (this.tabEventValue === 3) {
-              this.showInfoTabs = this.showInfoTabsMain.filter(
-                r =>
-                  r.id === 0 ||
-                  r.id === 1 ||
-                  r.id === 2 ||
-                  r.id === 3 ||
-                  r.id === 4 ||
-                  r.id === 5
-              );
+              this.showInfoTabs = this.showInfoTabsMain;
+              // .filter(
+              //   r =>
+              //     r.id === 0 ||
+              //     r.id === 1 ||
+              //     r.id === 2 ||
+              //     r.id === 3 ||
+              //     r.id === 4 ||
+              //     r.id === 5 ||
+
+              // );
               this.terminatedEmployeeInfo = this.showData;
             }
             // Default call For Prospective Employee

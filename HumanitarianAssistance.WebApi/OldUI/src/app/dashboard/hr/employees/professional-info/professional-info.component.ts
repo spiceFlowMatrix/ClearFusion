@@ -433,7 +433,7 @@ export class ProfessionalInfoComponent implements OnInit {
 
               let showLeavePopUp = false;
 
-              if (model.EmployeeTypeId !== EmployeeType.Terminated) {
+              if (model.EmployeeTypeId !== EmployeeType.Terminated && this.employeeTypeIdCheck !== EmployeeType.Terminated) {
                 showLeavePopUp = true;
               }
               this.triggerEmployeeLeavePopUp.emit({

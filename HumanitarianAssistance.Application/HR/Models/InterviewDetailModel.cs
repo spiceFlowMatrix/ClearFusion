@@ -58,6 +58,7 @@ namespace HumanitarianAssistance.Application.HR.Models
         public string Status { get; set; }
         public string InterviewStatus { get; set; }
         public int OfficeId { get; set; }
+        public int? DepartmentId { get; set; }
         public List<Interviewers> Interviewers { get; set; }
 
     }
