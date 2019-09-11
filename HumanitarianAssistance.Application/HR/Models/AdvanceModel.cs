@@ -20,5 +20,6 @@ namespace HumanitarianAssistance.Application.HR.Models
 		public bool IsDeducted { get; set; }        // Is advance amount deducted from next month salary when defining monthly salary payroll (false means not distributed)
 		public string EmployeeName { get; set; }
         public int? NumberOfInstallments { get; set; }
+		public int? DepartmentId { get; set; }
     }
 }

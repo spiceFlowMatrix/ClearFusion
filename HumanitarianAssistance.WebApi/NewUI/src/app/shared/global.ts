@@ -24,7 +24,6 @@ export class GLOBAL {
   public static API_Contract_GetContractListByClient = 'Contract/GetContractsListByClient';
   public static API_Project_GetAllProjectList = 'Project/GetAllProjectList';
   public static API_Project_GetAllProjectFilterList = 'Project/GetAllProjectFilterList';
-  public static API_Pdf_ConvertPdf = 'Pdf/CreatePDF';
   public static API_Project_GetProjectListById = 'Project/GetProjectListById';
   public static API_Contract_GetContractsPaginatedList = 'Contract/GetContractsPaginatedList';
   public static API_Project_AddProjectChat = 'Project/AddProjectChat';
@@ -170,6 +169,11 @@ export class GLOBAL {
   public static API_Project_StartProposalDragAndDropFile = 'Project/StartProposalDragAndDropFile';
   public static API_Project_UploadReviewFile = 'Project/UploadReviewFile';
   public static API_Project_UploadFinalizeFile = 'Project/UploadFinalizeFile';
+  public static API_Project_GetApprovalProjectDetailById = 'Project/GetApprovalProjectDetailById';
+  public static API_Project_GetProjectWinLossStatusById = 'Project/GetProjectWinLossStatusById';
+
+
+
 
 
   public static API_Project_AddEditProjectProposalDetail = 'Project/AddEditProjectProposalDetail';
@@ -415,8 +419,9 @@ export class GLOBAL {
   public static API_HiringRequest_DeleteCandidatDetail = 'HiringRequest/DeleteCandidatDetail';
   public static API_Chat_AddMessage = 'Chat/AddMessage';
 
-
+  // pdf
   public static API_Pdf_GetAllChartOfAccountHierarchyPdf = 'Pdf/GetAllChartOfAccountHierarchyPdf';
+  public static API_Pdf_GetAllVoucherSummaryReportPdf = 'Pdf/GetAllVoucherSummaryReportPdf';
 
   //#endregion
 

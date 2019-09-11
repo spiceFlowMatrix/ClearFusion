@@ -15,5 +15,6 @@ namespace HumanitarianAssistance.Application.HR.Models
         public int? ApplyLeaveStatusId { get; set; } //Approved, Not Approved, Rejected
         public string ApplyLeaveStatus { get; set; }
         public string Remarks { get; set; }
+        public int? DepartmentId { get; set; }
     }
 }

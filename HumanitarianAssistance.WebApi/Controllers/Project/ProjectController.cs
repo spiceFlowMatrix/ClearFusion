@@ -1788,5 +1788,19 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(command);
         }
         #endregion
+
+        #region "projectWinLossStatusBy ProjectId"
+        [HttpPost]
+        public async Task<ApiResponse> GetApprovalProjectDetailById([FromBody] long projectId)
+        {
+            return await _mediator.Send(new GetProjectApprovalDetailByIdQuery { ProjectId = projectId });
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> GetProjectWinLossStatusById([FromBody] long ProjectId)
+        {
+            return await _mediator.Send(new GetProjectWinLossStatusByIdQuery { ProjectId = ProjectId });
+        }
+        #endregion
     }
 }

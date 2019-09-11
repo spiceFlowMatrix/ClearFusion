@@ -905,4 +905,44 @@ export class ProjectListService {
       );
   }
   //#endregion
+
+  //#region "GetApprovedRejectList"
+  GetApprovalProjectDetailById(data: number) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_Project_GetApprovalProjectDetailById,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.ResponseData,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
+  //#region "GetProjectWinLossDetailById"
+  GetProjectWinLossDetailById(data: number) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_Project_GetProjectWinLossStatusById,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.ResponseData,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
 }

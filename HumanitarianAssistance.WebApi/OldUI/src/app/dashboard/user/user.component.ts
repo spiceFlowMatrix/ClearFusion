@@ -453,7 +453,12 @@ export class UserComponent implements OnInit, OnDestroy {
             ModuleId: y.ModuleId
           });
         });
-
+         const indexOne = this.projectsPermission.findIndex(x => x.PageId === 86);
+         const indexTwo = this.projectsPermission.findIndex(x => x.PageId === 81);
+         const indexThree = this.projectsPermission.findIndex(x => x.PageId === 75);
+         this.projectsPermission.splice(indexOne, 3);
+         this.projectsPermission.splice(indexTwo - 3, 2);
+         this.projectsPermission.splice(indexThree - 5, 4);
 
         data.data.ApplicationPagesList.forEach(x => {
           if (x.PageId === applicationPages.Contracts) {
@@ -667,7 +672,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   PermissionsInRoles(value) {
-     
+
 
     this.loadingPermission = true;
     const isRoleAlreadyExists: any = this.roles.filter(
@@ -791,6 +796,7 @@ export class UserComponent implements OnInit, OnDestroy {
           });
         }
       });
+
 
       this.accountingPermission.forEach(element => {
         if (element.Edit || element.View) {
@@ -1248,6 +1254,12 @@ export class UserComponent implements OnInit, OnDestroy {
               ModuleId: y.ModuleId
             });
           });
+          const indexOne = this.editProjectsPermission.findIndex(x => x.PageId === 86);
+          const indexTwo = this.editProjectsPermission.findIndex(x => x.PageId === 81);
+          const indexThree = this.editProjectsPermission.findIndex(x => x.PageId === 75);
+          this.editProjectsPermission.splice(indexOne, 3);
+          this.editProjectsPermission.splice(indexTwo - 3, 2);
+          this.editProjectsPermission.splice(indexThree - 5, 4);
           this.loadingPermission = false;
       }
       ,
@@ -1343,7 +1355,7 @@ onRolesPermissionUpdate() {
       });
     }
   });
-
+console.log(this.editProjectsPermission);
   this.editMarketingPermission.forEach(element => {
     if (element.Edit || element.View) {
       filteredRolePermissions.Permissions.push({

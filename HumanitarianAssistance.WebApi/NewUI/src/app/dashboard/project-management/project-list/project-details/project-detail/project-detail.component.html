@@ -1,288 +1,193 @@
 <div class="col-sm-10 col-sm-offset-1">
-    <mat-card [ngStyle]="scrollStyles">
-      <div class="project-details mar_tp_20 bdr_btm pad_btm_25">
-        <div class="row">
-          <div class="col-sm-6">
-            <div class="form-group">
-              <input
-                matInput
-                class="form-control project_input"
-                #projectName
-                placeholder="Project Name"
-                [(ngModel)]="projectDetail.ProjectName"
-                (change)="onNameChange($event, projectName.value)"
-                name="projectName"
-                [disabled]="!isEditingAllowed"
-              />
-            </div>
+  <mat-card [ngStyle]="scrollStyles">
+    <div class="project-details mar_tp_20 bdr_btm pad_btm_25">
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <input matInput class="form-control project_input" #projectName placeholder="Project Name"
+              [(ngModel)]="projectDetail.ProjectName" (change)="onNameChange($event, projectName.value)"
+              name="projectName" [disabled]="!isEditingAllowed" />
           </div>
+        </div>
 
-          <div class="col-sm-2">
-            <button
-              disabled="false"
-              mat-button
-              *ngIf="
+        <div class="col-sm-2">
+          <button disabled="false" mat-button *ngIf="
                 !(
                   projectDetail.IsCriteriaEvaluationSubmit ==
                     true && projectDetail.IsProposalSubmit == true
                 ) && projectDetail.IsApproved != false;
                 else ReviewerIdIsNotNull
-              "
-              class="asign_check assign_custom"
-              matTooltip="Please submit the Proposal and Criteria Evaluation first!"
-            >
-              <i class="far fa-file-alt"></i>
-              Review
-            </button>
+              " class="asign_check assign_custom"
+            matTooltip="Please submit the Proposal and Criteria Evaluation first!">
+            <i class="far fa-file-alt"></i>
+            Review
+          </button>
 
-            <ng-template #ReviewerIdIsNotNull>
-              <button
-                disabled="false"
-                mat-button
-                color="accent"
-                *ngIf="
+          <ng-template #ReviewerIdIsNotNull>
+            <button disabled="false" mat-button color="accent" *ngIf="
                   projectDetail.IsApproved == null;
                   else approveRejectFlag
-                "
-                (click)="openPropsalComponent()"
-                class="asign_check assign_custom"
-                [matTooltip]="
+                " (click)="openPropsalComponent()" class="asign_check assign_custom" [matTooltip]="
                   projectDetail.IsApproved == null &&
                   projectDetail.ReviewerId == null
                     ? 'Please assign a reviewer to review the project!'
                     : 'Click Here To Aprrove/Reject'
-                "
-              >
-                <i class="far fa-file-alt"></i>
-                Review
-              </button>
-              <ng-template #approveRejectFlag>
-                <a class="asign_check assign_custom">
-                  <button
-                    disabled="false"
-                    class="asign_check assign_custom "
-                    *ngIf="
+                ">
+              <i class="far fa-file-alt"></i>
+              Review
+            </button>
+            <ng-template #approveRejectFlag>
+              <a class="asign_check assign_custom">
+                <button disabled="false" class="asign_check assign_custom " (click)= "openAcceptProposalComponent()" *ngIf="
                       projectDetail.IsApproved == false;
                       else approvedGreen
-                    "
-                    mat-button
-                    [matTooltip]="
+                    " mat-button [matTooltip]="
                       projectDetail.IsApproved == false
                         ? 'Please upload other proposal documnets again.!'
                         : 'Your Proposal is approved'
-                    "
-                  >
-                    <i class="fas fa-file-alt red"></i>
-                    <span class="red">
-                      Review
-                    </span>
-                  </button>
+                    ">
+                  <i class="fas fa-file-alt red"></i>
+                  <span class="red">
+                    Review
+                  </span>
+                </button>
 
-                  <ng-template #approvedGreen>
-                    <button
-                      disabled="false"
-                      class="asign_check assign_custom "
-                      mat-button
-                      [matTooltip]="
+                <ng-template #approvedGreen>
+                  <button disabled="false" class="asign_check assign_custom " (click)= "openAcceptProposalComponent()" mat-button [matTooltip]="
                         projectDetail.IsApproved == true
                           ? 'Your Proposal Is Approved'
                           : ''
-                      "
-                    >
-                      <i class="fas fa-file-alt green"></i>
-                      <span class="green">
-                        Review
-                      </span>
-                    </button>
-                  </ng-template>
-                </a>
-              </ng-template>
+                      ">
+                    <i class="fas fa-file-alt green"></i>
+                    <span class="green">
+                      Review
+                    </span>
+                  </button>
+                </ng-template>
+              </a>
             </ng-template>
-          </div>
-          <div class="col-sm-2">
-            <button
-              disabled="false"
-              mat-button
-              color="accent"
-              *ngIf="
+          </ng-template>
+        </div>
+        <div class="col-sm-2">
+          <button disabled="false" mat-button color="accent" *ngIf="
                 checkProjectApprovedForWinLoass();
                 else DirectorIdIsNull
-              "
-              (click)="openPropsalWinComponent()"
-              [matTooltip]="
+              " (click)="openPropsalWinComponent()" [matTooltip]="
                 projectDetail.IsWin == true ||
                 projectDetail.DirectorId == null
                   ? 'Please assign a Director'
                   : 'Click Here to Finalize.'
-              "
-            >
-              <mat-icon aria-label="icon">check</mat-icon>
-              Finalize
-            </button>
+              ">
+            <mat-icon aria-label="icon">check</mat-icon>
+            Finalize
+          </button>
 
-            <ng-template #DirectorIdIsNull>
-              <button
-                disabled="false"
-                mat-button
-                *ngIf="projectDetail.IsWin == null"
-                class="asign_check assign_custom"
-                [matTooltip]="
+          <ng-template #DirectorIdIsNull>
+            <button disabled="false" mat-button *ngIf="projectDetail.IsWin == null" class="asign_check assign_custom"
+              [matTooltip]="
                   projectDetail.IsWin == null &&
                   projectDetail.DirectorId == null
                     ? 'Please assign a Director.'
                     : 'Project is not reviewed yet..!'
-                "
-              >
-                <mat-icon aria-label="icon">check</mat-icon>
-                Finalize
-              </button>
+                ">
+              <mat-icon aria-label="icon">check</mat-icon>
+              Finalize
+            </button>
 
-              <button
-                disabled="false"
-                mat-button
-                *ngIf="
+            <button disabled="false" (click)= "openPropsalWinComponent()" mat-button  *ngIf="
                   projectDetail.IsWin == false;
                   else winGreen
-                "
-                class="asign_check assign_custom"
-                [matTooltip]="
+                " class="asign_check assign_custom" [matTooltip]="
                   projectDetail.IsWin == false
                     ? 'The Project is lost'
                     : ''
-                "
-              >
-                <mat-icon aria-label="icon" class="red"
-                  >check</mat-icon
-                >
-                <span class="red"> Finalize</span>
-              </button>
+                ">
+              <mat-icon aria-label="icon" class="red">check</mat-icon>
+              <span class="red"> Finalize</span>
+            </button>
 
-              <ng-template #winGreen>
-                <button
-                  disabled="false"
-                  mat-button
-                  *ngIf="projectDetail.IsWin == true"
-                  class="asign_check assign_custom"
-                  [matTooltip]="
+            <ng-template #winGreen>
+              <button disabled="false" mat-button (click)= "openPropsalWinComponent()" *ngIf="projectDetail.IsWin == true" class="asign_check assign_custom"
+                [matTooltip]="
                     projectDetail.IsWin == true
                       ? 'You win the Project.'
                       : ''
-                  "
-                >
-                  <mat-icon aria-label="icon" class="green"
-                    >check</mat-icon
-                  >
-                  <span class="green"> Finalize</span>
-                </button>
-              </ng-template>
+                  ">
+                <mat-icon aria-label="icon" class="green">check</mat-icon>
+                <span class="green"> Finalize</span>
+              </button>
             </ng-template>
-          </div>
-          <div class="col-sm-2">
-              <mat-spinner
-                *ngIf="detailsLoaderFlag"
-                [diameter]="20"
-              ></mat-spinner>
-            <button
-            mat-button
-            *ngIf="!detailsLoaderFlag"
-            class="asign_check assign_custom"
-            color="accent"
-            (click)="openFormModal(0)"
-            pTooltip="Fill other Project details" tooltipPosition="top" >
+          </ng-template>
+        </div>
+        <div class="col-sm-2">
+          <mat-spinner *ngIf="detailsLoaderFlag" [diameter]="20"></mat-spinner>
+          <button mat-button *ngIf="!detailsLoaderFlag" class="asign_check assign_custom" color="accent"
+            (click)="openFormModal(0)" pTooltip="Fill other Project details" tooltipPosition="top">
             Add Other Details
           </button>
-          </div>
         </div>
+      </div>
 
-        <div class="row">
-          <div class="col-sm-7">
-            <div class="row">
-              <div class="col-sm-1">
-                <a href="#" class="grey_icon"
-                  ><i class="fa fa-align-left"></i
-                ></a>
-              </div>
-              <div class="col-sm-11 mar_left_0">
-                <div class="form-group">
-                  <textarea
-                    class="form-control text_manage"
-                    matInput
-                    #projectDescription
-                    placeholder="Project Description Text"
-                    (focusout)="
+      <div class="row">
+        <div class="col-sm-7">
+          <div class="row">
+            <div class="col-sm-1">
+              <a href="#" class="grey_icon"><i class="fa fa-align-left"></i></a>
+            </div>
+            <div class="col-sm-11 mar_left_0">
+              <div class="form-group">
+                <textarea class="form-control text_manage" matInput #projectDescription
+                  placeholder="Project Description Text" (focusout)="
                       onNameChange(
                         $event,
                         projectDescription.value
                       )
-                    "
-                    [ngModel]="projectDetail.ProjectDescription"
-                    name="projectDescription"
-                    [disabled]="!isEditingAllowed"
-                  ></textarea>
-                </div>
+                    " [ngModel]="projectDetail.ProjectDescription" name="projectDescription"
+                  [disabled]="!isEditingAllowed"></textarea>
               </div>
             </div>
           </div>
-          <div class="col-sm-5">
-            <div class="row">
-              <!-- Reviewer -->
-              <div class="col-sm-5">
-                <div class="inline_logo_inputField">
-                  <mat-form-field class="example-full-width">
-                    <mat-select
-                      placeholder="Reviewer"
-                      name="reviewer"
-                      [(value)]="projectDetail.ReviewerId"
-                      (selectionChange)="
+        </div>
+        <div class="col-sm-5">
+          <div class="row">
+            <!-- Reviewer -->
+            <div class="col-sm-5">
+              <div class="inline_logo_inputField">
+                <mat-form-field class="example-full-width">
+                  <mat-select placeholder="Reviewer" name="reviewer" [(value)]="projectDetail.ReviewerId"
+                    (selectionChange)="
                         onReviewerChanged($event.value)
-                      "
-                      [disabled]="!isEditingAllowed"
-                    >
-                      <mat-option
-                        *ngFor="let item of UserList"
-                        [value]="item.UserID"
-                      >
-                        {{ item.Username }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
+                      " [disabled]="!isEditingAllowed">
+                    <mat-option *ngFor="let item of UserList" [value]="item.UserID">
+                      {{ item.Username }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
               </div>
-              <!--  Director -->
-              <div class="col-sm-7">
-                <div class="inline_logo_inputField">
-                  <mat-form-field class="example-full-width">
-                    <mat-select
-                      placeholder="Director"
-                      name="director"
-                      [(value)]="projectDetail.DirectorId"
-                      (selectionChange)="
+            </div>
+            <!--  Director -->
+            <div class="col-sm-7">
+              <div class="inline_logo_inputField">
+                <mat-form-field class="example-full-width">
+                  <mat-select placeholder="Director" name="director" [(value)]="projectDetail.DirectorId"
+                    (selectionChange)="
                         onDirectorChanged($event.value)
-                      "
-                      [disabled]="!isEditingAllowed"
-                    >
-                      <mat-option
-                        *ngFor="let item of UserList"
-                        [value]="item.UserID"
-                      >
-                        {{ item.Username }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
+                      " [disabled]="!isEditingAllowed">
+                    <mat-option *ngFor="let item of UserList" [value]="item.UserID">
+                      {{ item.Username }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="row gray_bg" *ngIf="openProposalcompcheck">
-        <app-accept-proposal
-          [projectId]="projectId"
-          [winProjectFlag]="winProjectFlag"
-          (appovalData)="onAcceptedApprovalEmit($event)"
-          (rejectedApproval)="onRejectedApprovalEmit($event)"
-          (winLossApproval)="onWinLossApproval($event)"
-        ></app-accept-proposal>
-      </div>
-    </mat-card>
-  </div>
+    </div>
+    <div class="row gray_bg" *ngIf="openProposalcompcheck">
+      <app-accept-proposal [projectId]="projectId" [winProjectFlag]="winProjectFlag"
+        (appovalData)="onAcceptedApprovalEmit($event)" (rejectedApproval)="onRejectedApprovalEmit($event)"
+        (winLossApproval)="onWinLossApproval($event)"></app-accept-proposal>
+    </div>
+  </mat-card>
+</div>

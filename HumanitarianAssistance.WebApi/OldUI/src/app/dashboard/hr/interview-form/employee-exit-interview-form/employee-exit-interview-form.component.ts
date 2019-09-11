@@ -278,6 +278,7 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
             data.data.EmployeeDetailListData != null &&
             data.data.EmployeeDetailListData.length > 0
           ) {
+            debugger;
             // var empData;
             data.data.EmployeeDetailListData.forEach(element => {
               // empData = element;
@@ -300,11 +301,12 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
             });
           } else {
             // tslint:disable-next-line:curly
-            if (data.data.EmployeeDetailListData == null)
-              this.toastr.warning('No record found!');
-            // tslint:disable-next-line:curly
-            else if (data.StatusCode === 400)
+            if (data.data.EmployeeDetailListData == null) {
+              // this.toastr.warning('No record found!');
+            } else if (data.StatusCode === 400) {
+
               this.toastr.error('Something went wrong!');
+            }
           }
         },
         error => {

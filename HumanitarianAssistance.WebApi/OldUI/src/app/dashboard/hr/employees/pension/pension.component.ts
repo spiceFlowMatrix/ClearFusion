@@ -154,7 +154,7 @@ export class PensionComponent implements OnInit {
             this.toastr.info(data.Message);
             this.showHidePensionInfoLoading(false);
           }else if (data.StatusCode === 400) {
-            this.toastr.error('Something went wrong!');
+            this.toastr.error(data.Message);
             this.showHidePensionInfoLoading(false);
           }
         }

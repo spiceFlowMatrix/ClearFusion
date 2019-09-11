@@ -377,7 +377,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string NameExist = "Name Already Exist";
         public const string SuccessText = "Success";
         public const string FileText = "File Not Supported";
-        public const int FileNotSupported = 4440;
+        public const int FileNotSupported = 415;
 
         #region "Project"
         public const string ActivityNotFound = "Activity Not Found";
@@ -402,6 +402,9 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string TransactionNotFound = "Transaction Not Found";
         public const string AccountNotFound = "Account Not Found";
         public const string DeleteAllTransactions = "Transactions Exist";
+        public const string AccountAssignedToPensionDebit = "Account Exist On Pension Debit Account";
+        public const string AccountAssignedToEmployeeAnalyticalInfo = "Account Exist On Employee Analytical Info";
+        public const string AccountAssignedToSalaryHead = "Account Assigned To Employee Salary Head";
         public const string DeleteAllChildAccount = "Child Account Exist";
         public const string TransactionsNotSaved = "Transactions Not Saved";
 

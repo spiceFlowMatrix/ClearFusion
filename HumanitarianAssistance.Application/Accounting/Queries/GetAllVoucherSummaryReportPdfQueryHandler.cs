@@ -1,97 +1,64 @@
 using System;
-using System.IO;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using HumanitarianAssistance.Application.Infrastructure;
-using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Application.Accounting.Models;
+using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Persistence;
+using HumanitarianAssistance.Persistence.Extensions;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
-using RazorLight;
 
 namespace HumanitarianAssistance.Application.Accounting.Queries
 {
-    public class GetAllVoucherSummaryReportPdfQueryHandler : IRequestHandler<GetAllVoucherSummaryReportPdfQuery, ApiResponse>
+    public class GetAllVoucherSummaryReportPdfQueryHandler : IRequestHandler<GetAllVoucherSummaryReportPdfQuery, byte[]>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
-        private readonly IRazorLightEngine _razorEngine;
-        private readonly IRazorViewEngine _razorViewEngine;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly ITempDataProvider _tempDataProvider;
+        private readonly IPdfExportService _pdfExportService;
 
-        public GetAllVoucherSummaryReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IRazorLightEngine razorEngine, 
-            IRazorViewEngine razorViewEngine, IServiceProvider serviceProvider, ITempDataProvider tempDataProvider)
+        public GetAllVoucherSummaryReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IPdfExportService pdfExportService)
         {
             _dbContext = dbContext;
-            _razorEngine = razorEngine;
-            _razorViewEngine = razorViewEngine;
-            _serviceProvider = serviceProvider;
-            _tempDataProvider = tempDataProvider;
+            _pdfExportService = pdfExportService;
         }
 
-        public async Task<ApiResponse> Handle(GetAllVoucherSummaryReportPdfQuery request, CancellationToken cancellationToken)
+        public async Task<byte[]> Handle(GetAllVoucherSummaryReportPdfQuery request, CancellationToken cancellationToken)
         {
-            ApiResponse response = new ApiResponse();
-            var viewName = "TestPdf";
             try
             {
-                var httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };
-                var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
+                // model logic here
 
-                using (var sw = new StringWriter())
+                List<VoucherSummaryReportPdfModel> summary = new List<VoucherSummaryReportPdfModel>();
+
+                summary.Add(new VoucherSummaryReportPdfModel
                 {
-                    var viewResult = _razorViewEngine.GetView("","~/Pages/TestPdf.cshtml",false);
+                    Currency = "Afgani",
+                    Cheque = "554545",
+                    VoucherNo = "AFG-0001-14",
+                    Journal = "Hello",
+                    Date = "Helldfgdfgo",
+                    Region = "Helld fgdfgo",
+                    Description = "H dgf dfgello",
+                    TotalCredit = "Hello",
+                    TotalDebit = "Hello"
+                });
 
-                    if (viewResult.View == null)
-                    {
-                        throw new ArgumentNullException($"{viewName} does not match any available view");
-                    }
+                var spVoucherSummaryList = await _dbContext.LoadStoredProc("get_vouchersummaryreport_pdf")
+                                                            // .WithSqlParam("budgetlines", request.BudgetLines)
+                                                            .ExecuteStoredProc<SPVoucherSummaryReportPdfModel>();
 
-                    var viewDictionary = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
-                    {
-                        Model = null
-                    };
 
-                    var viewContext = new ViewContext(
-                        actionContext,
-                        viewResult.View,
-                        viewDictionary,
-                        new TempDataDictionary(actionContext.HttpContext, _tempDataProvider),
-                        sw,
-                        new HtmlHelperOptions()
-                    );
-
-                    await viewResult.View.RenderAsync(viewContext);
-                    response.ResponseData = sw.ToString();
-                }
+                Console.WriteLine(spVoucherSummaryList);
 
 
 
-                //var voucherSummaryList = await _dbContext.VoucherDetail.Where(x => !x.IsDeleted).ToListAsync();
-                //response.ResponseData = voucherSummaryList;
-                //response.StatusCode = StaticResource.successStatusCode;
-                //response.Message = StaticResource.SuccessText;
+                return await _pdfExportService.ExportToPdf(summary, "Pages/PdfTemplates/VoucherSummaryReport.cshtml");
 
-
-                
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = StaticResource.SuccessText;
             }
             catch (Exception ex)
             {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
+                throw new Exception(ex.Message);
             }
-            return response;
+
         }
     }
 }

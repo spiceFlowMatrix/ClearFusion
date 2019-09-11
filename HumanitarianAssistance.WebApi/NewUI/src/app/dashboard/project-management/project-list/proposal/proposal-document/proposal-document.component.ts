@@ -185,7 +185,7 @@ export class ProposalDocumentComponent implements OnInit, OnDestroy {
                 }
 
               }
-            } else if (res.StatusCode === 4440) {
+            } else if (res.StatusCode === 415) {
               this.toastr.warning(res.Message);
             }
 
