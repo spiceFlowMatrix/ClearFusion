@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Application.Logger.Commands.Create;
-using HumanitarianAssistance.Application.Logger.Models;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +14,11 @@ namespace HumanitarianAssistance.WebApi.Controllers
         [AllowAnonymous]
         public async Task<ApiResponse> Error()
         {
-            var exceptionDetails = HttpContext.Features.Get<IExceptionHandlerFeature>();
+            var exceptionDetails = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
 
             LogErrorCommand model= new LogErrorCommand
             {
-                Path= exceptionDetails.Error.Source,
+                Path= exceptionDetails.Path,
                 StackTrace= exceptionDetails.Error.StackTrace,
                 InnerException= exceptionDetails.Error.InnerException !=null? exceptionDetails.Error.InnerException.StackTrace : null,
                 Message= exceptionDetails.Error.InnerException !=null?  exceptionDetails.Error.InnerException.Message : exceptionDetails.Error.Message
