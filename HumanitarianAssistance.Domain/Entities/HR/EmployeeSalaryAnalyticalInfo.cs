@@ -13,7 +13,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1)]
         public int EmployeeSalaryAnalyticalInfoId { get; set; }
-        public int? AccountCode { get; set; }
+        public long? AccountNo { get; set; }
         public long ProjectId { get; set; }
         public ProjectDetail ProjectDetail { get; set; }
         public long BudgetlineId { get; set; }

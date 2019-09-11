@@ -33,7 +33,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     response.data.EmployeeSalaryAnalyticalInfoList = employeeSalaryAnalyticalInfo.Select(x => new EmployeeSalaryAnalyticalInfoModel
                     {
                         EmployeeSalaryAnalyticalInfoId = x.EmployeeSalaryAnalyticalInfoId,
-                        AccountCode = x.AccountCode,
+                        AccountCode = x.AccountNo,
                         BudgetLineId = x.BudgetlineId,
                         EmployeeID = x.EmployeeID,
                         ProjectId = x.ProjectId,
