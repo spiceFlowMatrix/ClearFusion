@@ -851,7 +851,7 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
             if (data.data.projectSector != null && data.StatusCode === 200) {
               const filtered: any[] = [];
               const _sector = data.data.projectSector;
-              const index = this.Sectorlist.findIndex(x=>x.SectorId == _sector.SectorId);
+              const index = this.Sectorlist.findIndex( x => x.SectorId === _sector.SectorId);
               this.Sector = this.Sectorlist[index].SectorName;
             }
             if (data.StatusCode === 400) {

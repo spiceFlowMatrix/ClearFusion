@@ -52,6 +52,7 @@ export class BudgetLineDocumentsComponent implements OnInit {
   }
 
   uploadFile(data: any) {
+    debugger;
     this.openBudgetLineDialog();
     // this.commonLoaderService.showLoader();
     this.budgetService.postBudgetLineDocument(data).subscribe(
