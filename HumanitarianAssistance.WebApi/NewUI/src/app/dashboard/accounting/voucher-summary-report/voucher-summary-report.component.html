@@ -9,31 +9,29 @@
                 <h4 class="main_heading"></h4>
               </div>
               <div class="col-sm-5 text-right">
-                <!-- <button
-                  mat-stroked-button
-                  color="accent"
+                <mat-icon
+                  class="icon_cursor display_inline_block"
+                  ia-hidden="false"
+                  aria-label="Example home icon"
+                  pTooltip="Export Pdf"
+                  tooltipPosition="top"
                   (click)="onExportPdf()"
                 >
-                  <mat-icon aria-hidden="false" aria-label="Example home icon">
-                    vertical_align_bottom </mat-icon
-                  >Export Pdf
-                </button> -->
+                  vertical_align_bottom
+                </mat-icon>
                 &nbsp;
-                <button
-                  mat-icon-button
-                  class="margin_left_10"
+
+                <mat-icon
+                  class="icon_cursor"
+                  *ngIf="!summaryLoader; else summaryReportLoaderTemplate"
                   [matMenuTriggerFor]="voucherSummaryReportMenu"
+                  >settings</mat-icon
                 >
-                  <mat-icon
-                    *ngIf="!summaryLoader; else summaryReportLoaderTemplate"
-                    >settings</mat-icon
-                  >
-                  <ng-template #summaryReportLoaderTemplate>
-                    <div class="spinner_center padding_top_5 padding_bottom_5">
-                      <mat-spinner [diameter]="25"> </mat-spinner>
-                    </div>
-                  </ng-template>
-                </button>
+                <ng-template #summaryReportLoaderTemplate>
+                  <div class="spinner_center padding_top_5 padding_bottom_5">
+                    <mat-spinner [diameter]="25"> </mat-spinner>
+                  </div>
+                </ng-template>
               </div>
             </div>
             <hr />
@@ -119,7 +117,9 @@
                               <td>{{ transactionItem.AccountCode }}</td>
                               <td>{{ transactionItem.AccountName }}</td>
                               <td>{{ transactionItem.CurrencyName }}</td>
-                              <td>{{ transactionItem.TransactionDescription }}</td>
+                              <td>
+                                {{ transactionItem.TransactionDescription }}
+                              </td>
                               <td>{{ transactionItem.Amount }}</td>
                               <td>{{ transactionItem.TransactionType }}</td>
                               <td width="3%"></td>
