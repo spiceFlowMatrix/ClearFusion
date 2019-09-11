@@ -299,7 +299,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
 
   //#region "getAllProjectActivityList"
   getAllProjectActivityList() {
-
+debugger;
     const filterData: any = {
       ProjectId: this.projectId,
       ActivityDescription: this.projectActivityFilter.FilterValue

@@ -25,14 +25,21 @@ namespace HumanitarianAssistance.Application.Project.Queries
             ApiResponse response = new ApiResponse();
             try
             {
-                var provincelist = await _dbContext.ProvinceDetails.Where(x => x.IsDeleted == false).ToListAsync();
-                var Newlist = provincelist.Where(x => request.CountryId.Any(y => x.CountryId == y)).Select(x => new ProvinceDetailModel
-                {
-                    ProvinceId = x.ProvinceId,
-                    ProvinceName = x.ProvinceName
-                }).OrderBy(x => x.ProvinceName).ToList();
+                var provincelist = await _dbContext.ProvinceDetails.Where(x => request.CountryId.Any(y => x.CountryId == y) && 
+                                                                               x.IsDeleted == false)
+                                                                                .Select(x => new ProvinceDetailModel
+                                                                                {
+                                                                                    ProvinceId = x.ProvinceId,
+                                                                                    ProvinceName = x.ProvinceName
+                                                                                }).OrderBy(x => x.ProvinceName)
+                                                                            .ToListAsync();
+                // var Newlist = provincelist.Where(x => request.CountryId.Any(y => x.CountryId == y)).Select(x => new ProvinceDetailModel
+                // {
+                //     ProvinceId = x.ProvinceId,
+                //     ProvinceName = x.ProvinceName
+                // }).OrderBy(x => x.ProvinceName).ToList();
 
-                response.data.ProvinceDetailsList = Newlist;
+                response.data.ProvinceDetailsList = provincelist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

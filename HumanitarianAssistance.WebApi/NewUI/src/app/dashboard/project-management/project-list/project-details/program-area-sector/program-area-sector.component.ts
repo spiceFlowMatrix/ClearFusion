@@ -257,11 +257,11 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
     this.initMultiselctSecurityModel();
     this.GetSecurityConsiderationByProjectId(this.ProjectId);
     this.GetCountryByProjectId(this.ProjectId);
-    this.GetProvinceByProjectId(this.ProjectId);
+  //  this.GetProvinceByProjectId(this.ProjectId);
     this.initCountryMultiSelectModel();
     this.initProvinceMultiSelectModel();
     this.initDistrictMultiSelectModel();
-    this.GetDistrictByProjectId(this.ProjectId);
+    //this.GetDistrictByProjectId(this.ProjectId);
     this.isEditingAllowed = this.localStorageService.IsEditingAllowed(
       this.pageId
     );
@@ -936,18 +936,19 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
   }
 
   GetCountryByProjectId(ProjectId: number) {
+    debugger
     if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.projectListService
         .GetOtherSecurityConsiByProjectId(
           this.appurl.getApiUrl() + GLOBAL.API_GetCountryByProjectId,
           ProjectId
         )
-        .subscribe(data => {
-          if (data != null) {
-            if (data.data.CountryMultiSelectById != null) {
+        .subscribe(response => {
+          if (response.data != null && response.StatusCode === 200) {
+            if (response.data.CountryMultiSelectById.length > 0 ) {
               [
                 this.countryMultiSelectModel.CountryId
-              ] = data.data.CountryMultiSelectById;
+              ] = response.data.CountryMultiSelectById;
               this.getAllProvinceListByCountryId([
                 this.countryMultiSelectModel.CountryId
               ]);
@@ -985,6 +986,7 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
         .subscribe(
           response => {
             if (response.StatusCode === 200) {
+              debugger;
               this.getAllProvinceListByCountryId([
                 this.countryMultiSelectModel.CountryId
               ]);

@@ -72,7 +72,7 @@ export class ProjectActivityAddComponent implements OnInit, OnDestroy {
       ActivityDescription: [null, Validators.required],
       PlannedStartDate: [new Date(), [Validators.required]],
       PlannedEndDate: [new Date(), Validators.required],
-      BudgetLineId: [null, Validators.required],
+      BudgetLineId: [null],
       EmployeeID: [null, Validators.required],
       OfficeId: [null],
       Recurring: [false, Validators.required],
