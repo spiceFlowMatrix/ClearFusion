@@ -29,12 +29,19 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
             {
                 List<EmployeeAppraisalDetailsModel> lst = new List<EmployeeAppraisalDetailsModel>();
 
-                var emplst = await _dbContext.EmployeeAppraisalDetails.Where(x => x.OfficeId == request.OfficeId && x.AppraisalStatus == true && x.IsDeleted == false).ToListAsync();
+                var emplst = await _dbContext.EmployeeAppraisalDetails
+                                             .Where(x => x.OfficeId == request.OfficeId &&
+                                             x.AppraisalStatus == true && x.IsDeleted == false)
+                                             .ToListAsync();
                 foreach (var item in emplst)
                 {
                     EmployeeAppraisalDetailsModel objAppraisal = new EmployeeAppraisalDetailsModel();
 
-                    var empDetails = await _dbContext.EmployeeEvaluation.Where(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId).ToListAsync();
+                    var empDetails = await _dbContext.EmployeeEvaluation
+                                                     .Include(x=> x.EmployeeDetail)
+                                                     .ThenInclude(x=> x.EmployeeProfessionalDetail)
+                                                     .Where(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId)
+                                                     .ToListAsync();
 
                     List<EmployeeEvaluationTrainingModel> trainingList = new List<EmployeeEvaluationTrainingModel>();
                     List<int> appraisalTeamMemberList = new List<int>();
@@ -45,7 +52,10 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                     foreach (var elements in empDetails)
                     {
                         //Training
-                        var trainingData = await _dbContext.EmployeeEvaluationTraining.Where(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId && x.IsDeleted == false).ToListAsync();
+                        var trainingData = await _dbContext.EmployeeEvaluationTraining
+                                                           .Where(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId &&
+                                                           x.IsDeleted == false)
+                                                           .ToListAsync();
 
                         foreach (var ele in trainingData)
                         {
@@ -64,7 +74,9 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                         }
 
                         //AppraisalTeamMemberList
-                        var appraisalTeamMemberData = await _dbContext.EmployeeAppraisalTeamMember.Where(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId && x.IsDeleted == false).ToListAsync();
+                        var appraisalTeamMemberData = await _dbContext.EmployeeAppraisalTeamMember
+                                                                      .Where(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId &&
+                                                                      x.IsDeleted == false).ToListAsync();
 
                         foreach (var teamElement in appraisalTeamMemberData)
                         {      
@@ -89,6 +101,7 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                         objAppraisal.EmployeeEvaluationId = elements.EmployeeEvaluationId;
                         objAppraisal.EmployeeAppraisalDetailsId = elements.EmployeeAppraisalDetailsId;
                         objAppraisal.EmployeeId = elements.EmployeeId;
+                        objAppraisal.DepartmentId = elements.EmployeeDetail.EmployeeProfessionalDetail.DepartmentId;
                         objAppraisal.FinalResultQues1 = elements.FinalResultQues1;
                         objAppraisal.FinalResultQues2 = elements.FinalResultQues2;
                         objAppraisal.FinalResultQues3 = elements.FinalResultQues3;
@@ -103,12 +116,10 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                         objAppraisal.WeakPoints = weak;
                         objAppraisal.EmployeeAppraisalTeamMemberList = appraisalTeamMemberList;
                         lst.Add(objAppraisal);
-
                     }
                 }
 
                 response.data.EmployeeAppraisalDetailsModelLst = lst;
-                //var finalLst = lst.GroupBy(x => x.EmployeeId).ToList();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

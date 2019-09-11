@@ -7,7 +7,7 @@ import { JobGradeTypeDropdown } from '../../dashboard/hr/job-hiring-details/job-
 export class JobGradePipe implements PipeTransform {
 
   transform(value: number, list: IDatasource[]): any {
-    if (value != null && list.length >= 0) {
+    if (value != null && value !== undefined  && list !== undefined && list.length >= 0) {
 
       const index = list.findIndex(x => x.Id === value);
 

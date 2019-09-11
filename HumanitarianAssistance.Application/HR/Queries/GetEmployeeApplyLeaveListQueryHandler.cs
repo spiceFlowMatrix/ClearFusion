@@ -44,7 +44,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     LeaveReasonId = x.LeaveReasonId,
                     LeaveReasonName = x.LeaveReasonDetails?.ReasonName ?? null,
                     ApplyLeaveStatusId = x.ApplyLeaveStatusId,
-                    Remarks = x.Remarks
+                    Remarks = x.Remarks,
+                    DepartmentId= x.EmployeeDetails.EmployeeProfessionalDetail.DepartmentId 
                 }).ToList();
                 
                 response.data.EmployeeApplyLeaveList = empapplyleavelist;

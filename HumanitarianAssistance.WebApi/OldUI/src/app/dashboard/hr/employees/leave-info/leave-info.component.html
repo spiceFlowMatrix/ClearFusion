@@ -1,12 +1,12 @@
 <div class="main-health-info">
 
-  <div *ngIf="tabEventValue != 3" class="">
+  <div class="">
     <dx-button text="Assign Leave" (onClick)="showAssignLeavePopup()" *ngIf="isEditingAllowed"></dx-button>
     <dx-button text="Applied Leave" (onClick)="showHideLeaveDetailsPopup()" *ngIf="isEditingAllowed"></dx-button>
   </div>
-  <div *ngIf="tabEventValue == 3" class="dv-btn-lft">
+  <!-- <div *ngIf="tabEventValue == 3" class="dv-btn-lft">
     <dx-button text="Applied Leave" (onClick)="showHideLeaveDetailsPopup()" *ngIf="isEditingAllowed"></dx-button>
-  </div>
+  </div> -->
 
   <dx-data-grid id="gridContainer" [dataSource]="leaveInfoDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
     [showRowLines]="true">

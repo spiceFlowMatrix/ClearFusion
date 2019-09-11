@@ -21,5 +21,6 @@ namespace HumanitarianAssistance.Application.HR.Models
         public long? AttendanceGroupId { get; set; }
         public int? WorkTimeMinutes { get; set; }
         public int? OvertimeMinutes { get; set; }
+        public int? DepartmentId { get; set; }
     }
 }

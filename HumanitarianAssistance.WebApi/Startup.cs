@@ -116,6 +116,7 @@ namespace HumanitarianAssistance.WebApi
         {
             if (env.IsDevelopment())
             {
+                app.UseExceptionHandler("/Error");
                 app.UseDeveloperExceptionPage();
             }
             else

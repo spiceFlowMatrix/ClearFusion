@@ -35,7 +35,11 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                 int month = DateTime.Parse(request.SelectedDate).Month;
 
-                List<EmployeeAttendance> empattendancelist = await _dbContext.EmployeeAttendance.Where(x => x.Date.Date == DateTime.Parse(request.SelectedDate).Date).ToListAsync();  //marked or not
+                List<EmployeeAttendance> empattendancelist = await _dbContext.EmployeeAttendance
+                                                                             .Include(x=> x.EmployeeDetails)
+                                                                             .ThenInclude(y=> y.EmployeeProfessionalDetail)
+                                                                             .Where(x => x.Date.Date == DateTime.Parse(request.SelectedDate).Date)
+                                                                             .ToListAsync();  //marked or not
 
                 List<EmployeeDetail> activelist = await _dbContext.EmployeeDetail
                                                                     .Include(x => x.EmployeeProfessionalDetail) // use to get officeId 
@@ -63,7 +67,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                                 EmployeeName = x.EmployeeDetails.EmployeeName,
                                                 EmployeeCode = x.EmployeeDetails.EmployeeCode,
                                                 LeaveStatus = x.AttendanceId == (int)AttendanceType.L ? true : false,
-                                                OfficeId = x.EmployeeDetails.EmployeeProfessionalDetail.OfficeId
+                                                OfficeId = x.EmployeeDetails.EmployeeProfessionalDetail.OfficeId,
+                                                DepartmentId= x.EmployeeDetails.EmployeeProfessionalDetail.DepartmentId
                                             }).ToList();
 
 
@@ -98,6 +103,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                 obj.OutTime = xPayrollMonthlyHourDetail.OutTime;
                                 obj.LeaveStatus = false;
                                 obj.OfficeId = request.OfficeId;
+                                obj.DepartmentId = item.EmployeeProfessionalDetail.DepartmentId;
                                 empAttModel.Add(obj);
                             }
                         }
