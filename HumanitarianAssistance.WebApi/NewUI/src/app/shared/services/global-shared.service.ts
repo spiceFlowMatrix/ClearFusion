@@ -6,17 +6,13 @@ import { map } from 'rxjs/internal/operators/map';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { Subject } from 'rxjs/internal/Subject';
 import { IMenuList } from '../dbheader/dbheader.component';
-import { FileManagementModel, FileModel } from '../file-management/file-management-model';
+import { FileModel } from '../file-management/file-management-model';
 import { SignedUrlObjectName } from '../file-management/signed-url-object-name';
-import { HttpResponse, HttpHeaders } from '@angular/common/http';
-
 
 @Injectable({
   providedIn: 'root'
 })
 export class GlobalSharedService {
-
-
   // Global Header Flag
   setSelectedHeader: number;
 
@@ -29,25 +25,24 @@ export class GlobalSharedService {
   constructor(
     private appurl: AppUrlService,
     private globalService: GlobalService
-  ) { }
+  ) {}
 
   //#region "GetTrainingLink"
   GetTrainingLink() {
-    return this.globalService.getList(
-      this.appurl.getApiUrl() + GLOBAL.API_Dashboard_GetTrainingLink
-    ).pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.data.TrainingLink,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
+    return this.globalService
+      .getList(this.appurl.getApiUrl() + GLOBAL.API_Dashboard_GetTrainingLink)
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.TrainingLink,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
   }
   //#endregion
-
 
   setMenuHeaderName(data: string) {
     this.menuHeaderNameSubject.next(data);
@@ -68,8 +63,7 @@ export class GlobalSharedService {
   //#region "uploadFileBySignedUrl"
   uploadFileBySignedUrl(url: string, data: any, options?: any) {
     return this.globalService
-      .put(url, data, { observe: 'response',
-      'Content-Type': data.type})
+      .put(url, data, { observe: 'response', 'Content-Type': data.type })
       .pipe(
         map(x => {
           console.log(x.status);
@@ -100,8 +94,11 @@ export class GlobalSharedService {
       FileType: file.type
     };
 
-     return this.globalService
-      .post(this.appurl.getApiUrl() + GLOBAL.API_FileManagement_GetSignedURL, DownloadObjectGCBucketModel)
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_FileManagement_GetSignedURL,
+        DownloadObjectGCBucketModel
+      )
       .pipe(
         // switchMap(s => { return s}),
         // switchMap(s => { return s}),
@@ -115,9 +112,9 @@ export class GlobalSharedService {
 
           if (responseData.statusCode === 200) {
             this.uploadFileBySignedUrl(responseData.data, file)
-              .pipe().subscribe((response: any) => {
+              .pipe()
+              .subscribe((response: any) => {
                 if (response.status === 200) {
-
                   const data: FileModel = {
                     FileName: file.name,
                     FilePath: objectName,
@@ -127,8 +124,9 @@ export class GlobalSharedService {
                     RecordId: entityId
                   };
 
-                   return this.saveUploadedFileInfo(data)
-                    .pipe().subscribe((response: any) => {
+                  return this.saveUploadedFileInfo(data)
+                    .pipe()
+                    .subscribe((response: any) => {
                       const responseData: IResponseData = {
                         data: x.data.SignedUrl,
                         statusCode: x.StatusCode,
@@ -140,15 +138,19 @@ export class GlobalSharedService {
           } else {
             throw new Error('Could not get signed URL');
           }
-        }));
+        })
+      );
   }
-  ////#endregion
-
+  //#endregion
 
   //#region "saveUploadedFileInfo"
   saveUploadedFileInfo(data: FileModel) {
     return this.globalService
-      .post(this.appurl.getApiUrl() + GLOBAL.API_FileManagement_SaveUploadedFileInfo, data)
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_FileManagement_SaveUploadedFileInfo,
+        data
+      )
       .pipe(
         map(x => {
           const responseData: IResponseData = {
@@ -157,6 +159,43 @@ export class GlobalSharedService {
             message: x.Message
           };
           return responseData;
+        })
+      );
+  }
+  //#endregion
+
+  //#region "getFile"
+  getFile(url: string, data: any) {
+    // for pdf use this options to avoid 406 (Not Acceptable)
+    const options = { responseType: 'blob', observe: 'response' };
+
+    return this.globalService
+      .post(
+        url,
+        data,
+        options
+      )
+      .pipe(
+        map(event => {
+          // get filename from header
+          const contentDisposition = event.headers.get('Content-Disposition');
+          const filename = contentDisposition
+            .split(';')[1]
+            .split('filename')[1]
+            .split('=')[1]
+            .trim();
+
+          // convert it to file
+          const file = new Blob([event.body], { type: event.body.type });
+
+          // force to download file
+          const blobURL = window.URL.createObjectURL(file);
+          const anchor = document.createElement('a');
+          anchor.download = filename; // filename is important to set on backend
+          anchor.href = blobURL;
+          anchor.click();
+
+          return event;
         })
       );
   }

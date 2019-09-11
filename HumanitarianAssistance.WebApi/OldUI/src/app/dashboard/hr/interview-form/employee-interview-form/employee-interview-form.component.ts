@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { HrService } from '../../hr.service';
-import { CodeService } from '../../../code/code.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GLOBAL } from '../../../../shared/global';
 import { AppSettingsService } from '../../../../service/app-settings.service';
 import { CommonService } from '../../../../service/common.service';
+import { CodeService } from '../../../code/code.service';
 
 @Component({
   selector: 'app-employee-interview-form',
