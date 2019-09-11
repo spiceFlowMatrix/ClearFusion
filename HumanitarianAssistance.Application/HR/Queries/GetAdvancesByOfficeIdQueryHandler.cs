@@ -27,37 +27,32 @@ namespace HumanitarianAssistance.Application.HR.Queries
             try
             {
                 List<AdvanceModel> list = await _dbContext.Advances
-                                     .Join(_dbContext.EmployeeDetail,
-                                                                x => x.EmployeeId, //Primary
-                                                                y => y.EmployeeID, //Foreign
-                                                                (x, y) => new
-                                                                {
-                                                                    Adv = x,
-                                                                    Emp = y
-                                                                })
-                                     .Where(x => x.Adv.OfficeId == request.OfficeId &&
-                                                 x.Adv.IsDeleted == false &&
-                                                 x.Adv.AdvanceDate.Month <= request.Month &&
-                                                 x.Adv.AdvanceDate.Year <= request.Year &&
-                                                 x.Adv.IsDeducted == false)
+                                     .Include(x=> x.EmployeeDetail)
+                                     .ThenInclude(x=> x.EmployeeProfessionalDetail)
+                                     .Where(x => x.OfficeId == request.OfficeId &&
+                                                 x.IsDeleted == false &&
+                                                 x.AdvanceDate.Month <= request.Month &&
+                                                 x.AdvanceDate.Year <= request.Year &&
+                                                 x.IsDeducted == false)
                                                  .Select(x => new AdvanceModel
                                                  {
-                                                     AdvancesId = x.Adv.AdvancesId,
-                                                     AdvanceDate = x.Adv.AdvanceDate,
-                                                     EmployeeId = x.Adv.EmployeeId,
-                                                     EmployeeCode = x.Emp.EmployeeCode,
-                                                     EmployeeName = x.Emp.EmployeeName,
-                                                     CurrencyId = x.Adv.CurrencyId,
-                                                     VoucherReferenceNo = x.Adv.VoucherReferenceNo,
-                                                     Description = x.Adv.Description,
-                                                     ModeOfReturn = x.Adv.ModeOfReturn,
-                                                     ApprovedBy = x.Adv.ApprovedBy,
-                                                     RequestAmount = x.Adv.RequestAmount,
-                                                     AdvanceAmount = x.Adv.AdvanceAmount,
-                                                     OfficeId = x.Adv.OfficeId,
-                                                     IsApproved = x.Adv.IsApproved,
-                                                     IsDeducted = x.Adv.IsDeducted,
-                                                     NumberOfInstallments = x.Adv.NumberOfInstallments,
+                                                     AdvancesId = x.AdvancesId,
+                                                     AdvanceDate = x.AdvanceDate,
+                                                     EmployeeId = x.EmployeeId,
+                                                     EmployeeCode = x.EmployeeDetail.EmployeeCode,
+                                                     EmployeeName = x.EmployeeDetail.EmployeeName,
+                                                     CurrencyId = x.CurrencyId,
+                                                     VoucherReferenceNo = x.VoucherReferenceNo,
+                                                     Description = x.Description,
+                                                     ModeOfReturn = x.ModeOfReturn,
+                                                     ApprovedBy = x.ApprovedBy,
+                                                     RequestAmount = x.RequestAmount,
+                                                     AdvanceAmount = x.AdvanceAmount,
+                                                     OfficeId = x.OfficeId,
+                                                     IsApproved = x.IsApproved,
+                                                     IsDeducted = x.IsDeducted,
+                                                     NumberOfInstallments = x.NumberOfInstallments,
+                                                     DepartmentId = x.EmployeeDetail.EmployeeProfessionalDetail.DepartmentId
                                                  }).ToListAsync();
 
                 if (list.Count > 0)

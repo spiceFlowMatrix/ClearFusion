@@ -1,20 +1,24 @@
 <div class="row">
   <div class="col-sm-12">
     <div class="main-heading clearfix">
-      <div class="col-sm-2">
+      <div class="col-sm-8">
         <h3 class="page-heading">Job Hiring Details</h3>
       </div>
-      <div class="col-sm-1 mr-top-padding-lft">Office</div>
-      <div class="col-sm-2 mr-top">
 
+      <div class="col-sm-3">
+        <div class="display-padding-top flex-padding-top">
+        <span class="padding-top-padding-right">Office</span>
         <dx-select-box [dataSource]="officeDropdownList" placeholder="Choose Office"
-          (onItemClick)="onOfficeSelected($event.itemData.OfficeId)" displayExpr="OfficeName" valueExpr="OfficeId"
-          [value]="selectedOffice" [searchEnabled]="true">
-        </dx-select-box>
+        (onItemClick)="onOfficeSelected($event.itemData.OfficeId)" displayExpr="OfficeName" valueExpr="OfficeId"
+        [value]="selectedOffice" [searchEnabled]="true">
+      </dx-select-box>
+    </div>
       </div>
-
-      <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="showHideAddJobHiringPopup()"
-        *ngIf="isEditingAllowed"></dx-button>
+      <div class="col-sm-1">
+          <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="showHideAddJobHiringPopup()"
+          *ngIf="isEditingAllowed"></dx-button>
+      </div>
+     
     </div>
     <div>
       <dx-data-grid id="gridContainer" [dataSource]="jobHiringDetails" [allowColumnReordering]="true"
@@ -31,7 +35,7 @@
 
         <dxi-column dataField="JobCode" [editorOptions]="{readOnly: true}"></dxi-column>
         <dxi-column dataField="JobDescription"></dxi-column>
-        <dxi-column dataField="OfficeId" caption="Office Name" [width]="160">
+        <dxi-column dataField="OfficeId" caption="Office Name" [width]="160" [visible]="false">
           <dxo-lookup [dataSource]="officeTypeDropdown" valueExpr="OfficeId" displayExpr="OfficeName">
           </dxo-lookup>
         </dxi-column>
@@ -55,6 +59,8 @@
     </div>
   </div>
 </div>
+
+<ngx-loading [show]="jobsLoading"></ngx-loading>
 
 <!-- Add Job Hiring Details -->
 <dx-popup class="popup" [width]="600" [height]="510" [showTitle]="true" title="Job Hiring" [dragEnabled]="false"

@@ -26,7 +26,10 @@ namespace HumanitarianAssistance.Application.Project.Queries
             ApiResponse response = new ApiResponse();
             try
             {
-                ApproveProjectDetails projectDetail = await _dbContext.ApproveProjectDetails.FirstOrDefaultAsync(x => x.ProjectId == request.ProjectId && x.IsDeleted == false);
+                ApproveProjectDetails projectDetail = await _dbContext.ApproveProjectDetails
+                                                                .Include(x => x.ProjectDetail)
+                                                                .ThenInclude(x=> x.ProjectProposalDetail)
+                                                                .FirstOrDefaultAsync(x => x.ProjectId == request.ProjectId && x.IsDeleted == false);
 
                 if (projectDetail != null)
                 {
@@ -37,6 +40,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
                         FileName = projectDetail.FileName,
                         FilePath = projectDetail.FilePath,
                         IsApproved = projectDetail.IsApproved,
+                        IsProposalRejected = projectDetail.ProjectDetail.ProjectProposalDetail.IsProposalAccept,
+                        ApproveProjrctId = projectDetail.ApproveProjrctId
                     };
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";

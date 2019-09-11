@@ -24,6 +24,10 @@ export class AttendanceComponent implements OnInit {
   updatingEmployeeAttendanceList: EmployeeAttendanceList[];
   attendanceTypeDropdown: any[];
   isEditingAllowed = false;
+  officeDropdownList: any[] = [];
+  officecodelist: any[];
+  selectedOffice: any;
+  departmentTypeDropdown: any[];
 
   // flag
   isAttandanceMarked = false;
@@ -81,7 +85,8 @@ export class AttendanceComponent implements OnInit {
   ngOnInit() {
     this.getAttendanceGroupList();
     this.getCurrentFinancialYear();
-    this.getAllDateforDisableCalenderDate();
+    // this.getAllDateforDisableCalenderDate();
+    this.getOfficeCodeList();
     this.attendanceTypeDropdown = this.hrService
       .getAllAttendanceType()
       .filter(x => x.AttendanceTypeId === 1 || x.AttendanceTypeId === 2);
@@ -102,7 +107,7 @@ export class AttendanceComponent implements OnInit {
     const model = {
       SelectedDate : e,
 // tslint:disable-next-line: radix
-      OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID')),
+      OfficeId: this.selectedOffice,
       AttendanceStatus: attendanceStaus,
       AttendanceGroupId: attendanceGroupId
     };
@@ -124,7 +129,6 @@ export class AttendanceComponent implements OnInit {
             data.data.EmployeeAttendanceList != null
           ) {
             this.isAttandanceMarked = true;
-
             data.data.EmployeeAttendanceList.forEach(element => {
               this.employeeAttendanceList.push({
                 EmployeeId: element.EmployeeId,
@@ -145,7 +149,8 @@ export class AttendanceComponent implements OnInit {
                 Date: this.todaySetTime.toLocaleString(),
                 TotalWorkTime: element.TotalWorkTime,
                 LeaveStatus: element.LeaveStatus,
-                OfficeId: element.OfficeId
+                OfficeId: element.OfficeId,
+                DepartmentId: element.DepartmentId
               });
             });
             // tslint:disable-next-line:curly
@@ -188,7 +193,7 @@ export class AttendanceComponent implements OnInit {
     const model = {
       SelectedDate : e,
 // tslint:disable-next-line: radix
-      OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID')),
+      OfficeId: this.selectedOffice,
       AttendanceStatus: attendanceStaus,
       AttendanceGroupId: attendanceGroupId
     };
@@ -238,7 +243,8 @@ export class AttendanceComponent implements OnInit {
                   ),
                   TotalWorkTime: element.TotalWorkTime,
                   LeaveStatus: element.LeaveStatus,
-                  OfficeId: element.OfficeId
+                  OfficeId: element.OfficeId,
+                  DepartmentId: element.DepartmentId
                 });
               });
             } else {
@@ -296,7 +302,7 @@ export class AttendanceComponent implements OnInit {
       ).toUTCString(),
       LeaveStatus: false,
       // tslint:disable-next-line:radix
-      OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID'))
+      OfficeId: this.selectedOffice
     };
 
     this.hrService
@@ -368,7 +374,7 @@ export class AttendanceComponent implements OnInit {
         this.setting.getBaseUrl() +
         GLOBAL.API_HR_GetAllDateforDisableCalenderDate,
         // tslint:disable-next-line:radix
-        parseInt(localStorage.getItem('EMPLOYEEOFFICEID'))
+        this.selectedOffice
       )
       .subscribe(
         data => {
@@ -410,7 +416,7 @@ export class AttendanceComponent implements OnInit {
       .GetAllDetail(
         this.setting.getBaseUrl() + GLOBAL.API_Account_GetFinancialYearDetails,
         // tslint:disable-next-line:radix
-        parseInt(localStorage.getItem('EMPLOYEEOFFICEID'))
+        this.selectedOffice
       )
       .subscribe(
         data => {
@@ -503,6 +509,111 @@ export class AttendanceComponent implements OnInit {
       );
   }
   //#endregion
+
+  //#region "Get Department Type"
+  getDepartmentType(eventId: any) {
+    this.hrService
+      .GetDepartmentDropdown(
+        this.setting.getBaseUrl() + GLOBAL.API_Code_GetDepartmentsByOfficeId,
+        eventId
+      )
+      .subscribe(
+        data => {
+          this.departmentTypeDropdown = [];
+          if (
+            data.data.Departments != null &&
+            data.data.Departments.length > 0
+          ) {
+            data.data.Departments.forEach(element => {
+              this.departmentTypeDropdown.push(element);
+            });
+          // tslint:disable-next-line:curly
+          } else if (data.StatusCode === 400)
+            this.toastr.error('Something went wrong!');
+        },
+        error => {
+          if (error.StatusCode === 500) {
+            this.toastr.error('Internal Server Error....');
+          } else if (error.StatusCode === 401) {
+            this.toastr.error('Unauthorized Access Error....');
+          } else if (error.StatusCode === 403) {
+            this.toastr.error('Forbidden Error....');
+          }
+        }
+      );
+  }
+  //#endregion
+
+  getOfficeCodeList() {
+    this.codeService
+        .GetAllCodeList(
+            this.setting.getBaseUrl() + GLOBAL.API_OfficeCode_GetAllOfficeDetails
+        )
+        .subscribe(
+            data => {
+                this.officecodelist = [];
+                if (
+                    data.StatusCode === 200 &&
+                    data.data.OfficeDetailsList.length > 0
+                ) {
+                    data.data.OfficeDetailsList.forEach(element => {
+                        this.officecodelist.push({
+                            Office: element.OfficeId,
+                            OfficeCode: element.OfficeCode,
+                            OfficeName: element.OfficeName,
+                            SupervisorName: element.SupervisorName,
+                            PhoneNo: element.PhoneNo,
+                            FaxNo: element.FaxNo,
+                            OfficeKey: element.OfficeKey
+                        });
+                    });
+
+                    const AllOffices = localStorage.getItem('ALLOFFICES').split(',');
+
+                    data.data.OfficeDetailsList.forEach(element => {
+                        const officeFound = AllOffices.indexOf('' + element.OfficeId);
+                        if (officeFound !== -1) {
+                            this.officeDropdownList.push({
+                                OfficeId: element.OfficeId,
+                                OfficeCode: element.OfficeCode,
+                                OfficeName: element.OfficeName,
+                                SupervisorName: element.SupervisorName,
+                                PhoneNo: element.PhoneNo,
+                                FaxNo: element.FaxNo,
+                                OfficeKey: element.OfficeKey
+                            });
+                        }
+                    });
+
+                    this.selectedOffice =
+                        (this.selectedOffice === null || this.selectedOffice === undefined)
+                                ? this.officeDropdownList[0].OfficeId
+                            : this.selectedOffice;
+
+                            this.getMarkAttendenceDate(this.markAttendenceDate, false, this.AttendanceGroupId);
+                            this.getDepartmentType(this.selectedOffice);
+                    // tslint:disable-next-line:curly
+                } else if (data.StatusCode === 400)
+                    this.toastr.error('Something went wrong!');
+            },
+            error => {
+                if (error.StatusCode === 500) {
+                    this.toastr.error('Internal Server Error....');
+                } else if (error.StatusCode === 401) {
+                    this.toastr.error('Unauthorized Access Error....');
+                } else if (error.StatusCode === 403) {
+                    this.toastr.error('Forbidden Error....');
+                } else {
+                }
+            }
+        );
+}
+
+onOfficeSelected(officeId: number) {
+  this.selectedOffice = officeId;
+  this.getMarkAttendenceDate(this.markAttendenceDate, false, this.AttendanceGroupId);
+  this.getDepartmentType(this.selectedOffice);
+}
 
   //#region OnTabClick
   previousAttendanceTabClicked() {

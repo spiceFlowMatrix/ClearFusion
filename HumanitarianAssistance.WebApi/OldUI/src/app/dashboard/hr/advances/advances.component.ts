@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { HrService } from '../hr.service';
 import { CodeService } from '../../code/code.service';
-import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GLOBAL } from '../../../shared/global';
 import {
-  applicationPages,
-  applicationModule
+  applicationPages
 } from '../../../shared/application-pages-enum';
 import { AppSettingsService } from '../../../service/app-settings.service';
 import { CommonService } from '../../../service/common.service';
@@ -26,10 +24,14 @@ export class AdvancesComponent implements OnInit {
   currencyDataSource: CurrencyCode[];
   employeeListDataSource: EmployeeListModel[];
   voucherDropdown: any[];
+  departmentTypeDropdown: any[];
 
   advanceDateSelectedValue = new Date();
   employeeSelectedValue: any;
   advancesHistoryDataSource: any;
+  officeDropdownList: any[] = [];
+  officecodelist: any[] = [];
+  selectedOffice: any;
 
   // popup
   addEmpAdvancesPopupVisible = false;
@@ -49,23 +51,15 @@ export class AdvancesComponent implements OnInit {
   constructor(
     private hrService: HrService,
     private codeService: CodeService,
-    private router: Router,
     private setting: AppSettingsService,
     private toastr: ToastrService,
     private commonService: CommonService
   ) {}
 
   ngOnInit() {
-    this.commonService.getEmployeeOfficeId().subscribe(data => {
-      this.getAllEmployeeListByOfficeId();
-      this.getAllEmployeeAdvances(
-        new Date(this.currentDate).getMonth() + 1,
-        new Date(this.currentDate).getFullYear()
-      );
-    });
-
     this.initializeForm();
     this.getCurrencyCodeList();
+    this.getOfficeCodeList();
     this.getAllEmployeeListByOfficeId();
     this.getAllEmployeeAdvances(
       new Date(this.currentDate).getMonth() + 1,
@@ -94,10 +88,10 @@ export class AdvancesComponent implements OnInit {
 
   //#region "Get All Employee Advances"
   getAllEmployeeAdvances(month: number, year: number) {
-    this.advancesLoader = true;
+    if (this.selectedOffice !== undefined && this.selectedOffice != null) {
+      this.advancesLoader = true;
 
-    // tslint:disable-next-line:radix
-    const officeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
+      const officeId = this.selectedOffice;
     this.hrService
       .GetAllByOfficeIdMonthYear(
         this.setting.getBaseUrl() + GLOBAL.API_Hr_GetAllAdvancesByOfficeId,
@@ -132,7 +126,8 @@ export class AdvancesComponent implements OnInit {
                   OfficeId: element.OfficeId,
                   IsApproved: element.IsApproved,
                   IsDeducted: element.IsDeducted,
-                  NumberOfInstallments: element.NumberOfInstallments
+                  NumberOfInstallments: element.NumberOfInstallments,
+                  DepartmentId: element.DepartmentId
                 });
               });
             }
@@ -151,6 +146,7 @@ export class AdvancesComponent implements OnInit {
           this.advancesLoader = false;
         }
       );
+    }
   }
   //#endregion
 
@@ -210,8 +206,8 @@ export class AdvancesComponent implements OnInit {
 
   //#region "Get All Employee List By OfficeId"
   getAllEmployeeListByOfficeId() {
-    // tslint:disable-next-line:radix
-    const officeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
+    if (this.selectedOffice !== undefined && this.selectedOffice != null) {
+    const officeId = this.selectedOffice;
     this.hrService
       .GetAllDetail(
         this.setting.getBaseUrl() + GLOBAL.API_Code_GetEmployeeDetailByOfficeId,
@@ -252,6 +248,7 @@ export class AdvancesComponent implements OnInit {
           }
         }
       );
+    }
   }
   //#endregion
 
@@ -276,7 +273,7 @@ export class AdvancesComponent implements OnInit {
       RequestAmount: model.RequestAmount,
       AdvanceAmount: model.AdvanceAmount,
       // tslint:disable-next-line:radix
-      OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID')),
+      OfficeId: this.selectedOffice,
       NumberOfInstallments: model.NumberOfInstallments
     };
 
@@ -535,6 +532,121 @@ export class AdvancesComponent implements OnInit {
     }
   }
 
+  //#region "Get Department Type"
+  getDepartmentType(eventId: any) {
+    this.hrService
+      .GetDepartmentDropdown(
+        this.setting.getBaseUrl() + GLOBAL.API_Code_GetDepartmentsByOfficeId,
+        eventId
+      )
+      .subscribe(
+        data => {
+          this.departmentTypeDropdown = [];
+          if (
+            data.data.Departments != null &&
+            data.data.Departments.length > 0
+          ) {
+            data.data.Departments.forEach(element => {
+              this.departmentTypeDropdown.push(element);
+            });
+          // tslint:disable-next-line:curly
+          } else if (data.StatusCode === 400)
+            this.toastr.error('Something went wrong!');
+        },
+        error => {
+          if (error.StatusCode === 500) {
+            this.toastr.error('Internal Server Error....');
+          } else if (error.StatusCode === 401) {
+            this.toastr.error('Unauthorized Access Error....');
+          } else if (error.StatusCode === 403) {
+            this.toastr.error('Forbidden Error....');
+          }
+        }
+      );
+  }
+  //#endregion
+
+  getOfficeCodeList() {
+    this.codeService
+        .GetAllCodeList(
+            this.setting.getBaseUrl() + GLOBAL.API_OfficeCode_GetAllOfficeDetails
+        )
+        .subscribe(
+            data => {
+                this.officecodelist = [];
+                if (
+                    data.StatusCode === 200 &&
+                    data.data.OfficeDetailsList.length > 0
+                ) {
+                    data.data.OfficeDetailsList.forEach(element => {
+                        this.officecodelist.push({
+                            Office: element.OfficeId,
+                            OfficeCode: element.OfficeCode,
+                            OfficeName: element.OfficeName,
+                            SupervisorName: element.SupervisorName,
+                            PhoneNo: element.PhoneNo,
+                            FaxNo: element.FaxNo,
+                            OfficeKey: element.OfficeKey
+                        });
+                    });
+
+                    const AllOffices = localStorage.getItem('ALLOFFICES').split(',');
+
+                    data.data.OfficeDetailsList.forEach(element => {
+                        const officeFound = AllOffices.indexOf('' + element.OfficeId);
+                        if (officeFound !== -1) {
+                            this.officeDropdownList.push({
+                                OfficeId: element.OfficeId,
+                                OfficeCode: element.OfficeCode,
+                                OfficeName: element.OfficeName,
+                                SupervisorName: element.SupervisorName,
+                                PhoneNo: element.PhoneNo,
+                                FaxNo: element.FaxNo,
+                                OfficeKey: element.OfficeKey
+                            });
+                        }
+                    });
+
+                    this.selectedOffice =
+                        (this.selectedOffice === null || this.selectedOffice == undefined)
+                            ? this.officeDropdownList[0].OfficeId
+                            : this.selectedOffice;
+
+                    this.getAllEmployeeListByOfficeId();
+                    this.getAllEmployeeAdvances(
+                      new Date(this.currentDate).getMonth() + 1,
+                      new Date(this.currentDate).getFullYear()
+                    );
+                    this.getDepartmentType(this.selectedOffice);
+
+                    // tslint:disable-next-line:curly
+                } else if (data.StatusCode === 400)
+                    this.toastr.error('Something went wrong!');
+            },
+            error => {
+                if (error.StatusCode === 500) {
+                    this.toastr.error('Internal Server Error....');
+                } else if (error.StatusCode === 401) {
+                    this.toastr.error('Unauthorized Access Error....');
+                } else if (error.StatusCode === 403) {
+                    this.toastr.error('Forbidden Error....');
+                } else {
+                }
+            }
+        );
+}
+
+
+onOfficeSelected(officeId: any) {
+  if (officeId !== undefined && officeId != null && officeId !== 0) {
+      this.selectedOffice = officeId;
+      this.getAllEmployeeAdvances(
+        new Date(this.currentDate).getMonth() + 1,
+        new Date(this.currentDate).getFullYear()
+      );
+  }
+}
+
   onShowAdvanceHistoryPopUp() {
     this.showAdvanceHistoryPopUp = true;
   }
@@ -623,6 +735,7 @@ class EmployeeAdvancesModel {
   IsApproved: any;
   IsDeducted: any;
   NumberOfInstallments?: number;
+  DepartmentId?: number;
 }
 
 class CurrencyCode {

@@ -198,6 +198,8 @@
                                             <div class="btn-grp-wrap">
                                                 <dx-button text="Documents" type="success" (click)="showDocs($event)">
                                                 </dx-button>
+                                                <dx-button text="Edit" (click)="showEditForm()"
+                                                    *ngIf="isEditingAllowed"></dx-button>
                                             </div>
                                         </ng-template>
 

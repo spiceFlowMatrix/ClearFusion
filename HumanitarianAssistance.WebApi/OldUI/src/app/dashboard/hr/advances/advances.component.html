@@ -18,7 +18,20 @@
             </dx-date-box>
           </div>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-3">
+
+        </div>
+        <div class="col-sm-2">
+          <div class="flex-padding-top">
+              <span class="padding-top-padding-right">Office</span>
+              <dx-select-box [dataSource]="officeDropdownList" placeholder="Choose Office"
+              (onItemClick)="onOfficeSelected($event.itemData.OfficeId)" displayExpr="OfficeName"
+              valueExpr="OfficeId" [value]="selectedOffice" [searchEnabled]="true">
+              </dx-select-box>
+          </div>
+          
+        </div>
+        <div class="col-sm-1">
           <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="showEmpAdvancesAddPopup()" *ngIf="isEditingAllowed"></dx-button>
         </div>
       </div>
@@ -29,10 +42,15 @@
       <dx-data-grid id="gridContainer" [dataSource]="employeeAdvancesDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
         [columnAutoWidth]="true" [showRowLines]="true">
         <dxo-header-filter [visible]="true"> </dxo-header-filter>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
 
         <dxi-column dataField="EmployeeId" [visible]="false"></dxi-column>
         <dxi-column dataField="EmployeeCode"></dxi-column>
         <dxi-column dataField="EmployeeName"></dxi-column>
+        <dxi-column [allowFiltering]="true" dataField="DepartmentId" [editorOptions]="{allowEditing: false}">
+            <dxo-lookup [dataSource]="departmentTypeDropdown" valueExpr="DepartmentId" displayExpr="DepartmentName">
+              </dxo-lookup>
+        </dxi-column>
         <dxi-column dataField="AdvanceDate" [width]="200" dataType="date" format="dd/MM/yyyy" [visible]="false"></dxi-column>
         <dxi-column dataField="CurrencyId" caption="Currency">
           <dxo-lookup [dataSource]="currencyDataSource" valueExpr="CurrencyId" displayExpr="CurrencyName">
