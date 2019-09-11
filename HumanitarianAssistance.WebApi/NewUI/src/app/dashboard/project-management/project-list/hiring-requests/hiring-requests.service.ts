@@ -7,11 +7,15 @@ import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/stat
 import { IHiringRequestDetailModel, ProjectHiringRequestFilterModel, IHiringReuestCandidateModel,
 IReuestedCandidateDetailModel, IitervireCandidateModel,
  ISelectedCandidateModel, CandidateDetailModel } from './models/hiring-requests-model';
+import { BehaviorSubject } from 'rxjs';
+import { IProjectPermissionMode } from '../project-activities/models/project-activities.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HiringRequestsService {
+
+  public hiringPermissionSubject = new BehaviorSubject<IProjectPermissionMode[]>([]);
 
   constructor( private globalService: GlobalService,
     private appurl: AppUrlService) { }
@@ -386,4 +390,9 @@ DeleteCandidateDetailDetail(model: IHiringReuestCandidateModel) {
   );
 }
 //#endregion
+
+setHiringPermissions(permissionList: IProjectPermissionMode[]) {
+  this.hiringPermissionSubject.next(permissionList);
+}
+
 }
