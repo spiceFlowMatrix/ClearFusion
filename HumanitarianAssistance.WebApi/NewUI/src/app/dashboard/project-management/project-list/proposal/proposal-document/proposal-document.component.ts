@@ -94,6 +94,9 @@ export class ProposalDocumentComponent implements OnInit, OnDestroy {
                   });
                   this.isProposalDocumentAvailable.emit(true);
                 }
+                if (this.fileDetailsModel.length === 1) {
+                  this.onFirstFileUploaded();
+                }
               }
             }
           }

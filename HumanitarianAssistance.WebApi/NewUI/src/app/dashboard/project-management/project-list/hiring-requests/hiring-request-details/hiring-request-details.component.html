@@ -9,7 +9,8 @@
               <div class="col-sm-6">
                 <span class="font_x_large">Hiring Request Details</span> &nbsp;
               </div>
-              <div class="col-sm-6">
+              <div class="col-sm-4">
+                <span *ngIf="markCompletePermission">
                 <button *ngIf="isCompleted" mat-raised-button color="accent" pTooltip="Request Completed" tooltipPosition="top"
                   aria-label="Request Completed">
                   <mat-icon aria-label="icon-button done icon" class="margin_left_minus_5">done</mat-icon>
@@ -25,7 +26,9 @@
                       <mat-spinner class="spinner_center" [diameter]="20"> </mat-spinner>
                     </div>
                   </ng-template>
-                </button> &nbsp;
+                </button> </span>
+                </div>
+                <div class="col-sm-2">
                 <button mat-raised-button color="primary" (click)="onEditHiringRequestClicked()">
                   Edit
                 </button>
@@ -221,7 +224,7 @@
 
                     <td width="5%" class="text-center" text-align="left">
                         <button mat-icon-button (click)="onCandidateDetailDelete(item)"
-                          >
+                        color="warn" >
                           <mat-icon aria-label="delete">delete</mat-icon>
                         </button>
                       </td>

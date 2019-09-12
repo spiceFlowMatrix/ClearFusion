@@ -38,7 +38,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                                })
                                                                .ToListAsync();
 
-                response.data.HiringControlList = hiringList;
+                response.ResponseData = hiringList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
             }
