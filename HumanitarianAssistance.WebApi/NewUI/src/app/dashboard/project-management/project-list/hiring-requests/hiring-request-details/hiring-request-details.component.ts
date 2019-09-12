@@ -33,6 +33,10 @@ import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { ActivatedRoute } from '@angular/router';
 import { EditCandidateDetailDialogComponent } from '../edit-candidate-detail-dialog/edit-candidate-detail-dialog.component';
 import { DeleteConfirmationComponent } from 'projects/library/src/lib/components/delete-confirmation/delete-confirmation.component';
+import { IProjectRoles, IProjectPeople } from '../../project-details/models/project-people.model';
+import { takeUntil } from 'rxjs/operators';
+import { ReplaySubject } from 'rxjs';
+import { ProjectListService } from '../../service/project-list.service';
 
 @Component({
   selector: 'app-hiring-request-details',
@@ -50,6 +54,9 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   @Input() professionList: IProfessionList[];
   @Output() UpdatedHRListRefresh = new EventEmitter<any[]>();
   //#endregion
+
+  // subscription destroy
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   // Model:
   hiringRequestModel: IHiringRequestModel;
@@ -88,8 +95,12 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     Candidate: EmployeeType.Candidate,
     Terminated: EmployeeType.Terminated
   };
-
   //#endregion
+
+    // permission
+    actualProjectPermissions: IProjectRoles[] = [];
+    projectPermissions: IProjectPeople[] = [];
+    markCompletePermission = false;
 
   constructor(
     private fb: FormBuilder,
@@ -97,13 +108,15 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     public toastr: ToastrService,
     private appurl: AppUrlService,
     private routeActive: ActivatedRoute,
-    public hiringRequestService: HiringRequestsService
+    public hiringRequestService: HiringRequestsService,
+    public projectListService: ProjectListService
   ) {
     this.getScreenSize();
   }
 
   ngOnInit() {
     this.initForm();
+    this.getActivityPermission();
     this.GetAllEmployeeContractTypelist();
     this.GetAllAttendanceGrouplist();
     this.routeActive.parent.params.subscribe(params => {
@@ -199,6 +212,36 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
     };
     this.GetEmployeeListByOfficeId(this.hiringRequestForm.value.OfficeId);
   }
+
+
+    //#region "Permission"
+    getActivityPermission() {
+      this.hiringRequestService.hiringPermissionSubject
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(data => {
+
+          // get user permission/role
+          this.projectPermissions = data;
+
+          // get all permissions/role
+          this.actualProjectPermissions = this.projectListService.GetHiringControlRole();
+
+          if (this.projectPermissions.length > 0) {
+            // Mark complete permission
+            this.markCompletePermission = this.checkMarkCompletePermission();
+          }
+        });
+    }
+
+    checkMarkCompletePermission(): boolean {
+      // NOTE: "PLANNING OFFICER" & "MONITORING OFFICER" can mark as complete
+      return this.projectPermissions.filter(
+        x =>
+          x.RoleId === this.actualProjectPermissions[0].Id
+      ).length > 0
+        ? true
+        : false;
+    }
 
   //#region "onAddNewRequestClicked"
   onEditHiringRequestClicked() {

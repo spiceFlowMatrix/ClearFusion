@@ -147,7 +147,7 @@ const routes: Routes = [
           {
             path: 'people',
             component: PeopleComponent,
-            canActivate: [RoleGuardService],
+          //  canActivate: [RoleGuardService],
             data: {
               module: moduleId,
               page: projectPagesMaster.ProjectPeople
