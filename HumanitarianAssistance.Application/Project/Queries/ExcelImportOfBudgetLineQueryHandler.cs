@@ -29,7 +29,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
         public async Task<ApiResponse> Handle(ExcelImportOfBudgetLineQuery request, CancellationToken cancellationToken)
         {
-            ApiResponse response = new ApiResponse();
+            ApiResponse response = new ApiResponse(); 
 
             try
             {
@@ -93,7 +93,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                         if (item.BudgetCode == null && item.ProjectJobCode != null)
                                         {
 
-                                            ProjectBudgetLineDetail ifExistbudgetDetail = await IfexistBudgetLine(item.BudgetName);
+                                            ProjectBudgetLineDetail ifExistbudgetDetail = await IfexistBudgetLine(item.BudgetName, item.ProjectId);
 
                                             if (ifExistbudgetDetail == null)
                                             {
@@ -127,7 +127,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                         else if (item.BudgetCode == null && item.ProjectJobCode == null)
                                         {
                                             // Note: call method to check job exsit or not
-                                            var ifJobExist = await IfExistProjectJob(item.ProjectJobName);
+                                            var ifJobExist = await IfExistProjectJob(item.ProjectJobName,item.ProjectId);
                                             //call add ProjectJob when job is new 
                                             if (ifJobExist == null)
                                             {
@@ -135,7 +135,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
                                                 //Note : check for budget exists
 
-                                                var ifBudgetExist = await IfexistBudgetLine(item.BudgetName);
+                                                var ifBudgetExist = await IfexistBudgetLine(item.BudgetName, item.ProjectId);
 
                                                 if (ifBudgetExist == null)
                                                 {
@@ -161,7 +161,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                         else if (item.BudgetCode != null && item.ProjectJobCode == null)
                                         {
                                             //check for is the project job name is already exist 
-                                            var ifJobDetailExist = await IfExistProjectJob(item.ProjectJobName);
+                                            var ifJobDetailExist = await IfExistProjectJob(item.ProjectJobName,item.ProjectId);
                                             if (ifJobDetailExist == null)
                                             {
                                                 //add new job here
@@ -173,7 +173,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                             else
                                             {
                                                 //Note : if project job exist and budgetLine already exist then do nothing else update the 
-                                                var ifBudgetExist = await IfexistBudgetLine(item.BudgetName);
+                                                var ifBudgetExist = await IfexistBudgetLine(item.BudgetName ,item.ProjectId);
 
                                                 // Note: if new budget line then update the newly created project job with new budget line
                                                 if (ifBudgetExist == null)
@@ -203,8 +203,9 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                     var projectJobObj = await AddProjectJob(item.ProjectId.Value, item.ProjectJobName, request.UserId);
 
                                                     var ifExistBudgetCode = await _dbContext.ProjectBudgetLineDetail
-                                                                                                     .FirstOrDefaultAsync(x => x.BudgetCode == item.BudgetCode &&
-                                                                                                                                x.IsDeleted == false);
+                                                                                                     .FirstOrDefaultAsync(x => x.BudgetCode == item.BudgetCode && 
+                                                                                                                               x.ProjectId == request.ProjectId &&
+                                                                                                                               x.IsDeleted == false);
                                                     if (ifExistBudgetCode == null)
                                                     {
                                                         ProjectBudgetLineDetail budgetLineObj = await AddEditProjectBudgetLine(item, projectJobObj.ProjectJobId, request.UserId);
@@ -257,8 +258,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                     {
                                         ProjectBudgetLineDetail obj = _mapper.Map<ProjectBudgetLineDetailModel, ProjectBudgetLineDetail>(item);
                                         // Note: call method to check job exsit or not
-                                        var ifJobExist = await IfExistProjectJob(item.ProjectJobName);
-                                        var ifBudgetExist = await IfexistBudgetLine(item.BudgetName);
+                                        var ifJobExist = await IfExistProjectJob(item.ProjectJobName, item.ProjectId );
+                                        var ifBudgetExist = await IfexistBudgetLine(item.BudgetName, item.ProjectId);
 
                                         //call add ProjectJob when job is new 
                                         if (ifJobExist == null)
@@ -320,12 +321,12 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
         }
 
-        public async Task<ProjectBudgetLineDetail> IfexistBudgetLine(string item)
+        public async Task<ProjectBudgetLineDetail> IfexistBudgetLine(string item ,long? ProjectId)
         {
             ProjectBudgetLineDetail ifExistbudgetDetail = await _dbContext.ProjectBudgetLineDetail
                                                                            .FirstOrDefaultAsync(x =>
                                                                             x.BudgetName == item &&
-                                                                            x.IsDeleted == false);
+                                                                            x.IsDeleted == false && x.ProjectId == ProjectId);
             return ifExistbudgetDetail;
         }
 
@@ -341,12 +342,12 @@ namespace HumanitarianAssistance.Application.Project.Queries
             return ProjectUtility.GenerateProjectBudgetLineCode(projectDetail.ProjectCode, projectjobCount++);
         }
 
-        public async Task<ProjectJobDetail> IfExistProjectJob(string item)
+        public async Task<ProjectJobDetail> IfExistProjectJob(string item ,long? ProjectId)
         {
             ProjectJobDetail ifJobExist = await _dbContext.ProjectJobDetail
                                                                   .FirstOrDefaultAsync(x =>
                                                                                        x.ProjectJobName == item &&
-                                                                                       x.IsDeleted == false);
+                                                                                       x.IsDeleted == false && x.ProjectId == ProjectId);
             return ifJobExist;
 
         }

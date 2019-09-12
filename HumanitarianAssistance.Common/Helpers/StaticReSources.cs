@@ -405,6 +405,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string AccountAssignedToPensionDebit = "Account Exist On Pension Debit Account";
         public const string AccountAssignedToEmployeeAnalyticalInfo = "Account Exist On Employee Analytical Info";
         public const string AccountAssignedToSalaryHead = "Account Assigned To Employee Salary Head";
+        public const string SalaryHeadNotSaved = "Salary Head Not Saved";
         public const string DeleteAllChildAccount = "Child Account Exist";
         public const string TransactionsNotSaved = "Transactions Not Saved";
 

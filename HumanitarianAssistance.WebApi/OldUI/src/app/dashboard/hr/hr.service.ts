@@ -1409,6 +1409,12 @@ export interface GeneralInfo {
   TinNumber: string;
   GradeId: number;
   OpeningPension: number;
+  EmployeeContractTypeId?: number;
+  HiredOn?: any;
+  FiredOn?: any;
+  FiredReason?: string;
+  ResignationOn?: any;
+  ResignationReason?: string;
 }
 
 export class Documents {

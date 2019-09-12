@@ -27,6 +27,7 @@ import {
 
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
+// tslint:disable-next-line: max-line-length
 import { MonitoringModel } from 'src/app/dashboard/project-management/project-list/project-activities/project-activity-phase/monitoring/monitoring-model';
 import { map } from 'rxjs/internal/operators/map';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
@@ -86,7 +87,7 @@ export class ProjectListService {
     }
   ];
 
-   activitiesControlRoles: IProjectRoles[] = [
+  activitiesControlRoles: IProjectRoles[] = [
     {
       Id: 1,
       Role: 'Planning Officer'
@@ -836,7 +837,7 @@ export class ProjectListService {
       .pipe(
         map(x => {
           const responseData: IResponseData = {
-            data: x.data.HiringControlList,
+            data: x.ResponseData,
             statusCode: x.StatusCode,
             message: x.Message
           };
