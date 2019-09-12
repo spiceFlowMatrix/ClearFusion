@@ -68,16 +68,16 @@ export class ProjectActivityDocumentsComponent implements OnInit, OnDestroy {
   }
 
   //#region "onDeleteDocument"
-  onDeleteDocument(item: IDocumentsModel): any {
+  onDeleteDocument(item): any {
     this.deleteDocument(item);
   }
   //#endregion
 
   //#region "deleteDocument"
-  deleteDocument(item: IDocumentsModel) {
+  deleteDocument(item) {
     item.IsLoading = true;
     this.activitiesService
-      .DeleteProjectActivityDocument(item.ActtivityDocumentId)
+      .DeleteProjectActivityDocument(item.ActivityDocumentId)
       .subscribe(
         (response: IResponseData) => {
           if (response.statusCode === 200) {
@@ -148,15 +148,15 @@ export class ProjectActivityDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public onFileDropped(event: UploadEvent) {
+    const index = this.documentsList.findIndex(x => x.ActivityDocumentsFileName === event.files[0].relativePath);
+    if (index === -1) {
     this.documentName = '';
     for (const droppedFile of event.files) {
       if (droppedFile.fileEntry.isFile) {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
-
         fileEntry.file((file: File) => {
           // Here you can access the real file
           //  console.log(droppedFile.relativePath, file);
-
           this.documentName = droppedFile.relativePath;
           const formData = new FormData();
           // formData.append(this.projectActivityId.toString(), file, droppedFile.relativePath);
@@ -167,6 +167,9 @@ export class ProjectActivityDocumentsComponent implements OnInit, OnDestroy {
           this.uploadActivityDocument(formData);
         });
       }
+    }
+    } else {
+      this.toastr.warning('Document Already Exist');
     }
   }
   //#endregion

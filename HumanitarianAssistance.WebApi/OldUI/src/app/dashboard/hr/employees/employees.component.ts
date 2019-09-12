@@ -10,7 +10,7 @@ import { applicationPages } from '../../../shared/application-pages-enum';
 import { CommonService } from '../../../service/common.service';
 import { AppSettingsService } from '../../../service/app-settings.service';
 import { UploadModel } from '../../../shared/FileManagement/file-management-model';
-import { DocumentFileTypes, FileSourceEntityTypes } from '../../../shared/enums';
+import { DocumentFileTypes, FileSourceEntityTypes, EmployeeType } from '../../../shared/enums';
 import { FileManagementService } from '../../../shared/FileManagement/file-management.service';
 import { JobHiringService } from '../job-hiring-details/job-hiring.service';
 import { IDatasource } from '../../../shared/pipes/job-grade.pipe';
@@ -69,6 +69,7 @@ export class EmployeesComponent implements OnInit {
   assignUnitIsValid = true;
   leaveReasonTypeDropdown: any;
   financialYearDropdown: any;
+  employeeContractType: any[];
 
   selectedLeaveList: any[];
   // hiredOnDate: any;
@@ -165,6 +166,7 @@ export class EmployeesComponent implements OnInit {
     this.GetFinancialYearDropdown();
     this.GetLeaveReasonTypeDropdown();
     this.getAllJobGrade();
+    this.getEmployeeContractType();
     this.commonService.getEmployeeOfficeId().subscribe(() => {
       this.Flag = 0; // to set tabs 1
       this.tabOnClick(this.tabEventValue);
@@ -188,6 +190,7 @@ export class EmployeesComponent implements OnInit {
     private jobHiringService: JobHiringService
   ) {
     this.allFormInitialize();
+    this.employeeFormInitialize();
     this.firstTabValue = this.showInfoTabsMain[0].text;
     this.windows = window;
     this.rules = { X: /[02-9]/ };
@@ -208,7 +211,7 @@ export class EmployeesComponent implements OnInit {
     );
   }
 
-  allFormInitialize() {
+  employeeFormInitialize() {
     this.empGeneral = {
       EmployeeName: null,
       EmployeeTypeId: null,
@@ -237,8 +240,19 @@ export class EmployeesComponent implements OnInit {
       OfficeId: null,
       TinNumber: null,
       GradeId: null,
-      OpeningPension: 0
+      OpeningPension: 0,
+      EmployeeContractTypeId: null,
+      HiredOn: new Date(new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDate()),
+      FiredOn: null,
+      FiredReason: null,
+      ResignationOn: null,
+      ResignationReason: null
     };
+  }
+
+  allFormInitialize() {
 
     this.empDocuments = {
       DocumentName: null,
@@ -519,7 +533,7 @@ export class EmployeesComponent implements OnInit {
 
   openAddForm() {
     this.popupAddEmployeeInfoVisible = true;
-    this.empGeneral = {};
+    this.employeeFormInitialize();
     this.imageURL = '';
     this.CountryId = 0;
     // tslint:disable-next-line:radix
@@ -803,10 +817,17 @@ export class EmployeesComponent implements OnInit {
   }
   //#endregion "GET ALL COUNTRY"
 
+  onValueChanged(event) {
+    console.log(this);
+    this.getStateType(event.value);
+  }
+
   //#region "GET ALL STATE"
   getStateType(e) {
     // TODO: Set Value For Add Employee
     this.countryId = e;
+
+    console.log(this.hrService);
 
     this.hrService
       .GetAllProvinceDetails(
@@ -1081,7 +1102,8 @@ export class EmployeesComponent implements OnInit {
     this.addEmployeePopupLoading = true;
 
     const generalInfo: GeneralInfo = {
-      EmployeeTypeId: 1,
+      EmployeeTypeId: this.tabEventValue === EmployeeType.Prospective ? EmployeeType.Prospective :
+                      this.tabEventValue === EmployeeType.Active ? EmployeeType.Active : EmployeeType.Terminated,
       EmployeePhoto: this.imageURL,
       Resume: this.fileURL,
       CountryId: this.countryId,
@@ -1119,7 +1141,20 @@ export class EmployeesComponent implements OnInit {
       PlaceOfBirth: value.BirthPlace,
       TinNumber: value.TinNumber,
       GradeId: value.GradeId,
-      OpeningPension: value.OpeningPension
+      OpeningPension: value.OpeningPension,
+      EmployeeContractTypeId: this.tabEventValue === EmployeeType.Active ? value.EmployeeContractTypeId : null,
+      HiredOn: this.tabEventValue === EmployeeType.Active ? new Date(
+        new Date(value.HiredOn).getFullYear(),
+        new Date(value.HiredOn).getMonth(),
+        new Date(value.HiredOn).getDate(),
+        new Date().getHours(),
+        new Date().getMinutes(),
+        new Date().getSeconds()
+      ) : value.HiredOn,
+      FiredOn: value.FiredOn,
+      FiredReason: value.FiredReason,
+      ResignationOn: value.ResignationOn,
+      ResignationReason: value.ResignationReason
     };
 
     this.hrService
@@ -1535,6 +1570,35 @@ export class EmployeesComponent implements OnInit {
   }
   //#endregion
 
+  //#region "Get Employee Contract Type"
+  getEmployeeContractType() {
+    this.hrService
+      .GetAllDropdown(
+        this.setting.getBaseUrl() + GLOBAL.API_Hr_GetEmployeeContractType
+      )
+      .subscribe(
+        data => {
+          this.employeeContractType = [];
+          if (
+            data.StatusCode === 200 &&
+            data.data.EmployeeContractTypeList.length > 0
+          ) {
+            this.employeeContractType = data.data.EmployeeContractTypeList;
+          }
+        },
+        error => {
+          if (error.StatusCode === 500) {
+            this.toastr.error('Internal Server Error....');
+          } else if (error.StatusCode === 401) {
+            this.toastr.error('Unauthorized Access Error....');
+          } else if (error.StatusCode === 403) {
+            this.toastr.error('Forbidden Error....');
+          }
+        }
+      );
+  }
+  //#endregion
+
   //#region "Get All Financial Year"
   GetFinancialYearDropdown() {
     this.hrService
@@ -1735,11 +1799,16 @@ export class EmployeesComponent implements OnInit {
 
   onFieldDataChanged(e) {
     if (e.dataField === 'Phone') {
-      if (e.value !== undefined) {
+      if (e.value !== undefined && e.value != null) {
         const phone = e.value.toString();
         if (phone.length > 14 || phone.length < 10) {
           this.toastr.warning('Phone Number should be between 10-14 digits!!!');
         }
+      }
+    }
+    if (e.dataField === 'CountryId') {
+      if (e.value !== undefined && e.value != null) {
+        this.getStateType(e.value);
       }
     }
   }

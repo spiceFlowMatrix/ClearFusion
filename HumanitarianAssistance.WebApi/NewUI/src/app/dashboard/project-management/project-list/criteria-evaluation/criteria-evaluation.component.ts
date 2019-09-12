@@ -4363,6 +4363,7 @@ export class CriteriaEvaluationComponent
     );
 
     // Set Menu Header List
+    this.authorizedMenuList.push(this.menuList.find(r=>r.Id===7));
     this.globalService.setMenuList(this.authorizedMenuList);
   }
   //#endregion

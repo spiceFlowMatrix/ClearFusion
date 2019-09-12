@@ -278,7 +278,6 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
             data.data.EmployeeDetailListData != null &&
             data.data.EmployeeDetailListData.length > 0
           ) {
-            debugger;
             // var empData;
             data.data.EmployeeDetailListData.forEach(element => {
               // empData = element;
