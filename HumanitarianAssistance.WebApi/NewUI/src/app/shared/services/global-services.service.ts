@@ -51,8 +51,8 @@ export class GlobalService {
   }
 
   //#region "GET_LIST_BY_ID"
-  getDataById(url: string): Observable<any> {
-    return this.http.get<any>(url).pipe(
+  getDataById(url: string, options?: any): Observable<any> {
+    return this.http.get<any>(url, options).pipe(
       map((response) => response),
       finalize(() => {
         // this.loader.hideLoader();
@@ -60,7 +60,7 @@ export class GlobalService {
     );
   }
 
-  //#region "GET_LIST_BY_ID"
+  //#region "GET_LIST_BY_ID And Date"
   getListByIdAndDate(url: string, data): Observable<any> {
     return this.http.post(url, data).pipe(
       map((response) => response),
@@ -69,7 +69,6 @@ export class GlobalService {
       })
     );
   }
-
 
   getListByListId(url: string, id: any): Observable<any> {
     // this.loader.showLoader();

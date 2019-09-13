@@ -394,19 +394,13 @@ export class GLOBAL {
   public static API_ProjectPeople_GetActivitiesControlPermission = 'ProjectPeople/GetActivitiesControlPermission';
 
 
-
-
-
-
-
-
   //#region "Hiring request"
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
   public static API_HiringRequest_AddHiringRequestDetail = 'HiringRequest/AddHiringRequestDetail';
   public static API_HiringRequest_GetProjectHiringRequestDetail = 'HiringRequest/GetProjectHiringRequestDetail';
   public static API_HiringRequest_EditHiringRequestDetail = 'HiringRequest/EditHiringRequestDetail';
   public static API_HiringRequest_GetAllEmployeeList = 'HiringRequest/GetAllEmployeeList';
-  public static API_HiringRequest_GetEmployeeListByOfficeId = 'Code/GetEmployeeDetailByOfficeId';
+  public static API_HiringRequest_GetEmployeeListByOfficeId = 'HiringRequest/GetHiringCandidatesByOfficeId';
   public static API_HiringRequest_AddHiringRequestCandidate = 'HiringRequest/AddHiringRequestCandidate';
   public static API_HiringRequest_GetHiringCandidatesListById = 'HiringRequest/GetHiringCandidatesListById';
   public static API_HiringRequest_AddCandidateInterviewDetail = 'HiringRequest/AddCandidateInterviewDetail';
