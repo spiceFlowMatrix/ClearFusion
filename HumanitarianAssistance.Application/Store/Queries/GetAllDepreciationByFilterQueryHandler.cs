@@ -80,9 +80,9 @@ namespace HumanitarianAssistance.Application.Store.Queries
                         obj.PurchaseDate = item.PurchaseDate;
                         obj.HoursSincePurchase = (daysSincePurchase) * 24; //Multiply total hours in a day for the day purchase was made count purchase day as well(need not to count hours but only days)
                         obj.DepreciationRate = item.DepreciationRate;
-                        obj.DepreciationAmount = Math.Round(((obj.HoursSincePurchase * item.DepreciationRate * item.UnitCost) / 100) * (double)dollarExchangeRate.Rate, 4);
-                        obj.CurrentValue = Math.Round((item.UnitCost - obj.DepreciationAmount) * (double)dollarExchangeRate.Rate, 4);
-                        obj.PurchasedCost = Math.Round(item.UnitCost * (double)dollarExchangeRate.Rate, 4);
+                        obj.DepreciationAmount = Math.Round(((obj.HoursSincePurchase * item.Quantity * item.DepreciationRate * item.UnitCost) / 100) * (double)dollarExchangeRate.Rate, 4);
+                        obj.CurrentValue = Math.Round(((item.UnitCost * item.Quantity) - obj.DepreciationAmount) * (double)dollarExchangeRate.Rate, 4);
+                        obj.PurchasedCost = Math.Round(item.UnitCost * item.Quantity * (double)dollarExchangeRate.Rate, 4);
                         depreciationList.Add(obj);
                     }
 

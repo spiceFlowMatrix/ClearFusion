@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Application.CommonServices
 {
-    public class HRService: IHRService
+    public class HRService : IHRService
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         public HRService(HumanitarianAssistanceDbContext dbContext)
@@ -19,35 +19,41 @@ namespace HumanitarianAssistance.Application.CommonServices
 
         public async Task<bool> AddEmployeePayrollDetails(int? EmployeeId)
         {
-            bool payrollSaved= false;
+            bool payrollSaved = false;
 
             try
             {
                 bool employeeSalaryHeadAlreadyExists = _dbContext.EmployeePayroll.Any(x => x.IsDeleted == false && x.EmployeeID == EmployeeId);
 
-                    // add salary head and payroll heads only if it does not already exists for an employee
-                    if (!employeeSalaryHeadAlreadyExists)
+                // add salary head and payroll heads only if it does not already exists for an employee
+                if (!employeeSalaryHeadAlreadyExists)
+                {
+                    //Get Default payrollaccountheads and save it to the newly created employee
+                    List<SalaryHeadDetails> salaryHeadDetails = await _dbContext.SalaryHeadDetails.Where(x => x.IsDeleted == false).ToListAsync();
+                    List<EmployeePayroll> EmployeePayrollList = new List<EmployeePayroll>();
+
+                    foreach (SalaryHeadDetails salaryHead in salaryHeadDetails)
+                    {
+                        EmployeePayroll employeePayroll = new EmployeePayroll();
+                        employeePayroll.AccountNo = salaryHead.AccountNo;
+                        employeePayroll.HeadTypeId = salaryHead.HeadTypeId;
+                        employeePayroll.SalaryHeadId = salaryHead.SalaryHeadId;
+                        employeePayroll.IsDeleted = false;
+                        employeePayroll.TransactionTypeId = salaryHead.TransactionTypeId;
+                        employeePayroll.EmployeeID = EmployeeId.Value;
+                        EmployeePayrollList.Add(employeePayroll);
+                    }
+
+                    List<EmployeePayrollAccountHead> payrollAccountHeadList = await _dbContext.EmployeePayrollAccountHead
+                                                                                          .Where(x => !x.IsDeleted && x.EmployeeId == EmployeeId)
+                                                                                          .ToListAsync();
+
+                    List<EmployeePayrollAccountHead> employeePayrollAccountHeads = new List<EmployeePayrollAccountHead>();
+
+                    if (payrollAccountHeadList.Any())
                     {
                         //Get Default payrollaccountheads and save it to the newly created employee
-                        List<SalaryHeadDetails> salaryHeadDetails = await _dbContext.SalaryHeadDetails.Where(x => x.IsDeleted == false).ToListAsync();
-                        List<EmployeePayroll> EmployeePayrollList = new List<EmployeePayroll>();
-
-                        foreach (SalaryHeadDetails salaryHead in salaryHeadDetails)
-                        {
-                            EmployeePayroll employeePayroll = new EmployeePayroll();
-                            employeePayroll.AccountNo = salaryHead.AccountNo;
-                            employeePayroll.HeadTypeId = salaryHead.HeadTypeId;
-                            employeePayroll.SalaryHeadId = salaryHead.SalaryHeadId;
-                            employeePayroll.IsDeleted = false;
-                            employeePayroll.TransactionTypeId = salaryHead.TransactionTypeId;
-                            employeePayroll.EmployeeID = EmployeeId.Value;
-                            EmployeePayrollList.Add(employeePayroll);
-                        }
-
-                        //Get Default payrollaccountheads and save it to the newly created employee
                         List<PayrollAccountHead> payrollAccountHeads = await _dbContext.PayrollAccountHead.Where(x => x.IsDeleted == false).ToListAsync();
-
-                        List<EmployeePayrollAccountHead> employeePayrollAccountHeads = new List<EmployeePayrollAccountHead>();
 
                         foreach (var employeePayrollAccount in payrollAccountHeads)
                         {
@@ -64,15 +70,20 @@ namespace HumanitarianAssistance.Application.CommonServices
 
                             employeePayrollAccountHeads.Add(employeePayrollAccountHead);
                         }
-
-                        await _dbContext.EmployeePayrollAccountHead.AddRangeAsync(employeePayrollAccountHeads);
-                        await _dbContext.EmployeePayroll.AddRangeAsync(EmployeePayrollList);
-                        await _dbContext.SaveChangesAsync();
-
-                        payrollSaved= true;
                     }
+
+                    await _dbContext.EmployeePayrollAccountHead.AddRangeAsync(employeePayrollAccountHeads);
+                    await _dbContext.EmployeePayroll.AddRangeAsync(EmployeePayrollList);
+                    await _dbContext.SaveChangesAsync();
+
+                    payrollSaved = true;
+                }
+                else
+                {
+                    payrollSaved = true;
+                }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return payrollSaved;

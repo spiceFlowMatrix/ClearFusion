@@ -28,7 +28,7 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
   employeeSelectedValueFlag = false;
   @Input() officeId: any;
   @Input() isEditingAllowed;
-  // selectedEmployee: number;
+  @Input() selectedEmployee: number;
 
   // Radio Group
   viewsRadioGroup: any;
@@ -323,9 +323,10 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
 
   //#region "on Add Exit Interview Form Submit"
   onAddExitInterviewFormSubmit(model: EmpExitInterviewFormModel) {
+
     const exitInterviewFormModel: EmpExitInterviewFormModel = {
       ExistInterviewDetailsId: 0,
-      EmployeeId: model.EmployeeId,
+      EmployeeId: this.employeeSelectedValue,
 
       EmployeeCode: model.EmployeeCode,
       EmployeeName: model.EmployeeName,
@@ -723,6 +724,7 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
     this.employeeSelectedValueFlag = false; // dropdown enable disabled
     this.empExitInterviewFormListFlag = false;
     this.addEmpExitInterviewDetailsFlag = true;
+    this.isExitInterviewViewOnly = false;
   }
 
   showEditEmpExitInterviewForm() {

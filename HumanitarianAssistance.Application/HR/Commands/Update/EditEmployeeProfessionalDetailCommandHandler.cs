@@ -59,7 +59,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                 if (employeeinfo != null)
                 {
                     employeeinfo.EmployeeTypeId = request.EmployeeTypeId;
-                    await _dbContext.SaveChangesAsync(); ;
+                    await _dbContext.SaveChangesAsync();
                 }
 
                 //when employee is active

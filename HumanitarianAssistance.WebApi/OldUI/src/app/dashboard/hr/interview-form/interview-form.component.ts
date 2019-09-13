@@ -56,7 +56,6 @@ export class InterviewFormComponent implements OnInit {
   //#endregion
 
   //#region "getOfficeCodeList"
-
   getOfficeCodeList() {
     this.codeService
         .GetAllCodeList(
@@ -99,7 +98,9 @@ export class InterviewFormComponent implements OnInit {
                     });
 
                     this.selectedOffice =
-                        (this.selectedOffice === null || this.selectedOffice === undefined)
+                        (this.selectedOffice === null ||
+                          this.selectedOffice === undefined ||
+                           isNaN(this.selectedOffice))
                                 ? this.officeDropdownList[0].OfficeId
                             : this.selectedOffice;
 

@@ -27,13 +27,19 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
             {
                 var OfficeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.OfficeId == request.OfficeId);
 
-                response.data.EmployeeDetailListData = await _dbContext.EmployeeDetail.Include(x => x.EmployeeProfessionalDetail).Where(x => x.EmployeeProfessionalDetail.OfficeId == request.OfficeId && x.EmployeeTypeId != (int)EmployeeTypeStatus.Terminated && x.IsDeleted == false).Select(x => new EmployeeDetailListModel
-                {
-                    EmployeeId = x.EmployeeID,
-                    EmployeeName = x.EmployeeName,
-                    EmployeeCode = x.EmployeeCode != null ? x.EmployeeCode : OfficeDetail.OfficeCode + x.EmployeeID,
-                    CodeEmployeeName = x.EmployeeCode != null ? x.EmployeeCode + " - " + x.EmployeeName : OfficeDetail.OfficeCode + x.EmployeeID + " - " + x.EmployeeName
-                }).ToListAsync();
+                response.data.EmployeeDetailListData = await _dbContext.EmployeeDetail
+                                                                       .Include(x => x.EmployeeProfessionalDetail)
+                                                                       .Where(x => x.EmployeeProfessionalDetail.OfficeId == request.OfficeId &&
+                                                                       x.EmployeeTypeId != (int)EmployeeTypeStatus.Terminated &&
+                                                                       x.EmployeeTypeId != (int)EmployeeTypeStatus.Prospective &&
+                                                                       x.IsDeleted == false)
+                                                                       .Select(x => new EmployeeDetailListModel
+                                                                        {
+                                                                            EmployeeId = x.EmployeeID,
+                                                                            EmployeeName = x.EmployeeName,
+                                                                            EmployeeCode = x.EmployeeCode != null ? x.EmployeeCode : OfficeDetail.OfficeCode + x.EmployeeID,
+                                                                            CodeEmployeeName = x.EmployeeCode != null ? x.EmployeeCode + " - " + x.EmployeeName : OfficeDetail.OfficeCode + x.EmployeeID + " - " + x.EmployeeName
+                                                                        }).ToListAsync();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

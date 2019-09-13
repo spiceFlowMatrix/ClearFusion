@@ -23,7 +23,7 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
   Interviewers: any[] = [];
   officecodelist: any[] = [];
   officeDropdownList: any[];
-  selectedOffice; any;
+  selectedOffice: any;
 
   employeeListDataSource: EmployeeListModel[];
   genderTypesDropdown: any[];
@@ -77,14 +77,12 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
 
-      this.employeeId = params['empId'];
-      //this.getAllInterviewDetails();
-    })
+      this.employeeId = +params['empId'];
+    });
     this.initializeForm();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-   
    // this.getAllInterviewDetails();
 
     if (changes !== undefined && changes.officeId !== undefined) {
@@ -285,7 +283,7 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
                 this.interviewDataSource.push(element);
               });
               if (this.employeeId > 0) {
-                var interviewDetailbyId = this.interviewDataSource.find(r => r.EmployeeID == this.employeeId);
+                const interviewDetailbyId = this.interviewDataSource.find(r => r.EmployeeID === this.employeeId);
                 this.onEditEmpInterviewShowForm(interviewDetailbyId, false);
               }
 
@@ -413,7 +411,6 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
 
   //#region "on Add Exit Interview Form Submit"
   onAddInterviewFormSubmit(model: EmpInterviewFormModel) {
-
     const interviewFormModel: EmpInterviewFormModel = {
       InterviewDetailsId: 0,
       EmployeeID: model.EmployeeID,
@@ -645,18 +642,32 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
       };
     }
 
-    this.ratingBasedCriteriaDataSource = model.RatingBasedCriteriaList === undefined ? [] : model.RatingBasedCriteriaList;
+    this.ratingBasedCriteriaDataSource = model === undefined ? [] :
+                                         model.RatingBasedCriteriaList === undefined ? [] :
+                                         model.RatingBasedCriteriaList;
 
-    this.languagesListDataSource = model.InterviewLanguageModelList === undefined ? [] : model.InterviewLanguageModelList;
-    this.trainingListDataSource = model.InterviewTrainingModelList === undefined ? [] : model.InterviewTrainingModelList;
-    this.technicalQuestionsListDataSource = model.InterviewTechQuesModelList === undefined ? [] : model.InterviewTechQuesModelList;
-    this.Interviewers = model.Interviewers === undefined ? [] : model.Interviewers;
+    this.languagesListDataSource = model === undefined ? [] :
+                                   model.InterviewLanguageModelList ===   undefined ? [] :
+                                   model.InterviewLanguageModelList;
+
+    this.trainingListDataSource = model === undefined ? [] :
+                                  model.InterviewTrainingModelList === undefined ? [] :
+                                  model.InterviewTrainingModelList;
+
+    this.technicalQuestionsListDataSource = model === undefined ? [] :
+                                            model.InterviewTechQuesModelList === undefined ? [] :
+                                            model.InterviewTechQuesModelList;
+
+    this.Interviewers = model === undefined ? [] :
+                        model.Interviewers === undefined ? [] :
+                        model.Interviewers;
 
     // TODO: disable Save button
-    this.currentApproveReject = model.InterviewStatus == null ? true : false;
+    this.currentApproveReject = model === undefined ? true : model.InterviewStatus == null ? true : false;
 
     this.showEditEmpInterviewForm();
   }
+
   //#endregion
 
   //#region "onExitInterviewFormSubmit"
