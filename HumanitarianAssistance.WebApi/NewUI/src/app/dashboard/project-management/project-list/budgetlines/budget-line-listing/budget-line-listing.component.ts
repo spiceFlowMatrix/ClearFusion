@@ -26,7 +26,7 @@ import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/stat
 })
 export class BudgetLineListingComponent implements OnInit {
   //#region "Variables"
-
+  public collapsed = false;
   // detail panel
   colsm6 = 'col-sm-10 col-sm-offset-1';
   showBudgetDetail = false;
@@ -363,4 +363,13 @@ export class BudgetLineListingComponent implements OnInit {
     }
   }
   //#endregion
+
+  toggleFormate() {
+    if (this.collapsed === false) {
+      this.collapsed = true;
+    } else {
+      this.collapsed = false;
+    }
+  }
+
 }
