@@ -106,5 +106,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             command.ModifiedDate = DateTime.UtcNow;
             return await _mediator.Send(command);
         } 
+
+        [HttpGet]
+        public async Task<ApiResponse> GetHiringCandidatesByOfficeId([FromQuery] int OfficeId)
+        {
+            return await _mediator.Send(new GetHiringCandidatesByOfficeIdQuery { OfficeId = OfficeId });
+        }
     }
 }
