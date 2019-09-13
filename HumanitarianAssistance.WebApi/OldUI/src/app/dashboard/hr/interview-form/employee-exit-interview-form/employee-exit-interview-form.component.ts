@@ -323,7 +323,6 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
 
   //#region "on Add Exit Interview Form Submit"
   onAddExitInterviewFormSubmit(model: EmpExitInterviewFormModel) {
-
     const exitInterviewFormModel: EmpExitInterviewFormModel = {
       ExistInterviewDetailsId: 0,
       EmployeeId: this.employeeSelectedValue,
