@@ -31,10 +31,11 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                 obj.CreatedDate = DateTime.UtcNow;
                 obj.IsDeleted = false;
                 obj.CreatedById = request.CreatedById;
+                obj.ProjectId = request.ProjectId;
                 await _dbContext.ProjectActivityDetail.AddAsync(obj);
                 await _dbContext.SaveChangesAsync();
 
-                if (request.ProvinceId != null)
+                if ( request.CountryId != null  && request.ProvinceId != null )
                 {
                     List<ProjectActivityProvinceDetail> activityProvienceList = new List<ProjectActivityProvinceDetail>();
 
@@ -60,7 +61,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
 
                     foreach (var item in selectedDistrict)
                     {
-
+                        item.CountryId = request.CountryId;
                         item.ActivityId = obj.ActivityId;
                         item.CreatedById = request.CreatedById;
                         item.CreatedDate = request.CreatedDate;
@@ -69,7 +70,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     // await _uow.ProjectActivityProvinceDetailRepository.A(obj);
                     await _dbContext.ProjectActivityProvinceDetail.AddRangeAsync(selectedDistrict);
                     await _dbContext.SaveChangesAsync();
-
                 }
 
                 response.StatusCode = StaticResource.successStatusCode;

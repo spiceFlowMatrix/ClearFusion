@@ -68,5 +68,13 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public float? Achieved { get; set; }
         public string SubActivityTitle { get; set; }
 
+        [ForeignKey("ProjectId")]
+        public long? ProjectId { get; set; }
+        public ProjectDetail ProjectDetail { get; set; }
+        [ForeignKey("CountryId")]
+        public int? CountryId { get; set; }
+        public CountryDetails CountryDetails { get; set; }
+
+
     }
 }

@@ -30,5 +30,6 @@ namespace HumanitarianAssistance.Application.Project.Models
         public int RecurrinTypeId { get; set; }
         public double Progress { get; set; }
         public double Sleepage { get; set; }
+        public int CountryId { get; set; }
     }
 }

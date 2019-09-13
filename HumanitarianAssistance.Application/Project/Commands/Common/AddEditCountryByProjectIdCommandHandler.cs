@@ -32,13 +32,13 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
 
                     if (countryExist.Any())
                     {
-                        var provinceExist =await _dbContext.ProvinceMultiSelect.Where(x => x.IsDeleted == false).ToListAsync();
+                        var provinceExist =await _dbContext.ProvinceMultiSelect.Where(x => x.IsDeleted == false && x.ProjectId == request.ProjectId).ToListAsync();
                         if (provinceExist.Any())
                         {
                             _dbContext.ProvinceMultiSelect.RemoveRange(provinceExist);
                             await _dbContext.SaveChangesAsync();
                         }
-                        var district = await _dbContext.DistrictMultiSelect.Where(x => x.IsDeleted == false).ToListAsync();
+                        var district = await _dbContext.DistrictMultiSelect.Where(x => x.IsDeleted == false && x.ProjectId == request.ProjectId).ToListAsync();
                      
                         if (district.Any())
                         {

@@ -526,7 +526,6 @@ export class PayrollComponent implements OnInit {
         data => {
           this.AccountsArr = [];
           if (data.StatusCode === 200) {
-            debugger;
             data.data.AccountDetailList.forEach(element => {
               this.AccountsArr.push({
                 AccountCode: element.AccountCode,

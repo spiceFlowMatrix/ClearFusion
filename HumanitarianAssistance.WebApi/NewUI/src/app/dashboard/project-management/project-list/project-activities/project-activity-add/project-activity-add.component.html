@@ -51,6 +51,14 @@
               </mat-form-field>
             </div>
             <div class="col-lg-6 col-sm-6">
+              <mat-form-field class="example-full-width">
+                <mat-select placeholder="Select Country"  formControlName="CountryId" (selectionChange)="onCountryDetailsChange($event)">
+                  <mat-option *ngFor="let item of countryList" [value]="item.value">{{ item.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-sm-6">
               <!--<mat-form-field class="example-full-width">
                  <mat-select placeholder="Location" formControlName="OfficeId">
                   <mat-option

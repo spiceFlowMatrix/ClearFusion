@@ -22,5 +22,8 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public long? DistrictID { get; set; }
         [ForeignKey("DistrictID")]
         public DistrictDetail DistrictDetail { get; set; }
+        [ForeignKey("CountryId")]
+        public int? CountryId { get; set; }
+        public CountryDetails CountryDetails { get; set; }
     }
 }

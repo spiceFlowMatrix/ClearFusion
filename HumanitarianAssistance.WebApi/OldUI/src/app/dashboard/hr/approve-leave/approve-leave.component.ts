@@ -80,7 +80,6 @@ export class ApproveLeaveComponent implements OnInit {
             data.data.EmployeeApplyLeaveList != null &&
             data.data.EmployeeApplyLeaveList.length > 0
           ) {
-            debugger;
             data.data.EmployeeApplyLeaveList.forEach(element => {
               this.leavedetailsDataSource.push(element);
               this.currentLeaveDetails = null;

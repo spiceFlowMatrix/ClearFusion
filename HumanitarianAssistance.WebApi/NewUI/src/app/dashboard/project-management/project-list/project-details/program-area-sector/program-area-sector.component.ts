@@ -936,7 +936,6 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
   }
 
   GetCountryByProjectId(ProjectId: number) {
-    debugger
     if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.projectListService
         .GetOtherSecurityConsiByProjectId(
@@ -963,6 +962,7 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
   onCountryDetailsChange(ev, data: number) {
     // this.countryDistrictFlag = true;
     this.ProvinceSelectionList = [];
+    this.DistrictMultiSelectList = [];
     if (ev === 'countrySelction' && data != null) {
       this.countryMultiSelectModel.CountryId = data;
       this.AddEditonCountryDetails(this.countryMultiSelectModel);
@@ -986,7 +986,6 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
         .subscribe(
           response => {
             if (response.StatusCode === 200) {
-              debugger;
               this.getAllProvinceListByCountryId([
                 this.countryMultiSelectModel.CountryId
               ]);

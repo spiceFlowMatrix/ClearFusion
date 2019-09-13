@@ -37,11 +37,11 @@ const projectphasesList: IProjectPhasesModel[] = [
   { Id: 3, Name: 'Completed' }
 ];
 
-
 @Injectable()
 export class ProjectActivitiesService {
-
-  public activityPermissionSubject = new BehaviorSubject<IProjectPermissionMode[]>([]);
+  public activityPermissionSubject = new BehaviorSubject<
+    IProjectPermissionMode[]
+  >([]);
 
   //#endregion
   constructor(
@@ -308,6 +308,24 @@ export class ProjectActivitiesService {
   }
   //#endregion
 
+  //#region "getAllProvinceList"
+  getAllCountryList(): any {
+    return this.globalService
+      .getList(
+        this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllCountryDetails
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.CountryDetailsList,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+
   //#region "GetProjectRecurringTypeList"
   GetProjectRecurringTypeList() {
     return recurringTypeList;
@@ -407,6 +425,27 @@ export class ProjectActivitiesService {
     return this.globalService
       .getList(
         this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProvinceDetails
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.ProvinceDetailsList,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
+  //#region "GetAllDistrictvalueByProvinceId"
+  getAllProvinceListByCountryId( Id: any) {
+    return this.globalService
+      .getListByListId(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Project_GetAllProvinceDetailsByCountryId,
+        Id
       )
       .pipe(
         map(x => {
@@ -787,7 +826,8 @@ export class ProjectActivitiesService {
   GetActivitiesControlPermission(data: number) {
     return this.globalService
       .post(
-        this.appurl.getApiUrl() + GLOBAL.API_ProjectPeople_GetActivitiesControlPermission,
+        this.appurl.getApiUrl() +
+          GLOBAL.API_ProjectPeople_GetActivitiesControlPermission,
         data
       )
       .pipe(

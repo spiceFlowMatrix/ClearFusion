@@ -48,12 +48,14 @@ export class ProjectActivityPhaseComponent
   @Input() districtMultiSelectList: any[] = [];
   @Input() activityByIdLoader: any;
   @Input() districtLoaderFlag: boolean;
-
+  @Input() countryList: any[] = [];
   @Input() recurringTypeList: any[] = [];
   @Output() updateActivity = new EventEmitter<any>();
   @Output() refreshProjectSummary = new EventEmitter();
   @Output() updateActivityStatusId = new EventEmitter<IProjectActivityDetail>();
   @Output() selectedProvinceDetailId = new EventEmitter<any>();
+  @Output() selectedCountryDetailId = new EventEmitter<any>();
+
   @Output() parentActivityListRefresh = new EventEmitter<any>();
 
   activityId: any;
@@ -100,7 +102,6 @@ export class ProjectActivityPhaseComponent
       this.activityId = this.activityDetail.ActivityId;
       this.getAllProjectSubActivityDetails(this.activityId);
     }
-
   }
 
   //#region "Dynamic Scroll"
@@ -110,7 +111,7 @@ export class ProjectActivityPhaseComponent
     this.screenWidth = window.innerWidth;
     this.scrollStyles = {
       'overflow-y': 'auto',
-      height: this.screenHeight - 180 + 'px',
+      height: this.screenHeight - 310 + 'px',
       'overflow-x': 'hidden'
     };
   }
@@ -144,36 +145,34 @@ export class ProjectActivityPhaseComponent
       Slippage: null,
 
       IsError: false,
-      IsLoading: false
+      IsLoading: false,
+      CountryId: null,
+      ProjectId: this.projectId
     };
   }
   //#endregion
 
   //#region "getActivitiesControlPermission"
   getActivitiesControlPermission() {
-
     this.activitiesService
       .GetActivitiesControlPermission(this.projectId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (response: IResponseData) => {
           if (response.statusCode === 200 && response.data != null) {
-
             // console.log(response.data);
             this.activitiesService.setActivityPermissions(response.data);
-
           } else {
             this.toastr.error(response.message);
           }
-
         },
-        error => {
-
-        }
+        error => {}
       );
   }
   //#endregion
-
+  OnSelectedCountryId(event: any) {
+this.selectedCountryDetailId.emit(event);
+  }
 
   //#region "selectedProvinceId emit event to activity listing"
   onSelectedProvinceId(event: any) {
@@ -222,30 +221,28 @@ export class ProjectActivityPhaseComponent
       autoFocus: false
     });
     // to refresh the list
-    dialogRef.componentInstance.onSubactivityListRefresh.subscribe((data) => {
+    dialogRef.componentInstance.onSubactivityListRefresh.subscribe(data => {
       // check for status id is planning
       this.updateActivityStatusId.emit(data);
       this.getAllProjectSubActivityDetails(this.activityId);
     });
-
   }
   //#endregion
-
 
   //#region "getAllProjectSubActivityDetails 03/05/2019"
   getAllProjectSubActivityDetails(id) {
     this.projectSubActivityList = [];
-    this.activitiesService.GetAllProjectSubActivityDetail(id)
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe(
-      (response: IResponseData) => {
-        if (response.statusCode === 200 && response.data !== null) {
-          this.projectSubActivityList = response.data;
-        }
-      },
-      error => {
-      }
-    );
+    this.activitiesService
+      .GetAllProjectSubActivityDetail(id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        (response: IResponseData) => {
+          if (response.statusCode === 200 && response.data !== null) {
+            this.projectSubActivityList = response.data;
+          }
+        },
+        error => {}
+      );
   }
   //#endregion
 
