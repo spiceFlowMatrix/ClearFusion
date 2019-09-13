@@ -43,7 +43,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
         public double? Slippage { get; set; }
         public string SubActivityTitle { get; set; }
         public new bool? IsDeleted { get; set; }
-
+        public int? CountryId { get; set; }
+        public long? ProjectId { get; set; }
 
     }
 }

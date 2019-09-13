@@ -50,6 +50,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                       .WithSqlParam("late_start", request.LateStart)
                                       .WithSqlParam("late_end", request.LateEnd)
                                       .WithSqlParam("on_schedule", request.OnSchedule)
+                                      .WithSqlParam("country_id", request.CountryId)
 
                                       .ExecuteStoredProc<SPProjectActivityDetail>();
 
@@ -69,7 +70,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     Recurring = x.Recurring,
                     RecurringCount = x.RecurringCount,
                     RecurrinTypeId = x.RecurrinTypeId,
-
+                    CountryId = x.CountryId,
                     Progress = Math.Round(x.Progress, 2),
                     Slippage = x.Sleepage
                 }).ToList();

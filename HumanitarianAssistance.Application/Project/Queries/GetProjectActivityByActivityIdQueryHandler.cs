@@ -29,7 +29,6 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                               .Include(x => x.EmployeeDetail)
                                                               .Include(x => x.ActivityStatusDetail)
                                                               .Include(x => x.ProjectActivityProvinceDetail)
-                                                              .Include(x => x.ProjectActivityProvinceDetail)
                                                               .FirstOrDefaultAsync(v => v.IsDeleted == false &&
                                                                                   v.ParentId == null &&
                                                                                   v.ActivityId == request.activityId
@@ -41,8 +40,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     obj.ActivityId = activityDetail.ActivityId;
                     obj.ActivityName = activityDetail.ActivityName;
                     obj.ActivityDescription = activityDetail.ActivityDescription;
-                    obj.BudgetLineId = activityDetail.ProjectBudgetLineDetail.BudgetLineId;
-                    obj.BudgetName = activityDetail.ProjectBudgetLineDetail.BudgetName;
+                    obj.BudgetLineId = activityDetail.ProjectBudgetLineDetail?.BudgetLineId;
+                    obj.BudgetName = activityDetail.ProjectBudgetLineDetail?.BudgetName;
                     obj.EmployeeID = activityDetail.EmployeeDetail.EmployeeID;
                     obj.EmployeeName = activityDetail.EmployeeDetail.EmployeeName;
                     obj.StatusId = activityDetail.ActivityStatusDetail.StatusId;
@@ -54,6 +53,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     obj.RecurrinTypeId = activityDetail.RecurrinTypeId;
                     obj.ActualStartDate = activityDetail.ActualStartDate;
                     obj.ActualEndDate = activityDetail.ActualEndDate;
+                    obj.CountryId = activityDetail.CountryId;
                     obj.ProvinceId = activityDetail.ProjectActivityProvinceDetail.Select(x => x.ProvinceId);
                     obj.DistrictID = activityDetail.ProjectActivityProvinceDetail.Select(x => x.DistrictID);
                 }
@@ -69,6 +69,40 @@ namespace HumanitarianAssistance.Application.Project.Queries
             }
             return response;
 
+
+
+
         }
     }
+
 }
+// private DateTime GetRecursiveDate(int recursiveType, int? dayofweek, int? occurance)
+// {
+//     DateTime today = DateTime.UtcNow;
+//     DateTime eventDate = new DateTime();
+//     if (recursiveType == 1)
+//     {
+//         int weeklyEvent = ((int)dayofweek - (int)today.DayOfWeek);
+//         eventDate = today.AddDays(weeklyEvent);
+//     }
+//     else if (recursiveType == 2)
+//     {
+//         List<DateTime> days = new List<DateTime>();
+//         int daysofMonth = DateTime.DaysInMonth(DateTime.UtcNow.Year, DateTime.UtcNow.Month);
+//         for (int i = 1; i <= daysofMonth; i++)
+//         {
+//             if ((int)new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, i).DayOfWeek == dayofweek.Value)
+//             {
+//                 days.Add(new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, i));
+//             };
+
+//         }
+//         if (days.Count <= occurance.Value - 1)
+//         {
+//             eventDate = days[occurance.Value];
+//         }
+
+//     }
+
+//     return eventDate;
+// }

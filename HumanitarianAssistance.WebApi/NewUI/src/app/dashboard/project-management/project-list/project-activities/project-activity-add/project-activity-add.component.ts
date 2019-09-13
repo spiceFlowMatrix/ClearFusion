@@ -39,10 +39,10 @@ export class ProjectActivityAddComponent implements OnInit, OnDestroy {
   districtSelectionList: any[] = [];
   districtSelectedList: any[] = [];
   provinceSelectionList: any[] = [];
-
+  countryList: any[] = [];
   projectActivityForm: FormGroup;
   addActivityLoader = false;
-
+  projectId: number;
   // subscribe
   addProjectActivitySubscribe: Subscription;
 
@@ -61,6 +61,8 @@ export class ProjectActivityAddComponent implements OnInit, OnDestroy {
     this.recurringTypeList = data.RecurringTypeList;
     this.provinceSelectionList = data.ProvinceSelectionList;
     this.districtSelectionList = this.districtSelectionList;
+    this.countryList = data.CountryList;
+    this.projectId = data.ProjectId;
     this.initForm();
   }
 
@@ -72,14 +74,15 @@ export class ProjectActivityAddComponent implements OnInit, OnDestroy {
       ActivityDescription: [null, Validators.required],
       PlannedStartDate: [new Date(), [Validators.required]],
       PlannedEndDate: [new Date(), Validators.required],
-      BudgetLineId: [null, Validators.required],
+      BudgetLineId: [null],
       EmployeeID: [null, Validators.required],
       OfficeId: [null],
       Recurring: [false, Validators.required],
       RecurringCount: [null],
       RecurrinTypeId: [1],
       ProvinceId: [null, Validators.required],
-      DistrictID: [null]
+      DistrictID: [null],
+      CountryId: [null, Validators.required]
     });
   }
   //#endregion
@@ -95,6 +98,66 @@ export class ProjectActivityAddComponent implements OnInit, OnDestroy {
     this.addProjectActivity(data);
   }
   //#endregion
+
+  onCountryDetailsChange(event: any) {
+    if (event != null &&  event !== undefined) {
+      this.getAllProvinceListByCountryId(event);
+
+    }
+  }
+
+ //#region "getAllProvinceList"
+ getAllProvinceList() {
+  // this.provinceDistrictFlag = true;
+  this.activitiesService.getAllProvinceList().subscribe(
+    (response: IResponseData) => {
+      this.provinceSelectionList = [];
+      if (response.statusCode === 200 && response.data != null) {
+        response.data.forEach(element => {
+          this.provinceSelectionList.push({
+            value: element.ProvinceId,
+            label: element.ProvinceName
+          });
+        });
+      }
+      // this.provinceDistrictFlag = false;
+    },
+    error => {
+      // this.provinceDistrictFlag = false;
+    }
+  );
+}
+
+getAllProvinceListByCountryId(id: any) {
+  const provinceId  = id.value;
+  // this.provinceDistrictFlag = true;
+  if (provinceId != null && provinceId !== undefined) {
+  this.provinceSelectionList = [];
+  this.activitiesService
+    .getAllProvinceListByCountryId([provinceId])
+    .subscribe(
+      response => {
+        if (response.statusCode === 200 && response.data != null) {
+            response.data.forEach(element => {
+              this.provinceSelectionList.push({
+                value: element.ProvinceId,
+                label: element.ProvinceName
+              });
+            });
+          // this.GetProvinceByProjectId(this.ProjectId);
+        }
+       // this.provinceDistrictFlag = false;
+      },
+      error => {
+        // this.provinceDistrictFlag = false;
+      }
+    );
+  }
+}
+
+
+//#endregion
+
 
   //#region "onProvinceDetailChange  for GetAllDistrictvalueByProvinceId"
   onProvinceDetailChange(event: any) {
@@ -112,7 +175,6 @@ export class ProjectActivityAddComponent implements OnInit, OnDestroy {
     // this.provinceSelectedFlag = true;
     this.activitiesService.GetAllDistrictvalueByProvinceId(id).subscribe(
       (res: IResponseData) => {
-
         if (res.statusCode === 200 && res.data !== null) {
           res.data.forEach(element => {
             this.districtSelectionList.push({
@@ -152,7 +214,9 @@ export class ProjectActivityAddComponent implements OnInit, OnDestroy {
         RecurringCount: data.RecurringCount,
         RecurrinTypeId: data.RecurrinTypeId,
         ProvinceId: data.ProvinceId,
-        DistrictID: data.DistrictID
+        DistrictID: data.DistrictID,
+        CountryId: data.CountryId,
+        ProjectId: this.projectId
       };
 
       if (activityData.PlannedEndDate >= activityData.PlannedStartDate) {

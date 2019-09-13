@@ -24,21 +24,13 @@
     </div>
   </div>
   <div [ngStyle]="scrollStyles">
-    <app-project-planning
-      [activityDetail]="activityDetail"
-      [planningDocumentsList]="planningDocumentsList"
-      [budgetLineList]="budgetLineList"
-      [employeeList]="employeeList"
-      [officeList]="officeList"
-      [provinceSelectionList]="provinceSelectionList"
-      [districtMultiSelectList]="districtMultiSelectList"
-      [recurringTypeList]="recurringTypeList"
-      [districtLoaderFlag]="districtLoaderFlag"
-      (selectedProvinceId)="onSelectedProvinceId($event)"
-      (updateActivity)="updateActivityEvent($event)"
-      (refreshProjectSummary)="refreshProjectSummaryEvent()"
-
-    ></app-project-planning>
+    <app-project-planning [activityDetail]="activityDetail" [planningDocumentsList]="planningDocumentsList"
+      [budgetLineList]="budgetLineList" [employeeList]="employeeList" [officeList]="officeList"
+      [provinceSelectionList]="provinceSelectionList" [countryList]="countryList"
+      [districtMultiSelectList]="districtMultiSelectList" [recurringTypeList]="recurringTypeList"
+      [districtLoaderFlag]="districtLoaderFlag" (selectedProvinceId)="onSelectedProvinceId($event)"
+      (updateActivity)="updateActivityEvent($event)" (refreshProjectSummary)="refreshProjectSummaryEvent()"
+      (selectedCurrencyId)="OnSelectedCountryId($event)"></app-project-planning>
     <br />
 
     <div class="row">
@@ -52,11 +44,12 @@
       </div>
     </div>
 
-   <div  *ngFor="let item of projectSubActivityList">
-    <br />
-    <app-sub-activities [subActivityDetail]="item" (updateActivityStatusId)="onUpdateActivityStatusId($event)"></app-sub-activities>
-    <br />
-   </div>
+    <div *ngFor="let item of projectSubActivityList">
+      <br />
+      <app-sub-activities [subActivityDetail]="item" (updateActivityStatusId)="onUpdateActivityStatusId($event)">
+      </app-sub-activities>
+      <br />
+    </div>
 
     <div class="row">
       <div class="col-sm-2">

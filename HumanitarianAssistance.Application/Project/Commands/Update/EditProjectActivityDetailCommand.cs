@@ -31,7 +31,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
         public int? RecurringCount { get; set; }
         public int? RecurrinTypeId { get; set; }
 
-
+        public int? CountryId { get; set; }
+        public long? ProjectId { get; set; }
         public IEnumerable<int> ProvinceId { get; set; }
         public IEnumerable<long?> DistrictID { get; set; }
 

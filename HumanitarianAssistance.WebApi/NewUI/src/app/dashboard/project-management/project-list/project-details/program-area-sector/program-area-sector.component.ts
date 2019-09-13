@@ -940,12 +940,12 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
           this.appurl.getApiUrl() + GLOBAL.API_GetCountryByProjectId,
           ProjectId
         )
-        .subscribe(data => {
-          if (data != null) {
-            if (data.data.CountryMultiSelectById != null) {
+        .subscribe(response => {
+          if (response.data != null && response.StatusCode === 200) {
+            if (response.data.CountryMultiSelectById.length > 0 ) {
               [
                 this.countryMultiSelectModel.CountryId
-              ] = data.data.CountryMultiSelectById;
+              ] = response.data.CountryMultiSelectById;
               this.getAllProvinceListByCountryId([
                 this.countryMultiSelectModel.CountryId
               ]);
@@ -960,6 +960,7 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
   onCountryDetailsChange(ev, data: number) {
     // this.countryDistrictFlag = true;
     this.ProvinceSelectionList = [];
+    this.DistrictMultiSelectList = [];
     if (ev === 'countrySelction' && data != null) {
       this.countryMultiSelectModel.CountryId = data;
       this.AddEditonCountryDetails(this.countryMultiSelectModel);

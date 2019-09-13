@@ -39,6 +39,8 @@ export interface IAddProjectActivityDataSources {
   RecurringTypeList: any[];
   ProvinceSelectionList: any[];
   DistrictMultiSelectList: any[];
+  CountryList: any[];
+  ProjectId: number;
 }
 
 export interface IEmployeeList {
@@ -110,6 +112,8 @@ export interface IProjectActivityDetail {
 
   IsLoading?: boolean;
   IsError?: boolean;
+  CountryId?: number;
+  ProjectId: number;
 }
 
 export interface IPlanningActivityDetail {
@@ -128,6 +132,8 @@ export interface IPlanningActivityDetail {
   RecurrinTypeId: number;
   ProvinceId?: number[];
   DistrictID?: number[];
+  CountryId?: number;
+  ProjectId: number;
 }
 
 export interface IBudgetLine {
