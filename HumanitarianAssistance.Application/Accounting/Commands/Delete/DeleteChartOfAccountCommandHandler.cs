@@ -29,6 +29,7 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Delete
             {
                 ChartOfAccountNew accountDetail = await _dbContext.ChartOfAccountNew.FirstOrDefaultAsync(x => x.ChartOfAccountNewId == request.AccountId);
                 
+                //CAUTION: Before deleting an account check if account assigned on other module or check if transaction exists for account
                 if (accountDetail != null)
                 {
                     if(accountDetail.AccountLevelId == (int)AccountLevels.InputLevel)
@@ -44,6 +45,10 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Delete
                         else if(await CheckPensionDebitAccountExist(request.AccountId))
                         {
                             throw new Exception(StaticResource.AccountAssignedToPensionDebit);
+                        }
+                        else if(await CheckAccountExistsOnEmployeeAnalyticalInfo(request.AccountId))
+                        {
+                            throw new Exception(StaticResource.AccountAssignedToEmployeeAnalyticalInfo);
                         }
                     }
                     else
@@ -119,6 +124,11 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Delete
         public async Task<bool> CheckPensionDebitAccountExist(long accountId)
         {
             return await _dbContext.PensionDebitAccountMaster.AnyAsync(x => x.ChartOfAccountNewId == accountId && x.IsDeleted == false);
+        }
+
+        public async Task<bool> CheckAccountExistsOnEmployeeAnalyticalInfo(long accountId)
+        {
+            return await _dbContext.EmployeeSalaryAnalyticalInfo .AnyAsync(x => x.AccountNo == accountId && x.IsDeleted == false);
         }
     }
 }

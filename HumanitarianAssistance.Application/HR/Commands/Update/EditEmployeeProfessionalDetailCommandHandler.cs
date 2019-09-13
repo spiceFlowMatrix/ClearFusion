@@ -1,4 +1,5 @@
-﻿using HumanitarianAssistance.Application.Infrastructure;
+﻿using HumanitarianAssistance.Application.CommonServicesInterface;
+using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.HR;
@@ -16,10 +17,12 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
     public class EditEmployeeProfessionalDetailCommandHandler : IRequestHandler<EditEmployeeProfessionalDetailCommand, ApiResponse>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
+        private readonly IHRService _hrService;
 
-        public EditEmployeeProfessionalDetailCommandHandler(HumanitarianAssistanceDbContext dbContext)
+        public EditEmployeeProfessionalDetailCommandHandler(HumanitarianAssistanceDbContext dbContext, IHRService hrService)
         {
             _dbContext = dbContext;
+            _hrService= hrService;
         }
         public async Task<ApiResponse> Handle(EditEmployeeProfessionalDetailCommand request, CancellationToken cancellationToken)
         {
@@ -56,60 +59,18 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                 if (employeeinfo != null)
                 {
                     employeeinfo.EmployeeTypeId = request.EmployeeTypeId;
-                    await _dbContext.SaveChangesAsync(); ;
+                    await _dbContext.SaveChangesAsync();
                 }
 
                 //when employee is active
                 if (request.EmployeeTypeId == (int)EmployeeTypeStatus.Active)
                 {
-                    bool employeeSalaryHeadAlreadyExists = _dbContext.EmployeePayroll.Any(x => x.IsDeleted == false && x.EmployeeID == request.EmployeeId);
 
-                    // add salary head and payroll heads only if it does not already exists for an employee
-                    if (!employeeSalaryHeadAlreadyExists)
+                    bool isSalaryHeadSaved=  await _hrService.AddEmployeePayrollDetails(request.EmployeeId);
+
+                    if(!isSalaryHeadSaved)
                     {
-                        //Get Default payrollaccountheads and save it to the newly created employee
-                        List<SalaryHeadDetails> salaryHeadDetails = await _dbContext.SalaryHeadDetails.Where(x => x.IsDeleted == false).ToListAsync();
-                        List<EmployeePayroll> EmployeePayrollList = new List<EmployeePayroll>();
-
-                        foreach (SalaryHeadDetails salaryHead in salaryHeadDetails)
-                        {
-                            EmployeePayroll employeePayroll = new EmployeePayroll();
-                            employeePayroll.AccountNo = salaryHead.AccountNo;
-                            employeePayroll.HeadTypeId = salaryHead.HeadTypeId;
-                            employeePayroll.SalaryHeadId = salaryHead.SalaryHeadId;
-                            employeePayroll.IsDeleted = false;
-                            employeePayroll.TransactionTypeId = salaryHead.TransactionTypeId;
-                            employeePayroll.EmployeeID = request.EmployeeId.Value;
-                            EmployeePayrollList.Add(employeePayroll);
-                        }
-
-                        await _dbContext.EmployeePayroll.AddRangeAsync(EmployeePayrollList);
-                        await _dbContext.SaveChangesAsync();
-
-
-                        //Get Default payrollaccountheads and save it to the newly created employee
-                        List<PayrollAccountHead> payrollAccountHeads = await _dbContext.PayrollAccountHead.Where(x => x.IsDeleted == false).ToListAsync();
-
-                        List<EmployeePayrollAccountHead> employeePayrollAccountHeads = new List<EmployeePayrollAccountHead>();
-
-                        foreach (var employeePayrollAccount in payrollAccountHeads)
-                        {
-                            EmployeePayrollAccountHead employeePayrollAccountHead = new EmployeePayrollAccountHead();
-
-                            employeePayrollAccountHead.IsDeleted = false;
-                            employeePayrollAccountHead.AccountNo = employeePayrollAccount.AccountNo;
-                            employeePayrollAccountHead.Description = employeePayrollAccount.Description;
-                            employeePayrollAccountHead.EmployeeId = request.EmployeeId.Value;
-                            employeePayrollAccountHead.PayrollHeadId = employeePayrollAccount.PayrollHeadId;
-                            employeePayrollAccountHead.PayrollHeadName = employeePayrollAccount.PayrollHeadName;
-                            employeePayrollAccountHead.PayrollHeadTypeId = employeePayrollAccount.PayrollHeadTypeId;
-                            employeePayrollAccountHead.TransactionTypeId = employeePayrollAccount.TransactionTypeId;
-
-                            employeePayrollAccountHeads.Add(employeePayrollAccountHead);
-                        }
-
-                        await _dbContext.EmployeePayrollAccountHead.AddRangeAsync(employeePayrollAccountHeads);
-                        await _dbContext.SaveChangesAsync();
+                        throw new Exception(StaticResource.SalaryHeadNotSaved);
                     }
                 }
 

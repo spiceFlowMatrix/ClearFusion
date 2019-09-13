@@ -58,5 +58,11 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
         public int? MaritalStatusId { get; set; }
         public string TinNumber { get; set; }
         public double OpeningPension { get; set; }
+        public int? EmployeeContractTypeId { get; set; }
+        public DateTime? HiredOn { get; set; }
+        public DateTime? FiredOn { get; set; }
+        public string FiredReason { get; set; }
+        public DateTime? ResignationOn { get; set; }
+        public string ResignationReason { get; set; }
     }
 }

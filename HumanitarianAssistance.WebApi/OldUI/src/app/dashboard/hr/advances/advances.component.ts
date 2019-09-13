@@ -644,6 +644,7 @@ onOfficeSelected(officeId: any) {
         new Date(this.currentDate).getMonth() + 1,
         new Date(this.currentDate).getFullYear()
       );
+      this.getAllEmployeeListByOfficeId();
   }
 }
 

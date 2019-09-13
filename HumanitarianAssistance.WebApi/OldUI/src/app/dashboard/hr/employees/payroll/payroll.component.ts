@@ -165,7 +165,8 @@ export class PayrollComponent implements OnInit {
         data => {
           this.employeePayrollList = [];
           if (data.StatusCode === 200) {
-            if (data.data.EmployeePayrollList != null) {
+            if (data.data.EmployeePayrollList != null && data.data.EmployeePayrollList !== undefined &&
+              data.data.EmployeePayrollList.length > 0) {
               let i = 1; // to set keyExpr="ID" value in HTML
               data.data.EmployeePayrollList.forEach(element => {
                 this.employeePayrollList.push({
@@ -186,11 +187,11 @@ export class PayrollComponent implements OnInit {
                 i++;
               });
 
-              // TODO: If value is not set the add default
-              this.payrollForm.CurrencyValue =
-                data.data.EmployeePayrollList[0].CurrencyId === 0
-                  ? this.payrollForm.CurrencyValue
-                  : data.data.EmployeePayrollList[0].CurrencyId;
+                  // TODO: If value is not set the add default
+                  this.payrollForm.CurrencyValue =
+                  data.data.EmployeePayrollList[0].CurrencyId === 0
+                ? this.payrollForm.CurrencyValue
+                : data.data.EmployeePayrollList[0].CurrencyId;
 
               this.payrollForm.PaymentType =
                 data.data.EmployeePayrollList[0].PaymentType === 0 ||

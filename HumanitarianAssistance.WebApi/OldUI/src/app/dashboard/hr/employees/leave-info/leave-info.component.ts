@@ -1,26 +1,26 @@
-import { Component, OnInit, Input } from "@angular/core";
-import { HrService } from "../../hr.service";
-import { Router } from "@angular/router";
+import { Component, OnInit, Input } from '@angular/core';
+import { HrService } from '../../hr.service';
+import { Router } from '@angular/router';
 import { GLOBAL } from '../../../../shared/global';
-import { ToastrService } from "ngx-toastr";
+import { ToastrService } from 'ngx-toastr';
 import {
   applicationPages,
   applicationModule
-} from "../../../../shared/application-pages-enum";
-import { AppSettingsService } from "../../../../service/app-settings.service";
-import { CommonService } from "../../../../service/common.service";
+} from '../../../../shared/application-pages-enum';
+import { AppSettingsService } from '../../../../service/app-settings.service';
+import { CommonService } from '../../../../service/common.service';
 
 @Component({
-  selector: "app-leave-info",
-  templateUrl: "./leave-info.component.html",
-  styleUrls: ["./leave-info.component.css"]
+  selector: 'app-leave-info',
+  templateUrl: './leave-info.component.html',
+  styleUrls: ['./leave-info.component.css']
 })
 export class LeaveInfoComponent implements OnInit {
   @Input() employeeId: number;
   @Input() tabEventValue: number;
 
   hiredOnDate: any;
-  isEditingAllowed: boolean = false;
+  isEditingAllowed = false;
 
   leaveInfoDataSource: LeaveInfoModel[];
   leaveInfoData: LeaveInfoData;
@@ -116,6 +116,7 @@ export class LeaveInfoComponent implements OnInit {
       .GetDataByEmployeeIdAndOfficeId(
         this.setting.getBaseUrl() + GLOBAL.API_HR_GetAllDisableCalanderDate,
         employeeId,
+        // tslint:disable-next-line: radix
         parseInt(localStorage.getItem('EMPLOYEEOFFICEID'))
       )
       .subscribe(
@@ -134,7 +135,9 @@ export class LeaveInfoComponent implements OnInit {
                 )
               );
             });
-          } else if (data.StatusCode === 400) this.toastr.warning(data.Message);
+          } else if (data.StatusCode === 400) {
+             this.toastr.warning(data.Message);
+          }
         },
         error => {
           if (error.StatusCode === 500) {
@@ -177,8 +180,9 @@ export class LeaveInfoComponent implements OnInit {
                 FinancialYearName: element.FinancialYearName
               });
             });
-          } else if (data.StatusCode === 400)
+          } else if (data.StatusCode === 400) {
             this.toastr.error('Something went wrong!');
+          }
         },
         error => {
           if (error.StatusCode === 500) {
@@ -216,8 +220,9 @@ export class LeaveInfoComponent implements OnInit {
                     new Date().getTimezoneOffset() * 60000
                 ));
             });
-          } else if (data.StatusCode === 400)
+          } else if (data.StatusCode === 400) {
             this.toastr.error('Something went wrong!');
+          }
         },
         error => {
           if (error.StatusCode === 500) {
@@ -249,8 +254,9 @@ export class LeaveInfoComponent implements OnInit {
             data.data.LeaveReasonList.forEach(element => {
               this.leaveReasonTypeDropdown.push(element);
             });
-          } else if (data.StatusCode === 400)
+          } else if (data.StatusCode === 400) {
             this.toastr.error('Something went wrong!');
+          }
         },
         error => {
           if (error.StatusCode === 500) {
@@ -283,7 +289,9 @@ export class LeaveInfoComponent implements OnInit {
             data.data.AssignLeaveToEmployeeList.forEach(element => {
               this.leaveInfoDataSource.push(element);
             });
-          } else if (data.StatusCode === 400) this.toastr.warning(data.Message);
+          } else if (data.StatusCode === 400) {
+            this.toastr.warning(data.Message);
+          }
 
           this.getAllDisableCalendarDate(this.employeeId);
           this.leaveInfoLoading = false;
@@ -329,7 +337,9 @@ export class LeaveInfoComponent implements OnInit {
             this.GetAllLeaveInfo(this.employeeId);
             this.hideAssignLeavePopup();
             this.getAllDisableCalendarDate(this.employeeId);
-          } else if (data.StatusCode === 900) this.toastr.warning(data.Message);
+          } else if (data.StatusCode === 900) {
+            this.toastr.warning(data.Message);
+          }
           this.assignLeavePopupLoading = false;
         },
         error => {
@@ -383,9 +393,9 @@ export class LeaveInfoComponent implements OnInit {
             if (data.StatusCode === 200) {
               this.toastr.success('Updated successfully!!!');
               this.GetAllLeaveInfo(this.employeeId);
-            } else if (data.StatusCode === 400)
+            } else if (data.StatusCode === 400) {
               this.toastr.error('Something went wrong!');
-
+            }
             this.editAssignLeavePopupLoading = false;
             this.hideEditLeaveInfoPopup();
           },
@@ -461,9 +471,9 @@ export class LeaveInfoComponent implements OnInit {
                 this.GetAllLeaveInfo(this.employeeId);
               } else if (data.StatusCode === 900) {
                 this.toastr.warning(data.Message);
-              } else if (data.StatusCode === 400)
+              } else if (data.StatusCode === 400) {
                 this.toastr.error('Something went wrong!');
-
+              }
               this.selectedDates = null;
               this.applyLeavePopupLoading = false;
             },
@@ -521,8 +531,9 @@ export class LeaveInfoComponent implements OnInit {
                 Remarks: element.Remarks
               });
             });
-          } else if (data.StatusCode === 400)
+          } else if (data.StatusCode === 400) {
             this.toastr.error('Something went wrong!');
+          }
         },
         error => {
           if (error.StatusCode === 500) {
@@ -552,8 +563,9 @@ export class LeaveInfoComponent implements OnInit {
             this.toastr.success('Deleted Successfully!!!');
             this.GetAllLeaveDetails(this.employeeId);
             this.GetAllLeaveInfo(this.employeeId);
-          } else if (data.StatusCode === 400)
+          } else if (data.StatusCode === 400) {
             this.toastr.error('Something went wrong!');
+          }
 
           this.leaveDetailsPopupLoading = false;
         },
@@ -613,10 +625,16 @@ export class LeaveInfoComponent implements OnInit {
     this.popupApplyLeaveVisible = false;
   }
 
+  // Export Leave PDF
+  exportLeavePdf() {
+  }
+
   // Leave Details
   showHideLeaveDetailsPopup() {
     this.popupLeaveDetailsVisible = !this.popupLeaveDetailsVisible;
-    if (this.popupLeaveDetailsVisible) this.GetAllLeaveDetails(this.employeeId);
+    if (this.popupLeaveDetailsVisible) {
+      this.GetAllLeaveDetails(this.employeeId);
+    }
   }
 
   // Edit Leave Info

@@ -32,7 +32,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                 obj.EmployeeID = request.EmployeeID;
                 obj.ProjectId = request.ProjectId;
                 obj.BudgetlineId = request.BudgetLineId;
-                obj.AccountCode = request.AccountCode;
+                obj.AccountNo = request.AccountCode;
                 obj.SalaryPercentage = request.SalaryPercentage;
 
                 obj.IsDeleted = false;

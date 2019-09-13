@@ -1076,6 +1076,7 @@ export class EmployeeSalaryComponent implements OnInit {
 
   onOfficeSelected(officeId: any) {
     this.selectedOffice = officeId;
+    this.getDepartmentType(this.selectedOffice);
   }
 
 

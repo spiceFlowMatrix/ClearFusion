@@ -13,6 +13,8 @@ namespace HumanitarianAssistance.WebApi.Extensions
             services.AddTransient<IProjectServices, ProjectServices>();
             services.AddTransient<IStoreServices, StoreServices>();
             services.AddTransient<IFileManagementService, FileManagementService>();
+            services.AddTransient<IPdfExportService, PdfExportService>();
+            services.AddTransient<IHRService, HRService>();
 
             return services;
         }

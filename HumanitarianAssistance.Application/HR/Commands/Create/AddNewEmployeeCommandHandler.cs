@@ -2,8 +2,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Application.HR.Models;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Domain.Entities.HR;
@@ -17,11 +19,13 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IHRService _hrService;
 
-        public AddNewEmployeeCommandHandler(HumanitarianAssistanceDbContext dbContext, IMapper mapper)
+        public AddNewEmployeeCommandHandler(HumanitarianAssistanceDbContext dbContext, IMapper mapper, IHRService hrService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _hrService= hrService;
         }
 
         public async Task<ApiResponse> Handle(AddNewEmployeeCommand request, CancellationToken cancellationToken)
@@ -31,13 +35,16 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
             {
                 EmployeeDetail obj = _mapper.Map<EmployeeDetail>(request);
                 obj.IsDeleted = false;
+
                 await _dbContext.EmployeeDetail.AddAsync(obj);
                 await _dbContext.SaveChangesAsync();
+
                 OfficeDetail OfficeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.OfficeId == request.OfficeId && x.IsDeleted == false);
-                EmployeeDetail emp = await _dbContext.EmployeeDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.EmployeeID == obj.EmployeeID);
-                emp.EmployeeCode = "E" + obj.EmployeeID;
-                 _dbContext.EmployeeDetail.Update(emp);
+                obj.EmployeeCode = "E" + obj.EmployeeID;
+
+                 _dbContext.EmployeeDetail.Update(obj);
                 await _dbContext.SaveChangesAsync();
+
                 EmployeeProfessionalDetailModel empprofessional = new EmployeeProfessionalDetailModel
                 {
                     EmployeeId = obj.EmployeeID,
@@ -47,25 +54,29 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     CreatedDate = request.CreatedDate,
                     IsDeleted = request.IsDeleted,
                     ProfessionId = request.ProfessionId,
-                    TinNumber = request.TinNumber
+                    TinNumber = request.TinNumber,
+                    HiredOn = request.HiredOn,
+                    EmployeeContractTypeId= request.EmployeeContractTypeId,
+                    FiredOn= request.FiredOn,
+                    FiredReason=  request.FiredReason,
+                    ResignationOn= request.ResignationOn,
+                    ResignationReason= request.ResignationReason
                 };
+
                 EmployeeProfessionalDetail obj1 = _mapper.Map<EmployeeProfessionalDetail>(empprofessional);
                 await _dbContext.EmployeeProfessionalDetail.AddAsync(obj1);
                 await _dbContext.SaveChangesAsync();
 
-                // UserDetails user = await _dbContext.UserDetails.FirstOrDefaultAsync(x => x.AspNetUserId == request.CreatedById && x.IsDeleted == false);
+                if(request.EmployeeTypeId != (int)EmployeeTypeStatus.Prospective)
+                {
+                    bool isEmployeeSalaryHeadSaved= await _hrService.AddEmployeePayrollDetails(obj.EmployeeID);
 
-                // LoggerDetailsModel loggerObj = new LoggerDetailsModel();
-                // loggerObj.NotificationId = (int)Common.Enums.LoggerEnum.EmployeeCreated;
-                // loggerObj.IsRead = false;
-                // loggerObj.UserName = user.FirstName + " " + user.LastName;
-                // loggerObj.UserId = request.CreatedById;
-                // loggerObj.LoggedDetail = "Employee " + obj.EmployeeName + " Created";
-                // loggerObj.CreatedDate = request.CreatedDate;
-
-                // response.LoggerDetailsModel = loggerObj;
-
-                // await _dbContext.SaveChangesAsync();
+                    if(!isEmployeeSalaryHeadSaved)
+                    {
+                        throw new Exception(StaticResource.SalaryHeadNotSaved);
+                    }
+                }
+                
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

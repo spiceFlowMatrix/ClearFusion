@@ -18,6 +18,7 @@ import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/stat
 import { ToastrService } from 'ngx-toastr';
 import { ProjectPlanningComponent } from './project-planning/project-planning.component';
 import { MatDialog } from '@angular/material/dialog';
+// tslint:disable-next-line: max-line-length
 import { MonitoringReviewComponent } from 'src/app/dashboard/project-management/project-list/project-activities/project-activity-phase/monitoring/monitoring-review/monitoring-review.component';
 import { AddSubActivitiesComponent } from './add-sub-activities/add-sub-activities.component';
 import { MonitoringComponent } from './monitoring/monitoring.component';

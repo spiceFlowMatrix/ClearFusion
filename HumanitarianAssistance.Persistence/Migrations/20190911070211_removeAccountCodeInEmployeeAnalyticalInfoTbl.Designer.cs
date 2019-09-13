@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190911070211_removeAccountCodeInEmployeeAnalyticalInfoTbl")]
+    partial class removeAccountCodeInEmployeeAnalyticalInfoTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3299,8 +3301,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<int>("EmployeeSalaryAnalyticalInfoId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<long?>("AccountNo");
-
                     b.Property<long>("BudgetlineId");
 
                     b.Property<string>("CreatedById");
@@ -3322,8 +3322,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<double>("SalaryPercentage");
 
                     b.HasKey("EmployeeSalaryAnalyticalInfoId");
-
-                    b.HasIndex("AccountNo");
 
                     b.HasIndex("BudgetlineId");
 
@@ -6066,8 +6064,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<string>("ChallengesAndSolutions");
 
-                    b.Property<int?>("CountryId");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
@@ -6088,8 +6084,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("PlannedStartDate");
 
-                    b.Property<long?>("ProjectId");
-
                     b.Property<int>("RecurrinTypeId");
 
                     b.Property<bool?>("Recurring");
@@ -6106,13 +6100,9 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasIndex("BudgetLineId");
 
-                    b.HasIndex("CountryId");
-
                     b.HasIndex("EmployeeID");
 
                     b.HasIndex("ParentId");
-
-                    b.HasIndex("ProjectId");
 
                     b.HasIndex("StatusId");
 
@@ -6157,8 +6147,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<long>("ActivityId");
 
-                    b.Property<int?>("CountryId");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
@@ -6176,8 +6164,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasKey("ActivityProvinceId");
 
                     b.HasIndex("ActivityId");
-
-                    b.HasIndex("CountryId");
 
                     b.HasIndex("DistrictID");
 
@@ -8768,10 +8754,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeSalaryAnalyticalInfo", b =>
                 {
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Accounting.ChartOfAccountNew", "ChartOfAccountNew")
-                        .WithMany()
-                        .HasForeignKey("AccountNo");
-
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectBudgetLineDetail", "ProjectBudgetLine")
                         .WithMany()
                         .HasForeignKey("BudgetlineId")
@@ -9360,10 +9342,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("BudgetLineId");
 
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.CountryDetails", "CountryDetails")
-                        .WithMany()
-                        .HasForeignKey("CountryId");
-
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
                         .WithMany()
                         .HasForeignKey("EmployeeID");
@@ -9371,10 +9349,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectActivityDetail")
                         .WithMany("ProjectSubActivityList")
                         .HasForeignKey("ParentId");
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId");
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ActivityStatusDetail", "ActivityStatusDetail")
                         .WithMany()
@@ -9395,10 +9369,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .WithMany("ProjectActivityProvinceDetail")
                         .HasForeignKey("ActivityId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.CountryDetails", "CountryDetails")
-                        .WithMany()
-                        .HasForeignKey("CountryId");
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.DistrictDetail", "DistrictDetail")
                         .WithMany()
