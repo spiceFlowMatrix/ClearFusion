@@ -13,18 +13,36 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         {
             IsCompleted = false;
         }
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1)]
         public long HiringRequestId { get; set; }
         public string HiringRequestCode { get; set; }
+        public string JobCategory { get; set; }
+        public string MinimumEducationLevel { get; set; }
+        public string Organization { get; set; }
+        [ForeignKey("ProviceId")]
+        public int? ProviceId { get; set; }
+        public ProvinceDetails ProvinceDetails { get; set; }
+        public string ContractType { get; set; }
+        public int? ContractDuration { get; set; }
+        public int? GenderId { get; set; }
+        public string SalaryRange { get; set; }
+        public DateTime? AnouncingDate { get; set; }
+        public DateTime? ClosingDate { get; set; }
+        [ForeignKey("CountryId")]
+        public int? CountryId { get; set; }
+        public CountryDetails CountryDetails { get; set; }
+        public int? JobType { get; set; }
+        public int? Shift { get; set; }
+        public string JobStatus { get; set; }
+        public string Experience { get; set; }
+        public string Background { get; set; }
         public string Description { get; set; }
-        //public string Profession { get; set; }
+        public string Profession { get; set; }
         [ForeignKey("ProfessionId")]
         public int? ProfessionId { get; set; }
         public ProfessionDetails ProfessionDetails { get; set; }
-
         public string Position { get; set; }
         public int? TotalVacancies { get; set; }
         public int? FilledVacancies { get; set; }
@@ -54,6 +72,9 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public ProjectDetail ProjectDetail { get; set; }
         public bool IsCompleted { get; set; }
         public JobHiringDetails JobHiringDetails { get; set; }
+        public string SpecificDutiesAndResponsblities { get; set; }
+        public string KnowladgeAndSkillRequired { get; set; }
+        public string SubmissionGuidlines { get; set; }
 
     }
 }

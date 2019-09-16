@@ -169,7 +169,7 @@ export class ProjectActivityDocumentsComponent implements OnInit, OnDestroy {
       }
     }
     } else {
-      this.toastr.warning('Document Already Exist');
+      this.toastr.warning('File Already Exist');
     }
   }
   //#endregion
