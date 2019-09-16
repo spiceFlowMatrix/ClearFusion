@@ -48,7 +48,8 @@ export class PurchasesComponent implements OnInit {
     purchaseFileImage: File;
     purchaseInvoiceImage: File;
     imageURL: any;
-
+    @Input() officeId: number;
+    exchangeRateMessage: string;
 
     imageFlag = true;
     updatedImage: any;
@@ -105,7 +106,8 @@ export class PurchasesComponent implements OnInit {
         private setting: AppSettingsService,
         private toastr: ToastrService,
         private codeservice: CodeService,
-        private fileManagementService: FileManagementService
+        private fileManagementService: FileManagementService,
+        private transformDate: DatePipe
     ) { }
 
     ngOnInit() {
@@ -764,20 +766,6 @@ export class PurchasesComponent implements OnInit {
                         ImageFileName: this.purchaseDetailsFormImageFileName, // data.ImageFileName,
                         InvoiceFileName: this.purchaseDetailsFormInvoice, // data.Invoice,
                         PurchasedById: data.PurchasedById,
-
-                        // newly added fields
-                        // VoucherId: data.VoucherId,
-                        // VoucherDate:
-                        //     data.VoucherDate != null
-                        //         ? new Date(
-                        //             new Date(data.VoucherDate).getFullYear(),
-                        //             new Date(data.VoucherDate).getMonth(),
-                        //             new Date(data.VoucherDate).getDate(),
-                        //             new Date().getHours(),
-                        //             new Date().getMinutes(),
-                        //             new Date().getSeconds()
-                        //         )
-                        //         : null,
                         AssetTypeId: data.AssetTypeId, // 1.Cash, 2.In Kind
                         InvoiceNo: data.InvoiceNo,
                         InvoiceDate:
@@ -963,7 +951,8 @@ export class PurchasesComponent implements OnInit {
             TimezoneOffset: null,
             PurchaseName: null
         };
-
+        this.exchangeRateMessage = '';
+        this.checkExchangeRateExists(this.purchaseDetailsForm.PurchaseDate);
         this.showAddPurchaseFormPopupVisible();
     }
     //#endregion
@@ -1064,17 +1053,55 @@ export class PurchasesComponent implements OnInit {
         } else if (event.value != null && event.dataField === 'ProjectId') {
             // backend call and verify
             this.getAllBudgetLineDetails(event.value);
+        } else if (event.value != null && event.dataField === 'PurchaseDate') {
+
+            this.checkExchangeRateExists(event.value);
         }
-        // else if (event.value != null && event.dataField === 'VoucherId') {
-        //     const voucherData = this.voucherDataSource.filter(
-        //         x => x.VoucherNo === event.value
-        //     );
-        //     this.purchaseDetailsForm.VoucherDate = this.voucherDataSource.filter(
-        //         x => x.VoucherNo === event.value
-        //     )[0].VoucherDate;
-        // }
     }
     //#endregion
+
+    checkExchangeRateExists(exchangeRateDate: any) {
+
+        if (this.officeId == null && this.officeId === undefined && this.officeId === 0) {
+            this.toastr.warning('Please select Office');
+            return;
+        }
+
+        const checkExchangeRateModel = {
+            ExchangeRateDate: new Date(
+                new Date(exchangeRateDate).getFullYear(),
+                new Date(exchangeRateDate).getMonth(),
+                new Date(exchangeRateDate).getDate(),
+                new Date().getHours(),
+                new Date().getMinutes(),
+                new Date().getSeconds()
+            ),
+            OfficeId: this.officeId
+        };
+
+        this.storeService
+        .AddEditByModel(
+            this.setting.getBaseUrl() + GLOBAL.API_ExchangeRates_CheckExchangeRatesExist,
+            checkExchangeRateModel
+        )
+        .subscribe(
+            data => {
+                if (data.StatusCode === 200) {
+
+                    if (!data.ResponseData) {
+                        this.exchangeRateMessage = 'No Exchange Rate Defined for ' +
+                        this.transformDate.transform(checkExchangeRateModel.ExchangeRateDate, 'dd-MM-yyyy');
+                    } else {
+                        this.exchangeRateMessage = '';
+                    }
+                } else {
+                    this.toastr.error(data.Message);
+                }
+            },
+            error => {
+            }
+        );
+    }
 
     //#region "onDeletePurchase"
     onDeletePurchase(data: any) {

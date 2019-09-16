@@ -98,6 +98,9 @@
     <dx-scroll-view showScrollbar="always" direction="both">
 
       <form action="your-action" (submit)="onPurchaseFormSubmit(purchaseDetailsForm)">
+          <div class="alert alert-warning" *ngIf="exchangeRateMessage != '' && exchangeRateMessage != null" role="alert">
+              {{exchangeRateMessage}}
+            </div>
         <dx-form id="form" [formData]="purchaseDetailsForm" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
           validationGroup="addPurchaseData" (onFieldDataChanged)="onFieldDataChanged($event)">
           <dxi-item itemType="group" [colCount]="2">
@@ -282,6 +285,9 @@
         </div>
     </div> -->
       <form action="your-action" (submit)="onPurchaseFormSubmit(purchaseDetailsForm)">
+          <div class="alert alert-warning" *ngIf="exchangeRateMessage != '' && exchangeRateMessage != null" role="alert">
+              {{exchangeRateMessage}}
+            </div>
         <dx-form id="form" [formData]="purchaseDetailsForm" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
           validationGroup="editPurchaseData" (onFieldDataChanged)="onFieldDataChanged($event)">
           <dxi-item itemType="group" [colCount]="2">
