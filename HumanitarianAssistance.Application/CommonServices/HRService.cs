@@ -50,7 +50,7 @@ namespace HumanitarianAssistance.Application.CommonServices
 
                     List<EmployeePayrollAccountHead> employeePayrollAccountHeads = new List<EmployeePayrollAccountHead>();
 
-                    if (payrollAccountHeadList.Any())
+                    if (!payrollAccountHeadList.Any())
                     {
                         //Get Default payrollaccountheads and save it to the newly created employee
                         List<PayrollAccountHead> payrollAccountHeads = await _dbContext.PayrollAccountHead.Where(x => x.IsDeleted == false).ToListAsync();

@@ -46,6 +46,7 @@ namespace HumanitarianAssistance.Application.HR.Models
         public int OfficeId { get; set; }
         public int Month { get; set; }
         public int? DepartmentId { get; set; }
+        public double AdvanceBalanceAmount { get; set; }
 
         public List<EmployeePayrollModel> EmployeePayrollList { get; set; }
     }

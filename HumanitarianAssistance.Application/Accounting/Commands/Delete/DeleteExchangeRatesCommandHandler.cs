@@ -30,12 +30,27 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Delete
             try
             {
                 if (command.ExchangeRateDate == null) {
-                    throw new Exception("Exchange Rate Date can't be null");
+                    throw new Exception("Please select Exchange Rate Date");
                 }
 
                 var exchangeRateVerification = await _dbContext.ExchangeRateVerifications
                                                                .FirstOrDefaultAsync(x => x.IsDeleted == false && 
                                                                                          x.Date.Date == command.ExchangeRateDate.Date);
+
+                var exchangeRateDetail =  await _dbContext.ExchangeRateDetail
+                                                          .Where(x => x.IsDeleted == false && 
+                                                                               x.Date.Date == command.ExchangeRateDate.Date).ToListAsync();
+
+                if(exchangeRateDetail.Any())
+                {
+                    exchangeRateDetail.ForEach(x=> { 
+                        x.IsDeleted = true;
+                        x.ModifiedById = command.ModifiedById;
+                        x.ModifiedDate = DateTime.UtcNow;
+                    });
+
+                    _dbContext.ExchangeRateDetail.UpdateRange(exchangeRateDetail);
+                }                                                           
 
                 if (exchangeRateVerification != null)
                 {
@@ -43,22 +58,9 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Delete
                     exchangeRateVerification.ModifiedDate = DateTime.UtcNow;
                     exchangeRateVerification.ModifiedById = command.ModifiedById;
                     _dbContext.Update(exchangeRateVerification);
-                    _dbContext.SaveChanges();
                 }
 
-                List<ExchangeRateDetail> exchangeRateList = await _dbContext.ExchangeRateDetail.Where(x => x.IsDeleted == false && x.Date.Date == command.ExchangeRateDate).ToListAsync();
-
-                if (exchangeRateList.Any())
-                {
-                    foreach (ExchangeRateDetail exchangeRate in exchangeRateList)
-                    {
-                        exchangeRate.IsDeleted = true;
-                        exchangeRate.ModifiedById = command.ModifiedById;
-                        exchangeRate.ModifiedDate = DateTime.UtcNow;
-                    }
-                    _dbContext.UpdateRange(exchangeRateList);
-                    _dbContext.SaveChanges();
-                }
+                await _dbContext.SaveChangesAsync();
 
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Exchange rates deleted successfully";

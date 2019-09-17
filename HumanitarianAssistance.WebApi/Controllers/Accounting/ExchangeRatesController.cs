@@ -58,5 +58,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         {
             return await _mediator.Send(new DeleteExchangeRatesCommand { ExchangeRateDate = model });
         }
+
+        [HttpPost]
+        public async Task<ApiResponse> CheckExchangeRatesExist([FromBody] CheckExchangeRatesExistQuery request)
+        {
+            return await _mediator.Send(request);
+        }
     }
 }
