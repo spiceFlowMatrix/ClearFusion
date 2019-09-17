@@ -114,17 +114,16 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                 throw new Exception(StaticResource.BasicPayNotSet+ " "+ payrollAttendance.EmployeeDetails.EmployeeCode);
                             }
 
-                            double convertMinutesToHours = Math.Round(((double)(payrollAttendance.OverTimeMinutes + payrollAttendance.AttendanceMinutes) / 60d),2);
+                            double convertMinutesToHours = ((double)(payrollAttendance.OverTimeMinutes + payrollAttendance.AttendanceMinutes) / 60d);
                             obj.GrossSalary = Math.Round((double)(obj.TotalGeneralAmount * (payrollAttendance.AttendanceHours.Value + obj.LeaveHours + payrollAttendance.OvertimeHours.Value + convertMinutesToHours) + obj.TotalAllowance),2);
                             obj.PensionAmount = Math.Round(((double)(obj.GrossSalary * payrollDetail.FirstOrDefault().PensionRate) / 100),2); // i.e. 4.5 % => 0.045
 
                             // eliminate hours and only show minutes if minutes is 60 we already added them to overtime hours so minutes = 0
-
                             decimal overtimeHour = Math.Round((decimal)((float)payrollAttendance.OverTimeMinutes / 60f), 2);
 
                             obj.OvertimeMinutes = Convert.ToInt32((overtimeHour- Math.Truncate(overtimeHour)) * 60);
+                            
                             // eliminate hours and only show minutes if minutes is 60 we already added them to AttendanceHours so minutes = 0
-
                             decimal attendanceMinutes = Math.Round((decimal)((float)payrollAttendance.AttendanceMinutes / 60f), 2);
 
                             obj.WorkingMinutes= Convert.ToInt32((attendanceMinutes - Math.Truncate(attendanceMinutes)) * 60); 
@@ -179,19 +178,22 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                     obj.AdvanceRecoveryAmount = Math.Round((Convert.ToDouble(xAdvances.AdvanceAmount / xAdvances.NumberOfInstallments ?? 1)), 2);
                                     obj.AdvanceAmount = xAdvances.AdvanceAmount;
                                     obj.IsAdvanceApproved = xAdvances.IsApproved;
+                                    obj.AdvanceBalanceAmount = xAdvances.AdvanceAmount;
                                 }
                                 else
                                 {
                                     Double iBalanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
                                     obj.AdvanceRecoveryAmount = Math.Round((Convert.ToDouble(iBalanceAmount / xAdvances.NumberOfInstallments)),2);
                                     obj.IsAdvanceApproved = xAdvances.IsApproved;
-                                    obj.AdvanceAmount = iBalanceAmount;
+                                obj.AdvanceAmount = xAdvances.AdvanceAmount;
+                                    obj.AdvanceBalanceAmount = iBalanceAmount;
                                 }
                             }
                             else
                             {
                                 obj.AdvanceRecoveryAmount = 0;
                                 obj.AdvanceAmount = 0;
+                                obj.AdvanceBalanceAmount = 0;
                                 obj.IsAdvanceApproved = false;
                             }
                         // }

@@ -54,6 +54,8 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public int? TotalDuration { get; set; }
         public float? BasicPay { get; set; }
         public int? AdvanceId { get; set; }
+        public int WorkingMinutes { get; set; }
+        public int OvertimeMinutes { get; set; }
         [ForeignKey("AdvanceId")]
         public Advances AdvanceDetail { get; set; }
     }

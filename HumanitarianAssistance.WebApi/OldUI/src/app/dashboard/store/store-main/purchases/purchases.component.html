@@ -266,24 +266,7 @@
   [(visible)]="editPurchaseFormPopupVisible">
   <div *dxTemplate="let data of 'content'">
       <dx-scroll-view  showScrollbar="always" direction="both">
-    <!-- <div class="row text-left">
-      <div *ngIf="purchaseDetailsForm.IsPurchaseVerified">
-          <div class="col-sm-6">
-              <button (click)="UnverifyPurchase()" class="btn btn-danger">Unverify Purchase</button>
-          </div>
-          <div class="col-sm-5" *ngIf="purchaseDetailsForm.VerifiedPurchaseVoucherReferenceNo !=null">
-              Voucher Reference No: {{purchaseDetailsForm.VerifiedPurchaseVoucherReferenceNo}}
-          </div>
-      </div>
-
-      <div class="col-sm-11" *ngIf="!purchaseDetailsForm.IsPurchaseVerified">
-          <button (click)="verifyPurchase()" class="btn btn-success">Verify Purchase</button>
-      </div> 
-      
-        <div class="col-sm-1">
-          <span (click)="hideEditPurchaseFormPopupVisible()">X</span>
-        </div>
-    </div> -->
+    
       <form action="your-action" (submit)="onPurchaseFormSubmit(purchaseDetailsForm)">
           <div class="alert alert-warning" *ngIf="exchangeRateMessage != '' && exchangeRateMessage != null" role="alert">
               {{exchangeRateMessage}}

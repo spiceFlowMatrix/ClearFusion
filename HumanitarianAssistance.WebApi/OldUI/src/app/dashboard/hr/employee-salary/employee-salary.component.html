@@ -131,6 +131,7 @@
                       <dxi-column dataField="GrossSalary" [allowEditing]="false"> </dxi-column>
                       <dxi-column dataField="NetSalary" [allowEditing]="false"> </dxi-column>
                       <dxi-column dataField="AdvanceAmount" [allowEditing]="false"> </dxi-column>
+                      <dxi-column dataField="AdvanceBalanceAmount" [allowEditing]="false"> </dxi-column>
 
                       <dxi-column dataField="IsAdvanceApproved" caption="Advance Approved" cellTemplate="IsAdvanceApproved"
                         [allowEditing]="false"></dxi-column>
@@ -183,35 +184,6 @@
 
                 <div class="row">
                   <div class="col-sm-12">
-
-                    <!-- <div class="employee-payroll-form dxagninptblk">
-                      <form action="your-action" (submit)="onEmployeeApprovedSalaryFilter(employeeApprovedSalaryFormFilter)">
-                        <br>
-                        <div class="dv-col-dt">
-                          <div class="row">
-
-                            <div class="col-md-10">
-                              <dx-form id="form" [(formData)]="employeeApprovedSalaryFormFilter" [colCount]="2" [readOnly]="false" [showColonAfterLabel]="true"
-                                [showValidationSummary]="true" validationGroup="customerData"> -->
-
-                    <!-- <dxi-item dataField="CurrencyId" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencyTypeDropdown, displayExpr: 'CurrencyName', valueExpr: 'CurrencyId', showClearButton:'true'  }">
-                                  <dxo-label text="Currency"></dxo-label>
-                                  <dxi-validation-rule type="required"></dxi-validation-rule>
-                                </dxi-item> -->
-                    <!-- <dxi-item dataField="Date" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'MMM , yyyy', minZoomLevel: 'decade' , maxZoomLevel: 'year', pickerType : 'date', max: currentDate,  showClearButton: 'true' }">
-                                  <dxi-validation-rule type="required"></dxi-validation-rule>
-                                </dxi-item>
-
-                              </dx-form>
-                            </div>
-                            <br>
-                            <div class="col-md-2 text-center dv-col-btn">
-                              <dx-button text="Filter" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
-                            </div>
-                          </div>
-                        </div>
-                      </form>
-                    </div> -->
 
                     <div class="cardPayrollForm">
                       <form action="your-action" (submit)="onEmployeeApprovedSalaryFilter(employeeApprovedSalaryFormFilter)">
@@ -276,6 +248,8 @@
                     </dxi-column>
                     <dxi-column dataField="TotalWorkHours" caption="Total Duration"> </dxi-column>
                     <dxi-column dataField="PresentDays" caption="Present Hours"> </dxi-column>
+                    <dxi-column dataField="WorkingMinutes" caption="Present Minutes" [allowEditing]="false"> </dxi-column>
+                      <dxi-column dataField="OvertimeMinutes" caption="Overtime Minutes" [allowEditing]="false"> </dxi-column>
                     <dxi-column dataField="OverTimeHours"> </dxi-column>
                     <dxi-column dataField="LeaveHours"> </dxi-column>
                     <!-- <dxi-column dataField="TotalGeneralAmount" caption="Monthly Salary"> </dxi-column> -->
@@ -286,6 +260,7 @@
                     <dxi-column dataField="GrossSalary"> </dxi-column>
                     <dxi-column dataField="NetSalary"> </dxi-column>
                     <dxi-column dataField="AdvanceAmount"> </dxi-column>
+                    <dxi-column dataField="AdvanceBalanceAmount" [allowEditing]="false"> </dxi-column>
                     <dxi-column dataField="AdvanceRecoveryAmount"> </dxi-column>
 
                     <dxi-column dataField="GeneratePayment" caption="Generate Payment" cellTemplate="generatePaymentTemplate" *ngIf="isEditingAllowed"></dxi-column>

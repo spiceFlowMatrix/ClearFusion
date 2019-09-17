@@ -25,7 +25,7 @@ namespace HumanitarianAssistance.Application.Infrastructure
             return voucherReferenceNo;
         }
 
-        public static string GetSalaryDescription(string employeeCode, string employeeName, int month, decimal? totalSalary)
+        public static string GetSalaryDescription(string employeeCode, string employeeName, int month, double? totalSalary)
         {
             string salaryDescription = string.Empty;
 
