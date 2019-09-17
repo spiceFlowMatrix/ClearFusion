@@ -31,6 +31,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   subActivityList: any[] = [];
   budgetLineList: IBudgetLine[] = [];
   employeeList: any[] = [];
+  countryList: any[] = [];
   officeList: any[] = [];
   provinceSelectionList: any[] = [];
   districtMultiSelectList: any[] = [];
@@ -80,7 +81,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.routeActive.parent.params.subscribe(params => {
       this.projectId = +params['id'];
-      this.getAllProvinceList();
+      // this.getAllProvinceList();
     });
 
     this.initializeForm();
@@ -91,7 +92,8 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
     this.getBudgetLineList();
     this.getAllEmployeeList();
     this.getOfficeList();
-    this.getAllProvinceList();
+    this.getAllCountryList();
+    // this.getAllProvinceList();
     this.getAllProjectActivityList();
 
     // // Signal-R
@@ -156,6 +158,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
 
       ActualStartDate: null,
       ActualEndDate: null,
+      ProjectId: this.projectId,
 
       // // Implementation
       // ImplementationProgress: null,
@@ -183,7 +186,8 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
       // Slippage: null,
 
       IsLoading: false,
-      IsError: false
+      IsError: false,
+      CountryId: null
     };
   }
   //#endregion
@@ -196,7 +200,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
 
     this.scrollStyles = {
       'overflow-y': 'auto',
-      height: this.screenHeight - 180 + 'px',
+      height: this.screenHeight - 310 + 'px',
       'overflow-x': 'hidden'
     };
   }
@@ -214,7 +218,9 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
         EmployeeList: this.employeeList,
         RecurringTypeList: this.recurringTypeList,
         ProvinceSelectionList: this.provinceSelectionList,
-        DistrictMultiSelectList: this.districtMultiSelectList
+        DistrictMultiSelectList: this.districtMultiSelectList,
+        CountryList: this.countryList,
+        ProjectId: this.projectId
       }
     });
 
@@ -297,27 +303,54 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   }
   //#endregion
 
-  //#region "getAllProjectActivityList"
-  getAllProjectActivityList() {
+  //#region "GetAllCountryList"
 
+  getAllCountryList() {
+    // this.countryDistrictFlag = true;
+    this.activitiesService.getAllCountryList().subscribe(
+      (response: IResponseData) => {
+        this.countryList = [];
+        if (response.statusCode === 200 && response.data !== null) {
+          response.data.forEach(element => {
+            this.countryList.push({
+              value: element.CountryId,
+              label: element.CountryName
+            });
+          });
+        }
+      }, // this.countryDistrictFlag = false;
+      error => {
+        // this.countryDistrictFlag = false;
+      }
+    );
+  }
+
+  //#endregion
+
+  //#region "getAllProjectActivityList" Note used for list with filter record
+  getAllProjectActivityList() {
     const filterData: any = {
       ProjectId: this.projectId,
       ActivityDescription: this.projectActivityFilter.FilterValue
     };
     this.activityListLoader = true;
-    this.activitiesService.GetProjectActivityAdvanceFilterList(filterData).subscribe(
-      (response: IResponseData) => {
-        this.projectActivityList = [];
-        if (response.statusCode === 200 && response.data !== null) {
-          this.totalCount = response.total;
-          this.setActivityList(response.data);
-          this.onSelectedProvinceDetailId(response.data.ProvinceId);
+    this.activitiesService
+      .GetProjectActivityAdvanceFilterList(filterData)
+      .subscribe(
+        (response: IResponseData) => {
+          this.projectActivityList = [];
+          if (response.statusCode === 200 && response.data !== null) {
+            this.totalCount = response.total;
+            this.setActivityList(response.data);
+
+            // this.onSelectedProvinceDetailId(response.data.ProvinceId);
+          }
+          this.activityListLoader = false;
+        },
+        error => {
+          this.activityListLoader = false;
         }
-        this.activityListLoader = false;
-      },
-      error => {
-        this.activityListLoader = false;
-      });
+      );
   }
   //#endregion
 
@@ -347,30 +380,65 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
       );
   }
   //#endregion
+  // ************************************************** comment for country
+  // //#region "getAllProvinceList"
+  // getAllProvinceList() {
+  //   // this.provinceDistrictFlag = true;
+  //   this.activitiesService.getAllProvinceList().subscribe(
+  //     (response: IResponseData) => {
+  //       this.provinceSelectionList = [];
+  //       if (response.statusCode === 200 && response.data != null) {
+  //         response.data.forEach(element => {
+  //           this.provinceSelectionList.push({
+  //             value: element.ProvinceId,
+  //             label: element.ProvinceName
+  //           });
+  //         });
+  //       }
+  //       // this.provinceDistrictFlag = false;
+  //     },
+  //     error => {
+  //       // this.provinceDistrictFlag = false;
+  //     }
+  //   );
+  // }
 
-  //#region "getAllProvinceList"
-  getAllProvinceList() {
-    // this.provinceDistrictFlag = true;
-    this.activitiesService.getAllProvinceList().subscribe(
-      (response: IResponseData) => {
-        this.provinceSelectionList = [];
-        if (response.statusCode === 200 && response.data != null) {
-          response.data.forEach(element => {
-            this.provinceSelectionList.push({
-              value: element.ProvinceId,
-              label: element.ProvinceName
-            });
-          });
-        }
-        // this.provinceDistrictFlag = false;
-      },
-      error => {
-        // this.provinceDistrictFlag = false;
-      }
-    );
+  // //#endregion
+  //#region "OnselectedCountryDetailId"
+  OnselectedCountryDetailId(event: any) {
+    if (event !== undefined && event !== null) {
+      this.getAllProvinceListByCountryId(event);
+    }
   }
-
   //#endregion
+
+  getAllProvinceListByCountryId(id: any) {
+    const provinceId = id;
+    // this.provinceDistrictFlag = true;
+    if (provinceId != null && provinceId !== undefined) {
+      this.provinceSelectionList = [];
+      this.activitiesService
+        .getAllProvinceListByCountryId([provinceId])
+        .subscribe(
+          response => {
+            if (response.statusCode === 200 && response.data != null) {
+              response.data.forEach(element => {
+                this.provinceSelectionList.push({
+                  value: element.ProvinceId,
+                  label: element.ProvinceName
+                });
+              });
+
+              // this.GetProvinceByProjectId(this.ProjectId);
+            }
+            // this.provinceDistrictFlag = false;
+          },
+          error => {
+            // this.provinceDistrictFlag = false;
+          }
+        );
+    }
+  }
 
   //#region "onSelectedProvinceDetailId"
   onSelectedProvinceDetailId(event: any) {
@@ -412,7 +480,6 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
 
   //#region "deleteProjectActivity"
   deleteProjectActivity(activityId: number) {
-
     const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
       width: '300px',
       height: '250px',
@@ -428,60 +495,58 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
     dialogRef.componentInstance.cancelText = Delete_Confirmation_Texts.noText;
 
     dialogRef.afterClosed().subscribe(result => {});
-    dialogRef.componentInstance.confirmDelete.subscribe(
-      res => {
-        dialogRef.componentInstance.isLoading = true;
+    dialogRef.componentInstance.confirmDelete.subscribe(res => {
+      dialogRef.componentInstance.isLoading = true;
 
+      const index = this.projectActivityList.findIndex(
+        x => x.ActivityId === activityId
+      );
+      if (index !== -1) {
+        this.projectActivityList.map(x => {
+          if (x.ActivityId === activityId) {
+            x.IsLoading = true;
+            x.IsError = false;
+          }
+        });
 
-    const index = this.projectActivityList.findIndex(
-      x => x.ActivityId === activityId
-    );
-    if (index !== -1) {
-      this.projectActivityList.map(x => {
-        if (x.ActivityId === activityId) {
-          x.IsLoading = true;
-          x.IsError = false;
-        }
-      });
-
-      this.deleteActivitySubscribe = this.activitiesService
-        .DeleteProjectActivity(activityId)
-        .subscribe(
-          (response: IResponseData) => {
-            if (response.statusCode === 200) {
-              this.totalCount = this.totalCount - 1;
-              this.GetRefreshedActivityList(index);
-              this.projectActivityList.splice(index, 1);
-            } else {
+        this.deleteActivitySubscribe = this.activitiesService
+          .DeleteProjectActivity(activityId)
+          .subscribe(
+            (response: IResponseData) => {
+              if (response.statusCode === 200) {
+                this.totalCount = this.totalCount - 1;
+                this.GetRefreshedActivityList(index);
+                this.projectActivityList.splice(index, 1);
+              } else {
+                this.projectActivityList.map(x => {
+                  if (x.ActivityId === activityId) {
+                    x.IsLoading = false;
+                    x.IsError = true;
+                  }
+                });
+              }
+              dialogRef.componentInstance.isLoading = false;
+              dialogRef.componentInstance.onCancelPopup();
+            },
+            error => {
               this.projectActivityList.map(x => {
                 if (x.ActivityId === activityId) {
                   x.IsLoading = false;
                   x.IsError = true;
+                  dialogRef.componentInstance.isLoading = false;
+                  dialogRef.componentInstance.onCancelPopup();
                 }
               });
             }
-            dialogRef.componentInstance.isLoading = false;
-            dialogRef.componentInstance.onCancelPopup();
-          },
-          error => {
-            this.projectActivityList.map(x => {
-              if (x.ActivityId === activityId) {
-                x.IsLoading = false;
-                x.IsError = true;
-                dialogRef.componentInstance.isLoading = false;
-                dialogRef.componentInstance.onCancelPopup();
-              }
-            });
-          }
-        );
-    }
-  });
-}
+          );
+      }
+    });
+  }
   //#endregion
 
   //#region GetRefreshedActivityList
   GetRefreshedActivityList(index) {
-// Note: If list is empty display activity listing page
+    // Note: If list is empty display activity listing page
     if (this.totalCount === 0) {
       this.showProjectActivityDetail = false;
       this.colsm6 = 'col-sm-10 col-sm-offset-1';
@@ -490,9 +555,9 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
       const activityId = this.projectActivityList[0].ActivityId;
       this.getAllProjectActivityDetailByActivityId(activityId);
     } else {
-     // Note : Display next item on deletion of any item
-    const activityId = this.projectActivityList[index + 1].ActivityId;
-    this.getAllProjectActivityDetailByActivityId(activityId);
+      // Note : Display next item on deletion of any item
+      const activityId = this.projectActivityList[index + 1].ActivityId;
+      this.getAllProjectActivityDetailByActivityId(activityId);
     }
   }
   //#endregion
@@ -511,7 +576,9 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
         ActivityId: element.ActivityId,
         ActivityName: element.ActivityName,
         ActivityDescription: element.ActivityDescription,
-        PlannedStartDate: StaticUtilities.setLocalDate(element.PlannedStartDate),
+        PlannedStartDate: StaticUtilities.setLocalDate(
+          element.PlannedStartDate
+        ),
         PlannedEndDate: StaticUtilities.setLocalDate(element.PlannedEndDate),
         BudgetLineId: element.BudgetLineId,
         EmployeeID: element.EmployeeID,
@@ -525,7 +592,8 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
 
         ActualStartDate: StaticUtilities.setLocalDate(element.ActualStartDate),
         ActualEndDate: StaticUtilities.setLocalDate(element.ActualEndDate),
-
+        CountryId: element.CountryId,
+        ProjectId: element.ProjectId,
         // Implementation
         // ImplementationProgress: element.ImplementationProgress,
         // ImplementationStatus: element.ImplementationStatus,
@@ -635,7 +703,10 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
                     this.activityDetail.ActualEndDate
                   )
                 : null;
+    // Note to get all list of provice and district list
+            this.OnselectedCountryDetailId(response.data.CountryId);
             this.onSelectedProvinceDetailId(response.data.ProvinceId);
+
           }
 
           this.activityByIdLoader = false;

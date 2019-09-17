@@ -38,20 +38,25 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
 
                     await _dbContext.SaveChangesAsync();
 
-                    if (request.ProvinceId.Any())
+                    if (request.CountryId != null)
                     {
-                        var projectActivityProvinceDetailExist = _dbContext.ProjectActivityProvinceDetail.Where(x => x.ActivityId == request.ActivityId && x.IsDeleted == false);
+                        var projectActivityProvinceDetailExist = await _dbContext.ProjectActivityProvinceDetail
+                                                                                    .Where(x => x.ActivityId == request.ActivityId &&
+                                                                                                x.IsDeleted == false)
+                                                                                    .ToListAsync();
 
                         if (projectActivityProvinceDetailExist.Any())
                         {
                             _dbContext.ProjectActivityProvinceDetail.RemoveRange(projectActivityProvinceDetailExist);
-                            _dbContext.SaveChanges();
+                            await _dbContext.SaveChangesAsync();
                         }
 
                         List<ProjectActivityProvinceDetail> activityProvienceList = new List<ProjectActivityProvinceDetail>();
 
 
-                        var districts = _dbContext.DistrictDetail.Where(x => x.IsDeleted == false && request.ProvinceId.Contains(x.ProvinceID.Value)).ToList();
+                        var districts = await _dbContext.DistrictDetail.Where(x => x.IsDeleted == false &&
+                                                                                   request.ProvinceId.Contains(x.ProvinceID.Value))
+                                                                        .ToListAsync();
 
                         var selectedDistrict = districts.Where(x => request.DistrictID.Contains(x.DistrictID))
                                                                          .Select(x => new ProjectActivityProvinceDetail
@@ -70,7 +75,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
 
                         foreach (var item in selectedDistrict)
                         {
-
                             item.ActivityId = projectactivityDetail.ActivityId;
                             item.ModifiedById = request.ModifiedById;
                             item.ModifiedDate = request.ModifiedDate;
@@ -79,10 +83,11 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                         await _dbContext.ProjectActivityProvinceDetail.AddRangeAsync(selectedDistrict);
                         await _dbContext.SaveChangesAsync();
 
+                        response.StatusCode = StaticResource.successStatusCode;
+                        response.Message = "Success";
+
                     }
 
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
                 }
                 else
                 {

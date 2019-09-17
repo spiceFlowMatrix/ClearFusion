@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace HumanitarianAssistance.Application.Project.Models
 {
@@ -42,7 +41,8 @@ namespace HumanitarianAssistance.Application.Project.Models
         public double? Slippage { get; set; }
         public string SubActivityTitle { get; set; }
         public bool? IsDeleted { get; set; }
-
+        public long? ProjectId { get; set; }
+        public int? CountryId { get; set; }
 
     }
 }

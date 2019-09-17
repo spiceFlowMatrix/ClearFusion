@@ -43,12 +43,14 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
   @Input() planningDocumentsList: IDocumentsModel[] = [];
   @Output() selectedProvinceId = new EventEmitter<any>();
   @Output() selectedDistrictId = new EventEmitter<any>();
+  @Output() selectedCurrencyId = new EventEmitter<any>();
 
   @Input() recurringTypeList: any[] = [];
   @Input() budgetLineList: IBudgetLine[] = [];
   @Input() employeeList: IEmployeeList[] = [];
   @Input() officeList: IOfficeList[] = [];
   @Input() provinceSelectionList: any[] = [];
+  @Input() countryList: any[] = [];
   @Input() districtMultiSelectList: any[] = [];
   @Input() districtLoaderFlag: boolean;
 
@@ -60,6 +62,7 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
   projectActivityForm: FormGroup;
   activityListLoader = false;
   editActivityLoader = false;
+  projectId: number;
 
   // lib datasource
   tableHeaderList: string[] = [
@@ -91,6 +94,8 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.getActivityPermission();
+    console.log("activity projectid", this.activityDetail.ProjectId );
+    this.projectId = this.activityDetail.ProjectId;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -122,6 +127,7 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
       RecurringType: [this.activityDetail.RecurrinTypeId],
       ProvinceId: [this.activityDetail.ProvinceId],
       DistrictID: [this.activityDetail.DistrictID],
+      CountryId: [this.activityDetail.CountryId]
     });
 
   }
@@ -144,6 +150,7 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
         this.activityDetail.DistrictID = val.DistrictID;
         this.activityDetail.ActualStartDate = val.ActualStartDate;
         this.activityDetail.ActualEndDate = val.ActualEndDate;
+        this.activityDetail.CountryId = val.CountryId;
       }
     });
   }
@@ -306,7 +313,8 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
       DistrictID: data.DistrictID,
       ProvinceId: data.ProvinceId,
       ParentId: data.ParentId,
-
+      CountryId: data.CountryId,
+      ProjectId: this.projectId,
       ActualStartDate: data.ActualStartDate,
       ActualEndDate: data.ActualEndDate,
 
@@ -334,6 +342,11 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
   }
   //#endregion
 
+//#region "onCountryDetailsChange"
+onCountryDetailsChange(event: any) {
+this.selectedCurrencyId.emit(event.value);
+}
+//#endregion
 
   //#region  "emit province detailchanges"
   onProvinceDetailChange(event: any) {

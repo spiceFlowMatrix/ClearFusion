@@ -63,6 +63,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
         public bool LateStart { get; set; }
         public bool LateEnd { get; set; }
         public bool OnSchedule { get; set; }
+        public int CountryId { get; set; }
 
     }
 }
