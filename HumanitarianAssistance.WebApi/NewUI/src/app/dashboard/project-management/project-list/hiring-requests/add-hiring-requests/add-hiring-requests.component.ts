@@ -71,8 +71,6 @@ export class AddHiringRequestsComponent implements OnInit, OnChanges {
     this.officeSelectionFlag = data.officeSelectionFlag;
     this.genderList = data.gender;
     this.workingShift = data.workingShift;
-    console.log(data.gender);
-console.log(data.workingShift);
   }
 
   ngOnInit() {
