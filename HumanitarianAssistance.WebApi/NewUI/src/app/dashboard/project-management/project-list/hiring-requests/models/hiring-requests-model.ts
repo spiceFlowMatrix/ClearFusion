@@ -1,4 +1,4 @@
-import { ICurrencyList } from 'src/app/dashboard/accounting/gain-loss-report/gain-loss-report.model';
+import { ICurrencyList } from "src/app/dashboard/accounting/gain-loss-report/gain-loss-report.model";
 
 export interface IHiringReuestDataSource {
   EmployeeList: IEmployeeListModel[];
@@ -11,6 +11,8 @@ export interface IHiringReuestDataSource {
   HiringRequestId: number;
   ProfessionList: IProfessionList[];
   officeSelectionFlag: boolean;
+  gender: any[];
+  workingShift: any[];
 }
 export interface ICurrencyListModel {
   CurrencyId: number;
@@ -35,21 +37,40 @@ export interface IJobGradeModel {
 export interface IHiringRequestDetailModel {
   HiringRequestId?: number;
   HiringRequestCode: string;
-  Description: string;
-  ProfessionId: number;
-  Position: string;
-  TotalVacancies: number;
-  FilledVacancies: number;
-  BasicPay: number;
-  BudgetLineId: number;
-  OfficeId: number;
-  GradeId: number;
-  EmployeeID: number;
-  ProjectId: number;
-  IsCompleted: boolean;
-  CurrencyId: number;
   RequestedBy?: string;
+  BasicPay?: number;
+  BudgetLineId?: number;
+  CurrencyId?: number;
+  Description?: string;
+  EmployeeID?: number;
+  FilledVacancies?: number;
+  GradeId?: number;
+  OfficeId?: number;
+  Position?: string;
+  ProfessionId?: number;
+  ProjectId?: number;
+  TotalVacancies?: number;
+  AnouncingDate?: Date;
+  JobType?: string;
+  Background?: string;
+  JobStatus?: string;
+  KnowladgeAndSkillRequired?: string;
+  SalaryRange?: string;
+  Shift?: number;
+  ProviceId?: number;
+  SpecificDutiesAndResponsblities?: string;
+  SubmissionGuidlines?: string;
+  ClosingDate?: Date;
+  ContractDuration?: number;
+  ContractType?: string;
+  CountryId?: number;
+  GenderId?: number;
+  MinimumEducationLevel?: string;
+  Experience?: string;
+  Organization?: string;
+  IsCompleted: boolean;
 }
+
 export interface IHiringRequestModel {
   Description: string;
   Position: string;
@@ -70,24 +91,38 @@ export interface ProjectHiringRequestFilterModel {
 
   HiringRequestId?: number;
   HiringRequestCode: string;
-  Description: string;
-  ProfessionId: string;
-  Position: string;
-  TotalVacancies: number;
-  FilledVacancies: number;
-  BasicPay: number;
-  BudgetLineId: number;
-  OfficeId: number;
-  GradeId: number;
-  EmployeeID: number;
-  ProjectId: number;
+  RequestedBy?: string;
+  BasicPay?: number;
+  BudgetLineId?: number;
+  CurrencyId?: number;
+  Description?: string;
+  EmployeeID?: number;
+  FilledVacancies?: number;
+  GradeId?: number;
+  OfficeId?: number;
+  Position?: string;
+  ProfessionId?: number;
+  ProjectId?: number;
+  TotalVacancies?: number;
+  AnouncingDate?: Date;
+  JobType?: string;
+  Background?: string;
+  JobStatus?: string;
+  KnowladgeAndSkillRequired?: string;
+  SalaryRange?: string;
+  Shift?: number;
+  ProviceId?: number;
+  SpecificDutiesAndResponsblities?: string;
+  SubmissionGuidlines?: string;
+  ClosingDate?: Date;
+  ContractDuration?: number;
+  ContractType?: string;
+  CountryId?: number;
+  GenderId?: number;
+  MinimumEducationLevel?: string;
+  Experience?: string;
+  Organization?: string;
   IsCompleted: boolean;
-  CurrencyId: number;
-  BudgetName: string;
-  CurrencyName: string;
-  EmployeeName: string;
-  GradeName: string;
-  RequestedBy: string;
 }
 export interface IEmployeeListModel {
   EmployeeId?: number;
@@ -158,4 +193,12 @@ export interface CandidateDetailModel {
   HiredOn: Date;
   OfficeId: number;
   EmployeeTypeId: number;
+}
+export interface WorkingShift {
+  Id: Number;
+  value: string;
+}
+export interface Gender {
+  Id: Number;
+  value: string;
 }
