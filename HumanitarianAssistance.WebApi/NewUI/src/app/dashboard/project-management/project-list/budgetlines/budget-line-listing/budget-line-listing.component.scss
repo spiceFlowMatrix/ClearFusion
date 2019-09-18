@@ -5,3 +5,8 @@
   float:right;
   .btn-floating { padding:0;margin-right:10px;margin-bottom:0;margin-top: 4px}
 }
+.viewtable,td,th {
+  border: 1px solid;
+  text-align: center;
+}
+.viewtable{width: 100%;color: rgb(136, 138, 143);}

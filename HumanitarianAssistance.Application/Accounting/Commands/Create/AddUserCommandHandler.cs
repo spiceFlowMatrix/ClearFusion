@@ -75,6 +75,9 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
 
                         await _dbContext.UserDetailOffices.AddRangeAsync(lst);
                         await _dbContext.SaveChangesAsync();
+
+                        
+
                         tran.Commit();
 
                         response.StatusCode = StaticResource.successStatusCode;

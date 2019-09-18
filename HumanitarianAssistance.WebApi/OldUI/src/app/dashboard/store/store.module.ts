@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { StoreComponent } from './store.component';
 import { DxTabsModule, DxDataGridModule, DxSelectBoxModule, DxCheckBoxModule, DxNumberBoxModule, DxTabPanelModule, DxButtonModule, DxFormModule, DxPopupModule, DxDateBoxModule, DxLookupModule, DxTemplateModule, DxListModule, DxTextBoxModule, DxRadioGroupModule, DxSchedulerModule, DxSwitchModule, DxTileViewModule, DxScrollViewModule, DxMenuModule, DxFileUploaderModule, DxPopoverModule, DxTagBoxModule, } from 'devextreme-angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -80,9 +80,10 @@ import { FileManagementService } from '../../shared/FileManagement/file-manageme
     StoreSourceCodesComponent,
     PaymentTypesComponent
   ],
-  providers:[
+  providers: [
     StoreService,
-    FileManagementService
+    FileManagementService,
+    DatePipe
   ]
 })
 export class StoreModule { }

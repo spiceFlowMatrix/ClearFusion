@@ -1415,6 +1415,7 @@ export interface GeneralInfo {
   FiredReason?: string;
   ResignationOn?: any;
   ResignationReason?: string;
+  Password: string;
 }
 
 export class Documents {
