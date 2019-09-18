@@ -6,7 +6,7 @@ namespace HumanitarianAssistance.Application.Project.Models
 {
     public class ProjectMonitoringQuestionModel
     {
-        public long IndicatorQuestionId { get; set; }
+        public long? IndicatorQuestionId { get; set; }
         public int? Score { get; set; }
         public long? VerificationSourceId { get; set; }
         public string VerificationSourceName { get; set; }

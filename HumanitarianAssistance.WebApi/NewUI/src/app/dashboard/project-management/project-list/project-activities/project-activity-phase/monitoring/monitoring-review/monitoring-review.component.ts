@@ -245,7 +245,6 @@ export class MonitoringReviewComponent implements OnInit {
 
 
   getQuestionsList(index: number) {
-    debugger;
     this.projectIndicatorId = this.monitoringReviewList.MonitoringReviewModel[
            index
          ].ProjectIndicatorId;
@@ -293,7 +292,6 @@ export class MonitoringReviewComponent implements OnInit {
   //#endregion
 
   saveMonitoringReview() {
-    debugger;
     if (
       this.monitoringReviewList.ProjectMonitoringReviewId === 0 ||
       this.monitoringReviewList.ProjectMonitoringReviewId === null ||
@@ -307,7 +305,6 @@ export class MonitoringReviewComponent implements OnInit {
 
   //#region "addMonitoringReview"
   addMonitoringReview() {
-    debugger;
     if (this.monitoringReviewList.MonitoringReviewModel.length > 0) {
       if (this.monitoringReviewList.MonitoringDate === '') {
         this.toastr.warning('Monitoring Date not selected');
