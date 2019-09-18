@@ -91,9 +91,9 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                                 monitoringQuestions.IsDeleted = false;
                                 monitoringQuestions.CreatedDate = request.CreatedDate;
                                 monitoringQuestions.CreatedById = request.CreatedById;
-                                monitoringQuestions.QuestionId = obj.QuestionId;
-                                monitoringQuestions.Verification = obj.Verification;
-                                monitoringQuestions.VerificationId = obj.VerificationId;
+                                monitoringQuestions.IndicatorQuestionId = obj.IndicatorQuestionId;
+                                monitoringQuestions.VerificationSourceName = obj.VerificationSourceName;
+                                monitoringQuestions.VerificationSourceId = obj.VerificationSourceId;
                                 monitoringQuestions.MonitoringIndicatorId = monitoringIndicatorDetail.MonitoringIndicatorId;
                                 monitoringQuestions.Score = obj.Score;
                                 await _dbContext.ProjectMonitoringIndicatorQuestions.AddAsync(monitoringQuestions);
@@ -107,10 +107,10 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
 
                                 monitoringQuestions.ModifiedDate = request.ModifiedDate;
                                 monitoringQuestions.ModifiedById = request.ModifiedById;
-                                monitoringQuestions.QuestionId = obj.QuestionId;
+                                monitoringQuestions.IndicatorQuestionId = obj.IndicatorQuestionId;
                                 monitoringQuestions.Score = obj.Score;
-                                monitoringQuestions.Verification = obj.Verification;
-                                monitoringQuestions.VerificationId = obj.VerificationId;
+                                monitoringQuestions.VerificationSourceName = obj.VerificationSourceName;
+                                monitoringQuestions.VerificationSourceId = obj.VerificationSourceId;
                                 _dbContext.ProjectMonitoringIndicatorQuestions.Update(monitoringQuestions);
                                 await _dbContext.SaveChangesAsync();
                             }
