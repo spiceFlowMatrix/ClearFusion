@@ -12,12 +12,27 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1)]
         public long Id { get; set; }
-        public long QuestionId { get; set; }
-        public int? VerificationId { get; set; }
-        public string Verification { get; set; }
+        // public long QuestionId { get; set; }
+        // public int? VerificationId { get; set; }
+        //  public string Verification { get; set; }
         public int? Score { get; set; }
-        public long MonitoringIndicatorId { get; set; }
-        [ForeignKey("QuestionId")]
+        // public long MonitoringIndicatorId { get; set; }
+        //  [ForeignKey("QuestionId")]
+        // public ProjectIndicatorQuestions ProjectIndicatorQuestions { get; set; }
+
+
+
+        public long? VerificationSourceId { get; set; }
+        public string VerificationSourceName { get; set; }
+        [ForeignKey("MonitoringIndicatorId")]
+        public long? MonitoringIndicatorId { get; set; }
+        public ProjectMonitoringIndicatorDetail ProjectMonitoringIndicatorDetail { get; set; }
+        [ForeignKey("IndicatorQuestionId")]
+        public long? IndicatorQuestionId { get; set; }
         public ProjectIndicatorQuestions ProjectIndicatorQuestions { get; set; }
+
+
+
+
     }
 }

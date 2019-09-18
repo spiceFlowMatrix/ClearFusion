@@ -57,9 +57,9 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                         monitoringQuestions.IsDeleted = false;
                         monitoringQuestions.CreatedDate = request.CreatedDate;
                         monitoringQuestions.CreatedById = request.CreatedById;
-                        monitoringQuestions.QuestionId = obj.QuestionId;
-                        monitoringQuestions.Verification = obj.Verification;
-                        monitoringQuestions.VerificationId = obj.VerificationId;
+                        monitoringQuestions.IndicatorQuestionId = obj.IndicatorQuestionId;
+                        monitoringQuestions.VerificationSourceName = obj.VerificationSourceName;
+                        monitoringQuestions.VerificationSourceId = obj.VerificationSourceId;
                         monitoringQuestions.MonitoringIndicatorId = monitoringIndicatorDetail.MonitoringIndicatorId;
                         monitoringQuestions.Score = obj.Score;
 

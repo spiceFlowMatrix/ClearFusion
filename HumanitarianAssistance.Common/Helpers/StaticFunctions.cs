@@ -52,6 +52,61 @@ namespace HumanitarianAssistance.Common.Helpers
             //Returned in AFG
             return salaryTax;
         }
+
+        public static DateTime GetRecurringDays(int? RecurringCount, int? RecurrinTypeId, DateTime? PlannedStartDate)
+        {
+            DateTime eventDate = new DateTime();
+            string myDate = PlannedStartDate.Value.ToString();
+            DateTime date = Convert.ToDateTime(myDate);
+            int year = date.Year;
+            int month = date.Month;
+            int numberOfReccuredDays = 0;
+            int numberOfDaysInQuater = 0;
+            int quarterdays = 0;
+            // daily
+            if (RecurrinTypeId == 1)
+            {
+                numberOfReccuredDays = 1 * RecurringCount.Value;
+                eventDate = date.AddDays(numberOfReccuredDays);
+
+            }
+            // weekly
+            else if (RecurrinTypeId == 2)
+            {
+                numberOfReccuredDays = 7 * RecurringCount.Value;
+                eventDate = date.AddDays(numberOfReccuredDays);
+            }
+            // monthly
+            else if (RecurrinTypeId == 3)
+            {
+                eventDate = date.AddMonths(RecurringCount.Value);
+            }
+            // yearly
+            else if (RecurrinTypeId == 4)
+            {
+                eventDate = date.AddYears(RecurringCount.Value);
+            }
+            // quarterly
+            else if (RecurrinTypeId == 5)
+            {
+                // to get number of days in quaerterly year i is quarter value
+                for (int i = 0; i < (3 * RecurringCount.Value); i++)
+                {
+                    quarterdays = DateTime.DaysInMonth(year, month);
+                    numberOfDaysInQuater = numberOfDaysInQuater + quarterdays;
+                    if (month >= 12)
+                    {
+                        year = year + 1;
+                        month = 0;
+                    }
+                    month = month + 1;
+                }
+                eventDate = date.AddDays(numberOfDaysInQuater);
+            }
+            return eventDate;
+        }
+
+
     }
 
     public static class DefaultValues
@@ -64,7 +119,8 @@ namespace HumanitarianAssistance.Common.Helpers
         public static string GetPurchaseCode(DateTime purchaseDate, string purchaseName, long purchaseId)
         {
 
-            return purchaseName+"-"+purchaseDate.Date.ToShortDateString()+"-"+purchaseId;
+            return purchaseName + "-" + purchaseDate.Date.ToShortDateString() + "-" + purchaseId;
         }
     }
+   
 }

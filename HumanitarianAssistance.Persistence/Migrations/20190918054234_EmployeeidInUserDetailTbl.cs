@@ -2,7 +2,7 @@
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
-    public partial class addEmployeeIdInUserDetailsTbl : Migration
+    public partial class EmployeeidInUserDetailTbl : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,6 +10,18 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 name: "EmployeeId",
                 table: "UserDetails",
                 nullable: true);
+
+            migrationBuilder.AddColumn<int>(
+                name: "OvertimeMinutes",
+                table: "EmployeePaymentTypes",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.AddColumn<int>(
+                name: "WorkingMinutes",
+                table: "EmployeePaymentTypes",
+                nullable: false,
+                defaultValue: 0);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserDetails_EmployeeId",
@@ -38,6 +50,14 @@ namespace HumanitarianAssistance.Persistence.Migrations
             migrationBuilder.DropColumn(
                 name: "EmployeeId",
                 table: "UserDetails");
+
+            migrationBuilder.DropColumn(
+                name: "OvertimeMinutes",
+                table: "EmployeePaymentTypes");
+
+            migrationBuilder.DropColumn(
+                name: "WorkingMinutes",
+                table: "EmployeePaymentTypes");
         }
     }
 }

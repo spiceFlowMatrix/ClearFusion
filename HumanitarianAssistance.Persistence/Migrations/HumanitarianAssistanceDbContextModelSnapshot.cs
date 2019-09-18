@@ -6677,27 +6677,27 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
+                    b.Property<long?>("IndicatorQuestionId");
+
                     b.Property<bool>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<long>("MonitoringIndicatorId");
-
-                    b.Property<long>("QuestionId");
+                    b.Property<long?>("MonitoringIndicatorId");
 
                     b.Property<int?>("Score");
 
-                    b.Property<string>("Verification");
+                    b.Property<long?>("VerificationSourceId");
 
-                    b.Property<int?>("VerificationId");
+                    b.Property<string>("VerificationSourceName");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MonitoringIndicatorId");
+                    b.HasIndex("IndicatorQuestionId");
 
-                    b.HasIndex("QuestionId");
+                    b.HasIndex("MonitoringIndicatorId");
 
                     b.ToTable("ProjectMonitoringIndicatorQuestions");
                 });
@@ -9637,15 +9637,13 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectMonitoringIndicatorQuestions", b =>
                 {
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectMonitoringIndicatorDetail")
-                        .WithMany("ProjectMonitoringIndicatorQuestions")
-                        .HasForeignKey("MonitoringIndicatorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectIndicatorQuestions", "ProjectIndicatorQuestions")
                         .WithMany()
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("IndicatorQuestionId");
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectMonitoringIndicatorDetail", "ProjectMonitoringIndicatorDetail")
+                        .WithMany("ProjectMonitoringIndicatorQuestions")
+                        .HasForeignKey("MonitoringIndicatorId");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectOpportunityControl", b =>

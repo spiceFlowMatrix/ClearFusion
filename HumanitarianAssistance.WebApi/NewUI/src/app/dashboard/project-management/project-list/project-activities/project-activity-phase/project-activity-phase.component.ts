@@ -189,7 +189,7 @@ this.selectedCountryDetailId.emit(event);
     // NOTE: It passed the data into the Add Voucher Model
 
     const dialogRef = this.dialog.open(MonitoringReviewComponent, {
-      width: '550px',
+      width: '570px',
       data: {
         projectId: this.projectId,
         activityId: this.activityId
