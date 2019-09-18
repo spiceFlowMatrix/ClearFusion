@@ -75,13 +75,11 @@ export class AddHiringRequestsComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.initForm();
-console.log(this.genderList);
-console.log(this.workingShift);
     if (
       this.hiringRequestDetail != null &&
       this.hiringRequestDetail !== undefined
     ) {
-      this.setHirectingrequestDetail();
+      this.setHiringRequestDetail();
     }
   }
   ngOnChanges() {
@@ -94,13 +92,10 @@ console.log(this.workingShift);
       BudgetLineId: [null, Validators.required],
       CurrencyId: [null, Validators.required],
       Description: ['', Validators.required],
-      EmployeeID: [null, Validators.required],
-      FilledVacancies: [null, Validators.required],
       GradeId: [null, Validators.required],
       OfficeId: [null, Validators.required],
       Position: ['', Validators.required],
       ProfessionId: [null, Validators.required],
-      ProjectId: [null, Validators.required],
       TotalVacancies: [null, Validators.required],
       AnouncingDate: [null, Validators.required],
       JobType: ['', Validators.required],
@@ -142,13 +137,10 @@ console.log(this.workingShift);
         ProfessionId: data.ProfessionId,
         Position: data.Position,
         TotalVacancies: data.TotalVacancies,
-        FilledVacancies: data.FilledVacancies,
         BasicPay: data.BasicPay,
         BudgetLineId: data.BudgetLineId,
         OfficeId: data.OfficeId,
         GradeId: data.GradeId,
-        EmployeeID: data.EmployeeID,
-        ProjectId: this.projectId,
         IsCompleted: data.IsCompleted,
         CurrencyId: data.CurrencyId,
         AnouncingDate: data.AnouncingDate,
@@ -210,7 +202,7 @@ console.log(this.workingShift);
   //#endregion
 
   //#region "setHirectingrequestDetail"
-  setHirectingrequestDetail() {
+  setHiringRequestDetail() {
     this.hiringRequestForm = this.fb.group({
       Description: [this.hiringRequestDetail.Description],
       HiringRequestId: [this.hiringRequestDetail.HiringRequestId],
@@ -218,14 +210,11 @@ console.log(this.workingShift);
       Position: [this.hiringRequestDetail.Position],
       ProfessionId: [this.hiringRequestDetail.ProfessionId],
       TotalVacancies: [this.hiringRequestDetail.TotalVacancies],
-      FilledVacancies: [this.hiringRequestDetail.FilledVacancies],
       BasicPay: [this.hiringRequestDetail.BasicPay],
       CurrencyId: [this.hiringRequestDetail.CurrencyId],
       BudgetLineId: [this.hiringRequestDetail.BudgetLineId],
       OfficeId: [this.hiringRequestDetail.OfficeId],
-      EmployeeID: [this.hiringRequestDetail.EmployeeID],
       GradeId: [this.hiringRequestDetail.GradeId],
-      ProjectId: [this.hiringRequestDetail.ProjectId],
       RequestedBy: [this.hiringRequestDetail.RequestedBy],
       AnouncingDate: [this.hiringRequestDetail.AnouncingDate],
       JobType: [this.hiringRequestDetail.JobType],
