@@ -139,7 +139,9 @@ export class ProfessionalInfoComponent implements OnInit {
       DepartmentName: null,
       EmployeeTypeName: null,
       AttendanceGroupId: null,
-      DutyStation: null
+      DutyStation: null,
+      Password: null,
+      ConfirmPassword: null
     };
   }
 
@@ -413,7 +415,9 @@ export class ProfessionalInfoComponent implements OnInit {
       ResignationReason: model.ResignationReason,
       Status: model.Status,
       TrainingBenefits: model.TrainingBenefits,
-      DutyStation: model.DutyStation
+      DutyStation: model.DutyStation,
+      ConfirmPassword: model.ConfirmPassword,
+      Password: model.Password
     };
     this.assignLeaveToEmployee = this.employeeId;
     this.hrService
@@ -516,7 +520,9 @@ export class ProfessionalInfoComponent implements OnInit {
       ResignationReason: model.ResignationReason,
       Status: model.Status,
       TrainingBenefits: model.TrainingBenefits,
-      DutyStation: model.DutyStation
+      DutyStation: model.DutyStation,
+      ConfirmPassword: model.ConfirmPassword,
+      Password: model.Password
     };
     this.assignLeaveToEmployee = this.employeeId;
     this.hrService
@@ -553,13 +559,7 @@ export class ProfessionalInfoComponent implements OnInit {
 
   //#region "On Form Submit"
   OnFormSubmit(model) {
-    // tslint:disable-next-line:curly
-    //if (model.EmployeeProfessionalId === 0)
-    //this.AddProfessionalDetails(model);
-    //// tslint:disable-next-line:curly
-    //else
-
-        this.EditProfessionalDetails(model);
+    this.EditProfessionalDetails(model);
   }
   //#endregion
 
@@ -605,7 +605,9 @@ export class ProfessionalInfoComponent implements OnInit {
       TrainingBenefits: value.TrainingBenefits,
       EmployeeId: this.employeeId,
       AttendanceGroupId: value.AttendanceGroupId,
-      DutyStation: value.DutyStation
+      DutyStation: value.DutyStation,
+      Password: value.Password,
+      ConfirmPassword: value.ConfirmPassword
     };
 
     this.popupProfesionalinfoVisible = true;
@@ -825,4 +827,6 @@ export class ProfessionalDetails {
   AttendanceGroupId?: number;
   AttendanceGroupName?: string;
   DutyStation: number;
+  Password: string;
+  ConfirmPassword: string;
 }

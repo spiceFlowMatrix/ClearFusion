@@ -248,7 +248,8 @@ export class EmployeesComponent implements OnInit {
       FiredOn: null,
       FiredReason: null,
       ResignationOn: null,
-      ResignationReason: null
+      ResignationReason: null,
+      Password: null
     };
   }
 
@@ -1154,7 +1155,8 @@ export class EmployeesComponent implements OnInit {
       FiredOn: value.FiredOn,
       FiredReason: value.FiredReason,
       ResignationOn: value.ResignationOn,
-      ResignationReason: value.ResignationReason
+      ResignationReason: value.ResignationReason,
+      Password: value.Password
     };
 
     this.hrService
@@ -1812,6 +1814,14 @@ export class EmployeesComponent implements OnInit {
       }
     }
   }
+
+  passwordComparison = () => {
+    return this.empGeneral.Password;
+}
+
+checkComparison() {
+    return true;
+}
 
   functionCache = {};
   validateRange(min, max) {

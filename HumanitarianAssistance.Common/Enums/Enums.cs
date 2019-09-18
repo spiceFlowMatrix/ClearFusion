@@ -21,8 +21,8 @@
     }
 
     public enum UserStatus {
-        InActive,
-        Active
+        InActive=0,
+        Active=1
     } 
 
     public enum AccountTypeEnum
