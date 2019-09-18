@@ -27,11 +27,11 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
             try
             {
                 ProjectHiringRequestDetail hiringRequestDeatil = new ProjectHiringRequestDetail()
-                {
+                {                     
                     BasicPay = request.BasicPay,
                     BudgetLineId = request.BudgetLineId,
                     CreatedById = request.CreatedById,
-                    CreatedDate = DateTime.UtcNow,
+                    CreatedDate =request.CreatedDate,
                     CurrencyId = request.CurrencyId,
                     Description = request.Description,
                     EmployeeID = request.EmployeeID,
@@ -43,7 +43,26 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     Position = request.Position,
                     ProfessionId = request.ProfessionId,
                     ProjectId = request.ProjectId,
-                    TotalVacancies = request.TotalVacancies
+                    TotalVacancies = request.TotalVacancies,
+                    AnouncingDate=request.AnouncingDate,
+                    JobType=request.JobType,
+                    Background=request.Background,
+                    JobStatus=request.JobStatus,
+                    KnowladgeAndSkillRequired=request.KnowladgeAndSkillRequired,
+                    SalaryRange=request.SalaryRange,
+                    Shift=request.Shift,
+                    ProviceId=request.ProviceId,
+                    SpecificDutiesAndResponsblities=request.SpecificDutiesAndResponsblities,
+                    SubmissionGuidlines=request.SubmissionGuidlines,
+                    ClosingDate=request.ClosingDate,
+                    ContractDuration=request.ContractDuration,
+                    ContractType=request.ContractType,
+                    CountryId=request.CountryId,
+                    GenderId=request.GenderId,
+                    MinimumEducationLevel=request.MinimumEducationLevel,
+                    Experience=request.Experience,
+                    Organization=request.Organization                    
+
                 };
                 await _dbContext.ProjectHiringRequestDetail.AddAsync(hiringRequestDeatil);
                 await _dbContext.SaveChangesAsync();

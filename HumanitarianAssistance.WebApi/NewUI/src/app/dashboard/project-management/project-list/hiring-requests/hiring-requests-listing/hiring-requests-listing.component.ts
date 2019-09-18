@@ -8,8 +8,9 @@ import {
   IOfficeListModel,
   IJobGradeModel,
   ProjectHiringRequestFilterModel,
-  IHiringRequestDetailModel,
-  IProfessionList
+  IProfessionList,
+  WorkingShift,
+  Gender
 } from '../models/hiring-requests-model';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { ActivatedRoute } from '@angular/router';
@@ -40,7 +41,15 @@ export class HiringRequestsListingComponent implements OnInit {
   officeList: IOfficeListModel[] = [];
   jobGradeList: IJobGradeModel[] = [];
   professionList: IProfessionList[] = [];
-
+  workingShift: WorkingShift[] = [
+    { Id: 1, value: 'Day' },
+    { Id: 2, value: 'Night' }
+  ];
+  gender: Gender[] = [
+    { Id: 1, value: 'Male' },
+    { Id: 2, value: 'Female' },
+    { Id: 2, value: 'Other' }
+  ];
   // model
   projectHiringRequestFilter: ProjectHiringRequestFilterModel;
   hiringRequestModel: ProjectHiringRequestFilterModel;
@@ -91,10 +100,9 @@ export class HiringRequestsListingComponent implements OnInit {
       pageIndex: 0,
       pageSize: 10,
       totalCount: 0,
-
       FilterValue: '',
-      Description: null,
-      Position: null,
+      Description: '',
+      Position: '',
       ProfessionId: null,
       TotalVacancies: null,
       FilledVacancies: null,
@@ -103,34 +111,48 @@ export class HiringRequestsListingComponent implements OnInit {
       BudgetLineId: null,
       GradeId: null,
       EmployeeID: null,
-      HiringRequestCode: null,
+      HiringRequestCode: '',
       HiringRequestId: null,
       IsCompleted: null,
       OfficeId: null,
       ProjectId: null,
-      BudgetName: null,
-      CurrencyName: null,
-      EmployeeName: null,
-      GradeName: null,
-      RequestedBy: null,
+      RequestedBy: '',
+      AnouncingDate: null,
+      JobType: '',
+      Background: '',
+      JobStatus: '',
+      KnowladgeAndSkillRequired: '',
+      SalaryRange: '',
+      Shift: null,
+      ProviceId: null,
+      SpecificDutiesAndResponsblities: '',
+      SubmissionGuidlines: '',
+      ClosingDate: null,
+      ContractDuration: null,
+      ContractType: '',
+      CountryId: null,
+      GenderId: null,
+      MinimumEducationLevel: '',
+      Experience: '',
+      Organization: ''
     };
   }
   //#endregion
 
-//#region  paginatorEvent
-pageEvent(e) {
-  this.hiringRequestModel.pageIndex = e.pageIndex;
-  this.hiringRequestModel.pageSize = e.pageSize;
+  //#region  paginatorEvent
+  pageEvent(e) {
+    this.hiringRequestModel.pageIndex = e.pageIndex;
+    this.hiringRequestModel.pageSize = e.pageSize;
 
-  this.onFilterApplied();
-}
-//#endregion
+    this.onFilterApplied();
+  }
+  //#endregion
 
-//#region "onFilterApplied"
-onFilterApplied() {
-  this.getAllHiringRequestFilterList();
-}
-//#endregion
+  //#region "onFilterApplied"
+  onFilterApplied() {
+    this.getAllHiringRequestFilterList();
+  }
+  //#endregion
 
   //#region "onItemClick"
   onItemClick(item: any) {
@@ -167,7 +189,9 @@ onFilterApplied() {
         CurrencyList: this.currencyList,
         JobGradeList: this.jobGradeList,
         ProjectId: this.projectId,
-        ProfessionList: this.professionList
+        ProfessionList: this.professionList,
+        workingShift: this.workingShift,
+        gender: this.gender
       }
     });
 
@@ -293,7 +317,7 @@ onFilterApplied() {
         (response: IResponseData) => {
           if (response.statusCode === 200 && response.data !== null) {
             this.hiringRequestModel.totalCount =
-            response.total != null ? response.total : 0;
+              response.total != null ? response.total : 0;
             this.setHiringrequestList(response.data);
           }
           this.hiringRequestListLoader = false;
@@ -324,12 +348,27 @@ onFilterApplied() {
         ProjectId: element.ProjectId,
         IsCompleted: element.IsCompleted,
         CurrencyId: element.CurrencyId,
-        BudgetName: element.BudgetName,
-        CurrencyName: element.CurrencyName,
-        EmployeeName: element.EmployeeName,
-        GradeName: element.GradeName,
         RequestedBy: element.RequestedBy,
-        FilterValue: element.FilterValue
+        FilterValue: element.FilterValue,
+        AnouncingDate: element.AnouncingDate,
+        JobType: element.JobType,
+        Background: element.Background,
+        JobStatus: element.JobStatus,
+        KnowladgeAndSkillRequired: element.KnowladgeAndSkillRequired,
+        SalaryRange: element.SalaryRange,
+        Shift: element.Shift,
+        ProviceId: element.ProviceId,
+        SpecificDutiesAndResponsblities:
+          element.SpecificDutiesAndResponsblities,
+        SubmissionGuidlines: element.SubmissionGuidlines,
+        ClosingDate: element.ClosingDate,
+        ContractDuration: element.ContractDuration,
+        ContractType: element.ContractType,
+        CountryId: element.CountryId,
+        GenderId: element.GenderId,
+        MinimumEducationLevel: element.MinimumEducationLevel,
+        Experience: element.Experience,
+        Organization: element.Organization
       });
     });
   }
@@ -347,6 +386,5 @@ onFilterApplied() {
     const indexOfHiringRequestList = this.hiringRequestlist.indexOf(data);
     this.hiringRequestlist[indexOfHiringRequestList] = event;
   }
-
   //#endregion
 }
