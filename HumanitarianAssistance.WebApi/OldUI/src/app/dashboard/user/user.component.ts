@@ -661,7 +661,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
         this.userEditForm.setValue({
           FirstName: data.data.UserDetails.FirstName,
-          LastName: data.data.UserDetails.LastName,
+          LastName: data.data.UserDetails.LastName == null ? '' : data.data.UserDetails.LastName,
           Email: data.data.UserDetails.Username,
           Phone: data.data.UserDetails.Phone,
           OfficeId: data.data.UserDetails.OfficeId,
