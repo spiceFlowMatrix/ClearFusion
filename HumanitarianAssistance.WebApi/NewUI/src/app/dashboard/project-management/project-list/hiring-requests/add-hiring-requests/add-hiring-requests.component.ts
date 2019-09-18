@@ -43,6 +43,8 @@ export class AddHiringRequestsComponent implements OnInit, OnChanges {
   jobGrageList: IJobGradeModel[] = [];
   professionList: IProfessionList[] = [];
   hiringRequestDetail: any;
+  workingShift: any[] = [];
+  genderList: any[] = [];
 
   projectId: number;
   activityId: number;
@@ -67,11 +69,16 @@ export class AddHiringRequestsComponent implements OnInit, OnChanges {
     this.hiringRequestDetail = data.HiringRequestDetail;
     this.professionList = data.ProfessionList;
     this.officeSelectionFlag = data.officeSelectionFlag;
+    this.genderList = data.gender;
+    this.workingShift = data.workingShift;
+    console.log(data.gender);
+console.log(data.workingShift);
   }
 
   ngOnInit() {
     this.initForm();
-
+console.log(this.genderList);
+console.log(this.workingShift);
     if (
       this.hiringRequestDetail != null &&
       this.hiringRequestDetail !== undefined

@@ -189,7 +189,9 @@ export class HiringRequestsListingComponent implements OnInit {
         CurrencyList: this.currencyList,
         JobGradeList: this.jobGradeList,
         ProjectId: this.projectId,
-        ProfessionList: this.professionList
+        ProfessionList: this.professionList,
+        workingShift: this.workingShift,
+        gender: this.gender
       }
     });
 
