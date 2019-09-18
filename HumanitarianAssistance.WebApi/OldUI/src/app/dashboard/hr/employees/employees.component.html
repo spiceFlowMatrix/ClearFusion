@@ -516,10 +516,6 @@
                     [editorOptions]="{ dataSource: countryTypeDropdown, displayExpr: 'CountryName', valueExpr: 'CountryId'}"
                     >
                             <dxo-label text="Country"></dxo-label>
-                            <!-- <dx-select-box (onValueChanged)="getStateType($event.value)"
-                                [(dataSource)]="countryTypeDropdown" valueExpr="CountryId" searchEnabled="true"
-                                [(value)]="CountryId" displayExpr="CountryName">
-                            </dx-select-box> -->
                             <dxi-validation-rule type="required" message="Country is required">
                             </dxi-validation-rule>
                         </dxi-item>
@@ -527,8 +523,6 @@
                         <dxi-item dataField="ProvinceId" editorType="dxSelectBox"
                             [editorOptions]="{ dataSource: stateTypeDropdown, displayExpr: 'ProvinceName', valueExpr: 'ProvinceId', searchEnabled: true }">
                             <dxo-label text="State"></dxo-label>
-                            <!-- <dxi-validation-rule type="required" message="ProvinceId is required">
-                            </dxi-validation-rule> -->
                         </dxi-item>
 
                     <dxi-item *ngIf="tabEventValue == 2" dataField="EmployeeContractTypeId" editorType="dxSelectBox"
@@ -541,6 +535,33 @@
                         [editorOptions]="{ disabled: hiredOnFlag, type: 'date', value: currentDate, max : currentDate , displayFormat: 'dd/MM/yyyy'}">
                         <dxi-validation-rule type="required"> </dxi-validation-rule>
                     </dxi-item>
+
+
+                    <dxi-item dataField="Password"
+                [editorOptions]="{ mode: 'password' }">
+                <dxi-validation-rule 
+                    type="required"
+                    message="Password is required">
+                </dxi-validation-rule>
+            </dxi-item>
+            <dxi-item 
+                editorType="dxTextBox"
+                [editorOptions]="{ mode: 'password' }">
+                <dxo-label
+                    text="Confirm Password">
+                </dxo-label>
+                <dxi-validation-rule 
+                    type="required"
+                    message="Confirm Password is required">
+                </dxi-validation-rule>
+                <dxi-validation-rule 
+                    type="compare" 
+                    [comparisonTarget]="passwordComparison"
+                    message="Password and Confirm Password do not match">
+                </dxi-validation-rule>
+            </dxi-item>
+
+
 
                     <dxi-item *ngIf="tabEventValue == 3" dataField="FiredOn" editorType="dxDateBox"
                         [editorOptions]="{ disabled: firedOnFlag, max : currentDate, displayFormat: 'dd/MM/yyyy'}">

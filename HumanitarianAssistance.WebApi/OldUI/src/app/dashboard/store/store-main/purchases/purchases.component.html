@@ -249,7 +249,7 @@
         </dx-form>
 
         <div class="btn-grp-wrap">
-          <dx-button text="Save" type="success" validationGroup="addPurchaseData" [useSubmitBehavior]="true"></dx-button>
+          <dx-button text="Save" type="success" validationGroup="addPurchaseData" [disabled]="exchangeRateMessage != '' && exchangeRateMessage != null" [useSubmitBehavior]="true"></dx-button>
           <dx-button text="Cancel" (onClick)="hideAddPurchaseFormPopupVisible()"></dx-button>
         </div>
       </form>
@@ -403,7 +403,7 @@
         </dx-form>
 
         <div class="btn-grp-wrap">
-          <dx-button text="Save" type="success" validationGroup="editPurchaseData" [useSubmitBehavior]="true"></dx-button>
+          <dx-button text="Save" type="success" [disabled]="exchangeRateMessage != '' && exchangeRateMessage != null" validationGroup="editPurchaseData" [useSubmitBehavior]="true"></dx-button>
           <dx-button text="Cancel" (onClick)="hideEditPurchaseFormPopupVisible()"></dx-button>
         </div>
       </form>
