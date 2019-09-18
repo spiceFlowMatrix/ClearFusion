@@ -1,4 +1,4 @@
-import { ICurrencyList } from "src/app/dashboard/accounting/gain-loss-report/gain-loss-report.model";
+import { ICurrencyList } from 'src/app/dashboard/accounting/gain-loss-report/gain-loss-report.model';
 
 export interface IHiringReuestDataSource {
   EmployeeList: IEmployeeListModel[];
@@ -13,6 +13,8 @@ export interface IHiringReuestDataSource {
   officeSelectionFlag: boolean;
   gender: any[];
   workingShift: any[];
+  countryList: ICountryList[];
+  provinceList: IProvinceList[];
 }
 export interface ICurrencyListModel {
   CurrencyId: number;
@@ -194,11 +196,19 @@ export interface CandidateDetailModel {
   OfficeId: number;
   EmployeeTypeId: number;
 }
-export interface WorkingShift {
+export interface IWorkingShift {
   Id: Number;
   value: string;
 }
-export interface Gender {
+export interface IGender {
   Id: Number;
   value: string;
+}
+export interface ICountryList {
+  CountryId: Number;
+  CountryName: string;
+}
+export interface IProvinceList {
+  ProvinceId: Number;
+  ProvinceName: string;
 }

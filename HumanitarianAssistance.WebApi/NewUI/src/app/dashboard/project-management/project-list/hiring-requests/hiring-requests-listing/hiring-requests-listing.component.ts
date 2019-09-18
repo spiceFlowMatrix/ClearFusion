@@ -9,8 +9,10 @@ import {
   IJobGradeModel,
   ProjectHiringRequestFilterModel,
   IProfessionList,
-  WorkingShift,
-  Gender
+  IWorkingShift,
+  IGender,
+  ICountryList,
+  IProvinceList
 } from '../models/hiring-requests-model';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { ActivatedRoute } from '@angular/router';
@@ -41,11 +43,13 @@ export class HiringRequestsListingComponent implements OnInit {
   officeList: IOfficeListModel[] = [];
   jobGradeList: IJobGradeModel[] = [];
   professionList: IProfessionList[] = [];
-  workingShift: WorkingShift[] = [
+  countryList: ICountryList[] = [];
+  provinceList: IProvinceList[] = [];
+  workingShift: IWorkingShift[] = [
     { Id: 1, value: 'Day' },
     { Id: 2, value: 'Night' }
   ];
-  gender: Gender[] = [
+  gender: IGender[] = [
     { Id: 1, value: 'Male' },
     { Id: 2, value: 'Female' },
     { Id: 2, value: 'Other' }
@@ -191,7 +195,9 @@ export class HiringRequestsListingComponent implements OnInit {
         ProjectId: this.projectId,
         ProfessionList: this.professionList,
         workingShift: this.workingShift,
-        gender: this.gender
+        gender: this.gender,
+        countryList: this.countryList,
+        provinceList: this.provinceList
       }
     });
 
@@ -385,6 +391,45 @@ export class HiringRequestsListingComponent implements OnInit {
     ).GradeName;
     const indexOfHiringRequestList = this.hiringRequestlist.indexOf(data);
     this.hiringRequestlist[indexOfHiringRequestList] = event;
+  }
+  //#endregion
+
+  //#region "getCountryList"
+
+  getCountryList() {
+    this.hiringRequestService.GetCountryList().subscribe(
+      (response: IResponseData) => {
+        this.countryList = [];
+        if (response.statusCode === 200 && response.data !== null) {
+          response.data.forEach(element => {
+            this.countryList.push({
+              CountryId: element.CountryId,
+              CountryName: element.CountryName
+            });
+          });
+        }
+      },
+      error => {}
+    );
+  }
+  //#endregion
+  //#region "getCountryList"
+
+  getProvinceList() {
+    this.hiringRequestService.GetProvinceList().subscribe(
+      (response: IResponseData) => {
+        this.provinceList = [];
+        if (response.statusCode === 200 && response.data !== null) {
+          response.data.forEach(element => {
+            this.provinceList.push({
+              ProvinceId: element.ProfessionId,
+              ProvinceName: element.ProfessionName
+            });
+          });
+        }
+      },
+      error => {}
+    );
   }
   //#endregion
 }

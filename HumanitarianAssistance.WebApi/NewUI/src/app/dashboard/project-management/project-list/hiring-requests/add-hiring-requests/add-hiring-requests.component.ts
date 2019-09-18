@@ -14,7 +14,9 @@ import {
   IOfficeListModel,
   IJobGradeModel,
   IHiringRequestDetailModel,
-  IProfessionList
+  IProfessionList,
+  ICountryList,
+  IProvinceList
 } from '../models/hiring-requests-model';
 import { ICurrencyList } from 'src/app/dashboard/accounting/gain-loss-report/gain-loss-report.model';
 import { HiringRequestsService } from '../hiring-requests.service';
@@ -45,7 +47,8 @@ export class AddHiringRequestsComponent implements OnInit, OnChanges {
   hiringRequestDetail: any;
   workingShift: any[] = [];
   genderList: any[] = [];
-
+  countryList: ICountryList[] = [];
+  provinceList: IProvinceList[] = [];
   projectId: number;
   activityId: number;
   officeSelectionFlag = false;
@@ -71,6 +74,8 @@ export class AddHiringRequestsComponent implements OnInit, OnChanges {
     this.officeSelectionFlag = data.officeSelectionFlag;
     this.genderList = data.gender;
     this.workingShift = data.workingShift;
+    this.countryList = data.countryList;
+    this.provinceList = data.provinceList;
   }
 
   ngOnInit() {

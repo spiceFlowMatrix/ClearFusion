@@ -231,6 +231,30 @@
               </mat-form-field>
             </div>
             <div class="col-lg-6 col-sm-6">
+              <mat-form-field class="example-full-width">
+                <mat-select placeholder="Nationality" formControlName="CountryId">
+                  <mat-option
+                    *ngFor="let item of countryList"
+                    [value]="item.CountryId"
+                  >
+                    {{ item.CountryName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+              <mat-form-field class="example-full-width">
+                <mat-select placeholder="City/Province" formControlName="ProvinceId">
+                  <mat-option
+                    *ngFor="let item of provinceList"
+                    [value]="item.ProvinceId"
+                  >
+                    {{ item.ProvinceName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-sm-6">
                 <mat-form-field class="example-full-width">
                   <mat-select placeholder="Gender" formControlName="GenderId">
                     <mat-option

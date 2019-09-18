@@ -391,6 +391,42 @@ DeleteCandidateDetailDetail(model: IHiringReuestCandidateModel) {
 }
 //#endregion
 
+  //#region "GetCountryList"
+  GetCountryList(): any {
+    return this.globalService
+      .getList(this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllCountryDetails)
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.JobGradeList,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+    //#region "GetProvinceList"
+    GetProvinceList(): any {
+      return this.globalService
+        .getList(this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProvinceDetails)
+        .pipe(
+          map(x => {
+            const responseData: IResponseData = {
+              data: x.data.JobGradeList,
+              statusCode: x.StatusCode,
+              message: x.Message
+            };
+            return responseData;
+          })
+        );
+    }
+    //#endregion
+
+
+
+
 setHiringPermissions(permissionList: IProjectPermissionMode[]) {
   this.hiringPermissionSubject.next(permissionList);
 }
