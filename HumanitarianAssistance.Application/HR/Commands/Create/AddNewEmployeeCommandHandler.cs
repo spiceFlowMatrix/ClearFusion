@@ -84,6 +84,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     List<int> office = new List<int>();
                     office.Add(request.OfficeId);
 
+                    //Add Employee to UserDetails Table
                     UserModel addUserCommand = new UserModel
                     {
                         Email= request.Email,
@@ -91,7 +92,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                         FirstName= request.EmployeeName,
                         OfficeId= office,
                         EmployeeId = request.EmployeeID,
-                        Status= (int)UserStatus.Active
+                        Status= (int)UserStatus.Active,
+                        Password = request.Password
                     };
 
                     response = await _hrService.AddUser(addUserCommand);
