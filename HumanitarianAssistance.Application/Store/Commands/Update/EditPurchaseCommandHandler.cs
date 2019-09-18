@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.Store;
 using HumanitarianAssistance.Persistence;
@@ -32,6 +33,13 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
 
                     if (purchaseRecord != null)
                     {
+                        var exRate = await _dbContext.ExchangeRateDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.Date.Date == request.PurchaseDate.Date && x.FromCurrency == request.Currency && x.ToCurrency == (int)Currency.USD);
+
+                        if (exRate == null)
+                        {
+                            throw new Exception($"Exchange Rates not defined for Date {request.PurchaseDate.Date.ToString("dd/MM/yyyy")}");
+                        }
+
                         _mapper.Map(request, purchaseRecord);
 
                         purchaseRecord.IsDeleted = false;

@@ -35,22 +35,30 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
                 var office = await _dbContext.OfficeDetail.FirstOrDefaultAsync(o => o.OfficeId == request.OfficeId); //use OfficeCode
                 var employeeDetails = await _dbContext.EmployeeDetail.FirstOrDefaultAsync(x => x.EmployeeID == request.EmployeeId && x.IsDeleted == false);
                 var currency = await _dbContext.CurrencyDetails.FirstOrDefaultAsync(x => x.IsDeleted == false && x.CurrencyId == request.CurrencyId);
+                var approvedSalary = await _dbContext.EmployeePaymentTypes.FirstOrDefaultAsync(x => !x.IsDeleted && x.EmployeeID == request.EmployeeId && x.PayrollMonth == request.PayrollMonth.Month && x.PayrollYear == request.PayrollMonth.Year);
 
                 List<VoucherTransactions> voucherTransactionsList = new List<VoucherTransactions>();
 
                 //for gross salary= basicpay * totalworkhours
-                decimal? grossSalary = request.EmployeePayrollLists.Where(x => x.HeadTypeId == (int)SalaryHeadType.GENERAL).Sum(x => x.MonthlyAmount) * request.PresentHours;
+                double? grossSalary = (double?)request.EmployeePayrollLists.Where(x => x.HeadTypeId == (int)SalaryHeadType.GENERAL)
+                                                                   .Sum(x => x.MonthlyAmount) * ((approvedSalary.Attendance+ approvedSalary.OverTimeHours)
+                                                                   + ((double?)(approvedSalary.OvertimeMinutes+ approvedSalary.WorkingMinutes)/60d));
+
+                if (grossSalary != null)
+                {
+                    grossSalary = Math.Round(grossSalary.Value, 2);
+                }
 
                 //total Allowances of an employee over a month
-                decimal? totalAllowance = request.EmployeePayrollLists.Where(x => x.HeadTypeId == (int)SalaryHeadType.ALLOWANCE).Sum(x => x.MonthlyAmount);
+                double? totalAllowance = (double?)request.EmployeePayrollLists.Where(x => x.HeadTypeId == (int)SalaryHeadType.ALLOWANCE).Sum(x => x.MonthlyAmount);
 
                 //total deductions of an employee over a month
-                decimal? totalDeductions = request.EmployeePayrollLists.Where(x => x.HeadTypeId == (int)SalaryHeadType.DEDUCTION).Sum(x => x.MonthlyAmount);
+                double? totalDeductions = (double?)request.EmployeePayrollLists.Where(x => x.HeadTypeId == (int)SalaryHeadType.DEDUCTION).Sum(x => x.MonthlyAmount);
 
-                decimal? totalDeductionsPayrollHeads = request.EmployeePayrollListPrimary.Sum(x => x.Amount);
+                double? totalDeductionsPayrollHeads = (double?)request.EmployeePayrollListPrimary.Sum(x => x.Amount);
 
                 //total salary payable to employee in a month
-                decimal? totalSalaryOfEmployee = grossSalary + totalAllowance;
+                double? totalSalaryOfEmployee = grossSalary + totalAllowance;
 
                 //var exchangeRates= await exchangeRateTask;
                 //exchangeRateTask.Dispose();

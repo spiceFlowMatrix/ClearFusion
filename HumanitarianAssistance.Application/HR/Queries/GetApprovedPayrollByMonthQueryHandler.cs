@@ -30,6 +30,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
             {
                 List<EmployeePaymentTypes> userdetail = await _dbContext
                                                                         .EmployeePaymentTypes
+                                                                        .Include(x=> x.AdvanceDetail)
                                                                         .Where(x => x.PayrollMonth == request.Month && 
                                                                         x.PayrollYear == request.Year && 
                                                                         x.OfficeId == request.OfficeId && 
@@ -70,8 +71,10 @@ namespace HumanitarianAssistance.Application.HR.Queries
                         CurrencyCode = item.CurrencyCode,
                         CurrencyId = item.CurrencyId,
                         EmployeeCode = item.EmployeeDetail.EmployeeCode,
-                        DepartmentId = item.EmployeeDetail.EmployeeProfessionalDetail.DepartmentId
-
+                        DepartmentId = item.EmployeeDetail.EmployeeProfessionalDetail.DepartmentId,
+                        WorkingMinutes = item.WorkingMinutes,
+                        OvertimeMinutes= item.OvertimeMinutes,
+                        AdvanceBalanceAmount = (item.AdvanceAmount ?? 0) -   item?.AdvanceDetail?.RecoveredAmount ?? 0 
                     };
 
                     obj.EmployeePayrollList = new List<EmployeePayrollModel>();

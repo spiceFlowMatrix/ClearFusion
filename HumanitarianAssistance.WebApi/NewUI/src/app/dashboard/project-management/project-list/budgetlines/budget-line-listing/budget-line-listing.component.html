@@ -22,6 +22,65 @@
 
         </div>
           <hr />
+          <div class="row">
+            <mat-card *ngIf="collapsed">
+              <mat-card-content>
+                <table class="viewtable">
+                  <caption style="text-align:center">
+                    Sample Data Entries For import Excel
+                  </caption>
+                  <tbody>
+                    <tr>
+                      <th>ProjectId</th>
+                      <th>ProjectJobCode</th>
+                      <th>ProjectJobName</th>
+                      <th>BudgetCode</th>
+                      <th>BudgetName</th>
+                      <th>InitialBudget</th>
+                      <th>CurrencyId</th>
+                      <th>CurrencyName</th>
+                    </tr>
+                    <tr>
+                      <td>{{ selectedProjectId }}</td>
+                      <td>P00{{ selectedProjectId }}-J001</td>
+                      <td>MyJobName</td>
+                      <td>P00{{ selectedProjectId }}-B00001</td>
+                      <td>MyBudgetName</td>
+                      <td>100</td>
+                      <td>1</td>
+                      <td>Afgani</td>
+                    </tr>
+                    <tr>
+                      <td>{{ selectedProjectId }}</td>
+                      <td>P00{{ selectedProjectId }}-J002</td>
+                      <td>MySecondJobName</td>
+                      <td>P00{{ selectedProjectId }}-B00002</td>
+                      <td>MySecondBudgetName</td>
+                      <td>200</td>
+                      <td>2</td>
+                      <td>Europian</td>
+                    </tr>
+                    <tr>
+                      <td>{{ selectedProjectId }}</td>
+                      <td>P00{{ selectedProjectId }}-J003</td>
+                      <td>MyThirdJobName</td>
+                      <td>P00{{ selectedProjectId }}-B00001</td>
+                      <td>MyThirdBudgetName</td>
+                      <td>300</td>
+                      <td>3</td>
+                      <td>Pakistani</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p style="color:red;font-size: 12px; padding-top: 5px">
+                  (*Important : You can also leave ProjectJobCode and
+                  BudgetCode Field Empty it will by default create new job and
+                  if you have two entry by same ProjectJobName in excel it will create
+                  one job for two entry.)
+                </p>
+              </mat-card-content>
+            </mat-card>
+          </div>
 
           <div class="row">
             <div class="col-sm-12">

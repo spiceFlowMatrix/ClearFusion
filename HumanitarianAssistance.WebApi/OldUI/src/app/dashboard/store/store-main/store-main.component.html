@@ -274,7 +274,7 @@
                               <div class="tab-content">
                                 <div id="purchases" class="tab-pane fade in active">
                                   <br>
-                                  <app-purchases [isEditingAllowed]="isEditingAllowed" (getItemAmounts)="getItemAmounts($event)"></app-purchases>
+                                  <app-purchases [isEditingAllowed]="isEditingAllowed" [officeId]="selectedOffice" (getItemAmounts)="getItemAmounts($event)"></app-purchases>
 
                                 </div>
                                 <div id="orders" class="tab-pane fade">
