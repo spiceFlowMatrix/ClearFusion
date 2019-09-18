@@ -91,9 +91,11 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                         Phone= request.Phone,
                         FirstName= request.EmployeeName,
                         OfficeId= office,
-                        EmployeeId = request.EmployeeID,
+                        EmployeeId = obj.EmployeeID,
                         Status= (int)UserStatus.Active,
-                        Password = request.Password
+                        Password = request.Password,
+                        CreatedById= obj.CreatedById,
+                        CreatedDate= obj.CreatedDate
                     };
 
                     response = await _hrService.AddUser(addUserCommand);

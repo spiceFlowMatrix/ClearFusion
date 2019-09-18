@@ -132,6 +132,7 @@ namespace HumanitarianAssistance.Application.CommonServices
                         user.CreatedDate = request.CreatedDate;
                         user.UserType = request.UserType;
                         user.AspNetUserId = newUser.Id;
+                        user.EmployeeId = request.EmployeeId;
 
                         await _dbContext.UserDetails.AddAsync(user);
                         await _dbContext.SaveChangesAsync();
