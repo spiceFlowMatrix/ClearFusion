@@ -43,6 +43,7 @@ export class ProjectActivityAddComponent implements OnInit, OnDestroy {
   projectActivityForm: FormGroup;
   addActivityLoader = false;
   projectId: number;
+  diasbleEndDate = false;
   // subscribe
   addProjectActivitySubscribe: Subscription;
 
@@ -100,64 +101,61 @@ export class ProjectActivityAddComponent implements OnInit, OnDestroy {
   //#endregion
 
   onCountryDetailsChange(event: any) {
-    if (event != null &&  event !== undefined) {
+    if (event != null && event !== undefined) {
       this.getAllProvinceListByCountryId(event);
-
     }
   }
 
- //#region "getAllProvinceList"
- getAllProvinceList() {
-  // this.provinceDistrictFlag = true;
-  this.activitiesService.getAllProvinceList().subscribe(
-    (response: IResponseData) => {
-      this.provinceSelectionList = [];
-      if (response.statusCode === 200 && response.data != null) {
-        response.data.forEach(element => {
-          this.provinceSelectionList.push({
-            value: element.ProvinceId,
-            label: element.ProvinceName
-          });
-        });
-      }
-      // this.provinceDistrictFlag = false;
-    },
-    error => {
-      // this.provinceDistrictFlag = false;
-    }
-  );
-}
-
-getAllProvinceListByCountryId(id: any) {
-  const provinceId  = id.value;
-  // this.provinceDistrictFlag = true;
-  if (provinceId != null && provinceId !== undefined) {
-  this.provinceSelectionList = [];
-  this.activitiesService
-    .getAllProvinceListByCountryId([provinceId])
-    .subscribe(
-      response => {
+  //#region "getAllProvinceList"
+  getAllProvinceList() {
+    // this.provinceDistrictFlag = true;
+    this.activitiesService.getAllProvinceList().subscribe(
+      (response: IResponseData) => {
+        this.provinceSelectionList = [];
         if (response.statusCode === 200 && response.data != null) {
-            response.data.forEach(element => {
-              this.provinceSelectionList.push({
-                value: element.ProvinceId,
-                label: element.ProvinceName
-              });
+          response.data.forEach(element => {
+            this.provinceSelectionList.push({
+              value: element.ProvinceId,
+              label: element.ProvinceName
             });
-          // this.GetProvinceByProjectId(this.ProjectId);
+          });
         }
-       // this.provinceDistrictFlag = false;
+        // this.provinceDistrictFlag = false;
       },
       error => {
         // this.provinceDistrictFlag = false;
       }
     );
   }
-}
 
+  getAllProvinceListByCountryId(id: any) {
+    const provinceId = id.value;
+    // this.provinceDistrictFlag = true;
+    if (provinceId != null && provinceId !== undefined) {
+      this.provinceSelectionList = [];
+      this.activitiesService
+        .getAllProvinceListByCountryId([provinceId])
+        .subscribe(
+          response => {
+            if (response.statusCode === 200 && response.data != null) {
+              response.data.forEach(element => {
+                this.provinceSelectionList.push({
+                  value: element.ProvinceId,
+                  label: element.ProvinceName
+                });
+              });
+              // this.GetProvinceByProjectId(this.ProjectId);
+            }
+            // this.provinceDistrictFlag = false;
+          },
+          error => {
+            // this.provinceDistrictFlag = false;
+          }
+        );
+    }
+  }
 
-//#endregion
-
+  //#endregion
 
   //#region "onProvinceDetailChange  for GetAllDistrictvalueByProvinceId"
   onProvinceDetailChange(event: any) {
@@ -290,4 +288,13 @@ getAllProvinceListByCountryId(id: any) {
     );
   }
   //#endregion
+
+  onRecurringChange(event: any) {
+    console.log(event);
+    if (event.checked === true) {
+      this.diasbleEndDate = true;
+    } else {
+      this.diasbleEndDate = false;
+    }
+  }
 }

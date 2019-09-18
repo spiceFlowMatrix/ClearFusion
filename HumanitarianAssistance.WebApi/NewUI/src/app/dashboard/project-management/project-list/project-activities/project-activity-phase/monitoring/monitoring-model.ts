@@ -7,24 +7,31 @@ export interface MonitoringModel {
   Remarks: string;
   ProjectId: number;
   ActivityId: number;
-  ProjectMonitoringReviewId? : number
-  Rating? : number;
+  ProjectMonitoringReviewId?: number;
+  Rating?: number;
 }
 
 export interface MonitoringReviewModel {
-  ProjectIndicatorId: number,
-  MonitoringIndicatorId? : number,
-  IndicatorName? : string,
-  TotalScore? : number,
-  IndicatorQuestions: MonitoringReviewQuestionModel[],
-  IsDeleted? : boolean
+  ProjectIndicatorId: number;
+  MonitoringIndicatorId?: number;
+  IndicatorName?: string;
+  TotalScore?: number;
+  IndicatorQuestions: MonitoringReviewQuestionModel[];
+  IsDeleted?: boolean;
 }
 
 export interface MonitoringReviewQuestionModel {
-  QuestionId: number,
-  Question: string,
-  Verification? : string,
-  VerificationId? : number,
-  Score? : number,
-  MonitoringIndicatorQuestionId? : number,
+  IndicatorQuestionId?: number;
+  IndicatorQuestion: string;
+  QuestionType?: boolean;
+  QuestionTypeName?: string;
+  ProjectIndicatorId: number;
+  IsDeleted?: boolean;
+  VerificationSources: IVerificationSourceModel[];
+}
+export interface IVerificationSourceModel {
+  VerificationSourceId?: number;
+  VerificationSourceName: string;
+  IndicatorQuestionId?: number;
+  IsDeleted?: boolean;
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Application.Project.Models;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.Project;
 using HumanitarianAssistance.Persistence;
@@ -31,7 +32,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                 if (projectactivityDetail != null)
                 {
                     _mapper.Map(request, projectactivityDetail);
-
+                    projectactivityDetail.PlannedEndDate = StaticFunctions.GetRecurringDays(request.RecurringCount, request.RecurrinTypeId, request.PlannedStartDate);
                     projectactivityDetail.ModifiedDate = request.ModifiedDate;
                     projectactivityDetail.ModifiedById = request.ModifiedById;
                     projectactivityDetail.IsDeleted = false;
@@ -83,11 +84,14 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                         await _dbContext.ProjectActivityProvinceDetail.AddRangeAsync(selectedDistrict);
                         await _dbContext.SaveChangesAsync();
 
-                        response.StatusCode = StaticResource.successStatusCode;
-                        response.Message = "Success";
-
                     }
+                    ProjectActivityModel projectActivityModel = new ProjectActivityModel();
+                     _mapper.Map(projectactivityDetail, projectActivityModel);
+               
 
+                    response.ResponseData = projectActivityModel;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
                 }
                 else
                 {

@@ -80,6 +80,7 @@ export class ProjectActivitiesService {
 
   //#region "EditProjectActivity"
   EditProjectActivity(data: IPlanningActivityDetail) {
+    debugger;
     return this.globalService
       .post(
         this.appurl.getApiUrl() + GLOBAL.API_Project_EditProjectActivityDetail,
@@ -87,12 +88,14 @@ export class ProjectActivitiesService {
       )
       .pipe(
         map(x => {
-          const responseData: IResponseData = {
-            data: x,
+          debugger;
+          const response: IResponseData = {
+            data: x.ResponseData,
             statusCode: x.StatusCode,
             message: x.Message
           };
-          return responseData;
+          console.log(response);
+          return response;
         })
       );
   }
