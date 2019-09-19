@@ -398,7 +398,7 @@ DeleteCandidateDetailDetail(model: IHiringReuestCandidateModel) {
       .pipe(
         map(x => {
           const responseData: IResponseData = {
-            data: x.data.JobGradeList,
+            data: x.data.CountryDetailsList,
             statusCode: x.StatusCode,
             message: x.Message
           };
@@ -414,7 +414,7 @@ DeleteCandidateDetailDetail(model: IHiringReuestCandidateModel) {
         .pipe(
           map(x => {
             const responseData: IResponseData = {
-              data: x.data.JobGradeList,
+              data: x.data.ProvinceDetailsList,
               statusCode: x.StatusCode,
               message: x.Message
             };
@@ -423,8 +423,6 @@ DeleteCandidateDetailDetail(model: IHiringReuestCandidateModel) {
         );
     }
     //#endregion
-
-
 
 
 setHiringPermissions(permissionList: IProjectPermissionMode[]) {

@@ -53,13 +53,13 @@ export interface IHiringRequestDetailModel {
   ProjectId?: number;
   TotalVacancies?: number;
   AnouncingDate?: Date;
-  JobType?: string;
+  JobType?: number;
   Background?: string;
   JobStatus?: string;
   KnowladgeAndSkillRequired?: string;
   SalaryRange?: string;
   Shift?: number;
-  ProviceId?: number;
+  ProvinceId?: number;
   SpecificDutiesAndResponsblities?: string;
   SubmissionGuidlines?: string;
   ClosingDate?: Date;
@@ -74,15 +74,34 @@ export interface IHiringRequestDetailModel {
 }
 
 export interface IHiringRequestModel {
-  Description: string;
-  Position: string;
-  Profession: string;
-  BudgetLine: string;
-  TotalVacancies: string;
-  Office: string;
-  FilledVacancies: string;
-  BasicPay: string;
-  jobGrade: string;
+  Description?: string;
+  Position?: string;
+  Profession?: string;
+  BudgetLine?: string;
+  TotalVacancies?: string;
+  OfficeId?: string;
+  FilledVacancies?: string;
+  BasicPay?: string;
+  jobGrade?: string;
+  JobCategory?: string;
+  MinimumEducation?: string;
+  Organization?: string;
+  ContractType?: string;
+  JobStatus?: string;
+  Experience?: string;
+  Background?: string;
+  SalaryRange?: string;
+  ProvinceId?: string;
+  ContractDuration?: string;
+  GenderId?: string;
+  Nationality?: string;
+  JobType?: string;
+  Shift?: string;
+  AnnouncingDate?: string;
+  ClosingDate?: string;
+  SpecificDutiesAndResposibilities?: string;
+  KnowladgeAndSkillRequired?: string;
+  SubmissionGuidline?: string;
 }
 
 export interface ProjectHiringRequestFilterModel {
@@ -91,6 +110,7 @@ export interface ProjectHiringRequestFilterModel {
   pageSize?: number;
   totalCount?: number;
 
+  GradeName?: string;
   HiringRequestId?: number;
   HiringRequestCode: string;
   RequestedBy?: string;
@@ -107,13 +127,13 @@ export interface ProjectHiringRequestFilterModel {
   ProjectId?: number;
   TotalVacancies?: number;
   AnouncingDate?: Date;
-  JobType?: string;
+  JobType?: number;
   Background?: string;
   JobStatus?: string;
   KnowladgeAndSkillRequired?: string;
   SalaryRange?: string;
   Shift?: number;
-  ProviceId?: number;
+  ProvinceId?: number;
   SpecificDutiesAndResponsblities?: string;
   SubmissionGuidlines?: string;
   ClosingDate?: Date;

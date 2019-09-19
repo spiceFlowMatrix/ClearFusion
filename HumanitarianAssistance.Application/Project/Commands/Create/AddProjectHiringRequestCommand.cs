@@ -29,7 +29,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
         public string JobCategory { get; set; }
         public string MinimumEducationLevel { get; set; }
         public string Organization { get; set; }
-        public int? ProviceId { get; set; }
+        public int? ProvinceId { get; set; }
         public string ContractType { get; set; }
         public int? ContractDuration { get; set; }
         public int? GenderId { get; set; }

@@ -20,7 +20,11 @@ import {
   IHiringReuestCandidateModel,
   IAttendaneGroupModel,
   IEmployeeContractList,
-  IHiringRequestModel
+  IHiringRequestModel,
+  IGender,
+  IWorkingShift,
+  ICountryList,
+  IProvinceList
 } from '../models/hiring-requests-model';
 import { MatDialog } from '@angular/material';
 import { AddHiringRequestsComponent } from '../add-hiring-requests/add-hiring-requests.component';
@@ -55,6 +59,10 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   @Input() officeList: IOfficeListModel[];
   @Input() jobGradeList: IJobGradeModel[];
   @Input() professionList: IProfessionList[];
+  @Input() genderList: IGender[];
+  @Input() workingShift: IWorkingShift[];
+  @Input() countryList: ICountryList[];
+  @Input() provinceList: IProvinceList[];
   @Output() UpdatedHRListRefresh = new EventEmitter<any[]>();
   //#endregion
 
@@ -163,7 +171,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       Background: ['', Validators.required],
       Position: ['', [Validators.required]],
       SalaryRange: ['', [Validators.required]],
-      ProviceId: [null, Validators.required],
+      ProvinceId: [null, Validators.required],
       ContractDuration: [null, Validators.required],
       GenderId: [null, Validators.required],
       Nationality: [null, Validators.required],
@@ -174,19 +182,18 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       OfficeId: [null, Validators.required],
       RequestedBy: [null],
       ProjectId: [null],
-      IsCompleted: [null]
-      // Description: ['', Validators.required],
-      // ProfessionId: ['', Validators.required],
-      // TotalVacancies: [null, Validators.required],
-      // FilledVacancies: [null, Validators.required],
-      // BasicPay: [null, Validators.required],
-      // CurrencyId: [null, Validators.required],
-      // BudgetLineId: [null, Validators.required],
-      // OfficeId: [null, Validators.required],
-      // GradeId: [null, Validators.required],
-      // RequestedBy: [null],
-      // ProjectId: [null],
-      // IsCompleted: [null]
+      IsCompleted: [null],
+      AnnouncingDate: [null],
+      ClosingDate: [null],
+      SpecificDutiesAndResposibilities: [null],
+      KnowladgeAndSkillRequired: [null],
+      SubmissionGuidline: [null],
+      Description: ['', Validators.required],
+      ProfessionId: ['', Validators.required],
+      BasicPay: [null, Validators.required],
+      CurrencyId: [null, Validators.required],
+      BudgetLineId: [null, Validators.required],
+      GradeId: [null, Validators.required]
     });
     this.hiringRequestModel = {
       Description: '',
@@ -194,16 +201,44 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       Profession: '',
       BudgetLine: '',
       TotalVacancies: '',
-      Office: '',
+      OfficeId: '',
       FilledVacancies: '',
       BasicPay: '',
-      jobGrade: ''
+      jobGrade: '',
+      JobCategory: '',
+      MinimumEducation: '',
+      Organization: '',
+      ContractType: '',
+      JobStatus: '',
+      Experience: '',
+      Background: '',
+      SalaryRange: '',
+      ProvinceId: '',
+      ContractDuration: '',
+      GenderId: '',
+      Nationality: '',
+      JobType: '',
+      Shift: '',
+      AnnouncingDate: '',
+      ClosingDate: '',
+      SpecificDutiesAndResposibilities: '',
+      KnowladgeAndSkillRequired: '',
+      SubmissionGuidline: ''
     };
   }
   //#endregion
 
   onChanges() {
     this.hiringRequestForm = this.fb.group({
+      Description: [this.hiringRequestDetail.Description],
+      Position: [this.hiringRequestDetail.Position],
+      Profession: [this.hiringRequestDetail.Profession],
+      BudgetLine: [this.hiringRequestDetail.BudgetLine],
+      TotalVacancies: [this.hiringRequestDetail.TotalVacancies],
+      Office: [this.hiringRequestDetail.Office],
+      FilledVacancies: [this.hiringRequestDetail.FilledVacancies],
+      BasicPay: [this.hiringRequestDetail.BasicPay],
+      jobGrade: [this.hiringRequestDetail.jobGrade],
       JobCategory: [this.hiringRequestDetail.JobCategory],
       MinimumEducation: [this.hiringRequestDetail.MinimumEducation],
       Organization: [this.hiringRequestDetail.Organization],
@@ -211,16 +246,23 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
       JobStatus: [this.hiringRequestDetail.JobStatus],
       Experience: [this.hiringRequestDetail.Experience],
       Background: [this.hiringRequestDetail.Background],
-      Position: [this.hiringRequestDetail.Position],
       SalaryRange: [this.hiringRequestDetail.SalaryRange],
-      ProviceId: [this.hiringRequestDetail.ProviceId],
+      ProvinceId: [this.hiringRequestDetail.ProvinceId],
       ContractDuration: [this.hiringRequestDetail.ContractDuration],
       GenderId: [this.hiringRequestDetail.GenderId],
       Nationality: [this.hiringRequestDetail.Nationality],
       JobType: [this.hiringRequestDetail.JobType],
       Shift: [this.hiringRequestDetail.Shift],
-      TotalVacancies: [this.hiringRequestDetail.TotalVacancies],
-      FilledVacancies: [this.hiringRequestDetail.FilledVacancies],
+      AnnouncingDate: [this.hiringRequestDetail.AnnouncingDate],
+      ClosingDate: [this.hiringRequestDetail.ClosingDate],
+      SpecificDutiesAndResposibilities: [
+        this.hiringRequestDetail.SpecificDutiesAndResposibilities
+      ],
+      KnowladgeAndSkillRequired: [
+        this.hiringRequestDetail.KnowladgeAndSkillRequired
+      ],
+      SubmissionGuidline: [this.hiringRequestDetail.SubmissionGuidline],
+
       OfficeId: [this.hiringRequestDetail.OfficeId],
       RequestedBy: [this.hiringRequestDetail.RequestedBy],
       ProjectId: [this.hiringRequestDetail.ProjectId],
@@ -237,14 +279,38 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
         x => x.BudgetLineId === this.hiringRequestForm.value.BudgetLineId
       ).BudgetName,
       TotalVacancies: this.hiringRequestForm.value.TotalVacancies,
-      Office: this.officeList.find(
+      OfficeId: this.officeList.find(
         x => x.OfficeId === this.hiringRequestForm.value.OfficeId
       ).OfficeName,
       FilledVacancies: this.hiringRequestForm.value.FilledVacancies,
       BasicPay: this.hiringRequestForm.value.BasicPay,
       jobGrade: this.jobGradeList.find(
         x => x.GradeId === this.hiringRequestForm.value.GradeId
-      ).GradeName
+      ).GradeName,
+      JobCategory: this.hiringRequestForm.value.JobCategory,
+      MinimumEducation: this.hiringRequestForm.value.MinimumEducation,
+      Organization: this.hiringRequestForm.value.Organization,
+      ContractType: this.hiringRequestForm.value.ContractType,
+      JobStatus: this.hiringRequestForm.value.JobStatus,
+      Experience: this.hiringRequestForm.value.Experience,
+      Background: this.hiringRequestForm.value.Background,
+      SalaryRange: this.hiringRequestForm.value.SalaryRange,
+      ProvinceId: this.provinceList.find(
+        x => x.ProvinceId === this.hiringRequestForm.value.ProvinceId
+      ).ProvinceName,
+      ContractDuration: this.hiringRequestForm.value.ContractDuration,
+      GenderId: this.genderList.find(
+        x => x.Id === this.hiringRequestForm.value.GenderId
+      ).value,
+      Nationality: this.countryList.find(
+        x => x.CountryId === this.hiringRequestForm.value.CountryId
+      ).CountryName,
+      JobType: this.hiringRequestForm.value.JobType,
+      Shift: this.workingShift.find(
+        x => x.Id === this.hiringRequestForm.value.Shift
+      ).value,
+      AnnouncingDate: this.hiringRequestForm.value.AnnouncingDate,
+      ClosingDate: this.hiringRequestForm.value.ClosingDate
     };
     this.GetEmployeeListByOfficeId(this.hiringRequestForm.value.OfficeId);
   }
@@ -317,7 +383,7 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           Background: [data.Background],
           Position: [data.Position],
           SalaryRange: [data.SalaryRange],
-          ProviceId: [data.ProviceId],
+          ProvinceId: [data.ProvinceId],
           ContractDuration: [data.ContractDuration],
           GenderId: [data.GenderId],
           Nationality: [data.Nationality],
@@ -327,7 +393,20 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
           FilledVacancies: [data.FilledVacancies],
           OfficeId: [data.OfficeId],
           RequestedBy: [data.RequestedBy],
-          ProjectId: [data.ProjectId]
+          ProjectId: [data.ProjectId],
+          Description: [data.Description],
+          Profession: [data.Profession],
+          BudgetLine: [data.BudgetLine],
+          Office: [data.Office],
+          BasicPay: [data.BasicPay],
+          jobGrade: [data.jobGrade],
+          AnnouncingDate: [data.AnnouncingDate],
+          ClosingDate: [data.ClosingDate],
+          SpecificDutiesAndResposibilities: [
+            data.SpecificDutiesAndResposibilities
+          ],
+          KnowladgeAndSkillRequired: [data.KnowladgeAndSkillRequired],
+          SubmissionGuidline: [data.SubmissionGuidline]
         });
         this.GetEmployeeListByOfficeId(this.hiringRequestForm.value.OfficeId);
         this.hiringRequestModel = {
@@ -340,12 +419,32 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
             x => x.BudgetLineId === data.BudgetLineId
           ).BudgetName,
           TotalVacancies: data.TotalVacancies,
-          Office: this.officeList.find(x => x.OfficeId === data.OfficeId)
+          OfficeId: this.officeList.find(x => x.OfficeId === data.OfficeId)
             .OfficeName,
           FilledVacancies: data.FilledVacancies,
           BasicPay: data.BasicPay,
           jobGrade: this.jobGradeList.find(x => x.GradeId === data.GradeId)
-            .GradeName
+            .GradeName,
+          JobCategory: data.JobCategory,
+          MinimumEducation: data.MinimumEducation,
+          Organization: data.Organization,
+          ContractType: data.ContractType,
+          JobStatus: data.JobStatus,
+          Experience: data.Experience,
+          Background: data.Background,
+          SalaryRange: data.SalaryRange,
+          ProvinceId: this.provinceList.find(
+            x => x.ProvinceId === data.ProvinceId
+          ).ProvinceName,
+          ContractDuration: data.ContractDuration,
+          GenderId: this.genderList.find(x => x.Id === data.GenderId).value,
+          Nationality: this.countryList.find(
+            x => x.CountryId === data.CountryId
+          ).CountryName,
+          JobType: data.JobType,
+          Shift: this.workingShift.find(x => x.Id === data.Shift).value,
+          AnnouncingDate: data.AnnouncingDate,
+          ClosingDate: data.ClosingDate
         };
       }
     );

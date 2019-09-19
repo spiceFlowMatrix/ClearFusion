@@ -55,14 +55,14 @@ export class HiringRequestsListingComponent implements OnInit {
     { Id: 2, value: 'Other' }
   ];
   // model
-  projectHiringRequestFilter: ProjectHiringRequestFilterModel;
+  // projectHiringRequestFilter: ProjectHiringRequestFilterModel;
   hiringRequestModel: ProjectHiringRequestFilterModel;
 
   hiringRequestListLoader = false;
 
   hiringRequestlist: ProjectHiringRequestFilterModel[] = [];
 
-  hiringRequestDetail: ProjectHiringRequestFilterModel;
+   hiringRequestDetail: ProjectHiringRequestFilterModel;
 
   constructor(
     public dialog: MatDialog,
@@ -96,6 +96,8 @@ export class HiringRequestsListingComponent implements OnInit {
     this.getOfficeList();
     this.getJobGradeList();
     this.getProfessionlist();
+    this.getCountryList();
+    this.getProvinceList();
   }
 
   //#region  "initForm"
@@ -122,13 +124,13 @@ export class HiringRequestsListingComponent implements OnInit {
       ProjectId: null,
       RequestedBy: '',
       AnouncingDate: null,
-      JobType: '',
+      JobType: null,
       Background: '',
       JobStatus: '',
       KnowladgeAndSkillRequired: '',
       SalaryRange: '',
       Shift: null,
-      ProviceId: null,
+      ProvinceId: null,
       SpecificDutiesAndResponsblities: '',
       SubmissionGuidlines: '',
       ClosingDate: null,
@@ -363,7 +365,7 @@ export class HiringRequestsListingComponent implements OnInit {
         KnowladgeAndSkillRequired: element.KnowladgeAndSkillRequired,
         SalaryRange: element.SalaryRange,
         Shift: element.Shift,
-        ProviceId: element.ProviceId,
+        ProvinceId: element.ProvinceId,
         SpecificDutiesAndResponsblities:
           element.SpecificDutiesAndResponsblities,
         SubmissionGuidlines: element.SubmissionGuidlines,
@@ -399,17 +401,19 @@ export class HiringRequestsListingComponent implements OnInit {
   getCountryList() {
     this.hiringRequestService.GetCountryList().subscribe(
       (response: IResponseData) => {
-        this.countryList = [];
-        if (response.statusCode === 200 && response.data !== null) {
-          response.data.forEach(element => {
-            this.countryList.push({
-              CountryId: element.CountryId,
-              CountryName: element.CountryName
+        if (response.statusCode === 200 && response != null) {
+          if (response.data != null) {
+            response.data.forEach(element => {
+              this.countryList.push({
+                CountryId: element.CountryId,
+                CountryName: element.CountryName
+              });
             });
-          });
+          }
         }
       },
-      error => {}
+      error => {
+      }
     );
   }
   //#endregion
@@ -422,8 +426,8 @@ export class HiringRequestsListingComponent implements OnInit {
         if (response.statusCode === 200 && response.data !== null) {
           response.data.forEach(element => {
             this.provinceList.push({
-              ProvinceId: element.ProfessionId,
-              ProvinceName: element.ProfessionName
+              ProvinceId: element.ProvinceId,
+              ProvinceName: element.ProvinceName
             });
           });
         }

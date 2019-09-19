@@ -53,10 +53,10 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                                                                                       .Select(z => new ProjectMonitoringQuestionModel
                                                                                                                       {
                                                                                                                           MonitoringIndicatorQuestionId = z.Id,
-                                                                                                                          QuestionId = z.QuestionId,
+                                                                                                                          IndicatorQuestionId = z.IndicatorQuestionId,
                                                                                                                           Score = z.Score,
-                                                                                                                          VerificationId = z.VerificationId,
-                                                                                                                          Verification = z.Verification,
+                                                                                                                          VerificationSourceId = z.VerificationSourceId,
+                                                                                                                          VerificationSourceName = z.VerificationSourceName,
                                                                                                                           Question = z.ProjectIndicatorQuestions.IndicatorQuestion
                                                                                                                       }).ToList()
                                                                                             }).ToList()
