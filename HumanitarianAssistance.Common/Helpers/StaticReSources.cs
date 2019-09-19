@@ -359,6 +359,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string PensionPayment = "Pension Payment";
         public const string EmployeeRecordNotFound= "Employee Record Not Found";
         public const string EmployeePayrollCurrencyNotSet= "Employee Payroll Currency Not Set";
+        public const string PayrollDailyHoursNotSaved = "Please Set Payroll Hours for Month {0} for Office {1}";
         // Marketing
         public const string unitRateNotFound = "Unit Rate does not exists. Please try other combinations..";
 
@@ -408,6 +409,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string SalaryHeadNotSaved = "Salary Head Not Saved";
         public const string DeleteAllChildAccount = "Child Account Exist";
         public const string TransactionsNotSaved = "Transactions Not Saved";
+        
 
         #endregion
 
