@@ -360,6 +360,8 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string EmployeeRecordNotFound= "Employee Record Not Found";
         public const string EmployeePayrollCurrencyNotSet= "Employee Payroll Currency Not Set";
         public const string PayrollDailyHoursNotSaved = "Please Set Payroll Hours for Month {0} for Office {1}";
+        public const string LeavesNotDefined = "Leaves Not Defined";
+
         // Marketing
         public const string unitRateNotFound = "Unit Rate does not exists. Please try other combinations..";
 

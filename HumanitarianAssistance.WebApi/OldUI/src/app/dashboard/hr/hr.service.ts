@@ -1391,7 +1391,8 @@ export class HrService {
   }
   //#endregion
 
-  private handleError(error: Response) {
+    private handleError(error: Response) {
+        debugger;
     return Observable.throw(error.json().error || 'Server error');
   }
 }

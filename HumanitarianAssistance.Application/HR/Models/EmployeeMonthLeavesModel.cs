@@ -12,5 +12,7 @@ namespace HumanitarianAssistance.Application.HR.Models
         //Assigned Leave in Days(no. of days)
         public int AssignedLeaveInDays { get; set; }
         public string Remarks { get; set; }
+        public int LeaveReasonId { get; set; }
+        public int LeaveMonthNumber { get; set; }
     }
 }

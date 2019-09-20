@@ -12,6 +12,7 @@ namespace HumanitarianAssistance.Application.HR.Models
         public string EmployeeCode { get; set; }
         public string EmployeeName { get; set; }
         public int Year { get; set; }
+        public string LogoPath { get; set; }
         public List<EmployeeMonthLeavesModel> EmployeeLeaves { get; set; }
     }
 }

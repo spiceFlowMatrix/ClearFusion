@@ -327,11 +327,20 @@ export class EmployeeSalaryComponent implements OnInit {
   }
   //#endregion
 
-  onRowUpdating(e) {
-    if (e.key.IsAdvanceRecovery) {
-        e.key.AdvanceBalanceAmount += e.oldData.AdvanceRecoveryAmount - e.newData.AdvanceRecoveryAmount;
-      e.key.NetSalary += e.oldData.AdvanceRecoveryAmount - e.newData.AdvanceRecoveryAmount;
-    }
+    onRowUpdating(e) {
+        debugger;
+
+        if (e.newData.AdvanceRecoveryAmount <= e.key.AdvanceBalanceAmount) {
+            if (e.key.IsAdvanceRecovery) {
+                    e.key.AdvanceBalanceAmount += e.oldData.AdvanceRecoveryAmount - e.newData.AdvanceRecoveryAmount;
+                    e.key.NetSalary += e.oldData.AdvanceRecoveryAmount - e.newData.AdvanceRecoveryAmount;
+            }
+        } else {
+            e.newData.AdvanceRecoveryAmount = e.oldData.AdvanceRecoveryAmount;
+            this.toastr.warning('Advance Recovery Amount should be less or equal to Advance Amount');
+        }
+
+        
 
   }
 
@@ -747,24 +756,32 @@ export class EmployeeSalaryComponent implements OnInit {
   ) {
     const dataKey = rowData.data;
     if (dataKey) {
-      if (e.value === true) {
+        if (e.value === true) {
+            debugger;
         const itemIndex = this.employeePayrollByHourlyBased.findIndex(
           item => item.EmployeeId === dataKey.EmployeeId
-        );
+            );
 
-        this.employeePayrollByHourlyBased[itemIndex].IsAdvanceRecovery = true;
-        this.employeePayrollByHourlyBased[itemIndex].NetSalary = parseFloat(
-          (
-            this.employeePayrollByHourlyBased[itemIndex].NetSalary -
-            (dataKey.AdvanceRecoveryAmount == null ? 0 : dataKey.AdvanceRecoveryAmount)
-          ).toFixed(4)
-        );
-        this.employeePayrollByHourlyBased[itemIndex].AdvanceBalanceAmount =
-        parseFloat((this.employeePayrollByHourlyBased[itemIndex].AdvanceBalanceAmount -
-          (dataKey.AdvanceRecoveryAmount == null ? 0 : dataKey.AdvanceRecoveryAmount)).toFixed(4));
-        this.employeePayrollByHourlyBased[itemIndex].AdvanceRecoveryAmount =
-        (dataKey.AdvanceRecoveryAmount == null ? 0 : dataKey.AdvanceRecoveryAmount);
-        rowData.row.cells[18].column.allowEditing = true;
+            if (this.employeePayrollByHourlyBased[itemIndex].AdvanceBalanceAmount >= dataKey.AdvanceRecoveryAmount) {
+                this.employeePayrollByHourlyBased[itemIndex].IsAdvanceRecovery = true;
+                this.employeePayrollByHourlyBased[itemIndex].NetSalary = parseFloat(
+                    (
+                        this.employeePayrollByHourlyBased[itemIndex].NetSalary -
+                        (dataKey.AdvanceRecoveryAmount == null ? 0 : dataKey.AdvanceRecoveryAmount)
+                    ).toFixed(4)
+                );
+                this.employeePayrollByHourlyBased[itemIndex].AdvanceBalanceAmount =
+                    parseFloat((this.employeePayrollByHourlyBased[itemIndex].AdvanceBalanceAmount -
+                        (dataKey.AdvanceRecoveryAmount == null ? 0 : dataKey.AdvanceRecoveryAmount)).toFixed(4));
+                this.employeePayrollByHourlyBased[itemIndex].AdvanceRecoveryAmount =
+                    (dataKey.AdvanceRecoveryAmount == null ? 0 : dataKey.AdvanceRecoveryAmount);
+                rowData.row.cells[18].column.allowEditing = true;
+            } else {
+                e.value = false;
+                this.toastr.warning('Advance Recovery Amount Should be less or equal to Advance Balance Amount');
+            }
+
+        
       } else {
         const itemIndex = this.employeePayrollByHourlyBased.findIndex(
           item => item.EmployeeId === dataKey.EmployeeId

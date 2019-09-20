@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Globalization;
 using HumanitarianAssistance.Common.Helpers;
+using Microsoft.AspNetCore.Hosting;
 
 namespace HumanitarianAssistance.Application.HR.Queries
 {
@@ -21,10 +22,12 @@ namespace HumanitarianAssistance.Application.HR.Queries
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IPdfExportService _pdfExportService;
-        public GetAllEmployeeLeavePdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IPdfExportService pdfExportService)
+        private readonly IHostingEnvironment _env;
+        public GetAllEmployeeLeavePdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IPdfExportService pdfExportService, IHostingEnvironment env)
         {
             _dbContext = dbContext;
             _pdfExportService = pdfExportService;
+            _env = env;
         }
         public async Task<byte[]> Handle(GetAllEmployeeLeavePdfQuery request, CancellationToken cancellationToken)
         {
@@ -32,41 +35,49 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
             try
             {
+                //Get Employee Details
                 EmployeeDetail employeeDetail = await _dbContext.EmployeeDetail
                                                       .Include(x => x.EmployeeProfessionalDetail)
                                                       .FirstOrDefaultAsync(x => !x.IsDeleted &&
                                                       x.EmployeeID == request.EmployeeId && x.EmployeeTypeId != (int)EmployeeTypeStatus.Prospective);
-
+                
+                //Get Current Financial Year
                 FinancialYearDetail financialyear = await _dbContext.FinancialYearDetail.FirstOrDefaultAsync(x => !x.IsDeleted && x.IsDefault);
 
+                if (financialyear == null)
+                {
+                    throw new Exception(StaticResource.defaultFinancialYearIsNotSet);
+                }
+
+                //Get All Payroll Hours for an office and Attendance Group
                 List<PayrollMonthlyHourDetail> officeHoursList = await _dbContext.PayrollMonthlyHourDetail
                                                                                  .Where(x => !x.IsDeleted && x.OfficeId == employeeDetail.EmployeeProfessionalDetail.OfficeId &&
                                                                                  x.AttendanceGroupId == employeeDetail.EmployeeProfessionalDetail.AttendanceGroupId)
                                                                                  .ToListAsync();
 
+                //Get All Leave Types
                 List<LeaveReasonDetail> leaveReasonDetails = await _dbContext.LeaveReasonDetail.Where(x => x.IsDeleted == false).ToListAsync();
 
+                if (leaveReasonDetails == null)
+                {
+                    throw new Exception(StaticResource.LeavesNotDefined);
+                }
+
+                //Get All leaves types assigned to an Employee
                 var assignedLeave = await _dbContext.AssignLeaveToEmployee
-                                               .Include(x => x.LeaveReasonDetails)
                                                .Where(x => x.IsDeleted == false && x.FinancialYearId == financialyear.FinancialYearId && x.EmployeeId == request.EmployeeId)
                                                .OrderByDescending(a => a.LeaveId)
                                                .Select(x => new
                                                    {
-                                                       x.LeaveId,
                                                        x.LeaveReasonId,
-                                                       x.LeaveReasonDetails.ReasonName,
-                                                       x.LeaveReasonDetails.Unit,
                                                        x.AssignUnit,
-                                                       x.UsedLeaveUnit,
-                                                       x.FinancialYearId,
-                                                       x.Description
                                                    })
                                                .ToListAsync();
 
+                //Get All Leaves applied by employee 
                 var appliedLeave = await _dbContext.EmployeeApplyLeave
                                                       .Include(x => x.LeaveReasonDetails)
                                                       .Where(x => x.EmployeeId == request.EmployeeId)
-                                                      .OrderByDescending(o => o.ApplyLeaveId)
                                                       .GroupBy(item => new
                                                       {
                                                           item.FromDate.Date.Month
@@ -89,8 +100,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 model.EmployeeCode = employeeDetail.EmployeeCode;
                 model.EmployeeName = employeeDetail.EmployeeName;
                 model.Year = financialyear.StartDate.Year;
-
-                int index = 0;
+                model.LogoPath = _env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath;
 
                 foreach (var item in appliedLeave)
                 {
@@ -105,15 +115,28 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                     foreach (var leave in item.Leaves)
                     {
-                        EmployeeMonthLeavesModel leaveModel = new EmployeeMonthLeavesModel();
-                        leaveModel.Month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.Month.Month);
+                        EmployeeMonthLeavesModel leaveModel = new EmployeeMonthLeavesModel
+                        {
+                            LeaveReasonId = leave.LeaveReasonId.LeaveReasonId,
+                            Month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.Month.Month),
+                            LeaveMonthNumber = item.Month.Month,
+                            LeaveType = leaveReasonDetails.FirstOrDefault(x => x.LeaveReasonId == leave.LeaveReasonId.LeaveReasonId).ReasonName,
+                            LeaveHours = leaveReasonDetails.FirstOrDefault(x => x.LeaveReasonId == leave.LeaveReasonId.LeaveReasonId).Unit * workingHours,
+                            AppliedLeave = leave.Leaves.Count * workingHours,
+                            AssignedHours = assignedLeave.FirstOrDefault(x => x.LeaveReasonId == leave.LeaveReasonId.LeaveReasonId).AssignUnit.Value * workingHours,
+                            AssignedLeaveInDays = assignedLeave.FirstOrDefault(x => x.LeaveReasonId == leave.LeaveReasonId.LeaveReasonId).AssignUnit.Value
+                        };
 
-                        leaveModel.LeaveType = leaveReasonDetails.FirstOrDefault(x => x.LeaveReasonId == leave.LeaveReasonId.LeaveReasonId).ReasonName;
-                        leaveModel.LeaveHours = leave.Leaves.Count * workingHours;
-                        leaveModel.AppliedLeave = leave.Leaves.Count;
-                        leaveModel.AssignedHours = assignedLeave.FirstOrDefault(x => x.LeaveReasonId == leave.LeaveReasonId.LeaveReasonId).AssignUnit.Value * workingHours;
-                        leaveModel.AssignedLeaveInDays = assignedLeave.FirstOrDefault(x => x.LeaveReasonId == leave.LeaveReasonId.LeaveReasonId).AssignUnit.Value;
-                        leaveModel.BalanceLeave= index>0? model.EmployeeLeaves[index-1].BalanceLeave- leave.Leaves.Count:  leaveModel.AssignedLeaveInDays - leave.Leaves.Count;
+                        if (model.EmployeeLeaves.Any(x => x.LeaveReasonId == leave.LeaveReasonId.LeaveReasonId))
+                        {
+                            int balanceLeave = model.EmployeeLeaves.OrderByDescending(x => x.LeaveMonthNumber).FirstOrDefault(x => x.LeaveReasonId == leave.LeaveReasonId.LeaveReasonId).BalanceLeave;
+                            leaveModel.BalanceLeave = balanceLeave - (leave.Leaves.Count * workingHours);
+                        }
+                        else
+                        {
+                            leaveModel.BalanceLeave = (leaveModel.AssignedLeaveInDays - leave.Leaves.Count) * workingHours;
+                        }
+                        
                         leaveModel.Remarks = leave.Leaves.FirstOrDefault().Remarks;
                         model.EmployeeLeaves.Add(leaveModel);
                     }
@@ -121,7 +144,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
             }
             catch (Exception ex)
             {
-
+                throw new Exception(ex.Message);
             }
 
             return await _pdfExportService.ExportToPdf(model, "Pages/PdfTemplates/EmployeeLeaveReport.cshtml");
