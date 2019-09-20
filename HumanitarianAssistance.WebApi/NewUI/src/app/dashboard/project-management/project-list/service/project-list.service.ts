@@ -554,7 +554,25 @@ export class ProjectListService {
     return this.globalService.post(url, data);
   }
   //#endregion
-
+//#region "GetSignedUrl"
+GetProjectSignedUrl(objectName: any): any {
+  return this.globalService
+    .post(
+      this.appurl.getApiUrl() + GLOBAL.API_Project_DownloadFileFromBucket,
+      objectName
+    )
+    .pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x.data.SignedUrl,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+}
+//#endregion
   //#region "GetOpportunityControlRole"
   GetOpportunityControlRole() {
     return this.opportunityControlRoles;

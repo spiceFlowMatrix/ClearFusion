@@ -1,96 +1,141 @@
 <div class="hirimg-request-detail-main">
   <div class="row">
-    <div class="col-sm-12" *ngIf="hiringReuestDetailLoader; else hiringRequestTemplate">
+    <div
+      class="col-sm-12"
+      *ngIf="hiringReuestDetailLoader; else hiringRequestTemplate"
+    >
       <mat-spinner class="center_loader" diameter="50"></mat-spinner>
     </div>
     <ng-template #hiringRequestTemplate>
       <mat-card [ngStyle]="scrollStyles">
-          <div class="row">
-              <div class="col-sm-6">
-                <span class="font_x_large">Hiring Request Details</span> &nbsp;
-              </div>
-              <div class="col-sm-4">
-                <span *ngIf="markCompletePermission">
-                <button *ngIf="isCompleted" mat-raised-button color="accent" pTooltip="Request Completed" tooltipPosition="top"
-                  aria-label="Request Completed">
-                  <mat-icon aria-label="icon-button done icon" class="margin_left_minus_5">done</mat-icon>
-                  Request Completed
-                </button> &nbsp;
-                <button *ngIf="!isCompleted" mat-stroked-button pTooltip="Complete Request" tooltipPosition="top"
-                  aria-label="Complete Request" (click)="onCompleteHiringRequestClicked()">
-                  <mat-icon *ngIf="!isCompletedFlag; else completedLoderTemplate" aria-label="icon-button done icon"
-                    class="margin_left_minus_5">done</mat-icon>
-                  Complete Request
-                  <ng-template #completedLoderTemplate>
-                    <div class="pull-left">
-                      <mat-spinner class="spinner_center" [diameter]="20"> </mat-spinner>
-                    </div>
-                  </ng-template>
-                </button> </span>
-                </div>
-                <div class="col-sm-2">
-                <button mat-raised-button color="primary" (click)="onEditHiringRequestClicked()">
-                  Edit
-                </button>
-                <br />
-                <br />
-              </div>
-            </div>
-            <hr />
-              <dl class="row hiring-list">
-                <div class="row hiringlist_margin">
-                  <dt class="col-sm-3">Description</dt>
-                    <span class="col-sm-2 ">-</span>
-                  <dd class="col-sm-7">{{hiringRequestModel.Description}}</dd>
-                </div>
-                <div class="row hiringlist_margin">
-                  <dt class="col-sm-3">Position</dt>
-                    <span class="col-sm-2 ">-</span>
-                  <dd class="col-sm-7">{{hiringRequestModel.Position}} </dd>
-                </div>
-                <div class="row hiringlist_margin">
-                  <dt class="col-sm-3">Profession</dt>
-                    <span class="col-sm-2 ">-</span>
-                  <dd class="col-sm-7">{{hiringRequestModel.Profession}}</dd>
-                </div>
-                <div class="row hiringlist_margin">
-                  <dt class="col-sm-3">Budget Line</dt>
-                    <span class="col-sm-2 ">-</span>
-                  <dd class="col-sm-7">{{hiringRequestModel.BudgetLine}}</dd>
-                </div>
-                <div class="row hiringlist_margin">
-                  <dt class="col-sm-3">Total Vacancies</dt>
-                    <span class="col-sm-2 ">-</span>
-                  <dd class="col-sm-7">{{hiringRequestModel.TotalVacancies}} </dd>
-                </div>
-                <div class="row hiringlist_margin">
-                 <dt class="col-sm-3">Office</dt>
-                    <span class="col-sm-2 ">-</span>
-                 <dd class="col-sm-7">{{hiringRequestModel.Office}} </dd>
-                </div>
-                <div class="row hiringlist_margin">
-                  <dt class="col-sm-3">Filled Vacancies</dt>
-                    <span class="col-sm-2 ">-</span>
-                  <dd class="col-sm-7">{{hiringRequestModel.FilledVacancies}} </dd>
-                </div>
-                <div class="row hiringlist_margin">
-                  <dt class="col-sm-3">BasicPay</dt>
-                    <span class="col-sm-2 ">-</span>
-                  <dd class="col-sm-7">{{hiringRequestModel.BasicPay}} </dd>
-                </div>
-                <div class="row hiringlist_margin">
-                  <dt class="col-sm-3">Job Grade</dt>
-                   <span class="col-sm-2 ">-</span>
-                  <dd class="col-sm-7">{{hiringRequestModel.jobGrade}} </dd>
-                </div>
-              </dl>
+        <div class="row">
+          <div class="col-sm-5">
+            <span class="font_x_large">Hiring Request Details</span> &nbsp;
+          </div>
+          <div class="col-sm-4">
+            <span *ngIf="markCompletePermission">
+              <button
+                *ngIf="isCompleted"
+                mat-raised-button
+                color="accent"
+                pTooltip="Request Completed"
+                tooltipPosition="top"
+                aria-label="Request Completed"
+              >
+                <mat-icon
+                  aria-label="icon-button done icon"
+                  class="margin_left_minus_5"
+                  >done</mat-icon
+                >
+                Request Completed
+              </button>
+              &nbsp;
+              <button
+                *ngIf="!isCompleted"
+                mat-stroked-button
+                pTooltip="Complete Request"
+                tooltipPosition="top"
+                aria-label="Complete Request"
+                (click)="onCompleteHiringRequestClicked()"
+              >
+                <mat-icon
+                  *ngIf="!isCompletedFlag; else completedLoderTemplate"
+                  aria-label="icon-button done icon"
+                  class="margin_left_minus_5"
+                  >done</mat-icon
+                >
+                Complete Request
+                <ng-template #completedLoderTemplate>
+                  <div class="pull-left">
+                    <mat-spinner class="spinner_center" [diameter]="20">
+                    </mat-spinner>
+                  </div>
+                </ng-template>
+              </button>
+            </span>
+          </div>
+          <div class="col-sm-2">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="onEditHiringRequestClicked()"
+            >
+              Edit
+            </button><br><br>
+          </div>
+          <div class="col-sm-1 ">
+            <mat-icon
+              class="icon_cursor display_inline_block"
+              ia-hidden="false"
+              aria-label="Example home icon"
+              pTooltip="Export Pdf"
+              tooltipPosition="top"
+              (click)="onExportPdf()"
+            >
+              vertical_align_bottom
+            </mat-icon>
+          </div>
+        </div>
+        <hr />
+        <dl class="row hiring-list">
+          <div class="row hiringlist_margin">
+            <dt class="col-sm-3">Description</dt>
+            <span class="col-sm-2 ">-</span>
+            <dd class="col-sm-7">{{ hiringRequestModel.Description }}</dd>
+          </div>
+          <div class="row hiringlist_margin">
+            <dt class="col-sm-3">Position</dt>
+            <span class="col-sm-2 ">-</span>
+            <dd class="col-sm-7">{{ hiringRequestModel.Position }}</dd>
+          </div>
+          <div class="row hiringlist_margin">
+            <dt class="col-sm-3">Profession</dt>
+            <span class="col-sm-2 ">-</span>
+            <dd class="col-sm-7">{{ hiringRequestModel.Profession }}</dd>
+          </div>
+          <div class="row hiringlist_margin">
+            <dt class="col-sm-3">Budget Line</dt>
+            <span class="col-sm-2 ">-</span>
+            <dd class="col-sm-7">{{ hiringRequestModel.BudgetLine }}</dd>
+          </div>
+          <div class="row hiringlist_margin">
+            <dt class="col-sm-3">Total Vacancies</dt>
+            <span class="col-sm-2 ">-</span>
+            <dd class="col-sm-7">{{ hiringRequestModel.TotalVacancies }}</dd>
+          </div>
+          <div class="row hiringlist_margin">
+            <dt class="col-sm-3">Office</dt>
+            <span class="col-sm-2 ">-</span>
+            <dd class="col-sm-7">{{ hiringRequestModel.Office }}</dd>
+          </div>
+          <div class="row hiringlist_margin">
+            <dt class="col-sm-3">Filled Vacancies</dt>
+            <span class="col-sm-2 ">-</span>
+            <dd class="col-sm-7">{{ hiringRequestModel.FilledVacancies }}</dd>
+          </div>
+          <div class="row hiringlist_margin">
+            <dt class="col-sm-3">BasicPay</dt>
+            <span class="col-sm-2 ">-</span>
+            <dd class="col-sm-7">{{ hiringRequestModel.BasicPay }}</dd>
+          </div>
+          <div class="row hiringlist_margin">
+            <dt class="col-sm-3">Job Grade</dt>
+            <span class="col-sm-2 ">-</span>
+            <dd class="col-sm-7">{{ hiringRequestModel.jobGrade }}</dd>
+          </div>
+        </dl>
         <div class="row table_border">
           <div class="col-sm-12">
             <!-- <button mat-raised-button color="primary" (click)="onAddCandidateClicked()">
               Add Candidate
             </button> -->
-            <div class="col-sm-12"
-             *ngIf="!getCandidateDetailLoader; else candidateListLoaderTemplate">
+            <div
+              class="col-sm-12"
+              *ngIf="
+                !getCandidateDetailLoader;
+                else candidateListLoaderTemplate
+              "
+            >
               <table class="table table-bordered">
                 <tbody>
                   <tr>
@@ -100,18 +145,21 @@
                     <td width="15%">Code/Id</td>
                     <td width="25%">Full Name</td>
                     <td width="15%">Gender</td>
-                    <td width="20%">Interview </td>
+                    <td width="20%">Interview</td>
                     <td width="30%">Current Status</td>
                     <td width="15%" class="text-center">Actions</td>
                     <td width="5%" class="text-center">
-                        <label class="btn-floating btn-lg pink lighten-1 mt-0 float-left">
+                      <label
+                        class="btn-floating btn-lg pink lighten-1 mt-0 float-left"
+                      >
                         <mat-icon
                           class="icon_cursor padding_top_5"
                           aria-label="icon-button done icon"
                           pTooltip="Add Candidate"
                           tooltipPosition="top"
                           (click)="onAddCandidateClicked()"
-                          >add</mat-icon>
+                          >add</mat-icon
+                        >
                       </label>
                     </td>
                     <td width="1%" class="text-center"></td>
@@ -120,51 +168,121 @@
                     <td width="1%">
                       <p class="width_8"></p>
                     </td>
-                    <td width="15%">{{ item.EmployeeID }}/{{ item.EmployeeCode }} </td>
-                    <td width="25%">{{ item.EmployeeName }}</td>
-                    <td width="15%">{{ item.Gender }} </td>
-                    <td width="20%"> <span
-                        *ngIf="item.EmployeeTypeId == employeeType.Active || item.IsInterViewed == false">None</span>
-                      <a *ngIf="(item.IsInterViewed == true || interviewCompleteCheckFlag == true) && item.EmployeeTypeId == employeeType.Candidate"
-                        (click)="seeCandidateDetail('dashboard/hr/interview-form',item.EmployeeID)">See Interview Details</a>
+                    <td width="15%">
+                      {{ item.EmployeeID }}/{{ item.EmployeeCode }}
                     </td>
-                    <td width="30%">{{ item.EmployeeTypeName }}
-                      <a *ngIf="item.EmployeeTypeId == employeeType.Candidate &&
-                      !((item.IsInterViewed == true || interviewCompleteCheckFlag == true) && item.EmployeeTypeId == employeeType.Candidate) &&
-                      !(item.EmployeeTypeId == employeeType.Active || item.IsInterViewed == true || interviewCompleteCheckFlag == true)"
-                        (click)="onAddInterviewCandidate(item)"> Interview Candidate</a>
+                    <td width="25%">{{ item.EmployeeName }}</td>
+                    <td width="15%">{{ item.Gender }}</td>
+                    <td width="20%">
+                      <span
+                        *ngIf="
+                          item.EmployeeTypeId == employeeType.Active ||
+                          item.IsInterViewed == false
+                        "
+                        >None</span
+                      >
+                      <a
+                        *ngIf="
+                          (item.IsInterViewed == true ||
+                            interviewCompleteCheckFlag == true) &&
+                          item.EmployeeTypeId == employeeType.Candidate
+                        "
+                        (click)="
+                          seeCandidateDetail(
+                            'dashboard/hr/interview-form',
+                            item.EmployeeID
+                          )
+                        "
+                        >See Interview Details</a
+                      >
+                    </td>
+                    <td width="30%">
+                      {{ item.EmployeeTypeName }}
+                      <a
+                        *ngIf="
+                          item.EmployeeTypeId == employeeType.Candidate &&
+                          !(
+                            (item.IsInterViewed == true ||
+                              interviewCompleteCheckFlag == true) &&
+                            item.EmployeeTypeId == employeeType.Candidate
+                          ) &&
+                          !(
+                            item.EmployeeTypeId == employeeType.Active ||
+                            item.IsInterViewed == true ||
+                            interviewCompleteCheckFlag == true
+                          )
+                        "
+                        (click)="onAddInterviewCandidate(item)"
+                      >
+                        Interview Candidate</a
+                      >
                     </td>
                     <td width="15%" class="text-right">
                       <button
-                        *ngIf="(!item.IsShortListed && !item.IsSelected && item.EmployeeTypeId == employeeType.Candidate && item.IsInterViewed)"
-                        mat-raised-button color="accent" pTooltip="Short List" tooltipPosition="top"
-                        aria-label="ShortList" (click)="OnShortListClick(item)">
-                        <span *ngIf="!isshortlistedLoaderFlag; else loaderTemplate">
+                        *ngIf="
+                          !item.IsShortListed &&
+                          !item.IsSelected &&
+                          item.EmployeeTypeId == employeeType.Candidate &&
+                          item.IsInterViewed
+                        "
+                        mat-raised-button
+                        color="accent"
+                        pTooltip="Short List"
+                        tooltipPosition="top"
+                        aria-label="ShortList"
+                        (click)="OnShortListClick(item)"
+                      >
+                        <span
+                          *ngIf="!isshortlistedLoaderFlag; else loaderTemplate"
+                        >
                           ShortList
                         </span>
                         <ng-template #loaderTemplate>
-                          <div class="spinner_center padding_top_5 padding_bottom_5">
+                          <div
+                            class="spinner_center padding_top_5 padding_bottom_5"
+                          >
                             <mat-spinner [diameter]="25"> </mat-spinner>
                           </div>
                         </ng-template>
-
                       </button>
 
-                      <button mat-stroked-button mat-raised-button
-                        *ngIf="(!item.IsSelected && item.IsShortListed && item.EmployeeTypeId==employeeType.Candidate) || (item.EmployeeTypeId==employeeType.Active && !item.IsSelected)"
-                        (click)="onSelectedCandidate(item)" [disabled]="item.IsSelectedFlag">
-                        <mat-icon aria-label="done" *ngIf="!item.IsSelectedFlag; else onSelectedCandidateFlagTemplate">
+                      <button
+                        mat-stroked-button
+                        mat-raised-button
+                        *ngIf="
+                          (!item.IsSelected &&
+                            item.IsShortListed &&
+                            item.EmployeeTypeId == employeeType.Candidate) ||
+                          (item.EmployeeTypeId == employeeType.Active &&
+                            !item.IsSelected)
+                        "
+                        (click)="onSelectedCandidate(item)"
+                        [disabled]="item.IsSelectedFlag"
+                      >
+                        <mat-icon
+                          aria-label="done"
+                          *ngIf="
+                            !item.IsSelectedFlag;
+                            else onSelectedCandidateFlagTemplate
+                          "
+                        >
                           done
                         </mat-icon>
                         Select
                         <ng-template #onSelectedCandidateFlagTemplate>
                           <div class="pull-left">
-                            <mat-spinner class="spinner_center" [diameter]="20"> </mat-spinner>
+                            <mat-spinner class="spinner_center" [diameter]="20">
+                            </mat-spinner>
                           </div>
                         </ng-template>
                       </button>
 
-                      <button mat-stroked-button mat-raised-button color="accent" *ngIf="item.IsSelected">
+                      <button
+                        mat-stroked-button
+                        mat-raised-button
+                        color="accent"
+                        *ngIf="item.IsSelected"
+                      >
                         <mat-icon aria-label="done">
                           done
                         </mat-icon>
@@ -219,29 +337,31 @@
 
 
   </ng-template>-->
-
                     </td>
 
                     <td width="5%" class="text-center" text-align="left">
-                        <button mat-icon-button (click)="onCandidateDetailDelete(item)"
-                        color="warn" >
-                          <mat-icon aria-label="delete">delete</mat-icon>
-                        </button>
-                      </td>
+                      <button
+                        mat-icon-button
+                        (click)="onCandidateDetailDelete(item)"
+                        color="warn"
+                      >
+                        <mat-icon aria-label="delete">delete</mat-icon>
+                      </button>
+                    </td>
 
-                      <td width="1%" class="text-center"></td>
+                    <td width="1%" class="text-center"></td>
                   </tr>
                 </tbody>
               </table>
             </div>
             <ng-template #candidateListLoaderTemplate>
-                <br />
-                <mat-spinner class="center_loader" diameter="50"></mat-spinner>
-              </ng-template>
               <br />
+              <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+            </ng-template>
+            <br />
           </div>
         </div>
       </mat-card>
-
     </ng-template>
   </div>
+</div>

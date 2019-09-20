@@ -3,6 +3,7 @@ using HumanitarianAssistance.Application.CommonModels;
 using HumanitarianAssistance.Application.Project.Commands.Common;
 using HumanitarianAssistance.Application.Project.Commands.Create;
 using HumanitarianAssistance.Application.Project.Commands.Update;
+using HumanitarianAssistance.Application.Project.Models;
 using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Domain.Entities.Project;
 using System;
@@ -30,6 +31,7 @@ namespace HumanitarianAssistance.WebApi.Infrastructure
             CreateMap<EditProjectActivityDetailCommand, ProjectActivityDetail>().ReverseMap();
             CreateMap<EditSectorDetailCommand, SectorDetails>().ReverseMap();
             CreateMap<ProjectBudgetLineDetailModel, ProjectBudgetLineDetail>().ReverseMap();
+            CreateMap<ProjectActivityDetail,ProjectActivityModel>().ReverseMap();
         }
     }
 }

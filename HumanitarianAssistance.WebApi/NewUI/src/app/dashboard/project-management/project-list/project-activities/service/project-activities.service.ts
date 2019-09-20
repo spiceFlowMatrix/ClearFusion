@@ -87,12 +87,13 @@ export class ProjectActivitiesService {
       )
       .pipe(
         map(x => {
-          const responseData: IResponseData = {
-            data: x,
+          const response: IResponseData = {
+            data: x.ResponseData,
             statusCode: x.StatusCode,
             message: x.Message
           };
-          return responseData;
+          console.log(response);
+          return response;
         })
       );
   }

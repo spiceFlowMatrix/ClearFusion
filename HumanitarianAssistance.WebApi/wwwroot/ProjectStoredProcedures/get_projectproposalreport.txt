@@ -1,0 +1,207 @@
+-- FUNCTION: public.get_projectproposalreport(character varying, text, text, integer, integer, integer, double precision, integer, boolean, boolean)
+
+-- DROP FUNCTION public.get_projectproposalreport(character varying, text, text, integer, integer, integer, double precision, integer, boolean, boolean);
+
+CREATE OR REPLACE FUNCTION public.get_projectproposalreport(
+	projectname character varying DEFAULT ''::character varying,
+	startdate text DEFAULT ''::text,
+	enddate text DEFAULT ''::text,
+	startdatefilteroption integer DEFAULT 0,
+	duedatefilteroption integer DEFAULT 0,
+	currencyid integer DEFAULT 0,
+	amount double precision DEFAULT 0.0,
+	amountfilteroption integer DEFAULT 0,
+	iscompleted boolean DEFAULT false,
+	islate boolean DEFAULT false)
+    RETURNS TABLE(projectsname character varying, projectcode character varying, projectstartdate date, projectenddate date, projectcurrencyid integer, budgetestimation double precision, progress double precision, colorcode integer, reviewcompletiondate date, duedays integer) 
+    LANGUAGE 'plpgsql'
+
+    COST 100
+    VOLATILE 
+    ROWS 1000
+AS $BODY$
+
+DECLARE
+	
+BEGIN
+CREATE TEMP TABLE temp_projectproposalreport(
+    	projectsname varchar(100),
+        projectcode varchar(100),
+		projectstartdate Date,
+		projectenddate Date,
+		projectcurrencyid Integer,
+		budgetestimation double precision,
+	    progress double precision,
+		colorcode integer,
+		reviewcompletiondate Date DEFAULT NULL,
+		duedays integer
+    );
+	
+	INSERT INTO temp_projectproposalreport
+	SELECT tt."ProjectName",tt."ProjectCode", tt."ProposalStartDate", tt."ProposalDueDate", 
+	CASE WHEN currencyid <>0
+	THEN currencyid
+	ELSE
+	tt."CurrencyId"
+	END,
+	tt.proposalbudget, round(CAST(tt.progress as numeric), 2) , tt.colorcode, tt.reviewcompletiondate, tt.duedays
+	FROM
+	(SELECT pd."ProjectName", pd."ProjectCode", ppd."ProposalStartDate", ppd."ProposalDueDate", ppd."CurrencyId",
+	 CASE WHEN currencyid <>0
+	 THEN COALESCE(ppd."ProposalBudget" * (SELECT "Rate" FROM "ExchangeRateDetail" WHERE "IsDeleted" = false AND
+                        	  "FromCurrency" = ppd."CurrencyId" AND
+								"ToCurrency"= currencyid AND
+                              "Date":: Date <= now() :: Date 
+                        ORDER BY "Date" DESC
+                        LIMIT 1),0)
+	 ELSE COALESCE(ppd."ProposalBudget",0)
+	 END AS ProposalBudget, 
+	 CASE WHEN ppd."ProposalStartDate" IS NOT NULL
+	 THEN
+	 	CASE WHEN ppd."ProposalDueDate" IS NOT NULL
+	 	THEN
+	 		CASE WHEN apd."IsApproved"=true
+	 		THEN
+	 			CASE WHEN (DATE_PART('day', ppd."ProposalDueDate" - ppd."ProposalStartDate" ) * 24 + DATE_PART('hour', ppd."ProposalDueDate" - ppd."ProposalStartDate"))>0
+	 			THEN ((DATE_PART('day', apd."ReviewCompletionDate" - ppd."ProposalStartDate" ) * 24 + DATE_PART('hour', apd."ReviewCompletionDate" - ppd."ProposalStartDate"))/
+	 				 (DATE_PART('day', ppd."ProposalDueDate" - ppd."ProposalStartDate" ) * 24 + DATE_PART('hour', ppd."ProposalDueDate" - ppd."ProposalStartDate"))) * 100
+	 			ELSE
+	 			0.0
+	 			END
+			ELSE
+	 			CASE WHEN (DATE_PART('day', ppd."ProposalDueDate" - ppd."ProposalStartDate" ) * 24 + DATE_PART('hour', ppd."ProposalDueDate" - ppd."ProposalStartDate"))>0
+	 			THEN 
+	 ((DATE_PART('day', now() - ppd."ProposalStartDate" ) * 24 + DATE_PART('hour', now() - ppd."ProposalStartDate"))/
+	 				 (DATE_PART('day', ppd."ProposalDueDate" - ppd."ProposalStartDate" ) * 24 + DATE_PART('hour', ppd."ProposalDueDate" - ppd."ProposalStartDate"))) * 100
+	 
+	 			ELSE
+	 			0.0
+	 			END
+	 		END
+	 	ELSE
+	 	0.0
+	 	END
+	 ELSE
+	 0.0
+	 END AS Progress,
+	 
+	 CASE WHEN ppd."ProposalStartDate" IS NOT NULL
+	 THEN
+	 	CASE WHEN ppd."ProposalDueDate" IS NOT NULL
+	 	THEN
+	 		CASE WHEN apd."IsApproved"=true
+	 		THEN
+	 			CASE WHEN apd."ReviewCompletionDate" IS NOT NULL
+	 			THEN
+	 				CASE WHEN DATE_PART('day', ppd."ProposalDueDate" :: timestamp - ppd."ProposalStartDate" 
+									:: timestamp)>0
+	 					THEN 
+	 						CASE WHEN ((DATE_PART('day', apd."ReviewCompletionDate" :: timestamp - ppd."ProposalStartDate" :: timestamp)/
+					 			DATE_PART('day', ppd."ProposalDueDate" :: timestamp - ppd."ProposalStartDate" :: timestamp)) * 100)>100
+	 							THEN 1
+	 							ELSE
+	 							2
+	 							END
+	 					ELSE
+	 					0
+	 					END
+	 			ELSE
+	 			0
+	 			END
+				ELSE
+	 				CASE WHEN DATE_PART('day', ppd."ProposalDueDate" :: timestamp - ppd."ProposalStartDate" :: timestamp)>0
+	 					THEN 
+	 						CASE WHEN ((DATE_PART('day', now() :: timestamp - ppd."ProposalStartDate" :: timestamp)/
+						DATE_PART('day', ppd."ProposalDueDate" :: timestamp - ppd."ProposalStartDate" :: timestamp)) * 100)>100
+	 						THEN 1
+	 						ELSE
+	 						3
+	 						END
+	 					ELSE
+	 					0
+	 					END
+	 			END
+	 	ELSE
+	 	0
+	 	END
+	 ELSE
+	 0
+	 END AS ColorCode,
+	 CASE WHEN apd."IsApproved"= true
+	 	THEN apd."ReviewCompletionDate"
+	 ELSE null
+	 END as reviewcompletiondate,
+	 CASE WHEN apd."IsApproved"= true
+	 	THEN 
+	 		CASE WHEN apd."ReviewCompletionDate" IS NOT NULL
+	 		THEN
+	 			CASE WHEN apd."ReviewCompletionDate" > ppd."ProposalDueDate"
+	 			THEN DATE_PART('day', apd."ReviewCompletionDate" :: timestamp - ppd."ProposalDueDate" :: timestamp)
+	 			ELSE
+	 			0
+	 			END
+	 		ELSE
+	 		0
+	 		END
+	 ELSE
+	 	CASE WHEN ppd."ProposalDueDate" IS NOT NULL
+	 		THEN 
+	 			DATE_PART('day', now() :: timestamp - ppd."ProposalDueDate" :: timestamp)
+	 		ELSE
+	 		0
+	 		END
+	 END AS DueDays
+	 FROM
+	 "ProjectDetail" AS pd
+	 LEFT JOIN "ProjectProposalDetail" AS ppd ON pd."ProjectId" = ppd."ProjectId"
+	 LEFT JOIN "ApproveProjectDetails" AS apd ON pd."ProjectId" = apd."ProjectId"
+	 WHERE (projectname ='' OR pd."ProjectName" = projectname)
+	 AND (startdate ='' OR 
+	 CASE WHEN startdatefilteroption=1
+	 THEN ppd."ProposalStartDate" :: Date = CAST(startdate AS Date) :: Date 
+	 WHEN startdatefilteroption=2
+	 THEN  ppd."ProposalStartDate" :: Date > CAST(startdate AS Date) :: Date 
+	 WHEN startdatefilteroption=3
+	 THEN  ppd."ProposalStartDate" :: Date < CAST(startdate AS Date) :: Date
+	 WHEN startdatefilteroption=4
+	 THEN  ppd."ProposalStartDate" :: Date != CAST(startdate AS Date) :: Date
+	 ELSE  ppd."ProposalStartDate" :: Date >= CAST(startdate AS Date) :: Date
+	 END)
+	 AND (enddate ='' OR 
+	 CASE WHEN duedatefilteroption=1
+	 THEN ppd."ProposalDueDate" :: Date = CAST(enddate AS DATE) :: DATE
+	 WHEN duedatefilteroption=2
+	 THEN  ppd."ProposalDueDate" :: Date > CAST(enddate AS DATE) :: DATE
+	 WHEN duedatefilteroption=3
+	 THEN  ppd."ProposalDueDate" :: Date < CAST(enddate AS DATE) :: DATE
+	 WHEN duedatefilteroption=4
+	 THEN ppd."ProposalDueDate" :: Date != CAST(enddate AS DATE) :: DATE
+	 ELSE ppd."ProposalDueDate" :: Date >= CAST(enddate AS DATE) :: DATE
+	 END)
+	 AND (amount=0.0 OR 
+	 CASE WHEN amountfilteroption=1
+	 THEN ppd."ProposalBudget" = amount
+	 WHEN amountfilteroption=2
+	 THEN ppd."ProposalBudget" > amount
+	 WHEN amountfilteroption=3
+	 THEN  ppd."ProposalBudget" < amount
+	 WHEN amountfilteroption=4
+	 THEN  ppd."ProposalBudget" != amount
+	 ELSE ppd."ProposalBudget" >= amount
+	 END)
+	 AND (iscompleted = false OR apd."IsApproved" = iscompleted)
+	 AND (islate= false OR (now() :: Date > ppd."ProposalDueDate" :: Date AND (iscompleted = true OR apd."IsApproved" = false)))
+	AND  pd."IsDeleted"= false
+	ORDER BY pd."CreatedDate" DESC) as tt;
+	
+	RETURN QUERY SELECT * from temp_projectproposalreport;
+
+ DROP TABLE temp_projectproposalreport;
+ 
+END;
+
+$BODY$;
+
+ALTER FUNCTION public.get_projectproposalreport(character varying, text, text, integer, integer, integer, double precision, integer, boolean, boolean)
+    OWNER TO postgres;
+

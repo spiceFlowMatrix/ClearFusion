@@ -105,7 +105,7 @@ export class ClientDetailsComponent implements OnInit, OnChanges {
   CreateClientonAddNew() {
     this.clientDetails = {};
     this.clientsService.EditClient(this.clientDetails)
-    .subscribe((result:IResponseData) => {
+    .subscribe((result: IResponseData) => {
       if (result.statusCode === 200) {
         this.commonLoaderService.hideLoader();
         this.toastr.success(result.message);
@@ -147,7 +147,7 @@ ResetFormOnAddNewClient() {
   GetClientDetailsById(clientId: number) {
     this.clientDetailsLoader = true;
     this.selectedclientId = clientId;
-    this.clientsService.GetClientById(clientId).subscribe((result:IResponseData) => {
+    this.clientsService.GetClientById(clientId).subscribe((result: IResponseData) => {
     if (result.statusCode === 200) {
     this.clientDetails = result.data;
     this.selectedclientId = this.clientDetails.ClientId;
@@ -206,7 +206,7 @@ ResetFormOnAddNewClient() {
 
     dialogRef.componentInstance.confirmDelete.subscribe(res => {
       dialogRef.componentInstance.isLoading = true;
-    this.clientsService.DeleteClient(id).subscribe((result:IResponseData) => {
+    this.clientsService.DeleteClient(id).subscribe((result: IResponseData) => {
       if (result.statusCode === 200) {
         this.toastr.success(result.message);
         this.length = result.total;
@@ -269,7 +269,7 @@ ResetFormOnAddNewClient() {
   AddNewClient() {
 
     this.clientsService.EditClient(this.clientDetails)
-      .subscribe((result:IResponseData) => {
+      .subscribe((result: IResponseData) => {
         if (result.statusCode === 200) {
           this.toastr.success(result.message);
           this.archiveButton = true;
@@ -288,7 +288,7 @@ ResetFormOnAddNewClient() {
   EditClient() {
     this.clientDetailsForm.disable();
     this.clientsService.EditClient(this.clientDetails)
-      .subscribe((result:IResponseData) => {
+      .subscribe((result: IResponseData) => {
         if (result.statusCode === 200) {
           this.toastr.success(result.message);
         this.clientDetails = {};

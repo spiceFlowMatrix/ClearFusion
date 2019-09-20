@@ -312,24 +312,6 @@
           <div class="row">
             <div class="col-sm-6">
               <div class="form-group ">
-                <mat-form-field class="example-full-width">
-                  <input matInput #MainActivitiesID type="text" [(ngModel)]="projectotherDetail.mainActivities"
-                    maxlength="150" placeholder="Main Activities" name="mainActivities" [formControl]="mainActivities"
-                    (focusout)="
-                      onProjectotherDetailsChange(
-                        'mainActivities',
-                        MainActivitiesID.value
-                      )
-                    " [disableControl]="!isEditingAllowed" />
-
-                  <mat-error *ngIf="mainActivities.hasError('required')">
-                    Main Activities is <strong>required</strong>
-                  </mat-error>
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="form-group ">
                 <mat-form-field>
                   <input matInput [(ngModel)]="projectotherDetail.REOIReceiveDate" [matDatepicker]="picker4"
                     placeholder="REOI Receive Date" (dateChange)="
@@ -340,9 +322,6 @@
                 </mat-form-field>
               </div>
             </div>
-          </div>
-          <br>
-          <div class="row">
             <div class="col-sm-6">
               <div class="form-group ">
                 <mat-form-field>
@@ -355,8 +334,29 @@
                 </mat-form-field>
               </div>
             </div>
-            <div class="col-sm-6">
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group ">
+                <mat-form-field class="example-full-width">
+                  <textarea rows="4" matInput #MainActivitiesID type="text" [(ngModel)]="projectotherDetail.mainActivities"
+                    maxlength="150" placeholder="Main Activities" name="mainActivities" [formControl]="mainActivities"
+                    (focusout)="
+                      onProjectotherDetailsChange(
+                        'mainActivities',
+                        MainActivitiesID.value
+                      )
+                    " [disableControl]="!isEditingAllowed" ></textarea>
+
+                  <mat-error *ngIf="mainActivities.hasError('required')">
+                    Main Activities is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
             </div>
+            <!-- <div class="col-sm-6">
+            </div> -->
           </div>
         </mat-card>
       </div>

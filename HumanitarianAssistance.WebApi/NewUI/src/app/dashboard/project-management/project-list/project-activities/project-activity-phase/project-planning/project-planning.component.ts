@@ -63,7 +63,15 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
   activityListLoader = false;
   editActivityLoader = false;
   projectId: number;
+  diasbleEndDate = false;
 
+  // only for header
+  tableHeader: string[] = [
+    'Extension Id',
+    'Start Date',
+    'End Date',
+    'Description'
+  ];
   // lib datasource
   tableHeaderList: string[] = [
     'ExtensionId',
@@ -94,7 +102,7 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.getActivityPermission();
-    console.log("activity projectid", this.activityDetail.ProjectId );
+    console.log('activity projectid', this.activityDetail.ProjectId );
     this.projectId = this.activityDetail.ProjectId;
   }
 
@@ -322,12 +330,12 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
 
     this.activitiesService
       .EditProjectActivity(projectActivityDetail)
-      .pipe(takeUntil(this.destroyed$))
+       .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (response: IResponseData) => {
-          if (response.statusCode === 200) {
+          if (response.statusCode === 200 ) {
             this.toastr.success('Activity updated successfully');
-            this.updateActivity.emit(projectActivityDetail);
+            this.updateActivity.emit(response.data);
           } else {
             this.toastr.error(response.message);
           }
@@ -380,8 +388,17 @@ this.selectedCurrencyId.emit(event.value);
     return this.projectActivityForm.get('Recurring').value;
   }
 
-  get activityActualStartdate(){
+  get activityActualStartdate() {
     return this.projectActivityForm.get('ActualStartDate').value;
+  }
+
+  onRecurringChange(event: any) {
+    console.log(event);
+    if (event.checked === true) {
+      this.diasbleEndDate = true;
+    } else {
+      this.diasbleEndDate = false;
+    }
   }
 
   ngOnDestroy() {

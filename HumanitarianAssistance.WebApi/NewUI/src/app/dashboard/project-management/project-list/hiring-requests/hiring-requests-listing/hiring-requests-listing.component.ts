@@ -8,8 +8,13 @@ import {
   IOfficeListModel,
   IJobGradeModel,
   ProjectHiringRequestFilterModel,
-  IHiringRequestDetailModel,
-  IProfessionList
+  IProfessionList,
+  IWorkingShift,
+  IGender,
+  ICountryList,
+  IProvinceList,
+  IJobTypeList,
+  IFilterModel
 } from '../models/hiring-requests-model';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { ActivatedRoute } from '@angular/router';
@@ -40,16 +45,30 @@ export class HiringRequestsListingComponent implements OnInit {
   officeList: IOfficeListModel[] = [];
   jobGradeList: IJobGradeModel[] = [];
   professionList: IProfessionList[] = [];
-
+  countryList: ICountryList[] = [];
+  provinceList: IProvinceList[] = [];
+  workingShift: IWorkingShift[] = [
+    { Id: 1, value: 'Day' },
+    { Id: 2, value: 'Night' }
+  ];
+  gender: IGender[] = [
+    { Id: 1, value: 'Male' },
+    { Id: 2, value: 'Female' },
+    { Id: 2, value: 'Other' }
+  ];
+  JobTypeList: IJobTypeList[] = [
+    {JobTypeId: 1, JobTypeName: 'JobName1'},
+    {JobTypeId: 2, JobTypeName: 'JobName2'}
+  ];
   // model
-  projectHiringRequestFilter: ProjectHiringRequestFilterModel;
-  hiringRequestModel: ProjectHiringRequestFilterModel;
+  // projectHiringRequestFilter: ProjectHiringRequestFilterModel;
+  hiringRequestModel: IFilterModel;
 
   hiringRequestListLoader = false;
 
   hiringRequestlist: ProjectHiringRequestFilterModel[] = [];
 
-  hiringRequestDetail: ProjectHiringRequestFilterModel;
+   hiringRequestDetail: ProjectHiringRequestFilterModel;
 
   constructor(
     public dialog: MatDialog,
@@ -77,12 +96,14 @@ export class HiringRequestsListingComponent implements OnInit {
     this.routeActive.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
-    this.getAllHiringRequestFilterList();
     this.getCurrencyList();
     this.getBudgetLineList();
     this.getOfficeList();
+    this.getCountryList();
     this.getJobGradeList();
     this.getProfessionlist();
+    this.getProvinceList();
+    this.getAllHiringRequestFilterList();
   }
 
   //#region  "initForm"
@@ -90,47 +111,27 @@ export class HiringRequestsListingComponent implements OnInit {
     this.hiringRequestModel = {
       pageIndex: 0,
       pageSize: 10,
-      totalCount: 0,
-
       FilterValue: '',
-      Description: null,
-      Position: null,
-      ProfessionId: null,
-      TotalVacancies: null,
-      FilledVacancies: null,
-      BasicPay: null,
-      CurrencyId: null,
-      BudgetLineId: null,
-      GradeId: null,
-      EmployeeID: null,
-      HiringRequestCode: null,
-      HiringRequestId: null,
-      IsCompleted: null,
-      OfficeId: null,
       ProjectId: null,
-      BudgetName: null,
-      CurrencyName: null,
-      EmployeeName: null,
-      GradeName: null,
-      RequestedBy: null,
+      TotalCount: 0
     };
   }
   //#endregion
 
-//#region  paginatorEvent
-pageEvent(e) {
-  this.hiringRequestModel.pageIndex = e.pageIndex;
-  this.hiringRequestModel.pageSize = e.pageSize;
+  //#region  paginatorEvent
+  pageEvent(e) {
+    this.hiringRequestModel.pageIndex = e.pageIndex;
+    this.hiringRequestModel.pageSize = e.pageSize;
 
-  this.onFilterApplied();
-}
-//#endregion
+    this.onFilterApplied();
+  }
+  //#endregion
 
-//#region "onFilterApplied"
-onFilterApplied() {
-  this.getAllHiringRequestFilterList();
-}
-//#endregion
+  //#region "onFilterApplied"
+  onFilterApplied() {
+    this.getAllHiringRequestFilterList();
+  }
+  //#endregion
 
   //#region "onItemClick"
   onItemClick(item: any) {
@@ -167,7 +168,12 @@ onFilterApplied() {
         CurrencyList: this.currencyList,
         JobGradeList: this.jobGradeList,
         ProjectId: this.projectId,
-        ProfessionList: this.professionList
+        ProfessionList: this.professionList,
+        workingShift: this.workingShift,
+        gender: this.gender,
+        countryList: this.countryList,
+        provinceList: this.provinceList,
+        JobTypeList: this.JobTypeList
       }
     });
 
@@ -283,17 +289,16 @@ onFilterApplied() {
 
   //#region "getAllProjectActivityList"
   getAllHiringRequestFilterList() {
-    this.hiringRequestModel.totalCount = 0;
     this.hiringRequestModel.ProjectId = this.projectId;
-
+    this.hiringRequestModel.TotalCount = 0;
     this.hiringRequestListLoader = true;
     this.hiringRequestService
       .GetProjectHiringRequestFilterList(this.hiringRequestModel)
       .subscribe(
         (response: IResponseData) => {
           if (response.statusCode === 200 && response.data !== null) {
-            this.hiringRequestModel.totalCount =
-            response.total != null ? response.total : 0;
+            this.hiringRequestModel.TotalCount =
+              response.total != null ? response.total : 0;
             this.setHiringrequestList(response.data);
           }
           this.hiringRequestListLoader = false;
@@ -310,7 +315,6 @@ onFilterApplied() {
     data.forEach((element: ProjectHiringRequestFilterModel) => {
       this.hiringRequestlist.push({
         HiringRequestId: element.HiringRequestId,
-        HiringRequestCode: element.HiringRequestCode,
         Description: element.Description,
         ProfessionId: element.ProfessionId,
         Position: element.Position,
@@ -320,16 +324,31 @@ onFilterApplied() {
         BudgetLineId: element.BudgetLineId,
         OfficeId: element.OfficeId,
         GradeId: element.GradeId,
-        EmployeeID: element.EmployeeID,
         ProjectId: element.ProjectId,
         IsCompleted: element.IsCompleted,
         CurrencyId: element.CurrencyId,
-        BudgetName: element.BudgetName,
-        CurrencyName: element.CurrencyName,
-        EmployeeName: element.EmployeeName,
-        GradeName: element.GradeName,
         RequestedBy: element.RequestedBy,
-        FilterValue: element.FilterValue
+        AnouncingDate: element.AnouncingDate,
+        JobType: element.JobType,
+        JobCategory: element.JobCategory,
+        Background: element.Background,
+        JobStatus: element.JobStatus,
+        KnowladgeAndSkillRequired: element.KnowladgeAndSkillRequired,
+        SalaryRange: element.SalaryRange,
+        Shift: element.Shift,
+        ProvinceId: element.ProvinceId,
+        SpecificDutiesAndResponsblities:
+          element.SpecificDutiesAndResponsblities,
+        SubmissionGuidlines: element.SubmissionGuidlines,
+        ClosingDate: element.ClosingDate,
+        ContractDuration: element.ContractDuration,
+        ContractType: element.ContractType,
+        CountryId: element.CountryId,
+        GenderId: element.GenderId,
+        MinimumEducationLevel: element.MinimumEducationLevel,
+        Experience: element.Experience,
+        Organization: element.Organization,
+        GradeName: this.jobGradeList.find(x => x.GradeId === element.GradeId).GradeName
       });
     });
   }
@@ -347,6 +366,45 @@ onFilterApplied() {
     const indexOfHiringRequestList = this.hiringRequestlist.indexOf(data);
     this.hiringRequestlist[indexOfHiringRequestList] = event;
   }
+  //#endregion
 
+  //#region "getCountryList"
+  getCountryList() {
+    this.hiringRequestService.GetCountryList().subscribe(
+      (response: IResponseData) => {
+        if (response.statusCode === 200 && response != null) {
+          if (response.data != null) {
+            response.data.forEach(element => {
+              this.countryList.push({
+                CountryId: element.CountryId,
+                CountryName: element.CountryName
+              });
+            });
+          }
+        }
+      },
+      error => {
+      }
+    );
+  }
+  //#endregion
+
+  //#region "getCountryList"
+  getProvinceList() {
+    this.hiringRequestService.GetProvinceList().subscribe(
+      (response: IResponseData) => {
+        this.provinceList = [];
+        if (response.statusCode === 200 && response.data !== null) {
+          response.data.forEach(element => {
+            this.provinceList.push({
+              ProvinceId: element.ProvinceId,
+              ProvinceName: element.ProvinceName
+            });
+          });
+        }
+      },
+      error => {}
+    );
+  }
   //#endregion
 }

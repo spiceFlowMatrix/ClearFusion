@@ -4,7 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Application.Project.Models;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Domain.Entities.Project;
 using HumanitarianAssistance.Persistence;
 using HumanitarianAssistance.Persistence.Extensions;
 using MediatR;
@@ -53,11 +55,24 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                                                                                       .Select(z => new ProjectMonitoringQuestionModel
                                                                                                                       {
                                                                                                                           MonitoringIndicatorQuestionId = z.Id,
-                                                                                                                          QuestionId = z.QuestionId,
+                                                                                                                          IndicatorQuestionId = z.IndicatorQuestionId,
+                                                                                                                          QuestionTypeName= z.ProjectIndicatorQuestions == null ? null
+                                                                                                                                                                                : (z.ProjectIndicatorQuestions.QuestionType == (int)QuestionType.Qualitative) ? "Qualitative" 
+                                                                                                                                                                                                                                                              : z.ProjectIndicatorQuestions == null ? null
+                                                                                                                                                                                                                                                                                                    : z.ProjectIndicatorQuestions.QuestionType == (int)QuestionType.Quantitative ? "Quantitative"
+                                                                                                                                                                                                                                                                                                                                                                                 : null,
                                                                                                                           Score = z.Score,
-                                                                                                                          VerificationId = z.VerificationId,
-                                                                                                                          Verification = z.Verification,
-                                                                                                                          Question = z.ProjectIndicatorQuestions.IndicatorQuestion
+                                                                                                                          VerificationSourceId = z.VerificationSourceId,
+                                                                                                                          VerificationSourceName = z.ProjectIndicatorQuestions == null ? null
+                                                                                                                                                                                       : z.ProjectIndicatorQuestions.VerificationSources == null ? null 
+                                                                                                                                                                                                                                                 :  z.ProjectIndicatorQuestions.VerificationSources 
+                                                                                                                                                                                                                    .FirstOrDefault( v=> v.VerificationSourceId == z.VerificationSourceId).VerificationSourceName 
+                                                                                                                                                                                                                                                                ?? null,
+                                                                                                                          IndicatorQuestion = z.ProjectIndicatorQuestions.IndicatorQuestion,
+                                                                                                                          VerificationSources = z.ProjectIndicatorQuestions == null ? null : z.ProjectIndicatorQuestions.VerificationSources.Select(c=> new VerificationSources {
+                                                                                                                              VerificationSourceId= c.VerificationSourceId,
+                                                                                                                              VerificationSourceName= c.VerificationSourceName
+                                                                                                                          }).ToList()
                                                                                                                       }).ToList()
                                                                                             }).ToList()
                                                                 }).ToListAsync();

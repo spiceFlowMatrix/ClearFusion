@@ -139,7 +139,7 @@ export class ProfessionalInfoComponent implements OnInit {
       DepartmentName: null,
       EmployeeTypeName: null,
       AttendanceGroupId: null,
-      DutyStation: null
+      DutyStation: null,
     };
   }
 
@@ -413,7 +413,7 @@ export class ProfessionalInfoComponent implements OnInit {
       ResignationReason: model.ResignationReason,
       Status: model.Status,
       TrainingBenefits: model.TrainingBenefits,
-      DutyStation: model.DutyStation
+      DutyStation: model.DutyStation,
     };
     this.assignLeaveToEmployee = this.employeeId;
     this.hrService
@@ -516,7 +516,7 @@ export class ProfessionalInfoComponent implements OnInit {
       ResignationReason: model.ResignationReason,
       Status: model.Status,
       TrainingBenefits: model.TrainingBenefits,
-      DutyStation: model.DutyStation
+      DutyStation: model.DutyStation,
     };
     this.assignLeaveToEmployee = this.employeeId;
     this.hrService
@@ -553,13 +553,7 @@ export class ProfessionalInfoComponent implements OnInit {
 
   //#region "On Form Submit"
   OnFormSubmit(model) {
-    // tslint:disable-next-line:curly
-    //if (model.EmployeeProfessionalId === 0)
-    //this.AddProfessionalDetails(model);
-    //// tslint:disable-next-line:curly
-    //else
-
-        this.EditProfessionalDetails(model);
+    this.EditProfessionalDetails(model);
   }
   //#endregion
 

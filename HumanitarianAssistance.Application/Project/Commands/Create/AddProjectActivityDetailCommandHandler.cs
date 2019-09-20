@@ -15,7 +15,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
 {
     public class AddProjectActivityDetailCommandHandler : IRequestHandler<AddProjectActivityDetailCommand, ApiResponse>
     {
-        private HumanitarianAssistanceDbContext _dbContext;
+        private readonly HumanitarianAssistanceDbContext _dbContext;
         private IMapper _mapper;
         public AddProjectActivityDetailCommandHandler(HumanitarianAssistanceDbContext dbContext, IMapper mapper)
         {
@@ -28,6 +28,14 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
             try
             {
                 ProjectActivityDetail obj = _mapper.Map<AddProjectActivityDetailCommand, ProjectActivityDetail>(request);
+                // note to update end date value 
+                if (obj.Recurring == true)
+                {
+                   
+                    obj.PlannedEndDate = StaticFunctions.GetRecurringDays(obj.RecurringCount, obj.RecurrinTypeId, obj.PlannedStartDate);
+
+                }
+
                 obj.CreatedDate = DateTime.UtcNow;
                 obj.IsDeleted = false;
                 obj.CreatedById = request.CreatedById;
@@ -35,7 +43,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                 await _dbContext.ProjectActivityDetail.AddAsync(obj);
                 await _dbContext.SaveChangesAsync();
 
-                if ( request.CountryId != null  && request.ProvinceId != null )
+                if (request.CountryId != null && request.ProvinceId != null)
                 {
                     List<ProjectActivityProvinceDetail> activityProvienceList = new List<ProjectActivityProvinceDetail>();
 
@@ -82,5 +90,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
             }
             return response;
         }
+       
     }
+
 }

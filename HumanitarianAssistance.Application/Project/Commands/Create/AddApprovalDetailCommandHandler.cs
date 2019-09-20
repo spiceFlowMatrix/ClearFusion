@@ -61,8 +61,16 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                 {
                     obj.ProjectId = request.ProjectId;
                     obj.CommentText = request.CommentText;
-                    obj.FileName = request.FileName;
-                    obj.FilePath = request.FilePath;
+                    if (request.FileName == null)
+                    {
+                        obj.FileName = obj.FileName;
+                        obj.FilePath = obj.FilePath;
+                    }
+                    else
+                    {
+                        obj.FileName = request.FileName;
+                        obj.FilePath = request.FilePath;
+                    }
                     obj.IsApproved = request.IsApproved;
                     obj.IsDeleted = false;
                     obj.CreatedById = request.CreatedById;

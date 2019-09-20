@@ -11,6 +11,11 @@ export interface IHiringReuestDataSource {
   HiringRequestId: number;
   ProfessionList: IProfessionList[];
   officeSelectionFlag: boolean;
+  gender: any[];
+  workingShift: any[];
+  countryList: ICountryList[];
+  provinceList: IProvinceList[];
+  JobTypeList: any[];
 }
 export interface ICurrencyListModel {
   CurrencyId: number;
@@ -34,60 +39,116 @@ export interface IJobGradeModel {
 }
 export interface IHiringRequestDetailModel {
   HiringRequestId?: number;
-  HiringRequestCode: string;
-  Description: string;
-  ProfessionId: number;
-  Position: string;
-  TotalVacancies: number;
-  FilledVacancies: number;
-  BasicPay: number;
-  BudgetLineId: number;
-  OfficeId: number;
-  GradeId: number;
-  EmployeeID: number;
-  ProjectId: number;
-  IsCompleted: boolean;
-  CurrencyId: number;
   RequestedBy?: string;
-}
-export interface IHiringRequestModel {
-  Description: string;
-  Position: string;
-  Profession: string;
-  BudgetLine: string;
-  TotalVacancies: string;
-  Office: string;
-  FilledVacancies: string;
-  BasicPay: string;
-  jobGrade: string;
+  BasicPay?: number;
+  BudgetLineId?: number;
+  CurrencyId?: number;
+  Description?: string;
+  EmployeeID?: number;
+  GradeId?: number;
+  OfficeId?: number;
+  Position?: string;
+  ProfessionId?: number;
+  ProjectId?: number;
+  TotalVacancies?: number;
+  AnouncingDate?: Date;
+  JobType?: number;
+  JobCategory?: string;
+  Background?: string;
+  JobStatus?: string;
+  KnowladgeAndSkillRequired?: string;
+  SalaryRange?: string;
+  Shift?: number;
+  ProvinceId?: number;
+  SpecificDutiesAndResponsblities?: string;
+  SubmissionGuidlines?: string;
+  ClosingDate?: Date;
+  ContractDuration?: number;
+  ContractType?: string;
+  CountryId?: number;
+  GenderId?: number;
+  MinimumEducationLevel?: string;
+  Experience?: string;
+  Organization?: string;
 }
 
-export interface ProjectHiringRequestFilterModel {
+export interface IHiringRequestModel {
+  Description?: string;
+  Position?: string;
+  Profession?: string;
+  BudgetLine?: string;
+  TotalVacancies?: string;
+  Office?: string;
+  FilledVacancies?: string;
+  BasicPay?: string;
+  jobGrade?: string;
+  JobCategory?: string;
+  MinimumEducation?: string;
+  Organization?: string;
+  ContractType?: string;
+  JobStatus?: string;
+  Experience?: string;
+  Background?: string;
+  SalaryRange?: string;
+  Province?: string;
+  Country?: string;
+  ContractDuration?: string;
+  Gender?: string;
+  JobType?: string;
+  Shift?: string;
+  AnnouncingDate?: string;
+  ClosingDate?: string;
+  KnowladgeAndSkillRequired?: string;
+  SubmissionGuidline?: string;
+  RequestedBy?: string;
+  Currency?: string;
+  SpecificDutiesAndResponsiblities?: string;
+  IsCompleted: boolean;
+}
+
+export interface IFilterModel {
   FilterValue: string;
   pageIndex?: number;
   pageSize?: number;
-  totalCount?: number;
+  ProjectId?: number;
+  TotalCount?: number;
+}
 
+export interface ProjectHiringRequestFilterModel {
+  GradeName?: string;
   HiringRequestId?: number;
-  HiringRequestCode: string;
-  Description: string;
-  ProfessionId: string;
-  Position: string;
-  TotalVacancies: number;
-  FilledVacancies: number;
-  BasicPay: number;
-  BudgetLineId: number;
-  OfficeId: number;
-  GradeId: number;
-  EmployeeID: number;
-  ProjectId: number;
+  RequestedBy?: string;
+  BasicPay?: number;
+  BudgetLineId?: number;
+  CurrencyId?: number;
+  Description?: string;
+  FilledVacancies?: number;
+  GradeId?: number;
+  OfficeId?: number;
+  Position?: string;
+  ProfessionId?: number;
+  ProjectId?: number;
+  TotalVacancies?: number;
+  AnouncingDate?: Date;
+  JobType?: number;
+  Background?: string;
+  JobStatus?: string;
+  KnowladgeAndSkillRequired?: string;
+  SalaryRange?: string;
+  Shift?: number;
+  ProvinceId?: number;
+  SpecificDutiesAndResponsblities?: string;
+  SubmissionGuidlines?: string;
+  ClosingDate?: Date;
+  ContractDuration?: number;
+  ContractType?: string;
+  CountryId?: number;
+  GenderId?: number;
+  MinimumEducationLevel?: string;
+  Experience?: string;
+  Organization?: string;
   IsCompleted: boolean;
-  CurrencyId: number;
-  BudgetName: string;
-  CurrencyName: string;
-  EmployeeName: string;
-  GradeName: string;
-  RequestedBy: string;
+  JobCategory: string;
 }
 export interface IEmployeeListModel {
   EmployeeId?: number;
@@ -158,4 +219,24 @@ export interface CandidateDetailModel {
   HiredOn: Date;
   OfficeId: number;
   EmployeeTypeId: number;
+}
+export interface IWorkingShift {
+  Id: Number;
+  value: string;
+}
+export interface IGender {
+  Id: Number;
+  value: string;
+}
+export interface ICountryList {
+  CountryId: Number;
+  CountryName: string;
+}
+export interface IProvinceList {
+  ProvinceId: Number;
+  ProvinceName: string;
+}
+export interface IJobTypeList {
+  JobTypeId: Number;
+  JobTypeName: string;
 }
