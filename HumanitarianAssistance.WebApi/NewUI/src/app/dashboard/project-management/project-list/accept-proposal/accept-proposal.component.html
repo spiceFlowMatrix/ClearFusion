@@ -1,7 +1,7 @@
 <div class="tab-content">
   <div id="details" class="tab-pane fade in active">
     <div class="project-details mar_tp_20 ">
-      <div class="">
+      <div class="" *ngIf="!approvedProjectDetailLoader; else LoaderTemplate">
         <div *ngIf="!winProjectFlag && winProjectFlag!=null" class="">
           <form [formGroup]="approvalForm">
             <div class="row">
@@ -47,11 +47,13 @@
             <div class="">
               <div class="col-sm-6 col-sm-offset-3">
                 <div class="">
-                  <textarea class="form-control rounded-0 custom_text" id="approveRejectCommentText" rows="3"
-                    placeholder="Type Here.." formControlName="CommentText">
+                  <textarea class="form-control rounded-0 custom_text" [readonly]="disableApprovedButton"
+                    id="approveRejectCommentText" rows="3" placeholder="Type Here.." formControlName="CommentText">
                   </textarea>
                   <a [href]="imageUrl">
-                    <file-drop *ngIf="FileName == null"  class="custom_drop" headertext="Drop file here"
+                    <file-drop *ngIf="winlossmodel.FileName == null"
+                      [ngClass]="disableApprovedButton ? 'checkedClass' : 'uncheckedClass'"
+                      [disabled]="disableApprovedButton " class="custom_drop" headertext="Drop file here"
                       (onFileDrop)="UploadReviewDragAndDropFile($event)" (onFileOver)="fileOver($event)"
                       (onFileLeave)="fileLeave($event)">
                       <i class="material-icons">
@@ -59,13 +61,19 @@
                       </i>
                     </file-drop>
                   </a>
-                  <div class="custom_drop_value text-center" *ngIf="FileName!=null">
-                    <strong>{{FileName}}</strong>
-                    <i class="icon_cursor" (click)="DeleteFile(FileName)" class="material-icons">
+                  <div class="custom_drop_value text-center" *ngIf="winlossmodel.FileName!=null">
+                    <a *ngIf="winlossmodel.IsReviewApproved != null || !winlossmodel.IsReviewApproved|| winlossmodel.IsProposalAccept == false; else showReviewFileName"
+                      (click)="onDocumentClicked(winlossmodel.FilePath)"><span class="color-font">
+                        {{winlossmodel.FileName}} </span></a>
+                    <i *ngIf="!winlossmodel.IsReviewApproved && !disableApprovedButton" class="icon_cursor"
+                      (click)="DeleteFile(winlossmodel.FileName)" class="material-icons">
                       cancel
                     </i>
+                    <ng-template #showReviewFileName>
+                      <span class="color-font"> {{winlossmodel.FileName}}</span>
+                    </ng-template>
                   </div>
-                  <h5 class="font_clr" >
+                  <h5 class="font_clr">
                     <span class="colr_red">*</span> The supported file format are .doc/.docx/.pdf/.xls/.xlsx </h5>
                 </div>
               </div>
@@ -75,7 +83,10 @@
             </div>
           </form>
         </div>
-
+        <ng-template #LoaderTemplate>
+          <br />
+          <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+        </ng-template>
 
         <!-- template for win project detail************ -->
         <div *ngIf="winProjectFlag" class="">
@@ -105,11 +116,11 @@
           <div class="">
             <div class="col-sm-6 col-sm-offset-3">
               <div>
-                <textarea class="form-control rounded-0 custom_text" rows="3" placeholder="Type Here.."
-                  [(ngModel)]="winLossMessage">
+                <textarea class="form-control rounded-0 custom_text" [readOnly]="diableWinLossButton" rows="3"
+                  placeholder="Type Here.." [(ngModel)]="winlossmodel.WinLossMessage">
                 </textarea>
 
-                <file-drop *ngIf="winLossFileName == ''" class="custom_drop" headertext="Drop file here"
+                <file-drop *ngIf="winlossmodel.WinLossFileName == ''" class="custom_drop" headertext="Drop file here"
                   (onFileDrop)="UploadWinLossDragAndDropFile($event)" (onFileOver)="winLossfileOver($event)"
                   (onFileLeave)="winLossFileLeave($event)">
                   <i class="material-icons">
@@ -117,14 +128,18 @@
                   </i>
                 </file-drop>
 
-                <div class="custom_drop_value text-center" *ngIf="winLossFileName != ''">
-                  <strong>{{winLossFileName}}</strong>
-                  <i class="icon_cursor" (click)="winLossDeleteFile()" class="material-icons">
+                <div class="custom_drop_value text-center" *ngIf="winlossmodel.WinLossFileName != ''">
+                  <span> <a class="color-font" *ngIf="diableWinLossButton;else showOnlyFilename"
+                      (click)="onDocumentClicked(winlossmodel.WinlossFilePath)">{{winlossmodel.WinLossFileName}}</a></span>
+                  <ng-template #showOnlyFilename> <span class="color-font">{{winlossmodel.WinLossFileName}}</span>
+                  </ng-template>
+                  <!-- <i class="icon_cursor" (click)="winLossDeleteFile()" class="material-icons">
                     cancel_outline
-                  </i>
+                  </i> -->
                 </div>
-                <h5 class="font_clr" > <span class="colr_red">*</span> Please upload a file with description to win or loss the Project. <br>
-                  <span class="colr_red">  *</span>  The supported file format are .doc/.docx/.pdf/.xls/.xlsx </h5>
+                <h5 class="font_clr"> <span class="colr_red">*</span> Please upload a file with description to win or
+                  loss the Project. <br>
+                  <span class="colr_red"> *</span> The supported file format are .doc/.docx/.pdf/.xls/.xlsx </h5>
               </div>
             </div>
             <div class="col-sm-12">
@@ -136,6 +151,7 @@
 
 
       </div>
+
     </div>
   </div>
 </div>

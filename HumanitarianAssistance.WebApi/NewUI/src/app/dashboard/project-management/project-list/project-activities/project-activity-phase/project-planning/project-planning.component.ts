@@ -65,6 +65,13 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
   projectId: number;
   diasbleEndDate = false;
 
+  // only for header
+  tableHeader: string[] = [
+    'Extension Id',
+    'Start Date',
+    'End Date',
+    'Description'
+  ];
   // lib datasource
   tableHeaderList: string[] = [
     'ExtensionId',
@@ -326,7 +333,6 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
        .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (response: IResponseData) => {
-          debugger;
           if (response.statusCode === 200 ) {
             this.toastr.success('Activity updated successfully');
             this.updateActivity.emit(response.data);

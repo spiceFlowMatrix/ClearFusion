@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
+import { Component, OnInit, Inject, EventEmitter, ɵConsole } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProjectActivitiesService } from 'src/app/dashboard/project-management/project-list/project-activities/service/project-activities.service';
 import { ToastrService } from 'ngx-toastr';
@@ -62,7 +62,7 @@ export class MonitoringReviewComponent implements OnInit {
       Questions: null,
       ProjectId: null
     };
-
+  // console.log(this.monitoringReviewList);
     this.getAllProjectIndicatorList();
 
     if (this.monitoringReviewList === undefined) {
@@ -245,7 +245,6 @@ export class MonitoringReviewComponent implements OnInit {
 
 
   getQuestionsList(index: number) {
-    debugger;
     this.projectIndicatorId = this.monitoringReviewList.MonitoringReviewModel[
            index
          ].ProjectIndicatorId;
@@ -266,6 +265,7 @@ export class MonitoringReviewComponent implements OnInit {
               });
             });
           }
+          console.log('getquestionlist',this.monitoringReviewList.MonitoringReviewModel);
           if (response.statusCode === 400){
              this.toastr.error(response.message);
           }
@@ -293,7 +293,6 @@ export class MonitoringReviewComponent implements OnInit {
   //#endregion
 
   saveMonitoringReview() {
-    debugger;
     if (
       this.monitoringReviewList.ProjectMonitoringReviewId === 0 ||
       this.monitoringReviewList.ProjectMonitoringReviewId === null ||
@@ -307,13 +306,11 @@ export class MonitoringReviewComponent implements OnInit {
 
   //#region "addMonitoringReview"
   addMonitoringReview() {
-    debugger;
     if (this.monitoringReviewList.MonitoringReviewModel.length > 0) {
       if (this.monitoringReviewList.MonitoringDate === '') {
         this.toastr.warning('Monitoring Date not selected');
         return;
       }
-
       for (
         let i = 0;
         i < this.monitoringReviewList.MonitoringReviewModel.length;
@@ -367,7 +364,6 @@ export class MonitoringReviewComponent implements OnInit {
         this.toastr.warning('Monitoring Date not selected');
         return;
       }
-
       for (
         let i = 0;
         i < this.monitoringReviewList.MonitoringReviewModel.length;
