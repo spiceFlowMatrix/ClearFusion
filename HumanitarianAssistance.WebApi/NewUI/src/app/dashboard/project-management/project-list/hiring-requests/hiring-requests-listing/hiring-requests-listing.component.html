@@ -81,7 +81,7 @@
                   </table>
                 </div>
                 <mat-paginator
-                  [length]="hiringRequestModel.totalCount"
+                  [length]="hiringRequestModel.TotalCount"
                   [pageSize]="hiringRequestModel.pageSize"
                   [pageIndex]="hiringRequestModel.pageIndex"
                   [pageSizeOptions]="[5, 10, 25, 100]"
@@ -111,6 +111,7 @@
           [workingShift]="workingShift"
           [countryList]="countryList"
           [provinceList]="provinceList"
+          [jobTypeList]="JobTypeList"
           (UpdatedHRListRefresh)="OnEditHiringRequestListRefresh($event)">
         </app-hiring-request-details>
       </div>

@@ -99,9 +99,9 @@ export class HiringRequestsListingComponent implements OnInit {
     this.getCurrencyList();
     this.getBudgetLineList();
     this.getOfficeList();
+    this.getCountryList();
     this.getJobGradeList();
     this.getProfessionlist();
-    this.getCountryList();
     this.getProvinceList();
     this.getAllHiringRequestFilterList();
   }

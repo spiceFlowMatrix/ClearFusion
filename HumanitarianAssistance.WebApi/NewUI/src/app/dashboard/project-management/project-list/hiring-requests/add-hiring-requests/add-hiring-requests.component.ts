@@ -122,7 +122,8 @@ export class AddHiringRequestsComponent implements OnInit, OnChanges {
       GenderId: [null, Validators.required],
       MinimumEducationLevel: ['', Validators.required],
       Experience: ['', Validators.required],
-      Organization: ['', Validators.required]
+      Organization: ['', Validators.required],
+      RequestedBy: ['', Validators.required]
     });
   }
   //#endregion
@@ -168,7 +169,8 @@ export class AddHiringRequestsComponent implements OnInit, OnChanges {
         MinimumEducationLevel: data.MinimumEducationLevel,
         Experience: data.Experience,
         Organization: data.Organization,
-        ProjectId: this.projectId
+        ProjectId: this.projectId,
+        RequestedBy: data.RequestedBy
       };
       this.hiringRequestService
         .AddHiringRequestDetail(hiringRequestDetail)
@@ -246,9 +248,8 @@ export class AddHiringRequestsComponent implements OnInit, OnChanges {
       GenderId: [this.hiringRequestDetail.GenderId],
       MinimumEducationLevel: [this.hiringRequestDetail.MinimumEducationLevel],
       Experience: [this.hiringRequestDetail.Experience],
-      Organization: [this.hiringRequestDetail.Organization]
+      Organization: [this.hiringRequestDetail.Organization],
     });
-    console.log(this.hiringRequestForm);
   }
   //#endregion
 
@@ -257,6 +258,7 @@ export class AddHiringRequestsComponent implements OnInit, OnChanges {
     if (this.hiringRequestForm.valid) {
       this.addHiringRequestLoader = true;
       const hiringRequestDetail: IHiringRequestDetailModel = {
+        HiringRequestId: data.HiringRequestId,
         Description: data.Description,
         ProfessionId: data.ProfessionId,
         Position: data.Position,
@@ -285,7 +287,8 @@ export class AddHiringRequestsComponent implements OnInit, OnChanges {
         MinimumEducationLevel: data.MinimumEducationLevel,
         Experience: data.Experience,
         Organization: data.Organization,
-        ProjectId: this.projectId
+        ProjectId: this.projectId,
+        RequestedBy: data.RequestedBy
       };
       this.hiringRequestService
         .EditHiringRequestDetail(hiringRequestDetail)

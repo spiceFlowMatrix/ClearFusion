@@ -1,4 +1,4 @@
-import { ICurrencyList } from "src/app/dashboard/accounting/gain-loss-report/gain-loss-report.model";
+import { ICurrencyList } from 'src/app/dashboard/accounting/gain-loss-report/gain-loss-report.model';
 
 export interface IHiringReuestDataSource {
   EmployeeList: IEmployeeListModel[];
@@ -38,6 +38,7 @@ export interface IJobGradeModel {
   GradeName: string;
 }
 export interface IHiringRequestDetailModel {
+  HiringRequestId?: number;
   RequestedBy?: string;
   BasicPay?: number;
   BudgetLineId?: number;
@@ -101,7 +102,6 @@ export interface IHiringRequestModel {
   SubmissionGuidline?: string;
   RequestedBy?: string;
   Currency?: string;
-  AnouncingDate?: Date;
   SpecificDutiesAndResponsiblities?: string;
   IsCompleted: boolean;
 }
