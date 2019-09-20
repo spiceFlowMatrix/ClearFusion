@@ -640,7 +640,6 @@ export class LeaveInfoComponent implements OnInit {
         this.setting.getBaseUrl() + GLOBAL.API_Pdf_GetAllEmployeeLeavePdf,
         model
       ).subscribe(x=> {
-        debugger;
         this.fileName = "EmployeeLeaveReport" + ".pdf";
         if(window.navigator.msSaveOrOpenBlob) {
           window.navigator.msSaveOrOpenBlob(x, this.fileName);

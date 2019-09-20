@@ -1381,7 +1381,6 @@ export class HrService {
     return this.http
       .post(url, data, {responseType: ResponseContentType.Blob, headers: Myheaders})
       .map((response: Response) => {
-        debugger;
         const result = response.blob();
         if (result) {
           return result;
@@ -1392,7 +1391,6 @@ export class HrService {
   //#endregion
 
     private handleError(error: Response) {
-        debugger;
     return Observable.throw(error.json().error || 'Server error');
   }
 }

@@ -328,7 +328,6 @@ export class EmployeeSalaryComponent implements OnInit {
   //#endregion
 
     onRowUpdating(e) {
-        debugger;
 
         if (e.newData.AdvanceRecoveryAmount <= e.key.AdvanceBalanceAmount) {
             if (e.key.IsAdvanceRecovery) {
@@ -757,7 +756,6 @@ export class EmployeeSalaryComponent implements OnInit {
     const dataKey = rowData.data;
     if (dataKey) {
         if (e.value === true) {
-            debugger;
         const itemIndex = this.employeePayrollByHourlyBased.findIndex(
           item => item.EmployeeId === dataKey.EmployeeId
             );
