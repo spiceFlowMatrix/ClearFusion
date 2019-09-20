@@ -26,12 +26,10 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
             ApiResponse response = new ApiResponse();
             try
             {
-                string description = request.Description.ToLower().Trim();
-
                 bool recordExists = await _dbContext.ProjectHiringRequestDetail.AnyAsync(x => x.IsDeleted == false &&
-                                                                                           x.Description.ToLower().Trim() == description && x.HiringRequestId != request.HiringRequestId);
+                                                                                            x.HiringRequestId == request.HiringRequestId);
 
-                if (!recordExists)
+                if (recordExists)
                 {
 
                     ProjectHiringRequestDetail projectHiringRequest = await _dbContext.ProjectHiringRequestDetail
@@ -43,10 +41,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                     projectHiringRequest.ModifiedDate = request.ModifiedDate;
                     projectHiringRequest.CurrencyId = request.CurrencyId;
                     projectHiringRequest.Description = request.Description;
-                    projectHiringRequest.EmployeeID = request.EmployeeID;
-                    projectHiringRequest.FilledVacancies = request.FilledVacancies;
                     projectHiringRequest.GradeId = request.GradeId;
-                    projectHiringRequest.IsCompleted = request.IsCompleted;
                     projectHiringRequest.IsDeleted = false;
                     projectHiringRequest.OfficeId = request.OfficeId;
                     projectHiringRequest.Position = request.Position;
@@ -60,7 +55,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                     projectHiringRequest.KnowladgeAndSkillRequired = request.KnowladgeAndSkillRequired;
                     projectHiringRequest.SalaryRange = request.SalaryRange;
                     projectHiringRequest.Shift = request.Shift;
-                    projectHiringRequest.ProviceId = request.ProviceId;
+                    projectHiringRequest.ProvinceId = request.ProvinceId;
                     projectHiringRequest.SpecificDutiesAndResponsblities = request.SpecificDutiesAndResponsblities;
                     projectHiringRequest.SubmissionGuidlines = request.SubmissionGuidlines;
                     projectHiringRequest.ClosingDate = request.ClosingDate;
@@ -71,6 +66,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                     projectHiringRequest.MinimumEducationLevel = request.MinimumEducationLevel;
                     projectHiringRequest.Experience = request.Experience;
                     projectHiringRequest.Organization = request.Organization;
+                    projectHiringRequest.JobCategory = request.JobCategory;
                     await _dbContext.SaveChangesAsync();
                     // Note : edit ProjectJob in old Ui
                     if (projectHiringRequest.HiringRequestId != 0)
@@ -95,7 +91,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                 }
                 else
                 {
-                    throw new Exception("Hiring Request is already exist");
+                    throw new Exception("Unable to Updated Hiring Request");
                 }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

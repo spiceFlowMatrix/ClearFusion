@@ -4,7 +4,8 @@ import {
   Headers,
   Response,
   RequestOptions,
-  RequestOptionsArgs
+  RequestOptionsArgs,
+  ResponseContentType
 } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { HealthModel } from './employees/employees.component';
@@ -576,7 +577,7 @@ export class HrService {
   //#endregion
 
   //#region "Add Leave Info"
-  addLeaveInfo(url: string, data: HealthModel) {
+  addLeaveInfo(url: string, data: HealthModel,) {
     const Myheaders = new Headers();
     Myheaders.append(
       'Authorization',
@@ -1366,10 +1367,30 @@ export class HrService {
       })
       .catch(this.handleError);
   }
-
   //#endregion
 
-  private handleError(error: Response) {
+  //#region "Add Leave Info"
+  DownloadPDF(url: string, data: any) {
+    const Myheaders = new Headers();
+    Myheaders.append(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('authenticationtoken'),
+    );
+    Myheaders.append('accept', 'application/pdf');
+    const options = new RequestOptions({ headers: Myheaders});
+    return this.http
+      .post(url, data, {responseType: ResponseContentType.Blob, headers: Myheaders})
+      .map((response: Response) => {
+        const result = response.blob();
+        if (result) {
+          return result;
+        }
+      })
+      .catch(this.handleError);
+  }
+  //#endregion
+
+    private handleError(error: Response) {
     return Observable.throw(error.json().error || 'Server error');
   }
 }

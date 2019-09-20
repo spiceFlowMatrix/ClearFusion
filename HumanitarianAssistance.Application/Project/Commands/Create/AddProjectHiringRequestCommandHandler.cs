@@ -33,11 +33,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     CreatedById = request.CreatedById,
                     CreatedDate =request.CreatedDate,
                     CurrencyId = request.CurrencyId,
-                    Description = request.Description,
-                    EmployeeID = request.EmployeeID,
-                    FilledVacancies = request.FilledVacancies,
+                    Description = request.Description,      
                     GradeId = request.GradeId,
-                    IsCompleted = request.IsCompleted,
                     IsDeleted = false,
                     OfficeId = request.OfficeId,
                     Position = request.Position,
@@ -48,10 +45,11 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     JobType=request.JobType,
                     Background=request.Background,
                     JobStatus=request.JobStatus,
+                    JobCategory=request.JobCategory,
                     KnowladgeAndSkillRequired=request.KnowladgeAndSkillRequired,
                     SalaryRange=request.SalaryRange,
                     Shift=request.Shift,
-                    ProviceId=request.ProviceId,
+                    ProvinceId=request.ProvinceId, 
                     SpecificDutiesAndResponsblities=request.SpecificDutiesAndResponsblities,
                     SubmissionGuidlines=request.SubmissionGuidlines,
                     ClosingDate=request.ClosingDate,
@@ -62,7 +60,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     MinimumEducationLevel=request.MinimumEducationLevel,
                     Experience=request.Experience,
                     Organization=request.Organization                    
-
                 };
                 await _dbContext.ProjectHiringRequestDetail.AddAsync(hiringRequestDeatil);
                 await _dbContext.SaveChangesAsync();

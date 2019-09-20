@@ -9,6 +9,7 @@ import {
 } from '../../../../shared/application-pages-enum';
 import { AppSettingsService } from '../../../../service/app-settings.service';
 import { CommonService } from '../../../../service/common.service';
+import { takeUntil } from 'rxjs/operators/takeUntil';
 
 @Component({
   selector: 'app-leave-info',
@@ -625,8 +626,33 @@ export class LeaveInfoComponent implements OnInit {
     this.popupApplyLeaveVisible = false;
   }
 
+
+  fileName: any;
   // Export Leave PDF
   exportLeavePdf() {
+
+    const model = {
+      EmployeeId: this.employeeId
+    };
+
+    this.hrService
+      .DownloadPDF(
+        this.setting.getBaseUrl() + GLOBAL.API_Pdf_GetAllEmployeeLeavePdf,
+        model
+      ).subscribe(x=> {
+        this.fileName = "EmployeeLeaveReport" + ".pdf";
+        if(window.navigator.msSaveOrOpenBlob) {
+          window.navigator.msSaveOrOpenBlob(x, this.fileName);
+        }else{
+          var link = document.createElement('a');
+          link.setAttribute("type", "hidden");
+          link.download = this.fileName;
+          link.href = window.URL.createObjectURL(x);
+          document.body.appendChild(link);
+          link.click();
+
+      }
+    });
   }
 
   // Leave Details

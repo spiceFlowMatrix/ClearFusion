@@ -703,7 +703,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
                     this.activityDetail.ActualEndDate
                   )
                 : null;
-    // Note to get all list of provice and district list
+    // Note to get all list of province and district list
             this.OnselectedCountryDetailId(response.data.CountryId);
             this.onSelectedProvinceDetailId(response.data.ProvinceId);
 
