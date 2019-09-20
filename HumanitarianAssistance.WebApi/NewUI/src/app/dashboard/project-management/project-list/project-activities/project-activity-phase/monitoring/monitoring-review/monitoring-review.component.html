@@ -38,12 +38,13 @@
           <mat-form-field>
             <mat-label>Indicator Name</mat-label>
             <mat-select (selectionChange)="getQuestionsList(i)" [(ngModel)]="item.ProjectIndicatorId">
-              <mat-option *ngFor="let indicator of projectIndicatorList" [value]="indicator.projectIndicatorId">
-                {{indicator.projectIndicatorName}}
+              <mat-option *ngFor="let indicator of projectIndicatorList" [value]="indicator.ProjectIndicatorId">
+                {{indicator.IndicatorName}}
               </mat-option>
             </mat-select>
           </mat-form-field>
         </div>
+
         <div class="col-sm-4" style="
                 text-align: right;
             ">
@@ -61,6 +62,7 @@
             <thead>
               <tr>
                 <th>Question</th>
+                <th>QuestionType</th>
                 <th>Verification</th>
                 <th>Score</th>
               </tr>
@@ -68,14 +70,15 @@
             <tbody>
               <tr *ngFor="let question of item.IndicatorQuestions">
                 <td>
-                  {{ question.Question }}
+                  {{ question.IndicatorQuestion }}
                 </td>
+                <td>{{ question.QuestionTypeName}}</td>
                 <td>
                   <mat-form-field>
                     <mat-label>Source Name</mat-label>
-                    <mat-select [(ngModel)]="question.Verification">
-                      <mat-option *ngFor="let verification of monitoringVerificationSource" [value]="verification.name">
-                        {{verification.name}}
+                    <mat-select [(ngModel)]="question.VerificationSourceId">
+                      <mat-option *ngFor="let verification of question.VerificationSources" [value]="verification.VerificationSourceId">
+                        {{verification.VerificationSourceName}}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>

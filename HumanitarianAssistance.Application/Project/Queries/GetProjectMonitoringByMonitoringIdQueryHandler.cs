@@ -62,10 +62,10 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                 {
                                     MonitoringIndicatorQuestionId = question.Id,
                                     Question = question.ProjectIndicatorQuestions.IndicatorQuestion,
-                                    QuestionId = question.QuestionId,
+                                    IndicatorQuestionId = question.IndicatorQuestionId,
                                     Score = question.Score,
-                                    Verification = question.Verification,
-                                    VerificationId = question.VerificationId
+                                    VerificationSourceName = question.VerificationSourceName,
+                                    VerificationSourceId = question.VerificationSourceId
                                 };
                                 model.IndicatorQuestions.Add(questions);
                             }

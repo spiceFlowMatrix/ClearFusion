@@ -295,7 +295,7 @@ export class DonorMasterListComponent implements OnInit {
     this.child.formReset();
   }
 
-  addDonorList(e) {
+  addDonorList(e: any) {
     this.DonorDetailModel.push(e);
     this.donorFilterModel.totalCount = e.Count;
   }

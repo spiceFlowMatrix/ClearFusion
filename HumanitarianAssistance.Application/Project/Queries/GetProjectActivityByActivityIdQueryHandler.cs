@@ -76,33 +76,3 @@ namespace HumanitarianAssistance.Application.Project.Queries
     }
 
 }
-// private DateTime GetRecursiveDate(int recursiveType, int? dayofweek, int? occurance)
-// {
-//     DateTime today = DateTime.UtcNow;
-//     DateTime eventDate = new DateTime();
-//     if (recursiveType == 1)
-//     {
-//         int weeklyEvent = ((int)dayofweek - (int)today.DayOfWeek);
-//         eventDate = today.AddDays(weeklyEvent);
-//     }
-//     else if (recursiveType == 2)
-//     {
-//         List<DateTime> days = new List<DateTime>();
-//         int daysofMonth = DateTime.DaysInMonth(DateTime.UtcNow.Year, DateTime.UtcNow.Month);
-//         for (int i = 1; i <= daysofMonth; i++)
-//         {
-//             if ((int)new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, i).DayOfWeek == dayofweek.Value)
-//             {
-//                 days.Add(new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, i));
-//             };
-
-//         }
-//         if (days.Count <= occurance.Value - 1)
-//         {
-//             eventDate = days[occurance.Value];
-//         }
-
-//     }
-
-//     return eventDate;
-// }

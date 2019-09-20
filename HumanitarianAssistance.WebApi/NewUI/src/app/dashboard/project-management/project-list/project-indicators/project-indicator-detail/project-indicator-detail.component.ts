@@ -38,7 +38,6 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
   panelOpenState = false;
   step = 0;
 
-
   projectId: number;
 
   // screen
@@ -94,12 +93,12 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
         this.ProjectindicatorDetail.ProjectIndicatorId
       );
     }
-    //this.togglePanel();
+    // this.togglePanel();
   }
 
-//   togglePanel() {
-//     this.panelOpenState = !this.panelOpenState;
-// }
+  //   togglePanel() {
+  //     this.panelOpenState = !this.panelOpenState;
+  // }
   initQuestionModel() {
     this.questionForm = this.fb.group({
       IndicatorQuestion: ['', Validators.required],
@@ -233,7 +232,7 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
           if (response.statusCode === 400) {
             this.toastr.error(response.message);
           }
-    this.IndicatorDetailLoaderFlag = false;
+          this.IndicatorDetailLoaderFlag = false;
         },
         error => {
           this.IndicatorDetailLoaderFlag = false;
@@ -317,14 +316,13 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
   }
   //#endregion
 
-  questionCount () {
+  questionCount() {
     const obj = {
-      Count:  this.indicatorQuestionList.length,
+      Count: this.indicatorQuestionList.length,
       ProjectIndicatorId: this.ProjectindicatorDetail.ProjectIndicatorId
     };
     this.questionDetailListRefresh.emit(obj);
   }
-
 
   //#region "onDelete"
   onDeleteQuestion(item: any) {
@@ -420,7 +418,7 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
     dialogRef.componentInstance.onUpdatedQuestionListRefresh.subscribe(
       (data: any) => {
         this.OnUpdatesQuestionListRefresh(data);
-       // this.questionDetailListRefresh.emit(data);
+        // this.questionDetailListRefresh.emit(data);
       }
     );
 
