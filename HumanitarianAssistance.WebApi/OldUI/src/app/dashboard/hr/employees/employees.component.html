@@ -185,7 +185,7 @@
 
                                 <div class="tab-content">
                                     <div *ngIf="openInfoTab==0" class="tab-pane fade in active">
-                                        <div *ngIf="tabEventValue != 3 ;  else terminatedEmp">
+                                        <div>
                                             <div class="btn-grp-wrap">
                                                 <!-- <dx-button text="Salary Slips" *ngIf="tabEventValue==2" (click)="showSalarySlipsDatePopup()"></dx-button> -->
                                                 <dx-button text="Documents" (click)="showDocs($event)"></dx-button>
@@ -194,12 +194,12 @@
                                             </div>
                                         </div>
 
-                                        <ng-template #terminatedEmp>
+                                        <!-- <ng-template #terminatedEmp>
                                             <div class="btn-grp-wrap">
                                                 <dx-button text="Documents" type="success" (click)="showDocs($event)">
                                                 </dx-button>
                                             </div>
-                                        </ng-template>
+                                        </ng-template> -->
 
                                         <div class="porject-des-listing">
 
