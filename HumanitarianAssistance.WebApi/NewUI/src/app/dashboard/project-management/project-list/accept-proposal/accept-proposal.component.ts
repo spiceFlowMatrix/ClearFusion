@@ -32,6 +32,7 @@ export class AcceptProposalComponent implements OnInit {
   data: any;
   winlossmodel: IWinLossProjectDetailModel;
   approvedProjectDetailLoader = false;
+  isNewFile = true;
   // win/loss
 
   winLossImageUrl: any;
@@ -284,7 +285,8 @@ export class AcceptProposalComponent implements OnInit {
               response.data.CommentText
             );
             // to bind the filename value
-            // this.FileName = response.data.FileName;
+            // ** to disable the anchor for first time upload of review file
+            this.isNewFile = (response.data.FileName == null || response.data.FileName === undefined) ? this.isNewFile : false;
             this.winlossmodel.FileName = response.data.FileName;
             this.winlossmodel.FilePath = response.data.FilePath;
             // check if isapproved is true then only we disable the button

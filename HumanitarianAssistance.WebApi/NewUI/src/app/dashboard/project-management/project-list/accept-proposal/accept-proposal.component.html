@@ -62,7 +62,7 @@
                     </file-drop>
                   </a>
                   <div class="custom_drop_value text-center" *ngIf="winlossmodel.FileName!=null">
-                    <a *ngIf="winlossmodel.IsReviewApproved != null || !winlossmodel.IsReviewApproved|| winlossmodel.IsProposalAccept == false; else showReviewFileName"
+                    <a *ngIf="(winlossmodel.IsReviewApproved != null || !winlossmodel.IsReviewApproved|| winlossmodel.IsProposalAccept == false) && !isNewFile; else showReviewFileName"
                       (click)="onDocumentClicked(winlossmodel.FilePath)"><span class="color-font">
                         {{winlossmodel.FileName}} </span></a>
                     <i *ngIf="!winlossmodel.IsReviewApproved && !disableApprovedButton" class="icon_cursor"
