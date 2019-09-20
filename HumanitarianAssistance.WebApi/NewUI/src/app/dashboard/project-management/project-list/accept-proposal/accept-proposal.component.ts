@@ -313,6 +313,7 @@ export class AcceptProposalComponent implements OnInit {
 
   //#region "getwinLossProjectDetail"
   getProjectWinLossDetailById(projectId: number) {
+    this.approvedProjectDetailLoader = true;
     if (projectId != null && projectId !== undefined) {
       this.projectListService
         .GetProjectWinLossDetailById(projectId)
@@ -323,6 +324,11 @@ export class AcceptProposalComponent implements OnInit {
             this.winlossmodel.WinlossFilePath = response.data.FilePath;
             this.diableWinLossButton = true;
           }
+          this.approvedProjectDetailLoader = false;
+        },
+        (error) => {
+          this.approvedProjectDetailLoader = false;
+          this.toastr.error('Someting went wrong');
         });
     }
   }
