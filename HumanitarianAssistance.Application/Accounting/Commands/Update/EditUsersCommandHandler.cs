@@ -42,7 +42,7 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Update
                     existUser.NormalizedUserName = request.Email;
                     existUser.PhoneNumber = request.Phone;
 
-                    var UserInfo = await _dbContext.UserDetails.FirstOrDefaultAsync(u => u.AspNetUserId == request.Id);
+                    var UserInfo = await _dbContext.UserDetails.Include(x=> x.EmployeeDetail).FirstOrDefaultAsync(u => u.AspNetUserId == request.Id);
 
                     UserInfo.FirstName = request.FirstName;
                     UserInfo.LastName = request.LastName;
@@ -56,6 +56,14 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Update
 
                     _dbContext.UserDetailOffices.RemoveRange(userOfficesList);
                     await _dbContext.SaveChangesAsync();
+
+                    if(UserInfo.EmployeeDetail != null)
+                    {
+                        UserInfo.EmployeeDetail.Email = request.Email;
+                        UserInfo.EmployeeDetail.Phone = request.Phone;
+                        UserInfo.EmployeeDetail.EmployeeName= request.FirstName+" "+request.LastName;     
+                        await _dbContext.SaveChangesAsync();          
+                    }
 
                     List<UserDetailOffices> lst = new List<UserDetailOffices>();
                     foreach (var item in request.OfficeId)

@@ -19,7 +19,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
     [ApiExplorerSettings(GroupName = nameof(SwaggerGrouping.Accounting))]
     public class AccountController : BaseController
     {
-
         [HttpPost]
         [AllowAnonymous]
         public async Task<ApiResponse> Login([FromBody]LoginCommand model)

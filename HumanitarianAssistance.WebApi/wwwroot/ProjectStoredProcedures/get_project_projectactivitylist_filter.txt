@@ -1,0 +1,195 @@
+-- FUNCTION: public.get_project_projectactivitylist_filter(bigint, text, text, text, text, text, integer[], bigint[], boolean, boolean, boolean, integer, integer, integer, integer, integer, integer, boolean, boolean, boolean,integer)
+
+-- DROP FUNCTION public.get_project_projectactivitylist_filter(bigint, text, text, text, text, text, integer[], bigint[], boolean, boolean, boolean, integer, integer, integer, integer, integer, integer, boolean, boolean, boolean,integer);
+
+CREATE OR REPLACE FUNCTION public.get_project_projectactivitylist_filter(
+	project_id bigint,
+	activity_description text DEFAULT ''::text,
+	planned_start_date text DEFAULT ''::text,
+	planned_end_date text DEFAULT ''::text,
+	actual_start_date text DEFAULT ''::text,
+	actual_end_date text DEFAULT ''::text,
+	assignee_id integer[] DEFAULT ARRAY[]::integer[],
+	budget_line_id bigint[] DEFAULT ARRAY[]::bigint[],
+	planning boolean DEFAULT false,
+	implementations boolean DEFAULT false,
+	completed boolean DEFAULT false,
+	progress_range_min integer DEFAULT 0,
+	progress_range_max integer DEFAULT 0,
+	sleepage_min integer DEFAULT 0,
+	sleepage_max integer DEFAULT 0,
+	duration_min integer DEFAULT 0,
+	duration_max integer DEFAULT 0,
+	late_start boolean DEFAULT false,
+	late_end boolean DEFAULT false,
+	on_schedule boolean DEFAULT false,
+	country_id integer DEFAULT 0
+)
+    RETURNS TABLE(activityid bigint, activityname character varying, activitydescription text, budgetlineid bigint, budgetname text, employeeid integer, employeename text, statusid integer, statusname text, plannedstartdate timestamp without time zone, plannedenddate timestamp without time zone, recurring boolean, recurringcount integer, recurrintypeid integer, progress double precision, sleepage double precision,countryid integer) 
+    LANGUAGE 'plpgsql'
+
+    COST 100
+    VOLATILE 
+    ROWS 1000
+AS $BODY$
+
+DECLARE
+	_project_id bigint;
+	_activity_description text;
+	_planned_start_date text;
+	_planned_end_date text;
+	_actual_start_date text;
+	_actual_end_date text;
+	
+	_budget_line_id bigint[];
+	_assignee_id integer[];
+	
+	_planning boolean;
+	_implementation boolean;
+	_completed boolean;
+	
+	_progress_range_min integer;
+	_progress_range_max integer;
+	_sleepage_min integer;
+	_sleepage_max integer;
+	
+	_duration_min integer;
+	_duration_max integer;
+	
+	_late_start boolean;
+	_late_end boolean;
+	_on_schedule boolean;
+	_country_id integer;
+
+BEGIN
+	_project_id := project_id;
+	_activity_description := activity_description;
+	_planned_start_date := planned_start_date;
+	_planned_end_date := planned_end_date;
+	
+	_actual_start_date := actual_start_date;
+	_actual_end_date := actual_end_date;
+	
+	_assignee_id := assignee_id;
+	_budget_line_id := budget_line_id;
+	
+	_planning := planning;
+	_implementation := implementations;
+	_completed := completed;
+	
+	_progress_range_min := progress_range_min;
+	_progress_range_max := progress_range_max;
+	_sleepage_min := sleepage_min;
+	_sleepage_max := sleepage_max;
+	
+	_duration_min := duration_min;
+	_duration_max := duration_max;
+	
+	_late_start := late_start;
+	_late_end := late_end;
+	_on_schedule := on_schedule;
+	_country_id := country_id;
+
+	RETURN QUERY 
+
+		SELECT pa."ActivityId", 
+			   pa."ActivityName", 
+			   pa."ActivityDescription", 
+			   pa."BudgetLineId",
+			   pbl."BudgetName",
+			   pa."EmployeeID",
+			   emp."EmployeeName",
+			   pa."StatusId",
+			   asd."StatusName",
+			   pa."PlannedStartDate",
+			   pa."PlannedEndDate",
+			   pa."Recurring",
+			   pa."RecurringCount",
+			   pa."RecurrinTypeId",
+			   get_projectactivityprogress(pa."ActivityId") as progress,
+			   COALESCE(((DATE_PART('day', pa."ActualEndDate":: timestamp  - pa."ActualStartDate":: timestamp )) -
+									(DATE_PART('day', pa."PlannedEndDate":: timestamp  - pa."PlannedStartDate":: timestamp ))),0) as sleepage,
+									pa."CountryId"
+		FROM "ProjectActivityDetail" AS pa
+		LEFT JOIN "ProjectBudgetLineDetail" AS pbl
+			ON pa."BudgetLineId" = pbl."BudgetLineId"
+		LEFT JOIN "EmployeeDetail" AS emp
+			ON pa."EmployeeID" = emp."EmployeeID"
+		LEFT JOIN "ActivityStatusDetail" AS asd
+			ON pa."StatusId" = asd."StatusId"
+		WHERE pa."ProjectId"= _project_id AND pa."IsDeleted" = false AND
+			  pa."ParentId" IS NULL AND
+			 
+			  -- Planned Start Date Filter (PlannedStartDate >= model.PlannedStartDate)
+			  (_planned_start_date = '' OR pa."PlannedStartDate":: DATE >= _planned_start_date:: DATE) AND	
+			  -- Planned End Date Filter (PlannedEndDate <= model.ActualEndDate)
+			  (_planned_end_date = '' OR pa."PlannedEndDate":: DATE <= _planned_end_date:: DATE) AND
+			  
+			  -- Actual Start Date Filter (sub-activity min ActualStartDate >= model.ActualStartDate)
+			  (_actual_start_date = '' OR (SELECT get_project_activityactualstartdate_min_byparentid(pa."ActivityId")):: DATE >= _actual_start_date:: DATE) AND
+			  -- Actual End Date Filter (sub-activity max ActualEndDate <= model.ActualEndDate)
+			  (_actual_end_date = '' OR (SELECT get_project_activityactualenddate_max_byparentid(pa."ActivityId")):: DATE <= _actual_end_date:: DATE) AND
+				
+			  -- Budget Line Filter
+			  (array_upper(_budget_line_id, 1) IS NULL OR pa."BudgetLineId" = ANY(_budget_line_id)) AND							
+			  -- Assignee Filter
+			  (array_upper(_assignee_id, 1) IS NULL OR pa."EmployeeID" = ANY(_assignee_id)) AND
+			
+			  -- Planning Filter
+		  	  (_planning = false OR pa."StatusId" = 1) AND
+			  -- Implementation Filter
+		  	  (_implementation = false OR pa."StatusId" = 2) AND
+			  -- Completed Filter
+		  	  (_completed = false OR pa."StatusId" = 3) AND
+															 
+			  -- Progress Range Filter
+			  (_progress_range_min = 0 OR 
+			   		(SELECT AVG(COALESCE((NULLIF("Achieved", 0) / NULLIF("Target", 0) * 100),0)) 
+			   		FROM "ProjectActivityDetail" 
+			   		WHERE "ParentId" = pa."ActivityId") >= _progress_range_min) AND
+			  -- Progress Range Filter
+			  (_progress_range_max = 0 OR 
+			   		(SELECT AVG(COALESCE((NULLIF("Achieved", 0) / NULLIF("Target", 0) * 100),0)) 
+			   		FROM "ProjectActivityDetail" 
+			   		WHERE "ParentId" = pa."ActivityId") <= _progress_range_max) AND
+			  										  										  
+			  -- Sleepage min 
+					-- Planned Days: (Planning End Date - Planning Start Date) 
+					-- Actual Days: (Actual End Date - Actual Start Date)
+					-- Slippage: Actual Days - Planned Days
+			  (_sleepage_min = 0 OR ((DATE_PART('day', pa."ActualEndDate":: timestamp  - pa."ActualStartDate":: timestamp )) -
+									(DATE_PART('day', pa."PlannedEndDate":: timestamp  - pa."PlannedStartDate":: timestamp ))) >= _sleepage_min) AND			  						 
+			  -- Sleepage max  
+					-- Planned Days: (Planning End Date - Planning Start Date) 
+					-- Actual Days: (Actual End Date - Actual Start Date)
+					-- Slippage: Actual Days - Planned Days
+			  (_sleepage_max = 0 OR ((DATE_PART('day', pa."ActualEndDate":: timestamp  - pa."ActualStartDate":: timestamp )) -
+									(DATE_PART('day', pa."PlannedEndDate":: timestamp  - pa."PlannedStartDate":: timestamp ))) <= _sleepage_max) AND												  
+																  
+			  -- Duration min (PlanneEndDate - PlanneStartDate).Days >= model.DurationMin
+			  (_duration_min = 0 OR DATE_PART('day', pa."PlannedEndDate":: timestamp  - pa."PlannedStartDate":: timestamp ) >= _duration_min) AND	
+			  -- Duration max (PlanneEndDate - PlanneStartDate).Days <= model.DurationMin
+			  (_duration_max = 0 OR DATE_PART('day', pa."PlannedEndDate":: timestamp  - pa."PlannedStartDate":: timestamp ) <= _duration_max) AND												  
+																  
+			  -- Late Start Filter (PlannedStartDate < ActualStartDate)
+		  	  (_late_start = false OR pa."PlannedStartDate":: DATE < (SELECT get_project_activityactualstartdate_min_byparentid(pa."ActivityId")):: DATE) AND		  
+			  -- Late End Filter ( PlannedEndDate < ActualEndDate)
+		  	  (_late_end = false OR pa."PlannedEndDate":: DATE < (SELECT get_project_activityactualenddate_max_byparentid(pa."ActivityId")):: DATE) AND
+			  -- On Schedule Filter (PlannedStartDate >= ActualStartDate &&  PlannedEndDate >= ActualEndDate)
+		  	  (_on_schedule = false OR 
+			   (pa."PlannedStartDate":: DATE >= (SELECT get_project_activityactualstartdate_min_byparentid(pa."ActivityId")):: DATE) AND
+			   (pa."PlannedEndDate":: DATE >= (SELECT get_project_activityactualenddate_max_byparentid(pa."ActivityId")):: DATE)
+			  ) AND
+			  -- Activity Description
+			  (_activity_description = '' OR pa."ActivityDescription" ILIKE '%' || _activity_description || '%')
+			  -- Planning Filter
+			  
+		ORDER BY pa."ActivityId" DESC;
+	
+END;
+
+$BODY$;
+
+ALTER FUNCTION public.get_project_projectactivitylist_filter(bigint, text, text, text, text, text, integer[], bigint[], boolean, boolean, boolean, integer, integer, integer, integer, integer, integer, boolean, boolean, boolean)
+    OWNER TO sd_testing_user;
+

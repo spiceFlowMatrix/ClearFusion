@@ -2,6 +2,7 @@
 using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Domain.Entities.HR;
 using HumanitarianAssistance.Persistence;
 using MediatR;
@@ -62,16 +63,29 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                     await _dbContext.SaveChangesAsync();
                 }
 
+                //get userdetail based on EmployeeId
+                UserDetails user = await _dbContext.UserDetails.FirstOrDefaultAsync(x=> x.IsDeleted== false && x.EmployeeId == request.EmployeeId);
+
                 //when employee is active
                 if (request.EmployeeTypeId == (int)EmployeeTypeStatus.Active)
                 {
-
                     bool isSalaryHeadSaved=  await _hrService.AddEmployeePayrollDetails(request.EmployeeId);
 
                     if(!isSalaryHeadSaved)
                     {
                         throw new Exception(StaticResource.SalaryHeadNotSaved);
                     }
+                } //when employee is terminated get its record from UserDetail and delete it
+                else if(request.EmployeeTypeId == (int)EmployeeTypeStatus.Terminated)
+                {
+                    
+                    user.IsDeleted = true;
+                    await _dbContext.SaveChangesAsync();
+                } //when employee is terminated to active get its record from UserDetail and undelete
+                else if(request.EmployeeTypeId == (int)EmployeeTypeStatus.Active)
+                {
+                    user.IsDeleted = false;
+                    await _dbContext.SaveChangesAsync();
                 }
 
                 response.StatusCode = StaticResource.successStatusCode;
