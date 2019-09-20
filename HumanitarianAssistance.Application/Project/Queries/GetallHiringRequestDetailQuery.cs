@@ -8,6 +8,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
     {      
         public long? ProjectId { get; set; }      
         public int? pageIndex { get; set; }
-        public int? pageSize { get; set; }       
+        public int? pageSize { get; set; }
+        public int? TotalCount { get; set; }  
+        public string FilterValue { get; set; }  
     }
 }

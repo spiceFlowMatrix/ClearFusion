@@ -12,7 +12,9 @@ import {
   IWorkingShift,
   IGender,
   ICountryList,
-  IProvinceList
+  IProvinceList,
+  IJobTypeList,
+  IFilterModel
 } from '../models/hiring-requests-model';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { ActivatedRoute } from '@angular/router';
@@ -54,9 +56,13 @@ export class HiringRequestsListingComponent implements OnInit {
     { Id: 2, value: 'Female' },
     { Id: 2, value: 'Other' }
   ];
+  JobTypeList: IJobTypeList[] = [
+    {JobTypeId: 1, JobTypeName: 'JobName1'},
+    {JobTypeId: 2, JobTypeName: 'JobName2'}
+  ];
   // model
   // projectHiringRequestFilter: ProjectHiringRequestFilterModel;
-  hiringRequestModel: ProjectHiringRequestFilterModel;
+  hiringRequestModel: IFilterModel;
 
   hiringRequestListLoader = false;
 
@@ -90,7 +96,6 @@ export class HiringRequestsListingComponent implements OnInit {
     this.routeActive.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
-    this.getAllHiringRequestFilterList();
     this.getCurrencyList();
     this.getBudgetLineList();
     this.getOfficeList();
@@ -98,6 +103,7 @@ export class HiringRequestsListingComponent implements OnInit {
     this.getProfessionlist();
     this.getCountryList();
     this.getProvinceList();
+    this.getAllHiringRequestFilterList();
   }
 
   //#region  "initForm"
@@ -105,42 +111,9 @@ export class HiringRequestsListingComponent implements OnInit {
     this.hiringRequestModel = {
       pageIndex: 0,
       pageSize: 10,
-      totalCount: 0,
       FilterValue: '',
-      Description: '',
-      Position: '',
-      ProfessionId: null,
-      TotalVacancies: null,
-      FilledVacancies: null,
-      BasicPay: null,
-      CurrencyId: null,
-      BudgetLineId: null,
-      GradeId: null,
-      EmployeeID: null,
-      HiringRequestCode: '',
-      HiringRequestId: null,
-      IsCompleted: null,
-      OfficeId: null,
       ProjectId: null,
-      RequestedBy: '',
-      AnouncingDate: null,
-      JobType: null,
-      Background: '',
-      JobStatus: '',
-      KnowladgeAndSkillRequired: '',
-      SalaryRange: '',
-      Shift: null,
-      ProvinceId: null,
-      SpecificDutiesAndResponsblities: '',
-      SubmissionGuidlines: '',
-      ClosingDate: null,
-      ContractDuration: null,
-      ContractType: '',
-      CountryId: null,
-      GenderId: null,
-      MinimumEducationLevel: '',
-      Experience: '',
-      Organization: ''
+      TotalCount: 0
     };
   }
   //#endregion
@@ -199,7 +172,8 @@ export class HiringRequestsListingComponent implements OnInit {
         workingShift: this.workingShift,
         gender: this.gender,
         countryList: this.countryList,
-        provinceList: this.provinceList
+        provinceList: this.provinceList,
+        JobTypeList: this.JobTypeList
       }
     });
 
@@ -315,16 +289,15 @@ export class HiringRequestsListingComponent implements OnInit {
 
   //#region "getAllProjectActivityList"
   getAllHiringRequestFilterList() {
-    this.hiringRequestModel.totalCount = 0;
     this.hiringRequestModel.ProjectId = this.projectId;
-
+    this.hiringRequestModel.TotalCount = 0;
     this.hiringRequestListLoader = true;
     this.hiringRequestService
       .GetProjectHiringRequestFilterList(this.hiringRequestModel)
       .subscribe(
         (response: IResponseData) => {
           if (response.statusCode === 200 && response.data !== null) {
-            this.hiringRequestModel.totalCount =
+            this.hiringRequestModel.TotalCount =
               response.total != null ? response.total : 0;
             this.setHiringrequestList(response.data);
           }
@@ -342,7 +315,6 @@ export class HiringRequestsListingComponent implements OnInit {
     data.forEach((element: ProjectHiringRequestFilterModel) => {
       this.hiringRequestlist.push({
         HiringRequestId: element.HiringRequestId,
-        HiringRequestCode: element.HiringRequestCode,
         Description: element.Description,
         ProfessionId: element.ProfessionId,
         Position: element.Position,
@@ -352,14 +324,13 @@ export class HiringRequestsListingComponent implements OnInit {
         BudgetLineId: element.BudgetLineId,
         OfficeId: element.OfficeId,
         GradeId: element.GradeId,
-        EmployeeID: element.EmployeeID,
         ProjectId: element.ProjectId,
         IsCompleted: element.IsCompleted,
         CurrencyId: element.CurrencyId,
         RequestedBy: element.RequestedBy,
-        FilterValue: element.FilterValue,
         AnouncingDate: element.AnouncingDate,
         JobType: element.JobType,
+        JobCategory: element.JobCategory,
         Background: element.Background,
         JobStatus: element.JobStatus,
         KnowladgeAndSkillRequired: element.KnowladgeAndSkillRequired,
@@ -376,7 +347,8 @@ export class HiringRequestsListingComponent implements OnInit {
         GenderId: element.GenderId,
         MinimumEducationLevel: element.MinimumEducationLevel,
         Experience: element.Experience,
-        Organization: element.Organization
+        Organization: element.Organization,
+        GradeName: this.jobGradeList.find(x => x.GradeId === element.GradeId).GradeName
       });
     });
   }
@@ -397,7 +369,6 @@ export class HiringRequestsListingComponent implements OnInit {
   //#endregion
 
   //#region "getCountryList"
-
   getCountryList() {
     this.hiringRequestService.GetCountryList().subscribe(
       (response: IResponseData) => {
@@ -417,8 +388,8 @@ export class HiringRequestsListingComponent implements OnInit {
     );
   }
   //#endregion
-  //#region "getCountryList"
 
+  //#region "getCountryList"
   getProvinceList() {
     this.hiringRequestService.GetProvinceList().subscribe(
       (response: IResponseData) => {

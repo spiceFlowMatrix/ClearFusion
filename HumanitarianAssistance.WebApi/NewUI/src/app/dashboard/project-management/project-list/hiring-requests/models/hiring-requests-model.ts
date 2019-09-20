@@ -1,4 +1,4 @@
-import { ICurrencyList } from 'src/app/dashboard/accounting/gain-loss-report/gain-loss-report.model';
+import { ICurrencyList } from "src/app/dashboard/accounting/gain-loss-report/gain-loss-report.model";
 
 export interface IHiringReuestDataSource {
   EmployeeList: IEmployeeListModel[];
@@ -15,6 +15,7 @@ export interface IHiringReuestDataSource {
   workingShift: any[];
   countryList: ICountryList[];
   provinceList: IProvinceList[];
+  JobTypeList: any[];
 }
 export interface ICurrencyListModel {
   CurrencyId: number;
@@ -37,15 +38,12 @@ export interface IJobGradeModel {
   GradeName: string;
 }
 export interface IHiringRequestDetailModel {
-  HiringRequestId?: number;
-  HiringRequestCode: string;
   RequestedBy?: string;
   BasicPay?: number;
   BudgetLineId?: number;
   CurrencyId?: number;
   Description?: string;
   EmployeeID?: number;
-  FilledVacancies?: number;
   GradeId?: number;
   OfficeId?: number;
   Position?: string;
@@ -54,6 +52,7 @@ export interface IHiringRequestDetailModel {
   TotalVacancies?: number;
   AnouncingDate?: Date;
   JobType?: number;
+  JobCategory?: string;
   Background?: string;
   JobStatus?: string;
   KnowladgeAndSkillRequired?: string;
@@ -70,7 +69,6 @@ export interface IHiringRequestDetailModel {
   MinimumEducationLevel?: string;
   Experience?: string;
   Organization?: string;
-  IsCompleted: boolean;
 }
 
 export interface IHiringRequestModel {
@@ -79,7 +77,7 @@ export interface IHiringRequestModel {
   Profession?: string;
   BudgetLine?: string;
   TotalVacancies?: string;
-  OfficeId?: string;
+  Office?: string;
   FilledVacancies?: string;
   BasicPay?: string;
   jobGrade?: string;
@@ -91,34 +89,39 @@ export interface IHiringRequestModel {
   Experience?: string;
   Background?: string;
   SalaryRange?: string;
-  ProvinceId?: string;
+  Province?: string;
+  Country?: string;
   ContractDuration?: string;
-  GenderId?: string;
-  Nationality?: string;
+  Gender?: string;
   JobType?: string;
   Shift?: string;
   AnnouncingDate?: string;
   ClosingDate?: string;
-  SpecificDutiesAndResposibilities?: string;
   KnowladgeAndSkillRequired?: string;
   SubmissionGuidline?: string;
+  RequestedBy?: string;
+  Currency?: string;
+  AnouncingDate?: Date;
+  SpecificDutiesAndResponsiblities?: string;
+  IsCompleted: boolean;
 }
 
-export interface ProjectHiringRequestFilterModel {
+export interface IFilterModel {
   FilterValue: string;
   pageIndex?: number;
   pageSize?: number;
-  totalCount?: number;
+  ProjectId?: number;
+  TotalCount?: number;
+}
 
+export interface ProjectHiringRequestFilterModel {
   GradeName?: string;
   HiringRequestId?: number;
-  HiringRequestCode: string;
   RequestedBy?: string;
   BasicPay?: number;
   BudgetLineId?: number;
   CurrencyId?: number;
   Description?: string;
-  EmployeeID?: number;
   FilledVacancies?: number;
   GradeId?: number;
   OfficeId?: number;
@@ -145,6 +148,7 @@ export interface ProjectHiringRequestFilterModel {
   Experience?: string;
   Organization?: string;
   IsCompleted: boolean;
+  JobCategory: string;
 }
 export interface IEmployeeListModel {
   EmployeeId?: number;
@@ -231,4 +235,8 @@ export interface ICountryList {
 export interface IProvinceList {
   ProvinceId: Number;
   ProvinceName: string;
+}
+export interface IJobTypeList {
+  JobTypeId: Number;
+  JobTypeName: string;
 }

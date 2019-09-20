@@ -60,7 +60,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                     projectHiringRequest.KnowladgeAndSkillRequired = request.KnowladgeAndSkillRequired;
                     projectHiringRequest.SalaryRange = request.SalaryRange;
                     projectHiringRequest.Shift = request.Shift;
-                    projectHiringRequest.ProviceId = request.ProviceId;
+                    projectHiringRequest.ProvinceId = request.ProvinceId;
                     projectHiringRequest.SpecificDutiesAndResponsblities = request.SpecificDutiesAndResponsblities;
                     projectHiringRequest.SubmissionGuidlines = request.SubmissionGuidlines;
                     projectHiringRequest.ClosingDate = request.ClosingDate;

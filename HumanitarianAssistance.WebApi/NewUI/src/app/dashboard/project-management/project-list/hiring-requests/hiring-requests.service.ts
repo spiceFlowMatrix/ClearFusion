@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { IHiringRequestDetailModel, ProjectHiringRequestFilterModel, IHiringReuestCandidateModel,
 IReuestedCandidateDetailModel, IitervireCandidateModel,
- ISelectedCandidateModel, CandidateDetailModel } from './models/hiring-requests-model';
+ ISelectedCandidateModel, CandidateDetailModel, IFilterModel } from './models/hiring-requests-model';
 import { BehaviorSubject } from 'rxjs';
 import { IProjectPermissionMode } from '../project-activities/models/project-activities.model';
 
@@ -168,7 +168,7 @@ export class HiringRequestsService {
 //#endregion
 
   //#region "GetProjectActivityAdvanceFilterList"
-  GetProjectHiringRequestFilterList(data: ProjectHiringRequestFilterModel): any {
+  GetProjectHiringRequestFilterList(data: IFilterModel): any {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
