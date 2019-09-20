@@ -64,7 +64,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                 }
 
                 //get userdetail based on EmployeeId
-                UserDetails user = await _dbContext.UserDetails.FirstOrDefaultAsync(x=> x.IsDeleted== false && x.EmployeeId == request.EmployeeId);
+                UserDetails user = await _dbContext.UserDetails.FirstOrDefaultAsync(x=> x.EmployeeId == request.EmployeeId);
 
                 //when employee is active
                 if (request.EmployeeTypeId == (int)EmployeeTypeStatus.Active)
@@ -75,18 +75,20 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                     {
                         throw new Exception(StaticResource.SalaryHeadNotSaved);
                     }
+
+                    if(user != null)
+                    {
+                        user.IsDeleted = false;
+                        await _dbContext.SaveChangesAsync();
+                    }
+                    
                 } //when employee is terminated get its record from UserDetail and delete it
-                else if(request.EmployeeTypeId == (int)EmployeeTypeStatus.Terminated)
+                else if(request.EmployeeTypeId == (int)EmployeeTypeStatus.Terminated && user != null)
                 {
                     
                     user.IsDeleted = true;
                     await _dbContext.SaveChangesAsync();
                 } //when employee is terminated to active get its record from UserDetail and undelete
-                else if(request.EmployeeTypeId == (int)EmployeeTypeStatus.Active)
-                {
-                    user.IsDeleted = false;
-                    await _dbContext.SaveChangesAsync();
-                }
 
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

@@ -1,52 +1,30 @@
 <div class="tab-content">
   <div id="details" class="tab-pane fade in active">
     <div class="project-details mar_tp_20 ">
-      <div class="" *ngIf="!approvedProjectDetailLoader; else LoaderTemplate">
+      <div class="">
         <div *ngIf="!winProjectFlag && winProjectFlag!=null" class="">
           <form [formGroup]="approvalForm">
-            <div class="row">
+            <div class="row" *ngIf="!approvedProjectDetailLoader; else LoaderTemplate">
               <div class="col-sm-12 text-center">
                 <div class="action button">
                   <button [disabled]="buttonDisabled()" mat-raised-button color="primary"
                     (click)="isApproved(approvalForm.value)">
-                    <!-- <a *ngIf="approveLoaderFlag; else IsApproveLoader;" class="text-center">
-                      <mat-spinner [diameter]="20"></mat-spinner>
-                    </a>
-                    <ng-template #IsApproveLoader> -->
-
                     <i class="material-icons"> done </i>
-                    <!-- </ng-template> -->
-                    <!-- <span class="pull-left spinner_center" *ngIf="approveLoaderFlag; else IsApproveLoader;">
-                      <mat-spinner [diameter]="15"></mat-spinner>
-                    </span>
-                    <ng-template #IsApproveLoader>
-                      <i class="material-icons"> done </i>
-                    </ng-template>  -->
                     Approve
                   </button>
-
-
                   <button [disabled]="buttonDisabled()" mat-raised-button (click)="isRejected(approvalForm.value)">
-                    <!-- <a *ngIf="rejectLoaderFlag; else IsRejectLoader;" class="text-center">
-                      <mat-spinner [diameter]="20"></mat-spinner>
-                    </a>
-                    <ng-template #IsRejectLoader> -->
                     <i class="material-icons"> clear </i>
-                    <!-- </ng-template> -->
                     Reject
                   </button>
                 </div>
               </div>
-            </div>
-            <div class="col-sm-2 col-sm-offset-5">
-              <mat-spinner class="mat-spiner-mrg-lft" *ngIf="commonLoaderFlag" [diameter]="25"></mat-spinner>
-            </div>
 
+              <div class="col-sm-2 col-sm-offset-5">
+                <mat-spinner class="mat-spiner-mrg-lft" *ngIf="commonLoaderFlag" [diameter]="25"></mat-spinner>
+              </div>
 
-            <div class="row"></div>
-            <div class="">
               <div class="col-sm-6 col-sm-offset-3">
-                <div class="">
+                <div class="" >
                   <textarea class="form-control rounded-0 custom_text" [readonly]="disableApprovedButton"
                     id="approveRejectCommentText" rows="3" placeholder="Type Here.." formControlName="CommentText">
                   </textarea>
@@ -62,7 +40,7 @@
                     </file-drop>
                   </a>
                   <div class="custom_drop_value text-center" *ngIf="winlossmodel.FileName!=null">
-                    <a *ngIf="winlossmodel.IsReviewApproved != null || !winlossmodel.IsReviewApproved|| winlossmodel.IsProposalAccept == false; else showReviewFileName"
+                    <a *ngIf="(winlossmodel.IsReviewApproved != null || !winlossmodel.IsReviewApproved|| winlossmodel.IsProposalAccept == false) && !isNewFile; else showReviewFileName"
                       (click)="onDocumentClicked(winlossmodel.FilePath)"><span class="color-font">
                         {{winlossmodel.FileName}} </span></a>
                     <i *ngIf="!winlossmodel.IsReviewApproved && !disableApprovedButton" class="icon_cursor"
@@ -76,21 +54,26 @@
                   <h5 class="font_clr">
                     <span class="colr_red">*</span> The supported file format are .doc/.docx/.pdf/.xls/.xlsx </h5>
                 </div>
+
+                <!-- loader common  -->
+
               </div>
+
               <div class="col-sm-12">
                 <div class="bdr_btm pad_btm_25"></div>
               </div>
             </div>
+            <ng-template #LoaderTemplate>
+              <br />
+              <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+            </ng-template>
           </form>
         </div>
-        <ng-template #LoaderTemplate>
-          <br />
-          <mat-spinner class="center_loader" diameter="50"></mat-spinner>
-        </ng-template>
+
 
         <!-- template for win project detail************ -->
         <div *ngIf="winProjectFlag" class="">
-
+          <div class="row" *ngIf="!approvedProjectDetailLoader; else LoaderTemplate">
           <div class="row">
             <div class="col-sm-12 text-center">
               <div class="action button">
@@ -113,7 +96,7 @@
 
           </div>
 
-          <div class="">
+
             <div class="col-sm-6 col-sm-offset-3">
               <div>
                 <textarea class="form-control rounded-0 custom_text" [readOnly]="diableWinLossButton" rows="3"
@@ -146,7 +129,10 @@
               <div class="bdr_btm pad_btm_25"></div>
             </div>
           </div>
-
+          <ng-template #LoaderTemplate>
+            <br />
+            <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+          </ng-template>
         </div>
 
 
