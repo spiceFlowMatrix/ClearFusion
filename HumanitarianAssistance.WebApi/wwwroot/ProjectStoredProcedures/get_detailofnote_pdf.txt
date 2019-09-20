@@ -1,0 +1,50 @@
+-- FUNCTION: public.get_detailofnote_pdf(integer, text)
+
+-- DROP FUNCTION public.get_detailofnote_pdf(integer, text);
+
+CREATE OR REPLACE FUNCTION public.get_detailofnote_pdf(
+	to_currency_id integer,
+	till_date text DEFAULT ''::text)
+    RETURNS TABLE(noteid integer, notename character varying, accountid bigint, accountcode text, accountname character varying, debit double precision, credit double precision) 
+    LANGUAGE 'plpgsql'
+
+    COST 100
+    VOLATILE 
+    ROWS 1000
+AS $BODY$
+
+DECLARE
+	_to_currency_id integer;
+	_till_date text;
+BEGIN
+	_to_currency_id := to_currency_id;
+	_till_date := till_date;
+
+	RETURN QUERY 
+		SELECT coa."AccountTypeId", 
+			   acct."AccountTypeName",
+			   vt."ChartOfAccountNewId", 
+			   coa."ChartOfAccountNewCode", 
+			   coa."AccountName",   
+			   SUM(get_exchangerate_value(vt."Debit", vde."CurrencyId", _to_currency_id, vde."VoucherDate")) AS Debit,  
+			   SUM(get_exchangerate_value(vt."Credit", vde."CurrencyId", _to_currency_id, vde."VoucherDate")) AS Credit
+
+		FROM "VoucherTransactions" AS vt
+		INNER JOIN "ChartOfAccountNew" AS coa
+			ON vt."ChartOfAccountNewId" = coa."ChartOfAccountNewId"
+		INNER JOIN "AccountType" AS acct
+			ON  acct."AccountTypeId" = coa."AccountTypeId"
+		INNER JOIN "VoucherDetail" AS vde
+			ON vt."VoucherNo" = vde."VoucherNo"
+		WHERE vt."ChartOfAccountNewId" IS NOT NULL AND
+			  vde."VoucherDate":: DATE <= _till_date:: DATE AND
+			  vt."IsDeleted" = false 
+		GROUP BY vt."ChartOfAccountNewId", coa."ChartOfAccountNewId", acct."AccountTypeId";
+
+END;
+
+$BODY$;
+
+ALTER FUNCTION public.get_detailofnote_pdf(integer, text)
+    OWNER TO postgres;
+
