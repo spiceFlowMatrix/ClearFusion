@@ -42,12 +42,21 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                     TotalDebit = "Hello"
                 });
 
-                var spVoucherSummaryList = await _dbContext.LoadStoredProc("get_vouchersummaryreport_pdf")
-                                                            // .WithSqlParam("budgetlines", request.BudgetLines)
-                                                            .ExecuteStoredProc<SPVoucherSummaryReportPdfModel>();
+                // var spVoucherSummaryList = await _dbContext.LoadStoredProc("get_vouchersummaryreport_pdf")
+                //                                             // .WithSqlParam("budgetlines", request.BudgetLines)
+                //                                             .ExecuteStoredProc<SPVoucherSummaryReportPdfModel>();
+                var spVoucherSummaryList=await _dbContext.LoadStoredProc("get_vouchersummaryreportvouchersbyfilter")
+                                      .WithSqlParam("accounts", request.Accounts)
+                                      .WithSqlParam("budgetlines", request.BudgetLines)
+                                      .WithSqlParam("currencyid", request.Currency)
+                                      .WithSqlParam("journals", request.Journals)
+                                      .WithSqlParam("offices", request.Offices)
+                                      .WithSqlParam("projectjobs", request.ProjectJobs)
+                                      .WithSqlParam("projects", request.Projects)
+                                      .WithSqlParam("recordtype", request.RecordType)
+                                      .ExecuteStoredProc<SPVoucherSummaryReportModel>();
 
-
-                Console.WriteLine(spVoucherSummaryList);
+                // Console.WriteLine(spVoucherSummaryList);
 
 
 
