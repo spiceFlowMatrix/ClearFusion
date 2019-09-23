@@ -13,14 +13,16 @@ export class ListingDeleteComponent implements OnInit {
   @Input() showDelete = false;
   @Input() tableHeaderList: string[] = [];
   @Input() tableContentList: any[] = [];
-
+  @Input() tableHeader: string[] = [];
   @Output() deleteConfirm = new EventEmitter<any>();
 
   //#endregion
 
   constructor(public dialog: MatDialog) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log('tablelist',this.tableContentList);
+  }
 
   confirmDeleteAction(data: any) {
     const dialogRef = this.dialog.open(DeleteConfirmationComponent, {

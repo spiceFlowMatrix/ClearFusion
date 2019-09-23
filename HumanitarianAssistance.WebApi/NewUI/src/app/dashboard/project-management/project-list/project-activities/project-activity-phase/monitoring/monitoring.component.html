@@ -45,7 +45,8 @@
 
           <div class="row">
             <div class="col-sm-12">
-              <lib-listing-delete [tableHeaderList]="tableHeaderList" [tableContentList]="review.IndicatorQuestions"
+              <!-- common library to pass dynamic listing and  delete functionality-->
+              <lib-listing-delete [tableHeaderList]="tableHeaderList" [tableHeader]="tableHeader" [tableContentList]="review.IndicatorQuestions "
                 [showDelete]="true"></lib-listing-delete>
             </div>
           </div>

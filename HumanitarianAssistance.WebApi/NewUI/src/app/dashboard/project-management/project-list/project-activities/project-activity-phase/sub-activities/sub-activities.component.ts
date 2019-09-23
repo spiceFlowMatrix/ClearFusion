@@ -56,6 +56,8 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
   IsEditSubActivityLoaderFlag = false;
 
   panelOpenState = false;
+  tableHeader: string[] = ['Start Date', 'End Date', 'Description'];
+
   tableHeaderList: string[] = ['StartDate', 'EndDate', 'Description'];
   extensionList: IActivityExtensionMode[] = [];
 

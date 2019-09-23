@@ -65,6 +65,13 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
   projectId: number;
   diasbleEndDate = false;
 
+  // only for header
+  tableHeader: string[] = [
+    'Extension Id',
+    'Start Date',
+    'End Date',
+    'Description'
+  ];
   // lib datasource
   tableHeaderList: string[] = [
     'ExtensionId',
