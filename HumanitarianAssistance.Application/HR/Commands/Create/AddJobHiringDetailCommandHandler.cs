@@ -27,7 +27,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
             ApiResponse response = new ApiResponse();
             try
             {
-                var jobhiringinfo = await _dbContext.JobHiringDetails.FirstOrDefaultAsync(x => x.JobCode == request.JobCode);
+                var jobhiringinfo = await _dbContext.JobHiringDetails.FirstOrDefaultAsync(x => x.JobCode == request.JobCode && x.IsDeleted== false);
                 if (jobhiringinfo == null)
                 {
                     JobHiringDetails obj = _mapper.Map<JobHiringDetails>(request);
