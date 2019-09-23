@@ -453,7 +453,7 @@ export class GLOBAL {
   public static API_Store_AddItemSpecificationsMaster = 'Store/AddItemSpecificationsMaster';
   public static API_Store_EditItemSpecificationsMaster = 'Store/EditItemSpecificationsMaster';
   public static API_Store_GetItemSpecificationsMaster = 'Store/GetItemSpecificationsMaster';
-
+  public static API_Store_DeleteItemSpecificationsMaster = 'Store/DeleteItemSpecificationsMaster';
 
 
   public static API_Store_AddItemSpecificationsDetails = 'Store/AddItemSpecificationsDetails';

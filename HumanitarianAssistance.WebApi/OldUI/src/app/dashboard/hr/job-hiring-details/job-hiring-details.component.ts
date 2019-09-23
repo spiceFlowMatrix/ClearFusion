@@ -23,7 +23,7 @@ import { AppSettingsService } from '../../../service/app-settings.service';
 })
 export class JobHiringDetailsComponent implements OnInit {
   //#region "Dropdowns"
-  officeTypeDropdown: OfficeTypeModel[];
+  // officeTypeDropdown: OfficeTypeModel[];
   professionTypeDropdown: ProfessionTypeModel[];
   jobGradeTypeDropdown: JobGradeTypeDropdown[];
   //#endregion
@@ -46,7 +46,6 @@ export class JobHiringDetailsComponent implements OnInit {
   constructor(
     private commonService: CommonService,
     private jobHiringService: JobHiringService,
-    private router: Router,
     private setting: AppSettingsService,
     private toastr: ToastrService
   ) {
@@ -127,7 +126,6 @@ export class JobHiringDetailsComponent implements OnInit {
             data.StatusCode === 200 &&
             data.data.OfficeDetailsList.length > 0
         ) {
-
           data.data.OfficeDetailsList.forEach(element => {
             this.officecodelist.push({
                 Office: element.OfficeId,
@@ -259,7 +257,6 @@ export class JobHiringDetailsComponent implements OnInit {
         data => {
           this.jobHiringDetails = [];
           if (data.data.JobHiringDetailsList.length > 0) {
-
             this.jobsLoading = false;
             this.jobHiringDetails = data.data.JobHiringDetailsList;
           } else if (data.StatusCode === 400) {

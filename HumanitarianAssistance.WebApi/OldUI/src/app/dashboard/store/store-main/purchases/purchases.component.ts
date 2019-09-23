@@ -117,7 +117,6 @@ export class PurchasesComponent implements OnInit {
         this.initializeForm();
         this.getCurrencyCodeList();
         this.getAllEmployeeList();
-        this.getAllUnitTypeDetails();
         this.getAllProjectDetails();
         this.getAllVoucherList();
         this.getAllStatusAtTimeOfIssue();
@@ -180,6 +179,7 @@ export class PurchasesComponent implements OnInit {
         this.flag = 0;
         this.inventoryItemId = itemId;
         this.datePipe = new DatePipe('en-US');
+        this.getAllUnitTypeDetails();
 
         this.storeService
             .GetAllDetailsById(
@@ -261,7 +261,7 @@ export class PurchasesComponent implements OnInit {
                             });
                         }
                     } else {
-                        if (data.StatusCode == 400) {
+                        if (data.StatusCode === 400) {
                             this.toastr.error(data.Message);
                         }
                     }
