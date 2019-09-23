@@ -218,6 +218,28 @@ export class ItemSpecificationMasterComponent implements OnInit {
   }
   //#endregion
 
+  //#region "AddItemSpectification"
+  DeleteItemSpecification(id: number) {
+    this.storeService
+      .AddEditByModel(
+        this.setting.getBaseUrl() +
+          GLOBAL.API_Store_DeleteItemSpecificationsMaster,
+          id
+      )
+      .subscribe(
+        data => {
+          if (data.StatusCode === 200) {
+            this.toastr.success('Item Specification Deleted Successfully!!!');
+          } else {
+            this.toastr.error(data.Message);
+          }
+          // this.getAllItemSpecificationDetails(this.selectedItemTypeValue);
+        },
+        error => {}
+      );
+  }
+  //#endregion
+
   //#region "logEvent"
   logEvent(eventName, obj) {
     if (eventName === 'RowInserting') {
@@ -243,6 +265,10 @@ export class ItemSpecificationMasterComponent implements OnInit {
         };
 
         this.EditItemSpectification(editDataModel);
+      }
+    } else if (eventName === 'RowRemoving') {
+      if (obj != null) {
+        this.DeleteItemSpecification(obj.data.ItemSpecificationMasterId);
       }
     }
   }
