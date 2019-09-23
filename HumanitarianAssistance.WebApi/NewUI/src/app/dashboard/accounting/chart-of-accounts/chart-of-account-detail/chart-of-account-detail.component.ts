@@ -951,7 +951,7 @@ export class ChartOfAccountDetailComponent implements OnInit, OnChanges {
       AccountFilterTypeId: model.AccountFilterTypeId
     };
 
-    console.log(obj);
+    // console.log(obj);
 
     // Main Level
     const mainLevelItem = this.chartOfAccountList.find(x => x.ChartOfAccountNewId === mainLevelData.ChartOfAccountNewId);
@@ -982,7 +982,7 @@ export class ChartOfAccountDetailComponent implements OnInit, OnChanges {
       )
       .subscribe(
         response => {
-          console.log(obj);
+          // console.log(obj);
           if (response.StatusCode === 200) {
 
             // Error Handling
@@ -1643,7 +1643,7 @@ export class ChartOfAccountDetailComponent implements OnInit, OnChanges {
     data: any
   ) {
 
-    console.log(data);
+  //   console.log(data);
 
     if (data !== '') {
 

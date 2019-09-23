@@ -5,7 +5,7 @@
     </h4>
   </div>
   <div class="col-sm-1">
-        <mat-icon class="icon_cursor padding_top_5px" aria-label="download" (click)="onExportPdf()">vertical_align_bottom</mat-icon>
+        <!-- <mat-icon class="icon_cursor padding_top_5px" aria-label="download" (click)="onExportPdf()">vertical_align_bottom</mat-icon> -->
   </div>
   <div class="col-sm-7">
         <mat-icon class="pull-right icon_cursor" aria-label="cancel" (click)="closeProgramAreaSectorModal()">clear</mat-icon>
@@ -275,7 +275,7 @@
               <div class="form-group  ">
                 <mat-form-field class="example-full-width">
                   <textarea rows="4" matInput #ProjectGoalID type="text" [(ngModel)]="projectotherDetail.projectGoal"
-                    maxlength="150" placeholder="Project Goal" name="projectGoal" [formControl]="projectGoal"
+                    placeholder="Project Goal" name="projectGoal" [formControl]="projectGoal"
                     (focusout)="
                         onProjectotherDetailsChange(
                           'projectGoal',
@@ -293,7 +293,7 @@
               <div class="form-group ">
                 <mat-form-field class="example-full-width">
                   <textarea rows="4" matInput #ProjectObjectiveID type="text" [(ngModel)]="projectotherDetail.projectObjective"
-                    maxlength="150" placeholder="Project Objective" name="projectObjective"
+                     placeholder="Project Objective" name="projectObjective"
                     [formControl]="projectObjective" (focusout)="
                       onProjectotherDetailsChange(
                         'projectObjective',
@@ -341,7 +341,7 @@
               <div class="form-group ">
                 <mat-form-field class="example-full-width">
                   <textarea rows="4" matInput #MainActivitiesID type="text" [(ngModel)]="projectotherDetail.mainActivities"
-                    maxlength="150" placeholder="Main Activities" name="mainActivities" [formControl]="mainActivities"
+                     placeholder="Main Activities" name="mainActivities" [formControl]="mainActivities"
                     (focusout)="
                       onProjectotherDetailsChange(
                         'mainActivities',
