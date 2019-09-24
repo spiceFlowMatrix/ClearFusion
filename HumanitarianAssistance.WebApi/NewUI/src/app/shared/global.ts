@@ -420,6 +420,9 @@ export class GLOBAL {
 
   //#endregion
 
+  // Store
+  public static API_StorePurchase_GetAllPurchaseFilters = 'StorePurchase/GetAllPurchaseFilters';
+
 }
 
 

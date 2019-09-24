@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PurchaseService } from '../../services/purchase.service';
 
 @Component({
   selector: 'app-purchase-filters',
@@ -7,9 +8,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PurchaseFiltersComponent implements OnInit {
 
-  constructor() { }
+  foods: any[] ;
+
+  constructor(private purchase: PurchaseService) { }
 
   ngOnInit() {
+    this.foods = [
+      {value: 'steak-0', viewValue: 'Steak'},
+      {value: 'pizza-1', viewValue: 'Pizza'},
+      {value: 'tacos-2', viewValue: 'Tacos'}
+    ];
+  }
+
+  onPurchaseClick() {
+    this.purchase.GetPurchaseFilterList().subscribe(x => {
+      debugger;
+    });
+
   }
 
 }
