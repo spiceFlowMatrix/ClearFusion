@@ -34,7 +34,8 @@ import { SubHeaderTemplateComponent } from 'projects/library/src/sub-header-temp
     MatCardModule,
     MatButtonModule,
     ShareLayoutModule,
-    SubHeaderTemplateModule
+    SubHeaderTemplateModule,
+    LibraryModule
 
 
 
