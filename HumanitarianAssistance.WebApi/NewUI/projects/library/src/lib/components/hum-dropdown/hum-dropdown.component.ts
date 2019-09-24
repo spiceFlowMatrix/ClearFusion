@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'lib-hum-dropdown',
@@ -7,7 +8,7 @@ import { AbstractControl } from '@angular/forms';
   styleUrls: ['./hum-dropdown.component.css']
 })
 export class HumDropdownComponent implements OnInit {
-  @Input() options: Array<Object>;
+  @Input() options: Observable<Array<Object>>;
   @Input() placeHolder: string;
   @Input() formControl: AbstractControl;
   @Output() change = new  EventEmitter<number>();
