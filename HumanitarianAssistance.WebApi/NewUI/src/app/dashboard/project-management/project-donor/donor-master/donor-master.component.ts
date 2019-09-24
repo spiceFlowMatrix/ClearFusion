@@ -98,12 +98,28 @@ export class DonorMasterComponent implements OnInit {
 
   initForm() {
     this.donorForm = this.fb.group({
-      DonorId: '',
+      DonorId: null,
       Name: ['', Validators.required],
       ContactDesignation: ['', Validators.required],
       ContactPerson: ['', Validators.required],
-      ContactPersonEmail: ['', [Validators.required, Validators.email]],
-      ContactPersonCell: ['', Validators.required]
+      ContactPersonEmail: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.pattern(
+            // tslint:disable-next-line: max-line-length
+            /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+          )
+        ])
+      ],
+      ContactPersonCell: [
+        null,
+        [Validators.minLength(10),
+        Validators.maxLength(14),
+        Validators.required,
+      Validators.pattern('^[0-9]*$')
+      ]
+      ]
     });
   }
 
@@ -195,14 +211,11 @@ export class DonorMasterComponent implements OnInit {
     dialogRef.componentInstance.confirmMessage =
       Delete_Confirmation_Texts.deleteText1;
 
-    dialogRef.componentInstance.confirmText =
-      Delete_Confirmation_Texts.yesText;
+    dialogRef.componentInstance.confirmText = Delete_Confirmation_Texts.yesText;
 
-    dialogRef.componentInstance.cancelText =
-      Delete_Confirmation_Texts.noText;
+    dialogRef.componentInstance.cancelText = Delete_Confirmation_Texts.noText;
 
-    dialogRef.afterClosed().subscribe(result => {
-    });
+    dialogRef.afterClosed().subscribe(result => {});
     dialogRef.componentInstance.confirmDelete.subscribe(res => {
       dialogRef.componentInstance.isLoading = true;
       if (
@@ -215,77 +228,107 @@ export class DonorMasterComponent implements OnInit {
             this.appurl.getApiUrl() + GLOBAL.API_Project_DeleteDonorDetails,
             this.donorId
           )
-          .subscribe(response => {
-            if (response.StatusCode === 200) {
-              this.totalcount = response.data.TotalCount;
-              this.deleteDonor.emit({ id: this.donorId, count: this.totalcount });
-              dialogRef.componentInstance.onCancelPopup();
-              this.toastr.success('Donor detail deleted successfully');
-
+          .subscribe(
+            response => {
+              if (response.StatusCode === 200) {
+                this.totalcount = response.data.TotalCount;
+                this.deleteDonor.emit({
+                  id: this.donorId,
+                  count: this.totalcount
+                });
+                dialogRef.componentInstance.onCancelPopup();
+                this.toastr.success('Donor detail deleted successfully');
+              }
+              dialogRef.componentInstance.isLoading = false;
+            },
+            error => {
+              this.toastr.error('Someting went wrong');
+              dialogRef.componentInstance.isLoading = false;
             }
-            dialogRef.componentInstance.isLoading = false;
-          },
-        error => {
-          this.toastr.error('Someting went wrong');
-          dialogRef.componentInstance.isLoading = false;
-        });
+          );
       }
     });
   }
 
   //#endregion
-
-  onChange(ev, value) {
-    if (ev === 'name') {
-      this.donarDetail.Name = value;
-    }
-    if (ev === 'designation') {
-      this.donarDetail.ContactDesignation = value;
-    }
-    if (ev === 'email') {
-      this.donarDetail.ContactPersonEmail = value;
-    }
-    if (ev === 'cName') {
-      this.donarDetail.ContactPerson = value;
-    }
-    if (ev === 'cCell') {
-      this.donarDetail.ContactPersonCell = value;
-    }
+  onFormSubmit(data): void {
     if (
       this.donorId === 0 ||
       this.donorId === undefined ||
       this.donorId === null
     ) {
-      this.CreateDonor();
+      this.CreateDonor(data);
     } else {
-      this.EditDonor();
+      this.EditDonor(data);
     }
   }
 
-  CreateDonor() {
-    this.updateRecordLoader = true;
+  // onChange(ev, value) {
+  //   if (ev === 'name') {
+  //     this.donarDetail.Name = value;
+  //   }
+  //   if (ev === 'designation') {
+  //     this.donarDetail.ContactDesignation = value;
+  //   }
+  //   if (ev === 'email') {
+  //     this.donarDetail.ContactPersonEmail = value;
+  //   }
+  //   if (ev === 'cName') {
+  //     this.donarDetail.ContactPerson = value;
+  //   }
+  //   if (ev === 'cCell') {
+  //     this.donarDetail.ContactPersonCell = value;
+  //   }
+  //   if (
+  //     this.donorId === 0 ||
+  //     this.donorId === undefined ||
+  //     this.donorId === null
+  //   ) {
+  //     //this.CreateDonor();
+  //   } else {
+  //     //this.EditDonor();
+  //   }
+  // }
 
-    this.donarDetail.DonorId = 0;
-    this.projectListService
-      .AddDonorDetail(
-        this.appurl.getApiUrl() + GLOBAL.API_Project_AddEditDonorDetails,
-        this.donarDetail
-      )
-      .subscribe(
-        response => {
-          if (response.data.StatusCode === 200) {
-            this.donarDetail = response.data.DonorDetailById;
-            this.donorId = response.data.DonorDetailById.DonorId;
-            this.addDonor.emit(this.donarDetail);
-            this.archiveButton = true;
+  CreateDonor(data: DonorDetailModel) {
+    this.updateRecordLoader = true;
+    if (this.donorForm.valid) {
+      const donerDetails: DonorDetailModel = {
+        DonorId: 0,
+        Name: data.Name,
+        ContactDesignation: data.ContactDesignation,
+        ContactPersonEmail: data.ContactPersonEmail,
+        ContactPerson: data.ContactPerson,
+        ContactPersonCell: data.ContactPersonCell
+      };
+      this.projectListService
+        .AddDonorDetail(
+          this.appurl.getApiUrl() + GLOBAL.API_Project_AddEditDonorDetails,
+          donerDetails
+        )
+        .subscribe(
+          response => {
+            if (response.data.StatusCode === 200) {
+              this.donarDetail = response.data.DonorDetailById;
+              this.donorId = response.data.DonorDetailById.DonorId;
+              this.addDonor.emit(this.donarDetail);
+              this.archiveButton = true;
+            }
+            this.updateRecordLoader = false;
+          },
+          error => {
+            this.updateRecordLoader = false;
+            this.toastr.error('Something Went Wrong. Please try again..!');
           }
-          this.updateRecordLoader = false;
-        },
-        error => {
-          this.updateRecordLoader = false;
-          this.toastr.error('Something Went Wrong. Please try again..!');
-        }
-      );
+        );
+    } else {
+      this.toastr.error('Please Fill Valid Data.');
+      this.updateRecordLoader = false;
+    }
+  }
+
+  get ContactPersonCell() {
+    return this.donorForm.get('ContactPersonCell');
   }
 
   CreateDonoronAddNew() {
@@ -305,29 +348,40 @@ export class DonorMasterComponent implements OnInit {
       });
   }
 
-  EditDonor() {
-    // tslint:disable-next-line:max-line-length
+  EditDonor(data: DonorDetailModel) {
     this.updateRecordLoader = true;
-
-    this.projectListService
-      .AddDonorDetail(
-        this.appurl.getApiUrl() + GLOBAL.API_Project_AddEditDonorDetails,
-        this.donarDetail
-      )
-      .subscribe(
-        response => {
-          if (response.StatusCode === 200) {
-            this.donarDetail = response.data.DonorDetailById;
-            this.updateDonor.emit(this.donarDetail);
-            this.toastr.success('Donor details updated successfully');
+    if (this.donorForm.valid) {
+      const donerDetails: DonorDetailModel = {
+        DonorId: data.DonorId,
+        Name: data.Name,
+        ContactDesignation: data.ContactDesignation,
+        ContactPersonEmail: data.ContactPersonEmail,
+        ContactPerson: data.ContactPerson,
+        ContactPersonCell: data.ContactPersonCell
+      };
+      this.projectListService
+        .AddDonorDetail(
+          this.appurl.getApiUrl() + GLOBAL.API_Project_AddEditDonorDetails,
+          donerDetails
+        )
+        .subscribe(
+          response => {
+            if (response.StatusCode === 200) {
+              this.donarDetail = response.data.DonorDetailById;
+              this.updateDonor.emit(this.donarDetail);
+              this.toastr.success('Donor details updated successfully');
+            }
+            this.updateRecordLoader = false;
+          },
+          error => {
+            this.updateRecordLoader = false;
+            this.toastr.error('Some error occured. Please try again later.');
           }
-          this.updateRecordLoader = false;
-        },
-        error => {
-          this.updateRecordLoader = false;
-          this.toastr.error('Some error occured. Please try again later.');
-        }
-      );
+        );
+    } else {
+      this.toastr.error('Please Fill Valid Data.');
+      this.updateRecordLoader = false;
+    }
   }
   //#endregion
 
