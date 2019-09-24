@@ -50,6 +50,26 @@ export class GlobalService {
     );
   }
 
+  //#region "GET_ITEM_BY_ID"
+  getStoreInventoriesById(url: string, AssetType: number): Observable<any> {
+    return this.http.get<any>(url + '?AssetType=' + AssetType).pipe(
+      map((response) => response),
+      finalize(() => {
+        // this.loader.hideLoader();
+      })
+    );
+  }
+
+   //#region "GET_ITEM_BY_ID"
+   getItemById(url: string, Id: number): Observable<any> {
+    return this.http.get<any>(url + '?Id=' + Id).pipe(
+      map((response) => response),
+      finalize(() => {
+        // this.loader.hideLoader();
+      })
+    );
+  }
+
   //#region "GET_LIST_BY_ID"
   getDataById(url: string, options?: any): Observable<any> {
     return this.http.get<any>(url, options).pipe(

@@ -15,7 +15,7 @@ export class PurchaseService {
     private appurl: AppUrlService
   ) { }
 
-  //#region "GetVoucherTypeList"
+  //#region "GetPurchaseFilterList"
   GetPurchaseFilterList(): any {
     return this.globalService
       .getList(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetAllPurchaseFilters)
@@ -24,6 +24,54 @@ export class PurchaseService {
           return x;
         })
       );
+  }
+  //#endregion
+
+  //#region "GetInventoriesByInventoryTypeId"
+  GetInventoriesByInventoryTypeId(Id: number): any {
+    return this.globalService
+      .getStoreInventoriesById(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllInventories, Id)
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.InventoryList,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        }));
+  }
+  //#endregion
+
+  //#region "GetItemGroupByInventoryId"
+  GetItemGroupByInventoryId(Id: number): any {
+    return this.globalService
+      .getItemById(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllStoreItemGroups, Id)
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.storeItemGroupList,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        }));
+  }
+  //#endregion
+
+  //#region "GetItemsByItemGroupId"
+  GetItemsByItemGroupId(Id: number): any {
+    return this.globalService
+      .getItemById(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllInventoryItems, Id)
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.InventoryItemList,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        }));
   }
   //#endregion
 }

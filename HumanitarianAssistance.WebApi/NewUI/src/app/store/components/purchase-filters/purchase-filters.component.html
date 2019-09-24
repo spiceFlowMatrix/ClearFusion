@@ -5,39 +5,39 @@
   <div class="row">
     <div class="col-md-12">
       <div class="col-md-3">
-        <lib-hum-dropdown [options]="inventoryType$" [formControl]="InventoryType" [placeHolder]="'Inventory'"></lib-hum-dropdown>
+        <lib-hum-dropdown [options]="inventoryType$" [formControl]="InventoryTypeId" [placeHolder]="'Inventory'" (change)="getInventoryTypeSelectedValue($event)"></lib-hum-dropdown>
       </div>
       <div class="col-md-3">
-        <lib-hum-dropdown [options]="receiptType$" [formControl]="ReceiptType" [placeHolder]="'Receipt Type'"></lib-hum-dropdown>
+        <lib-hum-dropdown [options]="receiptType$" [formControl]="ReceiptTypeId" [placeHolder]="'Receipt Type'" (change)="getReceiptTypeSelectedValue($event)"></lib-hum-dropdown>
       </div>
       <div class="col-md-3">
-          <lib-hum-dropdown [options]="offices$" [formControl]="OfficeId" [placeHolder]="'Office'"></lib-hum-dropdown>
+          <lib-hum-dropdown [options]="offices$" [formControl]="OfficeId" [placeHolder]="'Office'" (change)="getOfficeSelectedValue($event)"></lib-hum-dropdown>
         </div>
       <div class="col-md-3">
-          <lib-hum-dropdown [options]="currencies$" [formControl]="CurrencyId" [placeHolder]="'Currency'"></lib-hum-dropdown>
+          <lib-hum-dropdown [options]="currencies$" [formControl]="CurrencyId" [placeHolder]="'Currency'" (change)="getCurrenciesSelectedValue($event)"></lib-hum-dropdown>
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col-md-12">
       <div class="col-md-3">
-          <lib-hum-dropdown [options]="projects$" [formControl]="ProjectId" [placeHolder]="'Project'"></lib-hum-dropdown>
+          <lib-hum-dropdown [options]="projects$" [formControl]="ProjectId" [placeHolder]="'Project'" (change)="getProjectSelectedValue($event)"></lib-hum-dropdown>
       </div>
       <div class="col-md-3">
-          <lib-hum-dropdown [options]="animals" [formControl]="JobId" [placeHolder]="'Job'"></lib-hum-dropdown>
+          <lib-hum-dropdown [options]="projectJobs$" [formControl]="JobId" [placeHolder]="'Job'" (change)="getJobSelectedValue($event)"></lib-hum-dropdown>
       </div>
       <div class="col-md-3">
           <mat-form-field>
               <input matInput [formControl]="DateOfPurchase" [matDatepicker]="DateOfPurchase" placeholder="Date of Purchase">
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
+              <mat-datepicker-toggle matSuffix [for]="DateOfPurchase"></mat-datepicker-toggle>
+              <mat-datepicker #DateOfPurchase></mat-datepicker>
             </mat-form-field>
       </div>
       <div class="col-md-3">
           <mat-form-field>
               <input matInput [formControl]="DateOfIssue" [matDatepicker]="DateOfIssue" placeholder="Date of Issue">
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
+              <mat-datepicker-toggle matSuffix [for]="DateOfIssue"></mat-datepicker-toggle>
+              <mat-datepicker #DateOfIssue></mat-datepicker>
             </mat-form-field>
       </div>
     </div>
@@ -45,13 +45,13 @@
   <div class="row">
     <div class="col-md-12">
       <div class="col-md-3">
-          <lib-hum-dropdown [options]="storeInventory$" [formControl]="InventoryMaster" [placeHolder]="'Inventory(Master)'"></lib-hum-dropdown>
+          <lib-hum-dropdown [options]="storeInventory$" [formControl]="InventoryMasterId" [placeHolder]="'Inventory(Master)'" (change)="getMasterInventorySelectedValue($event)"></lib-hum-dropdown>
       </div>
       <div class="col-md-3">
-          <lib-hum-dropdown [options]="animals" [formControl]="ItemGroup" [placeHolder]="'Item Group'"></lib-hum-dropdown>
+          <lib-hum-dropdown [options]="storeItemGroups$" [formControl]="ItemGroupId" [placeHolder]="'Item Group'" (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
       </div>
       <div class="col-md-3">
-          <lib-hum-dropdown [options]="animals" [formControl]="Item" [placeHolder]="'Item'"></lib-hum-dropdown>
+          <lib-hum-dropdown [options]="storeItems$" [formControl]="ItemId" [placeHolder]="'Item'" (change)="getItemSelectedValue($event)"></lib-hum-dropdown>
       </div>
     </div>
   </div>
