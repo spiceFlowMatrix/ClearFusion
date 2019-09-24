@@ -7,8 +7,9 @@ import { PurchaseListComponent } from './components/purchase-list/purchase-list.
 import { AddPurchaseComponent } from './components/add-purchase/add-purchase.component';
 import { AddProcurementsComponent } from './components/add-procurements/add-procurements.component';
 import { EntryComponentComponent } from './components/entry-component/entry-component.component';
-import { MatIconModule, MatMenuModule, MatSidenavModule, MatCardModule, MatButtonModule } from '@angular/material';
+import { MatIconModule, MatMenuModule, MatSidenavModule, MatCardModule, MatButtonModule, MatInputModule } from '@angular/material';
 import { ShareLayoutModule } from '../shared/share-layout.module';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 import { LibraryModule, SubHeaderTemplateModule } from 'projects/library/src/public_api';
 import { SubHeaderTemplateComponent } from 'projects/library/src/sub-header-template/sub-header-template.component';
 
@@ -35,7 +36,9 @@ import { SubHeaderTemplateComponent } from 'projects/library/src/sub-header-temp
     MatButtonModule,
     ShareLayoutModule,
     SubHeaderTemplateModule,
-    LibraryModule
+    LibraryModule,
+    MatDatepickerModule,
+    MatInputModule
 
 
 

@@ -21,13 +21,7 @@ export class PurchaseService {
       .getList(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetAllPurchaseFilters)
       .pipe(
         map(x => {
-          debugger;
-          const responseData: IResponseData = {
-            data: x,
-            statusCode: x.StatusCode,
-            message: x.Message
-          };
-          return responseData;
+          return x;
         })
       );
   }

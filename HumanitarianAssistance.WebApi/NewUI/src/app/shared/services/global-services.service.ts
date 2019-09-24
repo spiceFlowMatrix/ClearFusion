@@ -31,7 +31,6 @@ export class GlobalService {
 
   //#region "GET_LIST"
   getList(url: string): Observable<any> {
-    debugger;
     return this.http.get<any>(url).pipe(
       map((response) => response),
       finalize(() => {

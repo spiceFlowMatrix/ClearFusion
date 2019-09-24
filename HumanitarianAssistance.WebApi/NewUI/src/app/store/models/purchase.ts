@@ -2,12 +2,18 @@ export interface Purchase {
 }
 
 export interface IPurchaseFilter {
-  InventoryType: IInventoryType[];
-  Offices: IOffice[];
-  ReceiptType: IReceiptType[];
-  Currencies: ICurrency[];
-  Projects: IProject[];
-  StoreInventory: IStoreInventory[];
+  InventoryType: IDropDownModel[];
+  Offices: IDropDownModel[];
+  ReceiptType: IDropDownModel[];
+  Currencies: IDropDownModel[];
+  Projects: IDropDownModel[];
+  StoreInventory: IDropDownModel[];
+}
+
+
+export interface IDropDownModel {
+  Name: string;
+  Value: number;
 }
 
 export interface IInventoryType {
