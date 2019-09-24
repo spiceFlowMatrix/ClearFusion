@@ -81,7 +81,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
                             var inventories = await inventoryResult;
 
                             model.StoreInventoryModel = inventories.data.InventoryList;
-
                         }
                     }
                 }
@@ -89,6 +88,10 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
                 if (receiptTypesResult.Exception == null)
                 {
                     var receipts = await receiptTypesResult;
+                    model.ReceiptTypes= receipts.data.ReceiptTypeList.Select(x=> new ReceiptTypeModel {
+                        ReceiptTypeId= x.ReceiptTypeId,
+                        ReceiptTypeName = x.ReceiptTypeName
+                    }).ToList();
                 }
 
                 if (officeResult.Exception == null)

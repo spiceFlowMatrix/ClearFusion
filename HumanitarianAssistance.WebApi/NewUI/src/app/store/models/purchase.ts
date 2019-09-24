@@ -12,8 +12,8 @@ export interface IPurchaseFilter {
 
 
 export interface IDropDownModel {
-  Name: string;
-  Value: number;
+  name: string;
+  value: number;
 }
 
 export interface IInventoryType {

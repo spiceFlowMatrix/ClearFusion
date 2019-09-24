@@ -5,26 +5,26 @@
   <div class="row">
     <div class="col-md-12">
       <div class="col-md-3">
-        <lib-hum-dropdown [options]="inventoryType$" [formControl]="InventoryType" [placeHolder]="'Inventory'" (change)="getSelectedValue($event)"></lib-hum-dropdown>
+        <lib-hum-dropdown [options]="inventoryType$" [formControl]="InventoryType" [placeHolder]="'Inventory'"></lib-hum-dropdown>
       </div>
       <div class="col-md-3">
-        <lib-hum-dropdown [options]="animals" [formControl]="ReceiptType" [placeHolder]="'Receipt Type'" (change)="getSelectedValue($event)"></lib-hum-dropdown>
+        <lib-hum-dropdown [options]="receiptType$" [formControl]="ReceiptType" [placeHolder]="'Receipt Type'"></lib-hum-dropdown>
       </div>
       <div class="col-md-3">
-          <lib-hum-dropdown [options]="animals" [formControl]="OfficeId" [placeHolder]="'Office'" (change)="getSelectedValue($event)"></lib-hum-dropdown>
+          <lib-hum-dropdown [options]="offices$" [formControl]="OfficeId" [placeHolder]="'Office'"></lib-hum-dropdown>
         </div>
       <div class="col-md-3">
-          <lib-hum-dropdown [options]="animals" [formControl]="CurrencyId" [placeHolder]="'Currency'" (change)="getSelectedValue($event)"></lib-hum-dropdown>
+          <lib-hum-dropdown [options]="currencies$" [formControl]="CurrencyId" [placeHolder]="'Currency'"></lib-hum-dropdown>
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col-md-12">
       <div class="col-md-3">
-          <lib-hum-dropdown [options]="animals" [formControl]="ProjectId" [placeHolder]="'Project'" (change)="getSelectedValue($event)"></lib-hum-dropdown>
+          <lib-hum-dropdown [options]="projects$" [formControl]="ProjectId" [placeHolder]="'Project'"></lib-hum-dropdown>
       </div>
       <div class="col-md-3">
-          <lib-hum-dropdown [options]="animals" [formControl]="JobId" [placeHolder]="'Job'" (change)="getSelectedValue($event)"></lib-hum-dropdown>
+          <lib-hum-dropdown [options]="animals" [formControl]="JobId" [placeHolder]="'Job'"></lib-hum-dropdown>
       </div>
       <div class="col-md-3">
           <mat-form-field>
@@ -45,13 +45,13 @@
   <div class="row">
     <div class="col-md-12">
       <div class="col-md-3">
-          <lib-hum-dropdown [options]="animals" [formControl]="InventoryMaster" [placeHolder]="'Inventory(Master)'" (change)="getSelectedValue($event)"></lib-hum-dropdown>
+          <lib-hum-dropdown [options]="storeInventory$" [formControl]="InventoryMaster" [placeHolder]="'Inventory(Master)'"></lib-hum-dropdown>
       </div>
       <div class="col-md-3">
-          <lib-hum-dropdown [options]="animals" [formControl]="ItemGroup" [placeHolder]="'Item Group'" (change)="getSelectedValue($event)"></lib-hum-dropdown>
+          <lib-hum-dropdown [options]="animals" [formControl]="ItemGroup" [placeHolder]="'Item Group'"></lib-hum-dropdown>
       </div>
       <div class="col-md-3">
-          <lib-hum-dropdown [options]="animals" [formControl]="Item" [placeHolder]="'Item'" (change)="getSelectedValue($event)"></lib-hum-dropdown>
+          <lib-hum-dropdown [options]="animals" [formControl]="Item" [placeHolder]="'Item'"></lib-hum-dropdown>
       </div>
     </div>
   </div>

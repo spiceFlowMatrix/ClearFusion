@@ -12,6 +12,7 @@ import { ShareLayoutModule } from '../shared/share-layout.module';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { LibraryModule, SubHeaderTemplateModule } from 'projects/library/src/public_api';
 import { SubHeaderTemplateComponent } from 'projects/library/src/sub-header-template/sub-header-template.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { SubHeaderTemplateComponent } from 'projects/library/src/sub-header-temp
     SubHeaderTemplateModule,
     LibraryModule,
     MatDatepickerModule,
-    MatInputModule
+    MatInputModule,
+    ReactiveFormsModule
 
 
 

@@ -48,52 +48,51 @@ export class PurchaseFiltersComponent implements OnInit {
 
   getPurchaseFilters() {
     this.purchase.GetPurchaseFilterList().subscribe(x  => {
-      debugger;
-      this.inventoryType$ = of(x.InventoryType.map(y => {
+      this.inventoryType$ = of(x.InventoryTypes.map(y => {
         return {
-          Value: y.Id,
-          Name: y.InventoryName
+          value: y.Id,
+          name: y.InventoryName
         };
       }));
 
       this.offices$ = of(x.Offices.map(y => {
         return {
-          Value: y.OfficeId,
-          Name: y.OfficeCode + '-' + y.OfficeName
+          value: y.OfficeId,
+          name: y.OfficeCode + '-' + y.OfficeName
         };
       }));
 
       this.currencies$ = of(x.CurrencyModel.map(y => {
         return {
-          Value: y.CurrencyId,
-          Name: y.CurrencyCode + '-' + y.CurrencyName
+          value: y.CurrencyId,
+          name: y.CurrencyCode + '-' + y.CurrencyName
         };
       }));
 
       this.projects$ = of(x.ProjectModel.map(y => {
         return {
-          Value: y.ProjectId,
-          Name: y.ProjectCode + '-' + y.ProjectName
+          value: y.ProjectId,
+          name: y.ProjectCode + '-' + y.ProjectName
         };
       }));
 
-      this.receiptType$ = of(x.ReceiptType.map(y => {
+      this.receiptType$ = of(x.ReceiptTypes.map(y => {
         return {
-          Value: y.ReceiptTypeId,
-          Name:  y.ReceiptTypeName
+          value: y.ReceiptTypeId,
+          name:  y.ReceiptTypeName
         };
       }));
 
-      this.storeInventory$ = of(x.ReceiptType.map(y => {
+      this.storeInventory$ = of(x.StoreInventoryModel.map(y => {
         return {
-          Value: y.InventoryId,
-          Name:  y.InventoryCode + '-' + y.InventoryName
+          value: y.InventoryId,
+          name:  y.InventoryCode + '-' + y.InventoryName
         };
       }));
 
     },
     err => {
-      debugger;
+     console.error(err);
     });
 
   }
