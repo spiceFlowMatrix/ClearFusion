@@ -257,7 +257,7 @@ export class DonorMasterComponent implements OnInit {
       this.donorId === undefined ||
       this.donorId === null
     ) {
-      this.CreateDonor(data);
+      this.toastr.error('Some error occured. Please try again later.');
     } else {
       this.EditDonor(data);
     }
@@ -290,42 +290,42 @@ export class DonorMasterComponent implements OnInit {
   //   }
   // }
 
-  CreateDonor(data: DonorDetailModel) {
-    this.updateRecordLoader = true;
-    if (this.donorForm.valid) {
-      const donerDetails: DonorDetailModel = {
-        DonorId: 0,
-        Name: data.Name,
-        ContactDesignation: data.ContactDesignation,
-        ContactPersonEmail: data.ContactPersonEmail,
-        ContactPerson: data.ContactPerson,
-        ContactPersonCell: data.ContactPersonCell
-      };
-      this.projectListService
-        .AddDonorDetail(
-          this.appurl.getApiUrl() + GLOBAL.API_Project_AddEditDonorDetails,
-          donerDetails
-        )
-        .subscribe(
-          response => {
-            if (response.data.StatusCode === 200) {
-              this.donarDetail = response.data.DonorDetailById;
-              this.donorId = response.data.DonorDetailById.DonorId;
-              this.addDonor.emit(this.donarDetail);
-              this.archiveButton = true;
-            }
-            this.updateRecordLoader = false;
-          },
-          error => {
-            this.updateRecordLoader = false;
-            this.toastr.error('Something Went Wrong. Please try again..!');
-          }
-        );
-    } else {
-      this.toastr.error('Please Fill Valid Data.');
-      this.updateRecordLoader = false;
-    }
-  }
+  // CreateDonor(data: DonorDetailModel) {
+  //   this.updateRecordLoader = true;
+  //   if (this.donorForm.valid) {
+  //     const donerDetails: DonorDetailModel = {
+  //       DonorId: 0,
+  //       Name: data.Name,
+  //       ContactDesignation: data.ContactDesignation,
+  //       ContactPersonEmail: data.ContactPersonEmail,
+  //       ContactPerson: data.ContactPerson,
+  //       ContactPersonCell: data.ContactPersonCell
+  //     };
+  //     this.projectListService
+  //       .AddDonorDetail(
+  //         this.appurl.getApiUrl() + GLOBAL.API_Project_AddEditDonorDetails,
+  //         donerDetails
+  //       )
+  //       .subscribe(
+  //         response => {
+  //           if (response.data.StatusCode === 200) {
+  //             this.donarDetail = response.data.DonorDetailById;
+  //             this.donorId = response.data.DonorDetailById.DonorId;
+  //             this.addDonor.emit(this.donarDetail);
+  //             this.archiveButton = true;
+  //           }
+  //           this.updateRecordLoader = false;
+  //         },
+  //         error => {
+  //           this.updateRecordLoader = false;
+  //           this.toastr.error('Something Went Wrong. Please try again..!');
+  //         }
+  //       );
+  //   } else {
+  //     this.toastr.error('Please Fill Valid Data.');
+  //     this.updateRecordLoader = false;
+  //   }
+  // }
 
   get ContactPersonCell() {
     return this.donorForm.get('ContactPersonCell');
@@ -352,7 +352,7 @@ export class DonorMasterComponent implements OnInit {
     this.updateRecordLoader = true;
     if (this.donorForm.valid) {
       const donerDetails: DonorDetailModel = {
-        DonorId: data.DonorId,
+        DonorId: this.donorId,
         Name: data.Name,
         ContactDesignation: data.ContactDesignation,
         ContactPersonEmail: data.ContactPersonEmail,
