@@ -1,5 +1,5 @@
 <mat-form-field>
-  <mat-select [formControl]="formControl" placeholder="{{placeHolder}}" (selectionChange)="optionChange($event.value)">
+  <mat-select [formControl]="dropControl" placeholder="{{placeHolder}}" (selectionChange)="optionChange($event.value)">
     <mat-option *ngFor="let option of options | async" [value]="option.value">
       {{option.name}}
     </mat-option>
