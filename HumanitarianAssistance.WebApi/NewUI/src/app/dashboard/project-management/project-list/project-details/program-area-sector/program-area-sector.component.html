@@ -71,7 +71,7 @@
                 <div class="form-group ">
                   <mat-form-field class="example-full-width">
                     <input matInput #opportunityNoID type="text" [(ngModel)]="projectotherDetail.opportunityNo"
-                      maxlength="150" placeholder="Opportunity No" name="opportunityNo" required (focusout)="
+                      placeholder="Opportunity No" name="opportunityNo" required (focusout)="
                           onProjectotherDetailsChange(
                             'opportunityNo',
                             opportunityNoID.value
@@ -91,7 +91,7 @@
                 <div class="form-group">
                   <mat-form-field class="example-full-width">
                     <input matInput #Opportunity type="text" [(ngModel)]="projectotherDetail.opportunity"
-                      maxlength="150" placeholder="Opportunity" name="opportunity" required (focusout)="
+                      placeholder="Opportunity" name="opportunity" required (focusout)="
                           onProjectotherDetailsChange(
                             'opportunity',
                             Opportunity.value
@@ -109,7 +109,7 @@
               <div class="col-sm-12">
                 <div class="form-group">
                   <mat-form-field class="example-full-width">
-                    <textarea matInput #Opportunitydescription type="text" matTextareaAutosize matAutosizeMinRows="2"
+                    <textarea rows="4" matInput #Opportunitydescription type="text"
                       [(ngModel)]="projectotherDetail.opportunitydescription" placeholder="Opportunity Description"
                       name="opportunitydescription" required (focusout)="
                 onProjectotherDetailsChange(
@@ -514,7 +514,7 @@
             <div class="col-sm-12">
               <div class="form-group ">
                 <mat-form-field class="example-full-width">
-                  <textarea matInput #GenderRemarksID type="text" matTextareaAutosize matAutosizeMinRows="2"
+                  <textarea rows="4" matInput #GenderRemarksID type="text"
                     [(ngModel)]="projectotherDetail.GenderRemarks" placeholder="Gender Remarks" name="GenderRemarks"
                     [formControl]="GenderRemarks" (focusout)="
                     onProjectotherDetailsChange(
@@ -574,7 +574,7 @@
             <div class="col-sm-12">
               <div class="form-group ">
                 <mat-form-field class="example-full-width ">
-                  <textarea matInput #SecurityRemarksID type="text" matTextareaAutosize matAutosizeMinRows="2"
+                  <textarea rows="4" matInput #SecurityRemarksID type="text"
                     [(ngModel)]="projectotherDetail.SecurityRemarks" placeholder="Security Remarks"
                     name="SecurityRemarks" [formControl]="SecurityRemarks" (focusout)="
                         onProjectotherDetailsChange(

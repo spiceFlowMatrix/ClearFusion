@@ -1,5 +1,5 @@
 export interface DonorDetailModel {
-  DonorId?: 0;
+  DonorId?: number;
   Name?: string;
   ContactPerson?: string;
   ContactDesignation?: string;
