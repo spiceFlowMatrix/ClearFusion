@@ -110,29 +110,29 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
     this.GetInventoriesByInventoryTypeId(event);
   }
 
-  getReceiptTypeSelectedValue(event: any) {
-    this.purchaseFormFilters.get('ReceiptTypeId').patchValue(event);
-  }
+  // getReceiptTypeSelectedValue(event: any) {
+  //   this.purchaseFormFilters.get('ReceiptTypeId').patchValue(event);
+  // }
 
-  getOfficeSelectedValue(event: any) {
-    this.purchaseFormFilters.get('OfficeId').patchValue(event);
-  }
+  // getOfficeSelectedValue(event: any) {
+  //   this.purchaseFormFilters.get('OfficeId').patchValue(event);
+  // }
 
-  getCurrenciesSelectedValue(event: any) {
-    this.purchaseFormFilters.get('CurrencyId').patchValue(event);
-  }
+  // getCurrenciesSelectedValue(event: any) {
+  //   this.purchaseFormFilters.get('CurrencyId').patchValue(event);
+  // }
 
   getProjectSelectedValue(event: any) {
     this.purchaseFormFilters.get('ProjectId').patchValue(event);
     this.getJobsByProjectId(event);
   }
 
-  getJobSelectedValue(event: any) {
-    this.purchaseFormFilters.get('JobId').patchValue(event);
-  }
+  // getJobSelectedValue(event: any) {
+  //   this.purchaseFormFilters.get('JobId').patchValue(event);
+  // }
 
   getMasterInventorySelectedValue(event: any) {
-    this.purchaseFormFilters.get('InventoryMasterId').patchValue(event);
+    this.purchaseFormFilters.get('ItemId').patchValue(null);
     this.GetAllStoreItemGroups(event);
   }
 
@@ -141,9 +141,9 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
     this.GetAllStoreItemsByGroupId(event);
   }
 
-  getItemSelectedValue(event: any) {
-    this.purchaseFormFilters.get('ItemId').patchValue(event);
-  }
+  // getItemSelectedValue(event: any) {
+  //   this.purchaseFormFilters.get('ItemId').patchValue(event);
+  // }
 
   getJobsByProjectId(projectId: number) {
     this.budgetLineService

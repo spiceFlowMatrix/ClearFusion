@@ -1,21 +1,20 @@
-﻿using HumanitarianAssistance.Application.Configuration.Models;
-using HumanitarianAssistance.Application.Project.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace HumanitarianAssistance.Application.Store.Models
 {
     public class PurchaseFilterModel
     {
-        public List<InventoryTypeModel> InventoryTypes { get; set; }
-        public List<ReceiptTypeModel> ReceiptTypes { get; set; }
-        public IList<OfficeDetailModel> Offices { get; set; }
-        public IList<CurrencyModel> CurrencyModel { get; set; }
-        public List<ProjectModel> ProjectModel { get; set; }
-        public List<ProjectJobDetailModel> ProjectJobModel { get; set; }
-        public List<StoreInventoryModel> StoreInventoryModel { get; set; }
-        public List<StoreItemGroupModel> StoreItemGroupModel { get; set; }
-        public List<StoreInventoryItemModel> StoreInventoryItemModel { get; set; }
+        // public int InventoryTypeId { get; set; }
+        // public int ReceiptTypeId { get; set; }
+        // public int OfficeId { get; set; }
+        // public int CurrencyId { get; set; }
+        // public long? ProjectId { get; set; }
+        // public DateTime? PurchaseStartDate { get; set; }
+        // public DateTime? PurchaseEndDate { get; set; }
+        // public DateTime? IssueStartDate { get; set; }
+        // public DateTime? IssueEndDate { get; set; }
+        // public long? InventoryId { get; set; }
+        // public long? ItemGroupId { get; set; }
+        // public long? ItemId { get; set; }
     }
 }

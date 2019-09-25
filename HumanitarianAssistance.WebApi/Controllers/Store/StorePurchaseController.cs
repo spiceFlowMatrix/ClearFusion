@@ -43,7 +43,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetAllPurchaseFilters()
         {
-            PurchaseFilterModel model = new PurchaseFilterModel();
+            PurchaseFilterDataSourceModel model = new PurchaseFilterDataSourceModel();
 
             try
             {
@@ -112,6 +112,23 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
             }
 
             return Ok(model);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetPurchasesWithFilters(GetPurchasesWithFiltersQuery request)
+        {
+            var result = await Task.FromResult(_mediator.Send(new GetPurchasesWithFiltersQuery { }));
+
+            if (result.Exception == null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result.Exception.InnerException.Message);
+            }
         }
     }
 }
