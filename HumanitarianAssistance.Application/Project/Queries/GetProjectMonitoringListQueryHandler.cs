@@ -50,12 +50,14 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                                                                 ProjectIndicatorId = y.ProjectIndicatorId,
                                                                                                 MonitoringIndicatorId = y.MonitoringIndicatorId,
                                                                                                 IndicatorName = y.ProjectIndicators.IndicatorName,
+                                                                                                QuestionTypeId = y.QuestionTypeId,
                                                                                                 IndicatorQuestions = y.ProjectMonitoringIndicatorQuestions
                                                                                                                       .Where(z => z.IsDeleted == false)
                                                                                                                       .Select(z => new ProjectMonitoringQuestionModel
                                                                                                                       {
                                                                                                                           MonitoringIndicatorQuestionId = z.Id,
                                                                                                                           IndicatorQuestionId = z.IndicatorQuestionId,
+                                                                                                                          QuestionType = z.ProjectIndicatorQuestions.QuestionType,
                                                                                                                           QuestionTypeName= z.ProjectIndicatorQuestions == null ? null
                                                                                                                                                                                 : (z.ProjectIndicatorQuestions.QuestionType == (int)QuestionType.Qualitative) ? "Qualitative" 
                                                                                                                                                                                                                                                               : z.ProjectIndicatorQuestions == null ? null
@@ -73,7 +75,9 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                                                                                               VerificationSourceId= c.VerificationSourceId,
                                                                                                                               VerificationSourceName= c.VerificationSourceName
                                                                                                                           }).ToList()
+
                                                                                                                       }).ToList()
+
                                                                                             }).ToList()
                                                                 }).ToListAsync();
 
