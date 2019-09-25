@@ -26,6 +26,7 @@ export interface ProjectIndicatorFilterModel {
     IndicatorName: string;
     IndicatorCode: string;
     Description: string;
+    QuestionType?: boolean;
     Questions?: number;
   }
 

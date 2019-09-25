@@ -63,6 +63,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                         monitoringIndicatorDetail.IsDeleted = false;
                         monitoringIndicatorDetail.ProjectMonitoringReviewId = monitoring.ProjectMonitoringReviewId;
                         monitoringIndicatorDetail.ProjectIndicatorId = item.ProjectIndicatorId;
+                        monitoringIndicatorDetail.QuestionTypeId = item.QuestionTypeId;
 
                         await _dbContext.ProjectMonitoringIndicatorDetail.AddAsync(monitoringIndicatorDetail);
                         await _dbContext.SaveChangesAsync();
@@ -76,6 +77,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                         monitoringIndicatorDetail.IsDeleted = false;
                         monitoringIndicatorDetail.ModifiedDate = request.ModifiedDate;
                         monitoringIndicatorDetail.ProjectIndicatorId = item.ProjectIndicatorId;
+                        monitoringIndicatorDetail.QuestionTypeId = item.QuestionTypeId;
                         _dbContext.ProjectMonitoringIndicatorDetail.Update(monitoringIndicatorDetail);
                         await _dbContext.SaveChangesAsync();
                     }

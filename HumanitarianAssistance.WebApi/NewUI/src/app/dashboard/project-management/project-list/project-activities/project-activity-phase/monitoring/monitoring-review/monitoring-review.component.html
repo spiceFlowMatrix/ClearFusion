@@ -4,15 +4,7 @@
       Monitoring Review
     </div>
     <div class="col-sm-4">
-      <!-- <button mat-raised-button color="primary" (click)="addMonitoringIndicator()">
-        Add Indicator
-      </button> -->
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="addMonitoringIndicator()"
-        [disabled]="filterLoaderFlag"
-      >
+      <button mat-raised-button color="primary" (click)="addMonitoringIndicator()" [disabled]="filterLoaderFlag">
         Add Indicator
       </button>
     </div>
@@ -25,7 +17,8 @@
       </div>
       <div class="col-sm-6">
         <mat-form-field>
-          <input matInput [matDatepicker]="picker" [(ngModel)]="monitoringReviewList.MonitoringDate" placeholder="monitoring date">
+          <input matInput [matDatepicker]="picker" [(ngModel)]="monitoringReviewList.MonitoringDate"
+            placeholder="monitoring date">
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
@@ -45,6 +38,7 @@
           </mat-form-field>
         </div>
 
+
         <div class="col-sm-4" style="
                 text-align: right;
             ">
@@ -54,50 +48,79 @@
         </div>
       </div>
 
-      <br />
 
-      <div class="row">
-        <div class="col-sm-12">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Question</th>
-                <th>QuestionType</th>
-                <th>Verification</th>
-                <th>Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let question of item.IndicatorQuestions">
-                <td>
-                  {{ question.IndicatorQuestion }}
-                </td>
-                <td>{{ question.QuestionTypeName}}</td>
-                <td>
-                  <mat-form-field>
-                    <mat-label>Source Name</mat-label>
-                    <mat-select [(ngModel)]="question.VerificationSourceId">
-                      <mat-option *ngFor="let verification of question.VerificationSources" [value]="verification.VerificationSourceId">
-                        {{verification.VerificationSourceName}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </td>
-                <td>
-                  <mat-form-field>
-                    <mat-label>Score</mat-label>
-                    <mat-select [(ngModel)]="question.Score">
-                      <mat-option *ngFor="let score of monitoringScore" [value]="score.score">
-                        {{score.name}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <br />
+        <div class="row" *ngIf="item.ProjectIndicatorId != null && item.ProjectIndicatorId != undefined">
+
+          <div class="col-sm-12">
+            <h5> Is this a Qualitative or Quantitative question?</h5>
+            <mat-radio-group aria-labelledby="example-radio-group-label"  class="example-radio-group" [(ngModel)]="item.QuestionTypeId">
+              <mat-radio-button class="example-radio-button" *ngFor="let q of questionTypeList" [value]="q.Id"
+                >
+                {{ q.Name }}
+              </mat-radio-button>
+            </mat-radio-group>
+            <br />
+          </div>
+
+          <br />
+          <div class="col-sm-12">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Question</th>
+                  <!-- <th>QuestionType</th> -->
+                  <th>Verification</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let question of item.IndicatorQuestions">
+                    <tr *ngIf="question.QuestionType == item.QuestionTypeId">
+                        <td>
+                          {{ question.IndicatorQuestion }}
+                        </td>
+                        <!-- <td>{{ question.QuestionTypeName}}</td> -->
+                        <td>
+                          <mat-form-field>
+                            <mat-label>Source Name</mat-label>
+                            <mat-select [(ngModel)]="question.VerificationSourceId">
+                              <mat-option *ngFor="let verification of question.VerificationSources"
+                                [value]="verification.VerificationSourceId">
+                                {{verification.VerificationSourceName}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </td>
+                        <td *ngIf="question.QuestionTypeName == questionTypeList[0].Name; else qualitativeTemplate">
+                          <mat-form-field>
+                            <mat-label>Score</mat-label>
+                            <mat-select [(ngModel)]="question.Score">
+                              <mat-option *ngFor="let score of monitoringQualitativeScore" [value]="score.score">
+                                {{score.name}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </td>
+                        <ng-template #qualitativeTemplate>
+                          <td>
+                            <mat-form-field>
+                              <mat-label>Score</mat-label>
+                              <mat-select [(ngModel)]="question.Score">
+                                <mat-option *ngFor="let score of monitoringQuantitativeScore" [value]="score.score">
+                                  {{score.name}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </td>
+                        </ng-template>
+                      </tr>
+                </ng-container>
+
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
     </div>
 
     <div class="row">
@@ -136,19 +159,11 @@
     <button mat-raised-button (click)="onCancelPopup()">
       Cancel
     </button>
-    <button
-    mat-raised-button
-    color="primary"
-    (click)="saveMonitoringReview()"
-    [disabled]="filterLoaderFlag"
-  >
-    <span
-      class="pull-left spinner_center margin_top_10"
-      *ngIf="filterLoaderFlag"
-    >
-      <mat-spinner [diameter]="15"></mat-spinner>
-    </span>
-    Save
-  </button>
+    <button mat-raised-button color="primary" (click)="saveMonitoringReview()" [disabled]="filterLoaderFlag">
+      <span class="pull-left spinner_center margin_top_10" *ngIf="filterLoaderFlag">
+        <mat-spinner [diameter]="15"></mat-spinner>
+      </span>
+      Save
+    </button>
   </div>
 </div>
