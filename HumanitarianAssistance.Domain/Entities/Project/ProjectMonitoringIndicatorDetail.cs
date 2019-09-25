@@ -14,6 +14,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public long MonitoringIndicatorId { get; set; }
         public long ProjectIndicatorId { get; set; }
         public long ProjectMonitoringReviewId { get; set; }
+        public int? QuestionTypeId{get; set;}
         public virtual ICollection<ProjectMonitoringIndicatorQuestions> ProjectMonitoringIndicatorQuestions { get; set; }
         [ForeignKey("ProjectIndicatorId")]
         public virtual ProjectIndicators ProjectIndicators { get; set; }

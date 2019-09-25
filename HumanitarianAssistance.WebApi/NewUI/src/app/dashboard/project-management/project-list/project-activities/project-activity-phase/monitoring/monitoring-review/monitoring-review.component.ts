@@ -1,4 +1,10 @@
-import { Component, OnInit, Inject, EventEmitter, ɵConsole } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Inject,
+  EventEmitter,
+  ɵConsole
+} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProjectActivitiesService } from 'src/app/dashboard/project-management/project-list/project-activities/service/project-activities.service';
 import { ToastrService } from 'ngx-toastr';
@@ -13,6 +19,7 @@ import {
   IndicatorQuestionModel
 } from '../../../../project-indicators/project-indicators-model';
 import { ProjectIndicatorService } from '../../../../project-indicators/project-indicator.service';
+import { element } from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-monitoring-review',
@@ -33,14 +40,16 @@ export class MonitoringReviewComponent implements OnInit {
     this.projectId = data.projectId;
     this.activityId = data.activityId;
     this.monitoringReviewList = data.monitoringReviewModel;
+    console.log('edit list', this.monitoringReviewList);
   }
 
   indicatorFilterModel: ProjectIndicatorFilterModel;
   projectIndicatorList: ProjectIndicatorModel[];
   indicatorQuestions: IndicatorQuestionModel[];
   monitoringReviewList: MonitoringModel;
-  monitoringScore: any[];
-  monitoringVerificationSource: any[];
+  monitoringQuantitativeScore: any[];
+  monitoringQualitativeScore: any[];
+  questionTypeList: any[];
   projectIndicatorId: number;
   projectId: any;
   activityId: any;
@@ -51,6 +60,7 @@ export class MonitoringReviewComponent implements OnInit {
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
+  QuestionTypeId: any = null;
 
   ngOnInit() {
     this.indicatorFilterModel = {
@@ -62,14 +72,32 @@ export class MonitoringReviewComponent implements OnInit {
       Questions: null,
       ProjectId: null
     };
-  // console.log(this.monitoringReviewList);
+    // console.log(this.monitoringReviewList);
     this.getAllProjectIndicatorList();
 
-    if (this.monitoringReviewList === undefined) {
+    if (
+      this.monitoringReviewList === undefined &&
+      this.monitoringReviewList == null
+    ) {
       this.initializeModel();
+    } else {
+      // for (let i = 0; i < this.monitoringReviewList.MonitoringReviewModel.length;  i++  ) {
+      //   this.getQuestionsList(i);
+      // }
     }
 
-    this.monitoringScore = [
+    this.questionTypeList = [
+      {
+        Id: 1,
+        Name: 'Qualitative'
+      },
+      {
+        Id: 2,
+        Name: 'Quantitative'
+      }
+    ];
+
+    this.monitoringQuantitativeScore = [
       {
         score: 1,
         name: '1 - Weak'
@@ -92,16 +120,16 @@ export class MonitoringReviewComponent implements OnInit {
       }
     ];
 
-    // this.monitoringVerificationSource = [
-    //   {
-    //     id: 1,
-    //     name: 'Documents'
-    //   },
-    //   {
-    //     id: 2,
-    //     name: 'Communication'
-    //   }
-    // ];
+    this.monitoringQualitativeScore = [
+      {
+        score: 1,
+        name: '1 - Yes'
+      },
+      {
+        score: 0,
+        name: '0 - No'
+      }
+    ];
   }
 
   initializeModel() {
@@ -109,7 +137,8 @@ export class MonitoringReviewComponent implements OnInit {
       MonitoringReviewModel: [
         {
           ProjectIndicatorId: 0,
-          IndicatorQuestions: []
+          IndicatorQuestions: [],
+          QuestionTypeId: 0
         }
       ],
       MonitoringDate: new Date(),
@@ -122,162 +151,93 @@ export class MonitoringReviewComponent implements OnInit {
     };
   }
 
-  // //#region "getAllProjectIndicatorList"
-  // getAllProjectIndicatorList() {
-  //   debugger;
-  //   this.projectListService
-  //     .GetProjectIndicatorsList(
-  //       this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProjectIndicators,
-  //       this.indicatorFilterModel
-  //     )
-  //     .subscribe(
-  //       data => {
-  //         this.projectIndicatorList = [];
-  //         if (
-  //           data.data.ProjectIndicatorList.ProjectIndicators.length > 0 &&
-  //           data.StatusCode === 200
-  //         ) {
-  //           data.data.ProjectIndicatorList.ProjectIndicators.forEach(
-  //             element => {
-  //               this.projectIndicatorList.push({
-  //                 ProjectIndicatorId: element.ProjectIndicatorId,
-  //                 IndicatorName: element.IndicatorName,
-  //                 IndicatorCode: element.IndicatorCode,
-  //                 Questions: element.Questions,
-  //                 Description: element.Description
-  //               });
-  //             }
-  //           );
-  //         }
-  //       },
-  //       error => {
-  //         this.toastr.success('Something went wrong');
-  //       }
-  //     );
-  // }
-  // //#endregion
+  //#region "getAllProjectIndicatorList"
+  getAllProjectIndicatorList() {
+    if (this.projectId != null && this.projectId !== undefined) {
+      // this.projectIndicatorListLoaderFlag = true;
+      this.indicatorFilterModel.totalCount = 0;
+      this.indicatorFilterModel.ProjectId = this.projectId;
+      this.projectListService
+        .GetProjectIndicatorsList(
+          this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProjectIndicators,
+          this.indicatorFilterModel
+        )
+        .subscribe(
+          data => {
+            this.projectIndicatorList = [];
+            if (
+              data.data.ProjectIndicatorList !== undefined &&
+              data.data.ProjectIndicatorList.ProjectIndicators !== undefined &&
+              data.data.ProjectIndicatorList.ProjectIndicators !== null &&
+              data.data.ProjectIndicatorList.ProjectIndicators.length > 0 &&
+              data.StatusCode === 200
+            ) {
+              data.data.ProjectIndicatorList.ProjectIndicators.forEach(
+                element => {
+                  this.projectIndicatorList.push({
+                    ProjectIndicatorId: element.ProjectIndicatorId,
+                    IndicatorName: element.IndicatorName,
+                    IndicatorCode: element.IndicatorCode,
+                    Description: element.Description,
+                    QuestionType: element.QuestionType,
+                    Questions: element.Questions
+                  });
+                  // this.DonorDetailModel = this.donorList;
+                }
+              );
 
- //#region "getAllProjectIndicatorList"
- getAllProjectIndicatorList() {
-  if (this.projectId != null && this.projectId !== undefined) {
-    // this.projectIndicatorListLoaderFlag = true;
-    this.indicatorFilterModel.totalCount = 0;
-    this.indicatorFilterModel.ProjectId = this.projectId;
-    this.projectListService
-      .GetProjectIndicatorsList(
-        this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProjectIndicators,
-        this.indicatorFilterModel
-      )
-      .subscribe(
-        data => {
-          this.projectIndicatorList = [];
-          if (
-            data.data.ProjectIndicatorList !== undefined &&
-            data.data.ProjectIndicatorList.ProjectIndicators !== undefined &&
-            data.data.ProjectIndicatorList.ProjectIndicators !== null &&
-            data.data.ProjectIndicatorList.ProjectIndicators.length > 0 &&
-            data.StatusCode === 200
-          ) {
-            data.data.ProjectIndicatorList.ProjectIndicators.forEach(
-              element => {
-                this.projectIndicatorList.push({
-                  ProjectIndicatorId: element.ProjectIndicatorId,
-                  IndicatorName: element.IndicatorName,
-                  IndicatorCode: element.IndicatorCode,
-                  Description: element.Description,
-                  Questions: element.Questions
-                });
-                // this.DonorDetailModel = this.donorList;
-              }
-            );
-
-            this.indicatorFilterModel.totalCount =
-              data.data.ProjectIndicatorList.IndicatorRecordCount;
+              this.indicatorFilterModel.totalCount =
+                data.data.ProjectIndicatorList.IndicatorRecordCount;
+            }
+          },
+          error => {
+            this.toastr.error('Something went wrong');
           }
-
-        },
-        error => {
-          this.toastr.error('Something went wrong');
-        }
-      );
+        );
+    }
   }
-}
-//#endregion
-
-
-
-
-  // //#region "getQuestionsList" raman
-  // getQuestionsList(index: number) {
-  //   this.projectIndicatorId = this.monitoringReviewList.MonitoringReviewModel[
-  //     index
-  //   ].ProjectIndicatorId;
-  //   this.indicatorQuestions = [];
-  //   this.projectListService
-  //     .GetProjectIndicatorQuestionById(
-  //       this.appurl.getApiUrl() +
-  //         GLOBAL.API_Project_GetProjectIndicatorQuestionsById,
-  //       this.projectIndicatorId
-  //     )
-  //     .subscribe(
-  //       data => {
-  //         if (data.data.Questions.length > 0 && data.StatusCode === 200) {
-  //           this.monitoringReviewList.MonitoringReviewModel[
-  //             index
-  //           ].IndicatorQuestions = [];
-  //           data.data.Questions.forEach(element => {
-  //             this.monitoringReviewList.MonitoringReviewModel[
-  //               index
-  //             ].IndicatorQuestions.push({
-  //               QuestionId: element.QuestionId,
-  //               Question: element.QuestionText,
-  //               Verification: ''
-  //             });
-  //           });
-  //         }
-  //       },
-  //       error => {
-  //         this.toastr.error('Something went wrong');
-  //       }
-  //     );
-  // }
   //#endregion
 
-
   getQuestionsList(index: number) {
+    debugger;
     this.projectIndicatorId = this.monitoringReviewList.MonitoringReviewModel[
-           index
-         ].ProjectIndicatorId;
-    // if (index !== 0 && index !== undefined && index != null) {
-      this.indicatorService.GetIndicatorQuestionById(this.projectIndicatorId)
-      .subscribe(
-        response => {
+      index
+    ].ProjectIndicatorId;
+    if (
+      this.projectIndicatorId != null &&
+      this.projectIndicatorId !== undefined &&
+      this.projectIndicatorId !== 0
+    ) {
+      this.indicatorService
+        .GetIndicatorQuestionById(this.projectIndicatorId)
+        .subscribe(response => {
           this.indicatorQuestions = [];
           if (response.statusCode === 200) {
-            response.data.forEach(element => {
             this.monitoringReviewList.MonitoringReviewModel[
               index
             ].IndicatorQuestions = [];
-            response.data.forEach(element => {
+            response.data.forEach(elemnt => {
               this.monitoringReviewList.MonitoringReviewModel[
                 index
-              ].IndicatorQuestions.push(element);
-              });
+              ].IndicatorQuestions.push(elemnt);
             });
           }
-          console.log('getquestionlist',this.monitoringReviewList.MonitoringReviewModel);
-          if (response.statusCode === 400){
-             this.toastr.error(response.message);
+          console.log(
+            'getquestionlist',
+            this.monitoringReviewList.MonitoringReviewModel
+          );
+          if (response.statusCode === 400) {
+            this.toastr.error(response.message);
           }
         });
+    }
   }
-
-
 
   addMonitoringIndicator() {
     this.monitoringReviewList.MonitoringReviewModel.push({
       ProjectIndicatorId: 0,
-      IndicatorQuestions: []
+      IndicatorQuestions: [],
+      QuestionTypeId: 0
     });
     this.projectIndicatorId = 0;
   }
@@ -306,6 +266,7 @@ export class MonitoringReviewComponent implements OnInit {
 
   //#region "addMonitoringReview"
   addMonitoringReview() {
+    debugger;
     if (this.monitoringReviewList.MonitoringReviewModel.length > 0) {
       if (this.monitoringReviewList.MonitoringDate === '') {
         this.toastr.warning('Monitoring Date not selected');
@@ -316,6 +277,16 @@ export class MonitoringReviewComponent implements OnInit {
         i < this.monitoringReviewList.MonitoringReviewModel.length;
         i++
       ) {
+        // filter the record on the bases of question type
+        this.monitoringReviewList.MonitoringReviewModel[
+          i
+        ].IndicatorQuestions = this.monitoringReviewList.MonitoringReviewModel[
+          i
+        ].IndicatorQuestions.filter(
+          x =>
+            x.QuestionType ===
+            this.monitoringReviewList.MonitoringReviewModel[i].QuestionTypeId
+        );
         if (
           this.monitoringReviewList.MonitoringReviewModel[i]
             .ProjectIndicatorId === 0
@@ -331,6 +302,7 @@ export class MonitoringReviewComponent implements OnInit {
     this.monitoringReviewList.MonitoringDate = this.setDateTime(
       this.monitoringReviewList.MonitoringDate
     );
+    console.log(this.monitoringReviewList);
 
     this.projectListService
       .AddProjectMonitoringReview(

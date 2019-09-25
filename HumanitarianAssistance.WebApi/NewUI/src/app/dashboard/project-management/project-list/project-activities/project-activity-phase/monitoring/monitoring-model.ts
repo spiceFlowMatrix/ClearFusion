@@ -1,5 +1,5 @@
 export interface MonitoringModel {
-  MonitoringReviewModel: MonitoringReviewModel[],
+  MonitoringReviewModel: MonitoringReviewModel[];
   PositivePoints: string;
   NegativePoints: string;
   Recommendations: string;
@@ -18,12 +18,13 @@ export interface MonitoringReviewModel {
   TotalScore?: number;
   IndicatorQuestions: MonitoringReviewQuestionModel[];
   IsDeleted?: boolean;
+  QuestionTypeId: number;
 }
 
 export interface MonitoringReviewQuestionModel {
   IndicatorQuestionId?: number;
   IndicatorQuestion: string;
-  QuestionType?: boolean;
+  QuestionType?: number;
   QuestionTypeName?: string;
   ProjectIndicatorId: number;
   IsDeleted?: boolean;

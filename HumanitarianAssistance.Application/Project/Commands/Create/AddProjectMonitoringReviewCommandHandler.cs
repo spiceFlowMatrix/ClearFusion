@@ -47,7 +47,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     monitoringIndicatorDetail.IsDeleted = false;
                     monitoringIndicatorDetail.ProjectMonitoringReviewId = projectMonitoringReviewDetail.ProjectMonitoringReviewId;
                     monitoringIndicatorDetail.ProjectIndicatorId = item.ProjectIndicatorId;
-
+                    monitoringIndicatorDetail.QuestionTypeId = item.QuestionTypeId;
                     await _dbContext.ProjectMonitoringIndicatorDetail.AddAsync(monitoringIndicatorDetail);
                     await _dbContext.SaveChangesAsync();
 
