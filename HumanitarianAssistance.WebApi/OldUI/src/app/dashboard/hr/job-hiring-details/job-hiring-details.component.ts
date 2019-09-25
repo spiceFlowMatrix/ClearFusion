@@ -100,7 +100,7 @@ export class JobHiringDetailsComponent implements OnInit {
   //#endregion
 
   onOfficeSelected(officeId: number) {
-    this.selectedOffice = officeId
+    this.selectedOffice = officeId;
     this.getJobHiringDetails();
 }
 
@@ -155,6 +155,7 @@ export class JobHiringDetailsComponent implements OnInit {
             }
         });
 
+
         this.selectedOffice =
             (this.selectedOffice === null || this.selectedOffice == undefined)
                     ? this.officeDropdownList[0].OfficeId
@@ -176,7 +177,7 @@ export class JobHiringDetailsComponent implements OnInit {
   }
   //#endregion
 
-  
+
 
 
 
@@ -244,7 +245,7 @@ export class JobHiringDetailsComponent implements OnInit {
   getJobHiringDetails() {
     this.jobsLoading = true;
     const officeId = this.selectedOffice;
-
+console.log(officeId);
     // tslint:disable-next-line:radix
    // this.OfficeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
 
@@ -354,7 +355,7 @@ export class JobHiringDetailsComponent implements OnInit {
   //#region "ADD Job"
   GetJobCode() {
     this.addJobHiringPopupLoading = true;
-    const officeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'), 32);
+    const officeId = this.selectedOffice;
 
     this.jobHiringService
       .GetJobHiringDetailByOfficeId(

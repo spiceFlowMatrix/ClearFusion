@@ -15,7 +15,10 @@
             max-width: 800px;
         }
 
-        .page-break {
+        .print {
+            .page-break
+
+        {
             page-break-after: always;
             page-break-inside: avoid;
             clear: both;
@@ -25,6 +28,7 @@
             page-break-before: always;
             page-break-inside: avoid;
             clear: both;
+        }
         }
     </style>
 </head>
@@ -131,10 +135,10 @@
                             </tr>
                             <tr>
                                 <td style="font-weight:500;" colspan="2" width="200" height="200" valign="top">
-                                    Specific Duties and Responsibilities:
+                                    Specific Duties and Responsibilities:<br /><br />
                                     @Item.SpecificDutiesAndResponsiblities
                                 </td>
-                            </tr>                            
+                            </tr>
                         </table>
                     </td>
                 </tr>
@@ -158,7 +162,7 @@
                         <table cellpadding="6" style="width:100%;font-size:14px;" border="1" bordercolor="#bfbfbf" cellspacing="0">
                             <tr>
                                 <td style="font-weight:500;" width="200" height="200" valign="top">
-                                    Knowledge and skills required:
+                                    Knowledge and skills required:<br /><br />
                                     @Item.KnowladgeAndSkillRequired
                                 </td>
                             </tr>
@@ -179,15 +183,15 @@
                         <table cellpadding="6" style="width:100%;font-size:14px;" cellspacing="0">
                             <tr>
                                 <td style="font-weight:500;">
-                                    Submission guidelines:
-                                    @Item.SubmissionGuidline
+                                    Submission guidelines:<br /><br />
+                                                          @Item.SubmissionGuidline
                                 </td>
                             </tr>
                         </table>
                     </td>
                 </tr>
             }
-            </table>
+        </table>
     </div>
 </body>
 </html>

@@ -16,7 +16,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project
             IsCompleted = false;
             Target = 0;
             Achieved = 0;
-
+            ProjectSubActivityList = new List<ProjectActivityDetail>();
         }
 
         //Planning

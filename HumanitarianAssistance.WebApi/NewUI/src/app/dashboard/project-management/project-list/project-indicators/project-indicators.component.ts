@@ -144,7 +144,7 @@ export class ProjectIndicatorsComponent implements OnInit {
                     IndicatorName: element.IndicatorName,
                     IndicatorCode: element.IndicatorCode,
                     Description: element.Description,
-                    Questions: element.Questions
+                    Questions: element.Questions,
                   });
                   // this.DonorDetailModel = this.donorList;
                 }

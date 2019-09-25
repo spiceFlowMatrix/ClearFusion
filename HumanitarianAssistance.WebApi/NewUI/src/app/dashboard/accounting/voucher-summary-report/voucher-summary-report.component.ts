@@ -10,7 +10,8 @@ import {
   VoucherSummaryFilterModel,
   IReportVoucherModel,
   BudgetlineListModel,
-  VoucherSummaryTransactionModel
+  VoucherSummaryTransactionModel,
+  IVoucherSummaryTransaction
 } from './voucher-summary-model';
 import { CurrencyModel } from '../../project-management/project-list/project-details/models/project-details.model';
 import { GLOBAL } from 'src/app/shared/global';
@@ -44,7 +45,7 @@ import { VoucherSummaryFilterComponent } from './voucher-summary-filter/voucher-
 export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
 
   //#endregion
-
+  recordtypetext;
   constructor(
     private voucherSummaryService: VoucherSummaryReportService,
     private appUrl: AppUrlService,
@@ -76,6 +77,7 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
   // report datasource
   voucherSummaryReport: IReportVoucherModel[];
   voucherSummaryTransactionModel: VoucherSummaryTransactionModel[];
+  VoucherSummaryTransaction: IVoucherSummaryTransaction[];
 
   screenHeight: number;
   screenWidth: number;
@@ -351,6 +353,7 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
 
           if (index !== -1) {
             if (response.statusCode === 200 && response.data !== null) {
+              this.voucherSummaryReport[index].VoucherTransactions = [];
               response.data.forEach(
                 (element: {
                   AccountCode: string;
@@ -360,8 +363,7 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
                   Amount: number;
                   TransactionType: string;
                 }) => {
-                  this.voucherSummaryReport[index].VoucherTransactions = [];
-
+                  // this.voucherSummaryReport[index].VoucherTransactions = [];
                   this.voucherSummaryReport[index].VoucherTransactions.push({
                     AccountCode: element.AccountCode,
                     AccountName: element.AccountName,
@@ -386,6 +388,14 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
   filterApplied(value: VoucherSummaryFilterModel) {
     this.onInitialize();
     this.filterData = value;
+    if (value.RecordType.toString() === '2'){
+      this.recordtypetext = 'Consolidated';
+    } else {
+      this.recordtypetext = 'Single';
+    }
+    // tslint:disable-next-line: no-unused-expression
+    this.recordtypetext = 'Note: Showing Vouchers for Record Type as ' + this.recordtypetext +
+    ' and Currency as ' + this.currencyList[this.currencyList.findIndex(x => x.CurrencyId === value.Currency)]['CurrencyCode'];
     this.getVoucherSummaryList(value);
   }
 

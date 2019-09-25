@@ -1,25 +1,16 @@
 import {
   Component,
   OnInit,
-  ViewChild,
   TemplateRef,
   ViewEncapsulation
 } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
-import {
-  DataTableModule,
-  SharedModule,
-  AccordionModule
-} from 'primeng/primeng';
 import { UserService } from './user.service';
-import { MultiSelectModule } from 'primeng/primeng';
 import { SelectItem } from 'primeng/components/common/api';
 import { GLOBAL } from '../../shared/global';
-import { DropdownModule } from 'primeng/primeng';
 import { ToastrService } from 'ngx-toastr';
-import { TextMaskModule } from 'angular2-text-mask';
 import { CustomValidation } from '../../shared/customValidations';
 import {
   applicationPages,
@@ -104,7 +95,6 @@ export class UserComponent implements OnInit, OnDestroy {
   roles: SelectItem[];
   RolesUser: SelectItem[];
   Permissions: SelectItem[];
-  private ChangePassword: FormGroup;
 
   // UserId For AddRoles
   UserId: any; // Global UserId FROM Table is selected for controls
@@ -151,7 +141,6 @@ export class UserComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    private router: Router,
     private toastr: ToastrService,
     private fb: FormBuilder,
     private setting: AppSettingsService,
@@ -203,25 +192,6 @@ export class UserComponent implements OnInit, OnDestroy {
       Status: [null]
     });
 
-    this.ChangePassword = this.fb.group({
-      NewPassword: [
-        '',
-        Validators.compose([
-          Validators.required,
-          Validators.minLength(5),
-          Validators.maxLength(20)
-        ])
-      ],
-      ConfirmPassword: [
-        '',
-        Validators.compose([
-          CustomValidation.ConfirmPassword,
-          Validators.required,
-          Validators.minLength(5),
-          Validators.maxLength(20)
-        ])
-      ]
-    });
     // Status Array
     this.status = [
       { label: 'Active', value: 1 },
@@ -671,7 +641,7 @@ export class UserComponent implements OnInit, OnDestroy {
       });
   }
 
-  PermissionsInRoles(value) {
+  PermissionsInRoles() {
 
 
     this.loadingPermission = true;
@@ -855,7 +825,6 @@ export class UserComponent implements OnInit, OnDestroy {
 
   userFormSubmit(model) {
     this.loading = true;
-    const obj: any = {};
     const addUser: AddUsers = {
       UserName: model.Email,
       Email: model.Email,
@@ -891,7 +860,7 @@ export class UserComponent implements OnInit, OnDestroy {
             this.toastr.error('Error!!!');
           }
         },
-        error => {
+        () => {
           // error message
         }
       );
@@ -899,7 +868,6 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   userEditFormSubmit(model) {
-    const obj: any = {};
     const editUser: EditUsers = {
       UserName: model.Email,
       Email: model.Email,
@@ -934,7 +902,7 @@ export class UserComponent implements OnInit, OnDestroy {
           }
           this.modalEditUserPermission.hide();
         },
-        error => {
+        () => {
           // error message
         }
       );
@@ -1263,7 +1231,7 @@ export class UserComponent implements OnInit, OnDestroy {
           this.loadingPermission = false;
       }
       ,
-      error => {
+      () => {
         this.loadingPermission = false;
       });
   }
@@ -1413,7 +1381,7 @@ this.EditOrderScheduleRolePermission.forEach(element => {
           GLOBAL.API_Permissions_UpdatePermissionsOnSelectedRole,
         filteredRolePermissions
       )
-      .subscribe(data => {
+      .subscribe(() => {
         this.editRole = false;
         this.toastr.success('Permissions Updated Successfully!!!');
         this.loadingPermission = false;

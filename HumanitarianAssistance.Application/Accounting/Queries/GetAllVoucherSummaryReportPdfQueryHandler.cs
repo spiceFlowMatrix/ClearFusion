@@ -7,6 +7,11 @@ using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Persistence;
 using HumanitarianAssistance.Persistence.Extensions;
 using MediatR;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using HumanitarianAssistance.Common.Enums;
+using HumanitarianAssistance.Domain.Entities.Accounting;
+using Microsoft.AspNetCore.Hosting;
 
 namespace HumanitarianAssistance.Application.Accounting.Queries
 {
@@ -14,11 +19,13 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IPdfExportService _pdfExportService;
+        private readonly IHostingEnvironment _env;
 
-        public GetAllVoucherSummaryReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IPdfExportService pdfExportService)
+        public GetAllVoucherSummaryReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IPdfExportService pdfExportService,IHostingEnvironment env)
         {
             _dbContext = dbContext;
             _pdfExportService = pdfExportService;
+            _env=env;
         }
 
         public async Task<byte[]> Handle(GetAllVoucherSummaryReportPdfQuery request, CancellationToken cancellationToken)
@@ -26,42 +33,55 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
             try
             {
                 // model logic here
+                VoucherSummaryMainReportPdfModel mainsummary=new VoucherSummaryMainReportPdfModel();
+                
+                mainsummary.Logo=_env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath;
+                mainsummary.RecordTypeText=(request.RecordType.ToString()=="1")?"Single":"Consolidated";
+                mainsummary.RecordTypeText="Note: Showing Vouchers for Record Type as " + mainsummary.RecordTypeText; 
 
-                List<VoucherSummaryReportPdfModel> summary = new List<VoucherSummaryReportPdfModel>();
+                var spVoucherSummaryList=await _dbContext.LoadStoredProc("get_all_voucher_transaction_list")
+                                        .WithSqlParam("recordtype", request.RecordType)
+                                        .WithSqlParam("currency_id", request.Currency)
+                                        .WithSqlParam("accounts", request.Accounts)
+                                        .WithSqlParam("budgetlines", request.BudgetLines)                                     
+                                        .WithSqlParam("journals", request.Journals)
+                                        .WithSqlParam("offices", request.Offices)
+                                        .WithSqlParam("projectjobs", request.ProjectJobs)
+                                        .WithSqlParam("projects", request.Projects)                                      
+                                        .ExecuteStoredProc<VoucherSummaryReportNewPdfModel>();
 
-                summary.Add(new VoucherSummaryReportPdfModel
-                {
-                    Currency = "Afgani",
-                    Cheque = "554545",
-                    VoucherNo = "AFG-0001-14",
-                    Journal = "Hello",
-                    Date = "Helldfgdfgo",
-                    Region = "Helld fgdfgo",
-                    Description = "H dgf dfgello",
-                    TotalCredit = "Hello",
-                    TotalDebit = "Hello"
-                });
-
-                // var spVoucherSummaryList = await _dbContext.LoadStoredProc("get_vouchersummaryreport_pdf")
-                //                                             // .WithSqlParam("budgetlines", request.BudgetLines)
-                //                                             .ExecuteStoredProc<SPVoucherSummaryReportPdfModel>();
-                var spVoucherSummaryList=await _dbContext.LoadStoredProc("get_vouchersummaryreportvouchersbyfilter")
-                                      .WithSqlParam("accounts", request.Accounts)
-                                      .WithSqlParam("budgetlines", request.BudgetLines)
-                                      .WithSqlParam("currencyid", request.Currency)
-                                      .WithSqlParam("journals", request.Journals)
-                                      .WithSqlParam("offices", request.Offices)
-                                      .WithSqlParam("projectjobs", request.ProjectJobs)
-                                      .WithSqlParam("projects", request.Projects)
-                                      .WithSqlParam("recordtype", request.RecordType)
-                                      .ExecuteStoredProc<SPVoucherSummaryReportModel>();
-
-                // Console.WriteLine(spVoucherSummaryList);
-
-
-
-                return await _pdfExportService.ExportToPdf(summary, "Pages/PdfTemplates/VoucherSummaryReport.cshtml");
-
+                var groupedlist=spVoucherSummaryList.GroupBy(x=>new {
+                    x.VoucherNo,
+                    x.ReferenceNo,
+                    x.VoucherDate,
+                    x.ChequeNo,
+                    x.VoucherDescription,
+                    x.CurrencyCode,
+                    x.JournalName,
+                    x.OfficeName
+                }).Select(s=>new VoucherSummaryReportPdfModel{
+                    Currency=s.Key.CurrencyCode,
+                    Cheque=s.Key.ChequeNo,
+                    VoucherNo=s.Key.ReferenceNo,
+                    Journal=s.Key.JournalName,
+                    Date=s.Key.VoucherDate.ToString(),
+                    Region=s.Key.OfficeName,
+                    Description=s.Key.VoucherDescription,
+                    TotalCredit=s.Sum(x=>x.Credit).ToString(),
+                    TotalDebit=s.Sum(x=>x.Debit).ToString(),
+                    TransactionDetails=s.Select(ss=>new TransactionSummaryReportPdfModel{
+                        AccountNo=ss.ChartOfAccountNewCode.ToString(),
+                        Description=ss.TransactionDescription,
+                        Debit=ss.Debit.ToString(),
+                        Credit=ss.Credit.ToString(),
+                        BudgetLine=ss.BudgetCode,
+                        Project=ss.ProjectCode,
+                        Job=ss.ProjectJobCode,
+                        Sector=ss.SectorCode
+                        }).ToList()
+                    }).ToList();
+                mainsummary.VoucherDetails=groupedlist;
+                return await _pdfExportService.ExportToPdf(mainsummary, "Pages/PdfTemplates/VoucherSummaryReport.cshtml");
             }
             catch (Exception ex)
             {
