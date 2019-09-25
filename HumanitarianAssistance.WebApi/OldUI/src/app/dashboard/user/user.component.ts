@@ -563,6 +563,7 @@ export class UserComponent implements OnInit, OnDestroy {
               value: { id: element.Id, name: element.RoleName }
             });
           });
+          console.log(this.roles);
         }
 
         this.loadingRoles = false;

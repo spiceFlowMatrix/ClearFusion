@@ -63,6 +63,9 @@
                     />
                   </mat-form-field>
                 </div>
+                <div class="col-sm-12">
+                    <span class="fieldValidation" *ngIf="donorForm.controls['Name'].invalid">*This Field Is Required</span>
+                  </div>
               </div>
               <div class="row">
                 <div class="col-sm-12">
@@ -75,6 +78,9 @@
                     />
                   </mat-form-field>
                 </div>
+                <div class="col-sm-12">
+                    <span class="fieldValidation" *ngIf="donorForm.controls['ContactDesignation'].invalid">*This Field Is Required</span>
+                  </div>
               </div>
               <div class="row">
                 <div class="col-sm-12">
@@ -87,6 +93,9 @@
                     />
                   </mat-form-field>
                 </div>
+                <div class="col-sm-12">
+                    <span class="fieldValidation" *ngIf="donorForm.controls['ContactPersonEmail'].invalid">*Email Should be in Valid Formate</span>
+                  </div>
               </div>
               <div class="row">
                 <div class="col-sm-12">
@@ -99,6 +108,9 @@
                     />
                   </mat-form-field>
                 </div>
+                <div class="col-sm-12">
+                    <span class="fieldValidation" *ngIf="donorForm.controls['ContactPerson'].invalid">*This Field Is Required</span>
+                  </div>
               </div>
               <div class="row">
                 <div class="col-sm-12">
@@ -108,14 +120,16 @@
                       placeholder="Contact Cell"
                       formControlName="ContactPersonCell"
                       [disableControl]="!isEditingAllowed"
-
                     />
                   </mat-form-field>
                 </div>
+                <div class="col-sm-12">
+                    <span class="fieldValidation" *ngIf="donorForm.controls['ContactPersonCell'].invalid">*Contact Number should be between 10-14 digits!!!</span>
+                  </div>
               </div>
               <div class="row">
                 <div class="col-sm-2">
-                  <button mat-raised-button color="primary" type="submit">
+                  <button [disabled]="!donorForm.valid" mat-raised-button color="primary" type="submit">
                     <span>Save</span>
                   </button>
                 </div>
