@@ -60,6 +60,7 @@ export class UserComponent implements OnInit, OnDestroy {
   AddPermissions: FormGroup;
   EditRolePermissions: FormGroup;
   userEditForm: FormGroup;
+  ChangePassword: FormGroup;
   ddnSelectedRole: any;
   EditRolePermission: rolePermissions[];
   EditApproveRejectRolePermission: ApproveRejectRolePermission[];
@@ -151,7 +152,7 @@ export class UserComponent implements OnInit, OnDestroy {
     // AddUser Modal Popup
     this.userForm = this.fb.group({
       FirstName: [
-        null,
+        '',
         Validators.compose([
           Validators.required,
           Validators.minLength(1),
@@ -159,7 +160,7 @@ export class UserComponent implements OnInit, OnDestroy {
         ])
       ],
       LastName: [
-        null,
+        '',
         Validators.compose([
           Validators.required,
           Validators.minLength(1),
@@ -213,6 +214,26 @@ export class UserComponent implements OnInit, OnDestroy {
     this.EditRolePermissions = this.fb.group({
       Roles: [''],
       Permissions: []
+    });
+
+    this.ChangePassword = this.fb.group({
+      NewPassword: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(20)
+        ])
+      ],
+      ConfirmPassword: [
+        '',
+        Validators.compose([
+          CustomValidation.ConfirmPassword,
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(20)
+        ])
+      ]
     });
 
     this.userEditForm = this.fb.group({
@@ -563,7 +584,6 @@ export class UserComponent implements OnInit, OnDestroy {
               value: { id: element.Id, name: element.RoleName }
             });
           });
-          console.log(this.roles);
         }
 
         this.loadingRoles = false;
@@ -911,6 +931,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   onSubmitPasswordChange(model: RestPasswordModel) {
+
     model.UserName = this.userName;
 
     this.userService
@@ -927,8 +948,9 @@ export class UserComponent implements OnInit, OnDestroy {
         }
       });
   }
-  openModelOnResetPassword(templateReset: TemplateRef<any>, covalue) {
-    this.userName = covalue.Email;
+  openModelOnResetPassword(templateReset: TemplateRef<any>, colvalue) {
+    this.ChangePassword.reset();
+    this.userName = colvalue.Email;
     this.modalResetPassword = this.modalService.show(
       templateReset,
       Object.assign({}, this.config, { class: 'gray modal-lg' })
