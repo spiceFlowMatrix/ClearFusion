@@ -29,17 +29,21 @@ namespace HumanitarianAssistance.Application.Store.Queries
             try
             {
                 model = await _dbContext.StoreItemPurchases
-                                        .Where(x=> x.IsDeleted== false 
-                                        // && x.AssetTypeId== request.InventoryTypeId &&
-                                        // x.ReceiptTypeId == request.ReceiptTypeId &&
-                                        // x.OfficeId == request.OfficeId &&
-                                        // x.Currency == request.CurrencyId
-                                        )
+                                  // .Include(x=> x.ProjectDetail.)
+                                   //.ThenInclude(x=> x.Job)
                                   .Include(x=> x.PurchaseOrders)
                                   .ThenInclude(x=> x.EmployeeDetail)
                                   .Include(x=> x.StoreInventoryItem)
                                   .Include(x=> x.EmployeeDetail)
                                   .Include(x=> x.ProjectDetail)
+                                  .Where(x=> x.IsDeleted== false &&
+                                        x.AssetTypeId== request.InventoryTypeId &&
+                                        x.ReceiptTypeId == request.ReceiptTypeId &&
+                                        x.OfficeId == request.OfficeId &&
+                                        x.Currency == request.CurrencyId &&
+                                        x.ProjectId==null ? true : x.ProjectId==request.ProjectId
+                                       // x.JobId == null ? true : x.JobId =
+                                        )
                                   .Select(x=> new PurchaseListModel 
                                   {
                                       PurchaseId = x.PurchaseId,
@@ -64,8 +68,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                        }).ToList()
 
                                   })
-                                //   .Skip(request.pageSize.Value * request.pageIndex.Value)
-                                //   .Take(request.pageSize.Value)
+                                  .Skip(request.pageSize.Value * request.pageIndex.Value)
+                                  .Take(request.pageSize.Value)
                                   .ToListAsync();
 
                 // List<ExchangeRateDetail> exchangeRateList= await _dbContext.ExchangeRateDetail

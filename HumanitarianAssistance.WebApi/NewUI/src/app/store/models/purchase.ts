@@ -34,3 +34,12 @@ export interface IFilterValueModel {
   pageSize: any;
   totalCount: any;
 }
+
+export interface IPurchaseList {
+  Id: number;
+  Item: string;
+  PurchasedBy: string;
+  Project: string;
+  OriginalCost: number;
+  DepreciatedCost: number;
+}

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { of, Observable } from 'rxjs';
 import { PurchaseService } from '../../services/purchase.service';
-import { IFilterValueModel } from '../../models/purchase';
+import { IFilterValueModel, IPurchaseList } from '../../models/purchase';
 
 @Component({
   selector: 'app-purchase-list',
@@ -10,14 +10,10 @@ import { IFilterValueModel } from '../../models/purchase';
 })
 export class PurchaseListComponent implements OnInit {
 
-  purchaseList$: Observable<any>;
+  purchaseList$: Observable<IPurchaseList[]>;
   filterValueModel: IFilterValueModel;
 
   purchaseListHeaders$: Observable<any> = of(['Id', 'Item', 'Purchased By', 'Project', 'Original Cost', 'Deprecated Cost']);
-  // values = of([
-  //   { 'TestHeader': 'Test value', 'TestHeader1': 'Testvalue', 'TestHeader2': 'Test value', 'TestHeader3': 'Test value' },
-  //   { 'TestHeader': 'Test value', 'TestHeader1': 'Testvalue', 'TestHeader2': 'Test value', 'TestHeader3': 'Test value' }
-  // ]);
 
   constructor(private purchaseService: PurchaseService) {
 
@@ -48,8 +44,17 @@ export class PurchaseListComponent implements OnInit {
     const id = 0;
     this.purchaseService
         .GetFilteredPurchaseList(filter).subscribe(x => {
-      debugger;
-      this.purchaseList$ = x;
+      this.purchaseList$ = of(x.map((element) => {
+        return  {
+
+          Id: element.PurchaseId,
+          Item: element.ItemName,
+          PurchasedBy: element.EmployeeName,
+          Project: element.ProjectName,
+          OriginalCost: element.OriginalCost,
+          DepreciatedCost: element.DepreciatedCost
+        };
+      }));
     });
   }
 

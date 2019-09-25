@@ -15,6 +15,7 @@ export class TableComponent implements OnInit {
   ngOnInit() {
     this.items.subscribe(res => {
       if (res) {
+        console.log(res);
         this.itemHeaders = of(Object.keys(res[0]));
       }
 
