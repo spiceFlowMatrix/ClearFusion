@@ -1,7 +1,37 @@
 using System.Collections.Generic;
+using System;
 
 namespace HumanitarianAssistance.Application.Accounting.Models
 {
+    public class VoucherSummaryMainReportPdfModel
+    {
+        public VoucherSummaryMainReportPdfModel()
+        {
+            VoucherDetails = new List<VoucherSummaryReportPdfModel>();
+        }
+        public string Logo { get; set; }
+        public string RecordTypeText { get; set; }
+        public IList<VoucherSummaryReportPdfModel> VoucherDetails { get; set; }
+    }
+    public class VoucherSummaryReportNewPdfModel
+    {
+        public long VoucherNo { get; set; }  
+        public string ReferenceNo { get; set; } 
+        public string ChequeNo { get; set; }   
+        public DateTime VoucherDate { get; set; }   
+        public string JournalName { get; set; }      
+        public string OfficeName { get; set; }  
+        public string CurrencyCode { get; set; }
+        public string VoucherDescription { get; set; } 
+        public string TransactionDescription { get; set; }
+        public double Credit { get; set; }
+        public double Debit { get; set; }
+        public string ChartOfAccountNewCode { get; set; }
+        public string ProjectCode { get; set; }  
+        public string BudgetCode { get; set; }  
+        public string ProjectJobCode { get; set; } 
+        public string SectorCode { get; set; }
+    }
     public class VoucherSummaryReportPdfModel
     {
         public VoucherSummaryReportPdfModel()

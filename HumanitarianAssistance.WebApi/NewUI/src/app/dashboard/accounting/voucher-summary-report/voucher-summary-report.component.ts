@@ -45,7 +45,7 @@ import { VoucherSummaryFilterComponent } from './voucher-summary-filter/voucher-
 export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
 
   //#endregion
-
+  recordtypetext;
   constructor(
     private voucherSummaryService: VoucherSummaryReportService,
     private appUrl: AppUrlService,
@@ -388,6 +388,14 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
   filterApplied(value: VoucherSummaryFilterModel) {
     this.onInitialize();
     this.filterData = value;
+    if (value.RecordType.toString() === '2'){
+      this.recordtypetext = 'Consolidated';
+    } else {
+      this.recordtypetext = 'Single';
+    }
+    // tslint:disable-next-line: no-unused-expression
+    this.recordtypetext = 'Note: Showing Vouchers for Record Type as ' + this.recordtypetext +
+    ' and Currency as ' + this.currencyList[this.currencyList.findIndex(x => x.CurrencyId === value.Currency)]['CurrencyCode'];
     this.getVoucherSummaryList(value);
   }
 

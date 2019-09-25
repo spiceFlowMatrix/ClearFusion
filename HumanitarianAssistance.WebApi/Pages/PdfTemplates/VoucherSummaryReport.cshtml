@@ -1,4 +1,4 @@
-﻿@model List<HumanitarianAssistance.Application.Accounting.Models.VoucherSummaryReportPdfModel>
+﻿@model HumanitarianAssistance.Application.Accounting.Models.VoucherSummaryMainReportPdfModel
 
 <html>
 	<head>
@@ -31,35 +31,42 @@
                     <td>
                         <table cellpadding="5" style="width:100%;">
                             <tr>
-                                <td width="150"><img src="logo.jpg" alt=""></td>
+                                <td width="150"><img src="@Model.Logo" alt=""></td>
                                 <td align="center" style="font-size:20px;font-weight:500;">COORDINATION OF HUMANITARIAN ASSISTANCE<br>TRANSACTION VOUCHER</td>
+                            </tr>
+                        </table>
+                        <table cellpadding="5" style="width:100%;">
+                            <tr>
+                                <td align="center" style="color:#636363;">@Model.RecordTypeText</td>
                             </tr>
                         </table>
                     </td>
                 </tr>
+                @foreach (var voucher in Model.VoucherDetails)
+                {
                 <tr>
                 	<td>
                     	<table cellpadding="5" style="width:100%;">
                         	<tr>
                             	<td width="120" style="color:#636363;">Currency:</td>
-                                <td style="font-weight:500">AFG</td>
+                                <td style="font-weight:500">@voucher.Currency</td>
                                 <td>&nbsp;</td>
                                 <td width="120" style="color:#636363;">Cheque #:</td>
-                                <td width="120" style="font-weight:500">0</td>
+                                <td width="120" style="font-weight:500">@voucher.Cheque</td>
                             </tr>
                             <tr>
                             	<td style="color:#636363;">Voucher No:</td>
-                                <td style="font-weight:500">KBA06208-19</td>
+                                <td style="font-weight:500">@voucher.VoucherNo</td>
                                 <td>&nbsp;</td>
                                 <td style="color:#636363;">Journal:</td>
-                                <td style="font-weight:500">KABUL</td>
+                                <td style="font-weight:500">@voucher.Journal</td>
                             </tr>
                             <tr>
                             	<td style="color:#636363;">Date:</td>
-                                <td style="font-weight:500">30-06-2019</td>
+                                <td style="font-weight:500">@voucher.Date</td>
                                 <td>&nbsp;</td>
                                 <td style="color:#636363;">Region:</td>
-                                <td style="font-weight:500">KBL</td>
+                                <td style="font-weight:500">@voucher.Region</td>
                             </tr>
                         </table>
                     </td>
@@ -71,7 +78,7 @@
                             	<td>Description</td>
                             </tr>
                             <tr>
-                            	<td>Staff Salary For June - 2019</td>
+                            	<td>@voucher.Description</td>
                             </tr>
                         </table>
                     </td>
@@ -90,439 +97,24 @@
                                 <th>Prj</th>
                                 <th>Job</th>
                             </tr>
+                            @foreach (var transaction in @voucher.TransactionDetails)
+                            {
                             <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
+                            	<td>@transaction.AccountNo</td>
+                                <td>@transaction.Description</td>
+                                <td align="right">@transaction.Debit</td>
+                                <td align="right">@transaction.Credit</td>
+                                <td>@transaction.BudgetLine</td>
+                                <td>@transaction.Area</td>
+                                <td>@transaction.Sector</td>
+                                <td>@transaction.Project</td>
+                                <td>@transaction.Job</td>
                             </tr>
-                            <!-- <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>510114</td>
-                                <td>E18858 Salary June 2019 Meena</td>
-                                <td align="right">40000</td>
-                                <td></td>
-                                <td>CG094</td>
-                                <td>GHRFO</td>
-                                <td>00001</td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                            	<td>220326</td>
-                                <td>STAFF SALARY FOR June 2019</td>
-                                <td></td>
-                                <td align="right">34115.5</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>00470</td>
-                                <td></td>
-                            </tr> -->
+                            }
                             <tr class="page-break-before">
                             	<td colspan="2" style="font-weight:500;">Total:</td>
-                                <td style="font-weight:500;" align="right">40000.00</td>
-                                <td style="font-weight:500;" align="right">40000.00</td>
+                                <td style="font-weight:500;" align="right">@voucher.TotalDebit</td>
+                                <td style="font-weight:500;" align="right">@voucher.TotalCredit</td>
                                 <td colspan="5"></td>
                             </tr>
                             <tr class="page-break-before">
@@ -531,6 +123,7 @@
                         </table>
                     </td>
                 </tr>
+                }
                 <tr>
                 	<td>&nbsp;</td>
                 </tr>
@@ -575,65 +168,3 @@
     </body>
 </html>
 
-
-
-
-
-
-
-
-
-
-<!-- <html>
-<head>
-    <style>
-        body{ font-family: "Arial"; font-size: 14px;}
-        .car-name {
-            color: darkgray;
-        }
-        .car-max-speed {
-            color: tomato;
-        }
-        .car-registration {
-            color: brown;
-        }
-    </style>
-</head>
-<body>
-    @foreach (var voucherItem in Model)
-    {
-        <div>
-            <span>@voucherItem.Currency</span>  <br>
-            <span>@voucherItem.Cheque</span>   <br>
-            <span>@voucherItem.VoucherNo</span>   <br>          
-            <span>@voucherItem.Journal</span> <br>
-            <span>@voucherItem.Date</span> <br>
-            <span>@voucherItem.Region</span> <br>
-            <span>@voucherItem.Description</span> <br>
-
-            <div style="padding: 30px;">
-            @foreach (var item in voucherItem.TransactionDetails)
-                {
-                    <div>
-                        <span>@item.AccountNo</span> <br>
-                        <span>@item.Description</span>  <br>
-                        <span>@item.Debit</span>  <br>
-                        <span>@item.Credit</span>  <br>
-                        <span>@item.BudgetLine</span>  <br>
-                        <span>@item.Area</span>  <br>
-                        <span>@item.Sector</span>  <br>
-                        <span>@item.Program</span>  <br>
-                        <span>@item.Project</span>  <br>
-                        <span>@item.Job</span>  <br>
-                    </div>
-                }
-            </div>
-
-            <span>@voucherItem.TotalCredit</span>
-            <span>@voucherItem.TotalDebit</span>
- 
-        </div>
-        <br />
-    }
-</body>
-</html> -->
