@@ -4,91 +4,126 @@
   <div class="col-sm-12">
     <mat-card [ngStyle]="scrollStyles">
       <div class="row">
-
-        <div class="loader-mr-left pull-right" *ngIf="updateRecordLoader;else showDeleteIcon">
+        <div
+          class="loader-mr-left pull-right"
+          *ngIf="updateRecordLoader; else showDeleteIcon"
+        >
           <mat-spinner diameter="20"></mat-spinner>
         </div>
 
         <ng-template #showDeleteIcon>
           <div class="col-sm-12" *ngIf="isEditingAllowed">
-              <div class="row">
-                  <div class="col-sm-6">
-                    <h4 class="main_heading">DONOR DETAILS</h4>
-                  </div>
-                  <!-- <div *ngIf="archiveButton" class="col-sm-6"><a class="pull-right" (click)="DeleteClient(selectedclientId)">Archive</a>
+            <div class="row">
+              <div class="col-sm-6">
+                <h4 class="main_heading">DONOR DETAILS</h4>
+              </div>
+              <!-- <div *ngIf="archiveButton" class="col-sm-6"><a class="pull-right" (click)="DeleteClient(selectedclientId)">Archive</a>
                         </div> -->
-                        <div *ngIf="isEditingAllowed">
-                  <div *ngIf="archiveButton" class="col-sm -6 pull-right">
-                    <button pTooltip="Archive"
+              <div *ngIf="isEditingAllowed">
+                <div *ngIf="archiveButton" class="col-sm -6 pull-right">
+                  <button
+                    pTooltip="Archive"
                     tooltipPosition="top"
                     (click)="onDeleteDonor()"
-                      mat-icon-button
-                    >
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </div>
-                  </div>
+                    mat-icon-button
+                    color="warn"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
                 </div>
+              </div>
+            </div>
           </div>
         </ng-template>
-
       </div>
       <div class="row">
-
-        <div class="col-sm-12" *ngIf="donordetailLoaderFlag; else donorDetailtemplate">
+        <div
+          class="col-sm-12"
+          *ngIf="donordetailLoaderFlag; else donorDetailtemplate"
+        >
           <mat-spinner class="center_loader" diameter="40"></mat-spinner>
         </div>
 
         <ng-template #donorDetailtemplate>
-
-<br/>
+          <br />
           <div class="col-sm-12">
-            <form name="donorForm" [formGroup]="donorForm" novalidate>
+            <form
+              name="donorForm"
+              [formGroup]="donorForm"
+              (ngSubmit)="onFormSubmit(donorForm.value)"
+            >
               <div class="row">
                 <div class="col-sm-12">
                   <mat-form-field class="example-full-width">
-                    <input placeholder="Donor Name" matInput #AAname (change)="onChange('name', AAname.value)" type="text" name="Name"
-                      formControlName="Name" [disableControl]="!isEditingAllowed" />
+                    <input
+                      placeholder="Donor Name"
+                      matInput
+                      formControlName="Name"
+                      [disableControl]="!isEditingAllowed"
+                    />
                   </mat-form-field>
-                </div>               
-              </div>
-              <div class="row">
-                <div class="col-sm-12">
-                        <mat-form-field class="example-full-width">
-                          <input placeholder="Contact Designation" matInput #designation (change)="onChange('designation', designation.value)" type="text"
-                             name="ContactDesignation" formControlName="ContactDesignation" [disableControl]="!isEditingAllowed" />
-                        </mat-form-field> 
                 </div>
               </div>
               <div class="row">
                 <div class="col-sm-12">
                   <mat-form-field class="example-full-width">
-                    <input matInput placeholder="Contact Email" #email (change)="onChange('email', email.value)" type="text" name="ContactPersonEmail"
-                      formControlName="ContactPersonEmail" [disableControl]="!isEditingAllowed" />
+                    <input
+                      placeholder="Contact Designation"
+                      matInput
+                      formControlName="ContactDesignation"
+                      [disableControl]="!isEditingAllowed"
+                    />
                   </mat-form-field>
-                </div>               
-              </div>
-              <div class="row">
-                  <div class="col-sm-12">
-                      <mat-form-field class="example-full-width">
-                        <input matInput placeholder="Contact Name" #cName (change)="onChange('cName', cName.value)" type="text" name="ContactPerson"
-                          formControlName="ContactPerson" [disableControl]="!isEditingAllowed" />
-                      </mat-form-field>
-                    </div>
+                </div>
               </div>
               <div class="row">
                 <div class="col-sm-12">
                   <mat-form-field class="example-full-width">
-                    <input matInput placeholder="Contact Cell" #cCell (change)="onChange('cCell', cCell.value)" type="number" name="ContactPersonCell"
-                      formControlName="ContactPersonCell" minlength="10" [disableControl]="!isEditingAllowed" />
+                    <input
+                      matInput
+                      placeholder="Contact Email"
+                      formControlName="ContactPersonEmail"
+                      [disableControl]="!isEditingAllowed"
+                    />
                   </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <mat-form-field class="example-full-width">
+                    <input
+                      matInput
+                      placeholder="Contact Name"
+                      formControlName="ContactPerson"
+                      [disableControl]="!isEditingAllowed"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <mat-form-field class="example-full-width">
+                    <input
+                      matInput
+                      placeholder="Contact Cell"
+                      formControlName="ContactPersonCell"
+                      [disableControl]="!isEditingAllowed"
+
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-2">
+                  <button mat-raised-button color="primary" type="submit">
+                    <span>Save</span>
+                  </button>
                 </div>
               </div>
             </form>
           </div>
         </ng-template>
       </div>
-
     </mat-card>
   </div>
 </div>
@@ -173,10 +208,6 @@
 <!-- Button trigger modal -->
 
 <!-- Button trigger modal -->
-
-
-
-
 
 <!-- <div class="modal fade" id="myModal" role="dialog">
   <div class="modal-dialog">

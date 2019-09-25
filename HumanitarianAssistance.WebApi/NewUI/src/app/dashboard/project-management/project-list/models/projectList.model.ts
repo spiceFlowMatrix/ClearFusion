@@ -10,3 +10,16 @@ export interface IProjectFilterModel {
   pageSize?: number;
   totalCount?: number;
 }
+
+export  interface IWinLossProjectDetailModel {
+  //reviewer
+  FileName: string;
+  FilePath: string;
+  // winloss
+  WinLossMessage: string;
+  WinLossFileName: string;
+  WinlossFilePath: string;
+  IsReviewApproved?: boolean;
+  // * project Proposal accept reject value
+  IsProposalAccept?: boolean;
+}

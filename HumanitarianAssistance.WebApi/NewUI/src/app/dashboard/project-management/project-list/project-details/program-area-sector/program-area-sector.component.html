@@ -5,7 +5,7 @@
     </h4>
   </div>
   <div class="col-sm-1">
-        <mat-icon class="icon_cursor padding_top_5px" aria-label="download" (click)="onExportPdf()">vertical_align_bottom</mat-icon>
+        <!-- <mat-icon class="icon_cursor padding_top_5px" aria-label="download" (click)="onExportPdf()">vertical_align_bottom</mat-icon> -->
   </div>
   <div class="col-sm-7">
         <mat-icon class="pull-right icon_cursor" aria-label="cancel" (click)="closeProgramAreaSectorModal()">clear</mat-icon>
@@ -71,7 +71,7 @@
                 <div class="form-group ">
                   <mat-form-field class="example-full-width">
                     <input matInput #opportunityNoID type="text" [(ngModel)]="projectotherDetail.opportunityNo"
-                      maxlength="150" placeholder="Opportunity No" name="opportunityNo" required (focusout)="
+                      placeholder="Opportunity No" name="opportunityNo" required (focusout)="
                           onProjectotherDetailsChange(
                             'opportunityNo',
                             opportunityNoID.value
@@ -91,7 +91,7 @@
                 <div class="form-group">
                   <mat-form-field class="example-full-width">
                     <input matInput #Opportunity type="text" [(ngModel)]="projectotherDetail.opportunity"
-                      maxlength="150" placeholder="Opportunity" name="opportunity" required (focusout)="
+                      placeholder="Opportunity" name="opportunity" required (focusout)="
                           onProjectotherDetailsChange(
                             'opportunity',
                             Opportunity.value
@@ -109,7 +109,7 @@
               <div class="col-sm-12">
                 <div class="form-group">
                   <mat-form-field class="example-full-width">
-                    <textarea matInput #Opportunitydescription type="text" matTextareaAutosize matAutosizeMinRows="2"
+                    <textarea rows="4" matInput #Opportunitydescription type="text"
                       [(ngModel)]="projectotherDetail.opportunitydescription" placeholder="Opportunity Description"
                       name="opportunitydescription" required (focusout)="
                 onProjectotherDetailsChange(
@@ -275,7 +275,7 @@
               <div class="form-group  ">
                 <mat-form-field class="example-full-width">
                   <textarea rows="4" matInput #ProjectGoalID type="text" [(ngModel)]="projectotherDetail.projectGoal"
-                    maxlength="150" placeholder="Project Goal" name="projectGoal" [formControl]="projectGoal"
+                    placeholder="Project Goal" name="projectGoal" [formControl]="projectGoal"
                     (focusout)="
                         onProjectotherDetailsChange(
                           'projectGoal',
@@ -293,7 +293,7 @@
               <div class="form-group ">
                 <mat-form-field class="example-full-width">
                   <textarea rows="4" matInput #ProjectObjectiveID type="text" [(ngModel)]="projectotherDetail.projectObjective"
-                    maxlength="150" placeholder="Project Objective" name="projectObjective"
+                     placeholder="Project Objective" name="projectObjective"
                     [formControl]="projectObjective" (focusout)="
                       onProjectotherDetailsChange(
                         'projectObjective',
@@ -312,24 +312,6 @@
           <div class="row">
             <div class="col-sm-6">
               <div class="form-group ">
-                <mat-form-field class="example-full-width">
-                  <input matInput #MainActivitiesID type="text" [(ngModel)]="projectotherDetail.mainActivities"
-                    maxlength="150" placeholder="Main Activities" name="mainActivities" [formControl]="mainActivities"
-                    (focusout)="
-                      onProjectotherDetailsChange(
-                        'mainActivities',
-                        MainActivitiesID.value
-                      )
-                    " [disableControl]="!isEditingAllowed" />
-
-                  <mat-error *ngIf="mainActivities.hasError('required')">
-                    Main Activities is <strong>required</strong>
-                  </mat-error>
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="form-group ">
                 <mat-form-field>
                   <input matInput [(ngModel)]="projectotherDetail.REOIReceiveDate" [matDatepicker]="picker4"
                     placeholder="REOI Receive Date" (dateChange)="
@@ -340,9 +322,6 @@
                 </mat-form-field>
               </div>
             </div>
-          </div>
-          <br>
-          <div class="row">
             <div class="col-sm-6">
               <div class="form-group ">
                 <mat-form-field>
@@ -355,8 +334,29 @@
                 </mat-form-field>
               </div>
             </div>
-            <div class="col-sm-6">
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group ">
+                <mat-form-field class="example-full-width">
+                  <textarea rows="4" matInput #MainActivitiesID type="text" [(ngModel)]="projectotherDetail.mainActivities"
+                     placeholder="Main Activities" name="mainActivities" [formControl]="mainActivities"
+                    (focusout)="
+                      onProjectotherDetailsChange(
+                        'mainActivities',
+                        MainActivitiesID.value
+                      )
+                    " [disableControl]="!isEditingAllowed" ></textarea>
+
+                  <mat-error *ngIf="mainActivities.hasError('required')">
+                    Main Activities is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
             </div>
+            <!-- <div class="col-sm-6">
+            </div> -->
           </div>
         </mat-card>
       </div>
@@ -514,7 +514,7 @@
             <div class="col-sm-12">
               <div class="form-group ">
                 <mat-form-field class="example-full-width">
-                  <textarea matInput #GenderRemarksID type="text" matTextareaAutosize matAutosizeMinRows="2"
+                  <textarea rows="4" matInput #GenderRemarksID type="text"
                     [(ngModel)]="projectotherDetail.GenderRemarks" placeholder="Gender Remarks" name="GenderRemarks"
                     [formControl]="GenderRemarks" (focusout)="
                     onProjectotherDetailsChange(
@@ -574,7 +574,7 @@
             <div class="col-sm-12">
               <div class="form-group ">
                 <mat-form-field class="example-full-width ">
-                  <textarea matInput #SecurityRemarksID type="text" matTextareaAutosize matAutosizeMinRows="2"
+                  <textarea rows="4" matInput #SecurityRemarksID type="text"
                     [(ngModel)]="projectotherDetail.SecurityRemarks" placeholder="Security Remarks"
                     name="SecurityRemarks" [formControl]="SecurityRemarks" (focusout)="
                         onProjectotherDetailsChange(

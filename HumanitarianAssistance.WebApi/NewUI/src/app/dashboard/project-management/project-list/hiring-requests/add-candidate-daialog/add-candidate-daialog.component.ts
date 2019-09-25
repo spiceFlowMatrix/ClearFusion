@@ -55,7 +55,6 @@ export class AddCandidateDaialogComponent implements OnInit {
   }
   OnSelectionChange(event: any) {
     this.candidateloaderFlag = true;
-    console.log(event);
     this.AddNewCandidate(event.value);
   }
 

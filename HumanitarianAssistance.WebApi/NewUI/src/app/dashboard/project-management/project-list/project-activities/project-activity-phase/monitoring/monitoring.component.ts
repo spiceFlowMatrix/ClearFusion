@@ -47,8 +47,19 @@ export class MonitoringComponent implements OnInit, OnChanges, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   //#endregion
-
-  tableHeaderList: string[] = ['Question', 'Verification', 'Score'];
+  tableHeader: string[] = [
+    'Indicator Question',
+    'Question Type',
+    'Verification Source',
+    'Score'
+  ];
+  // set header name same as database entity name for mapping
+  tableHeaderList: string[] = [
+    'IndicatorQuestion',
+    'QuestionTypeName',
+    'VerificationSourceName',
+    'Score'
+  ];
 
   ngOnInit() {
     this.getProjectMonitoringList();
@@ -133,7 +144,9 @@ export class MonitoringComponent implements OnInit, OnChanges, OnDestroy {
     const dialogRef = this.dialog.open(MonitoringReviewComponent, {
       width: '550px',
       data: {
-        monitoringReviewModel: monitoringModel
+        monitoringReviewModel: monitoringModel,
+        projectId: this.projectId,
+        activityId: this.activityId
       },
       autoFocus: false
     });

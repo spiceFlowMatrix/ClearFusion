@@ -140,8 +140,6 @@ export class ProfessionalInfoComponent implements OnInit {
       EmployeeTypeName: null,
       AttendanceGroupId: null,
       DutyStation: null,
-      Password: null,
-      ConfirmPassword: null
     };
   }
 
@@ -416,8 +414,6 @@ export class ProfessionalInfoComponent implements OnInit {
       Status: model.Status,
       TrainingBenefits: model.TrainingBenefits,
       DutyStation: model.DutyStation,
-      ConfirmPassword: model.ConfirmPassword,
-      Password: model.Password
     };
     this.assignLeaveToEmployee = this.employeeId;
     this.hrService
@@ -521,8 +517,6 @@ export class ProfessionalInfoComponent implements OnInit {
       Status: model.Status,
       TrainingBenefits: model.TrainingBenefits,
       DutyStation: model.DutyStation,
-      ConfirmPassword: model.ConfirmPassword,
-      Password: model.Password
     };
     this.assignLeaveToEmployee = this.employeeId;
     this.hrService
@@ -605,9 +599,7 @@ export class ProfessionalInfoComponent implements OnInit {
       TrainingBenefits: value.TrainingBenefits,
       EmployeeId: this.employeeId,
       AttendanceGroupId: value.AttendanceGroupId,
-      DutyStation: value.DutyStation,
-      Password: value.Password,
-      ConfirmPassword: value.ConfirmPassword
+      DutyStation: value.DutyStation
     };
 
     this.popupProfesionalinfoVisible = true;
@@ -827,6 +819,4 @@ export class ProfessionalDetails {
   AttendanceGroupId?: number;
   AttendanceGroupName?: string;
   DutyStation: number;
-  Password: string;
-  ConfirmPassword: string;
 }

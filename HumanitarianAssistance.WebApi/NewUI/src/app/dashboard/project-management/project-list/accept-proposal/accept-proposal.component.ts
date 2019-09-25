@@ -10,6 +10,9 @@ import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { ProjectListService } from '../service/project-list.service';
 import { IApproveRejectModel } from '../project-details/models/project-details.model';
 import { ToastrService } from 'ngx-toastr';
+import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
+import { IWinLossProjectDetailModel } from '../models/projectList.model';
+import { error } from '@angular/compiler/src/util';
 
 @Component({
   selector: 'app-accept-proposal',
@@ -27,17 +30,18 @@ export class AcceptProposalComponent implements OnInit {
   // Projectid: number;
   imageUrl: any = null;
   data: any;
-  FileName: string;
-
+  winlossmodel: IWinLossProjectDetailModel;
+  approvedProjectDetailLoader = false;
+  isNewFile = true;
   // win/loss
-  winLossMessage: string;
-  winLossFileName: string;
+
   winLossImageUrl: any;
 
   commonLoaderFlag = false;
   commonWinLossFlag = false;
   disableApprovedButton = false;
   diableWinLossButton = false;
+  // isApprovalRejectedflag: boolean = null;
   //#endregion
 
   //#region  input/output emit
@@ -64,11 +68,9 @@ export class AcceptProposalComponent implements OnInit {
   ngOnInit() {
     this.initForm();
     // this.Projectid = + this.routeActive.snapshot.paramMap.get('id');
-    this.FileName = null;
-    this.winLossMessage = '';
-    this.winLossFileName = '';
     this.getApprovedProjectDetail(this.projectId);
     this.getProjectWinLossDetailById(this.projectId);
+    this.initModel();
   }
 
   initForm() {
@@ -76,6 +78,17 @@ export class AcceptProposalComponent implements OnInit {
       CommentText: new FormControl('', [Validators.required]),
       FileName: new FormControl('')
     });
+  }
+  initModel() {
+    this.winlossmodel = {
+      FileName: null,
+      FilePath: null,
+      WinLossMessage: '',
+      WinLossFileName: '',
+      WinlossFilePath: null,
+      IsReviewApproved: null,
+      IsProposalAccept: null
+    };
   }
   //#region  click to emit event of approval to parent
   isApproved(text: any) {
@@ -110,7 +123,7 @@ export class AcceptProposalComponent implements OnInit {
 
   public dropped(event: UploadEvent) {
     this.files = event.files;
-    this.FileName = this.files[0].relativePath;
+    this.winlossmodel.FileName = this.files[0].relativePath;
     const droppedFile = event.files[0];
     const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
     const reader = new FileReader();
@@ -124,14 +137,14 @@ export class AcceptProposalComponent implements OnInit {
   }
 
   // drag and drop review documents 27/03/2019
-  //#region start proposal drag and drop
+  //#region upload review doc drag and drop
   public UploadReviewDragAndDropFile(event: UploadEvent) {
     this.files = event.files;
     if (/\.(gif|jpg|jpeg|tiff|png)$/i.test(this.files[0].relativePath)) {
       this.toastr.warning('File format is not correct.');
       return;
     }
-    this.FileName = this.files[0].relativePath;
+    this.winlossmodel.FileName = this.files[0].relativePath;
 
     for (const droppedFile of event.files) {
       // Is it a file?
@@ -151,7 +164,9 @@ export class AcceptProposalComponent implements OnInit {
 
   DeleteFile(data) {
     if (data != null) {
-      this.FileName = null;
+      // to hide the anchor tag
+      this.winlossmodel.IsReviewApproved = null;
+      this.winlossmodel.FileName = null;
     }
   }
 
@@ -174,7 +189,7 @@ export class AcceptProposalComponent implements OnInit {
   isWin() {
     this.commonWinLossFlag = true;
     const obj: IApproveRejectModel = {
-      text: this.winLossMessage, // "CommentText" is inside the form
+      text: this.winlossmodel.WinLossMessage, // "CommentText" is inside the form
       flag: true,
       data: this.formData
     };
@@ -184,7 +199,7 @@ export class AcceptProposalComponent implements OnInit {
   isLoss() {
     this.commonWinLossFlag = true;
     const obj: IApproveRejectModel = {
-      text: this.winLossMessage, // "CommentText" is inside the form
+      text: this.winlossmodel.WinLossMessage, // "CommentText" is inside the form
       flag: false,
       data: this.formData
     };
@@ -198,7 +213,7 @@ export class AcceptProposalComponent implements OnInit {
 
   public winLossDropped(event: UploadEvent) {
     this.files = event.files;
-    this.winLossFileName = this.files[0].relativePath;
+    this.winlossmodel.WinLossFileName = this.files[0].relativePath;
     const droppedFile = event.files[0];
     const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
     const reader = new FileReader();
@@ -221,7 +236,7 @@ export class AcceptProposalComponent implements OnInit {
       return;
     }
 
-    this.winLossFileName = this.files[0].relativePath;
+    this.winlossmodel.WinLossFileName = this.files[0].relativePath;
 
     for (const droppedFile of event.files) {
       // Is it a file?
@@ -240,15 +255,16 @@ export class AcceptProposalComponent implements OnInit {
   //#endregion
 
   winLossDeleteFile() {
-    this.winLossFileName = '';
+    this.winlossmodel.WinLossFileName = '';
   }
 
   winlossButtonDisabled() {
     // (this.lossLoaderFlag || this.winLoaderFlag) &&
     if (
-      this.winLossFileName === '' ||
-      this.winLossMessage === '' ||
-      this.commonWinLossFlag || this.diableWinLossButton === true
+      this.winlossmodel.WinLossFileName === '' ||
+      this.winlossmodel.WinLossMessage === '' ||
+      this.commonWinLossFlag ||
+      this.diableWinLossButton === true
     ) {
       return true;
     } else {
@@ -259,6 +275,7 @@ export class AcceptProposalComponent implements OnInit {
 
   //#region "getApprovedProjectDetail"
   getApprovedProjectDetail(projectId: number) {
+    this.approvedProjectDetailLoader = true;
     if (projectId != null && projectId !== undefined) {
       this.projectListService
         .GetApprovalProjectDetailById(projectId)
@@ -268,32 +285,75 @@ export class AcceptProposalComponent implements OnInit {
               response.data.CommentText
             );
             // to bind the filename value
-            this.FileName = response.data.FileName;
+            // ** to disable the anchor for first time upload of review file
+            this.isNewFile = (response.data.FileName == null || response.data.FileName === undefined) ? this.isNewFile : false;
+            this.winlossmodel.FileName = response.data.FileName;
+            this.winlossmodel.FilePath = response.data.FilePath;
             // check if isapproved is true then only we disable the button
-
-             if (response.data.IsApproved === true || response.data.IsProposalRejected === false) {
+            this.winlossmodel.IsReviewApproved = response.data.IsApproved;
+            this.winlossmodel.IsProposalAccept =
+              response.data.IsProposalRejected;
+            if (
+              response.data.IsApproved === true ||
+              response.data.IsProposalRejected === false // * the value from Project Proposal detail
+            ) {
               this.disableApprovedButton = true;
             }
           }
-        });
+          this.approvedProjectDetailLoader = false;
+        },
+        (error) => {
+          this.approvedProjectDetailLoader = false;
+          this.toastr.error('Someting went wrong');
+        }
+        );
     }
   }
   //#endregion
 
   //#region "getwinLossProjectDetail"
   getProjectWinLossDetailById(projectId: number) {
+    this.approvedProjectDetailLoader = true;
     if (projectId != null && projectId !== undefined) {
       this.projectListService
         .GetProjectWinLossDetailById(projectId)
         .subscribe(response => {
           if (response.data != null && response.statusCode === 200) {
-            this.winLossMessage = response.data.CommentText;
-            this.winLossFileName = response.data.FileName;
-              this.diableWinLossButton = true;
-
+            this.winlossmodel.WinLossMessage = response.data.CommentText;
+            this.winlossmodel.WinLossFileName = response.data.FileName;
+            this.winlossmodel.WinlossFilePath = response.data.FilePath;
+            this.diableWinLossButton = true;
           }
+          this.approvedProjectDetailLoader = false;
+        },
+        (error) => {
+          this.approvedProjectDetailLoader = false;
+          this.toastr.error('Someting went wrong');
         });
     }
+  }
+  //#endregion
+  //#region "onDocumentClicked"
+  onDocumentClicked(filePath: string) {
+    this.documentDownload(filePath);
+  }
+  //#endregion
+  documentDownload(objectName: string) {
+    const objectData = {
+      ObjectName: objectName
+    };
+    this.projectListService.GetProjectSignedUrl(objectData).subscribe(
+      (data: IResponseData) => {
+        if (data != null) {
+          if (data.statusCode === 200 && data.data != null) {
+            window.open(data.data, '_blank');
+          } else if (data.statusCode === 200) {
+            this.toastr.error(data.message);
+          }
+        }
+      },
+      error => {}
+    );
   }
   //#endregion
 }

@@ -349,6 +349,18 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
             return await _mediator.Send(command);
         }
 
+        [HttpPost]
+        public async Task<ApiResponse> DeleteItemSpecificationsMaster([FromBody]long Id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            DeleteItemSpecificationsMasterCommand command = new DeleteItemSpecificationsMasterCommand();
+            command.Id= Id;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+        }
+
         [HttpGet]
         public async Task<ApiResponse> GetItemSpecificationsMaster([FromQuery]int ItemTypeId, int OfficeId)
         {

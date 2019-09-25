@@ -61,7 +61,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                 ProjectMonitoringQuestionModel questions = new ProjectMonitoringQuestionModel
                                 {
                                     MonitoringIndicatorQuestionId = question.Id,
-                                    Question = question.ProjectIndicatorQuestions.IndicatorQuestion,
+                                    IndicatorQuestion = question.ProjectIndicatorQuestions.IndicatorQuestion,
                                     IndicatorQuestionId = question.IndicatorQuestionId,
                                     Score = question.Score,
                                     VerificationSourceName = question.VerificationSourceName,

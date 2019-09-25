@@ -21,8 +21,8 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public string JobCategory { get; set; }
         public string MinimumEducationLevel { get; set; }
         public string Organization { get; set; }
-        [ForeignKey("ProviceId")]
-        public int? ProviceId { get; set; }
+        [ForeignKey("ProvinceId")]
+        public int? ProvinceId { get; set; }
         public ProvinceDetails ProvinceDetails { get; set; }
         public string ContractType { get; set; }
         public int? ContractDuration { get; set; }

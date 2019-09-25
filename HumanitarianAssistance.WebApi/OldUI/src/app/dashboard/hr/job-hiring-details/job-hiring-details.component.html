@@ -36,7 +36,7 @@
         <dxi-column dataField="JobCode" [editorOptions]="{readOnly: true}"></dxi-column>
         <dxi-column dataField="JobDescription"></dxi-column>
         <dxi-column dataField="OfficeId" caption="Office Name" [width]="160" [visible]="false">
-          <dxo-lookup [dataSource]="officeTypeDropdown" valueExpr="OfficeId" displayExpr="OfficeName">
+          <dxo-lookup [dataSource]="officeDropdownList" valueExpr="OfficeId" displayExpr="OfficeName">
           </dxo-lookup>
         </dxi-column>
         <dxi-column dataField="ProfessionId" caption="Profession">
@@ -79,7 +79,7 @@
             </dxi-validation-rule>
           </dxi-item>
           <dxi-item dataField="OfficeId" editorType="dxSelectBox" [editorOptions]="{
-                  dataSource: officeTypeDropdown, 
+                  dataSource: officeDropdownList, 
                   value: jobHiringForm.OfficeId,
                   displayExpr: 'OfficeName',
                   valueExpr: 'OfficeId'}">

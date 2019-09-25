@@ -6487,9 +6487,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<long?>("ProjectId");
 
-                    b.Property<int?>("ProviceId");
-
-                    b.Property<int?>("ProvinceDetailsProvinceId");
+                    b.Property<int?>("ProvinceId");
 
                     b.Property<string>("SalaryRange");
 
@@ -6519,7 +6517,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.HasIndex("ProvinceDetailsProvinceId");
+                    b.HasIndex("ProvinceId");
 
                     b.ToTable("ProjectHiringRequestDetail");
                 });
@@ -9582,7 +9580,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.ProvinceDetails", "ProvinceDetails")
                         .WithMany()
-                        .HasForeignKey("ProvinceDetailsProvinceId");
+                        .HasForeignKey("ProvinceId");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectIndicatorQuestions", b =>

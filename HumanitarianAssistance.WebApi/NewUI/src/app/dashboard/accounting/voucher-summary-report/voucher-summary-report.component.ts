@@ -10,7 +10,8 @@ import {
   VoucherSummaryFilterModel,
   IReportVoucherModel,
   BudgetlineListModel,
-  VoucherSummaryTransactionModel
+  VoucherSummaryTransactionModel,
+  IVoucherSummaryTransaction
 } from './voucher-summary-model';
 import { CurrencyModel } from '../../project-management/project-list/project-details/models/project-details.model';
 import { GLOBAL } from 'src/app/shared/global';
@@ -76,6 +77,7 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
   // report datasource
   voucherSummaryReport: IReportVoucherModel[];
   voucherSummaryTransactionModel: VoucherSummaryTransactionModel[];
+  VoucherSummaryTransaction: IVoucherSummaryTransaction[];
 
   screenHeight: number;
   screenWidth: number;
@@ -351,6 +353,7 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
 
           if (index !== -1) {
             if (response.statusCode === 200 && response.data !== null) {
+              this.voucherSummaryReport[index].VoucherTransactions = [];
               response.data.forEach(
                 (element: {
                   AccountCode: string;
@@ -360,8 +363,7 @@ export class VoucherSummaryReportComponent implements OnInit, OnDestroy {
                   Amount: number;
                   TransactionType: string;
                 }) => {
-                  this.voucherSummaryReport[index].VoucherTransactions = [];
-
+                  // this.voucherSummaryReport[index].VoucherTransactions = [];
                   this.voucherSummaryReport[index].VoucherTransactions.push({
                     AccountCode: element.AccountCode,
                     AccountName: element.AccountName,

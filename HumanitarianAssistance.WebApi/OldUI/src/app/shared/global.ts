@@ -102,6 +102,7 @@ export class GLOBAL {
   public static API_HR_GetAllPayrollMonthlyHourDetailFilter = 'Attendance/GetAllPayrollMonthlyHourDetail'; // new EmployeeHR
   public static API_EmployeeHR_AddPayrollMonthlyHourDetail = 'Attendance/AddPayrollMonthlyHourDetail';
   public static API_HR_AssignLeaveToEmployeeDetail = 'Attendance/AssignLeaveToEmployeeDetail';
+  public static API_Pdf_GetAllEmployeeLeavePdf = 'Pdf/GetAllEmployeeLeavePdf';
   public static API_HR_GetAllEmployeeAssignLeave = 'Attendance/GetAllEmployeeAssignLeave';
   public static API_HR_GetEmployeeHealthDetail = 'EmployeeDetail/GetAllEmployeeHealthDetailByEmployeeId';
   public static API_HR_AddEmployeeHealthDetail = 'HREmployee/AddEmployeeHealthDetail';
@@ -452,7 +453,7 @@ export class GLOBAL {
   public static API_Store_AddItemSpecificationsMaster = 'Store/AddItemSpecificationsMaster';
   public static API_Store_EditItemSpecificationsMaster = 'Store/EditItemSpecificationsMaster';
   public static API_Store_GetItemSpecificationsMaster = 'Store/GetItemSpecificationsMaster';
-
+  public static API_Store_DeleteItemSpecificationsMaster = 'Store/DeleteItemSpecificationsMaster';
 
 
   public static API_Store_AddItemSpecificationsDetails = 'Store/AddItemSpecificationsDetails';
