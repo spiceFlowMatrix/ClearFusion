@@ -6,7 +6,7 @@ using MediatR;
 
 namespace HumanitarianAssistance.Application.Store.Queries
 {
-    public class GetPurchasesWithFiltersQuery: IRequest<List<PurchaseListModel>>
+    public class GetFilteredPurchaseListQuery: IRequest<List<PurchaseListModel>>
     {
         public int InventoryTypeId { get; set; }
         public int ReceiptTypeId { get; set; }

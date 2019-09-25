@@ -4,6 +4,7 @@ import { AppUrlService } from '../../shared/services/app-url.service';
 import { GLOBAL } from '../../shared/global';
 import { map } from 'rxjs/internal/operators/map';
 import { IResponseData } from '../../../app/dashboard/accounting/vouchers/models/status-code.model';
+import { IFilterValueModel } from '../models/purchase';
 
 @Injectable({
   providedIn: 'root'
@@ -72,6 +73,18 @@ export class PurchaseService {
           };
           return responseData;
         }));
+  }
+  //#endregion
+
+  //#region "GetPurchaseListFilter"
+  GetFilteredPurchaseList(filter: IFilterValueModel): any {
+    return this.globalService
+      .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetFilteredPurchaseList, filter)
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
   }
   //#endregion
 }

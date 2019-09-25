@@ -16,37 +16,21 @@ export interface IDropDownModel {
   value: number;
 }
 
-export interface IInventoryType {
-  Id: number;
-  InventoryName: string;
+export interface IFilterValueModel {
+  InventoryTypeId: any;
+  ReceiptTypeId: any;
+  OfficeId: any;
+  CurrencyId: any;
+  ProjectId: any;
+  PurchaseStartDate: any;
+  PurchaseEndDate: any;
+  IssueStartDate: any;
+  IssueEndDate: any;
+  InventoryId: any;
+  ItemGroupId: any;
+  ItemId: any;
 
-}
-
-export interface IOffice {
-OfficeId: number;
-OfficeName: string;
-OfficeCode: string;
-}
-
-export interface IReceiptType {
-  ReceiptTypeId: number;
-  ReceiptTypeName: string;
-}
-
-export interface ICurrency {
-  CurrencyId: number;
-  CurrencyName: string;
-  CurrencyCode: string;
-}
-
-export interface IProject {
-  ProjectId: number;
-  ProjectName: string;
-  ProjectCode: string;
-}
-
-export interface IStoreInventory {
-  InventoryId: number;
-  InventoryName: string;
-  InventoryCode: string;
+  pageIndex: any;
+  pageSize: any;
+  totalCount: any;
 }

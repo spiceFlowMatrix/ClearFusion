@@ -117,13 +117,13 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetPurchasesWithFilters(GetPurchasesWithFiltersQuery request)
+        public async Task<IActionResult> GetFilteredPurchaseList(GetFilteredPurchaseListQuery request)
         {
-            var result = await Task.FromResult(_mediator.Send(new GetPurchasesWithFiltersQuery { }));
+            var result = await Task.FromResult(_mediator.Send(request));
 
             if (result.Exception == null)
             {
-                return Ok(result);
+                return Ok(await result);
             }
             else
             {

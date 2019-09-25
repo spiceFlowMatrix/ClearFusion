@@ -13,16 +13,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Application.Store.Queries
 {
-    public class GetPurchasesWithFiltersQueryHandler : IRequestHandler<GetPurchasesWithFiltersQuery, List<PurchaseListModel>>
+    public class GetFilteredPurchaseListQueryHandler : IRequestHandler<GetFilteredPurchaseListQuery, List<PurchaseListModel>>
     {
 
         private HumanitarianAssistanceDbContext _dbContext;
         
-        public GetPurchasesWithFiltersQueryHandler(HumanitarianAssistanceDbContext dbContext)
+        public GetFilteredPurchaseListQueryHandler(HumanitarianAssistanceDbContext dbContext)
         {
             _dbContext = dbContext;
         }
-        public async Task<List<PurchaseListModel>> Handle(GetPurchasesWithFiltersQuery request, CancellationToken cancellationToken)
+        public async Task<List<PurchaseListModel>> Handle(GetFilteredPurchaseListQuery request, CancellationToken cancellationToken)
         {
             List<PurchaseListModel> model = new List<PurchaseListModel>();
             
@@ -64,8 +64,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                        }).ToList()
 
                                   })
-                                  .Skip(request.pageSize.Value * request.pageIndex.Value)
-                                  .Take(request.pageSize.Value)
+                                //   .Skip(request.pageSize.Value * request.pageIndex.Value)
+                                //   .Take(request.pageSize.Value)
                                   .ToListAsync();
 
                 // List<ExchangeRateDetail> exchangeRateList= await _dbContext.ExchangeRateDetail
