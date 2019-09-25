@@ -19,6 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { ListingDeleteComponent } from './components/listing-delete/listing-delete.component';
 import { DocumentListingComponent } from './components/document-listing/document-listing.component';
 import { HumDropdownComponent } from './components/hum-dropdown/hum-dropdown.component';
+import { TableComponent } from './components/table/table.component';
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import { HumDropdownComponent } from './components/hum-dropdown/hum-dropdown.com
     ListingDeleteComponent,
     DocumentListingComponent,
     HumDropdownComponent,
+    TableComponent,
   ],
   exports: [
     LibraryComponent,
@@ -54,7 +56,8 @@ import { HumDropdownComponent } from './components/hum-dropdown/hum-dropdown.com
     DragAndDropComponent,
     SearchDropdownComponent,
     ListingDeleteComponent,
-    HumDropdownComponent
+    HumDropdownComponent,
+    TableComponent
   ],
   entryComponents: [
     DeleteConfirmationComponent

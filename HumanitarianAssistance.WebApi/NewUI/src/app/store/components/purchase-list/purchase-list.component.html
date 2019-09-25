@@ -1,4 +1,3 @@
-
 <lib-sub-header-template>
   <span class="action_header">Purchases & Procurements
   </span>
@@ -12,56 +11,8 @@
 </lib-sub-header-template>
 <div class="row">
   <div class="col-md-12">
-      <app-purchase-filters></app-purchase-filters>
-      <div class="responsive_table-responsive">
-        Purchases
-        <table class="table table-bordered">
-          <thead>
-            <th>Id</th>
-            <th>Item</th>
-            <th>Purchased By</th>
-            <th>Project</th>
-            <th>Original Cost</th>
-            <th>Depricated Cost</th>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="grey-text">jh435k-324n
-              </td>
-              <td class="grey-text">C04-01-01 - Item Name
-              </td>
-              <td class="grey-text">Employee Name
-              </td>
-              <td class="grey-text">Project Code - Name
-              </td>
-              <td class="grey-text">450
-              </td>
-              <td class="grey-text">420
-              </td>
-              <td class="grey-text">
-                <a> + ADD PRECUREMENT</a>
-              </td>
-            </tr>
-            <tr>
-                <td class="grey-text">jh435k-324n
-                </td>
-                <td class="grey-text">C04-01-01 - Item Name
-                </td>
-                <td class="grey-text">Employee Name
-                </td>
-                <td class="grey-text">Project Code - Name
-                </td>
-                <td class="grey-text">450
-                </td>
-                <td class="grey-text">420
-                </td>
-                <td class="grey-text">
-                  <a> + ADD PRECUREMENT</a>
-                </td>
-              </tr>
-          </tbody>
-        </table>
-      </div>
+    <app-purchase-filters></app-purchase-filters>
+    <hum-table [headers]="headers" [items]="values"></hum-table>
   </div>
 
 </div>
