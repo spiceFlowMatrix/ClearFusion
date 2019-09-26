@@ -123,8 +123,7 @@ export class DonorMasterComponent implements OnInit {
       ]
     });
   }
-    // convenience getter for easy access to form fields
-    get f() { return this.donorForm.controls; }
+   
 
   ngOnInit() {}
 
