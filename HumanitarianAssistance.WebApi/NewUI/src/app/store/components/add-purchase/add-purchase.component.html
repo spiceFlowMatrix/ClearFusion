@@ -1,35 +1,10 @@
 <lib-sub-header-template>
   <span class="action_header">Add a new purchase
-    <span> <a>Save</a> </span>
-    <span> <a>Cancel</a> </span>
+    <hum-button [type]="'save'" [text]="'save'"></hum-button>
+    <hum-button [type]="'cancel'" [text]="'cancel'"></hum-button>
+    <hum-button [type]="'add'" [text]="'add procurement'"></hum-button>
   </span>
   <div class="action_section">
   </div>
 </lib-sub-header-template>
-<div class="container">
-  <div class="row">
-    Item Detail
-    <div class="col-md-12">
-      <div class="col-md-4"> Test </div>
-      <div class="col-md-4"> Test </div>
-      <div class="col-md-4"> Test </div>
-    </div>
-  </div>
-  <div class="row">
-    Item Detail
-    <div class="col-md-12">
-      <div class="col-md-4">
-        <lib-hum-dropdown [options]="animals" [formControl]="animalControl" [placeHolder]="'placeholder'" (change)="getSelectedValue($event)"></lib-hum-dropdown>
-      </div>
-      <div class="col-md-4">
-        <lib-hum-dropdown [options]="animals" [formControl]="animalControl" [placeHolder]="'placeholder'"></lib-hum-dropdown>
-      </div>
-      <div class="col-md-4">
-        <lib-hum-dropdown [options]="animals" [formControl]="animalControl" [placeHolder]="'placeholder'"></lib-hum-dropdown>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    Item Detail
-  </div>
-</div>
+<mat-card></mat-card>
