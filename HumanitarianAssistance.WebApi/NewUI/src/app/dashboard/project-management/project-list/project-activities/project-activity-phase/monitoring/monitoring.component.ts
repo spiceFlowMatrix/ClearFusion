@@ -93,7 +93,6 @@ export class MonitoringComponent implements OnInit, OnChanges, OnDestroy {
 
   //#region "getProjectMonitoringList"
   getProjectMonitoringList() {
-    debugger;
     this.projectMonitoring = [];
     if (this.activityId !== undefined && this.activityId !== 0) {
       this.activitiesService
@@ -131,7 +130,6 @@ export class MonitoringComponent implements OnInit, OnChanges, OnDestroy {
   //#region "openAddProjectMonitoringDialog"
   openEditProjectMonitoringDialog(Id: number): void {
     if (Id !== 0) {
-      debugger;
       const index = this.projectMonitoring.findIndex(
         x => x.ProjectMonitoringReviewId === Id
       );
