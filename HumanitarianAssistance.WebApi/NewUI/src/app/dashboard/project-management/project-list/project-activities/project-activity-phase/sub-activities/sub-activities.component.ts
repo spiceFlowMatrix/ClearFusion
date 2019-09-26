@@ -280,6 +280,7 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
 
   //#region "onStartActivityClicked"
   onStartActivityClicked() {
+    debugger;
     this.startActivityLoaderFlag = true;
     this.IsStartSubActivity = !this.IsStartSubActivity;
     const activityId = this.subActivityDetail.ActivityId;

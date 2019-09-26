@@ -217,7 +217,8 @@ this.selectedCountryDetailId.emit(event);
       data: {
         BudgetLineId: this.activityDetail.BudgetLineId,
         ActivityId: this.activityDetail.ActivityId,
-        EmployeeList: this.employeeList
+        EmployeeList: this.employeeList,
+        ProjectId: this.projectId
       },
       autoFocus: false
     });

@@ -26,16 +26,19 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
             _mapper = mapper;
         }
         public async Task<ApiResponse> Handle(UploadProjectActivityDocumentFileCommand request, CancellationToken cancellationToken)
-         {
+        {
             ApiResponse response = new ApiResponse();
             try
             {
                 ActivityDocumentDetailModel activityModel = new ActivityDocumentDetailModel();
-                var projectDetail = await _dbContext.ProjectActivityDetail
-                                                           .Include(x => x.ProjectBudgetLineDetail.ProjectDetail)
-                                                           .FirstOrDefaultAsync(x => x.ActivityId == request.ActivityID && x.IsDeleted == false);
-
-                string folderName = projectDetail?.ProjectBudgetLineDetail.ProjectDetail.ProjectCode;
+                var projectActivityDetail = await _dbContext.ProjectActivityDetail
+                                                           .Include(x => x.ProjectDetail)
+                                                           .FirstOrDefaultAsync(x => x.ActivityId == request.ActivityId && x.IsDeleted == false);
+                if (projectActivityDetail == null)
+                {
+                    throw new Exception(StaticResource.ActivityNotFound);
+                }
+                string folderName = projectActivityDetail?.ProjectDetail?.ProjectCode;
 
                 string googleApplicationCredentail = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
                 if (googleApplicationCredentail == null)
@@ -55,10 +58,10 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
                         string uploadedFileResponse = await GCBucket.UploadOtherProposalDocuments(bucketName, folderWithProposalFile, request.File, request.FileName, request.Ext);
                         if (!string.IsNullOrEmpty(uploadedFileResponse))
                         {
-                            docObj.ActivityId = request.ActivityID;
+                            docObj.ActivityId = request.ActivityId;
                             docObj.ActivityDocumentsFilePath = uploadedFileResponse;
                             docObj.StatusId = request.StatusID;
-                            docObj.CreatedById = request.CreatedById ;
+                            docObj.CreatedById = request.CreatedById;
                             docObj.IsDeleted = false;
                             docObj.MonitoringId = request.MonitoringID;
                             docObj.CreatedDate = request.CreatedDate;

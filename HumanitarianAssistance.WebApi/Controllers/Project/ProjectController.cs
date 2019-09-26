@@ -1554,7 +1554,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
                         {
                             File = file,
                             MonitoringID = monitoringID,
-                            ActivityID = activityID,
+                            ActivityId = activityID,
                             StatusID = statusID,
                             FileName = fileName,
                             Ext = ext,
