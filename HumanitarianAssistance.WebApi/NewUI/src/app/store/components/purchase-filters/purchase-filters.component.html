@@ -27,6 +27,15 @@
           <lib-hum-dropdown [options]="projectJobs$" formControlName="JobId" [placeHolder]="'Job'" (change)="getJobSelectedValue($event)"></lib-hum-dropdown>
       </div>
       <div class="col-md-3">
+
+          <!-- <mat-form-field>
+              <input matInput formControlName="DateOfPurchase" [matRangeDatepicker]="DateOfPurchase" placeholder="Date of Purchase">
+              <mat-range-datepicker
+                  #DateOfPurchase
+                  [rangeMode]="true">
+              </mat-range-datepicker>
+             </mat-form-field> -->
+
           <mat-form-field>
               <input matInput formControlName="DateOfPurchase" [matDatepicker]="DateOfPurchase" placeholder="Date of Purchase">
               <mat-datepicker-toggle matSuffix [for]="DateOfPurchase"></mat-datepicker-toggle>
@@ -34,6 +43,14 @@
             </mat-form-field>
       </div>
       <div class="col-md-3">
+          <!-- <mat-form-field>
+              <input matInput formControlName="DateOfIssue" [matRangeDatepicker]="DateOfIssue" placeholder="Date of Issue">
+              <mat-range-datepicker
+                  #DateOfIssue
+                  [rangeMode]="true">
+              </mat-range-datepicker>
+             </mat-form-field> -->
+
           <mat-form-field>
               <input matInput formControlName="DateOfIssue" [matDatepicker]="DateOfIssue" placeholder="Date of Issue">
               <mat-datepicker-toggle matSuffix [for]="DateOfIssue"></mat-datepicker-toggle>
