@@ -1,25 +1,33 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, ChangeDetectionStrategy } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'hum-table',
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css']
+  styleUrls: ['./table.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, OnChanges {
+
   @Input() headers: Observable<string[]>;
   @Input() items: Observable<Array<Object>>;
+  subItems:Observable<Array<Object>>
   itemHeaders: Observable<string[]>;
   constructor() { }
 
   ngOnInit() {
-    this.items.subscribe(res => {
-      if (res) {
-        console.log(res);
-        this.itemHeaders = of(Object.keys(res[0]));
-      }
 
-    });
+  }
+  ngOnChanges(): void {
+    if (this.items) {
+      this.items.subscribe(res => {
+        if (res == null || res.length > 0) {
+          this.itemHeaders = of(Object.keys(res[0]));
+        }
+
+      });
+    }
+
   }
 
 }

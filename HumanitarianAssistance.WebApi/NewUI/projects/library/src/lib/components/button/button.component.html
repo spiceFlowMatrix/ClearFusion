@@ -1,12 +1,12 @@
 <ng-container [ngSwitch]="type">
 
-  <button *ngSwitchCase="'save'" mat-flat-button class="blue">
+  <button *ngSwitchCase="'save'" mat-flat-button class="blue" (click)="btnClick()">
     <h5>
       <i class="fas fa-check"></i>
       {{text | uppercase}}
     </h5>
   </button>
-  <button *ngSwitchCase="'cancel'" mat-flat-button class="red">
+  <button *ngSwitchCase="'cancel'" mat-flat-button class="red" >
     <h5>
       <i class="fas fa-times"></i>
       {{text | uppercase}}

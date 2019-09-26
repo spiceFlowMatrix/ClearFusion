@@ -6,10 +6,11 @@
       </th>
     </tr>
   </thead>
-  <tbody>
-    <tr *ngFor="let item of items | async">
+  <tbody *ngIf="items">
+    <tr  *ngFor="let item of items | async">
       <td *ngFor="let header of itemHeaders | async; let j=index ">{{item[header]}}</td>
-      <td><a>ADD PROCUREMENT</a></td>
+      <td><hum-button [type]="'add'" [text]="'add procurement'"></hum-button></td>
     </tr>
+    
   </tbody>
 </table>
