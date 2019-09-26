@@ -426,6 +426,12 @@ export class GLOBAL {
   public static API_Store_GetAllInventories = 'Store/GetAllInventories';
   public static API_Store_GetAllStoreItemGroups = 'Store/GetAllStoreItemGroups';
   public static API_Store_GetAllInventoryItems = 'Store/GetAllInventoryItems';
+  public static API_StorePurchase_GetAllInventoriesType = 'StorePurchase/GetAllInventoriesType';
+  public static API_Store_GetAllStoreSourceCode = 'Store/GetAllStoreSourceCode';
+  public static API_Store_GetAllReceiptType = 'Store/GetAllReceiptType';
+  public static API_Store_GetAllStatusAtTimeOfIssue = 'Store/GetAllStatusAtTimeOfIssue';
+
+
 
 }
 

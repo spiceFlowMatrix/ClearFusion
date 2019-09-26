@@ -40,10 +40,10 @@ export class PurchaseListComponent implements OnInit {
   }
 
   getPurchasesByFilter(filter: IFilterValueModel) {
-    debugger;
+
     this.purchaseService
       .GetFilteredPurchaseList(filter).subscribe(x => {
-        debugger;
+
       this.purchaseList$ = of(x.map((element) => {
         return  {
 
@@ -59,7 +59,7 @@ export class PurchaseListComponent implements OnInit {
   }
 
   onpurchaseFilterSelected(event: any) {
-    debugger;
+
     this.filterValueModel = event.value;
     this.getPurchasesByFilter(this.filterValueModel);
   }

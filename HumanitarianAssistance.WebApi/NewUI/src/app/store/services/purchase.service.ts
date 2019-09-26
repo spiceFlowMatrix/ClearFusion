@@ -5,7 +5,8 @@ import { GLOBAL } from '../../shared/global';
 import { map } from 'rxjs/internal/operators/map';
 import { IResponseData } from '../../../app/dashboard/accounting/vouchers/models/status-code.model';
 import { IFilterValueModel } from '../models/purchase';
-import { retry } from 'rxjs/operators';
+import { retry, finalize } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class PurchaseService {
 
   constructor(
     private globalService: GlobalService,
-    private appurl: AppUrlService
+    private appurl: AppUrlService,
+    private http: HttpClient,
   ) { }
 
   //#region "GetPurchaseFilterList"
@@ -31,17 +33,18 @@ export class PurchaseService {
 
   //#region "GetInventoriesByInventoryTypeId"
   GetInventoriesByInventoryTypeId(Id: number): any {
-    return this.globalService
-      .getStoreInventoriesById(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllInventories, Id)
-      .pipe(
-        map(x => {
-          const responseData: IResponseData = {
-            data: x.data.InventoryList,
-            statusCode: x.StatusCode,
-            message: x.Message
-          };
-          return responseData;
-        }));
+        return this.http.get<any>(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllInventories + '?AssetType=' + Id).pipe(
+          map((response) => {
+            const responseData: IResponseData = {
+                    data: response.data.InventoryList,
+                    statusCode: response.StatusCode,
+                    message: response.Message
+                  };
+                  return responseData;
+          }),
+          finalize(() => {
+          })
+        );
   }
   //#endregion
 
@@ -88,4 +91,111 @@ export class PurchaseService {
       );
   }
   //#endregion
+
+  //#region "GetPurchaseFilterList"
+  GetAllInventoryTypeList(): any {
+    return this.globalService
+      .getList(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetAllInventoriesType)
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+  //#endregion
+
+  //#region "GetPurchaseFilterList"
+  GetAllProjectList(): any {
+    return this.globalService
+      .getList(this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProjectList)
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+  //#endregion
+
+  //#region "GetPurchaseFilterList"
+  GetAllOfficeList(): any {
+    return this.globalService
+      .getList(this.appurl.getApiUrl() + GLOBAL.API_code_GetAllOffice)
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+  //#endregion
+
+  getPurchaseAssetType(): any {
+    return [
+      {
+          AssetTypeId: 1,
+          AssetTypeName: 'Cash'
+      },
+      {
+          AssetTypeId: 2,
+          AssetTypeName: 'In Kind'
+      }
+  ];
+  }
+
+  getAllStoreSource() {
+    return this.globalService
+      .getList(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllStoreSourceCode)
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+
+  getEmployeesByOfficeId(Id) {
+      return this.http.get<any>(this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetEmployeeListByOfficeId + '?OfficeId=' + Id)
+      .pipe(
+        map((response) => {
+          const responseData: IResponseData = {
+            data: response.data.InventoryItemList,
+            statusCode: response.StatusCode,
+            message: response.Message
+        };
+
+        return responseData;
+      }),
+        finalize(() => {
+          // this.loader.hideLoader();
+        })
+      );
+  }
+
+  getAllReceiptType() {
+    return this.globalService
+      .getList(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllReceiptType)
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+
+  getAllStatusAtTimeOfIssue() {
+    return this.globalService
+      .getList(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllStatusAtTimeOfIssue)
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+
+  getAllCurrency() {
+    return this.globalService
+      .getList(this.appurl.getApiUrl() + GLOBAL.API_code_GetAllCurrency)
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
 }

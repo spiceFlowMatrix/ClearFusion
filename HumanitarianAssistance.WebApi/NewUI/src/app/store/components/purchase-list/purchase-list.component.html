@@ -3,7 +3,7 @@
   </span>
 
   <div class="action_section">
-    <span> <a [routerLink]="['/store/purchase/add']">+ ADD PURCHASE</a> </span>
+      <hum-button [routerLink]="['/store/purchase/add']" [type]="'add'" [text]="'add PURCHASE'"></hum-button>
     <span> <a>DISPLAY CURRENCY</a> </span>
     <span> <a>PDF EXPORT</a> </span>
     <span> <a>FIELD CONFIGURATION</a> </span>
@@ -17,7 +17,6 @@
       <h4>Purchases</h4>
       <hum-table *ngIf="purchaseList$" [headers]="purchaseListHeaders$" [items]="purchaseList$"></hum-table>
     </div>
-
   </div>
 </mat-card>
 
