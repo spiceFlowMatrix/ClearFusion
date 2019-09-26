@@ -41,7 +41,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                   .Include(x => x.EmployeeDetail)
                                   .Include(x => x.ProjectDetail)
                                   .Where(x => x.IsDeleted == false &&
-                                        x.AssetTypeId == request.InventoryTypeId &&
+                                        x.StoreInventoryItem.Inventory.AssetType == request.InventoryTypeId &&
                                         x.ReceiptTypeId == request.ReceiptTypeId &&
                                         x.OfficeId == request.OfficeId &&
                                         x.Currency == request.CurrencyId &&

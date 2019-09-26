@@ -301,8 +301,6 @@ export class PurchasesComponent implements OnInit {
     //#region "getStoreLocationList"
     // Get all Source Code Data Details
     getSourceCodeDatalist() {
-         
-
         // type=0 to get all sourcecodes
         this.storeService
             .GetSourceCode(
@@ -352,6 +350,7 @@ export class PurchasesComponent implements OnInit {
             )
             .subscribe(
                 data => {
+                     
                     this.employeeList = [];
                     if (data.data.EmployeeDetailListData != null) {
                         data.data.EmployeeDetailListData.forEach(element => {
