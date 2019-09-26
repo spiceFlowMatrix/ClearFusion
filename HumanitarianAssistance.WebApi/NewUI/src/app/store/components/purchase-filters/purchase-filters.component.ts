@@ -1,11 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { PurchaseService } from '../../services/purchase.service';
 import { IDropDownModel } from '../../models/purchase';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
-import { Subject } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 import { BudgetLineService } from 'src/app/dashboard/project-management/project-list/budgetlines/budget-line.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-purchase-filters',
@@ -26,17 +27,18 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
   storeItems$: Observable<IDropDownModel[]>;
   projectJobs$: Observable<IDropDownModel[]>;
 
-  //destroy$: Subject<boolean> = new Subject<boolean>();
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   purchaseFormFilters: FormGroup;
+  @Output() purchaseFilterSelected = new EventEmitter<FormGroup>();
 
   constructor(private purchaseService: PurchaseService,
     private fb: FormBuilder, private budgetLineService: BudgetLineService) {
 
     this.purchaseFormFilters = this.fb.group({
-      InventoryTypeId: [null],
-      ReceiptTypeId: [null],
-      OfficeId: [null],
-      CurrencyId: [null],
+      InventoryTypeId: [null, Validators.required],
+      ReceiptTypeId: [null, Validators.required],
+      OfficeId: [null, Validators.required],
+      CurrencyId: [null, Validators.required],
       ProjectId: [null],
       JobId: [null],
       DateOfPurchase: [null],
@@ -46,6 +48,8 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
       ItemId: [null]
     });
 
+    this.purchaseFormFilters.controls['ReceiptTypeId'].valueChanges.subscribe(x => { console.log(x) });
+
   }
 
   ngOnInit() {
@@ -54,7 +58,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
 
   getPurchaseFilters() {
     this.purchaseService.GetPurchaseFilterList()
-    //.takeUntil(this.destroy$)
+    .pipe(takeUntil(this.destroyed$))
     .subscribe(x  => {
       debugger;
       this.inventoryType$ = of(x.InventoryTypes.map(y => {
@@ -107,43 +111,47 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
 
   getInventoryTypeSelectedValue(event: any) {
     this.purchaseFormFilters.get('InventoryTypeId').patchValue(event);
-    this.GetInventoriesByInventoryTypeId(event);
+    this.getInventoriesByInventoryTypeId(event);
+    this.onPurchaseFilterSelectionChanged();
   }
 
-  // getReceiptTypeSelectedValue(event: any) {
-  //   this.purchaseFormFilters.get('ReceiptTypeId').patchValue(event);
-  // }
+  getReceiptTypeSelectedValue(event: any) {
+    this.purchaseFormFilters.get('ReceiptTypeId').patchValue(event);
+     this.onPurchaseFilterSelectionChanged();
+   }
 
-  // getOfficeSelectedValue(event: any) {
-  //   this.purchaseFormFilters.get('OfficeId').patchValue(event);
-  // }
+  getOfficeSelectedValue(event: any) {
+    this.purchaseFormFilters.get('OfficeId').patchValue(event);
+     this.onPurchaseFilterSelectionChanged();
+   }
 
-  // getCurrenciesSelectedValue(event: any) {
-  //   this.purchaseFormFilters.get('CurrencyId').patchValue(event);
-  // }
+  getCurrenciesSelectedValue(event: any) {
+    this.purchaseFormFilters.get('CurrencyId').patchValue(event);
+     this.onPurchaseFilterSelectionChanged();
+   }
 
   getProjectSelectedValue(event: any) {
-    this.purchaseFormFilters.get('ProjectId').patchValue(event);
+    this.onPurchaseFilterSelectionChanged();
     this.getJobsByProjectId(event);
   }
 
-  // getJobSelectedValue(event: any) {
-  //   this.purchaseFormFilters.get('JobId').patchValue(event);
-  // }
+   getJobSelectedValue(event: any) {
+     this.onPurchaseFilterSelectionChanged();
+   }
 
   getMasterInventorySelectedValue(event: any) {
-    this.purchaseFormFilters.get('ItemId').patchValue(null);
-    this.GetAllStoreItemGroups(event);
+    this.getAllStoreItemGroups(event);
+    this.onPurchaseFilterSelectionChanged();
   }
 
   getItemGroupSelectedValue(event: any) {
-    this.purchaseFormFilters.get('ItemGroupId').patchValue(event);
-    this.GetAllStoreItemsByGroupId(event);
+    this.getAllStoreItemsByGroupId(event);
+    this.onPurchaseFilterSelectionChanged();
   }
 
-  // getItemSelectedValue(event: any) {
-  //   this.purchaseFormFilters.get('ItemId').patchValue(event);
-  // }
+   getItemSelectedValue(event: any) {
+     this.onPurchaseFilterSelectionChanged();
+   }
 
   getJobsByProjectId(projectId: number) {
     this.budgetLineService
@@ -158,7 +166,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
         });
   }
 
-  GetInventoriesByInventoryTypeId(inventoryTypeId: number) {
+  getInventoriesByInventoryTypeId(inventoryTypeId: number) {
     this.purchaseService
         .GetInventoriesByInventoryTypeId(inventoryTypeId)
         .subscribe(x => {
@@ -172,7 +180,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
         });
   }
 
-  GetAllStoreItemGroups(inventoryId: number) {
+  getAllStoreItemGroups(inventoryId: number) {
     this.purchaseService
         .GetItemGroupByInventoryId(inventoryId)
         .subscribe(x => {
@@ -186,7 +194,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
         });
   }
 
-  GetAllStoreItemsByGroupId(groupId: number) {
+  getAllStoreItemsByGroupId(groupId: number) {
     this.purchaseService
         .GetItemsByItemGroupId(groupId)
         .subscribe(x => {
@@ -200,9 +208,15 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
         });
   }
 
+  onPurchaseFilterSelectionChanged() {
+    debugger;
+    if (this.purchaseFormFilters.valid) {
+      this.purchaseFilterSelected.emit(this.purchaseFormFilters);
+    }
+  }
+
   ngOnDestroy() {
-    // this.destroy$.next(true);
-    // // unsubscribe from the subject itself:
-    // this.destroy$.unsubscribe();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

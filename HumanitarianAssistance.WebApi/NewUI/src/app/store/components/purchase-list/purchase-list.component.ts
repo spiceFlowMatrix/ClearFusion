@@ -37,13 +37,13 @@ export class PurchaseListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getPurchasesByFilter(this.filterValueModel);
   }
 
   getPurchasesByFilter(filter: IFilterValueModel) {
-    const id = 0;
+    debugger;
     this.purchaseService
-        .GetFilteredPurchaseList(filter).subscribe(x => {
+      .GetFilteredPurchaseList(filter).subscribe(x => {
+        debugger;
       this.purchaseList$ = of(x.map((element) => {
         return  {
 
@@ -56,6 +56,12 @@ export class PurchaseListComponent implements OnInit {
         };
       }));
     });
+  }
+
+  onpurchaseFilterSelected(event: any) {
+    debugger;
+    this.filterValueModel = event.value;
+    this.getPurchasesByFilter(this.filterValueModel);
   }
 
 }

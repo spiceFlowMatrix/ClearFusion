@@ -9,10 +9,15 @@
     <span> <a>FIELD CONFIGURATION</a> </span>
   </div>
 </lib-sub-header-template>
-<div class="row">
-  <div class="col-md-12">
-    <app-purchase-filters></app-purchase-filters>
-    <hum-table *ngIf="purchaseList$" [headers]="purchaseListHeaders$" [items]="purchaseList$"></hum-table>
-  </div>
+<mat-card>
+  <div class="row">
+    <div class="col-md-12">
+      <h4>Filters</h4>
+      <app-purchase-filters (purchaseFilterSelected)="onpurchaseFilterSelected($event)"></app-purchase-filters>
+      <h4>Purchases</h4>
+      <hum-table *ngIf="purchaseList$" [headers]="purchaseListHeaders$" [items]="purchaseList$"></hum-table>
+    </div>
 
-</div>
+  </div>
+</mat-card>
+

@@ -22,6 +22,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
         {
             _dbContext = dbContext;
         }
+
         public async Task<List<PurchaseListModel>> Handle(GetFilteredPurchaseListQuery request, CancellationToken cancellationToken)
         {
             List<PurchaseListModel> model = new List<PurchaseListModel>();
@@ -29,29 +30,37 @@ namespace HumanitarianAssistance.Application.Store.Queries
             try
             {
                 model = await _dbContext.StoreItemPurchases
-                                  // .Include(x=> x.ProjectDetail.)
-                                   //.ThenInclude(x=> x.Job)
-                                  .Include(x=> x.PurchaseOrders)
-                                  .ThenInclude(x=> x.EmployeeDetail)
-                                  .Include(x=> x.StoreInventoryItem)
-                                  .Include(x=> x.EmployeeDetail)
-                                  .Include(x=> x.ProjectDetail)
-                                  .Where(x=> x.IsDeleted== false &&
-                                        x.AssetTypeId== request.InventoryTypeId &&
+                                   .Include(x => x.ProjectDetail)
+                                   .ThenInclude(x => x.ProjectJobDetail)
+                                  .Include(x => x.PurchaseOrders)
+                                  .ThenInclude(x => x.EmployeeDetail)
+                                  .Include(x => x.StoreInventoryItem)
+                                  .ThenInclude(x=> x.StoreItemGroup)
+                                  .Include(x => x.StoreInventoryItem)
+                                  .ThenInclude(x=> x.Inventory)
+                                  .Include(x => x.EmployeeDetail)
+                                  .Include(x => x.ProjectDetail)
+                                  .Where(x => x.IsDeleted == false &&
+                                        x.AssetTypeId == request.InventoryTypeId &&
                                         x.ReceiptTypeId == request.ReceiptTypeId &&
                                         x.OfficeId == request.OfficeId &&
                                         x.Currency == request.CurrencyId &&
-                                        x.ProjectId==null ? true : x.ProjectId==request.ProjectId
-                                       // x.JobId == null ? true : x.JobId =
+                                        request.ProjectId == 0 ? true : x.ProjectId == request.ProjectId &&
+                                        request.JobId == 0 ? true : x.ProjectDetail.ProjectJobDetail.Select(z => z.ProjectJobId).Contains(request.JobId) &&
+                                        request.PurchaseStartDate == null ? true : x.PurchaseDate.Date >= request.PurchaseStartDate &&
+                                        request.PurchaseEndDate == null ? true : x.PurchaseDate.Date <= request.PurchaseEndDate &&
+                                        request.InventoryId ==0 ? true : x.StoreInventoryItem.Inventory.InventoryId == request.InventoryId &&
+                                        request.ItemGroupId ==0 ? true : x.StoreInventoryItem.StoreItemGroup.ItemGroupId == request.ItemGroupId &&
+                                        request.ItemId == 0 ? true : x.StoreInventoryItem.ItemId == request.ItemId
                                         )
                                   .Select(x=> new PurchaseListModel 
                                   {
                                       PurchaseId = x.PurchaseId,
                                       PurchaseDate= x.PurchaseDate,
                                       CurrencyId= x.Currency,
-                                      ItemId = x.StoreInventoryItem.ItemId,
-                                      ItemName= x.StoreInventoryItem.ItemCode +"-"+x.StoreInventoryItem.ItemName,
-                                      EmployeeName= x.EmployeeDetail.EmployeeCode+"-"+x.EmployeeDetail.EmployeeName,
+                                      ItemId = x.StoreInventoryItem!=null? x.StoreInventoryItem.ItemId : 0,
+                                      ItemName= x.StoreInventoryItem != null ? (x.StoreInventoryItem.ItemCode +"-"+x.StoreInventoryItem.ItemName) : "",
+                                      EmployeeName= x.EmployeeDetail != null? x.EmployeeDetail.EmployeeCode+"-"+x.EmployeeDetail.EmployeeName : "",
                                       ProjectId= x.ProjectId,
                                       ProjectName= x.ProjectDetail == null ? "" : x.ProjectDetail.ProjectCode+"-"+x.ProjectDetail.ProjectName,
                                       OriginalCost= x.UnitCost * x.Quantity,
@@ -65,11 +74,12 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                            ProcuredAmount= z.IssuedQuantity,
                                                            Returned= z.Returned,
                                                            ReturnedOn= z.ReturnedDate
-                                                       }).ToList()
+                                                       }).Where(y=> request.IssueStartDate == null? true : y.IssueDate >= request.IssueStartDate &&
+                                                        request.IssueEndDate == null ? true : y.IssueDate <= request.IssueEndDate).ToList()
 
                                   })
-                                  .Skip(request.pageSize.Value * request.pageIndex.Value)
-                                  .Take(request.pageSize.Value)
+                                  //.Skip(request.pageSize.Value * request.pageIndex.Value)
+                                  //.Take(request.pageSize.Value)
                                   .ToListAsync();
 
                 // List<ExchangeRateDetail> exchangeRateList= await _dbContext.ExchangeRateDetail

@@ -21,7 +21,7 @@ export class HumDropdownComponent implements OnInit, ControlValueAccessor {
   @Input() placeHolder: string;
   // @Input() formControl: string;
   @Output() change = new EventEmitter<number>();
-  dropControl = new FormControl('', [Validators.required]);
+  dropControl = new FormControl('');
   constructor() { }
 
   ngOnInit() {
@@ -31,7 +31,7 @@ export class HumDropdownComponent implements OnInit, ControlValueAccessor {
     this.change.emit(event)
   }
   writeValue(obj: any): void {
-    console.log("write")
+    this.dropControl.setValue(obj);
   }
   registerOnChange(fn: any): void {
     console.log("registerOnChange")
