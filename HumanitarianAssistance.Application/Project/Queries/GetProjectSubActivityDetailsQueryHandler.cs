@@ -50,9 +50,22 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     ActualStartDate = b.ActualStartDate,
                     ActualEndDate = b.ActualEndDate,
                     StatusId = b.StatusId,
-                    SubActivityTitle = b.SubActivityTitle
+                    SubActivityTitle = b.SubActivityTitle,
+
                 }).OrderByDescending(x => x.ActivityId)
                   .ToList();
+                // calculate aggregate of all list value
+                var count = activityDetaillist.Count();
+                float? AggregateProgress = 0;
+
+                foreach (var item in activityDetaillist)
+                {
+                    var Progress = (item.Achieved / item.Target) * 100;
+                    AggregateProgress = AggregateProgress + Progress;
+
+                }
+                AggregateProgress = AggregateProgress / count;
+                
                 response.data.ProjectSubActivityListModel = activityDetaillist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

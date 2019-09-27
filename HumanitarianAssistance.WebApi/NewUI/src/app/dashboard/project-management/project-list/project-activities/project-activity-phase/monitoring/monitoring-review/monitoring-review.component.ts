@@ -210,7 +210,7 @@ export class MonitoringReviewComponent implements OnInit {
       this.indicatorService
         .GetIndicatorQuestionById(this.projectIndicatorId)
         .subscribe(response => {
-          this.indicatorQuestions = [];
+         // this.indicatorQuestions = [];
           if (response.statusCode === 200) {
             this.monitoringReviewList.MonitoringReviewModel[
               index
