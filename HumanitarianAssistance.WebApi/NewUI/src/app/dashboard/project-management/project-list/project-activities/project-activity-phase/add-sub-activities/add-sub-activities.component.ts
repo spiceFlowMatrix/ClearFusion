@@ -61,7 +61,6 @@ export class AddSubActivitiesComponent implements OnInit {
 
   //#region "addProjectSubActivity"
   addProjectSubActivity(data: IAddProjectSubActivityModel) {
-    debugger;
     if (this.projectSubActivityForm.valid && this.projectId != null) {
       this.addSubActivityLoaderFlag = true;
 

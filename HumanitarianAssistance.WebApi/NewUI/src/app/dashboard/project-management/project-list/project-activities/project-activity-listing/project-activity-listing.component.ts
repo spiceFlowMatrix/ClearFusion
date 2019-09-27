@@ -356,7 +356,6 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
 
   //#region "getAllProjectActivityStatus"
   getAllProjectActivityStatus() {
-    debugger;
     this.activitySummaryLoader = true;
     this.activitiesService
       .GetAllProjectActivityStatus(this.projectId)

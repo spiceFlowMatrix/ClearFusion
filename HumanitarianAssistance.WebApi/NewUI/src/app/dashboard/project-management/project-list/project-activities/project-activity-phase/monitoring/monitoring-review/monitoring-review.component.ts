@@ -199,7 +199,6 @@ export class MonitoringReviewComponent implements OnInit {
   //#endregion
 
   getQuestionsList(index: number) {
-    debugger;
     this.projectIndicatorId = this.monitoringReviewList.MonitoringReviewModel[
       index
     ].ProjectIndicatorId;
@@ -266,7 +265,6 @@ export class MonitoringReviewComponent implements OnInit {
 
   //#region "addMonitoringReview"
   addMonitoringReview() {
-    debugger;
     if (this.monitoringReviewList.MonitoringReviewModel.length > 0) {
       if (this.monitoringReviewList.MonitoringDate === '') {
         this.toastr.warning('Monitoring Date not selected');
