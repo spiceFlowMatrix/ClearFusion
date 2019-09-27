@@ -43,3 +43,11 @@ export interface IPurchaseList {
   OriginalCost: number;
   DepreciatedCost: number;
 }
+export interface IProcurementList {
+  EmployeeName?: string;
+  IssueDate?: string;
+  IssueId?: number;
+  MustReturn?: boolean;
+  ProcuredAmount?: string;
+  Returned: boolean
+}
