@@ -8,29 +8,30 @@ import {
   Output,
   EventEmitter,
   ViewChild
-} from '@angular/core';
+} from "@angular/core";
 import {
   IDocumentsModel,
   IProjectActivityDetail
-} from '../models/project-activities.model';
-import { ProjectActivitiesService } from '../service/project-activities.service';
-import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
-import { ToastrService } from 'ngx-toastr';
-import { ProjectPlanningComponent } from './project-planning/project-planning.component';
-import { MatDialog } from '@angular/material/dialog';
+} from "../models/project-activities.model";
+import { ProjectActivitiesService } from "../service/project-activities.service";
+import { IResponseData } from "src/app/dashboard/accounting/vouchers/models/status-code.model";
+import { ToastrService } from "ngx-toastr";
+import { ProjectPlanningComponent } from "./project-planning/project-planning.component";
+import { MatDialog } from "@angular/material/dialog";
 // tslint:disable-next-line: max-line-length
-import { MonitoringReviewComponent } from 'src/app/dashboard/project-management/project-list/project-activities/project-activity-phase/monitoring/monitoring-review/monitoring-review.component';
-import { AddSubActivitiesComponent } from './add-sub-activities/add-sub-activities.component';
-import { MonitoringComponent } from './monitoring/monitoring.component';
-import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
-import { takeUntil } from 'rxjs/internal/operators/takeUntil';
-import { SignalRService } from 'src/app/shared/services/signal-r.service';
-import { NotifySignalRService } from 'src/app/shared/services/notify-signalr.service';
+import { MonitoringReviewComponent } from "src/app/dashboard/project-management/project-list/project-activities/project-activity-phase/monitoring/monitoring-review/monitoring-review.component";
+import { AddSubActivitiesComponent } from "./add-sub-activities/add-sub-activities.component";
+import { MonitoringComponent } from "./monitoring/monitoring.component";
+import { ReplaySubject } from "rxjs/internal/ReplaySubject";
+import { takeUntil } from "rxjs/internal/operators/takeUntil";
+import { SignalRService } from "src/app/shared/services/signal-r.service";
+import { NotifySignalRService } from "src/app/shared/services/notify-signalr.service";
+import { element } from "@angular/core/src/render3";
 
 @Component({
-  selector: 'app-project-activity-phase',
-  templateUrl: './project-activity-phase.component.html',
-  styleUrls: ['./project-activity-phase.component.scss']
+  selector: "app-project-activity-phase",
+  templateUrl: "./project-activity-phase.component.html",
+  styleUrls: ["./project-activity-phase.component.scss"]
 })
 export class ProjectActivityPhaseComponent
   implements OnInit, OnChanges, OnDestroy {
@@ -65,6 +66,7 @@ export class ProjectActivityPhaseComponent
   projectSubActivityList: any[] = [];
 
   editActivityLoader = false;
+  AggregateProgress = 0;
 
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
@@ -106,14 +108,14 @@ export class ProjectActivityPhaseComponent
   }
 
   //#region "Dynamic Scroll"
-  @HostListener('window:resize', ['$event'])
+  @HostListener("window:resize", ["$event"])
   getScreenSize(event?) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
     this.scrollStyles = {
-      'overflow-y': 'auto',
-      height: this.screenHeight - 310 + 'px',
-      'overflow-x': 'hidden'
+      "overflow-y": "auto",
+      height: this.screenHeight - 310 + "px",
+      "overflow-x": "hidden"
     };
   }
   //#endregion
@@ -172,7 +174,7 @@ export class ProjectActivityPhaseComponent
   }
   //#endregion
   OnSelectedCountryId(event: any) {
-this.selectedCountryDetailId.emit(event);
+    this.selectedCountryDetailId.emit(event);
   }
 
   //#region "selectedProvinceId emit event to activity listing"
@@ -181,6 +183,7 @@ this.selectedCountryDetailId.emit(event);
   }
   //#endregion
   onUpdateActivityStatusId(data: any) {
+    debugger;
     this.updateActivityStatusId.emit(data);
   }
 
@@ -189,7 +192,7 @@ this.selectedCountryDetailId.emit(event);
     // NOTE: It passed the data into the Add Voucher Model
 
     const dialogRef = this.dialog.open(MonitoringReviewComponent, {
-      width: '570px',
+      width: "570px",
       data: {
         projectId: this.projectId,
         activityId: this.activityId
@@ -213,7 +216,7 @@ this.selectedCountryDetailId.emit(event);
     // NOTE: It passed the data into the Add Voucher Model
 
     const dialogRef = this.dialog.open(AddSubActivitiesComponent, {
-      width: '550px',
+      width: "550px",
       data: {
         BudgetLineId: this.activityDetail.BudgetLineId,
         ActivityId: this.activityDetail.ActivityId,
@@ -234,6 +237,7 @@ this.selectedCountryDetailId.emit(event);
   //#region "getAllProjectSubActivityDetails 03/05/2019"
   getAllProjectSubActivityDetails(id) {
     this.projectSubActivityList = [];
+
     this.activitiesService
       .GetAllProjectSubActivityDetail(id)
       .pipe(takeUntil(this.destroyed$))
@@ -241,6 +245,15 @@ this.selectedCountryDetailId.emit(event);
         (response: IResponseData) => {
           if (response.statusCode === 200 && response.data !== null) {
             this.projectSubActivityList = response.data;
+            var count = this.projectSubActivityList.length;
+            for (
+              let index = 0;
+              index < this.projectSubActivityList.length;
+              index++
+            ) {
+              this.projectSubActivityList.forEach(element => {});
+              // this.AggregateProgress : element.
+            }
           }
         },
         error => {}
