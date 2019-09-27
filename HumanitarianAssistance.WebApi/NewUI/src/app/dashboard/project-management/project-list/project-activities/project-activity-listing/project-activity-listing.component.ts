@@ -1,28 +1,28 @@
-import { Component, OnInit, HostListener, OnDestroy } from "@angular/core";
-import { ProjectActivityAddComponent } from "../project-activity-add/project-activity-add.component";
-import { MatDialog } from "@angular/material/dialog";
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { ProjectActivityAddComponent } from '../project-activity-add/project-activity-add.component';
+import { MatDialog } from '@angular/material/dialog';
 import {
   ProjectActivityFilterModel,
   IBudgetLine,
   IEmployeeList,
   IProjectActivityDetail,
   IProjectSummaryModel
-} from "../models/project-activities.model";
+} from '../models/project-activities.model';
 import {
   ProjectActivitiesService,
   IProjectPhasesModel
-} from "../service/project-activities.service";
-import { IResponseData } from "src/app/dashboard/accounting/vouchers/models/status-code.model";
-import { ActivatedRoute } from "@angular/router";
-import { Subscription } from "rxjs/internal/Subscription";
+} from '../service/project-activities.service';
+import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs/internal/Subscription';
 
-import { StaticUtilities } from "src/app/shared/static-utilities";
-import { DeleteConfirmationComponent } from "projects/library/src/lib/components/delete-confirmation/delete-confirmation.component";
-import { Delete_Confirmation_Texts } from "src/app/shared/enum";
+import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { DeleteConfirmationComponent } from 'projects/library/src/lib/components/delete-confirmation/delete-confirmation.component';
+import { Delete_Confirmation_Texts } from 'src/app/shared/enum';
 @Component({
-  selector: "app-project-activity-listing",
-  templateUrl: "./project-activity-listing.component.html",
-  styleUrls: ["./project-activity-listing.component.scss"]
+  selector: 'app-project-activity-listing',
+  templateUrl: './project-activity-listing.component.html',
+  styleUrls: ['./project-activity-listing.component.scss']
 })
 export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   //#region "variables"
@@ -52,7 +52,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   deleteActivitySubscribe: Subscription;
 
   showProjectActivityDetail = false;
-  colsm6 = "col-sm-10 col-sm-offset-1";
+  colsm6 = 'col-sm-10 col-sm-offset-1';
 
   // private _hubConnection: HubConnection | undefined;
   // message = '';
@@ -80,7 +80,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.routeActive.parent.params.subscribe(params => {
-      this.projectId = +params["id"];
+      this.projectId = +params['id'];
       // this.getAllProvinceList();
     });
 
@@ -126,7 +126,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   //#region "initializeForm"
   initializeForm() {
     this.projectActivityFilter = {
-      FilterValue: ""
+      FilterValue: ''
     };
 
     this.activitySummary = {
@@ -193,15 +193,15 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region "Dynamic Scroll"
-  @HostListener("window:resize", ["$event"])
+  @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
 
     this.scrollStyles = {
-      "overflow-y": "auto",
-      height: this.screenHeight - 310 + "px",
-      "overflow-x": "hidden"
+      'overflow-y': 'auto',
+      height: this.screenHeight - 310 + 'px',
+      'overflow-x': 'hidden'
     };
   }
   //#endregion
@@ -210,7 +210,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   openAddActivityDialog(): void {
     // NOTE: It passed the data into the Add Activity Model
     const dialogRef = this.dialog.open(ProjectActivityAddComponent, {
-      width: "550px",
+      width: '550px',
       autoFocus: false,
       data: {
         BudgetLineList: this.budgetLineList,
@@ -368,7 +368,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
               LateStart: response.data.LateStart,
               LateEnd: response.data.LateEnd,
               Progress:
-                response.data.Progress !== "NaN" ? response.data.Progress : 0,
+                response.data.Progress !== 'NaN' ? response.data.Progress : 0,
               Slippage: response.data.Slippage
             };
           }
@@ -481,9 +481,9 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   //#region "deleteProjectActivity"
   deleteProjectActivity(activityId: number) {
     const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
-      width: "300px",
-      height: "250px",
-      data: "delete",
+      width: '300px',
+      height: '250px',
+      data: 'delete',
       disableClose: false
     });
 
@@ -549,7 +549,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
     // Note: If list is empty display activity listing page
     if (this.totalCount === 0) {
       this.showProjectActivityDetail = false;
-      this.colsm6 = "col-sm-10 col-sm-offset-1";
+      this.colsm6 = 'col-sm-10 col-sm-offset-1';
     } else if (this.totalCount === index) {
       // Note: if delete last item of list
       const activityId = this.projectActivityList[0].ActivityId;
@@ -642,7 +642,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
 
   //#region "onSearchFilterReset"
   onSearchFilterReset() {
-    this.projectActivityFilter.FilterValue = "";
+    this.projectActivityFilter.FilterValue = '';
     this.getAllProjectActivityList();
   }
   //#endregion
@@ -791,8 +791,8 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   showProjectDetailPanel() {
     this.showProjectActivityDetail = true;
     this.colsm6 = this.showProjectActivityDetail
-      ? "col-sm-6"
-      : "col-sm-10 col-sm-offset-1";
+      ? 'col-sm-6'
+      : 'col-sm-10 col-sm-offset-1';
   }
   //#endregion
 
@@ -855,7 +855,8 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
     }
 
     // to update the progress from subactivtiy to main listing
-     if (data.ActivityId != null && data.ActivityId !== undefined) {
+     if (data.ActivityId != null && data.ActivityId !== undefined && data.Achieved != null
+                                                     && data.Achieved !== undefined) {
       const actviityIndex = this.projectActivityList.findIndex(
         x => x.ActivityId === data.ParentId
       );

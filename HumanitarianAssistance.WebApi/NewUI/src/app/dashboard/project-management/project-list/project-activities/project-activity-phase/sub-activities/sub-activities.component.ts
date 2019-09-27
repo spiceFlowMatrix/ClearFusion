@@ -307,7 +307,8 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
               StaticUtilities.setLocalDate(response.data.ActualStartDate)
             );
             this.startActivityLoaderFlag = false;
-            this.updateActivityStatusId.emit(response.data);
+           // note comment on 27-09-2019
+           // this.updateActivityStatusId.emit(response.data);
             // this.onCancelPopup();
           } else {
             this.toastr.error(response.message);
