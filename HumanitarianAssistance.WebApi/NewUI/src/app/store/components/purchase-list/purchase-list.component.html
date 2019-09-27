@@ -1,6 +1,9 @@
 <lib-sub-header-template>
   <span class="action_header">Purchases & Procurements
+      <hum-button [type]="'add'" [text]="'ADD PURCHASE'"></hum-button>
+      <hum-button [type]="'down'" [text]="'DISPLAY CURRENCY'"></hum-button>
   </span>
+
 
   <div class="action_section">
     <hum-button [routerLink]="['/store/purchase/add']" [type]="'add'" [text]="'Add PURCHASE'"></hum-button>
@@ -20,10 +23,14 @@
         <app-purchase-filters (purchaseFilterSelected)="onpurchaseFilterSelected($event)"></app-purchase-filters>
         <mat-divider></mat-divider>
         <h4>Purchases</h4>
+<<<<<<< HEAD
         <hum-table [headers]="purchaseListHeaders$" [items]="purchaseList$" [subHeaders]="subListHeaders$" [subTitle]="'Proceruements'"></hum-table>
         <mat-paginator [length]="purchaseRecordCount" [pageSize]="filterValueModel.pageSize" [pageSizeOptions]="[10, 5, 25, 100]"
       (page)="pageEvent($event)">
       </mat-paginator>
+=======
+        <hum-table [headers]="purchaseListHeaders$" [items]="purchaseList$" [subHeaders]="subListHeaders$" [subTitle]="''"></hum-table>
+>>>>>>> 809fae87cef386e95ad9551f01a7f5a0aacea5a1
       </div>
 
     </div>
