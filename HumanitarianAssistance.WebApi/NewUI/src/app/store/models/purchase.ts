@@ -43,6 +43,7 @@ export interface IPurchaseList {
   Project: string;
   OriginalCost: number;
   DepreciatedCost: number;
+  SubItems: IProcurementList[];
 }
 export interface IProcurementList {
   EmployeeName?: string;
@@ -50,5 +51,5 @@ export interface IProcurementList {
   IssueId?: number;
   MustReturn?: boolean;
   ProcuredAmount?: string;
-  Returned: boolean
+  Returned: boolean;
 }

@@ -20,7 +20,7 @@ export class PurchaseListComponent implements OnInit {
     scrollStyles: any;
 
   purchaseListHeaders$ = of(['Id', 'Item', 'Purchased By', 'Project', 'Original Cost', 'Deprecated Cost']);
-  subListHeaders$ = of(['Id', 'Date', 'Employee', 'Procured Amount', 'Must Return', 'Returned', 'Returned On'])
+  subListHeaders$ = of(['Id', 'Date', 'Employee', 'Procured Amount', 'Must Return', 'Returned', 'Returned On']);
   procurementList$: Observable<IProcurementList[]>;
 
   constructor(private purchaseService: PurchaseService) {
@@ -67,6 +67,7 @@ export class PurchaseListComponent implements OnInit {
 
     this.purchaseService
       .GetFilteredPurchaseList(filter).subscribe(x => {
+        debugger;
 
         this.purchaseRecordCount = x.RecordCount;
 
@@ -77,7 +78,8 @@ export class PurchaseListComponent implements OnInit {
           PurchasedBy: element.EmployeeName,
           Project: element.ProjectName,
           OriginalCost: element.OriginalCost,
-          DepreciatedCost: element.DepreciatedCost
+          DepreciatedCost: element.DepreciatedCost,
+          subItems: element.ProcurementList
         };
       }));
     });
