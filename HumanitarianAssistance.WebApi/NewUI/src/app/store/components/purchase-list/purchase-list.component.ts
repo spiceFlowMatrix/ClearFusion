@@ -68,8 +68,6 @@ export class PurchaseListComponent implements OnInit {
 
     this.purchaseService
       .GetFilteredPurchaseList(filter).subscribe(x => {
-        debugger;
-
         this.purchaseRecordCount = x.RecordCount;
 
       this.purchaseList$ = of(x.PurchaseList.map((element) => {

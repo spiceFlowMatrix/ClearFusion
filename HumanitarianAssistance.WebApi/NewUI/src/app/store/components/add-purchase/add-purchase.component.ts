@@ -32,26 +32,26 @@ export class AddPurchaseComponent implements OnInit {
     private fb: FormBuilder) {
 
     this.addPurchase = this.fb.group({
-      'InventoryType': [null, [Validators.required]],
-      'Inventory': [null, [Validators.required] ],
-      'ItemGroup': [null, [Validators.required]],
-      'Item': [null, [Validators.required]],
-      'Office': [null, [Validators.required]],
-      'Project': [null],
-      'BudgetLine': [null],
+      'InventoryTypeId': [null, [Validators.required]],
+      'InventoryId': [null, [Validators.required] ],
+      'ItemGroupId': [null, [Validators.required]],
+      'ItemId': [null, [Validators.required]],
+      'OfficeId': [null, [Validators.required]],
+      'ProjectId': [null],
+      'BudgetLineId': [null],
       'PurchaseOrderNo': [null],
       'PurchaseOrderDate': [null, [Validators.required]],
       'InvoiceDate': [null],
       'InvoiceNo': [null],
-      'AssetType': [null],
+      'AssetTypeId': [null],
       'Unit': [null],
       'Quantity': [null],
-      'Currency': [null, [Validators.required]],
+      'CurrencyId': [null, [Validators.required]],
       'Price': [null, [Validators.required]],
       'ReceivedFromLocation': [null],
-      'ReceivedFromEmployee': [null],
-      'ReceiptType': [null, [Validators.required]],
-      'Status': [null]
+      'ReceivedFromEmployeeId': [null],
+      'ReceiptTypeId': [null, [Validators.required]],
+      'StatusId': [null]
     });
   }
 
@@ -179,7 +179,7 @@ export class AddPurchaseComponent implements OnInit {
   }
 
   getInventoryTypeSelectedValue(event: any) {
-    this.addPurchase.get('InventoryType').patchValue(event);
+    this.addPurchase.get('InventoryTypeId').patchValue(event);
     this.getInventoriesByInventoryTypeId(event);
   }
 

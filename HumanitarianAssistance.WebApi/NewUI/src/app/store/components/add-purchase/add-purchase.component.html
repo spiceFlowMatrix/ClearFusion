@@ -14,19 +14,19 @@
       <div class="col-md-12">
         <h4>Item Detail</h4>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="inventoryType$" formControlName='InventoryType' [placeHolder]="'Inventory'"
+          <lib-hum-dropdown [options]="inventoryType$" formControlName='InventoryTypeId' [placeHolder]="'Inventory'"
             (change)="getInventoryTypeSelectedValue($event)"></lib-hum-dropdown>
         </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="storeInventory$" formControlName='Inventory' [placeHolder]="'Inventory(Master)'"
+          <lib-hum-dropdown [options]="storeInventory$" formControlName='InventoryId' [placeHolder]="'Inventory(Master)'"
             (change)="getMasterInventorySelectedValue($event)"></lib-hum-dropdown>
         </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="storeItemGroups$" formControlName='ItemGroup' [placeHolder]="'Item Group'"
+          <lib-hum-dropdown [options]="storeItemGroups$" formControlName='ItemGroupId' [placeHolder]="'Item Group'"
             (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
         </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="storeItems$" formControlName='Item' [placeHolder]="'Item'"
+          <lib-hum-dropdown [options]="storeItems$" formControlName='ItemId' [placeHolder]="'Item'"
             (change)="getItemSelectedValue($event)"></lib-hum-dropdown>
         </div>
       </div>
@@ -36,15 +36,15 @@
       <div class="col-md-12">
         <h4>Project & Analytical Information</h4>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="offices$" formControlName='Office' [placeHolder]="'Office'"
+          <lib-hum-dropdown [options]="offices$" formControlName='OfficeId' [placeHolder]="'Office'"
             (change)="getInventoryTypeSelectedValue($event)"></lib-hum-dropdown>
         </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="project$" formControlName='Project' [placeHolder]="'Project'"
+          <lib-hum-dropdown [options]="project$" formControlName='ProjectId' [placeHolder]="'Project'"
             (change)="getMasterInventorySelectedValue($event)"></lib-hum-dropdown>
         </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="budgetLine$" formControlName='BudgetLine' [placeHolder]="'Budget Line'"
+          <lib-hum-dropdown [options]="budgetLine$" formControlName='BudgetLineId' [placeHolder]="'Budget Line'"
             (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
         </div>
       </div>
@@ -84,7 +84,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="assetType$" formControlName='AssetType' [placeHolder]="'Asset Type'"
+          <lib-hum-dropdown [options]="assetType$" formControlName='AssetTypeId' [placeHolder]="'Asset Type'"
             (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
         </div>
       </div>
@@ -103,7 +103,7 @@
           </mat-form-field>
         </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="currency$" formControlName='Currency' [placeHolder]="'Currency'"
+          <lib-hum-dropdown [options]="currency$" formControlName='CurrencyId' [placeHolder]="'Currency'"
             (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
         </div>
         <div class="col-md-3">
@@ -121,7 +121,7 @@
             [placeHolder]="'Received From Location'" (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
         </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="employeeList$" formControlName='ReceivedFromEmployee'
+          <lib-hum-dropdown [options]="employeeList$" formControlName='ReceivedFromEmployeeId'
             [placeHolder]="'Received From Employee'" (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
         </div>
       </div>
@@ -129,11 +129,11 @@
     <div class="row">
       <div class="col-md-12">
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="receiptType$" formControlName='ReceiptType' [placeHolder]="'Receipt Type'"
+          <lib-hum-dropdown [options]="receiptType$" formControlName='ReceiptTypeId' [placeHolder]="'Receipt Type'"
             (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
         </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="statusList$" formControlName='Status' [placeHolder]="'Status'"
+          <lib-hum-dropdown [options]="statusList$" formControlName='StatusId' [placeHolder]="'Status'"
             (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
         </div>
       </div>
