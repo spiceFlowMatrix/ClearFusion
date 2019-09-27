@@ -831,7 +831,6 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   //#endregion
 
   onUpdateActivityStatusId(data: IProjectActivityDetail) {
-    debugger;
     // Note: when we update the status on the bases of Start button click of sub activity
     if (data.ParentId != null && data.StatusId === 2) {
       const activityDetailIndex = this.projectActivityList.findIndex(
