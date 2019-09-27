@@ -46,20 +46,6 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                         x.OfficeId == request.OfficeId &&
                                         x.Currency == request.CurrencyId);
 
-                //   .Where(x => x.IsDeleted == false &&
-                //         x.StoreInventoryItem.Inventory.AssetType == request.InventoryTypeId &&
-                //         x.ReceiptTypeId == request.ReceiptTypeId &&
-                //         x.OfficeId == request.OfficeId &&
-                //         x.Currency == request.CurrencyId &&
-                //         request.InventoryId ==0 ? true : x.StoreInventoryItem.Inventory.InventoryId == request.InventoryId &&
-                //         request.ProjectId == 0 ? true : x.ProjectId == request.ProjectId &&
-                //         request.JobId == 0 ? true : x.ProjectDetail.ProjectJobDetail.Select(z => z.ProjectJobId).Contains(request.JobId) &&
-                //         request.PurchaseStartDate == null ? true : x.PurchaseDate.Date >= request.PurchaseStartDate &&
-                //         request.PurchaseEndDate == null ? true : x.PurchaseDate.Date <= request.PurchaseEndDate &&
-                //         request.ItemGroupId ==0 ? true : x.StoreInventoryItem.StoreItemGroup.ItemGroupId == request.ItemGroupId &&
-                //         request.ItemId == 0 ? true : x.StoreInventoryItem.ItemId == request.ItemId
-                //         )
-
                 if (request.InventoryId != 0)
                 {
                     query= query.Where(x => x.StoreInventoryItem.Inventory.InventoryId == request.InventoryId);
