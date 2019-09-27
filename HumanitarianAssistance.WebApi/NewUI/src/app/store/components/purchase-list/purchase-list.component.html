@@ -21,7 +21,7 @@
         <app-purchase-filters (purchaseFilterSelected)="onpurchaseFilterSelected($event)"></app-purchase-filters>
         <mat-divider></mat-divider>
         <h4>Purchases</h4>
-        <hum-table [headers]="purchaseListHeaders$" [items]="purchaseList$" [subHeaders]="subListHeaders$" [subTitle]="'Proceruements'"></hum-table>
+        <hum-table [headers]="purchaseListHeaders$" [items]="purchaseList$" [subHeaders]="subListHeaders$" [subTitle]="'Proceruements'" (actionClick)="openProc()"></hum-table>
         <mat-paginator [length]="purchaseRecordCount" [pageSize]="filterValueModel.pageSize" [pageSizeOptions]="[10, 5, 25, 100]"
       (page)="pageEvent($event)">
       </mat-paginator>

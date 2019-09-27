@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, ChangeDetectionStrategy, EventEmitter, Output } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 @Component({
@@ -13,6 +13,7 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() subHeaders: Observable<string[]>;
   @Input() items: Observable<Array<Object>>;
   @Input() subTitle: string;
+  @Output() actionClick= new EventEmitter<any>();
   subItemHeaders: Observable<string[]>;
 
   subItems: Array<Object> = [];
@@ -42,6 +43,9 @@ export class TableComponent implements OnInit, OnChanges {
       });
     }
 
+  }
+  action(event){
+    this.actionClick.emit(event)
   }
 
 }
