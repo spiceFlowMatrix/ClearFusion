@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { of, Observable } from 'rxjs';
 import { PurchaseService } from '../../services/purchase.service';
-import { IFilterValueModel, IPurchaseList } from '../../models/purchase';
+import { IFilterValueModel, IPurchaseList, IProcurementList } from '../../models/purchase';
 
 @Component({
   selector: 'app-purchase-list',
@@ -19,7 +19,9 @@ export class PurchaseListComponent implements OnInit {
     screenWidth: any;
     scrollStyles: any;
 
-  purchaseListHeaders$: Observable<any> = of(['Id', 'Item', 'Purchased By', 'Project', 'Original Cost', 'Deprecated Cost']);
+  purchaseListHeaders$ = of(['Id', 'Item', 'Purchased By', 'Project', 'Original Cost', 'Deprecated Cost']);
+  subListHeaders$ = of(['Id', 'Date', 'Employee', 'Procured Amount', 'Must Return', 'Returned', 'Returned On'])
+  procurementList$: Observable<IProcurementList[]>;
 
   constructor(private purchaseService: PurchaseService) {
 

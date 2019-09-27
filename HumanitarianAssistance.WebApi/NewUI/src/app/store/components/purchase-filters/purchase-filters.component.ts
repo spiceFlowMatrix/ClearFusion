@@ -29,6 +29,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
 
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   purchaseFormFilters: FormGroup;
+  isBasic = true;
   @Output() purchaseFilterSelected = new EventEmitter<FormGroup>();
 
   constructor(private purchaseService: PurchaseService,
@@ -171,7 +172,6 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
     this.purchaseService
         .GetInventoriesByInventoryTypeId(inventoryTypeId)
         .subscribe(x => {
-
           this.storeInventory$ = of(x.data.map(y => {
             return {
               name: y.InventoryCode + '-' + y.InventoryName,
@@ -185,7 +185,6 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
     this.purchaseService
         .GetItemGroupByInventoryId(inventoryId)
         .subscribe(x => {
-
           this.storeItemGroups$ = of(x.data.map(y => {
             return {
               name: y.ItemGroupCode + '-' + y.ItemGroupName,
@@ -199,7 +198,6 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
     this.purchaseService
         .GetItemsByItemGroupId(groupId)
         .subscribe(x => {
-
           this.storeItems$ = of(x.data.map(y => {
             return {
               name: y.ItemCode + '-' + y.ItemName,
@@ -210,7 +208,6 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
   }
 
   onPurchaseFilterSelectionChanged() {
-
     if (this.purchaseFormFilters.valid) {
       this.purchaseFilterSelected.emit(this.purchaseFormFilters);
     }

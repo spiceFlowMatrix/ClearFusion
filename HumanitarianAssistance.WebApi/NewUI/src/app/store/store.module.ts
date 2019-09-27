@@ -7,7 +7,7 @@ import { PurchaseListComponent } from './components/purchase-list/purchase-list.
 import { AddPurchaseComponent } from './components/add-purchase/add-purchase.component';
 import { AddProcurementsComponent } from './components/add-procurements/add-procurements.component';
 import { EntryComponentComponent } from './components/entry-component/entry-component.component';
-import { MatIconModule, MatMenuModule, MatSidenavModule, MatCardModule, MatButtonModule, MatInputModule, MatNativeDateModule } from '@angular/material';
+import { MatIconModule, MatMenuModule, MatSidenavModule, MatCardModule, MatButtonModule, MatInputModule, MatNativeDateModule, MatDividerModule } from '@angular/material';
 import { ShareLayoutModule } from '../shared/share-layout.module';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { LibraryModule, SubHeaderTemplateModule } from 'projects/library/src/public_api';
@@ -15,6 +15,7 @@ import { SubHeaderTemplateComponent } from 'projects/library/src/sub-header-temp
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatRangeDatepickerModule, MatRangeNativeDateModule } from 'mat-range-datepicker';
+
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import {MatRangeDatepickerModule, MatRangeNativeDateModule } from 'mat-range-dat
     LibraryModule,
     MatDatepickerModule,
     MatInputModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatDividerModule
     // MatRangeDatepickerModule,
     // MatNativeDateModule
 
