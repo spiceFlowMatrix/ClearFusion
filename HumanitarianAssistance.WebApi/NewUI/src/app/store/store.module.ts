@@ -14,7 +14,6 @@ import { LibraryModule, SubHeaderTemplateModule } from 'projects/library/src/pub
 import { SubHeaderTemplateComponent } from 'projects/library/src/sub-header-template/sub-header-template.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import {MatRangeDatepickerModule, MatRangeNativeDateModule } from 'mat-range-datepicker';
 
 
 
