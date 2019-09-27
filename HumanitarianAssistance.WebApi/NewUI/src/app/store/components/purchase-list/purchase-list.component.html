@@ -1,15 +1,13 @@
 <lib-sub-header-template>
   <span class="action_header">Purchases & Procurements
-      <hum-button [type]="'add'" [text]="'ADD PURCHASE'"></hum-button>
+      <hum-button [type]="'add'" [text]="'ADD PURCHASE'" (click)="addPurchase()"></hum-button>
       <hum-button [type]="'down'" [text]="'DISPLAY CURRENCY'"></hum-button>
   </span>
 
 
   <div class="action_section">
-    <hum-button [routerLink]="['/store/purchase/add']" [type]="'add'" [text]="'Add PURCHASE'"></hum-button>
-    <hum-button [type]="'add'" [text]="'DISPLAY CURRENCY'"></hum-button>
-    <hum-button [type]="'add'" [text]="'PDF EXPORT'"></hum-button>
-    <hum-button [type]="'add'" [text]="'FIELD CONFIGURATION'"></hum-button>
+    <hum-button [type]="'text'" [text]="'PDF EXPORT'"></hum-button>
+    <hum-button [type]="'text'" [text]="'FIELD CONFIGURATION'"></hum-button>
     <!-- <span> <a [routerLink]="['/store/purchase/add']">ADD PURCHASE</a> </span>
     <span> <a>DISPLAY CURRENCY</a> </span>
     <span> <a>PDF EXPORT</a> </span>
