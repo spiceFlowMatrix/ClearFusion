@@ -7,6 +7,7 @@ import { IResponseData } from '../../../app/dashboard/accounting/vouchers/models
 import { IFilterValueModel } from '../models/purchase';
 import { retry, finalize } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { of, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -128,17 +129,19 @@ export class PurchaseService {
   }
   //#endregion
 
-  getPurchaseAssetType(): any {
-    return [
-      {
-          AssetTypeId: 1,
-          AssetTypeName: 'Cash'
-      },
-      {
-          AssetTypeId: 2,
-          AssetTypeName: 'In Kind'
-      }
-  ];
+  getPurchaseAssetType(): Observable<any[]> {
+    return of(
+      [
+        {
+            AssetTypeId: 1,
+            AssetTypeName: 'Cash'
+        },
+        {
+            AssetTypeId: 2,
+            AssetTypeName: 'In Kind'
+        }
+    ]
+    );
   }
 
   getAllStoreSource() {

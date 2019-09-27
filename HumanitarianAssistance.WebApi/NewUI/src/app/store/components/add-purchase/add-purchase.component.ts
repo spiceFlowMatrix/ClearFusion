@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { PurchaseService } from '../../services/purchase.service';
 import { Observable, of, forkJoin } from 'rxjs';
 import { IDropDownModel } from '../../models/purchase';
@@ -10,6 +10,8 @@ import { IDropDownModel } from '../../models/purchase';
   styleUrls: ['./add-purchase.component.scss']
 })
 export class AddPurchaseComponent implements OnInit {
+
+  addPurchase: FormGroup;
 
   inventoryType$: Observable<IDropDownModel[]>;
   storeInventory$: Observable<IDropDownModel[]>;
@@ -26,7 +28,33 @@ export class AddPurchaseComponent implements OnInit {
   receiptType$: Observable<IDropDownModel[]>;
   statusList$: Observable<IDropDownModel[]>;
 
-  constructor(private purchaseService: PurchaseService) { }
+  constructor(private purchaseService: PurchaseService,
+    private fb: FormBuilder) {
+
+    this.addPurchase = this.fb.group({
+      'InventoryType': [null, [Validators.required]],
+      'Inventory': [null, [Validators.required] ],
+      'ItemGroup': [null, [Validators.required]],
+      'Item': [null, [Validators.required]],
+      'Office': [null, [Validators.required]],
+      'Project': [null],
+      'BudgetLine': [null],
+      'PurchaseOrderNo': [null],
+      'PurchaseOrderDate': [null, [Validators.required]],
+      'InvoiceDate': [null],
+      'InvoiceNo': [null],
+      'AssetType': [null],
+      'Unit': [null],
+      'Quantity': [null],
+      'Currency': [null, [Validators.required]],
+      'Price': [null, [Validators.required]],
+      'ReceivedFromLocation': [null],
+      'ReceivedFromEmployee': [null],
+      'ReceiptType': [null, [Validators.required]],
+      'Status': [null]
+    });
+  }
+
 
   ngOnInit() {
 
@@ -39,7 +67,6 @@ export class AddPurchaseComponent implements OnInit {
       this.getStoreLocations(),
       this.getAllStatusAtTimeOfIssue(),
     ]).subscribe(result => {
-
       this.subscribeInventoryTypes(result[0]);
       this.subscribeAllProjects(result[1]);
       this.subscribeAllOffice(result[2]);
@@ -51,7 +78,8 @@ export class AddPurchaseComponent implements OnInit {
   }
 
   subscribeInventoryTypes(response: any) {
-    this.inventoryType$ = of(response.InventoryTypes.map(y => {
+
+    this.inventoryType$ = of(response.Result.map(y => {
       return {
         value: y.Id,
         name: y.InventoryName
@@ -77,116 +105,69 @@ export class AddPurchaseComponent implements OnInit {
     }));
   }
 
-  subscribeAssetType(response: any) {
-    this.assetType$ = of(response.map(y => {
-          return {
-            value: y.AssetTypeId,
-            name: y.AssetTypeName
-          };
-        }));
+  subscribeAssetType(response: any[]) {
+
+    const asset: IDropDownModel[] = [];
+
+    response.forEach(x => {
+      asset.push({
+        value: x.AssetTypeId,
+        name: x.AssetTypeName
+      });
+    });
+
+    this.assetType$ = of(asset);
   }
 
   subscribeAllCurrency(response: any) {
-   this.currency$ = of(response.data.CurrencyList.map(y => {
-        return {
-          value: y.CurrencyId,
-          name: y.CurrencyCode + '-' + y.CurrencyName
-        };
-      }));
+    this.currency$ = of(response.data.CurrencyList.map(y => {
+      return {
+        value: y.CurrencyId,
+        name: y.CurrencyCode + '-' + y.CurrencyName
+      };
+    }));
   }
 
   subscribeStoreLocations(response: any) {
     this.storeSource$ = of(response.data.SourceCodeDatalist.map(y => {
-          return {
-            value: y.SourceCodeId,
-            name: y.Code + '-' + y.Description
-          };
-        }));
+      return {
+        value: y.SourceCodeId,
+        name: y.Code + '-' + y.Description
+      };
+    }));
   }
 
   subscribeAllStatusAtTimeOfIssue(response: any) {
     this.statusList$ = of(response.data.StatusAtTimeOfIssueList.map(y => {
-          return {
-            value: y.StatusAtTimeOfIssueId,
-            name: y.StatusName
-          };
-        }));
+      return {
+        value: y.StatusAtTimeOfIssueId,
+        name: y.StatusName
+      };
+    }));
   }
 
-
-
-
-
   getAllInventoryTypes() {
-    return this.purchaseService.GetAllInventoryTypeList()
-    // .subscribe(x => {
-    //   this.inventoryType$ = of(x.InventoryTypes.map(y => {
-    //     return {
-    //       value: y.Id,
-    //       name: y.InventoryName
-    //     };
-    //   }));
-    // });
+    return this.purchaseService.GetAllInventoryTypeList();
   }
 
   getAllProjects() {
-    return this.purchaseService.GetAllProjectList()
-    // .subscribe(x => {
-    //   this.project$ = of(x.data.ProjectDetailModel.map(y => {
-    //     return {
-    //       value: y.ProjectId,
-    //       name: y.ProjectCode + '-' + y.ProjectName
-    //     };
-    //   }));
-    // });
+    return this.purchaseService.GetAllProjectList();
   }
 
   getAllOffice() {
-    return this.purchaseService.GetAllOfficeList()
-    // .subscribe(x => {
-    //   this.offices$ = of(x.data.OfficeDetailsList.map(y => {
-    //     return {
-    //       value: y.OfficeId,
-    //       name: y.OfficeCode + '-' + y.OfficeName
-    //     };
-    //   }));
-    // });
+    return this.purchaseService.GetAllOfficeList();
   }
 
   getAssetType() {
-    return this.purchaseService.getPurchaseAssetType()
-    // .subscribe(x => {
-    //   this.offices$ = of(x.map(y => {
-    //     return {
-    //       value: y.AssetTypeId,
-    //       name: y.AssetTypeName
-    //     };
-    //   }));
-    // });
+    return this.purchaseService.getPurchaseAssetType();
   }
 
   getAllCurrency() {
-    return this.purchaseService.getAllCurrency()
-    // .subscribe(x => {
-    //   this.offices$ = of(x.data.CurrencyList.map(y => {
-    //     return {
-    //       value: y.CurrencyId,
-    //       name: y.CurrencyCode + '-' + y.CurrencyName
-    //     };
-    //   }));
-    // });
+    return this.purchaseService.getAllCurrency();
   }
 
   getStoreLocations() {
-    return this.purchaseService.getAllStoreSource()
-    // .subscribe(x => {
-    //   this.storeSource$ = of(x.data.SourceCodeDatalist.map(y => {
-    //     return {
-    //       value: y.SourceCodeId,
-    //       name: y.Code + '-' + y.Description
-    //     };
-    //   }));
-    // });
+    return this.purchaseService.getAllStoreSource();
   }
 
   // getAllEmployeeList() {
@@ -194,15 +175,30 @@ export class AddPurchaseComponent implements OnInit {
   // }
 
   getAllStatusAtTimeOfIssue() {
-    return this.purchaseService.getAllStatusAtTimeOfIssue()
-    // .subscribe(x => {
-    //   this.statusList$ = of(x.data.StatusAtTimeOfIssueList.map(y => {
-    //     return {
-    //       value: y.StatusAtTimeOfIssueId,
-    //       name: y.StatusName
-    //     };
-    //   }));
-    // });
+    return this.purchaseService.getAllStatusAtTimeOfIssue();
+  }
+
+  getInventoryTypeSelectedValue(event: any) {
+    this.addPurchase.get('InventoryType').patchValue(event);
+    this.getInventoriesByInventoryTypeId(event);
+  }
+
+  getMasterInventorySelectedValue(event: any) {
+    // this.getAllStoreItemGroups(event);
+  }
+
+  getInventoriesByInventoryTypeId(inventoryTypeId: number) {
+    this.purchaseService
+        .GetInventoriesByInventoryTypeId(inventoryTypeId)
+        .subscribe(x => {
+
+          this.storeInventory$ = of(x.data.map(y => {
+            return {
+              name: y.InventoryCode + '-' + y.InventoryName,
+              value: y.InventoryId
+            };
+          }));
+        });
   }
 
 }

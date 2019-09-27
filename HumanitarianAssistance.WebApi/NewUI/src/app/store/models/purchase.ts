@@ -29,10 +29,11 @@ export interface IFilterValueModel {
   InventoryId: any;
   ItemGroupId: any;
   ItemId: any;
+  JobId: any;
 
-  pageIndex: any;
-  pageSize: any;
-  totalCount: any;
+  PageIndex?: number;
+  PageSize?: number;
+  TotalCount?: number;
 }
 
 export interface IPurchaseList {

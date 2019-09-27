@@ -20,6 +20,7 @@ namespace HumanitarianAssistance.Application.Store.Models
         public double OriginalCost { get; set; }
         public double DepreciatedCost { get; set; }
         public DateTime PurchaseDate {get; set;}
+        public int recordsCount { get; set; }
         public List<ProcurementListModel> ProcurementList { get; set; }
     }
 }

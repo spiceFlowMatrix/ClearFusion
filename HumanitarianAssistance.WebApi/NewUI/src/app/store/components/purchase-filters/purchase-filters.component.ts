@@ -47,9 +47,6 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
       ItemGroupId: [null],
       ItemId: [null]
     });
-
-    this.purchaseFormFilters.controls['ReceiptTypeId'].valueChanges.subscribe(x => { console.log(x) });
-
   }
 
   ngOnInit() {
@@ -130,25 +127,30 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
    }
 
   getProjectSelectedValue(event: any) {
+    this.purchaseFormFilters.get('ProjectId').patchValue(event);
     this.onPurchaseFilterSelectionChanged();
     this.getJobsByProjectId(event);
   }
 
    getJobSelectedValue(event: any) {
+    this.purchaseFormFilters.get('JobId').patchValue(event);
      this.onPurchaseFilterSelectionChanged();
    }
 
   getMasterInventorySelectedValue(event: any) {
+    this.purchaseFormFilters.get('InventoryMasterId').patchValue(event);
     this.getAllStoreItemGroups(event);
     this.onPurchaseFilterSelectionChanged();
   }
 
   getItemGroupSelectedValue(event: any) {
+    this.purchaseFormFilters.get('ItemGroupId').patchValue(event);
     this.getAllStoreItemsByGroupId(event);
     this.onPurchaseFilterSelectionChanged();
   }
 
    getItemSelectedValue(event: any) {
+    this.purchaseFormFilters.get('ItemId').patchValue(event);
      this.onPurchaseFilterSelectionChanged();
    }
 

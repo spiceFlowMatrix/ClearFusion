@@ -13,74 +13,115 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Application.Store.Queries
 {
-    public class GetFilteredPurchaseListQueryHandler : IRequestHandler<GetFilteredPurchaseListQuery, List<PurchaseListModel>>
+    public class GetFilteredPurchaseListQueryHandler : IRequestHandler<GetFilteredPurchaseListQuery, StorePurchaseListModel>
     {
 
         private HumanitarianAssistanceDbContext _dbContext;
-        
+
         public GetFilteredPurchaseListQueryHandler(HumanitarianAssistanceDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task<List<PurchaseListModel>> Handle(GetFilteredPurchaseListQuery request, CancellationToken cancellationToken)
+        public async Task<StorePurchaseListModel> Handle(GetFilteredPurchaseListQuery request, CancellationToken cancellationToken)
         {
-            List<PurchaseListModel> model = new List<PurchaseListModel>();
-            
+            StorePurchaseListModel model = new StorePurchaseListModel();
+
             try
             {
-                model = await _dbContext.StoreItemPurchases
+                var query = _dbContext.StoreItemPurchases
                                    .Include(x => x.ProjectDetail)
                                    .ThenInclude(x => x.ProjectJobDetail)
                                   .Include(x => x.PurchaseOrders)
                                   .ThenInclude(x => x.EmployeeDetail)
                                   .Include(x => x.StoreInventoryItem)
-                                  .ThenInclude(x=> x.StoreItemGroup)
+                                  .ThenInclude(x => x.StoreItemGroup)
                                   .Include(x => x.StoreInventoryItem)
-                                  .ThenInclude(x=> x.Inventory)
+                                  .ThenInclude(x => x.Inventory)
                                   .Include(x => x.EmployeeDetail)
                                   .Include(x => x.ProjectDetail)
                                   .Where(x => x.IsDeleted == false &&
                                         x.StoreInventoryItem.Inventory.AssetType == request.InventoryTypeId &&
                                         x.ReceiptTypeId == request.ReceiptTypeId &&
                                         x.OfficeId == request.OfficeId &&
-                                        x.Currency == request.CurrencyId &&
-                                        request.ProjectId == 0 ? true : x.ProjectId == request.ProjectId &&
-                                        request.JobId == 0 ? true : x.ProjectDetail.ProjectJobDetail.Select(z => z.ProjectJobId).Contains(request.JobId) &&
-                                        request.PurchaseStartDate == null ? true : x.PurchaseDate.Date >= request.PurchaseStartDate &&
-                                        request.PurchaseEndDate == null ? true : x.PurchaseDate.Date <= request.PurchaseEndDate &&
-                                        request.InventoryId ==0 ? true : x.StoreInventoryItem.Inventory.InventoryId == request.InventoryId &&
-                                        request.ItemGroupId ==0 ? true : x.StoreInventoryItem.StoreItemGroup.ItemGroupId == request.ItemGroupId &&
-                                        request.ItemId == 0 ? true : x.StoreInventoryItem.ItemId == request.ItemId
-                                        )
-                                  .Select(x=> new PurchaseListModel 
-                                  {
-                                      PurchaseId = x.PurchaseId,
-                                      PurchaseDate= x.PurchaseDate,
-                                      CurrencyId= x.Currency,
-                                      ItemId = x.StoreInventoryItem!=null? x.StoreInventoryItem.ItemId : 0,
-                                      ItemName= x.StoreInventoryItem != null ? (x.StoreInventoryItem.ItemCode +"-"+x.StoreInventoryItem.ItemName) : "",
-                                      EmployeeName= x.EmployeeDetail != null? x.EmployeeDetail.EmployeeCode+"-"+x.EmployeeDetail.EmployeeName : "",
-                                      ProjectId= x.ProjectId,
-                                      ProjectName= x.ProjectDetail == null ? "" : x.ProjectDetail.ProjectCode+"-"+x.ProjectDetail.ProjectName,
-                                      OriginalCost= x.UnitCost * x.Quantity,
-                                      DepreciatedCost= (x.UnitCost * x.Quantity)-(Math.Ceiling(DateTime.Now.Date.Subtract(x.PurchaseDate).TotalDays) * x.Quantity * x.DepreciationRate * x.UnitCost / 100),
-                                      ProcurementList= x.PurchaseOrders.Select(z=> new ProcurementListModel 
-                                                       {
-                                                           IssueId= z.OrderId,
-                                                           EmployeeName= z.EmployeeDetail.EmployeeCode +"-"+z.EmployeeDetail.EmployeeName,
-                                                           IssueDate= z.IssueDate,
-                                                           MustReturn= z.MustReturn,
-                                                           ProcuredAmount= z.IssuedQuantity,
-                                                           Returned= z.Returned,
-                                                           ReturnedOn= z.ReturnedDate
-                                                       }).Where(y=> request.IssueStartDate == null? true : y.IssueDate >= request.IssueStartDate &&
-                                                        request.IssueEndDate == null ? true : y.IssueDate <= request.IssueEndDate).ToList()
+                                        x.Currency == request.CurrencyId);
 
-                                  })
-                                  //.Skip(request.pageSize.Value * request.pageIndex.Value)
-                                  //.Take(request.pageSize.Value)
-                                  .ToListAsync();
+                //   .Where(x => x.IsDeleted == false &&
+                //         x.StoreInventoryItem.Inventory.AssetType == request.InventoryTypeId &&
+                //         x.ReceiptTypeId == request.ReceiptTypeId &&
+                //         x.OfficeId == request.OfficeId &&
+                //         x.Currency == request.CurrencyId &&
+                //         request.InventoryId ==0 ? true : x.StoreInventoryItem.Inventory.InventoryId == request.InventoryId &&
+                //         request.ProjectId == 0 ? true : x.ProjectId == request.ProjectId &&
+                //         request.JobId == 0 ? true : x.ProjectDetail.ProjectJobDetail.Select(z => z.ProjectJobId).Contains(request.JobId) &&
+                //         request.PurchaseStartDate == null ? true : x.PurchaseDate.Date >= request.PurchaseStartDate &&
+                //         request.PurchaseEndDate == null ? true : x.PurchaseDate.Date <= request.PurchaseEndDate &&
+                //         request.ItemGroupId ==0 ? true : x.StoreInventoryItem.StoreItemGroup.ItemGroupId == request.ItemGroupId &&
+                //         request.ItemId == 0 ? true : x.StoreInventoryItem.ItemId == request.ItemId
+                //         )
+
+                if (request.InventoryId != 0)
+                {
+                    query= query.Where(x => x.StoreInventoryItem.Inventory.InventoryId == request.InventoryId);
+                }
+
+                if (request.ProjectId != 0)
+                {
+                   query= query.Where(x => x.ProjectId == request.ProjectId);
+                }
+
+                if (request.JobId != 0)
+                {
+                   query= query.Where(x => x.ProjectDetail.ProjectJobDetail.Select(z => z.ProjectJobId).Contains(request.JobId));
+                }
+
+                if (request.PurchaseStartDate != null)
+                {
+                   query= query.Where(x => x.PurchaseDate.Date >= request.PurchaseStartDate);
+                }
+
+                if (request.PurchaseEndDate != null)
+                {
+                   query= query.Where(x => x.PurchaseDate.Date <= request.PurchaseEndDate);
+                }
+
+                if (request.ItemGroupId != 0)
+                {
+                   query= query.Where(x => x.StoreInventoryItem.StoreItemGroup.ItemGroupId == request.ItemGroupId);
+                }
+
+                if (request.ItemId != 0)
+                {
+                   query= query.Where(x => x.StoreInventoryItem.ItemId == request.ItemId);
+                }
+
+                var queryResult = query.Select(x => new PurchaseListModel
+                {
+                    PurchaseId = x.PurchaseId,
+                    PurchaseDate = x.PurchaseDate,
+                    CurrencyId = x.Currency,
+                    ItemId = x.StoreInventoryItem != null ? x.StoreInventoryItem.ItemId : 0,
+                    ItemName = x.StoreInventoryItem != null ? (x.StoreInventoryItem.ItemCode + "-" + x.StoreInventoryItem.ItemName) : "",
+                    EmployeeName = x.EmployeeDetail != null ? x.EmployeeDetail.EmployeeCode + "-" + x.EmployeeDetail.EmployeeName : "",
+                    ProjectId = x.ProjectId,
+                    ProjectName = x.ProjectDetail == null ? "" : x.ProjectDetail.ProjectCode + "-" + x.ProjectDetail.ProjectName,
+                    OriginalCost = x.UnitCost * x.Quantity,
+                    DepreciatedCost = (x.UnitCost * x.Quantity) - (Math.Ceiling(DateTime.Now.Date.Subtract(x.PurchaseDate).TotalDays) * x.Quantity * x.DepreciationRate * x.UnitCost / 100),
+                    ProcurementList = x.PurchaseOrders.Select(z => new ProcurementListModel
+                    {
+                        IssueId = z.OrderId,
+                        EmployeeName = z.EmployeeDetail.EmployeeCode + "-" + z.EmployeeDetail.EmployeeName,
+                        IssueDate = z.IssueDate,
+                        MustReturn = z.MustReturn,
+                        ProcuredAmount = z.IssuedQuantity,
+                        Returned = z.Returned,
+                        ReturnedOn = z.ReturnedDate
+                    }).Where(y => request.IssueStartDate == null ? true : y.IssueDate >= request.IssueStartDate &&
+                     request.IssueEndDate == null ? true : y.IssueDate <= request.IssueEndDate).ToList()
+                }).AsQueryable();
+
+                model.RecordCount = await queryResult.CountAsync();
+                model.PurchaseList = await queryResult.Skip(request.pageIndex.Value * request.pageSize.Value).Take(request.pageSize.Value).ToListAsync();
 
                 // List<ExchangeRateDetail> exchangeRateList= await _dbContext.ExchangeRateDetail
                 //                                                      .Where(x=> x.IsDeleted== false &&
@@ -100,7 +141,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                 //     item.DepreciatedCost = item.DepreciatedCost * (double)exchangeRate.Rate;
                 // }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }

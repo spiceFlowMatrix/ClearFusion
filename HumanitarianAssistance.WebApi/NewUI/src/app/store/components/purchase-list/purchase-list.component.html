@@ -3,20 +3,22 @@
   </span>
 
   <div class="action_section">
-      <hum-button [routerLink]="['/store/purchase/add']" [type]="'add'" [text]="'add PURCHASE'"></hum-button>
+    <hum-button [routerLink]="['/store/purchase/add']" [type]="'add'" [text]="'add PURCHASE'"></hum-button>
     <span> <a>DISPLAY CURRENCY</a> </span>
     <span> <a>PDF EXPORT</a> </span>
     <span> <a>FIELD CONFIGURATION</a> </span>
   </div>
 </lib-sub-header-template>
-<mat-card>
+<mat-card [ngStyle]="scrollStyles">
   <div class="row">
     <div class="col-md-12">
       <h4>Filters</h4>
       <app-purchase-filters (purchaseFilterSelected)="onpurchaseFilterSelected($event)"></app-purchase-filters>
       <h4>Purchases</h4>
       <hum-table *ngIf="purchaseList$" [headers]="purchaseListHeaders$" [items]="purchaseList$"></hum-table>
+      <mat-paginator [length]="purchaseRecordCount" [pageSize]="filterValueModel.pageSize" [pageSizeOptions]="[10, 5, 25, 100]"
+      (page)="pageEvent($event)">
+      </mat-paginator>
     </div>
   </div>
 </mat-card>
-

@@ -13,6 +13,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { LibraryModule, SubHeaderTemplateModule } from 'projects/library/src/public_api';
 import { SubHeaderTemplateComponent } from 'projects/library/src/sub-header-template/sub-header-template.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatRangeDatepickerModule, MatRangeNativeDateModule } from 'mat-range-datepicker';
 
 
@@ -31,6 +32,7 @@ import {MatRangeDatepickerModule, MatRangeNativeDateModule } from 'mat-range-dat
   imports: [
     CommonModule,
     StoreRoutingModule,
+    ReactiveFormsModule,
     // Material
     MatMenuModule,
     MatIconModule,
@@ -42,7 +44,7 @@ import {MatRangeDatepickerModule, MatRangeNativeDateModule } from 'mat-range-dat
     LibraryModule,
     MatDatepickerModule,
     MatInputModule,
-    ReactiveFormsModule,
+    MatPaginatorModule
     // MatRangeDatepickerModule,
     // MatNativeDateModule
 
