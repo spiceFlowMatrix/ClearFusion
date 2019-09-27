@@ -3,6 +3,8 @@ import { of, Observable } from 'rxjs';
 import { PurchaseService } from '../../services/purchase.service';
 import { IFilterValueModel, IPurchaseList, IProcurementList } from '../../models/purchase';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material';
+import { AddProcurementsComponent } from '../add-procurements/add-procurements.component';
 
 @Component({
   selector: 'app-purchase-list',
@@ -15,16 +17,16 @@ export class PurchaseListComponent implements OnInit {
   filterValueModel: IFilterValueModel;
   purchaseRecordCount = 0;
 
-    // screen
-    screenHeight: any;
-    screenWidth: any;
-    scrollStyles: any;
+  // screen
+  screenHeight: any;
+  screenWidth: any;
+  scrollStyles: any;
 
   purchaseListHeaders$ = of(['Id', 'Item', 'Purchased By', 'Project', 'Original Cost', 'Deprecated Cost']);
   subListHeaders$ = of(['Id', 'Date', 'Employee', 'Procured Amount', 'Must Return', 'Returned', 'Returned On']);
   procurementList$: Observable<IProcurementList[]>;
 
-  constructor(private purchaseService: PurchaseService, private router: Router) {
+  constructor(private purchaseService: PurchaseService, private router: Router, private dialog: MatDialog) {
 
     this.filterValueModel = {
       CurrencyId: null,
@@ -72,18 +74,18 @@ export class PurchaseListComponent implements OnInit {
 
         this.purchaseRecordCount = x.RecordCount;
 
-      this.purchaseList$ = of(x.PurchaseList.map((element) => {
-        return  {
-          Id: element.PurchaseId,
-          Item: element.ItemName,
-          PurchasedBy: element.EmployeeName,
-          Project: element.ProjectName,
-          OriginalCost: element.OriginalCost,
-          DepreciatedCost: element.DepreciatedCost,
-          subItems: element.ProcurementList
-        };
-      }));
-    });
+        this.purchaseList$ = of(x.PurchaseList.map((element) => {
+          return {
+            Id: element.PurchaseId,
+            Item: element.ItemName,
+            PurchasedBy: element.EmployeeName,
+            Project: element.ProjectName,
+            OriginalCost: element.OriginalCost,
+            DepreciatedCost: element.DepreciatedCost,
+            subItems: element.ProcurementList
+          };
+        }));
+      });
   }
 
   onpurchaseFilterSelected(event: any) {
@@ -118,6 +120,12 @@ export class PurchaseListComponent implements OnInit {
 
   addPurchase() {
     this.router.navigate(['/store/purchase/add']);
+  }
+  openProc() {
+    const dialogRef = this.dialog.open(AddProcurementsComponent, {
+      width: '500px',
+      data: {}
+    });
   }
 
 }

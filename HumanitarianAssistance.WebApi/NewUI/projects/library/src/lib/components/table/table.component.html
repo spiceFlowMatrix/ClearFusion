@@ -10,7 +10,7 @@
     <tr (click)="isShowSubList[i] = !isShowSubList[i]" class="main-table">
       <td *ngFor="let header of itemHeaders | async; let j=index ">{{item[header]}}</td>
       <td>
-        <hum-button [type]="'add'" [text]="'add procurement'"></hum-button>
+        <hum-button [type]="'add'" [text]="'add procurement'" (click)="action($event)"></hum-button>
       </td>
 
     </tr>
