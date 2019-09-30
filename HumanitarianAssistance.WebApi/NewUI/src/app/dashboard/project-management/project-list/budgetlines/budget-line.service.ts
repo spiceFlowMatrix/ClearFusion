@@ -10,6 +10,8 @@ import {
   ITransactionModel,
   IBudgetListFilterModel
 } from './models/budget-line.models';
+import { catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -81,7 +83,12 @@ export class BudgetLineService {
             message: x.Message
           };
           return responseData;
-        })
+        },
+        // catchError(err => {
+        //   return new Observable<Response>(err);
+        // }
+        // )
+        )
       );
   }
   //#endregion

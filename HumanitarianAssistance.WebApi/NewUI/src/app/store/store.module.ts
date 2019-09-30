@@ -15,6 +15,7 @@ import { LibraryModule, SubHeaderTemplateModule } from 'projects/library/src/pub
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatDialogModule } from '@angular/material/dialog';
 import {MatRangeDatepickerModule, MatRangeNativeDateModule } from 'mat-range-datepicker';
 
 
@@ -48,7 +49,8 @@ import {MatRangeDatepickerModule, MatRangeNativeDateModule } from 'mat-range-dat
     MatInputModule,
     MatPaginatorModule,
     MatDividerModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatDialogModule
     // MatRangeDatepickerModule,
     // MatNativeDateModule
 

@@ -55,7 +55,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
   }
 
   getPurchaseFilters() {
-    this.purchaseService.GetPurchaseFilterList()
+    this.purchaseService.getPurchaseFilterList()
     .pipe(takeUntil(this.destroyed$))
     .subscribe(x  => {
       this.inventoryType$ = of(x.InventoryTypes.map(y => {

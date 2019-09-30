@@ -16,30 +16,45 @@ import { Observable } from 'rxjs';
   ]
 })
 export class HumDropdownComponent implements OnInit, ControlValueAccessor {
+  constructor() { }
 
   @Input() options: Observable<Array<Object>>;
   @Input() placeHolder: string;
   // @Input() formControl: string;
   @Output() change = new EventEmitter<number>();
   dropControl = new FormControl('');
-  constructor() { }
+  val = '';
 
+
+  onChange: any = () => { console.log('Change'); };
+  onTouch: any = () => { };
+  set value(val) {
+    if (val !== undefined && this.val !== val) {
+      this.val = val;
+      this.onChange(val);
+      this.onTouch(val);
+    }
+
+  }
   ngOnInit() {
 
   }
   optionChange(event) {
-    this.change.emit(event)
+    this.change.emit(event);
   }
   writeValue(obj: any): void {
+    this.value = obj;
     this.dropControl.setValue(obj);
   }
   registerOnChange(fn: any): void {
-    console.log("registerOnChange")
+    this.onChange = fn;
+    console.log('registerOnChange');
   }
   registerOnTouched(fn: any): void {
-    console.log("registerOnTouched")
+    // tslint:disable-next-line: quotemark
+    console.log("registerOnTouched");
   }
   setDisabledState?(isDisabled: boolean): void {
-    console.log("setDisabledState")
+    console.log('setDisabledState');
   }
 }

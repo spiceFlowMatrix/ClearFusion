@@ -53,3 +53,37 @@ export interface IProcurementList {
   ProcuredAmount?: string;
   Returned: boolean;
 }
+
+export interface IAddEditPurchaseModel {
+  PurchaseId?: number;
+  InventoryTypeId?: any;
+  PurchaseName: string;
+  InventoryId: any;
+  ItemGroupId?: any;
+  InventoryItem: any;
+  OfficeId: any;
+  ProjectId: any;
+  BudgetLineId: any;
+  PurchaseOrderNo: any;
+  PurchaseDate: any;
+  InvoiceDate: any;
+  DeliveryDate: any;
+  InvoiceNo: any;
+  ReceivedFromLocation: any;
+  PurchasedById: any;
+
+  ReceiptTypeId: any;
+  Status: any;
+
+  Quantity: any;
+  Currency: any;
+  UnitCost: any;
+  AssetTypeId: any;
+  UnitType: any;
+  ApplyDepreciation: boolean;
+  DepreciationRate: any;
+
+  PageIndex?: number;
+  PageSize?: number;
+  TotalCount?: number;
+}

@@ -69,7 +69,7 @@ export class PurchaseListComponent implements OnInit {
   getPurchasesByFilter(filter: IFilterValueModel) {
 
     this.purchaseService
-      .GetFilteredPurchaseList(filter).subscribe(x => {
+      .getFilteredPurchaseList(filter).subscribe(x => {
         this.purchaseRecordCount = x.RecordCount;
 
         this.purchaseList$ = of(x.PurchaseList.map((element) => {
@@ -121,7 +121,7 @@ export class PurchaseListComponent implements OnInit {
   }
   openProc() {
     const dialogRef = this.dialog.open(AddProcurementsComponent, {
-      width: '500px',
+      width: '800px',
       data: {}
     });
   }
