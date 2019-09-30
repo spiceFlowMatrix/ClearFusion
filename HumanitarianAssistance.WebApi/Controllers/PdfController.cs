@@ -46,10 +46,19 @@ namespace HumanitarianAssistance.WebApi.Controllers
         }
         [HttpPost]
         [Produces(contentType: "application/pdf")]
-        public async Task<IActionResult> ProjectActivityReportPdf([FromBody] ProjectActivityReportPdfQuery model)
+        public async Task<IActionResult> ProjectActivityReportPdf([FromBody] long ProjectId)
         {    
-            var file = await _mediator.Send(model);
+            var file = await _mediator.Send(new ProjectActivityReportPdfQuery{ ProjectId = ProjectId});
             return File(file, "application/pdf", "ProjectActivityReport.pdf");
+        }
+
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetAnnualAppraisalReportPdf([FromBody] GetAnnualAppraisalReportPdfQuery model) 
+        {
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "AnnualAppraisalReport.pdf");
         }
     }
 }
+

@@ -6,7 +6,7 @@ import {
   IBudgetLine,
   IEmployeeList,
   IProjectActivityDetail,
-  IProjectSummaryModel
+  IProjectSummaryModel,
 } from '../models/project-activities.model';
 import {
   ProjectActivitiesService,
@@ -24,6 +24,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ReplaySubject } from 'rxjs';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
+import { element } from '@angular/core/src/render3';
 @Component({
   selector: 'app-project-activity-listing',
   templateUrl: './project-activity-listing.component.html',
@@ -212,6 +213,30 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
     };
   }
   //#endregion
+
+
+//   initializePdfForm()
+//   {
+//     this.projectActivityPdfModel = {
+// ProjectCode: null,
+// ProjectName: '',
+// ProjectGoal: '',
+// ProjectDuration: null,
+// ProjectLocation: '',
+// MainActivity: '',
+// ActivityDuration: '',
+// Monitoring: null,
+// Recommendations: '',
+// Start: '',
+// End: '',
+// Province: '',
+// District: '',
+// ActualStartDate: '',
+// ActualEndDate: '',
+//     };
+//   }
+
+
 
   //#region "openAddActivityDialog"
   openAddActivityDialog(): void {
@@ -889,7 +914,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
     onExportPdf() {
       this.globalSharedService
         .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_ProjectActivityReportPdf,
-                  this.projectActivityFilter
+                  this.projectId
         )
         .pipe(takeUntil(this.destroyed$))
         .subscribe();

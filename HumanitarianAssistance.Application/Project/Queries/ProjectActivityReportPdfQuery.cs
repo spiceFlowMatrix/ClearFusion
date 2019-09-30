@@ -7,6 +7,6 @@ namespace HumanitarianAssistance.Application.Project.Queries
 {
     public class ProjectActivityReportPdfQuery : IRequest<byte[]>
     {
-        public string FilterValue { get; set; }           
+        public long  ProjectId { get; set; }            
     }
 }
