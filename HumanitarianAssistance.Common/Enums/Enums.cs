@@ -8,7 +8,8 @@
         Store = 4,
         Project = 5,
         Marketing = 6,
-        PdfExport = 7
+        PdfExport = 7,
+        StorePurchase = 8,
     }
 
 

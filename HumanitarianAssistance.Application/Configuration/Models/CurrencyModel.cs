@@ -8,6 +8,6 @@ namespace HumanitarianAssistance.Application.Configuration.Models
         public string CurrencyCode { get; set; }
         public string CurrencyName { get; set; }
         public float? CurrencyRate { get; set; }
-		public bool? Status { get; set; }
+        public bool? Status { get; set; }
     }
 }

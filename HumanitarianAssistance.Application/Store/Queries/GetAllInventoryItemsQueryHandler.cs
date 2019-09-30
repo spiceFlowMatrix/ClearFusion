@@ -63,8 +63,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
             catch (Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-                return response;
+                response.Message = ex.Message;
             }
 
             return response;

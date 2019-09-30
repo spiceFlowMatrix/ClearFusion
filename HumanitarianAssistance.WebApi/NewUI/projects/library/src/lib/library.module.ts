@@ -18,6 +18,10 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatSelectModule } from '@angular/material/select';
 import { ListingDeleteComponent } from './components/listing-delete/listing-delete.component';
 import { DocumentListingComponent } from './components/document-listing/document-listing.component';
+import { HumDropdownComponent } from './components/hum-dropdown/hum-dropdown.component';
+import { TableComponent } from './components/table/table.component';
+import { ButtonComponent } from './components/button/button.component';
+
 
 @NgModule({
   imports: [
@@ -32,7 +36,8 @@ import { DocumentListingComponent } from './components/document-listing/document
     MatDialogModule,
     FileDropModule,
     MatSelectModule,
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule,
+    MatButtonModule
   ],
   declarations: [
     LibraryComponent,
@@ -43,6 +48,9 @@ import { DocumentListingComponent } from './components/document-listing/document
     SearchDropdownComponent,
     ListingDeleteComponent,
     DocumentListingComponent,
+    HumDropdownComponent,
+    TableComponent,
+    ButtonComponent
   ],
   exports: [
     LibraryComponent,
@@ -51,7 +59,10 @@ import { DocumentListingComponent } from './components/document-listing/document
     DeleteConfirmationComponent,
     DragAndDropComponent,
     SearchDropdownComponent,
-    ListingDeleteComponent
+    ListingDeleteComponent,
+    HumDropdownComponent,
+    TableComponent,
+    ButtonComponent
   ],
   entryComponents: [
     DeleteConfirmationComponent

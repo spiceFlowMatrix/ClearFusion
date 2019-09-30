@@ -1,0 +1,46 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th *ngFor="let header of headers | async">
+        {{header}}
+      </th>
+    </tr>
+  </thead>
+  <tbody *ngFor="let item of items | async; let i=index;">
+    <tr (click)="isShowSubList[i] = !isShowSubList[i]" class="main-table">
+      <td *ngFor="let header of itemHeaders | async; let j=index ">{{item[header]}}</td>
+      <td>
+        <hum-button [type]="'add'" [text]="'add procurement'" (click)="action($event)"></hum-button>
+      </td>
+
+    </tr>
+
+    <tr *ngIf="isShowSubList[i]" class="sub-table">
+      <td [attr.colspan]="(headers | async).length + 1">
+        <div class="sub-table">
+            <span>{{subTitle}}</span>
+            <table class="table table-striped sub-table">
+                <thead>
+                  <tr>
+                    <th *ngFor="let header of subHeaders | async">
+                      {{header}}
+                    </th>
+                  </tr>
+                </thead>
+      
+                <tbody *ngIf="subItems[i]">
+                  <tr *ngFor="let subItem of subItems[i]">
+                    <td *ngFor="let header of subItemHeaders | async; let j=index ">{{subItem[header]}}</td>
+                    <td><i class="fas fa-trash"></i> </td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+     
+      </td>
+    </tr>
+
+
+
+  </tbody>
+</table>

@@ -27,41 +27,39 @@ namespace HumanitarianAssistance.Application.Project.Queries
             ApiResponse response = new ApiResponse();
             try
             {
-                // Task<DateTime?> minStartDate = GetMinimumProjectActivityStartDate(request.ProjectId);
-                //  Task<DateTime?> maxEndDate = GetMaximumProjectActivityEndDate(request.ProjectId);
+                Task<DateTime?> minStartDate = GetMinimumProjectActivityStartDate(request.ProjectId);
+                Task<DateTime?> maxEndDate = GetMaximumProjectActivityEndDate(request.ProjectId);
 
                 Task<int> ActivityOnSchedule = GetActivityOnSchedule(request.ProjectId);
-                //Task<int> LateStart = GetLateStart(request.ProjectId);
-                // Task<int> LateEnd = GetLateEnd(request.ProjectId);
-                //  Task<float> Progress = GetProgress(request.ProjectId);
-                // Task<int> Slippage = GetSlippage(request.ProjectId);
+                Task<int> LateStart = GetLateStart(request.ProjectId);
+                Task<int> LateEnd = GetLateEnd(request.ProjectId);
+                Task<float> Progress = GetProgress(request.ProjectId);
+                Task<int> Slippage = GetSlippage(request.ProjectId);
 
-                //  DateTime minDate = await minStartDate ?? DateTime.UtcNow;
-                // DateTime maxDate = await maxEndDate ?? DateTime.UtcNow;
-
-                // ProjectActivityStatusModel obj = new ProjectActivityStatusModel
-                // {
-                //    // ProjectDuration = (maxDate.Date - minDate.Date).Days,
-                //     ActivityOnSchedule = await ActivityOnSchedule,
-                //     // LateStart = await LateStart,
-                //     // LateEnd = await LateEnd,
-                //     LateStart = 0,
-                //     LateEnd = 0,
-                //     // ActivityOnSchedule = 0,
-                //   //  Progress = await Progress,
-                //    // Slippage = await Slippage,
-                // };
+                DateTime minDate = await minStartDate ?? DateTime.UtcNow;
+                DateTime maxDate = await maxEndDate ?? DateTime.UtcNow;
 
                 ProjectActivityStatusModel obj = new ProjectActivityStatusModel
                 {
-                    ProjectDuration = 0,
-                    // ActivityOnSchedule = 0,
+                    ProjectDuration = (maxDate.Date - minDate.Date).Days,
                     ActivityOnSchedule = await ActivityOnSchedule,
-                    LateStart = 0,
-                    LateEnd = 0,
-                    Progress = 0,
-                    Slippage = 0
+                    LateStart = await LateStart,
+                    LateEnd = await LateEnd,
+
+                    Progress = await Progress,
+                    Slippage = await Slippage,
                 };
+
+                // ProjectActivityStatusModel obj = new ProjectActivityStatusModel
+                // {
+                //     ProjectDuration = 0,
+                //     // ActivityOnSchedule = 0,
+                //     ActivityOnSchedule = await ActivityOnSchedule,
+                //     LateStart = 0,
+                //     LateEnd = 0,
+                //     Progress = 0,
+                //     Slippage = 0
+                // };
 
                 response.data.ProjectActivityStatusModel = obj;
                 response.StatusCode = StaticResource.successStatusCode;
@@ -94,46 +92,54 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
         public async Task<int> GetActivityOnSchedule(long projectId)
         {
-            var subActivityList = await _dbContext.ProjectActivityDetail.Where(x => x.IsDeleted == false && x.ProjectId == projectId).ToListAsync();
-            Console.WriteLine(subActivityList);
+            //  Console.WriteLine(subActivityList);
             int totalCount = await _dbContext.ProjectActivityDetail
                                                       .CountAsync(a => a.IsDeleted == false &&
-                                                                       a.ProjectBudgetLineDetail.ProjectId == projectId &&
-                                                                       a.ParentId == null &&
-                                                                       a.PlannedStartDate ==
-                                                                       (a.ProjectSubActivityList.Min(y => y.ActualStartDate.Value.Date) != null ?
-                                                                            a.ProjectSubActivityList.Min(y => y.ActualStartDate.Value.Date) : DateTime.UtcNow.Date) &&
-                                                                       a.PlannedEndDate >= (a.ProjectSubActivityList.Max(y => y.ActualEndDate.Value.Date) != null ?
-                                                                            a.ProjectSubActivityList.Max(y => y.ActualEndDate.Value.Date) : DateTime.UtcNow.Date)
-                  
-                                                                       );
-            Console.WriteLine(totalCount);
+                                                                       a.ProjectId == projectId &&
+                                                                       a.ParentId == null && (a.ProjectSubActivityList.Any() ?
+                                                                       a.PlannedStartDate.Value.Date <=
+                                                                       (a.ProjectSubActivityList.Min(y => y.ActualStartDate.HasValue ?
+                                                                                                          y.ActualStartDate.Value.Date :
+                                                                                                          DateTime.UtcNow.Date)) &&
+                                                                       a.PlannedEndDate.Value.Date >= (a.ProjectSubActivityList.Max(y => y.ActualEndDate.HasValue ?
+                                                                                            y.ActualEndDate.Value.Date :
+                                                                                            DateTime.UtcNow.Date)) : false
+                                                      ));
+
+
+
             return totalCount;
 
         }
-        // public async Task<int> GetLateStart(long projectId)
-        // {
-        //     //NOTE: PlannedStart < ActualStartDate
-        //     int totalCount = await _dbContext.ProjectActivityDetail.CountAsync(a => a.IsDeleted == false &&
-        //                                                                           a.ProjectId == projectId &&
-        //                                                                           a.ParentId == null &&
-        //                                                                           a.PlannedStartDate.Value.Date < (a.ProjectSubActivityList.Min(x => x.ActualStartDate.Value.Date) != null ?
-        //                                                                                                            a.ProjectSubActivityList.Min(x => x.ActualStartDate.Value.Date) : DateTime.UtcNow.Date)
-        //                                                                       );
-        //     return totalCount;
-        // }
+        public async Task<int> GetLateStart(long projectId)
+        {
+            //NOTE: PlannedStart <  min of subactivity ActualStartDate
+            int totalCount = await _dbContext.ProjectActivityDetail.CountAsync(a => a.IsDeleted == false &&
+                                                                                  a.ProjectId == projectId &&
+                                                                                  a.ParentId == null &&
+                                                                                 (a.ProjectSubActivityList.Any() ?
+                                                                                 (a.PlannedStartDate.Value.Date < (a.ProjectSubActivityList.Min(x => x.ActualStartDate.HasValue ?
+                                                                                                                                                    x.ActualStartDate.Value.Date :
+                                                                                                                                                    DateTime.UtcNow.Date)
+                                                                                                                  )) : false
+                                                                              ));
 
-        // public async Task<int> GetLateEnd(long projectId)
-        // {
-        //     //NOTE: PlannedEndDate < ActualEndDate
-        //     int totalCount = await _dbContext.ProjectActivityDetail.CountAsync(a => a.IsDeleted == false &&
-        //                                                                            a.ProjectId == projectId &&
-        //                                                                            a.ParentId == null &&
-        //                                                                            a.PlannedEndDate.Value.Date < (a.ProjectSubActivityList.Min(x => x.ActualEndDate.Value.Date) != null ?
-        //                                                                                                           a.ProjectSubActivityList.Min(x => x.ActualEndDate.Value.Date) : DateTime.UtcNow.Date)
-        //                                                                       );
-        //     return totalCount;
-        // }
+            return totalCount;
+        }
+
+        public async Task<int> GetLateEnd(long projectId)
+        {
+            //NOTE: PlannedEndDate < ActualEndDate
+            int totalCount = await _dbContext.ProjectActivityDetail.CountAsync(a => a.IsDeleted == false &&
+                                                                                   a.ProjectId == projectId &&
+                                                                                   a.ParentId == null && (a.ProjectSubActivityList.Any()) ?
+                                                                                  (a.PlannedEndDate.Value.Date < (a.ProjectSubActivityList.Min(x => x.ActualEndDate.HasValue
+                                                                                                                                                  ? x.ActualEndDate.Value.Date
+                                                                                                                                                  : DateTime.UtcNow.Date))
+                                                                                   ) : false
+                                                                              );
+            return totalCount;
+        }
         public async Task<float> GetProgress(long projectId)
         {
             float avg = 0;

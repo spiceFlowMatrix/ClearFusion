@@ -1,0 +1,38 @@
+<ng-container [ngSwitch]="type">
+
+  <button *ngSwitchCase="'save'" mat-flat-button class="blue" (click)="btnClick()">
+    <h5>
+      <i class="fas fa-check"></i>
+      {{text | uppercase}}
+    </h5>
+  </button>
+  <button *ngSwitchCase="'cancel'" mat-flat-button class="red" (click)="btnClick()">
+    <h5>
+      <i class="fas fa-times"></i>
+      {{text | uppercase}}
+    </h5>
+  </button>
+  <button *ngSwitchCase="'add'" mat-flat-button class="blue" (click)="btnClick()">
+    <h5>
+      <i class="fas fa-plus"></i>
+      {{text | uppercase}}
+    </h5>
+  </button>
+  <button *ngSwitchCase="'filter'" mat-flat-button class="blue" (click)="btnClick()">
+    <h5>
+        <i class="fas fa-filter"></i>
+      {{text | uppercase}}
+    </h5>
+  </button>
+  <button *ngSwitchCase="'down'" mat-flat-button class="blue" (click)="btnClick()">
+    <h5>
+      {{text | uppercase}}
+      <i class="fas fa-caret-down"></i>
+    </h5>
+  </button>
+  <button *ngSwitchCase="'text'" mat-flat-button class="blue" (click)="btnClick()">
+      <h5>
+        {{text | uppercase}}
+      </h5>
+    </button>
+</ng-container>

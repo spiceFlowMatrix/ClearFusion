@@ -1,0 +1,142 @@
+<lib-sub-header-template>
+  <span class="action_header">Add a new purchase
+    <hum-button [type]="'save'" [text]="'save'"></hum-button>
+    <hum-button [type]="'cancel'" [text]="'cancel'"></hum-button>
+
+  </span>
+  <div class="action_section">
+  </div>
+</lib-sub-header-template>
+<mat-card>
+  <form [formGroup]='addPurchase'>
+
+    <div class="row">
+      <div class="col-md-12">
+        <h4>Item Detail</h4>
+        <div class="col-md-3">
+          <lib-hum-dropdown [options]="inventoryType$" formControlName='InventoryType' [placeHolder]="'Inventory'"
+            (change)="getInventoryTypeSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [options]="storeInventory$" formControlName='Inventory' [placeHolder]="'Inventory(Master)'"
+            (change)="getMasterInventorySelectedValue($event)"></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [options]="storeItemGroups$" formControlName='ItemGroup' [placeHolder]="'Item Group'"
+            (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [options]="storeItems$" formControlName='Item' [placeHolder]="'Item'"
+            (change)="getItemSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <h4>Project & Analytical Information</h4>
+        <div class="col-md-3">
+          <lib-hum-dropdown [options]="offices$" formControlName='Office' [placeHolder]="'Office'"
+            (change)="getInventoryTypeSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [options]="project$" formControlName='Project' [placeHolder]="'Project'"
+            (change)="getMasterInventorySelectedValue($event)"></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [options]="budgetLine$" formControlName='BudgetLine' [placeHolder]="'Budget Line'"
+            (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <h4>Purchase Detail</h4>
+        <div class="col-md-3">
+          <mat-form-field>
+            <input matInput formControlName='PurchaseOrderNo' placeholder="Purchase Order No">
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field>
+            <input matInput [matDatepicker]="PurchaseOrderDate" formControlName='PurchaseOrderDate'
+              placeholder="Purchase Order Date">
+            <mat-datepicker-toggle matSuffix [for]="PurchaseOrderDate"></mat-datepicker-toggle>
+            <mat-datepicker #PurchaseOrderDate></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field>
+            <input matInput [matDatepicker]="InvoiceDate" formControlName='InvoiceDate' placeholder="Invoice Date">
+            <mat-datepicker-toggle matSuffix [for]="InvoiceDate"></mat-datepicker-toggle>
+            <mat-datepicker #InvoiceDate></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field>
+            <input matInput formControlName='InvoiceNo' placeholder="Invoice No">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="col-md-3">
+          <lib-hum-dropdown [options]="assetType$" formControlName='AssetType' [placeHolder]="'Asset Type'"
+            (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <h4>Quantity & Price Detail</h4>
+        <div class="col-md-3">
+          <lib-hum-dropdown [options]="unit$" formControlName='Unit' [placeHolder]="'Unit'"
+            (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field>
+            <input matInput formControlName='Quantity' placeholder="Quantity">
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [options]="currency$" formControlName='Currency' [placeHolder]="'Currency'"
+            (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field>
+            <input matInput formControlName='Price' placeholder="Price">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="col-md-3">
+          <lib-hum-dropdown [options]="storeSource$" formControlName='ReceivedFromLocation'
+            [placeHolder]="'Received From Location'" (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [options]="employeeList$" formControlName='ReceivedFromEmployee'
+            [placeHolder]="'Received From Employee'" (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="col-md-3">
+          <lib-hum-dropdown [options]="receiptType$" formControlName='ReceiptType' [placeHolder]="'Receipt Type'"
+            (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [options]="statusList$" formControlName='Status' [placeHolder]="'Status'"
+            (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-card>

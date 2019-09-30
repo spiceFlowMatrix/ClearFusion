@@ -191,6 +191,7 @@ export interface IAddProjectSubActivityDataSources {
   BudgetLineId: number;
   ActivityId: number;
   EmployeeList: any[];
+  ProjectId: number;
 }
 
 export interface IAddProjectSubActivityModel {
@@ -202,6 +203,7 @@ export interface IAddProjectSubActivityModel {
   BudgetLineId?: number;
   ParentId?: number;
   SubActivityTitle: string;
+  ProjectId: number;
 }
 export interface IEditProjectSubActivityModel {
   ActivityId?: number;

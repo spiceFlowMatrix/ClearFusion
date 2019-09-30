@@ -151,7 +151,7 @@
       "root": "projects/library",
       "sourceRoot": "projects/library/src",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "hum",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",

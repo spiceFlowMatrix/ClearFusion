@@ -56,7 +56,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     PlannedEndDate = obj.PlannedEndDate,
                     PlannedStartDate = obj.PlannedStartDate,
                     EmployeeID = obj.EmployeeID,
-                    SubActivityTitle = obj.SubActivityTitle
+                    SubActivityTitle = obj.SubActivityTitle,
+                    ProjectId = obj.ProjectId
 
                 };
 
