@@ -42,10 +42,11 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
   //#region "variables"
   @Input() subActivityDetail: IProjectSubActivityListingModel;
   @Output() updateActivityStatusId = new EventEmitter<any>();
+  // @Input() projectSubActivityList: any[];
 
   projectSubActivityForm: FormGroup;
   SubActivityTitle: string;
-  projectSubActivityList: IProjectSubActivityListingModel[] = [];
+  @Input() projectSubActivityList: IProjectSubActivityListingModel[] = [];
   // flag
   subActivityCompletedFlag = false;
   startActivityLoaderFlag = false;
@@ -69,7 +70,7 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
   projectPermissions: IProjectPeople[] = [];
   markCompletePermission = false;
   addExtensionPermission = false;
-
+  progressDifference: any;
   // // signal-r
   // private _hubConnection: HubConnection | undefined;
 
@@ -86,6 +87,7 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.getActivityPermission();
+    console.log(this.projectSubActivityList.length);
   }
 
   ngOnChanges() {
@@ -132,7 +134,6 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
     this.activitiesService.activityPermissionSubject
       .pipe(takeUntil(this.destroyed$))
       .subscribe(data => {
-
         // get user permission/role
         this.projectPermissions = data;
 
@@ -197,6 +198,17 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
           .subscribe(
             (response: IResponseData) => {
               if (response.statusCode === 200 && response.data != null) {
+                // note to calculate progess and pass to parent list
+                const oldProgress =
+                  (this.subActivityDetail.Achieved /
+                    this.subActivityDetail.Target) *
+                  100;
+                const newProgress =
+                  (response.data.Achieved / response.data.Target) * 100;
+                const progressDiffer = (oldProgress - newProgress);
+                this.progressDifference = (progressDiffer / this.projectSubActivityList.length).toFixed(2);
+                response.data.Progress = this.progressDifference;
+                this.updateActivityStatusId.emit(response.data);
                 this.SubActivityTitle = response.data.SubActivityTitle;
                 this.subActivityDetail.Achieved = response.data.Achieved;
                 this.saveActivityLoaderFlag = false;
@@ -215,8 +227,8 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
           );
       }
     } else {
-    // Note : if form is not valid
-    this.IsEditSubActivityLoaderFlag = false;
+      // Note : if form is not valid
+      this.IsEditSubActivityLoaderFlag = false;
     }
   }
   //#endregion

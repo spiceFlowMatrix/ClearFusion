@@ -348,7 +348,8 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string InventoryCodeAlreadyExists = "Inventory Code already exists";
 
         //ExchangeRate
-        public const string ExchagneRateNotDefined = "Exchange rate is not defined !";
+        public const string ExchagneRateNotDefined = "Exchange rate is not defined";
+        public const string ExchangeRateNotPresent = "Exchange rate is not defined for {0}";
 
         public const string HoursAlreadySet = "Hours are already assigned for this Month";
         public const string CannotAddAdvance = "Cannot Add Advance for {0}-{1} as an uncleared Advance already exists";

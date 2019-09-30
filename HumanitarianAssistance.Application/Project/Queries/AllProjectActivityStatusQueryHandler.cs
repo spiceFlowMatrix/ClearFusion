@@ -92,13 +92,12 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
         public async Task<int> GetActivityOnSchedule(long projectId)
         {
-            var subActivityList = await _dbContext.ProjectActivityDetail.Where(x => x.IsDeleted == false && x.ProjectId == projectId).ToListAsync();
-            Console.WriteLine(subActivityList);
+            //  Console.WriteLine(subActivityList);
             int totalCount = await _dbContext.ProjectActivityDetail
                                                       .CountAsync(a => a.IsDeleted == false &&
                                                                        a.ProjectId == projectId &&
                                                                        a.ParentId == null && (a.ProjectSubActivityList.Any() ?
-                                                                       a.PlannedStartDate.Value.Date  <=
+                                                                       a.PlannedStartDate.Value.Date <=
                                                                        (a.ProjectSubActivityList.Min(y => y.ActualStartDate.HasValue ?
                                                                                                           y.ActualStartDate.Value.Date :
                                                                                                           DateTime.UtcNow.Date)) &&
@@ -106,24 +105,9 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                                                             y.ActualEndDate.Value.Date :
                                                                                             DateTime.UtcNow.Date)) : false
                                                       ));
-            int totalCount1 = await _dbContext.ProjectActivityDetail
-                                                      .CountAsync(a => a.IsDeleted == false &&
-                                                                       a.ProjectId == projectId &&
-                                                                       a.ParentId == null && (a.ProjectSubActivityList.Any() ) ?
-                                                                       (a.PlannedStartDate.Value.Date  == a.ProjectSubActivityList.Min(y => y.ActualStartDate.HasValue ?
-                                                                                                          y.ActualStartDate.Value.Date :
-                                                                                                          DateTime.UtcNow.Date))
-                                                                         : false
-                                                                       );
-            int totalCount2 = await _dbContext.ProjectActivityDetail
-                                                      .CountAsync(a => a.IsDeleted == false &&
-                                                                       a.ProjectId == projectId &&
-                                                                       a.ParentId == null && (a.ProjectSubActivityList.Any() ) ?
-                                                                       (a.PlannedEndDate.Value.Date  >= (a.ProjectSubActivityList.Max(y => y.ActualEndDate.HasValue ?
-                                                                                            y.ActualEndDate.Value.Date :
-                                                                                            DateTime.UtcNow.Date))) : false
-                                                                       );
-            Console.WriteLine(totalCount);
+
+
+
             return totalCount;
 
         }
@@ -133,12 +117,13 @@ namespace HumanitarianAssistance.Application.Project.Queries
             int totalCount = await _dbContext.ProjectActivityDetail.CountAsync(a => a.IsDeleted == false &&
                                                                                   a.ProjectId == projectId &&
                                                                                   a.ParentId == null &&
-                                                                                 ( a.ProjectSubActivityList.Any()) ?
-                                                                                 ( a.PlannedStartDate.Value.Date < (a.ProjectSubActivityList.Min(x => x.ActualStartDate.HasValue  ?
-                                                                                                                                                     x.ActualStartDate.Value.Date: 
-                                                                                                                                                     DateTime.UtcNow.Date) 
+                                                                                 (a.ProjectSubActivityList.Any() ?
+                                                                                 (a.PlannedStartDate.Value.Date < (a.ProjectSubActivityList.Min(x => x.ActualStartDate.HasValue ?
+                                                                                                                                                    x.ActualStartDate.Value.Date :
+                                                                                                                                                    DateTime.UtcNow.Date)
                                                                                                                   )) : false
-                                                                              );
+                                                                              ));
+
             return totalCount;
         }
 
@@ -150,7 +135,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                                                    a.ParentId == null && (a.ProjectSubActivityList.Any()) ?
                                                                                   (a.PlannedEndDate.Value.Date < (a.ProjectSubActivityList.Min(x => x.ActualEndDate.HasValue
                                                                                                                                                   ? x.ActualEndDate.Value.Date
-                                                                                                                                                  : DateTime.UtcNow.Date)) 
+                                                                                                                                                  : DateTime.UtcNow.Date))
                                                                                    ) : false
                                                                               );
             return totalCount;

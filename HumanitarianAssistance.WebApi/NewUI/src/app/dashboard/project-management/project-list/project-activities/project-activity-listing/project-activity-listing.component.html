@@ -53,76 +53,66 @@
           <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
             <mat-card>
                 <p>Project Duration</p>
-              <div *ngIf="
-              !activitySummaryLoader;
-              else projectDurationLoaderTemplate">
+              <div>
                   <h4>{{ activitySummary.ProjectDuration }} Days</h4>
               </div>
-              <ng-template #projectDurationLoaderTemplate>
+              <!-- <ng-template #projectDurationLoaderTemplate>
                   <div class="spinner_center padding_top_5 padding_bottom_5">
                     <mat-spinner [diameter]="25"></mat-spinner>
                   </div>
-                </ng-template>
+                </ng-template> -->
             </mat-card>
           </div>
           <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
             <mat-card>
                 <p>Activities on Schedule</p>
-              <div *ngIf="
-              !activitySummaryLoader;
-              else activityOnScheduleLoaderTemplate">
+              <div >
                   <h4>{{ activitySummary.ActivityOnSchedule }}</h4>
               </div>
-              <ng-template #activityOnScheduleLoaderTemplate>
+              <!-- <ng-template #activityOnScheduleLoaderTemplate>
                   <div class="spinner_center padding_top_5 padding_bottom_5">
                     <mat-spinner [diameter]="25"></mat-spinner>
                   </div>
-                </ng-template>
+                </ng-template> -->
             </mat-card>
           </div>
           <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
             <mat-card>
                 <p>Late Start</p>
-              <div *ngIf="
-              !activitySummaryLoader;
-              else lateStartLoaderTemplate">
+              <div >
                   <h4>{{ activitySummary.LateStart }}</h4>
               </div>
-              <ng-template #lateStartLoaderTemplate>
+              <!-- <ng-template #lateStartLoaderTemplate>
                 <div class="spinner_center padding_top_5 padding_bottom_5">
                   <mat-spinner [diameter]="25"></mat-spinner>
                 </div>
-              </ng-template>
+              </ng-template> -->
             </mat-card>
           </div>
           <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
             <mat-card>
                 <p>Late End</p>
-              <div *ngIf="
-              !activitySummaryLoader;
-              else lateEndLoaderTemplate">
+              <div>
                   <h4>{{ activitySummary.LateEnd }}</h4>
               </div>
-              <ng-template #lateEndLoaderTemplate>
+              <!-- <ng-template #lateEndLoaderTemplate>
                   <div class="spinner_center padding_top_5 padding_bottom_5">
                     <mat-spinner [diameter]="25"></mat-spinner>
                   </div>
-                </ng-template>
+                </ng-template> -->
             </mat-card>
           </div>
           <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
             <mat-card>
                 <p>Slippage</p>
-              <div *ngIf="
-              !activitySummaryLoader;
-              else activitySummaryLoaderTemplate">
+              <div >
                   <h4>{{ activitySummary.Slippage }}</h4>
               </div>
-              <ng-template #activitySummaryLoaderTemplate>
+              <!-- <ng-template #activitySummaryLoaderTemplate>
                   <div class="spinner_center padding_top_5 padding_bottom_5">
                     <mat-spinner [diameter]="25"></mat-spinner>
                   </div>
-                </ng-template>
+                </ng-template> -->
             </mat-card>
           </div>
           <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">

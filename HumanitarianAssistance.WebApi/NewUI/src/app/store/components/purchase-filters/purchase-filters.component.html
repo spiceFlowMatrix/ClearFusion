@@ -1,0 +1,78 @@
+  <div class="row">
+    <div class="col-md-12">
+      <span class="pull-left">
+        <h4>Filters</h4>
+      </span>
+      <span class="pull-right">
+        <hum-button [type]="'filter'" [text]="'advance filters'" (click)="isBasic=!isBasic"></hum-button>
+      </span>
+    </div>
+  </div>
+  <div class="row">
+    <form [formGroup]="purchaseFormFilters">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-3">
+            <lib-hum-dropdown [options]="inventoryType$" formControlName="InventoryTypeId" [placeHolder]="'Inventory'"
+              (change)="getInventoryTypeSelectedValue($event)"></lib-hum-dropdown>
+          </div>
+          <div class="col-md-3">
+            <lib-hum-dropdown [options]="receiptType$" formControlName="ReceiptTypeId" [placeHolder]="'Receipt Type'"
+              (change)="getReceiptTypeSelectedValue($event)"></lib-hum-dropdown>
+          </div>
+          <div class="col-md-3">
+            <lib-hum-dropdown [options]="offices$" formControlName="OfficeId" [placeHolder]="'Office'"
+              (change)="getOfficeSelectedValue($event)"></lib-hum-dropdown>
+          </div>
+          <div class="col-md-3">
+            <lib-hum-dropdown [options]="currencies$" formControlName="CurrencyId" [placeHolder]="'Currency'"
+              (change)="getCurrenciesSelectedValue($event)"></lib-hum-dropdown>
+          </div>
+        </div>
+      </div>
+      <div class="row" [hidden]="isBasic">
+        <div class="col-md-12">
+          <div class="col-md-3">
+            <lib-hum-dropdown [options]="projects$" formControlName="ProjectId" [placeHolder]="'Project'"
+              (change)="getProjectSelectedValue($event)"></lib-hum-dropdown>
+          </div>
+          <div class="col-md-3">
+            <lib-hum-dropdown [options]="projectJobs$" formControlName="JobId" [placeHolder]="'Job'"
+              (change)="getJobSelectedValue($event)"></lib-hum-dropdown>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field>
+              <input matInput formControlName="DateOfPurchase" [matDatepicker]="DateOfPurchase"
+                placeholder="Date of Purchase">
+              <mat-datepicker-toggle matSuffix [for]="DateOfPurchase"></mat-datepicker-toggle>
+              <mat-datepicker #DateOfPurchase></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field>
+              <input matInput formControlName="DateOfIssue" [matDatepicker]="DateOfIssue" placeholder="Date of Issue">
+              <mat-datepicker-toggle matSuffix [for]="DateOfIssue"></mat-datepicker-toggle>
+              <mat-datepicker #DateOfIssue></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row" [hidden]="isBasic">
+        <div class="col-md-12">
+          <div class="col-md-3">
+            <lib-hum-dropdown [options]="storeInventory$" formControlName="InventoryMasterId"
+              [placeHolder]="'Inventory(Master)'" (change)="getMasterInventorySelectedValue($event)"></lib-hum-dropdown>
+          </div>
+          <div class="col-md-3">
+            <lib-hum-dropdown [options]="storeItemGroups$" formControlName="ItemGroupId" [placeHolder]="'Item Group'"
+              (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+          </div>
+          <div class="col-md-3">
+            <lib-hum-dropdown [options]="storeItems$" formControlName="ItemId" [placeHolder]="'Item'"
+              (change)="getItemSelectedValue($event)"></lib-hum-dropdown>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
