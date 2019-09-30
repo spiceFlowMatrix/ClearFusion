@@ -179,7 +179,6 @@ export class PurchasesComponent implements OnInit {
         this.flag = 0;
         this.inventoryItemId = itemId;
         this.datePipe = new DatePipe('en-US');
-        this.getAllUnitTypeDetails();
 
         this.storeService
             .GetAllDetailsById(
@@ -350,7 +349,7 @@ export class PurchasesComponent implements OnInit {
             )
             .subscribe(
                 data => {
-                     
+
                     this.employeeList = [];
                     if (data.data.EmployeeDetailListData != null) {
                         data.data.EmployeeDetailListData.forEach(element => {
@@ -620,7 +619,7 @@ export class PurchasesComponent implements OnInit {
                             };
 
                             this.fileManagementService.uploadFile(dataModelPurchase).subscribe(x => {
-                                 
+
                                 // Parent call
                                 this.getItemAmounts.emit(
                                     localStorage.getItem('SelectedInventoryItem')
@@ -893,6 +892,7 @@ export class PurchasesComponent implements OnInit {
     //#region "onAddPurchasePopup"
     onAddPurchasePopup() {
         // initialize form
+        this.getAllUnitTypeDetails();
         this.purchaseDetailsForm = {
             PurchaseId: null,
             SerialNo: null, // Barcode Value
@@ -958,6 +958,7 @@ export class PurchasesComponent implements OnInit {
 
     //#region "onEditPurchasePopup"
     onEditPurchasePopup(data) {
+        this.getAllUnitTypeDetails();
         // tslint:disable-next-line:curly
         if (data != null)
             // initialize form
