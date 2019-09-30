@@ -32,8 +32,8 @@ export class AddPurchaseComponent implements OnInit {
     private fb: FormBuilder) {
 
     this.addPurchase = this.fb.group({
-      'InventoryType': [null, [Validators.required]],
-      'Inventory': [null, [Validators.required] ],
+      'InventoryType': [2, [Validators.required]],
+      'Inventory': [null, [Validators.required]],
       'ItemGroup': [null, [Validators.required]],
       'Item': [null, [Validators.required]],
       'Office': [null, [Validators.required]],
@@ -52,6 +52,9 @@ export class AddPurchaseComponent implements OnInit {
       'ReceivedFromEmployee': [null],
       'ReceiptType': [null, [Validators.required]],
       'Status': [null]
+    });
+    this.addPurchase.valueChanges.subscribe(r => {
+      console.log(r);
     });
   }
 
@@ -179,7 +182,8 @@ export class AddPurchaseComponent implements OnInit {
   }
 
   getInventoryTypeSelectedValue(event: any) {
-    this.addPurchase.get('InventoryType').patchValue(event);
+    //  console.log(event);
+    // this.addPurchase.get('InventoryType').patchValue(event);
     this.getInventoriesByInventoryTypeId(event);
   }
 
@@ -189,16 +193,16 @@ export class AddPurchaseComponent implements OnInit {
 
   getInventoriesByInventoryTypeId(inventoryTypeId: number) {
     this.purchaseService
-        .GetInventoriesByInventoryTypeId(inventoryTypeId)
-        .subscribe(x => {
+      .GetInventoriesByInventoryTypeId(inventoryTypeId)
+      .subscribe(x => {
 
-          this.storeInventory$ = of(x.data.map(y => {
-            return {
-              name: y.InventoryCode + '-' + y.InventoryName,
-              value: y.InventoryId
-            };
-          }));
-        });
+        this.storeInventory$ = of(x.data.map(y => {
+          return {
+            name: y.InventoryCode + '-' + y.InventoryName,
+            value: y.InventoryId
+          };
+        }));
+      });
   }
 
 }
