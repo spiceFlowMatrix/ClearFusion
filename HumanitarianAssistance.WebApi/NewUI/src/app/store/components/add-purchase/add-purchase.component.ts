@@ -115,7 +115,11 @@ validationMessages = {
       'ApplyDepreciation': [false],
       'DepreciationRate': [null]
     });
-  }
+
+    this.addPurchaseForm.valueChanges.subscribe(r => {
+      console.log(r);
+  });
+}
 
 
   ngOnInit() {
@@ -291,7 +295,8 @@ validationMessages = {
   }
 
   getInventoryTypeSelectedValue(event: any) {
-    this.addPurchaseForm.get('InventoryTypeId').patchValue(event);
+    //  console.log(event);
+    // this.addPurchase.get('InventoryType').patchValue(event);
     this.getInventoriesByInventoryTypeId(event);
   }
 

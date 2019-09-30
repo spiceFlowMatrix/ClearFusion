@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter, forwardRef } from '@angular/core';
-import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, Input, Output, EventEmitter, forwardRef, Self } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, NgControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -16,45 +16,42 @@ import { Observable } from 'rxjs';
   ]
 })
 export class HumDropdownComponent implements OnInit, ControlValueAccessor {
-  constructor() { }
 
   @Input() options: Observable<Array<Object>>;
   @Input() placeHolder: string;
   // @Input() formControl: string;
   @Output() change = new EventEmitter<number>();
+
+  public value: number;
+  public isDisabled: boolean;
+  private onChange;
+
   dropControl = new FormControl('');
-  val = '';
-
-
-  onChange: any = () => { console.log('Change'); };
-  onTouch: any = () => { };
-  set value(val) {
-    if (val !== undefined && this.val !== val) {
-      this.val = val;
-      this.onChange(val);
-      this.onTouch(val);
-    }
-
+  constructor() {
   }
+
   ngOnInit() {
-
   }
+  // handle change event
   optionChange(event) {
-    this.change.emit(event);
+    this.onChange(event);
+    this.value = event;
+    this.change.emit(event)
   }
+  // set a initial value
   writeValue(obj: any): void {
     this.value = obj;
     this.dropControl.setValue(obj);
   }
+  // register a function for value changes
   registerOnChange(fn: any): void {
     this.onChange = fn;
-    console.log('registerOnChange');
   }
+  // register a function for value touched
   registerOnTouched(fn: any): void {
-    // tslint:disable-next-line: quotemark
-    console.log("registerOnTouched");
+    this.onChange = fn;
   }
   setDisabledState?(isDisabled: boolean): void {
-    console.log('setDisabledState');
+    this.isDisabled = isDisabled;
   }
 }
