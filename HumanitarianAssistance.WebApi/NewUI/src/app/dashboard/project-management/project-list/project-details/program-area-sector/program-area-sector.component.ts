@@ -20,6 +20,7 @@ import { Component, OnInit, Inject, ChangeDetectorRef, OnDestroy } from '@angula
 import { Router } from '@angular/router';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { ProjectListService } from '../../service/project-list.service';
+import {ProjectOtherDetailPdfComponent} from './../project-other-detail-pdf/project-other-detail-pdf.component';
 import { GLOBAL } from 'src/app/shared/global';
 import {
   SectorModel,
@@ -29,7 +30,7 @@ import {
 import { FormControl } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, takeUntil } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { IDataSource } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
@@ -39,6 +40,7 @@ import { LocalStorageService } from 'src/app/shared/services/localstorage.servic
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { ProjectOtherDetailPdfService } from './project-other-detail-pdf.service';
 import { _def } from '@angular/core/src/view/provider';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 
 @Component({
   selector: 'app-program-area-sector',
@@ -229,6 +231,7 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
     public commonLoaderService: CommonLoaderService,
     private pDetailPdfService: ProjectOtherDetailPdfService,
     private _cdr: ChangeDetectorRef,
+    private globalSharedService: GlobalSharedService,
 
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
@@ -2235,9 +2238,24 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
   //#region "onExportPdf"
   onExportPdf() {
     // set your pdf values here
+    this.globalSharedService
+      .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetProjectOtherDetailReportPdf,
+      {"ProjectId":this.ProjectId}
+      )
+      .pipe()
+      .subscribe();
+    // this.setProjectOtherDetailValueForPdf();
+    // this.pDetailPdfService.onExportPdf(this.projectOtherDetailPdf);
+  }
+  openPdfOptionDialog() {
+    const dialogRef = this.dialog.open(ProjectOtherDetailPdfComponent, {
+      width: '650px',
+      data: {ProjectId: this.ProjectId }
+    });
 
-    this.setProjectOtherDetailValueForPdf();
-    this.pDetailPdfService.onExportPdf(this.projectOtherDetailPdf);
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
   //#endregion
 

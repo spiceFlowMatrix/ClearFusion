@@ -10,6 +10,7 @@ import { HubConnection } from '@aspnet/signalr';
 import * as signalR from '@aspnet/signalr';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operator/map';
 
 @Injectable()
 export class CommonService implements OnInit {
@@ -56,6 +57,43 @@ export class CommonService implements OnInit {
     //     // this.notificationDataSource = data;
     // });
   }
+
+  // //#region "getFile"
+  // getFile(URL: string, data: any) {
+  //   // for pdf use this options to avoid 406 (Not Acceptable)
+  //   const options = { responseType: 'blob', observe: 'response' };
+
+  //   return this.http.post(URL, data, options)
+  //     .post(
+  //       URL,
+  //       data,
+  //       options
+  //     )
+  //       .map(event => {
+  //         // get filename from header
+  //         const contentDisposition = event.headers.get('Content-Disposition');
+  //         const filename = contentDisposition
+  //           .split(';')[1]
+  //           .split('filename')[1]
+  //           .split('=')[1]
+  //           .trim();
+
+  //         // convert it to file
+  //         const file = new Blob([event.body], { type: event.body.type });
+
+  //         // force to download file
+  //         const blobURL = window.URL.createObjectURL(file);
+  //         const anchor = document.createElement('a');
+  //         anchor.download = filename; // filename is important to set on backend
+  //         anchor.href = blobURL;
+  //         anchor.click();
+
+  //         return event;
+  //       });
+  // }
+  // //#endregion
+
+
 
   GetProviders() {
     const URL =

@@ -55,7 +55,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
   }
 
   getPurchaseFilters() {
-    this.purchaseService.GetPurchaseFilterList()
+    this.purchaseService.getPurchaseFilterList()
     .pipe(takeUntil(this.destroyed$))
     .subscribe(x  => {
       this.inventoryType$ = of(x.InventoryTypes.map(y => {
@@ -170,7 +170,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
 
   getInventoriesByInventoryTypeId(inventoryTypeId: number) {
     this.purchaseService
-        .GetInventoriesByInventoryTypeId(inventoryTypeId)
+        .getInventoriesByInventoryTypeId(inventoryTypeId)
         .subscribe(x => {
           this.storeInventory$ = of(x.data.map(y => {
             return {
@@ -183,7 +183,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
 
   getAllStoreItemGroups(inventoryId: number) {
     this.purchaseService
-        .GetItemGroupByInventoryId(inventoryId)
+        .getItemGroupByInventoryId(inventoryId)
         .subscribe(x => {
           this.storeItemGroups$ = of(x.data.map(y => {
             return {
@@ -196,7 +196,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
 
   getAllStoreItemsByGroupId(groupId: number) {
     this.purchaseService
-        .GetItemsByItemGroupId(groupId)
+        .getItemsByItemGroupId(groupId)
         .subscribe(x => {
           this.storeItems$ = of(x.data.map(y => {
             return {

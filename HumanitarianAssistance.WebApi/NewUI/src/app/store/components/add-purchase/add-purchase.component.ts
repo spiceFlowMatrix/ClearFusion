@@ -1,8 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { PurchaseService } from '../../services/purchase.service';
 import { Observable, of, forkJoin } from 'rxjs';
 import { IDropDownModel } from '../../models/purchase';
+import { BudgetLineService } from 'src/app/dashboard/project-management/project-list/budgetlines/budget-line.service';
+import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { ToastrService } from 'ngx-toastr';
+import { ExchangeRateService } from 'src/app/dashboard/accounting/exchange-rate/exchange-rate-listing/exchange-rate.service';
+import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-add-purchase',
@@ -11,11 +17,11 @@ import { IDropDownModel } from '../../models/purchase';
 })
 export class AddPurchaseComponent implements OnInit {
 
-  addPurchase: FormGroup;
+  addPurchaseForm: FormGroup;
 
   inventoryType$: Observable<IDropDownModel[]>;
   storeInventory$: Observable<IDropDownModel[]>;
-  storeItemGroups: Observable<IDropDownModel[]>;
+  storeItemGroups$: Observable<IDropDownModel[]>;
   storeItems$: Observable<IDropDownModel[]>;
   offices$: Observable<IDropDownModel[]>;
   project$: Observable<IDropDownModel[]>;
@@ -28,35 +34,99 @@ export class AddPurchaseComponent implements OnInit {
   receiptType$: Observable<IDropDownModel[]>;
   statusList$: Observable<IDropDownModel[]>;
 
-  constructor(private purchaseService: PurchaseService,
-    private fb: FormBuilder) {
+   // screen
+   screenHeight: any;
+   screenWidth: any;
+   scrollStyles: any;
 
-    this.addPurchase = this.fb.group({
-      'InventoryType': [2, [Validators.required]],
-      'Inventory': [null, [Validators.required]],
-      'ItemGroup': [null, [Validators.required]],
-      'Item': [null, [Validators.required]],
-      'Office': [null, [Validators.required]],
-      'Project': [null],
-      'BudgetLine': [null],
+   exchangeRateMessage = '';
+
+// This object will hold the messages to be displayed to the user
+// Notice, each key in this object has the same name as the
+// corresponding form control
+formErrors = {
+  'InventoryTypeId': '',
+  'InventoryId': '',
+  'ItemGroupId': '',
+  'ItemId': '',
+  'OfficeId': '',
+  'PurchaseOrderDate': '',
+  'Quantity': '',
+  'CurrencyId': '',
+  'Price': '',
+  'ReceiptTypeId': '',
+};
+
+  // This object contains all the validation messages for this form
+validationMessages = {
+  'InventoryTypeId': {
+    'required': 'Inventory Type is required.',
+  },
+  'InventoryId': {
+    'required': 'Master Inventory is required.'
+  },
+  'ItemGroupId': {
+    'required': 'Item Group is required.',
+  },
+  'ItemId': {
+    'required': 'Item is required.',
+  },
+  'OfficeId': {
+    'required': 'Office is required.',
+  },
+  'PurchaseOrderDate': {
+    'required': 'Purchase Order Date is required.',
+  },
+  'Quantity': {
+    'required': 'Quantity is required.',
+  },
+  'CurrencyId': {
+    'required': 'Currency is required.',
+  },
+  'Price': {
+    'required': 'Price is required.',
+  },
+  'ReceiptTypeId': {
+    'required': 'Receipt Type is required.',
+  },
+};
+
+  constructor(private purchaseService: PurchaseService,
+    private fb: FormBuilder, private budgetLineService: BudgetLineService,
+    private commonLoader: CommonLoaderService, private toastr: ToastrService,
+    private router: Router, private transformDate: DatePipe ) {
+
+    this.addPurchaseForm = this.fb.group({
+      'InventoryTypeId': [null, [Validators.required]],
+      'InventoryId': [null, [Validators.required]],
+      'ItemGroupId': [null, [Validators.required]],
+      'ItemId': [null, [Validators.required]],
+      'OfficeId': [null, [Validators.required]],
+      'ProjectId': [null],
+      'BudgetLineId': [null],
       'PurchaseOrderNo': [null],
+      'PurchaseName': [null, [Validators.required]],
+      'ReceiptDate': [null],
       'PurchaseOrderDate': [null, [Validators.required]],
       'InvoiceDate': [null],
       'InvoiceNo': [null],
-      'AssetType': [null],
-      'Unit': [null],
-      'Quantity': [null],
-      'Currency': [null, [Validators.required]],
+      'AssetTypeId': [null],
+      'Unit': [null, [Validators.required]],
+      'Quantity': [null, [Validators.required]],
+      'CurrencyId': [null, [Validators.required]],
       'Price': [null, [Validators.required]],
       'ReceivedFromLocation': [null],
-      'ReceivedFromEmployee': [null],
-      'ReceiptType': [null, [Validators.required]],
-      'Status': [null]
+      'ReceivedFromEmployeeId': [null],
+      'ReceiptTypeId': [null, [Validators.required]],
+      'StatusId': [null],
+      'ApplyDepreciation': [false],
+      'DepreciationRate': [null]
     });
-    this.addPurchase.valueChanges.subscribe(r => {
+
+    this.addPurchaseForm.valueChanges.subscribe(r => {
       console.log(r);
-    });
-  }
+  });
+}
 
 
   ngOnInit() {
@@ -69,6 +139,8 @@ export class AddPurchaseComponent implements OnInit {
       this.getAllCurrency(),
       this.getStoreLocations(),
       this.getAllStatusAtTimeOfIssue(),
+      this.getAllUnitTypeDetails(),
+      this.getAllReceiptType()
     ]).subscribe(result => {
       this.subscribeInventoryTypes(result[0]);
       this.subscribeAllProjects(result[1]);
@@ -77,7 +149,15 @@ export class AddPurchaseComponent implements OnInit {
       this.subscribeAllCurrency(result[4]);
       this.subscribeStoreLocations(result[5]);
       this.subscribeAllStatusAtTimeOfIssue(result[6]);
+      this.subscribeAllUnitTypeDetails(result[7]);
+      this.subscribeAllReceiptType(result[8]);
     });
+
+    this.addPurchaseForm.valueChanges.subscribe((data) => {
+      // this.logValidationErrors(this.addPurchaseForm);
+    });
+
+    this.getScreenSize();
   }
 
   subscribeInventoryTypes(response: any) {
@@ -149,16 +229,52 @@ export class AddPurchaseComponent implements OnInit {
     }));
   }
 
+  subscribeAllUnitTypeDetails(response: any) {
+    this.unit$ = of(
+      response.data.PurchaseUnitTypeList.map(y => {
+        return {
+          name: y.UnitTypeName,
+          value: y.UnitTypeId
+        };
+    }));
+  }
+
+  subscribeAllReceiptType(response: any) {
+    this.commonLoader.hideLoader();
+    this.receiptType$ = of(response.data.ReceiptTypeList.map(y => {
+      return {
+        value: y.ReceiptTypeId,
+        name:  y.ReceiptTypeName
+      };
+    }));
+  }
+
+  //#region "Dynamic Scroll"
+  @HostListener('window:resize', ['$event'])
+  getScreenSize(event?) {
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+
+    this.scrollStyles = {
+      'overflow-y': 'auto',
+      height: this.screenHeight - 110 + 'px',
+      'overflow-x': 'hidden'
+    };
+  }
+  //#endregion
+
+
   getAllInventoryTypes() {
-    return this.purchaseService.GetAllInventoryTypeList();
+    this.commonLoader.showLoader();
+    return this.purchaseService.getAllInventoryTypeList();
   }
 
   getAllProjects() {
-    return this.purchaseService.GetAllProjectList();
+    return this.purchaseService.getAllProjectList();
   }
 
   getAllOffice() {
-    return this.purchaseService.GetAllOfficeList();
+    return this.purchaseService.getAllOfficeList();
   }
 
   getAssetType() {
@@ -173,12 +289,16 @@ export class AddPurchaseComponent implements OnInit {
     return this.purchaseService.getAllStoreSource();
   }
 
-  // getAllEmployeeList() {
-  //   this.purchaseService.getEmployeesByOfficeId();
-  // }
-
   getAllStatusAtTimeOfIssue() {
     return this.purchaseService.getAllStatusAtTimeOfIssue();
+  }
+
+  getAllUnitTypeDetails() {
+    return this.purchaseService.getAllUnitTypeDetails();
+  }
+
+  getAllReceiptType() {
+    return this.purchaseService.getAllReceiptType();
   }
 
   getInventoryTypeSelectedValue(event: any) {
@@ -188,12 +308,89 @@ export class AddPurchaseComponent implements OnInit {
   }
 
   getMasterInventorySelectedValue(event: any) {
-    // this.getAllStoreItemGroups(event);
+   // this.addPurchaseForm.get('InventoryId').patchValue(event);
+    this.getAllStoreItemGroups(event);
   }
+
+  getItemGroupSelectedValue(event: any) {
+    //this.addPurchaseForm.get('ItemGroupId').patchValue(event);
+    this.getAllStoreItemsByGroupId(event);
+  }
+
+  getItemSelectedValue(event: any) {
+   // this.addPurchaseForm.get('ItemId').patchValue(event);
+  }
+
+  getOfficeSelectedValue(event: any) {
+   // this.addPurchaseForm.get('OfficeId').patchValue(event);
+    this.getEmployeesByOfficeId(event);
+  }
+
+  getProjectSelectedValue(event: any) {
+   // this.addPurchaseForm.get('ProjectId').patchValue(event);
+    this.getBudgetLineByProjectId(event);
+  }
+
+  getBudgetSelectedValue(event: any) {
+    // this.addPurchaseForm.get('BudgetLineId').patchValue(event);
+  }
+
+  getAssetTypeSelectedValue(event: any) {
+    // this.addPurchaseForm.get('AssetTypeId').patchValue(event);
+  }
+
+  getUnitSelectedValue(event: any) {
+    // this.addPurchaseForm.get('Unit').patchValue(event);
+  }
+
+  getCurrencySelectedValue(event: any) {
+   // this.addPurchaseForm.get('CurrencyId').patchValue(event);
+  }
+
+  getStoreSourceSelectedValue(event: any) {
+   // this.addPurchaseForm.get('ReceivedFromLocation').patchValue(event);
+  }
+
+  getEmployeeSelectedValue(event: any) {
+   // this.addPurchaseForm.get('ReceivedFromEmployeeId').patchValue(event);
+  }
+
+  getReceiptSelectedValue(event: any) {
+   // this.addPurchaseForm.get('ReceiptTypeId').patchValue(event);
+  }
+
+  getStatusSelectedValue(event: any) {
+    // this.addPurchaseForm.get('StatusId').patchValue(event);
+  }
+
+  getEmployeesByOfficeId(officeId: any) {
+    this.purchaseService.getEmployeesByOfficeId(officeId)
+      .subscribe(x => {
+        this.employeeList$ = of(x.data.map(y => {
+          return {
+            name: y.CodeEmployeeName,
+            value: y.EmployeeId
+          };
+        }));
+      });
+  }
+
+  getBudgetLineByProjectId(projectId: any) {
+    this.budgetLineService.GetProjectBudgetLineList(projectId)
+      .subscribe(x => {
+        this.budgetLine$ = of(x.data.map(y => {
+          return {
+            name: y.BudgetCode + '-' + y.BudgetName,
+            value: y.BudgetLineId
+          };
+        }));
+      });
+  }
+
 
   getInventoriesByInventoryTypeId(inventoryTypeId: number) {
     this.purchaseService
-      .GetInventoriesByInventoryTypeId(inventoryTypeId)
+      .getInventoriesByInventoryTypeId(inventoryTypeId)
       .subscribe(x => {
 
         this.storeInventory$ = of(x.data.map(y => {
@@ -205,4 +402,128 @@ export class AddPurchaseComponent implements OnInit {
       });
   }
 
+  getAllStoreItemGroups(inventoryId: number) {
+    this.purchaseService
+      .getItemGroupByInventoryId(inventoryId)
+      .subscribe(x => {
+        this.storeItemGroups$ = of(x.data.map(y => {
+          return {
+            name: y.ItemGroupCode + '-' + y.ItemGroupName,
+            value: y.ItemGroupId
+          };
+        }));
+      });
+  }
+
+  getAllStoreItemsByGroupId(groupId: number) {
+    this.purchaseService
+      .getItemsByItemGroupId(groupId)
+      .subscribe(x => {
+        this.storeItems$ = of(x.data.map(y => {
+          return {
+            name: y.ItemCode + '-' + y.ItemName,
+            value: y.ItemId
+          };
+        }));
+      });
+  }
+
+  addPurchaseFormSubmit() {
+    if (this.addPurchaseForm.valid) {
+      this.purchaseService.addPurchase(this.addPurchaseForm.value)
+      .subscribe(x => {
+        if (x.StatusCode === 200) {
+          this.addPurchaseForm.reset();
+
+          this.toastr.success(x.Message);
+        } else if (x.StatusCode === 400) {
+          this.toastr.warning(x.Message);
+        }
+      },
+      error => {
+        console.log(error);
+      });
+    }
+  }
+
+  PurchaseDateChange(event: any) {
+    debugger;
+  }
+
+  checkExchangeRateExists(exchangeRateDate: any) {
+
+    if (this.addPurchaseForm.value.OfficeId == null && this.addPurchaseForm.value.OfficeId === undefined &&
+      this.addPurchaseForm.value.OfficeId === 0) {
+       return;
+    }
+
+    const checkExchangeRateModel = {
+        ExchangeRateDate: new Date(
+            new Date(exchangeRateDate).getFullYear(),
+            new Date(exchangeRateDate).getMonth(),
+            new Date(exchangeRateDate).getDate(),
+            new Date().getHours(),
+            new Date().getMinutes(),
+            new Date().getSeconds()
+        ),
+        OfficeId: this.addPurchaseForm.value.OfficeId
+    };
+
+    this.purchaseService
+        .checkExchangeRateExists(checkExchangeRateModel)
+        .subscribe(
+          data => {
+            debugger;
+              if (data.StatusCode === 200) {
+
+                  if (!data.ResponseData) {
+                      this.exchangeRateMessage = 'No Exchange Rate Defined for ' +
+                      this.transformDate.transform(checkExchangeRateModel.ExchangeRateDate, 'dd-MM-yyyy');
+                  } else {
+                      this.exchangeRateMessage = '';
+                  }
+              } else {
+                  this.toastr.error(data.Message);
+              }
+          },
+          error => {
+          }
+      );
+}
+
+  cancelButtonClicked() {
+    this.router.navigate(['store/purchases']);
+  }
+
+  logValidationErrors(group: FormGroup): void {
+
+    // Loop through each control key in the FormGroup
+    Object.keys(group.controls).forEach((key: string) => {
+      // Get the control. The control can be a nested form group
+      const abstractControl = group.get(key);
+      // If the control is nested form group, recursively call
+      // this same method
+      if (abstractControl instanceof FormGroup) {
+        this.logValidationErrors(abstractControl);
+        // If the control is a FormControl
+      } else {
+        // Clear the existing validation errors
+        this.formErrors[key] = '';
+        if (abstractControl && !abstractControl.valid) {
+          // Get all the validation messages of the form control
+          // that has failed the validation
+          const messages = this.validationMessages[key];
+          // Find which validation has failed. For example required,
+          // minlength or maxlength. Store that error message in the
+          // formErrors object. The UI will bind to this object to
+          // display the validation errors
+          for (const errorKey in abstractControl.errors) {
+            if (errorKey) {
+              this.formErrors[key] += messages[errorKey] + ' ';
+            }
+          }
+        }
+      }
+    });
+  }
 }

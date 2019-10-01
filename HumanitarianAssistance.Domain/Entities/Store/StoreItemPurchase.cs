@@ -14,7 +14,6 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1)]
         public long PurchaseId { get; set; }
-        [Required]
         public string SerialNo { get; set; }
         [Required]
         public long InventoryItem { get; set; }

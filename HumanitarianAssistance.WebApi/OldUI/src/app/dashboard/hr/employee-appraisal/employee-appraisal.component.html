@@ -173,6 +173,7 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title text-left">Add Appraisal Details</h3>
+
         </div>
         <div class="panel-body">
           <div class="row">
@@ -187,8 +188,7 @@
           </div>
 
           <div class="row" style="padding: 20px;">
-            <div class="col-sm-12">
-
+            <div class="col-sm-12">              
               <form action="your-action" (submit)="onAddFormSubmit(employeeAppraisalQuestionForm)">
 
                 <div class="row">
@@ -198,6 +198,18 @@
                       [showValidationSummary]="true" validationGroup="leaveInfoValidationDetails">
 
                       <dxi-item itemType="group" caption=" Employee Details" [colSpan]="2" [colCount]="2">
+
+                        <!-- <dxi-item dataField="EmployeeCode" disabled="true" [colSpan]="1">
+                          <dxo-label text="Employee Code"></dxo-label>
+                        </dxi-item> -->
+
+                        <dxi-item dataField="EmployeeCode">
+                          <div style="text-align: justify">{{employeeAppraisalQuestionForm.EmployeeCode}}</div>                  
+                        </dxi-item>  
+
+                        <dxi-item dataField="DutyStation">                          
+                          <div style="text-align: justify">{{employeeAppraisalQuestionForm.DutyStation}}</div>                  
+                        </dxi-item>  
 
                         <dxi-item dataField="EmployeeName" disabled="true" [colSpan]="1">
                           <dxo-label text="Employee Name"></dxo-label>
@@ -215,12 +227,16 @@
                           <dxo-label text="Qualification"></dxo-label>
                         </dxi-item>
 
-                        <dxi-item dataField="RecruitmentDate" disabled="true" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'dd/MM/yyyy' }">
-                          <dxo-label text="Recruitment Date"></dxo-label>
-                        </dxi-item>
-
+                        <!-- <dxi-item dataField="DutyStation" disabled="true" [colSpan]="1">
+                          <dxo-label text="Duty Station"></dxo-label>
+                        </dxi-item> -->
+                      
                         <dxi-item dataField="AppraisalPeriod" editorType="dxSelectBox" [editorOptions]="{ dataSource: employeeAppraisalPeriod, value: employeeAppraisalQuestionForm.AppraisalPeriod, displayExpr: 'PeriodDuration', valueExpr: 'PeriodId', showClearButton:'true'  }">
                           <dxi-validation-rule type="required"> </dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item dataField="RecruitmentDate" disabled="true" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'dd/MM/yyyy' }">
+                          <dxo-label text="Recruitment Date"></dxo-label>
                         </dxi-item>
 
                         <dxi-item dataField="CurrentAppraisalDate" editorType="dxDateBox" [editorOptions]="{ displayFormat: 'dd/MM/yyyy' }">
