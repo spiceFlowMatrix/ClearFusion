@@ -45,7 +45,7 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                     Position = x.EmployeeProfessionalDetail.DesignationDetails.Designation,
                     Department = x.EmployeeProfessionalDetail.Department.DepartmentName,
                     Qualification = x.QualificationDetails.QualificationName,
-                    DutyStation = x.EmployeeProfessionalDetail.OfficeDetail.OfficeName,
+                    DutyStation = x.EmployeeProfessionalDetail.DutyStation,
                     RecruitmentDate = x.EmployeeProfessionalDetail.HiredOn,
                     TenureWithCHA = (DateTime.Now.Date - x.EmployeeProfessionalDetail.HiredOn.Value.Date).Days.ToString() + " Days",
                     Gender = x.SexId == 1 ? "Male" : x.SexId == 2 ? "Female" : "Other",
