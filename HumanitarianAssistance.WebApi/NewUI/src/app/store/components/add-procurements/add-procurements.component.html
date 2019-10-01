@@ -1,0 +1,108 @@
+<h1 mat-dialog-title>Add Procurement</h1>
+  <form [formGroup]='addPurchase'>
+      <mat-dialog-content>
+
+          <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-4">
+                  <lib-hum-dropdown [options]="inventoryType$" formControlName='InventoryTypeId' [placeHolder]="'Inventory'"
+                    (change)="getInventoryTypeSelectedValue($event)"></lib-hum-dropdown>
+                </div>
+                <div class="col-md-4">
+                  <lib-hum-dropdown [options]="storeInventory$" formControlName='InventoryId' [placeHolder]="'Inventory(Master)'"
+                    (change)="getMasterInventorySelectedValue($event)"></lib-hum-dropdown>
+                </div>
+                <div class="col-md-4">
+                  <lib-hum-dropdown [options]="storeItemGroups$" formControlName='ItemGroupId' [placeHolder]="'Item Group'"
+                    (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="col-md-4">
+                    <lib-hum-dropdown [options]="storeItems$" formControlName='ItemId' [placeHolder]="'Item'"
+                      (change)="getItemSelectedValue($event)"></lib-hum-dropdown>
+                  </div>
+                  <div class="col-md-4">
+                    <lib-hum-dropdown [options]="storeItems$" formControlName='PurchaseName' [placeHolder]="'Purchase Name'"
+                      (change)="getSelectedPurchaseName($event)"></lib-hum-dropdown>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <h5>Issued Detail</h5>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-4">
+                  <mat-form-field>
+                    <input matInput formControlName='IssuedQuanitity' placeholder="Issued Quantity">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <lib-hum-dropdown [options]="employeeList$" formControlName='IssuedToEmployeeId'
+                    [placeHolder]="'Issued To Employee'" (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+                </div>
+                <div class="col-md-4">
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="IssueDate" formControlName='IssueDate' placeholder="Issue Date">
+                    <mat-datepicker-toggle matSuffix [for]="IssueDate"></mat-datepicker-toggle>
+                    <mat-datepicker #IssueDate></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-4">
+                  <mat-form-field>
+                    <input matInput formControlName='IssuedQuanitity' placeholder="Issued Quantity">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <lib-hum-dropdown [options]="employeeList$" formControlName='IssuedToEmployeeId'
+                    [placeHolder]="'Issued To Employee'" (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+                </div>
+                <div class="col-md-4">
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="IssueDate" formControlName='IssueDate' placeholder="Issue Date">
+                    <mat-datepicker-toggle matSuffix [for]="IssueDate"></mat-datepicker-toggle>
+                    <mat-datepicker #IssueDate></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-4">
+                  <lib-hum-dropdown [options]="project$" formControlName='ProjectId' [placeHolder]="'Project'"
+                    (change)="getMasterInventorySelectedValue($event)"></lib-hum-dropdown>
+                </div>
+                <div class="col-md-4">
+                  <lib-hum-dropdown [options]="storeSource$" formControlName='IssuedToLocation'
+                    [placeHolder]="'Issued To Location'" (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+                </div>
+                <div class="col-md-4">
+                  <lib-hum-dropdown [options]="statusList$" formControlName='StatusId' [placeHolder]="'Status At Time Of Issue'"
+                    (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-4">
+                  <mat-checkbox formControlName='MustReturn'>Must Return</mat-checkbox>
+                </div>
+              </div>
+            </div>
+
+      </mat-dialog-content>
+      <mat-dialog-actions>
+          <button mat-button [mat-dialog-close]="true" tabindex="1">Install</button>
+          <button mat-button mat-dialog-close tabindex="-1">Cancel</button>
+        </mat-dialog-actions>
+  </form>

@@ -14,6 +14,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string VerificationSourceName { get; set; }
         public long? MonitoringIndicatorQuestionId { get; set; }
         public string QuestionTypeName { get; set; }
+        public int? QuestionType{ get; set;}
         public List<VerificationSources> VerificationSources { get; set; }
     }
 }

@@ -22,6 +22,7 @@ export class AddSubActivitiesComponent implements OnInit {
   employeeList: IEmployeeList[] = [];
   budgetLineId: number;
   activityId: number;
+  projectId: number;
   addSubActivityLoaderFlag = false;
   addProjectSubActivitySubscribe: Subscription;
   onSubactivityListRefresh = new EventEmitter<any>();
@@ -36,6 +37,7 @@ export class AddSubActivitiesComponent implements OnInit {
     this.activityId = data.ActivityId;
     this.budgetLineId = data.BudgetLineId;
     this.employeeList = data.EmployeeList;
+    this.projectId = data.ProjectId;
   }
 
   ngOnInit() {
@@ -59,7 +61,7 @@ export class AddSubActivitiesComponent implements OnInit {
 
   //#region "addProjectSubActivity"
   addProjectSubActivity(data: IAddProjectSubActivityModel) {
-    if (this.projectSubActivityForm.valid) {
+    if (this.projectSubActivityForm.valid && this.projectId != null) {
       this.addSubActivityLoaderFlag = true;
 
       const activityData: IAddProjectSubActivityModel = {
@@ -70,7 +72,8 @@ export class AddSubActivitiesComponent implements OnInit {
         Target: data.Target,
         BudgetLineId: this.budgetLineId,
         ParentId: this.activityId,
-        SubActivityTitle: data.SubActivityTitle
+        SubActivityTitle: data.SubActivityTitle,
+        ProjectId: this.projectId
       };
 
       if (activityData.PlannedEndDate >= activityData.PlannedStartDate) {

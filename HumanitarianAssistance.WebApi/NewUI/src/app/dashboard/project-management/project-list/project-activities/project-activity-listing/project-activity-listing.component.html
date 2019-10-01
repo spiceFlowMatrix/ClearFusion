@@ -53,76 +53,66 @@
           <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
             <mat-card>
                 <p>Project Duration</p>
-              <div *ngIf="
-              !activitySummaryLoader;
-              else projectDurationLoaderTemplate">
+              <div>
                   <h4>{{ activitySummary.ProjectDuration }} Days</h4>
               </div>
-              <ng-template #projectDurationLoaderTemplate>
+              <!-- <ng-template #projectDurationLoaderTemplate>
                   <div class="spinner_center padding_top_5 padding_bottom_5">
                     <mat-spinner [diameter]="25"></mat-spinner>
                   </div>
-                </ng-template>
+                </ng-template> -->
             </mat-card>
           </div>
           <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
             <mat-card>
                 <p>Activities on Schedule</p>
-              <div *ngIf="
-              !activitySummaryLoader;
-              else activityOnScheduleLoaderTemplate">
+              <div >
                   <h4>{{ activitySummary.ActivityOnSchedule }}</h4>
               </div>
-              <ng-template #activityOnScheduleLoaderTemplate>
+              <!-- <ng-template #activityOnScheduleLoaderTemplate>
                   <div class="spinner_center padding_top_5 padding_bottom_5">
                     <mat-spinner [diameter]="25"></mat-spinner>
                   </div>
-                </ng-template>
+                </ng-template> -->
             </mat-card>
           </div>
           <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
             <mat-card>
                 <p>Late Start</p>
-              <div *ngIf="
-              !activitySummaryLoader;
-              else lateStartLoaderTemplate">
+              <div >
                   <h4>{{ activitySummary.LateStart }}</h4>
               </div>
-              <ng-template #lateStartLoaderTemplate>
+              <!-- <ng-template #lateStartLoaderTemplate>
                 <div class="spinner_center padding_top_5 padding_bottom_5">
                   <mat-spinner [diameter]="25"></mat-spinner>
                 </div>
-              </ng-template>
+              </ng-template> -->
             </mat-card>
           </div>
           <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
             <mat-card>
                 <p>Late End</p>
-              <div *ngIf="
-              !activitySummaryLoader;
-              else lateEndLoaderTemplate">
+              <div>
                   <h4>{{ activitySummary.LateEnd }}</h4>
               </div>
-              <ng-template #lateEndLoaderTemplate>
+              <!-- <ng-template #lateEndLoaderTemplate>
                   <div class="spinner_center padding_top_5 padding_bottom_5">
                     <mat-spinner [diameter]="25"></mat-spinner>
                   </div>
-                </ng-template>
+                </ng-template> -->
             </mat-card>
           </div>
           <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
             <mat-card>
                 <p>Slippage</p>
-              <div *ngIf="
-              !activitySummaryLoader;
-              else activitySummaryLoaderTemplate">
+              <div >
                   <h4>{{ activitySummary.Slippage }}</h4>
               </div>
-              <ng-template #activitySummaryLoaderTemplate>
+              <!-- <ng-template #activitySummaryLoaderTemplate>
                   <div class="spinner_center padding_top_5 padding_bottom_5">
                     <mat-spinner [diameter]="25"></mat-spinner>
                   </div>
-                </ng-template>
+                </ng-template> -->
             </mat-card>
           </div>
           <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
@@ -147,7 +137,7 @@
       <div [class]="colsm6">
         <div>
           <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-10">
               <span class="font_x_large">Project Activities</span> &nbsp;
               <button
                 mat-raised-button
@@ -156,12 +146,26 @@
               >
                 Add Activity
               </button>
+            </div>
+            <div class="col-sm-1">
+                <mat-icon
+                  class="icon_cursor display_inline_block"
+                  ia-hidden="false"
+                  aria-label="Example home icon"
+                  pTooltip="Export Pdf"
+                  tooltipPosition="top"
+                  (click)="onExportPdf()"
+                  class="pdfButton"
+                >
+                  vertical_align_bottom
+                </mat-icon>
+              </div>
+              <div class="col-sm-1">
               <button mat-raised-button color="primary" class="pull-right">
                 Gantt View
               </button>
             </div>
           </div>
-
           <br />
           <mat-card [ngStyle]="scrollStyles" *ngIf="filterViewFlag; else filterTemplate;">
             <div class="row">

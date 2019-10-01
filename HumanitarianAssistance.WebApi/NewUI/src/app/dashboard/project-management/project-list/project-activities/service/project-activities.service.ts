@@ -403,6 +403,7 @@ export class ProjectActivitiesService {
 
   //#region "GetAllProjectActivityStatus"
   GetAllProjectActivityStatus(projectId: number): any {
+
     return this.globalService
       .post(
         this.appurl.getApiUrl() + GLOBAL.API_Project_AllActivityStatus,

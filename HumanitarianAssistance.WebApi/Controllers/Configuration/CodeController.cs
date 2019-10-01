@@ -918,5 +918,24 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
            return await _mediator.Send(new GetAllEmployeeContractTypeQuery());
         }
 
+        [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetOfficeListAssignedToUser()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            
+            var result = await Task.FromResult(_mediator.Send(new GetOfficeListAssignedToUserQuery { UserId= userId}));
+
+            if (result.Exception == null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result.Exception.InnerException.Message);
+            }
+        }
+
     }
 }

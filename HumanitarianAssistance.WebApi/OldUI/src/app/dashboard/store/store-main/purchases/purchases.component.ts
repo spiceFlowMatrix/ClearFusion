@@ -5,7 +5,10 @@ import {
     EventEmitter,
     Input,
 
-    ViewChild
+    ViewChild,
+    OnChanges,
+    SimpleChange,
+    SimpleChanges
 } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { StoreService } from '../../store.service';
@@ -24,7 +27,7 @@ import { UploadModel } from '../../../../shared/FileManagement/file-management-m
     templateUrl: './purchases.component.html',
     styleUrls: ['./purchases.component.css']
 })
-export class PurchasesComponent implements OnInit {
+export class PurchasesComponent implements OnInit, OnChanges {
 
     @ViewChild('imageUploader') imageUploader: DxFileUploaderComponent;
     @ViewChild('invoiceUploader') invoiceUploader: DxFileUploaderComponent;
@@ -118,18 +121,24 @@ export class PurchasesComponent implements OnInit {
         this.getCurrencyCodeList();
         this.getAllEmployeeList();
         this.getAllProjectDetails();
-        this.getAllVoucherList();
+        // this.getAllVoucherList();
         this.getAllStatusAtTimeOfIssue();
         this.getAllReceiptType();
         this.getSourceCodeDatalist();
         this.getAllPaymentTypes();
         this.getJournalCodeList();
 
-        this.commonService.getStoreOfficeId().subscribe(data => {
-            this.getAllVoucherList();
-            this.getAllEmployeeList();
-            this.getAllProjectDetails();
-        });
+        // this.commonService.getStoreOfficeId().subscribe(data => {
+        //     this.getAllVoucherList();
+        //     this.getAllEmployeeList();
+        //     this.getAllProjectDetails();
+        // });
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        debugger;
+        this.getAllEmployeeList();
+        this.getAllProjectDetails();
     }
 
     //#region "initializeForm"
@@ -179,7 +188,6 @@ export class PurchasesComponent implements OnInit {
         this.flag = 0;
         this.inventoryItemId = itemId;
         this.datePipe = new DatePipe('en-US');
-        this.getAllUnitTypeDetails();
 
         this.storeService
             .GetAllDetailsById(
@@ -301,8 +309,6 @@ export class PurchasesComponent implements OnInit {
     //#region "getStoreLocationList"
     // Get all Source Code Data Details
     getSourceCodeDatalist() {
-         
-
         // type=0 to get all sourcecodes
         this.storeService
             .GetSourceCode(
@@ -343,7 +349,7 @@ export class PurchasesComponent implements OnInit {
     //#region "getAllEmployeeList"
     getAllEmployeeList() {
         // tslint:disable-next-line:radix
-        const OfficeId = parseInt(localStorage.getItem('STOREOFFICEID'));
+        const OfficeId = this.officeId;
         this.storeService
             .GetAllDetailsById(
                 this.setting.getBaseUrl() + GLOBAL.API_Code_GetEmployeeDetailByOfficeId,
@@ -352,6 +358,7 @@ export class PurchasesComponent implements OnInit {
             )
             .subscribe(
                 data => {
+
                     this.employeeList = [];
                     if (data.data.EmployeeDetailListData != null) {
                         data.data.EmployeeDetailListData.forEach(element => {
@@ -554,7 +561,7 @@ export class PurchasesComponent implements OnInit {
     //#region "getAllVoucherList"
     getAllVoucherList() {
         // tslint:disable-next-line:radix
-        const officeId = parseInt(localStorage.getItem('STOREOFFICEID'));
+        const officeId = this.officeId;
         this.storeService
             .GetAllDetailsById(
                 this.setting.getBaseUrl() +
@@ -621,7 +628,7 @@ export class PurchasesComponent implements OnInit {
                             };
 
                             this.fileManagementService.uploadFile(dataModelPurchase).subscribe(x => {
-                                 
+
                                 // Parent call
                                 this.getItemAmounts.emit(
                                     localStorage.getItem('SelectedInventoryItem')
@@ -788,7 +795,7 @@ export class PurchasesComponent implements OnInit {
                         // IsPurchaseVerified: data.IsPurchaseVerified,
                         // VerifiedPurchaseVoucher: data.VerifiedPurchaseVoucher,
                         // tslint:disable-next-line:radix
-                        OfficeId: parseInt(localStorage.getItem('STOREOFFICEID')),
+                        OfficeId: this.officeId,
                         JournalCode: data.JournalCode,
                         // VerifiedPurchaseVoucherReferenceNo:
                         //     data.VerifiedPurchaseVoucherReferenceNo,
@@ -868,7 +875,7 @@ export class PurchasesComponent implements OnInit {
                         // IsPurchaseVerified: data.IsPurchaseVerified,
                         // VerifiedPurchaseVoucher: data.VerifiedPurchaseVoucher,
                         // tslint:disable-next-line:radix
-                        OfficeId: parseInt(localStorage.getItem('STOREOFFICEID')),
+                        OfficeId: this.officeId,
                         JournalCode: data.JournalCode,
                         // VerifiedPurchaseVoucherReferenceNo:
                         //     data.VerifiedPurchaseVoucherReferenceNo,
@@ -894,6 +901,7 @@ export class PurchasesComponent implements OnInit {
     //#region "onAddPurchasePopup"
     onAddPurchasePopup() {
         // initialize form
+        this.getAllUnitTypeDetails();
         this.purchaseDetailsForm = {
             PurchaseId: null,
             SerialNo: null, // Barcode Value
@@ -959,6 +967,7 @@ export class PurchasesComponent implements OnInit {
 
     //#region "onEditPurchasePopup"
     onEditPurchasePopup(data) {
+        this.getAllUnitTypeDetails();
         // tslint:disable-next-line:curly
         if (data != null)
             // initialize form
@@ -1174,9 +1183,7 @@ export class PurchasesComponent implements OnInit {
         ) {
             // this.purchaseDetailsForm.IsPurchaseVerified = true;
             // tslint:disable-next-line:radix
-            this.purchaseDetailsForm.OfficeId = parseInt(
-                localStorage.getItem('STOREOFFICEID')
-            );
+            this.purchaseDetailsForm.OfficeId = this.officeId;
             this.showEditPurchaseFormPopupLoading();
             this.storeService
                 .AddEditByModel(
@@ -1213,9 +1220,7 @@ export class PurchasesComponent implements OnInit {
     UnverifyPurchase() {
         // this.purchaseDetailsForm.IsPurchaseVerified = false;
         // tslint:disable-next-line:radix
-        this.purchaseDetailsForm.OfficeId = parseInt(
-            localStorage.getItem('STOREOFFICEID')
-        );
+        this.purchaseDetailsForm.OfficeId = this.officeId;
         this.showEditPurchaseFormPopupLoading();
         this.storeService
             .AddEditByModel(

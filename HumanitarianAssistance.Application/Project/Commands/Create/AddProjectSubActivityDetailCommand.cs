@@ -42,8 +42,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
         public double? Progress { get; set; }
         public double? Slippage { get; set; }
         public string SubActivityTitle { get; set; }
-        public new bool?  IsDeleted { get; set; }
-
+        public new bool? IsDeleted { get; set; }
+        public long ProjectId { get; set; }
 
     }
 }

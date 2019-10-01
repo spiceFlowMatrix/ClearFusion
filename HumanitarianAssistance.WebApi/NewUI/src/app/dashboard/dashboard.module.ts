@@ -11,6 +11,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { ShareLayoutModule } from '../shared/share-layout.module';
 
 @NgModule({
   imports: [
@@ -23,14 +24,15 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatSidenavModule,
     MatCardModule,
     MatButtonModule,
+    ShareLayoutModule
   ],
   declarations: [
     DashboardComponent,
 
-    // components
-    DbsidebarComponent,
-    DbheaderComponent,
-    DbfooterComponent
+    // // components
+    // DbsidebarComponent,
+    // DbheaderComponent,
+    // DbfooterComponent
   ]
 })
 export class DashboardModule { }

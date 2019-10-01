@@ -191,6 +191,7 @@ export interface IAddProjectSubActivityDataSources {
   BudgetLineId: number;
   ActivityId: number;
   EmployeeList: any[];
+  ProjectId: number;
 }
 
 export interface IAddProjectSubActivityModel {
@@ -202,6 +203,7 @@ export interface IAddProjectSubActivityModel {
   BudgetLineId?: number;
   ParentId?: number;
   SubActivityTitle: string;
+  ProjectId: number;
 }
 export interface IEditProjectSubActivityModel {
   ActivityId?: number;
@@ -255,4 +257,31 @@ export interface IProjectPermissionMode {
   UserId: number;
   DateAdded: any;
 }
+
+//  export interface IProjectActivityPdfModel {
+// ProjectId: number;
+//  }
+// export interface IMonitoring {
+//   IndicatorName: string;
+//   ActivityQuestions: any[];
+//   Ratings: string;
+//   StrongPoints: string;
+//   WeakPoints: string;
+
+//   ProjectCode: number;
+//   ProjectName: string;
+//   ProjectGoal: string;
+//   ProjectDuration: number;
+//   ProjectLocation: string;
+//   MainActivity: string;
+//   ActivityDuration: any;
+//   Monitoring: IMonitoring[];
+//   Recommendations: string;
+//   Start: string;
+//   End: string;
+//   Province: string;
+//   District: string;
+//   ActualStartDate: string;
+//   ActualEndDate: string;
+// }
 

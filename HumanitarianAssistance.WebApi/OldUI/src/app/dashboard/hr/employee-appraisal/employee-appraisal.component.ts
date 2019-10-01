@@ -10,6 +10,7 @@ import {
 } from '../../../shared/application-pages-enum';
 import { AppSettingsService } from '../../../service/app-settings.service';
 import { CommonService } from '../../../service/common.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-employee-appraisal',
@@ -18,7 +19,6 @@ import { CommonService } from '../../../service/common.service';
 })
 export class EmployeeAppraisalComponent implements OnInit {
   //#region "Variables"
-
   employeeAppraisalListDataSource: EmployeeAppraisalModel[];
   employeeAppraisalQuestionForm: EmployeeAppraisalModel;
 
@@ -379,7 +379,7 @@ export class EmployeeAppraisalComponent implements OnInit {
                 Position: element.Position,
                 Department: element.Department,
                 Qualification: element.Qualification,
-                DutyStation: element.DutyStation,
+                DutyStation: this.officecodelist.find(x => x.Office === element.DutyStation).OfficeName,
                 RecruitmentDate: element.RecruitmentDate,
                 AppraisalPeriod: null,
                 CurrentAppraisalDate: new Date(),
@@ -1343,6 +1343,18 @@ export class EmployeeAppraisalComponent implements OnInit {
       );
   }
   //#endregion
+
+    //#region "onExportPdf"
+    // onExportPdf() {
+    //   this.commonService
+    //     .getFile(this.setting.getBaseUrl() + GLOBAL.API_HR_GetAnnualAppraisalReportPdf,
+    //               this.employeeAppraisalQuestionForm
+    //     );
+    // }
+    //#endregion
+
+
+
 
   // Evaluation Add
   onEvaluationAdding(data: any) {

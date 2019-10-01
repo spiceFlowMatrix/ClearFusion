@@ -114,14 +114,16 @@ export class DonorMasterComponent implements OnInit {
       ],
       ContactPersonCell: [
         null,
-        [Validators.minLength(10),
-        Validators.maxLength(14),
-        Validators.required,
-      Validators.pattern('^[0-9]*$')
-      ]
+        [
+          Validators.minLength(10),
+          Validators.maxLength(14),
+          Validators.required,
+          Validators.pattern('^[0-9]*$')
+        ]
       ]
     });
   }
+   
 
   ngOnInit() {}
 

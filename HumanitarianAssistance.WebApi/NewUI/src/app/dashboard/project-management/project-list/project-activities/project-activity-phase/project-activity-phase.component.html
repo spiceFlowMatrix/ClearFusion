@@ -46,7 +46,7 @@
 
     <div *ngFor="let item of projectSubActivityList">
       <br />
-      <app-sub-activities [subActivityDetail]="item" (updateActivityStatusId)="onUpdateActivityStatusId($event)">
+      <app-sub-activities [subActivityDetail]="item" (updateActivityStatusId)="onUpdateActivityStatusId($event)" [projectSubActivityList]="projectSubActivityList">
       </app-sub-activities>
       <br />
     </div>
