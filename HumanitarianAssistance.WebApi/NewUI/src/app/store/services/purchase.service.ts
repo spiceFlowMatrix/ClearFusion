@@ -248,6 +248,18 @@ export class PurchaseService {
       );
   }
 
+  checkExchangeRateExists(model: any) {
+    return this.globalService
+      .post(this.appurl.getApiUrl() + GLOBAL.API_ExchangeRates_CheckExchangeRatesExist, model)
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+
+
+
   //#region "getLocalDate"
   getLocalDate(date: any) {
     return new Date(
