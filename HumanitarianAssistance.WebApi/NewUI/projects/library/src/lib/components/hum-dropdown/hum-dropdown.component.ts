@@ -26,6 +26,8 @@ export class HumDropdownComponent implements OnInit, ControlValueAccessor {
   public isDisabled: boolean;
   private onChange;
 
+  private onTouch;
+
   dropControl = new FormControl('');
   constructor() {
   }
@@ -35,8 +37,9 @@ export class HumDropdownComponent implements OnInit, ControlValueAccessor {
   // handle change event
   optionChange(event) {
     this.onChange(event);
+    this.onTouch();
     this.value = event;
-    this.change.emit(event)
+    this.change.emit(event);
   }
   // set a initial value
   writeValue(obj: any): void {
@@ -49,7 +52,7 @@ export class HumDropdownComponent implements OnInit, ControlValueAccessor {
   }
   // register a function for value touched
   registerOnTouched(fn: any): void {
-    this.onChange = fn;
+    this.onTouch = fn;
   }
   setDisabledState?(isDisabled: boolean): void {
     this.isDisabled = isDisabled;

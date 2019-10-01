@@ -5,6 +5,9 @@ import { Observable, of, forkJoin } from 'rxjs';
 import { IDropDownModel } from '../../models/purchase';
 import { BudgetLineService } from 'src/app/dashboard/project-management/project-list/budgetlines/budget-line.service';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { ToastrService } from 'ngx-toastr';
+import { ExchangeRateService } from 'src/app/dashboard/accounting/exchange-rate/exchange-rate-listing/exchange-rate.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-purchase',
@@ -87,7 +90,8 @@ validationMessages = {
 
   constructor(private purchaseService: PurchaseService,
     private fb: FormBuilder, private budgetLineService: BudgetLineService,
-    private commonLoader: CommonLoaderService) {
+    private commonLoader: CommonLoaderService, private toastr: ToastrService,
+    private router: Router ) {
 
     this.addPurchaseForm = this.fb.group({
       'InventoryTypeId': [null, [Validators.required]],
@@ -147,7 +151,7 @@ validationMessages = {
     });
 
     this.addPurchaseForm.valueChanges.subscribe((data) => {
-      this.logValidationErrors(this.addPurchaseForm);
+      // this.logValidationErrors(this.addPurchaseForm);
     });
 
     this.getScreenSize();
@@ -301,59 +305,59 @@ validationMessages = {
   }
 
   getMasterInventorySelectedValue(event: any) {
-    this.addPurchaseForm.get('InventoryId').patchValue(event);
+   // this.addPurchaseForm.get('InventoryId').patchValue(event);
     this.getAllStoreItemGroups(event);
   }
 
   getItemGroupSelectedValue(event: any) {
-    this.addPurchaseForm.get('ItemGroupId').patchValue(event);
+    //this.addPurchaseForm.get('ItemGroupId').patchValue(event);
     this.getAllStoreItemsByGroupId(event);
   }
 
   getItemSelectedValue(event: any) {
-    this.addPurchaseForm.get('ItemId').patchValue(event);
+   // this.addPurchaseForm.get('ItemId').patchValue(event);
   }
 
   getOfficeSelectedValue(event: any) {
-    this.addPurchaseForm.get('OfficeId').patchValue(event);
+   // this.addPurchaseForm.get('OfficeId').patchValue(event);
     this.getEmployeesByOfficeId(event);
   }
 
   getProjectSelectedValue(event: any) {
-    this.addPurchaseForm.get('ProjectId').patchValue(event);
+   // this.addPurchaseForm.get('ProjectId').patchValue(event);
     this.getBudgetLineByProjectId(event);
   }
 
   getBudgetSelectedValue(event: any) {
-    this.addPurchaseForm.get('BudgetLineId').patchValue(event);
+    // this.addPurchaseForm.get('BudgetLineId').patchValue(event);
   }
 
   getAssetTypeSelectedValue(event: any) {
-    this.addPurchaseForm.get('AssetTypeId').patchValue(event);
+    // this.addPurchaseForm.get('AssetTypeId').patchValue(event);
   }
 
   getUnitSelectedValue(event: any) {
-    this.addPurchaseForm.get('Unit').patchValue(event);
+    // this.addPurchaseForm.get('Unit').patchValue(event);
   }
 
   getCurrencySelectedValue(event: any) {
-    this.addPurchaseForm.get('CurrencyId').patchValue(event);
+   // this.addPurchaseForm.get('CurrencyId').patchValue(event);
   }
 
   getStoreSourceSelectedValue(event: any) {
-    this.addPurchaseForm.get('ReceivedFromLocation').patchValue(event);
+   // this.addPurchaseForm.get('ReceivedFromLocation').patchValue(event);
   }
 
   getEmployeeSelectedValue(event: any) {
-    this.addPurchaseForm.get('ReceivedFromEmployeeId').patchValue(event);
+   // this.addPurchaseForm.get('ReceivedFromEmployeeId').patchValue(event);
   }
 
   getReceiptSelectedValue(event: any) {
-    this.addPurchaseForm.get('ReceiptTypeId').patchValue(event);
+   // this.addPurchaseForm.get('ReceiptTypeId').patchValue(event);
   }
 
   getStatusSelectedValue(event: any) {
-    this.addPurchaseForm.get('StatusId').patchValue(event);
+    // this.addPurchaseForm.get('StatusId').patchValue(event);
   }
 
   getEmployeesByOfficeId(officeId: any) {
@@ -424,8 +428,23 @@ validationMessages = {
   addPurchaseFormSubmit() {
     debugger;
     if (this.addPurchaseForm.valid) {
-      this.purchaseService.addPurchase(this.addPurchaseForm.value);
+      this.purchaseService.addPurchase(this.addPurchaseForm.value)
+      .subscribe(x => {
+        debugger;
+
+        if (x.StatusCode === 200) {
+          this.addPurchaseForm.reset();
+
+          this.toastr.success(x.Message);
+        } else if (x.StatusCode === 400) {
+          this.toastr.warning(x.Message);
+        }
+      });
     }
+  }
+
+  cancelButtonClicked() {
+    this.router.navigate(['store/purchases']);
   }
 
   logValidationErrors(group: FormGroup): void {

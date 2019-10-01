@@ -1,7 +1,7 @@
 <lib-sub-header-template>
   <span class="action_header">Add a new purchase
     <hum-button (click)='addPurchaseFormSubmit()' [type]="'save'" [text]="'save'"></hum-button>
-    <hum-button (click)='addPurchaseFormSubmit()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+    <hum-button (click)='cancelButtonClicked()' [type]="'cancel'" [text]="'cancel'"></hum-button>
 
   </span>
   <div class="action_section">
@@ -13,12 +13,16 @@
       <div class="col-md-12">
         <h4>Item Detail</h4>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="inventoryType$" formControlName='InventoryTypeId' [placeHolder]="'Inventory'"
+          <lib-hum-dropdown [options]="inventoryType$" formControlName="InventoryTypeId" [placeHolder]="'Inventory'"
             (change)="getInventoryTypeSelectedValue($event)">
             <mat-error *ngIf="!addPurchaseForm.controls['InventoryTypeId'].valid && addPurchaseForm.controls['InventoryTypeId'].touched">
               asdas
             </mat-error>
           </lib-hum-dropdown>
+          {{}}
+          <div *ngIf="addPurchaseForm.controls['InventoryTypeId'].invalid && (addPurchaseForm.controls['InventoryTypeId'].dirty || addPurchaseForm.controls['InventoryTypeId'].touched)">
+              Error
+            </div>
         </div>
         <div class="col-md-3">
           <lib-hum-dropdown [options]="storeInventory$" formControlName='InventoryId' [placeHolder]="'Inventory(Master)'"
@@ -117,6 +121,7 @@
         <div class="col-md-3">
           <mat-form-field>
             <input matInput type="number" formControlName='Price' placeholder="Price">
+
           </mat-form-field>
         </div>
       </div>

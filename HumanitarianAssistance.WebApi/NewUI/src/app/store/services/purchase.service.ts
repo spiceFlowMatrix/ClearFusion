@@ -4,7 +4,7 @@ import { AppUrlService } from '../../shared/services/app-url.service';
 import { GLOBAL } from '../../shared/global';
 import { map } from 'rxjs/internal/operators/map';
 import { IResponseData } from '../../../app/dashboard/accounting/vouchers/models/status-code.model';
-import { IFilterValueModel, IAddPurchaseModel, IAddEditPurchaseModel } from '../models/purchase';
+import { IFilterValueModel, IAddEditPurchaseModel } from '../models/purchase';
 import { retry, finalize } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of, Observable } from 'rxjs';
@@ -218,15 +218,15 @@ export class PurchaseService {
       AssetTypeId: purchase.AssetTypeId,
       BudgetLineId: purchase.BudgetLineId,
       Currency: purchase.CurrencyId,
-      DeliveryDate: purchase.ReceiptDate,
+      DeliveryDate: this.getLocalDate(purchase.ReceiptDate) ,
       DepreciationRate: purchase.DepreciationRate,
       InventoryId: purchase.InventoryId,
       InventoryItem: purchase.ItemId,
-      InvoiceDate: purchase.InvoiceDate,
+      InvoiceDate: this.getLocalDate(purchase.InvoiceDate),
       InvoiceNo: purchase.InvoiceNo,
       OfficeId: purchase.OfficeId,
       ProjectId: purchase.ProjectId,
-      PurchaseDate: purchase.PurchaseOrderDate,
+      PurchaseDate: this.getLocalDate(purchase.PurchaseOrderDate),
       PurchaseName: purchase.PurchaseName,
       PurchaseOrderNo: purchase.PurchaseOrderNo,
       PurchasedById: purchase.ReceivedFromEmployeeId,
@@ -235,7 +235,8 @@ export class PurchaseService {
       ReceiptTypeId: purchase.ReceiptTypeId,
       Status: purchase.StatusId,
       UnitCost: purchase.Price,
-      UnitType: purchase.Unit
+      UnitType: purchase.Unit,
+      TimezoneOffset: new Date().getTimezoneOffset()
     };
 
     return this.globalService
@@ -246,4 +247,18 @@ export class PurchaseService {
         })
       );
   }
+
+  //#region "getLocalDate"
+  getLocalDate(date: any) {
+    return new Date(
+      new Date(date).getFullYear(),
+      new Date(date).getMonth(),
+      new Date(date).getDate(),
+      new Date().getHours(),
+      new Date().getMinutes(),
+      new Date().getSeconds(),
+      new Date().getMilliseconds(),
+    );
+  }
+  //#endregion
 }

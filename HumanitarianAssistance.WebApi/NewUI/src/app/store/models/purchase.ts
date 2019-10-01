@@ -82,6 +82,7 @@ export interface IAddEditPurchaseModel {
   UnitType: any;
   ApplyDepreciation: boolean;
   DepreciationRate: any;
+  TimezoneOffset: any;
 
   PageIndex?: number;
   PageSize?: number;
