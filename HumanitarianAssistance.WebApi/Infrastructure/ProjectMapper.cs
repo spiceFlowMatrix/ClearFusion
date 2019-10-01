@@ -6,6 +6,7 @@ using HumanitarianAssistance.Application.Project.Commands.Update;
 using HumanitarianAssistance.Application.Project.Models;
 using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Domain.Entities.Project;
+using HumanitarianAssistance.Application.Project.Queries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,8 @@ namespace HumanitarianAssistance.WebApi.Infrastructure
             CreateMap<EditSectorDetailCommand, SectorDetails>().ReverseMap();
             CreateMap<ProjectBudgetLineDetailModel, ProjectBudgetLineDetail>().ReverseMap();
             CreateMap<ProjectActivityDetail,ProjectActivityModel>().ReverseMap();
+            CreateMap<ProjectOtherDetailPdfModel,ProjectOtherDetailNewPdfModel>().ReverseMap();
+            CreateMap<ProjectPdfFlags,GetProjectOtherDetailReportPdfQuery>().ReverseMap();
         }
     }
 }

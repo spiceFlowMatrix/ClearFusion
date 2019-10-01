@@ -417,6 +417,7 @@ export class GLOBAL {
   public static API_Pdf_GetAllChartOfAccountHierarchyPdf = 'Pdf/GetAllChartOfAccountHierarchyPdf';
   public static API_Pdf_GetAllVoucherSummaryReportPdf = 'Pdf/GetAllVoucherSummaryReportPdf';
   public static API_Pdf_GetHiringRequestFormPdf = 'Pdf/GetHiringRequestFormPdf';
+  public static API_Pdf_GetProjectOtherDetailReportPdf = 'Pdf/GetProjectOtherDetailReportPdf';
 
   //#endregion
 
