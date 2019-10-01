@@ -5,8 +5,12 @@
 
   </span>
   <div class="action_section">
+      <div class="alert alert-warning" *ngIf="exchangeRateMessage != '' && exchangeRateMessage != null" role="alert">
+          {{exchangeRateMessage}}
+      </div>
   </div>
 </lib-sub-header-template>
+
 <mat-card [ngStyle]="scrollStyles">
   <form [formGroup]='addPurchaseForm'>
     <div class="row">
@@ -72,7 +76,7 @@
         </div>
         <div class="col-md-3">
           <mat-form-field>
-            <input matInput [matDatepicker]="PurchaseOrderDate" formControlName='PurchaseOrderDate'
+            <input matInput [matDatepicker]="PurchaseOrderDate" (dateChange)="PurchaseDateChange($event)" formControlName='PurchaseOrderDate'
               placeholder="Purchase Order Date">
             <mat-datepicker-toggle matSuffix [for]="PurchaseOrderDate"></mat-datepicker-toggle>
             <mat-datepicker #PurchaseOrderDate></mat-datepicker>

@@ -434,6 +434,7 @@ export class GLOBAL {
   public static API_Store_GetAllStatusAtTimeOfIssue = 'Store/GetAllStatusAtTimeOfIssue';
   public static API_Store_GetAllPurchaseUnitType = 'Store/GetAllPurchaseUnitType';
   public static API_Store_AddPurchase = 'Store/AddPurchase';
+  public static API_ExchangeRates_CheckExchangeRatesExist = 'ExchangeRates/CheckExchangeRatesExist';
 
 }
 

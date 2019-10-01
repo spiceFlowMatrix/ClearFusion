@@ -8,6 +8,7 @@ import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.
 import { ToastrService } from 'ngx-toastr';
 import { ExchangeRateService } from 'src/app/dashboard/accounting/exchange-rate/exchange-rate-listing/exchange-rate.service';
 import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-add-purchase',
@@ -37,6 +38,8 @@ export class AddPurchaseComponent implements OnInit {
    screenHeight: any;
    screenWidth: any;
    scrollStyles: any;
+
+   exchangeRateMessage = '';
 
 // This object will hold the messages to be displayed to the user
 // Notice, each key in this object has the same name as the
@@ -91,7 +94,7 @@ validationMessages = {
   constructor(private purchaseService: PurchaseService,
     private fb: FormBuilder, private budgetLineService: BudgetLineService,
     private commonLoader: CommonLoaderService, private toastr: ToastrService,
-    private router: Router ) {
+    private router: Router, private transformDate: DatePipe ) {
 
     this.addPurchaseForm = this.fb.group({
       'InventoryTypeId': [null, [Validators.required]],
@@ -426,12 +429,9 @@ validationMessages = {
   }
 
   addPurchaseFormSubmit() {
-    debugger;
     if (this.addPurchaseForm.valid) {
       this.purchaseService.addPurchase(this.addPurchaseForm.value)
       .subscribe(x => {
-        debugger;
-
         if (x.StatusCode === 200) {
           this.addPurchaseForm.reset();
 
@@ -439,9 +439,57 @@ validationMessages = {
         } else if (x.StatusCode === 400) {
           this.toastr.warning(x.Message);
         }
+      },
+      error => {
+        console.log(error);
       });
     }
   }
+
+  PurchaseDateChange(event: any) {
+    debugger;
+  }
+
+  checkExchangeRateExists(exchangeRateDate: any) {
+
+    if (this.addPurchaseForm.value.OfficeId == null && this.addPurchaseForm.value.OfficeId === undefined &&
+      this.addPurchaseForm.value.OfficeId === 0) {
+       return;
+    }
+
+    const checkExchangeRateModel = {
+        ExchangeRateDate: new Date(
+            new Date(exchangeRateDate).getFullYear(),
+            new Date(exchangeRateDate).getMonth(),
+            new Date(exchangeRateDate).getDate(),
+            new Date().getHours(),
+            new Date().getMinutes(),
+            new Date().getSeconds()
+        ),
+        OfficeId: this.addPurchaseForm.value.OfficeId
+    };
+
+    this.purchaseService
+        .checkExchangeRateExists(checkExchangeRateModel)
+        .subscribe(
+          data => {
+            debugger;
+              if (data.StatusCode === 200) {
+
+                  if (!data.ResponseData) {
+                      this.exchangeRateMessage = 'No Exchange Rate Defined for ' +
+                      this.transformDate.transform(checkExchangeRateModel.ExchangeRateDate, 'dd-MM-yyyy');
+                  } else {
+                      this.exchangeRateMessage = '';
+                  }
+              } else {
+                  this.toastr.error(data.Message);
+              }
+          },
+          error => {
+          }
+      );
+}
 
   cancelButtonClicked() {
     this.router.navigate(['store/purchases']);
