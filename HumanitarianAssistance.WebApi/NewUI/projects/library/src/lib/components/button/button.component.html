@@ -1,6 +1,6 @@
 <ng-container [ngSwitch]="type">
 
-  <button *ngSwitchCase="'save'" mat-flat-button class="blue" (click)="btnClick()">
+  <button *ngSwitchCase="'save'" mat-flat-button class="blue" (click)="btnClick()" cdkFocusInitial>
     <h5>
       <i class="fas fa-check"></i>
       {{text | uppercase}}
@@ -20,7 +20,7 @@
   </button>
   <button *ngSwitchCase="'filter'" mat-flat-button class="blue" (click)="btnClick()">
     <h5>
-        <i class="fas fa-filter"></i>
+      <i class="fas fa-filter"></i>
       {{text | uppercase}}
     </h5>
   </button>
@@ -31,8 +31,21 @@
     </h5>
   </button>
   <button *ngSwitchCase="'text'" mat-flat-button class="blue" (click)="btnClick()">
-      <h5>
+    <h5>
+      {{text | uppercase}}
+    </h5>
+  </button>
+  <button *ngSwitchCase="'clear'" mat-flat-button class="blue" (click)="btnClick()">
+    <h5>
+        <i class="fas fa-sync-alt"></i>
         {{text | uppercase}}
       </h5>
     </button>
+  <button *ngSwitchCase="'loading'" mat-flat-button class="blue" (click)="btnClick()">
+      <span class="display_inline_block">
+          <mat-spinner [diameter]="15"></mat-spinner>
+        </span>
+        {{text| uppercase}}
+    </button>
+
 </ng-container>

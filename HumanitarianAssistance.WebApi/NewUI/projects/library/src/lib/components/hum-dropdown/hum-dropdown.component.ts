@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, forwardRef, Self } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, NgControl } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, NgControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -19,6 +19,7 @@ export class HumDropdownComponent implements OnInit, ControlValueAccessor {
 
   @Input() options: Observable<Array<Object>>;
   @Input() placeHolder: string;
+  @Input() validation = false;
   // @Input() formControl: string;
   @Output() change = new EventEmitter<number>();
 
@@ -33,6 +34,7 @@ export class HumDropdownComponent implements OnInit, ControlValueAccessor {
   }
 
   ngOnInit() {
+
   }
   // handle change event
   optionChange(event) {
@@ -45,6 +47,9 @@ export class HumDropdownComponent implements OnInit, ControlValueAccessor {
   writeValue(obj: any): void {
     this.value = obj;
     this.dropControl.setValue(obj);
+    if (this.validation) {
+      this.dropControl.setValidators([Validators.required]);
+    }
   }
   // register a function for value changes
   registerOnChange(fn: any): void {
