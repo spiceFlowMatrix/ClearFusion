@@ -33,7 +33,8 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Create
 		public int OfficeId { get; set; }
 		public int? TotalScore { get; set; }
 		public bool AppraisalStatus { get; set; }
-		public List<EmployeeAppraisalQuestionModel> EmployeeAppraisalQuestionList { get; set; }
+        public decimal? AppraisalScore { get; set; }  
+        public List<EmployeeAppraisalQuestionModel> EmployeeAppraisalQuestionList { get; set; }
 		public List<EmployeeEvaluationTrainingModel> EmployeeEvaluationModelList { get; set; }
 		public List<string> StrongPoints { get; set; }
 		public List<string> WeakPoints { get; set; }

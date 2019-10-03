@@ -21,10 +21,11 @@
         CR = 3
     }
 
-    public enum UserStatus {
-        InActive=0,
-        Active=1
-    } 
+    public enum UserStatus
+    {
+        InActive = 0,
+        Active = 1
+    }
 
     public enum AccountTypeEnum
     {
@@ -210,6 +211,15 @@
         PurchaseImage = 1,
         PurchaseInvoice = 2,
         EmployeeProfile = 3
+    }
+
+    public enum MarkedScores
+    {
+        Poor = 0,
+        Fair = 1,
+        Good = 2,
+        Excellent = 3,
+        Perfect = 4,
     }
 
 

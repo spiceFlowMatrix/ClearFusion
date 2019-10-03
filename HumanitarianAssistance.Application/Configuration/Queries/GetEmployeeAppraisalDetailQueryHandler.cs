@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Configuration.Models;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Persistence;
 using MediatR;
@@ -62,7 +63,9 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                         questions.EmployeeAppraisalQuestionsId = element.EmployeeAppraisalQuestionsId;
                         model.EmployeeAppraisalQuestionList.Add(questions);
                     }
-
+                    var scorePoint = Math.Round((decimal)item.TotalScore / (decimal)quesLst.Count());
+                    model.AppraisalScore = ((MarkedScores)scorePoint).ToString();
+                        
                     lst.Add(model);
                 }
                 response.data.EmployeeAppraisalDetailsModelLst = lst;
