@@ -22,7 +22,7 @@ import { HumDropdownComponent } from './components/hum-dropdown/hum-dropdown.com
 import { TableComponent } from './components/table/table.component';
 import { ButtonComponent } from './components/button/button.component';
 import { ConfigCardComponent } from './components/config-card/config-card.component';
-import { MatCardModule } from '@angular/material';
+import { MatCardModule, MatDividerModule } from '@angular/material';
 
 
 @NgModule({
@@ -40,7 +40,8 @@ import { MatCardModule } from '@angular/material';
     MatSelectModule,
     NgxMatSelectSearchModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+    MatDividerModule
   ],
   declarations: [
     LibraryComponent,

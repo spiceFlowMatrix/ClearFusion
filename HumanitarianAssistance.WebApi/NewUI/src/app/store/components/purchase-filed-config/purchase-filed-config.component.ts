@@ -8,23 +8,15 @@ import { Component, OnInit, HostListener, ElementRef, Input, OnChanges } from '@
 export class PurchaseFiledConfigComponent implements OnInit {
 
 
-  @Input() showConfig = false;
+   showConfig = false;
 
-  constructor(private eRef : ElementRef) { }
-  @HostListener('document:click', ['$event'])
-  clickout(event) {
-    if (this.eRef.nativeElement.contains(event.target)) {
-      // this.showCard = true;
-    } else {
-      if (this.showConfig) {
-        this.showConfig = false;
-        console.log('test')
-      }
-
-    }
-  }
-
+  constructor(private eRef: ElementRef) { }
+ 
   ngOnInit() {
+  }
+  show() {
+    this.showConfig = true;
+    console.log(true);
   }
 
 }
