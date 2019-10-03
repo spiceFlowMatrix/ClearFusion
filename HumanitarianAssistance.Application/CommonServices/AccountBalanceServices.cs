@@ -144,11 +144,14 @@ namespace HumanitarianAssistance.Application.CommonServices
         public async Task<List<VoucherTransactions>> GetAccountTransactions(List<ChartOfAccountNew> inputLevelAccounts, DateTime endDate)
         {
             return await _dbContext.VoucherTransactions
-                .Where(x => x.TransactionDate != null ? x.TransactionDate.Value.Date <= endDate.Date : x.TransactionDate <= endDate
-                            && inputLevelAccounts.Select(y => y.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId)
+               
+                .Where(x => (x.TransactionDate != null ? x.TransactionDate.Value.Date <= endDate.Date : x.TransactionDate <= endDate)
                             && x.IsDeleted == false
+                            && inputLevelAccounts.Select(y => y.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId)
+                           
                             && x.ChartOfAccountNewId != null)
-                .Include(x => x.ChartOfAccountDetail)
+                 .Include(x => x.ChartOfAccountDetail)
+                
                 .ToListAsync();
         }
 
@@ -156,8 +159,8 @@ namespace HumanitarianAssistance.Application.CommonServices
             DateTime endDate)
         {
             return await _dbContext.VoucherTransactions
-                .Where(x => x.TransactionDate != null ? x.TransactionDate.Value.Date <= endDate.Date : x.TransactionDate <= endDate
-                            && x.TransactionDate != null ? x.TransactionDate.Value.Date >= startDate.Date : x.TransactionDate >= startDate
+                .Where(x => (x.TransactionDate != null ? x.TransactionDate.Value.Date <= endDate.Date : x.TransactionDate <= endDate)
+                            // && (x.TransactionDate != null ? x.TransactionDate.Value.Date >= startDate.Date : x.TransactionDate >= startDate)
                             && inputLevelAccounts.Select(y => y.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId)
                             && x.IsDeleted == false
                             && x.ChartOfAccountNewId != null)

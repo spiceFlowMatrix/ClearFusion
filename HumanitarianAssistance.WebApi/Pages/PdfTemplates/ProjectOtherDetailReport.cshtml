@@ -1,0 +1,362 @@
+@model HumanitarianAssistance.Application.Project.Models.ProjectOtherDetailNewPdfModel
+@using HumanitarianAssistance.Common.Enums;
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0;">
+ 	<meta name="format-detection" content="telephone=no"/>
+	<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet"> 
+
+	<style>
+/* Reset styles */ 
+body { margin: 0; padding: 0; min-width: 100%; width: 100% !important; height: 100% !important;}
+body, table, td, div, p, a { -webkit-font-smoothing: antialiased; text-size-adjust: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; line-height: 100%; }
+table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse !important; border-spacing: 0; }
+img { border: 0; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+#outlook a { padding: 0; }
+
+/* Rounded corners for advanced mail clients only  
+<!-- @@ media all and (min-width: 560px) {
+	.container { border-radius: 8px; -webkit-border-radius: 8px; -moz-border-radius: 8px; -khtml-border-radius: 8px;}
+} */
+
+/* Set color for auto links (addresses, dates, etc.) */ 
+a, a:hover {
+	color: #127DB3;
+}
+.footer a, .footer a:hover {
+	color: #999999;
+}
+			.print{
+				.page-break {
+				  page-break-after: always;
+				  page-break-inside: avoid;
+				  clear:both;
+				}
+				.page-break-before {
+				  page-break-before: always;
+				  page-break-inside: avoid;
+				  clear:both;
+				}
+			}
+
+ 	</style>
+
+	<!-- MESSAGE SUBJECT -->
+	<title>Humanitarian PDF Template</title>
+
+</head>
+
+<!-- BODY -->
+<body topmargin="0" rightmargin="0" bottommargin="0" leftmargin="0" marginwidth="0" marginheight="0" width="100%" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; width: 100%; height: 100%; -webkit-font-smoothing: antialiased; text-size-adjust: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; line-height: 100%;
+	background-color: white;
+	color: #000000;"
+	bgcolor="white"
+	text="#000000">
+
+<!-- SECTION / BACKGROUND -->
+
+<table height="100%" border="0" cellpadding="0" cellspacing="0" align="center"
+	bgcolor="#FFFFFF" width="600" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: inherit; font-size: 14px; max-width: 100%;" >
+
+	<tr>
+		
+		<td colspan="2" align="center" valign="top" style="border-bottom: 1px solid #979797;border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 3%; padding-right: 3%; font-size: 20px; line-height: 100%;padding-top: 20px; padding-bottom: 20px;color: #000000; text-align: left;font-family: 'Roboto', sans-serif; ">
+			<b style="font-weight: 500;">@Model.ProjectCode-@Model.ProjectName</b>	
+			<p style="color: #9f9e9e; font-size: 15px; line-height: 26px;">@Model.ProjectDescription
+		</td>
+		
+	</tr>
+	@if(@Model.flags.opportunitytype ||@Model.flags.donor ||@Model.flags.opportunityno ||@Model.flags.opportunity ||@Model.flags.opportunitydesc ||@Model.flags.country ||@Model.flags.province ||@Model.flags.district ||@Model.flags.office ||@Model.flags.sector ||@Model.flags.program ||@Model.flags.startdate ||@Model.flags.enddate){
+	<tr id="table-1">
+		<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding-bottom: 20px; padding-top:20px; padding-left: 3%; padding-right: 4%;">
+			<table cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #efefef; box-shadow: 1px 1px 8px #dfdfdf;">
+				<tbody>
+					<tr>
+						<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50% font-size:16px; padding-right: 1%;padding-top: 30px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<b style="font-weight: 600;">Opportunity Details</b>
+						</td>
+					</tr>
+					<tr>@if(@Model.flags.opportunitytype){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Opportunity Type</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@(Enum.GetName(typeof(OpportunityType), @Model.OpportunityType))#</b>
+						</td>
+						}
+						@if(@Model.flags.donor){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 1%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Donor</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.Donor</b>
+						</td>
+						}
+					</tr>
+					<tr>@if(@Model.flags.opportunityno){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Opportunity No</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.opportunityNo</b>
+						</td>
+						}
+						@if(@Model.flags.opportunity){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 1%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Opportunity</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.opportunity</b>
+						</td>
+						}
+					</tr>
+					<tr>@if(@Model.flags.opportunitydesc){
+						<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Opportunity Description</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.opportunitydescription</b>
+						</td>
+						}
+					</tr>
+					<tr>
+						@if(@Model.flags.country){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Country</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.CountryName</b>
+						</td>
+						}@if(@Model.flags.province){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 1%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Province</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@string.Join(",", @Model.Province)</b>
+						</td>
+						}
+					</tr>
+					<tr>@if(@Model.flags.district){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select District</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@string.Join(",", @Model.District)</b>
+						</td>
+						}@if(@Model.flags.office){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 1%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Office</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.OfficeName</b>
+						</td>
+						}
+					</tr>
+					<tr>@if(@Model.flags.sector){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Sector</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.SectorName</b>
+						</td>
+						}@if(@Model.flags.program){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 1%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Program</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.ProgramName</b>
+						</td>
+						}
+					</tr>
+					<tr>@if(@Model.flags.startdate){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Start Date</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.StartDate</b>
+						</td>
+						}@if(@Model.flags.enddate){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 1%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">End Date</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.EndDate</b>
+						</td>
+						}
+					</tr>
+				
+				</tbody>
+				
+			</table>
+			
+		</td>
+		
+	</tr>
+	}
+	@if(@Model.flags.projgoal ||@Model.flags.projobj ||@Model.flags.mainactivities ||@Model.flags.reoidate ||@Model.flags.submissiondate){
+	<tr id="table-2">
+		<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding-bottom: 20px; padding-top:20px; padding-left: 3%; padding-right: 4%;">
+			
+			<table cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #efefef; box-shadow: 1px 1px 8px #dfdfdf;">
+				<tbody>
+					<tr>
+						<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50% font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 30px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<b style="font-weight: 600;">Project Objective & Goal</b>
+						</td>
+					</tr>
+					<tr>@if(@Model.flags.projgoal){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Projet Goal</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.projectGoal</b>
+						</td>
+						}@if(@Model.flags.projobj){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 1%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Project Objective</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.projectObjective</b>
+						</td>
+						}
+					</tr>
+					<tr>@if(@Model.flags.mainactivities){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Main Activities</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.mainActivities</b>
+						</td>
+						}@if(@Model.flags.reoidate){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 1%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">REOI Recieve Date</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.REOIReceiveDate</b>
+						</td>
+						}
+					</tr>
+					<tr>@if(@Model.flags.submissiondate){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Submission date</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.SubmissionDate </b>
+						</td>
+						}
+					</tr>
+					
+				</tbody>
+				
+			</table>
+			
+		</td>
+		
+	</tr>
+	}
+	@if(@Model.flags.dirbenmale ||@Model.flags.indirbenmale ||@Model.flags.dirbenfemale ||@Model.flags.indirbenfemale){
+	<tr id="table-3" class="page-break-before">
+		<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding-bottom: 20px; padding-top:20px; padding-left: 3%; padding-right: 4%;">
+			
+			<table cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #efefef; box-shadow: 1px 1px 8px #dfdfdf;">
+				<tbody>
+					<tr>
+						<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50% font-size:16px; padding-right: 1%;padding-top: 30px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<b style="font-weight: 600;">Beneficiary Details</b>
+						</td>
+					</tr>
+					<tr>@if(@Model.flags.dirbenmale){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Direct Beneficiary Male</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.beneficiaryMale</b>
+						</td>
+						}@if(@Model.flags.indirbenmale){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 1%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">InDirect Beneficiary Male</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.InDirectBeneficiaryMale</b>
+						</td>
+						}
+					</tr>
+					<tr>@if(@Model.flags.dirbenfemale){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Direct Beneficiary Female</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.beneficiaryFemale</b>
+						</td>
+						}@if(@Model.flags.indirbenfemale){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 1%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">InDirect Beneficiary Female</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.InDirectBeneficiaryFemale</b>
+						</td>
+						}
+					</tr>
+					<tr>@if(@Model.flags.dirbenmale && @Model.flags.dirbenfemale){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">Total Direct Beneficiary: <span>@(@Model.beneficiaryMale + @Model.beneficiaryFemale)</span></b>
+						</td>
+						}@if(@Model.flags.indirbenmale && @Model.flags.indirbenfemale){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">Total InDirect Beneficiary: <span> @(@Model.InDirectBeneficiaryMale + @Model.InDirectBeneficiaryFemale)</span></b>
+						</td>
+						}
+						</tr>
+					
+				</tbody>
+				
+			</table>
+		</td>
+		
+	</tr>
+	}
+	@if(@Model.flags.strengthconsideration ||@Model.flags.genderconsideration ||@Model.flags.genderremarks){
+	<tr id="table-4">
+		<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding-bottom: 20px; padding-top:20px; padding-left: 3%; padding-right: 4%;">
+			
+			<table cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #efefef; box-shadow: 1px 1px 8px #dfdfdf;">
+				<tbody>
+					<tr>
+						<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50% font-size:16px; padding-right: 1%;padding-top: 30px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<b style="font-weight: 600;">Gender Consideration</b>
+						</td>
+					</tr>
+					<tr>@if(@Model.flags.strengthconsideration){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Strenth Consideration </small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;"> @Model.StrengthConsiderationName</b>
+						</td>
+						}@if(@Model.flags.genderconsideration){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 1%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Gender Consideration</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;"> @Model.StrengthConsiderationName</b>
+						</td>
+						}
+					</tr>
+					<tr>@if(@Model.flags.genderremarks){
+						<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Gender Remarks</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;"> @Model.GenderRemarks</b>
+						</td>
+						}
+						
+					</tr>
+					
+				</tbody>
+				
+			</table>
+			
+		</td>
+		
+	</tr>
+	}
+	@if(@Model.flags.security ||@Model.flags.securityconsideration ||@Model.flags.securityremarks){
+	<tr id="table-5">
+		<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding-bottom: 20px; padding-top:20px; padding-left: 3%; padding-right: 4%;">
+			<table cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #efefef; box-shadow: 1px 1px 8px #dfdfdf;">
+				<tbody>
+					<tr>
+						<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50% font-size:16px; padding-right: 1%;padding-top: 30px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<b style="font-weight: 600;">Security Consideration</b>
+						</td>
+					</tr>
+					<tr>@if(@Model.flags.security){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Security</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.SecurityName</b>
+						</td>
+						}@if(@Model.flags.securityconsideration){
+						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 1%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Security Consideration</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@string.Join(",", @Model.SecurityConsideration)</b>
+						</td>
+						}
+					</tr>
+					<tr>@if(@Model.flags.securityremarks){
+						<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Security Remarks</small><br />
+							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.SecurityRemarks</b>
+						</td>
+						}
+						
+					</tr>
+					
+				</tbody>
+				
+			</table>
+		</td>
+		
+	</tr>
+	}
+	
+	
+<!-- End of WRAPPER -->
+</table>
+
+
+
+</body>
+</html>

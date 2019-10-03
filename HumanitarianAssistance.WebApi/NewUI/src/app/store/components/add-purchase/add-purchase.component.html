@@ -1,0 +1,175 @@
+<lib-sub-header-template>
+  <span class="action_header">Add New Purchase
+        <hum-button *ngIf="!isAddPurchaseFormSubmitted" (click)='addPurchaseFormSubmit()' [type]="'save'" [text]="'save'"></hum-button>
+        <hum-button *ngIf="isAddPurchaseFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+        <hum-button (click)='cancelButtonClicked()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+
+  </span>
+  <div class="action_section">
+  </div>
+</lib-sub-header-template>
+
+<div class="alert alert-warning" *ngIf="exchangeRateMessage != '' && exchangeRateMessage != null" role="alert">
+    <p class="txt-center-align">{{exchangeRateMessage}}</p>
+</div>
+
+<mat-card [ngStyle]="scrollStyles">
+  <form [formGroup]='addPurchaseForm'>
+    <div class="row">
+      <div class="col-md-12">
+        <h4>Item Detail</h4>
+        <div class="col-md-3">
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['InventoryTypeId'].hasError('required')" [options]="inventoryType$" formControlName="InventoryTypeId" [placeHolder]="'Inventory'"
+            (change)="getInventoryTypeSelectedValue($event)">
+          </lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['InventoryId'].hasError('required')" [options]="storeInventory$" formControlName='InventoryId' [placeHolder]="'Inventory(Master)'"
+            (change)="getMasterInventorySelectedValue($event)"></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['ItemGroupId'].hasError('required')" [options]="storeItemGroups$" formControlName='ItemGroupId' [placeHolder]="'Item Group'"
+            (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['ItemId'].hasError('required')" [options]="storeItems$" formControlName='ItemId' [placeHolder]="'Item'"
+            (change)="getItemSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <h4>Project & Analytical Information</h4>
+        <div class="col-md-3">
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['OfficeId'].hasError('required')" [options]="offices$" formControlName='OfficeId' [placeHolder]="'Office'"
+            (change)="getOfficeSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['ProjectId'].hasError('required')" [options]="project$" formControlName='ProjectId' [placeHolder]="'Project'"
+            (change)="getProjectSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['BudgetLineId'].hasError('required')" [options]="budgetLine$" formControlName='BudgetLineId' [placeHolder]="'Budget Line'"
+            (change)="getBudgetSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <h4>Purchase Detail</h4>
+        <div class="col-md-3">
+            <mat-form-field>
+              <input matInput formControlName='PurchaseName' placeholder="Purchase Name">
+            </mat-form-field>
+          </div>
+        <div class="col-md-3">
+          <mat-form-field>
+            <input matInput type="number" formControlName='PurchaseOrderNo' placeholder="Purchase Order No">
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field>
+            <input matInput [matDatepicker]="PurchaseOrderDate" (dateChange)="PurchaseDateChange($event)" formControlName='PurchaseOrderDate'
+              placeholder="Purchase Order Date">
+            <mat-datepicker-toggle matSuffix [for]="PurchaseOrderDate"></mat-datepicker-toggle>
+            <mat-datepicker #PurchaseOrderDate></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field>
+            <input matInput [matDatepicker]="InvoiceDate" formControlName='InvoiceDate' placeholder="Invoice Date">
+            <mat-datepicker-toggle matSuffix [for]="InvoiceDate"></mat-datepicker-toggle>
+            <mat-datepicker #InvoiceDate></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+          <div class="col-md-3">
+              <mat-form-field>
+                <input matInput type="number" formControlName='InvoiceNo' placeholder="Invoice No">
+              </mat-form-field>
+            </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['AssetTypeId'].hasError('required')" [options]="assetType$" formControlName='AssetTypeId' [placeHolder]="'Asset Type'"
+            (change)="getAssetTypeSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <h4>Quantity & Price Detail</h4>
+        <div class="col-md-3">
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['Unit'].hasError('required')" [options]="unit$" formControlName='Unit' [placeHolder]="'Unit'"
+            (change)="getUnitSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field>
+            <input matInput type="number" formControlName='Quantity' placeholder="Quantity">
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['CurrencyId'].hasError('required')" [options]="currency$" formControlName='CurrencyId' [placeHolder]="'Currency'"
+            (change)="getCurrencySelectedValue($event)"></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field>
+            <input matInput type="number" formControlName='Price' placeholder="Price">
+
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+          <div class="col-md-3">
+              <mat-form-field>
+                  <input matInput [matDatepicker]="ReceiptDate" formControlName='ReceiptDate' placeholder="Receipt Date">
+                  <mat-datepicker-toggle matSuffix [for]="ReceiptDate"></mat-datepicker-toggle>
+                  <mat-datepicker #ReceiptDate></mat-datepicker>
+                </mat-form-field>
+            </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['ReceivedFromLocation'].hasError('required')"  [options]="storeSource$" formControlName='ReceivedFromLocation'
+            [placeHolder]="'Received From Location'" (change)="getStoreSourceSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['ReceivedFromEmployeeId'].hasError('required')" [options]="employeeList$" formControlName='ReceivedFromEmployeeId'
+            [placeHolder]="'Received From Employee'" (change)="getEmployeeSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="col-md-3">
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['ReceiptTypeId'].hasError('required')" [options]="receiptType$" formControlName='ReceiptTypeId' [placeHolder]="'Receipt Type'"
+            (change)="getReceiptSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['StatusId'].hasError('required')" [options]="statusList$" formControlName='StatusId' [placeHolder]="'Status'"
+            (change)="getStatusSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+          <h4>Depreciation</h4>
+        <div class="col-md-3">
+            <mat-checkbox formControlName='ApplyDepreciation'>Apply Depreciation</mat-checkbox>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input matInput type="number" formControlName='DepreciationRate' placeholder="Depreciation Rate(%)">
+              </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-card>

@@ -103,6 +103,14 @@
                             <dxi-validation-rule type="required"> </dxi-validation-rule>
                           </dxi-item>
 
+                          <dxi-item dataField="EmployeeQualification" *ngIf="empInterviewFormMainForm.InterviewStatus == 'approved'">
+                            <div style="text-align: justify">{{empInterviewFormMainForm.Qualification}}</div>                  
+                          </dxi-item>  
+
+                          <dxi-item dataField="DutyStation" *ngIf="empInterviewFormMainForm.InterviewStatus == 'approved'">
+                            <div style="text-align: justify">{{empInterviewFormMainForm.DutyStation}}</div>                                          
+                          </dxi-item>  
+
                         </dxi-item>
 
 
@@ -217,9 +225,10 @@
                               <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
                               <dxo-header-filter [visible]="true"> </dxo-header-filter>
 
-                              <dxi-column dataField="TechnicalQuestionId" [visible]="false">
-                              </dxi-column>
-                              <dxi-column dataField="Question" caption=" " allowEditing="false">
+                              <!-- <dxi-column dataField="TechnicalQuestionId" [visible]="false">                                
+                              </dxi-column> -->
+                              <dxi-column dataField="Question" caption="Question">
+                                  <dxo-lookup [dataSource]="technicalQuestionsList" displayExpr="Question" valueExpr="InterviewTechnicalQuestionsId"></dxo-lookup>
                               </dxi-column>
 
 

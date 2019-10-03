@@ -24,7 +24,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
             try
             {
-                bool exchangeRateExists = await _dbContext.ExchangeRateDetail.AnyAsync(x=> !x.IsDeleted && x.Date.Date == request.ExchangeRateDate.Date);
+                bool exchangeRateExists = await _dbContext.ExchangeRateDetail.AnyAsync(x=> !x.IsDeleted && x.Date.Date == request.ExchangeRateDate.Date && x.OfficeId == request.OfficeId);
                
                 response.ResponseData = exchangeRateExists;
                 response.StatusCode = StaticResource.successStatusCode;

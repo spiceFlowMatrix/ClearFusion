@@ -33,7 +33,8 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                                       {
                                                           AccountCode = c.ChartOfAccountNewId,
                                                           AccountName = c.ChartOfAccountNewCode + " - " + c.AccountName,
-                                                          ChartOfAccountNewCode = c.ChartOfAccountNewCode
+                                                          ChartOfAccountNewCode = c.ChartOfAccountNewCode,
+                                                          AccountHeadTypeId= c.AccountHeadTypeId
                                                       }).OrderBy(x => x.AccountName).ToListAsync();
 
                 response.data.AccountDetailList = accountcodelist;

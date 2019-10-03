@@ -8,7 +8,8 @@
         Store = 4,
         Project = 5,
         Marketing = 6,
-        PdfExport = 7
+        PdfExport = 7,
+        StorePurchase = 8,
     }
 
 
@@ -220,21 +221,12 @@
         Yearly = 4,
         Quarterly = 5
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public enum OpportunityType
+    {
+        EOI = 1,
+        Concept = 2,
+        RFX= 3
+    }
 
 
     public enum QuestionType

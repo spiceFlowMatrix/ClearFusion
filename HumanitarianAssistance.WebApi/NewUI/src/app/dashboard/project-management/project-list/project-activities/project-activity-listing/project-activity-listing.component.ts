@@ -19,6 +19,11 @@ import { Subscription } from 'rxjs/internal/Subscription';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
 import { DeleteConfirmationComponent } from 'projects/library/src/lib/components/delete-confirmation/delete-confirmation.component';
 import { Delete_Confirmation_Texts } from 'src/app/shared/enum';
+import { GLOBAL } from 'src/app/shared/global';
+import { takeUntil } from 'rxjs/operators';
+import { ReplaySubject } from 'rxjs';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
 @Component({
   selector: 'app-project-activity-listing',
   templateUrl: './project-activity-listing.component.html',
@@ -37,7 +42,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   districtMultiSelectList: any[] = [];
   activitySummary: IProjectSummaryModel;
   projectPhasesList: IProjectPhasesModel[] = [];
-
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   projectActivityFilter: ProjectActivityFilterModel;
   projectActivityList: IProjectActivityDetail[] = [];
   projectActivityListById: IProjectActivityDetail[] = [];
@@ -71,6 +76,8 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
 
   constructor(
     public dialog: MatDialog,
+    private globalSharedService: GlobalSharedService,
+    private appurl: AppUrlService,
     public activitiesService: ProjectActivitiesService,
     private routeActive: ActivatedRoute
   ) {
@@ -205,6 +212,30 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
     };
   }
   //#endregion
+
+
+//   initializePdfForm()
+//   {
+//     this.projectActivityPdfModel = {
+// ProjectCode: null,
+// ProjectName: '',
+// ProjectGoal: '',
+// ProjectDuration: null,
+// ProjectLocation: '',
+// MainActivity: '',
+// ActivityDuration: '',
+// Monitoring: null,
+// Recommendations: '',
+// Start: '',
+// End: '',
+// Province: '',
+// District: '',
+// ActualStartDate: '',
+// ActualEndDate: '',
+//     };
+//   }
+
+
 
   //#region "openAddActivityDialog"
   openAddActivityDialog(): void {
@@ -894,6 +925,19 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   //   //#endregion
 
   //#region "ngOnDestroy"
+
+    //#endregion
+    //#region "onExportPdf"
+    onExportPdf() {
+      this.globalSharedService
+        .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_ProjectActivityReportPdf,
+                  this.projectId
+        )
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe();
+    }
+    //#endregion
+
   ngOnDestroy() {
     if (this.deleteActivitySubscribe && !this.deleteActivitySubscribe.closed) {
       this.deleteActivitySubscribe.unsubscribe();

@@ -7978,8 +7978,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<string>("ReceivedFromLocation");
 
-                    b.Property<string>("SerialNo")
-                        .IsRequired();
+                    b.Property<string>("SerialNo");
 
                     b.Property<int?>("Status");
 
@@ -9604,7 +9603,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectJobDetail", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
+                        .WithMany("ProjectJobDetail")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

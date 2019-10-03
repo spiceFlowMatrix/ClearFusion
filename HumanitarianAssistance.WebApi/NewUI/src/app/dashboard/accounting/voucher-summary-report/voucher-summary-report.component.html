@@ -10,7 +10,12 @@
                 <span style="color: rgba(0, 0, 0, 0.54)">{{this.recordtypetext}}</span>
               </div>
               <div class="col-sm-5 text-right">
-                <mat-icon
+                  <button mat-stroked-button color="accent" style="left:-15px;top: -6px;" (click)="onExportPdf()">
+                      <mat-icon aria-hidden="false" aria-label="Example home icon">
+                        vertical_align_bottom </mat-icon
+                      >Export Pdf
+                    </button>
+                <!-- <mat-icon
                   class="icon_cursor display_inline_block"
                   ia-hidden="false"
                   aria-label="Example home icon"
@@ -19,7 +24,7 @@
                   (click)="onExportPdf()"
                 >
                   vertical_align_bottom
-                </mat-icon>
+                </mat-icon> -->
                 &nbsp;
 
                 <mat-icon

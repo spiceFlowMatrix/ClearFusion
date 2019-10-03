@@ -19,7 +19,8 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
   interviewDataSource: any[];
   languagesListDataSource: InterviewLanguagesModel[];
   trainingListDataSource: InterviewTrainingModel[];
-  technicalQuestionsListDataSource: InterviewTechnicalQuestionModel[];
+  technicalQuestionsListDataSource: InterviewTechnicalQuestionModel[] = [];
+  technicalQuestionsList: any[];
   Interviewers: any[] = [];
   officecodelist: any[] = [];
   officeDropdownList: any[];
@@ -170,6 +171,12 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
         SkillRatingName: 'Perfect'
       }
     ];
+    this.technicalQuestionsList = [
+      {
+        Question: null,
+        InterviewTechnicalQuestionsId: null
+      }
+    ];
 
     this.initInterviewForm();
   }
@@ -197,25 +204,21 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
     this.trainingListDataSource = [];
     this.ratingBasedCriteriaDataSource = [];
 
-    this.technicalQuestionsListDataSource = [
-      {
-        TechnicalQuestionId: 1,
-        Question: 'Accounting',
-        Answer: null
-      },
-      {
-        TechnicalQuestionId: 2,
-        Question: 'Communication Skills',
-        Answer: null
-      }
-    ];
-
+    // this.technicalQuestionsListDataSource = [
+    //   {
+    //     TechnicalQuestionId: null,
+    //     Question: null,
+    //     Answer: null
+    //   }
+    // ];
+    this.getAllInterviewQuestions();
     this.empInterviewFormMainForm = {
       InterviewDetailsId: null,
 
       EmployeeID: null,
       JobId: null,
-
+      Qualification: null,
+      DutyStation: null,
       PassportNo: null,
 
       University: null,
@@ -415,7 +418,8 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
       InterviewDetailsId: 0,
       EmployeeID: model.EmployeeID,
       JobId: model.JobId,
-
+      Qualification: null,
+      DutyStation: model.DutyStation,
       PassportNo: model.PassportNo,
 
       University: model.University,
@@ -505,6 +509,9 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
       InterviewDetailsId: model.InterviewDetailsId,
       EmployeeID: model.EmployeeID,
       JobId: model.JobId,
+
+      Qualification: model.Qualification,
+      DutyStation: model.DutyStation,
 
       PassportNo: model.PassportNo,
 
@@ -598,6 +605,8 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
         InterviewDetailsId: model.InterviewDetailsId,
         EmployeeID: model.EmployeeID,
         JobId: model.JobId,
+        DutyStation: model.DutyStation,
+        Qualification: model.Qualification,
         PassportNo: model.PassportNo,
         University: model.University,
         PlaceOfBirth: model.PlaceOfBirth,
@@ -895,6 +904,50 @@ getDepartmentType(eventId: any) {
       }
     );
 }
+
+
+//#region "Get All Interview Questions"
+getAllInterviewQuestions() {
+  // tslint:disable-next-line:radix
+  const officeId = this.officeId;
+  this.codeService
+    .GetAppraisalQuestions(
+      this.setting.getBaseUrl() + GLOBAL.API_Code_GetInterviewQuestions,
+      officeId
+    )
+    .subscribe(
+      data => {
+        this.technicalQuestionsList = [];
+        if (
+          data.StatusCode === 200 &&
+          data.data.InterviewTechnicalQuestionsList.length > 0 &&
+          data.data.InterviewTechnicalQuestionsList != null
+        ) {
+          data.data.InterviewTechnicalQuestionsList.forEach(element => {
+            this.technicalQuestionsList.push(element);
+          });
+        }
+      },
+      error => {
+        if (error.StatusCode === 500) {
+          this.toastr.error('Internal Server Error....');
+        } else if (error.StatusCode === 401) {
+          this.toastr.error('Unauthorized Access Error....');
+        } else if (error.StatusCode === 403) {
+          this.toastr.error('Forbidden Error....');
+        }
+      }
+    );
+}
+//#endregion
+
+
+
+
+
+
+
+
 //#endregion
 
   //#region "Add Training"
@@ -955,6 +1008,8 @@ class EmployeeListModel {
 class EmpInterviewFormModel {
   InterviewDetailsId: number;
   EmployeeID: number;
+  Qualification: string;
+  DutyStation: number;
   JobId: number;
   University: string;
   PassportNo: string;

@@ -259,3 +259,30 @@ export interface IProjectPermissionMode {
   DateAdded: any;
 }
 
+//  export interface IProjectActivityPdfModel {
+// ProjectId: number;
+//  }
+// export interface IMonitoring {
+//   IndicatorName: string;
+//   ActivityQuestions: any[];
+//   Ratings: string;
+//   StrongPoints: string;
+//   WeakPoints: string;
+
+//   ProjectCode: number;
+//   ProjectName: string;
+//   ProjectGoal: string;
+//   ProjectDuration: number;
+//   ProjectLocation: string;
+//   MainActivity: string;
+//   ActivityDuration: any;
+//   Monitoring: IMonitoring[];
+//   Recommendations: string;
+//   Start: string;
+//   End: string;
+//   Province: string;
+//   District: string;
+//   ActualStartDate: string;
+//   ActualEndDate: string;
+// }
+

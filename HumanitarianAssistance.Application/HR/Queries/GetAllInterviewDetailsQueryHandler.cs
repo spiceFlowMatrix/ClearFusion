@@ -31,13 +31,13 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 List<InterviewDetailModel> lst = new List<InterviewDetailModel>();
                 var recordLst = await _dbContext.InterviewDetails
                                                          .Include(x => x.EmployeeDetail)
-                                                         .ThenInclude(x=> x.EmployeeProfessionalDetail)
+                                                         .ThenInclude(x => x.EmployeeProfessionalDetail)
                                                          .Include(x => x.RatingBasedCriteriaList)
                                                          .Include(x => x.InterviewLanguagesList)
                                                          .Include(x => x.InterviewTrainingsList)
                                                          .Include(x => x.HRJobInterviewersList)
                                                          .Include(x => x.InterviewTechnicalQuestionList)
-                                                         .Include(x=> x.JobHiringDetail)
+                                                         .Include(x => x.JobHiringDetail)
                                                          .Where(x => x.IsDeleted == false && x.JobHiringDetail.OfficeId == request.OfficeId)
                                                          .ToListAsync();
                 foreach (var model in recordLst)
@@ -136,6 +136,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                     var empDetail = await _dbContext.EmployeeDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.EmployeeID == model.EmployeeID);
                     var jobDetail = await _dbContext.JobHiringDetails.Include(x => x.OfficeDetails).FirstOrDefaultAsync(x => x.IsDeleted == false && x.JobId == model.JobId);
+                    var higherQualification = await _dbContext.QualificationDetails.Where(x => x.QualificationId == model.EmployeeDetail.HigherQualificationId).SingleOrDefaultAsync();
 
                     obj.EmployeeID = model.EmployeeID;
                     obj.CandidateName = empDetail.EmployeeName;
@@ -172,6 +173,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     obj.TotalMarksObtained = model.TotalMarksObtained;
                     obj.Status = model.Status;
                     obj.InterviewStatus = model.InterviewStatus;
+                    obj.Qualification = higherQualification != null ? higherQualification.QualificationName : null;
 
                     lst.Add(obj);
                 }

@@ -7,7 +7,8 @@ import { DbstyleGuideComponent } from './shared/dbstyle-guide/dbstyle-guide.comp
 
 const appRoutes: Routes = [
     // { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-   { path: '', loadChildren: './dashboard/dashboard.module#DashboardModule', canActivate: [AuthGuard] },
+    { path: '', loadChildren: './dashboard/dashboard.module#DashboardModule', canActivate: [AuthGuard] },
+    { path: 'store', loadChildren: './store/store.module#StoreModule', canActivate: [AuthGuard] },
     // { path: '', loadChildren: './dashboard/dashboard.module#DashboardModule' },
     { path: 'login', component: LoginComponent },
     { path: 'style-guide', component: DbstyleGuideComponent }
