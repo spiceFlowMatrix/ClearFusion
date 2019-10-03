@@ -576,10 +576,13 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
         ActivityId: element.ActivityId,
         ActivityName: element.ActivityName,
         ActivityDescription: element.ActivityDescription,
-        PlannedStartDate: StaticUtilities.setLocalDate(
-          element.PlannedStartDate
-        ),
-        PlannedEndDate: StaticUtilities.setLocalDate(element.PlannedEndDate),
+        // PlannedStartDate: StaticUtilities.setLocalDate(
+        //   element.PlannedStartDate
+        // ),
+        PlannedStartDate: element.PlannedStartDate,
+         // PlannedEndDate: StaticUtilities.setLocalDate(element.PlannedEndDate),
+        PlannedEndDate: element.PlannedEndDate,
+
         BudgetLineId: element.BudgetLineId,
         EmployeeID: element.EmployeeID,
         OfficeId: element.OfficeId,
@@ -804,23 +807,26 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
 
   //#region "updateActivity"
   updateActivity(data: IProjectActivityDetail) {
-    const activityDetailIndex = this.projectActivityList.findIndex(
-      x => x.ActivityId === data.ActivityId
-    );
-    if (activityDetailIndex !== -1) {
-      // Other Properties
-      data.Progress = 0;
-      // this.findProgress(
-      //   data.ImplementationProgress,
-      //   data.MonitoringProgress
-      // );
-      data.Slippage = 0;
-      // this.findSleepage(
-      //   data.PlannedEndDate,
-      //   data.ActualEndDate
-      // );
-      this.projectActivityList[activityDetailIndex] = data;
-    }
+    // const activityDetailIndex = this.projectActivityList.findIndex(
+    //   x => x.ActivityId === data.ActivityId
+    // );
+    // if (activityDetailIndex !== -1) {
+    //   // Other Properties
+    //   data.Progress = 0;
+    //   // this.findProgress(
+    //   //   data.ImplementationProgress,
+    //   //   data.MonitoringProgress
+    //   // );
+    //   data.Slippage = 0;
+    //   // this.findSleepage(
+    //   //   data.PlannedEndDate,
+    //   //   data.ActualEndDate
+    //   // );
+    //   this.projectActivityList[activityDetailIndex] = data;
+    // }
+
+    // *note  to get reoccured activity 01-10-2019
+    this.getAllProjectActivityList();
   }
   //#endregion
 
@@ -831,7 +837,6 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   //#endregion
 
   onUpdateActivityStatusId(data: IProjectActivityDetail) {
-    debugger;
     // Note: when we update the status on the bases of Start button click of sub activity
     if (data.ParentId != null && data.StatusId === 2) {
       const activityDetailIndex = this.projectActivityList.findIndex(

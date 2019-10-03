@@ -101,7 +101,7 @@
 
             <div *ngIf="recurringFlag" class="col-sm-6 col-sm-offset-3 text-center">
               <mat-form-field class="example-full-width">
-                <input matInput formControlName="RecurringCount" placeholder="Recur count" type="number" />
+                <input matInput formControlName="RecurringCount" placeholder="Recur count" type="number" [min]="0" oninput="validity.valid||(value='');"/>
               </mat-form-field>
             </div>
             <div *ngIf="recurringFlag" class="col-sm-12 text-center">

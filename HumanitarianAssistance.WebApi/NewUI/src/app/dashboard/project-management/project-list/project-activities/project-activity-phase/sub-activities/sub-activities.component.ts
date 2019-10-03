@@ -99,7 +99,6 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   initForm() {
-    debugger;
     this.projectSubActivityForm = this.fb.group({
       ActivityDescription: [this.subActivityDetail.ActivityDescription],
       IsCompleted: [this.subActivityDetail.IsCompleted],
@@ -177,7 +176,6 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
 
   //#region "editProjectSubActivity"
   editProjectSubActivity(data: IEditProjectSubActivityModel) {
-    debugger;
     if (this.projectSubActivityForm.valid) {
       // this.addSubActivityLoaderFlag = true;
       const activityData: IEditProjectSubActivityModel = {

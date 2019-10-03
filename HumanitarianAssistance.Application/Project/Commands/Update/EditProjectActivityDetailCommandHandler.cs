@@ -32,7 +32,15 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                 if (projectactivityDetail != null)
                 {
                     _mapper.Map(request, projectactivityDetail);
-                    projectactivityDetail.PlannedEndDate = StaticFunctions.GetRecurringDays(request.RecurringCount, request.RecurrinTypeId, request.PlannedStartDate);
+                    // when reoccuring count value is 0 then set Planned end date as Planned start date 
+                    if (request.RecurringCount == 0)
+                    {
+                        projectactivityDetail.PlannedEndDate = request.PlannedStartDate;
+                    }
+                    else
+                    {
+                        projectactivityDetail.PlannedEndDate = StaticFunctions.GetRecurringDays(request.RecurringCount, request.RecurrinTypeId, request.PlannedStartDate);
+                    }
                     projectactivityDetail.ModifiedDate = request.ModifiedDate;
                     projectactivityDetail.ModifiedById = request.ModifiedById;
                     projectactivityDetail.IsDeleted = false;
@@ -86,8 +94,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
 
                     }
                     ProjectActivityModel projectActivityModel = new ProjectActivityModel();
-                     _mapper.Map(projectactivityDetail, projectActivityModel);
-               
+                    _mapper.Map(projectactivityDetail, projectActivityModel);
+
 
                     response.ResponseData = projectActivityModel;
                     response.StatusCode = StaticResource.successStatusCode;

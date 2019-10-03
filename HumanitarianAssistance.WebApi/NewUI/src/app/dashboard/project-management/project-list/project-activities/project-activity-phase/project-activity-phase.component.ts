@@ -183,7 +183,6 @@ export class ProjectActivityPhaseComponent
   }
   //#endregion
   onUpdateActivityStatusId(data: any) {
-    debugger;
     this.updateActivityStatusId.emit(data);
   }
 

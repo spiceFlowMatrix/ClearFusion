@@ -20,10 +20,11 @@
         CR = 3
     }
 
-    public enum UserStatus {
-        InActive=0,
-        Active=1
-    } 
+    public enum UserStatus
+    {
+        InActive = 0,
+        Active = 1
+    }
 
     public enum AccountTypeEnum
     {
@@ -211,6 +212,14 @@
         EmployeeProfile = 3
     }
 
+    public enum TimeInterval
+    {
+        Daily = 1,
+        Weekly = 2,
+        Monthly = 3,
+        Yearly = 4,
+        Quarterly = 5
+    }
 
 
 
