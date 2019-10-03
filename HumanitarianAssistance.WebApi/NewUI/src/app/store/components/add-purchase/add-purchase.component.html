@@ -1,15 +1,17 @@
 <lib-sub-header-template>
-  <span class="action_header">Add a new purchase
-    <hum-button (click)='addPurchaseFormSubmit()' [type]="'save'" [text]="'save'"></hum-button>
-    <hum-button (click)='cancelButtonClicked()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+  <span class="action_header">Add New Purchase
+        <hum-button *ngIf="!isAddPurchaseFormSubmitted" (click)='addPurchaseFormSubmit()' [type]="'save'" [text]="'save'"></hum-button>
+        <hum-button *ngIf="isAddPurchaseFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+        <hum-button (click)='cancelButtonClicked()' [type]="'cancel'" [text]="'cancel'"></hum-button>
 
   </span>
   <div class="action_section">
-      <div class="alert alert-warning" *ngIf="exchangeRateMessage != '' && exchangeRateMessage != null" role="alert">
-          {{exchangeRateMessage}}
-      </div>
   </div>
 </lib-sub-header-template>
+
+<div class="alert alert-warning" *ngIf="exchangeRateMessage != '' && exchangeRateMessage != null" role="alert">
+    <p class="txt-center-align">{{exchangeRateMessage}}</p>
+</div>
 
 <mat-card [ngStyle]="scrollStyles">
   <form [formGroup]='addPurchaseForm'>
@@ -17,27 +19,20 @@
       <div class="col-md-12">
         <h4>Item Detail</h4>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="inventoryType$" formControlName="InventoryTypeId" [placeHolder]="'Inventory'"
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['InventoryTypeId'].hasError('required')" [options]="inventoryType$" formControlName="InventoryTypeId" [placeHolder]="'Inventory'"
             (change)="getInventoryTypeSelectedValue($event)">
-            <mat-error *ngIf="!addPurchaseForm.controls['InventoryTypeId'].valid && addPurchaseForm.controls['InventoryTypeId'].touched">
-              asdas
-            </mat-error>
           </lib-hum-dropdown>
-          {{}}
-          <div *ngIf="addPurchaseForm.controls['InventoryTypeId'].invalid && (addPurchaseForm.controls['InventoryTypeId'].dirty || addPurchaseForm.controls['InventoryTypeId'].touched)">
-              Error
-            </div>
         </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="storeInventory$" formControlName='InventoryId' [placeHolder]="'Inventory(Master)'"
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['InventoryId'].hasError('required')" [options]="storeInventory$" formControlName='InventoryId' [placeHolder]="'Inventory(Master)'"
             (change)="getMasterInventorySelectedValue($event)"></lib-hum-dropdown>
         </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="storeItemGroups$" formControlName='ItemGroupId' [placeHolder]="'Item Group'"
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['ItemGroupId'].hasError('required')" [options]="storeItemGroups$" formControlName='ItemGroupId' [placeHolder]="'Item Group'"
             (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
         </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="storeItems$" formControlName='ItemId' [placeHolder]="'Item'"
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['ItemId'].hasError('required')" [options]="storeItems$" formControlName='ItemId' [placeHolder]="'Item'"
             (change)="getItemSelectedValue($event)"></lib-hum-dropdown>
         </div>
       </div>
@@ -47,15 +42,15 @@
       <div class="col-md-12">
         <h4>Project & Analytical Information</h4>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="offices$" formControlName='OfficeId' [placeHolder]="'Office'"
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['OfficeId'].hasError('required')" [options]="offices$" formControlName='OfficeId' [placeHolder]="'Office'"
             (change)="getOfficeSelectedValue($event)"></lib-hum-dropdown>
         </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="project$" formControlName='ProjectId' [placeHolder]="'Project'"
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['ProjectId'].hasError('required')" [options]="project$" formControlName='ProjectId' [placeHolder]="'Project'"
             (change)="getProjectSelectedValue($event)"></lib-hum-dropdown>
         </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="budgetLine$" formControlName='BudgetLineId' [placeHolder]="'Budget Line'"
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['BudgetLineId'].hasError('required')" [options]="budgetLine$" formControlName='BudgetLineId' [placeHolder]="'Budget Line'"
             (change)="getBudgetSelectedValue($event)"></lib-hum-dropdown>
         </div>
       </div>
@@ -100,7 +95,7 @@
               </mat-form-field>
             </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="assetType$" formControlName='AssetTypeId' [placeHolder]="'Asset Type'"
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['AssetTypeId'].hasError('required')" [options]="assetType$" formControlName='AssetTypeId' [placeHolder]="'Asset Type'"
             (change)="getAssetTypeSelectedValue($event)"></lib-hum-dropdown>
         </div>
       </div>
@@ -110,7 +105,7 @@
       <div class="col-md-12">
         <h4>Quantity & Price Detail</h4>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="unit$" formControlName='Unit' [placeHolder]="'Unit'"
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['Unit'].hasError('required')" [options]="unit$" formControlName='Unit' [placeHolder]="'Unit'"
             (change)="getUnitSelectedValue($event)"></lib-hum-dropdown>
         </div>
         <div class="col-md-3">
@@ -119,7 +114,7 @@
           </mat-form-field>
         </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="currency$" formControlName='CurrencyId' [placeHolder]="'Currency'"
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['CurrencyId'].hasError('required')" [options]="currency$" formControlName='CurrencyId' [placeHolder]="'Currency'"
             (change)="getCurrencySelectedValue($event)"></lib-hum-dropdown>
         </div>
         <div class="col-md-3">
@@ -141,11 +136,11 @@
                 </mat-form-field>
             </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="storeSource$" formControlName='ReceivedFromLocation'
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['ReceivedFromLocation'].hasError('required')"  [options]="storeSource$" formControlName='ReceivedFromLocation'
             [placeHolder]="'Received From Location'" (change)="getStoreSourceSelectedValue($event)"></lib-hum-dropdown>
         </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="employeeList$" formControlName='ReceivedFromEmployeeId'
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['ReceivedFromEmployeeId'].hasError('required')" [options]="employeeList$" formControlName='ReceivedFromEmployeeId'
             [placeHolder]="'Received From Employee'" (change)="getEmployeeSelectedValue($event)"></lib-hum-dropdown>
         </div>
       </div>
@@ -153,11 +148,11 @@
     <div class="row">
       <div class="col-md-12">
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="receiptType$" formControlName='ReceiptTypeId' [placeHolder]="'Receipt Type'"
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['ReceiptTypeId'].hasError('required')" [options]="receiptType$" formControlName='ReceiptTypeId' [placeHolder]="'Receipt Type'"
             (change)="getReceiptSelectedValue($event)"></lib-hum-dropdown>
         </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [options]="statusList$" formControlName='StatusId' [placeHolder]="'Status'"
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['StatusId'].hasError('required')" [options]="statusList$" formControlName='StatusId' [placeHolder]="'Status'"
             (change)="getStatusSelectedValue($event)"></lib-hum-dropdown>
         </div>
       </div>

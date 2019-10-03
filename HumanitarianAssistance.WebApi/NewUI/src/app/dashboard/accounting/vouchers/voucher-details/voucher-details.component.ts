@@ -54,7 +54,8 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
   @Input() isEditingAllowed: boolean;
   @Output() voucherDetailChanged = new EventEmitter<IVoucherDetailModel>();
 
-  accountDataSource: IDataSource[];
+  debitaccountDataSource: IDataSource[];
+  creditaccountDataSource: IDataSource[];
   selectedAccount: number[];
 
   voucherDetail: IVoucherDetailModel;
@@ -151,15 +152,24 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
   getInputLevelAccountList() {
     this.voucherService.GetInputLevelAccountList().subscribe(
       (response: IResponseData) => {
-        this.accountDataSource = [];
+        this.debitaccountDataSource = [];
+        this.creditaccountDataSource = [];
         if (response.statusCode === 200 && response.data !== null) {
           response.data.forEach(element => {
-            this.accountDataSource.push({
-              Id: element.AccountCode,
-              Name: element.AccountName
-            });
+            if (element.AccountTypeId === 2 || element.AccountTypeId === 4 ) {
+              this.debitaccountDataSource.push({
+                Id: element.AccountCode,
+                Name: element.AccountName
+              });
+            }
+            if (element.AccountTypeId === 1 || element.AccountTypeId === 3 ) {
+              this.creditaccountDataSource.push({
+                Id: element.AccountCode,
+                Name: element.AccountName
+              });
+            }
           });
-          console.log(this.accountDataSource);
+          //console.log(this.accountDataSource);
         }
       },
       error => {}
