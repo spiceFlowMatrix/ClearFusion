@@ -13,9 +13,10 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() subHeaders: Observable<string[]>;
   @Input() items: Observable<Array<Object>>;
   @Input() subTitle: string;
-  @Output() actionClick= new EventEmitter<any>();
+  @Output() actionClick = new EventEmitter<any>();
   subItemHeaders: Observable<string[]>;
 
+  mainItems: Observable<Array<Object>>;
   subItems: Array<Object> = [];
   itemHeaders: Observable<string[]>;
 
@@ -26,8 +27,11 @@ export class TableComponent implements OnInit, OnChanges {
 
   }
   ngOnChanges(): void {
-    if (this.items) {
-      this.items.subscribe(res => {
+    this.mainItems.lift(r => {
+      return r;
+    });
+    if (this.mainItems) {
+      this.mainItems.subscribe(res => {
         this.subItems = [];
         if (res == null || res.length > 0) {
           res.forEach((element, i) => {
@@ -35,7 +39,6 @@ export class TableComponent implements OnInit, OnChanges {
             this.subItems.push(element['subItems']);
             delete element['subItems'];
           });
-          console.log(this.subItems);
           this.itemHeaders = of(Object.keys(res[0]));
           this.subItemHeaders = of(Object.keys(this.subItems[0][0]));
         }
@@ -44,7 +47,7 @@ export class TableComponent implements OnInit, OnChanges {
     }
 
   }
-  action(event){
+  action(event) {
     this.actionClick.emit(event)
   }
 

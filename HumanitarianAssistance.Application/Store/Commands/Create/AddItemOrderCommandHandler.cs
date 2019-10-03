@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Application.Store.Models;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Domain.Entities.HR;
 using HumanitarianAssistance.Domain.Entities.Store;
 using HumanitarianAssistance.Persistence;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -37,6 +40,17 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
 
                     await _dbContext.StorePurchaseOrders.AddAsync(obj);
                     await _dbContext.SaveChangesAsync();
+                    response.data.ProcurementModel = new ProcurmentSummaryModel();
+                    response.data.ProcurementModel.ProcurementId = obj.OrderId;
+                    EmployeeDetail employee = await _dbContext.EmployeeDetail
+                                                              .FirstOrDefaultAsync(x=> !x.IsDeleted && 
+                                                              x.EmployeeID == request.IssuedToEmployeeId);
+
+                    if(employee != null)
+                    {
+                        response.data.ProcurementModel.EmployeeName= employee.EmployeeCode + "-" +employee.EmployeeName;
+                    }
+
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }

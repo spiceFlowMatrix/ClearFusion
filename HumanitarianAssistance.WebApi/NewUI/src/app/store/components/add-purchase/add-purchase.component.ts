@@ -1,21 +1,21 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { Validators, FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { PurchaseService } from '../../services/purchase.service';
-import { Observable, of, forkJoin } from 'rxjs';
+import { Observable, of, forkJoin, ReplaySubject } from 'rxjs';
 import { IDropDownModel } from '../../models/purchase';
 import { BudgetLineService } from 'src/app/dashboard/project-management/project-list/budgetlines/budget-line.service';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { ToastrService } from 'ngx-toastr';
-import { ExchangeRateService } from 'src/app/dashboard/accounting/exchange-rate/exchange-rate-listing/exchange-rate.service';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-purchase',
   templateUrl: './add-purchase.component.html',
   styleUrls: ['./add-purchase.component.scss']
 })
-export class AddPurchaseComponent implements OnInit {
+export class AddPurchaseComponent implements OnInit, OnDestroy {
 
   addPurchaseForm: FormGroup;
 
@@ -40,56 +40,8 @@ export class AddPurchaseComponent implements OnInit {
    scrollStyles: any;
 
    exchangeRateMessage = '';
-
-// This object will hold the messages to be displayed to the user
-// Notice, each key in this object has the same name as the
-// corresponding form control
-formErrors = {
-  'InventoryTypeId': '',
-  'InventoryId': '',
-  'ItemGroupId': '',
-  'ItemId': '',
-  'OfficeId': '',
-  'PurchaseOrderDate': '',
-  'Quantity': '',
-  'CurrencyId': '',
-  'Price': '',
-  'ReceiptTypeId': '',
-};
-
-  // This object contains all the validation messages for this form
-validationMessages = {
-  'InventoryTypeId': {
-    'required': 'Inventory Type is required.',
-  },
-  'InventoryId': {
-    'required': 'Master Inventory is required.'
-  },
-  'ItemGroupId': {
-    'required': 'Item Group is required.',
-  },
-  'ItemId': {
-    'required': 'Item is required.',
-  },
-  'OfficeId': {
-    'required': 'Office is required.',
-  },
-  'PurchaseOrderDate': {
-    'required': 'Purchase Order Date is required.',
-  },
-  'Quantity': {
-    'required': 'Quantity is required.',
-  },
-  'CurrencyId': {
-    'required': 'Currency is required.',
-  },
-  'Price': {
-    'required': 'Price is required.',
-  },
-  'ReceiptTypeId': {
-    'required': 'Receipt Type is required.',
-  },
-};
+   isAddPurchaseFormSubmitted = false;
+   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(private purchaseService: PurchaseService,
     private fb: FormBuilder, private budgetLineService: BudgetLineService,
@@ -141,7 +93,9 @@ validationMessages = {
       this.getAllStatusAtTimeOfIssue(),
       this.getAllUnitTypeDetails(),
       this.getAllReceiptType()
-    ]).subscribe(result => {
+    ])
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(result => {
       this.subscribeInventoryTypes(result[0]);
       this.subscribeAllProjects(result[1]);
       this.subscribeAllOffice(result[2]);
@@ -302,69 +256,28 @@ validationMessages = {
   }
 
   getInventoryTypeSelectedValue(event: any) {
-    //  console.log(event);
-    // this.addPurchase.get('InventoryType').patchValue(event);
     this.getInventoriesByInventoryTypeId(event);
   }
 
   getMasterInventorySelectedValue(event: any) {
-   // this.addPurchaseForm.get('InventoryId').patchValue(event);
     this.getAllStoreItemGroups(event);
   }
 
   getItemGroupSelectedValue(event: any) {
-    //this.addPurchaseForm.get('ItemGroupId').patchValue(event);
     this.getAllStoreItemsByGroupId(event);
   }
 
-  getItemSelectedValue(event: any) {
-   // this.addPurchaseForm.get('ItemId').patchValue(event);
-  }
-
   getOfficeSelectedValue(event: any) {
-   // this.addPurchaseForm.get('OfficeId').patchValue(event);
     this.getEmployeesByOfficeId(event);
   }
 
   getProjectSelectedValue(event: any) {
-   // this.addPurchaseForm.get('ProjectId').patchValue(event);
     this.getBudgetLineByProjectId(event);
-  }
-
-  getBudgetSelectedValue(event: any) {
-    // this.addPurchaseForm.get('BudgetLineId').patchValue(event);
-  }
-
-  getAssetTypeSelectedValue(event: any) {
-    // this.addPurchaseForm.get('AssetTypeId').patchValue(event);
-  }
-
-  getUnitSelectedValue(event: any) {
-    // this.addPurchaseForm.get('Unit').patchValue(event);
-  }
-
-  getCurrencySelectedValue(event: any) {
-   // this.addPurchaseForm.get('CurrencyId').patchValue(event);
-  }
-
-  getStoreSourceSelectedValue(event: any) {
-   // this.addPurchaseForm.get('ReceivedFromLocation').patchValue(event);
-  }
-
-  getEmployeeSelectedValue(event: any) {
-   // this.addPurchaseForm.get('ReceivedFromEmployeeId').patchValue(event);
-  }
-
-  getReceiptSelectedValue(event: any) {
-   // this.addPurchaseForm.get('ReceiptTypeId').patchValue(event);
-  }
-
-  getStatusSelectedValue(event: any) {
-    // this.addPurchaseForm.get('StatusId').patchValue(event);
   }
 
   getEmployeesByOfficeId(officeId: any) {
     this.purchaseService.getEmployeesByOfficeId(officeId)
+    .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
         this.employeeList$ = of(x.data.map(y => {
           return {
@@ -377,6 +290,7 @@ validationMessages = {
 
   getBudgetLineByProjectId(projectId: any) {
     this.budgetLineService.GetProjectBudgetLineList(projectId)
+    .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
         this.budgetLine$ = of(x.data.map(y => {
           return {
@@ -391,6 +305,7 @@ validationMessages = {
   getInventoriesByInventoryTypeId(inventoryTypeId: number) {
     this.purchaseService
       .getInventoriesByInventoryTypeId(inventoryTypeId)
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
 
         this.storeInventory$ = of(x.data.map(y => {
@@ -405,6 +320,7 @@ validationMessages = {
   getAllStoreItemGroups(inventoryId: number) {
     this.purchaseService
       .getItemGroupByInventoryId(inventoryId)
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
         this.storeItemGroups$ = of(x.data.map(y => {
           return {
@@ -418,6 +334,7 @@ validationMessages = {
   getAllStoreItemsByGroupId(groupId: number) {
     this.purchaseService
       .getItemsByItemGroupId(groupId)
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
         this.storeItems$ = of(x.data.map(y => {
           return {
@@ -430,29 +347,43 @@ validationMessages = {
 
   addPurchaseFormSubmit() {
     if (this.addPurchaseForm.valid) {
+      this.isAddPurchaseFormSubmitted = true;
       this.purchaseService.addPurchase(this.addPurchaseForm.value)
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
         if (x.StatusCode === 200) {
+          let control: AbstractControl = null;
           this.addPurchaseForm.reset();
+          this.addPurchaseForm.markAsUntouched();
+          Object.keys(this.addPurchaseForm.controls).forEach((name) => {
+          control = this.addPurchaseForm.controls[name];
+          control.setErrors(null);
+        });
+          this.isAddPurchaseFormSubmitted = false;
 
           this.toastr.success(x.Message);
         } else if (x.StatusCode === 400) {
+          this.isAddPurchaseFormSubmitted = false;
           this.toastr.warning(x.Message);
         }
       },
       error => {
+        this.isAddPurchaseFormSubmitted = false;
         console.log(error);
       });
+    } else {
+      this.toastr.warning('Please correct errors in purchase form and submit again');
     }
   }
 
   PurchaseDateChange(event: any) {
-    debugger;
+    if (event.value) {
+      this.checkExchangeRateExists(event.value);
+    }
   }
 
   checkExchangeRateExists(exchangeRateDate: any) {
-
-    if (this.addPurchaseForm.value.OfficeId == null && this.addPurchaseForm.value.OfficeId === undefined &&
+    if (this.addPurchaseForm.value.OfficeId == null || this.addPurchaseForm.value.OfficeId === undefined ||
       this.addPurchaseForm.value.OfficeId === 0) {
        return;
     }
@@ -471,9 +402,9 @@ validationMessages = {
 
     this.purchaseService
         .checkExchangeRateExists(checkExchangeRateModel)
+        .pipe(takeUntil(this.destroyed$))
         .subscribe(
           data => {
-            debugger;
               if (data.StatusCode === 200) {
 
                   if (!data.ResponseData) {
@@ -495,35 +426,8 @@ validationMessages = {
     this.router.navigate(['store/purchases']);
   }
 
-  logValidationErrors(group: FormGroup): void {
-
-    // Loop through each control key in the FormGroup
-    Object.keys(group.controls).forEach((key: string) => {
-      // Get the control. The control can be a nested form group
-      const abstractControl = group.get(key);
-      // If the control is nested form group, recursively call
-      // this same method
-      if (abstractControl instanceof FormGroup) {
-        this.logValidationErrors(abstractControl);
-        // If the control is a FormControl
-      } else {
-        // Clear the existing validation errors
-        this.formErrors[key] = '';
-        if (abstractControl && !abstractControl.valid) {
-          // Get all the validation messages of the form control
-          // that has failed the validation
-          const messages = this.validationMessages[key];
-          // Find which validation has failed. For example required,
-          // minlength or maxlength. Store that error message in the
-          // formErrors object. The UI will bind to this object to
-          // display the validation errors
-          for (const errorKey in abstractControl.errors) {
-            if (errorKey) {
-              this.formErrors[key] += messages[errorKey] + ' ';
-            }
-          }
-        }
-      }
-    });
+  ngOnDestroy() {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }
