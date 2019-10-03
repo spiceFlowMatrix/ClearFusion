@@ -1,4 +1,7 @@
-<h1 mat-dialog-title>Add Procurement</h1>
+<div>
+    <h1 mat-dialog-title>Add Procurement</h1>
+    <hr>
+</div>
   <form [formGroup]='addProcurementForm'>
       <mat-dialog-content>
 
@@ -78,10 +81,10 @@
                 </div>
               </div>
             </div>
-
+            <hr>
       </mat-dialog-content>
-      <mat-dialog-actions>
-          <button mat-button [mat-dialog-close]="true" tabindex="1">Install</button>
-          <button mat-button mat-dialog-close tabindex="-1">Cancel</button>
+      <mat-dialog-actions class="items-float-right">
+            <hum-button (click)='addProcurement()' [type]="'save'" [text]="'save'"></hum-button>
+            <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
         </mat-dialog-actions>
   </form>

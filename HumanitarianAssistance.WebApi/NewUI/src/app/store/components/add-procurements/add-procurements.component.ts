@@ -9,7 +9,7 @@ import { PurchaseService } from '../../services/purchase.service';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { of } from 'rxjs/internal/observable/of';
 import { ToastrService } from 'ngx-toastr';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-add-procurements',
@@ -36,6 +36,7 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder, private purchaseService: PurchaseService,
     private commonLoader: CommonLoaderService, public toastr: ToastrService,
+    private dialogRef: MatDialogRef<AddProcurementsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
     this.addProcurementForm = this.fb.group({
@@ -253,6 +254,12 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
           });
     }
   }
+
+  //#region "onCancelPopup"
+  onCancelPopup(): void {
+    this.dialogRef.close(false);
+  }
+  //#endregion
 
   ngOnDestroy() {
     this.destroyed$.next(true);
