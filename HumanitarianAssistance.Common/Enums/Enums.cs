@@ -213,6 +213,13 @@
         EmployeeProfile = 3
     }
 
+    public enum OpportunityType
+    {
+        EOI = 1,
+        Concept = 2,
+        RFX= 3
+    }
+
     public enum MarkedScores
     {
         Poor = 0,

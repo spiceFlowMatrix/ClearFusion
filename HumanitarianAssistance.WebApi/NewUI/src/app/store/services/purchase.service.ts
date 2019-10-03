@@ -4,7 +4,7 @@ import { AppUrlService } from '../../shared/services/app-url.service';
 import { GLOBAL } from '../../shared/global';
 import { map } from 'rxjs/internal/operators/map';
 import { IResponseData } from '../../../app/dashboard/accounting/vouchers/models/status-code.model';
-import { IFilterValueModel } from '../models/purchase';
+import { IFilterValueModel, IAddEditPurchaseModel } from '../models/purchase';
 import { retry, finalize } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of, Observable } from 'rxjs';
@@ -21,7 +21,7 @@ export class PurchaseService {
   ) { }
 
   //#region "GetPurchaseFilterList"
-  GetPurchaseFilterList(): any {
+  getPurchaseFilterList(): any {
     return this.globalService
       .getList(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetAllPurchaseFilters)
       .pipe(
@@ -33,7 +33,7 @@ export class PurchaseService {
   //#endregion
 
   //#region "GetInventoriesByInventoryTypeId"
-  GetInventoriesByInventoryTypeId(Id: number): any {
+  getInventoriesByInventoryTypeId(Id: number): any {
         return this.http.get<any>(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllInventories + '?AssetType=' + Id).pipe(
           map((response) => {
             const responseData: IResponseData = {
@@ -50,7 +50,7 @@ export class PurchaseService {
   //#endregion
 
   //#region "GetItemGroupByInventoryId"
-  GetItemGroupByInventoryId(Id: number): any {
+  getItemGroupByInventoryId(Id: number): any {
     return this.globalService
       .getItemById(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllStoreItemGroups, Id)
       .pipe(
@@ -66,7 +66,7 @@ export class PurchaseService {
   //#endregion
 
   //#region "GetItemsByItemGroupId"
-  GetItemsByItemGroupId(Id: number): any {
+  getItemsByItemGroupId(Id: number): any {
     return this.globalService
       .getItemById(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllInventoryItems, Id)
       .pipe(
@@ -82,7 +82,7 @@ export class PurchaseService {
   //#endregion
 
   //#region "GetPurchaseListFilter"
-  GetFilteredPurchaseList(filter: IFilterValueModel): any {
+  getFilteredPurchaseList(filter: IFilterValueModel): any {
     return this.globalService
       .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetFilteredPurchaseList, filter)
       .pipe(
@@ -94,7 +94,7 @@ export class PurchaseService {
   //#endregion
 
   //#region "GetPurchaseFilterList"
-  GetAllInventoryTypeList(): any {
+  getAllInventoryTypeList(): any {
     return this.globalService
       .getList(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetAllInventoriesType)
       .pipe(
@@ -106,7 +106,7 @@ export class PurchaseService {
   //#endregion
 
   //#region "GetPurchaseFilterList"
-  GetAllProjectList(): any {
+  getAllProjectList(): any {
     return this.globalService
       .getList(this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProjectList)
       .pipe(
@@ -118,7 +118,7 @@ export class PurchaseService {
   //#endregion
 
   //#region "GetPurchaseFilterList"
-  GetAllOfficeList(): any {
+  getAllOfficeList(): any {
     return this.globalService
       .getList(this.appurl.getApiUrl() + GLOBAL.API_code_GetAllOffice)
       .pipe(
@@ -159,7 +159,7 @@ export class PurchaseService {
       .pipe(
         map((response) => {
           const responseData: IResponseData = {
-            data: response.data.InventoryItemList,
+            data: response.data.EmployeeDetailListData,
             statusCode: response.StatusCode,
             message: response.Message
         };
@@ -201,4 +201,107 @@ export class PurchaseService {
         })
       );
   }
+
+  getAllUnitTypeDetails() {
+    return this.globalService
+      .getList(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllPurchaseUnitType)
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+
+  addPurchase(purchase: any) {
+    const purchaseModel: IAddEditPurchaseModel = {
+      ApplyDepreciation: purchase.ApplyDepreciation,
+      AssetTypeId: purchase.AssetTypeId,
+      BudgetLineId: purchase.BudgetLineId,
+      Currency: purchase.CurrencyId,
+      DeliveryDate: this.getLocalDate(purchase.ReceiptDate) ,
+      DepreciationRate: purchase.DepreciationRate,
+      InventoryId: purchase.InventoryId,
+      InventoryItem: purchase.ItemId,
+      InvoiceDate: this.getLocalDate(purchase.InvoiceDate),
+      InvoiceNo: purchase.InvoiceNo,
+      OfficeId: purchase.OfficeId,
+      ProjectId: purchase.ProjectId,
+      PurchaseDate: this.getLocalDate(purchase.PurchaseOrderDate),
+      PurchaseName: purchase.PurchaseName,
+      PurchaseOrderNo: purchase.PurchaseOrderNo,
+      PurchasedById: purchase.ReceivedFromEmployeeId,
+      Quantity: purchase.Quantity,
+      ReceivedFromLocation: purchase.ReceivedFromLocation,
+      ReceiptTypeId: purchase.ReceiptTypeId,
+      Status: purchase.StatusId,
+      UnitCost: purchase.Price,
+      UnitType: purchase.Unit,
+      TimezoneOffset: new Date().getTimezoneOffset()
+    };
+
+    return this.globalService
+      .post(this.appurl.getApiUrl() + GLOBAL.API_Store_AddPurchase, purchaseModel)
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+
+  checkExchangeRateExists(model: any) {
+    return this.globalService
+      .post(this.appurl.getApiUrl() + GLOBAL.API_ExchangeRates_CheckExchangeRatesExist, model)
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+
+    //#region "getPurchaseListByItemId"
+  getPurchaseListByItemId(Id) {
+    return this.http.get<any>(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllPurchasesByItem + '?ItemId=' + Id)
+    .pipe(
+      map((response) => {
+        const responseData: IResponseData = {
+          data: response.data.StoreItemsPurchaseViewList,
+          statusCode: response.StatusCode,
+          message: response.Message
+      };
+
+      return responseData;
+    }),
+      finalize(() => {
+        // this.loader.hideLoader();
+      })
+    );
+}
+ //#endregion
+
+ //#region "getItemDetailByItemId"
+ getItemDetailByPurchaseId(Id) {
+  return this.http.get<any>(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetItemDetailByItemId + '?PurchaseId=' + Id)
+  .pipe(
+    map(x => {
+      return x;
+    })
+  );
+}
+//#endregion
+
+
+
+  //#region "getLocalDate"
+  getLocalDate(date: any) {
+    return new Date(
+      new Date(date).getFullYear(),
+      new Date(date).getMonth(),
+      new Date(date).getDate(),
+      new Date().getHours(),
+      new Date().getMinutes(),
+      new Date().getSeconds(),
+      new Date().getMilliseconds(),
+    );
+  }
+  //#endregion
 }

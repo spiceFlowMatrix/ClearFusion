@@ -42,8 +42,16 @@ namespace HumanitarianAssistance.WebApi.Controllers
         public async Task<IActionResult> GetHiringRequestFormPdf([FromBody] GetHiringRequestFormPdfQuery model)
         {  
             var file = await _mediator.Send(model);
-            return File(file, "application/pdf", "HiringRequestForm.pdf"); 
+            return File(file, "application/pdf", "HiringRequestForm.pdf");
         }
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]  
+        public async Task<IActionResult> GetProjectOtherDetailReportPdf([FromBody] GetProjectOtherDetailReportPdfQuery model)
+        {  
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "ProjectOtherDetailReport.pdf");
+        }
+                   
         [HttpPost]
         [Produces(contentType: "application/pdf")]
         public async Task<IActionResult> ProjectActivityReportPdf([FromBody] long ProjectId)

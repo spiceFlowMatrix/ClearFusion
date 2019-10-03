@@ -1,3 +1,90 @@
-<p>
-  add-procurements works!
-</p>
+<div>
+    <h1 mat-dialog-title>Add Procurement</h1>
+    <hr>
+</div>
+  <form [formGroup]='addProcurementForm'>
+      <mat-dialog-content>
+
+          <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-4">
+                  <lib-hum-dropdown [validation]="addProcurementForm.controls['InventoryTypeId'].hasError('required')"  [options]="inventoryType$" formControlName='InventoryTypeId' [placeHolder]="'Inventory'"
+                    (change)="getInventoryTypeSelectedValue($event)"></lib-hum-dropdown>
+                </div>
+                <div class="col-md-4">
+                  <lib-hum-dropdown [validation]="addProcurementForm.controls['InventoryId'].hasError('required')" [options]="storeInventory$" formControlName='InventoryId' [placeHolder]="'Inventory(Master)'"
+                    (change)="getMasterInventorySelectedValue($event)"></lib-hum-dropdown>
+                </div>
+                <div class="col-md-4">
+                  <lib-hum-dropdown [validation]="addProcurementForm.controls['ItemGroupId'].hasError('required')" [options]="storeItemGroups$" formControlName='ItemGroupId' [placeHolder]="'Item Group'"
+                    (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                  <div class="col-md-4">
+                    <lib-hum-dropdown [validation]="addProcurementForm.controls['ItemId'].hasError('required')" [options]="storeItems$" formControlName='ItemId' [placeHolder]="'Item'"
+                      (change)="getItemSelectedValue($event)"></lib-hum-dropdown>
+                  </div>
+                  <div class="col-md-4">
+                    <lib-hum-dropdown [validation]="addProcurementForm.controls['PurchaseId'].hasError('required')" [options]="purchases$" formControlName='PurchaseId' [placeHolder]="'Purchase Name'"
+                      (change)="getSelectedPurchaseName($event)"></lib-hum-dropdown>
+                  </div>
+                </div>
+              </div>
+
+            <h5>Issued Detail</h5>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-4">
+                  <mat-form-field>
+                    <input matInput formControlName='IssuedQuantity' placeholder="Issued Quantity">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <lib-hum-dropdown [validation]="addProcurementForm.controls['IssuedToEmployeeId'].hasError('required')" [options]="employeeList$" formControlName='IssuedToEmployeeId'
+                    [placeHolder]="'Issued To Employee'" (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+                </div>
+                <div class="col-md-4">
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="IssueDate" formControlName='IssueDate' placeholder="Issue Date">
+                    <mat-datepicker-toggle matSuffix [for]="IssueDate"></mat-datepicker-toggle>
+                    <mat-datepicker #IssueDate></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-4">
+                  <lib-hum-dropdown [validation]="addProcurementForm.controls['ProjectId'].hasError('required')" [options]="projects$" formControlName='ProjectId' [placeHolder]="'Project'"
+                    (change)="getMasterInventorySelectedValue($event)"></lib-hum-dropdown>
+                </div>
+                <div class="col-md-4">
+                  <lib-hum-dropdown   [options]="storeSource$" formControlName='StoreSourceId'
+                    [placeHolder]="'Issued To Location'" (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+                </div>
+                <div class="col-md-4">
+                  <lib-hum-dropdown [validation]="addProcurementForm.controls['StatusId'].hasError('required')" [options]="statusList$" formControlName='StatusId' [placeHolder]="'Status At Time Of Issue'"
+                    (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-4">
+                  <mat-checkbox formControlName='MustReturn'>Must Return</mat-checkbox>
+                </div>
+              </div>
+            </div>
+            <hr>
+      </mat-dialog-content>
+      <mat-dialog-actions class="items-float-right">
+            <hum-button (click)='addProcurement()' [type]="'save'" [text]="'save'"></hum-button>
+            <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+        </mat-dialog-actions>
+  </form>

@@ -417,6 +417,7 @@ export class GLOBAL {
   public static API_Pdf_GetAllChartOfAccountHierarchyPdf = 'Pdf/GetAllChartOfAccountHierarchyPdf';
   public static API_Pdf_GetAllVoucherSummaryReportPdf = 'Pdf/GetAllVoucherSummaryReportPdf';
   public static API_Pdf_GetHiringRequestFormPdf = 'Pdf/GetHiringRequestFormPdf';
+  public static API_Pdf_GetProjectOtherDetailReportPdf = 'Pdf/GetProjectOtherDetailReportPdf';
   public static API_Pdf_ProjectActivityReportPdf = 'Pdf/ProjectActivityReportPdf';
 
   //#endregion
@@ -431,8 +432,11 @@ export class GLOBAL {
   public static API_Store_GetAllStoreSourceCode = 'Store/GetAllStoreSourceCode';
   public static API_Store_GetAllReceiptType = 'Store/GetAllReceiptType';
   public static API_Store_GetAllStatusAtTimeOfIssue = 'Store/GetAllStatusAtTimeOfIssue';
-
-
+  public static API_Store_GetAllPurchaseUnitType = 'Store/GetAllPurchaseUnitType';
+  public static API_Store_AddPurchase = 'Store/AddPurchase';
+  public static API_ExchangeRates_CheckExchangeRatesExist = 'ExchangeRates/CheckExchangeRatesExist';
+  public static API_Store_GetAllPurchasesByItem = 'Store/GetAllPurchasesByItem';
+  public static API_StorePurchase_GetItemDetailByItemId = 'StorePurchase/GetItemDetailByItemId';
 
 }
 
