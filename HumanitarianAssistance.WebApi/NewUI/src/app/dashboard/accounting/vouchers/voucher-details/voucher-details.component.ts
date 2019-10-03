@@ -156,13 +156,13 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
         this.creditaccountDataSource = [];
         if (response.statusCode === 200 && response.data !== null) {
           response.data.forEach(element => {
-            if (element.AccountTypeId === 2 || element.AccountTypeId === 4 ) {
+            if (element.AccountHeadTypeId === 2 || element.AccountHeadTypeId === 5 ) {
               this.debitaccountDataSource.push({
                 Id: element.AccountCode,
                 Name: element.AccountName
               });
             }
-            if (element.AccountTypeId === 1 || element.AccountTypeId === 3 ) {
+            if (element.AccountHeadTypeId === 1 || element.AccountHeadTypeId === 4 ) {
               this.creditaccountDataSource.push({
                 Id: element.AccountCode,
                 Name: element.AccountName
