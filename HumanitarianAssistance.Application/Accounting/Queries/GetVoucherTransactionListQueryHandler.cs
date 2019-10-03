@@ -42,7 +42,8 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
                         if (model.RecordType == (int)RECORDTYPE.SINGLE)
                         {
-                            response.data.VoucherSummaryTransactionList = data.VoucherTransactionDetails.Select(x => new VoucherSummaryTransactionModel
+                            response.data.VoucherSummaryTransactionList = data.VoucherTransactionDetails.Where(x=>x.IsDeleted==false)
+                            .Select(x => new VoucherSummaryTransactionModel
                             {
                                 AccountCode = x.ChartOfAccountDetail.ChartOfAccountNewCode,
                                 AccountName = x.ChartOfAccountDetail.AccountName,
@@ -103,7 +104,9 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                 voucherSummaryTransactionModel.CurrencyName = data.CurrencyDetail.CurrencyName;
                                 voucherSummaryTransactionModel.TransactionDescription = item.Description;
 
-                                response.data.VoucherSummaryTransactionList.Add(voucherSummaryTransactionModel);
+                                if(item.IsDeleted==false){
+                                    response.data.VoucherSummaryTransactionList.Add(voucherSummaryTransactionModel);
+                                }                         
                             }
                         }
                     }
