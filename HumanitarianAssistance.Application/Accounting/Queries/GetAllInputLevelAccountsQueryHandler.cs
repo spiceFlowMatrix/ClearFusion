@@ -34,7 +34,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                                           AccountCode = c.ChartOfAccountNewId,
                                                           AccountName = c.ChartOfAccountNewCode + " - " + c.AccountName,
                                                           ChartOfAccountNewCode = c.ChartOfAccountNewCode,
-                                                          AccountTypeId= (c.AccountTypeId==null)?0:c.AccountTypeId
+                                                          AccountHeadTypeId= c.AccountHeadTypeId
                                                       }).OrderBy(x => x.AccountName).ToListAsync();
 
                 response.data.AccountDetailList = accountcodelist;
