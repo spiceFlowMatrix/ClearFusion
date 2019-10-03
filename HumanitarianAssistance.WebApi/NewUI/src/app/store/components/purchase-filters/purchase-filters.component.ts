@@ -107,57 +107,50 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
   }
 
   getInventoryTypeSelectedValue(event: any) {
-    this.purchaseFormFilters.get('InventoryTypeId').patchValue(event);
     this.getInventoriesByInventoryTypeId(event);
     this.onPurchaseFilterSelectionChanged();
   }
 
   getReceiptTypeSelectedValue(event: any) {
-    this.purchaseFormFilters.get('ReceiptTypeId').patchValue(event);
      this.onPurchaseFilterSelectionChanged();
    }
 
   getOfficeSelectedValue(event: any) {
-    this.purchaseFormFilters.get('OfficeId').patchValue(event);
      this.onPurchaseFilterSelectionChanged();
    }
 
   getCurrenciesSelectedValue(event: any) {
-    this.purchaseFormFilters.get('CurrencyId').patchValue(event);
      this.onPurchaseFilterSelectionChanged();
    }
 
   getProjectSelectedValue(event: any) {
-    this.purchaseFormFilters.get('ProjectId').patchValue(event);
     this.onPurchaseFilterSelectionChanged();
     this.getJobsByProjectId(event);
   }
 
    getJobSelectedValue(event: any) {
-    this.purchaseFormFilters.get('JobId').patchValue(event);
      this.onPurchaseFilterSelectionChanged();
    }
 
   getMasterInventorySelectedValue(event: any) {
-    this.purchaseFormFilters.get('InventoryMasterId').patchValue(event);
+    this.purchaseFormFilters.get('ItemId').patchValue(null);
     this.getAllStoreItemGroups(event);
     this.onPurchaseFilterSelectionChanged();
   }
 
   getItemGroupSelectedValue(event: any) {
-    this.purchaseFormFilters.get('ItemGroupId').patchValue(event);
     this.getAllStoreItemsByGroupId(event);
     this.onPurchaseFilterSelectionChanged();
   }
 
    getItemSelectedValue(event: any) {
-    this.purchaseFormFilters.get('ItemId').patchValue(event);
      this.onPurchaseFilterSelectionChanged();
    }
 
   getJobsByProjectId(projectId: number) {
     this.budgetLineService
         .GetProjectJobList(projectId)
+        .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
           this.projectJobs$ = of(x.data.map(y => {
             return {
@@ -171,6 +164,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
   getInventoriesByInventoryTypeId(inventoryTypeId: number) {
     this.purchaseService
         .getInventoriesByInventoryTypeId(inventoryTypeId)
+        .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
           this.storeInventory$ = of(x.data.map(y => {
             return {
@@ -184,6 +178,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
   getAllStoreItemGroups(inventoryId: number) {
     this.purchaseService
         .getItemGroupByInventoryId(inventoryId)
+        .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
           this.storeItemGroups$ = of(x.data.map(y => {
             return {
@@ -197,6 +192,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
   getAllStoreItemsByGroupId(groupId: number) {
     this.purchaseService
         .getItemsByItemGroupId(groupId)
+        .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
           this.storeItems$ = of(x.data.map(y => {
             return {
@@ -211,6 +207,10 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
     if (this.purchaseFormFilters.valid) {
       this.purchaseFilterSelected.emit(this.purchaseFormFilters);
     }
+  }
+
+  clearFilters() {
+    this.purchaseFormFilters.reset();
   }
 
   ngOnDestroy() {

@@ -17,6 +17,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialogModule } from '@angular/material/dialog';
 import { PurchaseFiledConfigComponent } from './components/purchase-filed-config/purchase-filed-config.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 
@@ -51,7 +52,8 @@ import { PurchaseFiledConfigComponent } from './components/purchase-filed-config
     MatPaginatorModule,
     MatDividerModule,
     MatCheckboxModule,
-    MatDialogModule
+    MatDialogModule,
+    MatProgressSpinnerModule
     // MatRangeDatepickerModule,
     // MatNativeDateModule
 

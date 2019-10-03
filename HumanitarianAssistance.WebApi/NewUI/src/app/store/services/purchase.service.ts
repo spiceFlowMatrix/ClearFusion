@@ -4,10 +4,11 @@ import { AppUrlService } from '../../shared/services/app-url.service';
 import { GLOBAL } from '../../shared/global';
 import { map } from 'rxjs/internal/operators/map';
 import { IResponseData } from '../../../app/dashboard/accounting/vouchers/models/status-code.model';
-import { IFilterValueModel, IAddEditPurchaseModel } from '../models/purchase';
+import { IFilterValueModel, IAddEditPurchaseModel, IAddEditProcurementModel } from '../models/purchase';
 import { retry, finalize } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of, Observable } from 'rxjs';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
 
 @Injectable({
   providedIn: 'root'
@@ -247,6 +248,71 @@ export class PurchaseService {
         })
       );
   }
+
+  addProcurement(procurement: any) {
+    const procurementModel: IAddEditProcurementModel = {
+      Purchase: procurement.PurchaseId,
+      InventoryItem: procurement.ItemId,
+      IssuedQuantity: procurement.IssuedQuantity,
+      MustReturn: procurement.MustReturn,
+      IssuedToEmployeeId: procurement.IssuedToEmployeeId,
+      IssueDate:  StaticUtilities.getLocalDate(procurement.IssueDate),
+      IssedToLocation: procurement.StoreSourceId,
+      StatusAtTimeOfIssue: procurement.StatusId,
+      Project: procurement.ProjectId
+    };
+
+    return this.globalService
+      .post(this.appurl.getApiUrl() + GLOBAL.API_Store_AddItemOrder, procurementModel)
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+
+  checkExchangeRateExists(model: any) {
+    return this.globalService
+      .post(this.appurl.getApiUrl() + GLOBAL.API_ExchangeRates_CheckExchangeRatesExist, model)
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+
+    //#region "getPurchaseListByItemId"
+  getPurchaseListByItemId(Id) {
+    return this.http.get<any>(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllPurchasesByItem + '?ItemId=' + Id)
+    .pipe(
+      map((response) => {
+        const responseData: IResponseData = {
+          data: response.data.StoreItemsPurchaseViewList,
+          statusCode: response.StatusCode,
+          message: response.Message
+      };
+
+      return responseData;
+    }),
+      finalize(() => {
+        // this.loader.hideLoader();
+      })
+    );
+}
+ //#endregion
+
+ //#region "getItemDetailByItemId"
+ getItemDetailByPurchaseId(Id) {
+  return this.http.get<any>(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetItemDetailByItemId + '?PurchaseId=' + Id)
+  .pipe(
+    map(x => {
+      return x;
+    })
+  );
+}
+//#endregion
+
+
 
   //#region "getLocalDate"
   getLocalDate(date: any) {
