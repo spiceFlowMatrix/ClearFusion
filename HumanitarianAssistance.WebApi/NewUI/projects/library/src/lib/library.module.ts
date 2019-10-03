@@ -21,6 +21,8 @@ import { DocumentListingComponent } from './components/document-listing/document
 import { HumDropdownComponent } from './components/hum-dropdown/hum-dropdown.component';
 import { TableComponent } from './components/table/table.component';
 import { ButtonComponent } from './components/button/button.component';
+import { ConfigCardComponent } from './components/config-card/config-card.component';
+import { MatCardModule } from '@angular/material';
 
 
 @NgModule({
@@ -37,7 +39,8 @@ import { ButtonComponent } from './components/button/button.component';
     FileDropModule,
     MatSelectModule,
     NgxMatSelectSearchModule,
-    MatButtonModule
+    MatButtonModule,
+    MatCardModule
   ],
   declarations: [
     LibraryComponent,
@@ -50,7 +53,8 @@ import { ButtonComponent } from './components/button/button.component';
     DocumentListingComponent,
     HumDropdownComponent,
     TableComponent,
-    ButtonComponent
+    ButtonComponent,
+    ConfigCardComponent
   ],
   exports: [
     LibraryComponent,
@@ -62,7 +66,8 @@ import { ButtonComponent } from './components/button/button.component';
     ListingDeleteComponent,
     HumDropdownComponent,
     TableComponent,
-    ButtonComponent
+    ButtonComponent,
+    ConfigCardComponent
   ],
   entryComponents: [
     DeleteConfirmationComponent

@@ -22,6 +22,8 @@ export class PurchaseListComponent implements OnInit {
   screenWidth: any;
   scrollStyles: any;
 
+  showConfig = false;
+
   purchaseListHeaders$ = of(['Id', 'Item', 'Purchased By', 'Project', 'Original Cost', 'Deprecated Cost']);
   subListHeaders$ = of(['Id', 'Date', 'Employee', 'Procured Amount', 'Must Return', 'Returned', 'Returned On']);
   procurementList$: Observable<IProcurementList[]>;
@@ -124,6 +126,10 @@ export class PurchaseListComponent implements OnInit {
       width: '800px',
       data: {}
     });
+  }
+
+  showConfiguration(){
+    this.showConfig = true;
   }
 
 }
