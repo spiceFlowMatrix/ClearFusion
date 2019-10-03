@@ -6,7 +6,7 @@
       </th>
     </tr>
   </thead>
-  <tbody *ngFor="let item of items | async; let i=index;">
+  <tbody *ngFor="let item of mainItems | async; let i=index;">
     <tr (click)="isShowSubList[i] = !isShowSubList[i]" class="main-table">
       <td *ngFor="let header of itemHeaders | async; let j=index ">{{item[header]}}</td>
       <td>

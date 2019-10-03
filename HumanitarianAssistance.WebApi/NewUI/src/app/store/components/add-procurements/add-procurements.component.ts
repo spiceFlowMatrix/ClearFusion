@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { IDropDownModel } from '../../models/purchase';
 import { Observable } from 'rxjs/internal/Observable';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
@@ -40,6 +40,7 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
     this.addProcurementForm = this.fb.group({
+      'ProcurementId': [null],
       'InventoryTypeId': [null, [Validators.required]],
       'InventoryId': [null, [Validators.required]],
       'ItemGroupId': [null, [Validators.required]],
@@ -52,6 +53,7 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
       'StoreSourceId': [null, [Validators.required]],
       'StatusId': [null, [Validators.required]],
       'MustReturn': [false],
+      'EmployeeName': [null]
     });
   }
 
@@ -252,6 +254,29 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
           error => {
             console.error(error);
           });
+    }
+  }
+
+  addProcurement() {
+    if (this.addProcurementForm.valid) {
+      this.purchaseService.addProcurement(this.addProcurementForm.value)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(x => {
+        if (x.StatusCode === 200) {
+          this.addProcurementForm.get('ProcurementId').patchValue(x.data.ProcurementModel.ProcurementId);
+          this.addProcurementForm.get('EmployeeName').patchValue(x.data.ProcurementModel.EmployeeName);
+
+          this.dialogRef.close(this.addProcurementForm.value);
+          this.toastr.success(x.Message);
+        } else if (x.StatusCode === 400) {
+          this.toastr.warning(x.Message);
+        }
+      },
+      error => {
+        console.log(error);
+      });
+    } else {
+      this.toastr.warning('Please correct errors in procurement form and submit again');
     }
   }
 

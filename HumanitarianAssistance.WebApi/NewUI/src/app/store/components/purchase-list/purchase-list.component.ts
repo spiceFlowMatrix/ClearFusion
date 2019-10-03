@@ -81,7 +81,7 @@ export class PurchaseListComponent implements OnInit {
             OriginalCost: element.OriginalCost,
             DepreciatedCost: element.DepreciatedCost,
             subItems: element.ProcurementList
-          };
+          } as IPurchaseList;
         }));
       });
   }
@@ -119,13 +119,33 @@ export class PurchaseListComponent implements OnInit {
   addPurchase() {
     this.router.navigate(['/store/purchase/add']);
   }
-  openProc(event: any) {
+  openProcurementModal(event: any) {
     const dialogRef = this.dialog.open(AddProcurementsComponent, {
       width: '850px',
       data: {
         value: event.Id,
         officeId: this.filterValueModel.OfficeId
       }
+    });
+
+    dialogRef.afterClosed().subscribe(x => {
+      console.log(x);
+
+      this.purchaseList$.subscribe((purchase) => {
+        console.log(purchase);
+        // debugger;
+        // const index = purchase.findIndex(i => i.Id === x.PurchaseId);
+        // if (index !== -1) {
+        //   purchase[index].subItems.unshift({
+        //     EmployeeName: x.EmployeeName,
+        //     IssueDate: x.IssueDate,
+        //     IssueId: x.ProcurementId,
+        //     MustReturn: x.MustReturn,
+        //     ProcuredAmount: x.IssuedQuantity,
+        //     Returned: false
+        //   });
+        // }
+      });
     });
   }
 

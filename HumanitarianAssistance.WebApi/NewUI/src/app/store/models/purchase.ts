@@ -43,7 +43,7 @@ export interface IPurchaseList {
   Project: string;
   OriginalCost: number;
   DepreciatedCost: number;
-  SubItems: IProcurementList[];
+  subItems: IProcurementList[];
 }
 export interface IProcurementList {
   EmployeeName?: string;
@@ -87,4 +87,20 @@ export interface IAddEditPurchaseModel {
   PageIndex?: number;
   PageSize?: number;
   TotalCount?: number;
+}
+
+export interface IAddEditProcurementModel {
+  OrderId?: number;
+  Purchase?: number;
+  InventoryItem: string;
+  IssuedQuantity: any;
+  MustReturn?: boolean;
+  Returned?: boolean;
+  IssuedToEmployeeId: number;
+  IssueDate: any;
+  ReturnedDate?: any;
+  Remarks?: string;
+  IssedToLocation: number;
+  StatusAtTimeOfIssue: number;
+  Project: number;
 }
