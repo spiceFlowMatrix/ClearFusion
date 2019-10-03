@@ -67,7 +67,7 @@ export class PurchaseListComponent implements OnInit {
   //#endregion
 
   getPurchasesByFilter(filter: IFilterValueModel) {
-
+    this.filterValueModel = filter;
     this.purchaseService
       .getFilteredPurchaseList(filter).subscribe(x => {
         this.purchaseRecordCount = x.RecordCount;
@@ -119,10 +119,13 @@ export class PurchaseListComponent implements OnInit {
   addPurchase() {
     this.router.navigate(['/store/purchase/add']);
   }
-  openProc() {
+  openProc(event: any) {
     const dialogRef = this.dialog.open(AddProcurementsComponent, {
-      width: '800px',
-      data: {}
+      width: '850px',
+      data: {
+        value: event.Id,
+        officeId: this.filterValueModel.OfficeId
+      }
     });
   }
 

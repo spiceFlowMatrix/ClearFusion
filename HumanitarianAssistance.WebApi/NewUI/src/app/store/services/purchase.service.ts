@@ -258,6 +258,37 @@ export class PurchaseService {
       );
   }
 
+    //#region "getPurchaseListByItemId"
+  getPurchaseListByItemId(Id) {
+    return this.http.get<any>(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllPurchasesByItem + '?ItemId=' + Id)
+    .pipe(
+      map((response) => {
+        const responseData: IResponseData = {
+          data: response.data.StoreItemsPurchaseViewList,
+          statusCode: response.StatusCode,
+          message: response.Message
+      };
+
+      return responseData;
+    }),
+      finalize(() => {
+        // this.loader.hideLoader();
+      })
+    );
+}
+ //#endregion
+
+ //#region "getItemDetailByItemId"
+ getItemDetailByPurchaseId(Id) {
+  return this.http.get<any>(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetItemDetailByItemId + '?PurchaseId=' + Id)
+  .pipe(
+    map(x => {
+      return x;
+    })
+  );
+}
+//#endregion
+
 
 
   //#region "getLocalDate"

@@ -136,7 +136,6 @@ export class PurchasesComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        debugger;
         this.getAllEmployeeList();
         this.getAllProjectDetails();
     }

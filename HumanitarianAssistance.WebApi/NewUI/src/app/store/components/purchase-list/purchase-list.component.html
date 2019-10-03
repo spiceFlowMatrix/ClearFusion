@@ -8,10 +8,6 @@
   <div class="action_section">
     <hum-button [type]="'text'" [text]="'PDF EXPORT'"></hum-button>
     <hum-button [type]="'text'" [text]="'FIELD CONFIGURATION'"></hum-button>
-    <!-- <span> <a [routerLink]="['/store/purchase/add']">ADD PURCHASE</a> </span>
-    <span> <a>DISPLAY CURRENCY</a> </span>
-    <span> <a>PDF EXPORT</a> </span>
-    <span> <a>FIELD CONFIGURATION</a> </span> -->
   </div>
 </lib-sub-header-template>
 <mat-card [ngStyle]="scrollStyles">
@@ -21,13 +17,11 @@
         <app-purchase-filters (purchaseFilterSelected)="onpurchaseFilterSelected($event)"></app-purchase-filters>
         <mat-divider></mat-divider>
         <h4>Purchases</h4>
-        <hum-table [headers]="purchaseListHeaders$" [items]="purchaseList$" [subHeaders]="subListHeaders$" [subTitle]="'Proceruements'" (actionClick)="openProc()"></hum-table>
+        <hum-table [headers]="purchaseListHeaders$" [items]="purchaseList$" [subHeaders]="subListHeaders$" [subTitle]="'Procurements'" (actionClick)="openProc($event)"></hum-table>
         <mat-paginator [length]="purchaseRecordCount" [pageSize]="filterValueModel.pageSize" [pageSizeOptions]="[10, 5, 25, 100]"
       (page)="pageEvent($event)">
       </mat-paginator>
-
       </div>
-
     </div>
   </div>
 </mat-card>
