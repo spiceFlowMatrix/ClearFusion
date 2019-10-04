@@ -31,6 +31,8 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Create
 
                 SalaryHeadDetails obj = _mapper.Map<SalaryHeadDetails>(request);
                 obj.IsDeleted = false;
+                obj.AccountNo=null;
+                obj.TransactionTypeId=null;
                 await _dbContext.SalaryHeadDetails.AddAsync(obj);
                 await _dbContext.SaveChangesAsync();
 
@@ -49,11 +51,11 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Create
                         EmployeePayroll employeePayroll = new EmployeePayroll();
                         employeePayroll.EmployeeID = employeeid;
                         employeePayroll.IsDeleted = false;
-                        employeePayroll.AccountNo = request.AccountNo;
+                        //employeePayroll.AccountNo = request.AccountNo;
                         employeePayroll.SalaryHeadId = obj.SalaryHeadId;
                         employeePayroll.HeadTypeId = request.HeadTypeId;
-                        employeePayroll.AccountNo = request.AccountNo;
-                        employeePayroll.TransactionTypeId = request.TransactionTypeId;
+                        //employeePayroll.AccountNo = request.AccountNo;
+                        //employeePayroll.TransactionTypeId = request.TransactionTypeId;
                         employeePayroll.MonthlyAmount = (request.MonthlyAmount == null)?0:(double)request.MonthlyAmount;
                         employeePayrollList.Add(employeePayroll);
                     }

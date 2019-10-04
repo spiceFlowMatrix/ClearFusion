@@ -46,7 +46,8 @@ export class AppSidebarComponent implements OnInit {
     SalaryTaxReportContent: applicationPages.SalaryTaxReportContent,
     SetPayrollAccount: applicationPages.SetPayrollAccount,
     PensionDebitAccount: applicationPages.PensionDebitAccount,
-    AttendanceGroupMaster: applicationPages.AttendanceGroupMaster
+    AttendanceGroupMaster: applicationPages.AttendanceGroupMaster,
+    InterviewRatingQuestion: applicationPages.InterviewRatingQuestions
   };
 
   Accounting: any = {

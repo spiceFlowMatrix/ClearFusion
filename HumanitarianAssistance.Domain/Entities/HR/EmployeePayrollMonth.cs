@@ -17,7 +17,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public int SalaryHeadId { get; set; }
         public SalaryHeadDetails SalaryHeadDetails { get; set; }
         public double MonthlyAmount { get; set; }
-        public int CurrencyId { get; set; }
+        public int? CurrencyId { get; set; }
         public int? PaymentType { get; set; }
         public int? HeadTypeId { get; set; }
         public CurrencyDetails CurrencyDetails { get; set; }

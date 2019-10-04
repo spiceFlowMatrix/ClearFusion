@@ -43,12 +43,12 @@
                               <dxi-column dataField="SalaryHeadType" [width]="160" [editorOptions]="{disabled: true}"></dxi-column>
                               <dxi-column dataField="SalaryHead" [width]="200" [editorOptions]="{disabled: true}"></dxi-column>
                               <dxi-column dataField="MonthlyAmount" caption="Amount" [width]="150"></dxi-column>
-                              <dxi-column dataField="AccountNo" caption="Account" [width]="250">
+                              <!-- <dxi-column dataField="AccountNo" caption="Account" [width]="250">
                                 <dxo-lookup [dataSource]="AccountsArr" displayExpr="AccountName" valueExpr="AccountCode"></dxo-lookup>
                               </dxi-column>
                               <dxi-column dataField="TransactionTypeId" caption="Transaction Type" [width]="200" [editorOptions]="{disabled: true}">
                                 <dxo-lookup [dataSource]="transactionTypeDropdown" displayExpr="TransactionTypeName" valueExpr="TransactionTypeId"></dxo-lookup>
-                              </dxi-column>
+                              </dxi-column> -->
                               <dxo-paging [pageSize]="15"></dxo-paging>
                             </dx-data-grid>
                           </dxi-item>
@@ -77,12 +77,12 @@
                                 <dxi-column dataField="PayrollHeadId" [visible]="false" [width]="160" [editorOptions]="{disabled: true}"></dxi-column>
                                 <dxi-column dataField="SalaryHeadType" [width]="160" [editorOptions]="{disabled: true}"></dxi-column>
                                 <dxi-column dataField="PayrollHeadName" [editorOptions]="{disabled: true}"></dxi-column>
-                                <dxi-column dataField="AccountNo" caption="Account" [width]="350">
+                                <!-- <dxi-column dataField="AccountNo" caption="Account" [width]="350">
                                   <dxo-lookup [dataSource]="AccountsArr" displayExpr="AccountName" valueExpr="AccountCode"></dxo-lookup>
                                 </dxi-column>
                                 <dxi-column dataField="TransactionTypeId" caption="Transaction Type" [width]="150" [editorOptions]="{disabled: true}">
                                   <dxo-lookup [dataSource]="transactionTypeDropdown" displayExpr="TransactionTypeName" valueExpr="TransactionTypeId"></dxo-lookup>
-                                </dxi-column>
+                                </dxi-column> -->
                                 <dxo-paging [pageSize]="15"></dxo-paging>
                               </dx-data-grid>
                             </dxi-item>

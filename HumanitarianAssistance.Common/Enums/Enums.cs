@@ -228,6 +228,14 @@
         RFX= 3
     }
 
+    public enum MarkedScores
+    {
+        Poor = 0,
+        Fair = 1,
+        Good = 2,
+        Excellent = 3,
+        Perfect = 4,
+    }
 
     public enum QuestionType
     {

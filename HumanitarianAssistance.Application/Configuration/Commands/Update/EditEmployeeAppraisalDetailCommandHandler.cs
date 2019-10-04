@@ -30,6 +30,7 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Update
                 emp.DutyStation = request.DutyStation;
                 emp.AppraisalPeriod = request.AppraisalPeriod;
                 emp.TotalScore = request.TotalScore;
+                emp.AppraisalScore = request.AppraisalScore;
                 foreach (var item in request.EmployeeAppraisalQuestionList)
                 {
                     var question = await _dbContext.EmployeeAppraisalQuestions.FirstOrDefaultAsync(x => x.EmployeeAppraisalQuestionsId== item.EmployeeAppraisalQuestionsId);

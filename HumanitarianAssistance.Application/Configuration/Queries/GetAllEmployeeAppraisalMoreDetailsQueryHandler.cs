@@ -1,5 +1,6 @@
 ﻿using HumanitarianAssistance.Application.Configuration.Models;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Persistence;
 using MediatR;
@@ -35,6 +36,7 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                                              .ToListAsync();
                 foreach (var item in emplst)
                 {
+                    //var quesLst = await _dbContext.EmployeeAppraisalQuestions.Include(x => x.AppraisalGeneralQuestions).Where(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate == item.CurrentAppraisalDate).ToListAsync();
                     EmployeeAppraisalDetailsModel objAppraisal = new EmployeeAppraisalDetailsModel();
 
                     var empDetails = await _dbContext.EmployeeEvaluation
@@ -42,7 +44,11 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                                                      .ThenInclude(x=> x.EmployeeProfessionalDetail)
                                                      .Where(x => x.EmployeeAppraisalDetailsId == item.EmployeeAppraisalDetailsId)
                                                      .ToListAsync();
-
+                    var scorePoint = item.AppraisalScore != null ? Math.Round((double)item.AppraisalScore) : 0;
+                    if (item.AppraisalScore != null)
+                    {
+                        objAppraisal.AppraisalScore = scorePoint + " - " + ((MarkedScores)scorePoint).ToString();
+                    }
                     List<EmployeeEvaluationTrainingModel> trainingList = new List<EmployeeEvaluationTrainingModel>();
                     List<int> appraisalTeamMemberList = new List<int>();
 

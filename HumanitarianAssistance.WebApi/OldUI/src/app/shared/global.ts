@@ -329,6 +329,10 @@ export class GLOBAL {
   public static API_Code_AddEmployeeAppraisalMoreDetails = 'Code/AddEmployeeAppraisalMoreDetails';
   public static API_Code_EditEmployeeAppraisalMoreDetails = 'Code/EditEmployeeAppraisalMoreDetails';
 
+  public static API_Code_AddRatingBasedCriteriaQuestion = 'Code/AddRatingBasedCriteriaQuestions';
+  public static API_Code_GetRatingBasedCriteriaQuestions = 'Code/GetAllRatingBasedCriteriaQuestionsByOfficeId';
+  public static API_Code_EditRatingBasedCriteriaQuestion = 'Code/EditRatingBasedCriteriaQuestions';
+
   public static API_Hr_GetAllAdvancesByOfficeId = 'EmployeePayroll/GetAllAdvancesByOfficeId';
   public static API_EmployeeHR_GetAllEmployeePension = 'EmployeePayroll/GetAllEmployeePension';
   public static API_Account_AddEmployeePensionPayment = 'Account/AddEmployeePensionPayment';
