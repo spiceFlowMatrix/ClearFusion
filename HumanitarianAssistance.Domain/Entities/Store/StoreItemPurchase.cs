@@ -45,7 +45,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public DateTime? InvoiceDate { get; set; }
         public int? Status { get; set; }
         public int? ReceiptTypeId { get; set; }
-        public string ReceivedFromLocation { get; set; }
+        public long? ReceivedFromLocation { get; set; }
         public long? ProjectId { get; set; }
 
         public long? BudgetLineId { get; set; }
@@ -55,8 +55,14 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public int? OfficeId { get; set; }
         public int? JournalCode { get; set; }
         public string PurchaseName { get; set; }
+        
+        [ForeignKey("OfficeId")]
+        public OfficeDetail OfficeDetail { get; set; }
+        [ForeignKey("ReceivedFromLocation")]
+        public StoreSourceCodeDetail StoreSourceCodeDetail {get; set;}
 
-
+        [ForeignKey("BudgetLineId")]
+        public ProjectBudgetLineDetail ProjectBudgetLineDetail { get; set; }
         [ForeignKey("InventoryItem")]
         public StoreInventoryItem StoreInventoryItem { get; set; }
         [ForeignKey("Currency")]
@@ -65,20 +71,14 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public EmployeeDetail EmployeeDetail { get; set; }
         [ForeignKey("UnitType")]
         public PurchaseUnitType PurchaseUnitType { get; set; }
-
         [ForeignKey("VoucherId")]
         public VoucherDetail VoucherDetail { get; set; }
-
         [ForeignKey("Status")]
         public StatusAtTimeOfIssue StatusAtTimeOfIssue { get; set; }
-
         [ForeignKey("ReceiptTypeId")]
         public ReceiptType ReceiptType { get; set; }
-
         [ForeignKey("ProjectId")]
         public ProjectDetail ProjectDetail { get; set; }
-
-
         public List<StorePurchaseOrder> PurchaseOrders { get; set; }
     }
 }

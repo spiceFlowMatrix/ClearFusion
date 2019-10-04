@@ -40,6 +40,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                   .ThenInclude(x => x.Inventory)
                                   .Include(x => x.EmployeeDetail)
                                   .Include(x => x.ProjectDetail)
+                                  .Include(x=> x.ProjectBudgetLineDetail)
+                                  .Include(x=> x.OfficeDetail)
                                   .Where(x => x.IsDeleted == false &&
                                         x.StoreInventoryItem.Inventory.AssetType == request.InventoryTypeId &&
                                         x.ReceiptTypeId == request.ReceiptTypeId &&
@@ -88,11 +90,32 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     CurrencyId = x.Currency,
                     PurchasedQuantity= x.Quantity,
                     ItemId = x.StoreInventoryItem != null ? x.StoreInventoryItem.ItemId : 0,
+                    ItemCode= x.StoreInventoryItem != null ? x.StoreInventoryItem.ItemCode :"",
                     ItemName = x.StoreInventoryItem != null ? (x.StoreInventoryItem.ItemCode + "-" + x.StoreInventoryItem.ItemName) : "",
                     EmployeeName = x.EmployeeDetail != null ? x.EmployeeDetail.EmployeeCode + "-" + x.EmployeeDetail.EmployeeName : "",
                     ProjectId = x.ProjectId,
                     ProjectName = x.ProjectDetail == null ? "" : x.ProjectDetail.ProjectCode + "-" + x.ProjectDetail.ProjectName,
                     OriginalCost = x.UnitCost * x.Quantity,
+                    ItemCodeDescription = x.StoreInventoryItem != null ? (x.StoreInventoryItem.ItemCode + "-" + x.StoreInventoryItem.Description): ""  ,
+                    AssetTypeId= x.AssetTypeId,
+                    Description = x.StoreInventoryItem != null ? x.StoreInventoryItem.Description: ""  ,
+                    BudgetLineId = x.BudgetLineId,
+                    BudgetLineName= x.ProjectBudgetLineDetail ==null? "" : x.ProjectBudgetLineDetail.BudgetName,
+                    ChasisNo="",
+                    MakerCountry="",
+                    RegistrationNo="",
+                    CurrencyName= x.CurrencyDetails == null? "":  x.CurrencyDetails.CurrencyName,
+                    DepreciationRate= x.DepreciationRate,
+                    EngineSerialNo= "",
+                    IdentificationNo="",
+                    MasterInventoryCode= x.StoreInventoryItem.MasterInventoryCode,
+                    ModelType="",
+                    OfficeCode= x.OfficeDetail.OfficeCode,
+                    ReceiptDate= x.DeliveryDate != null ? x.DeliveryDate.ToShortDateString() :"",
+                   // PurchaseOrderNo= Convert.ToInt64(x.SerialNo),
+                    InvoiceDate= x.InvoiceDate != null ? x.InvoiceDate.Value.ToShortDateString(): "",
+                    ReceivedFromLocationName= x.StoreSourceCodeDetail != null? (x.StoreSourceCodeDetail.Code+"-"+x.StoreSourceCodeDetail.Description): "" ,
+                    Status= x.StatusAtTimeOfIssue != null? x.StatusAtTimeOfIssue.StatusName : "",
                     DepreciatedCost = (x.UnitCost * x.Quantity) - (Math.Ceiling(DateTime.Now.Date.Subtract(x.PurchaseDate).TotalDays) * x.Quantity * x.DepreciationRate * x.UnitCost / 100),
                     ProcurementList = x.PurchaseOrders.Where(p=> !p.IsDeleted).Select(z => new ProcurementListModel
                     {

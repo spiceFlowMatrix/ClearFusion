@@ -8,11 +8,11 @@ import { AddPurchaseComponent } from './components/add-purchase/add-purchase.com
 import { AddProcurementsComponent } from './components/add-procurements/add-procurements.component';
 import { EntryComponentComponent } from './components/entry-component/entry-component.component';
 import { MatIconModule, MatMenuModule, MatSidenavModule, MatCardModule, MatButtonModule,
-  MatInputModule, MatDividerModule } from '@angular/material';
+  MatInputModule, MatDividerModule, MatListModule } from '@angular/material';
 import { ShareLayoutModule } from '../shared/share-layout.module';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { LibraryModule, SubHeaderTemplateModule } from 'projects/library/src/public_api';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialogModule } from '@angular/material/dialog';
@@ -40,6 +40,7 @@ import { DocumentUploadComponent } from './components/document-upload/document-u
     CommonModule,
     StoreRoutingModule,
     ReactiveFormsModule,
+    FormsModule,
     // Material
     MatMenuModule,
     MatIconModule,
@@ -55,7 +56,8 @@ import { DocumentUploadComponent } from './components/document-upload/document-u
     MatDividerModule,
     MatCheckboxModule,
     MatDialogModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatListModule
     // MatRangeDatepickerModule,
     // MatNativeDateModule
 

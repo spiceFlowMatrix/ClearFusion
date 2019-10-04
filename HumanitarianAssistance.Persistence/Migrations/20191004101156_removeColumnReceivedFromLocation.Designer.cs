@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191004101156_removeColumnReceivedFromLocation")]
+    partial class removeColumnReceivedFromLocation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -8013,8 +8015,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("ReceiptTypeId");
 
-                    b.Property<long?>("ReceivedFromLocation");
-
                     b.Property<string>("SerialNo");
 
                     b.Property<int?>("Status");
@@ -8044,8 +8044,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("PurchasedById");
 
                     b.HasIndex("ReceiptTypeId");
-
-                    b.HasIndex("ReceivedFromLocation");
 
                     b.HasIndex("Status");
 
@@ -9949,10 +9947,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.ReceiptType", "ReceiptType")
                         .WithMany()
                         .HasForeignKey("ReceiptTypeId");
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreSourceCodeDetail", "StoreSourceCodeDetail")
-                        .WithMany()
-                        .HasForeignKey("ReceivedFromLocation");
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StatusAtTimeOfIssue", "StatusAtTimeOfIssue")
                         .WithMany()

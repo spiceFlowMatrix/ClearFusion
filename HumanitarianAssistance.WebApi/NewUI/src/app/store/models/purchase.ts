@@ -45,6 +45,34 @@ export interface IPurchaseList {
   DepreciatedCost: number;
   subItems: IProcurementList[];
 }
+
+export interface IPurchaseFilterConfigColList {
+    PurchaseId: number;
+    ItemName: string;
+    ItemId: string;
+    EmployeeName: string;
+    ProjectName: string;
+    OriginalCost: number;
+    DepreciatedCost: number;
+    PurchasedQuantity: number;
+    ItemCodeDescription: string;
+    BudgetLineName: string;
+    ChasisNo: string;
+    CurrencyName: string;
+    DepreciationRate: any;
+    EngineSerialNo: string;
+    IdentificationNo: string;
+    ItemCode: string;
+    MasterInventoryCode: string;
+    ModelType: string;
+    OfficeCode: string;
+    PurchaseOrderNo: any;
+    InvoiceDate: any;
+    ReceivedFromLocation: string;
+    Status: string;
+    subItems: IProcurementList[];
+}
+
 export interface IProcurementList {
   EmployeeName?: string;
   IssueDate?: string;
