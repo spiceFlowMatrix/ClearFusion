@@ -1,4 +1,5 @@
-import { Component, OnInit, HostListener, ElementRef, Input, OnChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, Input, OnChanges, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+
 
 @Component({
   selector: 'hum-config-card',
@@ -9,6 +10,7 @@ export class ConfigCardComponent implements OnInit, OnChanges {
 
   constructor(private eRef: ElementRef) { }
   @Input() showCard: boolean;
+  @Output() cardState = new EventEmitter<any>()
 
   isShow = false;
   ngOnChanges(): void {
@@ -19,7 +21,7 @@ export class ConfigCardComponent implements OnInit, OnChanges {
   }
   closeCard() {
     this.isShow = false;
-    
+    this.cardState.emit(this.isShow);
   }
 
 
