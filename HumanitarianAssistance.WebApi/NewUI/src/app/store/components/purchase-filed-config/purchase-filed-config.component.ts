@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ElementRef, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, Input, OnChanges, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-purchase-filed-config',
@@ -8,15 +8,16 @@ import { Component, OnInit, HostListener, ElementRef, Input, OnChanges } from '@
 export class PurchaseFiledConfigComponent implements OnInit {
 
 
-   showConfig = false;
+  showConfig = false;
 
-  constructor(private eRef: ElementRef) { }
- 
+  constructor(private cdr: ChangeDetectorRef) { }
+
   ngOnInit() {
   }
   show() {
+    this.showConfig = false;
     this.showConfig = true;
-    console.log(true);
+   // this.cdr.detectChanges()
   }
 
 }
