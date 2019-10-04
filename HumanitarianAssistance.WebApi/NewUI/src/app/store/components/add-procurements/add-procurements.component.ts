@@ -50,7 +50,7 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
       'ItemGroupId': [null, [Validators.required]],
       'ItemId': [null, [Validators.required]],
       'PurchaseId': [null, [Validators.required]],
-      'IssuedQuantity': [0, [Validators.required, Validators.min(0)]],
+      'IssuedQuantity': [1, [Validators.required, Validators.min(1)]],
       'IssuedToEmployeeId': [null, [Validators.required]],
       'IssueDate': [null, [Validators.required]],
       'ProjectId': [null, [Validators.required]],
