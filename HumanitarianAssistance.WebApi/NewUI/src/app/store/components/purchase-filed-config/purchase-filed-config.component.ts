@@ -15,9 +15,12 @@ export class PurchaseFiledConfigComponent implements OnInit {
   ngOnInit() {
   }
   show() {
-    this.showConfig = false;
     this.showConfig = true;
    // this.cdr.detectChanges()
+  }
+  getState(e){
+    this.showConfig = e;
+
   }
 
 }

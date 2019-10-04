@@ -1,4 +1,4 @@
-<hum-config-card [showCard]="showConfig">
+<hum-config-card [showCard]="showConfig" (cardState)="getState($event)">
     <div title>Purchases Field Configuration</div>
     <div subtitle>Please select all the fields that should be displayed in the purchases list and also the PDF
         export.</div>
