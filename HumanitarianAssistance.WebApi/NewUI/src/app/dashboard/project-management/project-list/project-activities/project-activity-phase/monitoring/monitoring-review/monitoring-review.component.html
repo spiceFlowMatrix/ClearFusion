@@ -48,13 +48,12 @@
         </div>
       </div>
 
-
       <br />
-        <div class="row" *ngIf="item.ProjectIndicatorId != null && item.ProjectIndicatorId != undefined">
+        <div class="row" *ngIf="projectIndicatorId != null && projectIndicatorId != undefined || item.ProjectIndicatorId" >
 
           <div class="col-sm-12">
             <h5> Is this a Qualitative or Quantitative question?</h5>
-            <mat-radio-group aria-labelledby="example-radio-group-label"  class="example-radio-group" [(ngModel)]="item.QuestionTypeId">
+            <mat-radio-group aria-labelledby="example-radio-group-label" (change)="getQuestionsList(i)"  class="example-radio-group" [(ngModel)]="item.QuestionTypeId">
               <mat-radio-button class="example-radio-button" *ngFor="let q of questionTypeList" [value]="q.Id"
                 >
                 {{ q.Name }}

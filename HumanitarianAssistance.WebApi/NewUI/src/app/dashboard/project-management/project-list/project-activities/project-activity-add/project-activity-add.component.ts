@@ -20,6 +20,8 @@ import { ProjectActivitiesService } from '../service/project-activities.service'
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { ProjectActivityStatus } from 'src/app/shared/enum';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { min } from 'date-fns';
 
 @Component({
   selector: 'app-project-activity-add',
@@ -79,7 +81,7 @@ export class ProjectActivityAddComponent implements OnInit, OnDestroy {
       EmployeeID: [null, Validators.required],
       OfficeId: [null],
       Recurring: [false, Validators.required],
-      RecurringCount: [null],
+      RecurringCount: [null , [Validators.min]],
       RecurrinTypeId: [1],
       ProvinceId: [null, Validators.required],
       DistrictID: [null],
@@ -202,8 +204,8 @@ export class ProjectActivityAddComponent implements OnInit, OnDestroy {
         ActivityId: 0,
         ActivityName: data.ActivityDescription,
         ActivityDescription: data.ActivityDescription,
-        PlannedStartDate: this.getLocalDate(data.PlannedStartDate),
-        PlannedEndDate: this.getLocalDate(data.PlannedEndDate),
+        PlannedStartDate: StaticUtilities.getLocalDate(data.PlannedStartDate),
+        PlannedEndDate: StaticUtilities.getLocalDate(data.PlannedEndDate),
         BudgetLineId: data.BudgetLineId,
         EmployeeID: data.EmployeeID,
         OfficeId: data.OfficeId,
@@ -275,19 +277,6 @@ export class ProjectActivityAddComponent implements OnInit, OnDestroy {
     return this.projectActivityForm.get('Recurring').value;
   }
 
-  //#region "getLocalDate"
-  getLocalDate(date: any) {
-    return new Date(
-      new Date(date).getFullYear(),
-      new Date(date).getMonth(),
-      new Date(date).getDate(),
-      new Date(date).getHours(),
-      new Date().getMinutes(),
-      new Date().getSeconds(),
-      new Date().getMilliseconds()
-    );
-  }
-  //#endregion
 
   onRecurringChange(event: any) {
     console.log(event);

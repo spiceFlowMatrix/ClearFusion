@@ -33,12 +33,16 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
 
   purchaseId: number;
   officeId: number;
+  itemsToBeProcuredCount: number;
 
   constructor(private fb: FormBuilder, private purchaseService: PurchaseService,
     private commonLoader: CommonLoaderService, public toastr: ToastrService,
     private dialogRef: MatDialogRef<AddProcurementsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
+  }
+
+  ngOnInit() {
     this.addProcurementForm = this.fb.group({
       'ProcurementId': [null],
       'InventoryTypeId': [null, [Validators.required]],
@@ -46,7 +50,7 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
       'ItemGroupId': [null, [Validators.required]],
       'ItemId': [null, [Validators.required]],
       'PurchaseId': [null, [Validators.required]],
-      'IssuedQuantity': [null, [Validators.required]],
+      'IssuedQuantity': [0, [Validators.required, Validators.min(0)]],
       'IssuedToEmployeeId': [null, [Validators.required]],
       'IssueDate': [null, [Validators.required]],
       'ProjectId': [null, [Validators.required]],
@@ -55,12 +59,12 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
       'MustReturn': [false],
       'EmployeeName': [null]
     });
-  }
 
-  ngOnInit() {
 
     this.purchaseId = this.data.value;
     this.officeId = this.data.officeId;
+
+    this.addProcurementForm;
 
     forkJoin([
       this.getAllInventoryTypes(),
@@ -182,12 +186,21 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
   subscribePurchaseListByItemId(response: any) {
     this.commonLoader.hideLoader();
     if (response.statusCode === 200) {
+
+      const index = response.data.findIndex(x => x.PurchaseId === this.purchaseId);
+
+      if (index !== -1) {
+        this.itemsToBeProcuredCount = response.data[index].Quantity - response.data[index].ItemsIssuedCount;
+        this.addProcurementForm.get('IssuedQuantity').setValidators(Validators.max(this.itemsToBeProcuredCount));
+      }
+
       this.purchases$ = of(response.data.map(y => {
         return {
           name: y.PurchaseCode,
           value: y.PurchaseId
         };
       }));
+
     } else {
       this.toastr.warning(response.message);
     }

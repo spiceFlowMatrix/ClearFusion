@@ -49,9 +49,9 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
 
                         await _dbContext.SaveChangesAsync();
 
-                        if (indicatorQuestion.VerificationSources.Any())
+                        if (request.VerificationSources.Any())
                         {
-                            // check sources are they present in new requested list
+                            // check sources: Are they present in new requested list?
                             var sourcesNotPresent = indicatorQuestion.VerificationSources.Where(x => !request.VerificationSources.Select(y => y.VerificationSourceId).Contains(x.VerificationSourceId));
 
                             // to delete the existing verification resource if not present in new list
