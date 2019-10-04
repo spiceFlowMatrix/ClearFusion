@@ -47,8 +47,9 @@ export interface IPurchaseList {
 }
 
 export interface IPurchaseFilterConfigColList {
-  PurchaseId: number;
+    PurchaseId: number;
     ItemName: string;
+    ItemId: string;
     EmployeeName: string;
     ProjectName: string;
     OriginalCost: number;

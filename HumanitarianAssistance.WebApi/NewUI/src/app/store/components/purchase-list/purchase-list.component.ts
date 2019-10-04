@@ -27,9 +27,9 @@ export class PurchaseListComponent implements OnInit {
   screenWidth: any;
   scrollStyles: any;
   actions: TableActionsModel;
-   
+
   showConfig = false;
-  @ViewChild(PurchaseFiledConfigComponent) fieldConfig : PurchaseFiledConfigComponent;
+  @ViewChild(PurchaseFiledConfigComponent) fieldConfig: PurchaseFiledConfigComponent;
 
   purchaseListHeaders$ = of(['Id', 'Item', 'Purchased By', 'Project', 'Original Cost', 'Deprecated Cost']);
   subListHeaders$ = of(['Id', 'Date', 'Employee', 'Procured Amount', 'Must Return', 'Returned', 'Returned On']);
@@ -37,8 +37,8 @@ export class PurchaseListComponent implements OnInit {
 
 
   constructor(private purchaseService: PurchaseService,
-              private router: Router, private dialog: MatDialog,
-              private datePipe: DatePipe, private toastr: ToastrService) {
+    private router: Router, private dialog: MatDialog,
+    private datePipe: DatePipe, private toastr: ToastrService) {
 
     this.filterValueModel = {
       CurrencyId: null,
@@ -177,31 +177,47 @@ export class PurchaseListComponent implements OnInit {
 
   deleteProcurement(event: any) {
     this.purchaseService.deleteProcurement(event.subItem.OrderId)
-        .subscribe(x => {
-          if (x.StatusCode === 200) {
-            this.purchaseList$.subscribe((purchase) => {
-              const index = purchase.findIndex(i => i.Id === event.item.Id);
-              if (index >= 0) {
-                const subItemIndex = purchase[index].subItems.findIndex(i => i.OrderId === event.subItem.OrderId);
-                purchase[index].subItems.splice(subItemIndex, 1);
-              }
-              this.purchaseList$ = of(purchase);
-            });
-            this.toastr.success(x.Message);
-          } else {
-            this.toastr.warning(x.Message);
-          }
-        },
+      .subscribe(x => {
+        if (x.StatusCode === 200) {
+          this.purchaseList$.subscribe((purchase) => {
+            const index = purchase.findIndex(i => i.Id === event.item.Id);
+            if (index >= 0) {
+              const subItemIndex = purchase[index].subItems.findIndex(i => i.OrderId === event.subItem.OrderId);
+              purchase[index].subItems.splice(subItemIndex, 1);
+            }
+            this.purchaseList$ = of(purchase);
+          });
+          this.toastr.success(x.Message);
+        } else {
+          this.toastr.warning(x.Message);
+        }
+      },
         (error) => {
           this.toastr.error(error);
         });
   }
 
   configFilterAppliedEvent(event: any) {
-    debugger;
+
+    // let headers: any[]=[];
+
+    // event.forEach(element => {
+    //   headers.push(element.name);
+    // });
+
+    //  this.purchaseListHeaders$ = of(headers);
+
+    // this.purchaseFilterConfigList$.subscribe(y => {
+    //   this.purchaseList$ = of(y.map((element) => {
+    //     return {
+
+    //     } as IPurchaseList;
+    //   }));
+    // });
+
   }
 
   showConfiguration() {
-   this.fieldConfig.show();
+    this.fieldConfig.show();
   }
 }

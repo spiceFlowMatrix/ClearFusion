@@ -20,35 +20,32 @@ export class PurchaseFiledConfigComponent implements OnInit {
   @Output() configFilterAppliedEvent = new EventEmitter<any>();
 
   columnsToShow = [
-    { name: 'Store Item Id', value: 1, },
-    { name: 'Store Item Code', value: 2 },
-    { name: 'Store Item Name', value: 3 },
-    { name: 'Store Item Code & Description', value: 4 },
-    { name: 'Master Inventory Code', value: 5 },
-    { name: 'Description', value: 6 },
-    { name: 'Office Code', value: 7 },
-    { name: 'BudgetLine', value: 8 },
-    { name: 'Project', value: 9 },
-    { name: 'Purchase Order Number', value: 10 },
-    { name: 'Purchase Order Date', value: 11 },
-    { name: 'Invoice Date', value: 12 },
-    { name: 'AssetType', value: 13 },
-    { name: 'Maker/Country', value: 14 },
-    { name: 'Chasis No', value: 15 },
-    { name: 'Engine/Serial No', value: 16 },
-    { name: 'Registration No', value: 17 },
-    { name: 'Identification No', value: 18 },
-    { name: 'Model/Type', value: 19 },
-    { name: 'Quantity', value: 21 },
-    { name: 'Currency', value: 22 },
-    { name: 'Receipt Date', value: 24 },
-    { name: 'Depreciation Rate(%)', value: 25 },
-    { name: 'Depreciation Value At Hand', value: 27 },
-    { name: 'Received From Location', value: 29 },
-    { name: 'Status', value: 30 },
-    { name: 'Purchase Date', value: 34 },
-    { name: 'Remarks', value: 35 },
-    { name: 'Attachments', value: 36 }
+    { name: 'Store Item Id', modelName: 'ItemId', value: 1, },
+    { name: 'Store Item Code', modelName: 'ItemCode', value: 2 },
+    { name: 'Store Item Name', modelName: 'ItemName', value: 3 },
+    { name: 'Store Item Code & Description', modelName: 'ItemCodeDescription', value: 4 },
+    { name: 'Master Inventory Code', modelName: 'MasterInventoryCode', value: 5 },
+    { name: 'Description', modelName: 'Description', value: 6 },
+    { name: 'Office Code', modelName: 'OfficeCode', value: 7 },
+    { name: 'BudgetLine', modelName: 'BudgetLineName', value: 8 },
+    { name: 'Project', modelName: 'ProjectName', value: 9 },
+    { name: 'Purchase Order Number', modelName: 'PurchaseOrderNumber', value: 10 },
+    { name: 'Purchase Order Date', modelName: 'PurchaseDate', value: 11 },
+    { name: 'Invoice Date', modelName: 'InvoiceDate', value: 12 },
+    { name: 'AssetType', modelName: 'AssetTypeId', value: 13 },
+    { name: 'Maker/Country', modelName: 'MakerCountry', value: 14 },
+    { name: 'Chasis No', modelName: 'ChasisNo', value: 15 },
+    { name: 'Engine/Serial No', modelName: 'EngineSerialNo', value: 16 },
+    { name: 'Registration No', modelName: 'RegistrationNo', value: 17 },
+    { name: 'Identification No', modelName: 'IdentificationNo',  value: 18 },
+    { name: 'Model/Type', modelName: 'ModelType', value: 19 },
+    { name: 'Quantity', modelName: 'PurchasedQuantity', value: 21 },
+    { name: 'Currency', modelName: 'CurrencyName', value: 22 },
+    { name: 'Receipt Date', modelName: 'ReceiptDate', value: 24 },
+    { name: 'Depreciation Rate(%)', modelName: 'DepreciationRate', value: 25 },
+    { name: 'Depreciation Value At Hand', modelName: 'DepreciatedCost', value: 27 },
+    { name: 'Received From Location',  modelName: 'ReceivedFromLocationName', value: 29 },
+    { name: 'Status', modelName: 'Status', value: 30 },
   ];
 
   selectedOptions: any[] = [];
@@ -82,8 +79,8 @@ export class PurchaseFiledConfigComponent implements OnInit {
     console.log(this.selectedOptions);
   }
   change(list: any[]) {
-    if (list.length > 7) {
-      this.toastr.warning('7 Filter option can be selected at a time');
+    if (list.length > 5) {
+      this.toastr.warning('6 Filter option can be selected at a time');
     } else {
        this.configFilterAppliedEvent.emit(list);
     }
