@@ -17,7 +17,11 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public string Recommendations { get; set; }
         public string Remarks { get; set; }
         public long ProjectId { get; set; }
+        [ForeignKey("ActivityId")]
         public long ActivityId { get; set; }
+        public ProjectActivityDetail ProjectActivityDetail { get; set; }
+
+
         public DateTime? MonitoringDate { get; set; }
         public virtual ICollection<ProjectMonitoringIndicatorDetail> ProjectMonitoringIndicatorDetail { get; set; }
     }
