@@ -17,55 +17,57 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() subTitle: string;
   @Input() actions: TableActionsModel
   @Output() actionClick = new EventEmitter<any>();
-  @Output() deleteClick = new EventEmitter<any>();
+  @Output() subActionClick = new EventEmitter<any>();
   subItemHeaders: Observable<string[]>;
 
   mainItems: Observable<Array<Object>>;
   subItems: Array<Object> = [];
   itemHeaders: Observable<string[]>;
-
+  itemActions: TableActionsModel;
 
   isShowSubList = [];
-  constructor() { }
-
-  ngOnInit() {
+  constructor() { 
     this.actions = {
       items: {
-        button: { status: true, text: 'Add Procurement' },
-        delete: false,
-        edit: false,
-        download: false
-
       },
       subitems: {
-        button: { status: false, text: 'Add Procurement' },
-        delete: true,
-        edit: false,
-        download: true
       }
     }
   }
+
+  ngOnInit() {
+  
+    console.log(this.actions)
+  }
   ngOnChanges(): void {
+    this.itemActions = this.actions
+    console.log(this.itemActions)
     if (this.items) {
       this.items.subscribe(res => {
         this.subItems = [];
         if (res == null || res.length > 0) {
-          res.forEach((element, i) => {
-            this.subItems.push(element['subItems']);
-          });
           this.itemHeaders = of(Object.keys(res[0]));
-          this.itemHeaders.subscribe(r => {
-            const index = r.findIndex(v => v === 'subItems');
-            r.splice(index);
+          res.forEach((element, i) => {
+            if (element['subItems']) {
+              this.subItems.push(element['subItems']);
+            }
+
           });
-          this.subItemHeaders = of(Object.keys(this.subItems[0][0]));
+          if (this.subItems.length > 0) {
+            this.subItemHeaders = of(Object.keys(this.subItems[0][0]));
+            this.itemHeaders.subscribe(r => {
+              const index = r.findIndex(v => v === 'subItems');
+              r.splice(index);
+            });
+          }
         }
 
       });
     }
 
   }
-  action(item, type) {
+  action(item, type, e: Event) {
+    e.stopPropagation();
     const model: any = {
       item: item,
       type: type
@@ -80,7 +82,11 @@ export class TableComponent implements OnInit, OnChanges {
       type: type
     };
 
-    this.deleteClick.emit(model);
+    this.subActionClick.emit(model);
+  }
+
+  switchSubList(i) {
+    this.isShowSubList[i] = !this.isShowSubList[i];
   }
 
 }

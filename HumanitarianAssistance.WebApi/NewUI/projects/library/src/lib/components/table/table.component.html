@@ -7,14 +7,14 @@
     </tr>
   </thead>
   <tbody *ngFor="let item of items | async; let i=index;">
-    <tr (click)="isShowSubList[i] = !isShowSubList[i]" class="main-table">
+    <tr (click)="switchSubList(i)" class="main-table">
       <td *ngFor="let header of itemHeaders | async; let j=index ">{{item[header]}}</td>
-      <td *ngIf="actions && (actions.items)">
-        <hum-button *ngIf="actions.items.button.status" [type]="'add'" [text]="actions.items.button.text"
-          (click)='action(item,"button")'></hum-button>
-        <i *ngIf="actions.items.download" class="fas fa-download" (click)='action(item,"button")'></i>
-        <i *ngIf="actions.items.edit" class="fas fa-edit" (click)='action(item,"button")'></i>
-        <i *ngIf="actions.items.delete" class="fas fa-trash" (click)='action(item,"button")'></i>
+      <td *ngIf="itemActions && (itemActions.items)">
+        <hum-button *ngIf="itemActions.items?.button?.status" [type]="'add'" [text]="itemActions.items.button.text"
+          (click)='action(item,"button",$event)'></hum-button>
+        <i *ngIf="itemActions.items?.download" class="fas fa-download" (click)='action(item,"download",$event)'></i>
+        <i *ngIf="itemActions.items?.edit" class="fas fa-edit" (click)='action(item,"edit",$event)'></i>
+        <i *ngIf="itemActions.items?.delete" class="fas fa-trash" (click)='action(item,"delete",$event)'></i>
 
 
       </td>
@@ -37,13 +37,13 @@
             <tbody *ngIf="subItems[i]">
               <tr *ngFor="let subItem of subItems[i]">
                 <td *ngFor="let header of subItemHeaders | async; let j=index ">{{subItem[header]}}</td>
-                <td *ngIf="actions && (actions.subitems)">
-                  <hum-button *ngIf="actions.subitems.button.status" [type]="'add'" [text]="actions.items.button.text"
+                <td *ngIf="itemActions && (itemActions.subitems)">
+                  <hum-button *ngIf="itemActions.subitems?.button?.status" [type]="'add'" [text]="itemActions.items.button.text"
                     (click)='subaction(subItem, item ,"button")'></hum-button>
-                  <i *ngIf="actions.subitems.download" class="fas fa-download"
+                  <i *ngIf="itemActions.subitems?.download" class="fas fa-download"
                     (click)='subaction(subItem, item ,"download")'></i>
-                  <i *ngIf="actions.subitems.edit" class="fas fa-edit" (click)='subAction(subItem, item ,"edit")'></i>
-                  <i *ngIf="actions.subitems.delete" class="fas fa-trash"
+                  <i *ngIf="itemActions.subitems?.edit" class="fas fa-edit" (click)='subAction(subItem, item ,"edit")'></i>
+                  <i *ngIf="itemActions.subitems?.delete" class="fas fa-trash"
                     (click)='subAction(subItem, item ,"delete")'></i>
 
 

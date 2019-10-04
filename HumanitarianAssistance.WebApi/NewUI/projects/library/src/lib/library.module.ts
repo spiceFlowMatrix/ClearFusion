@@ -68,7 +68,7 @@ import { MatCardModule, MatDividerModule } from '@angular/material';
     HumDropdownComponent,
     TableComponent,
     ButtonComponent,
-    ConfigCardComponent
+    ConfigCardComponent,
   ],
   entryComponents: [
     DeleteConfirmationComponent
