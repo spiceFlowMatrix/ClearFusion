@@ -1,0 +1,78 @@
+<div class="main-financial-year">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="main-heading clearfix">
+        <h3 class="page-heading">Rating Base Criteria Questions</h3>
+        <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="onShowHideRatingBasedCriteriaQuestionsAddPopup()"></dx-button>
+      </div>
+      <div>
+
+        <dx-data-grid id="gridContainer" [dataSource]="ratingBasedCriteriaQuestionsDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+          [showRowLines]="true">
+          <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+          <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+          <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+          <dxo-header-filter [visible]="true"> </dxo-header-filter>
+
+          <dxi-column dataField="QuestionsId" [visible]="false"></dxi-column>
+          <dxi-column dataField="Question" caption="Questions"></dxi-column>
+          <dxi-column caption="Action" alignment="center" [width]="100" cellTemplate="CellTemplateEdit"></dxi-column>
+
+          <div *dxTemplate="let data of 'CellTemplateEdit'">
+            <a href="javascript:void(0)" (click)="onRatingBasedCriteriaQuestionsEditClick(data.data)">Edit</a>
+          </div>
+
+          <dxo-paging [pageSize]="10"></dxo-paging>
+          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+
+        </dx-data-grid>
+
+      </div>
+    </div>
+  </div>  
+</div>
+
+<!-- Add -->
+<dx-popup class="popup" [width]="600" [height]="250" [showTitle]="true" title="Rating Based Criteria Questions" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="addRatingBasedCriteriaQuestionsPopupVisible">
+  <div *dxTemplate="let data of 'content'">
+    <form action="your-action" (submit)="onRatingBasedCriteriaQuestionsFormSubmit(ratingBasedCriteriaQuestionForm)">
+      <dx-form id="form" [formData]="ratingBasedCriteriaQuestionForm" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+        validationGroup="customerData" >
+        
+        <dxi-item dataField="Question" caption="Question" editorType="dxTextArea" [editorOptions]="{ height: 90 }" [colSpan]="1">          
+        </dxi-item>        
+
+      </dx-form>
+
+      <br />
+      <div class="btn-grp-wrap">
+        <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+        <dx-button text="Cancel" (onClick)="onShowHideRatingBasedCriteriaQuestionsAddPopup()"></dx-button>
+      </div>
+    </form>    
+  </div>
+</dx-popup>
+
+<!-- Edit -->
+<dx-popup class="popup" [width]="600" [height]="250" [showTitle]="true" title="Rating Based Criteria Questions" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="editRatingBasedCriteriaQuestionsPopupVisible">
+  <div *dxTemplate="let data of 'content'">
+    <form action="your-action" (submit)="onRatingBasedCriteriaQuestionsFormSubmit(ratingBasedCriteriaQuestionForm)">
+      <dx-form id="form" [formData]="ratingBasedCriteriaQuestionForm" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+        validationGroup="editVal" >
+
+        <dxi-item dataField="Question" caption="Question" editorType="dxTextArea" [editorOptions]="{ height: 90 }" [colSpan]="1">          
+        </dxi-item>        
+
+      </dx-form>
+      <br />
+      <div class="btn-grp-wrap">
+        <dx-button text="Save" type="success" validationGroup="editVal" [useSubmitBehavior]="true"></dx-button>
+        <dx-button text="Cancel" (onClick)="onShowHideRatingBasedCriteriaQuestionsEditPopup()"></dx-button>
+      </div>
+    </form>    
+  </div>
+</dx-popup>
+
+<ngx-loading [show]="loading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>

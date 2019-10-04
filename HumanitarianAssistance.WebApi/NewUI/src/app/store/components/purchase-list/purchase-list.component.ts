@@ -8,6 +8,7 @@ import { AddProcurementsComponent } from '../add-procurements/add-procurements.c
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { PurchaseFiledConfigComponent } from '../purchase-filed-config/purchase-filed-config.component';
+import { TableActionsModel } from 'projects/library/src/public_api';
 
 @Component({
   selector: 'app-purchase-list',
@@ -25,7 +26,8 @@ export class PurchaseListComponent implements OnInit {
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
-
+  actions: TableActionsModel;
+   
   showConfig = false;
   @ViewChild(PurchaseFiledConfigComponent) fieldConfig : PurchaseFiledConfigComponent;
 
@@ -60,6 +62,19 @@ export class PurchaseListComponent implements OnInit {
 
   ngOnInit() {
     this.getScreenSize();
+    this.actions = {
+      items: {
+        button: { status: true, text: 'Add Procurement' },
+        delete: false,
+        download: false,
+      },
+      subitems: {
+        button: { status: false, text: '' },
+        delete: true,
+        download: false,
+      }
+
+    }
   }
 
   //#region "Dynamic Scroll"

@@ -16,6 +16,11 @@ import { VoucherAddComponent } from '../voucher-add/voucher-add.component';
 import { IResponseData } from '../models/status-code.model';
 import { ApplicationPages } from 'src/app/shared/applicationpagesenum';
 import { LocalStorageService } from 'src/app/shared/services/localstorage.service';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
+import { GLOBAL } from 'src/app/shared/global';
+import { takeUntil } from 'rxjs/operators';
+import { ReplaySubject } from 'rxjs';
 
 @Component({
   selector: 'app-voucher-listing',
@@ -50,13 +55,15 @@ export class VoucherListingComponent implements OnInit {
   listingScreenWidth = 100;
   detailScreenWidth = 0;
 
-
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   //#endregion
 
   constructor(
     public dialog: MatDialog,
     private voucherService: VoucherService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private globalSharedService: GlobalSharedService,
+    private appurl: AppUrlService
   ) {
     this.getScreenSize();
   }
@@ -361,4 +368,13 @@ export class VoucherListingComponent implements OnInit {
      this.voucherList[indexOfVoucher] = e;
   }
   //#endregion
+
+  onExportPdf() {
+    this.globalSharedService
+      .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetAllVoucherSummaryReportPdf,
+      this.voucherFilter
+      )
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe();
+  }
 }

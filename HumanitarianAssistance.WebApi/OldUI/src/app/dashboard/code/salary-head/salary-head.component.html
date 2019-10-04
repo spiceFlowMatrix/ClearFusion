@@ -22,14 +22,14 @@
           </dxi-column>
           <dxi-column dataField="HeadName"></dxi-column>
           <dxi-column dataField="Description"></dxi-column>
-          <dxi-column dataField="AccountNo" caption="Account">
+          <!-- <dxi-column dataField="AccountNo" caption="Account">
               <dxo-lookup [dataSource]="levelFourAccounts" valueExpr="AccountCode" displayExpr="AccountName">
               </dxo-lookup>
             </dxi-column>
             <dxi-column dataField="TransactionTypeId" caption="Transaction Type" [editorOptions]="{disabled: true}">
                 <dxo-lookup [dataSource]="transactionTypeDropdown" valueExpr="TransactionTypeId" displayExpr="TransactionTypeName">
                 </dxo-lookup>
-              </dxi-column>
+              </dxi-column> -->
 
           <dxi-column caption="Action" alignment="center" [width]="150" cellTemplate="CellTemplateEdit" *ngIf="isEditingAllowed"></dxi-column>
           <div *dxTemplate="let data of 'CellTemplateEdit'">
@@ -68,14 +68,14 @@
         </dxi-item>
         <dxi-item dataField="Description" style="text-align:left;">
         </dxi-item>
-        <dxi-item dataField="AccountNo" editorType="dxSelectBox" [editorOptions]="{dataSource:levelFourAccounts, valueExpr: 'AccountCode', displayExpr: 'AccountName', showClearButton: true  }">
+        <!-- <dxi-item dataField="AccountNo" editorType="dxSelectBox" [editorOptions]="{dataSource:levelFourAccounts, valueExpr: 'AccountCode', displayExpr: 'AccountName', showClearButton: true  }">
             <dxo-label text="Account" style="text-align:left;"></dxo-label>
             <dxi-validation-rule type="required">
           </dxi-validation-rule>
-        </dxi-item>
+        </dxi-item> 
         <dxi-item dataField="TransactionTypeId" [visible]="false" editorType="dxSelectBox" [editorOptions]="{dataSource:transactionTypeDropdown, valueExpr: 'TransactionTypeId', displayExpr: 'TransactionTypeName', showClearButton: true  }">
             <dxo-label text="Transaction Type" style="text-align:left;"></dxo-label>
-        </dxi-item>
+        </dxi-item> -->
         <dxi-item dataField="SaveForAll" editorType="dxCheckBox" [editorOptions]="{value: salaryHeadData.SaveForAll }">
             <dxo-label text="Save For All Employees" style="text-align:left;"></dxo-label>
         </dxi-item>
