@@ -29,5 +29,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public List<ProjectBudgetLineDetail> ProjectBudgetLineDetails { get; set; }
         public ProjectProposalDetail ProjectProposalDetail { get; set; }
         public List<ProjectJobDetail> ProjectJobDetail { get; set; }
+        public ProjectOtherDetail ProjectOtherDetail { get; set; }
+
     }
 }
