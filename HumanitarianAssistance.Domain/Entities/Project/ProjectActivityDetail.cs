@@ -75,6 +75,6 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public int? CountryId { get; set; }
         public CountryDetails CountryDetails { get; set; }
 
-
+        public virtual ICollection<ProjectMonitoringReviewDetail> ProjectMonitoringReviewDetail { get; set; }
     }
 }

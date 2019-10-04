@@ -126,7 +126,10 @@
                               <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
                               <dxo-header-filter [visible]="true"> </dxo-header-filter>
 
-                              <dxi-column dataField="CriteriaQuestion" caption=" "> </dxi-column>
+                              <!-- <dxi-column dataField="CriteriaQuestion" caption=" "> </dxi-column> -->
+                              <dxi-column dataField="CriteriaQuestion" caption=" ">
+                                <dxo-lookup [dataSource]="ratingBasedCriteriaQuestionsList" displayExpr="CriteriaQuestion" valueExpr="CriteriaQuestionId"></dxo-lookup>
+                            </dxi-column>
 
                               <dxi-column dataField="Rating" caption="Rating" [width]="200">
                                 <dxo-lookup [dataSource]="skillRatingRadioGroup" displayExpr="SkillRatingName" valueExpr="SkillRatingId"></dxo-lookup>

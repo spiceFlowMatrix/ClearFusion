@@ -1,0 +1,24 @@
+<mat-card class="sidebar-settings">
+
+  <mat-card-title>
+    <ng-content select="[title]"> </ng-content>
+  </mat-card-title>
+
+
+  <mat-card-subtitle>
+    <ng-content select="[subtitle]"></ng-content>
+  </mat-card-subtitle>
+
+  <mat-divider></mat-divider>
+
+  <mat-card-content>
+    <ng-content select="[content]"></ng-content>
+  </mat-card-content>
+
+  <mat-divider></mat-divider>
+
+  <mat-card-footer>
+    <ng-content select="[footer]"></ng-content>
+  </mat-card-footer>
+
+</mat-card>

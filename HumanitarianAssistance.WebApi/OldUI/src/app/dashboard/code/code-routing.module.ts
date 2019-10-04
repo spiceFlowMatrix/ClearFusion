@@ -29,6 +29,7 @@ import {
 import { RoleGuardService } from '../../service/role-guard.service';
 import { PensionDebitAccountComponent } from './pension-debit-account/pension-debit-account.component';
 import { AttendanceGroupMasterComponent } from './attendance-group-master/attendance-group-master.component';
+import { InterviewRatingQuestionsComponent } from './interview-rating-questions/interview-rating-questions.component';
 
 const Code: any = {
   ChartOfAccount: applicationPages.ChartOfAccount,
@@ -258,6 +259,14 @@ const appRouter: Routes = [
       {
         path: 'attendance-group-master',
         component: AttendanceGroupMasterComponent,
+        canActivate: [RoleGuardService],
+        data: {
+          module: CodeModule.ModuleId,
+          page: Code.AttendanceGroupMaster
+        }
+      }, {
+        path: 'interview-rating-questions',
+        component: InterviewRatingQuestionsComponent,
         canActivate: [RoleGuardService],
         data: {
           module: CodeModule.ModuleId,

@@ -53,6 +53,7 @@ namespace HumanitarianAssistance.Common.Helpers
             return salaryTax;
         }
 
+// Project actiivty recurring days 
         public static DateTime GetRecurringDays(int? RecurringCount, int? RecurrinTypeId, DateTime? PlannedStartDate)
         {
             DateTime eventDate = new DateTime();
@@ -67,29 +68,34 @@ namespace HumanitarianAssistance.Common.Helpers
             if (RecurrinTypeId == 1)
             {
                 numberOfReccuredDays = 1 * RecurringCount.Value;
-                eventDate = date.AddDays(numberOfReccuredDays);
+                eventDate = date.AddDays(numberOfReccuredDays - 1);
 
             }
             // weekly
             else if (RecurrinTypeId == 2)
             {
                 numberOfReccuredDays = 7 * RecurringCount.Value;
-                eventDate = date.AddDays(numberOfReccuredDays);
+                eventDate = date.AddDays(numberOfReccuredDays - 1);
             }
             // monthly
             else if (RecurrinTypeId == 3)
             {
+
                 eventDate = date.AddMonths(RecurringCount.Value);
+                //to get previous day 
+                eventDate = eventDate.AddDays(-1);
             }
             // yearly
             else if (RecurrinTypeId == 4)
             {
                 eventDate = date.AddYears(RecurringCount.Value);
+                eventDate = eventDate.AddDays(-1);
+
             }
             // quarterly
             else if (RecurrinTypeId == 5)
             {
-                // to get number of days in quaerterly year i is quarter value
+                // to get number of days in quaerterly year i is quarter value(3 months)
                 for (int i = 0; i < (3 * RecurringCount.Value); i++)
                 {
                     quarterdays = DateTime.DaysInMonth(year, month);
@@ -102,6 +108,7 @@ namespace HumanitarianAssistance.Common.Helpers
                     month = month + 1;
                 }
                 eventDate = date.AddDays(numberOfDaysInQuater);
+                // eventDate = eventDate.AddDays(-1);
             }
             return eventDate;
         }
@@ -122,5 +129,5 @@ namespace HumanitarianAssistance.Common.Helpers
             return purchaseName + "-" + purchaseDate.Date.ToShortDateString() + "-" + purchaseId;
         }
     }
-   
+
 }
