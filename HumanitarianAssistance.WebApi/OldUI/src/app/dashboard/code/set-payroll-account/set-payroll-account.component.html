@@ -37,7 +37,7 @@
 
         <dxi-column dataField="Description"></dxi-column>
 
-        <dxi-column dataField="AccountNo" caption="Account">
+        <!-- <dxi-column dataField="AccountNo" caption="Account">
           <dxo-lookup [dataSource]="levelFourAccounts" valueExpr="AccountNo" displayExpr="AccountName">
           </dxo-lookup>
         </dxi-column>
@@ -45,7 +45,7 @@
         <dxi-column dataField="TransactionTypeId"  caption="Transaction Type" [editorOptions]="{disabled: true}">
           <dxo-lookup [dataSource]="transactionTypeDropdown" valueExpr="TransactionTypeId" displayExpr="TransactionTypeName">
           </dxo-lookup>
-        </dxi-column>
+        </dxi-column> -->
 
         <dxo-paging [pageSize]="10"></dxo-paging>
       </dx-data-grid>

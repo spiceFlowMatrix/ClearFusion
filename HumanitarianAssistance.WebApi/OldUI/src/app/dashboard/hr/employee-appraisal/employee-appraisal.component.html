@@ -63,6 +63,8 @@
                 <dxi-column dataField="OfficeId" caption="Office" [visible]="false"></dxi-column>
                 <dxi-column dataField="TotalScore"></dxi-column>
 
+                <dxi-column dataField="AppraisalScore"></dxi-column>
+
                 <dxi-column caption="Action" alignment="center" cellTemplate="CellTemplateEdit" [width]="100" *ngIf="isEditingAllowed"></dxi-column>
                 <div *dxTemplate="let data of 'CellTemplateEdit'">
                   <a href="javascript:void(0)" (click)="onEditEmpAppraisalDetailShowForm(data.key, 1)">Edit</a>
@@ -120,6 +122,7 @@
 
                 <dxi-column dataField="CurrentAppraisalDate" caption="Evaluation Date" dataType="date" format="dd/MM/yyyy">
                 </dxi-column>
+                <dxi-column dataField="AppraisalScore"></dxi-column>
 
                 <dxi-column caption="Appraisal Request" cellTemplate="ActionAppraisalRequestCellTemplateEdit"></dxi-column>
                 <div *dxTemplate="let data of 'ActionAppraisalRequestCellTemplateEdit'">
@@ -257,14 +260,14 @@
                             <dxo-lookup [dataSource]="remarksList" valueExpr="RemarkId" displayExpr="RemarkName">
                             </dxo-lookup>
                           </dxi-column>
-                          <dxi-column dataField="Remarks"></dxi-column>
-
+                          <dxi-column dataField="Remarks">
+                              <dxi-validation-rule type="pattern"
+                              [pattern]="RemarksPattern" message="max length is 100 words"> </dxi-validation-rule>
+                          </dxi-column>
                           <dxo-summary>
                             <dxi-total-item column="Score" summaryType="sum">
                             </dxi-total-item>
                           </dxo-summary>
-
-
                           <dxo-paging [pageSize]="10"></dxo-paging>
                           <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
 
@@ -311,14 +314,17 @@
                   [showValidationSummary]="true" validationGroup="empAppValidationDetails">
 
                   <dxi-item itemType="group" caption="Employee Details" [colSpan]="2" [colCount]="2">
+
+                      <dxi-item dataField="EmployeeCode">
+                          <div style="text-align: justify">{{employeeAppraisalQuestionForm.EmployeeCode}}</div>                  
+                        </dxi-item>  
+
+                        <dxi-item dataField="DutyStation">                          
+                          <div style="text-align: justify">{{employeeAppraisalQuestionForm.DutyStation}}</div>                  
+                        </dxi-item>  
                     <dxi-item dataField="EmployeeName" disabled="true" [colSpan]="1">
                       <dxo-label text="Employee Name"></dxo-label>
                     </dxi-item>
-
-                    <!-- <dxi-item dataField="EmployeeName" disabled="true" [colSpan]="1">
-                      <dxo-label text="Employee Name"></dxo-label>
-                      <dxi-validation-rule type="required"> </dxi-validation-rule>
-                    </dxi-item> -->
 
                     <dxi-item dataField="Position" disabled="true" [colSpan]="1">
                       <dxo-label text="Position"></dxo-label>
@@ -348,8 +354,10 @@
                       <dxo-label text="Current Appraisal Date"></dxo-label>
                       <dxi-validation-rule type="required"> </dxi-validation-rule>
                     </dxi-item>
+                    <dxi-item dataField="AppraisalScore" disabled="true" [colSpan]="1">
+                      <dxo-label text="AppraisalScore"></dxo-label>
+                    </dxi-item>
                   </dxi-item>
-
                   <dxi-item itemType="group" caption="General / Profession Indicators" [colSpan]="2" [colCount]="2">
 
                     <dx-data-grid id="gridContainer" [dataSource]="questionSourceData" [allowColumnReordering]="true" [allowColumnResizing]="true"

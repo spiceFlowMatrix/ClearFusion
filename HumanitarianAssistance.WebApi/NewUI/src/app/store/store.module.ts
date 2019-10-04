@@ -18,6 +18,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialogModule } from '@angular/material/dialog';
 import { PurchaseFiledConfigComponent } from './components/purchase-filed-config/purchase-filed-config.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { DocumentUploadComponent } from './components/document-upload/document-upload.component';
 
 
 
@@ -28,7 +29,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     AddPurchaseComponent,
     AddProcurementsComponent,
     EntryComponentComponent,
-    PurchaseFiledConfigComponent
+    PurchaseFiledConfigComponent,
+    DocumentUploadComponent
     // components
   //  DbsidebarComponent,
    // DbheaderComponent,

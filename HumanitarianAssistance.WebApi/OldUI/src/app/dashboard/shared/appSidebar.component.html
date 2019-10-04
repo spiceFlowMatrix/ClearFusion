@@ -46,6 +46,9 @@
                         <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.TechnicalQuestions)">
                             <a (click)="navigateToPath('code/technical-questions')">Technical Questions</a>
                         </li>
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.InterviewRatingQuestions)">
+                            <a (click)="navigateToPath('code/interview-rating-questions')">Rating Based Questions</a>
+                        </li>
                         <!-- <li (click)="toggleSideFun()">
                             <a [routerLink]="['code/analytical-codes']">Analytical Codes</a>
                         </li> -->
@@ -84,7 +87,7 @@
                         </li>
                         <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.AttendanceGroupMaster)">
                             <a (click)="navigateToPath('code/attendance-group-master')">Attendance Group Master</a>
-                        </li>
+                        </li>     
                     </ul>
                 </li>
 
