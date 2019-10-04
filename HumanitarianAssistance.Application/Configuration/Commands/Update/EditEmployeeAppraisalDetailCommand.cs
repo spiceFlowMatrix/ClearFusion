@@ -31,8 +31,9 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Update
 		public DateTime CurrentAppraisalDate { get; set; }
 		public int OfficeId { get; set; }
 		public int? TotalScore { get; set; }
-		public bool AppraisalStatus { get; set; }
-		public List<EmployeeAppraisalQuestionModel> EmployeeAppraisalQuestionList { get; set; }
+		public bool AppraisalStatus { get; set; }  
+        public double AppraisalScore { get; set; }
+        public List<EmployeeAppraisalQuestionModel> EmployeeAppraisalQuestionList { get; set; }
 		public List<EmployeeEvaluationTrainingModel> EmployeeEvaluationModelList { get; set; }
 		public List<string> StrongPoints { get; set; }
 		public List<string> WeakPoints { get; set; }

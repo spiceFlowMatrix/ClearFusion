@@ -35,11 +35,6 @@
                                 <td align="center" style="font-size:20px;font-weight:500;">COORDINATION OF HUMANITARIAN ASSISTANCE<br>TRANSACTION VOUCHER</td>
                             </tr>
                         </table>
-                        <table cellpadding="5" style="width:100%;">
-                            <tr>
-                                <td align="center" style="color:#636363;">@Model.RecordTypeText</td>
-                            </tr>
-                        </table>
                     </td>
                 </tr>
                 @foreach (var voucher in Model.VoucherDetails)
@@ -56,7 +51,7 @@
                             </tr>
                             <tr>
                             	<td style="color:#636363;">Voucher No:</td>
-                                <td style="font-weight:500">@voucher.VoucherNo</td>
+                                <td style="font-weight:500">@voucher.ReferenceNo</td>
                                 <td>&nbsp;</td>
                                 <td style="color:#636363;">Journal:</td>
                                 <td style="font-weight:500">@voucher.Journal</td>

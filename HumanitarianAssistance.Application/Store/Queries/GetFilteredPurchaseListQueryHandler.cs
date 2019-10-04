@@ -84,8 +84,9 @@ namespace HumanitarianAssistance.Application.Store.Queries
                 var queryResult = query.Select(x => new PurchaseListModel
                 {
                     PurchaseId = x.PurchaseId,
-                    PurchaseDate = x.PurchaseDate,
+                    PurchaseDate = x.PurchaseDate.ToShortDateString(),
                     CurrencyId = x.Currency,
+                    PurchasedQuantity= x.Quantity,
                     ItemId = x.StoreInventoryItem != null ? x.StoreInventoryItem.ItemId : 0,
                     ItemName = x.StoreInventoryItem != null ? (x.StoreInventoryItem.ItemCode + "-" + x.StoreInventoryItem.ItemName) : "",
                     EmployeeName = x.EmployeeDetail != null ? x.EmployeeDetail.EmployeeCode + "-" + x.EmployeeDetail.EmployeeName : "",
@@ -93,9 +94,9 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     ProjectName = x.ProjectDetail == null ? "" : x.ProjectDetail.ProjectCode + "-" + x.ProjectDetail.ProjectName,
                     OriginalCost = x.UnitCost * x.Quantity,
                     DepreciatedCost = (x.UnitCost * x.Quantity) - (Math.Ceiling(DateTime.Now.Date.Subtract(x.PurchaseDate).TotalDays) * x.Quantity * x.DepreciationRate * x.UnitCost / 100),
-                    ProcurementList = x.PurchaseOrders.Select(z => new ProcurementListModel
+                    ProcurementList = x.PurchaseOrders.Where(p=> !p.IsDeleted).Select(z => new ProcurementListModel
                     {
-                        IssueId = z.OrderId,
+                        OrderId = z.OrderId,
                         EmployeeName = z.EmployeeDetail.EmployeeCode + "-" + z.EmployeeDetail.EmployeeName,
                         IssueDate = z.IssueDate,
                         MustReturn = z.MustReturn,

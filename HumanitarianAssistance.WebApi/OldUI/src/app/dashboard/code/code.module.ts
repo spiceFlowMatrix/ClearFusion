@@ -48,6 +48,7 @@ import { SetPayrollAccountComponent } from './set-payroll-account/set-payroll-ac
 import { CommonService } from '../../service/common.service';
 import { PensionDebitAccountComponent } from './pension-debit-account/pension-debit-account.component';
 import { AttendanceGroupMasterComponent } from './attendance-group-master/attendance-group-master.component';
+import { InterviewRatingQuestionsComponent } from './interview-rating-questions/interview-rating-questions.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -105,7 +106,8 @@ import { AttendanceGroupMasterComponent } from './attendance-group-master/attend
     SalaryTaxReportContentComponent,
     SetPayrollAccountComponent,
     PensionDebitAccountComponent,
-    AttendanceGroupMasterComponent
+    AttendanceGroupMasterComponent,
+    InterviewRatingQuestionsComponent
   ],
   providers: [CodeService, CommonService]
 })

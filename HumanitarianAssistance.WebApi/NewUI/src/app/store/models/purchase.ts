@@ -48,10 +48,11 @@ export interface IPurchaseList {
 export interface IProcurementList {
   EmployeeName?: string;
   IssueDate?: string;
-  IssueId?: number;
+  OrderId?: number;
   MustReturn?: boolean;
   ProcuredAmount?: string;
   Returned: boolean;
+  ReturnedOn?: any;
 }
 
 export interface IAddEditPurchaseModel {
@@ -103,4 +104,9 @@ export interface IAddEditProcurementModel {
   IssedToLocation: number;
   StatusAtTimeOfIssue: number;
   Project: number;
+}
+
+export interface IDeleteProcurementModel {
+  PurchaseId?: number;
+  OrderId: number;
 }

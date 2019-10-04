@@ -1258,6 +1258,14 @@ namespace HumanitarianAssistance.Persistence.Migrations
                             ModuleId = 2,
                             ModuleName = "Code",
                             PageName = "AttendanceGroupMaster"
+                        },
+                        new
+                        {
+                            PageId = 89,
+                            IsDeleted = false,
+                            ModuleId = 2,
+                            ModuleName = "Code",
+                            PageName = "InterviewRatingQuestions"
                         });
                 });
 
@@ -1952,6 +1960,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AppraisalPeriod");
+
+                    b.Property<double?>("AppraisalScore");
 
                     b.Property<bool>("AppraisalStatus");
 
@@ -4019,6 +4029,30 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("OfficeId");
 
                     b.ToTable("PayrollMonthlyHourDetail");
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.RatingBasedCriteriaQuestions", b =>
+                {
+                    b.Property<int>("QuestionsId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int>("OfficeId");
+
+                    b.Property<string>("Question");
+
+                    b.HasKey("QuestionsId");
+
+                    b.ToTable("RatingBasedCriteriaQuestions");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.SalaryHeadDetails", b =>

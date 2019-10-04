@@ -1,10 +1,13 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { of, Observable } from 'rxjs';
 import { PurchaseService } from '../../services/purchase.service';
 import { IFilterValueModel, IPurchaseList, IProcurementList } from '../../models/purchase';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { AddProcurementsComponent } from '../add-procurements/add-procurements.component';
+import { DatePipe } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
+import { PurchaseFiledConfigComponent } from '../purchase-filed-config/purchase-filed-config.component';
 
 @Component({
   selector: 'app-purchase-list',
@@ -22,11 +25,16 @@ export class PurchaseListComponent implements OnInit {
   screenWidth: any;
   scrollStyles: any;
 
+  showConfig = false;
+  @ViewChild(PurchaseFiledConfigComponent) fieldConfig : PurchaseFiledConfigComponent;
+
   purchaseListHeaders$ = of(['Id', 'Item', 'Purchased By', 'Project', 'Original Cost', 'Deprecated Cost']);
   subListHeaders$ = of(['Id', 'Date', 'Employee', 'Procured Amount', 'Must Return', 'Returned', 'Returned On']);
   procurementList$: Observable<IProcurementList[]>;
 
-  constructor(private purchaseService: PurchaseService, private router: Router, private dialog: MatDialog) {
+  constructor(private purchaseService: PurchaseService,
+              private router: Router, private dialog: MatDialog,
+              private datePipe: DatePipe, private toastr: ToastrService) {
 
     this.filterValueModel = {
       CurrencyId: null,
@@ -133,20 +141,46 @@ export class PurchaseListComponent implements OnInit {
 
       this.purchaseList$.subscribe((purchase) => {
         console.log(purchase);
-        // debugger;
-        // const index = purchase.findIndex(i => i.Id === x.PurchaseId);
-        // if (index !== -1) {
-        //   purchase[index].subItems.unshift({
-        //     EmployeeName: x.EmployeeName,
-        //     IssueDate: x.IssueDate,
-        //     IssueId: x.ProcurementId,
-        //     MustReturn: x.MustReturn,
-        //     ProcuredAmount: x.IssuedQuantity,
-        //     Returned: false
-        //   });
-        // }
+
+        const index = purchase.findIndex(i => i.Id === x.PurchaseId);
+        if (index !== -1) {
+          purchase[index].subItems.unshift({
+            EmployeeName: x.EmployeeName,
+            IssueDate: this.datePipe.transform(x.IssueDate, 'dd-MM-yyyy'),
+            OrderId: x.ProcurementId,
+            MustReturn: x.MustReturn,
+            ProcuredAmount: x.IssuedQuantity,
+            Returned: false
+          });
+        }
+        this.purchaseList$ = of(purchase);
       });
     });
+  }
+
+  deleteProcurement(event: any) {
+    this.purchaseService.deleteProcurement(event.subItem.OrderId)
+        .subscribe(x => {
+          if (x.StatusCode === 200) {
+            this.purchaseList$.subscribe((purchase) => {
+              const index = purchase.findIndex(i => i.Id === event.item.Id);
+              if (index >= 0) {
+                const subItemIndex = purchase[index].subItems.findIndex(i => i.OrderId === event.subItem.OrderId);
+                purchase[index].subItems.splice(subItemIndex, 1);
+              }
+              this.purchaseList$ = of(purchase);
+            });
+            this.toastr.success(x.Message);
+          } else {
+            this.toastr.warning(x.Message);
+          }
+        },
+        (error) => {
+          this.toastr.error(error);
+        });
+  }
+  showConfiguration(){
+   this.fieldConfig.show();
   }
 
 }
