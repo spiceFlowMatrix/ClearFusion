@@ -86,7 +86,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     {
                         if (payrollAttendance.GrossSalary == 0 || payrollAttendance.GrossSalary == null)
                         {
-                            int iCurrencyId = payrollDetail.FirstOrDefault(x => x.HeadTypeId == 3).CurrencyId;
+                            int? iCurrencyId = payrollDetail.FirstOrDefault(x => x.HeadTypeId == 3).CurrencyId;
 
                             EmployeeMonthlyPayrollModel obj = new EmployeeMonthlyPayrollModel();
 
