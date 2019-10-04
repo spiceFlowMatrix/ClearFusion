@@ -96,7 +96,7 @@ export class PurchaseListComponent implements OnInit {
     this.purchaseService
       .getFilteredPurchaseList(filter).subscribe(x => {
         this.purchaseRecordCount = x.RecordCount;
-        this.purchaseFilterConfigList$ = of(x);
+        this.purchaseFilterConfigList$ = of(x.PurchaseList);
         this.purchaseList$ = of(x.PurchaseList.map((element) => {
           return {
             Id: element.PurchaseId,
@@ -211,11 +211,12 @@ export class PurchaseListComponent implements OnInit {
     //  this.purchaseListHeaders$ = of(headers);
 
     // this.purchaseFilterConfigList$.subscribe(y => {
-    //   this.purchaseList$ = of(y.map((element) => {
-    //     return {
 
-    //     } as IPurchaseList;
-    //   }));
+    //   // this.purchaseList$ = of(y.map((element) => {
+    //   //   return {
+
+    //   //   } as IPurchaseList;
+    //   // }));
     // });
 
   }
