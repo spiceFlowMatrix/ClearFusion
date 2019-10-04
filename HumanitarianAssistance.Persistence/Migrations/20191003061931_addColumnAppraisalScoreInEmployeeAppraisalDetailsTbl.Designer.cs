@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191003061931_addColumnAppraisalScoreInEmployeeAppraisalDetailsTbl")]
+    partial class addColumnAppraisalScoreInEmployeeAppraisalDetailsTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1258,14 +1260,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                             ModuleId = 2,
                             ModuleName = "Code",
                             PageName = "AttendanceGroupMaster"
-                        },
-                        new
-                        {
-                            PageId = 89,
-                            IsDeleted = false,
-                            ModuleId = 2,
-                            ModuleName = "Code",
-                            PageName = "InterviewRatingQuestions"
                         });
                 });
 
@@ -4029,30 +4023,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("OfficeId");
 
                     b.ToTable("PayrollMonthlyHourDetail");
-                });
-
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.RatingBasedCriteriaQuestions", b =>
-                {
-                    b.Property<int>("QuestionsId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int>("OfficeId");
-
-                    b.Property<string>("Question");
-
-                    b.HasKey("QuestionsId");
-
-                    b.ToTable("RatingBasedCriteriaQuestions");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.SalaryHeadDetails", b =>

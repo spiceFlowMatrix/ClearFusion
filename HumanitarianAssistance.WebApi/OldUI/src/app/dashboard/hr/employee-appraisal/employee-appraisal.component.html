@@ -268,7 +268,6 @@
                             <dxi-total-item column="Score" summaryType="sum">
                             </dxi-total-item>
                           </dxo-summary>
-                          
                           <dxo-paging [pageSize]="10"></dxo-paging>
                           <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
 
@@ -355,8 +354,10 @@
                       <dxo-label text="Current Appraisal Date"></dxo-label>
                       <dxi-validation-rule type="required"> </dxi-validation-rule>
                     </dxi-item>
+                    <dxi-item dataField="AppraisalScore" disabled="true" [colSpan]="1">
+                      <dxo-label text="AppraisalScore"></dxo-label>
+                    </dxi-item>
                   </dxi-item>
-
                   <dxi-item itemType="group" caption="General / Profession Indicators" [colSpan]="2" [colCount]="2">
 
                     <dx-data-grid id="gridContainer" [dataSource]="questionSourceData" [allowColumnReordering]="true" [allowColumnResizing]="true"

@@ -51,7 +51,8 @@ export enum applicationPages {
   MarketingJobs = 65,
   Policy = 73,
   PensionDebitAccount= 87,
-  AttendanceGroupMaster= 88
+  AttendanceGroupMaster= 88,
+  InterviewRatingQuestions= 89
 }
 
 export enum applicationModule {

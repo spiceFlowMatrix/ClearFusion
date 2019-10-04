@@ -1241,7 +1241,7 @@ export class EmployeeAppraisalComponent implements OnInit {
                         });
 
                         this.selectedOffice =
-                            (this.selectedOffice === null || this.selectedOffice == undefined)
+                            (this.selectedOffice === null || this.selectedOffice === undefined)
                                     ? this.officeDropdownList[0].OfficeId
                                 : this.selectedOffice;
 
@@ -1362,7 +1362,7 @@ export class EmployeeAppraisalComponent implements OnInit {
     // }
     //#endregion
 
- 
+
 
   // Evaluation Add
   onEvaluationAdding(data: any) {

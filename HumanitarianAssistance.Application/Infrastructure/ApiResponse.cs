@@ -293,6 +293,7 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public ICollection<PayrollAccountHead> PayrollAccountHead { get; set; }
         public long? PensionDebitAccountId { get; set; }
         public List<AttendanceGroupMasterModel> AttendanceGroupMasterList { get; set; }
+        public List<RatingBasedCriteriaQuestionsModel> RatingBasedCriteriaQuestionList { get; set; }  
         #endregion
 
 

@@ -17,7 +17,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {MatRangeDatepickerModule, MatRangeNativeDateModule } from 'mat-range-datepicker';
 
 
 

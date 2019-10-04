@@ -72,7 +72,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             model.CreatedById = userId;
             model.CreatedDate = DateTime.UtcNow;
-            
+
             return await _mediator.Send(model);
         }
 
@@ -208,7 +208,8 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
         [HttpPost]
         public async Task<ApiResponse> GetAllAccountTypeByCategory([FromBody]int id)
         {
-            return await _mediator.Send(new GetAllAccountTypeByCategoryQuery {
+            return await _mediator.Send(new GetAllAccountTypeByCategoryQuery
+            {
                 Id = id
             });
         }
@@ -254,7 +255,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
         {
             return await _mediator.Send(new GetEmployeeAppraisalByIdQuery { EmployeeId = EmployeeId, CurrentAppraisalDate = CurrentAppraisalDate });
         }
-
         [HttpGet]
         public async Task<ApiResponse> GetAllEmployeeAppraisalDetails([FromQuery] int OfficeId)
         {
@@ -698,6 +698,31 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
 
         #endregion
 
+        #region "Rating Based Criteria Questions"    
+        [HttpGet]
+        public async Task<ApiResponse> GetAllRatingBasedCriteriaQuestionsByOfficeId([FromQuery] int OfficeId)
+        {
+            return await _mediator.Send(new GetAllRatingBasedCriteriaQuestionsByOfficeIdQuery { OfficeId = OfficeId });
+        }    
+        [HttpPost]
+        public async Task<ApiResponse> AddRatingBasedCriteriaQuestions([FromBody]AddRatingBasedCriteriaQuestionsCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }  
+        [HttpPost]
+        public async Task<ApiResponse> EditRatingBasedCriteriaQuestions([FromBody]EditRatingBasedCriteriaQuestionsCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+        
+        #endregion
+         
         #region "Interview Technical Questions"
         [HttpPost]
         public async Task<ApiResponse> AddInterviewTechnicalQuestions([FromBody]AddInterviewTechnicalQuestionsCommand model)
@@ -898,8 +923,8 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
         {
             return await _mediator.Send(new GetContractTypeContentQuery
             {
-                OfficeId= officeId,
-                EmployeeContractTypeId= EmployeeContractTypeId
+                OfficeId = officeId,
+                EmployeeContractTypeId = EmployeeContractTypeId
             });
         }
 
@@ -915,7 +940,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
         [HttpGet]
         public async Task<ApiResponse> GetAllEmployeeContractType()
         {
-           return await _mediator.Send(new GetAllEmployeeContractTypeQuery());
+            return await _mediator.Send(new GetAllEmployeeContractTypeQuery());
         }
 
         [HttpGet]
@@ -924,8 +949,8 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
         public async Task<IActionResult> GetOfficeListAssignedToUser()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            
-            var result = await Task.FromResult(_mediator.Send(new GetOfficeListAssignedToUserQuery { UserId= userId}));
+
+            var result = await Task.FromResult(_mediator.Send(new GetOfficeListAssignedToUserQuery { UserId = userId }));
 
             if (result.Exception == null)
             {

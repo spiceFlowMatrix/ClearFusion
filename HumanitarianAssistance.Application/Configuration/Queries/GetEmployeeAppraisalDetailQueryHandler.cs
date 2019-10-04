@@ -51,6 +51,11 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                     model.OfficeId = item.OfficeId;
                     model.TotalScore = item.TotalScore;
                     model.AppraisalStatus = item.AppraisalStatus;
+                    var scorePoint = item.AppraisalScore != null ? Math.Round((double)item.AppraisalScore) : 0;
+                    if (item.AppraisalScore != null)
+                    {
+                        model.AppraisalScore = scorePoint + " - " + ((MarkedScores)scorePoint).ToString();
+                    }
                     foreach (var element in quesLst)
                     {
                         EmployeeAppraisalQuestionModel questions = new EmployeeAppraisalQuestionModel();
@@ -62,10 +67,7 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                         questions.Remarks = element.Remarks;
                         questions.EmployeeAppraisalQuestionsId = element.EmployeeAppraisalQuestionsId;
                         model.EmployeeAppraisalQuestionList.Add(questions);
-                    }
-                    var scorePoint = Math.Round((decimal)item.TotalScore / (decimal)quesLst.Count());
-                    model.AppraisalScore = ((MarkedScores)scorePoint).ToString();
-                        
+                    }                        
                     lst.Add(model);
                 }
                 response.data.EmployeeAppraisalDetailsModelLst = lst;

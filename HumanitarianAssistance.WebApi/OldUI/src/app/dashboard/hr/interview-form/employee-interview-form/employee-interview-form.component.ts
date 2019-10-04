@@ -39,7 +39,8 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
 
   yesNoRadioGroup: any[];
   interviewFormRadioGroup: any[];
-  ratingBasedCriteriaDataSource: any[];
+  ratingBasedCriteriaDataSource: any[] = [];
+  ratingBasedCriteriaQuestionsList: any[];
   @Input() isEditingAllowed: boolean;
 
   // form
@@ -81,6 +82,18 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
       this.employeeId = +params['empId'];
     });
     this.initializeForm();
+    // this.technicalQuestionsList = [
+    //   {
+    //     Question: null,
+    //     InterviewTechnicalQuestionsId: null
+    //   }
+    // ];
+    // this.ratingBasedCriteriaQuestionsList = [
+    //   {
+    //     CriteriaQuestion: null,
+    //     CriteriaQuestionId: null
+    //   }
+    // ];
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -93,6 +106,11 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
     //  this.getAllInterviewDetails();
       this.getjobCodeList();
       this.getDepartmentType(this.officeId);
+
+      this.technicalQuestionsList = [];
+      this.ratingBasedCriteriaQuestionsList = [];
+      this.getAllCriteriaQuestions();
+      this.getAllInterviewQuestions();
     }
   }
 
@@ -177,6 +195,12 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
         InterviewTechnicalQuestionsId: null
       }
     ];
+    this.ratingBasedCriteriaQuestionsList = [
+      {
+        CriteriaQuestion: null,
+        CriteriaQuestionId: null
+      }
+    ];
 
     this.initInterviewForm();
   }
@@ -203,15 +227,8 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
 
     this.trainingListDataSource = [];
     this.ratingBasedCriteriaDataSource = [];
+    this.technicalQuestionsListDataSource = [];
 
-    // this.technicalQuestionsListDataSource = [
-    //   {
-    //     TechnicalQuestionId: null,
-    //     Question: null,
-    //     Answer: null
-    //   }
-    // ];
-    this.getAllInterviewQuestions();
     this.empInterviewFormMainForm = {
       InterviewDetailsId: null,
 
@@ -262,6 +279,8 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
       InterviewStatus: null
     };
     this.Interviewers = [];
+    // this.getAllCriteriaQuestions();
+    // this.getAllInterviewQuestions();
   }
 
   //#region "getAllInterviewDetails"
@@ -600,7 +619,6 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
     if (model != null) {
       this.disableSelectEmpDropdownFlag();
       this.interviewFormViewOnly = viewOnly;
-
       this.empInterviewFormMainForm = {
         InterviewDetailsId: model.InterviewDetailsId,
         EmployeeID: model.EmployeeID,
@@ -942,6 +960,43 @@ getAllInterviewQuestions() {
 //#endregion
 
 
+//#region "Get All Interview Questions"
+getAllCriteriaQuestions() {
+  // tslint:disable-next-line:radix
+  const officeId = this.officeId;
+  this.codeService
+    .GetAppraisalQuestions(
+      this.setting.getBaseUrl() + GLOBAL.API_Code_GetRatingBasedCriteriaQuestions,
+      officeId
+    )
+    .subscribe(
+      data => {
+        this.ratingBasedCriteriaQuestionsList = [];
+        if (
+          data.StatusCode === 200 &&
+          data.data.RatingBasedCriteriaQuestionList.length > 0 &&
+          data.data.RatingBasedCriteriaQuestionList != null
+        ) {
+          data.data.RatingBasedCriteriaQuestionList.forEach(element => {
+            this.ratingBasedCriteriaQuestionsList.push({
+                CriteriaQuestionId : element.QuestionsId,
+                CriteriaQuestion : element.Question
+              });
+          });
+        }
+      },
+      error => {
+        if (error.StatusCode === 500) {
+          this.toastr.error('Internal Server Error....');
+        } else if (error.StatusCode === 401) {
+          this.toastr.error('Unauthorized Access Error....');
+        } else if (error.StatusCode === 403) {
+          this.toastr.error('Forbidden Error....');
+        }
+      }
+    );
+}
+// #endregion
 
 
 
@@ -1081,3 +1136,9 @@ class InterviewTechnicalQuestionModel {
   Question: any;
   Answer: string;
 }
+
+// class CriteriaQuestionModel {
+//   QuestionId: number;
+//   CriteriaQuestion: any;
+//   Rating: string;
+// }

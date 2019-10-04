@@ -229,23 +229,6 @@
         Perfect = 4,
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public enum QuestionType
     {
         Qualitative = 1,

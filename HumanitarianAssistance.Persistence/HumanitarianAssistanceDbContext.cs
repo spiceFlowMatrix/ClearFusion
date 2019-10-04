@@ -73,7 +73,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<EmployeeAppraisalDetails> EmployeeAppraisalDetails { get; set; }
         public DbSet<EmployeeAppraisalQuestions> EmployeeAppraisalQuestions { get; set; }
         public DbSet<EmployeeEvaluation> EmployeeEvaluation { get; set; }
-        public DbSet<InterviewTechnicalQuestions> InterviewTechnicalQuestions { get; set; }
+        public DbSet<InterviewTechnicalQuestions> InterviewTechnicalQuestions { get; set; }    
         public DbSet<Advances> Advances { get; set; }
 
         public DbSet<InterviewDetails> InterviewDetails { get; set; }
@@ -214,7 +214,9 @@ namespace HumanitarianAssistance.Persistence
 
         public DbSet<VerificationSources> VerificationSources { get; set; }
 
-        #endregion
+        public DbSet<RatingBasedCriteriaQuestions> RatingBasedCriteriaQuestions { get; set; }
+
+        #endregion  
 
         #region Marketing
         public DbSet<InvoiceGeneration> InvoiceGeneration { get; set; }
@@ -381,7 +383,8 @@ namespace HumanitarianAssistance.Persistence
                 new ApplicationPages { IsDeleted = false, PageId = 85, PageName = "VoucherSummaryReport", ModuleId = 7, ModuleName = "AccountingNew" },
                 new ApplicationPages { IsDeleted = false, PageId = 86, PageName = "HiringRequests", ModuleId = 8, ModuleName = "Projects" },
                 new ApplicationPages { IsDeleted = false, PageId = 87, PageName = "PensionDebitAccount", ModuleId = 2, ModuleName = "Code" },
-                new ApplicationPages { IsDeleted = false, PageId = 88, PageName = "AttendanceGroupMaster", ModuleId = 2, ModuleName = "Code" }
+                new ApplicationPages { IsDeleted = false, PageId = 88, PageName = "AttendanceGroupMaster", ModuleId = 2, ModuleName = "Code" },
+                new ApplicationPages { IsDeleted = false, PageId = 89, PageName = "InterviewRatingQuestions", ModuleId = 2, ModuleName = "Code" }
             );
 
 
