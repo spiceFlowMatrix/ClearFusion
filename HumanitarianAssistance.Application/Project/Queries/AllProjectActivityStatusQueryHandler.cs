@@ -174,8 +174,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                                                       a.ProjectId == projectId &&
                                                                                       a.ParentId == null
                                                                                       &&
-                                                                                      (a.ActualEndDate != null ? a.ActualEndDate.Value.Date : DateTime.UtcNow.Date) >
-                                                                                      (a.PlannedEndDate != null ? a.PlannedEndDate.Value.Date : DateTime.UtcNow.Date)
+                                                                                      (a.ActualEndDate.Value.Date != null ? a.ActualEndDate.Value.Date : DateTime.UtcNow.Date) >
+                                                                                      (a.PlannedEndDate.Value.Date != null ? a.PlannedEndDate.Value.Date : DateTime.UtcNow.Date)
                                                                                       );
             return slippage;
         }

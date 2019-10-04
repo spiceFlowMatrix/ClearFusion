@@ -57,10 +57,10 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                         {
                             response.data.VoucherSummaryTransactionList = new List<VoucherSummaryTransactionModel>();
 
-                            ExchangeRateDetail exchangeRateDetail = exchangeRateDetail = await _dbContext.ExchangeRateDetail
+                            ExchangeRateDetail exchangeRateDetail = await _dbContext.ExchangeRateDetail
                                                                                   .OrderByDescending(x => x.Date)
                                                                                   .FirstOrDefaultAsync(x => x.IsDeleted == false &&
-                                                                                   x.Date <= data.VoucherDate.Date && x.FromCurrency == data.CurrencyId &&
+                                                                                   x.Date.Date <= data.VoucherDate.Date && x.FromCurrency == data.CurrencyId &&
                                                                                    x.ToCurrency == model.CurrencyId);
 
                             foreach (var item in data.VoucherTransactionDetails)

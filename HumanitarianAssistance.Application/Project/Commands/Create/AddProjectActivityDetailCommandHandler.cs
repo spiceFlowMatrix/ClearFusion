@@ -31,11 +31,10 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                 // note to update end date value 
                 if (obj.Recurring == true)
                 {
-                   
+
                     obj.PlannedEndDate = StaticFunctions.GetRecurringDays(obj.RecurringCount, obj.RecurrinTypeId, obj.PlannedStartDate);
 
                 }
-
                 obj.CreatedDate = DateTime.UtcNow;
                 obj.IsDeleted = false;
                 obj.CreatedById = request.CreatedById;
@@ -90,7 +89,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
             }
             return response;
         }
-       
+
     }
 
 }

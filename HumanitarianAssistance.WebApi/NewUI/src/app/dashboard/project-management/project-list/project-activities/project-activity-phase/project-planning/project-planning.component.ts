@@ -19,7 +19,7 @@ import {
   IEmployeeList,
   IOfficeList
 } from '../../models/project-activities.model';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ProjectActivityStatus } from 'src/app/shared/enum';
 import { AddExtensionsComponent } from '../add-extensions/add-extensions.component';
@@ -29,7 +29,10 @@ import { StaticUtilities } from 'src/app/shared/static-utilities';
 import { DatePipe } from '@angular/common';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
-import { IProjectRoles, IProjectPeople } from '../../../project-details/models/project-people.model';
+import {
+  IProjectRoles,
+  IProjectPeople
+} from '../../../project-details/models/project-people.model';
 import { ProjectListService } from '../../../service/project-list.service';
 
 @Component({
@@ -102,7 +105,7 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.getActivityPermission();
-    console.log('activity projectid', this.activityDetail.ProjectId );
+    console.log('activity projectid', this.activityDetail.ProjectId);
     this.projectId = this.activityDetail.ProjectId;
   }
 
@@ -115,6 +118,12 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
     ) {
       this.onChanges();
       this.getAllExtensionList();
+      if (
+        this.activityDetail != null &&
+        this.activityDetail.Recurring === true
+      ) {
+        this.diasbleEndDate = true;
+      }
     }
   }
 
@@ -131,13 +140,12 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
       Assignee: [this.activityDetail.EmployeeID],
       Location: [this.activityDetail.OfficeId],
       Recurring: [this.activityDetail.Recurring],
-      RecurringCount: [this.activityDetail.RecurringCount],
+      RecurringCount: [this.activityDetail.RecurringCount, [Validators.min]],
       RecurringType: [this.activityDetail.RecurrinTypeId],
       ProvinceId: [this.activityDetail.ProvinceId],
       DistrictID: [this.activityDetail.DistrictID],
       CountryId: [this.activityDetail.CountryId]
     });
-
   }
   //#endregion
 
@@ -221,12 +229,20 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
 
   checkUploadDocumentPermission(): boolean {
     // NOTE: Document can be uploaded by any person "EXCEPT PLANNING OFFICER"
-    return this.projectPermissions.filter(x => x.RoleId !== this.actualProjectPermissions[0].Id).length > 0 ?  true : false;
+    return this.projectPermissions.filter(
+      x => x.RoleId !== this.actualProjectPermissions[0].Id
+    ).length > 0
+      ? true
+      : false;
   }
 
   checkAddExtensionPermission(): boolean {
     // NOTE: Only "PLANNING OFFICER" will Add Extension
-    return this.projectPermissions.filter(x => x.RoleId === this.actualProjectPermissions[0].Id).length > 0 ?  true : false;
+    return this.projectPermissions.filter(
+      x => x.RoleId === this.actualProjectPermissions[0].Id
+    ).length > 0
+      ? true
+      : false;
   }
   //#endregion
 
@@ -269,7 +285,6 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
                 ),
                 Description: element.Description
               });
-
             });
           }
         },
@@ -299,18 +314,21 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
   }
   //#endregion
 
-
   //#region "editProjectActivity"
   editProjectActivity(data: any) {
     this.editActivityLoader = true;
+    if (data.Recurring === false) {
+      data.RecurringCount = 0;
+      data.RecurrinTypeId = null;
+    }
 
     const projectActivityDetail: IProjectActivityDetail = {
       // Planning
       ActivityId: data.ActivityId,
       ActivityName: data.ActivityName,
       ActivityDescription: data.ActivityDescription,
-      PlannedStartDate: data.PlannedStartDate,
-      PlannedEndDate: data.PlannedEndDate,
+      PlannedStartDate: StaticUtilities.getLocalDate(data.PlannedStartDate),
+      PlannedEndDate: StaticUtilities.getLocalDate(data.PlannedEndDate),
       BudgetLineId: data.BudgetLineId,
       EmployeeID: data.EmployeeID,
       OfficeId: data.OfficeId,
@@ -324,16 +342,15 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
       CountryId: data.CountryId,
       ProjectId: this.projectId,
       ActualStartDate: data.ActualStartDate,
-      ActualEndDate: data.ActualEndDate,
-
+      ActualEndDate: data.ActualEndDate
     };
 
     this.activitiesService
       .EditProjectActivity(projectActivityDetail)
-       .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (response: IResponseData) => {
-          if (response.statusCode === 200 ) {
+          if (response.statusCode === 200) {
             this.toastr.success('Activity updated successfully');
             this.updateActivity.emit(response.data);
           } else {
@@ -350,11 +367,11 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
   }
   //#endregion
 
-//#region "onCountryDetailsChange"
-onCountryDetailsChange(event: any) {
-this.selectedCurrencyId.emit(event.value);
-}
-//#endregion
+  //#region "onCountryDetailsChange"
+  onCountryDetailsChange(event: any) {
+    this.selectedCurrencyId.emit(event.value);
+  }
+  //#endregion
 
   //#region  "emit province detailchanges"
   onProvinceDetailChange(event: any) {
@@ -364,16 +381,15 @@ this.selectedCurrencyId.emit(event.value);
 
   //#region "onSaveProjectActivity"
   onSaveProjectActivity() {
-    if (
-      this.projectActivityForm.valid
-    ) {
+    if (this.projectActivityForm.valid) {
+      // this.editProjectActivity(this.activityDetail);
       this.editProjectActivity(this.activityDetail);
+
     } else {
       this.toastr.warning('Please fill the correct values');
     }
   }
   //#endregion
-
 
   //#region "onDistrictDetailsChange"
   onDistrictDetailsChange(event: any) {
@@ -393,8 +409,7 @@ this.selectedCurrencyId.emit(event.value);
   }
 
   onRecurringChange(event: any) {
-    console.log(event);
-    if (event.checked === true) {
+    if (event.checked === true ) {
       this.diasbleEndDate = true;
     } else {
       this.diasbleEndDate = false;

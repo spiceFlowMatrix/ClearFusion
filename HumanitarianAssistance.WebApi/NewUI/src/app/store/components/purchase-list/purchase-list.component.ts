@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { of, Observable } from 'rxjs';
 import { PurchaseService } from '../../services/purchase.service';
 import { IFilterValueModel, IPurchaseList, IProcurementList } from '../../models/purchase';
@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material';
 import { AddProcurementsComponent } from '../add-procurements/add-procurements.component';
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { PurchaseFiledConfigComponent } from '../purchase-filed-config/purchase-filed-config.component';
 
 @Component({
   selector: 'app-purchase-list',
@@ -23,6 +24,9 @@ export class PurchaseListComponent implements OnInit {
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
+
+  showConfig = false;
+  @ViewChild(PurchaseFiledConfigComponent) fieldConfig : PurchaseFiledConfigComponent;
 
   purchaseListHeaders$ = of(['Id', 'Item', 'Purchased By', 'Project', 'Original Cost', 'Deprecated Cost']);
   subListHeaders$ = of(['Id', 'Date', 'Employee', 'Procured Amount', 'Must Return', 'Returned', 'Returned On']);
@@ -175,4 +179,8 @@ export class PurchaseListComponent implements OnInit {
           this.toastr.error(error);
         });
   }
+  showConfiguration(){
+   this.fieldConfig.show();
+  }
+
 }
