@@ -10,7 +10,6 @@ namespace HumanitarianAssistance.Application.Accounting.Models
             VoucherDetails = new List<VoucherSummaryReportPdfModel>();
         }
         public string Logo { get; set; }
-        public string RecordTypeText { get; set; }
         public IList<VoucherSummaryReportPdfModel> VoucherDetails { get; set; }
     }
     public class VoucherSummaryReportNewPdfModel
@@ -40,7 +39,8 @@ namespace HumanitarianAssistance.Application.Accounting.Models
         }
         public string Currency { get; set; }
         public string Cheque { get; set; }
-        public string VoucherNo { get; set; }
+        public long VoucherNo { get; set; }
+        public string ReferenceNo { get; set; }
         public string Journal { get; set; }
         public string Date { get; set; }
         public string Region { get; set; }

@@ -31,7 +31,7 @@
                 <tbody *ngIf="subItems[i]">
                   <tr *ngFor="let subItem of subItems[i]">
                     <td *ngFor="let header of subItemHeaders | async; let j=index ">{{subItem[header]}}</td>
-                    <td><i class="fas fa-trash"></i> </td>
+                    <td><i class="fas fa-trash" (click)='deleteClicked(subItem, item)'></i> </td>
                   </tr>
                 </tbody>
               </table>

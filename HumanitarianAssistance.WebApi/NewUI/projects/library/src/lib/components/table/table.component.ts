@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, OnChanges, ChangeDetectionStrategy, EventEmitter, Output } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { IDeleteProcurementModel } from 'src/app/store/models/purchase';
 
 @Component({
   selector: 'hum-table',
@@ -13,9 +14,11 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() subHeaders: Observable<string[]>;
   @Input() items: Observable<Array<Object>>;
   @Input() subTitle: string;
-  @Output() actionClick= new EventEmitter<any>();
+  @Output() actionClick = new EventEmitter<any>();
+  @Output() deleteClick = new EventEmitter<any>();
   subItemHeaders: Observable<string[]>;
 
+  mainItems: Observable<Array<Object>>;
   subItems: Array<Object> = [];
   itemHeaders: Observable<string[]>;
 
@@ -31,12 +34,13 @@ export class TableComponent implements OnInit, OnChanges {
         this.subItems = [];
         if (res == null || res.length > 0) {
           res.forEach((element, i) => {
-
             this.subItems.push(element['subItems']);
-            delete element['subItems'];
           });
-          console.log(this.subItems);
           this.itemHeaders = of(Object.keys(res[0]));
+          this.itemHeaders.subscribe(r => {
+            const index = r.findIndex(v => v === 'subItems');
+            r.splice(index);
+          });
           this.subItemHeaders = of(Object.keys(this.subItems[0][0]));
         }
 
@@ -44,8 +48,17 @@ export class TableComponent implements OnInit, OnChanges {
     }
 
   }
-  action(event){
-    this.actionClick.emit(event)
+  action(event) {
+    this.actionClick.emit(event);
+  }
+
+  deleteClicked(subItemEvent, itemEvent) {
+    const model: any = {
+      subItem: subItemEvent,
+      item: itemEvent
+    };
+
+    this.deleteClick.emit(model);
   }
 
 }

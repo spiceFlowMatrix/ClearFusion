@@ -371,6 +371,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         this.isAddPurchaseFormSubmitted = false;
         console.log(error);
       });
+    } else {
+      this.toastr.warning('Please correct errors in purchase form and submit again');
     }
   }
 

@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Domain.Entities.Accounting;
 using Microsoft.AspNetCore.Hosting;
+using System.Globalization;
 
 namespace HumanitarianAssistance.Application.Accounting.Queries
 {
@@ -32,24 +33,39 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
         {
             try
             {
+                DateTime parsedDateTime;
+                string voucherNoValue = null;
+                string referenceNoValue = null;
+                string descriptionValue = null;
+                string journalNameValue = null;
+                string dateValue = null;
+                string formattedDate = null;
                 // model logic here
+                if (!string.IsNullOrEmpty(request.FilterValue))
+                {
+                    voucherNoValue = request.VoucherNoFlag ? request.FilterValue.ToLower().Trim() : null;
+                    referenceNoValue = request.ReferenceNoFlag ? request.FilterValue.ToLower().Trim() : null;
+                    descriptionValue = request.DescriptionFlag ? request.FilterValue.ToLower().Trim() : null;
+                    journalNameValue = request.JournalNameFlag ? request.FilterValue.ToLower().Trim() : null;
+                    dateValue = request.DateFlag ? request.FilterValue.ToLower().Trim() : null;
+                    if(DateTime.TryParseExact(dateValue, "dd/mm/yyyy", 
+                        CultureInfo.InvariantCulture, 
+                        DateTimeStyles.None, 
+                        out parsedDateTime))
+                    {
+                        formattedDate = parsedDateTime.ToString("yyyy-mm-dd");
+                    }
+                    else
+                    {
+                        formattedDate =dateValue;
+                    }
+                }
                 VoucherSummaryMainReportPdfModel mainsummary=new VoucherSummaryMainReportPdfModel();
                 
                 mainsummary.Logo=_env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath;
-                mainsummary.RecordTypeText=(request.RecordType.ToString()=="1")?"Single":"Consolidated";
-                mainsummary.RecordTypeText="Note: Showing Vouchers for Record Type as " + mainsummary.RecordTypeText; 
 
                 var spVoucherSummaryList=await _dbContext.LoadStoredProc("get_all_voucher_transaction_list")
-                                        .WithSqlParam("recordtype", request.RecordType)
-                                        .WithSqlParam("currency_id", request.Currency)
-                                        .WithSqlParam("accounts", request.Accounts)
-                                        .WithSqlParam("budgetlines", request.BudgetLines)                                     
-                                        .WithSqlParam("journals", request.Journals)
-                                        .WithSqlParam("offices", request.Offices)
-                                        .WithSqlParam("projectjobs", request.ProjectJobs)
-                                        .WithSqlParam("projects", request.Projects)                                      
-                                        .ExecuteStoredProc<VoucherSummaryReportNewPdfModel>();
-
+                                                .ExecuteStoredProc<VoucherSummaryReportNewPdfModel>();
                 var groupedlist=spVoucherSummaryList.GroupBy(x=>new {
                     x.VoucherNo,
                     x.ReferenceNo,
@@ -62,7 +78,8 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                 }).Select(s=>new VoucherSummaryReportPdfModel{
                     Currency=s.Key.CurrencyCode,
                     Cheque=s.Key.ChequeNo,
-                    VoucherNo=s.Key.ReferenceNo,
+                    VoucherNo=s.Key.VoucherNo,
+                    ReferenceNo=s.Key.ReferenceNo,
                     Journal=s.Key.JournalName,
                     Date=s.Key.VoucherDate.ToString(),
                     Region=s.Key.OfficeName,
@@ -79,7 +96,15 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                         Job=ss.ProjectJobCode,
                         Sector=ss.SectorCode
                         }).ToList()
-                    }).ToList();
+                    }).Where(v=>!string.IsNullOrEmpty(request.FilterValue) ? (
+                            (!string.IsNullOrEmpty(voucherNoValue)?v.VoucherNo.ToString().Trim().Contains(voucherNoValue):false) ||
+                            (!string.IsNullOrEmpty(referenceNoValue)?v.ReferenceNo.Trim().ToLower().Contains(referenceNoValue):false) ||
+                            (!string.IsNullOrEmpty(descriptionValue)?v.Description.Trim().ToLower().Contains(descriptionValue):false)||
+                            (!string.IsNullOrEmpty(journalNameValue)?v.Journal.Trim().ToLower().Contains(journalNameValue):false) ||
+                            (!string.IsNullOrEmpty(formattedDate)?v.Date.ToString().Trim().Contains(formattedDate):false)
+                            ) : true).ToList();
+               
+               
                 mainsummary.VoucherDetails=groupedlist;
                 return await _pdfExportService.ExportToPdf(mainsummary, "Pages/PdfTemplates/VoucherSummaryReport.cshtml");
             }

@@ -322,6 +322,7 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public string InventoryCode { get; set; }
         public string InventoryItemCode { get; set; }
         public List<CodeType> SourceCodeTypelist { get; set; }
+        public ProcurmentSummaryModel ProcurementModel { get; set; }
 
         #region "HR"
         //HR

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { IDropDownModel } from '../../models/purchase';
 import { Observable } from 'rxjs/internal/Observable';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
@@ -33,32 +33,38 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
 
   purchaseId: number;
   officeId: number;
+  itemsToBeProcuredCount: number;
 
   constructor(private fb: FormBuilder, private purchaseService: PurchaseService,
     private commonLoader: CommonLoaderService, public toastr: ToastrService,
     private dialogRef: MatDialogRef<AddProcurementsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
+  }
+
+  ngOnInit() {
     this.addProcurementForm = this.fb.group({
+      'ProcurementId': [null],
       'InventoryTypeId': [null, [Validators.required]],
       'InventoryId': [null, [Validators.required]],
       'ItemGroupId': [null, [Validators.required]],
       'ItemId': [null, [Validators.required]],
       'PurchaseId': [null, [Validators.required]],
-      'IssuedQuantity': [null, [Validators.required]],
+      'IssuedQuantity': [0, [Validators.required, Validators.min(0)]],
       'IssuedToEmployeeId': [null, [Validators.required]],
       'IssueDate': [null, [Validators.required]],
       'ProjectId': [null, [Validators.required]],
       'StoreSourceId': [null, [Validators.required]],
       'StatusId': [null, [Validators.required]],
       'MustReturn': [false],
+      'EmployeeName': [null]
     });
-  }
 
-  ngOnInit() {
 
     this.purchaseId = this.data.value;
     this.officeId = this.data.officeId;
+
+    this.addProcurementForm;
 
     forkJoin([
       this.getAllInventoryTypes(),
@@ -180,12 +186,21 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
   subscribePurchaseListByItemId(response: any) {
     this.commonLoader.hideLoader();
     if (response.statusCode === 200) {
+
+      const index = response.data.findIndex(x => x.PurchaseId === this.purchaseId);
+
+      if (index !== -1) {
+        this.itemsToBeProcuredCount = response.data[index].Quantity - response.data[index].ItemsIssuedCount;
+        this.addProcurementForm.get('IssuedQuantity').setValidators(Validators.max(this.itemsToBeProcuredCount));
+      }
+
       this.purchases$ = of(response.data.map(y => {
         return {
           name: y.PurchaseCode,
           value: y.PurchaseId
         };
       }));
+
     } else {
       this.toastr.warning(response.message);
     }
@@ -252,6 +267,29 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
           error => {
             console.error(error);
           });
+    }
+  }
+
+  addProcurement() {
+    if (this.addProcurementForm.valid) {
+      this.purchaseService.addProcurement(this.addProcurementForm.value)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(x => {
+        if (x.StatusCode === 200) {
+          this.addProcurementForm.get('ProcurementId').patchValue(x.data.ProcurementModel.ProcurementId);
+          this.addProcurementForm.get('EmployeeName').patchValue(x.data.ProcurementModel.EmployeeName);
+
+          this.dialogRef.close(this.addProcurementForm.value);
+          this.toastr.success(x.Message);
+        } else if (x.StatusCode === 400) {
+          this.toastr.warning(x.Message);
+        }
+      },
+      error => {
+        console.log(error);
+      });
+    } else {
+      this.toastr.warning('Please correct errors in procurement form and submit again');
     }
   }
 

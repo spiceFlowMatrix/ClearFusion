@@ -50,7 +50,10 @@ export class AddSubActivitiesComponent implements OnInit {
       PlannedStartDate: [new Date(), [Validators.required]],
       PlannedEndDate: [new Date(), Validators.required],
       EmployeeID: [null, Validators.required],
-      Target: [0, Validators.required],
+      Target: [
+        null,
+        [Validators.min(0), Validators.max(100), Validators.maxLength(3)]
+      ],
       SubActivityTitle: [null, Validators.required]
     });
   }

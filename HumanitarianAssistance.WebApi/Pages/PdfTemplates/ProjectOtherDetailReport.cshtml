@@ -67,7 +67,7 @@ a, a:hover {
 		</td>
 		
 	</tr>
-	
+	@if(@Model.flags.opportunitytype ||@Model.flags.donor ||@Model.flags.opportunityno ||@Model.flags.opportunity ||@Model.flags.opportunitydesc ||@Model.flags.country ||@Model.flags.province ||@Model.flags.district ||@Model.flags.office ||@Model.flags.sector ||@Model.flags.program ||@Model.flags.startdate ||@Model.flags.enddate){
 	<tr id="table-1">
 		<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding-bottom: 20px; padding-top:20px; padding-left: 3%; padding-right: 4%;">
 			<table cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #efefef; box-shadow: 1px 1px 8px #dfdfdf;">
@@ -163,11 +163,15 @@ a, a:hover {
 				</tbody>
 				
 			</table>
+			
 		</td>
 		
 	</tr>
+	}
+	@if(@Model.flags.projgoal ||@Model.flags.projobj ||@Model.flags.mainactivities ||@Model.flags.reoidate ||@Model.flags.submissiondate){
 	<tr id="table-2">
 		<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding-bottom: 20px; padding-top:20px; padding-left: 3%; padding-right: 4%;">
+			
 			<table cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #efefef; box-shadow: 1px 1px 8px #dfdfdf;">
 				<tbody>
 					<tr>
@@ -210,11 +214,15 @@ a, a:hover {
 				</tbody>
 				
 			</table>
+			
 		</td>
 		
 	</tr>
+	}
+	@if(@Model.flags.dirbenmale ||@Model.flags.indirbenmale ||@Model.flags.dirbenfemale ||@Model.flags.indirbenfemale){
 	<tr id="table-3" class="page-break-before">
 		<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding-bottom: 20px; padding-top:20px; padding-left: 3%; padding-right: 4%;">
+			
 			<table cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #efefef; box-shadow: 1px 1px 8px #dfdfdf;">
 				<tbody>
 					<tr>
@@ -264,8 +272,11 @@ a, a:hover {
 		</td>
 		
 	</tr>
+	}
+	@if(@Model.flags.strengthconsideration ||@Model.flags.genderconsideration ||@Model.flags.genderremarks){
 	<tr id="table-4">
 		<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding-bottom: 20px; padding-top:20px; padding-left: 3%; padding-right: 4%;">
+			
 			<table cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #efefef; box-shadow: 1px 1px 8px #dfdfdf;">
 				<tbody>
 					<tr>
@@ -297,9 +308,12 @@ a, a:hover {
 				</tbody>
 				
 			</table>
+			
 		</td>
 		
 	</tr>
+	}
+	@if(@Model.flags.security ||@Model.flags.securityconsideration ||@Model.flags.securityremarks){
 	<tr id="table-5">
 		<td colspan="2" align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding-bottom: 20px; padding-top:20px; padding-left: 3%; padding-right: 4%;">
 			<table cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #efefef; box-shadow: 1px 1px 8px #dfdfdf;">
@@ -336,6 +350,7 @@ a, a:hover {
 		</td>
 		
 	</tr>
+	}
 	
 	
 <!-- End of WRAPPER -->

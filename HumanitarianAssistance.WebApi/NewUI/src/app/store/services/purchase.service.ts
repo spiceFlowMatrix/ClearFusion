@@ -4,10 +4,11 @@ import { AppUrlService } from '../../shared/services/app-url.service';
 import { GLOBAL } from '../../shared/global';
 import { map } from 'rxjs/internal/operators/map';
 import { IResponseData } from '../../../app/dashboard/accounting/vouchers/models/status-code.model';
-import { IFilterValueModel, IAddEditPurchaseModel } from '../models/purchase';
+import { IFilterValueModel, IAddEditPurchaseModel, IAddEditProcurementModel, IDeleteProcurementModel } from '../models/purchase';
 import { retry, finalize } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of, Observable } from 'rxjs';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
 
 @Injectable({
   providedIn: 'root'
@@ -241,6 +242,42 @@ export class PurchaseService {
 
     return this.globalService
       .post(this.appurl.getApiUrl() + GLOBAL.API_Store_AddPurchase, purchaseModel)
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+
+  addProcurement(procurement: any) {
+    const procurementModel: IAddEditProcurementModel = {
+      Purchase: procurement.PurchaseId,
+      InventoryItem: procurement.ItemId,
+      IssuedQuantity: procurement.IssuedQuantity,
+      MustReturn: procurement.MustReturn,
+      IssuedToEmployeeId: procurement.IssuedToEmployeeId,
+      IssueDate:  StaticUtilities.getLocalDate(procurement.IssueDate),
+      IssedToLocation: procurement.StoreSourceId,
+      StatusAtTimeOfIssue: procurement.StatusId,
+      Project: procurement.ProjectId
+    };
+
+    return this.globalService
+      .post(this.appurl.getApiUrl() + GLOBAL.API_Store_AddItemOrder, procurementModel)
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+
+  deleteProcurement(orderId: number) {
+    const procurementModel: IDeleteProcurementModel = {
+      OrderId: orderId
+    };
+
+    return this.globalService
+      .post(this.appurl.getApiUrl() + GLOBAL.API_Store_DeleteItemOrder, procurementModel)
       .pipe(
         map(x => {
           return x;

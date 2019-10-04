@@ -42,7 +42,8 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
                         if (model.RecordType == (int)RECORDTYPE.SINGLE)
                         {
-                            response.data.VoucherSummaryTransactionList = data.VoucherTransactionDetails.Select(x => new VoucherSummaryTransactionModel
+                            response.data.VoucherSummaryTransactionList = data.VoucherTransactionDetails.Where(x=>x.IsDeleted==false)
+                            .Select(x => new VoucherSummaryTransactionModel
                             {
                                 AccountCode = x.ChartOfAccountDetail.ChartOfAccountNewCode,
                                 AccountName = x.ChartOfAccountDetail.AccountName,
@@ -56,10 +57,10 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                         {
                             response.data.VoucherSummaryTransactionList = new List<VoucherSummaryTransactionModel>();
 
-                            ExchangeRateDetail exchangeRateDetail = exchangeRateDetail = await _dbContext.ExchangeRateDetail
+                            ExchangeRateDetail exchangeRateDetail = await _dbContext.ExchangeRateDetail
                                                                                   .OrderByDescending(x => x.Date)
                                                                                   .FirstOrDefaultAsync(x => x.IsDeleted == false &&
-                                                                                   x.Date <= data.VoucherDate.Date && x.FromCurrency == data.CurrencyId &&
+                                                                                   x.Date.Date <= data.VoucherDate.Date && x.FromCurrency == data.CurrencyId &&
                                                                                    x.ToCurrency == model.CurrencyId);
 
                             foreach (var item in data.VoucherTransactionDetails)
@@ -103,7 +104,9 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                 voucherSummaryTransactionModel.CurrencyName = data.CurrencyDetail.CurrencyName;
                                 voucherSummaryTransactionModel.TransactionDescription = item.Description;
 
-                                response.data.VoucherSummaryTransactionList.Add(voucherSummaryTransactionModel);
+                                if(item.IsDeleted==false){
+                                    response.data.VoucherSummaryTransactionList.Add(voucherSummaryTransactionModel);
+                                }                         
                             }
                         }
                     }

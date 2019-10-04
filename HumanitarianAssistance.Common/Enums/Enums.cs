@@ -213,6 +213,14 @@
         EmployeeProfile = 3
     }
 
+    public enum TimeInterval
+    {
+        Daily = 1,
+        Weekly = 2,
+        Monthly = 3,
+        Yearly = 4,
+        Quarterly = 5
+    }
     public enum OpportunityType
     {
         EOI = 1,
