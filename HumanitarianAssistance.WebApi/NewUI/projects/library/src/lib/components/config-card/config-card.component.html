@@ -1,5 +1,5 @@
-<mat-card class="sidebar-settings">
-
+<mat-card [ngClass]="{'sidebar-open':isShow, 'sidebar-closed':!isShow}">
+  <div class="close-box" (click)="closeCard()"><i class="fas fa-times-circle"></i></div>
   <mat-card-title>
     <ng-content select="[title]"> </ng-content>
   </mat-card-title>

@@ -145,34 +145,37 @@ export class PurchaseListComponent implements OnInit {
     this.router.navigate(['/store/purchase/add']);
   }
   openProcurementModal(event: any) {
-    const dialogRef = this.dialog.open(AddProcurementsComponent, {
-      width: '850px',
-      data: {
-        value: event.Id,
-        officeId: this.filterValueModel.OfficeId
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(x => {
-      console.log(x);
-
-      this.purchaseList$.subscribe((purchase) => {
-        console.log(purchase);
-
-        const index = purchase.findIndex(i => i.Id === x.PurchaseId);
-        if (index !== -1) {
-          purchase[index].subItems.unshift({
-            EmployeeName: x.EmployeeName,
-            IssueDate: this.datePipe.transform(x.IssueDate, 'dd-MM-yyyy'),
-            OrderId: x.ProcurementId,
-            MustReturn: x.MustReturn,
-            ProcuredAmount: x.IssuedQuantity,
-            Returned: false
-          });
+    if (event.type == "button") {
+      const dialogRef = this.dialog.open(AddProcurementsComponent, {
+        width: '850px',
+        data: {
+          value: event.item.Id,
+          officeId: this.filterValueModel.OfficeId
         }
-        this.purchaseList$ = of(purchase);
       });
-    });
+
+      dialogRef.afterClosed().subscribe(x => {
+        console.log(x);
+
+        this.purchaseList$.subscribe((purchase) => {
+          console.log(purchase);
+
+          const index = purchase.findIndex(i => i.Id === x.PurchaseId);
+          if (index !== -1) {
+            purchase[index].subItems.unshift({
+              EmployeeName: x.EmployeeName,
+              IssueDate: this.datePipe.transform(x.IssueDate, 'dd-MM-yyyy'),
+              OrderId: x.ProcurementId,
+              MustReturn: x.MustReturn,
+              ProcuredAmount: x.IssuedQuantity,
+              Returned: false
+            });
+          }
+          this.purchaseList$ = of(purchase);
+        });
+      });
+    }
+
   }
 
   deleteProcurement(event: any) {

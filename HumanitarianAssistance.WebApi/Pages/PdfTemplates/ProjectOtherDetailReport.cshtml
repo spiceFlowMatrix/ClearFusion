@@ -79,13 +79,13 @@ a, a:hover {
 					</tr>
 					<tr>@if(@Model.flags.opportunitytype){
 						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
-							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Opportunity Type</small><br />
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Opportunity Type</small><br />
 							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@(Enum.GetName(typeof(OpportunityType), @Model.OpportunityType))#</b>
 						</td>
 						}
 						@if(@Model.flags.donor){
 						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 1%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
-							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Donor</small><br />
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Donor</small><br />
 							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.Donor</b>
 						</td>
 						}
@@ -113,36 +113,36 @@ a, a:hover {
 					<tr>
 						@if(@Model.flags.country){
 						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
-							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Country</small><br />
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Country</small><br />
 							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.CountryName</b>
 						</td>
 						}@if(@Model.flags.province){
 						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 1%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
-							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Province</small><br />
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Province</small><br />
 							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@string.Join(",", @Model.Province)</b>
 						</td>
 						}
 					</tr>
 					<tr>@if(@Model.flags.district){
 						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
-							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select District</small><br />
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">District</small><br />
 							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@string.Join(",", @Model.District)</b>
 						</td>
 						}@if(@Model.flags.office){
 						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 1%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
-							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Office</small><br />
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Office</small><br />
 							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.OfficeName</b>
 						</td>
 						}
 					</tr>
 					<tr>@if(@Model.flags.sector){
 						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
-							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Sector</small><br />
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Sector</small><br />
 							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.SectorName</b>
 						</td>
 						}@if(@Model.flags.program){
 						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 1%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
-							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Program</small><br />
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Program</small><br />
 							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.ProgramName</b>
 						</td>
 						}
@@ -181,7 +181,7 @@ a, a:hover {
 					</tr>
 					<tr>@if(@Model.flags.projgoal){
 						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
-							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Projet Goal</small><br />
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Project Goal</small><br />
 							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.projectGoal</b>
 						</td>
 						}@if(@Model.flags.projobj){
@@ -325,12 +325,12 @@ a, a:hover {
 					</tr>
 					<tr>@if(@Model.flags.security){
 						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 2%; width:50%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
-							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Security</small><br />
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Security</small><br />
 							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@Model.SecurityName</b>
 						</td>
 						}@if(@Model.flags.securityconsideration){
 						<td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 1%; font-size:16px; padding-right: 1%; font-weight: 300;padding-top: 10px;padding-bottom: 10px;font-family: 'Roboto', sans-serif;  ">
-							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Select Security Consideration</small><br />
+							<small style="color: #9f9e9e; font-size: 15px; line-height: 26px;">Security Consideration</small><br />
 							<b style="font-weight: 300; font-size: 16px; color: #3b3b3b;">@string.Join(",", @Model.SecurityConsideration)</b>
 						</td>
 						}

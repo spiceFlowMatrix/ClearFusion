@@ -57,8 +57,9 @@ export class PurchaseFiledConfigComponent implements OnInit {
   }
 
   show() {
+    this.showConfig = false;
     this.showConfig = true;
-    console.log(true);
+   // this.cdr.detectChanges()
   }
 
   //#region "Dynamic Scroll"
