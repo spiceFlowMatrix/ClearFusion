@@ -33,9 +33,12 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
             try
             {
-                var purchases = await _dbContext.StoreItemPurchases.Include(x => x.PurchaseOrders)
-                                                                            .Include(x => x.StoreInventoryItem)
-                                                                            .Where(x => x.InventoryItem == request.ItemId && x.IsDeleted == false).ToListAsync();
+                var purchases = await _dbContext.StoreItemPurchases
+                                                .Include(x=> x.PurchaseOrders)
+                                                .Include(x => x.StoreInventoryItem)
+                                                .Where(x => x.InventoryItem == request.ItemId && 
+                                                x.StoreInventoryItem.IsDeleted == false &&
+                                                x.IsDeleted == false).ToListAsync();
 
 
                 var purchasesModel = purchases.Select(v => new StoreItemPurchaseViewModel
@@ -72,7 +75,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                    // VerifiedPurchaseVoucher = v.VerifiedPurchaseVoucher,
                     JournalCode = v.JournalCode,
                     PurchaseName= v.PurchaseName,
-                    PurchaseCode= PurchaseCode.GetPurchaseCode(v.PurchaseDate, v.PurchaseName, v.PurchaseId)
+                    PurchaseCode= PurchaseCode.GetPurchaseCode(v.PurchaseDate, v.PurchaseName, v.PurchaseId),
+                    ItemsIssuedCount = v.PurchaseOrders.Where(x=> x.IsDeleted == false).Sum(x=> x.IssuedQuantity)
                    // VerifiedPurchaseVoucherReferenceNo = v.VerifiedPurchaseVoucher != null ? _dbContext.VoucherDetail.FirstOrDefault(x => x.IsDeleted == false && x.VoucherNo == v.VerifiedPurchaseVoucher).ReferenceNo : null
                 }).OrderByDescending(x=> x.PurchaseDate).ToList();
 

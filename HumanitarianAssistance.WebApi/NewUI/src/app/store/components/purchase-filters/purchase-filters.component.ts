@@ -58,6 +58,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
     this.purchaseService.getPurchaseFilterList()
     .pipe(takeUntil(this.destroyed$))
     .subscribe(x  => {
+
       this.inventoryType$ = of(x.InventoryTypes.map(y => {
         return {
           value: y.Id,
@@ -100,6 +101,13 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
         };
       }));
 
+      // Set defaults for filter
+      this.purchaseFormFilters.get('InventoryTypeId').patchValue(x.InventoryTypes !== null ? x.InventoryTypes[0].Id : null);
+      this.purchaseFormFilters.get('ReceiptTypeId').patchValue(x.ReceiptTypes !== null ? x.ReceiptTypes[0].ReceiptTypeId : null);
+      this.purchaseFormFilters.get('OfficeId').patchValue(x.Offices !== null ? x.Offices[0].OfficeId : null);
+      this.purchaseFormFilters.get('CurrencyId').patchValue(x.CurrencyModel !== null ? x.CurrencyModel[0].CurrencyId : null);
+
+      this.onPurchaseFilterSelectionChanged();
     },
     err => {
      console.error(err);
