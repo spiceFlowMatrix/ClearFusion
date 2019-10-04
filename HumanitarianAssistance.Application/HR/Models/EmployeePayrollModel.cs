@@ -8,7 +8,7 @@ namespace HumanitarianAssistance.Application.HR.Models
         public int HeadTypeId { get; set; }
         public int SalaryHeadId { get; set; }
         public int EmployeeId { get; set; }
-        public int CurrencyId { get; set; }
+        public int? CurrencyId { get; set; }
         public int PaymentType { get; set; }
         public string SalaryHeadType { get; set; }
         public string SalaryHead { get; set; }

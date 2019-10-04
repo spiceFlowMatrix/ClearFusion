@@ -58,16 +58,16 @@ const routes: Routes = [
           module: ModuleId,
           page: accountingNewMaster.ExchangeRates
         }
-      },
-      {
-        path: 'voucher-summary-report',
-        loadChildren: './voucher-summary-report/voucher-summary-report.module#VoucherSummaryReportModule',
-        canActivate: [RoleGuardService],
-        data: {
-          module: ModuleId,
-          page: accountingNewMaster.VoucherSummaryReport
-        }
       }
+      // {
+      //   path: 'voucher-summary-report',
+      //   loadChildren: './voucher-summary-report/voucher-summary-report.module#VoucherSummaryReportModule',
+      //   canActivate: [RoleGuardService],
+      //   data: {
+      //     module: ModuleId,
+      //     page: accountingNewMaster.VoucherSummaryReport
+      //   }
+      // }
     ]
   }
 ];

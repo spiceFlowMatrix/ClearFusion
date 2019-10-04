@@ -16,8 +16,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialogModule } from '@angular/material/dialog';
+import { PurchaseFiledConfigComponent } from './components/purchase-filed-config/purchase-filed-config.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {MatRangeDatepickerModule, MatRangeNativeDateModule } from 'mat-range-datepicker';
+import { DocumentUploadComponent } from './components/document-upload/document-upload.component';
 
 
 
@@ -27,7 +28,9 @@ import {MatRangeDatepickerModule, MatRangeNativeDateModule } from 'mat-range-dat
     PurchaseListComponent,
     AddPurchaseComponent,
     AddProcurementsComponent,
-    EntryComponentComponent
+    EntryComponentComponent,
+    PurchaseFiledConfigComponent,
+    DocumentUploadComponent
     // components
   //  DbsidebarComponent,
    // DbheaderComponent,

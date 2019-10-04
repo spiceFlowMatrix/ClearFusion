@@ -114,6 +114,7 @@ export interface IProjectActivityDetail {
   IsError?: boolean;
   CountryId?: number;
   ProjectId: number;
+  Achieved?: number;
 }
 
 export interface IPlanningActivityDetail {

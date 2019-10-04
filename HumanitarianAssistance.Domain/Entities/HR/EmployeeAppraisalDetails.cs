@@ -27,5 +27,6 @@ namespace HumanitarianAssistance.Domain.Entities.HR
 		public int OfficeId { get; set; }
 		public bool AppraisalStatus { get; set; }
 		public int? TotalScore { get; set; }
-	}
+        public double? AppraisalScore { get; set; }  
+    }
 }

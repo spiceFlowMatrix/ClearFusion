@@ -7,6 +7,7 @@ using HumanitarianAssistance.Application.Project.Models;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Application.Project.Queries
 {
@@ -32,22 +33,22 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
                 summary = (from pad in _dbContext.ProjectActivityDetail
                            where pad.ProjectId == request.ProjectId && pad.IsDeleted == false
-                           //join pmrd in _dbContext.ProjectMonitoringReviewDetail
-                           //on pad.ProjectId equals pmrd.ProjectId
-                           //join pmiq in _dbContext.ProjectMonitoringIndicatorDetail
-                           //on pmrd.ProjectMonitoringReviewId equals pmiq.ProjectMonitoringReviewId
-                           //join piq in _dbContext.ProjectIndicatorQuestions
-                           //on pmiq.ProjectIndicatorId equals piq.ProjectIndicatorId
-                           //join pd in _dbContext.ProjectDetail
-                           //on pad.ProjectId equals pd.ProjectId     
-                           //join pod in _dbContext.ProjectOtherDetail
-                           //on pad.ProjectId equals pod.ProjectId
-                           //join cd in _dbContext.CountryDetails
-                           //on pad.CountryId equals cd.CountryId
-                           //join prd in _dbContext.ProvinceDetails
-                           //on cd.CountryId equals prd.CountryId
-                           //join dd in _dbContext.DistrictDetail
-                           //on prd.ProvinceId equals dd.ProvinceID
+                           join pmrd in _dbContext.ProjectMonitoringReviewDetail
+                           on pad.ProjectId equals pmrd.ProjectId
+                           join pmiq in _dbContext.ProjectMonitoringIndicatorDetail
+                           on pmrd.ProjectMonitoringReviewId equals pmiq.ProjectMonitoringReviewId
+                           join piq in _dbContext.ProjectIndicatorQuestions
+                           on pmiq.ProjectIndicatorId equals piq.ProjectIndicatorId
+                           //    join pd in _dbContext.ProjectDetail
+                           //    on pad.ProjectId equals pd.ProjectId     
+                           //    join pod in _dbContext.ProjectOtherDetail
+                           //    on pad.ProjectId equals pod.ProjectId
+                           //    join cd in _dbContext.CountryDetails
+                           //    on pad.CountryId equals cd.CountryId
+                           //    join prd in _dbContext.ProvinceDetails
+                           //    on cd.CountryId equals prd.CountryId
+                           //    join dd in _dbContext.DistrictDetail
+                           //    on prd.ProvinceId equals dd.ProvinceID
                            select new ProjectActivityReportPdfModel
                            {
                                //ProjectCode = pd.ProjectCode,
@@ -55,15 +56,40 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                //ProjectGoal = pod.projectGoal,                               
                                MainActivity = pad.ActivityName,
                                //Recommendations = pmrd.Recommendations,
-                               Start= pad.PlannedStartDate,
-                               End= pad.PlannedEndDate,
+                               Start = pad.PlannedStartDate,
+                               End = pad.PlannedEndDate,
                                //Country = cd.CountryName,
                                //Province = prd.ProvinceName,
                                //District = dd.District,
-                               ActualStartDate=pad.ActualStartDate,
-                               ActualEndDate=pad.ActualEndDate,                               
+                               ActualStartDate = pad.ActualStartDate,
+                               ActualEndDate = pad.ActualEndDate,
                            }).ToList();
-                
+
+                var activityDetail = await _dbContext.ProjectActivityDetail
+                                                             .Include(x => x.ProjectDetail)
+                                                             .ThenInclude(x=> x.ProjectOtherDetail)
+                                                             .Include(x => x.ProjectActivityProvinceDetail)
+                                                             .Include(x => x.ProjectMonitoringReviewDetail)
+                                                             .ThenInclude(x => x.ProjectMonitoringIndicatorDetail)
+                                                             .ThenInclude(x => x.ProjectMonitoringIndicatorQuestions)
+                                                             .Where(v => v.IsDeleted == false &&
+                                                                                 v.ParentId == null &&
+                                                                                 v.ProjectId == request.ProjectId
+                                                             ).Select(z => new ProjectActivityReportPdfModel
+                                                             {
+                                                                 ProjectCode = z.ProjectDetail.ProjectCode,
+                                                                 ProjectName = z.ProjectDetail.ProjectName,
+                                                                 ProjectGoal = z.ProjectDetail.ProjectDescription,                               
+                                                                 MainActivity = z.ActivityName,
+                                                                 Start = z.PlannedStartDate,
+                                                                 End = z.PlannedEndDate,
+                                                                //  Country = z.,
+                                                                //  Province = prd.ProvinceName,
+                                                                //  District = dd.District,
+                                                                 ActualStartDate = z.ActualStartDate,
+                                                                 ActualEndDate = z.ActualEndDate,
+                                                             }).ToListAsync();
+
 
                 return await _pdfExportService.ExportToPdf(summary, "Pages/PdfTemplates/ProjectActivityReport.cshtml");
             }

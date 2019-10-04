@@ -21,11 +21,11 @@ export class EmployeeAppraisalComponent implements OnInit {
   //#region "Variables"
   employeeAppraisalListDataSource: EmployeeAppraisalModel[];
   employeeAppraisalQuestionForm: EmployeeAppraisalModel;
-
   questionSourceData: EmployeeAppraisalQuestionList[];
   remarksList: RemarkModel[];
     officeDropdownList: any[] = [];
     officecodelist: any[];
+    RemarksPattern = /(\w*\W*){0,10}/g;
 
   employeeListDataSource: EmployeeListModel[];
   employeeDetailListData: EmployeeDetailListModel[];
@@ -174,7 +174,8 @@ export class EmployeeAppraisalComponent implements OnInit {
       OfficeId: null,
       TotalScore: 0,
       EmployeeAppraisalQuestionList: null,
-      AppraisalStatus: false
+      AppraisalStatus: false,
+      AppraisalScore: null
     };
   }
   //#endregion
@@ -275,7 +276,8 @@ export class EmployeeAppraisalComponent implements OnInit {
                 QuestionDari: element.DariQuestion,
                 SequenceNo: element.SequenceNo,
                 Remarks: element.Remarks,
-                Score: element.Score
+                Score: element.Score,
+                AppraisalScore: element.AppraisalScore
               });
             });
           } else {
@@ -387,7 +389,8 @@ export class EmployeeAppraisalComponent implements OnInit {
                   OfficeId: this.selectedOffice,
                 TotalScore: null,
                 EmployeeAppraisalQuestionList: this.questionSourceData,
-                AppraisalStatus: element.AppraisalStatus
+                AppraisalStatus: element.AppraisalStatus,
+                AppraisalScore: element.AppraisalScore
               };
             });
           } else {
@@ -835,7 +838,8 @@ export class EmployeeAppraisalComponent implements OnInit {
         OfficeId: this.selectedOffice,
       TotalScore: data.TotalScore,
       EmployeeAppraisalQuestionList: this.questionSourceData,
-      AppraisalStatus: false
+      AppraisalStatus: false,
+      AppraisalScore: data.AppraisalScore
     };
 
     appraisalData.TotalScore = 0;
@@ -846,7 +850,8 @@ export class EmployeeAppraisalComponent implements OnInit {
           ? 0
           : element.Score);
     });
-
+    appraisalData.AppraisalScore = 0;
+    appraisalData.AppraisalScore = appraisalData.TotalScore / this.questionSourceData.length;
     if (this.employeeSelectedFlag) {
       this.addEmployeeAppraisal(appraisalData);
     } else {
@@ -888,7 +893,8 @@ export class EmployeeAppraisalComponent implements OnInit {
         OfficeId: this.selectedOffice,
       TotalScore: data.TotalScore,
       EmployeeAppraisalQuestionList: this.questionSourceData,
-      AppraisalStatus: data.AppraisalStatus
+      AppraisalStatus: data.AppraisalStatus,
+      AppraisalScore: data.AppraisalScore,
     };
 
     appraisalData.TotalScore = 0;
@@ -900,6 +906,8 @@ export class EmployeeAppraisalComponent implements OnInit {
           ? 0
           : element.Score);
     });
+    appraisalData.AppraisalScore = 0;
+    appraisalData.AppraisalScore = appraisalData.TotalScore / this.questionSourceData.length;
 
     this.editEmployeeAppraisal(appraisalData);
   }
@@ -1023,7 +1031,8 @@ export class EmployeeAppraisalComponent implements OnInit {
         OfficeId: data.OfficeId,
         TotalScore: data.TotalScore,
         EmployeeAppraisalQuestionList: data.EmployeeAppraisalQuestionList,
-        AppraisalStatus: data.AppraisalStatus
+        AppraisalStatus: data.AppraisalStatus,
+        AppraisalScore: data.AppraisalScore
       };
 
       this.questionSourceData = data.EmployeeAppraisalQuestionList;
@@ -1232,7 +1241,7 @@ export class EmployeeAppraisalComponent implements OnInit {
                         });
 
                         this.selectedOffice =
-                            (this.selectedOffice === null || this.selectedOffice == undefined)
+                            (this.selectedOffice === null || this.selectedOffice === undefined)
                                     ? this.officeDropdownList[0].OfficeId
                                 : this.selectedOffice;
 
@@ -1352,7 +1361,6 @@ export class EmployeeAppraisalComponent implements OnInit {
     //     );
     // }
     //#endregion
-
 
 
 
@@ -1501,6 +1509,7 @@ class EmployeeAppraisalModel {
   TotalScore: number;
   EmployeeAppraisalQuestionList: EmployeeAppraisalQuestionList[];
   AppraisalStatus: any;
+  AppraisalScore?: any;
 }
 
 class EmployeeAppraisalQuestionList {
@@ -1511,6 +1520,7 @@ class EmployeeAppraisalQuestionList {
   SequenceNo: any;
   Score: any;
   Remarks: any;
+  AppraisalScore: any;
 }
 
 class RemarkModel {
