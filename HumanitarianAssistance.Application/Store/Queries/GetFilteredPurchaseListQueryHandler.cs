@@ -40,6 +40,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                   .ThenInclude(x => x.Inventory)
                                   .Include(x => x.EmployeeDetail)
                                   .Include(x => x.ProjectDetail)
+                                  .Include(x=> x.ProjectBudgetLineDetail)
+                                  .Include(x=> x.OfficeDetail)
                                   .Where(x => x.IsDeleted == false &&
                                         x.StoreInventoryItem.Inventory.AssetType == request.InventoryTypeId &&
                                         x.ReceiptTypeId == request.ReceiptTypeId &&
@@ -93,6 +95,23 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     ProjectId = x.ProjectId,
                     ProjectName = x.ProjectDetail == null ? "" : x.ProjectDetail.ProjectCode + "-" + x.ProjectDetail.ProjectName,
                     OriginalCost = x.UnitCost * x.Quantity,
+                    ItemCodeDescription = x.StoreInventoryItem != null ? (x.StoreInventoryItem.ItemCode + "-" + x.StoreInventoryItem.Description): ""  ,
+                    AssetTypeId= x.AssetTypeId,
+                    BudgetLineId = x.BudgetLineId,
+                    BudgetLineName= x.ProjectBudgetLineDetail ==null? "" : x.ProjectBudgetLineDetail.BudgetName,
+                    ChasisNo="",
+                    CurrencyName= x.CurrencyDetails == null? "":  x.CurrencyDetails.CurrencyName,
+                    DepreciationRate= x.DepreciationRate,
+                    EngineSerialNo= "",
+                    IdentificationNo="",
+                    ItemCode= x.StoreInventoryItem.ItemCode,
+                    MasterInventoryCode= x.StoreInventoryItem.MasterInventoryCode,
+                    ModelType="",
+                    OfficeCode= x.OfficeDetail.OfficeCode,
+                    PurchaseOrderNo= Convert.ToInt64(x.SerialNo),
+                    InvoiceDate= x.InvoiceDate != null ? x.InvoiceDate.Value.ToShortDateString(): "",
+                    ReceivedFromLocation= x.ReceivedFromLocation != null? (x.StoreSourceCodeDetail.Code+"-"+x.StoreSourceCodeDetail.Description): "" ,
+                    Status= x.StatusAtTimeOfIssue != null? x.StatusAtTimeOfIssue.StatusName : "",
                     DepreciatedCost = (x.UnitCost * x.Quantity) - (Math.Ceiling(DateTime.Now.Date.Subtract(x.PurchaseDate).TotalDays) * x.Quantity * x.DepreciationRate * x.UnitCost / 100),
                     ProcurementList = x.PurchaseOrders.Where(p=> !p.IsDeleted).Select(z => new ProcurementListModel
                     {

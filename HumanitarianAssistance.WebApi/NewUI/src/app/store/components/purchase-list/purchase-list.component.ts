@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { of, Observable } from 'rxjs';
 import { PurchaseService } from '../../services/purchase.service';
-import { IFilterValueModel, IPurchaseList, IProcurementList } from '../../models/purchase';
+import { IFilterValueModel, IPurchaseList, IProcurementList, IPurchaseFilterConfigColList } from '../../models/purchase';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { AddProcurementsComponent } from '../add-procurements/add-procurements.component';
@@ -17,6 +17,7 @@ import { PurchaseFiledConfigComponent } from '../purchase-filed-config/purchase-
 export class PurchaseListComponent implements OnInit {
 
   purchaseList$: Observable<IPurchaseList[]>;
+  purchaseFilterConfigList$: Observable<IPurchaseFilterConfigColList[]>;
   filterValueModel: IFilterValueModel;
   purchaseRecordCount = 0;
 
@@ -31,6 +32,7 @@ export class PurchaseListComponent implements OnInit {
   purchaseListHeaders$ = of(['Id', 'Item', 'Purchased By', 'Project', 'Original Cost', 'Deprecated Cost']);
   subListHeaders$ = of(['Id', 'Date', 'Employee', 'Procured Amount', 'Must Return', 'Returned', 'Returned On']);
   procurementList$: Observable<IProcurementList[]>;
+
 
   constructor(private purchaseService: PurchaseService,
               private router: Router, private dialog: MatDialog,
@@ -79,7 +81,7 @@ export class PurchaseListComponent implements OnInit {
     this.purchaseService
       .getFilteredPurchaseList(filter).subscribe(x => {
         this.purchaseRecordCount = x.RecordCount;
-
+        this.purchaseFilterConfigList$ = of(x);
         this.purchaseList$ = of(x.PurchaseList.map((element) => {
           return {
             Id: element.PurchaseId,
@@ -179,8 +181,12 @@ export class PurchaseListComponent implements OnInit {
           this.toastr.error(error);
         });
   }
-  showConfiguration(){
-   this.fieldConfig.show();
+
+  configFilterAppliedEvent(event: any) {
+    debugger;
   }
 
+  showConfiguration() {
+   this.fieldConfig.show();
+  }
 }

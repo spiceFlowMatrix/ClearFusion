@@ -45,6 +45,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                     purchase.IsDeleted = false;
                     purchase.CreatedById = request.CreatedById;
                     purchase.CreatedDate = request.CreatedDate;
+                    purchase.SerialNo = request.PurchaseOrderNo.ToString();
 
                     await _dbContext.StoreItemPurchases.AddAsync(purchase);
                     await _dbContext.SaveChangesAsync();

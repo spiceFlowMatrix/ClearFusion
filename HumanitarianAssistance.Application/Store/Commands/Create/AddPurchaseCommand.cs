@@ -20,7 +20,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
         public string ImageFileName { get; set; }               // Image String
         public string InvoiceFileName { get; set; }             // Invoice String
         public int PurchasedById { get; set; }                  // Employee ID
-
+        public long? PurchaseOrderNo {get; set;}
 
         //Newly Added Fields
        // public long? VoucherId { get; set; }
