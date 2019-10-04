@@ -47,5 +47,6 @@ namespace HumanitarianAssistance.Application.Store.Models
         public long InvoiceDocumentId {get; set; }
         public string PurchaseName { get; set; }
         public string PurchaseCode { get; set; }
+        public int? ItemsIssuedCount { get; set; }
     }
 }

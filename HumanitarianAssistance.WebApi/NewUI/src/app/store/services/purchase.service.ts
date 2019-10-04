@@ -4,7 +4,7 @@ import { AppUrlService } from '../../shared/services/app-url.service';
 import { GLOBAL } from '../../shared/global';
 import { map } from 'rxjs/internal/operators/map';
 import { IResponseData } from '../../../app/dashboard/accounting/vouchers/models/status-code.model';
-import { IFilterValueModel, IAddEditPurchaseModel, IAddEditProcurementModel } from '../models/purchase';
+import { IFilterValueModel, IAddEditPurchaseModel, IAddEditProcurementModel, IDeleteProcurementModel } from '../models/purchase';
 import { retry, finalize } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of, Observable } from 'rxjs';
@@ -264,6 +264,20 @@ export class PurchaseService {
 
     return this.globalService
       .post(this.appurl.getApiUrl() + GLOBAL.API_Store_AddItemOrder, procurementModel)
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+
+  deleteProcurement(orderId: number) {
+    const procurementModel: IDeleteProcurementModel = {
+      OrderId: orderId
+    };
+
+    return this.globalService
+      .post(this.appurl.getApiUrl() + GLOBAL.API_Store_DeleteItemOrder, procurementModel)
       .pipe(
         map(x => {
           return x;

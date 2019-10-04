@@ -4,7 +4,7 @@ namespace HumanitarianAssistance.Application.Store.Models
 {
     public class ProcurementListModel
     {
-        public long IssueId { get; set; }
+        public long OrderId { get; set; }
         public DateTime IssueDate { get; set; }
         public string EmployeeName { get; set; }
         public int ProcuredAmount { get; set; }
