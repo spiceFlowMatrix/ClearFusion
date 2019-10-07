@@ -154,12 +154,13 @@ export enum FileSourceEntityTypes {
   ProjectActivityPlanning = 8,
   DonorDetail = 9,
   StorePurchase= 10,
-  EmployeeProfile=11
+  Employee= 11,
 }
 
 export enum DocumentFileTypes {
     PurchaseImage = 1,
-    PurchaseInvoice =2,
-    EmployeeProfile =3
+    PurchaseInvoice = 2,
+    EmployeeProfile = 3,
+    EmployeeDocument= 4
 }
 

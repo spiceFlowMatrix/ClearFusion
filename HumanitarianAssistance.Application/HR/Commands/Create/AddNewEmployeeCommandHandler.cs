@@ -35,6 +35,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
 
             using (IDbContextTransaction tran = _dbContext.Database.BeginTransaction())
             {
+                EmployeeDetailModel model= new EmployeeDetailModel();
+
                 try
                 {
                     EmployeeDetail obj = _mapper.Map<EmployeeDetail>(request);
@@ -42,6 +44,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
 
                     await _dbContext.EmployeeDetail.AddAsync(obj);
                     await _dbContext.SaveChangesAsync();
+
+                    model.EmployeeID = obj.EmployeeID;
 
                     OfficeDetail OfficeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.OfficeId == request.OfficeId && x.IsDeleted == false);
                     obj.EmployeeCode = "E" + obj.EmployeeID;
@@ -106,6 +110,9 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     }
 
                     tran.Commit();
+
+                    
+                    response.data.EmployeeDetailModel = model;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }

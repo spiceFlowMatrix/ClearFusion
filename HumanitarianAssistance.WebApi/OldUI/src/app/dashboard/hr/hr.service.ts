@@ -1390,6 +1390,26 @@ export class HrService {
   }
   //#endregion
 
+  //#region "Add By Model"
+  CheckUserEmailAlreadyExists(url: string, email: any) {
+      const Myheaders = new Headers();
+    Myheaders.append(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('authenticationtoken')
+    );
+    const options = new RequestOptions({ headers: Myheaders });
+    return this.http
+      .get(url + '?Email=' + email, options)
+      .map((response: Response) => {
+        const doclist = response.json();
+        if (doclist) {
+          return doclist;
+        }
+      })
+      .catch(this.handleError);
+  }
+  //#endregion
+
     private handleError(error: Response) {
     return Observable.throw(error.json().error || 'Server error');
   }

@@ -115,7 +115,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                             // }
 
                             double convertMinutesToHours = ((double)(payrollAttendance.OverTimeMinutes + payrollAttendance.AttendanceMinutes) / 60d);
-                            obj.GrossSalary = Math.Round((double)(obj.TotalGeneralAmount * (payrollAttendance.AttendanceHours.Value + obj.LeaveHours + payrollAttendance.OvertimeHours.Value + convertMinutesToHours) + obj.TotalAllowance),2);
+                            obj.GrossSalary = Math.Round((double)(obj.TotalGeneralAmount * (payrollAttendance.AttendanceHours.Value + obj.LeaveHours + (payrollAttendance.OvertimeHours !=null? payrollAttendance.OvertimeHours.Value :0) + convertMinutesToHours) + obj.TotalAllowance),2);
                             obj.PensionAmount = Math.Round(((double)(obj.GrossSalary * payrollDetail.FirstOrDefault().PensionRate) / 100),2); // i.e. 4.5 % => 0.045
 
                             // eliminate hours and only show minutes if minutes is 60 we already added them to overtime hours so minutes = 0
