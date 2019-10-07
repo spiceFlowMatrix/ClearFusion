@@ -55,7 +55,13 @@
                       Invalidate
                     </button>
                   </div>
-
+                  <div class="col-sm-6">
+                      <button mat-stroked-button color="accent" style="left:64%;" (click)="onExportPdf()">
+                        <mat-icon aria-hidden="false" aria-label="Example home icon">
+                          vertical_align_bottom </mat-icon
+                        >Export Pdf
+                      </button>
+                  </div>
                   <div class="col-sm-1 pull-right ">
                     <!-- Filter -->
                     <div *ngIf="!fileUploadLoader; else documentUploadtemplate">

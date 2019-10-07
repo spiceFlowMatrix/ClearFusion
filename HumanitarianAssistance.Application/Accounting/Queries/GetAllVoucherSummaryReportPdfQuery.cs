@@ -14,11 +14,6 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
         // public List<long> ProjectJobs { get; set; }
         // public List<long> Projects { get; set; }
         // public int RecordType { get; set; }
-        public string FilterValue { get; set; }
-        public bool VoucherNoFlag { get; set; }
-        public bool ReferenceNoFlag { get; set; }
-        public bool DescriptionFlag { get; set; }
-        public bool JournalNameFlag { get; set; }
-        public bool DateFlag { get; set; }
+        public long VoucherId { get; set; }
     }
 }
