@@ -64,8 +64,6 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
     this.purchaseId = this.data.value;
     this.officeId = this.data.officeId;
 
-    this.addProcurementForm;
-
     forkJoin([
       this.getAllInventoryTypes(),
       this.getAllProjects(),
