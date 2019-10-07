@@ -262,6 +262,7 @@ namespace HumanitarianAssistance.Common.Helpers
         //Company Contact
         public const string UserCreated = "New User Created";
         public const string UserAlreadyExist = "User is already exists";
+        public const string EmailAlreadyExist = "Email is already exists";
         public const string UserNotExist = "User does not exists";
         public const string ApplicationStatusUpdated = "Application status has updated";
         public const string ContactAccountStatusUpdated = "Contact Account Status Updated";

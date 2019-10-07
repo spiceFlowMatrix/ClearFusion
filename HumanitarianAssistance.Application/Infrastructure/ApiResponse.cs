@@ -389,7 +389,7 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public IList<InterviewScheduleModel> InterviewScheduleDirectorlist { get; set; }
         public IList<InterviewScheduleModel> InterviewScheduleGeneralAdminlist { get; set; }
         public IList<InterviewScheduleModel> InterviewScheduleFieldOfficelist { get; set; }
-
+        public EmployeeDetailModel EmployeeDetailModel { get; set; }
         public List<PayrollHeadModel> PayrollHeadModelList { get; set; }
         public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
 
