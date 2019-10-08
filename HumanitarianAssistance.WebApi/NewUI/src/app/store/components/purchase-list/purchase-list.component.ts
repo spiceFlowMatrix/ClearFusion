@@ -9,6 +9,7 @@ import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { PurchaseFiledConfigComponent } from '../purchase-filed-config/purchase-filed-config.component';
 import { TableActionsModel } from 'projects/library/src/public_api';
+import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 
 @Component({
   selector: 'app-purchase-list',
@@ -38,7 +39,7 @@ export class PurchaseListComponent implements OnInit {
 
   constructor(private purchaseService: PurchaseService,
     private router: Router, private dialog: MatDialog,
-    private datePipe: DatePipe, private toastr: ToastrService) {
+    private datePipe: DatePipe, private toastr: ToastrService, private loader: CommonLoaderService) {
 
     this.filterValueModel = {
       CurrencyId: null,
@@ -95,6 +96,7 @@ export class PurchaseListComponent implements OnInit {
     this.filterValueModel = filter;
     this.purchaseService
       .getFilteredPurchaseList(filter).subscribe(x => {
+        this.loader.showLoader();
         this.purchaseRecordCount = x.RecordCount;
         this.purchaseFilterConfigList$ = of(x.PurchaseList);
         this.purchaseList$ = of(x.PurchaseList.map((element) => {
@@ -105,9 +107,22 @@ export class PurchaseListComponent implements OnInit {
             Project: element.ProjectName,
             OriginalCost: element.OriginalCost,
             DepreciatedCost: element.DepreciatedCost,
-            subItems: element.ProcurementList
+            subItems: element.ProcurementList.map((r)=> {
+              return {
+                Id : r.OrderId, 
+                IssueDate :r.IssueDate ? this.datePipe.transform(new Date(r.IssueDate),"dd/MM/yyyy") :null,
+                Employee : r.EmployeeName,
+                ProcuredAmount: r.ProcuredAmount,
+                MustReturn: r.MustReturn?"Yes":"No",
+                Returned: r.Returned?"Yes":"No",
+                ReturnedOn: r.ReturnedOn ? this.datePipe.transform(new Date(r.ReturnedOn),"dd/MM/yyyy"):null
+
+
+              }
+            })
           } as IPurchaseList;
         }));
+        this.loader.hideLoader();
       });
   }
 
@@ -202,22 +217,22 @@ export class PurchaseListComponent implements OnInit {
 
   configFilterAppliedEvent(event: any) {
 
-    // let headers: any[]=[];
+    let headers: any[]=[];
 
-    // event.forEach(element => {
-    //   headers.push(element.name);
-    // });
+    event.forEach(element => {
+      headers.push(element.name);
+    });
 
-    //  this.purchaseListHeaders$ = of(headers);
+     this.purchaseListHeaders$ = of(headers);
 
-    // this.purchaseFilterConfigList$.subscribe(y => {
+    this.purchaseFilterConfigList$.subscribe(y => {
 
-    //   // this.purchaseList$ = of(y.map((element) => {
-    //   //   return {
+      // this.purchaseList$ = of(y.map((element) => {
+      //   return {
 
-    //   //   } as IPurchaseList;
-    //   // }));
-    // });
+      //   } as IPurchaseList;
+      // }));
+    });
 
   }
 
