@@ -6134,6 +6134,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("RecurringCount");
 
+                    b.Property<Guid?>("ReoccuredReferenceId");
+
                     b.Property<int?>("StatusId");
 
                     b.Property<string>("SubActivityTitle");

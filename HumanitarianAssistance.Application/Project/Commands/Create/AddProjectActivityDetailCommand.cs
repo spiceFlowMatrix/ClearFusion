@@ -45,6 +45,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
         public new bool? IsDeleted { get; set; }
         public int? CountryId { get; set; }
         public long? ProjectId { get; set; }
+        public Guid? ReoccuredReferenceId { get; set; }
 
     }
 }

@@ -39,7 +39,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                     }
                     else
                     {
-                        projectactivityDetail.PlannedEndDate = StaticFunctions.GetRecurringDays(request.RecurringCount, request.RecurrinTypeId, request.PlannedStartDate);
+                        projectactivityDetail.PlannedEndDate = StaticFunctions.GetRecurrenceEndDate(request.RecurringCount, request.RecurrinTypeId, request.PlannedStartDate);
                     }
                     projectactivityDetail.ModifiedDate = request.ModifiedDate;
                     projectactivityDetail.ModifiedById = request.ModifiedById;

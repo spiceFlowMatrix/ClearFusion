@@ -7,6 +7,7 @@ import { of } from 'rxjs/internal/observable/of';
 import { ReplaySubject } from 'rxjs';
 import { BudgetLineService } from 'src/app/dashboard/project-management/project-list/budgetlines/budget-line.service';
 import { takeUntil } from 'rxjs/operators';
+import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 
 @Component({
   selector: 'app-purchase-filters',
@@ -33,7 +34,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
   @Output() purchaseFilterSelected = new EventEmitter<FormGroup>();
 
   constructor(private purchaseService: PurchaseService,
-    private fb: FormBuilder, private budgetLineService: BudgetLineService) {
+    private fb: FormBuilder, private budgetLineService: BudgetLineService, private loader : CommonLoaderService) {
 
     this.purchaseFormFilters = this.fb.group({
       InventoryTypeId: [null, Validators.required],
@@ -55,10 +56,11 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
   }
 
   getPurchaseFilters() {
+    this.loader.showLoader();
     this.purchaseService.getPurchaseFilterList()
     .pipe(takeUntil(this.destroyed$))
     .subscribe(x  => {
-
+      
       this.inventoryType$ = of(x.InventoryTypes.map(y => {
         return {
           value: y.Id,
@@ -108,6 +110,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
       this.purchaseFormFilters.get('CurrencyId').patchValue(x.CurrencyModel !== null ? x.CurrencyModel[0].CurrencyId : null);
 
       this.onPurchaseFilterSelectionChanged();
+      this.loader.hideLoader();
     },
     err => {
      console.error(err);
