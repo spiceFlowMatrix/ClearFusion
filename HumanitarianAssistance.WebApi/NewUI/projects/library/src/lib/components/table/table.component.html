@@ -7,7 +7,7 @@
     </tr>
   </thead>
   <tbody *ngFor="let item of items | async; let i=index;">
-    <tr (click)="switchSubList(i)" class="main-table">
+    <tr (click)="switchSubList(i,item)" class="main-table">
       <td *ngFor="let header of itemHeaders | async; let j=index ">{{item[header] ? item[header] : "N/A"}}</td>
       <td *ngIf="itemActions && (itemActions.items)">
         <span class="action-span">
