@@ -1,0 +1,68 @@
+<mat-card>
+  <div class="main-journal">
+    <mat-card>
+      <form [formGroup]="ledgerFilterForm" (ngSubmit)="onApplyingFilter(ledgerFilterForm.value)">
+        <div class="row">
+          <div class="col-md-12">
+                <div class="col-md-4">
+                  <mat-form-field>
+                      <mat-label>Office</mat-label>
+                      <mat-select formControlName="OfficesList" multiple>
+                          <mat-option *ngFor="let office of officeDropdown" [value]="office.OfficeId">{{office.OfficeName}}</mat-option>
+                      </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                    <lib-hum-dropdown [options]="currencyId$" formControlName="CurrencyId" [placeHolder]="'Currency'"
+                    ></lib-hum-dropdown>
+                </div>
+                <div class="col-md-4">
+                  <lib-hum-dropdown [options]="recordType$" formControlName="RecordType" [placeHolder]="'Record Type'"
+                    ></lib-hum-dropdown>
+                </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+              <div class="col-md-4">
+                  <mat-form-field>
+                      <mat-label>Accounts</mat-label>
+                      <mat-select formControlName="accountLists" multiple>
+                          <mat-option *ngFor="let account of accountDropdown" [value]="account.AccountCode">{{account.AccountName}}</mat-option>
+                      </mat-select>
+                  </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                  <mat-form-field>
+                    <input matInput [satDatepicker]="resultPicker" formControlName="date">
+                    <sat-datepicker
+                        #resultPicker
+                        [rangeMode]="true">
+                    </sat-datepicker>
+                    <sat-datepicker-toggle matSuffix [for]="resultPicker"></sat-datepicker-toggle>
+                  </mat-form-field>
+              </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <button class="pull-right" type="submit" mat-stroked-button color="accent">Update Filters</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="row">
+        <div class="col-md-6 text-center">
+          <h3>Opening Balance</h3>
+          <p>{{this.openingBalance}}</p>
+        </div>
+        <div class="col-md-6 text-center">
+          <h3>Closing Balance</h3>
+          <p>{{this.closingBalance}}</p>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <hum-table [headers]="ledgerListHeaders$" [items]="ledgerFilterList$"></hum-table>
+    </mat-card>
+  </div>
+</mat-card>
