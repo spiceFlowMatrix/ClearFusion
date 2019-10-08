@@ -1940,6 +1940,17 @@ checkComparison() {
     return true;
 }
 
+validateAddEmployeeForm() {
+
+  if (this.empGeneral.EmployeeName == null || this.empGeneral.FatherName == null ||
+    this.empGeneral.Email == null || this.empGeneral.TinNumber == null ||
+    this.empGeneral.GradeId == null || this.empGeneral.Phone == null ||
+    this.empGeneral.CountryId == null || this.empGeneral.EmployeeContractTypeId == null ||
+    this.empGeneral.HiredOn == null || this.empGeneral.Password == null) {
+      this.toastr.warning('Required fields are not filled out');
+    }
+}
+
   functionCache = {};
   validateRange(min, max) {
     if (!this.functionCache[`min${min}max${max}`])

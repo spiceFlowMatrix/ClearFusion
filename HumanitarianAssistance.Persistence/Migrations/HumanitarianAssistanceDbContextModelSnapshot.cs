@@ -1680,7 +1680,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasKey("EntitySourceDocumentId");
 
-                    b.HasIndex("DocumentFileId");
+                    b.HasIndex("DocumentFileId")
+                        .IsUnique();
 
                     b.ToTable("EntitySourceDocumentDetails");
                 });
@@ -6134,6 +6135,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("RecurringCount");
 
+                    b.Property<Guid?>("ReoccuredReferenceId");
+
                     b.Property<int?>("StatusId");
 
                     b.Property<string>("SubActivityTitle");
@@ -7861,7 +7864,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<long?>("InventoryCreditAccount");
 
-                    b.Property<long>("InventoryDebitAccount");
+                    b.Property<long?>("InventoryDebitAccount");
 
                     b.Property<string>("InventoryDescription");
 
@@ -8511,8 +8514,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.EntitySourceDocumentDetail", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.DocumentFileDetail", "DocumentFileDetail")
-                        .WithMany()
-                        .HasForeignKey("DocumentFileId")
+                        .WithOne("EntitySourceDocumentDetail")
+                        .HasForeignKey("HumanitarianAssistance.Domain.Entities.EntitySourceDocumentDetail", "DocumentFileId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -9888,8 +9891,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Accounting.ChartOfAccountNew", "ChartDebitAccountDetails")
                         .WithMany()
-                        .HasForeignKey("InventoryDebitAccount")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("InventoryDebitAccount");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.StoreInventoryItem", b =>

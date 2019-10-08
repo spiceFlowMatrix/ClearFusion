@@ -32,7 +32,7 @@ namespace HumanitarianAssistance.Application.CommonServices
 
                     fileModel = await _dbContext.EntitySourceDocumentDetails
                                        .Include(x => x.DocumentFileDetail)
-                                       .Where(x => x.IsDeleted == false && x.EntityId == model.RecordId
+                                       .Where(x => x.IsDeleted == false && x.DocumentFileDetail.IsDeleted== false && x.EntityId == model.RecordId
                                               && x.DocumentFileDetail.PageId == model.PageId &&
                                               x.DocumentFileDetail.DocumentTypeId == model.DocumentTypeId)
                                        .Select(x => new FileListModel

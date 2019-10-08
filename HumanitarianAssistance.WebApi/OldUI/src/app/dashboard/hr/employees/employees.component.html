@@ -661,7 +661,7 @@
 
                 <div class="btn-grp-wrap">
                     <dx-button text="Save" type="success" validationGroup="addGeneralDetails"
-                        [useSubmitBehavior]="true"></dx-button>
+                        [useSubmitBehavior]="true" (click)="validateAddEmployeeForm(addGeneralDetails)"></dx-button>
                     <dx-button text="Cancel" (click)="closeEmployeeForm()"></dx-button>
                 </div>
             </form>

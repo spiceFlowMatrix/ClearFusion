@@ -11,8 +11,8 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string ProjectGoal { get; set; }
         public string MainActivity { get; set; }
         public List<MonitoringReviewModel> MonitoringReviewModel { get; set; }
-        public DateTime? Start { get; set; }
-        public DateTime? End { get; set; }
+        public DateTime? ProjectStartDate { get; set; }
+        public DateTime? ProjectEndDate { get; set; }
         public string Country { get; set; }
         public string Province { get; set; }
         public string District { get; set; } 

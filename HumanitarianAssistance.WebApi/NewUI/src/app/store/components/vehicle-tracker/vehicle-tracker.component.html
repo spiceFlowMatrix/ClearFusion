@@ -1,0 +1,24 @@
+<lib-sub-header-template>
+  <span class="action_header">Vehicle Tracker
+    <hum-button [type]="'down'" [text]="'DISPLAY CURRENCY'"></hum-button>
+  </span>
+  <div class="action_section">
+  </div>
+</lib-sub-header-template>
+<mat-divider></mat-divider>
+<mat-card [ngStyle]="scrollStyles">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <app-vehicle-filters></app-vehicle-filters>
+        <mat-divider></mat-divider>
+        <h4>Vehicles</h4>
+        <hum-table [headers]="vehicleListHeaders$" [items]="vehicleList$"
+          (actionClick)="openMilageModal($event)" [actions]="actions" (rowClick)="goToDetails($event)"></hum-table>
+        <!-- <mat-paginator [length]="purchaseRecordCount" [pageSize]="filterValueModel.pageSize"
+          [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
+        </mat-paginator> -->
+      </div>
+    </div>
+  </div>
+</mat-card>
