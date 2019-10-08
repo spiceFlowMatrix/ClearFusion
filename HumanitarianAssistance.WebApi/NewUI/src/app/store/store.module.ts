@@ -8,7 +8,7 @@ import { AddPurchaseComponent } from './components/add-purchase/add-purchase.com
 import { AddProcurementsComponent } from './components/add-procurements/add-procurements.component';
 import { EntryComponentComponent } from './components/entry-component/entry-component.component';
 import { MatIconModule, MatMenuModule, MatSidenavModule, MatCardModule, MatButtonModule,
-  MatInputModule, MatDividerModule, MatListModule, MatExpansionModule } from '@angular/material';
+  MatInputModule, MatDividerModule, MatListModule, MatExpansionModule, MatTabsModule } from '@angular/material';
 import { ShareLayoutModule } from '../shared/share-layout.module';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { LibraryModule, SubHeaderTemplateModule } from 'projects/library/src/public_api';
@@ -27,6 +27,9 @@ import { GeneratorFiltersComponent } from './components/generator-filters/genera
 import { VehicleFiltersComponent } from './components/vehicle-filters/vehicle-filters.component';
 import { GeneratorDetailsComponent } from './components/generator-details/generator-details.component';
 import { VehicleDetailsComponent } from './components/vehicle-details/vehicle-details.component';
+import { AddMilageComponent } from './components/add-milage/add-milage.component';
+import { EditVehicleComponent } from './components/edit-vehicle/edit-vehicle.component';
+import { EditGeneratorComponent } from './components/edit-generator/edit-generator.component';
 
 
 
@@ -47,7 +50,10 @@ import { VehicleDetailsComponent } from './components/vehicle-details/vehicle-de
     GeneratorFiltersComponent,
     VehicleFiltersComponent,
     GeneratorDetailsComponent,
-      VehicleDetailsComponent
+      VehicleDetailsComponent,
+      AddMilageComponent,
+      EditVehicleComponent,
+      EditGeneratorComponent
     // components
   //  DbsidebarComponent,
    // DbheaderComponent,
@@ -75,13 +81,14 @@ import { VehicleDetailsComponent } from './components/vehicle-details/vehicle-de
     MatDialogModule,
     MatProgressSpinnerModule,
     MatListModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatTabsModule
     // MatRangeDatepickerModule,
     // MatNativeDateModule
 
 
 
   ],
-  entryComponents: [AddProcurementsComponent]
+  entryComponents: [AddProcurementsComponent, AddMilageComponent]
 })
 export class StoreModule { }
