@@ -8,7 +8,7 @@ import { AddPurchaseComponent } from './components/add-purchase/add-purchase.com
 import { AddProcurementsComponent } from './components/add-procurements/add-procurements.component';
 import { EntryComponentComponent } from './components/entry-component/entry-component.component';
 import { MatIconModule, MatMenuModule, MatSidenavModule, MatCardModule, MatButtonModule,
-  MatInputModule, MatDividerModule, MatListModule } from '@angular/material';
+  MatInputModule, MatDividerModule, MatListModule, MatExpansionModule } from '@angular/material';
 import { ShareLayoutModule } from '../shared/share-layout.module';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { LibraryModule, SubHeaderTemplateModule } from 'projects/library/src/public_api';
@@ -19,6 +19,14 @@ import {MatDialogModule } from '@angular/material/dialog';
 import { PurchaseFiledConfigComponent } from './components/purchase-filed-config/purchase-filed-config.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DocumentUploadComponent } from './components/document-upload/document-upload.component';
+import { VehicleDetailComponent } from './components/vehicle-detail/vehicle-detail.component';
+import { GeneratorDetailComponent } from './components/generator-detail/generator-detail.component';
+import { VehicleTrackerComponent } from './components/vehicle-tracker/vehicle-tracker.component';
+import { GeneratorTrackerComponent } from './components/generator-tracker/generator-tracker.component';
+import { GeneratorFiltersComponent } from './components/generator-filters/generator-filters.component';
+import { VehicleFiltersComponent } from './components/vehicle-filters/vehicle-filters.component';
+import { GeneratorDetailsComponent } from './components/generator-details/generator-details.component';
+import { VehicleDetailsComponent } from './components/vehicle-details/vehicle-details.component';
 
 
 
@@ -30,7 +38,16 @@ import { DocumentUploadComponent } from './components/document-upload/document-u
     AddProcurementsComponent,
     EntryComponentComponent,
     PurchaseFiledConfigComponent,
-    DocumentUploadComponent
+    DocumentUploadComponent,
+    VehicleDetailComponent,
+
+    GeneratorDetailComponent,
+    VehicleTrackerComponent,
+    GeneratorTrackerComponent,
+    GeneratorFiltersComponent,
+    VehicleFiltersComponent,
+    GeneratorDetailsComponent,
+      VehicleDetailsComponent
     // components
   //  DbsidebarComponent,
    // DbheaderComponent,
@@ -57,7 +74,8 @@ import { DocumentUploadComponent } from './components/document-upload/document-u
     MatCheckboxModule,
     MatDialogModule,
     MatProgressSpinnerModule,
-    MatListModule
+    MatListModule,
+    MatExpansionModule
     // MatRangeDatepickerModule,
     // MatNativeDateModule
 

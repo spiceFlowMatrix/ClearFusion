@@ -1,47 +1,47 @@
 <ng-container [ngSwitch]="type">
 
-  <button *ngSwitchCase="'save'" mat-flat-button class="blue" (click)="btnClick()" cdkFocusInitial>
+  <button *ngSwitchCase="'save'" mat-flat-button class="blue" (click)="btnClick()" cdkFocusInitial type="button">
     <h5>
       <i class="fas fa-check"></i>
       {{text | uppercase}}
     </h5>
   </button>
-  <button *ngSwitchCase="'cancel'" mat-flat-button class="red" (click)="btnClick()">
+  <button *ngSwitchCase="'cancel'" mat-flat-button class="red" (click)="btnClick()" type="button">
     <h5>
       <i class="fas fa-times"></i>
       {{text | uppercase}}
     </h5>
   </button>
-  <button *ngSwitchCase="'add'" mat-flat-button class="blue" (click)="btnClick()">
+  <button *ngSwitchCase="'add'" mat-flat-button class="blue" (click)="btnClick()" type="button">
     <h5>
       <i class="fas fa-plus"></i>
       {{text | uppercase}}
     </h5>
   </button>
-  <button *ngSwitchCase="'filter'" mat-flat-button class="blue" (click)="btnClick()">
+  <button *ngSwitchCase="'filter'" mat-flat-button class="blue" (click)="btnClick()" type="button">
     <h5>
       <i class="fas fa-filter"></i>
       {{text | uppercase}}
     </h5>
   </button>
-  <button *ngSwitchCase="'down'" mat-flat-button class="blue" (click)="btnClick()">
+  <button *ngSwitchCase="'down'" mat-flat-button class="blue" (click)="btnClick()" type="button">
     <h5>
       {{text | uppercase}}
       <i class="fas fa-caret-down"></i>
     </h5>
   </button>
-  <button *ngSwitchCase="'text'" mat-flat-button class="blue" (click)="btnClick()">
+  <button *ngSwitchCase="'text'" mat-flat-button class="blue" (click)="btnClick()" type="button">
     <h5>
       {{text | uppercase}}
     </h5>
   </button>
-  <button *ngSwitchCase="'clear'" mat-flat-button class="blue" (click)="btnClick()">
+  <button *ngSwitchCase="'clear'" mat-flat-button class="blue" (click)="btnClick()" type="button">
     <h5>
         <i class="fas fa-sync-alt"></i>
         {{text | uppercase}}
       </h5>
     </button>
-  <button *ngSwitchCase="'loading'" mat-flat-button class="blue" (click)="btnClick()">
+  <button *ngSwitchCase="'loading'" mat-flat-button class="blue" (click)="btnClick()" type="button">
       <span class="display_inline_block">
           <mat-spinner [diameter]="15"></mat-spinner>
         </span>
