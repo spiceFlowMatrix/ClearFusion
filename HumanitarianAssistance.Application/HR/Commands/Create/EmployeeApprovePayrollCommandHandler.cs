@@ -148,10 +148,9 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                                 await _dbContext.SaveChangesAsync();
                             }
                         }
-
-                        tran.Commit();
                     }
 
+                    tran.Commit();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }

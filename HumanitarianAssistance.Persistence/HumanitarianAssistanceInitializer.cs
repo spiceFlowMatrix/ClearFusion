@@ -1,4 +1,5 @@
-﻿using HumanitarianAssistance.Domain.Entities;
+﻿using HumanitarianAssistance.Common.Enums;
+using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Domain.Entities.Accounting;
 using HumanitarianAssistance.Domain.Entities.HR;
 using HumanitarianAssistance.Domain.Entities.Marketing;
@@ -210,6 +211,16 @@ namespace HumanitarianAssistance.Persistence
             if (!context.ProjectPhaseDetails.Any())
             {
                 await AddProjectPhaseDetails(context);
+            }
+
+            if (!context.StoreInventories.Any())
+            {
+                await AddStoreInventorySeedData(context);
+            }
+
+            if (!context.StoreItemGroups.Any())
+            {
+                await AddStoreItemGroupSeedData(context);
             }
 
 
@@ -1569,6 +1580,56 @@ namespace HumanitarianAssistance.Persistence
 
                 };
                 await context.ProjectPhaseDetails.AddRangeAsync(list);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private static async Task AddStoreInventorySeedData(HumanitarianAssistanceDbContext context)
+        {
+            try
+            {
+                StoreInventory inventory= new StoreInventory 
+                {
+                    InventoryId= 1,
+                    AssetType= (int)InventoryMasterType.Consumables,
+                    InventoryCode= "C01",
+                    InventoryName="Transport",
+                    InventoryDescription ="Transport",
+                    IsDeleted= false,
+                    CreatedDate= DateTime.UtcNow
+                };
+
+                await context.StoreInventories.AddAsync(inventory);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private static async Task AddStoreItemGroupSeedData(HumanitarianAssistanceDbContext context)
+        {
+            try
+            {
+                List<StoreItemGroup> list = new List<StoreItemGroup>
+                {
+                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupId=1, ItemGroupCode ="C01-01", ItemGroupName= "Vehicle", InventoryId =1},
+                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupId=2, ItemGroupCode ="C01-02", ItemGroupName= "Generator", InventoryId =1},
+                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupId=3, ItemGroupCode ="C01-03", ItemGroupName= "Vehicle Fuel", InventoryId =1},
+                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupId=4, ItemGroupCode ="C01-04", ItemGroupName= "Generator Fuel", InventoryId =1},
+                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupId=5, ItemGroupCode ="C01-05", ItemGroupName= "Vehicle Mobil Oil", InventoryId =1},
+                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupId=6, ItemGroupCode ="C01-06", ItemGroupName= "Generator Mobil Oil", InventoryId =1},
+                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupId=7, ItemGroupCode ="C01-07", ItemGroupName= "Vehicle Spare Parts", InventoryId =1},
+                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupId=8, ItemGroupCode ="C01-08", ItemGroupName= "Generator Spare Parts", InventoryId =1},
+                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupId=9, ItemGroupCode ="C01-09", ItemGroupName= "Vehicle Maintenance Service", InventoryId =1},
+                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupId=10, ItemGroupCode ="C01-10", ItemGroupName= "Generator Maintenance Service", InventoryId =1},
+                };
+                await context.StoreItemGroups.AddRangeAsync(list);
                 await context.SaveChangesAsync();
             }
             catch (Exception ex)

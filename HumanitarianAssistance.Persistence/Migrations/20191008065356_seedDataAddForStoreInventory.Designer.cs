@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191008065356_seedDataAddForStoreInventory")]
+    partial class seedDataAddForStoreInventory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1680,8 +1682,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasKey("EntitySourceDocumentId");
 
-                    b.HasIndex("DocumentFileId")
-                        .IsUnique();
+                    b.HasIndex("DocumentFileId");
 
                     b.ToTable("EntitySourceDocumentDetails");
                 });
@@ -8514,8 +8515,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.EntitySourceDocumentDetail", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.DocumentFileDetail", "DocumentFileDetail")
-                        .WithOne("EntitySourceDocumentDetail")
-                        .HasForeignKey("HumanitarianAssistance.Domain.Entities.EntitySourceDocumentDetail", "DocumentFileId")
+                        .WithMany()
+                        .HasForeignKey("DocumentFileId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -29,9 +29,10 @@ namespace HumanitarianAssistance.Application.FileManagement.Commands.Create
                 if (request != null)
                 {
                     DocumentFileDetail fileDetail = await _dbContext.DocumentFileDetail
+                                                                    .Include(x=> x.EntitySourceDocumentDetail)
                                                                     .FirstOrDefaultAsync(x => x.IsDeleted == false &&
                                                                      x.Name == request.FileName && x.PageId == request.PageId &&
-                                                                     x.DocumentTypeId == request.DocumentTypeId);
+                                                                     x.DocumentTypeId == request.DocumentTypeId && x.EntitySourceDocumentDetail.EntityId == request.RecordId);
 
                     //Delete file If file with same name already exists for same page and same document type.
                     if (fileDetail != null)
@@ -70,6 +71,8 @@ namespace HumanitarianAssistance.Application.FileManagement.Commands.Create
 
                     await _dbContext.EntitySourceDocumentDetails.AddAsync(docDetail);
                     await _dbContext.SaveChangesAsync();
+
+                    response.data.DocumentFileId= fileDetail.DocumentFileId;
                 }
 
                 response.StatusCode = StaticResource.successStatusCode;
