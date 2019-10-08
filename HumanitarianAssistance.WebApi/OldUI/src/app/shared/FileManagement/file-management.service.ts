@@ -157,6 +157,13 @@ export class FileManagementService {
     }
     //#endregion
 
+    //#region "GetDocumentFiles"
+    GetDocumentFiles(model: any) {
+        const url = this.settings.getBaseUrl() + GLOBAL.API_FileManagement_GetDocumentFiles;
+        return this.PostByModel(url, model);
+    }
+    //#endregion
+
     private handleError(error: Response) {
         return Observable.throw(error || 'Server error');
     }

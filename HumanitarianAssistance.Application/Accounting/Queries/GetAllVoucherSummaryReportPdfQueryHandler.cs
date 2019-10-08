@@ -33,38 +33,12 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
         {
             try
             {
-                DateTime parsedDateTime;
-                string voucherNoValue = null;
-                string referenceNoValue = null;
-                string descriptionValue = null;
-                string journalNameValue = null;
-                string dateValue = null;
-                string formattedDate = null;
-                // model logic here
-                if (!string.IsNullOrEmpty(request.FilterValue))
-                {
-                    voucherNoValue = request.VoucherNoFlag ? request.FilterValue.ToLower().Trim() : null;
-                    referenceNoValue = request.ReferenceNoFlag ? request.FilterValue.ToLower().Trim() : null;
-                    descriptionValue = request.DescriptionFlag ? request.FilterValue.ToLower().Trim() : null;
-                    journalNameValue = request.JournalNameFlag ? request.FilterValue.ToLower().Trim() : null;
-                    dateValue = request.DateFlag ? request.FilterValue.ToLower().Trim() : null;
-                    if(DateTime.TryParseExact(dateValue, "dd/mm/yyyy", 
-                        CultureInfo.InvariantCulture, 
-                        DateTimeStyles.None, 
-                        out parsedDateTime))
-                    {
-                        formattedDate = parsedDateTime.ToString("yyyy-mm-dd");
-                    }
-                    else
-                    {
-                        formattedDate =dateValue;
-                    }
-                }
                 VoucherSummaryMainReportPdfModel mainsummary=new VoucherSummaryMainReportPdfModel();
                 
                 mainsummary.Logo=_env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath;
 
                 var spVoucherSummaryList=await _dbContext.LoadStoredProc("get_all_voucher_transaction_list")
+                                                .WithSqlParam("voucherid", request.VoucherId)   
                                                 .ExecuteStoredProc<VoucherSummaryReportNewPdfModel>();
                 var groupedlist=spVoucherSummaryList.GroupBy(x=>new {
                     x.VoucherNo,
@@ -96,13 +70,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                         Job=ss.ProjectJobCode,
                         Sector=ss.SectorCode
                         }).ToList()
-                    }).Where(v=>!string.IsNullOrEmpty(request.FilterValue) ? (
-                            (!string.IsNullOrEmpty(voucherNoValue)?v.VoucherNo.ToString().Trim().Contains(voucherNoValue):false) ||
-                            (!string.IsNullOrEmpty(referenceNoValue)?v.ReferenceNo.Trim().ToLower().Contains(referenceNoValue):false) ||
-                            (!string.IsNullOrEmpty(descriptionValue)?v.Description.Trim().ToLower().Contains(descriptionValue):false)||
-                            (!string.IsNullOrEmpty(journalNameValue)?v.Journal.Trim().ToLower().Contains(journalNameValue):false) ||
-                            (!string.IsNullOrEmpty(formattedDate)?v.Date.ToString().Trim().Contains(formattedDate):false)
-                            ) : true).ToList();
+                    }).ToList();
                
                
                 mainsummary.VoucherDetails=groupedlist;

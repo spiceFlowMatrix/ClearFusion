@@ -62,9 +62,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public ICollection<ProjectActivityDetail> ProjectSubActivityList { get; set; }
 
 
-        [Range(0, 100)]
         public float? Target { get; set; }
-        [Range(0, 100)]
         public float? Achieved { get; set; }
         public string SubActivityTitle { get; set; }
 
@@ -74,6 +72,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         [ForeignKey("CountryId")]
         public int? CountryId { get; set; }
         public CountryDetails CountryDetails { get; set; }
+        public Guid? ReoccuredReferenceId { get; set; }
 
         public virtual ICollection<ProjectMonitoringReviewDetail> ProjectMonitoringReviewDetail { get; set; }
     }

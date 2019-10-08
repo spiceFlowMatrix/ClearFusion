@@ -633,5 +633,18 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         {
             return await _mediator.Send(new GetPrimarySalaryHeadsQuery { EmployeeId = EmployeeId });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckUserEmailAlreadyExists(string Email)
+        {
+            if(!string.IsNullOrEmpty(Email))
+            {
+                return Ok(await _mediator.Send(new CheckUserEmailAlreadyExistsQuery { Email = Email }));
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }

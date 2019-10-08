@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191007095908_addColumnRecurredReferenceIdInProjectActivityDetailTbl")]
+    partial class addColumnRecurredReferenceIdInProjectActivityDetailTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -6134,7 +6136,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("RecurringCount");
 
-                    b.Property<Guid?>("ReoccuredReferenceId");
+                    b.Property<long?>("ReoccuredReferenceId");
 
                     b.Property<int?>("StatusId");
 

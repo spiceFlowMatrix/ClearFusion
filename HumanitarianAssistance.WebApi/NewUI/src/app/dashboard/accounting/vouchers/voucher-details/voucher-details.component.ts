@@ -37,6 +37,8 @@ import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 import { DocumentListingComponent } from 'projects/library/src/lib/components/document-listing/document-listing.component';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { FileSourceEntityTypes } from 'src/app/shared/enum';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
+import { GLOBAL } from 'src/app/shared/global';
 
 @Component({
   selector: 'app-voucher-details',
@@ -88,7 +90,8 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
     private toastr: ToastrService,
     private budgetLineService: BudgetLineService,
     private projectJobService: ProjectJobsService,
-    private globalSharedService: GlobalSharedService
+    private globalSharedService: GlobalSharedService,
+    private appurl: AppUrlService
   ) {
     this.getScreenSize();
   }
@@ -776,6 +779,15 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
           .subscribe(x => (this.fileUploadLoader = false));
       }
     }
+  }
+
+  onExportPdf() {
+    this.globalSharedService
+      .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetAllVoucherSummaryReportPdf,
+      {VoucherId: this.voucherId}
+      )
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe();
   }
 
   ngOnDestroy() {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Tab, HrService, SexTypes, GeneralInfo } from '../hr.service';
 import { ToastrService } from 'ngx-toastr';
 import { GLOBAL } from '../../../shared/global';
@@ -28,6 +28,7 @@ export class EmployeesComponent implements OnInit {
   isEditingAllowed = false;
   selectedOffice = null;
   jobGradeTypeDropdown: IDatasource[];
+  DocumentFileList: any[] = [];
 
   officeDropdownList: any[] = [];
   documentTypeList: any;
@@ -54,6 +55,7 @@ export class EmployeesComponent implements OnInit {
   showData: any;
   empGeneral: any;
   imageURL: any;
+  docName: any;
   defaultImagePath: string;
   fileURL: any;
   docURL: any;
@@ -153,6 +155,8 @@ export class EmployeesComponent implements OnInit {
 
   maritalStatusDropdown: any[];
   employeeImage: File;
+
+  @Output() triggerEmployeeLeavePopUpEvent = new EventEmitter<any>();
 
   //#endregion "VARIABLES"
 
@@ -411,14 +415,9 @@ export class EmployeesComponent implements OnInit {
     this.imageFlag = true;
     let dataModelImage: UploadModel;
     this.profileImageChangePopupLoading = true;
-    const changeEmployeeImage: any = {
-      EmployeeId: this.employeeId,
-      EmployeeImage: this.imageURL
-    };
-   
     dataModelImage = {
       DocumentTypeId: DocumentFileTypes.EmployeeProfile,
-      PageId: FileSourceEntityTypes.EmployeeProfile,
+      PageId: FileSourceEntityTypes.Employee,
       EntityId: this.employeeId,
       File: this.employeeImage,
       DocumentFileId: null
@@ -497,11 +496,82 @@ export class EmployeesComponent implements OnInit {
   //#endregion
 
   // Add Document with file uploader
+  // onFormSubmitDocAdd(data: any) {
+  //   this.addNewDocument.DocumentFilePath = this.imageURLDoc;
+  //   data.EmployeeId = this.employeeId;
+  //   this.AddEmployeeDocument(data);
+  // }
+
+
+
+  // Add Document with file uploader
   onFormSubmitDocAdd(data: any) {
-    this.addNewDocument.DocumentFilePath = this.imageURLDoc;
-    data.EmployeeId = this.employeeId;
-    this.AddEmployeeDocument(data);
+    this.addDocPopupLoading = true;
+    let dataModelImage: UploadModel;
+    dataModelImage = {
+      DocumentTypeId: DocumentFileTypes.EmployeeDocument,
+      PageId: FileSourceEntityTypes.Employee,
+      EntityId: this.employeeId,
+      File: this.imageURLDoc,
+      DocumentFileId: null
+  };
+    this.fileManagementService.uploadFile(dataModelImage)
+      .subscribe(
+        data => {
+          if (data.StatusCode === 200) {
+            this.toastr.success('Document Uploaded Successfully');
+            this.popupVisibleAddDoc = false;
+            this.addDocPopupLoading = false;
+            this.getEmployeeDocument(this.employeeId);
+          } else {
+            this.addDocPopupLoading = false;
+            this.toastr.error('Something went wrong!');
+          }
+        },
+        error => {
+          this.addDocPopupLoading = false;
+          if (error.StatusCode === 500) {
+            this.toastr.error('Internal Server Error....');
+          } else if (error.StatusCode === 401) {
+            this.toastr.error('Unauthorized Access Error....');
+          } else if (error.StatusCode === 403) {
+            this.toastr.error('Forbidden Error....');
+          }
+        }
+      );
   }
+  //#endregion
+
+  getEmployeeDocument(employeeId: number) {
+    this.DocumentFileList = [];
+    const model = {
+      DocumentTypeId: DocumentFileTypes.EmployeeDocument,
+      PageId: FileSourceEntityTypes.Employee,
+      // tslint:disable-next-line: radix
+      RecordId: employeeId,
+    };
+
+    this.fileManagementService
+        .GetDocumentFiles(model)
+        .subscribe(x => {
+          if (x.data.DocumentFileList !== undefined) {
+
+            x.data.DocumentFileList.forEach(y => {
+              this.DocumentFileList.push({
+                FileName: y.FileName,
+                FilePath: y.FilePath,
+                DocumentFileId: y.DocumentFileId,
+                DocumentTypeId: y.DocumentTypeId,
+                FileSignedUrl: y.FileSignedURL,
+              });
+            });
+
+            this.showDocumentData = this.DocumentFileList;
+            this.selectedDropdown = this.DocumentFileList[0].FileName;
+          }
+        });
+  }
+
 
   // Event Fire on image Selection
   onImageSelectDoc(event: any) {
@@ -509,7 +579,7 @@ export class EmployeesComponent implements OnInit {
     const myReader: FileReader = new FileReader();
     myReader.readAsDataURL(file);
     myReader.onloadend = () => {
-      this.imageURLDoc = myReader.result;
+      this.imageURLDoc = file;
     };
   }
 
@@ -655,6 +725,7 @@ export class EmployeesComponent implements OnInit {
     this.GetEmployeeDetailsByEmployeeId(model.EmployeeID);
     this.employeeId = model.EmployeeID;
     localStorage.setItem('SelectedEmployee', this.employeeId !== undefined ? this.employeeId.toString() : '');
+    
   }
   //#endregion
 
@@ -1043,6 +1114,7 @@ export class EmployeesComponent implements OnInit {
   //#region  "Get On Click All Employee Details"
   GetEmployeeDetailsByEmployeeId(employeeId: number) {
     this.commonService.setLoader(true);
+    this.getEmployeeDocument(employeeId);
 
     if (employeeId === 0) {
       this.toastr.warning('No data to display !');
@@ -1167,15 +1239,32 @@ export class EmployeesComponent implements OnInit {
       .subscribe(
         data => {
           if (data.StatusCode === 200) {
+            this.addEmployeePopupLoading = false; // loader on popup
             this.toastr.success('Employee Added Successfully!!!');
             this.GetAllEmployeeDetails(this.tabEventValue);
             this.popupAddEmployeeInfoVisible = false;
-            this.employeeId = 0;
-            if (data.LoggerDetailsModel != null) {
-            }
-            this.fireNotification(data.LoggerDetailsModel);
+            this.employeeId = data.data.EmployeeDetailModel.EmployeeID;
+
+            let showLeavePopUp = false;
+
+              if (generalInfo.EmployeeTypeId !== EmployeeType.Prospective) {
+                showLeavePopUp = true;
+              }
+
+              const employeeLeavePopUpData = {
+                employeeid: this.employeeId,
+                displayLeavePopUp: showLeavePopUp
+              };
+              
+              this.triggerEmployeeLeavePopUp(employeeLeavePopUpData);
+
+            // if (data.LoggerDetailsModel != null) {
+            // }
+            // this.fireNotification(data.LoggerDetailsModel);
+          } else {
+            this.toastr.warning(data.Message);
+            this.addEmployeePopupLoading = false; // loader on popup
           }
-          this.addEmployeePopupLoading = false; // loader on popup
         },
         error => {
           if (error.StatusCode === 500) {
@@ -1402,9 +1491,8 @@ export class EmployeesComponent implements OnInit {
   }
 
   selectDoc(e) {
-    this.docpath = this._DomSanitizer.bypassSecurityTrustResourceUrl(
-      this.setting.getDocUrl() + e.value
-    );
+    this.docpath = e.FileSignedUrl;
+    this.selectedDropdown = e.FileSignedUrl;
   }
 
   fireNotification(model) {
@@ -1541,6 +1629,7 @@ export class EmployeesComponent implements OnInit {
   triggerEmployeeLeavePopUp(model) {
     this.assignLeaveToEmployee = model.employeeid;
     if (model.displayLeavePopUp) {
+      this.selectedLeaveList = [];
       this.popupAssignLeaveVisible = true;
     }
   }
@@ -1813,6 +1902,34 @@ export class EmployeesComponent implements OnInit {
         this.getStateType(e.value);
       }
     }
+    if (e.dataField === 'Email') {
+      if (e.value !== undefined && e.value != null && e.value !== '') {
+        this.checkEmailAlreadyExists(e.value);
+      }
+    }
+  }
+
+  checkEmailAlreadyExists(email: string) {
+    this.hrService
+      .CheckUserEmailAlreadyExists(this.setting.getBaseUrl() + GLOBAL.API_HR_CheckUserEmailAlreadyExists, email)
+      .subscribe(
+        data => {
+
+          if (data) {
+            this.toastr.warning('Email already exists');
+            this.empGeneral.Email = '';
+          }
+        },
+        error => {
+          if (error.StatusCode === 500) {
+            this.toastr.error('Internal Server Error....');
+          } else if (error.StatusCode === 401) {
+            this.toastr.error('Unauthorized Access Error....');
+          } else if (error.StatusCode === 403) {
+            this.toastr.error('Forbidden Error....');
+          }
+        }
+      );
   }
 
   passwordComparison = () => {
