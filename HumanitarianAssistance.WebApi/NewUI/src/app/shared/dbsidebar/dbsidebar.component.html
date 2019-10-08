@@ -122,7 +122,9 @@
         <li [ngClass]="{'active': selectedLink == 55 }" (click)="onOldUiPageClick('dashboard/store/store-main', 55)" *ngIf="displayModulePages(StorePages.Store)"><a>Store</a></li>
         <li [ngClass]="{'active': selectedLink == 56 }" (click)="onOldUiPageClick('dashboard/store/procurment-summary', 56)" *ngIf="displayModulePages(StorePages.ProcurementSummary)"><a>Procurement Summary</a></li>
         <li [ngClass]="{'active': selectedLink == 57 }" (click)="onOldUiPageClick('dashboard/store/store-depreciation-report', 57)" *ngIf="displayModulePages(StorePages.DepreciationReport)"><a>Depreciation Report</a></li>
-        <li [ngClass]="{'active': selectedLink == 57 }" [routerLink]="['/store/purchases']"><a>Purchase & Precurement</a></li>
+        <li [ngClass]="{'active': selectedLink == 58 }" [routerLink]="['/store/purchases']"><a>Purchase & Precurement</a></li>
+        <li [ngClass]="{'active': selectedLink == 59 }" [routerLink]="['/store/vehicle/tracker']"><a>Vehicle Tracker</a></li>
+        <li [ngClass]="{'active': selectedLink == 60 }" [routerLink]="['/store/generator/tracker']"><a>Generator Tracker</a></li>
       </ul>
 
       <!-- <li (click)="onsideBarLinkClicked('/style-guide')"> <a>Style-guide</a>

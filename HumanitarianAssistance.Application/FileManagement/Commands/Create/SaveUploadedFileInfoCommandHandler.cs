@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Infrastructure;
@@ -27,7 +28,21 @@ namespace HumanitarianAssistance.Application.FileManagement.Commands.Create
             {
                 if (request != null)
                 {
-                    DocumentFileDetail fileDetail = new DocumentFileDetail
+                    DocumentFileDetail fileDetail = await _dbContext.DocumentFileDetail
+                                                                    .FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                                                                     x.Name == request.FileName && x.PageId == request.PageId &&
+                                                                     x.DocumentTypeId == request.DocumentTypeId);
+
+                    //Delete file If file with same name already exists for same page and same document type.
+                    if (fileDetail != null)
+                    {
+                        fileDetail.IsDeleted = true;
+                        _dbContext.DocumentFileDetail.Update(fileDetail);
+                        await _dbContext.SaveChangesAsync();
+                    }
+                                                               
+
+                    fileDetail = new DocumentFileDetail
                     {
                         IsDeleted = false,
                         CreatedDate = DateTime.UtcNow,
@@ -45,13 +60,13 @@ namespace HumanitarianAssistance.Application.FileManagement.Commands.Create
                     await _dbContext.SaveChangesAsync();
 
                      EntitySourceDocumentDetail docDetail = new EntitySourceDocumentDetail
-                    {
+                     {
                         CreatedDate = DateTime.UtcNow,
                         CreatedById = request.CreatedById,
                         DocumentFileId = fileDetail.DocumentFileId,
                         EntityId = request.RecordId,
                         IsDeleted = false
-                    };
+                     };
 
                     await _dbContext.EntitySourceDocumentDetails.AddAsync(docDetail);
                     await _dbContext.SaveChangesAsync();
