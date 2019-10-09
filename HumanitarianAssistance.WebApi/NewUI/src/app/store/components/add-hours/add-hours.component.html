@@ -1,9 +1,9 @@
 <div>
-  <h1 mat-dialog-title>Vehicle Mileage Form</h1>
-  <div mat-dialog-subtitle>Please enter number of Kilometers the vehicle has been used.</div>
-  <div mat-dialog-subtitle><b>Note:</b> User may provide a negative value if the vehicle's total incurred mileage needs to be
-    reduced for some reason..</div>
-  <br/>
+  <h1 mat-dialog-title> Generator Usage Form</h1>
+  <div mat-dialog-subtitle>Please enter number of Hours the Generator has been used.</div>
+  <div mat-dialog-subtitle><b>Note:</b> User may provide a negative value if the generator's total incurred usage needs
+    to be reduced for some reason.</div>
+  <br />
   <form>
 
 
@@ -24,7 +24,7 @@
       </div>
     </mat-dialog-content>
     <mat-dialog-actions class="items-float-right">
-      <hum-button (click)='addMilage()' [type]="'save'" [text]="'save'"></hum-button>
+      <hum-button (click)='addHours()' [type]="'save'" [text]="'save'"></hum-button>
       <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
     </mat-dialog-actions>
 

@@ -6,10 +6,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./vehicle-filters.component.scss']
 })
 export class VehicleFiltersComponent implements OnInit {
-
+  isBasic = true;
   constructor() { }
 
   ngOnInit() {
   }
+  clearFilters(){
 
+  }
 }
