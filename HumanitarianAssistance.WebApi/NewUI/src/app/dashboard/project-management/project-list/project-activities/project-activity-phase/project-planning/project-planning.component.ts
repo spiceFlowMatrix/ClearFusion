@@ -105,7 +105,6 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
   ) {}
 
   ngOnInit() {
-    debugger;
     this.getActivityPermission();
     console.log('activity projectid', this.activityDetail.ProjectId);
     this.projectId = this.activityDetail.ProjectId;
