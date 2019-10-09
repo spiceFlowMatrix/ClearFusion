@@ -1941,14 +1941,39 @@ checkComparison() {
 }
 
 validateAddEmployeeForm() {
-
-  if (this.empGeneral.EmployeeName == null || this.empGeneral.FatherName == null ||
-    this.empGeneral.Email == null || this.empGeneral.TinNumber == null ||
-    this.empGeneral.GradeId == null || this.empGeneral.Phone == null ||
-    this.empGeneral.CountryId == null || this.empGeneral.EmployeeContractTypeId == null ||
-    this.empGeneral.HiredOn == null || this.empGeneral.Password == null) {
-      this.toastr.warning('Required fields are not filled out');
-    }
+  if (this.tabEventValue === 2) {
+    if ((this.empGeneral.EmployeeName == null || this.empGeneral.EmployeeName === '') ||
+    (this.empGeneral.FatherName == null || this.empGeneral.FatherName === '' ) ||
+      (this.empGeneral.Email == null || this.empGeneral.Email === '') ||
+      (this.empGeneral.TinNumber == null || this.empGeneral.TinNumber === '') ||
+      this.empGeneral.GradeId == null ||
+      (this.empGeneral.Phone == null || this.empGeneral.Phone === '')  ||
+      this.empGeneral.CountryId == null || this.empGeneral.EmployeeContractTypeId == null ||
+      (this.empGeneral.HiredOn == null || this.empGeneral.HiredOn === '') ||
+      (this.empGeneral.Password == null || this.empGeneral.Password === '')) {
+        this.toastr.warning('Required fields are not filled out');
+      }
+  } else if (this.tabEventValue === 1) {
+    if ((this.empGeneral.EmployeeName == null || this.empGeneral.EmployeeName === '') ||
+    (this.empGeneral.FatherName == null || this.empGeneral.FatherName === '' ) ||
+      (this.empGeneral.Email == null || this.empGeneral.Email === '') ||
+      (this.empGeneral.TinNumber == null || this.empGeneral.TinNumber === '') ||
+      this.empGeneral.GradeId == null ||
+      (this.empGeneral.Phone == null || this.empGeneral.Phone === '')  ||
+      this.empGeneral.CountryId == null || (this.empGeneral.Password == null || this.empGeneral.Password === '')) {
+        this.toastr.warning('Required fields are not filled out');
+      }
+  } else {
+      if ((this.empGeneral.EmployeeName == null || this.empGeneral.EmployeeName === '') ||
+      (this.empGeneral.FatherName == null || this.empGeneral.FatherName === '' ) ||
+      (this.empGeneral.Email == null || this.empGeneral.Email === '') ||
+      (this.empGeneral.TinNumber == null || this.empGeneral.TinNumber === '') ||
+      this.empGeneral.GradeId == null ||
+      (this.empGeneral.Phone == null || this.empGeneral.Phone === '')  ||
+      this.empGeneral.CountryId == null || (this.empGeneral.Password == null || this.empGeneral.Password === '')) {
+        this.toastr.warning('Required fields are not filled out');
+      }
+  }
 }
 
   functionCache = {};

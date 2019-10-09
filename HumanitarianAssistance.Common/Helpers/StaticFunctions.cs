@@ -53,7 +53,7 @@ namespace HumanitarianAssistance.Common.Helpers
             return salaryTax;
         }
 
-// Project actiivty recurring days end date 
+        // Project actiivty recurring days end date 
         public static DateTime GetRecurrenceEndDate(int? RecurringCount, int? RecurrinTypeId, DateTime? PlannedStartDate)
         {
             DateTime eventDate = new DateTime();

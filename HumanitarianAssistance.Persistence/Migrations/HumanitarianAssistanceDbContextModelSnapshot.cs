@@ -7906,7 +7906,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<string>("ItemName");
 
-                    b.Property<int>("ItemType");
+                    b.Property<int?>("ItemType");
 
                     b.Property<string>("MasterInventoryCode");
 
@@ -9907,8 +9907,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.InventoryItemType", "ItemTypes")
                         .WithMany()
-                        .HasForeignKey("ItemType")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ItemType");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.StoreItemGroup", b =>

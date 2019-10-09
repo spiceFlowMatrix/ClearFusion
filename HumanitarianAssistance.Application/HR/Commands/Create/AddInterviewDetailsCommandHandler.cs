@@ -38,7 +38,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     await _dbContext.InterviewDetails.AddAsync(obj);
 
                     //Rating Based Criteria
-                    foreach (var item in request.RatingBasedCriteriaList)
+                    foreach (var item in request.RatingBasedCriteriaModelList)
                     {
                         RatingBasedCriteria ratingobj = new RatingBasedCriteria();
                         ratingobj.InterviewDetailsId = obj.InterviewDetailsId;

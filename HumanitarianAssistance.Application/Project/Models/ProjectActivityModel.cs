@@ -43,6 +43,6 @@ namespace HumanitarianAssistance.Application.Project.Models
         public bool? IsDeleted { get; set; }
         public long? ProjectId { get; set; }
         public int? CountryId { get; set; }
-
+        public Guid? ReoccuredReferenceId { get; set; }
     }
 }

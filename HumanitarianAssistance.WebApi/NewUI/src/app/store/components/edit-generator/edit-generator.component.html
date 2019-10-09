@@ -1,3 +1,12 @@
-<p>
-  edit-generator works!
-</p>
+<lib-sub-header-template>
+  <span class="action_header">
+    Edit Generator Details
+    <hum-button [type]="'save'" [text]="'save'"></hum-button>
+    <hum-button [type]="'cancel'" [text]="'cancel'" (click)="backToDetails()"></hum-button>
+  </span>
+  <div class="action_section">
+  </div>
+</lib-sub-header-template>
+<mat-card>
+  <app-generator-detail></app-generator-detail>
+</mat-card>
