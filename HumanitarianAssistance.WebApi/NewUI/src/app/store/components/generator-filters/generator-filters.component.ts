@@ -6,11 +6,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./generator-filters.component.scss']
 })
 export class GeneratorFiltersComponent implements OnInit {
- 
+  isBasic = true;
   constructor() { }
 
   ngOnInit() {
 
   }
- 
+  clearFilters() { }
 }

@@ -29,6 +29,7 @@ namespace HumanitarianAssistance.Application.FileManagement.Commands.Create
                 if (request != null)
                 {
                     DocumentFileDetail fileDetail = await _dbContext.DocumentFileDetail
+
                                                                     .Include(x=> x.EntitySourceDocumentDetail)
                                                                     .FirstOrDefaultAsync(x => x.IsDeleted == false &&
                                                                      x.Name == request.FileName && x.PageId == request.PageId &&

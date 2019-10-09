@@ -9,3 +9,11 @@ export interface IVehicleList {
     TotalCost?: string;
     OriginalCost?: string;
 }
+
+export interface ILogs {
+    EventType?: string;
+    EventBy?: string;
+    EventOn?: string;
+    Detail?: string;
+
+}
