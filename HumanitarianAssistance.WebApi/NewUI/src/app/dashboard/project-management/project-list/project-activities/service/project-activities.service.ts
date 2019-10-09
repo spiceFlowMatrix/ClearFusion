@@ -59,23 +59,7 @@ export class ProjectActivitiesService {
   //#endregion
 
   //#region "AddProjectActivity"
-  AddProjectActivity(data: IPlanningActivityDetail) {
-    return this.globalService
-      .post(
-        this.appurl.getApiUrl() + GLOBAL.API_Project_AddProjectActivityDetail,
-        data
-      )
-      .pipe(
-        map(x => {
-          const responseData: IResponseData = {
-            data: x,
-            statusCode: x.StatusCode,
-            message: x.Message
-          };
-          return responseData;
-        })
-      );
-  }
+  
   //#endregion
 
   //#region "EditProjectActivity"

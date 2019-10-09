@@ -10,7 +10,6 @@
         }
 
         .container {
-            margin: 0 auto;
             max-width: 1300px;
         }
     </style>
@@ -35,7 +34,7 @@
                         <tr>
                             <th style="text-align:center; font-weight:200;font-size:10px;background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;">S#</th>
                             <th style="text-align:center;font-weight:200;font-size:10px;background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;">Name</th>
-                            <th style="text-align:center;font-weight:200;font-size:10px;background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;">First Name</th>
+                            <th style="text-align:center;font-weight:200;font-size:10px;background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;">Father Name</th>
                             <th style="text-align:center;font-weight:200;font-size:10px;background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;">Designation</th>
                             <th style="text-align:center;font-weight:200;font-size:10px;background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;">Department</th>
                             <th style="text-align:center;font-weight:200;font-size:10px;background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;">Weak Point</th>
@@ -48,86 +47,35 @@
                             <th style="text-align:center;font-weight:200;font-size:10px;background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;">Committee Member 2</th>
                             <th style="text-align:center;font-weight:200;font-size:10px;background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;">Final Review Remarks </th>
                         </tr>
+                        @foreach (var Item in Model)
+                        {
                         <tr>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
+                            <td>@Item.SerialNumber</td>
+                            <td>@Item.Name</td>
+                            <td>@Item.FatherName</td>
+                            <td>@Item.Designation</td>
+                            <td>@Item.Department</td>
+                            <td>
+                           @foreach (var data1 in Item.WeakPoint)
+                           {
+                                @data1 <br>
+                            }
+                            </td>
+                            <td>
+                                @foreach (var data2 in Item.StrongPoint)
+                                {
+                                    @data2 <br> 
+                                }
+                            </td>
+                            <td>@Item.AppraisalStatus</td>
+                            <td>@Item.RequiredTraining</td>
+                            <td>@Item.EmployeeComments</td>
+                            <td>@Item.SuperviserComment</td>
+                            <td>@Item.CommitteeMemberOne</td>
+                            <td>@Item.CommitteeMemberTwo</td>
+                            <td>@Item.FinalReview</td>
                         </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                        </tr>
+                        }
                     </table>
                 </td>
             </tr>
