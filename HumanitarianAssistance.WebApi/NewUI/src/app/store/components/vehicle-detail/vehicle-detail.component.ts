@@ -52,7 +52,6 @@ export class VehicleDetailComponent implements OnInit, OnChanges, OnDestroy {
     this.purchaseService.getAllOfficeList()
     .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
-        debugger;
         this.offices$ = of(x.data.OfficeDetailsList.map(y => {
           return {
             value: y.OfficeId,

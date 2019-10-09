@@ -1941,8 +1941,6 @@ checkComparison() {
 }
 
 validateAddEmployeeForm() {
-  debugger;
-
   if (this.tabEventValue === 2) {
     if ((this.empGeneral.EmployeeName == null || this.empGeneral.EmployeeName === '') ||
     (this.empGeneral.FatherName == null || this.empGeneral.FatherName === '' ) ||

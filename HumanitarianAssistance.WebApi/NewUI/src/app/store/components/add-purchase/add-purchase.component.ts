@@ -281,7 +281,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   getItemGroupSelectedValue(event: any) {
-    debugger;
     this.getAllStoreItemsByGroupId(event);
 
     if (this.addPurchaseForm.get('InventoryId').value === StoreMasterCategory.Transport &&
@@ -450,7 +449,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   addTransportItemButtonClicked(transportItemType: number) {
-    debugger;
     if (transportItemType === this.ItemGroups.Vehicle) {
       this.addVehicles();
     } else if (transportItemType === this.ItemGroups.Generator) {
