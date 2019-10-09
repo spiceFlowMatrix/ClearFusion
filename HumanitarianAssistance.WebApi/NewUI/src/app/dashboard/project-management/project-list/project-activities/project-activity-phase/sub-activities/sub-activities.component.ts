@@ -111,11 +111,11 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
       Progress: [],
       Target: [
         this.subActivityDetail.Target,
-        [Validators.min(0), Validators.max(100), Validators.maxLength(3)]
+        [Validators.min(0)]
       ],
       Achieved: [
         this.subActivityDetail.Achieved,
-        [Validators.min(0), Validators.max(100)]
+        [Validators.min(0)]
       ],
       SubActivityTitle: [this.subActivityDetail.SubActivityTitle]
     });
