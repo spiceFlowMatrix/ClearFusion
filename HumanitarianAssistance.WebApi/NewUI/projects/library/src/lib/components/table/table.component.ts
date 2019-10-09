@@ -18,6 +18,7 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() actions: TableActionsModel
   @Output() actionClick = new EventEmitter<any>();
   @Output() subActionClick = new EventEmitter<any>();
+  @Output() rowClick = new EventEmitter<any>();
   subItemHeaders: Observable<string[]>;
 
   mainItems: Observable<Array<Object>>;
@@ -26,7 +27,7 @@ export class TableComponent implements OnInit, OnChanges {
   itemActions: TableActionsModel;
 
   isShowSubList = [];
-  constructor() { 
+  constructor() {
     this.actions = {
       items: {
       },
@@ -36,7 +37,7 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-  
+
     console.log(this.actions)
   }
   ngOnChanges(): void {
@@ -50,11 +51,14 @@ export class TableComponent implements OnInit, OnChanges {
           res.forEach((element, i) => {
             if (element['subItems']) {
               this.subItems.push(element['subItems']);
+              if (element['subItems'].length > 0) {
+                this.subItemHeaders = of(Object.keys(element['subItems'][0]));
+              }
             }
 
           });
           if (this.subItems.length > 0) {
-            this.subItemHeaders = of(Object.keys(this.subItems[0][0]));
+
             this.itemHeaders.subscribe(r => {
               const index = r.findIndex(v => v === 'subItems');
               r.splice(index);
@@ -85,8 +89,10 @@ export class TableComponent implements OnInit, OnChanges {
     this.subActionClick.emit(model);
   }
 
-  switchSubList(i) {
-    this.isShowSubList[i] = !this.isShowSubList[i];
+  switchSubList(i, event) {
+    if (this.subItems.length > 0)   this.isShowSubList[i] = !this.isShowSubList[i];
+    this.rowClick.emit(event);
+    
   }
 
 }

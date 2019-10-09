@@ -29,20 +29,27 @@ namespace HumanitarianAssistance.Application.FileManagement.Queries
             {
                 if (request != null)
                 {
-
                     List<FileListModel> fileList = new List<FileListModel>();
 
-                    fileList = await _dbContext.EntitySourceDocumentDetails
+                    var query = _dbContext.EntitySourceDocumentDetails
                                        .Include(x => x.DocumentFileDetail)
-                                       .Where(x => x.IsDeleted == false && x.EntityId == request.RecordId
+                                       .Where(x => x.IsDeleted == false && x.DocumentFileDetail.IsDeleted == false && x.EntityId == request.RecordId
                                               && x.DocumentFileDetail.PageId == request.PageId)
-                                       .Select(x => new FileListModel
-                                       {
-                                           FileName = x.DocumentFileDetail.Name,
-                                           FilePath = x.DocumentFileDetail.StorageDirectoryPath,
-                                           DocumentFileId = x.DocumentFileId,
-                                           DocumentTypeId = x.DocumentFileDetail.DocumentTypeId
-                                       }).ToListAsync();
+                                       .AsQueryable();
+
+
+                    if (request.DocumentTypeId != null && request.DocumentTypeId != 0)
+                    {
+                        query = query.Where(x => x.DocumentFileDetail.DocumentTypeId == request.DocumentTypeId);
+                    }
+
+                    fileList = await query.Select(x => new FileListModel
+                    {
+                        FileName = x.DocumentFileDetail.Name,
+                        FilePath = x.DocumentFileDetail.StorageDirectoryPath,
+                        DocumentFileId = x.DocumentFileId,
+                        DocumentTypeId = x.DocumentFileDetail.DocumentTypeId
+                    }).ToListAsync();
 
                     if (fileList.Any())
                     {

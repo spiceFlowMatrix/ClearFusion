@@ -135,7 +135,6 @@ export class FileManagementService {
 
     //#region "saveUploadedFileInfo"
     saveUploadedFileInfo(data: FileModel) {
-
         const url = this.settings.getBaseUrl() + GLOBAL.API_FileManagement_SaveUploadedFileInfo;
         return this.PostByModel(url, data);
     }
@@ -154,6 +153,13 @@ export class FileManagementService {
 
         const url = this.settings.getBaseUrl() + GLOBAL.API_FileManagement_GetSignedURLByDocumentFileId;
         return this.GetById(url, id);
+    }
+    //#endregion
+
+    //#region "GetDocumentFiles"
+    GetDocumentFiles(model: any) {
+        const url = this.settings.getBaseUrl() + GLOBAL.API_FileManagement_GetDocumentFiles;
+        return this.PostByModel(url, model);
     }
     //#endregion
 

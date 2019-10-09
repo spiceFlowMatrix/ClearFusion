@@ -55,7 +55,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
         [HttpPost]
         [Produces(contentType: "application/pdf")]
         public async Task<IActionResult> ProjectActivityReportPdf([FromBody] long ProjectId)
-        {    
+        {
             var file = await _mediator.Send(new ProjectActivityReportPdfQuery{ ProjectId = ProjectId});
             return File(file, "application/pdf", "ProjectActivityReport.pdf");
         }

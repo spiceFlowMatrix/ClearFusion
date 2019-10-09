@@ -13,7 +13,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
             RecurringCount = 0;
         }
         //Planning
-        public long? ActivityId { get; set; }
+        public long ActivityId { get; set; }
         public string ActivityName { get; set; }
         public string ActivityDescription { get; set; }
         public DateTime? PlannedStartDate { get; set; }
@@ -29,7 +29,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
 
         public bool? Recurring { get; set; }
         public int? RecurringCount { get; set; }
-        public int? RecurrinTypeId { get; set; }
+        public int RecurrinTypeId { get; set; }
 
         public int? CountryId { get; set; }
         public long? ProjectId { get; set; }
@@ -44,5 +44,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
         public double? Slippage { get; set; }
         public string SubActivityTitle { get; set; }
         public new bool? IsDeleted { get; set; }
+        public Guid? ReoccuredReferenceId { get; set; }
     }
 }

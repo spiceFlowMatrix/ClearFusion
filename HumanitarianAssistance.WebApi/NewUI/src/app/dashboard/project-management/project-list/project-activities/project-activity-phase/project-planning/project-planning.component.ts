@@ -67,6 +67,7 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
   editActivityLoader = false;
   projectId: number;
   diasbleEndDate = false;
+  disableRecurrence = false;
 
   // only for header
   tableHeader: string[] = [
@@ -107,6 +108,15 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
     this.getActivityPermission();
     console.log('activity projectid', this.activityDetail.ProjectId);
     this.projectId = this.activityDetail.ProjectId;
+    if (
+      this.activityDetail != null &&
+      this.activityDetail.Recurring === true &&
+      this.activityDetail.Recurring !== null
+    ) {
+      this.disableRecurrence = true;
+    } else {
+      this.disableRecurrence = false;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -123,6 +133,9 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
         this.activityDetail.Recurring === true
       ) {
         this.diasbleEndDate = true;
+        this.disableRecurrence = true;
+      } else {
+        this.disableRecurrence = false;
       }
     }
   }
@@ -144,7 +157,8 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
       RecurringType: [this.activityDetail.RecurrinTypeId],
       ProvinceId: [this.activityDetail.ProvinceId],
       DistrictID: [this.activityDetail.DistrictID],
-      CountryId: [this.activityDetail.CountryId]
+      CountryId: [this.activityDetail.CountryId],
+      ReoccuredReferenceId: [this.activityDetail.ReoccuredReferenceId]
     });
   }
   //#endregion
@@ -317,11 +331,6 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
   //#region "editProjectActivity"
   editProjectActivity(data: any) {
     this.editActivityLoader = true;
-    if (data.Recurring === false) {
-      data.RecurringCount = 0;
-      data.RecurrinTypeId = null;
-    }
-
     const projectActivityDetail: IProjectActivityDetail = {
       // Planning
       ActivityId: data.ActivityId,
@@ -342,7 +351,8 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
       CountryId: data.CountryId,
       ProjectId: this.projectId,
       ActualStartDate: data.ActualStartDate,
-      ActualEndDate: data.ActualEndDate
+      ActualEndDate: data.ActualEndDate,
+      ReoccuredReferenceId: data.ReoccuredReferenceId
     };
 
     this.activitiesService
@@ -353,6 +363,9 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
           if (response.statusCode === 200) {
             this.toastr.success('Activity updated successfully');
             this.updateActivity.emit(response.data);
+            if (projectActivityDetail.Recurring === true) {
+              this.disableRecurrence = true;
+            }
           } else {
             this.toastr.error(response.message);
           }
@@ -384,7 +397,6 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
     if (this.projectActivityForm.valid) {
       // this.editProjectActivity(this.activityDetail);
       this.editProjectActivity(this.activityDetail);
-
     } else {
       this.toastr.warning('Please fill the correct values');
     }
@@ -409,8 +421,9 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onRecurringChange(event: any) {
-    if (event.checked === true ) {
+    if (event.checked === true) {
       this.diasbleEndDate = true;
+      this.disableRecurrence = false;
     } else {
       this.diasbleEndDate = false;
     }

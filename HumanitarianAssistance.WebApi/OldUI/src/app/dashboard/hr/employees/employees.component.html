@@ -368,16 +368,23 @@
 
 
 <!-- Document Popup -->
-<dx-popup class="popup doc-popup-content" [width]="800" [height]="600" [showTitle]="false" [dragEnabled]="false"
+<dx-popup class="popup doc-popup-content" [width]="500" [height]="300" title="Documents" [showTitle]="true" [dragEnabled]="false"
     [closeOnOutsideClick]="true" [(visible)]="popupVisibleDocument" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)">
     <div *dxTemplate="let data of 'content'">
+            <dx-scroll-view [height]="250" showScrollbar="always" direction="both">
 
         <div class="row">
             <div class="col-sm-12">
                 <div class="main-heading">
                 </div>
                 <div class="doc-iframe-outer">
-                    <iframe [src]="docpath" style="text-align: center;" height="500px" width="400px"></iframe>
+                    <!-- <iframe [src]="docpath" style="text-align: center;" height="500px" width="400px"></iframe> -->
+                
+                <ul *ngFor="let item of DocumentFileList">
+                    <li style="text-align: start">
+                        {{item.FileName}}
+                    </li>
+                </ul>
                 </div>
             </div>
             <div class="doc-popftr" *ngIf="isEditingAllowed">
@@ -388,9 +395,9 @@
                         </a>
                     </div>
                     <div class="doc-popup-select-drop">
-                        <dx-select-box (onValueChanged)="selectDoc($event)" [dataSource]="showDocumentData"
-                            valueExpr="DocumentGUID" displayExpr="DocumentName" value="DocumentGUID"
-                            [value]="selectedDropdown">
+                        <dx-select-box [dataSource]="DocumentFileList"
+                            valueExpr="FileSignedUrl" displayExpr="FileName"
+                            (onItemClick)="selectDoc($event.itemData)">
                         </dx-select-box>
                     </div>
                     <div class="doc-popup-ad-btn">
@@ -402,7 +409,7 @@
             </div>
 
         </div>
-
+    </dx-scroll-view>
     </div>
 </dx-popup>
 
@@ -654,7 +661,7 @@
 
                 <div class="btn-grp-wrap">
                     <dx-button text="Save" type="success" validationGroup="addGeneralDetails"
-                        [useSubmitBehavior]="true"></dx-button>
+                        [useSubmitBehavior]="true" (click)="validateAddEmployeeForm(addGeneralDetails)"></dx-button>
                     <dx-button text="Cancel" (click)="closeEmployeeForm()"></dx-button>
                 </div>
             </form>
@@ -837,8 +844,8 @@
 </dx-popup>
 
 <!-- Assign Leave -->
-<dx-popup class="popup" [width]="850" [height]="400" [showTitle]="true" title="Assign Leave" [dragEnabled]="false"
-    [closeOnOutsideClick]="true" [(visible)]="popupAssignLeaveVisible">
+<dx-popup class="popup" [width]="850" [height]="400" [showTitle]="false" title="Assign Leave" [dragEnabled]="false"
+    [closeOnOutsideClick]="false" [(visible)]="popupAssignLeaveVisible">
 
     <div *dxTemplate="let data of 'content'">
         <dx-scroll-view showScrollbar="always" direction="both">

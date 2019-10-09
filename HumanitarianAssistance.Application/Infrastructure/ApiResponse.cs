@@ -42,6 +42,7 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public string AspNetUserId { get; set; }
         public string Token { get; set; }
         public string JobCode { get; set; }
+        public long DocumentFileId { get; set; }
         public IList<string> Roles { get; set; }
         public List<RolePermissionModel> RolePermissionModelList { get; set; }
         public IList<ApproveRejectPermissionModel> ApproveRejectPermissionsInRole { get; set; }
@@ -389,7 +390,7 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public IList<InterviewScheduleModel> InterviewScheduleDirectorlist { get; set; }
         public IList<InterviewScheduleModel> InterviewScheduleGeneralAdminlist { get; set; }
         public IList<InterviewScheduleModel> InterviewScheduleFieldOfficelist { get; set; }
-
+        public EmployeeDetailModel EmployeeDetailModel { get; set; }
         public List<PayrollHeadModel> PayrollHeadModelList { get; set; }
         public List<ExchangeGainLossReportViewModel> ExchangeGainLossReportList { get; set; }
 

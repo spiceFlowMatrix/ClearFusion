@@ -30,7 +30,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
         public DateTime? InvoiceDate { get; set; }
         public int? Status { get; set; }
         public int? ReceiptTypeId { get; set; }
-        public string ReceivedFromLocation { get; set; }
+        public long? ReceivedFromLocation { get; set; }
         public long? ProjectId { get; set; }
         public long? BudgetLineId { get; set; }
         public int? PaymentTypeId { get; set; }

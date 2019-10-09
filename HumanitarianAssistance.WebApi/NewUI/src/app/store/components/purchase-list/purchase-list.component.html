@@ -15,6 +15,7 @@
 
   </div>
 </lib-sub-header-template>
+<mat-divider></mat-divider>
 <mat-card [ngStyle]="scrollStyles">
   <div class="container">
     <div class="row">
@@ -33,4 +34,4 @@
   </div>
 </mat-card>
 
-<app-purchase-filed-config></app-purchase-filed-config>
+<app-purchase-filed-config (configFilterAppliedEvent)="configFilterAppliedEvent($event)"></app-purchase-filed-config>

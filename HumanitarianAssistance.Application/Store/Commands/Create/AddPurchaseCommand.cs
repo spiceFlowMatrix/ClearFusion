@@ -20,7 +20,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
         public string ImageFileName { get; set; }               // Image String
         public string InvoiceFileName { get; set; }             // Invoice String
         public int PurchasedById { get; set; }                  // Employee ID
-
+        public long? PurchaseOrderNo {get; set;}
 
         //Newly Added Fields
        // public long? VoucherId { get; set; }
@@ -30,7 +30,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
         public DateTime? InvoiceDate { get; set; }
         public int? Status { get; set; }
         public int? ReceiptTypeId { get; set; }
-        public string ReceivedFromLocation { get; set; }
+        public long? ReceivedFromLocation { get; set; }
         public long? ProjectId { get; set; }
         public long? BudgetLineId { get; set; }
         public int? PaymentTypeId { get; set; }
