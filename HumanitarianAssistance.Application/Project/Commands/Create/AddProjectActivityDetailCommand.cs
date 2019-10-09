@@ -13,7 +13,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
             RecurringCount = 0;
         }
         //Planning
-        public long? ActivityId { get; set; }
+        public long ActivityId { get; set; }
         public string ActivityName { get; set; }
         public string ActivityDescription { get; set; }
         public DateTime? PlannedStartDate { get; set; }

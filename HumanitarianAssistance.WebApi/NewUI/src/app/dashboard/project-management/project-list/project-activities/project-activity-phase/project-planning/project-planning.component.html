@@ -172,27 +172,28 @@
             <div class="row">
               <div class="col-sm-6 col-sm-offset-3 text-center">
                 <span class="font_large">Recurring</span>
-                <mat-slide-toggle formControlName="Recurring" class="padding_left_10"
+                <mat-slide-toggle formControlName="Recurring" class="padding_left_10" [disabled]="disableRecurrence == true"
                   (change)="onRecurringChange($event)" color="primary" [checked]="true">
                 </mat-slide-toggle>
               </div>
 
               <div *ngIf="recurringFlag" class="col-sm-6 col-sm-offset-3 text-center">
-                <mat-form-field class="example-full-width">
-                  <input matInput id="RecurringCount" formControlName="RecurringCount"  placeholder="Recur count" type="number" min="0" oninput="validity.valid||(value='');"/>
+                <mat-form-field class="example-full-width" (click)="disableRecurrence = false" (mouseout)="disableRecurrence == true" >
+                  <input matInput id="RecurringCount" formControlName="RecurringCount" placeholder="Recur count" [attr.disabled]="disableRecurrence == true"
+                    type="number" min="0" oninput="validity.valid||(value='');" />
                 </mat-form-field>
-                </div>
-                <div *ngIf="recurringFlag" class="col-sm-10 col-sm-offset-1 text-center">
-                  <mat-radio-group class="example-radio-group" formControlName="RecurringType">
-                    <mat-radio-button class="example-radio-button" *ngFor="let item of recurringTypeList"
-                      [value]="item.Id">
-                      {{ item.Name }}
-                    </mat-radio-button>
-                  </mat-radio-group>
-                </div>
+              </div>
+              <div *ngIf="recurringFlag" class="col-sm-10 col-sm-offset-1 text-center">
+                <mat-radio-group class="example-radio-group" formControlName="RecurringType"  [disabled]="disableRecurrence == true">
+                  <mat-radio-button class="example-radio-button" *ngFor="let item of recurringTypeList"
+                    [value]="item.Id">
+                    {{ item.Name }}
+                  </mat-radio-button>
+                </mat-radio-group>
               </div>
             </div>
           </div>
+        </div>
       </form>
 
       <!-- <div class="row">
