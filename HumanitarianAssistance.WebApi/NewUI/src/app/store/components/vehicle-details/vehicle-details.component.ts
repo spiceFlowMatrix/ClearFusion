@@ -14,7 +14,7 @@ export class VehicleDetailsComponent implements OnInit {
 
   ngOnInit() {
   }
-  openMilageModal(event) {
+  openMilageModal() {
 
     const dialogRef = this.dialog.open(AddMilageComponent, {
       width: '850px',

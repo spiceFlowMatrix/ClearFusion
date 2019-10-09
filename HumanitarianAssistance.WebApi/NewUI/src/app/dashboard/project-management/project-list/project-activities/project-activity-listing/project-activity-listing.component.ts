@@ -444,6 +444,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   //#endregion
 
   getAllProvinceListByCountryId(id: any) {
+    debugger;
     const provinceId = id;
     // this.provinceDistrictFlag = true;
     if (provinceId != null && provinceId !== undefined) {
@@ -698,6 +699,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
 
   // #region "onProjectActivityClick" pk
   onProjectActivityClick(item: IProjectActivityDetail) {
+    debugger;
     this.selectedProjectActivityId = item.ActivityId;
     //  this.activityDetail = item;
     this.showProjectDetailPanel();
@@ -706,6 +708,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   // #endregion
 
   getAllProjectActivityDetailByActivityId(activityId: number) {
+    debugger;
     this.activityByIdLoader = true;
     this.activitiesService
       .GetAllProjectActivityListByActivityId(activityId)

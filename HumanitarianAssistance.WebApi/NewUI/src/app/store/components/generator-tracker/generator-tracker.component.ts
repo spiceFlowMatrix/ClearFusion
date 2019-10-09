@@ -3,6 +3,8 @@ import { Observable, of } from 'rxjs';
 import { IVehicleList } from '../../models/vehicles';
 import { TableActionsModel } from 'projects/library/src/public_api';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material';
+import { AddHoursComponent } from '../add-hours/add-hours.component';
 
 @Component({
   selector: 'app-generator-tracker',
@@ -13,7 +15,7 @@ export class GeneratorTrackerComponent implements OnInit {
   vehicleListHeaders$ = of(["Plate No", "Driver", "Fuel Consumption Rate", "Total Mileage (KM)", "Total Cost", "Original Cost"]);
   vehicleList$: Observable<IVehicleList[]>;
   actions: TableActionsModel;
-  constructor(private router: Router) { }
+  constructor(private router: Router , private dialog:MatDialog) { }
 
   ngOnInit() {
     this.vehicleList$ = of([{
@@ -42,7 +44,7 @@ export class GeneratorTrackerComponent implements OnInit {
 
     this.actions = {
       items: {
-        button: { status: true, text: 'Add Milage' },
+        button: { status: true, text: 'Add Hours' },
         delete: false,
         download: false,
       },
@@ -52,17 +54,17 @@ export class GeneratorTrackerComponent implements OnInit {
     }
   }
   goToDetails(e) {
-    this.router.navigate(['store/generator/detail',1]);
+    this.router.navigate(['store/generator/detail', 1]);
   }
-  // openMilageModal(event) {
-  //   if (event.type == "button") {
-  //     const dialogRef = this.dialog.open(AddMilageComponent, {
-  //       width: '850px',
-  //       data: {
-  //         //value: event.item.Id,
-  //         //  officeId: this.filterValueModel.OfficeId
-  //       }
-  //     });
-  //   }
-  // }
+  openMilageModal(event) {
+    if (event.type == "button") {
+      const dialogRef = this.dialog.open(AddHoursComponent, {
+        width: '850px',
+        data: {
+          //value: event.item.Id,
+          //  officeId: this.filterValueModel.OfficeId
+        }
+      });
+    }
+  }
 }
