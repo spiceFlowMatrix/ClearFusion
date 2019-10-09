@@ -1,0 +1,32 @@
+<div>
+  <h1 mat-dialog-title>Vehicle Mileage Form</h1>
+  <div mat-dialog-subtitle>Please enter number of Kilometers the vehicle has been used.</div>
+  <div mat-dialog-subtitle><b>Note:</b> User may provide a negative value if the vehicle's total incurred mileage needs to be
+    reduced for some reason..</div>
+  <br/>
+  <form>
+
+
+    <mat-dialog-content>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-3">
+            <mat-form-field class="example-full-width">
+              <input matInput placeholder="Milage (KM)" value="12">
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field class="example-full-width">
+              <input matInput placeholder="Month" value="12">
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions class="items-float-right">
+      <hum-button (click)='addMilage()' [type]="'save'" [text]="'save'"></hum-button>
+      <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+    </mat-dialog-actions>
+
+  </form>
+</div>

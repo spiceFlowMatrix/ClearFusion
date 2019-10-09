@@ -1,3 +1,92 @@
-<p>
-  vehicle-details works!
-</p>
+<lib-sub-header-template>
+  <span class="action_header">
+    <a class="back_arrow" routerLink="/store/vehicle/tracker">
+      <i class="fas fa-arrow-left"></i>
+    </a>
+    Vehicle Details
+    <hum-button [type]="'add'" [text]="'ADD MILAGE'" (click)="openMilageModal()"></hum-button>
+    <hum-button [type]="'text'" [text]="'Edit detials'" (click)="goToDetails()"></hum-button>
+  </span>
+  <div class="action_section">
+  </div>
+</lib-sub-header-template>
+<mat-divider></mat-divider>
+<mat-tab-group>
+  <mat-tab label="DETAILS">
+    <ng-template matTabContent>
+      <ng-container *ngTemplateOutlet="vehicleDetails"></ng-container>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="MONTHLY BREAKDOWN"> Content 2 </mat-tab>
+  <mat-tab label="LOGS">
+    <ng-template matTabContent>
+      <app-logs></app-logs>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
+<!-- Vehicle Details template-->
+<ng-template #vehicleDetails>
+  <mat-card>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="col-md-6">
+          <h5>Vehicle Usage Analysis</h5>
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <td>Mark</td>
+                <td>Otto</td>
+              </tr>
+              <tr>
+                <td>Mark</td>
+                <td>Otto</td>
+              </tr>
+              <tr>
+                <td>Mark</td>
+                <td>Otto</td>
+              </tr>
+            </tbody>
+          </table>
+          <h5>Vehicle Usage Analysis</h5>
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <td>Mark</td>
+                <td>Otto</td>
+              </tr>
+              <tr>
+                <td>Mark</td>
+                <td>Otto</td>
+              </tr>
+              <tr>
+                <td>Mark</td>
+                <td>Otto</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <div class="col-md-6">
+            <h5>Vehicle Usage Analysis</h5>
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <td>Mark</td>
+                <td>Otto</td>
+              </tr>
+              <tr>
+                <td>Mark</td>
+                <td>Otto</td>
+              </tr>
+              <tr>
+                <td>Mark</td>
+                <td>Otto</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+
+</ng-template>

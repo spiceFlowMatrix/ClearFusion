@@ -1,34 +1,47 @@
 <div class="row">
-    <form>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="col-md-3">
-              <mat-form-field class="example-full-width">
-                  <input matInput placeholder="Favorite food" value="Sushi">
-                </mat-form-field>
-          </div>
-          <div class="col-md-3">
-              <mat-form-field class="example-full-width">
-                  <input matInput placeholder="Favorite food" value="Sushi">
-                </mat-form-field>
-          </div>
-          <div class="col-md-3">
-              <mat-form-field class="example-full-width">
-                  <input matInput placeholder="Favorite food" value="Sushi">
-                </mat-form-field>
-          </div>
-          <div class="col-md-3">
-              <mat-form-field class="example-full-width">
-                  <input matInput placeholder="Favorite food" value="Sushi">
-                </mat-form-field>
-          </div>
-          <div class="col-md-3">
-              <mat-form-field class="example-full-width">
-                  <input matInput placeholder="Favorite food" value="Sushi">
-                </mat-form-field>
-          </div>
-        
+  <form [formGroup]="generatorDetailForm">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="col-md-3">
+            <mat-form-field class="example-full-width">
+                <input matInput type='number' min="0" oninput="validity.valid||(value='');" formControlName='Voltage' placeholder="Voltage(KV)">
+              </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field class="example-full-width">
+            <input matInput type='number'  min="0" oninput="validity.valid||(value='');"formControlName="StartingUsageHours" placeholder="Starting Usage(Hours)">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field class="example-full-width">
+                <input matInput type='number' min="0" oninput="validity.valid||(value='');" formControlName="IncurredUsageHours" placeholder="Incurred Usage(Hours)">
+              </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field class="example-full-width">
+              <input matInput type='number' min="0" oninput="validity.valid||(value='');" formControlName="ModelYear" placeholder="ModelYear">
+              </mat-form-field>
+        </div>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="col-md-3">
+          <mat-form-field class="example-full-width">
+            <input matInput type='number' min="0" oninput="validity.valid||(value='');" formControlName="FuelConsumptionRate" placeholder="Fuel Consumption Rate(litres/100KM)">
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field class="example-full-width">
+                <input matInput type='number' min="0" oninput="validity.valid||(value='');" formControlName="MobilOilConsumptionRate" placeholder="Fuel Consumption Rate(litres/100KM)">
+              </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [validation]="generatorDetailForm.controls['OfficeId'].hasError('required')"
+          [options]="offices$" formControlName='OfficeId' [placeHolder]="'Location'"></lib-hum-dropdown>
         </div>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
+</div>

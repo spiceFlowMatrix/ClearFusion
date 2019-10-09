@@ -2,7 +2,7 @@
   <div class="col-sm-12">
     <div class="main-heading">
     </div>
-    <div class="doc-iframe-outer">
+    <div class="doc-iframe-outer" *ngIf ="docpath != '' && docpath != null && docpath != undefined">
       <iframe [src]="docpath" style="text-align: center;" height="500px" width="400px"></iframe>
     </div>
   </div>

@@ -7,15 +7,17 @@ import { PurchaseListComponent } from './components/purchase-list/purchase-list.
 import { AddPurchaseComponent } from './components/add-purchase/add-purchase.component';
 import { AddProcurementsComponent } from './components/add-procurements/add-procurements.component';
 import { EntryComponentComponent } from './components/entry-component/entry-component.component';
-import { MatIconModule, MatMenuModule, MatSidenavModule, MatCardModule, MatButtonModule,
-  MatInputModule, MatDividerModule, MatListModule, MatExpansionModule } from '@angular/material';
+import {
+  MatIconModule, MatMenuModule, MatSidenavModule, MatCardModule, MatButtonModule,
+  MatInputModule, MatDividerModule, MatListModule, MatExpansionModule, MatTabsModule
+} from '@angular/material';
 import { ShareLayoutModule } from '../shared/share-layout.module';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { LibraryModule, SubHeaderTemplateModule } from 'projects/library/src/public_api';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatDialogModule } from '@angular/material/dialog';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
 import { PurchaseFiledConfigComponent } from './components/purchase-filed-config/purchase-filed-config.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DocumentUploadComponent } from './components/document-upload/document-upload.component';
@@ -27,6 +29,11 @@ import { GeneratorFiltersComponent } from './components/generator-filters/genera
 import { VehicleFiltersComponent } from './components/vehicle-filters/vehicle-filters.component';
 import { GeneratorDetailsComponent } from './components/generator-details/generator-details.component';
 import { VehicleDetailsComponent } from './components/vehicle-details/vehicle-details.component';
+import { AddMilageComponent } from './components/add-milage/add-milage.component';
+import { EditVehicleComponent } from './components/edit-vehicle/edit-vehicle.component';
+import { EditGeneratorComponent } from './components/edit-generator/edit-generator.component';
+import { AddHoursComponent } from './components/add-hours/add-hours.component';
+import { LogsComponent } from './components/logs/logs.component';
 
 
 
@@ -47,11 +54,16 @@ import { VehicleDetailsComponent } from './components/vehicle-details/vehicle-de
     GeneratorFiltersComponent,
     VehicleFiltersComponent,
     GeneratorDetailsComponent,
-      VehicleDetailsComponent
+    VehicleDetailsComponent,
+    AddMilageComponent,
+    EditVehicleComponent,
+    EditGeneratorComponent,
+    AddHoursComponent,
+    LogsComponent
     // components
-  //  DbsidebarComponent,
-   // DbheaderComponent,
-   // DbfooterComponent
+    //  DbsidebarComponent,
+    // DbheaderComponent,
+    // DbfooterComponent
   ],
   imports: [
     CommonModule,
@@ -75,13 +87,14 @@ import { VehicleDetailsComponent } from './components/vehicle-details/vehicle-de
     MatDialogModule,
     MatProgressSpinnerModule,
     MatListModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatTabsModule
     // MatRangeDatepickerModule,
     // MatNativeDateModule
 
 
 
   ],
-  entryComponents: [AddProcurementsComponent]
+  entryComponents: [AddProcurementsComponent, AddMilageComponent, AddHoursComponent]
 })
 export class StoreModule { }
