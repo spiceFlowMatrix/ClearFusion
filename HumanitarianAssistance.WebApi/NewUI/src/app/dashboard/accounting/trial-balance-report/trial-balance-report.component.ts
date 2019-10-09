@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ReportService } from '../report-services/report.service';
 import { ToastrService } from 'ngx-toastr';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { IMenuList } from 'src/app/shared/dbheader/dbheader.component';
+import { Observable, of } from 'rxjs';
+import { IDropDownModel } from '../report-services/report-models';
+import { map } from 'rxjs/operators';
+import { IOpenedChange } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
 
 class TrialBalanceFilter {
   public static trialBalanceFilter: TrialBalanceFilterModel;
@@ -30,16 +37,24 @@ export class TrialBalanceReportComponent implements OnInit {
   selectedJournal: any;
   defaultRecordType: any;
   selectedAccounts: any[];
-
+  menuList: IMenuList[] = [];
   // Report
   viewPdfFlag = true;
   debitSumForReport = 0.0;
   creditSumForReport = 0.0;
   balanceSumForReport = 0.0;
 
+  currencyId$: Observable<IDropDownModel[]>;
+  recordType$: Observable<IDropDownModel[]>;
+  trialListHeaders$ = of(['Account', 'Account Name', 'Description', 'Currency',
+  'Debit', 'Credit']);
+  trialbalFilterList$: Observable<ITrialList[]>;
+  trailbalFilterForm: FormGroup;
   constructor(
     private accountservice: ReportService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private fb: FormBuilder,
+    private globalService: GlobalSharedService
   ) {
     this.FromDate = '01/01/' + new Date().getFullYear();
     this.trailFilters = {
@@ -48,18 +63,20 @@ export class TrialBalanceReportComponent implements OnInit {
       RecordType: 1,
       fromdate: this.FromDate,
       // todate: new Date(),
-      accountLists: []
+      accountLists: [],
+      date: {'begin': new Date(new Date().getFullYear(), 0, 1), 'end': new Date()}
     };
     this.recordTypeDropdown = [
       {
-        Id: 1,
-        Name: 'Single'
+        value: 1,
+        name: 'Single'
       },
       {
-        Id: 2,
-        Name: 'Consolidate'
+        value: 2,
+        name: 'Consolidate'
       }
     ];
+    this.recordType$ = of(this.recordTypeDropdown);
 
     this.defaultRecordType = this.recordTypeDropdown[0].Id;
 
@@ -90,6 +107,16 @@ export class TrialBalanceReportComponent implements OnInit {
     this.getCurrencyCodeList();
     this.getOfficeCodeList();
     this.GetAccountDetails();
+
+    this.globalService.setMenuHeaderName('Trial Balance');
+    this.globalService.setMenuList(this.menuList);
+    this.trailbalFilterForm = this.fb.group({
+      'OfficesList': ['', Validators.required],
+      'CurrencyId': ['', Validators.required],
+      'RecordType': [1, Validators.required],
+      'accountLists': ['', Validators.required],
+      'date': [{'begin': new Date(new Date().getFullYear(), 0, 1), 'end': new Date()}]
+    });
   }
 
    //#region "onApplyingFilter"
@@ -103,27 +130,32 @@ export class TrialBalanceReportComponent implements OnInit {
         RecordType: value.RecordType,
         OfficesList: value.OfficesList,
         fromdate: new Date(
-          new Date(this.trialBalanceDateRange[0]).getFullYear(),
-          new Date(this.trialBalanceDateRange[0]).getMonth(),
-          new Date(this.trialBalanceDateRange[0]).getDate(),
+          new Date(value.date.begin).getFullYear(),
+          new Date(value.date.begin).getMonth(),
+          new Date(value.date.begin).getDate(),
           new Date().getHours(),
           new Date().getMinutes(),
           new Date().getSeconds()
         ),
         todate: new Date(
-          new Date(this.trialBalanceDateRange[1]).getFullYear(),
-          new Date(this.trialBalanceDateRange[1]).getMonth(),
-          new Date(this.trialBalanceDateRange[1]).getDate(),
+          new Date(value.date.end).getFullYear(),
+          new Date(value.date.end).getMonth(),
+          new Date(value.date.end).getDate(),
           new Date().getHours(),
           new Date().getMinutes(),
           new Date().getSeconds()
-        )
+        ),
       };
       this.GetAllTrailBalance(TrialBalanceFilter.trialBalanceFilter);
     }
   }
   //#endregion
-
+  onOpenedAccountMultiSelectChange(event: IOpenedChange) {
+    this.trailbalFilterForm.controls['accountLists'].setValue(event.Value);
+  }
+  onOpenedOfficeMultiSelectChange(event: IOpenedChange) {
+    this.trailbalFilterForm.controls['OfficesList'].setValue(event.Value);
+  }
   //#region  "getCurrencyCodeList"
   getCurrencyCodeList() {
     this.accountservice
@@ -135,10 +167,16 @@ export class TrialBalanceReportComponent implements OnInit {
             data.data.CurrencyList.forEach(element => {
               this.currencyDropdown.push(element);
             });
-
+            this.currencyId$ = of(this.currencyDropdown.map(y => {
+              return {
+                value: y.CurrencyId,
+                name: y.CurrencyCode + '-' + y.CurrencyName
+              };
+            }));
             this.selectedCurrency = this.currencyDropdown[0].CurrencyId;
-
+            this.trailbalFilterForm.controls['CurrencyId'].setValue(this.selectedCurrency);
             this.intialFlagValue += 1;
+
           }
         },
         error => {}
@@ -155,30 +193,33 @@ export class TrialBalanceReportComponent implements OnInit {
           if (data.data.OfficeDetailsList != null) {
             this.officeDropdown = [];
 
-            const allOffices = [];
+            // const allOffices = [];
             const officeIds: any[] =
               localStorage.getItem('ALLOFFICES') != null
                 ? localStorage.getItem('ALLOFFICES').split(',')
                 : null;
 
             data.data.OfficeDetailsList.forEach(element => {
-              allOffices.push(element);
+              this.officeDropdown.push({
+                Id: element.OfficeId,
+                Name: element.OfficeName
+              });
             });
 
             officeIds.forEach(x => {
-              const officeData = allOffices.filter(
+              const officeData = this.officeDropdown.filter(
                 // tslint:disable-next-line:radix
                 e => e.OfficeId === parseInt(x)
               )[0];
-              this.officeDropdown.push(officeData);
+              // this.officeDropdown.push(officeData);
             });
 
             this.selectedOffices = [];
-            officeIds.forEach(x => {
+            this.officeDropdown.forEach(x => {
               // tslint:disable-next-line:radix
-              this.selectedOffices.push(parseInt(x));
+              this.selectedOffices.push(x.Id);
             });
-
+            this.trailbalFilterForm.controls['OfficesList'].setValue(this.selectedOffices);
             this.intialFlagValue += 1;
 
             this.officeDropdown = this.accountservice.sortDropdown(
@@ -214,14 +255,16 @@ export class TrialBalanceReportComponent implements OnInit {
             );
             data.data.AccountDetailList.forEach(element => {
               this.accountDropdown.push({
-                AccountCode: element.AccountCode,
-                AccountName: element.AccountName
+                Id: element.AccountCode,
+                Name: element.AccountName
               });
             });
 
-            data.data.AccountDetailList.forEach(e =>
-              this.selectedAccounts.push(e.AccountCode)
+            data.data.AccountDetailList.forEach(e => {
+              this.selectedAccounts.push(e.AccountCode);
+            }
             );
+            this.trailbalFilterForm.controls['accountLists'].setValue(this.selectedAccounts);
 
             this.intialFlagValue += 1;
           }
@@ -238,8 +281,14 @@ export class TrialBalanceReportComponent implements OnInit {
         }
       );
   }
-  //#endregion
 
+  get AccountIds() {
+    return this.trailbalFilterForm.get('accountLists').value;
+  }
+  get OfficeIds() {
+    return this.trailbalFilterForm.get('OfficesList').value;
+  }
+  //#endregion
   //#region  "GetAllTrailBalance"
   GetAllTrailBalance(trialBalanceFilter: any) {
     this.showHideTrialBalanceLoader(true);
@@ -260,6 +309,15 @@ export class TrialBalanceReportComponent implements OnInit {
             data.data.TrialBalanceList.forEach(element => {
               this.trailBalanceData.push(element);
             });
+            this.trialbalFilterList$ = of(this.trailBalanceData).pipe(
+              map(r => r.map(v => ({
+                Account: v.ChartOfAccountNewCode,
+                AccountName: v.ChartOfAccountNewCode + '-' + v.AccountName,
+                Description: v.Description,
+                Currency: v.CurrencyName,
+                Debit: v.DebitAmount,
+                Credit: v.CreditAmount
+               }) as ITrialList)));
 
             this.debitSumForReport = this.accountservice.sumOfListInArray(
               this.trailBalanceData,
@@ -275,6 +333,7 @@ export class TrialBalanceReportComponent implements OnInit {
             this.toastr.warning(data.Message);
           }
           this.showHideTrialBalanceLoader(false);
+          console.log(this.trialbalFilterList$);
         },
         error => {
           this.showHideTrialBalanceLoader(false);
@@ -332,6 +391,7 @@ interface TrialFilter {
   // todate: any;
   RecordType: number;
   accountLists: any;
+  date;
 }
 
 class TrialBalanceFilterModel {
@@ -343,3 +403,11 @@ class TrialBalanceFilterModel {
   todate: any;
 }
 
+interface ITrialList {
+  Account;
+  AccountName;
+  Description;
+  Currency;
+  Debit;
+  Credit;
+}

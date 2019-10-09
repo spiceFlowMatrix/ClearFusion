@@ -9,6 +9,7 @@ import { GlobalService } from 'src/app/shared/services/global-services.service';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { map } from 'rxjs/operators';
 import { IMenuList } from 'src/app/shared/dbheader/dbheader.component';
+import { IOpenedChange } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
 
 @Component({
   selector: 'app-journal-report',
@@ -133,9 +134,9 @@ export class JournalReportComponent implements OnInit {
       'OfficesList': ['', Validators.required],
       'CurrencyId': ['', Validators.required],
       'JournalCode': ['', Validators.required],
-      'RecordType': ['', Validators.required],
+      'RecordType': [1, Validators.required],
       'accountLists': ['', Validators.required],
-      'date': [{'begin': new Date(new Date().getFullYear(), new Date().getMonth(), 1), 'end': new Date()}]
+      'date': [{'begin': new Date(new Date().getFullYear(), 0, 1), 'end': new Date()}]
     });
   }
  //#region "onApplyingFilter"
@@ -176,6 +177,24 @@ export class JournalReportComponent implements OnInit {
 }
 //#endregion
 
+onOpenedAccountMultiSelectChange(event: IOpenedChange) {
+  this.journalFilterForm.controls['accountLists'].setValue(event.Value);
+}
+onOpenedOfficeMultiSelectChange(event: IOpenedChange) {
+  this.journalFilterForm.controls['OfficesList'].setValue(event.Value);
+}
+onOpenedJournalMultiSelectChange(event: IOpenedChange) {
+  this.journalFilterForm.controls['JournalCode'].setValue(event.Value);
+}
+get AccountIds() {
+  return this.journalFilterForm.get('accountLists').value;
+}
+get journalIds() {
+  return this.journalFilterForm.get('JournalCode').value;
+}
+get OfficeIds() {
+  return this.journalFilterForm.get('OfficesList').value;
+}
 //#region "getCurrencyCodeList"
 getCurrencyCodeList() {
   this.accountservice
@@ -189,6 +208,7 @@ getCurrencyCodeList() {
           });
 
           this.selectedCurrency = this.currencyDropdown[0].CurrencyId;
+          this.journalFilterForm.controls['CurrencyId'].setValue(this.selectedCurrency);
           this.currencyId$ = of(this.currencyDropdown.map(y => {
             return {
               value: y.CurrencyId,
@@ -221,30 +241,33 @@ getOfficeCodeList() {
         if (data.data.OfficeDetailsList != null) {
           this.officeDropdown = [];
 
-          const allOffices = [];
+          //const allOffices = [];
           const officeIds: any[] =
             localStorage.getItem('ALLOFFICES') != null
               ? localStorage.getItem('ALLOFFICES').split(',')
               : null;
 
           data.data.OfficeDetailsList.forEach(element => {
-            allOffices.push(element);
+            this.officeDropdown.push({
+              Id: element.OfficeId,
+              Name: element.OfficeName
+            });
           });
 
-          officeIds.forEach(x => {
-            const officeData = allOffices.filter(
-              // tslint:disable-next-line:radix
-              e => e.OfficeId === parseInt(x)
-            )[0];
-            this.officeDropdown.push(officeData);
-          });
+          // officeIds.forEach(x => {
+          //   const officeData = allOffices.filter(
+          //     // tslint:disable-next-line:radix
+          //     e => e.OfficeId === parseInt(x)
+          //   )[0];
+          //   this.officeDropdown.push(officeData);
+          // });
 
           this.selectedOffices = [];
-          officeIds.forEach(x => {
+          this.officeDropdown.forEach(x => {
             // tslint:disable-next-line:radix
-            this.selectedOffices.push(parseInt(x));
+            this.selectedOffices.push(x.Id);
           });
-
+          this.journalFilterForm.controls['OfficesList'].setValue(this.selectedOffices);
           // Initial Page Loading
           this.intialFlagValue += 1;
 
@@ -359,18 +382,18 @@ getJournalDropdownList() {
           ) {
             data.data.JournalDetailList.forEach(element => {
               this.journalDropdown.push({
-                JournalCode: element.JournalCode,
-                JournalName: element.JournalName
+                Id: element.JournalCode,
+                Name: element.JournalName
               });
             });
 
             this.selectedJournal = [];
             const JournalCodes = [];
             this.journalDropdown.forEach(x => {
-              JournalCodes.push(x.JournalCode);
+              JournalCodes.push(x.Id);
             });
             this.selectedJournal = JournalCodes;
-
+            this.journalFilterForm.controls['JournalCode'].setValue(this.selectedJournal);
             // Initial Page Loading
             this.intialFlagValue += 1;
           }
@@ -405,18 +428,17 @@ GetAccountDetails() {
           if (data.data.AccountDetailList.length > 0) {
             data.data.AccountDetailList.forEach(element => {
               this.accountDropdown.push({
-                AccountCode: element.AccountCode,
-                AccountName: element.AccountName
+                Id: element.AccountCode,
+                Name: element.AccountName
               });
             });
 
             const AccountNos = [];
 
-            data.data.AccountDetailList.forEach(x =>
-              AccountNos.push(x.AccountCode)
+            this.accountDropdown.forEach(x =>
+              this.selectedAccounts.push(x.Id)
             );
-
-            this.selectedAccounts = AccountNos;
+            this.journalFilterForm.controls['accountLists'].setValue(this.selectedAccounts);
           }
         }
       },

@@ -8,6 +8,7 @@ import { IMenuList } from 'src/app/shared/dbheader/dbheader.component';
 import { of, Observable } from 'rxjs';
 import { IDropDownModel } from '../report-services/report-models';
 import { map } from 'rxjs/operators';
+import { IOpenedChange } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
 
 interface LedgerFilter {
   CurrencyId: number;
@@ -89,7 +90,7 @@ export class LedgerStatementReportComponent implements OnInit {
     ];
     this.recordType$ = of(this.recordTypeDropdown);
 
-    this.defaultRecordType = this.recordTypeDropdown[0].Id;
+    this.defaultRecordType = this.recordTypeDropdown[0].value;
 
     this.ledgerDateRange = [];
     this.ledgerDateRange.push(
@@ -134,9 +135,8 @@ export class LedgerStatementReportComponent implements OnInit {
           CurrencyId: this.selectedCurrency,
           accountLists: this.selectedAccounts,
           RecordType: this.defaultRecordType,
-          FromDate: null,
-          ToDate: null,
-          OfficeIdList: this.selectedOffices
+          date: {'begin': new Date(new Date().getFullYear(), 0, 1), 'end': new Date()},
+          OfficesList: this.selectedOffices
         };
         this.onApplyingFilter(obj);
       },
@@ -147,9 +147,9 @@ export class LedgerStatementReportComponent implements OnInit {
     this.ledgerFilterForm = this.fb.group({
       'OfficesList': ['', Validators.required],
       'CurrencyId': ['', Validators.required],
-      'RecordType': ['', Validators.required],
+      'RecordType': [1, Validators.required],
       'accountLists': ['', Validators.required],
-      'date': [{'begin': new Date(new Date().getFullYear(), new Date().getMonth(), 1), 'end': new Date()}]
+      'date': [{'begin': new Date(new Date().getFullYear(), 0, 1), 'end': new Date()}]
     });
   }
 
@@ -195,6 +195,7 @@ export class LedgerStatementReportComponent implements OnInit {
         };
       }));
       this.selectedCurrency = this.currencyDropdown[0].CurrencyId;
+      this.ledgerFilterForm.controls['CurrencyId'].setValue(this.selectedCurrency);
     } else {
       this.toastr.error(response.Message);
     }
@@ -209,7 +210,10 @@ export class LedgerStatementReportComponent implements OnInit {
     ) {
       this.officeDropdown = [];
       response.data.OfficeDetailsList.forEach(element => {
-        this.officeDropdown.push(element);
+        this.officeDropdown.push({
+          Id: element.OfficeId,
+          Name: element.OfficeName
+        });
       });
 
       const officeIds: any[] =
@@ -218,19 +222,20 @@ export class LedgerStatementReportComponent implements OnInit {
           : null;
 
       // fetch only allowed office
-      officeIds.forEach(x => {
-        const officeData = this.officeDropdown.filter(
-          // tslint:disable-next-line:radix
-          e => e.OfficeId === parseInt(x)
-        )[0];
-        // this.officeDropdown.push(officeData);
-      });
+      // officeIds.forEach(x => {
+      //   const officeData = this.officeDropdown.filter(
+      //     // tslint:disable-next-line:radix
+      //     e => e.OfficeId === parseInt(x)
+      //   )[0];
+      //   this.officeDropdown.push(officeData);
+      // });
 
       this.selectedOffices = [];
-      officeIds.forEach(x => {
+      this.officeDropdown.forEach(x => {
         // tslint:disable-next-line:radix
-        this.selectedOffices.push(parseInt(x));
+        this.selectedOffices.push(x.Id);
       });
+      this.ledgerFilterForm.controls['OfficesList'].setValue(this.selectedOffices);
     } else {
       this.toastr.error(response.Message);
     }
@@ -251,14 +256,15 @@ export class LedgerStatementReportComponent implements OnInit {
       if (response.data.AccountDetailList.length > 0) {
         response.data.AccountDetailList.forEach(element => {
           this.accountDropdown.push({
-            AccountCode: element.AccountCode,
-            AccountName: element.AccountName
+            Id: element.AccountCode,
+            Name: element.AccountName
           });
         });
 
           this.accountDropdown.map(x => {
-            this.selectedAccounts.push(x.AccountCode);
+            this.selectedAccounts.push(x.Id);
           });
+          this.ledgerFilterForm.controls['accountLists'].setValue(this.selectedAccounts);
 
       }
     } else {
@@ -268,7 +274,7 @@ export class LedgerStatementReportComponent implements OnInit {
 
   //#region "onApplyingFilter"
   onApplyingFilter(value: any) {
-    debugger;
+    //debugger;
     if (this.ledgerDateRange == null) {
       this.toastr.error('Please Select Date Range');
     } else {
@@ -277,17 +283,17 @@ export class LedgerStatementReportComponent implements OnInit {
         accountLists: value.accountLists,
         RecordType: value.RecordType,
         FromDate: new Date(
-          new Date(this.ledgerDateRange[0]).getFullYear(),
-          new Date(this.ledgerDateRange[0]).getMonth(),
-          new Date(this.ledgerDateRange[0]).getDate(),
+          new Date(value.date.begin).getFullYear(),
+          new Date(value.date.begin).getMonth(),
+          new Date(value.date.begin).getDate(),
           new Date().getHours(),
           new Date().getMinutes(),
           new Date().getSeconds()
         ),
         ToDate: new Date(
-          new Date(this.ledgerDateRange[1]).getFullYear(),
-          new Date(this.ledgerDateRange[1]).getMonth(),
-          new Date(this.ledgerDateRange[1]).getDate(),
+          new Date(value.date.end).getFullYear(),
+          new Date(value.date.end).getMonth(),
+          new Date(value.date.end).getDate(),
           new Date().getHours(),
           new Date().getMinutes(),
           new Date().getSeconds()
@@ -298,7 +304,18 @@ export class LedgerStatementReportComponent implements OnInit {
     }
   }
   //#endregion
-
+  onOpenedAccountMultiSelectChange(event: IOpenedChange) {
+    this.ledgerFilterForm.controls['accountLists'].setValue(event.Value);
+  }
+  onOpenedOfficeMultiSelectChange(event: IOpenedChange) {
+    this.ledgerFilterForm.controls['OfficesList'].setValue(event.Value);
+  }
+  get AccountIds() {
+    return this.ledgerFilterForm.get('accountLists').value;
+  }
+  get OfficeIds() {
+    return this.ledgerFilterForm.get('OfficesList').value;
+  }
   //#region "GetLedgerDetails"
   GetLedgerDetails(journalFilter: any) {
     this.showLedgerLoading();

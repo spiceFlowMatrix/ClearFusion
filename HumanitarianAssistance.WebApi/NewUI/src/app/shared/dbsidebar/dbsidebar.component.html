@@ -33,7 +33,7 @@
         <li [ngClass]="{'active': selectedLink == 17 }" (click)="onsideBarLinkClicked('/accounting/exchange-rate', 17)" *ngIf="displayChildModule(ModulesAccounting.ExchangeRates)"><a>Exchange Rates</a></li>
         <li [ngClass]="{'active': selectedLink == 18 }" (click)="onsideBarLinkClicked('/accounting/journal-report', 18)" *ngIf="displayChildModule(ModulesAccounting.Journal)"><a>Journal</a></li>
         <li [ngClass]="{'active': selectedLink == 19 }" (click)="onsideBarLinkClicked('/accounting/ledger-report', 19)" *ngIf="displayChildModule(ModulesAccounting.Ledger)"><a>Ledger</a></li>
-        <li [ngClass]="{'active': selectedLink == 20 }" (click)="onOldUiPageClick('dashboard/accounts/trialbalance', 20)" *ngIf="displayChildModule(ModulesAccounting.TrialBalance)"><a>Trial Balance</a></li>
+        <li [ngClass]="{'active': selectedLink == 20 }" (click)="onsideBarLinkClicked('/accounting/trial-balance', 20)" *ngIf="displayChildModule(ModulesAccounting.TrialBalance)"><a>Trial Balance</a></li>
         <li [ngClass]="{'active': selectedLink == 21 }" (click)="onOldUiPageClick('dashboard/accounts/pension-payments', 21)" *ngIf="displayChildModule(ModulesAccounting.PensionPayments)"><a>Pension Payments</a></li>
 
       </ul>

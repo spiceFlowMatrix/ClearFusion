@@ -8,6 +8,7 @@ import {
 import { RoleGuardService } from 'src/app/shared/services/role-guard';
 import { JournalReportComponent } from './journal-report/journal-report.component';
 import { LedgerStatementReportComponent } from './ledger-statement-report/ledger-statement-report.component';
+import { TrialBalanceReportComponent } from './trial-balance-report/trial-balance-report.component';
 
 const ModuleId: number = ApplicationModule.AccountingNew;
 
@@ -68,6 +69,10 @@ const routes: Routes = [
       {
         path: 'ledger-report',
         component: LedgerStatementReportComponent
+      },
+      {
+        path: 'trial-balance',
+        component: TrialBalanceReportComponent
       }
       // {
       //   path: 'voucher-summary-report',
