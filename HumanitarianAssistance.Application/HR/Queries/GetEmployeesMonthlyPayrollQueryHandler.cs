@@ -53,10 +53,10 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                     var payroll = await _dbContext.EmployeePayroll.Include(x => x.SalaryHeadDetails).Where(x => x.EmployeeID == payrollAttendance.EmployeeId && x.IsDeleted == false).ToListAsync();
 
-                    if (payroll.Any(x => x.AccountNo == null))
-                    {
-                        throw new Exception(StaticResource.PayrollNotSet+" "+ payrollAttendance.EmployeeDetails.EmployeeCode);
-                    }
+                    // if (payroll.Any(x => x.AccountNo == null))
+                    // {
+                    //     throw new Exception(StaticResource.PayrollNotSet+" "+ payrollAttendance.EmployeeDetails.EmployeeCode);
+                    // }
 
                     PayrollMonthlyHourDetail payrollHour = payrollHours.FirstOrDefault(x=> x.AttendanceGroupId == payrollAttendance.EmployeeDetails.EmployeeProfessionalDetail.AttendanceGroupId);
 
@@ -86,7 +86,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     {
                         if (payrollAttendance.GrossSalary == 0 || payrollAttendance.GrossSalary == null)
                         {
-                            int iCurrencyId = payrollDetail.FirstOrDefault(x => x.HeadTypeId == 3).CurrencyId;
+                            int? iCurrencyId = payrollDetail.FirstOrDefault(x => x.HeadTypeId == 3).CurrencyId;
 
                             EmployeeMonthlyPayrollModel obj = new EmployeeMonthlyPayrollModel();
 
@@ -109,13 +109,13 @@ namespace HumanitarianAssistance.Application.HR.Queries
                             obj.TotalDeduction = payrollDetail.Where(x => x.HeadTypeId == (int)SalaryHeadType.DEDUCTION).Sum(s => s.MonthlyAmount);
                             obj.TotalGeneralAmount = payrollDetail.Where(x => x.HeadTypeId == (int)SalaryHeadType.GENERAL).Sum(s => s.MonthlyAmount);
 
-                            if (obj.TotalGeneralAmount == 0)
-                            {
-                                throw new Exception(StaticResource.BasicPayNotSet+ " "+ payrollAttendance.EmployeeDetails.EmployeeCode);
-                            }
+                            // if (obj.TotalGeneralAmount == 0)
+                            // {
+                            //     throw new Exception(StaticResource.BasicPayNotSet+ " "+ payrollAttendance.EmployeeDetails.EmployeeCode);
+                            // }
 
                             double convertMinutesToHours = ((double)(payrollAttendance.OverTimeMinutes + payrollAttendance.AttendanceMinutes) / 60d);
-                            obj.GrossSalary = Math.Round((double)(obj.TotalGeneralAmount * (payrollAttendance.AttendanceHours.Value + obj.LeaveHours + payrollAttendance.OvertimeHours.Value + convertMinutesToHours) + obj.TotalAllowance),2);
+                            obj.GrossSalary = Math.Round((double)(obj.TotalGeneralAmount * (payrollAttendance.AttendanceHours.Value + obj.LeaveHours + (payrollAttendance.OvertimeHours !=null? payrollAttendance.OvertimeHours.Value :0) + convertMinutesToHours) + obj.TotalAllowance),2);
                             obj.PensionAmount = Math.Round(((double)(obj.GrossSalary * payrollDetail.FirstOrDefault().PensionRate) / 100),2); // i.e. 4.5 % => 0.045
 
                             // eliminate hours and only show minutes if minutes is 60 we already added them to overtime hours so minutes = 0

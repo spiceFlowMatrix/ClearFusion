@@ -1,13 +1,15 @@
 import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { of, Observable } from 'rxjs';
 import { PurchaseService } from '../../services/purchase.service';
-import { IFilterValueModel, IPurchaseList, IProcurementList } from '../../models/purchase';
+import { IFilterValueModel, IPurchaseList, IProcurementList, IPurchaseFilterConfigColList } from '../../models/purchase';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { AddProcurementsComponent } from '../add-procurements/add-procurements.component';
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { PurchaseFiledConfigComponent } from '../purchase-filed-config/purchase-filed-config.component';
+import { TableActionsModel } from 'projects/library/src/public_api';
+import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 
 @Component({
   selector: 'app-purchase-list',
@@ -17,6 +19,7 @@ import { PurchaseFiledConfigComponent } from '../purchase-filed-config/purchase-
 export class PurchaseListComponent implements OnInit {
 
   purchaseList$: Observable<IPurchaseList[]>;
+  purchaseFilterConfigList$: Observable<IPurchaseFilterConfigColList[]>;
   filterValueModel: IFilterValueModel;
   purchaseRecordCount = 0;
 
@@ -24,17 +27,19 @@ export class PurchaseListComponent implements OnInit {
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
+  actions: TableActionsModel;
 
   showConfig = false;
-  @ViewChild(PurchaseFiledConfigComponent) fieldConfig : PurchaseFiledConfigComponent;
+  @ViewChild(PurchaseFiledConfigComponent) fieldConfig: PurchaseFiledConfigComponent;
 
   purchaseListHeaders$ = of(['Id', 'Item', 'Purchased By', 'Project', 'Original Cost', 'Deprecated Cost']);
   subListHeaders$ = of(['Id', 'Date', 'Employee', 'Procured Amount', 'Must Return', 'Returned', 'Returned On']);
   procurementList$: Observable<IProcurementList[]>;
 
+
   constructor(private purchaseService: PurchaseService,
-              private router: Router, private dialog: MatDialog,
-              private datePipe: DatePipe, private toastr: ToastrService) {
+    private router: Router, private dialog: MatDialog,
+    private datePipe: DatePipe, private toastr: ToastrService, private loader: CommonLoaderService) {
 
     this.filterValueModel = {
       CurrencyId: null,
@@ -58,6 +63,19 @@ export class PurchaseListComponent implements OnInit {
 
   ngOnInit() {
     this.getScreenSize();
+    this.actions = {
+      items: {
+        button: { status: true, text: 'Add Procurement' },
+        delete: false,
+        download: false,
+      },
+      subitems: {
+        button: { status: false, text: '' },
+        delete: true,
+        download: false,
+      }
+
+    }
   }
 
   //#region "Dynamic Scroll"
@@ -78,8 +96,9 @@ export class PurchaseListComponent implements OnInit {
     this.filterValueModel = filter;
     this.purchaseService
       .getFilteredPurchaseList(filter).subscribe(x => {
+        this.loader.showLoader();
         this.purchaseRecordCount = x.RecordCount;
-
+        this.purchaseFilterConfigList$ = of(x.PurchaseList);
         this.purchaseList$ = of(x.PurchaseList.map((element) => {
           return {
             Id: element.PurchaseId,
@@ -88,9 +107,22 @@ export class PurchaseListComponent implements OnInit {
             Project: element.ProjectName,
             OriginalCost: element.OriginalCost,
             DepreciatedCost: element.DepreciatedCost,
-            subItems: element.ProcurementList
+            subItems: element.ProcurementList.map((r)=> {
+              return {
+                Id : r.OrderId, 
+                IssueDate :r.IssueDate ? this.datePipe.transform(new Date(r.IssueDate),"dd/MM/yyyy") :null,
+                Employee : r.EmployeeName,
+                ProcuredAmount: r.ProcuredAmount,
+                MustReturn: r.MustReturn?"Yes":"No",
+                Returned: r.Returned?"Yes":"No",
+                ReturnedOn: r.ReturnedOn ? this.datePipe.transform(new Date(r.ReturnedOn),"dd/MM/yyyy"):null
+
+
+              }
+            })
           } as IPurchaseList;
         }));
+        this.loader.hideLoader();
       });
   }
 
@@ -128,59 +160,83 @@ export class PurchaseListComponent implements OnInit {
     this.router.navigate(['/store/purchase/add']);
   }
   openProcurementModal(event: any) {
-    const dialogRef = this.dialog.open(AddProcurementsComponent, {
-      width: '850px',
-      data: {
-        value: event.Id,
-        officeId: this.filterValueModel.OfficeId
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(x => {
-      console.log(x);
-
-      this.purchaseList$.subscribe((purchase) => {
-        console.log(purchase);
-
-        const index = purchase.findIndex(i => i.Id === x.PurchaseId);
-        if (index !== -1) {
-          purchase[index].subItems.unshift({
-            EmployeeName: x.EmployeeName,
-            IssueDate: this.datePipe.transform(x.IssueDate, 'dd-MM-yyyy'),
-            OrderId: x.ProcurementId,
-            MustReturn: x.MustReturn,
-            ProcuredAmount: x.IssuedQuantity,
-            Returned: false
-          });
+    if (event.type == "button") {
+      const dialogRef = this.dialog.open(AddProcurementsComponent, {
+        width: '850px',
+        data: {
+          value: event.item.Id,
+          officeId: this.filterValueModel.OfficeId
         }
-        this.purchaseList$ = of(purchase);
       });
-    });
+
+      dialogRef.afterClosed().subscribe(x => {
+        console.log(x);
+
+        this.purchaseList$.subscribe((purchase) => {
+          console.log(purchase);
+
+          const index = purchase.findIndex(i => i.Id === x.PurchaseId);
+          if (index !== -1) {
+            purchase[index].subItems.unshift({
+              EmployeeName: x.EmployeeName,
+              IssueDate: this.datePipe.transform(x.IssueDate, 'dd-MM-yyyy'),
+              OrderId: x.ProcurementId,
+              MustReturn: x.MustReturn,
+              ProcuredAmount: x.IssuedQuantity,
+              Returned: false
+            });
+          }
+          this.purchaseList$ = of(purchase);
+        });
+      });
+    }
+
   }
 
   deleteProcurement(event: any) {
     this.purchaseService.deleteProcurement(event.subItem.OrderId)
-        .subscribe(x => {
-          if (x.StatusCode === 200) {
-            this.purchaseList$.subscribe((purchase) => {
-              const index = purchase.findIndex(i => i.Id === event.item.Id);
-              if (index >= 0) {
-                const subItemIndex = purchase[index].subItems.findIndex(i => i.OrderId === event.subItem.OrderId);
-                purchase[index].subItems.splice(subItemIndex, 1);
-              }
-              this.purchaseList$ = of(purchase);
-            });
-            this.toastr.success(x.Message);
-          } else {
-            this.toastr.warning(x.Message);
-          }
-        },
+      .subscribe(x => {
+        if (x.StatusCode === 200) {
+          this.purchaseList$.subscribe((purchase) => {
+            const index = purchase.findIndex(i => i.Id === event.item.Id);
+            if (index >= 0) {
+              const subItemIndex = purchase[index].subItems.findIndex(i => i.OrderId === event.subItem.OrderId);
+              purchase[index].subItems.splice(subItemIndex, 1);
+            }
+            this.purchaseList$ = of(purchase);
+          });
+          this.toastr.success(x.Message);
+        } else {
+          this.toastr.warning(x.Message);
+        }
+      },
         (error) => {
           this.toastr.error(error);
         });
   }
-  showConfiguration(){
-   this.fieldConfig.show();
+
+  configFilterAppliedEvent(event: any) {
+
+    let headers: any[]=[];
+
+    event.forEach(element => {
+      headers.push(element.name);
+    });
+
+     this.purchaseListHeaders$ = of(headers);
+
+    this.purchaseFilterConfigList$.subscribe(y => {
+
+      // this.purchaseList$ = of(y.map((element) => {
+      //   return {
+
+      //   } as IPurchaseList;
+      // }));
+    });
+
   }
 
+  showConfiguration() {
+    this.fieldConfig.show();
+  }
 }

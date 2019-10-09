@@ -58,7 +58,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                         EmployeeApprovedPayroll.AdvanceRecoveryAmount = finalPayroll.IsAdvanceRecovery ? finalPayroll.AdvanceRecoveryAmount : 0;
                         EmployeeApprovedPayroll.Attendance = finalPayroll.PresentDays;
                         EmployeeApprovedPayroll.BasicPay = Convert.ToSingle(finalPayroll.TotalGeneralAmount);
-                        EmployeeApprovedPayroll.CurrencyId = finalPayroll.CurrencyId;
+                        //EmployeeApprovedPayroll.CurrencyId = finalPayroll.CurrencyId;
                         EmployeeApprovedPayroll.EmployeeID = finalPayroll.EmployeeId;
                         EmployeeApprovedPayroll.GrossSalary = finalPayroll.GrossSalary;
                         EmployeeApprovedPayroll.HourlyRate = finalPayroll.HourlyRate;
@@ -94,7 +94,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                             foreach (var payroll in finalPayroll.EmployeePayrollList)
                             {
                                 EmployeePayrollMonth employeePayrollMonth = new EmployeePayrollMonth();
-                                employeePayrollMonth.CurrencyId = payroll.CurrencyId;
+                                //employeePayrollMonth.CurrencyId = payroll.CurrencyId;
+                                employeePayrollMonth.CurrencyId =null;
                                 employeePayrollMonth.Date = new DateTime(finalPayroll.Year, finalPayroll.Month, DateTime.Now.Day);
                                 employeePayrollMonth.EmployeeID = finalPayroll.EmployeeId;
                                 employeePayrollMonth.IsDeleted = false;
@@ -147,10 +148,9 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                                 await _dbContext.SaveChangesAsync();
                             }
                         }
-
-                        tran.Commit();
                     }
 
+                    tran.Commit();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }

@@ -263,7 +263,7 @@
                     <dxi-column dataField="AdvanceBalanceAmount" [allowEditing]="false"> </dxi-column>
                     <dxi-column dataField="AdvanceRecoveryAmount"> </dxi-column>
 
-                    <dxi-column dataField="GeneratePayment" caption="Generate Payment" cellTemplate="generatePaymentTemplate" *ngIf="isEditingAllowed"></dxi-column>
+                    <!-- <dxi-column dataField="GeneratePayment" caption="Generate Payment" cellTemplate="generatePaymentTemplate" *ngIf="isEditingAllowed"></dxi-column> -->
                     <div *dxTemplate="let data of 'generatePaymentTemplate'">
                       <!-- <div *ngIf="data.value == true"> -->
                       <span>

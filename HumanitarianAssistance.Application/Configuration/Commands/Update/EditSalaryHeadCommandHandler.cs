@@ -33,8 +33,8 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Update
                 if (existrecord != null)
                 {
                     existrecord.HeadName = request.HeadName;
-                    existrecord.AccountNo = request.AccountNo;
-                    existrecord.TransactionTypeId = request.TransactionTypeId;
+                    //existrecord.AccountNo = request.AccountNo;
+                    //existrecord.TransactionTypeId = request.TransactionTypeId;
                     existrecord.Description = request.Description;
                     existrecord.HeadTypeId = request.HeadTypeId;
                     existrecord.ModifiedById = request.ModifiedById;
@@ -53,7 +53,7 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Update
                     {
                         employeePayrollList.ForEach(x =>
                         {
-                            x.AccountNo = request.AccountNo; x.TransactionTypeId = request.TransactionTypeId;
+                            // x.AccountNo = request.AccountNo; x.TransactionTypeId = request.TransactionTypeId;
                             x.HeadTypeId = request.HeadTypeId;
                         });
 

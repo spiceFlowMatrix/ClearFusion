@@ -1,0 +1,51 @@
+<div class="row">
+    <form [formGroup]="vehicleDetailForm">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-3">
+              <mat-form-field class="example-full-width">
+                  <input matInput formControlName='PlateNo' placeholder="Plate No">
+                </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <lib-hum-dropdown [validation]="vehicleDetailForm.controls['DriverId'].hasError('required')"
+            [options]="employeeList$" formControlName='DriverId' [placeHolder]="'Driver'"></lib-hum-dropdown>
+          </div>
+          <div class="col-md-3">
+              <mat-form-field class="example-full-width">
+                  <input matInput type='number' formControlName="StartingMileage" placeholder="Starting Mileage(KM)">
+                </mat-form-field>
+          </div>
+          <div class="col-md-3">
+              <mat-form-field class="example-full-width">
+                <input matInput type='number' formControlName="IncurredMileage" placeholder="Incurred Mileage(KM)">
+                </mat-form-field>
+          </div>
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-3">
+            <mat-form-field class="example-full-width">
+              <input matInput type='number' formControlName="FuelConsumptionRate" placeholder="Fuel Consumption Rate(litres/100KM)">
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+              <mat-form-field class="example-full-width">
+                  <input matInput type='number' formControlName="MobilOilConsumptionRate" placeholder="Fuel Consumption Rate(litres/100KM)">
+                </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <lib-hum-dropdown [validation]="vehicleDetailForm.controls['OfficeId'].hasError('required')"
+            [options]="offices$" formControlName='OfficeId' [placeHolder]="'Location'"></lib-hum-dropdown>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field class="example-full-width">
+                <input matInput type='number' formControlName="ModelYear" placeholder="Model Year">
+              </mat-form-field>
+        </div>
+        </div>
+      </div>
+    </form>
+  </div>

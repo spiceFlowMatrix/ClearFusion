@@ -40,7 +40,9 @@
               <div class="col-md-12">
                 <div class="col-md-4">
                   <mat-form-field>
-                    <input matInput min="0" type="number" oninput="validity.valid||(value='');" id="IssuedQuantity" formControlName='IssuedQuantity' placeholder="Issued Quantity">
+                    <input  matInput min="0" type="number" oninput="validity.valid||(value='');" id="IssuedQuantity" formControlName='IssuedQuantity' placeholder="Issued Quantity">
+                    <mat-error *ngIf="addProcurementForm.controls['IssuedQuantity'].hasError('max')">Issued quantity must be less than purchased quantity</mat-error>
+                    <mat-error *ngIf="addProcurementForm.controls['IssuedQuantity'].hasError('required')">required</mat-error>
                   </mat-form-field>
                 </div>
                 <div class="col-md-4">

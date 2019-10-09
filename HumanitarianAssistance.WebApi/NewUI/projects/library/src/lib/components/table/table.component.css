@@ -4,3 +4,10 @@
 .main-table{
     background-color: #ffff !important;
 }
+.sub-table h5{
+    margin-top: 0% !important;
+    margin-bottom: 0% !important;
+}
+.action-span{
+    margin-left: 10px;
+}

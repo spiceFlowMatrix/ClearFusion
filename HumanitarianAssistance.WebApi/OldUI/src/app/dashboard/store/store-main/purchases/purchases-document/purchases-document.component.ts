@@ -117,7 +117,6 @@ export class PurchasesDocumentComponent implements OnInit, OnDestroy, OnChanges 
 
   // #region "getPurchasesDocumentList"
   getPurchasesDocumentList(DocumentFileId) {
-
     this.docpath = null;
 
     this.fileManagementService.getSignedURLByDocumenFileId(DocumentFileId).subscribe(x => {
@@ -146,7 +145,7 @@ export class PurchasesDocumentComponent implements OnInit, OnDestroy, OnChanges 
     this.fileManagementService.uploadFile(dataModel).subscribe(x => {
       this.cancelDeletePurchase();
       this.showHideAddPurchaseDocPopupLoading();
-      this.getPurchasesDocumentList(dataModel.DocumentFileId);
+      this.getPurchasesDocumentList(x.data.DocumentFileId);
     });
   }
   //#endregion

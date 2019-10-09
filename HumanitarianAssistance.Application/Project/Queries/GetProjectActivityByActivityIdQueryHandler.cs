@@ -44,8 +44,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     obj.BudgetName = activityDetail.ProjectBudgetLineDetail?.BudgetName;
                     obj.EmployeeID = activityDetail.EmployeeDetail.EmployeeID;
                     obj.EmployeeName = activityDetail.EmployeeDetail.EmployeeName;
-                    obj.StatusId = activityDetail.ActivityStatusDetail.StatusId;
-                    obj.StatusName = activityDetail.ActivityStatusDetail.StatusName;
+                    obj.StatusId = activityDetail.ActivityStatusDetail?.StatusId;
+                    obj.StatusName = activityDetail.ActivityStatusDetail?.StatusName;
                     obj.PlannedStartDate = activityDetail.PlannedStartDate;
                     obj.PlannedEndDate = activityDetail.PlannedEndDate;
                     obj.Recurring = activityDetail.Recurring;
@@ -54,8 +54,9 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     obj.ActualStartDate = activityDetail.ActualStartDate;
                     obj.ActualEndDate = activityDetail.ActualEndDate;
                     obj.CountryId = activityDetail.CountryId;
-                    obj.ProvinceId = activityDetail.ProjectActivityProvinceDetail.Select(x => x.ProvinceId);
-                    obj.DistrictID = activityDetail.ProjectActivityProvinceDetail.Select(x => x.DistrictID);
+                    obj.ReoccuredReferenceId = activityDetail.ReoccuredReferenceId;
+                    obj.ProvinceId = activityDetail.ProjectActivityProvinceDetail?.Select(x => x.ProvinceId);
+                    obj.DistrictID = activityDetail.ProjectActivityProvinceDetail?.Select(x => x.DistrictID);
                 }
 
                 response.data.ProjectActivityDetails = obj;

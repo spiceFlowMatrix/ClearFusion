@@ -1680,7 +1680,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasKey("EntitySourceDocumentId");
 
-                    b.HasIndex("DocumentFileId");
+                    b.HasIndex("DocumentFileId")
+                        .IsUnique();
 
                     b.ToTable("EntitySourceDocumentDetails");
                 });
@@ -3121,7 +3122,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int>("CurrencyId");
+                    b.Property<int?>("CurrencyId");
 
                     b.Property<DateTime>("Date");
 
@@ -6134,6 +6135,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("RecurringCount");
 
+                    b.Property<Guid?>("ReoccuredReferenceId");
+
                     b.Property<int?>("StatusId");
 
                     b.Property<string>("SubActivityTitle");
@@ -6767,6 +6770,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasKey("ProjectMonitoringReviewId");
 
+                    b.HasIndex("ActivityId");
+
                     b.ToTable("ProjectMonitoringReviewDetail");
                 });
 
@@ -6873,7 +6878,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasKey("ProjectOtherDetailId");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("ProjectId")
+                        .IsUnique();
 
                     b.ToTable("ProjectOtherDetail");
                 });
@@ -7858,7 +7864,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<long?>("InventoryCreditAccount");
 
-                    b.Property<long>("InventoryDebitAccount");
+                    b.Property<long?>("InventoryDebitAccount");
 
                     b.Property<string>("InventoryDescription");
 
@@ -7900,7 +7906,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<string>("ItemName");
 
-                    b.Property<int>("ItemType");
+                    b.Property<int?>("ItemType");
 
                     b.Property<string>("MasterInventoryCode");
 
@@ -8010,7 +8016,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("ReceiptTypeId");
 
-                    b.Property<string>("ReceivedFromLocation");
+                    b.Property<long?>("ReceivedFromLocation");
 
                     b.Property<string>("SerialNo");
 
@@ -8028,15 +8034,21 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasKey("PurchaseId");
 
+                    b.HasIndex("BudgetLineId");
+
                     b.HasIndex("Currency");
 
                     b.HasIndex("InventoryItem");
+
+                    b.HasIndex("OfficeId");
 
                     b.HasIndex("ProjectId");
 
                     b.HasIndex("PurchasedById");
 
                     b.HasIndex("ReceiptTypeId");
+
+                    b.HasIndex("ReceivedFromLocation");
 
                     b.HasIndex("Status");
 
@@ -8502,8 +8514,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.EntitySourceDocumentDetail", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.DocumentFileDetail", "DocumentFileDetail")
-                        .WithMany()
-                        .HasForeignKey("DocumentFileId")
+                        .WithOne("EntitySourceDocumentDetail")
+                        .HasForeignKey("HumanitarianAssistance.Domain.Entities.EntitySourceDocumentDetail", "DocumentFileId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -8788,8 +8800,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.CurrencyDetails", "CurrencyDetails")
                         .WithMany()
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CurrencyId");
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetails")
                         .WithMany()
@@ -9679,6 +9690,14 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .HasForeignKey("MonitoringIndicatorId");
                 });
 
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectMonitoringReviewDetail", b =>
+                {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectActivityDetail", "ProjectActivityDetail")
+                        .WithMany("ProjectMonitoringReviewDetail")
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectOpportunityControl", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectDetail", "ProjectDetail")
@@ -9695,8 +9714,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectOtherDetail", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
+                        .WithOne("ProjectOtherDetail")
+                        .HasForeignKey("HumanitarianAssistance.Domain.Entities.Project.ProjectOtherDetail", "ProjectId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -9872,8 +9891,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Accounting.ChartOfAccountNew", "ChartDebitAccountDetails")
                         .WithMany()
-                        .HasForeignKey("InventoryDebitAccount")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("InventoryDebitAccount");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.StoreInventoryItem", b =>
@@ -9889,8 +9907,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.InventoryItemType", "ItemTypes")
                         .WithMany()
-                        .HasForeignKey("ItemType")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ItemType");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.StoreItemGroup", b =>
@@ -9903,6 +9920,10 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.StoreItemPurchase", b =>
                 {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectBudgetLineDetail", "ProjectBudgetLineDetail")
+                        .WithMany()
+                        .HasForeignKey("BudgetLineId");
+
                     b.HasOne("HumanitarianAssistance.Domain.Entities.CurrencyDetails", "CurrencyDetails")
                         .WithMany()
                         .HasForeignKey("Currency")
@@ -9912,6 +9933,10 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .WithMany("StoreItemPurchases")
                         .HasForeignKey("InventoryItem")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.OfficeDetail", "OfficeDetail")
+                        .WithMany()
+                        .HasForeignKey("OfficeId");
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectDetail", "ProjectDetail")
                         .WithMany()
@@ -9925,6 +9950,10 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.ReceiptType", "ReceiptType")
                         .WithMany()
                         .HasForeignKey("ReceiptTypeId");
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreSourceCodeDetail", "StoreSourceCodeDetail")
+                        .WithMany()
+                        .HasForeignKey("ReceivedFromLocation");
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StatusAtTimeOfIssue", "StatusAtTimeOfIssue")
                         .WithMany()

@@ -159,7 +159,7 @@ namespace HumanitarianAssistance.Application.CommonServices
                     else
                     {
                         response.StatusCode = StaticResource.MandateNameAlreadyExistCode;
-                        response.Message = StaticResource.UserAlreadyExist;
+                        response.Message = StaticResource.EmailAlreadyExist;
                     }
                 }
                 catch (Exception ex)

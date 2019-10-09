@@ -61,9 +61,7 @@ export class VoucherListingComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private voucherService: VoucherService,
-    private localStorageService: LocalStorageService,
-    private globalSharedService: GlobalSharedService,
-    private appurl: AppUrlService
+    private localStorageService: LocalStorageService
   ) {
     this.getScreenSize();
   }
@@ -369,12 +367,4 @@ export class VoucherListingComponent implements OnInit {
   }
   //#endregion
 
-  onExportPdf() {
-    this.globalSharedService
-      .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetAllVoucherSummaryReportPdf,
-      this.voucherFilter
-      )
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe();
-  }
 }

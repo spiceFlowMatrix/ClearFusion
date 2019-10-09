@@ -31,7 +31,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public StoreItemGroup StoreItemGroup { get; set; }
 
         //public long Voucher { get; set; }
-        public int ItemType { get; set; } // This must be used by the front-end to determine the UI to present for the item type
+        public int? ItemType { get; set; } // This must be used by the front-end to determine the UI to present for the item type
                                           // Types will include general purchase, vehicle, generator, fuel, maintenance, spare parts
                                           // General purchase will cover most items in the store, the additional types is for generators and vehicles management
 

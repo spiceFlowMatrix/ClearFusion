@@ -20,5 +20,6 @@ namespace HumanitarianAssistance.Domain.Entities
         public string StorageDirectoryPath { get; set; }
         public bool? Active { get; set; }
         public int? DocumentTypeId { get; set; }
+        public EntitySourceDocumentDetail EntitySourceDocumentDetail { get; set; }
     }
 }

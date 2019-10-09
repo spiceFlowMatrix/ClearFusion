@@ -256,7 +256,7 @@ export class GLOBAL {
 
 
   public static API_HR_GetAllDisableCalanderDate = 'EmployeeHolidays/GetAllDisableCalanderDate';
-
+  public static API_HR_CheckUserEmailAlreadyExists = 'EmployeeDetail/CheckUserEmailAlreadyExists';
 
   public static API_HR_MonthlyEmployeeAttendanceReport = 'Attendance/MonthlyEmployeeAttendanceReport';
 
@@ -539,6 +539,7 @@ public static API_FileManagement_GetSignedURL = 'FileManagement/GetSignedURL';
 public static API_FileManagement_SaveUploadedFileInfo = 'FileManagement/SaveUploadedFileInfo';
 public static API_FileManagement_UpdateUploadedFileInfo = 'FileManagement/UpdateUploadedFileInfo';
 public static API_FileManagement_GetSignedURLByDocumentFileId = 'FileManagement/GetSignedURLByDocumentFileId';
+public static API_FileManagement_GetDocumentFiles = 'FileManagement/GetDocumentFiles';
 
 
 
