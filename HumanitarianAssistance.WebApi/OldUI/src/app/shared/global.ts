@@ -108,7 +108,7 @@ export class GLOBAL {
   public static API_HR_AddEmployeeHealthDetail = 'HREmployee/AddEmployeeHealthDetail';
   public static API_HR_EditEmployeeHealthDetail = 'HREmployee/EditEmployeeHealthDetail';
   public static API_HR_GetEmployeeProfessionalDetail = 'EmployeeDetail/GetEmployeeProfessionalDetail';
- // public static API_HR_GetAnnualAppraisalReportPdf = 'Pdf/GetAnnualAppraisalReportPdf';
+  public static API_HR_GetAnnualAppraisalReportPdf = 'Pdf/GetAnnualAppraisalReportPdf';
 
 
   public static API_PMU_AddBudgetLine = 'ProjectPipeLining/AddBudgetLine';

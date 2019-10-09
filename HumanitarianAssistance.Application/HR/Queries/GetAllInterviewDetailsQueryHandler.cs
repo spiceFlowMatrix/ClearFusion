@@ -49,7 +49,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                     if (model.RatingBasedCriteriaList != null && model.RatingBasedCriteriaList.Any())
                     {
-                        obj.RatingBasedCriteriaList = new List<RatingBasedCriteriaModel>();
+                        obj.RatingBasedCriteriaModelList = new List<RatingBasedCriteriaModel>();
 
                         foreach (var item in model.RatingBasedCriteriaList)
                         {
@@ -59,7 +59,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                 Rating = item.Rating
                             };
 
-                            obj.RatingBasedCriteriaList.Add(criteriaModel);
+                            obj.RatingBasedCriteriaModelList.Add(criteriaModel);
                         }
                     }
 

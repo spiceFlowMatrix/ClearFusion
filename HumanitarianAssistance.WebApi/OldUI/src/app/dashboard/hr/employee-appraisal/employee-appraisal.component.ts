@@ -6,7 +6,6 @@ import { GLOBAL } from '../../../shared/global';
 import { CodeService } from '../../code/code.service';
 import {
   applicationPages,
-  applicationModule
 } from '../../../shared/application-pages-enum';
 import { AppSettingsService } from '../../../service/app-settings.service';
 import { CommonService } from '../../../service/common.service';
@@ -23,9 +22,11 @@ export class EmployeeAppraisalComponent implements OnInit {
   employeeAppraisalQuestionForm: EmployeeAppraisalModel;
   questionSourceData: EmployeeAppraisalQuestionList[];
   remarksList: RemarkModel[];
-    officeDropdownList: any[] = [];
-    officecodelist: any[];
-    RemarksPattern = /(\w*\W*){0,10}/g;
+  officeDropdownList: any[] = [];
+  officecodelist: any[];
+  RemarksPattern = /(\w*\W*){0,10}/g;
+
+  fileName: any;
 
   employeeListDataSource: EmployeeListModel[];
   employeeDetailListData: EmployeeDetailListModel[];
@@ -49,8 +50,8 @@ export class EmployeeAppraisalComponent implements OnInit {
   // Appraisal
   approveRejectEmployeeAppraisalDetailsId: number;
   currentAppraisalApproveReject: boolean;
-    popupAppraisalFormConfVisible = false;
-    selectedOffice: number;
+  popupAppraisalFormConfVisible = false;
+  selectedOffice: number;
 
   // Evaluation
   approveRejectEmployeeEvaluationId: number;
@@ -98,16 +99,18 @@ export class EmployeeAppraisalComponent implements OnInit {
   ngOnInit() {
     // this.commonService.setLoader(false);
 
-    this.employeeAppraisalPeriod = [{
-      PeriodId: 1,
-      PeriodDuration: 'Annual'
-    },
-    {
-      PeriodId: 2,
-      PeriodDuration: 'Probationary'
-    }];
+    this.employeeAppraisalPeriod = [
+      {
+        PeriodId: 1,
+        PeriodDuration: 'Annual'
+      },
+      {
+        PeriodId: 2,
+        PeriodDuration: 'Probationary'
+      }
+    ];
 
-      this.getOfficeCodeList();
+    this.getOfficeCodeList();
 
     this.getAllRemarks();
 
@@ -212,8 +215,8 @@ export class EmployeeAppraisalComponent implements OnInit {
   //#region "Get All Employee Appraisal List"
   getAllEmployeeAppraisalList() {
     this.showEmpAppraisalLoader();
-      // tslint:disable-next-line:radix
-      const officeId = this.selectedOffice;
+    // tslint:disable-next-line:radix
+    const officeId = this.selectedOffice;
     this.hrService
       .GetAllDetailsByOfficeId(
         this.setting.getBaseUrl() +
@@ -253,8 +256,8 @@ export class EmployeeAppraisalComponent implements OnInit {
 
   //#region "Get All Appraisal Questions"
   getAllAppraisalQuestions() {
-      // tslint:disable-next-line:radix
-      const officeId = this.selectedOffice;
+    // tslint:disable-next-line:radix
+    const officeId = this.selectedOffice;
     this.codeService
       .GetAppraisalQuestions(
         this.setting.getBaseUrl() + GLOBAL.API_Code_GetAppraisalQuestions,
@@ -306,9 +309,9 @@ export class EmployeeAppraisalComponent implements OnInit {
   //#endregion
 
   //#region "Get All Employee List By OfficeId"
-    getAllEmployeeListByOfficeId() {
+  getAllEmployeeListByOfficeId() {
     // tslint:disable-next-line:radix
-      const officeId = this.selectedOffice;
+    const officeId = this.selectedOffice;
     this.hrService
       .GetAllDetail(
         this.setting.getBaseUrl() + GLOBAL.API_Code_GetEmployeeDetailByOfficeId,
@@ -381,12 +384,14 @@ export class EmployeeAppraisalComponent implements OnInit {
                 Position: element.Position,
                 Department: element.Department,
                 Qualification: element.Qualification,
-                DutyStation: this.officecodelist.find(x => x.Office === element.DutyStation).OfficeName,
+                DutyStation: this.officecodelist.find(
+                  x => x.Office === element.DutyStation
+                ).OfficeName,
                 RecruitmentDate: element.RecruitmentDate,
                 AppraisalPeriod: null,
                 CurrentAppraisalDate: new Date(),
-                  // tslint:disable-next-line:radix
-                  OfficeId: this.selectedOffice,
+                // tslint:disable-next-line:radix
+                OfficeId: this.selectedOffice,
                 TotalScore: null,
                 EmployeeAppraisalQuestionList: this.questionSourceData,
                 AppraisalStatus: element.AppraisalStatus,
@@ -464,7 +469,7 @@ export class EmployeeAppraisalComponent implements OnInit {
   getAllEmployeeAppraisalMoreDetails() {
     this.showEmpAppraisalLoader();
     // tslint:disable-next-line:radix
-      const officeId = this.selectedOffice;
+    const officeId = this.selectedOffice;
     this.hrService
       .GetAllDetail(
         this.setting.getBaseUrl() +
@@ -806,7 +811,7 @@ export class EmployeeAppraisalComponent implements OnInit {
   //#endregion
 
   //#region "On Add Form Submit"
-    onAddFormSubmit(data: EmployeeAppraisalModel) {
+  onAddFormSubmit(data: EmployeeAppraisalModel) {
     const appraisalData: EmployeeAppraisalModel = {
       EmployeeAppraisalDetailsId: 0,
       EmployeeId: data.EmployeeId,
@@ -834,8 +839,8 @@ export class EmployeeAppraisalComponent implements OnInit {
         new Date().getMinutes(),
         new Date().getSeconds()
       ),
-        // tslint:disable-next-line:radix
-        OfficeId: this.selectedOffice,
+      // tslint:disable-next-line:radix
+      OfficeId: this.selectedOffice,
       TotalScore: data.TotalScore,
       EmployeeAppraisalQuestionList: this.questionSourceData,
       AppraisalStatus: false,
@@ -851,7 +856,8 @@ export class EmployeeAppraisalComponent implements OnInit {
           : element.Score);
     });
     appraisalData.AppraisalScore = 0;
-    appraisalData.AppraisalScore = appraisalData.TotalScore / this.questionSourceData.length;
+    appraisalData.AppraisalScore =
+      appraisalData.TotalScore / this.questionSourceData.length;
     if (this.employeeSelectedFlag) {
       this.addEmployeeAppraisal(appraisalData);
     } else {
@@ -889,12 +895,12 @@ export class EmployeeAppraisalComponent implements OnInit {
         new Date().getMinutes(),
         new Date().getSeconds()
       ),
-        // tslint:disable-next-line:radix
-        OfficeId: this.selectedOffice,
+      // tslint:disable-next-line:radix
+      OfficeId: this.selectedOffice,
       TotalScore: data.TotalScore,
       EmployeeAppraisalQuestionList: this.questionSourceData,
       AppraisalStatus: data.AppraisalStatus,
-      AppraisalScore: data.AppraisalScore,
+      AppraisalScore: data.AppraisalScore
     };
 
     appraisalData.TotalScore = 0;
@@ -907,7 +913,8 @@ export class EmployeeAppraisalComponent implements OnInit {
           : element.Score);
     });
     appraisalData.AppraisalScore = 0;
-    appraisalData.AppraisalScore = appraisalData.TotalScore / this.questionSourceData.length;
+    appraisalData.AppraisalScore =
+      appraisalData.TotalScore / this.questionSourceData.length;
 
     this.editEmployeeAppraisal(appraisalData);
   }
@@ -956,8 +963,8 @@ export class EmployeeAppraisalComponent implements OnInit {
       CommentsByEmployee: data.CommentsByEmployee,
       EmployeeId: this.onEmployeeMoreDetailValue,
       EvaluationStatus: null,
-        // tslint:disable-next-line:radix
-        OfficeId: this.selectedOffice
+      // tslint:disable-next-line:radix
+      OfficeId: this.selectedOffice
     };
     this.addEmployeeAppraisalMoreDetails(dataModel);
   }
@@ -1003,8 +1010,8 @@ export class EmployeeAppraisalComponent implements OnInit {
       CommentsByEmployee: data.CommentsByEmployee,
       EmployeeId: data.EmployeeId,
       EvaluationStatus: data.EvaluationStatus,
-        // tslint:disable-next-line:radix
-        OfficeId: this.selectedOffice
+      // tslint:disable-next-line:radix
+      OfficeId: this.selectedOffice
     };
 
     this.editEmployeeAppraisalMoreDetails(dataModel);
@@ -1015,6 +1022,7 @@ export class EmployeeAppraisalComponent implements OnInit {
 
   onEditEmpAppraisalDetailShowForm(data: any, questionUpdateFlag: any) {
     if (data != null) {
+      this.questionSourceData = [];
       this.employeeAppraisalQuestionForm = {
         EmployeeAppraisalDetailsId: data.EmployeeAppraisalDetailsId,
         EmployeeId: data.EmployeeId,
@@ -1106,8 +1114,8 @@ export class EmployeeAppraisalComponent implements OnInit {
         ? keyValue.EmployeeEvaluationModelList.forEach(element => {
             this.employeeEvaluationDataSource.push(element);
           })
-        // tslint:disable-next-line:no-unused-expression
-        : null;
+        : // tslint:disable-next-line:no-unused-expression
+          null;
 
       keyValue.StrongPoints != null
         ? keyValue.StrongPoints.forEach(element => {
@@ -1115,8 +1123,8 @@ export class EmployeeAppraisalComponent implements OnInit {
               StrongPoints: element
             });
           })
-        // tslint:disable-next-line:no-unused-expression
-        : null;
+        : // tslint:disable-next-line:no-unused-expression
+          null;
 
       keyValue.WeakPoints != null
         ? keyValue.WeakPoints.forEach(element => {
@@ -1124,8 +1132,8 @@ export class EmployeeAppraisalComponent implements OnInit {
               WeakPoints: element
             });
           })
-        // tslint:disable-next-line:no-unused-expression
-        : null;
+        : // tslint:disable-next-line:no-unused-expression
+          null;
 
       keyValue.EmployeeAppraisalTeamMemberList != null
         ? keyValue.EmployeeAppraisalTeamMemberList.forEach(element => {
@@ -1133,8 +1141,8 @@ export class EmployeeAppraisalComponent implements OnInit {
               EmployeeId: element
             });
           })
-        // tslint:disable-next-line:no-unused-expression
-        : null;
+        : // tslint:disable-next-line:no-unused-expression
+          null;
 
       this.pointsOfEmployeesForm = {
         EmployeeEvaluationId: keyValue.EmployeeEvaluationId,
@@ -1170,8 +1178,8 @@ export class EmployeeAppraisalComponent implements OnInit {
         EvaluationStatus: keyValue.EvaluationStatus,
 
         EmployeeId: keyValue.EmployeeId,
-          // tslint:disable-next-line:radix
-          OfficeId: this.selectedOffice
+        // tslint:disable-next-line:radix
+        OfficeId: this.selectedOffice
       };
       this.showEditAppraisalMoreDetails();
     }
@@ -1189,84 +1197,83 @@ export class EmployeeAppraisalComponent implements OnInit {
           : (this.currentAppraisalApproveReject = false);
       }
     }
-    }
+  }
 
-    onOfficeSelected(officeId: number) {
-        this.selectedOffice = officeId;
-        this.getAllEmployeeAppraisalList();
-        this.getAllEmployeeAppraisalMoreDetails();
-        this.getAllEmployeeListByOfficeId();
-        this.getDepartmentType(this.selectedOffice);
-    }
+  onOfficeSelected(officeId: number) {
+    this.selectedOffice = officeId;
+    this.getAllEmployeeAppraisalList();
+    this.getAllEmployeeAppraisalMoreDetails();
+    this.getAllEmployeeListByOfficeId();
+    this.getDepartmentType(this.selectedOffice);
+  }
 
-    getOfficeCodeList() {
-        this.codeService
-            .GetAllCodeList(
-                this.setting.getBaseUrl() + GLOBAL.API_OfficeCode_GetAllOfficeDetails
-            )
-            .subscribe(
-                data => {
-                    this.officecodelist = [];
-                    if (
-                        data.StatusCode === 200 &&
-                        data.data.OfficeDetailsList.length > 0
-                    ) {
-                        data.data.OfficeDetailsList.forEach(element => {
-                            this.officecodelist.push({
-                                Office: element.OfficeId,
-                                OfficeCode: element.OfficeCode,
-                                OfficeName: element.OfficeName,
-                                SupervisorName: element.SupervisorName,
-                                PhoneNo: element.PhoneNo,
-                                FaxNo: element.FaxNo,
-                                OfficeKey: element.OfficeKey
-                            });
-                        });
+  getOfficeCodeList() {
+    this.codeService
+      .GetAllCodeList(
+        this.setting.getBaseUrl() + GLOBAL.API_OfficeCode_GetAllOfficeDetails
+      )
+      .subscribe(
+        data => {
+          this.officecodelist = [];
+          if (
+            data.StatusCode === 200 &&
+            data.data.OfficeDetailsList.length > 0
+          ) {
+            data.data.OfficeDetailsList.forEach(element => {
+              this.officecodelist.push({
+                Office: element.OfficeId,
+                OfficeCode: element.OfficeCode,
+                OfficeName: element.OfficeName,
+                SupervisorName: element.SupervisorName,
+                PhoneNo: element.PhoneNo,
+                FaxNo: element.FaxNo,
+                OfficeKey: element.OfficeKey
+              });
+            });
 
-                        const AllOffices = localStorage.getItem('ALLOFFICES').split(',');
+            const AllOffices = localStorage.getItem('ALLOFFICES').split(',');
 
-                        data.data.OfficeDetailsList.forEach(element => {
-                            const officeFound = AllOffices.indexOf('' + element.OfficeId);
-                            if (officeFound !== -1) {
-                                this.officeDropdownList.push({
-                                    OfficeId: element.OfficeId,
-                                    OfficeCode: element.OfficeCode,
-                                    OfficeName: element.OfficeName,
-                                    SupervisorName: element.SupervisorName,
-                                    PhoneNo: element.PhoneNo,
-                                    FaxNo: element.FaxNo,
-                                    OfficeKey: element.OfficeKey
-                                });
-                            }
-                        });
+            data.data.OfficeDetailsList.forEach(element => {
+              const officeFound = AllOffices.indexOf('' + element.OfficeId);
+              if (officeFound !== -1) {
+                this.officeDropdownList.push({
+                  OfficeId: element.OfficeId,
+                  OfficeCode: element.OfficeCode,
+                  OfficeName: element.OfficeName,
+                  SupervisorName: element.SupervisorName,
+                  PhoneNo: element.PhoneNo,
+                  FaxNo: element.FaxNo,
+                  OfficeKey: element.OfficeKey
+                });
+              }
+            });
 
-                        this.selectedOffice =
-                            (this.selectedOffice === null || this.selectedOffice === undefined)
-                                    ? this.officeDropdownList[0].OfficeId
-                                : this.selectedOffice;
+            this.selectedOffice =
+              this.selectedOffice === null || this.selectedOffice === undefined
+                ? this.officeDropdownList[0].OfficeId
+                : this.selectedOffice;
 
-                        this.getAllEmployeeListByOfficeId();
-                        this.getAllEmployeeAppraisalList();
-                        this.getAllEmployeeAppraisalMoreDetails();
-                        this.getDepartmentType(this.selectedOffice);
+            this.getAllEmployeeListByOfficeId();
+            this.getAllEmployeeAppraisalList();
+            this.getAllEmployeeAppraisalMoreDetails();
+            this.getDepartmentType(this.selectedOffice);
 
-                        // tslint:disable-next-line:curly
-                    } else if (data.StatusCode === 400)
-                        this.toastr.error('Something went wrong!');
-                },
-                error => {
-                    if (error.StatusCode === 500) {
-                        this.toastr.error('Internal Server Error....');
-                    } else if (error.StatusCode === 401) {
-                        this.toastr.error('Unauthorized Access Error....');
-                    } else if (error.StatusCode === 403) {
-                        this.toastr.error('Forbidden Error....');
-                    } else {
-                    }
-                }
-            );
-    }
-
+            // tslint:disable-next-line:curly
+          } else if (data.StatusCode === 400)
+            this.toastr.error('Something went wrong!');
+        },
+        error => {
+          if (error.StatusCode === 500) {
+            this.toastr.error('Internal Server Error....');
+          } else if (error.StatusCode === 401) {
+            this.toastr.error('Unauthorized Access Error....');
+          } else if (error.StatusCode === 403) {
+            this.toastr.error('Forbidden Error....');
+          } else {
+          }
+        }
+      );
+  }
 
   onApproveAppraisalConfirmClick() {
     this.approvalOrRejectEmployeeAppraisal(
@@ -1336,7 +1343,7 @@ export class EmployeeAppraisalComponent implements OnInit {
             data.data.Departments.forEach(element => {
               this.departmentTypeDropdown.push(element);
             });
-          // tslint:disable-next-line:curly
+            // tslint:disable-next-line:curly
           } else if (data.StatusCode === 400)
             this.toastr.error('Something went wrong!');
         },
@@ -1353,16 +1360,39 @@ export class EmployeeAppraisalComponent implements OnInit {
   }
   //#endregion
 
-    //#region "onExportPdf"
-    // onExportPdf() {
-    //   this.commonService
-    //     .getFile(this.setting.getBaseUrl() + GLOBAL.API_HR_GetAnnualAppraisalReportPdf,
-    //               this.employeeAppraisalQuestionForm
-    //     );
-    // }
-    //#endregion
+  //#region "onExportPdf"
+  // onExportPdf() {
+  //   this.commonService
+  //     .getFile(this.setting.getBaseUrl() + GLOBAL.API_HR_GetAnnualAppraisalReportPdf,
+  //               this.employeeAppraisalQuestionForm
+  //     );
+  // }
+  //#endregion
 
-
+  // Export Leave PDF
+  onExportPdf() {
+    const model = {
+      OfficeId : this.selectedOffice
+    };
+    this.hrService
+      .DownloadPDF(
+        this.setting.getBaseUrl() + GLOBAL.API_HR_GetAnnualAppraisalReportPdf,
+        model
+      )
+      .subscribe(x => {
+        this.fileName = 'EmployeeLeaveReport' + '.pdf';
+        if (window.navigator.msSaveOrOpenBlob) {
+          window.navigator.msSaveOrOpenBlob(x, this.fileName);
+        } else {
+          const link = document.createElement('a');
+          link.setAttribute('type', 'hidden');
+          link.download = this.fileName;
+          link.href = window.URL.createObjectURL(x);
+          document.body.appendChild(link);
+          link.click();
+        }
+      });
+  }
 
   // Evaluation Add
   onEvaluationAdding(data: any) {
