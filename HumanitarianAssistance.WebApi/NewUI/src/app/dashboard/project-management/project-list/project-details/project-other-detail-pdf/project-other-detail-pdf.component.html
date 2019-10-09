@@ -1,5 +1,8 @@
 <h4>Choose Sections to Export</h4><hr>
 <form [formGroup]="myForm">
+    <mat-checkbox value="isChecked" formControlName="SelectAll" (change)="SelectAllChange()">
+        SelectAll
+        </mat-checkbox>
   <div class="content-wrapper">
     <h5><strong>Opportunity Details</strong></h5><br>
     <div class="row">
