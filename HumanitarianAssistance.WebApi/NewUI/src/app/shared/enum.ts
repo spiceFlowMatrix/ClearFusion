@@ -530,14 +530,10 @@ export enum StoreMasterCategory {
 export enum StoreItemGroups {
 Vehicle = 1,
 Generator = 2,
-VehicleFuel = 3,
-GeneratorFuel= 4,
-VehicleMobilOil= 5,
-GeneratorMobilOil= 6,
-VehicleSpareParts= 7,
-GeneratorSpareParts= 8,
-VehicleMaintenanceService= 9,
-GeneratorMaintenanceService= 10
+Fuel= 3,
+SpareParts= 4,
+MobilOil= 5,
+Services= 6
 }
 //#endregion
 
