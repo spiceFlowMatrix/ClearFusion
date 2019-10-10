@@ -115,6 +115,7 @@ export interface IProjectActivityDetail {
   CountryId?: number;
   ProjectId: number;
   Achieved?: number;
+  ReoccuredReferenceId?: string;
 }
 
 export interface IPlanningActivityDetail {

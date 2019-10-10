@@ -1,4 +1,10 @@
-import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  SimpleChanges,
+  OnChanges
+} from '@angular/core';
 import { HrService } from '../../hr.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -6,6 +12,14 @@ import { GLOBAL } from '../../../../shared/global';
 import { AppSettingsService } from '../../../../service/app-settings.service';
 import { CommonService } from '../../../../service/common.service';
 import { CodeService } from '../../../code/code.service';
+import {
+  IInterviewLanguagesModel,
+  IInterviewTrainingModel,
+  IInterviewTechnicalQuestionModel,
+  IEmployeeListModel,
+  ISkillRatingModel,
+  IEmpInterviewFormModel
+} from '../interview-form.models';
 
 @Component({
   selector: 'app-employee-interview-form',
@@ -17,16 +31,16 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
 
   // Data Source
   interviewDataSource: any[];
-  languagesListDataSource: InterviewLanguagesModel[];
-  trainingListDataSource: InterviewTrainingModel[];
-  technicalQuestionsListDataSource: InterviewTechnicalQuestionModel[] = [];
+  languagesListDataSource: IInterviewLanguagesModel[];
+  trainingListDataSource: IInterviewTrainingModel[];
+  technicalQuestionsListDataSource: IInterviewTechnicalQuestionModel[] = [];
   technicalQuestionsList: any[];
   Interviewers: any[] = [];
   officecodelist: any[] = [];
   officeDropdownList: any[];
   selectedOffice: any;
 
-  employeeListDataSource: EmployeeListModel[];
+  employeeListDataSource: IEmployeeListModel[];
   genderTypesDropdown: any[];
   ratingBasedDropDown: any[];
   trainingTypeDropdown: any[];
@@ -44,15 +58,16 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
   @Input() isEditingAllowed: boolean;
 
   // form
-  empInterviewFormMainForm: EmpInterviewFormModel;
+  empInterviewFormMainForm: IEmpInterviewFormModel;
 
-  skillRatingDropdown: SkillRatingModel[];
+  skillRatingDropdown: ISkillRatingModel[];
   skillRatingRadioGroup: any[];
   jobCodeDropdown: any[];
 
   // Flag
   empInterviewFormListFlag = true;
   addEmpInterviewDetailsFlag = false;
+  viewEmpInterviewDetailsFlag = false;
   editEmpInterviewDetailsFlag = false;
   selectEmpDropdownFlag = false;
 
@@ -75,35 +90,22 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
     private commonService: CommonService,
     private route: ActivatedRoute,
     private codeService: CodeService
-  ) { }
+  ) {}
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
-
       this.employeeId = +params['empId'];
     });
     this.initializeForm();
-    // this.technicalQuestionsList = [
-    //   {
-    //     Question: null,
-    //     InterviewTechnicalQuestionsId: null
-    //   }
-    // ];
-    // this.ratingBasedCriteriaQuestionsList = [
-    //   {
-    //     CriteriaQuestion: null,
-    //     CriteriaQuestionId: null
-    //   }
-    // ];
   }
 
   ngOnChanges(changes: SimpleChanges) {
-   // this.getAllInterviewDetails();
+    // this.getAllInterviewDetails();
 
     if (changes !== undefined && changes.officeId !== undefined) {
       this.officeId = changes.officeId.currentValue;
       console.log(changes.officeId.currentValue);
       this.getAllEmployeeListByOfficeId();
-    //  this.getAllInterviewDetails();
+      //  this.getAllInterviewDetails();
       this.getjobCodeList();
       this.getDepartmentType(this.officeId);
 
@@ -245,7 +247,7 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
       MaritalStatus: null,
 
       Experience: null,
-      RatingBasedCriteriaList: [],
+      RatingBasedCriteriaModelList: [],
 
       ProfessionalCriteriaMarks: 0,
 
@@ -305,10 +307,11 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
                 this.interviewDataSource.push(element);
               });
               if (this.employeeId > 0) {
-                const interviewDetailbyId = this.interviewDataSource.find(r => r.EmployeeID === this.employeeId);
+                const interviewDetailbyId = this.interviewDataSource.find(
+                  r => r.EmployeeID === this.employeeId
+                );
                 this.onEditEmpInterviewShowForm(interviewDetailbyId, false);
               }
-
             } else {
               // tslint:disable-next-line:curly
               if (data.data.InterviewDetailList == null) {
@@ -431,9 +434,24 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
   }
   //#endregion "Get All Job Code"
 
+  technicalQuestionsValueChanged(obj) {
+    let totalProfesionalMarks = 0;
+    this.technicalQuestionsListDataSource.forEach(element => {
+        totalProfesionalMarks = totalProfesionalMarks + Number(element.Answer);
+      });
+      this.empInterviewFormMainForm.MarksObtained = totalProfesionalMarks;
+  }
+  ratingCriteriaQuestionsValueChanged(obj) {
+    let totalCriteriaMarks = 0;
+    this.ratingBasedCriteriaDataSource.forEach(element => {
+        totalCriteriaMarks = totalCriteriaMarks + Number(element.Rating);
+      });
+      this.empInterviewFormMainForm.ProfessionalCriteriaMarks = totalCriteriaMarks;
+  }
+
   //#region "on Add Exit Interview Form Submit"
-  onAddInterviewFormSubmit(model: EmpInterviewFormModel) {
-    const interviewFormModel: EmpInterviewFormModel = {
+  onAddInterviewFormSubmit(model: IEmpInterviewFormModel) {
+    const interviewFormModel: IEmpInterviewFormModel = {
       InterviewDetailsId: 0,
       EmployeeID: model.EmployeeID,
       JobId: model.JobId,
@@ -448,7 +466,7 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
       MaritalStatus: model.MaritalStatus,
 
       Experience: model.Experience,
-      RatingBasedCriteriaList: this.ratingBasedCriteriaDataSource,
+      RatingBasedCriteriaModelList: this.ratingBasedCriteriaDataSource,
 
       ProfessionalCriteriaMarks: model.ProfessionalCriteriaMarks,
 
@@ -523,8 +541,7 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
 
   //#region "on Edit Exit Interview Form Submit"
   onEditInterviewFormSubmit(model: any) {
-
-    const interviewFormModel: EmpInterviewFormModel = {
+    const interviewFormModel: IEmpInterviewFormModel = {
       InterviewDetailsId: model.InterviewDetailsId,
       EmployeeID: model.EmployeeID,
       JobId: model.JobId,
@@ -542,7 +559,7 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
 
       Experience: model.Experience,
 
-      RatingBasedCriteriaList: this.ratingBasedCriteriaDataSource,
+      RatingBasedCriteriaModelList: this.ratingBasedCriteriaDataSource,
 
       ProfessionalCriteriaMarks: model.ProfessionalCriteriaMarks,
 
@@ -615,7 +632,7 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region "onEditEmpInterviewShowForm"
-  onEditEmpInterviewShowForm(model: EmpInterviewFormModel, viewOnly: boolean) {
+  onEditEmpInterviewShowForm(model: IEmpInterviewFormModel, viewOnly: boolean) {
     if (model != null) {
       this.disableSelectEmpDropdownFlag();
       this.interviewFormViewOnly = viewOnly;
@@ -632,7 +649,10 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
         MaritalStatus: model.MaritalStatus,
 
         Experience: model.Experience,
-        RatingBasedCriteriaList: model.RatingBasedCriteriaList === undefined ? [] : model.RatingBasedCriteriaList,
+        RatingBasedCriteriaModelList:
+          model.RatingBasedCriteriaModelList === undefined
+            ? []
+            : model.RatingBasedCriteriaModelList,
 
         ProfessionalCriteriaMarks: model.ProfessionalCriteriaMarks,
 
@@ -645,9 +665,18 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
         NoticePeriod: model.NoticePeriod,
         JoiningDate: model.JoiningDate,
 
-        InterviewLanguageModelList: model.InterviewLanguageModelList === undefined ? [] : model.InterviewLanguageModelList,
-        InterviewTrainingModelList: model.InterviewTrainingModelList === undefined ? [] : model.InterviewTrainingModelList,
-        InterviewTechQuesModelList: model.InterviewTechQuesModelList === undefined ? [] : model.InterviewTechQuesModelList,
+        InterviewLanguageModelList:
+          model.InterviewLanguageModelList === undefined
+            ? []
+            : model.InterviewLanguageModelList,
+        InterviewTrainingModelList:
+          model.InterviewTrainingModelList === undefined
+            ? []
+            : model.InterviewTrainingModelList,
+        InterviewTechQuesModelList:
+          model.InterviewTechQuesModelList === undefined
+            ? []
+            : model.InterviewTechQuesModelList,
 
         // Compensation
         CurrentBase: model.CurrentBase,
@@ -663,36 +692,56 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
 
         // Recommendation
         Status: model.Status,
-        Interviewers: model.Interviewers === undefined ? [] : model.Interviewers,
+        Interviewers:
+          model.Interviewers === undefined ? [] : model.Interviewers,
 
         InterviewStatus: model.InterviewStatus
       };
     }
 
-    this.ratingBasedCriteriaDataSource = model === undefined ? [] :
-                                         model.RatingBasedCriteriaList === undefined ? [] :
-                                         model.RatingBasedCriteriaList;
+    this.ratingBasedCriteriaDataSource =
+      model === undefined
+        ? []
+        : model.RatingBasedCriteriaModelList === undefined
+        ? []
+        : model.RatingBasedCriteriaModelList;
 
-    this.languagesListDataSource = model === undefined ? [] :
-                                   model.InterviewLanguageModelList ===   undefined ? [] :
-                                   model.InterviewLanguageModelList;
+    this.languagesListDataSource =
+      model === undefined
+        ? []
+        : model.InterviewLanguageModelList === undefined
+        ? []
+        : model.InterviewLanguageModelList;
 
-    this.trainingListDataSource = model === undefined ? [] :
-                                  model.InterviewTrainingModelList === undefined ? [] :
-                                  model.InterviewTrainingModelList;
+    this.trainingListDataSource =
+      model === undefined
+        ? []
+        : model.InterviewTrainingModelList === undefined
+        ? []
+        : model.InterviewTrainingModelList;
 
-    this.technicalQuestionsListDataSource = model === undefined ? [] :
-                                            model.InterviewTechQuesModelList === undefined ? [] :
-                                            model.InterviewTechQuesModelList;
+    this.technicalQuestionsListDataSource =
+      model === undefined
+        ? []
+        : model.InterviewTechQuesModelList === undefined
+        ? []
+        : model.InterviewTechQuesModelList;
 
-    this.Interviewers = model === undefined ? [] :
-                        model.Interviewers === undefined ? [] :
-                        model.Interviewers;
+    this.Interviewers =
+      model === undefined
+        ? []
+        : model.Interviewers === undefined
+        ? []
+        : model.Interviewers;
 
     // TODO: disable Save button
-    this.currentApproveReject = model === undefined ? true : model.InterviewStatus == null ? true : false;
-
+    this.currentApproveReject =
+      model === undefined ? true : model.InterviewStatus == null ? true : false;
+if (this.interviewFormViewOnly === false) {
     this.showEditEmpInterviewForm();
+} else {
+  this.showViewEmpInterviewForm();
+}
   }
 
   //#endregion
@@ -716,7 +765,7 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
       this.hrService
         .ApprovalAndRejectionInterviewForm(
           this.setting.getBaseUrl() +
-          GLOBAL.API_Code_ApproveEmployeeInterviewRequest,
+            GLOBAL.API_Code_ApproveEmployeeInterviewRequest,
           InterviewDetailsId
         )
         .subscribe(
@@ -745,7 +794,7 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
       this.hrService
         .ApprovalAndRejectionInterviewForm(
           this.setting.getBaseUrl() +
-          GLOBAL.API_Code_RejectEmployeeInterviewRequest,
+            GLOBAL.API_Code_RejectEmployeeInterviewRequest,
           InterviewDetailsId
         )
         .subscribe(
@@ -774,9 +823,6 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
   }
 
   //#endregion
-
-
-
 
   //#region "onIsInterviewFormApprovedValueChanged"
   onIsInterviewFormApprovedValueChanged(cellData: any, e: any) {
@@ -850,7 +896,7 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
             });
 
             this.selectedOffice =
-              (this.selectedOffice === null || this.selectedOffice === undefined)
+              this.selectedOffice === null || this.selectedOffice === undefined
                 ? this.officeDropdownList[0].OfficeId
                 : this.selectedOffice;
 
@@ -880,6 +926,7 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
 
   //#region "on Back Button Click"
   onBackButtonClick() {
+    this.viewEmpInterviewDetailsFlag = false;
     if (this.empInterviewFormListFlag === true) {
       this.empInterviewFormListFlag = false;
       this.addEmpInterviewDetailsFlag = true;
@@ -891,119 +938,111 @@ export class EmployeeInterviewFormComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region "Get Department Type"
-getDepartmentType(eventId: any) {
-  this.hrService
-    .GetDepartmentDropdown(
-      this.setting.getBaseUrl() + GLOBAL.API_Code_GetDepartmentsByOfficeId,
-      eventId
-    )
-    .subscribe(
-      data => {
-        this.departmentTypeDropdown = [];
-        if (
-          data.data.Departments != null &&
-          data.data.Departments.length > 0
-        ) {
-          data.data.Departments.forEach(element => {
-            this.departmentTypeDropdown.push(element);
-          });
-        // tslint:disable-next-line:curly
-        } else if (data.StatusCode === 400)
-          this.toastr.error('Something went wrong!');
-      },
-      error => {
-        if (error.StatusCode === 500) {
-          this.toastr.error('Internal Server Error....');
-        } else if (error.StatusCode === 401) {
-          this.toastr.error('Unauthorized Access Error....');
-        } else if (error.StatusCode === 403) {
-          this.toastr.error('Forbidden Error....');
+  getDepartmentType(eventId: any) {
+    this.hrService
+      .GetDepartmentDropdown(
+        this.setting.getBaseUrl() + GLOBAL.API_Code_GetDepartmentsByOfficeId,
+        eventId
+      )
+      .subscribe(
+        data => {
+          this.departmentTypeDropdown = [];
+          if (
+            data.data.Departments != null &&
+            data.data.Departments.length > 0
+          ) {
+            data.data.Departments.forEach(element => {
+              this.departmentTypeDropdown.push(element);
+            });
+            // tslint:disable-next-line:curly
+          } else if (data.StatusCode === 400)
+            this.toastr.error('Something went wrong!');
+        },
+        error => {
+          if (error.StatusCode === 500) {
+            this.toastr.error('Internal Server Error....');
+          } else if (error.StatusCode === 401) {
+            this.toastr.error('Unauthorized Access Error....');
+          } else if (error.StatusCode === 403) {
+            this.toastr.error('Forbidden Error....');
+          }
         }
-      }
-    );
-}
+      );
+  }
 
-
-//#region "Get All Interview Questions"
-getAllInterviewQuestions() {
-  // tslint:disable-next-line:radix
-  const officeId = this.officeId;
-  this.codeService
-    .GetAppraisalQuestions(
-      this.setting.getBaseUrl() + GLOBAL.API_Code_GetInterviewQuestions,
-      officeId
-    )
-    .subscribe(
-      data => {
-        this.technicalQuestionsList = [];
-        if (
-          data.StatusCode === 200 &&
-          data.data.InterviewTechnicalQuestionsList.length > 0 &&
-          data.data.InterviewTechnicalQuestionsList != null
-        ) {
-          data.data.InterviewTechnicalQuestionsList.forEach(element => {
-            this.technicalQuestionsList.push(element);
-          });
+  //#region "Get All Interview Questions"
+  getAllInterviewQuestions() {
+    // tslint:disable-next-line:radix
+    const officeId = this.officeId;
+    this.codeService
+      .GetAppraisalQuestions(
+        this.setting.getBaseUrl() + GLOBAL.API_Code_GetInterviewQuestions,
+        officeId
+      )
+      .subscribe(
+        data => {
+          this.technicalQuestionsList = [];
+          if (
+            data.StatusCode === 200 &&
+            data.data.InterviewTechnicalQuestionsList.length > 0 &&
+            data.data.InterviewTechnicalQuestionsList != null
+          ) {
+            data.data.InterviewTechnicalQuestionsList.forEach(element => {
+              this.technicalQuestionsList.push(element);
+            });
+          }
+        },
+        error => {
+          if (error.StatusCode === 500) {
+            this.toastr.error('Internal Server Error....');
+          } else if (error.StatusCode === 401) {
+            this.toastr.error('Unauthorized Access Error....');
+          } else if (error.StatusCode === 403) {
+            this.toastr.error('Forbidden Error....');
+          }
         }
-      },
-      error => {
-        if (error.StatusCode === 500) {
-          this.toastr.error('Internal Server Error....');
-        } else if (error.StatusCode === 401) {
-          this.toastr.error('Unauthorized Access Error....');
-        } else if (error.StatusCode === 403) {
-          this.toastr.error('Forbidden Error....');
-        }
-      }
-    );
-}
-//#endregion
+      );
+  }
+  //#endregion
 
-
-//#region "Get All Interview Questions"
-getAllCriteriaQuestions() {
-  // tslint:disable-next-line:radix
-  const officeId = this.officeId;
-  this.codeService
-    .GetAppraisalQuestions(
-      this.setting.getBaseUrl() + GLOBAL.API_Code_GetRatingBasedCriteriaQuestions,
-      officeId
-    )
-    .subscribe(
-      data => {
-        this.ratingBasedCriteriaQuestionsList = [];
-        if (
-          data.StatusCode === 200 &&
-          data.data.RatingBasedCriteriaQuestionList.length > 0 &&
-          data.data.RatingBasedCriteriaQuestionList != null
-        ) {
-          data.data.RatingBasedCriteriaQuestionList.forEach(element => {
-            this.ratingBasedCriteriaQuestionsList.push({
-                CriteriaQuestionId : element.QuestionsId,
-                CriteriaQuestion : element.Question
+  //#region "Get All Interview Questions"
+  getAllCriteriaQuestions() {
+    // tslint:disable-next-line:radix
+    const officeId = this.officeId;
+    this.codeService
+      .GetAppraisalQuestions(
+        this.setting.getBaseUrl() +
+          GLOBAL.API_Code_GetRatingBasedCriteriaQuestions,
+        officeId
+      )
+      .subscribe(
+        data => {
+          this.ratingBasedCriteriaQuestionsList = [];
+          if (
+            data.StatusCode === 200 &&
+            data.data.RatingBasedCriteriaQuestionList.length > 0 &&
+            data.data.RatingBasedCriteriaQuestionList != null
+          ) {
+            data.data.RatingBasedCriteriaQuestionList.forEach(element => {
+              this.ratingBasedCriteriaQuestionsList.push({
+                CriteriaQuestionId: element.QuestionsId,
+                CriteriaQuestion: element.Question
               });
-          });
+            });
+          }
+        },
+        error => {
+          if (error.StatusCode === 500) {
+            this.toastr.error('Internal Server Error....');
+          } else if (error.StatusCode === 401) {
+            this.toastr.error('Unauthorized Access Error....');
+          } else if (error.StatusCode === 403) {
+            this.toastr.error('Forbidden Error....');
+          }
         }
-      },
-      error => {
-        if (error.StatusCode === 500) {
-          this.toastr.error('Internal Server Error....');
-        } else if (error.StatusCode === 401) {
-          this.toastr.error('Unauthorized Access Error....');
-        } else if (error.StatusCode === 403) {
-          this.toastr.error('Forbidden Error....');
-        }
-      }
-    );
-}
-// #endregion
-
-
-
-
-
-
-//#endregion
+      );
+  }
+  // #endregion
 
   //#region "Add Training"
   logEventTraining(eventName, obj) {
@@ -1028,9 +1067,15 @@ getAllCriteriaQuestions() {
     this.addEmpInterviewDetailsFlag = true;
   }
 
+  showViewEmpInterviewForm() {
+    this.empInterviewFormListFlag = false;
+    this.viewEmpInterviewDetailsFlag = true;
+  }
+
   hideAddEmpInterviewForm() {
     this.empInterviewFormListFlag = true;
     this.addEmpInterviewDetailsFlag = false;
+    this.viewEmpInterviewDetailsFlag = false;
   }
 
   showInterviewApprovalConfirmation() {
@@ -1048,97 +1093,5 @@ getAllCriteriaQuestions() {
   enableSelectEmpDropdownFlag() {
     this.selectEmpDropdownFlag = false;
   }
-
   //#endregion
 }
-
-class EmployeeListModel {
-  EmployeeId: any;
-  EmployeeName: any;
-  EmployeeCode: any;
-  CodeEmployeeName: any;
-}
-
-// Main Form
-class EmpInterviewFormModel {
-  InterviewDetailsId: number;
-  EmployeeID: number;
-  Qualification: string;
-  DutyStation: number;
-  JobId: number;
-  University: string;
-  PassportNo: string;
-  PlaceOfBirth: any;
-  TazkiraIssuePlace: string;
-  MaritalStatus: any;
-
-  Experience: string;
-  RatingBasedCriteriaList: any[];
-
-  ProfessionalCriteriaMarks: number;
-
-  MarksObtained: any;
-  WrittenTestMarks: any;
-  Ques1: any;
-  Ques2: any;
-  Ques3: any;
-  PreferedLocation: any;
-  NoticePeriod: any;
-  JoiningDate: any;
-
-  InterviewLanguageModelList: InterviewLanguagesModel[];
-  InterviewTrainingModelList: InterviewTrainingModel[];
-  InterviewTechQuesModelList: InterviewTechnicalQuestionModel[];
-
-  // Compensation
-  CurrentBase: any;
-  CurrentTransportation: any;
-  CurrentMeal: any;
-  CurrentOther: any;
-  ExpectationBase: any;
-  ExpectationTransportation: any;
-  ExpectationMeal: any;
-  ExpectationOther: any;
-
-  TotalMarksObtained: any;
-
-  // Recommendation
-  Status: number;
-  Interviewers: any[];
-
-  InterviewStatus: string;
-}
-
-class SkillRatingModel {
-  SkillRatingId: number;
-  SkillRatingName: string;
-}
-
-class InterviewLanguagesModel {
-  LanguageName: string;
-  LanguageId: number;
-  Reading: number;
-  Writing: number;
-  Listening: number;
-  Speaking: number;
-}
-
-class InterviewTrainingModel {
-  TraininigType: any;
-  TrainingName: any;
-  StudyingCountry: any;
-  StartDate: any;
-  EndDate: any;
-}
-
-class InterviewTechnicalQuestionModel {
-  TechnicalQuestionId: number;
-  Question: any;
-  Answer: string;
-}
-
-// class CriteriaQuestionModel {
-//   QuestionId: number;
-//   CriteriaQuestion: any;
-//   Rating: string;
-// }

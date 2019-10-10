@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { GLOBAL } from '../../../../shared/global';
 import { AppSettingsService } from '../../../../service/app-settings.service';
 import { CommonService } from '../../../../service/common.service';
+import { IEmpExitInterviewFormModel, IEmployeeListModel } from '../interview-form.models';
 
 @Component({
   selector: 'app-employee-exit-interview-form',
@@ -16,7 +17,7 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
   //#region "Variables"
 
   // Data Sources
-  employeeListDataSource: EmployeeListModel[];
+  employeeListDataSource: IEmployeeListModel[];
   exitInterviewDataSource: any[];
   genderTypesDropdown: any[];
 
@@ -36,7 +37,7 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
   empAspectsFeedbackRadioGroup: any;
 
   // Form
-  empExitInterviewFormMainForm: EmpExitInterviewFormModel;
+  empExitInterviewFormMainForm: IEmpExitInterviewFormModel;
 
   // Flag
   empExitInterviewFormListFlag = true;
@@ -322,8 +323,8 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region "on Add Exit Interview Form Submit"
-  onAddExitInterviewFormSubmit(model: EmpExitInterviewFormModel) {
-    const exitInterviewFormModel: EmpExitInterviewFormModel = {
+  onAddExitInterviewFormSubmit(model: IEmpExitInterviewFormModel) {
+    const exitInterviewFormModel: IEmpExitInterviewFormModel = {
       ExistInterviewDetailsId: 0,
       EmployeeId: this.employeeSelectedValue,
 
@@ -433,7 +434,7 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
 
   //#region "on Edit Exit Interview Form Submit"
   onEditExitInterviewFormSubmit(model: any) {
-    const exitInterviewFormModel: EmpExitInterviewFormModel = {
+    const exitInterviewFormModel: IEmpExitInterviewFormModel = {
       ExistInterviewDetailsId: model.ExistInterviewDetailsId,
       EmployeeId: model.EmployeeId,
 
@@ -747,102 +748,3 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
   //#endregion
 }
 
-//#region "classes"
-
-class EmpExitInterviewFormModel {
-  ExistInterviewDetailsId: number;
-  EmployeeId: number;
-
-  EmployeeCode: string;
-  EmployeeName: string;
-  Position: any;
-  Department: any;
-  TenureWithCHA: any;
-  Gender: any;
-  OfficeId: any;
-
-  // FeelingAboutEmployee
-  DutiesOfJob: any;
-  TrainingAndDevelopmentPrograms: any;
-  OpportunityAdvancement: any;
-  SalaryTreatment: any;
-  BenefitProgram: any;
-  WorkingConditions: any;
-  WorkingHours: any;
-  CoWorkers: any;
-  Supervisors: any;
-  GenderFriendlyEnvironment: any;
-  OverallJobSatisfaction: any;
-
-  // ReasonOfLeaving
-  Benefits: any;
-  BetterJobOpportunity: any;
-  FamilyReasons: any;
-  NotChallenged: any;
-  Pay: any;
-  PersonalReasons: any;
-  Relocation: any;
-  ReturnToSchool: any;
-  ConflictWithSuoervisors: any;
-  ConflictWithOther: any;
-  WorkRelationship: any;
-  CompanyInstability: any;
-  CareerChange: any;
-  HealthIssue: any;
-
-  // TheDepartment
-  HadGoodSynergy: any;
-  HadAdequateEquipment: any;
-  WasAdequatelyStaffed: any;
-  WasEfficient: any;
-
-  // TheJobItself
-  JobWasChallenging: any;
-  SkillsEffectivelyUsed: any;
-  JobOrientation: any;
-  WorkLoadReasonable: any;
-  SufficientResources: any;
-  WorkEnvironment: any;
-  ComfortableAppropriately: any;
-  Equipped: any;
-
-  // MySupervisor
-  HadKnowledgeOfJob: any;
-  HadKnowledgeSupervision: any;
-  WasOpenSuggestions: any;
-  RecognizedEmployeesContribution: any;
-
-  // TheManagement
-  GaveFairTreatment: any;
-  WasAvailableToDiscuss: any;
-  WelcomedSuggestions: any;
-  MaintainedConsistent: any;
-  ProvidedRecognition: any;
-  EncouragedCooperation: any;
-  ProvidedDevelopment: any;
-
-  Question: any;
-  Explain: string;
-}
-
-class EmployeeListModel {
-  EmployeeId: any;
-  EmployeeName: any;
-  EmployeeCode: any;
-  CodeEmployeeName: any;
-}
-
-class EmployeeMoreDetailModel {
-  EmployeeId: any;
-  EmployeeName: any;
-  EmployeeCode: any;
-  FathersName: any;
-  Position: any;
-  Department: any;
-  Qualification: any;
-  DutyStation: any;
-  RecruitmentDate: any;
-  TenureWithCHA: any;
-  Gender: any;
-}
-//#endregion
