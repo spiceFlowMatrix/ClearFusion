@@ -5,7 +5,7 @@ import { GLOBAL } from '../../shared/global';
 import { map } from 'rxjs/internal/operators/map';
 import { IResponseData } from '../../../app/dashboard/accounting/vouchers/models/status-code.model';
 import { IFilterValueModel, IAddEditPurchaseModel, IAddEditProcurementModel, IDeleteProcurementModel } from '../models/purchase';
-import { retry, finalize } from 'rxjs/operators';
+import { retry, finalize, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of, Observable } from 'rxjs';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
@@ -237,14 +237,21 @@ export class PurchaseService {
       Status: purchase.StatusId,
       UnitCost: purchase.Price,
       UnitType: purchase.Unit,
-      TimezoneOffset: new Date().getTimezoneOffset()
+      TimezoneOffset: new Date().getTimezoneOffset(),
+      PurchasedVehicleList: purchase.TransportVehicles,
+      PurchasedGeneratorList: purchase.TransportGenerators,
+      TransportItemId: purchase.TransportItemId
     };
 
     return this.globalService
-      .post(this.appurl.getApiUrl() + GLOBAL.API_Store_AddPurchase, purchaseModel)
+      .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_AddStorePurchase, purchaseModel, { observe : 'response'})
       .pipe(
-        map(x => {
-          return x;
+       // tap(resp => console.log('response', resp)),
+        map((x: Response) => {
+         return {
+          StatusCode: x.status,
+          Message: x.status === 200 ? 'Success' : 'Fail'
+         };
         })
       );
   }

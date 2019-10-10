@@ -439,6 +439,7 @@ export class GLOBAL {
   public static API_StorePurchase_GetItemDetailByItemId = 'StorePurchase/GetItemDetailByItemId';
   public static API_Store_AddItemOrder = 'Store/AddItemOrder';
   public static API_Store_DeleteItemOrder = 'Store/DeleteItemOrder';
+  public static API_StorePurchase_AddStorePurchase = 'StorePurchase/AddStorePurchase';
 
 }
 

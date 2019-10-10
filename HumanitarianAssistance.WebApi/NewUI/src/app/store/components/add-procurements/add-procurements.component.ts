@@ -45,11 +45,11 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.addProcurementForm = this.fb.group({
       'ProcurementId': [null],
-      'InventoryTypeId': [null, [Validators.required]],
-      'InventoryId': [null, [Validators.required]],
-      'ItemGroupId': [null, [Validators.required]],
-      'ItemId': [null, [Validators.required]],
-      'PurchaseId': [null, [Validators.required]],
+      'InventoryTypeId': [{value: null, disabled: true}, [Validators.required]],
+      'InventoryId': [{value: null, disabled: true}, [Validators.required]],
+      'ItemGroupId': [{value: null, disabled: true}, [Validators.required]],
+      'ItemId': [{value: null, disabled: true}, [Validators.required]],
+      'PurchaseId': [{value: null, disabled: true}, [Validators.required]],
       'IssuedQuantity': [1, [Validators.required, Validators.min(1)]],
       'IssuedToEmployeeId': [null, [Validators.required]],
       'IssueDate': [null, [Validators.required]],

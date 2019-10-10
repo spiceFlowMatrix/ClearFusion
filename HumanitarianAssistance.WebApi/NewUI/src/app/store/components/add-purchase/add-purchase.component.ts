@@ -483,7 +483,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     this.removeGenerators();
     (<FormArray>this.addPurchaseForm.get('TransportVehicles')).push(this.fb.group({
       'PlateNo': ['', Validators.required],
-      'DriverId': ['', Validators.required],
+      'EmployeeId': ['', Validators.required],
       'StartingMileage': ['', [Validators.required, Validators.min(0)]],
       'IncurredMileage': ['', [Validators.required, Validators.min(0)]],
       'FuelConsumptionRate': ['', [Validators.required, Validators.min(0)]],
