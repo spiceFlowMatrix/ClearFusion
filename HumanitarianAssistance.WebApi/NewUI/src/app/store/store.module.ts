@@ -34,6 +34,7 @@ import { EditVehicleComponent } from './components/edit-vehicle/edit-vehicle.com
 import { EditGeneratorComponent } from './components/edit-generator/edit-generator.component';
 import { AddHoursComponent } from './components/add-hours/add-hours.component';
 import { LogsComponent } from './components/logs/logs.component';
+import { AddDocumentComponent } from './components/document-upload/add-document.component';
 
 
 
@@ -59,7 +60,8 @@ import { LogsComponent } from './components/logs/logs.component';
     EditVehicleComponent,
     EditGeneratorComponent,
     AddHoursComponent,
-    LogsComponent
+    LogsComponent,
+    AddDocumentComponent
     // components
     //  DbsidebarComponent,
     // DbheaderComponent,
@@ -95,6 +97,6 @@ import { LogsComponent } from './components/logs/logs.component';
 
 
   ],
-  entryComponents: [AddProcurementsComponent, AddMilageComponent, AddHoursComponent]
+  entryComponents: [AddProcurementsComponent, AddMilageComponent, AddHoursComponent, AddDocumentComponent]
 })
 export class StoreModule { }

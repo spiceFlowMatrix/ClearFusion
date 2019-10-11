@@ -11,6 +11,8 @@ import { DatePipe } from '@angular/common';
 import { takeUntil } from 'rxjs/operators';
 import { StoreMasterCategory, StoreItemGroups } from 'src/app/shared/enum';
 import { VehicleDetailComponent } from '../vehicle-detail/vehicle-detail.component';
+import { AddDocumentComponent } from '../document-upload/add-document.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-add-purchase',
@@ -57,7 +59,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   constructor(private purchaseService: PurchaseService,
     private fb: FormBuilder, private budgetLineService: BudgetLineService,
     private commonLoader: CommonLoaderService, private toastr: ToastrService,
-    private router: Router, private transformDate: DatePipe) {
+    private router: Router, private transformDate: DatePipe,
+    private dialog: MatDialog) {
 
     this.addPurchaseForm = this.fb.group({
       'InventoryTypeId': [null, [Validators.required]],
@@ -520,6 +523,15 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     while (control.length > 0) {
       control.removeAt(0);
     }
+  }
+
+  openAddDocumentDialog(): void {
+    const dialogRef = this.dialog.open(AddDocumentComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
 
   ngOnDestroy() {

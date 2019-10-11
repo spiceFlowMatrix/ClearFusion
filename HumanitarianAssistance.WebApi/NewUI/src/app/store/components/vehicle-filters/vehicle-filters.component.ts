@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-vehicle-filters',
@@ -7,7 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VehicleFiltersComponent implements OnInit {
   isBasic = true;
-  constructor() { }
+
+  vehicleTrackerFilterForm: FormGroup;
+
+  constructor(private _fb: FormBuilder) {
+    this.vehicleTrackerFilterForm = this._fb.group({
+      'PlateNo': [null],
+      'Driver': [null],
+      'Office': [null],
+      'TotalCost': [null]
+    });
+  }
 
   ngOnInit() {
   }

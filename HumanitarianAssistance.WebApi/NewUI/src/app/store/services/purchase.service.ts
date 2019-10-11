@@ -4,7 +4,7 @@ import { AppUrlService } from '../../shared/services/app-url.service';
 import { GLOBAL } from '../../shared/global';
 import { map } from 'rxjs/internal/operators/map';
 import { IResponseData } from '../../../app/dashboard/accounting/vouchers/models/status-code.model';
-import { IFilterValueModel, IAddEditPurchaseModel, IAddEditProcurementModel, IDeleteProcurementModel } from '../models/purchase';
+import { IFilterValueModel, IAddEditPurchaseModel, IAddEditProcurementModel, IDeleteProcurementModel, IDropDownModel } from '../models/purchase';
 import { retry, finalize, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of, Observable } from 'rxjs';
@@ -142,6 +142,15 @@ export class PurchaseService {
             AssetTypeName: 'In Kind'
         }
     ]
+    );
+  }
+
+  getPurchaseDocumentTypes(): Observable<IDropDownModel[]> {
+    return of (
+      [
+        { name: 'Invoice', value: 1},
+        { name: 'Image', value: 2 }
+      ]
     );
   }
 
