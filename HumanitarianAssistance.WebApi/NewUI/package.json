@@ -67,6 +67,7 @@
     "primeng": "^6.1.6",
     "rrule": "^2.6.0",
     "rxjs": "~6.3.3",
+    "saturn-datepicker": "^7.2.1",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

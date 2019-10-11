@@ -20,6 +20,7 @@ export class HumDropdownComponent implements OnInit, ControlValueAccessor {
   @Input() options: Observable<Array<Object>>;
   @Input() placeHolder: string;
   @Input() validation = false;
+  @Input() disabled = false;
   // @Input() formControl: string;
   @Output() change = new EventEmitter<number>();
 
@@ -49,6 +50,9 @@ export class HumDropdownComponent implements OnInit, ControlValueAccessor {
     this.dropControl.setValue(obj);
     if (this.validation) {
       this.dropControl.setValidators([Validators.required]);
+    }
+    if (this.disabled) {
+      this.dropControl.disable();
     }
   }
   // register a function for value changes

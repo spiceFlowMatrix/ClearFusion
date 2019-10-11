@@ -8,7 +8,7 @@
   </thead>
   <tbody *ngFor="let item of items | async; let i=index;">
     <tr (click)="switchSubList(i,item)" class="main-table">
-      <td *ngFor="let header of itemHeaders | async; let j=index ">{{item[header] ? item[header] : "N/A"}}</td>
+      <td *ngFor="let header of itemHeaders | async; let j=index "> {{(item[header] != null) ? item[header] : "N/A"}}</td>
       <td *ngIf="itemActions && (itemActions.items)">
         <span class="action-span">
           <hum-button *ngIf="itemActions.items?.button?.status" [type]="'add'" [text]="itemActions.items.button.text"
@@ -43,7 +43,7 @@
             <tbody *ngIf="subItems[i]">
               <tr *ngFor="let subItem of subItems[i]">
                 <td *ngFor="let header of subItemHeaders | async; let j=index ">
-                  {{subItem[header] ? subItem[header] : "N/A"}}</td>
+                  {{subItem[header] != null ? subItem[header] : "N/A"}}</td>
 
                 <td *ngIf="itemActions && (itemActions.subitems)">
                   <span class="action-span">

@@ -241,6 +241,7 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
         .subscribe(x => {
 
           if (x != null) {
+            debugger;
             this.addProcurementForm.get('ItemId').patchValue(x.ItemId);
             this.addProcurementForm.get('InventoryTypeId').patchValue(x.InventoryTypeId);
             this.addProcurementForm.get('InventoryId').patchValue(x.InventoryId);
@@ -270,6 +271,7 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
 
   addProcurement() {
     if (this.addProcurementForm.valid) {
+      debugger;
       this.purchaseService.addProcurement(this.addProcurementForm.value)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {

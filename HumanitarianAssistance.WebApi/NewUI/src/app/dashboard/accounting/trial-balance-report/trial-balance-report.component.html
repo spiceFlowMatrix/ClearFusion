@@ -1,0 +1,101 @@
+<mat-card>
+    <div class="main-journal">
+      <mat-card>
+        <form [formGroup]="trailbalFilterForm" (ngSubmit)="onApplyingFilter(trailbalFilterForm.value)">
+          <div class="row">
+            <div class="col-md-12">
+                  <div class="col-md-3">
+                      <lib-search-dropdown
+                      placeholder="Office"
+                      [multiSelect]="true"
+                      placeholderSearchLabel="Find Offices..."
+                      noEntriesFoundLabel="No matching Accounts found"
+                      [dataSource]="officeDropdown"
+                      [selectedValue]="OfficeIds"
+                      (openedChange)="
+                              onOpenedOfficeMultiSelectChange($event)
+                            "
+                    >
+                    </lib-search-dropdown>
+                    <!-- <mat-form-field>
+                        <mat-label>Office</mat-label>
+                        <mat-select formControlName="OfficesList" multiple>
+                            <mat-option *ngFor="let office of officeDropdown" [value]="office.OfficeId">{{office.OfficeName}}</mat-option>
+                        </mat-select>
+                    </mat-form-field> -->
+                  </div>
+                  <div class="col-md-3">
+                      <lib-hum-dropdown [options]="currencyId$" formControlName="CurrencyId" [placeHolder]="'Currency'"
+                      ></lib-hum-dropdown>
+                  </div>
+                  <div class="col-md-3">
+                    <lib-hum-dropdown [options]="recordType$" formControlName="RecordType" [placeHolder]="'Record Type'"
+                      ></lib-hum-dropdown>
+                  </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-3">
+                    <lib-search-dropdown
+                    placeholder="Accounts"
+                    [multiSelect]="true"
+                    placeholderSearchLabel="Find Accounts..."
+                    noEntriesFoundLabel="No matching Accounts found"
+                    [dataSource]="accountDropdown"
+                    [selectedValue]="AccountIds"
+                    (openedChange)="
+                            onOpenedAccountMultiSelectChange($event)
+                          "
+                  >
+                  </lib-search-dropdown>
+                    <!-- <mat-form-field>
+                        <mat-label>Accounts</mat-label>
+                        <mat-select formControlName="accountLists" multiple>
+                            <mat-option *ngFor="let account of accountDropdown" [value]="account.AccountCode">{{account.AccountName}}</mat-option>
+                        </mat-select>
+                    </mat-form-field> -->
+                </div>
+                <div class="col-md-3">
+                    <mat-form-field>
+                      <input matInput [satDatepicker]="resultPicker" formControlName="date">
+                      <sat-datepicker
+                          #resultPicker
+                          [rangeMode]="true">
+                      </sat-datepicker>
+                      <sat-datepicker-toggle matSuffix [for]="resultPicker"></sat-datepicker-toggle>
+                    </mat-form-field>
+                </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-4">
+                <!-- <button class="pull-right" mat-stroked-button color="accent"><mat-icon aria-hidden="false" aria-label="Example home icon">
+                    vertical_align_bottom </mat-icon
+                  >Pdf Export</button> -->
+                <!-- <button class="pull-right" type="submit" mat-stroked-button color="accent" style="margin-right: 10px">Update Filters</button> -->
+                <hum-button [isSubmit]="true" [type]="'save'" [text]="'UPDATE FILTERS'">
+                  </hum-button>
+                <hum-button (click)="ExportPdf(trailbalFilterForm.value)" [isSubmit]="true" [type]="'download'" [text]="'PDF EXPORT'">
+                  </hum-button>
+              </div>
+          </div>
+        </form><br>
+        <mat-divider></mat-divider>
+        <hum-table [headers]="trialListHeaders$" [items]="trialbalFilterList$"></hum-table>
+        <div *ngIf="(trialbalFilterList$ | async)">
+            <h5 class="display_inline_block">Total Debits: </h5><strong>{{this.debitSumForReport}}</strong><br>
+            <h5 class="display_inline_block">Total Credits: </h5><strong>{{this.creditSumForReport}}</strong>
+          </div>
+          <mat-paginator
+            [length]="totalCount"
+            [pageSize]="pageSize"
+            [pageIndex]="pageIndex"
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            (page)="pageEvent($event)"
+          >
+          </mat-paginator>
+      </mat-card>
+    </div>
+  </mat-card>

@@ -1457,6 +1457,8 @@ export interface GeneralInfo {
   ResignationOn?: any;
   ResignationReason?: string;
   Password: string;
+  AttendanceGroupId?: number;
+  DutyStation?: number;
 }
 
 export class Documents {
