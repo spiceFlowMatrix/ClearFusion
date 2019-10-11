@@ -69,8 +69,13 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-12">
-            <button class="pull-right" type="submit" mat-stroked-button color="accent">Update Filters</button>
+            <div class="col-md-8"></div>
+          <div class="col-md-4">
+            <!-- <button class="pull-right" type="submit" mat-stroked-button color="accent">Update Filters</button> -->
+            <hum-button [isSubmit]="true" [type]="'save'" [text]="'UPDATE FILTERS'">
+            </hum-button>
+            <hum-button (click)="ExportPdf(ledgerFilterForm.value)" [isSubmit]="true" [type]="'download'" [text]="'PDF EXPORT'">
+            </hum-button>
           </div>
         </div>
       </form>

@@ -1,6 +1,6 @@
 <ng-container [ngSwitch]="type">
 
-  <button *ngSwitchCase="'save'" mat-flat-button class="blue" (click)="btnClick()" cdkFocusInitial type="button">
+  <button *ngSwitchCase="'save'" mat-flat-button class="blue" (click)="btnClick()" cdkFocusInitial [type]="(isSubmit)?'submit':'button'">
     <h5>
       <i class="fas fa-check"></i>
       {{text | uppercase}}
@@ -47,5 +47,10 @@
         </span>
         {{text| uppercase}}
     </button>
-
+  <button *ngSwitchCase="'download'" mat-flat-button class="blue" (click)="btnClick()" type="button">
+      <h5>
+          <i class="fas fa-download"></i>
+          {{text | uppercase}}
+        </h5>
+      </button>
 </ng-container>

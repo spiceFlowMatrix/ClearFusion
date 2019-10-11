@@ -8,6 +8,7 @@ import { Observable, of } from 'rxjs';
 import { IDropDownModel } from '../report-services/report-models';
 import { map } from 'rxjs/operators';
 import { IOpenedChange } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
+import { GLOBAL } from 'src/app/shared/global';
 
 class TrialBalanceFilter {
   public static trialBalanceFilter: TrialBalanceFilterModel;
@@ -50,6 +51,10 @@ export class TrialBalanceReportComponent implements OnInit {
   'Debit', 'Credit']);
   trialbalFilterList$: Observable<ITrialList[]>;
   trailbalFilterForm: FormGroup;
+
+  totalCount = 0;
+  pageSize = 10;
+  pageIndex: 0;
   constructor(
     private accountservice: ReportService,
     private toastr: ToastrService,
@@ -148,6 +153,13 @@ export class TrialBalanceReportComponent implements OnInit {
       };
       this.GetAllTrailBalance(TrialBalanceFilter.trialBalanceFilter);
     }
+  }
+  pageEvent(e) {
+    this.pageIndex = e.pageIndex;
+    this.pageSize = e.pageSize;
+    // this.voucherFilter.totalCount =  e.length;
+
+    // this.getVoucherList();
   }
   //#endregion
   onOpenedAccountMultiSelectChange(event: IOpenedChange) {
@@ -377,11 +389,36 @@ export class TrialBalanceReportComponent implements OnInit {
   hideTrialBalancePdf() {
     this.viewPdfFlag = true;
   }
-  //#endregion
 
+  //#endregion
+  ExportPdf(value) {
+    TrialBalanceFilter.trialBalanceFilter = {
+      CurrencyId: value.CurrencyId,
+      accountLists: value.accountLists,
+      RecordType: value.RecordType,
+      OfficesList: value.OfficesList,
+      fromdate: new Date(
+        new Date(value.date.begin).getFullYear(),
+        new Date(value.date.begin).getMonth(),
+        new Date(value.date.begin).getDate(),
+        new Date().getHours(),
+        new Date().getMinutes(),
+        new Date().getSeconds()
+      ),
+      todate: new Date(
+        new Date(value.date.end).getFullYear(),
+        new Date(value.date.end).getMonth(),
+        new Date(value.date.end).getDate(),
+        new Date().getHours(),
+        new Date().getMinutes(),
+        new Date().getSeconds()
+      ),
+    };
+    this.accountservice.onExportTrialBalancePdf(TrialBalanceFilter.trialBalanceFilter);
+  }
   customizeValue(data: any) {
     return parseFloat(data.value).toFixed(4);
-}
+  }
 }
 
 interface TrialFilter {

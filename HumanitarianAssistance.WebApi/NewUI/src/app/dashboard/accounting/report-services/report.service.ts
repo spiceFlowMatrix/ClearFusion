@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { GlobalService } from 'src/app/shared/services/global-services.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ export class ReportService {
 
   constructor(
     private globalService: GlobalService,
+    private globalSharedService: GlobalSharedService,
     private appurl: AppUrlService
   ) { }
 
@@ -76,5 +78,23 @@ export class ReportService {
       this.appurl.getApiUrl() + GLOBAL.API_AccountReports_GetTrialBalanceReport,
       trialBalanceFilter
     );
+  }
+
+  onExportTrialBalancePdf(value) {
+    this.globalSharedService
+      .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_TrialBalanceReportPdf,
+      value
+      )
+      .pipe()
+      .subscribe();
+  }
+
+  onExportLedgerPdf(value) {
+    this.globalSharedService
+      .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_LedgerReportPdf,
+      value
+      )
+      .pipe()
+      .subscribe();
   }
 }

@@ -422,6 +422,8 @@ export class GLOBAL {
   public static API_Pdf_GetHiringRequestFormPdf = 'Pdf/GetHiringRequestFormPdf';
   public static API_Pdf_GetProjectOtherDetailReportPdf = 'Pdf/GetProjectOtherDetailReportPdf';
   public static API_Pdf_ProjectActivityReportPdf = 'Pdf/ProjectActivityReportPdf';
+  public static API_Pdf_TrialBalanceReportPdf = 'Pdf/GetTrailBalanceReportPdf';
+  public static API_Pdf_LedgerReportPdf = 'Pdf/GetLedgerReportPdf';
 
   //#endregion
 

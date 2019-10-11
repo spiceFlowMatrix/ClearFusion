@@ -387,6 +387,31 @@ export class LedgerStatementReportComponent implements OnInit {
       );
   }
   //#endregion
+  ExportPdf(value) {
+    const ledgerFilter: LedgerFilter = {
+      CurrencyId: value.CurrencyId,
+      accountLists: value.accountLists,
+      RecordType: value.RecordType,
+      FromDate: new Date(
+        new Date(value.date.begin).getFullYear(),
+        new Date(value.date.begin).getMonth(),
+        new Date(value.date.begin).getDate(),
+        new Date().getHours(),
+        new Date().getMinutes(),
+        new Date().getSeconds()
+      ),
+      ToDate: new Date(
+        new Date(value.date.end).getFullYear(),
+        new Date(value.date.end).getMonth(),
+        new Date(value.date.end).getDate(),
+        new Date().getHours(),
+        new Date().getMinutes(),
+        new Date().getSeconds()
+      ),
+      OfficeIdList: value.OfficesList
+    };
+    this.accountservice.onExportLedgerPdf(ledgerFilter);
+  }
 
   //#region "export pdf"
   printLedgerReport(): void {
