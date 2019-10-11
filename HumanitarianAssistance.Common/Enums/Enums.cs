@@ -242,4 +242,16 @@
         Qualitative = 1,
         Quantitative = 2
     }
+
+    public enum TransportItem
+    {
+        VehicleFuel=1,
+        GeneratorFuel=2,
+        VehicleMobilOil=3,
+        GeneratorMobilOil=4,
+        VehicleSpareParts=5,
+        GeneratorSpareParts=6,
+        VehicleMaintenanceService=7,
+        GeneratorMaintenanceService=8
+    }
 }

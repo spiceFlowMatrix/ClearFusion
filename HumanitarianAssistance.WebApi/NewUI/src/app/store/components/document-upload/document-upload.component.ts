@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { of } from 'rxjs';
 import { TableActionsModel } from 'projects/library/src/public_api';
+import { MatDialog } from '@angular/material/dialog';
+import { AddDocumentComponent } from './add-document.component';
 
 @Component({
   selector: 'app-document-upload',
@@ -20,6 +22,7 @@ export class DocumentUploadComponent implements OnInit {
 
     }
   }
+
   documentHeaders$ = of(['Name', 'Type', 'Uploaded On', 'Uploaded By']);
   documentsList$ = of([
     { name: 'Document name', type: 'invoice', uploadedon: '25 April', uploadedby: 'User' },
@@ -27,7 +30,10 @@ export class DocumentUploadComponent implements OnInit {
     { name: 'Document name', type: 'invoice', uploadedon: '25 April', uploadedby: 'User' },
     { name: 'Document name', type: 'invoice', uploadedon: '25 April', uploadedby: 'User' }
   ]);
+
   ngOnInit() {
   }
 
+  openAddDocumentDialog(event) {
+  }
 }

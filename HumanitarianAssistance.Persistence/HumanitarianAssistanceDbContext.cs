@@ -98,7 +98,10 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<StoreItemPurchase> StoreItemPurchases { get; set; }
         public DbSet<StorePurchaseOrder> StorePurchaseOrders { get; set; }
         public DbSet<StoreItemGroup> StoreItemGroups { get; set; }
-
+        public DbSet<PurchasedVehicleDetail> PurchasedVehicleDetail { get; set; }
+        public DbSet<PurchasedGeneratorDetail> PurchasedGeneratorDetail { get; set; }
+        public DbSet<VehicleItemDetail> VehicleItemDetail { get; set; }
+        public DbSet<GeneratorItemDetail> GeneratorItemDetail { get; set; }
         public DbSet<EmployeePayrollMonth> EmployeePayrollMonth { get; set; }
         public DbSet<EmployeeContract> EmployeeContract { get; set; }
         public DbSet<SalaryTaxReportContent> SalaryTaxReportContent { get; set; }

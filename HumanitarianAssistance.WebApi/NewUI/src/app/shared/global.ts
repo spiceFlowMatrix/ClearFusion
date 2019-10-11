@@ -184,7 +184,10 @@ export class GLOBAL {
 
   public static API_Code_GetAllAccountByAccountHeadTypeId = 'Code/GetAllAccountByAccountHeadTypeId';
   public static API_Code_GetAllJournalDetail = 'Code/GetAllJournalDetail';
-
+  public static API_AccountReports_GetJournalVoucherDetails = 'AccountReports/GetJournalVoucherDetails';
+  public static API_Accounting_GetAccountDetails = 'Account/GetAllAccountCode';
+  public static API_AccountReports_GetAllLedgerDetails = 'AccountReports/GetAllLedgerDetails';
+  public static API_AccountReports_GetTrialBalanceReport = 'AccountReports/GetTrialBalanceReport';
 
 
 
@@ -419,6 +422,8 @@ export class GLOBAL {
   public static API_Pdf_GetHiringRequestFormPdf = 'Pdf/GetHiringRequestFormPdf';
   public static API_Pdf_GetProjectOtherDetailReportPdf = 'Pdf/GetProjectOtherDetailReportPdf';
   public static API_Pdf_ProjectActivityReportPdf = 'Pdf/ProjectActivityReportPdf';
+  public static API_Pdf_TrialBalanceReportPdf = 'Pdf/GetTrailBalanceReportPdf';
+  public static API_Pdf_LedgerReportPdf = 'Pdf/GetLedgerReportPdf';
 
   //#endregion
 
@@ -439,6 +444,7 @@ export class GLOBAL {
   public static API_StorePurchase_GetItemDetailByItemId = 'StorePurchase/GetItemDetailByItemId';
   public static API_Store_AddItemOrder = 'Store/AddItemOrder';
   public static API_Store_DeleteItemOrder = 'Store/DeleteItemOrder';
+  public static API_StorePurchase_AddStorePurchase = 'StorePurchase/AddStorePurchase';
 
 }
 

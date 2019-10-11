@@ -7684,7 +7684,17 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
                     b.Property<long>("GeneratorPurchaseId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<long>("PurchaseId");
 

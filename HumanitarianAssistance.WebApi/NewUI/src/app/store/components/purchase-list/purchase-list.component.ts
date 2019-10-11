@@ -107,18 +107,16 @@ export class PurchaseListComponent implements OnInit {
             Project: element.ProjectName,
             OriginalCost: element.OriginalCost,
             DepreciatedCost: element.DepreciatedCost,
-            subItems: element.ProcurementList.map((r)=> {
+            subItems: element.ProcurementList.map((r) => {
               return {
-                Id : r.OrderId, 
-                IssueDate :r.IssueDate ? this.datePipe.transform(new Date(r.IssueDate),"dd/MM/yyyy") :null,
+                Id : r.OrderId,
+                IssueDate : r.IssueDate ? this.datePipe.transform(new Date(r.IssueDate), 'dd/MM/yyyy') : null,
                 Employee : r.EmployeeName,
                 ProcuredAmount: r.ProcuredAmount,
-                MustReturn: r.MustReturn?"Yes":"No",
-                Returned: r.Returned?"Yes":"No",
-                ReturnedOn: r.ReturnedOn ? this.datePipe.transform(new Date(r.ReturnedOn),"dd/MM/yyyy"):null
-
-
-              }
+                MustReturn: r.MustReturn ? 'Yes' : 'No',
+                Returned: r.Returned ? 'Yes' : 'No',
+                ReturnedOn: r.ReturnedOn ? this.datePipe.transform(new Date(r.ReturnedOn), 'dd/MM/yyyy') : null
+              };
             })
           } as IPurchaseList;
         }));
@@ -173,18 +171,20 @@ export class PurchaseListComponent implements OnInit {
         console.log(x);
 
         this.purchaseList$.subscribe((purchase) => {
+          debugger;
           console.log(purchase);
 
           const index = purchase.findIndex(i => i.Id === x.PurchaseId);
           if (index !== -1) {
             purchase[index].subItems.unshift({
-              EmployeeName: x.EmployeeName,
-              IssueDate: this.datePipe.transform(x.IssueDate, 'dd-MM-yyyy'),
               OrderId: x.ProcurementId,
-              MustReturn: x.MustReturn,
+              IssueDate: this.datePipe.transform(x.IssueDate, 'dd-MM-yyyy'),
+              EmployeeName: x.EmployeeName,
               ProcuredAmount: x.IssuedQuantity,
-              Returned: false
-            });
+              MustReturn: x.MustReturn,
+              Returned: false,
+              ReturnedOn: null
+            } as IProcurementList);
           }
           this.purchaseList$ = of(purchase);
         });
@@ -194,13 +194,14 @@ export class PurchaseListComponent implements OnInit {
   }
 
   deleteProcurement(event: any) {
-    this.purchaseService.deleteProcurement(event.subItem.OrderId)
+    debugger;
+    this.purchaseService.deleteProcurement(event.subItem.Id)
       .subscribe(x => {
         if (x.StatusCode === 200) {
           this.purchaseList$.subscribe((purchase) => {
             const index = purchase.findIndex(i => i.Id === event.item.Id);
             if (index >= 0) {
-              const subItemIndex = purchase[index].subItems.findIndex(i => i.OrderId === event.subItem.OrderId);
+              const subItemIndex = purchase[index].subItems.findIndex(i => i.OrderId === event.subItem.Id);
               purchase[index].subItems.splice(subItemIndex, 1);
             }
             this.purchaseList$ = of(purchase);
@@ -217,7 +218,7 @@ export class PurchaseListComponent implements OnInit {
 
   configFilterAppliedEvent(event: any) {
 
-    let headers: any[]=[];
+    let headers: any[] = [];
 
     event.forEach(element => {
       headers.push(element.name);
