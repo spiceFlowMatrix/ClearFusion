@@ -47,30 +47,30 @@ export interface IPurchaseList {
 }
 
 export interface IPurchaseFilterConfigColList {
-    PurchaseId: number;
-    ItemName: string;
-    ItemId: string;
-    EmployeeName: string;
-    ProjectName: string;
-    OriginalCost: number;
-    DepreciatedCost: number;
-    PurchasedQuantity: number;
-    ItemCodeDescription: string;
-    BudgetLineName: string;
-    ChasisNo: string;
-    CurrencyName: string;
-    DepreciationRate: any;
-    EngineSerialNo: string;
-    IdentificationNo: string;
-    ItemCode: string;
-    MasterInventoryCode: string;
-    ModelType: string;
-    OfficeCode: string;
-    PurchaseOrderNo: any;
-    InvoiceDate: any;
-    ReceivedFromLocation: string;
-    Status: string;
-    subItems: IProcurementList[];
+  PurchaseId: number;
+  ItemName: string;
+  ItemId: string;
+  EmployeeName: string;
+  ProjectName: string;
+  OriginalCost: number;
+  DepreciatedCost: number;
+  PurchasedQuantity: number;
+  ItemCodeDescription: string;
+  BudgetLineName: string;
+  ChasisNo: string;
+  CurrencyName: string;
+  DepreciationRate: any;
+  EngineSerialNo: string;
+  IdentificationNo: string;
+  ItemCode: string;
+  MasterInventoryCode: string;
+  ModelType: string;
+  OfficeCode: string;
+  PurchaseOrderNo: any;
+  InvoiceDate: any;
+  ReceivedFromLocation: string;
+  Status: string;
+  subItems: IProcurementList[];
 }
 
 export interface IProcurementList {
@@ -100,10 +100,8 @@ export interface IAddEditPurchaseModel {
   InvoiceNo: any;
   ReceivedFromLocation: any;
   PurchasedById: any;
-
   ReceiptTypeId: any;
   Status: any;
-
   Quantity: any;
   Currency: any;
   UnitCost: any;
@@ -112,6 +110,9 @@ export interface IAddEditPurchaseModel {
   ApplyDepreciation: boolean;
   DepreciationRate: any;
   TimezoneOffset: any;
+  TransportItemId?: number;
+  PurchasedVehicleList: IPurchasedVehicleModel[];
+  PurchasedGeneratorList: IPurchasedGeneratorModel[];
 
   PageIndex?: number;
   PageSize?: number;
@@ -137,4 +138,40 @@ export interface IAddEditProcurementModel {
 export interface IDeleteProcurementModel {
   PurchaseId?: number;
   OrderId: number;
+}
+
+export interface IPurchasedVehicleModel {
+  Id?: number;
+  PlateNo: string;
+  EmployeeId: number;
+  StartingMileage: number;
+  IncurredMileage: number;
+  FuelConsumptionRate: number;
+  MobilOilConsumptionRate: number;
+  OfficeId: number;
+  ModelYear: number;
+  PurchaseId?: number;
+}
+
+export interface IPurchasedGeneratorModel {
+  Id?: number;
+  Voltage: number;
+  EmployeeId: number;
+  StartingUsage: number;
+  IncurredUsage: number;
+  FuelConsumptionRate: number;
+  MobilOilConsumptionRate: number;
+  OfficeId: number;
+  ModelYear: number;
+  PurchaseId?: number;
+}
+
+export interface IPurchasedFiles {
+  Id: number;
+  File: any;
+  DocumentTypeId: number;
+  Date: any;
+  Filename: string;
+  UploadedBy: string;
+  DocumentTypeName: string;
 }

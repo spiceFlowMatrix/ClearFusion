@@ -6,7 +6,8 @@ import {
   IBudgetLine,
   IEmployeeList,
   IProjectActivityDetail,
-  IProjectSummaryModel
+  IProjectSummaryModel,
+  PdfExportModel
 } from '../models/project-activities.model';
 import {
   ProjectActivitiesService,
@@ -49,6 +50,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
 
   selectedProjectActivityId: number;
   activityDetail: IProjectActivityDetail;
+  pdfExportModel: PdfExportModel;
   activityListLoader = false;
   activitySummaryLoader = false;
   activityByIdLoader = false;
@@ -196,6 +198,10 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
       IsError: false,
       CountryId: null
     };
+    this.pdfExportModel = {
+      ProjectId: this.projectId,
+      ActivityId: []
+    };
   }
   //#endregion
 
@@ -213,29 +219,26 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   }
   //#endregion
 
-
-//   initializePdfForm()
-//   {
-//     this.projectActivityPdfModel = {
-// ProjectCode: null,
-// ProjectName: '',
-// ProjectGoal: '',
-// ProjectDuration: null,
-// ProjectLocation: '',
-// MainActivity: '',
-// ActivityDuration: '',
-// Monitoring: null,
-// Recommendations: '',
-// Start: '',
-// End: '',
-// Province: '',
-// District: '',
-// ActualStartDate: '',
-// ActualEndDate: '',
-//     };
-//   }
-
-
+  //   initializePdfForm()
+  //   {
+  //     this.projectActivityPdfModel = {
+  // ProjectCode: null,
+  // ProjectName: '',
+  // ProjectGoal: '',
+  // ProjectDuration: null,
+  // ProjectLocation: '',
+  // MainActivity: '',
+  // ActivityDuration: '',
+  // Monitoring: null,
+  // Recommendations: '',
+  // Start: '',
+  // End: '',
+  // Province: '',
+  // District: '',
+  // ActualStartDate: '',
+  // ActualEndDate: '',
+  //     };
+  //   }
 
   //#region "openAddActivityDialog"
   openAddActivityDialog(): void {
@@ -611,7 +614,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
         //   element.PlannedStartDate
         // ),
         PlannedStartDate: element.PlannedStartDate,
-         // PlannedEndDate: StaticUtilities.setLocalDate(element.PlannedEndDate),
+        // PlannedEndDate: StaticUtilities.setLocalDate(element.PlannedEndDate),
         PlannedEndDate: element.PlannedEndDate,
 
         BudgetLineId: element.BudgetLineId,
@@ -768,12 +771,14 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
     if (planningEndDate === undefined || planningEndDate == null) {
       planningEndDate = new Date();
     } else {
-      planningEndDate = this.getLocalDate(planningEndDate);
+      planningEndDate = StaticUtilities.getLocalDate(planningEndDate);
     }
     if (ImplementationEndDate === undefined || ImplementationEndDate == null) {
       ImplementationEndDate = new Date();
     } else {
-      ImplementationEndDate = this.getLocalDate(ImplementationEndDate);
+      ImplementationEndDate = StaticUtilities.getLocalDate(
+        ImplementationEndDate
+      );
     }
     // let sleepage = Math.round(
     //   (new Date(ImplementationEndDate).valueOf() -
@@ -792,32 +797,6 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
     }
 
     return sleepage;
-  }
-  //#endregion
-
-  //#region "setLocalDate"
-  setLocalDate(date: any) {
-    if (date === null || date === undefined) {
-      return null;
-    } else {
-      return new Date(
-        new Date(date).getTime() - new Date().getTimezoneOffset() * 60000
-      );
-    }
-  }
-  //#endregion
-
-  //#region "getLocalDate"
-  getLocalDate(date: any) {
-    return new Date(
-      new Date(date).getFullYear(),
-      new Date(date).getMonth(),
-      new Date(date).getDate(),
-      new Date(date).getHours(),
-      new Date(date).getMinutes(),
-      new Date(date).getSeconds(),
-      new Date(date).getMilliseconds()
-    );
   }
   //#endregion
 
@@ -891,15 +870,18 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
     }
 
     // to update the progress from subactivtiy to main listing
-     if (data.ActivityId != null && data.ActivityId !== undefined && data.Achieved != null
-                                                     && data.Achieved !== undefined) {
+    if (
+      data.ActivityId != null &&
+      data.ActivityId !== undefined &&
+      data.Achieved != null &&
+      data.Achieved !== undefined
+    ) {
       const actviityIndex = this.projectActivityList.findIndex(
         x => x.ActivityId === data.ParentId
       );
-      if (actviityIndex !== -1 ) {
+      if (actviityIndex !== -1) {
         this.projectActivityList[actviityIndex].Progress =
-         (this.projectActivityList[actviityIndex].Progress) - ( data.Progress);
-
+          this.projectActivityList[actviityIndex].Progress - data.Progress;
       }
     }
   }
@@ -926,17 +908,25 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
 
   //#region "ngOnDestroy"
 
-    //#endregion
-    //#region "onExportPdf"
-    onExportPdf() {
-      this.globalSharedService
-        .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_ProjectActivityReportPdf,
-                  this.projectId
-        )
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe();
+  //#endregion
+  //#region "onExportPdf"
+  onExportPdf() {
+    debugger;
+    if (this.projectActivityList.length > 0) {
+      this.projectActivityList.forEach(element => {
+        this.pdfExportModel.ActivityId.push(element.ActivityId);
+      });
+      this.pdfExportModel.ProjectId = this.projectId;
     }
-    //#endregion
+    this.globalSharedService
+      .getFile(
+        this.appurl.getApiUrl() + GLOBAL.API_Pdf_ProjectActivityReportPdf,
+        this.pdfExportModel
+      )
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe();
+  }
+  //#endregion
 
   ngOnDestroy() {
     if (this.deleteActivitySubscribe && !this.deleteActivitySubscribe.closed) {

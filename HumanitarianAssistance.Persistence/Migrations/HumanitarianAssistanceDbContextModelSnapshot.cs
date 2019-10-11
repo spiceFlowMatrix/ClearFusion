@@ -7679,6 +7679,36 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.ToTable("RolePermissions");
                 });
 
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.GeneratorItemDetail", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<long>("GeneratorPurchaseId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<long>("PurchaseId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GeneratorPurchaseId")
+                        .IsUnique();
+
+                    b.HasIndex("PurchaseId")
+                        .IsUnique();
+
+                    b.ToTable("GeneratorItemDetail");
+                });
+
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.InventoryItemType", b =>
                 {
                     b.Property<int>("ItemType")
@@ -7803,6 +7833,86 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasKey("UnitTypeId");
 
                     b.ToTable("PurchaseUnitType");
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.PurchasedGeneratorDetail", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int>("FuelConsumptionRate");
+
+                    b.Property<int>("IncurredUsage");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<int>("MobilOilConsumptionRate");
+
+                    b.Property<int>("ModelYear");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int>("OfficeId");
+
+                    b.Property<long>("PurchaseId");
+
+                    b.Property<int>("StartingUsage");
+
+                    b.Property<int>("Voltage");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PurchaseId");
+
+                    b.ToTable("PurchasedGeneratorDetail");
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.PurchasedVehicleDetail", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int>("EmployeeId");
+
+                    b.Property<int>("FuelConsumptionRate");
+
+                    b.Property<int>("IncurredMileage");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<int>("MobilOilConsumptionRate");
+
+                    b.Property<int>("ModelYear");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int>("OfficeId");
+
+                    b.Property<string>("PlateNo");
+
+                    b.Property<long>("PurchaseId");
+
+                    b.Property<int>("StartingMileage");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("PurchaseId");
+
+                    b.ToTable("PurchasedVehicleDetail");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.ReceiptType", b =>
@@ -8153,6 +8263,36 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("CodeTypeId");
 
                     b.ToTable("StoreSourceCodeDetail");
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.VehicleItemDetail", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<long>("PurchaseId");
+
+                    b.Property<long>("VehiclePurchaseId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PurchaseId")
+                        .IsUnique();
+
+                    b.HasIndex("VehiclePurchaseId")
+                        .IsUnique();
+
+                    b.ToTable("VehicleItemDetail");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.StrongandWeakPoints", b =>
@@ -9862,6 +10002,19 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .HasForeignKey("PageId");
                 });
 
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.GeneratorItemDetail", b =>
+                {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Store.PurchasedGeneratorDetail", "PurchasedGeneratorDetail")
+                        .WithOne("GeneratorItemDetail")
+                        .HasForeignKey("HumanitarianAssistance.Domain.Entities.Store.GeneratorItemDetail", "GeneratorPurchaseId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreItemPurchase", "StoreItemPurchase")
+                        .WithOne("GeneratorItemDetail")
+                        .HasForeignKey("HumanitarianAssistance.Domain.Entities.Store.GeneratorItemDetail", "PurchaseId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.ItemSpecificationDetails", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.ItemSpecificationMaster", "ItemSpecificationMaster")
@@ -9880,6 +10033,27 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.OfficeDetail", "OfficeDetail")
                         .WithMany()
                         .HasForeignKey("OfficeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.PurchasedGeneratorDetail", b =>
+                {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreItemPurchase", "StoreItemPurchase")
+                        .WithMany()
+                        .HasForeignKey("PurchaseId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.PurchasedVehicleDetail", b =>
+                {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreItemPurchase", "StoreItemPurchase")
+                        .WithMany()
+                        .HasForeignKey("PurchaseId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -9992,6 +10166,19 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.CodeType", "CodeTypes")
                         .WithMany()
                         .HasForeignKey("CodeTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.VehicleItemDetail", b =>
+                {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreItemPurchase", "StoreItemPurchase")
+                        .WithOne("VehicleItemDetail")
+                        .HasForeignKey("HumanitarianAssistance.Domain.Entities.Store.VehicleItemDetail", "PurchaseId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Store.PurchasedVehicleDetail", "PurchasedVehicleDetail")
+                        .WithOne("VehicleItemDetail")
+                        .HasForeignKey("HumanitarianAssistance.Domain.Entities.Store.VehicleItemDetail", "VehiclePurchaseId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -12,4 +12,5 @@ export interface FileModel {
  PageId: number;
  FilePath: string;
  RecordId: number;
+ DocumentTypeId?: number;
 }

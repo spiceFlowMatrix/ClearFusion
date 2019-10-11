@@ -510,6 +510,24 @@
                             <dxi-validation-rule type="required"> </dxi-validation-rule>
                         </dxi-item>
 
+                        <dxi-item *ngIf="tabEventValue == 2" dataField="AttendanceGroupId" editorType="dxSelectBox" [editorOptions]="{
+                            dataSource: attendanceGroupList, 
+                            displayExpr: 'Name',
+                            valueExpr: 'Id'}">
+                                <dxo-label text="Attendance Group">
+                                </dxo-label>
+                                <dxi-validation-rule type="required"> </dxi-validation-rule>
+                            </dxi-item>
+
+                            <dxi-item *ngIf="tabEventValue == 2" dataField="DutyStation" editorType="dxSelectBox" [editorOptions]="{
+                                dataSource: officecodelist, 
+                                displayExpr: 'OfficeName',
+                                valueExpr: 'Office'}">
+                                <dxi-validation-rule type="required"> </dxi-validation-rule>
+                                <dxo-label text="Duty Station"></dxo-label>
+                              </dxi-item>
+                    
+
                         <dxi-item dataField="Phone" editorType="dxNumberBox"
                         [editorOptions]="{  mode: 'number', minLength:10, maxLength: 14}">
                         <dxi-validation-rule type="custom"

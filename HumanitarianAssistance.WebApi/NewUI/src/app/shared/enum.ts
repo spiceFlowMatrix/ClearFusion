@@ -509,7 +509,9 @@ export enum FileSourceEntityTypes {
   ProjectActivityImplementation = 6,
   ProjectActivityMonitoring = 7,
   ProjectActivityPlanning = 8,
-  DonorDetail = 9
+  DonorDetail = 9,
+  StorePurchase= 10,
+  Employee= 11,
 }
 //#endregion
 //#region "EmployeeType"
@@ -530,14 +532,16 @@ export enum StoreMasterCategory {
 export enum StoreItemGroups {
 Vehicle = 1,
 Generator = 2,
-VehicleFuel = 3,
-GeneratorFuel= 4,
-VehicleMobilOil= 5,
-GeneratorMobilOil= 6,
-VehicleSpareParts= 7,
-GeneratorSpareParts= 8,
-VehicleMaintenanceService= 9,
-GeneratorMaintenanceService= 10
+Fuel= 3,
+SpareParts= 4,
+MobilOil= 5,
+Services= 6
 }
 //#endregion
 
+export enum DocumentFileTypes {
+  PurchaseImage = 1,
+  PurchaseInvoice = 2,
+  EmployeeProfile = 3,
+  EmployeeDocument= 4
+}

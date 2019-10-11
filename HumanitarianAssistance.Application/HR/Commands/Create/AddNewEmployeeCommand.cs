@@ -65,5 +65,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
         public DateTime? ResignationOn { get; set; }
         public string ResignationReason { get; set; }
         public string Password { get; set; }
+        public int? AttendanceGroupId { get; set; }
+        public int? DutyStation { get; set; }
     }
 }

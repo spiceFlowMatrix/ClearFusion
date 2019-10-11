@@ -11,6 +11,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Common.Enums;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace HumanitarianAssistance.Application.Store.Commands.Create
 {
@@ -29,6 +30,8 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
 
             request.PurchaseDate = request.TimezoneOffset == null? request.PurchaseDate : request.PurchaseDate.AddMinutes(Math.Abs((double)request.TimezoneOffset));
 
+            using (IDbContextTransaction tran = _dbContext.Database.BeginTransaction())
+            {
             try
             {
                 if (request != null)
@@ -47,12 +50,14 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                     purchase.CreatedDate = request.CreatedDate;
                     purchase.SerialNo = request.PurchaseOrderNo.ToString();
 
+                    //Add Purchase
                     await _dbContext.StoreItemPurchases.AddAsync(purchase);
                     await _dbContext.SaveChangesAsync();
 
                     response.ResponseData = new {PurchaseId = purchase.PurchaseId };
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
+                    tran.Commit();
                 }
                 else
                 {
@@ -63,10 +68,14 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
             }
             catch (Exception ex)
             {
+                tran.Rollback();
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;
                 return response;
             }
+            }
+            
+
             return response;
         }
     }

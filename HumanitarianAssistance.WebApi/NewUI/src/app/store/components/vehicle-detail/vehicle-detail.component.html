@@ -8,8 +8,8 @@
                 </mat-form-field>
           </div>
           <div class="col-md-3">
-            <lib-hum-dropdown [validation]="vehicleDetailForm.controls['DriverId'].hasError('required')"
-            [options]="employeeList$" formControlName='DriverId' [placeHolder]="'Driver'"></lib-hum-dropdown>
+            <lib-hum-dropdown [validation]="vehicleDetailForm.controls['EmployeeId'].hasError('required')"
+            [options]="employeeList$" formControlName='EmployeeId' [placeHolder]="'Driver'"></lib-hum-dropdown>
           </div>
           <div class="col-md-3">
               <mat-form-field class="example-full-width">
@@ -33,7 +33,7 @@
           </div>
           <div class="col-md-3">
               <mat-form-field class="example-full-width">
-                  <input matInput type='number' formControlName="MobilOilConsumptionRate" placeholder="Fuel Consumption Rate(litres/100KM)">
+                  <input matInput type='number' formControlName="MobilOilConsumptionRate" placeholder="Mobil Oil Consumption Rate(litres/100KM)">
                 </mat-form-field>
           </div>
           <div class="col-md-3">

@@ -14,6 +14,7 @@ import { DocumentFileTypes, FileSourceEntityTypes, EmployeeType } from '../../..
 import { FileManagementService } from '../../../shared/FileManagement/file-management.service';
 import { JobHiringService } from '../job-hiring-details/job-hiring.service';
 import { IDatasource } from '../../../shared/pipes/job-grade.pipe';
+import { IAttendanceGroup } from '../../code/attendance-group-master/attendance-group-master.component';
 
 @Component({
   selector: 'app-employees',
@@ -31,6 +32,7 @@ export class EmployeesComponent implements OnInit {
   DocumentFileList: any[] = [];
 
   officeDropdownList: any[] = [];
+  attendanceGroupList: IAttendanceGroup[] = [];
   documentTypeList: any;
 
   openInfoTab = 0;
@@ -171,6 +173,7 @@ export class EmployeesComponent implements OnInit {
     this.GetLeaveReasonTypeDropdown();
     this.getAllJobGrade();
     this.getEmployeeContractType();
+    this.getAttendanceGroupList();
     this.commonService.getEmployeeOfficeId().subscribe(() => {
       this.Flag = 0; // to set tabs 1
       this.tabOnClick(this.tabEventValue);
@@ -253,7 +256,9 @@ export class EmployeesComponent implements OnInit {
       FiredReason: null,
       ResignationOn: null,
       ResignationReason: null,
-      Password: null
+      Password: null,
+      AttendanceGroupId: null,
+      DutyStation: null
     };
   }
 
@@ -1228,7 +1233,9 @@ export class EmployeesComponent implements OnInit {
       FiredReason: value.FiredReason,
       ResignationOn: value.ResignationOn,
       ResignationReason: value.ResignationReason,
-      Password: value.Password
+      Password: value.Password,
+      AttendanceGroupId: value.AttendanceGroupId,
+      DutyStation: value.DutyStation
     };
 
     this.hrService
@@ -1974,6 +1981,32 @@ validateAddEmployeeForm() {
         this.toastr.warning('Required fields are not filled out');
       }
   }
+}
+
+getAttendanceGroupList() {
+  this.codeservice.GetAllDetails(this.setting.getBaseUrl() + GLOBAL.API_Code_GetAttendanceGroups)
+    .subscribe(data => {
+      this.attendanceGroupList = [];
+      if (data.StatusCode === 200) {
+        if (data.data.AttendanceGroupMasterList.length > 0
+          || data.data.AttendanceGroupMasterList !== undefined
+          || data.data.AttendanceGroupMasterList !== null) {
+          data.data.AttendanceGroupMasterList.forEach(element => {
+            this.attendanceGroupList.push(element);
+          });
+        }
+      } else {
+        this.toastr.error(data.Message);
+      }
+    }, error => {
+      if (error.StatusCode === 500) {
+        this.toastr.error('Internal Server Error....');
+      } else if (error.StatusCode === 401) {
+        this.toastr.error('Unauthorized Access Error....');
+      } else if (error.StatusCode === 403) {
+        this.toastr.error('Forbidden Error....');
+      }
+    });
 }
 
   functionCache = {};
