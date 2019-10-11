@@ -178,8 +178,8 @@
               </div>
 
               <div *ngIf="recurringFlag" class="col-sm-6 col-sm-offset-3 text-center">
-                <mat-form-field class="example-full-width" (click)="disableRecurrence = false" (mouseout)="disableRecurrence == true" >
-                  <input matInput id="RecurringCount" formControlName="RecurringCount" placeholder="Recur count" [attr.disabled]="disableRecurrence == true"
+                <mat-form-field class="example-full-width" (click)="disableMatInput = false" (mouseout)="disableMatInput == true" >
+                  <input matInput id="RecurringCount" formControlName="RecurringCount" placeholder="Recur count" [attr.disabled]="disableMatInput == true"
                     type="number" min="0" oninput="validity.valid||(value='');" />
                 </mat-form-field>
               </div>

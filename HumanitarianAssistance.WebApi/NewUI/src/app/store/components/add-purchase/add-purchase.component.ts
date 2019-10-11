@@ -43,6 +43,9 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
   exchangeRateMessage = '';
   isAddPurchaseFormSubmitted = false;
+  transportItemPlaceholder = '';
+  selectedItemGroupName = '';
+  selectedItemName = '';
 
   // store enum in a variable to access it in html
   MasterCategory = StoreMasterCategory;
@@ -82,7 +85,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       'ApplyDepreciation': [false],
       'DepreciationRate': [null],
       'TransportVehicles': new FormArray([]),
-      'TransportGenerators': new FormArray([])
+      'TransportGenerators': new FormArray([]),
+      'TransportItemId': [null]
     });
 
     this.addPurchaseForm.valueChanges.subscribe(r => {
@@ -282,6 +286,9 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
   getItemGroupSelectedValue(event: any) {
     this.getAllStoreItemsByGroupId(event);
+    // Remove generator or vehicle if any
+    this.removeGenerators();
+    this.removeVehicles();
 
     if (this.addPurchaseForm.get('InventoryId').value === StoreMasterCategory.Transport &&
       event === this.ItemGroups.Vehicle) {
@@ -290,6 +297,18 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       event === this.ItemGroups.Generator) {
       this.addGenerators();
     }
+
+    this.storeItemGroups$.subscribe(x => {
+      const index = x.findIndex(y => y.value === event);
+      this.selectedItemGroupName = x[index].name;
+    });
+  }
+
+  getItemSelectedValue(event: any) {
+    this.storeItems$.subscribe(x => {
+      const index = x.findIndex(y => y.value === event);
+      this.selectedItemName = x[index].name;
+    });
   }
 
   getOfficeSelectedValue(event: any) {
@@ -461,11 +480,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   addVehicles() {
-    const control = <FormArray>this.addPurchaseForm.controls['TransportGenerators'];
-    while (control.length > 0) {
-          control.removeAt(0);
-}
-
+    this.removeGenerators();
     (<FormArray>this.addPurchaseForm.get('TransportVehicles')).push(this.fb.group({
       'PlateNo': ['', Validators.required],
       'DriverId': ['', Validators.required],
@@ -479,10 +494,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   addGenerators() {
-    const control = <FormArray>this.addPurchaseForm.controls['TransportVehicles'];
-      while (control.length > 0) {
-            control.removeAt(0);
-}
+    this.removeVehicles();
     (<FormArray>this.addPurchaseForm.get('TransportGenerators')).push(this.fb.group({
       'Voltage': ['', [Validators.required, Validators.min(0)]],
       'StartingUsageHours': ['', Validators.required],
@@ -492,6 +504,22 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       'MobilOilConsumptionRate': ['', [Validators.required, Validators.min(0)]],
       'OfficeId': ['', Validators.required]
     }));
+  }
+
+  removeVehicles() {
+    // remove vehicle if any
+    const control = <FormArray>this.addPurchaseForm.controls['TransportVehicles'];
+    while (control.length > 0) {
+      control.removeAt(0);
+    }
+  }
+
+  removeGenerators() {
+    // remove generator if any
+    const control = <FormArray>this.addPurchaseForm.controls['TransportGenerators'];
+    while (control.length > 0) {
+      control.removeAt(0);
+    }
   }
 
   ngOnDestroy() {

@@ -68,6 +68,7 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
   projectId: number;
   diasbleEndDate = false;
   disableRecurrence = false;
+  disableMatInput = false;
 
   // only for header
   tableHeader: string[] = [
@@ -113,9 +114,11 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
       this.activityDetail.Recurring === true &&
       this.activityDetail.Recurring !== null
     ) {
+      this.disableMatInput = true;
       this.disableRecurrence = true;
     } else {
       this.disableRecurrence = false;
+      this.disableMatInput = false;
     }
   }
 
@@ -133,9 +136,11 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
         this.activityDetail.Recurring === true
       ) {
         this.diasbleEndDate = true;
+        this.disableMatInput = true;
         this.disableRecurrence = true;
       } else {
         this.disableRecurrence = false;
+        this.disableMatInput = false;
       }
     }
   }

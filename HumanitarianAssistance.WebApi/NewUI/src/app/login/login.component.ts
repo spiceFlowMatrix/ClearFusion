@@ -31,7 +31,6 @@ export class LoginComponent implements OnInit {
         null,
         Validators.compose([
           Validators.required,
-          Validators.minLength(4),
           Validators.maxLength(20)
         ])
       ]

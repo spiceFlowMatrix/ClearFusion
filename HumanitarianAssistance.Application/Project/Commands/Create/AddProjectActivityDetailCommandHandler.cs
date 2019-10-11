@@ -134,7 +134,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     {
                         obj.PlannedStartDate = plannedStartDate.Date;
                         AddProjectActivity(obj, ref activityDetail);
-                        
+
                     }
 
                     await _dbContext.ProjectActivityDetail.AddRangeAsync(activityDetail);
@@ -202,48 +202,50 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                 ProjectId = obj.ProjectId,
                 ReoccuredReferenceId = obj.ReoccuredReferenceId,
                 CountryId = obj.CountryId,
+                ActivityName = obj.ActivityName,
+                StatusId= obj.StatusId,
             };
 
-            activityDetail.Add(activityModel);
+        activityDetail.Add(activityModel);
         }
 
-        // note:  Common Add Project Province and district with or with recurrence
-        public void AddActivityProvinceDistrict(AddProjectActivityDetailCommand request)
+    // note:  Common Add Project Province and district with or with recurrence
+    public void AddActivityProvinceDistrict(AddProjectActivityDetailCommand request)
+    {
+        if (request.CountryId != null && request.ProvinceId != null)
         {
-            if (request.CountryId != null && request.ProvinceId != null)
+
+            var districts = _dbContext.DistrictDetail.Where(x => x.IsDeleted == false && request.ProvinceId.Contains(x.ProvinceID.Value)).ToList();
+
+            activityProvienceList = districts.Where(x => request.DistrictID.Contains(x.DistrictID))
+                                                            .Select(x => new ProjectActivityProvinceDetail
+                                                            {
+                                                                DistrictID = x.DistrictID,
+                                                                ProvinceId = x.ProvinceID.Value
+                                                            }).ToList();
+
+
+            var provincesWithNoDistrict = request.ProvinceId.Where(x => !activityProvienceList.Select(y => y.ProvinceId).Contains(x)).ToList();
+
+            foreach (var item in provincesWithNoDistrict)
             {
-
-                var districts = _dbContext.DistrictDetail.Where(x => x.IsDeleted == false && request.ProvinceId.Contains(x.ProvinceID.Value)).ToList();
-
-                activityProvienceList = districts.Where(x => request.DistrictID.Contains(x.DistrictID))
-                                                                .Select(x => new ProjectActivityProvinceDetail
-                                                                {
-                                                                    DistrictID = x.DistrictID,
-                                                                    ProvinceId = x.ProvinceID.Value
-                                                                }).ToList();
-
-
-                var provincesWithNoDistrict = request.ProvinceId.Where(x => !activityProvienceList.Select(y => y.ProvinceId).Contains(x)).ToList();
-
-                foreach (var item in provincesWithNoDistrict)
-                {
-                    ProjectActivityProvinceDetail projectActivityProvinceDetail = new ProjectActivityProvinceDetail();
-                    projectActivityProvinceDetail.ProvinceId = item;
-                    activityProvienceList.Add(projectActivityProvinceDetail);
-                }
-
-                foreach (var item in activityProvienceList)
-                {
-                    item.CountryId = request.CountryId;
-                    item.ActivityId = request.ActivityId;
-                    item.CreatedById = request.CreatedById;
-                    item.CreatedDate = request.CreatedDate;
-                    item.IsDeleted = false;
-                }
-
+                ProjectActivityProvinceDetail projectActivityProvinceDetail = new ProjectActivityProvinceDetail();
+                projectActivityProvinceDetail.ProvinceId = item;
+                activityProvienceList.Add(projectActivityProvinceDetail);
             }
+
+            foreach (var item in activityProvienceList)
+            {
+                item.CountryId = request.CountryId;
+                item.ActivityId = request.ActivityId;
+                item.CreatedById = request.CreatedById;
+                item.CreatedDate = request.CreatedDate;
+                item.IsDeleted = false;
+            }
+
         }
     }
+}
 
 
 }

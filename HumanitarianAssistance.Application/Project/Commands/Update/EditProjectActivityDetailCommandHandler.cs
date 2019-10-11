@@ -32,7 +32,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
             try
             {
                 List<ProjectActivityDetail> activityDetail = new List<ProjectActivityDetail>();
-                // update  all recurred record with recurrence
+                // Case 1:  update  all recurred record with recurrence
                 var projectactivityList = await _dbContext.ProjectActivityDetail.Where(x => x.ReoccuredReferenceId == request.ReoccuredReferenceId &&
                                                                                             x.ReoccuredReferenceId != null &&
                                                                                             x.IsDeleted == false).ToListAsync();
@@ -55,12 +55,14 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                         element.RecurringCount = element.RecurringCount;
                         element.ActualStartDate = request.ActualStartDate;
                         element.ActualEndDate = request.ActualEndDate;
-                        element.CreatedDate = DateTime.UtcNow;
                         element.IsDeleted = false;
                         element.CreatedById = request.CreatedById;
                         element.ProjectId = request.ProjectId;
                         element.ReoccuredReferenceId = request.ReoccuredReferenceId;
                         element.CountryId = request.CountryId;
+                        element.StatusId = request.StatusId;
+                        element.ModifiedById = request.ModifiedById;
+                        element.ModifiedDate = DateTime.UtcNow;
                         activityList.Add(element);
 
                     }
@@ -80,7 +82,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                 }
 
 
-                // if update without recurrence and add new recurrence
+                // Case 2: if update without recurrence and add new recurrence
                 else
                 {
 
@@ -204,10 +206,11 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
 
                                     else
                                     {
-                                        //  note , if existing activity hsve changes in then update recuurence 
+                                        //  note , if existing parent activity have changes in province and district then update  
                                         request.ActivityId = projectactivityDetail.ActivityId;
+                                        projectactivityDetail.ModifiedById = request.ModifiedById;
+                                        projectactivityDetail.ModifiedDate = DateTime.UtcNow;
                                         editActivityProvinceDistrict(request);
-                                        await _dbContext.ProjectActivityProvinceDetail.AddRangeAsync(activityProvienceList);
                                         await _dbContext.SaveChangesAsync();
                                     }
                                 }
@@ -327,6 +330,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                 ProjectId = obj.ProjectId,
                 ReoccuredReferenceId = obj.ReoccuredReferenceId,
                 CountryId = obj.CountryId,
+                StatusId= obj.StatusId,
             };
 
             activityDetail.Add(activityModel);
