@@ -8,6 +8,7 @@ import { Subject } from 'rxjs/internal/Subject';
 import { IMenuList } from '../dbheader/dbheader.component';
 import { FileModel } from '../file-management/file-management-model';
 import { SignedUrlObjectName } from '../file-management/signed-url-object-name';
+import { concatMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -79,7 +80,7 @@ export class GlobalSharedService {
   //#endregion
 
   //#region "uploadFile"
-  uploadFile(pageId: number, entityId: number, file: any) {
+  uploadFile(pageId: number, entityId: any, file: any, documentTypeId: any = null) {
     let objectName = SignedUrlObjectName.getSignedURLObjectName(pageId);
 
     if (objectName == null && objectName === '' && objectName === undefined) {
@@ -100,47 +101,38 @@ export class GlobalSharedService {
         DownloadObjectGCBucketModel
       )
       .pipe(
-        // switchMap(s => { return s}),
-        // switchMap(s => { return s}),
-        // switchMap(s => { return s}),
-        map(x => {
-          const responseData: IResponseData = {
-            data: x.data.SignedUrl,
-            statusCode: x.StatusCode,
-            message: x.Message
-          };
-
-          if (responseData.statusCode === 200) {
-            this.uploadFileBySignedUrl(responseData.data, file)
-              .pipe()
-              .subscribe((response: any) => {
-                if (response.status === 200) {
-                  const data: FileModel = {
-                    FileName: file.name,
-                    FilePath: objectName,
-                    FileSize: file.size,
-                    FileType: file.type,
-                    PageId: pageId,
-                    RecordId: entityId
-                  };
-
-                  return this.saveUploadedFileInfo(data)
-                    .pipe()
-                    .subscribe((response: any) => {
-                      const responseData: IResponseData = {
-                        data: x.data.SignedUrl,
-                        statusCode: x.StatusCode,
-                        message: x.Message
-                      };
-                    });
-                }
-              });
-          } else {
-            throw new Error('Could not get signed URL');
-          }
-        })
+       concatMap(res => {
+         console.log('res', res);
+        const responseData: IResponseData = {
+          data: res.data.SignedUrl,
+          statusCode: res.StatusCode,
+          message: res.Message
+        };
+        if (responseData.statusCode === 200) {
+          return this.uploadFileBySignedUrl(responseData.data, file);
+        } else {
+          throw new Error('Could not get signed URL');
+        }
+      }), concatMap(res1 => {
+        console.log('res1', res1);
+          if (res1['status'] === 200) {
+            const data: FileModel = {
+              FileName: file.name,
+              FilePath: objectName,
+              FileSize: file.size,
+              FileType: file.type,
+              PageId: pageId,
+              RecordId: entityId,
+              DocumentTypeId: documentTypeId
+            };
+            return this.saveUploadedFileInfo(data);
+       } else {
+        throw new Error('Could not upload file');
+       }
+      })
       );
   }
+
   //#endregion
 
   //#region "saveUploadedFileInfo"
@@ -198,6 +190,12 @@ export class GlobalSharedService {
           return event;
         })
       );
+  }
+  //#endregion
+
+  //#region "RandomNum" NOTE: Use for Add functionality
+  RandomNum() {
+    return Math.floor(Math.random() * 10000);
   }
   //#endregion
 }

@@ -165,3 +165,13 @@ export interface IPurchasedGeneratorModel {
   ModelYear: number;
   PurchaseId?: number;
 }
+
+export interface IPurchasedFiles {
+  Id: number;
+  File: any;
+  DocumentTypeId: number;
+  Date: any;
+  Filename: string;
+  UploadedBy: string;
+  DocumentTypeName: string;
+}
