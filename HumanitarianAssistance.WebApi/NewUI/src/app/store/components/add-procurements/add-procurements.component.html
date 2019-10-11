@@ -9,15 +9,15 @@
               <div class="col-md-12">
                 <div class="col-md-4">
                   <lib-hum-dropdown [validation]="addProcurementForm.controls['InventoryTypeId'].hasError('required')"  [options]="inventoryType$" formControlName='InventoryTypeId' [placeHolder]="'Inventory'"
-                    (change)="getInventoryTypeSelectedValue($event)" [disabled]="addProcurementForm.controls['InventoryTypeId'].disabled"></lib-hum-dropdown>
+                    (change)="getInventoryTypeSelectedValue($event)"></lib-hum-dropdown>
                 </div>
                 <div class="col-md-4">
                   <lib-hum-dropdown [validation]="addProcurementForm.controls['InventoryId'].hasError('required')" [options]="storeInventory$" formControlName='InventoryId' [placeHolder]="'Inventory(Master)'"
-                    (change)="getMasterInventorySelectedValue($event)" [disabled]="addProcurementForm.controls['InventoryId'].disabled"></lib-hum-dropdown>
+                    (change)="getMasterInventorySelectedValue($event)"></lib-hum-dropdown>
                 </div>
                 <div class="col-md-4">
                   <lib-hum-dropdown [validation]="addProcurementForm.controls['ItemGroupId'].hasError('required')" [options]="storeItemGroups$" formControlName='ItemGroupId' [placeHolder]="'Item Group'"
-                    (change)="getItemGroupSelectedValue($event)" [disabled]="addProcurementForm.controls['ItemGroupId'].disabled"></lib-hum-dropdown>
+                    (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
                 </div>
               </div>
             </div>
@@ -25,11 +25,11 @@
                 <div class="col-md-12">
                   <div class="col-md-4">
                     <lib-hum-dropdown [validation]="addProcurementForm.controls['ItemId'].hasError('required')" [options]="storeItems$" formControlName='ItemId' [placeHolder]="'Item'"
-                      (change)="getItemSelectedValue($event)" [disabled]="addProcurementForm.controls['ItemId'].disabled"></lib-hum-dropdown>
+                      (change)="getItemSelectedValue($event)"></lib-hum-dropdown>
                   </div>
                   <div class="col-md-4">
                     <lib-hum-dropdown [validation]="addProcurementForm.controls['PurchaseId'].hasError('required')" [options]="purchases$" formControlName='PurchaseId' [placeHolder]="'Purchase Name'"
-                      (change)="getSelectedPurchaseName($event)" [disabled]="addProcurementForm.controls['PurchaseId'].disabled"></lib-hum-dropdown>
+                      (change)="getSelectedPurchaseName($event)"></lib-hum-dropdown>
                   </div>
                 </div>
               </div>

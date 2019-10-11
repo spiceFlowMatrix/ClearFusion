@@ -257,6 +257,7 @@ export class PurchaseService {
   }
 
   addProcurement(procurement: any) {
+    debugger;
     const procurementModel: IAddEditProcurementModel = {
       Purchase: procurement.PurchaseId,
       InventoryItem: procurement.ItemId,
