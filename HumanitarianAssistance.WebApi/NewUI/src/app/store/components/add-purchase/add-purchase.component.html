@@ -1,6 +1,6 @@
 <lib-sub-header-template>
   <span class="action_header">Add New Purchase
-    <hum-button *ngIf="!isAddPurchaseFormSubmitted" (click)='addPurchaseFormSubmit()' [type]="'save'" [text]="'save'">
+    <hum-button *ngIf="!isAddPurchaseFormSubmitted"  (click)='addPurchaseFormSubmit()' [type]="'save'" [text]="'save'">
     </hum-button>
     <hum-button *ngIf="isAddPurchaseFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
     <hum-button (click)='cancelButtonClicked()' [type]="'cancel'" [text]="'cancel'"></hum-button>
@@ -250,4 +250,8 @@
       </div>
     </div>
   </form>
+<<<<<<< HEAD
+
+=======
+>>>>>>> clean-arc-master
 </mat-card>

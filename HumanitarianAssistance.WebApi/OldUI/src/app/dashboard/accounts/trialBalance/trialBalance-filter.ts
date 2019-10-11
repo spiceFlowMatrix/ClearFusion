@@ -10,5 +10,4 @@ class TrialBalanceFilterModel {
     OfficesList: any;
     fromdate: any;
     todate: any;
-    
 }
