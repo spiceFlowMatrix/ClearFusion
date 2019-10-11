@@ -135,7 +135,6 @@ export class FileManagementService {
 
     //#region "saveUploadedFileInfo"
     saveUploadedFileInfo(data: FileModel) {
-
         const url = this.settings.getBaseUrl() + GLOBAL.API_FileManagement_SaveUploadedFileInfo;
         return this.PostByModel(url, data);
     }

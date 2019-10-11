@@ -12,6 +12,12 @@
       {{text | uppercase}}
     </h5>
   </button>
+  <button *ngSwitchCase="'remove'" mat-flat-button class="red" (click)="btnClick()" type="button">
+    <h5>
+      <i class="fas fa-trash-alt"></i>
+      {{text | uppercase}}
+    </h5>
+  </button>
   <button *ngSwitchCase="'add'" mat-flat-button class="blue" (click)="btnClick()" type="button">
     <h5>
       <i class="fas fa-plus"></i>

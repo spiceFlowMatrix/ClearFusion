@@ -74,7 +74,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                     var criteriaRecord = await _dbContext.RatingBasedCriteria.Where(x => x.InterviewDetailsId == request.InterviewDetailsId).ToListAsync();
                     _dbContext.RatingBasedCriteria.RemoveRange(criteriaRecord);
 
-                    foreach (var item in request.RatingBasedCriteriaList)
+                    foreach (var item in request.RatingBasedCriteriaModelList)
                     {
                         RatingBasedCriteria ratingObj = new RatingBasedCriteria();
                         ratingObj.InterviewDetailsId = request.InterviewDetailsId;

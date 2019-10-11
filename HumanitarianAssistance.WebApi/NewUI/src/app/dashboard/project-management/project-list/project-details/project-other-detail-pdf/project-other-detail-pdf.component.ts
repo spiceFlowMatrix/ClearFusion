@@ -17,6 +17,7 @@ export class ProjectOtherDetailPdfComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,private globalSharedService: GlobalSharedService,private appurl: AppUrlService,
     private fb: FormBuilder) {
       this.myForm = this.fb.group({
+        SelectAll: [false],
         opportunitytype: [false],
         donor: [false],
         opportunityno: [false],
@@ -68,5 +69,70 @@ export class ProjectOtherDetailPdfComponent implements OnInit {
   }
   closeModal(): void {
     this.dialogRef.close();
+  }
+  SelectAllChange(){
+    if (this.myForm.controls['SelectAll'].value) {
+      this.myForm.patchValue({
+        opportunitytype: true,
+        donor: true,
+        opportunityno: true,
+        opportunity: true,
+        enddate: true,
+        opportunitydesc: true,
+        country: true,
+        province: true,
+        district: true,
+        office: true,
+        sector: true,
+        program: true,
+        startdate: true,
+        projgoal: true,
+        projobj: true,
+        reoidate: true,
+        submissiondate: true,
+        mainactivities: true,
+        dirbenmale: true,
+        dirbenfemale: true,
+        indirbenmale: true,
+        indirbenfemale: true,
+        strengthconsideration: true,
+        genderconsideration: true,
+        genderremarks: true,
+        security: true,
+        securityconsideration: true,
+        securityremarks: true
+      });
+    } else {
+      this.myForm.patchValue({
+        opportunitytype: false,
+        donor: false,
+        opportunityno: false,
+        opportunity: false,
+        enddate: false,
+        opportunitydesc: false,
+        country: false,
+        province: false,
+        district: false,
+        office: false,
+        sector: false,
+        program: false,
+        startdate: false,
+        projgoal: false,
+        projobj: false,
+        reoidate: false,
+        submissiondate: false,
+        mainactivities: false,
+        dirbenmale: false,
+        dirbenfemale: false,
+        indirbenmale: false,
+        indirbenfemale: false,
+        strengthconsideration: false,
+        genderconsideration: false,
+        genderremarks: false,
+        security: false,
+        securityconsideration: false,
+        securityremarks: false
+      });
+    }
   }
 }

@@ -20,6 +20,8 @@ export class LeaveInfoComponent implements OnInit {
   @Input() employeeId: number;
   @Input() tabEventValue: number;
 
+  fileName: any;
+  addapplyleaveinfo: any[];
   hiredOnDate: any;
   isEditingAllowed = false;
 
@@ -137,7 +139,7 @@ export class LeaveInfoComponent implements OnInit {
               );
             });
           } else if (data.StatusCode === 400) {
-             this.toastr.warning(data.Message);
+            this.toastr.warning(data.Message);
           }
         },
         error => {
@@ -417,7 +419,7 @@ export class LeaveInfoComponent implements OnInit {
   //#endregion
 
   //#region "on Leave Applied"
-  addapplyleaveinfo: any[];
+
   onLeaveApplied(model: ApplyLeaveModel) {
     this.applyLeavePopupLoading = true;
 
@@ -626,11 +628,8 @@ export class LeaveInfoComponent implements OnInit {
     this.popupApplyLeaveVisible = false;
   }
 
-
-  fileName: any;
   // Export Leave PDF
   exportLeavePdf() {
-
     const model = {
       EmployeeId: this.employeeId
     };
@@ -639,20 +638,20 @@ export class LeaveInfoComponent implements OnInit {
       .DownloadPDF(
         this.setting.getBaseUrl() + GLOBAL.API_Pdf_GetAllEmployeeLeavePdf,
         model
-      ).subscribe(x=> {
-        this.fileName = "EmployeeLeaveReport" + ".pdf";
-        if(window.navigator.msSaveOrOpenBlob) {
+      )
+      .subscribe(x => {
+        this.fileName = 'EmployeeLeaveReport' + '.pdf';
+        if (window.navigator.msSaveOrOpenBlob) {
           window.navigator.msSaveOrOpenBlob(x, this.fileName);
-        }else{
-          var link = document.createElement('a');
-          link.setAttribute("type", "hidden");
+        } else {
+          const link = document.createElement('a');
+          link.setAttribute('type', 'hidden');
           link.download = this.fileName;
           link.href = window.URL.createObjectURL(x);
           document.body.appendChild(link);
           link.click();
-
-      }
-    });
+        }
+      });
   }
 
   // Leave Details

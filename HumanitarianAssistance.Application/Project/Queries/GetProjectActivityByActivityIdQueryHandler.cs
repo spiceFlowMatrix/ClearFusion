@@ -54,6 +54,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     obj.ActualStartDate = activityDetail.ActualStartDate;
                     obj.ActualEndDate = activityDetail.ActualEndDate;
                     obj.CountryId = activityDetail.CountryId;
+                    obj.ReoccuredReferenceId = activityDetail.ReoccuredReferenceId;
                     obj.ProvinceId = activityDetail.ProjectActivityProvinceDetail?.Select(x => x.ProvinceId);
                     obj.DistrictID = activityDetail.ProjectActivityProvinceDetail?.Select(x => x.DistrictID);
                 }

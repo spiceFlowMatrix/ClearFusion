@@ -33,7 +33,7 @@ namespace HumanitarianAssistance.Application.FileManagement.Queries
 
                     var query = _dbContext.EntitySourceDocumentDetails
                                        .Include(x => x.DocumentFileDetail)
-                                       .Where(x => x.IsDeleted == false && x.EntityId == request.RecordId
+                                       .Where(x => x.IsDeleted == false && x.DocumentFileDetail.IsDeleted == false && x.EntityId == request.RecordId
                                               && x.DocumentFileDetail.PageId == request.PageId)
                                        .AsQueryable();
 

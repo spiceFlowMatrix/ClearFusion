@@ -11,7 +11,7 @@ namespace HumanitarianAssistance.Application.Store.Models
         public string InventoryName { get; set; }
         public string InventoryDescription { get; set; }
         public int AssetType { get; set; }
-        public long InventoryDebitAccount { get; set; }
+        public long? InventoryDebitAccount { get; set; }
         public long? InventoryCreditAccount { get; set; }
     }
 }

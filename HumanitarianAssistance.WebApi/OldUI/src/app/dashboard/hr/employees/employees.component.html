@@ -661,7 +661,7 @@
 
                 <div class="btn-grp-wrap">
                     <dx-button text="Save" type="success" validationGroup="addGeneralDetails"
-                        [useSubmitBehavior]="true"></dx-button>
+                        [useSubmitBehavior]="true" (click)="validateAddEmployeeForm(addGeneralDetails)"></dx-button>
                     <dx-button text="Cancel" (click)="closeEmployeeForm()"></dx-button>
                 </div>
             </form>
@@ -844,8 +844,8 @@
 </dx-popup>
 
 <!-- Assign Leave -->
-<dx-popup class="popup" [width]="850" [height]="400" [showTitle]="true" title="Assign Leave" [dragEnabled]="false"
-    [closeOnOutsideClick]="true" [(visible)]="popupAssignLeaveVisible">
+<dx-popup class="popup" [width]="850" [height]="400" [showTitle]="false" title="Assign Leave" [dragEnabled]="false"
+    [closeOnOutsideClick]="false" [(visible)]="popupAssignLeaveVisible">
 
     <div *dxTemplate="let data of 'content'">
         <dx-scroll-view showScrollbar="always" direction="both">

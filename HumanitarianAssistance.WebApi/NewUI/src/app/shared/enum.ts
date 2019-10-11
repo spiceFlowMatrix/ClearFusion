@@ -519,3 +519,21 @@ export enum EmployeeType {
   Terminated = 3
 }
 //#endregion
+
+//#region "StoreMasterCategory"
+export enum StoreMasterCategory {
+  Transport = 1
+}
+//#endregion
+
+//#region "StoreItemGroups"
+export enum StoreItemGroups {
+Vehicle = 1,
+Generator = 2,
+Fuel= 3,
+SpareParts= 4,
+MobilOil= 5,
+Services= 6
+}
+//#endregion
+

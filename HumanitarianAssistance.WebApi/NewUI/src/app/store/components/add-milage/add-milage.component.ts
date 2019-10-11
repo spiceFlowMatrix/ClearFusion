@@ -11,5 +11,8 @@ export class AddMilageComponent implements OnInit {
 
   ngOnInit() {
   }
+  onCancelPopup() {
 
+  }
+  addMilage() { }
 }

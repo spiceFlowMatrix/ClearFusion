@@ -52,7 +52,7 @@ export class AddSubActivitiesComponent implements OnInit {
       EmployeeID: [null, Validators.required],
       Target: [
         null,
-        [Validators.min(0), Validators.max(100), Validators.maxLength(3)]
+        [Validators.min(0)]
       ],
       SubActivityTitle: [null, Validators.required]
     });

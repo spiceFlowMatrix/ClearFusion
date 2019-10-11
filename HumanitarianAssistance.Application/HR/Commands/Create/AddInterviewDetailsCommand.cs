@@ -33,7 +33,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
         public DateTime JoiningDate { get; set; }
 
 
-        public List<RatingBasedCriteriaModel> RatingBasedCriteriaList { get; set; }
+        public List<RatingBasedCriteriaModel> RatingBasedCriteriaModelList { get; set; }  
         public List<InterviewLanguageModel> InterviewLanguageModelList { get; set; }
         public List<InterviewTrainingModel> InterviewTrainingModelList { get; set; }
         public List<InterviewTechQuesModel> InterviewTechQuesModelList { get; set; }

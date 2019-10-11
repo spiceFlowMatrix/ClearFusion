@@ -19,7 +19,6 @@
   <form [formGroup]='addPurchaseForm'>
 
     <div class="row">
-      <div class="col-md-12">
         <h4>Item Detail</h4>
         <div class="col-md-3">
           <lib-hum-dropdown [validation]="addPurchaseForm.controls['InventoryTypeId'].hasError('required')"
@@ -42,89 +41,9 @@
             [options]="storeItems$" formControlName='ItemId' [placeHolder]="'Item'"
             (change)="getItemSelectedValue($event)"></lib-hum-dropdown>
         </div>
-      </div>
     </div>
 
-    <!-- Vehicle Details-->
     <div class="row">
-      <div class="col-md-12">
-        <mat-accordion>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                <h4>New Vehicle Detail Form - 1001</h4>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <app-vehicle-detail></app-vehicle-detail>
-          </mat-expansion-panel>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                <h4>New Vehicle Detail Form - 1001</h4>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <app-vehicle-detail></app-vehicle-detail>
-          </mat-expansion-panel>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                <h4>New Vehicle Detail Form - 1001</h4>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <app-vehicle-detail></app-vehicle-detail>
-          </mat-expansion-panel>
-
-        </mat-accordion>
-      </div>
-    </div>
-    <!-- Generator Details-->
-    <div class="row">
-      <div class="col-md-12">
-        <mat-accordion>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                <h4>New Generator Detail Form - 1001</h4>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <app-generator-detail></app-generator-detail>
-          </mat-expansion-panel>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                <h4>New Generator Detail Form - 1001</h4>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <app-generator-detail></app-generator-detail>
-          </mat-expansion-panel>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                <h4>New Generator Detail Form - 1001</h4>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <app-generator-detail></app-generator-detail>
-          </mat-expansion-panel>
-
-        </mat-accordion>
-      </div>
-    </div>
-    <!-- Purchase vehicle Item-->
-    <div class="row">
-      <div class="col-md-12">
-
-      </div>
-    </div>
-     <!-- Purchase generator Item-->
-     <div class="row">
-        <div class="col-md-12">
-
-        </div>
-      </div>
-
-
-    <div class="row">
-      <div class="col-md-12">
         <h4>Project & Analytical Information</h4>
         <div class="col-md-3">
           <lib-hum-dropdown [validation]="addPurchaseForm.controls['OfficeId'].hasError('required')"
@@ -141,11 +60,79 @@
             [options]="budgetLine$" formControlName='BudgetLineId' [placeHolder]="'Budget Line'"
             (change)="getBudgetSelectedValue($event)"></lib-hum-dropdown>
         </div>
+    </div>
+
+    <!-- Transport Details-->
+    <div class="row" *ngIf="addPurchaseForm.controls['InventoryId'].value === MasterCategory.Transport">
+
+      <div *ngIf="addPurchaseForm.controls['ItemGroupId'].value === ItemGroups.Vehicle ||
+                              addPurchaseForm.controls['ItemGroupId'].value === ItemGroups.Generator">
+        <div class="col-md-10">
+          <strong>Note:</strong>The item you have selected is <strong>{{selectedItemGroupName}}</strong>. Therefore, the
+          following <strong>transport related metadata</strong> must be filled out.
+        </div>
+        <div class="col-md-2">
+          <div class="items-float-right">
+            <hum-button (click)='addTransportItemButtonClicked(addPurchaseForm.controls["ItemGroupId"].value)'
+              [type]="'add'" [text]="'Add'"></hum-button>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="addPurchaseForm.controls['ItemGroupId'].value === ItemGroups.Vehicle">
+        <div class="col-md-12">
+          <mat-accordion>
+            <mat-expansion-panel formArrayName="TransportVehicles"
+              *ngFor="let item of addPurchaseForm.controls['TransportVehicles'].controls; let i= index">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <h4>New Vehicle Detail Form - {{item.get('PlateNo').value}}</h4>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <app-vehicle-detail [formGroupName]="i" [officeId]='addPurchaseForm.controls["OfficeId"].value'
+                [vehicleDetailForm]='item'></app-vehicle-detail>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="addPurchaseForm.controls['ItemGroupId'].value === ItemGroups.Generator">
+        <div class="col-md-12">
+          <mat-accordion>
+            <mat-expansion-panel formArrayName="TransportGenerators"
+              *ngFor="let item of addPurchaseForm.controls['TransportGenerators'].controls; let i= index">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <h4>New Generator Detail Form - {{item.get('Voltage').value}}</h4>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <app-generator-detail [formGroupName]="i" [officeId]='addPurchaseForm.controls["OfficeId"].value'
+                [generatorDetailForm]='item'></app-generator-detail>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+
+      <div *ngIf="addPurchaseForm.controls['ItemGroupId'].value ===ItemGroups.Fuel ||
+      addPurchaseForm.controls['ItemGroupId'].value ===ItemGroups.SpareParts || addPurchaseForm.controls['ItemGroupId'].value ===ItemGroups.MobilOil
+      || addPurchaseForm.controls['ItemGroupId'].value ===ItemGroups.Services">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Note:</strong>The item you have selected is <strong>{{selectedItemName}}</strong>. Therefore, the
+          following <strong>transport
+            related metadata</strong> must be filled out.
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['OfficeId'].hasError('required')"
+            [options]="offices$" formControlName='OfficeId' [placeHolder]="transportItemPlaceholder"
+            (change)="getOfficeSelectedValue($event)"></lib-hum-dropdown>
+        </div>
+      </div>
       </div>
     </div>
 
     <div class="row">
-      <div class="col-md-12">
         <h4>Purchase Detail</h4>
         <div class="col-md-3">
           <mat-form-field>
@@ -172,11 +159,9 @@
             <mat-datepicker #InvoiceDate></mat-datepicker>
           </mat-form-field>
         </div>
-      </div>
     </div>
 
     <div class="row">
-      <div class="col-md-12">
         <div class="col-md-3">
           <mat-form-field>
             <input matInput type="number" formControlName='InvoiceNo' placeholder="Invoice No">
@@ -187,11 +172,9 @@
             [options]="assetType$" formControlName='AssetTypeId' [placeHolder]="'Asset Type'"
             (change)="getAssetTypeSelectedValue($event)"></lib-hum-dropdown>
         </div>
-      </div>
     </div>
 
     <div class="row">
-      <div class="col-md-12">
         <h4>Quantity & Price Detail</h4>
         <div class="col-md-3">
           <lib-hum-dropdown [validation]="addPurchaseForm.controls['Unit'].hasError('required')" [options]="unit$"
@@ -213,11 +196,9 @@
 
           </mat-form-field>
         </div>
-      </div>
     </div>
 
     <div class="row">
-      <div class="col-md-12">
         <div class="col-md-3">
           <mat-form-field>
             <input matInput [matDatepicker]="ReceiptDate" formControlName='ReceiptDate' placeholder="Receipt Date">
@@ -235,10 +216,8 @@
             [options]="employeeList$" formControlName='ReceivedFromEmployeeId' [placeHolder]="'Received From Employee'"
             (change)="getEmployeeSelectedValue($event)"></lib-hum-dropdown>
         </div>
-      </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
         <div class="col-md-3">
           <lib-hum-dropdown [validation]="addPurchaseForm.controls['ReceiptTypeId'].hasError('required')"
             [options]="receiptType$" formControlName='ReceiptTypeId' [placeHolder]="'Receipt Type'"
@@ -249,11 +228,9 @@
             [options]="statusList$" formControlName='StatusId' [placeHolder]="'Status'"
             (change)="getStatusSelectedValue($event)"></lib-hum-dropdown>
         </div>
-      </div>
     </div>
 
     <div class="row">
-      <div class="col-md-12">
         <h4>Depreciation</h4>
         <div class="col-md-3">
           <mat-checkbox formControlName='ApplyDepreciation'>Apply Depreciation</mat-checkbox>
@@ -264,17 +241,17 @@
           </mat-form-field>
         </div>
       </div>
-    </div>
     <div class="row">
       <div class="col-md-12">
         <h4>Documents
           <hum-button [type]="'add'" [text]="'add'"></hum-button>
         </h4>
-
         <app-document-upload></app-document-upload>
-
       </div>
     </div>
   </form>
+<<<<<<< HEAD
 
+=======
+>>>>>>> clean-arc-master
 </mat-card>
