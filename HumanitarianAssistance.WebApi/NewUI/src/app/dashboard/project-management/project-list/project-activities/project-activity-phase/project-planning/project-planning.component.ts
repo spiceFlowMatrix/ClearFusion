@@ -153,7 +153,7 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
       ActivityStartDate: [this.activityDetail.PlannedStartDate],
       ActivityEndDate: [this.activityDetail.PlannedEndDate],
       ActualStartDate: [this.activityDetail.ActualStartDate],
-      ActualEndDate: [this.activityDetail.ActualEndDate],
+      ActualEndDate: [this.activityDetail.ActualEndDate, { disabled: true }],
       BudgetLine: [this.activityDetail.BudgetLineId],
       Assignee: [this.activityDetail.EmployeeID],
       Location: [this.activityDetail.OfficeId],
@@ -190,7 +190,6 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
   //#endregion
-
   //#region "openDocumentsDialog"
   openDocumentsDialog(): void {
     // NOTE: It passed the data into the Document Model
@@ -424,7 +423,14 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
   get activityActualStartdate() {
     return this.projectActivityForm.get('ActualStartDate').value;
   }
-
+// to enable and disable the actual end date
+  get disableActualEndDate() {
+    if (this.projectActivityForm.get('ActualStartDate').value == null) {
+      return this.projectActivityForm.controls['ActualEndDate'].disable();
+    } else {
+      return this.projectActivityForm.controls['ActualEndDate'].enable();
+    }
+  }
   onRecurringChange(event: any) {
     if (event.checked === true) {
       this.diasbleEndDate = true;
