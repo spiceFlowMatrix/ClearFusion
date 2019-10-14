@@ -62,6 +62,9 @@ export class MonitoringReviewComponent implements OnInit {
   scrollStyles: any;
   QuestionTypeId: any = null;
 
+  scoreFlag = true;
+  verificationFlag = true;
+
   ngOnInit() {
     this.indicatorFilterModel = {
       pageIndex: 0,
@@ -199,6 +202,9 @@ export class MonitoringReviewComponent implements OnInit {
   //#endregion
 
   getQuestionsList(index: number) {
+    // to force user to mark score for qualitative and quantitative question
+    this.scoreFlag = true;
+    this.verificationFlag = true;
     this.projectIndicatorId = this.monitoringReviewList.MonitoringReviewModel[
       index
     ].ProjectIndicatorId;
@@ -210,7 +216,7 @@ export class MonitoringReviewComponent implements OnInit {
       this.indicatorService
         .GetIndicatorQuestionById(this.projectIndicatorId)
         .subscribe(response => {
-         // this.indicatorQuestions = [];
+          // this.indicatorQuestions = [];
           if (response.statusCode === 200) {
             this.monitoringReviewList.MonitoringReviewModel[
               index
@@ -233,6 +239,9 @@ export class MonitoringReviewComponent implements OnInit {
   }
 
   addMonitoringIndicator() {
+    // disable submit button
+    this.scoreFlag = true;
+    this.verificationFlag = true;
     this.monitoringReviewList.MonitoringReviewModel.push({
       ProjectIndicatorId: 0,
       IndicatorQuestions: [],
@@ -242,6 +251,8 @@ export class MonitoringReviewComponent implements OnInit {
   }
 
   onDelete(index: number) {
+    this.scoreFlag = false;
+    this.verificationFlag = false;
     this.monitoringReviewList.MonitoringReviewModel.splice(index, 1);
   }
 
@@ -263,6 +274,20 @@ export class MonitoringReviewComponent implements OnInit {
     }
   }
 
+  onQuestionScorechange(event) {
+    if (event.value != null) {
+      this.scoreFlag = false;
+    } else {
+      this.scoreFlag = true;
+    }
+  }
+  onVerificationChange(event) {
+    if (event.value != null) {
+      this.verificationFlag = false;
+    } else {
+      this.verificationFlag = true;
+    }
+  }
   //#region "addMonitoringReview"
   addMonitoringReview() {
     if (this.monitoringReviewList.MonitoringReviewModel.length > 0) {

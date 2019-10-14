@@ -509,7 +509,9 @@ export enum FileSourceEntityTypes {
   ProjectActivityImplementation = 6,
   ProjectActivityMonitoring = 7,
   ProjectActivityPlanning = 8,
-  DonorDetail = 9
+  DonorDetail = 9,
+  StorePurchase= 10,
+  Employee= 11,
 }
 //#endregion
 //#region "EmployeeType"
@@ -537,3 +539,9 @@ Services= 6
 }
 //#endregion
 
+export enum DocumentFileTypes {
+  PurchaseImage = 1,
+  PurchaseInvoice = 2,
+  EmployeeProfile = 3,
+  EmployeeDocument= 4
+}

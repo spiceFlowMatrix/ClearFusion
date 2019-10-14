@@ -1,9 +1,9 @@
 <h2 mat-dialog-title>Upload Document</h2>
-<form [formGroup]="addDocumentForm" (ngSubmit)="submitAddDocument()">
+<form [formGroup]="addDocumentForm" (submit)="submitAddDocument()">
     <mat-dialog-content class="mat-typography">
         <div class="row">
           <div class="col-sm-6">
-              <button mat-raised-button (click)="openInput()">Select File to Upload</button>
+              <button type="button" mat-raised-button color="primary" (click)="openInput()">Select File to Upload</button>
     <input id="fileInput" style="display:none" hidden type="file" (change)="fileChange($event.target.files)" name="file">
           </div>
           <div class="col-sm-6">
@@ -15,8 +15,9 @@
 
       </mat-dialog-content>
       <mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close>Cancel</button>
-        <button mat-button type="submit" cdkFocusInitial>Save</button>
+        <hum-button [type]="'save'" [isSubmit]="true" [text]="'save'">
+          </hum-button>
+          <hum-button (click)='cancelButtonClicked()' [type]="'cancel'" [text]="'cancel'"></hum-button>
       </mat-dialog-actions>
 </form>
 
