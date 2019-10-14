@@ -911,7 +911,6 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   //#endregion
   //#region "onExportPdf"
   onExportPdf() {
-    debugger;
     if (this.projectActivityList.length > 0) {
       this.projectActivityList.forEach(element => {
         this.pdfExportModel.ActivityId.push(element.ActivityId);
