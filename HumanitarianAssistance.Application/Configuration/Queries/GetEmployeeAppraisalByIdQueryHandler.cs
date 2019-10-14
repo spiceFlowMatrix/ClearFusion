@@ -31,7 +31,7 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                 if (empAppraisalDetails != null)
                 {
                     EmployeeAppraisalDetailsModel model = new EmployeeAppraisalDetailsModel();
-                    var quesLst = await _dbContext.EmployeeAppraisalQuestions.Include(x => x.AppraisalGeneralQuestions).Where(x => x.EmployeeId == empAppraisalDetails.EmployeeId && x.CurrentAppraisalDate.Date.Day == request.CurrentAppraisalDate.Date.Day && x.CurrentAppraisalDate.Date.Month == request.CurrentAppraisalDate.Date.Month && x.CurrentAppraisalDate.Date.Year == request.CurrentAppraisalDate.Date.Year).ToListAsync();
+                    var quesLst = await _dbContext.EmployeeAppraisalQuestions.Include(x => x.AppraisalGeneralQuestions).Where(x => x.CurrentAppraisalDate == request.CurrentAppraisalDate && x.EmployeeId == empAppraisalDetails.EmployeeId && x.IsDeleted == false).ToListAsync();
                     model.EmployeeAppraisalDetailsId = empAppraisalDetails.EmployeeAppraisalDetailsId;
                     model.EmployeeId = empAppraisalDetails.EmployeeId;
                     model.EmployeeCode = empAppraisalDetails.EmployeeCode;
@@ -47,7 +47,7 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                     model.OfficeId = empAppraisalDetails.OfficeId;
                     model.TotalScore = empAppraisalDetails.TotalScore;
                     model.AppraisalStatus = empAppraisalDetails.AppraisalStatus;
-                    var scorePoint = empAppraisalDetails.AppraisalScore !=null ? Math.Round((double)empAppraisalDetails.AppraisalScore):0;
+                    var scorePoint = empAppraisalDetails.AppraisalScore != null ? Math.Round((double)empAppraisalDetails.AppraisalScore) : 0;
                     if (empAppraisalDetails.AppraisalScore != null)
                     {
                         model.AppraisalScore = scorePoint + " - " + ((MarkedScores)scorePoint).ToString();
