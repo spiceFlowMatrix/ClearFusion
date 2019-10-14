@@ -25,7 +25,6 @@ export class AddDocumentComponent implements OnInit {
   }
 
   submitAddDocument() {
-    debugger;
     this.addDocumentForm;
 
   }

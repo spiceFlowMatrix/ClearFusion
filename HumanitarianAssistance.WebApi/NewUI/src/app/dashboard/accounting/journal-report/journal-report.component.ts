@@ -141,7 +141,6 @@ export class JournalReportComponent implements OnInit {
   }
  //#region "onApplyingFilter"
  onApplyingFilter(value: JournalFilterModel) {
-   debugger;
   if (this.journalDateRange == null) {
     this.toastr.error('Please Select Date Range');
   } else {
@@ -293,7 +292,6 @@ getOfficeCodeList() {
 
 //#region "GetAllJournalDetails"
 GetAllJournalDetails() {
-  debugger;
   this.showjournalListLoading();
 
   this.journalReportDataSource = [];
