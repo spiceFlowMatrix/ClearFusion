@@ -84,6 +84,11 @@ export class MonitoringReviewComponent implements OnInit {
     ) {
       this.initializeModel();
     } else {
+       // to enable the question type and verification source o edit case
+       this.scoreFlag = false;
+       this.verificationFlag = false;
+
+
       // for (let i = 0; i < this.monitoringReviewList.MonitoringReviewModel.length;  i++  ) {
       //   this.getQuestionsList(i);
       // }
@@ -103,7 +108,7 @@ export class MonitoringReviewComponent implements OnInit {
     this.monitoringQuantitativeScore = [
       {
         score: 1,
-        name: '1 - Weak'
+        name: '1-Weak'
       },
       {
         score: 2,

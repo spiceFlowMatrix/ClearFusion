@@ -14,7 +14,6 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public long ProjectJobId { get; set; }
         public string ProjectJobCode { get; set; }
         public string ProjectJobName { get; set; }
-
         public long ProjectId { get; set; }
         [ForeignKey("ProjectId")]
         public virtual ProjectDetail ProjectDetail { get; set; }
