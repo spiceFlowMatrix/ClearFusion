@@ -259,7 +259,8 @@ export class PurchaseService {
         map((x: Response) => {
          return {
           StatusCode: x.status,
-          Message: x.status === 200 ? 'Success' : 'Fail'
+          Message: x.status === 200 ? 'Success' : 'Fail',
+          PurchaseId: x.body
          };
         })
       );

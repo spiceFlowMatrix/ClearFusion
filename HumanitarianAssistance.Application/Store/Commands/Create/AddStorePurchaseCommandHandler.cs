@@ -53,6 +53,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                         //Add Purchase
                         await _dbContext.StoreItemPurchases.AddAsync(purchase);
                         await _dbContext.SaveChangesAsync();
+                        purchaseId = purchase.PurchaseId;
 
                         //Add Purchased vehicle List
                         if(request.PurchasedVehicleList.Any())
