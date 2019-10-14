@@ -92,17 +92,6 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.getActivityPermission();
-    console.log(this.projectSubActivityList.length);
-    // this.projectSubActivityForm = this.fb.group(
-    //   {
-    //     Achieved: this.fb.control(
-    //       this.subActivityDetail.Achieved,
-    //       Validators.required
-    //     ),
-    //   //  Target: this.fb.control(this.subActivityDetail.Target)
-    //   },
-    //   { validator: this.achievedRangeValidator }
-    // );
   }
 
   ngOnChanges() {
@@ -141,9 +130,8 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
   achievedRangeValidator(group: FormGroup): { invalid: boolean } {
     const achieved = group.controls['Achieved'];
     const target = group.controls['Target'];
-    if (achieved.value >= target.value) {
+    if (achieved.value > target.value) {
        achieved.setErrors({ invalid: true });
-      //  return { invalid: true };
     } else {
       return null;
     }
@@ -165,8 +153,7 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
           // Mark Add Extension permission
           this.addExtensionPermission = this.checkAddExtensionPermission();
 
-          console.log(this.markCompletePermission);
-          console.log(this.addExtensionPermission);
+
         }
       });
   }
