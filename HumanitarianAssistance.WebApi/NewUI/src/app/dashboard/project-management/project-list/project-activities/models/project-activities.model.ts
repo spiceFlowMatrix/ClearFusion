@@ -287,3 +287,7 @@ export interface IProjectPermissionMode {
 //   ActualEndDate: string;
 // }
 
+export interface PdfExportModel {
+ProjectId: number;
+ActivityId: number[];
+}

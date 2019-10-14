@@ -1,16 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { of } from 'rxjs';
+import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { of, Observable } from 'rxjs';
 import { TableActionsModel } from 'projects/library/src/public_api';
-import { MatDialog } from '@angular/material/dialog';
-import { AddDocumentComponent } from './add-document.component';
+import { IPurchasedFiles } from '../../models/purchase';
 
 @Component({
   selector: 'app-document-upload',
   templateUrl: './document-upload.component.html',
   styleUrls: ['./document-upload.component.scss']
 })
-export class DocumentUploadComponent implements OnInit {
-  actions: TableActionsModel
+export class DocumentUploadComponent implements OnInit, OnChanges {
+  actions: TableActionsModel;
+
+  @Input() purchasedDocumentFiles: IPurchasedFiles[];
+  @Output() deleteDocument =  new EventEmitter<any>();
+
+  documentHeaders$: Observable<any>;
+  documentsList$: Observable<any>;
+
   constructor() {
     this.actions = {
       items: {
@@ -20,20 +26,20 @@ export class DocumentUploadComponent implements OnInit {
       },
       subitems: {}
 
-    }
+    };
   }
-
-  documentHeaders$ = of(['Name', 'Type', 'Uploaded On', 'Uploaded By']);
-  documentsList$ = of([
-    { name: 'Document name', type: 'invoice', uploadedon: '25 April', uploadedby: 'User' },
-    { name: 'Document name', type: 'invoice', uploadedon: '25 April', uploadedby: 'User' },
-    { name: 'Document name', type: 'invoice', uploadedon: '25 April', uploadedby: 'User' },
-    { name: 'Document name', type: 'invoice', uploadedon: '25 April', uploadedby: 'User' }
-  ]);
 
   ngOnInit() {
+    this.documentHeaders$ = of(['Id', 'Name', 'Type', 'Uploaded On', 'Uploaded By']);
   }
 
-  openAddDocumentDialog(event) {
+  ngOnChanges() {
+     this.documentsList$ = of(this.purchasedDocumentFiles);
+  }
+
+  documentButtonClick(event) {
+    if (event.type === 'delete') {
+      this.deleteDocument.emit(event.item);
+    }
   }
 }

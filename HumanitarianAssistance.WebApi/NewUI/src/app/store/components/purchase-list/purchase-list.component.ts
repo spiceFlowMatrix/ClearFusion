@@ -171,7 +171,6 @@ export class PurchaseListComponent implements OnInit {
         console.log(x);
 
         this.purchaseList$.subscribe((purchase) => {
-          debugger;
           console.log(purchase);
 
           const index = purchase.findIndex(i => i.Id === x.PurchaseId);
@@ -194,7 +193,6 @@ export class PurchaseListComponent implements OnInit {
   }
 
   deleteProcurement(event: any) {
-    debugger;
     this.purchaseService.deleteProcurement(event.subItem.Id)
       .subscribe(x => {
         if (x.StatusCode === 200) {
