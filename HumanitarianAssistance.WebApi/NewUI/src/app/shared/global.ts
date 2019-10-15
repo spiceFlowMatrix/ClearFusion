@@ -160,6 +160,8 @@ export class GLOBAL {
   public static API_Project_GetProjectJobsByProjectIds = 'Project/GetProjectJobsByProjectIds';
   public static API_Project_GetProjectJobDetailByBudgetLineId = 'Project/GetProjectJobDetailByBudgetLineId';
   public static API_Project_GetProjectBudgetLinesByProjectJobIds = 'Project/GetProjectBudgetLinesByProjectJobIds';
+  public static API_Project_GetProjectBudgetLinesByProjectIds = 'Project/GetProjectBudgetLinesByProjectIds';
+  public static API_Project_GetProjectJobsByBudgetLineIds = 'Project/GetProjectJobsByBudgetLineIds';
 
   public static API_Project_AddEditProjectproposals = 'Project/AddEditProjectproposals';
   public static API_Project_GetProjectproposalsById = 'Project/GetProjectproposalsById';
@@ -211,7 +213,7 @@ export class GLOBAL {
   public static API_VoucherTransaction_GetAllVoucherList = 'VoucherTransaction/GetAllVoucherList';
   public static API_VoucherTransaction_GetVoucherDetailByVoucherNo = 'VoucherTransaction/GetVoucherDetailByVoucherNo';
   public static API_VoucherTransaction_AddVoucherDetail = 'VoucherTransaction/AddVoucherDetail';
-  public static API_VoucherTransaction_EditVoucherDetail= 'VoucherTransaction/EditVoucherDetail';
+  public static API_VoucherTransaction_EditVoucherDetail = 'VoucherTransaction/EditVoucherDetail';
   public static API_VoucherTransaction_VerifyVoucher = 'VoucherTransaction/VerifyVoucher';
   public static API_VoucherTransaction_GetAllTransactionsByVoucherId = 'VoucherTransaction/GetAllTransactionsByVoucherId';
   public static API_VoucherTransaction_AddEditTransactionList = 'VoucherTransaction/AddEditTransactionList';
@@ -424,6 +426,7 @@ export class GLOBAL {
   public static API_Pdf_ProjectActivityReportPdf = 'Pdf/ProjectActivityReportPdf';
   public static API_Pdf_TrialBalanceReportPdf = 'Pdf/GetTrailBalanceReportPdf';
   public static API_Pdf_LedgerReportPdf = 'Pdf/GetLedgerReportPdf';
+  public static API_Pdf_JournalTrialBalanceReportPdf = 'Pdf/GetJournalTrialBalanceReportPdf';
 
   //#endregion
 

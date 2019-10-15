@@ -1,0 +1,98 @@
+CREATE
+OR REPLACE FUNCTION public.get_budgetlinebreakdown(
+    currency integer,
+    projectid bigint,
+    budgetlinestartdate text,
+    budgetlineenddate text,
+    budgetlineids bigint []
+) RETURNS TABLE(
+    voucherdate date,
+    expenditure double precision,
+    currencyid integer
+) LANGUAGE 'plpgsql' COST 100 VOLATILE ROWS 1000 AS $Body$ -- Declaration
+DECLARE _currencyid INTEGER = currency;
+
+_projectid BIGINT = projectid;
+
+_budgetlinestartdate TEXT = budgetlinestartdate;
+
+_budgetlineenddate TEXT = budgetlineenddate;
+
+_budgetlineids BIGINT [] = budgetlineids;
+
+BEGIN CREATE TEMP TABLE temp_budgetlinebreakdown(
+    voucherdate DATE,
+    expenditure DOUBLE PRECISION,
+    currencyid INTEGER
+);
+
+INSERT INTO
+    temp_budgetlinebreakdown
+SELECT
+    tt.VoucherDate,
+    tt."Debit",
+    tt._currencyid
+FROM
+    (
+        SELECT
+            date(vd."VoucherDate") as VoucherDate,
+            Sum(
+                vt."Debit" * (
+                    SELECT
+                        "Rate"
+                    FROM
+                        "ExchangeRateDetail"
+                    WHERE
+                        "IsDeleted" = false
+                        AND "FromCurrency" = vd."CurrencyId"
+                        AND "ToCurrency" = _currencyid
+                        AND "Date" :: Date <= vd."VoucherDate" :: Date
+                    ORDER BY
+                        "Date" DESC
+                    LIMIT
+                        1
+                )
+            ) AS "Debit",
+            _currencyid
+        FROM
+            "VoucherDetail" AS vd
+            JOIN "VoucherTransactions" AS vt ON vt."VoucherNo" = vd."VoucherNo"
+            JOIN "ProjectBudgetLineDetail" AS bl ON vt."BudgetLineId" = bl."BudgetLineId"
+        WHERE
+            vd."IsDeleted" = false
+            AND vt."BudgetLineId" IN (
+                SELECT
+                    "BudgetLineId"
+                FROM
+                    "ProjectBudgetLineDetail"
+                WHERE
+                    "CreatedDate" :: Date >= CAST(_budgetlinestartdate AS Date) :: Date
+                    AND "CreatedDate" :: Date <= CAST(_budgetlineenddate AS Date) :: Date
+                    AND "ProjectId" = _projectid
+            )
+            AND vt."BudgetLineId" IN (
+                select
+                    *
+                from
+                    unnest(_budgetlineids)
+            )
+            AND vd."VoucherDate" :: Date >= _budgetlinestartdate :: Date
+            AND vd."VoucherDate" :: Date <= _budgetlineenddate :: Date
+        GROUP BY
+            date(vd."VoucherDate")
+    ) AS tt;
+
+RETURN QUERY
+SELECT
+    *
+from
+    temp_budgetlinebreakdown
+ORDER BY
+    voucherdate;
+
+DROP TABLE temp_budgetlinebreakdown;
+
+END;
+
+$Body$;
+
