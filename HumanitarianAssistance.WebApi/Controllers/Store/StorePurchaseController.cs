@@ -166,6 +166,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
             }
             else
             {
+                
                 return BadRequest(result.Exception.InnerException.Message);
             }
         }

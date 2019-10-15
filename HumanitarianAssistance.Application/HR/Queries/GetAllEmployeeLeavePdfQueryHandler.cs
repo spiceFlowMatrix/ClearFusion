@@ -55,6 +55,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                                                                  x.AttendanceGroupId == employeeDetail.EmployeeProfessionalDetail.AttendanceGroupId)
                                                                                  .ToListAsync();
 
+                
+
                 //Get All Leave Types
                 List<LeaveReasonDetail> leaveReasonDetails = await _dbContext.LeaveReasonDetail.Where(x => x.IsDeleted == false).ToListAsync();
 
@@ -144,7 +146,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw ex;
             }
 
             return await _pdfExportService.ExportToPdf(model, "Pages/PdfTemplates/EmployeeLeaveReport.cshtml");

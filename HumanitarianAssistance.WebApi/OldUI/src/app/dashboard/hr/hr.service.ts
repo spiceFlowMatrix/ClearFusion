@@ -1371,15 +1371,17 @@ export class HrService {
 
   //#region "Add Leave Info"
   DownloadPDF(url: string, data: any) {
+    debugger;
     const Myheaders = new Headers();
     Myheaders.append(
       'Authorization',
       'Bearer ' + localStorage.getItem('authenticationtoken'),
     );
-    Myheaders.append('accept', 'application/pdf');
-    const options = new RequestOptions({ headers: Myheaders});
+   // Myheaders.append('accept', 'application/pdf');
+    const options = { headers: Myheaders,
+                         observe: 'response'};
     return this.http
-      .post(url, data, {responseType: ResponseContentType.Blob, headers: Myheaders})
+      .post(url, data, options)
       .map((response: Response) => {
         const result = response.blob();
         if (result) {
@@ -1411,6 +1413,8 @@ export class HrService {
   //#endregion
 
     private handleError(error: Response) {
+      debugger;
+      console.log(error.headers.get('ExceptionMessage'));
     return Observable.throw(error.json().error || 'Server error');
   }
 }
