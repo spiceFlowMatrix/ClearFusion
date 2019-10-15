@@ -123,7 +123,7 @@ export class AddHiringRequestsComponent implements OnInit, OnChanges {
       MinimumEducationLevel: ['', Validators.required],
       Experience: ['', Validators.required],
       Organization: ['', Validators.required],
-      RequestedBy: ['', Validators.required]
+      RequestedBy: ['']
     });
   }
   //#endregion

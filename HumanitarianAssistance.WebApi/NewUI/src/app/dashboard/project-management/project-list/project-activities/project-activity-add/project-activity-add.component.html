@@ -117,7 +117,7 @@
     </div>
     <div mat-dialog-actions class="pull-right">
       <button mat-raised-button [mat-dialog-close]="data">Cancel</button>
-      <button mat-raised-button color="primary" type="submit" [disabled]="addActivityLoader">
+      <button  mat-raised-button color="primary" type="submit" [disabled]="addActivityLoader">
         <span *ngIf="!addActivityLoader; else activityAddLoaderTemplate">Add</span>
         <ng-template #activityAddLoaderTemplate>
           <div class="spinner_center padding_top_5 padding_bottom_5">

@@ -83,7 +83,7 @@
                         <td>
                           <mat-form-field>
                             <mat-label>Source Name</mat-label>
-                            <mat-select [(ngModel)]="question.VerificationSourceId">
+                            <mat-select [(ngModel)]="question.VerificationSourceId" required (selectionChange)="onVerificationChange($event)">
                               <mat-option *ngFor="let verification of question.VerificationSources"
                                 [value]="verification.VerificationSourceId">
                                 {{verification.VerificationSourceName}}
@@ -94,8 +94,8 @@
                         <td *ngIf="question.QuestionTypeName == questionTypeList[0].Name; else qualitativeTemplate">
                           <mat-form-field>
                             <mat-label>Score</mat-label>
-                            <mat-select [(ngModel)]="question.Score">
-                              <mat-option *ngFor="let score of monitoringQualitativeScore" [value]="score.score">
+                            <mat-select [(ngModel)]="question.Score" required (selectionChange)="onQuestionScorechange($event)">
+                              <mat-option *ngFor="let score of monitoringQualitativeScore" [value]="score.score"    >
                                 {{score.name}}
                               </mat-option>
                             </mat-select>
@@ -105,7 +105,7 @@
                           <td>
                             <mat-form-field>
                               <mat-label>Score</mat-label>
-                              <mat-select [(ngModel)]="question.Score">
+                              <mat-select [(ngModel)]="question.Score" required (selectionChange)="onQuestionScorechange($event)">
                                 <mat-option *ngFor="let score of monitoringQuantitativeScore" [value]="score.score">
                                   {{score.name}}
                                 </mat-option>
@@ -158,7 +158,7 @@
     <button mat-raised-button (click)="onCancelPopup()">
       Cancel
     </button>
-    <button mat-raised-button color="primary" (click)="saveMonitoringReview()" [disabled]="filterLoaderFlag">
+    <button mat-raised-button color="primary" (click)="saveMonitoringReview()" [disabled]="filterLoaderFlag || scoreFlag ==true || verificationFlag == true">
       <span class="pull-left spinner_center margin_top_10" *ngIf="filterLoaderFlag">
         <mat-spinner [diameter]="15"></mat-spinner>
       </span>

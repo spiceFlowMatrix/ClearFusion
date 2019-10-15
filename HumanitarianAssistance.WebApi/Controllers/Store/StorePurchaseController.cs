@@ -1,8 +1,10 @@
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Configuration.Queries;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Application.Store.Commands.Create;
 using HumanitarianAssistance.Application.Store.Models;
 using HumanitarianAssistance.Application.Store.Queries;
 using HumanitarianAssistance.Common.Enums;
@@ -147,5 +149,26 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
                 return BadRequest(result.Exception.InnerException.Message);
             }
         }
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> AddStorePurchase([FromBody] AddStorePurchaseCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            var result = await Task.FromResult(_mediator.Send(command));
+
+            if (result.Exception == null)
+            {
+                return Ok(await result);
+            }
+            else
+            {
+                return BadRequest(result.Exception.InnerException.Message);
+            }
+        }
+
     }
 }

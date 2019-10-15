@@ -15,7 +15,12 @@ import {
   IProjectActivityDocumentModel,
   IActivityExtensionMode
 } from '../../models/project-activities.model';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  AbstractControl
+} from '@angular/forms';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
 import { ProjectActivitiesService } from '../../service/project-activities.service';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
@@ -87,7 +92,6 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.getActivityPermission();
-    console.log(this.projectSubActivityList.length);
   }
 
   ngOnChanges() {
@@ -109,16 +113,10 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
       ActualEndDate: [this.subActivityDetail.ActualEndDate],
       EmployeeID: [this.subActivityDetail.EmployeeID],
       Progress: [],
-      Target: [
-        this.subActivityDetail.Target,
-        [Validators.min(0)]
-      ],
-      Achieved: [
-        this.subActivityDetail.Achieved,
-        [Validators.min(0)]
-      ],
+      Target: [this.subActivityDetail.Target, [Validators.min(0)]],
+      Achieved: [this.subActivityDetail.Achieved, [Validators.min(0)]],
       SubActivityTitle: [this.subActivityDetail.SubActivityTitle]
-    });
+    }, { validator: this.achievedRangeValidator });
   }
 
   onChanges(data: any): void {
@@ -128,7 +126,16 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
       this.editProjectSubActivity(data);
     }
   }
-
+// Note Custom validator
+  achievedRangeValidator(group: FormGroup): { invalid: boolean } {
+    const achieved = group.controls['Achieved'];
+    const target = group.controls['Target'];
+    if (achieved.value > target.value) {
+       achieved.setErrors({ invalid: true });
+    } else {
+      return null;
+    }
+  }
   //#region "Permission"
   getActivityPermission() {
     this.activitiesService.activityPermissionSubject
@@ -146,8 +153,7 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
           // Mark Add Extension permission
           this.addExtensionPermission = this.checkAddExtensionPermission();
 
-          console.log(this.markCompletePermission);
-          console.log(this.addExtensionPermission);
+
         }
       });
   }
@@ -205,8 +211,10 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
                   100;
                 const newProgress =
                   (response.data.Achieved / response.data.Target) * 100;
-                const progressDiffer = (oldProgress - newProgress);
-                this.progressDifference = (progressDiffer / this.projectSubActivityList.length).toFixed(2);
+                const progressDiffer = oldProgress - newProgress;
+                this.progressDifference = (
+                  progressDiffer / this.projectSubActivityList.length
+                ).toFixed(2);
                 response.data.Progress = this.progressDifference;
                 this.updateActivityStatusId.emit(response.data);
                 this.SubActivityTitle = response.data.SubActivityTitle;
@@ -305,8 +313,8 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
               StaticUtilities.setLocalDate(response.data.ActualStartDate)
             );
             this.startActivityLoaderFlag = false;
-           // note comment on 27-09-2019
-           // this.updateActivityStatusId.emit(response.data);
+            // note comment on 27-09-2019
+            // this.updateActivityStatusId.emit(response.data);
             // this.onCancelPopup();
           } else {
             this.toastr.error(response.message);

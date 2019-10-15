@@ -68,7 +68,9 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                         FiredOn = request.FiredOn,
                         FiredReason = request.FiredReason,
                         ResignationOn = request.ResignationOn,
-                        ResignationReason = request.ResignationReason
+                        ResignationReason = request.ResignationReason,
+                        AttendanceGroupId= request.AttendanceGroupId,
+                        DutyStation= request.DutyStation
                     };
 
                     EmployeeProfessionalDetail obj1 = _mapper.Map<EmployeeProfessionalDetail>(empprofessional);

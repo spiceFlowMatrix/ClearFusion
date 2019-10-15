@@ -21,6 +21,7 @@ export class AddQuestionsDialogComponent implements OnInit {
   @Output() onUpdatedQuestionListRefresh = new EventEmitter();
   //#region  "variables"
   public questionForm: FormGroup;
+  verificationSounceLoaderFlag: false;
   questionDetailModel: IQuestionDetailModel;
   IndicatorDetail: any;
   questionDetail: any;

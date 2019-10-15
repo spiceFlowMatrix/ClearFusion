@@ -73,7 +73,7 @@
               </div>
               <div class="col-lg-6 col-sm-6">
                 <mat-form-field>
-                  <input matInput formControlName="ActivityStartDate" [matDatepicker]="planningStartDatepicker"
+                  <input matInput formControlName="ActivityStartDate" [matDatepicker]="planningStartDatepicker" [disabled]="diasbleEndDate == true" readonly="diasbleEndDate == true"
                     placeholder="Start Date" />
                   <mat-datepicker-toggle matSuffix [for]="planningStartDatepicker"></mat-datepicker-toggle>
                   <mat-datepicker color="primary" #planningStartDatepicker></mat-datepicker>
@@ -82,7 +82,7 @@
               </div>
               <div class="col-lg-6 col-sm-6">
                 <mat-form-field>
-                  <input matInput [min]="activityStartDate" formControlName="ActivityEndDate"
+                  <input matInput [min]="activityStartDate" formControlName="ActivityEndDate" readonly="diasbleEndDate == true"
                     [disabled]="diasbleEndDate" [matDatepicker]="planningEndDatepicker" placeholder="End Date" />
                   <mat-datepicker-toggle matSuffix [for]="planningEndDatepicker"></mat-datepicker-toggle>
                   <mat-datepicker color="primary" #planningEndDatepicker></mat-datepicker>
@@ -100,7 +100,7 @@
               </div>
               <div class="col-lg-6 col-sm-6">
                 <mat-form-field>
-                  <input matInput [min]="activityActualStartdate" formControlName="ActualEndDate"
+                  <input matInput [min]="activityActualStartdate" formControlName="ActualEndDate" [attr.disabled]="ngAfterContentChecked"
                     [matDatepicker]="planningActualEndDatepicker" placeholder="Actual End Date" />
                   <mat-datepicker-toggle matSuffix [for]="planningActualEndDatepicker"></mat-datepicker-toggle>
                   <mat-datepicker color="primary" #planningActualEndDatepicker></mat-datepicker>

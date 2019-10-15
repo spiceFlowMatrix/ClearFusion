@@ -120,7 +120,7 @@
 
                             <dx-data-grid id="gridContainer" [dataSource]="ratingBasedCriteriaDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
                               [showRowLines]="true"
-                              (onRowInserted)="ratingCriteriaQuestionsValueChanged()">
+                              (onRowInserted)="ratingCriteriaQuestionsValueChanged()" (onRowUpdated)="ratingCriteriaQuestionsValueChanged()">
 
                               <dxo-editing [allowAdding]="!interviewFormViewOnly" [allowUpdating]="!interviewFormViewOnly" mode="batch"></dxo-editing>
                               <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
@@ -225,7 +225,7 @@
                           <dxi-tab title="Technical Question">
 
                             <dx-data-grid id="gridContainer" [dataSource]="technicalQuestionsListDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
-                              [showRowLines]="true"  (onRowInserted)="technicalQuestionsValueChanged()">
+                              [showRowLines]="true"  (onRowInserted)="technicalQuestionsValueChanged()" (onRowUpdated)="technicalQuestionsValueChanged()">
                               <dxo-editing [allowAdding]="!interviewFormViewOnly" [allowUpdating]="!interviewFormViewOnly" mode="batch"></dxo-editing>
                               <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
                               <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
@@ -457,7 +457,7 @@
 
                             <dx-data-grid id="gridContainer" [dataSource]="ratingBasedCriteriaDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
                               [showRowLines]="true"
-                              (onRowInserted)="ratingCriteriaQuestionsValueChanged()">
+                              (onRowInserted)="ratingCriteriaQuestionsValueChanged()" (onRowUpdated)="ratingCriteriaQuestionsValueChanged()">
 
                               <dxo-editing [allowAdding]="!interviewFormViewOnly" [allowUpdating]="!interviewFormViewOnly" mode="batch"></dxo-editing>
                               <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
@@ -556,7 +556,7 @@
                           <dxi-tab title="Technical Question">
 
                             <dx-data-grid id="gridContainer" [dataSource]="technicalQuestionsListDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
-                              [showRowLines]="true"  (onRowInserted)="technicalQuestionsValueChanged()">
+                              [showRowLines]="true"  (onRowInserted)="technicalQuestionsValueChanged()" (onRowUpdated)="technicalQuestionsValueChanged()">
                               <dxo-editing [allowAdding]="!interviewFormViewOnly" [allowUpdating]="!interviewFormViewOnly" mode="batch"></dxo-editing>
                               <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
                               <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>

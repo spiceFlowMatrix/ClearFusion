@@ -9,7 +9,7 @@
               <div class="col-md-12">
                 <div class="col-md-4">
                   <lib-hum-dropdown [validation]="addProcurementForm.controls['InventoryTypeId'].hasError('required')"  [options]="inventoryType$" formControlName='InventoryTypeId' [placeHolder]="'Inventory'"
-                    (change)="getInventoryTypeSelectedValue($event)"></lib-hum-dropdown>
+                    ></lib-hum-dropdown>
                 </div>
                 <div class="col-md-4">
                   <lib-hum-dropdown [validation]="addProcurementForm.controls['InventoryId'].hasError('required')" [options]="storeInventory$" formControlName='InventoryId' [placeHolder]="'Inventory(Master)'"
@@ -25,11 +25,11 @@
                 <div class="col-md-12">
                   <div class="col-md-4">
                     <lib-hum-dropdown [validation]="addProcurementForm.controls['ItemId'].hasError('required')" [options]="storeItems$" formControlName='ItemId' [placeHolder]="'Item'"
-                      (change)="getItemSelectedValue($event)"></lib-hum-dropdown>
+                      ></lib-hum-dropdown>
                   </div>
                   <div class="col-md-4">
                     <lib-hum-dropdown [validation]="addProcurementForm.controls['PurchaseId'].hasError('required')" [options]="purchases$" formControlName='PurchaseId' [placeHolder]="'Purchase Name'"
-                      (change)="getSelectedPurchaseName($event)"></lib-hum-dropdown>
+                      ></lib-hum-dropdown>
                   </div>
                 </div>
               </div>
