@@ -1,0 +1,29 @@
+CREATE
+OR REPLACE FUNCTION public.get_debit_percentage(
+    budget_line_id bigint,
+    initial_budget DOUBLE PRECISION
+) returns double precision AS $total$ DECLARE total DOUBLE PRECISION;
+
+debit_amt integer;
+
+Begin
+select
+    sum("Debit") into debit_amt
+from
+    "VoucherTransactions"
+where
+    "BudgetLineId" = budget_line_id;
+
+select
+    (debit_amt / initial_budget) * 100 into total
+from
+    "VoucherTransactions"
+where
+    "BudgetLineId" = budget_line_id
+    and "IsDeleted" = false;
+
+RETURN total;
+
+end;
+
+$total$ LANGUAGE plpgsql;
