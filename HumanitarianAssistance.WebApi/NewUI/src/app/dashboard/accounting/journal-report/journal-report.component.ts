@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, Input } from '@angular/core';
 import {ReportService} from 'src/app/dashboard/accounting/report-services/report.service';
 import { ToastrService } from 'ngx-toastr';
 import { GLOBAL } from 'src/app/shared/global';
-import { Observable, of } from 'rxjs';
+import { Observable, of, ReplaySubject } from 'rxjs';
 import { IDropDownModel } from 'src/app/dashboard/accounting/report-services/report-models';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { GlobalService } from 'src/app/shared/services/global-services.service';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
-import { map } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { IMenuList } from 'src/app/shared/dbheader/dbheader.component';
-import { IOpenedChange } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
+import { IOpenedChange, IDataSource } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
 
 @Component({
   selector: 'app-journal-report',
@@ -38,6 +38,7 @@ export class JournalReportComponent implements OnInit {
   currentDateFinal: any;
   journalDateRange: any;
   journalDate: any;
+  projectList = [];
 
   // Report
   viewPdfFlag = true;
@@ -52,14 +53,22 @@ export class JournalReportComponent implements OnInit {
   selectedOffices: any[];
   selectedCurrency: any;
   selectedJournal: any[];
+  selectedJobs: any[];
   defaultRecordType: any;
+  multiProjectList: any[] ;
+  multiProjectJobList: any[];
+  multiBudgetLineList: any[];
 
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   currencyId$: Observable<IDropDownModel[]>;
   recordType$: Observable<IDropDownModel[]>;
   journalListHeaders$ = of(['Transaction Date', 'Voucher Code', 'Transaction Description', 'Currency', 'Account Code', 'Account Name',
   'Debit Amount', 'Credit Amount', 'Project', 'Budget Line']);
   journalFilterList$: Observable<IJournalList[]>;
   journalFilterForm: FormGroup;
+  screenHeight: number;
+  screenWidth: number;
+  scrollStyles: any;
   //#endregion
   constructor(
     private accountservice: ReportService,
@@ -91,6 +100,7 @@ export class JournalReportComponent implements OnInit {
       date: {'begin': new Date(new Date().getFullYear(), new Date().getMonth(), 1), 'end': new Date()},
       BudgetLine: null,
       Project: null,
+      JobCode: null,
       accountLists: null,
       FromDate: null ,
       ToDate : null
@@ -120,14 +130,25 @@ export class JournalReportComponent implements OnInit {
     );
     // Set Menu Header List
     this.globalService.setMenuList(this.menuList);
+    this.getScreenSize();
    }
-
+   @HostListener('window:resize', ['$event'])
+   getScreenSize(event?) {
+     this.screenHeight = window.innerHeight;
+     this.screenWidth = window.innerWidth;
+     this.scrollStyles = {
+       'overflow-y': 'auto',
+       height: this.screenHeight - 110 + 'px',
+       'overflow-x': 'hidden'
+     };
+   }
   ngOnInit() {
     this.globalService.setMenuHeaderName('Journal');
+    this.getProjectList();
     this.getCurrencyCodeList();
     this.getOfficeCodeList();
     this.getJournalDropdownList();
-    this.GetAllJournalDetails();
+    // this.GetAllJournalDetails();
     this.GetAccountDetails();
 
     this.journalFilterForm = this.fb.group({
@@ -136,12 +157,15 @@ export class JournalReportComponent implements OnInit {
       'JournalCode': ['', Validators.required],
       'RecordType': [1, Validators.required],
       'accountLists': ['', Validators.required],
-      'date': [{'begin': new Date(new Date().getFullYear(), 0, 1), 'end': new Date()}]
+      'date': [{'begin': new Date(new Date().getFullYear(), 0, 1), 'end': new Date()},
+      Validators.required],
+      'Project' : [[]],
+      'JobCode' : [[]],
+      'BudgetLine' : [[]]
     });
   }
  //#region "onApplyingFilter"
  onApplyingFilter(value: JournalFilterModel) {
-   debugger;
   if (this.journalDateRange == null) {
     this.toastr.error('Please Select Date Range');
   } else {
@@ -169,10 +193,11 @@ export class JournalReportComponent implements OnInit {
       ),
       BudgetLine: value.BudgetLine,
       Project: value.Project,
+      JobCode: value.JobCode,
       accountLists: value.accountLists,
       date: null
     };
-    this.GetAllJournalDetails();
+    this.GetAllJournalDetails(this.journalFilter);
   }
 }
 //#endregion
@@ -186,6 +211,35 @@ onOpenedOfficeMultiSelectChange(event: IOpenedChange) {
 onOpenedJournalMultiSelectChange(event: IOpenedChange) {
   this.journalFilterForm.controls['JournalCode'].setValue(event.Value);
 }
+onOpenedProjectMultiSelectChange(event: number[]) {
+  this.journalFilterForm.controls['Project'].setValue(event);
+  const projectFilter = event;
+    if (projectFilter.length > 0) {
+      this.multiBudgetLineList = [];
+      this.multiProjectJobList = [];
+      this.journalFilterForm.controls['JobCode'].setValue([]);
+      this.journalFilterForm.controls['BudgetLine'].setValue([]);
+      this.getProjectBudgetLineList(projectFilter);
+    } else {
+      this.multiBudgetLineList = [];
+      this.multiProjectJobList = [];
+      this.journalFilterForm.controls['JobCode'].setValue([]);
+      this.journalFilterForm.controls['BudgetLine'].setValue([]);
+    }
+}
+onOpenedProjectJobMultiSelectChange(event: number[]) {
+  this.journalFilterForm.controls['JobCode'].setValue(event);
+}
+onOpenedBudgetLineMultiSelectChange(event: number[]) {
+  this.journalFilterForm.controls['BudgetLine'].setValue(event);
+  const projectbudgetFilter = event;
+    if (projectbudgetFilter.length > 0) {
+      this.getProjectJobList(projectbudgetFilter);
+    } else {
+      this.multiProjectJobList = [];
+      this.journalFilterForm.controls['JobCode'].setValue([]);
+    }
+}
 get AccountIds() {
   return this.journalFilterForm.get('accountLists').value;
 }
@@ -195,6 +249,90 @@ get journalIds() {
 get OfficeIds() {
   return this.journalFilterForm.get('OfficesList').value;
 }
+get ProjectIds() {
+  return this.journalFilterForm.get('Project').value;
+}
+get projectJobIds() {
+  return this.journalFilterForm.get('JobCode').value;
+}
+get budgetLineIds() {
+  return this.journalFilterForm.get('BudgetLine').value;
+}
+
+getProjectList() {
+  this.accountservice
+    .GetProjectList()
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(
+      (response) => {
+        this.projectList = [];
+        this.multiProjectList = [];
+        if (response.statusCode === 200 && response.data !== null) {
+          response.data.forEach(element => {
+            this.projectList.push({
+              ProjectId: element.ProjectId,
+              ProjectCode: element.ProjectCode,
+              ProjectName: element.ProjectName,
+              ProjectNameCode: element.ProjectCode + '-' + element.ProjectName
+            });
+
+            this.multiProjectList.push({
+              Id: element.ProjectId,
+              Name: element.ProjectCode + '-' + element.ProjectName
+            });
+          });
+        }
+      },
+      error => {}
+    );
+}
+
+getProjectJobList(projectbudgetIds: number[]) {
+  this.accountservice
+    .getProjectJobList(projectbudgetIds)
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(
+      (response) => {
+        this.multiProjectJobList = [];
+        this.selectedJobs = [];
+        if (response.statusCode === 200 && response.data !== null) {
+          response.data.forEach(element => {
+            this.multiProjectJobList.push({
+              Id: element.ProjectJobId,
+              Name: element.ProjectJobName
+            });
+          });
+          this.multiProjectJobList.forEach(x => {
+            this.selectedJobs.push(x.Id);
+          });
+          this.journalFilterForm.controls['JobCode'].setValue(this.selectedJobs);
+        }
+      },
+      error => {}
+    );
+}
+
+getProjectBudgetLineList(projectIds: number[]) {
+  this.accountservice
+    .getProjectBudgetLineList(projectIds)
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(
+      (response) => {
+        this.multiBudgetLineList = [];
+        if (response.statusCode === 200 && response.data !== null) {
+          response.data.forEach(element => {
+            this.multiBudgetLineList.push({
+              Id: element.BudgetLineId,
+              Name: element.BudgetName
+            });
+          });
+          this.journalFilterForm.controls['BudgetLine'].setValue([]);
+        }
+      },
+      error => {}
+    );
+}
+
 //#region "getCurrencyCodeList"
 getCurrencyCodeList() {
   this.accountservice
@@ -241,7 +379,7 @@ getOfficeCodeList() {
         if (data.data.OfficeDetailsList != null) {
           this.officeDropdown = [];
 
-          //const allOffices = [];
+          // const allOffices = [];
           const officeIds: any[] =
             localStorage.getItem('ALLOFFICES') != null
               ? localStorage.getItem('ALLOFFICES').split(',')
@@ -292,8 +430,8 @@ getOfficeCodeList() {
 //#endregion
 
 //#region "GetAllJournalDetails"
-GetAllJournalDetails() {
-  debugger;
+GetAllJournalDetails(journalFilter) {
+
   this.showjournalListLoading();
 
   this.journalReportDataSource = [];
@@ -304,7 +442,7 @@ GetAllJournalDetails() {
 
   this.accountservice
     .GetAllJournalDetails(
-      this.journalFilter
+      journalFilter
     )
     .subscribe(
       data => {
@@ -325,7 +463,6 @@ GetAllJournalDetails() {
             parseFloat(this.debitSumForReport) -
             parseFloat(this.creditSumForReport)
           ).toFixed(4);
-
           data.data.JournalVoucherViewList.forEach(element => {
             this.journalDataSource.push(element);
           });
@@ -341,9 +478,11 @@ GetAllJournalDetails() {
               DebitAmount: v.DebitAmount,
               CreditAmount: v.CreditAmount,
               Project: v.Project,
-              BudgetLine: v.BudgetLine
+              BudgetLine: v.BudgetLineDescription
              }) as IJournalList))
           );
+        } else {
+          this.journalFilterList$ = of();
         }
         // else
         //   this.toastr.error(data.Message);
@@ -456,6 +595,37 @@ GetAccountDetails() {
 }
 //#endregion
 
+ExportTrialBalPdf(value) {
+  this.journalFilter = {
+    CurrencyId: value.CurrencyId,
+    JournalCode: value.JournalCode,
+    OfficesList: value.OfficesList,
+    RecordType:
+      value.RecordType == null ? this.defaultRecordType : value.RecordType,
+    FromDate: new Date(
+      new Date(value.date.begin).getFullYear(),
+      new Date(value.date.begin).getMonth(),
+      new Date(value.date.begin).getDate(),
+      new Date().getHours(),
+      new Date().getMinutes(),
+      new Date().getSeconds()
+    ),
+    ToDate: new Date(
+      new Date(value.date.end).getFullYear(),
+      new Date(value.date.end).getMonth(),
+      new Date(value.date.end).getDate(),
+      new Date().getHours(),
+      new Date().getMinutes(),
+      new Date().getSeconds()
+    ),
+    BudgetLine: value.BudgetLine,
+    Project: value.Project,
+    JobCode: value.JobCode,
+    accountLists: value.accountLists,
+    date: null
+  };
+  this.accountservice.onExportJournalTrialBalancePdf(this.journalFilter);
+}
 //#region "export pdf"
 printJournalReport(): void {
   let printContents, popupWin;
@@ -519,8 +689,9 @@ CurrencyId: number;
 JournalCode: any[];
 RecordType: number;
 accountLists: any;
-Project: any;
-BudgetLine: any;
+Project: any[];
+BudgetLine: any[];
+JobCode: any[];
 FromDate: any;
 ToDate: any;
 date: any;

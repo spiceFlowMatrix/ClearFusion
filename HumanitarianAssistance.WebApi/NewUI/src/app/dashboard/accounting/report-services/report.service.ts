@@ -3,6 +3,7 @@ import { GlobalService } from 'src/app/shared/services/global-services.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -80,6 +81,56 @@ export class ReportService {
     );
   }
 
+  GetProjectList(): any {
+    return this.globalService
+      .getList(this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProjectList)
+      .pipe(
+        map(x => {
+          const responseData = {
+            data: x.data.ProjectDetailModel,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  getProjectJobList(projectBudgetIds: number[]) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_Project_GetProjectJobsByBudgetLineIds,
+        projectBudgetIds
+      )
+      .pipe(
+        map(x => {
+          const responseData = {
+            data: x.data.ProjectJobDetailModel,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  getProjectBudgetLineList(projectIds: number[]) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Project_GetProjectBudgetLinesByProjectIds,
+        projectIds
+      )
+      .pipe(
+        map(x => {
+          const responseData = {
+            data: x.data.ProjectBudgetLineDetailList,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+
   onExportTrialBalancePdf(value) {
     this.globalSharedService
       .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_TrialBalanceReportPdf,
@@ -92,6 +143,15 @@ export class ReportService {
   onExportLedgerPdf(value) {
     this.globalSharedService
       .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_LedgerReportPdf,
+      value
+      )
+      .pipe()
+      .subscribe();
+  }
+
+  onExportJournalTrialBalancePdf(value) {
+    this.globalSharedService
+      .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_JournalTrialBalanceReportPdf,
       value
       )
       .pipe()
