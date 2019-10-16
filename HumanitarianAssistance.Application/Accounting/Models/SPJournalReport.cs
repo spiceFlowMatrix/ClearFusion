@@ -17,8 +17,8 @@ namespace HumanitarianAssistance.Application.Accounting.Models
         public string AccountCode { get; set; }
         public int JournalCode { get; set; }
         public string AccountName { get; set; }
-        public string ProjectCode { get; set; }
-        public string BudgetCode { get; set; }
-        public string ProjectJobCode { get; set; }
+        // public string ProjectCode { get; set; }
+        // public string BudgetCode { get; set; }
+        // public string ProjectJobCode { get; set; }
     }
 }

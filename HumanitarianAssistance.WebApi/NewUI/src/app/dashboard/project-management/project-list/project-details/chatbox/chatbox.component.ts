@@ -40,8 +40,8 @@ export class ChatboxComponent implements OnInit {
 
     // this._hubConnection
     //   .start()
-    //   .then(() => console.log('Connection started!'))
-    //   .catch(err => console.log('Error while establishing connection :('));
+    //   .then(() => // console.log('Connection started!'))
+    //   .catch(err => // console.log('Error while establishing connection :('));
 
     //   this._hubConnection.on('ProjectChatSave', (UserRole:string,UserName: string, receivedMessage: string) => {
     //     const text = `${UserRole}: ${UserName}: ${receivedMessage}`;
