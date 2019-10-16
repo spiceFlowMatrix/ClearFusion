@@ -1,97 +1,109 @@
-<mat-card>
+<mat-card [ngStyle]="scrollStyles">
     <div class="main-journal">
       <mat-card>
         <form [formGroup]="journalFilterForm" (ngSubmit)="onApplyingFilter(journalFilterForm.value)">
           <div class="row">
-            <div class="col-md-12">
-                  <div class="col-md-3">
-                      <lib-search-dropdown
-                      placeholder="Office"
-                      [multiSelect]="true"
-                      placeholderSearchLabel="Find Offices..."
-                      noEntriesFoundLabel="No matching Accounts found"
-                      [dataSource]="officeDropdown"
-                      [selectedValue]="OfficeIds"
-                      (openedChange)="
-                              onOpenedOfficeMultiSelectChange($event)
-                            "
-                    >
-                    </lib-search-dropdown>
-                    <!-- <mat-form-field>
-                        <mat-label>Office</mat-label>
-                        <mat-select formControlName="OfficesList" multiple>
-                            <mat-option *ngFor="let office of officeDropdown" [value]="office.OfficeId">{{office.OfficeName}}</mat-option>
-                        </mat-select>
-                    </mat-form-field> -->
-                  </div>
-                  <div class="col-md-3">
-                      <lib-hum-dropdown [options]="currencyId$" formControlName="CurrencyId" [placeHolder]="'Currency'"
-                      ></lib-hum-dropdown>
-                  </div>
-                  <div class="col-md-3">
-                    <lib-hum-dropdown [options]="recordType$" formControlName="RecordType" [placeHolder]="'Record Type'"
-                      ></lib-hum-dropdown>
-                  </div>
-                  <div class="col-md-3">
-                      <lib-search-dropdown
-                      placeholder="Journal"
-                      [multiSelect]="true"
-                      placeholderSearchLabel="Find Journals..."
-                      noEntriesFoundLabel="No matching Journals found"
-                      [dataSource]="journalDropdown"
-                      [selectedValue]="journalIds"
-                      (openedChange)="onOpenedJournalMultiSelectChange($event)"
-                    >
-                    </lib-search-dropdown>
-                    <!-- <mat-form-field>
-                        <mat-label>Journal</mat-label>
-                        <mat-select formControlName="JournalCode" multiple>
-                            <mat-option *ngFor="let journal of journalDropdown" [value]="journal.JournalCode">{{journal.JournalName}}</mat-option>
-                        </mat-select>
-                    </mat-form-field> -->
-                  </div>
-                  <!--
-                  <div class="col-md-3">
-                    <lib-hum-dropdown [options]="currencies$" formControlName="CurrencyId" [placeHolder]="'Currency'"
-                      (change)="getCurrenciesSelectedValue($event)"></lib-hum-dropdown>
-                  </div> -->
+            <div class="col-md-3">
+                <lib-search-dropdown
+                placeholder="Office"
+                [multiSelect]="true"
+                placeholderSearchLabel="Find Offices..."
+                noEntriesFoundLabel="No matching Accounts found"
+                [dataSource]="officeDropdown"
+                [selectedValue]="OfficeIds"
+                (openedChange)="
+                        onOpenedOfficeMultiSelectChange($event)
+                      "
+              >
+              </lib-search-dropdown>
+            </div>
+            <div class="col-md-3">
+                <lib-hum-dropdown [options]="currencyId$" formControlName="CurrencyId" [placeHolder]="'Currency'"
+                ></lib-hum-dropdown>
+            </div>
+            <div class="col-md-3">
+              <lib-hum-dropdown [options]="recordType$" formControlName="RecordType" [placeHolder]="'Record Type'"
+                ></lib-hum-dropdown>
+            </div>
+            <div class="col-md-3">
+                <lib-search-dropdown
+                placeholder="Journal"
+                [multiSelect]="true"
+                placeholderSearchLabel="Find Journals..."
+                noEntriesFoundLabel="No matching Journals found"
+                [dataSource]="journalDropdown"
+                [selectedValue]="journalIds"
+                (openedChange)="onOpenedJournalMultiSelectChange($event)"
+              >
+              </lib-search-dropdown>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12">
-                <div class="col-md-3">
-                    <lib-search-dropdown
-                    placeholder="Accounts"
-                    [multiSelect]="true"
-                    placeholderSearchLabel="Find Accounts..."
-                    noEntriesFoundLabel="No matching Accounts found"
-                    [dataSource]="accountDropdown"
-                    [selectedValue]="AccountIds"
-                    (openedChange)="onOpenedAccountMultiSelectChange($event)"
-                  >
-                  </lib-search-dropdown>
-                    <!-- <mat-form-field>
-                        <mat-label>Accounts</mat-label>
-                        <mat-select formControlName="accountLists" multiple>
-                            <mat-option *ngFor="let account of accountDropdown" [value]="account.AccountCode">{{account.AccountName}}</mat-option>
-                        </mat-select>
-                    </mat-form-field> -->
-                </div>
-                <div class="col-md-3">
-                    <mat-form-field>
-                      <input matInput [satDatepicker]="resultPicker" formControlName="date">
-                      <sat-datepicker
-                          #resultPicker
-                          [rangeMode]="true">
-                      </sat-datepicker>
-                      <sat-datepicker-toggle matSuffix [for]="resultPicker"></sat-datepicker-toggle>
-                    </mat-form-field>
-                </div>
+            <div class="col-md-3">
+                <lib-search-dropdown
+                placeholder="Accounts"
+                [multiSelect]="true"
+                placeholderSearchLabel="Find Accounts..."
+                noEntriesFoundLabel="No matching Accounts found"
+                [dataSource]="accountDropdown"
+                [selectedValue]="AccountIds"
+                (openedChange)="onOpenedAccountMultiSelectChange($event)"
+              >
+            </lib-search-dropdown>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                  <input matInput [satDatepicker]="resultPicker" formControlName="date">
+                  <sat-datepicker
+                      #resultPicker
+                      [rangeMode]="true">
+                  </sat-datepicker>
+                  <sat-datepicker-toggle matSuffix [for]="resultPicker"></sat-datepicker-toggle>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <lib-search-dropdown
+                placeholder="Projects"
+                [multiSelect]="true"
+                placeholderSearchLabel="Find Project..."
+                noEntriesFoundLabel="No matching project found"
+                [dataSource]="multiProjectList"
+                [selectedValue]="ProjectIds"
+                (selectionChanged)="onOpenedProjectMultiSelectChange($event)"
+              >
+              </lib-search-dropdown>
+            </div>
+            <div class="col-md-3">
+                <lib-search-dropdown
+                placeholder="BudgetLines"
+                [multiSelect]="true"
+                placeholderSearchLabel="Find BudgetLine..."
+                noEntriesFoundLabel="No matching budgetline found"
+                [dataSource]="multiBudgetLineList"
+                [selectedValue]="budgetLineIds"
+                (selectionChanged)="onOpenedBudgetLineMultiSelectChange($event)"
+              >
+              </lib-search-dropdown>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12">
-              <button class="pull-right" type="submit" mat-stroked-button color="accent">Update Filters</button>
+            <div class="col-md-3">
+                <lib-search-dropdown
+                placeholder="Project Jobs"
+                [multiSelect]="true"
+                placeholderSearchLabel="Find Project Job..."
+                noEntriesFoundLabel="No matching project job found"
+                [dataSource]="multiProjectJobList"
+                [selectedValue]="projectJobIds"
+                (selectionChanged)="onOpenedProjectJobMultiSelectChange($event)"
+                ></lib-search-dropdown>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10"></div>
+            <div class="col-md-2">
+                <hum-button [isSubmit]="true" [type]="'save'" [text]="'UPDATE FILTERS'">
+                  </hum-button>
             </div>
           </div>
 
@@ -102,7 +114,9 @@
         </span>
 
         <div class="action_section">
-          <hum-button [type]="'text'" [text]="'PDF EXPORT'"></hum-button>
+          <hum-button [type]="'download'" [text]="'EXPORT BUDGET LINE REPORT'"></hum-button>
+          <hum-button [type]="'download'" [text]="'EXPORT LEDGER REPORT'"></hum-button>
+          <hum-button (click)="ExportTrialBalPdf(journalFilterForm.value)" [type]="'download'" [text]="'EXPORT TRIAL REPORT'"></hum-button>
         </div>
       </lib-sub-header-template>
       <mat-card>
