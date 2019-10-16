@@ -38,6 +38,9 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 //Get Employee Details
                 EmployeeDetail employeeDetail = await _dbContext.EmployeeDetail
                                                       .Include(x => x.EmployeeProfessionalDetail)
+                                                      .ThenInclude(x=> x.OfficeDetail)
+                                                      .Include(x => x.EmployeeProfessionalDetail)
+                                                      .ThenInclude(x=> x.AttendanceGroupMaster)
                                                       .FirstOrDefaultAsync(x => !x.IsDeleted &&
                                                       x.EmployeeID == request.EmployeeId && x.EmployeeTypeId != (int)EmployeeTypeStatus.Prospective);
                 
@@ -110,7 +113,10 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                     if(payrollMonthHour == null)
                     {
-                        throw new Exception(String.Format(StaticResource.PayrollDailyHoursNotSaved, item.Month.Month, employeeDetail.EmployeeProfessionalDetail.OfficeId));
+                        throw new Exception(String.Format(StaticResource.PayrollDailyHoursNotSaved,
+                                                          CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.Month.Month),
+                                                          employeeDetail.EmployeeProfessionalDetail.OfficeDetail.OfficeName, 
+                                                          employeeDetail.EmployeeProfessionalDetail.AttendanceGroupMaster.Name));
                     }
 
                     int workingHours = payrollMonthHour.Hours.Value;

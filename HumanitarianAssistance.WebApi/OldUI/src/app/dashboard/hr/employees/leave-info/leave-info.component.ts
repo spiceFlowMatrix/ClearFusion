@@ -651,6 +651,9 @@ export class LeaveInfoComponent implements OnInit {
           document.body.appendChild(link);
           link.click();
         }
+      },
+      error => {
+        this.toastr.warning(error);
       });
   }
 

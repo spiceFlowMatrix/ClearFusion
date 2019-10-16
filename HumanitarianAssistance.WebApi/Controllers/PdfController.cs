@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Accounting.Queries;
@@ -33,15 +34,24 @@ namespace HumanitarianAssistance.WebApi.Controllers
         [Produces(contentType: "application/pdf")]
         public async Task<IActionResult> GetAllEmployeeLeavePdf([FromBody] GetAllEmployeeLeavePdfQuery model)
         {
-            var result = await Task.FromResult(_mediator.Send(model));
+            try
+            {
+                var result = await Task.FromResult(_mediator.Send(model));
 
-            if (result.Exception == null)
-            {
-                return Ok(File(result.Result, "application/pdf", "EmployeeLeavePdf.pdf"));
+                if (result.Exception == null)
+                {
+                    return Ok(File(result.Result, "application/pdf", "EmployeeLeavePdf.pdf"));
+                }
+                else
+                {
+
+                    return BadRequest(result.Exception.InnerException.Message);
+                }
+
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest(result.Exception.InnerException.Message);
+                return BadRequest(ex.InnerException.Message);
             }
         }
 

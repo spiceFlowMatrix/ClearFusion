@@ -9,6 +9,7 @@ import {
 } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { HealthModel } from './employees/employees.component';
+import { ToastrService } from 'ngx-toastr';
 
 export class EmployeeAttendanceList {
   EmployeeId: number;
@@ -59,7 +60,7 @@ export class Tab {
 // HR tabs
 @Injectable()
 export class HrService {
-  constructor(private http: Http) {}
+  constructor(private http: Http, private toastr: ToastrService) {}
 
   getAllAttendanceType(): AttendanceType[] {
     return attendanceType;
@@ -1377,9 +1378,8 @@ export class HrService {
       'Authorization',
       'Bearer ' + localStorage.getItem('authenticationtoken'),
     );
-   // Myheaders.append('accept', 'application/pdf');
-    const options = { headers: Myheaders,
-                         observe: 'response'};
+    Myheaders.append('accept', 'application/pdf');
+    const options = { headers: Myheaders};
     return this.http
       .post(url, data, options)
       .map((response: Response) => {
@@ -1388,7 +1388,7 @@ export class HrService {
           return result;
         }
       })
-      .catch(this.handleError);
+      .catch(this.handleDownloadPdfError);
   }
   //#endregion
 
@@ -1413,10 +1413,13 @@ export class HrService {
   //#endregion
 
     private handleError(error: Response) {
-      debugger;
-      console.log(error.headers.get('ExceptionMessage'));
+
     return Observable.throw(error.json().error || 'Server error');
   }
+
+  private handleDownloadPdfError(error: any) {
+  return Observable.throw(error._body);
+}
 }
 
 export interface GeneralInfo {
