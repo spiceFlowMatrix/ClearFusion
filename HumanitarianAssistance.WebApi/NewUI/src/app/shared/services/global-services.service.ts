@@ -39,7 +39,7 @@ export class GlobalService {
       )
 
       // catchError(this.errHandler.handleError('dfdf', []))
-      // catchError((error) => { console.log(error); return ""; })
+      // catchError((error) => { // console.log(error); return ""; })
     );
   }
   //#endregion
@@ -180,7 +180,7 @@ export class GlobalService {
       })
 
       // catchError(this.errHandler.handleError('dfdf', []))
-      // catchError((error) => { console.log(error); return ""; })
+      // catchError((error) => { // console.log(error); return ""; })
     );
   }
   //#endregion
