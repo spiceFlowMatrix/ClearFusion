@@ -1,0 +1,67 @@
+<lib-sub-header-template [headerClass]="'sub_header_template_main1'">
+  <span class="action_header">Job Details
+    <hum-button [type]="'save'" [text]="'save'"></hum-button>
+    <hum-button [type]="'cancel'" [text]="'cancel'"></hum-button>
+  </span>
+
+
+  <div class="action_section">
+    <hum-button [type]="'text'" [text]="'All Jobs'" [routerLink]="['job-detail']"></hum-button>
+    <!-- <hum-button [type]="'down'" [text]="'jobs'"></hum-button> -->
+  </div>
+</lib-sub-header-template>
+<mat-divider></mat-divider>
+
+<mat-card>
+<div class="container">
+  <form>
+  <div class="row">
+    <div class="col-md-6">
+      <mat-form-field class="example-full-width">
+        <textarea matInput placeholder="Leave a comment"></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="col-md-6">
+        <lib-hum-dropdown [placeHolder]="'Item'"></lib-hum-dropdown>
+      </div>
+      <div class="col-md-6">
+        <lib-hum-dropdown [placeHolder]="'Item'"></lib-hum-dropdown>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="col-md-6">
+        <lib-hum-dropdown [placeHolder]="'Item'"></lib-hum-dropdown>
+      </div>
+      <div class="col-md-6">
+        <lib-hum-dropdown [placeHolder]="'Item'"></lib-hum-dropdown>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="col-md-6">
+        <lib-hum-dropdown [placeHolder]="'Item'"></lib-hum-dropdown>
+      </div>
+      <div class="col-md-6">
+        <lib-hum-dropdown [placeHolder]="'Item'"></lib-hum-dropdown>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="col-md-6">
+        <lib-hum-dropdown [placeHolder]="'Item'"></lib-hum-dropdown>
+      </div>
+      <div class="col-md-6">
+        <lib-hum-dropdown [placeHolder]="'Item'"></lib-hum-dropdown>
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+</mat-card>

@@ -22,7 +22,6 @@ import { ProjectDetailComponent } from './project-list/project-details/project-d
 import { BudgetLineListingComponent } from './project-list/budgetlines/budget-line-listing/budget-line-listing.component';
 import { ProjectActivitiesComponent } from './project-list/project-activities/project-activities.component';
 import { PeopleComponent } from './project-list/project-details/people/people.component';
-import { HiringRequestsComponent } from './project-list/hiring-requests/hiring-requests.component';
 import { ProjectIndicatorsComponent } from './project-list/project-indicators/project-indicators.component';
 
 const moduleId: number = ApplicationModule.Projects;
@@ -147,7 +146,7 @@ const routes: Routes = [
           {
             path: 'people',
             component: PeopleComponent,
-          //  canActivate: [RoleGuardService],
+            //  canActivate: [RoleGuardService],
             data: {
               module: moduleId,
               page: projectPagesMaster.ProjectPeople
@@ -155,7 +154,7 @@ const routes: Routes = [
           },
           {
             path: 'hiring-request',
-            component: HiringRequestsComponent,
+            loadChildren: '../project-management/project-hiring/project-hiring.module#ProjectHiringModule',
             canActivate: [RoleGuardService],
             data: {
               module: moduleId,
@@ -173,6 +172,7 @@ const routes: Routes = [
           },
         ]
       }
+     
     ]
   }
   // { path: 'projects', component: ProjectListComponent},
@@ -182,4 +182,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class ProjectManagementRoutingModule {}
+export class ProjectManagementRoutingModule { }
