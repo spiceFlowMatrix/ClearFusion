@@ -58,8 +58,5 @@ export class HiringRequestsComponent implements OnInit {
       
     ] as HiringList[])
   }
-  jobDetail(){
-  this.router.navigate(['/job-detail'])
-  }
 
 }

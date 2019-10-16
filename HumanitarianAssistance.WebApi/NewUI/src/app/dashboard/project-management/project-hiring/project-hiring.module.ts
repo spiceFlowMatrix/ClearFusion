@@ -8,7 +8,9 @@ import { SubHeaderTemplateModule, LibraryModule } from 'projects/library/src/pub
 import { MatDividerModule, MatInputModule, MatCardModule } from '@angular/material';
 
 @NgModule({
-  declarations: [HiringRequestsComponent, JobDetailComponent],
+  declarations: [
+    HiringRequestsComponent, JobDetailComponent
+  ],
   imports: [
     CommonModule,
     ProjectHiringRoutingModule,
@@ -17,6 +19,9 @@ import { MatDividerModule, MatInputModule, MatCardModule } from '@angular/materi
     MatDividerModule,
     MatInputModule,
     MatCardModule
+  ],
+  exports:[
+    HiringRequestsComponent, JobDetailComponent
   ]
 })
 export class ProjectHiringModule { }
