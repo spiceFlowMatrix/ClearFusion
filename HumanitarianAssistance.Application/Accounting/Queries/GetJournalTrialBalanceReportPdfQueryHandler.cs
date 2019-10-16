@@ -50,9 +50,9 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                           .WithSqlParam("officelist", request.OfficesList)
                                           .WithSqlParam("journalno", request.JournalCode)
                                           .WithSqlParam("accountslist", request.AccountLists)
-                                          .WithSqlParam("project", request.Project)
-                                          .WithSqlParam("budgetline", request.BudgetLine)
-                                          .WithSqlParam("projectjob", request.JobCode)
+                                        //   .WithSqlParam("project", request.Project)
+                                        //   .WithSqlParam("budgetline", request.BudgetLine)
+                                        //   .WithSqlParam("projectjob", request.JobCode)
                                           .ExecuteStoredProc<SPJournalReport>();
 
 
