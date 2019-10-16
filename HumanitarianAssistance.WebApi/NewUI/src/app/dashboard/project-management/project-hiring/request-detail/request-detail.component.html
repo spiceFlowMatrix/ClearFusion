@@ -1,0 +1,46 @@
+<lib-sub-header-template [headerClass]="'sub_header_template_main1'">
+  <span class="action_header">Request Details
+    <hum-button [type]="'edit'" [text]="'Edit'"></hum-button>
+    <hum-button [type]="'add'" [text]="'complete '"></hum-button>
+    <hum-button [type]="'cancel'" [text]="'close'"></hum-button>
+  </span>
+  <div class="action_section">
+  </div>
+</lib-sub-header-template>
+<mat-divider></mat-divider>
+
+<mat-card class="custom-card">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="col-md-6">
+        <h5>Vehicle Usage Analysis</h5>
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <td>Mark</td>
+              <td>Otto</td>
+            </tr>
+            <tr>
+              <td>Mark</td>
+              <td>Otto</td>
+            </tr>
+            <tr>
+              <td>Mark</td>
+              <td>Otto</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <mat-tab-group>
+      <mat-tab label="New Candidates">
+        <!-- <ng-template matTabContent>
+              <ng-container *ngTemplateOutlet="generatorDetails"></ng-container>
+            </ng-template> -->
+      </mat-tab>
+      <mat-tab label="Existing Candidates"> Content 2 </mat-tab>
+    </mat-tab-group>
+  </div>
+</mat-card>

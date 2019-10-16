@@ -25,6 +25,7 @@ import { PeopleComponent } from './project-list/project-details/people/people.co
 import { ProjectIndicatorsComponent } from './project-list/project-indicators/project-indicators.component';
 import { HiringRequestsComponent } from './project-hiring/hiring-requests/hiring-requests.component';
 import { JobDetailComponent } from './project-hiring/job-detail/job-detail.component';
+import { RequestDetailComponent } from './project-hiring/request-detail/request-detail.component';
 
 const moduleId: number = ApplicationModule.Projects;
 
@@ -157,6 +158,15 @@ const routes: Routes = [
           {
             path: 'hiring-request',
             component: HiringRequestsComponent,
+            canActivate: [RoleGuardService],
+            data: {
+              module: moduleId,
+              page: projectPagesMaster.HiringRequests
+            }
+          },
+          {
+            path: 'hiring-request/:id',
+            component: RequestDetailComponent,
             canActivate: [RoleGuardService],
             data: {
               module: moduleId,
