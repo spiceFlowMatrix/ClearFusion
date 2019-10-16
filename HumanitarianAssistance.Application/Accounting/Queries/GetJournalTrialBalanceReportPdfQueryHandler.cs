@@ -69,8 +69,8 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                         TransactionDescription = x.TransactionDescription,
                         VoucherNo = x.VoucherNo,
                         AccountName = x.AccountName,
-                        Project = x.ProjectCode,
-                        BudgetLineDescription = x.BudgetCode
+                        // Project = x.ProjectCode,
+                        // BudgetLineDescription = x.BudgetCode
                     }).ToList();
 
                     var journalReport = spJournalReport.GroupBy(x => x.ChartOfAccountNewId).ToList();

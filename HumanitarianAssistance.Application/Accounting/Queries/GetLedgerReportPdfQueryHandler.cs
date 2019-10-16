@@ -103,7 +103,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                             }).ToList();
 
                             mainList=spLedgerReportClosing.Select(x=> new LedgerReportMainPdfList(){
-                                VoucherDate=x.VoucherDate.ToString("dd/MM/yyyy"),
+                                //VoucherDate=x.VoucherDate.ToString("dd/MM/yyyy"),
                                 ReferenceNo=x.VoucherReferenceNo,
                                 LineDescription=x.Description,
                                 Currency=x.CurrencyName,
@@ -177,7 +177,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                             }).ToList();
                             
                             mainList=spLedgerReportClosing.Select(x=> new LedgerReportMainPdfList(){
-                                VoucherDate=x.VoucherDate.ToString("dd/MM/yyyy"),
+                                //VoucherDate=x.VoucherDate.ToString("dd/MM/yyyy"),
                                 ReferenceNo=x.VoucherReferenceNo,
                                 LineDescription=x.Description,
                                 Currency=x.CurrencyName,
