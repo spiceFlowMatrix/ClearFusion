@@ -32,15 +32,15 @@ export class SignalRService {
 
     this.hubConnection
       .start()
-      .then(() => console.log('Connection started...'))
-      .catch(err => console.log('Error while starting connection: ' + err));
+      .then(() => // console.log('Connection started...'))
+      .catch(err => // console.log('Error while starting connection: ' + err));
   }
 
   public stopConnection(): void {
     this.hubConnection
       .stop()
-      .then(() => console.log('Connection closed...'))
-      .catch(err => console.log('Error while closing connection: ' + err));
+      .then(() => // console.log('Connection closed...'))
+      .catch(err => // console.log('Error while closing connection: ' + err));
   }
 
 
@@ -53,7 +53,7 @@ export class SignalRService {
   //#region "activityPermissionChanged - on"
   public activityPermissionChangedOn(): void {
     this.hubConnection.on('activityPermissionChanged', data => {
-      console.log(data);
+      // console.log(data);
       this.activityPermission$.next(data);
     });
   }
@@ -61,7 +61,7 @@ export class SignalRService {
 
   public addTransferChartDataListener(): void {
     this.hubConnection.on('transferchartdata', data => {
-      console.log(data);
+      // console.log(data);
     });
   }
 
@@ -72,7 +72,7 @@ export class SignalRService {
 //   this.hubConnection.invoke('AddMessage', data);
 
 //   // this.hubConnection.on('ReceiveMessage', x => {
-//   //   console.log(x);
+//   //   // console.log(x);
 //   //   this.DemoMessage$.next(data);
 //   // });
 // }
@@ -85,7 +85,7 @@ public AddMessageInvoke(data: any) {
 //#region "activityPermissionChanged - on"
 public BroadcastMessageOn(): void {
   this.hubConnection.on('BroadcastMessageOn', data => {
-    console.log(data);
+    // console.log(data);
   });
 }
 //#endregion

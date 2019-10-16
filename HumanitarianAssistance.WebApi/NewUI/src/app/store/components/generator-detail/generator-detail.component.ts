@@ -25,7 +25,7 @@ export class GeneratorDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getAllOffice();
-    console.log(this.generatorDetailForm);
+    // console.log(this.generatorDetailForm);
   }
 
   getAllOffice() {

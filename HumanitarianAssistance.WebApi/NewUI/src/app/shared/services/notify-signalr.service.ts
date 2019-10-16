@@ -27,21 +27,21 @@ export class NotifySignalRService {
       .build();
 
     this.hubConnection.on('BroadcastMessage', data => {
-      console.log(data);
+      // console.log(data);
       this.DemoMessage$.next(data);
     });
 
     this.hubConnection
       .start()
-      .then(() => console.log('Notify Connection started...'))
-      .catch(err => console.log('Error while starting connection: ' + err));
+      .then(() => // console.log('Notify Connection started...'))
+      .catch(err => // console.log('Error while starting connection: ' + err));
   }
 
   public stopConnection(): void {
     this.hubConnection
       .stop()
-      .then(() => console.log('Notify Connection closed...'))
-      .catch(err => console.log('Error while closing connection: ' + err));
+      .then(() => // console.log('Notify Connection closed...'))
+      .catch(err => // console.log('Error while closing connection: ' + err));
   }
 
   //#region "activityPermissionChanged - invoke"
@@ -53,7 +53,7 @@ export class NotifySignalRService {
   //#region "activityPermissionChanged - on"
   public activityPermissionChangedOn(): void {
     this.hubConnection.on('activityPermissionChanged', data => {
-      console.log(data);
+      // console.log(data);
       this.activityPermission$.next(data);
     });
   }
@@ -61,7 +61,7 @@ export class NotifySignalRService {
 
   public addTransferChartDataListener(): void {
     this.hubConnection.on('transferchartdata', data => {
-      console.log(data);
+      // console.log(data);
     });
   }
 }
