@@ -159,7 +159,6 @@ export class ProjectJobsDetailsComponent implements OnInit {
     });
 
     dialogRef.componentInstance.confirmDelete.subscribe(res => {
-      console.log(res);
       dialogRef.componentInstance.isLoading = true;
       // this.phaseDetailsForm.disable();
 

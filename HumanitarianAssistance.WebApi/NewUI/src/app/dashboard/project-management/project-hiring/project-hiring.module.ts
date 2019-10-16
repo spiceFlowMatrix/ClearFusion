@@ -4,13 +4,20 @@ import { CommonModule } from '@angular/common';
 import { ProjectHiringRoutingModule } from './project-hiring-routing.module';
 import { HiringRequestsComponent } from './hiring-requests/hiring-requests.component';
 import { JobDetailComponent } from './job-detail/job-detail.component';
-import { SubHeaderTemplateModule, LibraryModule } from 'projects/library/src/public_api';
-import { MatDividerModule, MatInputModule, MatCardModule } from '@angular/material';
+import {
+  SubHeaderTemplateModule,
+  LibraryModule
+} from 'projects/library/src/public_api';
+import {
+  MatDividerModule,
+  MatInputModule,
+  MatCardModule,
+  MatPaginatorModule
+} from '@angular/material';
+
 
 @NgModule({
-  declarations: [
-    HiringRequestsComponent, JobDetailComponent
-  ],
+  declarations: [HiringRequestsComponent, JobDetailComponent],
   imports: [
     CommonModule,
     ProjectHiringRoutingModule,
@@ -18,10 +25,9 @@ import { MatDividerModule, MatInputModule, MatCardModule } from '@angular/materi
     LibraryModule,
     MatDividerModule,
     MatInputModule,
-    MatCardModule
+    MatCardModule,
+    MatPaginatorModule
   ],
-  exports:[
-    HiringRequestsComponent, JobDetailComponent
-  ]
+  exports: [HiringRequestsComponent, JobDetailComponent]
 })
-export class ProjectHiringModule { }
+export class ProjectHiringModule {}

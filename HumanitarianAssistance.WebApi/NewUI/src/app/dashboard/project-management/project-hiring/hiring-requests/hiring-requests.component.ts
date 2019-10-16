@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { of, Observable } from 'rxjs';
-import { HiringList } from '../models/hiring-list';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { IFilterModel, HiringList } from '../models/hiring-Requests-models';
+import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
+import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
+import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 
 @Component({
   selector: 'app-hiring-requests',
@@ -9,54 +12,90 @@ import { Router } from '@angular/router';
   styleUrls: ['./hiring-requests.component.scss']
 })
 export class HiringRequestsComponent implements OnInit {
-  hiringListHeaders$ = of(['Job Code', 'Job Grade', 'Position', 'Total Vacancies', 'Filled Vacancies', 'Pay Currency', 'Pay Rate', 'Status']);
+  projectId: number;
+  filterModel: IFilterModel;
+  hiringListHeaders$ = of([
+    'Hiring Request Id',
+    'Job Code',
+    'Job Grade',
+    'Position',
+    'Total Vacancies',
+    'Filled Vacancies',
+    'Pay Currency',
+    'Pay Rate',
+    'Status'
+  ]);
   hiringList$: Observable<HiringList[]>;
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private routeActive: ActivatedRoute,
+    public hiringRequestService: HiringRequestsService,
+    private loader: CommonLoaderService
+  ) {}
 
   ngOnInit() {
-    this.hiringList$ = of ([
-      {
-        JobCode:'1',
-        JobGrade: 'A',
-        FilledVacancies:'22',
-        PayCurrency:'AFG',
-        PayRate:'15',
-        Position:'Manager',
-        Status:'open',
-        TotalVacancies:'50'
-      },
-      {
-        JobCode:'1',
-        JobGrade: 'A',
-        FilledVacancies:'22',
-        PayCurrency:'AFG',
-        PayRate:'15',
-        Position:'Manager',
-        Status:'open',
-        TotalVacancies:'50'
-      },
-      {
-        JobCode:'1',
-        JobGrade: 'A',
-        FilledVacancies:'22',
-        PayCurrency:'AFG',
-        PayRate:'15',
-        Position:'Manager',
-        Status:'open',
-        TotalVacancies:'50'
-      },
-      {
-        JobCode:'1',
-        JobGrade: 'A',
-        FilledVacancies:'22',
-        PayCurrency:'AFG',
-        PayRate:'15',
-        Position:'Manager',
-        Status:'open',
-        TotalVacancies:'50'
-      }
-      
-    ] as HiringList[])
+    this.filterModel = {
+      FilterValue: '',
+      pageIndex: 0,
+      pageSize: 10,
+      ProjectId: null,
+      TotalCount: 0
+    };
+    this.routeActive.parent.params.subscribe(params => {
+      this.projectId = +params['id'];
+    });
+    this.getAllHiringRequestFilterList();
   }
 
+  //#region  paginatorEvent
+  pageEvent(e) {
+    this.filterModel.pageIndex = e.pageIndex;
+    this.filterModel.pageSize = e.pageSize;
+    this.onFilterApplied();
+  }
+  //#endregion
+
+  //#region "onFilterApplied"
+  onFilterApplied() {
+    this.getAllHiringRequestFilterList();
+  }
+  //#endregion
+
+  //#region "getAllProjectActivityList"
+  getAllHiringRequestFilterList() {
+    this.filterModel.ProjectId = this.projectId;
+    this.filterModel.TotalCount = 0;
+    //   this.hiringRequestListLoader = true;
+    this.hiringRequestService
+      .GetProjectHiringRequestFilterList(this.filterModel)
+      .subscribe(
+        (response: IResponseData) => {
+          this.loader.showLoader();
+          if (response.statusCode === 200 && response.data !== null) {
+            this.filterModel.TotalCount =
+              response.total != null ? response.total : 0;
+            this.hiringList$ = of(
+              response.data.map(element => {
+                return {
+                  HiringRequestId: element.HiringRequestId,
+                  JobCode: element.JobCode,
+                  JobGrade: element.JobGrade,
+                  Position: element.Position,
+                  TotalVacancies: element.TotalVacancies,
+                  FilledVacancies: element.FilledVacancies,
+                  PayCurrency: element.PayCurrency,
+                  PayRate: element.PayRate,
+                  Status: element.Status
+                } as HiringList;
+              })
+            );
+          }
+          this.loader.hideLoader();
+        },
+        error => {
+          this.loader.hideLoader();
+        }
+      );
+  }
+  //#endregion
 }

@@ -196,7 +196,6 @@ export class LedgerStatementReportComponent implements OnInit {
   //#endregion
 
   getCurrencyCodeList(response: any) {
-    console.log(response);
     if (response.StatusCode === 200 && response.data.CurrencyList != null) {
       this.currencyDropdown = [];
       response.data.CurrencyList.forEach(element => {

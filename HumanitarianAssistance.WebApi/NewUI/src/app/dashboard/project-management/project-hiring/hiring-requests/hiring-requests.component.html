@@ -19,11 +19,11 @@
     <div class="col-md-12">
       <!-- <app-purchase-filters (purchaseFilterSelected)="onpurchaseFilterSelected($event)"></app-purchase-filters> -->
       <!-- <mat-divider></mat-divider> -->
- 
+
       <hum-table [headers]="hiringListHeaders$" [items]="hiringList$"></hum-table>
-      <!-- <mat-paginator [length]="purchaseRecordCount" [pageSize]="filterValueModel.pageSize"
+      <mat-paginator [length]="filterModel.TotalCount" [pageSize]="filterModel.pageSize"
         [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
-      </mat-paginator> -->
+      </mat-paginator>
     </div>
   </div>
 </div>
