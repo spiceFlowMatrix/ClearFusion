@@ -232,10 +232,7 @@ export class MonitoringReviewComponent implements OnInit {
               ].IndicatorQuestions.push(elemnt);
             });
           }
-          // console.log(
-            'getquestionlist',
-            this.monitoringReviewList.MonitoringReviewModel
-          );
+          // console.log('getquestionlist',this.monitoringReviewList.MonitoringReviewModel);
           if (response.statusCode === 400) {
             this.toastr.error(response.message);
           }

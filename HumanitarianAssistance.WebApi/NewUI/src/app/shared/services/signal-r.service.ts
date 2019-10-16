@@ -32,15 +32,15 @@ export class SignalRService {
 
     this.hubConnection
       .start()
-      .then(() => // console.log('Connection started...'))
-      .catch(err => // console.log('Error while starting connection: ' + err));
+      .then(() => console.log('Connection started...'))
+      .catch(err => console.log('Error while starting connection: ' + err));
   }
 
   public stopConnection(): void {
     this.hubConnection
       .stop()
-      .then(() => // console.log('Connection closed...'))
-      .catch(err => // console.log('Error while closing connection: ' + err));
+      .then(() => console.log('Connection closed...'))
+      .catch(err => console.log('Error while closing connection: ' + err));
   }
 
 

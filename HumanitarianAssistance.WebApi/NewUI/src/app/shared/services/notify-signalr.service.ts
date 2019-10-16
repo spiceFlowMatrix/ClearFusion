@@ -33,15 +33,15 @@ export class NotifySignalRService {
 
     this.hubConnection
       .start()
-      .then(() => // console.log('Notify Connection started...'))
-      .catch(err => // console.log('Error while starting connection: ' + err));
+      .then(() => console.log('Notify Connection started...'))
+      .catch(err => console.log('Error while starting connection: ' + err));
   }
 
   public stopConnection(): void {
     this.hubConnection
       .stop()
-      .then(() => // console.log('Notify Connection closed...'))
-      .catch(err => // console.log('Error while closing connection: ' + err));
+      .then(() => console.log('Notify Connection closed...'))
+      .catch(err => console.log('Error while closing connection: ' + err));
   }
 
   //#region "activityPermissionChanged - invoke"

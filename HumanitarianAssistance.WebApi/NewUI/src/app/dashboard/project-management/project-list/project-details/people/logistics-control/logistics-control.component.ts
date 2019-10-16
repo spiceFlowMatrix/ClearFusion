@@ -140,7 +140,6 @@ export class LogisticsControlComponent implements OnInit, OnDestroy {
         error => {
           // error
         },
-        () => // console.log('Completed')
       );
   }
   //#endregion
