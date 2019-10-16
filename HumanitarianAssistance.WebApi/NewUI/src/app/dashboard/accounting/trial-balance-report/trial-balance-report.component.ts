@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ReportService } from '../report-services/report.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -55,6 +55,10 @@ export class TrialBalanceReportComponent implements OnInit {
   totalCount = 0;
   pageSize = 10;
   pageIndex: 0;
+  screenHeight: number;
+  screenWidth: number;
+  scrollStyles: any;
+
   constructor(
     private accountservice: ReportService,
     private toastr: ToastrService,
@@ -106,7 +110,19 @@ export class TrialBalanceReportComponent implements OnInit {
         new Date().getSeconds()
       )
     );
+    this.getScreenSize();
   }
+
+  @HostListener('window:resize', ['$event'])
+   getScreenSize(event?) {
+     this.screenHeight = window.innerHeight;
+     this.screenWidth = window.innerWidth;
+     this.scrollStyles = {
+       'overflow-y': 'auto',
+       height: this.screenHeight - 110 + 'px',
+       'overflow-x': 'hidden'
+     };
+   }
 
   ngOnInit() {
     this.getCurrencyCodeList();

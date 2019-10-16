@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card [ngStyle]="scrollStyles">
     <div class="main-journal">
       <mat-card>
         <form [formGroup]="trailbalFilterForm" (ngSubmit)="onApplyingFilter(trailbalFilterForm.value)">
