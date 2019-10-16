@@ -196,7 +196,7 @@ export class LedgerStatementReportComponent implements OnInit {
   //#endregion
 
   getCurrencyCodeList(response: any) {
-    console.log(response);
+    // console.log(response);
     if (response.StatusCode === 200 && response.data.CurrencyList != null) {
       this.currencyDropdown = [];
       response.data.CurrencyList.forEach(element => {
@@ -216,7 +216,7 @@ export class LedgerStatementReportComponent implements OnInit {
   }
 
   getOfficeCodeList(response: any) {
-    console.log(response);
+    // console.log(response);
 
     if (
       response.StatusCode === 200 &&
@@ -256,7 +256,7 @@ export class LedgerStatementReportComponent implements OnInit {
   }
 
   GetAccountDetails(response: any) {
-    console.log(response);
+    // console.log(response);
 
     this.accountDropdown = [];
     this.selectedAccounts = [];

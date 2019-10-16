@@ -40,7 +40,7 @@ export class MonitoringReviewComponent implements OnInit {
     this.projectId = data.projectId;
     this.activityId = data.activityId;
     this.monitoringReviewList = data.monitoringReviewModel;
-    console.log('edit list', this.monitoringReviewList);
+    // console.log('edit list', this.monitoringReviewList);
   }
 
   indicatorFilterModel: ProjectIndicatorFilterModel;
@@ -75,7 +75,7 @@ export class MonitoringReviewComponent implements OnInit {
       Questions: null,
       ProjectId: null
     };
-    // console.log(this.monitoringReviewList);
+    // // console.log(this.monitoringReviewList);
     this.getAllProjectIndicatorList();
 
     if (
@@ -232,10 +232,7 @@ export class MonitoringReviewComponent implements OnInit {
               ].IndicatorQuestions.push(elemnt);
             });
           }
-          console.log(
-            'getquestionlist',
-            this.monitoringReviewList.MonitoringReviewModel
-          );
+          // console.log('getquestionlist',this.monitoringReviewList.MonitoringReviewModel);
           if (response.statusCode === 400) {
             this.toastr.error(response.message);
           }
@@ -343,7 +340,7 @@ export class MonitoringReviewComponent implements OnInit {
     this.monitoringReviewList.MonitoringDate = this.setDateTime(
       this.monitoringReviewList.MonitoringDate
     );
-    console.log(this.monitoringReviewList);
+    // console.log(this.monitoringReviewList);
 
     this.projectListService
       .AddProjectMonitoringReview(

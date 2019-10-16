@@ -80,7 +80,7 @@ export class PurchaseFiledConfigComponent implements OnInit {
   //#endregion
 
   applyConfigFilter() {
-    console.log(this.selectedOptions);
+    // console.log(this.selectedOptions);
   }
   change(list: any[]) {
     if (list.length > 5) {
