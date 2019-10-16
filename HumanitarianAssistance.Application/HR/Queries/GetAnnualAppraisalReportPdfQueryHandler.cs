@@ -81,7 +81,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 //     });
                 //     sNumber = sNumber + 1;
                 // }
-                var EmployeeList = await _dbContext.LoadStoredProc("get_Annual_Appraisal_Report")
+                var EmployeeList = await _dbContext.LoadStoredProc("get_annual_appraisal_report")
                                      .WithSqlParam("office_id", request.OfficeId)
                                      .ExecuteStoredProc<spAnnualAppraisalReportPdfModel>();
 

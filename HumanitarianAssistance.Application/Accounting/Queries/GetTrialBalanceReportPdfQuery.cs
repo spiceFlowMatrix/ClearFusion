@@ -8,7 +8,6 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
     public class GetTrialBalanceReportPdfQuery : IRequest<byte[]>
     {
         public List<int> OfficesList { get; set; }
-        public List<int> OfficeIdList { get; set; }
         public int CurrencyId { get; set; }
         public DateTime fromdate { get; set; }
         public DateTime todate { get; set; }
