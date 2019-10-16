@@ -31,27 +31,19 @@ namespace HumanitarianAssistance.WebApi.Controllers
         }
 
         [HttpPost]
-        [Produces(contentType: "application/pdf")]
+        //[Produces(contentType: "application/pdf")]
         public async Task<IActionResult> GetAllEmployeeLeavePdf([FromBody] GetAllEmployeeLeavePdfQuery model)
         {
             try
             {
-                var result = await Task.FromResult(_mediator.Send(model));
-
-                if (result.Exception == null)
-                {
-                    return Ok(File(result.Result, "application/pdf", "EmployeeLeavePdf.pdf"));
-                }
-                else
-                {
-
-                    return BadRequest(result.Exception.InnerException.Message);
-                }
-
+                var file = await _mediator.Send(model);
+                return File(file, "application/pdf", "EmployeeLeaveReport.pdf");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.InnerException.Message);
+
+                Response.Headers.Add("ExMessage", ex.Message);
+                return BadRequest();
             }
         }
 

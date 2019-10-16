@@ -1370,27 +1370,26 @@ export class HrService {
   }
   //#endregion
 
-  //#region "Add Leave Info"
-  DownloadPDF(url: string, data: any) {
-    debugger;
-    const Myheaders = new Headers();
-    Myheaders.append(
-      'Authorization',
-      'Bearer ' + localStorage.getItem('authenticationtoken'),
-    );
-    Myheaders.append('accept', 'application/pdf');
-    const options = { headers: Myheaders};
-    return this.http
-      .post(url, data, options)
-      .map((response: Response) => {
-        const result = response.blob();
-        if (result) {
-          return result;
-        }
-      })
-      .catch(this.handleDownloadPdfError);
-  }
-  //#endregion
+ //#region "Add Leave Info"
+ DownloadPDF(url: string, data: any) {
+  const Myheaders = new Headers();
+  Myheaders.append(
+    'Authorization',
+    'Bearer ' + localStorage.getItem('authenticationtoken'),
+  );
+  Myheaders.append('accept', 'application/pdf');
+  const options = new RequestOptions({ headers: Myheaders});
+  return this.http
+    .post(url, data, {responseType: ResponseContentType.Blob, headers: Myheaders})
+    .map((response: Response) => {
+      const result = response.blob();
+      if (result) {
+        return result;
+      }
+    })
+    .catch(this.handleDownloadPdfError);
+}
+//#endregion
 
   //#region "Add By Model"
   CheckUserEmailAlreadyExists(url: string, email: any) {
@@ -1418,7 +1417,8 @@ export class HrService {
   }
 
   private handleDownloadPdfError(error: any) {
-  return Observable.throw(error._body);
+    const exmessage = error.headers.get('ExMessage');
+    return Observable.throw(error.json().error || exmessage);
 }
 }
 
