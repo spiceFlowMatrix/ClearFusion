@@ -31,9 +31,12 @@
         <li [ngClass]="{'active': selectedLink == 5 }" (click)="onsideBarLinkClicked('/accounting/gain-loss-report', 5)" *ngIf="displayChildModule(ModulesAccounting.GainLossReport)"><a>Gain/Loss Report</a></li>
         <!-- <li [ngClass]="{'active': selectedLink == 59 }" (click)="onsideBarLinkClicked('/accounting/voucher-summary-report', 59)" *ngIf="displayChildModule(ModulesAccounting.VoucherSummaryReport)"><a>Voucher Summary Report</a></li> -->
         <li [ngClass]="{'active': selectedLink == 17 }" (click)="onsideBarLinkClicked('/accounting/exchange-rate', 17)" *ngIf="displayChildModule(ModulesAccounting.ExchangeRates)"><a>Exchange Rates</a></li>
-        <li [ngClass]="{'active': selectedLink == 18 }" (click)="onsideBarLinkClicked('/accounting/journal-report', 18)" *ngIf="displayChildModule(ModulesAccounting.Journal)"><a>Journal</a></li>
+        <!-- <li [ngClass]="{'active': selectedLink == 18 }" (click)="onsideBarLinkClicked('/accounting/journal-report', 18)" *ngIf="displayChildModule(ModulesAccounting.Journal)"><a>Journal</a></li>
         <li [ngClass]="{'active': selectedLink == 19 }" (click)="onsideBarLinkClicked('/accounting/ledger-report', 19)" *ngIf="displayChildModule(ModulesAccounting.Ledger)"><a>Ledger</a></li>
-        <li [ngClass]="{'active': selectedLink == 20 }" (click)="onsideBarLinkClicked('/accounting/trial-balance', 20)" *ngIf="displayChildModule(ModulesAccounting.TrialBalance)"><a>Trial Balance</a></li>
+        <li [ngClass]="{'active': selectedLink == 20 }" (click)="onsideBarLinkClicked('/accounting/trial-balance', 20)" *ngIf="displayChildModule(ModulesAccounting.TrialBalance)"><a>Trial Balance</a></li> -->
+        <li [ngClass]="{'active': selectedLink == 18 }" (click)="onOldUiPageClick('dashboard/accounts/journal', 18)" *ngIf="displayChildModule(ModulesAccounting.Journal)"><a>Journal</a></li>
+        <li [ngClass]="{'active': selectedLink == 19 }" (click)="onOldUiPageClick('dashboard/accounts/ledger', 19)" *ngIf="displayChildModule(ModulesAccounting.Ledger)"><a>Ledger</a></li>
+        <li [ngClass]="{'active': selectedLink == 20 }" (click)="onOldUiPageClick('dashboard/accounts/trialbalance', 20)" *ngIf="displayChildModule(ModulesAccounting.TrialBalance)"><a>Trial Balance</a></li>
         <li [ngClass]="{'active': selectedLink == 21 }" (click)="onOldUiPageClick('dashboard/accounts/pension-payments', 21)" *ngIf="displayChildModule(ModulesAccounting.PensionPayments)"><a>Pension Payments</a></li>
 
       </ul>
@@ -122,9 +125,9 @@
         <li [ngClass]="{'active': selectedLink == 55 }" (click)="onOldUiPageClick('dashboard/store/store-main', 55)" *ngIf="displayModulePages(StorePages.Store)"><a>Store</a></li>
         <li [ngClass]="{'active': selectedLink == 56 }" (click)="onOldUiPageClick('dashboard/store/procurment-summary', 56)" *ngIf="displayModulePages(StorePages.ProcurementSummary)"><a>Procurement Summary</a></li>
         <li [ngClass]="{'active': selectedLink == 57 }" (click)="onOldUiPageClick('dashboard/store/store-depreciation-report', 57)" *ngIf="displayModulePages(StorePages.DepreciationReport)"><a>Depreciation Report</a></li>
-        <li [ngClass]="{'active': selectedLink == 58 }" [routerLink]="['/store/purchases']"><a>Purchase & Procurement</a></li>
+        <!-- <li [ngClass]="{'active': selectedLink == 58 }" [routerLink]="['/store/purchases']"><a>Purchase & Procurement</a></li>
         <li [ngClass]="{'active': selectedLink == 59 }" [routerLink]="['/store/vehicle/tracker']"><a>Vehicle Tracker</a></li>
-        <li [ngClass]="{'active': selectedLink == 60 }" [routerLink]="['/store/generator/tracker']"><a>Generator Tracker</a></li>
+        <li [ngClass]="{'active': selectedLink == 60 }" [routerLink]="['/store/generator/tracker']"><a>Generator Tracker</a></li> -->
       </ul>
 
       <!-- <li (click)="onsideBarLinkClicked('/style-guide')"> <a>Style-guide</a>

@@ -78,7 +78,7 @@ namespace HumanitarianAssistance.WebApi
                 options.AddPolicy(defaultCorsPolicyName, p =>
                 {
                     //todo: Get from configuration
-                    p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("Content-Disposition");
+                    p.WithOrigins(DefaultCorsPolicyUrl).AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("Content-Disposition", "ExMessage");
 
                 });
             });
