@@ -243,6 +243,19 @@ export class MonitoringReviewComponent implements OnInit {
     }
   }
 
+
+  getQuestionsTypeList(index: number) {
+    this.projectIndicatorId = this.monitoringReviewList.MonitoringReviewModel[
+      index
+    ].ProjectIndicatorId;
+    if (
+      this.projectIndicatorId != null &&
+      this.projectIndicatorId !== undefined &&
+      this.projectIndicatorId !== 0
+    ) {
+
+    }
+  }
   addMonitoringIndicator() {
     // disable submit button
     this.scoreFlag = true;
@@ -364,17 +377,14 @@ export class MonitoringReviewComponent implements OnInit {
         this.toastr.warning('Monitoring Date not selected');
         return;
       }
-      for (
-        let i = 0;
-        i < this.monitoringReviewList.MonitoringReviewModel.length;
-        i++
-      ) {
-        if (
-          this.monitoringReviewList.MonitoringReviewModel[i]
-            .ProjectIndicatorId === 0
-        ) {
+      for (   let i = 0; i < this.monitoringReviewList.MonitoringReviewModel.length; i++ ) {
+        if (  this.monitoringReviewList.MonitoringReviewModel[i].ProjectIndicatorId === 0) {
           this.toastr.warning('Indicator not selected');
           return;
+        }   else if (this.monitoringReviewList.MonitoringReviewModel[i].IndicatorQuestions.length > 0) {
+          this.monitoringReviewList.MonitoringReviewModel[i].IndicatorQuestions =
+          this.monitoringReviewList.MonitoringReviewModel[i].IndicatorQuestions.filter(x => x.Score != null);
+
         }
       }
     }
