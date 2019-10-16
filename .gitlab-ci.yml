@@ -11,8 +11,8 @@ variables:
     GKE_ZONE: europe-west4-b
     CF_REVIEW_URL: cleantestedg.cha-net.org
     CF_CHAPROD_URL: manage.cha-net.org
-    CF_APP_NAME: clearfusion-${CI_COMMIT_REF_SLUG}
-    CF_APP_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}
+    CF_APP_NAME: clearfusion-master
+    CF_APP_IMAGE: ${CI_REGISTRY_IMAGE}:master-${CI_COMMIT_SHORT_SHA}
     ENVIRONMENT: "Production"
 
 build-newui:
@@ -73,20 +73,20 @@ publish-container:
         - docker build --cache-from ${CF_APP_IMAGE} -t ${CF_APP_IMAGE} -f ./Dockerfile .
         - docker push ${CF_APP_IMAGE}
 
-deploy-cleanarch:
+deploy-chaprod:
     stage: deploy
     image: devth/helm
     environment:
-        name: cleanarch
-        url: https://${CF_REVIEW_URL}
+        name: chaprod
+        url: https://manage.cha-net.org
     script:
         - init_helm
         - helm upgrade
           --install
           --set web.name="${CF_APP_NAME}"
           --set web.image="${CF_APP_IMAGE}"
-          --set web.host="${CF_REVIEW_URL}"
-          --set app.env=${ENVIRONMENT}
+          --set web.host="${CF_CHAPROD_URL}"
+          --set app.env="Production"
           --set deployment.namespace="${KUBE_NAMESPACE}"
           --set ci.project.path="${CI_PROJECT_PATH_SLUG}"
           --set ci.project.environment="${CI_ENVIRONMENT_SLUG}"
@@ -97,11 +97,11 @@ deploy-cleanarch:
           --set secret.googlebucketname="${APP_GOOGLE_BUCKET_NAME}"
           --wait
           --force
-          clearfusion-${CI_COMMIT_REF_SLUG}
+          clearfusion-master
           ./k8s-chart
     only:
         refs:
-            - cleanarch
+            - cleanarch-prod
             
 
 
