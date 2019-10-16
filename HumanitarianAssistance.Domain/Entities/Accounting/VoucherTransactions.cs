@@ -64,6 +64,5 @@ namespace HumanitarianAssistance.Domain.Entities.Accounting
         public long? JobId { get; set; }
         [ForeignKey("JobId")]
         public ProjectJobDetail ProjectJobDetail { get; set; }
-        public double? BudgetLineCurrentExpenditure { get; set; }
     }
 }
