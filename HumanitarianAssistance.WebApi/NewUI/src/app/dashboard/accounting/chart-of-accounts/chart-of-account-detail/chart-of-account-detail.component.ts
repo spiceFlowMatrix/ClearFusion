@@ -67,7 +67,7 @@ export class ChartOfAccountDetailComponent implements OnInit, OnChanges {
   //#endregion
 
   ngOnChanges(changes: SimpleChanges) {
-    // console.log(changes);
+    // // console.log(changes);
     // this.getMainLevelAccount(this.ACCOUNT_HEAD_TYPE);
     // this.isEditingAllowed = this.localStorageService.IsEditingAllowed(this.pageId);
     // this.cd.detectChanges();
@@ -951,7 +951,7 @@ export class ChartOfAccountDetailComponent implements OnInit, OnChanges {
       AccountFilterTypeId: model.AccountFilterTypeId
     };
 
-    // console.log(obj);
+    // // console.log(obj);
 
     // Main Level
     const mainLevelItem = this.chartOfAccountList.find(x => x.ChartOfAccountNewId === mainLevelData.ChartOfAccountNewId);
@@ -982,7 +982,7 @@ export class ChartOfAccountDetailComponent implements OnInit, OnChanges {
       )
       .subscribe(
         response => {
-          // console.log(obj);
+          // // console.log(obj);
           if (response.StatusCode === 200) {
 
             // Error Handling
@@ -1613,7 +1613,7 @@ export class ChartOfAccountDetailComponent implements OnInit, OnChanges {
     data: any
   ) {
 
-    console.log('subLevelData -- ', subLevelData);
+    // console.log('subLevelData -- ', subLevelData);
 
     if (data !== '') {
 
@@ -1627,7 +1627,7 @@ export class ChartOfAccountDetailComponent implements OnInit, OnChanges {
         AccountFilterTypeId: data
       };
 
-      console.log('AccountFilterType', subLevelDetail);
+      // console.log('AccountFilterType', subLevelDetail);
 
       this.editSubLevelAccountDetail(mainLevelData, controlLevelData, subLevelDetail);
       // this.editAnyAccountDetail(controlLevelDetail);
@@ -1643,7 +1643,7 @@ export class ChartOfAccountDetailComponent implements OnInit, OnChanges {
     data: any
   ) {
 
-  //   console.log(data);
+  //   // console.log(data);
 
     if (data !== '') {
 
@@ -1657,7 +1657,7 @@ export class ChartOfAccountDetailComponent implements OnInit, OnChanges {
         AccountFilterTypeId: subLevelData.AccountFilterTypeId
       };
 
-      console.log('AccountType', subLevelDetail);
+      // console.log('AccountType', subLevelDetail);
 
       this.editSubLevelAccountDetail(mainLevelData, controlLevelData, subLevelDetail);
       // this.editAnyAccountDetail(controlLevelDetail);
@@ -1800,7 +1800,7 @@ export class ChartOfAccountDetailComponent implements OnInit, OnChanges {
       response => {
         if (response.statusCode === 200) {
           // do something
-          console.log(response.data);
+          // console.log(response.data);
 
           // set dataSouce value for pdf
           this.cofPdfService.dataSource = response.data;

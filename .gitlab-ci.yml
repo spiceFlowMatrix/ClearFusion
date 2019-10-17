@@ -10,6 +10,7 @@ variables:
     GKE_PROJECT: clear-fusion-193608
     GKE_ZONE: europe-west4-b
     CF_REVIEW_URL: cleantestedg.cha-net.org
+    CF_CHAPROD_URL: manage.cha-net.org
     CF_APP_NAME: clearfusion-${CI_COMMIT_REF_SLUG}
     CF_APP_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}
     ENVIRONMENT: "Production"
@@ -101,6 +102,37 @@ deploy-cleanarch:
     only:
         refs:
             - cleanarch
+
+deploy-chaprod:
+    stage: deploy
+    image: devth/helm
+    environment:
+        name: chaprod
+        url: https://manage.cha-net.org
+    script:
+        - init_helm
+        - helm upgrade
+          --install
+          --set web.name="${CF_APP_NAME}"
+          --set web.image="${CF_APP_IMAGE}"
+          --set web.host="${CF_CHAPROD_URL}"
+          --set app.env="Production"
+          --set deployment.namespace="${KUBE_NAMESPACE}"
+          --set ci.project.path="${CI_PROJECT_PATH_SLUG}"
+          --set ci.project.environment="${CI_ENVIRONMENT_SLUG}"
+          --set secret.appdbconnectionstring="${LINUX_DBCONNECTION_STRING}"
+          --set secret.postgresuser="${POSTGRES_DB_USER}"
+          --set secret.postgrespassword="${POSTGRES_DB_PASSWORD}"
+          --set secret.appserviceaccount="${APPLICATION_GCP_SERVICEACCOUNT}"
+          --set secret.googlebucketname="${APP_GOOGLE_BUCKET_NAME}"
+          --wait
+          --force
+          clearfusion-${CI_COMMIT_REF_SLUG}
+          ./k8s-chart
+    only:
+        refs:
+            - cleanarch
+
 
 .functions: &functions |
     # Functions

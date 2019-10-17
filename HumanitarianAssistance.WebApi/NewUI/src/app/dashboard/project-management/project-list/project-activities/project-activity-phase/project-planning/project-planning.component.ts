@@ -110,7 +110,7 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, AfterContent
 
   ngOnInit() {
     this.getActivityPermission();
-    console.log('activity projectid', this.activityDetail.ProjectId);
+    // console.log('activity projectid', this.activityDetail.ProjectId);
     this.projectId = this.activityDetail.ProjectId;
     if (
       this.activityDetail != null &&

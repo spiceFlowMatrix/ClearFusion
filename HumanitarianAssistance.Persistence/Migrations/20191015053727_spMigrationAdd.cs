@@ -8,30 +8,30 @@ namespace HumanitarianAssistance.Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_get_activitylistreportpdf.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getallvouchertransactionlist.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getannualappraisalreport.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getbudgetlinebreakdown.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getbudgetlinelist.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getdebitpercentage.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getdetailofnotepdf.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getexchangeratevalue.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getjournalreport.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getledgerreport.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getprojectactivityactualenddatemaxbyparentid.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getprojectactivityactualstartdateminbyparentid.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getprojectactivitylist.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getprojectactivityprogress.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getprojectcashflow.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getprojectotherdetailpdf.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getprojectactivitylistfilter.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getprojectproposalreport.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getprojectproposalreportamountsummary.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_gettotalexpectedprojectbudget.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_gettotalexpenditure.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_gettransactionlist.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_gettrialbalancereport.sql")));
-            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Substring(0, AppDomain.CurrentDomain.BaseDirectory.IndexOf("bin")), @"SQL/sp_getvouchersummaryreportvouchersbyfilter.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_get_activitylistreportpdf.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getallvouchertransactionlist.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getannualappraisalreport.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getbudgetlinebreakdown.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getbudgetlinelist.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getdebitpercentage.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getdetailofnotepdf.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getexchangeratevalue.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getjournalreport.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getledgerreport.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getprojectactivityactualenddatemaxbyparentid.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getprojectactivityactualstartdateminbyparentid.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getprojectactivitylist.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getprojectactivityprogress.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getprojectcashflow.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getprojectotherdetailpdf.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getprojectactivitylistfilter.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getprojectproposalreport.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getprojectproposalreportamountsummary.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_gettotalexpectedprojectbudget.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_gettotalexpenditure.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_gettransactionlist.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_gettrialbalancereport.sql")));
+            migrationBuilder.Sql(System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), @"SQL/sp_getvouchersummaryreportvouchersbyfilter.sql")));
 
 
         }
