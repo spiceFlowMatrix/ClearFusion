@@ -15,6 +15,9 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
         public int RecordType { get; set; }
         public List<int> JournalCode { get; set; }
         public List<long> AccountLists { get; set; }
+        public List<long> Project { get; set; }
+        public List<long> BudgetLine { get; set; }
+        public List<long> JobCode { get; set; }
         
     }
 }

@@ -26,7 +26,7 @@
         <hum-table [headers]="purchaseListHeaders$" [items]="purchaseList$" [subHeaders]="subListHeaders$"
           [subTitle]="'Procurements'" (actionClick)="openProcurementModal($event)"
           (subActionClick)="deleteProcurement($event)" [actions]="actions"></hum-table>
-        <mat-paginator [length]="purchaseRecordCount" [pageSize]="filterValueModel.pageSize"
+        <mat-paginator [length]="purchaseRecordCount" [pageSize]="filterValueModel.PageSize"
           [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
         </mat-paginator>
       </div>

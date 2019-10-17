@@ -51,7 +51,14 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
 
                 _dbContext.ProjectMonitoringIndicatorDetail.UpdateRange(indicators);
                 await _dbContext.SaveChangesAsync();
-
+                // delete indicator question whose MonitoringIndicatorId is same as deleted indicator record will delete
+                foreach (var item in indicators)
+                {
+                    var indicatorQuestion = await _dbContext.ProjectMonitoringIndicatorQuestions.Where(x => x.MonitoringIndicatorId == item.MonitoringIndicatorId).ToListAsync();
+                    indicatorQuestion.ForEach(x => x.IsDeleted = true);
+                    _dbContext.ProjectMonitoringIndicatorQuestions.RemoveRange(indicatorQuestion);
+                    await _dbContext.SaveChangesAsync();
+                }
                 foreach (var item in request.MonitoringReviewModel)
                 {
                     ProjectMonitoringIndicatorDetail monitoringIndicatorDetail = new ProjectMonitoringIndicatorDetail();
@@ -84,38 +91,22 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
 
                     if (item.IndicatorQuestions.Any())
                     {
+
                         foreach (var obj in item.IndicatorQuestions)
                         {
                             ProjectMonitoringIndicatorQuestions monitoringQuestions = new ProjectMonitoringIndicatorQuestions();
-
-                            if (obj.MonitoringIndicatorQuestionId == null)
-                            {
-                                monitoringQuestions.IsDeleted = false;
-                                monitoringQuestions.CreatedDate = request.CreatedDate;
-                                monitoringQuestions.CreatedById = request.CreatedById;
-                                monitoringQuestions.IndicatorQuestionId = obj.IndicatorQuestionId;
-                                monitoringQuestions.VerificationSourceName = obj.VerificationSourceName;
-                                monitoringQuestions.VerificationSourceId = obj.VerificationSourceId;
-                                monitoringQuestions.MonitoringIndicatorId = monitoringIndicatorDetail.MonitoringIndicatorId;
-                                monitoringQuestions.Score = obj.Score;
-                                await _dbContext.ProjectMonitoringIndicatorQuestions.AddAsync(monitoringQuestions);
-                                await _dbContext.SaveChangesAsync();
-                            }
-                            else
-                            {
-                                monitoringQuestions = await _dbContext.ProjectMonitoringIndicatorQuestions
-                                                                               .FirstOrDefaultAsync(x => x.IsDeleted == false && x.Id == obj.MonitoringIndicatorQuestionId);
-
-
-                                monitoringQuestions.ModifiedDate = request.ModifiedDate;
-                                monitoringQuestions.ModifiedById = request.ModifiedById;
-                                monitoringQuestions.IndicatorQuestionId = obj.IndicatorQuestionId;
-                                monitoringQuestions.Score = obj.Score;
-                                monitoringQuestions.VerificationSourceName = obj.VerificationSourceName;
-                                monitoringQuestions.VerificationSourceId = obj.VerificationSourceId;
-                                _dbContext.ProjectMonitoringIndicatorQuestions.Update(monitoringQuestions);
-                                await _dbContext.SaveChangesAsync();
-                            }
+                            // add each question for each monitoring inicator id
+                            monitoringQuestions.IsDeleted = false;
+                            monitoringQuestions.CreatedDate = request.CreatedDate;
+                            monitoringQuestions.CreatedById = request.CreatedById;
+                            monitoringQuestions.IndicatorQuestionId = obj.IndicatorQuestionId;
+                            monitoringQuestions.VerificationSourceName = obj.VerificationSourceName;
+                            monitoringQuestions.VerificationSourceId = obj.VerificationSourceId;
+                            monitoringQuestions.MonitoringIndicatorId = monitoringIndicatorDetail.MonitoringIndicatorId;
+                            monitoringQuestions.Score = obj.Score;
+                            await _dbContext.ProjectMonitoringIndicatorQuestions.AddAsync(monitoringQuestions);
+                            await _dbContext.SaveChangesAsync();
+                           
                         }
                     }
                 }

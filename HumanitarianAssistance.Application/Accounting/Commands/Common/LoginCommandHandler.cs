@@ -58,21 +58,24 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Common
                     throw new Exception(StaticResource.InvalidUserCredentials);
                 }
 
-                // validate user
-                SignInResult result = await _signInManager.PasswordSignInAsync(request.UserName, request.Password, isPersistent: false, lockoutOnFailure: false);
-
-                if (!result.Succeeded)
-                {
-                    throw new Exception(StaticResource.InvalidUserCredentials);
-                }
-
                 var user = await _userManager.FindByNameAsync(request.UserName.Trim());
-                //var result1 = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
                 if (user == null)
                 {
                     throw new Exception(StaticResource.InvalidUserCredentials);
                 }
+
+                // validate user
+
+                if (!await _userManager.CheckPasswordAsync(user, request.Password))
+                {
+                    throw new Exception(StaticResource.InvalidUserCredentials);
+                }
+
+                
+                //var result1 = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+
+                
 
                 var userDetail = _dbContext.UserDetails.AsNoTracking().FirstOrDefault(x => x.IsDeleted == false && x.AspNetUserId == user.Id);
                 var offices = _dbContext.UserDetailOffices.Where(x => x.IsDeleted == false && x.UserId == userDetail.UserID).Select(x => x.OfficeId).ToList();

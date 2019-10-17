@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import {ReportService} from 'src/app/dashboard/accounting/report-services/report.service';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs/observable/forkJoin';
@@ -67,6 +67,10 @@ export class LedgerStatementReportComponent implements OnInit {
   debitSumForReport = 0.0;
   creditSumForReport = 0.0;
   balanceSumForReport = 0.0;
+  screenHeight: number;
+  screenWidth: number;
+  scrollStyles: any;
+  //#endregion
   //#endregion
   constructor(
     private accountservice: ReportService,
@@ -113,8 +117,18 @@ export class LedgerStatementReportComponent implements OnInit {
         new Date().getSeconds()
       )
     );
+    this.getScreenSize();
    }
-
+   @HostListener('window:resize', ['$event'])
+   getScreenSize(event?) {
+     this.screenHeight = window.innerHeight;
+     this.screenWidth = window.innerWidth;
+     this.scrollStyles = {
+       'overflow-y': 'auto',
+       height: this.screenHeight - 110 + 'px',
+       'overflow-x': 'hidden'
+     };
+   }
   ngOnInit() {
     this.initForm();
     this.globalService.setMenuHeaderName('Ledger');
@@ -182,7 +196,7 @@ export class LedgerStatementReportComponent implements OnInit {
   //#endregion
 
   getCurrencyCodeList(response: any) {
-    console.log(response);
+    // console.log(response);
     if (response.StatusCode === 200 && response.data.CurrencyList != null) {
       this.currencyDropdown = [];
       response.data.CurrencyList.forEach(element => {
@@ -202,7 +216,7 @@ export class LedgerStatementReportComponent implements OnInit {
   }
 
   getOfficeCodeList(response: any) {
-    console.log(response);
+    // console.log(response);
 
     if (
       response.StatusCode === 200 &&
@@ -242,7 +256,7 @@ export class LedgerStatementReportComponent implements OnInit {
   }
 
   GetAccountDetails(response: any) {
-    console.log(response);
+    // console.log(response);
 
     this.accountDropdown = [];
     this.selectedAccounts = [];

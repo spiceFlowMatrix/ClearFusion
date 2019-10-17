@@ -6,7 +6,9 @@ import {
   EventEmitter,
   OnChanges,
   SimpleChanges,
-  OnDestroy
+  OnDestroy,
+  ChangeDetectorRef,
+  AfterContentChecked
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectActivityDocumentsComponent } from '../../project-activity-documents/project-activity-documents.component';
@@ -40,7 +42,7 @@ import { ProjectListService } from '../../../service/project-list.service';
   templateUrl: './project-planning.component.html',
   styleUrls: ['./project-planning.component.scss']
 })
-export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
+export class ProjectPlanningComponent implements OnInit, OnChanges, AfterContentChecked, OnDestroy {
   //#region "variables"
   @Input() activityDetail: IProjectActivityDetail;
   @Input() planningDocumentsList: IDocumentsModel[] = [];
@@ -102,12 +104,13 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
     public toastr: ToastrService,
     private activitiesService: ProjectActivitiesService,
     private projectListService: ProjectListService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private cdref: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.getActivityPermission();
-    console.log('activity projectid', this.activityDetail.ProjectId);
+    // console.log('activity projectid', this.activityDetail.ProjectId);
     this.projectId = this.activityDetail.ProjectId;
     if (
       this.activityDetail != null &&
@@ -144,7 +147,16 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
       }
     }
   }
-
+  // to disable the actual end date until actual start date is not filled
+  // Note : NgafterContentChecked use to handle error ExpressionChangedAfterItHasBeenCheckedError
+  ngAfterContentChecked() {
+    this.cdref.detectChanges();
+    if (this.projectActivityForm.get('ActualStartDate').value == null) {
+      return this.projectActivityForm.controls['ActualEndDate'].disable();
+    } else {
+      return this.projectActivityForm.controls['ActualEndDate'].enable();
+    }
+  }
   //#region "initForm"
   initForm() {
     // const activitylist = this.activityDetail;
@@ -423,14 +435,7 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, OnDestroy {
   get activityActualStartdate() {
     return this.projectActivityForm.get('ActualStartDate').value;
   }
-// to enable and disable the actual end date
-  get disableActualEndDate() {
-    if (this.projectActivityForm.get('ActualStartDate').value == null) {
-      return this.projectActivityForm.controls['ActualEndDate'].disable();
-    } else {
-      return this.projectActivityForm.controls['ActualEndDate'].enable();
-    }
-  }
+
   onRecurringChange(event: any) {
     if (event.checked === true) {
       this.diasbleEndDate = true;

@@ -100,7 +100,7 @@
               </div>
               <div class="col-lg-6 col-sm-6">
                 <mat-form-field>
-                  <input matInput [min]="activityActualStartdate" formControlName="ActualEndDate" [attr.disabled]="disableActualEndDate"
+                  <input matInput [min]="activityActualStartdate" formControlName="ActualEndDate" [attr.disabled]="ngAfterContentChecked"
                     [matDatepicker]="planningActualEndDatepicker" placeholder="Actual End Date" />
                   <mat-datepicker-toggle matSuffix [for]="planningActualEndDatepicker"></mat-datepicker-toggle>
                   <mat-datepicker color="primary" #planningActualEndDatepicker></mat-datepicker>

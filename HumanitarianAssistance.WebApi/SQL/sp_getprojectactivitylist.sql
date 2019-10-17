@@ -1,0 +1,51 @@
+CREATE
+OR REPLACE FUNCTION public.get_project_projectactivitylist(projectid integer) RETURNS TABLE(
+    activityid integer,
+    activityname character varying,
+    activitydescription text,
+    budgetlineid bigint,
+    budgetname text,
+    employeeid integer,
+    employeename text,
+    statusid integer,
+    statusname text,
+    plannedstartdate timestamp without time zone,
+    plannedenddate timestamp without time zone,
+    recurring boolean,
+    recurringcount integer,
+    recurrintypeid integer
+) LANGUAGE 'plpgsql' COST 100 VOLATILE ROWS 1000 AS $Body$ DECLARE _projectid integer;
+
+BEGIN _projectid = projectid;
+
+RETURN QUERY
+SELECT
+    pa."ActivityId",
+    pa."ActivityName",
+    pa."ActivityDescription",
+    pa."BudgetLineId",
+    pbl."BudgetName",
+    pa."EmployeeID",
+    emp."EmployeeName",
+    pa."StatusId",
+    asd."StatusName",
+    pa."PlannedStartDate",
+    pa."PlannedEndDate",
+    pa."Recurring",
+    pa."RecurringCount",
+    pa."RecurrinTypeId"
+FROM
+    "ProjectActivityDetail" AS pa
+    INNER JOIN "ProjectBudgetLineDetail" AS pbl ON pa."BudgetLineId" = pbl."BudgetLineId"
+    INNER JOIN "EmployeeDetail" AS emp ON pa."EmployeeID" = emp."EmployeeID"
+    INNER JOIN "ActivityStatusDetail" AS asd ON pa."StatusId" = asd."StatusId"
+WHERE
+    pbl."ProjectId" = _projectid
+    AND pa."IsDeleted" = false
+    AND pa."ParentId" IS NULL
+ORDER BY
+    pa."ActivityId" DESC;
+
+END;
+
+$Body$;

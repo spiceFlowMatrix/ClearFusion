@@ -1802,5 +1802,17 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(new GetProjectWinLossStatusByIdQuery { ProjectId = ProjectId });
         }
         #endregion
+
+        [HttpPost]
+        public async Task<ApiResponse> GetProjectJobsByBudgetLineIds([FromBody] List<long?> budgetLineIds)
+        {
+            return await _mediator.Send(new GetProjectJobsByMultipleBudgetLineIdsQuery { budgetLineIds = budgetLineIds });
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> GetProjectBudgetLinesByProjectIds([FromBody] List<long?> projectIds)
+        {
+            return await _mediator.Send(new GetBudgetLinesByMultipleProjectIdsQuery { projectIds = projectIds });
+        }
     }
 }

@@ -1,10 +1,10 @@
-<mat-card>
+<mat-card [ngStyle]="scrollStyles">
   <div class="main-journal">
     <mat-card>
       <form [formGroup]="ledgerFilterForm" (ngSubmit)="onApplyingFilter(ledgerFilterForm.value)">
         <div class="row">
           <div class="col-md-12">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <lib-search-dropdown
                     placeholder="Office"
                     [multiSelect]="true"
@@ -24,11 +24,11 @@
                       </mat-select>
                   </mat-form-field> -->
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <lib-hum-dropdown [options]="currencyId$" formControlName="CurrencyId" [placeHolder]="'Currency'"
                     ></lib-hum-dropdown>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <lib-hum-dropdown [options]="recordType$" formControlName="RecordType" [placeHolder]="'Record Type'"
                     ></lib-hum-dropdown>
                 </div>
@@ -36,7 +36,7 @@
         </div>
         <div class="row">
           <div class="col-md-12">
-              <div class="col-md-4">
+              <div class="col-md-3">
                   <lib-search-dropdown
                   placeholder="Accounts"
                   [multiSelect]="true"
@@ -56,7 +56,7 @@
                       </mat-select>
                   </mat-form-field> -->
               </div>
-              <div class="col-md-4">
+              <div class="col-md-3">
                   <mat-form-field>
                     <input matInput [satDatepicker]="resultPicker" formControlName="date">
                     <sat-datepicker
@@ -74,7 +74,7 @@
             <!-- <button class="pull-right" type="submit" mat-stroked-button color="accent">Update Filters</button> -->
             <hum-button [isSubmit]="true" [type]="'save'" [text]="'UPDATE FILTERS'">
             </hum-button>
-            <hum-button (click)="ExportPdf(ledgerFilterForm.value)" [isSubmit]="true" [type]="'download'" [text]="'PDF EXPORT'">
+            <hum-button (click)="ExportPdf(ledgerFilterForm.value)" [type]="'download'" [text]="'PDF EXPORT'">
             </hum-button>
           </div>
         </div>

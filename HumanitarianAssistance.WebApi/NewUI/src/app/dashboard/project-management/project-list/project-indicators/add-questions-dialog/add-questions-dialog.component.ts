@@ -21,6 +21,7 @@ export class AddQuestionsDialogComponent implements OnInit {
   @Output() onUpdatedQuestionListRefresh = new EventEmitter();
   //#region  "variables"
   public questionForm: FormGroup;
+  verificationSounceLoaderFlag: false;
   questionDetailModel: IQuestionDetailModel;
   IndicatorDetail: any;
   questionDetail: any;
@@ -42,7 +43,7 @@ export class AddQuestionsDialogComponent implements OnInit {
   ) {
     this.IndicatorDetail = data.ProjectindicatorDetail;
     this.questionDetail = data.QuestionDetail;
-    console.log('wwhuh', this.questionDetail);
+    // console.log('wwhuh', this.questionDetail);
   }
 
   ngOnInit() {

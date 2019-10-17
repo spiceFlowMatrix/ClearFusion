@@ -121,6 +121,11 @@ namespace HumanitarianAssistance.Application.CommonServices
                     {
                         IdentityResult objNew = await _userManager.CreateAsync(newUser, request.Password);
 
+                        if(!objNew.Succeeded) 
+                        {
+                            throw new Exception("Could Not Create App User");
+                        }
+
                         UserDetails user = new UserDetails();
 
                         user.FirstName = request.FirstName;

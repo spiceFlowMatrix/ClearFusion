@@ -40,7 +40,7 @@ export class MonitoringReviewComponent implements OnInit {
     this.projectId = data.projectId;
     this.activityId = data.activityId;
     this.monitoringReviewList = data.monitoringReviewModel;
-    console.log('edit list', this.monitoringReviewList);
+    // console.log('edit list', this.monitoringReviewList);
   }
 
   indicatorFilterModel: ProjectIndicatorFilterModel;
@@ -75,7 +75,7 @@ export class MonitoringReviewComponent implements OnInit {
       Questions: null,
       ProjectId: null
     };
-    // console.log(this.monitoringReviewList);
+    // // console.log(this.monitoringReviewList);
     this.getAllProjectIndicatorList();
 
     if (
@@ -84,6 +84,11 @@ export class MonitoringReviewComponent implements OnInit {
     ) {
       this.initializeModel();
     } else {
+       // to enable the question type and verification source o edit case
+       this.scoreFlag = false;
+       this.verificationFlag = false;
+
+
       // for (let i = 0; i < this.monitoringReviewList.MonitoringReviewModel.length;  i++  ) {
       //   this.getQuestionsList(i);
       // }
@@ -103,7 +108,7 @@ export class MonitoringReviewComponent implements OnInit {
     this.monitoringQuantitativeScore = [
       {
         score: 1,
-        name: '1 - Weak'
+        name: '1-Weak'
       },
       {
         score: 2,
@@ -227,10 +232,7 @@ export class MonitoringReviewComponent implements OnInit {
               ].IndicatorQuestions.push(elemnt);
             });
           }
-          console.log(
-            'getquestionlist',
-            this.monitoringReviewList.MonitoringReviewModel
-          );
+          // console.log('getquestionlist',this.monitoringReviewList.MonitoringReviewModel);
           if (response.statusCode === 400) {
             this.toastr.error(response.message);
           }
@@ -238,6 +240,19 @@ export class MonitoringReviewComponent implements OnInit {
     }
   }
 
+
+  getQuestionsTypeList(index: number) {
+    this.projectIndicatorId = this.monitoringReviewList.MonitoringReviewModel[
+      index
+    ].ProjectIndicatorId;
+    if (
+      this.projectIndicatorId != null &&
+      this.projectIndicatorId !== undefined &&
+      this.projectIndicatorId !== 0
+    ) {
+
+    }
+  }
   addMonitoringIndicator() {
     // disable submit button
     this.scoreFlag = true;
@@ -325,7 +340,7 @@ export class MonitoringReviewComponent implements OnInit {
     this.monitoringReviewList.MonitoringDate = this.setDateTime(
       this.monitoringReviewList.MonitoringDate
     );
-    console.log(this.monitoringReviewList);
+    // console.log(this.monitoringReviewList);
 
     this.projectListService
       .AddProjectMonitoringReview(
@@ -359,17 +374,14 @@ export class MonitoringReviewComponent implements OnInit {
         this.toastr.warning('Monitoring Date not selected');
         return;
       }
-      for (
-        let i = 0;
-        i < this.monitoringReviewList.MonitoringReviewModel.length;
-        i++
-      ) {
-        if (
-          this.monitoringReviewList.MonitoringReviewModel[i]
-            .ProjectIndicatorId === 0
-        ) {
+      for (   let i = 0; i < this.monitoringReviewList.MonitoringReviewModel.length; i++ ) {
+        if (  this.monitoringReviewList.MonitoringReviewModel[i].ProjectIndicatorId === 0) {
           this.toastr.warning('Indicator not selected');
           return;
+        }   else if (this.monitoringReviewList.MonitoringReviewModel[i].IndicatorQuestions.length > 0) {
+          this.monitoringReviewList.MonitoringReviewModel[i].IndicatorQuestions =
+          this.monitoringReviewList.MonitoringReviewModel[i].IndicatorQuestions.filter(x => x.Score != null);
+
         }
       }
     }
