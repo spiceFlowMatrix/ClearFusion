@@ -103,8 +103,6 @@ deploy-cleanarch:
         refs:
             - cleanarch
             
-
-
 .functions: &functions |
     # Functions
     function init_helm() {
