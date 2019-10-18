@@ -54,7 +54,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     obj.JobDescription = request.description;
                     obj.IsActive = false;
                     obj.OfficeId = request.office;
-                    obj.Unit = request.payRate;
+                    obj.Unit = request.totalVacancies;
                     //obj.
                     await _dbContext.JobHiringDetails.AddAsync(obj);
                     await _dbContext.SaveChangesAsync();

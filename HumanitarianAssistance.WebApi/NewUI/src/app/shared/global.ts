@@ -400,7 +400,7 @@ export class GLOBAL {
 
 
   //#region "Hiring request"
-  public static API_HREmployee_AddJobHiringDetail = 'HRJobs/AddJobHiringDetail';
+  public static API_HREmployee_AddJobHiringDetail = 'HRJobs/AddJobHiringDetails';
 
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
   public static API_HiringRequest_AddHiringRequestDetail = 'HiringRequest/AddHiringRequestDetail';
