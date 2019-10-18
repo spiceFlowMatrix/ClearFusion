@@ -8,7 +8,7 @@ namespace HumanitarianAssistance.Persistence.Infrastructure
 {
     public abstract class DesignTimeDbContextFactoryBase<TContext> : IDesignTimeDbContextFactory<TContext> where TContext : DbContext
     {
-        private readonly string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
+        private readonly string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING_TWO");
         private readonly string aspNetCoreEnvironment = "ASPNETCORE_ENVIRONMENT";
 
         public TContext CreateDbContext(string[] args)

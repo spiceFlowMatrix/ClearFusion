@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 
 @Component({
   selector: 'lib-sub-header-template',
@@ -7,7 +7,8 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubHeaderTemplateComponent implements OnInit {
-
+  
+  @Input() headerClass = 'sub_header_template_main';
   constructor() { }
 
   ngOnInit() {

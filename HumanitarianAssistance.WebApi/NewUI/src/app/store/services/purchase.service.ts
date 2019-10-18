@@ -4,7 +4,13 @@ import { AppUrlService } from '../../shared/services/app-url.service';
 import { GLOBAL } from '../../shared/global';
 import { map } from 'rxjs/internal/operators/map';
 import { IResponseData } from '../../../app/dashboard/accounting/vouchers/models/status-code.model';
-import { IFilterValueModel, IAddEditPurchaseModel, IAddEditProcurementModel, IDeleteProcurementModel, IDropDownModel } from '../models/purchase';
+import {
+  IFilterValueModel,
+  IAddEditPurchaseModel,
+  IAddEditProcurementModel,
+  IDeleteProcurementModel,
+  IDropDownModel
+} from '../models/purchase';
 import { retry, finalize, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of, Observable } from 'rxjs';
@@ -14,17 +20,18 @@ import { StaticUtilities } from 'src/app/shared/static-utilities';
   providedIn: 'root'
 })
 export class PurchaseService {
-
   constructor(
     private globalService: GlobalService,
     private appurl: AppUrlService,
-    private http: HttpClient,
-  ) { }
+    private http: HttpClient
+  ) {}
 
   //#region "GetPurchaseFilterList"
   getPurchaseFilterList(): any {
     return this.globalService
-      .getList(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetAllPurchaseFilters)
+      .getList(
+        this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetAllPurchaseFilters
+      )
       .pipe(
         map(x => {
           return x;
@@ -35,25 +42,34 @@ export class PurchaseService {
 
   //#region "GetInventoriesByInventoryTypeId"
   getInventoriesByInventoryTypeId(Id: number): any {
-        return this.http.get<any>(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllInventories + '?AssetType=' + Id).pipe(
-          map((response) => {
-            const responseData: IResponseData = {
-                    data: response.data.InventoryList,
-                    statusCode: response.StatusCode,
-                    message: response.Message
-                  };
-                  return responseData;
-          }),
-          finalize(() => {
-          })
-        );
+    return this.http
+      .get<any>(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Store_GetAllInventories +
+          '?AssetType=' +
+          Id
+      )
+      .pipe(
+        map(response => {
+          const responseData: IResponseData = {
+            data: response.data.InventoryList,
+            statusCode: response.StatusCode,
+            message: response.Message
+          };
+          return responseData;
+        }),
+        finalize(() => {})
+      );
   }
   //#endregion
 
   //#region "GetItemGroupByInventoryId"
   getItemGroupByInventoryId(Id: number): any {
     return this.globalService
-      .getItemById(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllStoreItemGroups, Id)
+      .getItemById(
+        this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllStoreItemGroups,
+        Id
+      )
       .pipe(
         map(x => {
           const responseData: IResponseData = {
@@ -62,14 +78,18 @@ export class PurchaseService {
             message: x.Message
           };
           return responseData;
-        }));
+        })
+      );
   }
   //#endregion
 
   //#region "GetItemsByItemGroupId"
   getItemsByItemGroupId(Id: number): any {
     return this.globalService
-      .getItemById(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllInventoryItems, Id)
+      .getItemById(
+        this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllInventoryItems,
+        Id
+      )
       .pipe(
         map(x => {
           const responseData: IResponseData = {
@@ -78,14 +98,19 @@ export class PurchaseService {
             message: x.Message
           };
           return responseData;
-        }));
+        })
+      );
   }
   //#endregion
 
   //#region "GetPurchaseListFilter"
   getFilteredPurchaseList(filter: IFilterValueModel): any {
     return this.globalService
-      .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetFilteredPurchaseList, filter)
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_StorePurchase_GetFilteredPurchaseList,
+        filter
+      )
       .pipe(
         map(x => {
           return x;
@@ -97,7 +122,9 @@ export class PurchaseService {
   //#region "GetPurchaseFilterList"
   getAllInventoryTypeList(): any {
     return this.globalService
-      .getList(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetAllInventoriesType)
+      .getList(
+        this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetAllInventoriesType
+      )
       .pipe(
         map(x => {
           return x;
@@ -131,27 +158,20 @@ export class PurchaseService {
   //#endregion
 
   getPurchaseAssetType(): Observable<any[]> {
-    return of(
-      [
-        {
-            AssetTypeId: 1,
-            AssetTypeName: 'Cash'
-        },
-        {
-            AssetTypeId: 2,
-            AssetTypeName: 'In Kind'
-        }
-    ]
-    );
+    return of([
+      {
+        AssetTypeId: 1,
+        AssetTypeName: 'Cash'
+      },
+      {
+        AssetTypeId: 2,
+        AssetTypeName: 'In Kind'
+      }
+    ]);
   }
 
   getPurchaseDocumentTypes(): Observable<IDropDownModel[]> {
-    return of (
-      [
-        { name: 'Invoice', value: 1},
-        { name: 'Image', value: 2 }
-      ]
-    );
+    return of([{ name: 'Invoice', value: 1 }, { name: 'Image', value: 2 }]);
   }
 
   getAllStoreSource() {
@@ -165,17 +185,23 @@ export class PurchaseService {
   }
 
   getEmployeesByOfficeId(Id) {
-      return this.http.get<any>(this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetEmployeeListByOfficeId + '?OfficeId=' + Id)
+    return this.http
+      .get<any>(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_GetEmployeeListByOfficeId +
+          '?OfficeId=' +
+          Id
+      )
       .pipe(
-        map((response) => {
+        map(response => {
           const responseData: IResponseData = {
             data: response.data.EmployeeDetailListData,
             statusCode: response.StatusCode,
             message: response.Message
-        };
+          };
 
-        return responseData;
-      }),
+          return responseData;
+        }),
         finalize(() => {
           // this.loader.hideLoader();
         })
@@ -194,7 +220,9 @@ export class PurchaseService {
 
   getAllStatusAtTimeOfIssue() {
     return this.globalService
-      .getList(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllStatusAtTimeOfIssue)
+      .getList(
+        this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllStatusAtTimeOfIssue
+      )
       .pipe(
         map(x => {
           return x;
@@ -214,7 +242,9 @@ export class PurchaseService {
 
   getAllUnitTypeDetails() {
     return this.globalService
-      .getList(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllPurchaseUnitType)
+      .getList(
+        this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllPurchaseUnitType
+      )
       .pipe(
         map(x => {
           return x;
@@ -228,7 +258,7 @@ export class PurchaseService {
       AssetTypeId: purchase.AssetTypeId,
       BudgetLineId: purchase.BudgetLineId,
       Currency: purchase.CurrencyId,
-      DeliveryDate: this.getLocalDate(purchase.ReceiptDate) ,
+      DeliveryDate: this.getLocalDate(purchase.ReceiptDate),
       DepreciationRate: purchase.DepreciationRate,
       InventoryId: purchase.InventoryId,
       InventoryItem: purchase.ItemId,
@@ -253,15 +283,19 @@ export class PurchaseService {
     };
 
     return this.globalService
-      .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_AddStorePurchase, purchaseModel, { observe : 'response'})
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_AddStorePurchase,
+        purchaseModel,
+        { observe: 'response' }
+      )
       .pipe(
        // tap(resp => // console.log('response', resp)),
         map((x: Response) => {
-         return {
-          StatusCode: x.status,
-          Message: x.status === 200 ? 'Success' : 'Fail',
-          PurchaseId: x.body
-         };
+          return {
+            StatusCode: x.status,
+            Message: x.status === 200 ? 'Success' : 'Fail',
+            PurchaseId: x.body
+          };
         })
       );
   }
@@ -273,14 +307,17 @@ export class PurchaseService {
       IssuedQuantity: procurement.IssuedQuantity,
       MustReturn: procurement.MustReturn,
       IssuedToEmployeeId: procurement.IssuedToEmployeeId,
-      IssueDate:  StaticUtilities.getLocalDate(procurement.IssueDate),
+      IssueDate: StaticUtilities.getLocalDate(procurement.IssueDate),
       IssedToLocation: procurement.StoreSourceId,
       StatusAtTimeOfIssue: procurement.StatusId,
       Project: procurement.ProjectId
     };
 
     return this.globalService
-      .post(this.appurl.getApiUrl() + GLOBAL.API_Store_AddItemOrder, procurementModel)
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_Store_AddItemOrder,
+        procurementModel
+      )
       .pipe(
         map(x => {
           return x;
@@ -294,7 +331,10 @@ export class PurchaseService {
     };
 
     return this.globalService
-      .post(this.appurl.getApiUrl() + GLOBAL.API_Store_DeleteItemOrder, procurementModel)
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_Store_DeleteItemOrder,
+        procurementModel
+      )
       .pipe(
         map(x => {
           return x;
@@ -304,7 +344,11 @@ export class PurchaseService {
 
   checkExchangeRateExists(model: any) {
     return this.globalService
-      .post(this.appurl.getApiUrl() + GLOBAL.API_ExchangeRates_CheckExchangeRatesExist, model)
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_ExchangeRates_CheckExchangeRatesExist,
+        model
+      )
       .pipe(
         map(x => {
           return x;
@@ -312,37 +356,31 @@ export class PurchaseService {
       );
   }
 
-    //#region "getPurchaseListByItemId"
+  //#region "getPurchaseListByItemId"
   getPurchaseListByItemId(Id) {
-    return this.http.get<any>(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllPurchasesByItem + '?ItemId=' + Id)
-    .pipe(
-      map((response) => {
-        const responseData: IResponseData = {
-          data: response.data.StoreItemsPurchaseViewList,
-          statusCode: response.StatusCode,
-          message: response.Message
-      };
+    return this.http
+      .get<any>(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Store_GetAllPurchasesByItem +
+          '?ItemId=' +
+          Id
+      )
+      .pipe(
+        map(response => {
+          const responseData: IResponseData = {
+            data: response.data.StoreItemsPurchaseViewList,
+            statusCode: response.StatusCode,
+            message: response.Message
+          };
 
-      return responseData;
-    }),
-      finalize(() => {
-        // this.loader.hideLoader();
-      })
-    );
-}
- //#endregion
-
- //#region "getItemDetailByItemId"
- getItemDetailByPurchaseId(Id) {
-  return this.http.get<any>(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetItemDetailByItemId + '?PurchaseId=' + Id)
-  .pipe(
-    map(x => {
-      return x;
-    })
-  );
-}
-//#endregion
-
+          return responseData;
+        }),
+        finalize(() => {
+          // this.loader.hideLoader();
+        })
+      );
+  }
+  //#endregion
 //#region "getVechileList"
 getVehicleList(model: any) {
   return this.globalService
@@ -355,6 +393,22 @@ addVehicleMileage(model: any) {
 }
 
 
+  //#region "getItemDetailByItemId"
+  getItemDetailByPurchaseId(Id) {
+    return this.http
+      .get<any>(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_StorePurchase_GetItemDetailByItemId +
+          '?PurchaseId=' +
+          Id
+      )
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+  //#endregion
 
   //#region "getLocalDate"
   getLocalDate(date: any) {
@@ -365,7 +419,7 @@ addVehicleMileage(model: any) {
       new Date().getHours(),
       new Date().getMinutes(),
       new Date().getSeconds(),
-      new Date().getMilliseconds(),
+      new Date().getMilliseconds()
     );
   }
   //#endregion
