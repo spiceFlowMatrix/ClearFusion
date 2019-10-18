@@ -457,6 +457,28 @@ export class HiringRequestsService {
   }
   //#endregion
 
+//#region "AddJobHiringDetails"
+addJobHiringDetails(data: any) {
+  console.log(data);
+  return this.globalService
+    .post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HREmployee_AddJobHiringDetail,
+      data
+    )
+    .pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+}
+//#endregion
+
   setHiringPermissions(permissionList: IProjectPermissionMode[]) {
     this.hiringPermissionSubject.next(permissionList);
   }

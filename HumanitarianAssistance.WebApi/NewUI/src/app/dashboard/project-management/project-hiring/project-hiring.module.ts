@@ -14,11 +14,14 @@ import {
   MatCardModule,
   MatPaginatorModule
 } from '@angular/material';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
   declarations: [HiringRequestsComponent, JobDetailComponent],
   imports: [
+    ReactiveFormsModule,
+    FormsModule,
     CommonModule,
     ProjectHiringRoutingModule,
     SubHeaderTemplateModule,
