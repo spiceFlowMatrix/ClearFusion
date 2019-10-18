@@ -14,7 +14,8 @@ import { PurchaseService } from '../../services/purchase.service';
 })
 export class VehicleTrackerComponent implements OnInit {
 
-  vehicleListHeaders$ = of(['Plate No', 'Driver', 'Fuel Consumption Rate', 'Total Mileage (KM)', 'Total Cost', 'Original Cost']);
+  vehicleListHeaders$ = of(['Vechile Id', 'Plate No', 'Driver', 'Fuel Consumption Rate', 'Total Mileage (KM)', 'Total Cost',
+                            'Original Cost']);
   vehicleList$: Observable<IVehicleList[]>;
   actions: TableActionsModel;
   vehicleTrackerFilter: IVehicleTrackerFilter;
@@ -38,7 +39,7 @@ export class VehicleTrackerComponent implements OnInit {
     this.getVehicleList(this.vehicleTrackerFilter);
     this.actions = {
       items: {
-        button: { status: true, text: 'Add Milage' },
+        button: { status: true, text: 'Add Mileage' },
         delete: false,
         download: false,
       },
@@ -94,6 +95,7 @@ export class VehicleTrackerComponent implements OnInit {
         this.recordsCount = response.TotalRecords;
         this.vehicleList$ = of(response.VehicleList.map((element) => {
           return {
+            VehicleId: element.VehicleId,
             PlateNo: element.PlateNo,
             Driver: element.EmployeeName,
             FCRate: element.FuelConsumptionRate,
@@ -116,8 +118,7 @@ export class VehicleTrackerComponent implements OnInit {
       const dialogRef = this.dialog.open(AddMilageComponent, {
         width: '850px',
         data: {
-          // value: event.item.Id,
-          //  officeId: this.filterValueModel.OfficeId
+            vehicleId: event.VehicleId
         }
       });
     }

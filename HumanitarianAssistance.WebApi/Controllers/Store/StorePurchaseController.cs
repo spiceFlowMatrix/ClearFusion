@@ -188,5 +188,25 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
             }
         }
 
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> AddVehicleMileage([FromBody] AddStorePurchaseCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            var result = await Task.FromResult(_mediator.Send(command));
+
+            if (result.Exception == null)
+            {
+                return Ok(await result);
+            }
+            else
+            {
+                return BadRequest(result.Exception.InnerException.Message);
+            }
+        }
+
     }
 }
