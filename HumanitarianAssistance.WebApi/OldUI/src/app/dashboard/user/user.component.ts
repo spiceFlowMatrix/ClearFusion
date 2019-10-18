@@ -175,7 +175,7 @@ export class UserComponent implements OnInit, OnDestroy {
         null,
         Validators.compose([
           Validators.required,
-          Validators.minLength(1),
+          Validators.minLength(6),
           Validators.maxLength(20)
         ])
       ],
@@ -184,7 +184,7 @@ export class UserComponent implements OnInit, OnDestroy {
         Validators.compose([
           CustomValidation.ComparePassword,
           Validators.required,
-          Validators.minLength(1),
+          Validators.minLength(6),
           Validators.maxLength(20)
         ])
       ],
@@ -221,7 +221,7 @@ export class UserComponent implements OnInit, OnDestroy {
         '',
         Validators.compose([
           Validators.required,
-          Validators.minLength(1),
+          Validators.minLength(5),
           Validators.maxLength(20)
         ])
       ],
@@ -230,7 +230,7 @@ export class UserComponent implements OnInit, OnDestroy {
         Validators.compose([
           CustomValidation.ConfirmPassword,
           Validators.required,
-          Validators.minLength(1),
+          Validators.minLength(5),
           Validators.maxLength(20)
         ])
       ]

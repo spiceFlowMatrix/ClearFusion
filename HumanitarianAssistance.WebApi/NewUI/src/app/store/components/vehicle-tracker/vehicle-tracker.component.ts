@@ -56,7 +56,7 @@ export class VehicleTrackerComponent implements OnInit {
   }
   goToDetails(e) {
     this.router.navigate(['store/vehicle/detail',1]);
-  //  // console.log(e);
+  //  console.log(e);
   }
   openMilageModal(event) {
     if (event.type == "button") {

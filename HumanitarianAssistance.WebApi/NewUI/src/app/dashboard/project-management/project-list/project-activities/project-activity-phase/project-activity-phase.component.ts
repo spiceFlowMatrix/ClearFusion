@@ -163,7 +163,7 @@ export class ProjectActivityPhaseComponent
       .subscribe(
         (response: IResponseData) => {
           if (response.statusCode === 200 && response.data != null) {
-            // // console.log(response.data);
+            // console.log(response.data);
             this.activitiesService.setActivityPermissions(response.data);
           } else {
             this.toastr.error(response.message);

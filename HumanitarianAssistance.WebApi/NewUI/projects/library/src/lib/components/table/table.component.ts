@@ -38,11 +38,11 @@ export class TableComponent implements OnInit, OnChanges {
 
   ngOnInit() {
 
-    // console.log(this.actions)
+    console.log(this.actions)
   }
   ngOnChanges(): void {
     this.itemActions = this.actions
-    // console.log(this.itemActions)
+    console.log(this.itemActions)
     if (this.items) {
       this.items.subscribe(res => {
         this.subItems = [];
@@ -92,7 +92,7 @@ export class TableComponent implements OnInit, OnChanges {
   switchSubList(i, event) {
     if (this.subItems.length > 0)   this.isShowSubList[i] = !this.isShowSubList[i];
     this.rowClick.emit(event);
-
+    
   }
 
 }
