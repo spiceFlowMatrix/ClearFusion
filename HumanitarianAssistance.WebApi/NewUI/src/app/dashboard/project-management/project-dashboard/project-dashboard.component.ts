@@ -30,19 +30,20 @@ export class ProjectDashboardComponent implements OnInit {
       PageId: projectPagesMaster.Donors,
       Text: 'Donors',
       Link: '/project/project-donor'
-    },
-    {
-      Id: 4,
-      PageId: projectPagesMaster.ProjectCashFlow,
-      Text: 'Cash Flow',
-      Link: '/project/project-cash-flow'
-    },
-    {
-      Id: 5,
-      PageId: projectPagesMaster.ProposalReport,
-      Text: 'Proposal Report',
-      Link: '/project/proposal-report'
-    },
+    }
+    // ,
+    // {
+    //   Id: 4,
+    //   PageId: projectPagesMaster.ProjectCashFlow,
+    //   Text: 'Cash Flow',
+    //   Link: '/project/project-cash-flow'
+    // },
+    // {
+    //   Id: 5,
+    //   PageId: projectPagesMaster.ProposalReport,
+    //   Text: 'Proposal Report',
+    //   Link: '/project/proposal-report'
+    // },
 
   ];
   authorizedMenuList: IMenuList[] = [];
