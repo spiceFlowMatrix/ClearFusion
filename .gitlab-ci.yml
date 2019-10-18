@@ -131,9 +131,9 @@ deploy-chaprod:
           ./k8s-chart
     only:
         refs:
-            - cleanarch
+            - master
 
-
+            
 .functions: &functions |
     # Functions
     function init_helm() {
