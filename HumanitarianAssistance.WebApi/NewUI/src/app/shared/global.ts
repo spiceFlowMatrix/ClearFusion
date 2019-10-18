@@ -450,8 +450,10 @@ export class GLOBAL {
   public static API_Store_AddItemOrder = 'Store/AddItemOrder';
   public static API_Store_DeleteItemOrder = 'Store/DeleteItemOrder';
   public static API_StorePurchase_AddStorePurchase = 'StorePurchase/AddStorePurchase';
-  public static API_StorePurchase_GetVehicleList = 'StorePurchase/GetVehicleList';
-  public static API_StorePurchase_AddVehicleMileage = 'StorePurchase/AddVehicleMileage';
+  public static API_VehicleTracker_GetVehicleList = 'VehicleTracker/GetVehicleList';
+  public static API_VehicleTracker_AddVehicleMileage = 'VehicleTracker/AddVehicleMileage';
+  public static API_VehicleTracker_GetVehicleById = 'VehicleTracker/GetVehicleById';
+  public static API_VehicleTracker_SaveVehicleDetail = 'VehicleTracker/EditVehicleDetail';
 
 }
 

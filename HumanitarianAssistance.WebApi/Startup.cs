@@ -39,7 +39,7 @@ namespace HumanitarianAssistance.WebApi
         {
             //get and set environment variable at run time
             string DefaultCorsPolicyUrl = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
-            string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING_TWO");
+            string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
             defaultCorsPolicyName = Configuration["DEFAULT_CORS_POLICY_NAME"];
 
             // Database connection

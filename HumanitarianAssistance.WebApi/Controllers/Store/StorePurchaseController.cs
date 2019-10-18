@@ -18,7 +18,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
     [Produces("application/json")]
     [Route("api/StorePurchase/[Action]")]
     [ApiExplorerSettings(GroupName = nameof(SwaggerGrouping.StorePurchase))]
-    [AllowAnonymous]
     public class StorePurchaseController : BaseController
     {
 
@@ -170,43 +169,5 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
                 return BadRequest(result.Exception.InnerException.Message);
             }
         }
-
-        [HttpPost]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        public async Task<IActionResult> GetVehicleList(GetVehicleListQuery request)
-        {
-            var result = await Task.FromResult(_mediator.Send(request));
-
-            if (result.Exception == null)
-            {
-                return Ok(await result);
-            }
-            else
-            {
-                return BadRequest(result.Exception.InnerException.Message);
-            }
-        }
-
-        [HttpPost]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        public async Task<IActionResult> AddVehicleMileage([FromBody] AddVehicleMileageCommand command)
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            command.CreatedById = userId;
-            command.CreatedDate = DateTime.UtcNow;
-            var result = await Task.FromResult(_mediator.Send(command));
-
-            if (result.Exception == null)
-            {
-                return Ok(await result);
-            }
-            else
-            {
-                return BadRequest(result.Exception.InnerException.Message);
-            }
-        }
-
     }
 }

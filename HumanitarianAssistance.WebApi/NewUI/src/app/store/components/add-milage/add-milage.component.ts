@@ -13,38 +13,45 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class AddMilageComponent implements OnInit {
 
   mileageForm: FormGroup;
-
-
+  isAddMileageFormSubmitted = false;
 
   constructor(private fb: FormBuilder, private purchaseService: PurchaseService,
     private commonLoader: CommonLoaderService, public toastr: ToastrService,
     private dialogRef: MatDialogRef<AddMilageComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
-      debugger;
+    debugger;
 
-      this.mileageForm = this.fb.group({
-        'VehicleId': [data.vehicleId, [Validators.required]],
-        'Mileage': [null, [Validators.required]],
-        'Month': [null, [Validators.required]]
-      });
-    }
+    this.mileageForm = this.fb.group({
+      'VehicleId': [data.vehicleId, [Validators.required]],
+      'Mileage': [null, [Validators.required]],
+      'Month': [null, [Validators.required]]
+    });
+  }
 
   ngOnInit() {
   }
 
- //#region "onCancelPopup"
- onCancelPopup(): void {
-  this.dialogRef.close(false);
-}
+  //#region "onCancelPopup"
+  onCancelPopup(): void {
+    this.dialogRef.close(false);
+  }
 
-//#endregion
+  //#endregion
   addMilage() {
-    debugger;
+    this.isAddMileageFormSubmitted = true;
     if (this.mileageForm.valid) {
       this.purchaseService.addVehicleMileage(this.mileageForm.value)
-                          .subscribe(x => {
-
-                          });
+        .subscribe(x => {
+          if (x) {
+            this.dialogRef.close(false);
+            this.isAddMileageFormSubmitted = false;
+          } else {
+            this.toastr.warning('Something went wrong');
+            this.isAddMileageFormSubmitted = false;
+          }
+        }, error => {
+          this.isAddMileageFormSubmitted = false;
+        });
 
     }
   }
