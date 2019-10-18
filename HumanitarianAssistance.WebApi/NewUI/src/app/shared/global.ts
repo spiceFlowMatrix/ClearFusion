@@ -428,7 +428,7 @@ export class GLOBAL {
   public static API_Pdf_LedgerReportPdf = 'Pdf/GetLedgerReportPdf';
   public static API_Pdf_JournalTrialBalanceReportPdf = 'Pdf/GetJournalTrialBalanceReportPdf';
   public static API_Pdf_GetJournalBudgetLineSummaryPdf  = 'Pdf/GetJournalBudgetLineSummaryPdf';
-
+  public static API_Pdf_GetJournalLedgerReportPdf = 'Pdf/GetJournalLedgerReportPdf';
   //#endregion
 
   // Store

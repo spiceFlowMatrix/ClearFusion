@@ -158,7 +158,7 @@ export class ReportService {
       .subscribe();
   }
 
-  onExportExportBudgetlinePdf(value) {
+  onExportJournalBudgetlinePdf(value) {
     this.globalSharedService
       .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetJournalBudgetLineSummaryPdf,
       value
@@ -166,4 +166,14 @@ export class ReportService {
       .pipe()
       .subscribe();
   }
+
+  onExportJournalLedgerPdf(value) {
+    this.globalSharedService
+      .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetJournalLedgerReportPdf,
+      value
+      )
+      .pipe()
+      .subscribe();
+  }
+
 }

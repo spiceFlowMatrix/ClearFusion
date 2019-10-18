@@ -115,7 +115,7 @@
 
         <div class="action_section">
           <hum-button (click)="ExportBudgetlinePdf(journalFilterForm.value)" [type]="'download'" [text]="'EXPORT BUDGET LINE REPORT'"></hum-button>
-          <hum-button [type]="'download'" [text]="'EXPORT LEDGER REPORT'"></hum-button>
+          <hum-button (click)="ExportLedgerPdf(journalFilterForm.value)" [type]="'download'" [text]="'EXPORT LEDGER REPORT'"></hum-button>
           <hum-button (click)="ExportTrialBalPdf(journalFilterForm.value)" [type]="'download'" [text]="'EXPORT TRIAL REPORT'"></hum-button>
         </div>
       </lib-sub-header-template>
