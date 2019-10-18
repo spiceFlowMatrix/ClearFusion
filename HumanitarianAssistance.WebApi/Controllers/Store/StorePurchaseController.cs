@@ -191,7 +191,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> AddVehicleMileage([FromBody] AddStorePurchaseCommand command)
+        public async Task<IActionResult> AddVehicleMileage([FromBody] AddVehicleMileageCommand command)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             command.CreatedById = userId;

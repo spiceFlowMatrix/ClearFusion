@@ -20,9 +20,10 @@ export class AddMilageComponent implements OnInit {
     private commonLoader: CommonLoaderService, public toastr: ToastrService,
     private dialogRef: MatDialogRef<AddMilageComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
+      debugger;
 
       this.mileageForm = this.fb.group({
-        'VehicleId': [data.VehicleId, [Validators.required]],
+        'VehicleId': [data.vehicleId, [Validators.required]],
         'Mileage': [null, [Validators.required]],
         'Month': [null, [Validators.required]]
       });
@@ -38,8 +39,9 @@ export class AddMilageComponent implements OnInit {
 
 //#endregion
   addMilage() {
+    debugger;
     if (this.mileageForm.valid) {
-      this.purchaseService.addVehicleMileage(this.mileageForm)
+      this.purchaseService.addVehicleMileage(this.mileageForm.value)
                           .subscribe(x => {
 
                           });

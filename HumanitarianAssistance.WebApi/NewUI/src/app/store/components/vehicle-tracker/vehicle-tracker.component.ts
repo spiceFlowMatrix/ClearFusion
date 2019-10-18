@@ -114,11 +114,12 @@ export class VehicleTrackerComponent implements OnInit {
   }
 
   openMilageModal(event) {
+    debugger;
     if (event.type === 'button') {
       const dialogRef = this.dialog.open(AddMilageComponent, {
         width: '850px',
         data: {
-            vehicleId: event.VehicleId
+            vehicleId: event.item.VehicleId
         }
       });
     }
