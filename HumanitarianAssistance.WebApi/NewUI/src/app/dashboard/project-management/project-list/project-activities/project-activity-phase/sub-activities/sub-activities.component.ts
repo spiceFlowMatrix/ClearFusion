@@ -478,7 +478,7 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
 
   //   this._hubConnection.on('Send', (data: any) => {
   //     // const received = `Received: ${data}`;
-  //     console.log(data);
+  //     // console.log(data);
   //     this.getActivityPermission();
   //   });
   // }
@@ -489,7 +489,7 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
     this.destroyed$.next(true);
     this.destroyed$.complete();
 
-    // this._hubConnection.stop().finally(() => console.log('connection closed')).catch(err => console.error(err.toString()));
+    // this._hubConnection.stop().finally(() => // console.log('connection closed')).catch(err => console.error(err.toString()));
   }
   //#endregion
 }

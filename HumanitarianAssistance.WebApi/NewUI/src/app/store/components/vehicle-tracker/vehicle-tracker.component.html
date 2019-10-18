@@ -6,18 +6,18 @@
   </div>
 </lib-sub-header-template>
 <mat-divider></mat-divider>
-<mat-card>
+<mat-card [ngStyle]="scrollStyles">
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <app-vehicle-filters></app-vehicle-filters>
+        <app-vehicle-filters (applyFilterEvent)='getFilteredVehicleList($event)'></app-vehicle-filters>
         <mat-divider></mat-divider>
         <h4>Vehicles</h4>
         <hum-table [headers]="vehicleListHeaders$" [items]="vehicleList$"
           (actionClick)="openMilageModal($event)" [actions]="actions" (rowClick)="goToDetails($event)"></hum-table>
-        <!-- <mat-paginator [length]="purchaseRecordCount" [pageSize]="filterValueModel.pageSize"
+        <mat-paginator [length]="recordsCount" [pageSize]="vehicleTrackerFilter.pageSize"
           [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
-        </mat-paginator> -->
+        </mat-paginator>
       </div>
     </div>
   </div>

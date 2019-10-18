@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Accounting.Queries;
@@ -30,28 +31,37 @@ namespace HumanitarianAssistance.WebApi.Controllers
         }
 
         [HttpPost]
-        [Produces(contentType: "application/pdf")]
+        //[Produces(contentType: "application/pdf")]
         public async Task<IActionResult> GetAllEmployeeLeavePdf([FromBody] GetAllEmployeeLeavePdfQuery model)
         {
-            var file = await _mediator.Send(model);
-            return File(file, "application/pdf", "EmployeeLeavePdf.pdf");
+            try
+            {
+                var file = await _mediator.Send(model);
+                return File(file, "application/pdf", "EmployeeLeaveReport.pdf");
+            }
+            catch (Exception ex)
+            {
+
+                Response.Headers.Add("ExMessage", ex.Message);
+                return BadRequest();
+            }
         }
 
         [HttpPost]
-        [Produces(contentType: "application/pdf")]  
+        [Produces(contentType: "application/pdf")]
         public async Task<IActionResult> GetHiringRequestFormPdf([FromBody] GetHiringRequestFormPdfQuery model)
-        {  
+        {
             var file = await _mediator.Send(model);
             return File(file, "application/pdf", "HiringRequestForm.pdf");
         }
         [HttpPost]
-        [Produces(contentType: "application/pdf")]  
+        [Produces(contentType: "application/pdf")]
         public async Task<IActionResult> GetProjectOtherDetailReportPdf([FromBody] GetProjectOtherDetailReportPdfQuery model)
-        {  
+        {
             var file = await _mediator.Send(model);
             return File(file, "application/pdf", "ProjectOtherDetailReport.pdf");
         }
-                   
+
         [HttpPost]
         [Produces(contentType: "application/pdf")]
         public async Task<IActionResult> ProjectActivityReportPdf([FromBody] ProjectActivityReportPdfQuery model)
@@ -62,7 +72,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
 
         [HttpPost]
         [Produces(contentType: "application/pdf")]
-        public async Task<IActionResult> GetAnnualAppraisalReportPdf([FromBody] GetAnnualAppraisalReportPdfQuery model) 
+        public async Task<IActionResult> GetAnnualAppraisalReportPdf([FromBody] GetAnnualAppraisalReportPdfQuery model)
         {
             var file = await _mediator.Send(model);
             return File(file, "application/pdf", "AnnualAppraisalReport.pdf");
@@ -70,7 +80,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
 
         [HttpPost]
         [Produces(contentType: "application/pdf")]
-        public async Task<IActionResult> GetTrailBalanceReportPdf([FromBody] GetTrialBalanceReportPdfQuery model) 
+        public async Task<IActionResult> GetTrailBalanceReportPdf([FromBody] GetTrialBalanceReportPdfQuery model)
         {
             var file = await _mediator.Send(model);
             return File(file, "application/pdf", "TrialBalanceReport.pdf");
@@ -78,7 +88,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
 
         [HttpPost]
         [Produces(contentType: "application/pdf")]
-        public async Task<IActionResult> GetLedgerReportPdf([FromBody] GetLedgerReportPdfQuery model) 
+        public async Task<IActionResult> GetLedgerReportPdf([FromBody] GetLedgerReportPdfQuery model)
         {
             var file = await _mediator.Send(model);
             return File(file, "application/pdf", "LedgerReport.pdf");
@@ -90,6 +100,14 @@ namespace HumanitarianAssistance.WebApi.Controllers
         {
             var file = await _mediator.Send(model);
             return File(file, "application/pdf", "TrialBalanceReportJournal.pdf");
+        }
+
+         [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetCriteriaEvaluationReportPdf([FromBody] GetCriteriaEvaluationDetailReportPdfQuery model)
+        {
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "ProjectOtherDetailReport.pdf");
         }
     }
 }

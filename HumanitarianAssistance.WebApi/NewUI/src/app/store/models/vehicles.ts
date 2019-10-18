@@ -10,6 +10,16 @@ export interface IVehicleList {
     OriginalCost?: string;
 }
 
+
+export interface IVehicleTrackerFilter {
+  TotalCost?: number;
+  EmployeeId?: number;
+  OfficeId?: number;
+  PlateNo?: string;
+  pageSize: 10;
+  pageIndex: 0;
+}
+
 export interface ILogs {
     EventType?: string;
     EventBy?: string;

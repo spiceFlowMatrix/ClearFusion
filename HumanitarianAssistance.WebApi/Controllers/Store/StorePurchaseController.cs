@@ -166,6 +166,24 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
             }
             else
             {
+                
+                return BadRequest(result.Exception.InnerException.Message);
+            }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetVehicleList(GetVehicleListQuery request)
+        {
+            var result = await Task.FromResult(_mediator.Send(request));
+
+            if (result.Exception == null)
+            {
+                return Ok(await result);
+            }
+            else
+            {
                 return BadRequest(result.Exception.InnerException.Message);
             }
         }

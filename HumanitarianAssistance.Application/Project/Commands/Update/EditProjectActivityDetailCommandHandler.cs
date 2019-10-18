@@ -45,6 +45,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
 
                     foreach (var element in projectactivityList)
                     {
+                        element.ActivityName = request.ActivityName;
                         element.ActivityDescription = request.ActivityDescription;
                         // element.PlannedStartDate = element.PlannedStartDate;
                         // element.PlannedEndDate = element.PlannedEndDate;
@@ -313,7 +314,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
         {
             var activityModel = new ProjectActivityDetail
             {
-
+                ActivityName = obj.ActivityName,
                 ActivityDescription = obj.ActivityDescription,
                 PlannedStartDate = plannedStartDate,
                 PlannedEndDate = obj.PlannedEndDate,
@@ -330,7 +331,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                 ProjectId = obj.ProjectId,
                 ReoccuredReferenceId = obj.ReoccuredReferenceId,
                 CountryId = obj.CountryId,
-                StatusId= obj.StatusId,
+                StatusId = obj.StatusId,
             };
 
             activityDetail.Add(activityModel);

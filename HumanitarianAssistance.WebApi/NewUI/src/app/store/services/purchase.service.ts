@@ -289,7 +289,7 @@ export class PurchaseService {
         { observe: 'response' }
       )
       .pipe(
-        // tap(resp => console.log('response', resp)),
+       // tap(resp => // console.log('response', resp)),
         map((x: Response) => {
           return {
             StatusCode: x.status,
@@ -381,6 +381,13 @@ export class PurchaseService {
       );
   }
   //#endregion
+//#region "getVechileList"
+getVehicleList(model: any) {
+  // debugger;
+  return this.globalService
+    .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetVehicleList, model);
+}
+
 
   //#region "getItemDetailByItemId"
   getItemDetailByPurchaseId(Id) {

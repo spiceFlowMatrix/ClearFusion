@@ -25,5 +25,6 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         [ForeignKey("PurchaseId")]
         public StoreItemPurchase StoreItemPurchase { get; set; }
         public VehicleItemDetail VehicleItemDetail { get; set; }
+        public VehicleMileageDetail VehicleMileageDetail {get; set;}
     }
 }

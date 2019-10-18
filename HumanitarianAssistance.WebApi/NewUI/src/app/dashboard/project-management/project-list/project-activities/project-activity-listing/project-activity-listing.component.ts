@@ -116,7 +116,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
     // this._hubConnection.on('Send', (data: any) => {
     //   const received = `Received: ${data}`;
     //   this.messages.push(received);
-    //   console.log(this.messages);
+    //   // console.log(this.messages);
     // });
   }
 
@@ -667,7 +667,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
         IsLoading: false,
         IsError: false
       });
-      // console.log(this.projectActivityList);
+      // // console.log(this.projectActivityList);
     });
   }
 

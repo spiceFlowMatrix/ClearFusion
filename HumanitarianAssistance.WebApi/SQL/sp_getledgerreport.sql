@@ -1,3 +1,7 @@
+-- FUNCTION: public.get_ledger_report(integer, text, text, integer, integer[], bigint[], boolean)
+
+-- DROP FUNCTION public.get_ledger_report(integer, text, text, integer, integer[], bigint[], boolean);
+
 CREATE OR REPLACE FUNCTION public.get_ledger_report(
 	currency integer,
 	fromdate text,
@@ -6,7 +10,7 @@ CREATE OR REPLACE FUNCTION public.get_ledger_report(
 	officelist integer[],
 	accountslist bigint[],
 	openingbalance boolean)
-    RETURNS TABLE(chartofaccountnewid bigint, accountname text, voucherno bigint, voucherdate timestamp without time zone, isvoucherverified boolean, description text, voucherreferenceno text, currencyname text, debitamount double precision, creditamount double precision, transactiondate date, currencyid integer, chartofaccountnewcode text) 
+    RETURNS TABLE(chartofaccountnewid bigint, accountname text, voucherno bigint, description text, voucherreferenceno text, currencyname text, debitamount double precision, creditamount double precision, transactiondate date, currencyid integer, chartofaccountnewcode text) 
     LANGUAGE 'plpgsql'
 
     COST 100
@@ -17,14 +21,12 @@ AS $BODY$
 -- Declaration
 DECLARE 
 _recordtype integer=recordtype; _currencyid integer = currency;_officelist         integer[] = officelist;_accountslist       bigint[] = accountslist;_fromdate text = fromdate;_todate text = todate;_openingbalance boolean = openingbalance;BEGIN
-  CREATE temp TABLE temp_ledger_report( chartofaccountnewid BIGINT, accountname TEXT, voucherno BIGINT,voucherdate timestamp without time zone, isvoucherverified boolean,description TEXT, voucherreferenceno TEXT, currencyname TEXT, debitamount double precision, creditamount double precision, transactiondate DATE, currencyid INTEGER, chartofaccountnewcode TEXT );
+  CREATE temp TABLE temp_ledger_report( chartofaccountnewid BIGINT, accountname TEXT, voucherno BIGINT, description TEXT, voucherreferenceno TEXT, currencyname TEXT, debitamount double precision, creditamount double precision, transactiondate DATE, currencyid INTEGER, chartofaccountnewcode TEXT );
   IF _recordtype=1 THEN 
   INSERT INTO temp_ledger_report 
   SELECT    vt."ChartOfAccountNewId", 
             coa."AccountName", 
-            vd."VoucherNo",
-			vd."VoucherDate",
-			vd."IsVoucherVerified",
+            vd."VoucherNo", 
             vt."Description", 
             vd."ReferenceNo", 
             cd."CurrencyName", 
@@ -67,9 +69,7 @@ _recordtype integer=recordtype; _currencyid integer = currency;_officelist      
   INSERT INTO temp_ledger_report 
   SELECT tt."ChartOfAccountNewId", 
          tt."AccountName", 
-         tt."VoucherNo",
-		 tt."VoucherDate",
-		 tt."IsVoucherVerified",
+         tt."VoucherNo", 
          tt."Description", 
          tt."ReferenceNo", 
          tt."CurrencyName", 
@@ -81,8 +81,7 @@ _recordtype integer=recordtype; _currencyid integer = currency;_officelist      
   FROM   ( 
                    SELECT    vt."ChartOfAccountNewId", 
                              coa."AccountName", 
-                             vd."VoucherNo",
-	  						 vd."IsVoucherVerified",
+                             vd."VoucherNo", 
                              vt."Description", 
                              vd."ReferenceNo", 
                              cd."CurrencyName", 
