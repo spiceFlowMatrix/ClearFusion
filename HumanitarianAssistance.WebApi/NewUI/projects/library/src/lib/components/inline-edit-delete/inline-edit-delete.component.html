@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="example-form-field inline_content_show_edit">
+    <div class="col-sm-10 col-xs-10">
+      <mat-form-field class="example-form-field">
+        <input matInput [disabled]="value._IsLoading" [required]="required" [(ngModel)]="value.Name" type="text"
+          (blur)="onEdit()" />
+      </mat-form-field>
+
+    </div>
+    <div class="col-sm-2 text-right col-xs-2 ">
+      <ng-template #spinnerTemplate>
+
+        <div class="spinner_abs">
+          <div class="spinner_content " *ngIf="value._IsLoading && !value._IsError">
+            <mat-spinner [diameter]="20"></mat-spinner>
+          </div>
+          <div class="spinner_content" *ngIf="value._IsError">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+
+          <div *ngIf="!value._IsError && !value._IsLoading">
+
+          </div>
+
+        </div>
+      </ng-template>
+
+      <mat-icon *ngIf="!value._IsDeleted && !value._IsLoading; else spinnerTemplate"
+        class="icon_cursor small_icon text-danger tp_15 icon_width" (click)="onDelete()">
+        delete
+      </mat-icon>
+
+    </div>
+  </div>
+  <!-- <i class="material-icons small_icon"> highlight_off </i> -->
+
+</div>

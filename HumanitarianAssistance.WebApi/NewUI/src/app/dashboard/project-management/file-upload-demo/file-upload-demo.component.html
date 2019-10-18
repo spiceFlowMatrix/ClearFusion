@@ -1,0 +1,58 @@
+<div class="project-list-main">
+  <div class="main_body">
+    <div class="body-content">
+      <div class="container-fluid">
+        <mat-card>
+          <div class="row">
+            <div class="col-sm-4 col-sm-offset-3">
+              <lib-drag-and-drop
+                (uploadFileEmit)="uploadFileEmit($event)"
+              ></lib-drag-and-drop>
+            </div>
+          </div>
+          <div class="row text-center">
+            <div class="col-sm-4 col-sm-offset-3">
+              <br />
+              <input
+                type="button"
+                value="Download pdf sample"
+                (click)="downloadPdf()"
+              />
+            </div>
+          </div>
+
+          <br />
+          <br />
+          <div class="row">
+            <div class="col-sm-12">
+              <lib-listing-delete></lib-listing-delete>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <input type="text" [(ngModel)]="sampleMessage" />
+    </div>
+
+    <br />
+    <div class="col-sm-12">
+        <table>
+          <tr *ngFor="let message of Messages">
+            <td>{{message.userName}}</td>
+            <td>: </td>
+            <td>{{message.message}}</td>
+          </tr>
+        </table>
+    </div>
+    <br />
+    <div class="col-sm-2">
+      <button (click)="sendChat()">Send Message</button>
+    </div>
+
+
+  </div>
+</div>

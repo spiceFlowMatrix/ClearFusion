@@ -1,0 +1,82 @@
+<div>
+  <div class="row">
+    <div class="col-sm-9">
+      <h1 mat-dialog-title>
+        {{ headerText }}
+      </h1>
+    </div>
+    <div class="col-sm-2">
+      <button mat-mini-fab (click)="uploadDocumentFlag = !uploadDocumentFlag">
+        <mat-icon aria-label="add" *ngIf="!uploadDocumentFlag">add</mat-icon>
+        <mat-icon aria-label="close" *ngIf="uploadDocumentFlag">close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div *ngIf="!loading; else documentsLoading">
+    <div class="col-sm-12" *ngIf="!uploadDocumentFlag; else uploadActivityDocumentTemplate">
+      <div class="row border_bottom"></div>
+
+      <div class="row border_bottom" *ngFor="let item of documentsList">
+        <div class="col-sm-9 margin_top_10">
+          <a (click)="onDocumentClicked(item.ActivityDocumentsFilePath)">{{ item.ActivityDocumentsFileName }}</a>
+        </div>
+        <div class="col-sm-2">
+          <button mat-icon-button color="warn" (click)="onDeleteDocument(item)" *ngIf="
+                !item.IsLoading && !item.IsError;
+                else loadingDocumentTemplate
+              ">
+            <mat-icon aria-label="delete">delete</mat-icon>
+          </button>
+
+          <ng-template #loadingDocumentTemplate>
+            <button mat-icon-button disabled="true" *ngIf="
+                  item.IsLoading && !item.IsError;
+                  else errorDocumentTemplate
+                ">
+              <mat-spinner [diameter]="20"></mat-spinner>
+            </button>
+          </ng-template>
+
+          <ng-template #errorDocumentTemplate>
+            <button mat-icon-button color="warn" *ngIf="!item.IsLoading && item.IsError">
+              <mat-icon aria-label="error">warning</mat-icon>
+            </button>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+    <ng-template #uploadActivityDocumentTemplate>
+      <div class="col-sm-12">
+        <br />
+        <file-drop *ngIf="documentName == ''; else documentNameTemplate" headertext="Drop file here"
+          (onFileDrop)="onFileDropped($event)" (onFileOver)="onFileOver($event)" (onFileLeave)="onFileLeave($event)">
+          <i class="material-icons">
+            add_circle_outline
+          </i>
+        </file-drop>
+
+        <ng-template #documentNameTemplate>
+          {{ documentName }}
+        </ng-template>
+        <br />
+      </div>
+    </ng-template>
+  </div>
+    <ng-template #documentsLoading>
+        <div style="text-align: -webkit-center;">
+      <mat-spinner [diameter]="25"> </mat-spinner>
+    </div>
+    </ng-template>
+
+  </div>
+
+
+
+  <div mat-dialog-actions class="pull-right">
+    <button mat-button autoFocus="false" [mat-dialog-close]="data">
+      Cancel
+    </button>
+  </div>
+</div>

@@ -1,0 +1,6 @@
+.pension-report-popup{min-height: 600px;}
+.pension-report-buttons{max-width: 190px; float: right; margin-right: 5px;}
+.report-download{ float: right; margin-top: 3px;}
+.dx-field-pension{ margin-top: -20px; margin-bottom: 30px;}
+.pension-heading{ margin-left: 14px; margin-top: -38px; font-size: 18px;}
+.page-heading-report{ font-size: 21px; color: #898989; top: 0; z-index: 9999;float: left; margin-bottom: 20px; font-size: 18px; font-weight: 500;}

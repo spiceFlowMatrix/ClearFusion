@@ -1,0 +1,41 @@
+<div style="background-image:url(assets/images/login-bg.jpg);" class="dv-login-page login-page loginpage-mbl">
+    <div class="container-fluid">
+        <div class="login-wrap loginbxmbl">
+            <div class="login-form">
+                <form class="log-form" [formGroup]="rForm" (ngSubmit)="onFormSubmit(rForm.value) && rForm.valid">
+                    <div class="mod-logo">
+                        <div class="mod-logo-inner">
+                            Coordination of Humanitarian Assistance
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <h2>Please Login</h2>
+                        <div class="form-group">
+                            <input type="text" placeholder="Enter Username" formControlName="Username" class="form-control custom-field">
+                            <label class="has-error">Please fill correct Username</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" placeholder="Enter Password" formControlName="Password" class="form-control custom-field">
+                            <label class="has-error">Please fill correct Password</label>
+                        </div>
+                        <div class="form-group clearfix">
+                            <div class="fg-left">
+                                <div class="custom-checkbox">
+                                    <input type="checkbox" id="test2" checked="checked" />
+                                    <label for="test2">Save Detail</label>
+                                </div>
+                            </div>
+                            <div class="fg-right">
+                                <a href="#" class="f-pswrd">Forgot Password ?</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-wrap">
+                        <input [ngStyle]="{'background' : rForm.valid ? '#3dc5ab' : '#e2e2e2'}" type="submit" class="login-btn" value="Login" [disabled]="!rForm.valid">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
+</div>

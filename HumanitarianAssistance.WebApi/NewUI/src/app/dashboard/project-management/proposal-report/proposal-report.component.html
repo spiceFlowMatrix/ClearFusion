@@ -1,0 +1,182 @@
+<div class="project-report-main">
+  <div class="body-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+          <mat-card [ngStyle]="scrollStyles">
+            <div class="row">
+              <div class="col-sm-3">
+                <h4 class="main_heading">
+                  Proposal Report
+                </h4>
+              </div>
+              <div class="col-sm-4 all_grey_text margin_top_10">
+                {{ totalCount }} Proposals
+              </div>
+              <div class="col-sm-5 text-right">
+                <button
+                  mat-icon-button
+                  class="margin_left_10"
+                  [matMenuTriggerFor]="projectReportMenu"
+                >
+                  <mat-icon>settings</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div class="row text-center pointer_default">
+              <div class="col-sm-2 col-sm-offset-3 accent_color_code">
+                <i class="material-icons font_size_smaller ">
+                  lens
+                </i>
+                Completed
+              </div>
+              <div class="col-sm-2 primary_color_code">
+                <i class="material-icons font_size_smaller ">
+                  lens
+                </i>
+                In-Progress
+              </div>
+              <div class="col-sm-2 warn_color_code">
+                <i class="material-icons font_size_smaller ">
+                  lens
+                </i>
+                Late
+              </div>
+            </div>
+
+            <hr />
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div
+                  *ngIf="
+                    projectListLoaderFlag;
+                    else projectProposalReportTemplate
+                  "
+                >
+                  <mat-spinner
+                    [diameter]="50"
+                    class="center_loader"
+                  ></mat-spinner>
+                </div>
+
+                <ng-template #projectProposalReportTemplate>
+                  <div
+                    class="responsive_table-responsive table-responsive mar_tp_40"
+                  >
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr class="grey-text">
+                          <td width="5%"></td>
+                          <td>Project Name</td>
+                          <td class="text-right">Start Date</td>
+                          <td width="20%" class="text-center"></td>
+                          <td class="text-left">Due Date</td>
+                          <td>Budget Est</td>
+                          <td width="5%"></td>
+                        </tr>
+
+                        <tr *ngFor="let item of proposalReportList">
+                          <td width="5%"></td>
+                          <td>
+                            {{ item.ProjectCode }}/{{ item.ProjectsName }}
+                          </td>
+                          <td class="text-right">
+                            {{
+                              item.ProjectStartDate != null
+                                ? (item.ProjectStartDate | date: "dd/MM/yyy")
+                                : ""
+                            }}
+                          </td>
+                          <td width="20%" class="text-center">
+                            <mat-progress-bar
+                              [color]="getColorTheme(item.ColorCode)"
+                              mode="determinate"
+                              [value]="item.Progress"
+                              [pTooltip]="
+                                getToolTipText(
+                                  item.Progress,
+                                  item.ColorCode,
+                                  item.ReviewCompletionDate,
+                                  item.DueDays
+                                )
+                              "
+                              tooltipPosition="top"
+                            >
+                            </mat-progress-bar>
+                          </td>
+                          <td class="text-left">
+                            {{
+                              item.ProjectEndDate != null
+                                ? (item.ProjectEndDate | date: "dd/MM/yyy")
+                                : ""
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              item.ProjectCurrencyId != null &&
+                              item.ProjectCurrencyId != 0
+                                ? (item.ProjectCurrencyId
+                                  | currencyCode
+                                    : currencyList)
+                                : null
+                            }}
+                            {{ item.BudgetEstimation }}
+                          </td>
+                          <td width="5%"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+
+
+
+            <mat-paginator
+            [length]="totalCount"
+            [pageSize]="reportFilter.pageSize"
+            [pageIndex]="reportFilter.pageIndex"
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            (page)="pageEvent($event)"
+          >
+          </mat-paginator>
+
+          <hr />
+
+            <div class="row">
+              <div class="col-sm-3"></div>
+              <div class="col-sm-3"></div>
+              <div class="col-sm-3"></div>
+              <div class="col-sm-3">
+                <ul *ngFor="let item of (amountSummaryList$ | async)">
+                  <li>
+                    <span class="font_weight">
+                     {{ item.CurrencyId
+                      | currencyCode: currencyList
+                  }}
+                    </span>
+                     : {{ item.ProposalAmount | number: "5.2" }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </mat-card>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<mat-menu #projectReportMenu="matMenu">
+  <div (click)="$event.stopPropagation()">
+    <app-proposal-report-filter
+      [currencyList]="currencyList"
+      (filterReport)="filterReport($event)"
+    ></app-proposal-report-filter>
+  </div>
+</mat-menu>

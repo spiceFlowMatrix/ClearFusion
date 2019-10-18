@@ -1,0 +1,28 @@
+<div>
+<h1 mat-dialog-title>
+  Pick a Time Slot
+    <button mat-icon-button [mat-dialog-close]="data.data" class="pull-right">
+        <mat-icon aria-label="cancel">clear</mat-icon>
+    </button>
+</h1>
+<div mat-dialog-content>
+  <div class="row">
+    <div class="col-sm-6">
+        <mat-form-field class="example-full-width">
+            <input [(ngModel)]="startEndTimeForm.startTime" name="startTimes" matInput atp-time-picker placeholder="Start Time"/>
+          </mat-form-field>
+    </div>
+    <div class="col-sm-6">
+        <mat-form-field class="example-full-width">
+            <input [(ngModel)]="startEndTimeForm.endTime" name="endTimes" matInput atp-time-picker placeholder="End Time"/>
+          </mat-form-field>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions class="pull-right">
+  <button mat-raised-button [mat-dialog-close]="data.data">Cancel</button>
+  <button mat-raised-button color="accent" type="button" (click)="SaveTime()" cdkFocusInitial>
+    Confirm
+  </button>
+</div>
+</div>

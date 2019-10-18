@@ -1,0 +1,149 @@
+<div class="body-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div [class]="colsm6">
+        <mat-card style="height: 547px; overflow-y: auto;">
+          <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':display}">
+            <!-- modal-dialog -->
+            <div class="modal-dialog modal-filter" role="document">
+              <!-- modal-content -->
+              <div class="modal-content" style="padding-bottom: 10%">
+                <!-- modal-body -->
+                <div class="modal-body">
+                  <button type="button" class="close" aria-label="Close" (click)="closeModalDialog()"><span
+                      aria-hidden="true">&times;</span></button>
+                  <label>Clients</label>
+                  <form [formGroup]="filtersForm" (ngSubmit)="onSubmit(filtersForm.value)">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <mat-form-field class="example-full-width">
+                          <input #clientIds matInput formControlName="clientId" placeholder="Search By Client Id" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <mat-form-field class="example-full-width">
+                          <input matInput #emailId placeholder="Email" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <mat-form-field class="example-full-width">
+                          <mat-label>Select Category</mat-label>
+                          <mat-select #categoryId formControlName="category" placeholder="Category">
+                            <mat-option *ngFor="let items of categories" [value]="items.CategoryId">
+                              {{items.CategoryName}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-6">
+                        <mat-form-field class="example-full-width">
+                          <mat-label>Select Client</mat-label>
+                          <mat-select placeholder="Client" #clientNameId formControlName="clientName">
+                            <mat-option *ngFor="let contract of clientListDetails" [value]="contract.ClientName">
+                              {{contract.ClientName}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>                      
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <mat-form-field class="example-full-width">
+                          <input #positionId formControlName="position" matInput placeholder="Position" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row pull-right">
+                      <div class="col-sm-5">
+                        <button mat-raised-button color="accent">
+                          <i class="fas fa-filter"></i>
+                          Filter
+                        </button>
+                      </div>
+                      <div class="col-sm-5">
+                        <button type="reset" mat-raised-button (click)="RefreshFilters()">
+                          <mat-icon aria-label="refresh">refresh</mat-icon>
+                          Reset
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="project-details">
+            <div class="row">
+              <div class="col-sm-10">
+                <h4 class="main_heading">
+                  CLIENTS LIST
+                </h4>
+              </div>
+              <div class="col-sm-2">
+                <button (click)="openModalFilter()" mat-icon-button class="margin_left_10 pull-right">
+                  <mat-icon>settings</mat-icon>
+                </button>
+              </div>
+            </div>           
+          </div>
+          <div class="row">
+            <div *ngIf="clienttListLoaderFlag; else clientListTemplate" class="col-sm-12"><br /><br /><br />
+              <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+            </div>
+            <ng-template #clientListTemplate>
+              <div class="col-sm-12">
+                <div class="responsive_table-responsive">
+                  <table class="table table-bordered">
+                    <tbody>
+                      <tr>
+                        <td width="1%">
+                          <p class="width_8"></p>
+                        </td>
+                        <td width="5%"></td>
+                        <td width="40%"><a class="add_new" (click)="onItemClick(0)" *ngIf="isEditingAllowed">Add
+                            New....</a>
+                        </td>
+                        <td width="20%"></td>
+                        <td width="20%"></td>
+                        <td width="5%"></td>
+                        <td width="1%"></td>
+                      </tr>
+                      <tr (click)="onItemClick(clients.ClientId)" *ngFor="let clients of clientListDetails"
+                        [ngClass]="{'selected': selectedRowID === clients.ClientId}">
+                        <td width="1%">
+                          <p class="width_8"></p>
+                        </td>
+                        <td class="grey-text" width="5%">{{clients.ClientCode}}/{{clients.ClientId}}</td>
+                        <td width="40%" text-align="left">
+                          <p class="diamond">{{clients.ClientName}}</p>
+                        </td>
+                        <td class="text-right" width="10%">{{clients.Phone}}</td>
+                        <td class="text-left" width="30%">
+                        </td>
+                        <td class="" width="7"><a class="blue-circle "><i class="far fa-bell"></i></a></td>
+                        <td width="1%" class="text-center"><i *ngIf="selectedRowID === clients.ClientId"
+                            class="material-icons font-12"> arrow_forward_ios </i></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <mat-paginator [length]="length" [pageSize]="pageSize" [pageIndex]="pageIndex"
+                    [pageSizeOptions]="pageSizeOptions" (page)="pagination($event)">
+                  </mat-paginator>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+     </mat-card>
+      </div>
+      <div [hidden]="!showClientDetail" class="col-sm-6">
+        <app-client-details [clientId]="clientId" (updateClientList)="updateClientListById($event)"
+          (addClientList)="addClientListById($event)" (deleteClient)="onClientDeleted($event)"
+          (hideDetailPanel)="hideDetailPanel($event)" [isEditingAllowed]="isEditingAllowed"></app-client-details>
+      </div>
+    </div>
+  </div>
+</div>

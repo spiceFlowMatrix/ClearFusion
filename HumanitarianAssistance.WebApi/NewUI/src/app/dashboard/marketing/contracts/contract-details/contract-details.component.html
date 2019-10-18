@@ -1,0 +1,302 @@
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- modal -->
+      <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayModal}">
+          <!-- modal-dialog -->
+          <div class="modal-dialog" style="width:250px" role="document">
+            <!-- modal-content -->
+            <div class="modal-content">
+
+              <!-- modal-body -->
+              <div class="modal-body">
+                <button type="button" class="close" aria-label="Close" (click)="closeModal()"><span aria-hidden="true">&times;</span></button>
+                <div class="row">
+                  <div class="col-sm-6"><label align="center">Are You Sure?</label></div>
+                  <div class="col-sm-6" style="margin-top:-20px"> <mat-spinner *ngIf="confirmApprovalLoader" diameter="15"></mat-spinner></div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+
+                      <!-- <button mat-raised-button (click)="confirmApprove()"  matTooltip="Confirm" >YES</button> -->
+                      <!-- <button (click)="ConfirmSave()" class="btn btn-primary btn-lg" mat-button>Yes</button> -->
+                  </div>
+                  <div class="col-sm-6">
+                      <button mat-raised-button pTooltip="Reject"
+                      tooltipPosition="top" (click)="closeModal()">NO</button>
+                      <!-- <button (click)="closeModal()" class="btn btn-default btn-lg" mat-button>No</button> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <form [formGroup]="contractDetailsForm">
+      <div class="col-sm-12 mat-detail">
+        <div class="row">
+            <div
+              *ngIf="contractDetailLoaderFlag; else contractDetailTemplate"
+              class="col-sm-12"
+            ><br/><br/><br/>
+              <mat-spinner
+                class="center_loader"
+                diameter="50"
+              ></mat-spinner>
+            </div>
+            <ng-template #contractDetailTemplate>
+              <div class="col-sm-12">
+                  <mat-card [ngStyle]="scrollStyles">
+                      <!-- <span (click)="onHideDetailPanel()"><i title="Back to List" class="fas fa-arrow-left"></i></span> -->
+                      <!-- <div class="row pull-right">
+                        <a *ngIf="archiveButton" (click)="DeleteContract(selectedcontractId)">Archive</a>
+                      </div> -->
+                      <div class="row" *ngIf="isEditingAllowed">
+                          <div *ngIf="archiveButton" class="col-sm -6 pull-right">
+                              <button pTooltip="Archive"
+                              tooltipPosition="top"
+                                (click)="DeleteContract(selectedcontractId)"
+                                color="warn"
+                                mat-icon-button
+                              >
+                                <mat-icon>delete</mat-icon>
+                              </button>
+                              <!-- <a class="pull-right" (click)="DeleteUnitRate(routeId)">Archive</a> -->
+                            </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-6">
+                            <div class="comment-text ">
+                                <div class="user_name">
+                                    <img src="../../../../../assets/img/user_img.png" alt="">
+                                  </div>
+                                <div class="user_text">
+                                  <p class="relative_p">
+                                      <mat-form-field class="example-full-width">
+                                          <mat-select name="clientName" formControlName="clientName" placeholder="Client Name" #clientName (selectionChange)="selectionChanged('clientName',$event.value)" [disableControl]="!isEditingAllowed || disableControls">
+                                            <mat-option *ngFor="let contract of clientList" [value]="contract.ClientId">
+                                              {{contract.ClientName}}
+                                            </mat-option>
+                                          </mat-select >
+                                        </mat-form-field>
+                                        <span class="validationError abs_custom" *ngIf="formErrors.clientName">{{formErrors.clientName}}</span>
+                                  </p>
+
+                                </div>
+                              </div>
+                          <!-- <img src="../../../../../assets/img/user_img.png" style="width:30px" alt="Avatar"> -->
+                          <!-- <label>Client</label> -->
+
+                          <!-- <mat-form-field class="example-full-width">
+                            <input type="text" #clientNameID name="clientName" placeholder="Client Name" matInput formControlName="clientName">
+                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectionChanged('clientName',$event.option.value)">
+                              <mat-option *ngFor="let option of filteredOptions | async" [value]="option.ClientName">
+                                {{option.ClientName}}
+                              </mat-option>
+                            </mat-autocomplete>
+                          </mat-form-field> -->
+
+                        </div>
+                        <!-- <div style="display:none">
+                          <mat-form-field class="example-full-width">
+                            <input type="text" placeholder="Client Name" name="clientId" matInput [formControlName]="clientId">
+                          </mat-form-field>
+                        </div> -->
+                        <div class="col-sm-6">
+                          <mat-button-toggle-group #activityTypeId formControlName="activityType" #group="matButtonToggleGroup" >
+                            <mat-button-toggle (change)="selectionChanged('activity',$event)" *ngFor="let item of activitytypes;"
+                              [value]="item.ActivityTypeId" [disableControl]="!isEditingAllowed || disableControls">{{item.ActivityName}}</mat-button-toggle>
+                          </mat-button-toggle-group>
+                          <span class="validationError" *ngIf="formErrors.activityType">{{formErrors.activityType}}</span>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-sm-7">
+                            <!-- <label style="display:block">Date Range</label> -->
+                          <div class="row">
+                              <div class="col-sm-6">
+                                  <mat-form-field style="width:100%;float:left;">
+                                    <input #startDate name="startDate" (dateInput)="selectionChanged('startDate',startDate.value)" class="fixedWidth"
+                                      formControlName="startDate" matInput [matDatepicker]="picker" placeholder="Start Date" [disableControl]="!isEditingAllowed || disableControls">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                  </mat-form-field>
+                                 <p style="display:inline-block"> <span class="validationError" *ngIf="formErrors.startDate">{{formErrors.startDate}}</span></p>
+                              </div>
+                              <div class="col-sm-6">
+                                  <mat-form-field style="width:100%;float:right;">
+                                      <input name="endDate" #endDate (dateInput)="selectionChanged('endDate',endDate.value)" formControlName="endDate"
+                                        matInput [matDatepicker]="picker1" placeholder="End Date" [disableControl]="!isEditingAllowed || disableControls">
+                                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                      <mat-datepicker #picker1></mat-datepicker>
+                                    </mat-form-field>
+                                   <p style="display:inline-block"> <span class="validationError" *ngIf="formErrors.endDate">{{formErrors.endDate}}</span></p>
+                              </div>
+                          </div>
+
+
+                        </div>
+
+                        <div class="col-sm-5">
+                            <div class="comment-text ">
+                                <div class="user_name">
+                                  <p>$</p>
+                                </div>
+                                <div class="user_text">
+                                  <p>
+                                      <mat-form-field class="example-full-width">
+                                          <mat-select formControlName="currency" placeholder="Currency" #currencyId name="currencys"
+                                            (selectionChange)="selectionChanged('currency',$event.value)" [disableControl]="!isEditingAllowed || disableControls">
+                                            <mat-option *ngFor="let contract of currencies" [value]="contract.CurrencyId">
+                                              {{contract.CurrencyCode}}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                        <span class="validationError" *ngIf="formErrors.currency">{{formErrors.currency}}</span>
+                                  </p>
+
+                                </div>
+                              </div>
+                          <!-- <img src="../../../../../assets/img/currency-icon.jpg" style="width:30px" alt="Avatar"> -->
+                          <!-- <label>Currency</label> -->
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-sm-7">
+
+                        </div>
+                        <div class="col-sm-5">
+
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <!-- <label>Language</label> -->
+                          <mat-form-field class="example-full-width">
+                            <mat-select name="language" formControlName="language" placeholder="Language" name="language" #language
+                              (selectionChange)="selectionChanged('language',$event.value)" [disableControl]="!isEditingAllowed || disableControls">
+                              <mat-option *ngFor="let contract of languages" [value]="contract.LanguageId">
+                                {{contract.LanguageName}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <span class="validationError" *ngIf="formErrors.language">{{formErrors.language}}</span>
+                        </div>
+                        <div class="col-sm-4">
+                          <!-- <label>Medium</label> -->
+                          <mat-form-field class="example-full-width">
+                            <mat-select name="medium" formControlName="medium" placeholder="Medium" name="medium" #medium
+                              (selectionChange)="selectionChanged('medium',$event.value)">
+                              <mat-option *ngFor="let contract of mediums" [value]="contract.MediumId" [disableControl]="!isEditingAllowed || disableControls">
+                                {{contract.MediumName}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <span class="validationError" *ngIf="formErrors.medium">{{formErrors.medium}}</span>
+                        </div>
+                        <div class="col-sm-4">
+                          <!-- <label>Job Nature</label> -->
+                          <mat-form-field class="example-full-width">
+                            <mat-select name="jobNature" formControlName="jobNature" placeholder="Job Nature" #jobNature name="jobNature"
+                              (selectionChange)="selectionChanged('jobNature',$event.value)" [disableControl]="!isEditingAllowed || disableControls">
+                              <mat-option *ngFor="let contract of natures" [value]="contract.NatureId">
+                                {{contract.NatureName}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <span class="validationError" *ngIf="formErrors.jobNature">{{formErrors.jobNature}}</span>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <!-- <label>Time Category</label> -->
+                          <mat-form-field class="example-full-width">
+                            <mat-select name="timeCategory" formControlName="timeCategory" placeholder="Time Category"
+                              #timeCategoryId name="timeCategory" (selectionChange)="selectionChanged('timeCategory',$event.value)" [disableControl]="!isEditingAllowed || disableControls">
+                              <mat-option *ngFor="let contract of timecategories" [value]="contract.TimeCategoryId">
+                                {{contract.TimeCategoryName}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <span class="validationError" *ngIf="formErrors.timeCategory">{{formErrors.timeCategory}}</span>
+                        </div>
+                        <!-- <div class="col-sm-4">
+                          <label>Media Category</label>
+                          <mat-form-field class="example-full-width">
+                            <mat-select name="mediaCategory" formControlName="mediaCategory" placeholder="Media Category" name="mediaCategory"
+                              #mediaCategory (selectionChange)="selectionChanged('mediaCategory',$event.value)">
+                              <mat-option *ngFor="let contract of mediacategories" [value]="contract.MediaCategoryId">
+                                {{contract.CategoryName}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <span class="validationError" *ngIf="formErrors.mediaCategory">{{formErrors.mediaCategory}}</span>
+                        </div> -->
+                      </div>
+                      <hr>
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <mat-radio-group name="quality" formControlName="quality">
+                            <mat-radio-button (change)="selectionChanged('quality', $event.value)" *ngFor="let lang of qualityModel"
+                              [value]="lang.QualityId" [disableControl]="!isEditingAllowed || disableControls">
+                              {{lang.QualityName}}</mat-radio-button>
+                          </mat-radio-group>
+                          <span class="validationError" *ngIf="formErrors.quality">{{formErrors.quality}}</span>
+                        </div>
+                      </div>
+                      <hr>
+
+                      <div align="center">
+                        <div class="row">
+                          <div class="col-sm-4"></div>
+                            <div class="col-sm-4">
+                               <div align="center">
+                                  <mat-form-field class="example-full-width">
+                                      <input style="text-align: center" type="text" #unitRate formControlName="unitRate"
+                                       matInput [disableControl]="!isEditingAllowed || disableControls">
+                                  </mat-form-field>
+                                  <mat-spinner *ngIf="unitRateLoader" [diameter]="15"></mat-spinner>
+                               </div>
+                            </div>
+                            <div class="col-sm-4"></div>
+                        </div>
+                        <p><label>UNIT RATE</label></p>
+                        <p *ngIf="isEditingAllowed">
+                          <span *ngIf="viewContract" pTooltip="View Contract"
+                          tooltipPosition="top" class="fa fa-eye"></span>
+                          <label>CONTRACT</label>
+                          <button pTooltip="Save Contract"
+                          tooltipPosition="top" *ngIf="saveContractBtn" (click)="ConfirmSave()" mat-icon-button>
+                              <mat-icon>save</mat-icon>
+                          </button>
+                          <mat-spinner *ngIf="hideSaveLoader" [diameter]="25"></mat-spinner>
+                          <span pTooltip="Approved"
+                          tooltipPosition="top" *ngIf="confirmApproval" class="fa fa-check" style="color:green"></span>
+                          &nbsp;&nbsp;<span pTooltip="Approve Contract"
+                          tooltipPosition="top" *ngIf="approveContract && isApproveRejectAllowed" (click)="openApproveContractDialog('Approve')" class="fa fa-check"></span>
+                          &nbsp;&nbsp;<span pTooltip="Reject Contract"
+                          tooltipPosition="top" *ngIf="declineContract && isApproveRejectAllowed" (click)="openApproveContractDialog('Rejected')" class="fa fa-close"></span>
+                          <span  pTooltip="Rejected"
+                          tooltipPosition="top" *ngIf="confirmDecline" class="fa fa-close" style="color:red"></span>
+                        </p>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+
+                        <br>
+                        <br>
+                        <br>
+                      </div>
+                  </mat-card>
+              </div>
+            </ng-template>
+        </div>
+
+      </div>
+    </form>
+    </div>
+  </div>
+
+

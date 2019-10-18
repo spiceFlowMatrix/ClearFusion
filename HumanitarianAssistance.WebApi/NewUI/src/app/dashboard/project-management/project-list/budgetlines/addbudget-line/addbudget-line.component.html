@@ -1,0 +1,95 @@
+<div>
+  <form
+    [formGroup]="addBudgetForm"
+    (ngSubmit)="onAddBudget(addBudgetForm)"
+    role="form"
+    action="POST"
+  >
+    <h1 mat-dialog-title>
+      Create Budget Line
+      <button mat-icon-button [mat-dialog-close]="data.data" class="pull-right">
+        <mat-icon aria-label="Example cancel icon">clear</mat-icon>
+      </button>
+    </h1>
+    <div mat-dialog-content>
+      <div class="row">
+        <div class="col-sm-6">
+          <mat-form-field class="example-full-width">
+            <textarea
+              matInput
+              placeholder="Budget Description"
+              name="BudgetName"
+              formControlName="BudgetName"
+            ></textarea>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+          <mat-form-field class="example-full-width">
+            <input
+              matInput
+              type="number"
+              appNumberOnly="true"
+              placeholder="Initial Budget"
+              name="InitialBudget"
+              formControlName="InitialBudget"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <mat-form-field class="example-full-width">
+            <mat-select
+              placeholder="Project Job"
+              name="ProjectJobName"
+              formControlName="ProjectJobId"
+            >
+              <mat-option
+                *ngFor="let item of projectJobList"
+                [value]="item.ProjectJobId"
+              >
+                {{ item.ProjectJobName }}
+                      </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+          <mat-form-field class="example-full-width">
+            <mat-select
+              placeholder="Currency"
+              name="CurrencyId"
+              formControlName="CurrencyId"
+            >
+              <mat-option
+                *ngFor="let item of currencyList"
+                [value]="item.CurrencyId"
+              >
+                {{ item.CurrencyName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div mat-dialog-actions class="pull-right">
+      <button mat-raised-button [mat-dialog-close]="data.data">Cancel</button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="!addBudgetForm.valid || addBudgetLoader"
+      >
+        <span
+          class="pull-left spinner_center margin_top_10"
+          *ngIf="addBudgetLoader"
+        >
+          <mat-spinner [diameter]="15"></mat-spinner>
+        </span>
+        Create
+      </button>
+    </div>
+  </form>
+
+
+</div>

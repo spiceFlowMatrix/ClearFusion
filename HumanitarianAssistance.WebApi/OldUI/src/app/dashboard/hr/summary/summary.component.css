@@ -1,0 +1,56 @@
+.main-summary{
+    background-color: #f8f9fa;
+}
+.totalCountSize{
+    font-size: 50px;
+ }
+
+.title-light{
+    font-weight: 500;
+    font-size: 16px;
+    opacity: 0.5;
+}
+
+hr{
+padding: 0px;
+margin: 5px;
+}
+
+.left-search-panel{
+    min-height: 300px;
+}
+
+.image-light{
+    opacity: 1;
+}
+
+.top-card-heading{
+    font-size: 22px;
+    color: #ffffff;
+    padding-top: 14px;
+    text-align: center;
+}
+.top-card{
+    padding-top : 15px;
+    padding-bottom : 15px;
+    box-shadow: 0px 4px 18px 0px rgba(0,0,0,0.3);
+    transition: 0.3s;
+}
+
+.dv-img-cstm-large img{ height:120px; width:120px; padding: 20px; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; }
+.dv-img-cstm-large{ height: 150px; vertical-align: middle; background-color:#3dc5ab; box-shadow: 3px 1px 14px #c3c3c3;}
+
+/* card */
+.card { box-shadow: 0 1px 2px 0  rgba(0,0,0,0.2); transition: 0.3s;}
+.card:hover { box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2); }
+/* card */
+
+.dv-smmry-dt .thumbnail.card{ padding: 0;}
+.dv-smmry-dt .thumbnail .caption{ padding: 0;}
+.dv-smmry-dt .col-sm-8{ padding: 10px; padding-left: 20px;}
+.dv-img-cstm img{height:120px; width:120px; padding: 20px;}
+.dv-img-cstm{ background-color:#3dc5ab; box-shadow: 3px 1px 14px #c3c3c3;}
+.dv-smmry-dt-snd .thumbnail.card{ padding: 0 4px;}
+.dv-smmry-dt-snd .thumbnail .caption{ padding: 0 9px}
+div.thumbnail.card.left-search-panel.filter{min-height: 443px;}
+

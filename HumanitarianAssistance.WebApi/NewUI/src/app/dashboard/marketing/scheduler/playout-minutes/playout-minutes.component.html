@@ -1,0 +1,37 @@
+<div class="mat-detail"  align="center">
+  <div mat-dialog-content>
+     <div class="row">
+      <div class="col-sm-6">
+          <h4>Playout Minutes</h4>
+      </div>
+       <div class="col-sm-6">
+          <button mat-icon-button [mat-dialog-close]="data.data" class="pull-right">
+            <mat-icon aria-label="cancel">clear</mat-icon>
+          </button>
+       </div>
+     </div>
+     <br/>
+     <div class="row">
+       <div class="col-sm-6">
+          <mat-form-field class="example-full-width" style="width:100%;float:left;">
+            <input appNumberOnly="true" [disabled]="disableTotalMinutes" (change)="selectionChanged('totalMinutes')" matInput placeholder="Total Playout Minutes" [(ngModel)]="playoutMinutesForm.totalMinutes"/>
+          </mat-form-field>
+       </div>
+       <div class="col-sm-6" [hidden]="!disableDroppedMinutes" >
+          <!-- <mat-form-field class="example-full-width" style="width:100%;float:left;"> -->
+            <label>Dropped Minutes</label>
+            <p>{{playoutMinutesForm.droppedMinutes}}</p>
+            <!-- <input appNumberOnly="true" [disabled]="disableDroppedMinutes" (change)="selectionChanged('droppedMinutes')" matInput placeholder="Dropped Minutes" [(ngModel)]="playoutMinutesForm.droppedMinutes"/> -->
+          <!-- </mat-form-field> -->
+       </div>
+     </div>
+     <br/>    
+  </div>
+  <div mat-dialog-actions class="pull-right">
+      <button mat-raised-button [mat-dialog-close]="data.data">Cancel</button>    
+      <button [disabled]="disableSubmitBtn || addPlayoutMinutesLoader" (click)="addPlayoutMinutes()" mat-raised-button color="accent" cdkFocusInitial>        
+          <span class="pull-left spinner_center margin_top_10" *ngIf="addPlayoutMinutesLoader"><mat-spinner [diameter]="15"></mat-spinner></span>
+        Submit
+      </button>
+    </div>
+</div>

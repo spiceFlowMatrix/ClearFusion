@@ -1,0 +1,159 @@
+<div class="row">
+  <div>
+    <div class="col-xs-12">
+
+      <div class="main-heading clearfix">
+        <h3 class="page-headin">Task & Activity</h3>
+      </div>
+
+      <!-- Project List SideBar -->
+      <div id="task-activity" class="col-sm-3 search-task">
+        <dx-list #list [dataSource]="projectList" [height]="400" [searchEnabled]="true" searchExpr="ProjectName" searchMode="contains">
+          <div *dxTemplate="let data of 'item'">
+            <a href="javascript:void(0);">
+              <p>
+                <span class="wrapspan">
+                  <span>{{data.ProjectName}}</span>
+                  <span>{{data.Description}}</span>
+                </span>
+                <i class="fa fa-plus" (click)="addTaskShowPopup()"></i>
+              </p>
+            </a>
+          </div>
+        </dx-list>
+      </div>
+
+      <!-- Task-Activity Panel-->
+      <div class="col-md-9 task-act-todo-outer">
+        <div class="row">
+      <div class="col-sm-12 task-card-blk task-crd-todo">
+        <div class="task-card-blk-in">
+
+          <div class="task-card-blk-hdr">
+            <h3>To Do</h3>
+          </div>
+
+          <ul class="card-listing-blk">
+            <dx-list #list [dataSource]="projectList" [height]="400">
+              <div *dxTemplate="let data of 'item'">
+                <li>
+                  <h4 class="completed">Activity one</h4>
+                  <span>Oka K.</span>
+                  <span>List. Design</span>
+                  <div class="act-icons">
+                    <a href="javascript:void(0)">
+                      <i class="fa fa-pencil" title="Edit"></i>
+                    </a>
+                    <a href="javascript:void(0)">
+                      <i class="fa fa-eye" title="View"></i>
+                    </a>
+                    <a href="javascript:void(0)" [attr.id]="data.ProjectName" (click)="toggleWiithShadingOptions()">
+                      <i class="fa fa-envelope-o" title="Message"></i>
+                    </a>
+                    <a href="javascript:void(0)">
+                      <i class="fa fa-paperclip" aria-hidden="true"></i>
+                    </a>
+                  </div>
+                </li>
+              </div>
+            </dx-list>
+          </ul>
+        </div>
+      </div>
+      </div>
+      </div>
+
+      <!-- Task-Activity Panel Ends-->
+
+    </div>
+  </div>
+</div>
+
+<!-- Comments PopOver -->
+<dx-popover target="#ProjectX" position="bottom" [width]="600" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)" [(visible)]="withAnimationOptionsVisible">
+  <dxo-animation>
+    <dxo-show type="pop" [from]="{ scale: 0 }" [to]="{ scale: 1 }"></dxo-show>
+    <dxo-hide type="fade" [from]="1" [to]="0"></dxo-hide>
+  </dxo-animation>
+  <div *dxTemplate="let data = model of 'content'">
+    <div class="task-card-blk-hdr">
+      <h3>Upload EOI</h3>
+    </div>
+    <ul class="card-listing-blk">
+      <dx-list #list [dataSource]="projectList" [height]="180" class="crd-comment-listing">
+        <div *dxTemplate="let data of 'item'">
+          <li>
+            <img src="assets/images/profile-pic.jpg" alt="" />
+            <h5>John Doe</h5>
+            <h6>Comment first</h6>
+            <span>12:40PM</span>
+            <div class="comnt-rpy-btn">Reply</div>
+          </li>
+        </div>
+      </dx-list>
+    </ul>
+    <div class="crd-comment-post">
+      <input type="text" placeholder="Comments" class="form-control" />
+      <input class="post-cmnt" type="submit" value="Post" name="Post" />
+    </div>
+  </div>
+</dx-popover>
+
+<!-- Add Task Popup -->
+<dx-popup class="popup" [width]="600" [height]="250" [showTitle]="true" title="Add Task" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)" [(visible)]="popupVisibleAddTask">
+  <div *dxTemplate="let data of 'content'">
+    <form action="your-action" (submit)="AddEditProjectDetails(taskModel)">
+      <dx-form [showColonAfterLabel]="true" [formData]="taskModel" [colCount]='1' [readOnly]="false" [showColonAfterLabel]="true"
+        [showValidationSummary]="true" validationGroup="customerData">
+
+        <dxi-item dataField="TaskName">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-item>
+        <dxi-item dataField="Description">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-item>
+        <dxi-item dataField="Priority" caption="Priority" editorType="dxSelectBox" [editorOptions]="{ dataSource: priorityArr, value: Priority, displayExpr: 'Priority', valueExpr: 'Priority' }">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-item>
+
+      </dx-form>
+      <br />
+      <div class="btn-grp-wrap">
+        <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+        <dx-button text="Cancel" (onClick)="HidePopup()"></dx-button>
+      </div>
+    </form>
+  </div>
+</dx-popup>
+
+<!-- Add Activity Popup -->
+<dx-popup class="popup" [width]="600" [height]="250" [showTitle]="true" title="Add Activity" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)" [(visible)]="popupVisibleAddActivity">
+  <div *dxTemplate="let data of 'content'">
+    <form action="your-action" (submit)="AddEditProjectDetails(activityModel)">
+      <dx-form [showColonAfterLabel]="true" [formData]="activityModel" [colCount]='1' [readOnly]="false" [showColonAfterLabel]="true"
+        [showValidationSummary]="true" validationGroup="customerData">
+
+        <dxi-item dataField="ActivityName">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-item>
+        <dxi-item dataField="Description">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-item>
+        <dxi-item dataField="Priority" caption="Priority" editorType="dxSelectBox" [editorOptions]="{ dataSource: priorityArr, value: Priority, displayExpr: 'Priority', valueExpr: 'Priority' }">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-item>
+        <dxi-item dataField="Status" editorType="dxSelectBox" [editorOptions]="{ dataSource: Status, value: Id, displayExpr: 'Value', valueExpr: 'Id' }">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-item>
+
+      </dx-form>
+      <br />
+      <div class="btn-grp-wrap">
+        <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+        <dx-button text="Cancel" (onClick)="HidePopup()"></dx-button>
+      </div>
+    </form>
+  </div>
+</dx-popup>

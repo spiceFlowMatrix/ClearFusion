@@ -1,0 +1,87 @@
+<div class="main-currency-exchange-analysis">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="main-heading clearfix">
+        <h3 class="page-headin">Advance Deduction</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12 dxagninptblk">
+
+
+      <form action="your-action" (submit)="onApplyingFilter(advanceDeductionFilter)">
+        <dx-form id="form" [(formData)]="advanceDeductionFilter" [colCount]="5" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+          validationGroup="customerData">
+         
+          <dxi-item dataField="OfficesList" editorType="dxTagBox" showCheckBoxesMode="normal" [editorOptions]="{ dataSource: officeDropdown, displayExpr: 'OfficeName', valueExpr: 'OfficeId', multiline: false, maxDisplayedTags: 1, placeholder: 'Select Office', searchEnabled: true, showClearButton:'true'  }">
+            <dxo-label text="Office"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="RecordType" editorType="dxSelectBox" [editorOptions]="{ dataSource: recordTypeDropdown, value: 'null', displayExpr: 'Name', valueExpr: 'Id', placeholder: 'Select Record Type' }">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="CurrencyId" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencyDropdown, value: '1', displayExpr: 'CurrencyCode', valueExpr: 'CurrencyId', placeholder: 'Select Currency', searchEnabled: true, showClearButton:'true'  }">
+            <dxo-label text="Currency"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item dataField="Month" editorType="dxDateBox" [editorOptions]="{ width: '100%', placeholder:'Select Date', displayFormat:'MMM, yyyy', maxZoomLevel: 'year', showClearButton: 'true' }">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+
+
+        </dx-form>
+        <br>
+        <div class="row">
+          <div class="col-md-offset-2 col-md-8 text-center">
+            <dx-button text="Update Filter" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div>
+        <dx-data-grid id="gridContainer" [dataSource]="advanceDeductionDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+          [columnAutoWidth]="true">
+          <dxo-paging [pageSize]="10"></dxo-paging>
+          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+          <dxo-search-panel [visible]="true" [width]="240" placeholder="Search..."></dxo-search-panel>
+
+
+          <dxi-column dataField="Employee" caption="Employee">
+          </dxi-column>
+          <dxi-column dataField="BaseNetSalary" caption="BaseNetSalary">
+          </dxi-column>
+          <dxi-column dataField="AdvanceDeduction" caption="AdvanceDeduction">
+          </dxi-column>
+          <dxi-column dataField="NetSalary" caption="NetSalary">
+          </dxi-column>
+
+          <dxi-column caption="Action" alignment="center" [width]="100" cellTemplate="CellTemplateEdit"></dxi-column>
+          <div *dxTemplate="let data of 'CellTemplateEdit'">
+            <a href="javascript:void(0)" (click)="showAdvanceDeductionEditPopup(data.data)">Edit</a>
+          </div>
+
+
+        </dx-data-grid>
+      </div>
+    </div>
+  </div>
+
+  <div>
+  </div>
+
+
+
+</div>

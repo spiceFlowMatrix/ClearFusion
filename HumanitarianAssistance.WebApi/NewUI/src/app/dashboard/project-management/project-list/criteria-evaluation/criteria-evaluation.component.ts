@@ -4401,11 +4401,6 @@ export class CriteriaEvaluationComponent
   }
   //#endregion
 
-
-  downloadPdf(){
-
-  }
-
   ngOnDestroy() {
     this.cdRef.detach();
   }

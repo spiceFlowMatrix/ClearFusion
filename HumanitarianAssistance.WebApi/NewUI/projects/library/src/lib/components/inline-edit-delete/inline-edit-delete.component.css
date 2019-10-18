@@ -1,0 +1,23 @@
+/* .example-form-field.inline_content_show_edit{display:inline-block;}
+.example-form-field.inline_content_show_edit input{border-bottom: 1px solid rgba(0,0,0,0.4); background:transparent; box-shadow: none; border:none;}
+.example-form-field.inline_content_show_edit input:hover, .example-form-field.inline_content_show_edit input:focus {
+  outline: none;
+  box-shadow: none;
+  border-bottom: 1px solid rgba(0,0,0,0.4);
+  width: auto;
+} */
+.icon_cursor {
+  cursor: pointer;
+}
+.small_icon {
+  font-size: 22px;
+}
+.spinner_abs{position: absolute; top: 15px; margin-left: 22px;}
+.example-form-field.inline_content_show_edit{
+  position: relative;
+}
+.tp_15{position: relative;top:15px;}
+
+.icon_width {
+  width: 21px;
+}

@@ -1,0 +1,73 @@
+.brand {
+  font-size: 50px;
+}
+
+.container {
+  padding: 1px 0;
+  height: 100%;
+  width: 100%;
+  background-image: url("../../assets/img/login_background.jpg");
+  background-size: cover;
+  color: #fff;
+}
+
+.login {
+  max-width: 300px;
+  min-height: 400px;
+  margin: 30px auto;
+  background-color: rgba(10,10,10,.68);
+}
+
+.login-icon-field {
+  height: 170px;
+  width: 100%;
+  margin-top: 70px;
+}
+
+.password-icon,.user-icon {
+  margin: 5px;
+}
+
+button {
+  display: block;
+  width: 210px;
+  height: 40px;
+  padding: 0;
+  margin: 10px 20px 10px;
+  font-weight: 700;
+  color: #fff;
+  background-color: #22c08a;
+  border: none;
+  border-radius: 20px;
+  transition: background-color .10s ease-in-out;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+}
+input{
+  color: #fff;
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 140px;
+  caret-color: #fff;
+}
+input::-webkit-input-placeholder {
+  color: rgba(255,255,255,.4);
+}
+input::-moz-placeholder {
+  color: rgba(255,255,255,.4);
+}
+.input_block {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #fff;
+  padding-top: 0px;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  margin-bottom: 10px;
+
+  display: block;
+}
+

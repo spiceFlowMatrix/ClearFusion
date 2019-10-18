@@ -1,0 +1,116 @@
+<div class="main-financial-year">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="col-sm-3 main-heading clearfix">
+        <h3 class="page-heading">Appraisal Questions</h3>
+       </div>
+       <!-- <div class="col-sm-3" style="padding-top: 5px;">
+          <dx-select-box [dataSource]="officecodelist" placeholder="Choose Office" (onItemClick)="onOfficeSelected($event.itemData.OfficeId)"
+                            displayExpr="OfficeName" valueExpr="OfficeId" [value]="selectedOffice" [searchEnabled]="true">
+                        </dx-select-box>
+         </div> -->
+         <div class="col-sm-9"style="padding-bottom: 5px;">
+            <dx-button class="button-info btn btn-default btn-green" text="Add New" (onClick)="onShowHideAppraisalQuestionsAddPopup()"
+            *ngIf="isEditingAllowed"></dx-button>
+         </div>
+        
+      
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <dx-data-grid id="gridContainer" wordWrapEnabled="true" [dataSource]="appraisalQuestionsDataSource"
+        [allowColumnReordering]="true" [allowColumnResizing]="true" [columnAutoWidth]="true" [showRowLines]="true">
+        <dxo-editing [allowAdding]="false" [allowUpdating]="false" mode="batch"></dxo-editing>
+        <dxo-grouping [contextMenuEnabled]="true" expandMode="rowClick"></dxo-grouping>
+        <dxo-group-panel [visible]="false" emptyPanelText="Use the context menu of header columns to group data"></dxo-group-panel>
+        <dxo-header-filter [visible]="true"> </dxo-header-filter>
+
+        <dxi-column dataField="AppraisalGeneralQuestionsId" [visible]="false"></dxi-column>
+        <dxi-column dataField="SequenceNo" caption="Sequence No" [width]="200"></dxi-column>
+        <dxi-column dataField="Question" caption="Questions"></dxi-column>
+        <dxi-column dataField="DariQuestion" caption="Dari Question"></dxi-column>
+        <dxi-column caption="Action" alignment="center" [width]="100" cellTemplate="CellTemplateEdit" *ngIf="isEditingAllowed"></dxi-column>
+
+        <div *dxTemplate="let data of 'CellTemplateEdit'">
+          <a href="javascript:void(0)" (click)="onAppraisalQuestinsEditClick(data.data)">Edit</a>
+        </div>
+
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+      </dx-data-grid>
+    </div>
+  </div>
+  <!-- <ngx-loading [show]="financialYearListLoading"></ngx-loading> -->
+</div>
+
+<!-- Add -->
+<dx-popup class="popup" [width]="600" [height]="400" [showTitle]="true" title="Appraisal Questions" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="addAppraisalQuestionsPopupVisible">
+  <div *dxTemplate="let data of 'content'">
+    <form action="your-action" (submit)="onAppraisalQuestionsFormSubmit(appraisalQuestionsForm)">
+      <dx-form id="form" [formData]="appraisalQuestionsForm" [readOnly]="false" [showColonAfterLabel]="true"
+        [showValidationSummary]="true" validationGroup="customerData" (onFieldDataChanged)="onFieldDataChanged($event)">
+
+        <dxi-item dataField="SequenceNo" caption="Sequence No" datatype="number">
+          <dxi-validation-rule type="required" message="Sequence No. is required">
+          </dxi-validation-rule>
+        </dxi-item>
+        <dxi-item dataField="Question" caption="Question" editorType="dxTextArea" [editorOptions]="{ height: 90 }"
+          [colSpan]="1">
+          <dxi-validation-rule type="required" message="Question is required">
+          </dxi-validation-rule>
+        </dxi-item>
+        <dxi-item dataField="DariQuestion" alignment="right" editorType="dxTextArea" [editorOptions]="{ height: 90 }"
+          [colSpan]="1">
+          <dxi-validation-rule type="required" message="Dari Question is required">
+          </dxi-validation-rule>
+        </dxi-item>
+
+      </dx-form>
+
+      <br />
+      <div class="btn-grp-wrap">
+        <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+        <dx-button text="Cancel" (onClick)="onShowHideAppraisalQuestionsAddPopup()"></dx-button>
+      </div>
+    </form>
+    <ngx-loading [show]="addAppraisalQuestionsPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+  </div>
+</dx-popup>
+
+<!-- Edit -->
+<dx-popup class="popup" [width]="600" [height]="400" [showTitle]="true" title="Appraisal Questions" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="editAppraisalQuestionsPopupVisible">
+  <div *dxTemplate="let data of 'content'">
+    <form action="your-action" (submit)="onAppraisalQuestionsFormSubmit(appraisalQuestionsForm)">
+      <dx-form id="form" [formData]="appraisalQuestionsForm" [readOnly]="false" [showColonAfterLabel]="true"
+        [showValidationSummary]="true" validationGroup="editVal" (onFieldDataChanged)="onFieldDataChanged($event)">
+
+
+        <dxi-item dataField="SequenceNo" caption="Sequence No" datatype="number">
+          <dxi-validation-rule type="required" message="Sequence No. is required">
+          </dxi-validation-rule>
+        </dxi-item>
+        <dxi-item dataField="Question" caption="Question" editorType="dxTextArea" [editorOptions]="{ height: 90 }"
+          [colSpan]="1">
+          <dxi-validation-rule type="required" message="Question is required">
+          </dxi-validation-rule>
+        </dxi-item>
+        <dxi-item dataField="DariQuestion" alignment="right" editorType="dxTextArea" [editorOptions]="{ height: 90 }"
+          [colSpan]="1">
+          <dxi-validation-rule type="required" message="Dari Question is required">
+          </dxi-validation-rule>
+        </dxi-item>
+
+      </dx-form>
+      <br />
+      <div class="btn-grp-wrap">
+        <dx-button text="Save" type="success" validationGroup="editVal" [useSubmitBehavior]="true"></dx-button>
+        <dx-button text="Cancel" (onClick)="onShowHideAppraisalQuestionsEditPopup()"></dx-button>
+      </div>
+    </form>
+    <ngx-loading [show]="editAppraisalQuestionsPopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>
+  </div>
+</dx-popup>

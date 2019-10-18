@@ -1,0 +1,84 @@
+<div class="body-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div [class]="colsm6">
+        <mat-card>
+          <div class="project-details">
+              <div class="row">
+                  <div class="col-sm-10">
+                      <h4 class="main_heading">
+                          Channel
+                       </h4>
+                  </div>
+                  <div class="col-sm-2">
+                      <button
+                      mat-icon-button
+                      class="margin_left_10 pull-right"
+                    >
+                      <mat-icon>settings</mat-icon>
+                    </button>
+                  </div>
+    
+                </div>
+            <!-- <h4 class="main_heading bdr_heading">Channel <a><i class="fa fa-cog black_icon pull-right"></i></a></h4> -->
+          </div>
+          <div class="row">
+              <div
+              *ngIf="channelListLoaderFlag; else channelListTemplate"
+              class="col-sm-12"
+            ><br/><br/><br/>
+              <mat-spinner
+                class="center_loader"
+                diameter="50"
+              ></mat-spinner>
+            </div>
+            <ng-template #channelListTemplate>
+                <div class="col-sm-12">
+                    <div class="responsive_table-responsive">
+                        <table class="table table-bordered">
+                          <tbody>
+                            <tr>
+                              <td width="1%">
+                                <p class="width_8"></p>
+                              </td>
+                              <td width="5%"></td>
+                              <td width="40%"><a class="add_new" (click)="onItemClick(0)" *ngIf="isEditingAllowed">Add New....</a></td>
+                              <td width="20%"></td>
+                              <td width="20%"></td>
+                              <td width="5%"></td>
+                              <td width="1%"></td>
+                            </tr>
+                            <tr *ngFor="let db of channelList" (click)="onItemClick(db.ChannelId)" [ngClass]="{'selected': selectedRowID === db.ChannelId}">
+                              <td width="1%">
+                                <p class="width_8"></p>
+                              </td>
+                              <td class="grey-text" width="5%">{{db.ChannelId}}</td>
+                              <td width="40%" text-align="left">
+                                <p class="diamond">{{db.ChannelName}}</p>
+                              </td>
+                              <td text-align="left" width="10%">
+                                  <p class="diamond">{{db.MediumName}}</p>
+                              </td>
+                              <td class="text-left" width="30%">
+                                <!-- <p class="diamond">{{db.Medium}}</p> -->
+                              </td>
+                              <td class="" width="7"><a class="blue-circle "><i class="far fa-bell"></i></a></td>
+                              <td width="1%" class="text-center"><i *ngIf="selectedRowID === db.ChannelId" class="material-icons font-12"> arrow_forward_ios </i></td>
+                            </tr>
+
+                          </tbody>
+
+                        </table>
+                      </div>
+                 </div>
+            </ng-template>
+          </div>
+        </mat-card>
+      </div>
+      <div [ngStyle]="{'visibility': showChannelDetail ? 'visible' : 'hidden'}" class="col-sm-6">
+        <app-channel-detail (updateChannel)="updateChannelList($event)" (addChannel)="addChannelList($event)" (deleteChannel)="onChannelDeleted($event)"
+          (hideDetailPanel)="hideDetailPanel($event)" [channelId]="channelId"></app-channel-detail>
+      </div>
+    </div>
+  </div>
+</div>

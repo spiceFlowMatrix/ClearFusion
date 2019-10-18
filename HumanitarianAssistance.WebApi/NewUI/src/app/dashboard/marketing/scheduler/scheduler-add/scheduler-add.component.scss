@@ -1,0 +1,18 @@
+.e-input-group .e-input-group-icon,
+      .e-input-group.e-control-wrapper .e-input-group-icon,
+      .e-input-group.e-control-wrapper:not(.e-disabled) .e-input-group-icon:hover {
+        background: none;
+      }
+
+      .e-input-group:not(.e-disabled) .e-input-group-icon:active,
+      .e-input-group.e-control-wrapper:not(.e-disabled) .e-input-group-icon:active {
+        background: rgb(0, 120, 214);
+      }
+      .example-button-row .dot {
+        //height: 40px;
+        //width: 50px;
+        background-color: #ffffff;
+        color: black;
+        font-family: 'Roboto', sans-serif;
+        margin-left:3px;
+      }

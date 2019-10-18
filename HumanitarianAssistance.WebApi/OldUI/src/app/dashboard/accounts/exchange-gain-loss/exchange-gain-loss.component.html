@@ -1,0 +1,113 @@
+<div class="main-exchange-gain-loss">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="main-heading clearfix">
+        <h3 class="page-headin">Exchange Gain/Loss</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 dxagninptblk">
+      <form action="your-action" (submit)="onApplyingFilter(exchangeGainLossFilter)">
+        <div class="row">
+          <div class="col-sm-10">
+            <dx-form id="form" [(formData)]="exchangeGainLossFilter" [colCount]="2" [readOnly]="false"
+              [showColonAfterLabel]="true" [showValidationSummary]="true" (onFieldDataChanged)="onFieldDataChanged($event)"
+              validationGroup="customerData">
+
+              <dxi-item dataField="OfficeIdList" editorType="dxTagBox" showCheckBoxesMode="normal" [editorOptions]="{ dataSource: officeDropdown, displayExpr: 'OfficeName', valueExpr: 'OfficeId', multiline: false, maxDisplayedTags: 1, showClearButton:'true', placeholder: 'Select Office', selectAllMode: 'allPages', showSelectionControls: true, value: selectedOffices,  searchEnabled: true  }">
+                <dxo-label text="Office"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+              <dxi-item dataField="DateRange" class="dsplcal cal-custom-outer">
+                <p-calendar name="exchangeGainLossDateRange" [(ngModel)]="exchangeGainLossDateRange" (ngModelChange)="onDateRangeChanged($event)"
+                  dateFormat="dd/mm/yy" selectionMode="range" showIcon="true" [style]="{'position': 'relative', 'overflow': 'visible', 'z-index': '999'}"></p-calendar>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+              <dxi-item dataField="JournalId" editorType="dxSelectBox" [editorOptions]="{ dataSource: journalDropdown, displayExpr: 'JournalName', valueExpr: 'JournalCode', showClearButton:'true' , placeholder: 'Select Journal', searchEnabled: true }">
+                <dxo-label text="Journal"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+              <dxi-item dataField="VoucherList" editorType="dxTagBox" showCheckBoxesMode="normal" [editorOptions]="{dataSource: voucherDropdown, displayExpr: 'VoucherName', valueExpr: 'VoucherId', multiline: false, maxDisplayedTags: 1, showClearButton:'true', placeholder: 'Select Voucher', selectAllMode: 'allPages', showSelectionControls: true, searchEnabled: true  }">
+                <dxo-label text="Voucher"></dxo-label>
+              </dxi-item>
+              <dxi-item dataField="AccountList" editorType="dxTagBox" showCheckBoxesMode="normal" [editorOptions]="{ dataSource: accountDropdown, displayExpr: 'AccountName', value: selectedAccounts, valueExpr: 'AccountCode', multiline: false, maxDisplayedTags: 1, showClearButton:'true', placeholder: 'Select Account', selectAllMode: 'allPages', showSelectionControls: true, searchEnabled: true  }">
+                <dxo-label text="Account"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+              <dxi-item dataField="DateOfComparison" editorType="dxDateBox" [editorOptions]="{ type: 'date', width: '100%', displayFormat: 'dd/MM/yyy', showClearButton: 'true' }">
+
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+              <dxi-item dataField="ComparisonCurrencyId" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencyDropdown, displayExpr: 'CurrencyCode', valueExpr: 'CurrencyId', showClearButton:'true' , placeholder: 'Select Currency' }">
+                <dxo-label text="Comparison Currency"></dxo-label>
+                <dxi-validation-rule type="required"> </dxi-validation-rule>
+              </dxi-item>
+
+            </dx-form>
+          </div>
+          <div class="col-sm-2" style="margin-top: 210px;">
+            <dx-button style="margin-top: 20px;" text="Update Filter" type="success" validationGroup="customerData"
+              [useSubmitBehavior]="true"></dx-button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <dx-data-grid id="gridContainer" [dataSource]="exchangeGainOrLossDataSource" [allowColumnReordering]="true"
+        [allowColumnResizing]="true" [columnAutoWidth]="true">
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-search-panel [visible]="true" [width]="240" placeholder="Search..."></dxo-search-panel>
+        <dxi-column dataField="TransactionDate" caption="TransactionDate" dataType="date" format="dd/MM/yyyy">
+        </dxi-column>
+
+        <dxi-column dataField="CreditOrDebit" caption="Credit Or Debit">
+        </dxi-column>
+
+        <dxi-column dataField="OriginalCurrency" caption="Original Currency">
+          <dxo-lookup [dataSource]="currencyDropdown" displayExpr="CurrencyCode" valueExpr="CurrencyId"></dxo-lookup>
+        </dxi-column>
+
+        <dxi-column dataField="TransactionAmount" caption="Transaction Amount">
+        </dxi-column>
+
+        <dxi-column dataField="OriginalExchangeValue" caption="Original Exchange Value">
+        </dxi-column>
+
+        <dxi-column dataField="CurrentExchangeValue" caption="Current Exchange Value">
+        </dxi-column>
+
+        <dxi-column dataField="GainLossAmount" caption="Gain Loss Amount">
+        </dxi-column>
+
+        <dxo-summary>
+          <dxi-total-item column="TransactionAmount" summaryType="sum">
+          </dxi-total-item>
+          <dxi-total-item column="OriginalExchangeValue" summaryType="sum">
+          </dxi-total-item>
+          <dxi-total-item column="CurrentExchangeValue" summaryType="sum">
+          </dxi-total-item>
+          <dxi-total-item column="GainLossAmount" summaryType="sum">
+          </dxi-total-item>
+        </dxo-summary>
+        <dxo-remote-operations [sorting]="true" [paging]="true"> </dxo-remote-operations>
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]"></dxo-pager>
+      </dx-data-grid>
+    </div>
+  </div>
+
+  <ngx-loading [show]="exchangeGainLossLoader"></ngx-loading>
+
+
+</div>

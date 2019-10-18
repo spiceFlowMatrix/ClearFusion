@@ -1,0 +1,41 @@
+<div class="main-category-populator">
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="main-heading clearfix">
+        <h3 class="page-headin">Category Populator</h3>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div>
+        <div id="tabs">
+          <dx-tabs #apiTabs [dataSource]="tabs" [selectedIndex]="0" [width]="400" [height]="50" (onItemClick)="selectTab($event)"></dx-tabs>
+          <div class="dx-fieldset">
+
+            <div *ngIf="categoryPopulatorTabFlag == true; else incomeExpenditureReport">
+              <div class="dx-field">
+
+                <app-balance-sheet></app-balance-sheet>
+
+              </div>
+            </div>
+
+            <ng-template #incomeExpenditureReport>
+              <div class="dx-field">
+
+                <app-income-expenditure-report></app-income-expenditure-report>
+
+              </div>
+            </ng-template>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

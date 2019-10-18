@@ -255,7 +255,7 @@ export class PurchaseService {
     return this.globalService
       .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_AddStorePurchase, purchaseModel, { observe : 'response'})
       .pipe(
-       // tap(resp => // console.log('response', resp)),
+       // tap(resp => console.log('response', resp)),
         map((x: Response) => {
          return {
           StatusCode: x.status,

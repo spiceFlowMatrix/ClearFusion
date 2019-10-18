@@ -1,0 +1,19 @@
+.dx-datagrid-header-panel {
+    border: 1px solid #ddd;
+    margin: 6px;
+    padding: 5px;
+}
+.dx-datagrid-header-panel .dx-toolbar{ margin-bottom: 0px !important;}
+#markAttendance .dx-field{display: inline-block;
+    position: absolute;
+    z-index: 11;
+    right: 133px;
+    margin: 0;
+    top:13px;}
+    #previousAttendance .dx-field {
+        border: 1px solid #ccc;
+        margin: 6px;
+        padding: 6px;
+    }
+    #previousAttendance .dx-field-value{ margin-right: 0px;}
+    

@@ -1,0 +1,36 @@
+// :host /deep/ .mat-form-field-underline{height: 0 !important;}
+// :host /deep/  .mat-form-field-infix{padding-top:0 !important;}
+:host /deep/ .doc-upload-wrap .drop-zone {  border: 2px dotted #c2c2c1 !important; border-radius: 6px;}
+:host /deep/  .mat-form-field-infix{width:auto !important}
+:host /deep/ .doc-upload-wrap {
+    .Genrating-new-wrap {
+        position: relative;
+        height: 161px;
+        background:transparent;
+        transform:scale(1.0);
+        transition:0.3s all;
+        &:hover { transform:scale(1.14);}
+        span {
+            font-size: 16rem !important;
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 100%;
+            padding: 0;
+            display: block;
+            file-drop {
+                position: absolute;
+                display: block;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                .drop-zone { border:none !important;box-shadow:none;}
+            }
+        }
+    }
+}
+
+:host /deep/ .mat-loader-wrap .mat-progress-spinner { display:inline-block;}
