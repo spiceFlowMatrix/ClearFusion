@@ -137,9 +137,9 @@ export class ProposalReportComponent implements OnInit {
       AmountFilterOption: null,
       IsCompleted: false,
       IsLate: false,
-      pageIndex:0,
-      pageSize:10,
-      totalCount:0
+      pageIndex: 0,
+      pageSize: 10,
+      totalCount: 0
     };
   }
   //#endregion
