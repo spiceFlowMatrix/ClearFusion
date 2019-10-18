@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { ProjectHiringRoutingModule } from './project-hiring-routing.module';
 import { HiringRequestsComponent } from './hiring-requests/hiring-requests.component';
 import { JobDetailComponent } from './job-detail/job-detail.component';
@@ -12,13 +11,17 @@ import {
   MatDividerModule,
   MatInputModule,
   MatCardModule,
-  MatPaginatorModule
+  MatPaginatorModule,
+  MatTabsModule
 } from '@angular/material';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RequestDetailComponent } from './request-detail/request-detail.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 
 @NgModule({
-  declarations: [HiringRequestsComponent, JobDetailComponent],
+  declarations: [
+    HiringRequestsComponent, JobDetailComponent, RequestDetailComponent
+  ],
   imports: [
     ReactiveFormsModule,
     FormsModule,
@@ -29,7 +32,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatDividerModule,
     MatInputModule,
     MatCardModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatTabsModule
   ],
   exports: [HiringRequestsComponent, JobDetailComponent]
 })
