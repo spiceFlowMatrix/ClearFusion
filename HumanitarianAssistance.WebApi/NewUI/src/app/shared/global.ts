@@ -429,6 +429,8 @@ export class GLOBAL {
   public static API_Pdf_TrialBalanceReportPdf = 'Pdf/GetTrailBalanceReportPdf';
   public static API_Pdf_LedgerReportPdf = 'Pdf/GetLedgerReportPdf';
   public static API_Pdf_JournalTrialBalanceReportPdf = 'Pdf/GetJournalTrialBalanceReportPdf';
+  public static API_Pdf_GetCriteriaEvaluationReportPdf = 'Pdf/GetCriteriaEvaluationReportPdf';
+
   public static API_Pdf_GetJournalBudgetLineSummaryPdf  = 'Pdf/GetJournalBudgetLineSummaryPdf';
   public static API_Pdf_GetJournalLedgerReportPdf = 'Pdf/GetJournalLedgerReportPdf';
   //#endregion

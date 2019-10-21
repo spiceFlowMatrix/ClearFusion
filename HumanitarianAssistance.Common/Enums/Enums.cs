@@ -227,7 +227,7 @@
     {
         EOI = 1,
         Concept = 2,
-        RFX= 3
+        RFX = 3
     }
 
     public enum MarkedScores
@@ -247,13 +247,16 @@
 
     public enum TransportItem
     {
-        VehicleFuel=1,
-        GeneratorFuel=2,
-        VehicleMobilOil=3,
-        GeneratorMobilOil=4,
-        VehicleSpareParts=5,
-        GeneratorSpareParts=6,
-        VehicleMaintenanceService=7,
-        GeneratorMaintenanceService=8
+        VehicleFuel = 1,
+        GeneratorFuel = 2,
+        VehicleMobilOil = 3,
+        GeneratorMobilOil = 4,
+        VehicleSpareParts = 5,
+        GeneratorSpareParts = 6,
+        VehicleMaintenanceService = 7,
+        GeneratorMaintenanceService = 8
     }
+
+   
+
 }
