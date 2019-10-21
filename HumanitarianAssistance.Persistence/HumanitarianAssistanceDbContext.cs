@@ -220,6 +220,7 @@ namespace HumanitarianAssistance.Persistence
 
         public DbSet<RatingBasedCriteriaQuestions> RatingBasedCriteriaQuestions { get; set; }
 
+        public DbSet<JobHiringDetail> JobHiringDetail { get; set; }             
         #endregion  
 
         #region Marketing
