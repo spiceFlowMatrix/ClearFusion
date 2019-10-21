@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { IVehicleList } from '../../models/vehicles';
 import { TableActionsModel } from 'projects/library/src/public_api';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';

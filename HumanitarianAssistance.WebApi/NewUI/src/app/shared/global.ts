@@ -460,7 +460,7 @@ export class GLOBAL {
   public static API_GeneratorTracker_GetGeneratorList = 'GeneratorTracker/GetGeneratorList';
   public static API_GeneratorTracker_GetGeneratorById = 'GeneratorTracker/GetGeneratorById';
   public static API_GeneratorTracker_AddGeneratorUsageHours = 'GeneratorTracker/AddGeneratorUsageHours';
-
+  public static API_GeneratorTracker_EditGeneratorDetail = 'GeneratorTracker/EditGeneratorDetail';
 }
 
 

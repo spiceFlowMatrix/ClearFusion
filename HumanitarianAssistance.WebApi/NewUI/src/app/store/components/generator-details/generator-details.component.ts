@@ -97,7 +97,6 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   }
 
   openHoursModal(event) {
-    debugger;
     const dialogRef = this.dialog.open(AddHoursComponent, {
       width: '850px',
       data: {
@@ -106,7 +105,7 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
     });
   }
   goToDetails() {
-    this.router.navigate(['store/generator/edit', 1]);
+    this.router.navigate(['store/generator/edit', this.generatorId]);
   }
 
   ngOnDestroy() {

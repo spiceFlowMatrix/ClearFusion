@@ -446,6 +446,12 @@ addGeneratorUsageHours(model: any) {
     .post(this.appurl.getApiUrl() + GLOBAL.API_GeneratorTracker_AddGeneratorUsageHours, model);
 }
 
+// saveGeneratorDetail
+saveGeneratorDetail(model: any) {
+  return this.globalService
+    .post(this.appurl.getApiUrl() + GLOBAL.API_GeneratorTracker_EditGeneratorDetail, model);
+}
+
   //#region "getLocalDate"
   getLocalDate(date: any) {
     return new Date(

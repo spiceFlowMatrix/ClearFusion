@@ -15,3 +15,14 @@ export interface IGeneratorList {
   TotalCost?: string;
   OriginalCost?: string;
 }
+
+export interface IGeneratorItem {
+  GeneratorId: number;
+  Voltage?: number;
+  StartingUsage?: number;
+  IncurredUsage?: number;
+  MobilOilConsumptionRate?: number;
+  ModelYear?: number;
+  OfficeId?: number;
+  FuelConsumptionRate?: number;
+}
