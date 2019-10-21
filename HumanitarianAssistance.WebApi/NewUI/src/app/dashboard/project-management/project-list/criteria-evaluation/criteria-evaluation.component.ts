@@ -4402,6 +4402,7 @@ export class CriteriaEvaluationComponent
   }
   //#endregion
 
+
   downloadPdf() {
     debugger;
     const pdfmodel: ICriteriaEvaluationPdfModel = {
@@ -4417,6 +4418,7 @@ export class CriteriaEvaluationComponent
         .pipe()
         .subscribe();
     }
+
   }
 
   ngOnDestroy() {

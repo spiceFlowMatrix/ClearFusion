@@ -25,7 +25,7 @@
   </mat-tab>
 </mat-tab-group>
 <!-- Vehicle Details template-->
-<ng-template #vehicleDetails>
+<ng-template #vehicleDetails [ngStyle]="scrollStyles">
   <mat-card>
     <div class="row">
       <div class="col-md-12">
@@ -35,6 +35,7 @@
             <tbody>
               <tr>
                 <td>Incurred Mileage(KM)</td>
+
                 <td>{{vehicleDetailForm.IncurredMileage}}</td>
               </tr>
               <tr>
@@ -68,6 +69,7 @@
               <tr>
                 <td>Actual Mobil Oil Consumption Rate (Litre Per 100 KM)</td>
                 <td>-</td>
+
               </tr>
             </tbody>
           </table>
@@ -76,6 +78,7 @@
             <tbody>
               <tr>
                 <td>Fuel Total Cost</td>
+
                 <td>-</td>
               </tr>
               <tr>
@@ -108,6 +111,7 @@
             <tbody>
               <tr>
                 <td>Plate No</td>
+
                 <td>{{vehicleDetailForm.PlateNo}}</td>
               </tr>
               <tr>
@@ -125,6 +129,7 @@
               <tr>
                 <td>PurchaseId</td>
                 <td><a>{{vehicleDetailForm.PurchaseName}}</a></td>
+
               </tr>
             </tbody>
           </table>

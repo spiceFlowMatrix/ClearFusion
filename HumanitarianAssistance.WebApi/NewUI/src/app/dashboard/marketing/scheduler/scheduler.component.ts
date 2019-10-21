@@ -222,7 +222,7 @@ export class SchedulerComponent implements OnInit {
        this.dialog.closeAll();
      });
      dialogRef.afterClosed().subscribe(result => {
-       console.log(result);
+       // console.log(result);
      });
      this.refresh.next();
   }

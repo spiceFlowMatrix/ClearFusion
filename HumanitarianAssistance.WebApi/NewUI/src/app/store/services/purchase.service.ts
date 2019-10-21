@@ -289,7 +289,7 @@ export class PurchaseService {
         { observe: 'response' }
       )
       .pipe(
-       // tap(resp => console.log('response', resp)),
+       // tap(resp => // console.log('response', resp)),
         map((x: Response) => {
           return {
             StatusCode: x.status,
@@ -387,13 +387,13 @@ getVehicleList(model: any) {
     .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_GetVehicleList, model);
 }
 
+
 //#region "getGeneratorList"
 getGeneratorList(model: any) {
   return this.globalService
     .post(this.appurl.getApiUrl() + GLOBAL.API_GeneratorTracker_GetGeneratorList, model);
 }
 
-// addVehicleMileage
 addVehicleMileage(model: any) {
   return this.globalService
     .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_AddVehicleMileage, model);
@@ -430,6 +430,7 @@ addVehicleMileage(model: any) {
     return this.globalService
       .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_SaveVehicleDetail, model);
   }
+
 
   getGeneratorDetailById(Id) {
     return this.http
