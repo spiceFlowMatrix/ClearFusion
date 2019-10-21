@@ -1,0 +1,99 @@
+@model HumanitarianAssistance.Application.Accounting.Models.JournalLedgerMainReportModel
+<html>
+	<head>
+    	<title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+		<style>
+			body { font-family: 'Roboto', sans-serif;}
+			.container { margin:0 auto;max-width:900px;}
+			.print{
+				.page-break {
+				  page-break-after: always;
+				  page-break-inside: avoid;
+				  clear:both;
+				}
+				.page-break-before {
+				  page-break-before: always;
+				  page-break-inside: avoid;
+				  clear:both;
+				}
+			}
+			
+		</style>
+    </head>
+    <body>
+        
+    	<div class="container">
+            <table style="width:100%;">
+                <tr>
+                    <td>
+                        <table cellpadding="5" style="width:100%;">
+                            <tr>
+                                <td width="150"><img src="@Model.Logo" alt=""></td>
+                                <td align="center" style="font-size:20px;font-weight:500;">COORDINATION OF HUMANITARIAN ASSISTANCE<br>GROUP ANALYTICAL REPORT</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>From : @(Model.FromDate) To : @(Model.ToDate) >> Base Currency : '@(Model.Currency)' (@(Model.RecordType)) </p>
+                    </td>
+                </tr>
+                <tr>
+                	<td>
+                    	<table cellpadding="5" style="width:100%;font-size:14px;" border="1" bordercolor="#bfbfbf" cellspacing="0">
+                        	<tr>
+                            	<th>Group</th>
+                                <th>Date</th>
+                                <th>Voucher No</th>
+                                <th>Description</th>
+                                <th>Currency</th>
+                                <th>Rate</th>
+                                <th>Debit</th>
+                                <th>Credit</th>
+                                <th></th>
+                            </tr>
+                            @foreach (var records in @Model.mainList)
+                            {
+                                @foreach (var transactions in @records.TransactionList)
+                                {
+                                    <tr>
+                                        <td>@transactions.Group</td>
+                                        <td>@transactions.TransactionDate</td>
+                                        <td>@transactions.VoucherNo</td>
+                                        <td>@transactions.Description</td>
+                                        <td>@transactions.Currency</td>
+                                        <td>@transactions.Rate</td>
+                                        <td>@transactions.Debit</td>
+                                        <td>@transactions.Credit</td>
+                                        <td>@(transactions.IsVoucherVerified ?"V":"N/V")</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td colspan="2">Sub Total For A/C : </td>
+                                    <td >@records.AccountCode</td>
+                                    <td colspan="3" >@records.AccountName</td>
+                                    <td >@records.TotalDebit</td>
+                                    <td >@records.TotalCredit</td>
+                                    <td >@records.Balance</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="9"></td>
+                                </tr>
+                            }
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                	<td>&nbsp;</td>
+                </tr>
+                <tr>
+                	<td>&nbsp;</td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
+
