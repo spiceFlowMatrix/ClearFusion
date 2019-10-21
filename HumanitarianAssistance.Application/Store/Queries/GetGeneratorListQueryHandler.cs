@@ -26,6 +26,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                 var purchasedGeneratorsQuery = _dbContext.PurchasedGeneratorDetail
                                                   .Include(x=> x.StoreItemPurchase)
                                                   .Where(x=> x.IsDeleted == false && x.StoreItemPurchase.IsDeleted == false)
+                                                  .OrderByDescending(x=> x.Id)
                                                   .Select(x=> new GeneratorTrackerModel 
                                                   {
                                                       GeneratorId = x.Id,
@@ -33,12 +34,12 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                       FuelConsumptionRate = x.FuelConsumptionRate,
                                                       StartingUsage= x.StartingUsage,
                                                       IncurredUsage= x.IncurredUsage,
+                                                      TotalUsage= x.StartingUsage + x.IncurredUsage,
                                                       MobilOilConsumptionRate= x.MobilOilConsumptionRate,
                                                       ModelYear= x.ModelYear,
                                                       PurchaseId= x.PurchaseId,
                                                       TotalCost = x.StoreItemPurchase.UnitCost,
                                                       OriginalCost = x.StoreItemPurchase.UnitCost,
-                                                      
                                                       OfficeId = x.OfficeId
                                                   })
                                                   .AsQueryable();

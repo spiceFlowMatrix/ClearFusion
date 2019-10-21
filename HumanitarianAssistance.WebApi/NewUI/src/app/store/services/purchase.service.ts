@@ -390,7 +390,7 @@ getVehicleList(model: any) {
 //#region "getGeneratorList"
 getGeneratorList(model: any) {
   return this.globalService
-    .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_GetVehicleList, model);
+    .post(this.appurl.getApiUrl() + GLOBAL.API_GeneratorTracker_GetGeneratorList, model);
 }
 
 // addVehicleMileage
@@ -430,6 +430,21 @@ addVehicleMileage(model: any) {
     return this.globalService
       .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_SaveVehicleDetail, model);
   }
+
+  getGeneratorDetailById(Id) {
+    return this.http
+      .get<any>(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_GeneratorTracker_GetGeneratorById +
+          '?id=' +
+          Id);
+  }
+
+  // addGeneratorUsageHours
+addGeneratorUsageHours(model: any) {
+  return this.globalService
+    .post(this.appurl.getApiUrl() + GLOBAL.API_GeneratorTracker_AddGeneratorUsageHours, model);
+}
 
   //#region "getLocalDate"
   getLocalDate(date: any) {

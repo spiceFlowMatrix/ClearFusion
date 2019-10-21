@@ -14,16 +14,15 @@
   <div class="col-md-12">
     <div class="col-md-3">
         <mat-form-field class="example-full-width">
-            <input matInput formControlName="Voltage" placeholder="KV">
+            <input matInput type="number" formControlName="Voltage" placeholder="KV">
           </mat-form-field>
     </div>
     <div class="col-md-3">
-        <lib-hum-dropdown [options]="officeList$" formControlName="OfficeId" [placeHolder]="'Office'"
-        (change)="getOfficeSelectedValue($event)"></lib-hum-dropdown>
+        <lib-hum-dropdown [options]="officeList$" formControlName="OfficeId" [placeHolder]="'Office'"></lib-hum-dropdown>
     </div>
     <div class="col-md-3">
       <mat-form-field class="example-full-width">
-        <input matInput formControlName="ModelYear" placeholder="Model Year">
+        <input matInput type="number" maxlength="4" formControlName="ModelYear" placeholder="Model Year">
       </mat-form-field>
   </div>
     <div class="col-md-3">

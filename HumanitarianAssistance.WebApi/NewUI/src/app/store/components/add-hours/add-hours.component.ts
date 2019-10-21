@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PurchaseService } from '../../services/purchase.service';
+import { ToastrService } from 'ngx-toastr';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-add-hours',
@@ -7,12 +11,49 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AddHoursComponent implements OnInit {
 
-  constructor() { }
+  addUsageHourForm: FormGroup;
+  isAddUsageHourFormSubmitted = false;
+
+
+  constructor(private fb: FormBuilder, private purchaseService: PurchaseService,
+    public toastr: ToastrService,
+    private dialogRef: MatDialogRef<AddHoursComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+      this.addUsageHourForm = this.fb.group({
+        'GeneratorId': [data.generatorId, [Validators.required]],
+        'Hours': [null, [Validators.required]],
+        'Month': [null, [Validators.required]]
+      });
+    }
 
   ngOnInit() {
   }
-  onCancelPopup() {
 
+  //#region "onCancelPopup"
+  onCancelPopup(): void {
+    this.dialogRef.close(false);
   }
-  addHours() { }
+
+  //#endregion
+  addHours() {
+    debugger;
+    this.isAddUsageHourFormSubmitted = true;
+    if (this.addUsageHourForm.valid) {
+      this.purchaseService.addGeneratorUsageHours(this.addUsageHourForm.value)
+        .subscribe(x => {
+          if (x) {
+            this.dialogRef.close(false);
+            this.isAddUsageHourFormSubmitted = false;
+            this.toastr.success('Added Successfully');
+          } else {
+            this.toastr.warning('Something went wrong');
+            this.isAddUsageHourFormSubmitted = false;
+          }
+        }, error => {
+          this.toastr.warning('Something went wrong');
+          this.isAddUsageHourFormSubmitted = false;
+        });
+
+    }
+  }
 }
