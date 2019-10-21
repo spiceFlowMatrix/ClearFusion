@@ -1,0 +1,51 @@
+<div class="main-salary-tax-report-content">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="main-heading clearfix">
+        <h3 class="page-headin">Salary Tax Report Content</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title text-left">Salary Tax Report Content</h3>
+            </div>
+            <div class="panel-body">
+
+              <form action="your-action" (submit)="onFormSubmit(salaryTaxReportForm)">
+                <dx-form id="form" [formData]="salaryTaxReportForm" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+                  validationGroup="salaryHeadDataValidatation">
+
+                  <dxi-item dataField="EmployerAuthorizedOfficerName">
+                    <dxi-validation-rule type="required"> </dxi-validation-rule>
+                  </dxi-item>
+
+                  <dxi-item dataField="PositionAuthorizedOfficer">
+                    <dxi-validation-rule type="required"> </dxi-validation-rule>
+                  </dxi-item>
+
+                </dx-form>
+                <div class="btn-grp-wrap">
+                  <dx-button text="Save" type="success" validationGroup="salaryHeadDataValidatation" [useSubmitBehavior]="true" *ngIf="isEditingAllowed"></dx-button>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+
+  <ngx-loading [show]="salaryTaxReportContentLoader" ></ngx-loading>
+
+</div>

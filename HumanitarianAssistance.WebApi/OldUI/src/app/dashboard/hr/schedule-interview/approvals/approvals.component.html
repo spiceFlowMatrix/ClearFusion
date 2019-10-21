@@ -1,0 +1,261 @@
+<div class="main-approve">
+
+  <ul class="nav nav-tabs">
+    <li class="active">
+      <a data-toggle="tab" href="#generalAssembly">General Assembly</a>
+    </li>
+    <li>
+      <a data-toggle="tab" href="#director">Director</a>
+    </li>
+    <li>
+      <a data-toggle="tab" href="#generalAdmin">General Admin</a>
+    </li>
+    <li>
+      <a data-toggle="tab" href="#fieldOfficeManager">Field Office Manager</a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+
+    <!-- generalAssembly -->
+    <div id="generalAssembly" class="tab-pane fade in active">
+      <div class="row">
+        <div class="col-md-12">
+
+          <div class="row text-center">
+            <div class="col-sm-12">
+              <div class="generalAssemblyNote">
+                <div class="caption  alert alert-info" style="padding: 5px;">
+                  <p> Approval For Grade 1 Jobs</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="approveDataByGeneralAssembly?.length != 0 ; else generalAssemblyNoDate">
+            <dx-button text="Approve" class="m-b-1" (click)="approveEmployee('generalAssembly')"></dx-button>
+            <br>
+            <dx-data-grid id="grid-container" [dataSource]="approveDataByGeneralAssembly" keyExpr="EmployeeId" [selectedRowKeys]="selectedRows"
+              [columnAutoWidth]="true" (onSelectionChanged)="selectionChangedHandler($event)" [allowColumnReordering]="true"
+              [allowColumnResizing]="true">
+            
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-header-filter [visible]="true"> </dxo-header-filter>
+
+              <dxi-column dataField="EmployeeId"></dxi-column>
+              <dxi-column dataField="EmployeeName"></dxi-column>
+              <dxi-column dataField="PhoneNo" caption="Contact"> </dxi-column>
+              <dxi-column dataField="JobId" caption="JobCode">
+                <dxo-lookup [dataSource]="jobCodeDropdown" valueExpr="JobId" displayExpr="JobCode">
+                </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="GradeId" caption="Grade">
+                <dxo-lookup [dataSource]="jobGradeDropdown" valueExpr="GradeId" displayExpr="GradeName">
+                </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="Approval1" caption="Approved" cellTemplate="GeneralAssembly"></dxi-column>
+              <div *dxTemplate="let cell of 'GeneralAssembly'">
+                <dx-switch [value]="cell.value" offText="No" onText="Yes" (onOptionChanged)="switchValueChanged('generalAssembly', cell, $event.value)"></dx-switch>
+              </div>
+              <dxo-paging [pageSize]="10"></dxo-paging>
+            </dx-data-grid>
+          </div>
+
+
+          <ng-template #generalAssemblyNoDate>
+
+            <div class="row text-center">
+              <div class="col-sm-6 col-sm-offset-3">
+                <div class="attandanceMarkedMsg">
+                  <div class="caption  alert alert-info" style="margin-top: 50px; padding: 20px;">
+                    <h4 style="margin-bottom: 0px;"> No Data to Display</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </ng-template>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- director -->
+    <div id="director" class="tab-pane fade">
+      <div class="row">
+        <div class="col-md-12">
+
+          <div class="row text-center">
+            <div class="col-sm-12">
+              <div class="attandanceMarkedMsg">
+                <div class="caption  alert alert-info" style="padding: 5px;">
+                  <p>Approval For Grade 2 to 12 Jobs</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div *ngIf="approveDataByDirector?.length != 0; else directorNoDate">
+            <dx-button text="Approve" (click)="approveEmployee('director')"></dx-button>
+            <br>
+            <dx-data-grid id="grid-container" [dataSource]="approveDataByDirector" keyExpr="EmployeeId" [selectedRowKeys]="selectedRows"
+              [columnAutoWidth]="true" (onSelectionChanged)="selectionChangedHandler($event)" [allowColumnReordering]="true"
+              [allowColumnResizing]="true">
+
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-header-filter [visible]="true"> </dxo-header-filter>
+
+              <dxi-column dataField="EmployeeId"></dxi-column>
+              <dxi-column dataField="EmployeeName"></dxi-column>
+              <dxi-column dataField="PhoneNo" caption="Contact"> </dxi-column>
+              <dxi-column dataField="JobId" caption="JobCode">
+                <dxo-lookup [dataSource]="jobCodeDropdown" valueExpr="JobId" displayExpr="JobCode">
+                </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="GradeId" caption="Grade">
+                <dxo-lookup [dataSource]="jobGradeDropdown" valueExpr="GradeId" displayExpr="GradeName">
+                </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="Approval1" caption="Approved" cellTemplate="GeneralAssembly"></dxi-column>
+              <div *dxTemplate="let cell of 'GeneralAssembly'">
+                <dx-switch [value]="cell.value" offText="No" onText="Yes" (onValueChanged)="switchValueChanged('director', cell, $event.value)"></dx-switch>
+              </div>
+
+              <dxo-paging [pageSize]="10"></dxo-paging>
+            </dx-data-grid>
+
+
+          </div>
+
+          <ng-template #directorNoDate>
+            <div class="row text-center">
+              <div class="col-sm-6 col-sm-offset-3">
+                <div class="attandanceMarkedMsg">
+                  <div class="caption  alert alert-info" style="margin-top: 50px; padding: 20px;">
+                    <h4 style="margin-bottom: 0px;">No Data to Display !</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- generalAdmin -->
+    <div id="generalAdmin" class="tab-pane fade">
+      <div class="row">
+        <div class="col-md-12">
+
+          <br>
+
+          <div *ngIf="approveDataByGeneralAdmin?.length != 0; else generalAdminNoDate">
+            <dx-button text="Approve" (click)="approveEmployee('generalAdmin')"></dx-button>
+            <br>
+            <dx-data-grid id="grid-container" [dataSource]="approveDataByGeneralAdmin" keyExpr="EmployeeId" [selectedRowKeys]="selectedRows"
+              (onSelectionChanged)="selectionChangedHandler($event)" [allowColumnReordering]="true" [allowColumnResizing]="true">
+
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-header-filter [visible]="true"> </dxo-header-filter>
+
+              <dxi-column dataField="EmployeeId"></dxi-column>
+              <dxi-column dataField="EmployeeName"></dxi-column>
+              <dxi-column dataField="PhoneNo" caption="Contact"> </dxi-column>
+              <dxi-column dataField="JobId" caption="JobCode">
+                <dxo-lookup [dataSource]="jobCodeDropdown" valueExpr="JobId" displayExpr="JobCode">
+                </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="GradeId" caption="Grade">
+                <dxo-lookup [dataSource]="jobGradeDropdown" valueExpr="GradeId" displayExpr="GradeName">
+                </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="Approval1" caption="Approved" cellTemplate="GeneralAssembly"></dxi-column>
+              <div *dxTemplate="let cell of 'GeneralAssembly'">
+                <dx-switch [value]="cell.value" offText="No" onText="Yes" (onValueChanged)="switchValueChanged('generalAdmin', cell,$event.value)"></dx-switch>
+              </div>
+
+              <dxo-paging [pageSize]="10"></dxo-paging>
+            </dx-data-grid>
+          </div>
+
+          <ng-template #generalAdminNoDate>
+            <div class="row text-center">
+              <div class="col-sm-6 col-sm-offset-3">
+                <div class="attandanceMarkedMsg">
+                  <div class="caption  alert alert-info" style="margin-top: 50px; padding: 20px;">
+                    <h4 style="margin-bottom: 0px;">No Data to Display !</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+          <br>
+
+
+        </div>
+      </div>
+    </div>
+
+    <!-- fieldOfficeManager -->
+    <div id="fieldOfficeManager" class="tab-pane fade">
+      <div class="row">
+        <div class="col-md-12">
+
+          <br>
+
+          <div *ngIf="approveDataByFieldOffice?.length != 0; else fieldOfficerNoDate">
+            <dx-button text="Approve" (click)="approveEmployee('fieldOfficeManager')"></dx-button>
+            <br>
+            <dx-data-grid id="grid-container" [dataSource]="approveDataByFieldOffice" keyExpr="EmployeeId" [selectedRowKeys]="selectedRows"
+              (onSelectionChanged)="selectionChangedHandler($event)" [allowColumnReordering]="true" [allowColumnResizing]="true">
+
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-header-filter [visible]="true"> </dxo-header-filter>
+
+              <dxi-column dataField="EmployeeId"></dxi-column>
+              <dxi-column dataField="EmployeeName"></dxi-column>
+              <dxi-column dataField="PhoneNo" caption="Contact"> </dxi-column>
+              <dxi-column dataField="JobId" caption="JobCode">
+                <dxo-lookup [dataSource]="jobCodeDropdown" valueExpr="JobId" displayExpr="JobCode">
+                </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="GradeId" caption="Grade">
+                <dxo-lookup [dataSource]="jobGradeDropdown" valueExpr="GradeId" displayExpr="GradeName">
+                </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="Approval1" caption="Approved" cellTemplate="GeneralAssembly"></dxi-column>
+              <div *dxTemplate="let cell of 'GeneralAssembly'">
+                <dx-switch [value]="cell.value" offText="No" onText="Yes" (onValueChanged)="switchValueChanged('fieldOfficeManager', cell,$event.value)"></dx-switch>
+              </div>
+
+              <dxo-paging [pageSize]="10"></dxo-paging>
+            </dx-data-grid>
+
+          </div>
+
+          <ng-template #fieldOfficerNoDate>
+            <div class="row text-center">
+              <div class="col-sm-6 col-sm-offset-3">
+                <div class="attandanceMarkedMsg">
+                  <div class="caption  alert alert-info" style="margin-top: 50px; padding: 20px;">
+                    <h4 style="margin-bottom: 0px;">No Data to Display !</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+          <br>
+
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <ngx-loading [show]="approveEmployeeListLoader"></ngx-loading>
+
+</div>

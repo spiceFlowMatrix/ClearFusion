@@ -1,0 +1,157 @@
+<div class="exchange-rate-listing-main">
+  <div class="body-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div [class]="colsm6">
+          <div #exchangeRateListing>
+            <mat-card [ngStyle]="scrollStyles">
+              <div>
+                <button mat-raised-button color="accent" (click)="openAddExchangeRateDialog()" *ngIf="isEditingAllowed">
+                  Add
+                </button>
+                <hr />
+                <div class="row text-center">
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <input matInput [matDatepicker]="fromDateFilterPicker"
+                        [(ngModel)]="exchangeRateFilter.FromDateFilter" placeholder="From Date" />
+                      <mat-datepicker-toggle matSuffix [for]="fromDateFilterPicker"></mat-datepicker-toggle>
+                      <mat-datepicker #fromDateFilterPicker></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <input matInput [min]="exchangeRateFilter.FromDateFilter" [matDatepicker]="tillDateFilterPicker"
+                        [(ngModel)]="exchangeRateFilter.TillDateFilter" placeholder="Till Date" />
+                      <mat-datepicker-toggle matSuffix [for]="tillDateFilterPicker"></mat-datepicker-toggle>
+                      <mat-datepicker #tillDateFilterPicker></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row text-center">
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <mat-checkbox [(ngModel)]="exchangeRateFilter.VerifiedFilter">Verified</mat-checkbox>
+                      </div>
+                      <div class="col-sm-4">
+                        <button mat-raised-button color="accent" class="margin_left_10"
+                          (click)="getSavedExchangeRatesDate()">
+                          Apply
+                        </button>
+                      </div>
+                      <div class="col-sm-4">
+                        <!-- Reset -->
+                        <button mat-raised-button (click)="onFilterReset()">
+                          Clear
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-12">
+                    {{ exchangeRateFilter.totalCount }} Records
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-12"></div>
+                </div>
+                <br />
+                <div class="row">
+                  <div *ngIf="
+                      exchangeRateListLoaderFlag;
+                      else exchangeRateListTemplate
+                    " class="col-sm-12">
+                    <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+                  </div>
+                  <ng-template #exchangeRateListTemplate>
+                    <div class="col-sm-12">
+                      <div class="responsive_table-responsive">
+                        <table class="table table-bordered">
+                          <tbody>
+                            <tr>
+                              <td width="2%">
+                                <p class="width_8"></p>
+                              </td>
+                              <td width="46%" class="text-left">
+                                <strong>Date</strong>
+                              </td>
+                              <td width="46%" text-align="left">
+                                <strong>Verification</strong>
+                              </td>
+                              <td width="4%"></td>
+                            </tr>
+                            <tr *ngFor="let item of exchangeRateList" (click)="
+                                onItemClick(
+                                  item
+                                )
+                              " [ngClass]="{
+                                selected: exchangeRateVerificationId == item.ExchangeRateVerificationId
+                              }">
+                              <td width="2%">
+                                <p class="width_8"></p>
+                              </td>
+                              <td width="46%" text-align="left">
+                                <p class="diamond">
+                                  {{
+                                    item.ExchangeRateDate | date: "dd/MM/yyyy"
+                                  }}
+                                </p>
+                              </td>
+                              <td width="46%" text-align="left">
+                                <p class="text_overflow">
+                                  {{
+                                    item.VerificationStatus
+                                      ? "Verified"
+                                      : "Pending"
+                                  }}
+                                </p>
+                              </td>
+                              <td class="text-center" width="4%" *ngIf="isEditingAllowed">
+                                <button mat-icon-button [disabled]="item.VerificationStatus"
+                                  (click)="onDeleteExchangeRate(item.ExchangeRateDate)" color="warn"
+                                  aria-label="Example icon-button with a heart icon">
+                                  <mat-icon>
+                                    delete
+                                  </mat-icon>
+
+                                </button>
+                              </td>
+                              <td class="text-center" width="4%">
+                                <i *ngIf="exchangeRateVerificationId == item.ExchangeRateVerificationId"
+                                  class="material-icons font-12">
+                                  arrow_forward_ios
+                                </i>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <mat-paginator [length]="exchangeRateFilter.totalCount" [pageSize]="exchangeRateFilter.pageSize"
+                        [pageIndex]="exchangeRateFilter.pageIndex" [pageSizeOptions]="[5, 10, 25, 100]"
+                        (page)="pageEvent($event)">
+                      </mat-paginator>
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+            </mat-card>
+          </div>
+        </div>
+
+        <!-- Exchange Rate Detail -->
+        <div class="col-sm-6" [hidden]="!showExchangeRateDetail">
+          <mat-card [ngStyle]="scrollStyles">
+            <app-exchange-rate-detail [currencyList]="CurrencyList" [officeList]="officeList"
+              [exchangeRateItem]="exchangeRateItem" (listRefresh)="listRefresh($event)"
+              [isEditingAllowed]="isEditingAllowed"></app-exchange-rate-detail>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

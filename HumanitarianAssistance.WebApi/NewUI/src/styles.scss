@@ -1,0 +1,83 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~ngx-toastr/toastr.css";
+@import "~@angular/material/theming";
+@include mat-core();
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+
+$mat-blue-primary: (
+  50: #d9ddf0,
+  100: #d1d5e7,
+  200: #a6afd4,
+  300: #6170b3,
+  400: #5c6cb3,
+  500: #4d5ca0,
+  600: #48589e,
+  700: #5363a7,
+  800: #323e77,
+  900: #2c386e,
+  A100: #283364,
+  A200: #263266,
+  A400: #1e295a,
+  A700: #151e45,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white
+  )
+);
+
+$mat-blue-secondary: (
+  50: #e7fffc,
+  100: #c1fff8,
+  200: #c8fdf6,
+  300: #d1d5e7,
+  400: #affff4,
+  500: #a4fcf0,
+  600: #8affef,
+  700: #26ffdc,
+  800: #26fcd9,
+  900: #00ffea,
+  A100: #26f0cf,
+  A200: #00d4b1,
+  A400: #1ec9ae,
+  A700: #1aaf98,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white
+  )
+);
+
+$my-app-primary: mat-palette($mat-blue-primary);
+$my-app-accent: mat-palette($mat-blue-secondary, A200, 300, A200);
+$my-app-warn: mat-palette($mat-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$my-app-theme: mat-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($my-app-theme);

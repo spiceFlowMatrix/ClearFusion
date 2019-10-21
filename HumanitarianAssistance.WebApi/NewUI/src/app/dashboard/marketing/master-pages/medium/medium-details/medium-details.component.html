@@ -1,0 +1,51 @@
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-sm-6">
+          <!-- <span (click)="onHideDetailPanel()"><i title="Back to List" class="fas fa-arrow-left"></i></span> -->
+        </div>
+        <div class="col-sm-6">
+          <!-- <div *ngIf="archiveButton" class="col-sm-6"><a class="pull-right" (click)="DeleteMedium(mediumId)">Archive</a></div> -->
+          <div *ngIf="archiveButton" class="col-sm -6 pull-right">
+              <button pTooltip="Archive"
+              tooltipPosition="top"
+                (click)="DeleteMedium(mediumId)"
+                color="warn"
+                mat-icon-button
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+        </div>
+      </div>
+
+      <form [formGroup]="mediumDetailsForm">
+        <!-- <div class="container-fluid"> -->
+        <div class="row">
+            <div
+            *ngIf="mediumDetailsLoaderFlag; else mediumDetailsTemplate"
+            class="col-sm-12"
+          ><br/>
+            <mat-spinner
+              class="center_loader"
+              diameter="50"
+            ></mat-spinner>
+          </div>
+          <ng-template #mediumDetailsTemplate>
+            <div class="col-sm-12">
+              <div class="col-sm-6">
+                <!-- <label>Medium</label> -->
+                <mat-form-field class="example-full-width">
+                <input (change)="onChange(mediumName.value)" #mediumName formControlName="mediumName" matInput name="mediumName"
+                   placeholder="Medium" />
+                  </mat-form-field>
+              </div>
+            </div></ng-template>
+        </div>
+        <!-- </div> -->
+      </form>
+
+    </mat-card>
+  </div>
+</div>

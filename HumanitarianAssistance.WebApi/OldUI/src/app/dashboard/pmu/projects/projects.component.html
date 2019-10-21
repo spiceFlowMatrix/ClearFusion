@@ -1,0 +1,1028 @@
+<div class="heading-hdr">
+    <div class="main-heading clearfix">
+        <h3 class="page-heading">Projects</h3>
+        <!-- <h3 >Title</h3> -->
+        <!-- <h3 translate>Title</h3> -->
+        <!-- <button (click)="switchLanguage('fr')">fr</button> -->
+        <!-- <button (click)="textConverter()">fr</button> -->
+    </div>
+</div>
+<div class="employee-details-outer">
+    <div class="row">
+        <div class="col-xs-12 col-sm-4 col-md-3 project-left-part-outer" id="task-activity">
+            <div class="emp-left-part">
+                <div class="emp-list-hdr">
+                    <div class="emp-add-btn">
+                        <a (click)="addProjectModal(1)">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="emp-listing project-left-listing pro-left-listing-height">
+                    <dx-list #list [dataSource]="projectList" [height]="610" [searchEnabled]="true" searchExpr="ProjectName" searchMode="contains">
+                        <div *dxTemplate="let data of 'item'" [ngClass]="{'active': selectedItemProject == data}">
+                            <a href="javascript:void(0);" (click)="selectedProject(data)">
+                                <div class="pro-icon-left">
+                                    <i class="fa fa-file-text" aria-hidden="true"></i>
+                                </div>
+                                <div>{{data.ProjectName == null ? "" : data.ProjectName}}</div>
+                                <div>{{data.Description == null ? "" : data.Description}}</div>
+                            </a>
+                        </div>
+                    </dx-list>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-9 emp-right-part-outer">
+            <div class="emp-right-part">
+                <div class="emp-right-part-hdr">
+                    <h3>{{selectedProjectName}}</h3>
+                    <p>{{selectedProjectDescription}}</p>
+                </div>
+
+                <div id="tabs">
+
+                    <dx-tabs #apiTabs [dataSource]="showInfoTabs" [selectedIndex]="0" (onItemClick)="openInfoTabs($event)"></dx-tabs>
+
+                    <!-- Tab 1 -->
+                    <div *ngIf="openInfoTab==0">
+                        <div class="btn-grp-wrap">
+                            <dx-button text="Documents" (click)="showDocs($event)"></dx-button>
+                            <dx-button text="Edit" (onClick)="addProjectModal(2)"></dx-button>
+                        </div>
+                        <div class="porject-des-listing">
+                            <ul>
+                                <li>
+                                    <h4>Project Name :</h4>
+                                    <span>{{projectModel.ProjectName == null ? "" : projectModel.ProjectName}}</span>
+                                </li>
+                                <li>
+                                    <h4>Description :</h4>
+                                    <span>{{projectModel.Description == null ? "" : projectModel.Description}}</span>
+                                </li>
+                                <li>
+                                    <h4>StartDate : </h4>
+                                    <span>{{projectModel.StartDate == null ? "" : projectModel.StartDate | date}}</span>
+                                </li>
+                                <li>
+                                    <h4>EndDate : </h4>
+                                    <span>{{projectModel.EndDate == null ? "" : projectModel.EndDate | date}}</span>
+                                </li>
+                                <li>
+                                    <h4>Currency : </h4>
+                                    <span>{{projectModel.CurrencyCode == null ? "" : projectModel.CurrencyCode}}</span>
+                                </li>
+                                <li>
+                                    <h4>Budget : </h4>
+                                    <span>{{projectModel.Budget == null ? "" : projectModel.Budget}}</span>
+                                </li>
+                                <li>
+                                    <h4>Receivable Amount : </h4>
+                                    <span>{{projectModel.ReceivableAmount == null ? "" : projectModel.ReceivableAmount}}</span>
+                                </li>
+                                <li>
+                                    <h4>Payable Amount : </h4>
+                                    <span>{{projectModel.PayableAmount == null ? "" : projectModel.PayableAmount}}</span>
+                                </li>
+                                <li>
+                                    <h4>Current Balance : </h4>
+                                    <span>{{projectModel.CurrentBalance == null ? "" : projectModel.CurrentBalance}}</span>
+                                </li>
+                                <li>
+                                    <h4>Status : </h4>
+                                    <span>{{projectModel.StatusValue == null ? "" : projectModel.StatusValue}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2  -->
+                    <div *ngIf="openInfoTab==1" class="project-details-tab-3">
+                        <div *ngIf="AddReceivable==0">
+                            <dx-data-grid id="gridContainer" [dataSource]="projectBudgetLine" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                                [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+                                (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)"
+                                (onRowUpdating)="logEvent('RowUpdating',$event)" (onRowUpdated)="logEvent('RowUpdated',$event)"
+                                (onRowRemoving)="logEvent('RowRemoving',$event)" (onRowRemoved)="logEvent('RowRemoved',$event)">
+                                <dxo-paging [pageSize]="5"></dxo-paging>
+                                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+                                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                <dxo-editing mode="popup" [allowUpdating]="true" [allowAdding]="true" [form]="{
+                                  items: ['BudgetLineTypeId','Description','StartDate','EndDate','AmountReceivable','AmountPayable'] , colCount: '1', shading :'false', shadingColor :'rgba(0, 0, 0, 0.5)'}">
+                                    <dxo-popup title="Add/Edit Project Budget Line" [closeOnOutsideClick]="true" [showTitle]="true" [width]="700" [height]="345" [position]="{ my: 'center', at: 'center', of: windows }"></dxo-popup>
+                                </dxo-editing>
+                                <dxi-column dataField="ProjectId" caption="Project" [visible]="false">
+                                    <dxo-lookup [dataSource]="projectList" displayExpr="ProjectName" valueExpr="ProjectId"></dxo-lookup>
+                                </dxi-column>
+
+                                <dxi-column dataField="BudgetLineId" caption="Budget Line Id" alignment="right" [visible]="false">
+                                </dxi-column>
+
+                                <dxi-column dataField="BudgetLineTypeId" caption="B/L Type">
+                                    <dxo-lookup [dataSource]="BudgetLineTypeArr" displayExpr="BudgetLineTypeName" valueExpr="BudgetLineTypeId"></dxo-lookup>
+                                </dxi-column>
+
+                                <dxi-column dataField="Description" caption="Description" alignment="right">
+                                </dxi-column>
+
+                                <dxi-column dataField="StartDate" caption="StartDate" dataType="date" format="dd/MM/yyyy" alignment="right">
+                                </dxi-column>
+
+                                <dxi-column dataField="EndDate" caption="EndDate" dataType="date" alignment="right" format="dd/MM/yyyy">
+                                </dxi-column>
+
+                                <dxi-column dataField="AmountReceivable" caption="Amount Receivable" alignment="right">
+                                </dxi-column>
+
+                                <dxi-column dataField="AddReceivable" caption="Installment" cellTemplate="CellTemplateBudgetLineReceivable"></dxi-column>
+                                <div *dxTemplate="let data of 'CellTemplateBudgetLineReceivable'">
+                                    <a href="javascript:void(0);" (click)="addReceivableClicked(data)">Receivable</a>
+                                </div>
+
+                                <dxi-column dataField="AmountPayable" caption="Amount Payable" alignment="right">
+                                </dxi-column>
+
+                                <dxi-column dataField="AddPayable" caption="Installment" cellTemplate="CellTemplateBudgetLinePayable"></dxi-column>
+                                <div *dxTemplate="let data of 'CellTemplateBudgetLinePayable'">
+                                    <a href="javascript:void(0);" (click)="addPayableClicked(data)">Payable</a>
+                                </div>
+
+                                <dxi-column dataField="Employees" caption="Employees" cellTemplate="CellTemplateAssignedEmployee"></dxi-column>
+                                <div *dxTemplate="let data of 'CellTemplateAssignedEmployee'">
+                                    <a href="javascript:void(0);" (click)="assignedEmployees(data)">Assigned Employees</a>
+                                </div>
+                            </dx-data-grid>
+                        </div>
+                        <div *ngIf="AddReceivable==1">
+                            <div class="btn-grp-wrap">
+                                <dx-button text="Back" (onClick)="ShowBudgetLineGrid(0)">
+                                </dx-button>
+                            </div>
+                            <dx-data-grid id="gridContainer1" [dataSource]="projectBudgetReceivable" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                                [columnAutoWidth]="true" (onEditingStart)="logEventReceivable('EditingStart',$event)" (onInitNewRow)="logEventReceivable('InitNewRow',$event)"
+                                (onRowInserting)="logEventReceivable('RowInserting',$event)" (onRowInserted)="logEventReceivable('RowInserted',$event)"
+                                (onRowUpdating)="logEventReceivable('RowUpdating',$event)" (onRowUpdated)="logEventReceivable('RowUpdated',$event)"
+                                (onRowRemoving)="logEventReceivable('RowRemoving',$event)" (onRowRemoved)="logEventReceivable('RowRemoved',$event)">
+                                <dxo-paging [pageSize]="10"></dxo-paging>
+                                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+                                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                <dxo-editing mode="popup" [allowUpdating]="true" [allowAdding]="true" [form]="{
+                                  items: ['ExpectedDate','Amount'], colCount: '1' }">
+                                    <dxo-popup title="Add/Edit Budget Line Receivable" [showTitle]="true" [width]="700" [height]="345" [position]="{ my: 'center', at: 'center', of: windows }"></dxo-popup>
+                                </dxo-editing>
+
+                                <dxi-column dataField="BudgetReceivalbeId" caption="BudgetReceivalbeId" [visible]="false">
+                                </dxi-column>
+
+                                <dxi-column dataField="ProjectName" caption="Project">
+                                    <dxo-lookup [dataSource]="projectList" displayExpr="ProjectName" valueExpr="ProjectName"></dxo-lookup>
+                                </dxi-column>
+
+                                <dxi-column dataField="BudgetLineTypeId" caption="B/L Type">
+                                    <dxo-lookup [dataSource]="BudgetLineTypeArr" displayExpr="BudgetLineTypeName" valueExpr="BudgetLineTypeId"></dxo-lookup>
+                                </dxi-column>
+
+                                <dxi-column dataField="Description" caption="Description" alignment="right">
+                                </dxi-column>
+
+                                <dxi-column dataField="ExpectedDate" caption="Expected Date" dataType="date">
+                                </dxi-column>
+
+                                <dxi-column dataField="Amount" caption="Amount" alignment="right">
+                                </dxi-column>
+
+                                <dxi-column dataField="AddReceivable" caption="Installment" cellTemplate="CellTemplateBudgetLineReceived"></dxi-column>
+                                <div *dxTemplate="let data of 'CellTemplateBudgetLineReceived'">
+                                    <a href="javascript:void(0);" (click)="addReceivedClicked(data)">Received Amount</a>
+                                </div>
+
+                            </dx-data-grid>
+                        </div>
+                        <div *ngIf="AddReceivable==2">
+                            <div class="btn-grp-wrap">
+                                <dx-button text="Back" (onClick)="ShowBudgetLineGrid(1)">
+                                </dx-button>
+                            </div>
+                            <dx-data-grid id="gridContainer1" [dataSource]="projectBudgetReceived" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                                [columnAutoWidth]="true" (onEditingStart)="logEventReceivedAmount('EditingStart',$event)" (onInitNewRow)="logEventReceivedAmount('InitNewRow',$event)"
+                                (onRowInserting)="logEventReceivedAmount('RowInserting',$event)" (onRowInserted)="logEventReceivedAmount('RowInserted',$event)"
+                                (onRowUpdating)="logEventReceivedAmount('RowUpdating',$event)" (onRowUpdated)="logEventReceivedAmount('RowUpdated',$event)"
+                                (onRowRemoving)="logEventReceivedAmount('RowRemoving',$event)" (onRowRemoved)="logEventReceivedAmount('RowRemoved',$event)">
+                                <dxo-paging [pageSize]="10"></dxo-paging>
+                                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+                                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                <dxo-editing mode="popup" [allowUpdating]="true" [allowAdding]="true" [form]="{
+                                      items: ['ReceivedDate','Amount','Remark'], colCount: '1' }">
+                                    <dxo-popup title="Add/Edit Receivable Installment" [showTitle]="true" [closeOnOutsideClick]="true" [width]="700" [height]="345" [position]="{ my: 'center', at: 'center', of: windows }"></dxo-popup>
+                                </dxo-editing>
+
+                                <dxi-column dataField="BudgetReceivedAmountId" caption="BudgetReceivedAmountId" [visible]="false">
+                                </dxi-column>
+
+                                <dxi-column dataField="BudgetReceivalbeId" caption="BudgetReceivalbeId" [visible]="false">
+                                </dxi-column>
+
+                                <dxi-column dataField="ProjectName" caption="Project">
+                                    <dxo-lookup [dataSource]="projectList" displayExpr="ProjectName" valueExpr="ProjectName"></dxo-lookup>
+                                </dxi-column>
+
+                                <dxi-column dataField="BudgetLineName" caption="B/L Type">
+                                </dxi-column>
+
+                                <dxi-column dataField="ReceivedDate" caption="Received Date" dataType="date">
+                                </dxi-column>
+
+                                <dxi-column dataField="Amount" caption="Amount" alignment="right" datatype="number" [setCellValue]="setStateValue">
+                                    <dxi-validation-rule type="required" [pattern]="pattern" message="message"></dxi-validation-rule>
+                                </dxi-column>
+                                <!-- <div *dxTemplate="let d of 'diffCellTemplate'">
+                                    <dx-number-box [min]="0" [max]="SelectedRowAmount" [showSpinButtons]="true" [showClearButton]="true">
+                                    </dx-number-box>
+                                </div> -->
+
+                                <dxi-column dataField="Remark" caption="Remark" alignment="right">
+                                </dxi-column>
+
+                            </dx-data-grid>
+                        </div>
+
+                        <!-- Payble Link Clicked -->
+                        <div *ngIf="AddReceivable==3">
+                            <div class="btn-grp-wrap">
+                                <dx-button text="Back" (onClick)="ShowBudgetLineGrid(0)">
+                                </dx-button>
+                            </div>
+                            <dx-data-grid id="gridContainer1" [dataSource]="projectBudgetPayable" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                                [columnAutoWidth]="true" (onEditingStart)="logEventPayable('EditingStart',$event)" (onInitNewRow)="logEventPayable('InitNewRow',$event)"
+                                (onRowInserting)="logEventPayable('RowInserting',$event)" (onRowInserted)="logEventPayable('RowInserted',$event)"
+                                (onRowUpdating)="logEventPayable('RowUpdating',$event)" (onRowUpdated)="logEventPayable('RowUpdated',$event)"
+                                (onRowRemoving)="logEventPayable('RowRemoving',$event)" (onRowRemoved)="logEventPayable('RowRemoved',$event)">
+                                <dxo-paging [pageSize]="10"></dxo-paging>
+                                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+                                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                <dxo-editing mode="popup" [allowUpdating]="true" [allowAdding]="true" [form]="{
+                                  items: ['ExpectedDate','Amount'], colCount: '1' }">
+                                    <dxo-popup title="Add/Edit Budget Line Payable" [showTitle]="true" [width]="700" [height]="345" [position]="{ my: 'center', at: 'center', of: windows }"></dxo-popup>
+                                </dxo-editing>
+
+                                <dxi-column dataField="BudgetPayableId" caption="BudgetPayableId" [visible]="false">
+                                </dxi-column>
+
+                                <dxi-column dataField="ProjectName" caption="Project">
+                                    <dxo-lookup [dataSource]="projectList" displayExpr="ProjectName" valueExpr="ProjectName"></dxo-lookup>
+                                </dxi-column>
+
+                                <dxi-column dataField="BudgetLineTypeName" caption="Budget Line">
+                                </dxi-column>
+
+                                <dxi-column dataField="ExpectedDate" caption="Expected Date" dataType="date">
+                                </dxi-column>
+
+                                <dxi-column dataField="Amount" caption="Amount" alignment="right">
+                                </dxi-column>
+
+                                <dxi-column dataField="AddReceivable" caption="Installment" cellTemplate="CellTemplateBudgetLineReceived"></dxi-column>
+                                <div *dxTemplate="let data of 'CellTemplateBudgetLineReceived'">
+                                    <a href="javascript:void(0);" (click)="addPayableAmountClicked(data)">Payable Amount</a>
+                                </div>
+
+                            </dx-data-grid>
+                        </div>
+                        <div *ngIf="AddReceivable==4">
+                            <div class="btn-grp-wrap">
+                                <dx-button text="Back" (onClick)="ShowBudgetLineGrid(3)">
+                                </dx-button>
+                            </div>
+                            <dx-data-grid id="gridContainer1" [dataSource]="projectBudgetPaid" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                                [columnAutoWidth]="true" (onEditingStart)="logEventPaidAmount('EditingStart',$event)" (onInitNewRow)="logEventPaidAmount('InitNewRow',$event)"
+                                (onRowInserting)="logEventPaidAmount('RowInserting',$event)" (onRowInserted)="logEventPaidAmount('RowInserted',$event)"
+                                (onRowUpdating)="logEventPaidAmount('RowUpdating',$event)" (onRowUpdated)="logEventPaidAmount('RowUpdated',$event)"
+                                (onRowRemoving)="logEventPaidAmount('RowRemoving',$event)" (onRowRemoved)="logEventPaidAmount('RowRemoved',$event)">
+                                <dxo-paging [pageSize]="10"></dxo-paging>
+                                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+                                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                <dxo-editing mode="popup" [allowUpdating]="true" [allowAdding]="true" [form]="{
+                                      items: ['PaymentDate','Amount','Remark'], colCount: '1' }">
+                                    <dxo-popup title="Add/Edit Payable Installment" [showTitle]="true" [closeOnOutsideClick]="true" [width]="700" [height]="345" [position]="{ my: 'center', at: 'center', of: windows }"></dxo-popup>
+                                </dxo-editing>
+
+                                <dxi-column dataField="BudgetPayableAmountId" caption="BudgetPayableAmountId" [visible]="false">
+                                </dxi-column>
+
+                                <dxi-column dataField="BudgetPayableId" caption="BudgetPayableId" [visible]="false">
+                                </dxi-column>
+
+                                <dxi-column dataField="ProjectName" caption="Project">
+                                    <dxo-lookup [dataSource]="projectList" displayExpr="ProjectName" valueExpr="ProjectName"></dxo-lookup>
+                                </dxi-column>
+
+                                <dxi-column dataField="BudgetLineName" caption="B/L Type">
+                                </dxi-column>
+
+                                <dxi-column dataField="PaymentDate" caption="Payment Date" dataType="date">
+                                </dxi-column>
+
+                                <dxi-column dataField="Amount" caption="Amount" alignment="right" datatype="number" [setCellValue]="setStateValue">
+                                    <dxi-validation-rule type="required" [pattern]="pattern" message="message"></dxi-validation-rule>
+                                </dxi-column>
+                                <!-- <div *dxTemplate="let d of 'diffCellTemplate'">
+                                    <dx-number-box [min]="0" [max]="SelectedRowAmount" [showSpinButtons]="true" [showClearButton]="true">
+                                    </dx-number-box>
+                                </div> -->
+
+                                <dxi-column dataField="Remark" caption="Remark" alignment="right">
+                                </dxi-column>
+
+                            </dx-data-grid>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3  -->
+                    <div *ngIf="openInfoTab==2">
+                        <br>
+                        <div class="pro-accordian-outer">
+                            <div class="pro-todo-add-btn">
+                                <a (click)="addTaskShowPopup()">
+                                    <i aria-hidden="true" class="fa fa-plus-circle"></i> Add Task
+                                </a>
+                            </div>
+                            <div class="panel-group" id="accordion" *ngFor="let item of allTaskArr">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading active-task-bg">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" class="collapsed" data-parent="#accordion" href="#collapse{{item.TaskId}}">{{item.TaskName}}</a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse{{item.TaskId}}" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div class="row project-task-todo-outer">
+                                                <!-- Task-Activity Panel-->
+                                                <div class="col-sm-12 task-card-blk task-crd-todo">
+                                                    <div class="task-reject-approved-outer">
+                                                        <form>
+                                                            <label class="custom-radio-1">Approved
+                                                                <input type="radio" checked="checked" name="radio">
+                                                                <span class="checkmark"></span>
+                                                            </label>
+                                                            <label class="custom-radio-1">Not Approved
+                                                                <input type="radio" name="radio">
+                                                                <span class="checkmark"></span>
+                                                            </label>
+                                                        </form>
+                                                    </div>
+                                                    <div class="task-card-blk-in">
+                                                        <div class="task-card-blk-hdr">
+                                                            <div class="ad-mr-act">
+                                                                <a href="javascript:void(0);" (click)="addActivityShowPopup(item)">
+                                                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Activity </a>
+                                                            </div>
+                                                        </div>
+                                                        <ul class="card-listing-blk">
+                                                            <dx-list #list [dataSource]="item.ActivityMasterList" [height]="400">
+                                                                <div *dxTemplate="let data of 'item'">
+                                                                    <li>
+                                                                        <h4 class="completed">{{data.ActivityName}}</h4>
+                                                                        <span>{{data.Description}}</span>
+                                                                        <span>Priority : {{data.Priority}}</span>
+                                                                        <div class="act-icons">
+                                                                            <a href="javascript:void(0)">
+                                                                                <i class="fa fa-pencil" title="Edit"></i>
+                                                                            </a>
+                                                                            <a href="javascript:void(0)">
+                                                                                <i class="fa fa-eye" title="View"></i>
+                                                                            </a>
+                                                                            <a href="javascript:void(0)" id="activityComments{{data.ActivityId}}" (click)="toggleWiithShadingOptions(data.ActivityId)">
+                                                                                <i class="fa fa-envelope-o" title="Message"></i>
+                                                                            </a>
+                                                                            <a href="javascript:void(0)" (click)="activityDoc(data)">
+                                                                                <i class="fa fa-paperclip" aria-hidden="true"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    </li>
+                                                                </div>
+                                                            </dx-list>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <!-- Task-Activity Panel Ends-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Add Project Popup -->
+<dx-popup class="popup ad-project-popup-outer" [width]="600" [height]="250" [showTitle]="true" title="Add Project" [dragEnabled]="false"
+    [closeOnOutsideClick]="false" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)" [(visible)]="popupVisible">
+    <div *dxTemplate="let data of 'content'">
+        <form action="your-action" (submit)="AddEditProjectDetails(projectModel)">
+            <dx-form [showColonAfterLabel]="true" [formData]="projectModel" [colCount]='2' [readOnly]="false" [showColonAfterLabel]="true"
+                [showValidationSummary]="true" validationGroup="customerData">
+
+                <dxi-item dataField="ProjectName">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="Description">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="StartDate" editorType="dxDateBox" [editorOptions]="{ type: 'date', width: '100%'}">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="EndDate" editorType="dxDateBox" [editorOptions]="{ type: 'date', width: '100%'}">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="CurrencyId" caption="Currency" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencyModel, caption:'Currency', value: CurrencyId, displayExpr: 'CurrencyCode', valueExpr: 'CurrencyId' }">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="Budget">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="ReceivableAmount">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="PayableAmount">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="CurrentBalance">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="Status" editorType="dxSelectBox" [editorOptions]="{ dataSource: Status, value: Id, displayExpr: 'Value', valueExpr: 'Id' }">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+
+            </dx-form>
+            <br />
+            <div class="btn-grp-wrap">
+                <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+                <dx-button text="Cancel" (onClick)="HidePopup()"></dx-button>
+            </div>
+        </form>
+    </div>
+</dx-popup>
+
+<!-- Document Popup -->
+<dx-popup class="popup doc-popup-content" [width]="800" [height]="500" [showTitle]="false" [dragEnabled]="false" [closeOnOutsideClick]="true"
+    [(visible)]="popupVisibleDocument" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)">
+    <div *dxTemplate="let data of 'content'">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="main-heading">
+                    <!-- <h3 class="page-heading">Voucher No {{VoucherNo}} </h3> -->
+                </div>
+                <div class="doc-iframe-outer">
+                    <iframe [src]="docpath" style="text-align: center;" height="500px" width="400px"></iframe>
+                </div>
+            </div>
+            <div class="doc-popftr">
+                <div class="doc-popftr-inside">
+                    <div class="doc-popup-dwnload-icon">
+                        <a [href]="docpath" target="_blank" [download]="filePathUrl">
+                            <i class="fa fa-download"></i>
+                        </a>
+                    </div>
+                    <div class="doc-popup-select-drop">
+                        <dx-select-box (onValueChanged)="selectedDoc($event)" [dataSource]="showDocumentData" valueExpr="DocumentGUID" displayExpr="DocumentName"
+                            value="DocumentGUID" [value]="selectedDropdown">
+                        </dx-select-box>
+                    </div>
+                    <div class="doc-popup-ad-btn">
+                        <a href="javascript:void(0);" (click)="addDocument()">
+                            <i aria-hidden="true" class="fa fa-plus-circle"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</dx-popup>
+
+<!-- Add Document Modal -->
+<div class="addDocumentModal">
+
+    <dx-popup class="popup" [width]="800" [minHeight]="450" [showTitle]="true" title="Add Document" [dragEnabled]="false" [closeOnOutsideClick]="true"
+        [(visible)]="popupVisibleAddDoc">
+        <div *dxTemplate="let data of 'content'">
+
+            <form action="your-action" (submit)="onFormSubmitDocAdd(addNewDocument)">
+                <dx-form id="form" [formData]="addNewDocument" [readOnly]="false" [showColonAfterLabel]="true" [showValidationSummary]="true"
+                    validationGroup="customerData">
+
+                    <dxi-item dataField="DocumentDate" editorType="dxDateBox">
+                        <dxo-label text="Document Date">
+                        </dxo-label>
+                    </dxi-item>
+
+                    <dxi-item dataField="DocumentName" caption="Document Name">
+                    </dxi-item>
+
+                    <dxi-item dataField="DocumentFilePath" caption="File Path">
+                        <dxo-label text="File Path">
+                        </dxo-label>
+                        <dx-file-uploader selectButtonText="Select File" labelText="" accept="image/*,application/pdf" [multiple]="true" uploadMode="useForm"
+                            (onValueChanged)="onImageSelectDoc($event)" reset="resetUploader">
+                        </dx-file-uploader>
+                    </dxi-item>
+
+                </dx-form>
+                <br />
+                <div class="btn-grp-wrap">
+                    <dx-button text="Add" type="success" [useSubmitBehavior]="true">
+                    </dx-button>
+                    <dx-button text="Cancel" (onClick)="cancelDeleteVoucher()">
+                    </dx-button>
+                </div>
+            </form>
+
+        </div>
+    </dx-popup>
+</div>
+
+<!-- Add Task Popup -->
+<dx-popup class="popup" [width]="600" [height]="250" [showTitle]="true" title="Add Task" [dragEnabled]="false" [closeOnOutsideClick]="false"
+    [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)" [(visible)]="popupVisibleAddTask">
+    <div *dxTemplate="let data of 'content'">
+        <form action="your-action" (submit)="AddEditTaskDetails(taskModel)">
+            <dx-form [showColonAfterLabel]="true" [formData]="taskModel" [colCount]='1' [readOnly]="false" [showColonAfterLabel]="true"
+                [showValidationSummary]="true" validationGroup="customerData">
+                <dxi-item dataField="TaskName">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="Description">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="Priority" caption="Priority" editorType="dxSelectBox" [editorOptions]="{ dataSource: priorityArr,  displayExpr: 'PriorityName', valueExpr: 'PriorityName' }">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="Assignee" caption="Assignee" editorType="dxTagBox" [editorOptions]="{ dataSource: assigneeArr,  displayExpr: 'UserName', valueExpr: 'UserName' }">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+            </dx-form>
+            <br />
+            <div class="btn-grp-wrap">
+                <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+                <dx-button text="Cancel" (onClick)="HidePopupTaskPopup()"></dx-button>
+            </div>
+        </form>
+    </div>
+</dx-popup>
+
+<!-- Add Activity Popup -->
+<dx-popup class="popup" [width]="600" [height]="250" [showTitle]="true" title="Add Activity" [dragEnabled]="false" [closeOnOutsideClick]="false"
+    [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)" [(visible)]="popupVisibleAddActivity">
+    <div *dxTemplate="let data of 'content'">
+        <form action="your-action" (submit)="AddEditActivityDetails(activityModel)">
+            <dx-form [showColonAfterLabel]="true" [formData]="activityModel" [colCount]='1' [readOnly]="false" [showColonAfterLabel]="true"
+                [showValidationSummary]="true" validationGroup="customerData">
+
+                <dxi-item dataField="ActivityName">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="Description">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="Priority" caption="Priority" editorType="dxSelectBox" [editorOptions]="{ dataSource: priorityArr,  displayExpr: 'PriorityName', valueExpr: 'PriorityName' }">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="Status" editorType="dxSelectBox" [editorOptions]="{ dataSource: Status, value: Id, displayExpr: 'Value', valueExpr: 'Id' }">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="Assignee" caption="Assignee" editorType="dxTagBox" [editorOptions]="{ dataSource: assigneeArr,  displayExpr: 'UserName', valueExpr: 'UserName' }">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+
+            </dx-form>
+            <br />
+            <div class="btn-grp-wrap">
+                <dx-button text="Save" type="success" validationGroup="customerData" [useSubmitBehavior]="true"></dx-button>
+                <dx-button text="Cancel" (onClick)="HidePopupActivityPopup()"></dx-button>
+            </div>
+        </form>
+    </div>
+</dx-popup>
+
+<!-- Comments Popover on Activities -->
+<dx-popover class="actvitiy-popover-custom" target="{{selectedActivityId}}" position="top" [width]="300" [shading]="true"
+    shadingColor="rgba(0, 0, 0, 0.5)" [(visible)]="withShadingOptionsVisible">
+    <dxo-animation>
+        <dxo-show type="pop" [from]="{ scale: 0 }" [to]="{ scale: 1 }"></dxo-show>
+        <dxo-hide type="fade" [from]="1" [to]="0"></dxo-hide>
+    </dxo-animation>
+    <div *dxTemplate="let data = model of 'content'">
+        <div class="task-card-blk-hdr">
+            <h3>Upload EOI</h3>
+        </div>
+        <ul class="card-listing-blk">
+            <dx-list #list [dataSource]="projectList" [height]="180" class="crd-comment-listing">
+                <div *dxTemplate="let data of 'item'">
+                    <li>
+                        <img src="assets/images/profile-pic.jpg" alt="" />
+                        <h5>John Doe</h5>
+                        <h6>Comment first</h6>
+                        <span>12:40PM</span>
+                        <div class="comnt-rpy-btn">Reply</div>
+                    </li>
+                </div>
+            </dx-list>
+        </ul>
+        <div class="crd-comment-post">
+            <input type="text" placeholder="Comments" class="form-control" />
+            <input class="post-cmnt" type="submit" value="Post" name="Post" />
+        </div>
+    </div>
+</dx-popover>
+
+<!--Activity Document Popup -->
+<dx-popup class="popup doc-popup-content" [width]="800" [height]="500" [showTitle]="false" [dragEnabled]="false" [closeOnOutsideClick]="true"
+    [(visible)]="popupActivityDocument" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)">
+    <div *dxTemplate="let data of 'content'">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="main-heading">
+                    <!-- <h3 class="page-heading">Voucher No {{VoucherNo}} </h3> -->
+                </div>
+                <div class="doc-iframe-outer">
+                    <iframe [src]="docpath" style="text-align: center;" height="500px" width="400px"></iframe>
+                </div>
+            </div>
+            <div class="doc-popftr">
+                <div class="doc-popftr-inside">
+                    <div class="doc-popup-dwnload-icon">
+                        <a [href]="docpath" target="_blank" [download]="filePathUrl">
+                            <i class="fa fa-download"></i>
+                        </a>
+                    </div>
+                    <div class="doc-popup-select-drop">
+                        <dx-select-box (onValueChanged)="selectedDoc($event)" [dataSource]="showDocumentData" valueExpr="DocumentGUID" displayExpr="DocumentName"
+                            value="DocumentGUID" [value]="selectedDropdown">
+                        </dx-select-box>
+                    </div>
+                    <div class="doc-popup-ad-btn">
+                        <a href="javascript:void(0);" (click)="addDocument()">
+                            <i aria-hidden="true" class="fa fa-plus-circle"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dx-popup>
+
+<!--Assigned Employee Popup -->
+<dx-popup class="popup doc-popup-content" [width]="1000" [height]="800" title="Assign Employees" [showTitle]="true" [dragEnabled]="false"
+    [closeOnOutsideClick]="false" [(visible)]="assignedEmployeePopup" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)">
+    <div *dxTemplate="let data of 'content'">
+        <h3>{{selectedProjectName}}</h3>
+        <p>{{selectedProjectDescription}}</p>
+        <p>Budget Line - {{selectedBudgetLineName}}</p>
+        <br>
+        <dx-data-grid key="EmployeeId" id="gridContainer" [dataSource]="activeEmployeeDetail" [allowColumnReordering]="true" [allowColumnResizing]="true"
+            [columnAutoWidth]="true" [showRowLines]="true">
+            <dxo-paging [pageSize]="10"></dxo-paging>
+            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 30]" [showInfo]="true"></dxo-pager>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <!-- <dxo-selection mode="multiple"></dxo-selection> -->
+
+            <dxi-column dataField="EmployeeId" caption="EmployeeId" [visible]="false">
+            </dxi-column>
+
+            <dxi-column dataField="EmployeeName" caption="EmployeeName">
+            </dxi-column>
+
+            <dxi-column dataField="Email" caption="Email">
+            </dxi-column>
+
+            <dxi-column dataField="Profession" caption="Profession">
+            </dxi-column>
+
+            <!-- <dxi-column dataField="Designation" caption="Designation">
+            </dxi-column> -->
+
+            <dxi-column dataField="ExperienceYear" caption="ExperienceYear">
+            </dxi-column>
+
+            <dxi-column dataField="ExperienceMonth" caption="ExperienceMonth">
+            </dxi-column>
+
+            <dxi-column dataField="Status" caption="Status" [visible]="false">
+            </dxi-column>
+
+            <dxi-column dataField="Add" caption="Action" cellTemplate="CellTemplateAdd"></dxi-column>
+            <div *dxTemplate="let data of 'CellTemplateAdd'">
+                <a href="javascript:void(0);" (click)="selectionChangedHandler(data)">Add</a>
+            </div>
+
+        </dx-data-grid>
+        <!-- <dx-button text="Add" (click)="selectionChangedHandler()"></dx-button> -->
+        <br>
+        <br>
+
+        <dx-data-grid id="gridContainer" [dataSource]="selectedEmployeeDetail" [allowColumnReordering]="true" [allowColumnResizing]="true"
+            [columnAutoWidth]="true" [showRowLines]="true">
+            <dxo-paging [pageSize]="5"></dxo-paging>
+            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+            <!-- <dxo-filter-row [visible]="true"></dxo-filter-row> -->
+            <!-- <dxo-header-filter [visible]="true"></dxo-header-filter> -->
+            <!-- <dxo-selection mode="multiple" showCheckBoxesMode="always"></dxo-selection> -->
+
+            <dxi-column dataField="EmployeeId" caption="EmployeeId" [visible]="false">
+            </dxi-column>
+
+            <dxi-column dataField="EmployeeName" caption="EmployeeName">
+            </dxi-column>
+
+            <dxi-column dataField="Download" caption="Action" cellTemplate="CellTemplateDownload"></dxi-column>
+            <div *dxTemplate="let data of 'CellTemplateDownload'">
+                <a *ngIf="data.data.Status != 'Recent'" href="javascript:void(0);">View Contract</a>
+            </div>
+
+            <dxi-column dataField="Delete" caption="Action" cellTemplate="CellTemplateDelete"></dxi-column>
+            <div *dxTemplate="let data of 'CellTemplateDelete'">
+                <a href="javascript:void(0);" (click)="removeAssignedEmployees(data)">Delete</a>
+            </div>
+
+            <!-- <dxi-column dataField="Email" caption="Email">
+            </dxi-column>
+
+            <dxi-column dataField="Profession" caption="Profession">
+            </dxi-column> -->
+
+            <!-- <dxi-column dataField="Designation" caption="Designation">
+            </dxi-column> -->
+
+            <!-- <dxi-column dataField="ExperienceYear" caption="ExperienceYear">
+            </dxi-column>
+
+            <dxi-column dataField="ExperienceMonth" caption="ExperienceMonth">
+            </dxi-column> -->
+
+        </dx-data-grid>
+
+        <dx-button text="Save" (click)="saveAssignedEmployees()"></dx-button>
+    </div>
+</dx-popup>
+
+<!-- Employee Contract Popup -->
+<dx-popup class="popup doc-popup-content" [width]="980" [height]="900" [showTitle]="true" [dragEnabled]="false" [closeOnOutsideClick]="false"
+    [(visible)]="contractEmployeePopup" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)">
+    <div *dxTemplate="let data of 'content'" style="overflow-y: scroll;max-height: 600px; padding-left:30px; padding-right:30px; width: 100%">
+        <dx-button (click)="generatePdf()" text="Export Pdf"></dx-button>
+        <div id="contractReportPdf" style="background-color: #fff;">
+            <table class="pdf" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td>
+                        <table class="table-responsive" align="center" border="0" cellpadding="0" cellspacing="0" width="100%" id="parent_tbl">
+                            <tr>
+                                <td>
+                                    <table width="100%" align="left" cellpadding="0;" cellspacing="0" id="child_tbl" style=" background:#fff;">
+                                        <tr>
+                                            <td style="color:#333; font-family: Times New Roman;font-size:18px; text-align:left;">
+                                                <img src="assets/images/reportLogo.png" width="100" height="100">
+                                            </td>
+                                            <td style="text-align:center;padding:10px 0;font-size: 20px;" translate>Coordination of Humanitarian Assistance
+                                                <br>
+                                                <span style="color:#333; font-family: Times New Roman;font-size:28px;text-transform: capitalize;">
+                                                    <strong>Coordination of Humanitarian Assistance</strong>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr> </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <table class="pdf" border="0" cellpadding="0" style="text-align:left;" cellspacing="0" width="100%">
+                <tbody>
+                    <tr>
+                        <td style="font-size: 20px;color: #302d2d; padding:2px  0; padding-left:20px; ">Employment Contract</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 20px;color: #302d2d; padding:2px  0; padding-left:50px;" translate>Employment Contract</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 16px;color: #302d2d;padding:12px  0 2px;">
+                            <p style="margin-bottom:0px;">This contract is between Coordination of Humanitarian Assistance (CHA) and employees for specific
+                                task, the details of the contract are as follow:</p>
+                            <!-- <p style="margin-bottom:0px;"></p> -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 16px;color: #302d2d;padding:2px  0; padding-top:12px; text-align:right; padding-right:20px;">
+                                <p translate>This contract is between Coordination of Humanitarian Assistance (CHA) and employees for specific task, the details of the contract are as follow:</p>
+                            <!-- <p translate></p> -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="pdf" border="0" cellpadding="0" cellspacing="0" width="100%" style="padding-top:30px;">
+                <tbody>
+                    <tr>
+                        <td style="width:90%; text-align:left; padding-right:20px;">
+                            <table width="100%">
+                                <tbody>
+                                    <tr>
+                                        <td style="width:40%; vertical-align:top; font-weight:600; line-height:34px;">Employee's Name /
+                                            <span style="padding-left:20px;" translate>Employee's Name</span>
+                                        </td>
+                                        <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.EmployeeName}}</td>
+                                        <td style="width:5%">&nbsp;</td>
+                                        <td style="width:30%;border-bottom:1px solid; text-align:right;">{{employeeNameDari}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Father Name /
+                                            <span style="padding-left:20px;" translate>Father Name</span>
+                                        </td>
+                                        <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.FatherName}}</td>
+                                        <td style="width:5%">&nbsp;</td>
+                                        <td style="width:30%;border-bottom:1px solid; text-align:right;">{{fatherNameDari}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Employee Code /
+                                            <span style="padding-left:20px;" translate>Employee Code</span>
+                                        </td>
+                                        <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.EmployeeCode}}</td>
+                                        <td style="width:5%">&nbsp;</td>
+                                        <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.EmployeeCode}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Designation /
+                                            <span style="padding-left:20px;" translate>Designation</span>
+                                        </td>
+                                        <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.Designation}}</td>
+                                        <td style="width:5%">&nbsp;</td>
+                                        <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.Designation}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Contract Start Date /
+                                            <span style="padding-left:20px;" translate>Contract Start Date</span>
+                                        </td>
+                                        <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.ContractStartDate | date}}</td>
+                                        <td style="width:5%">&nbsp;</td>
+                                        <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.ContractStartDate | date}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Contract End Date /
+                                            <span style="padding-left:20px;" translate>Contract End Date</span>
+                                        </td>
+                                        <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.ContractEndDate | date}}</td>
+                                        <td style="width:5%">&nbsp;</td>
+                                        <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.ContractEndDate | date}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Duration Of Contract /
+                                            <span style="padding-left:20px;" translate>Duration Of Contract</span>
+                                        </td>
+                                        <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.DurationOfContract}}</td>
+                                        <td style="width:5%">&nbsp;</td>
+                                        <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.DurationOfContract}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Salary /
+                                            <span style="padding-left:20px;" translate>Salary</span>
+                                        </td>
+                                        <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.Salary}}</td>
+                                        <td style="width:5%">&nbsp;</td>
+                                        <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.Salary}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Grade /
+                                            <span style="padding-left:20px;" translate>Grade</span>
+                                        </td>
+                                        <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.Grade}}</td>
+                                        <td style="width:5%">&nbsp;</td>
+                                        <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.Grade}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Project Name /
+                                            <span style="padding-left:20px;" translate>Project Name</span>
+                                        </td>
+                                        <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.ProjectName}}</td>
+                                        <td style="width:5%">&nbsp;</td>
+                                        <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.ProjectName}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Project Code /
+                                            <span style="padding-left:20px;" translate>Project Code</span>
+                                        </td>
+                                        <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.ProjectCode}}</td>
+                                        <td style="width:5%">&nbsp;</td>
+                                        <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.ProjectCode}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Duty Station /
+                                            <span style="padding-left:20px;" translate>Duty Station</span>
+                                        </td>
+                                        <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.DutyStation}}</td>
+                                        <td style="width:5%">&nbsp;</td>
+                                        <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.DutyStation}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Province /
+                                            <span style="padding-left:20px;" translate>Province</span>
+                                        </td>
+                                        <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.Province}}</td>
+                                        <td style="width:5%">&nbsp;</td>
+                                        <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.Province}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Budget Line /
+                                            <span style="padding-left:20px;" translate>Budget Line</span>
+                                        </td>
+                                        <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.BudgetLine}}</td>
+                                        <td style="width:5%">&nbsp;</td>
+                                        <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.BudgetLine}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Job /
+                                            <span style="padding-left:20px;" translate>Job</span>
+                                        </td>
+                                        <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.JobId}}</td>
+                                        <td style="width:5%">&nbsp;</td>
+                                        <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.JobId}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Work Time /
+                                            <span style="padding-left:20px;" translate>Work Time</span>
+                                        </td>
+                                        <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.WorkTime}}</td>
+                                        <td style="width:5%">&nbsp;</td>
+                                        <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.WorkTime}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:35%; vertical-align:top; font-weight:600; line-height:34px;">Work Day (Hours) /
+                                            <span style="padding-left:20px;" translate>Work Day (Hours)</span>
+                                        </td>
+                                        <td style="width:30%;border-bottom:1px solid">{{selectedEmployeesReportData.WorkDayHours}}</td>
+                                        <td style="width:5%">&nbsp;</td>
+                                        <td style="width:30%;border-bottom:1px solid; text-align:right;">{{selectedEmployeesReportData.WorkDayHours}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td style="width:10% ; padding-right:20px; vertical-align:top;">
+                            <img src="{{selectedEmployeesReportData.EmployeeImage == null || selectedEmployeesReportData.EmployeeImage == '' ? defaultImagePath : contractPhoto}}"
+                                style="width: 130px;float: right;">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="pdf" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 20px; text-align:left;">
+                <tr>
+                    <td style="width:50%; vertical-align: top; border-right: 1px solid #000; padding-right: 20px; text-align:left;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td style="font-size:16px; font-weight:600;"> Conditions: </td>
+                            </tr>
+                            <tr>
+                                <td style="font-size:16px; font-weight:600;"></td>
+                            </tr>
+                            <tr>
+                                <td style="font-size:14">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                        <tr>
+                                            <td colspan="4" style="font-size:14; line-height: 22px; text-align:left;">
+                                                <span [innerHTML]="selectedEmployeesReportData.ContentEnglish"></span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </td>
+                    <td style="width:50%; vertical-align: top;padding-left:20px; text-align:right;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td style="font-size:14px; font-weight:600; padding-right:20px;">
+                                    <span [innerHTML]="selectedEmployeesReportData.ContentDari"></span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</dx-popup>
+
+<ngx-loading [show]="loading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }"></ngx-loading>

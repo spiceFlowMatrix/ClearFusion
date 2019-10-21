@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener, ElementRef, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { FieldConfigService } from '../../services/field-config.service';
 
 @Component({
   selector: 'app-purchase-filed-config',
@@ -17,50 +18,57 @@ export class PurchaseFiledConfigComponent implements OnInit {
   scrollStyles: any;
 
   // Input/Output
-  @Output() configFilterAppliedEvent = new EventEmitter<any>();
+  // @Output() configFilterAppliedEvent = new EventEmitter<any>();
 
+  // columnsToShow = [
+  //   { name: 'Store Item Id', modelName: 'ItemId', value: 1, },
+  //   { name: 'Store Item Code', modelName: 'ItemCode', value: 2 },
+  //   { name: 'Store Item Name', modelName: 'ItemName', value: 3 },
+  //   { name: 'Store Item Code & Description', modelName: 'ItemCodeDescription', value: 4 },
+  //   { name: 'Master Inventory Code', modelName: 'MasterInventoryCode', value: 5 },
+  //   { name: 'Description', modelName: 'Description', value: 6 },
+  //   { name: 'Office Code', modelName: 'OfficeCode', value: 7 },
+  //   { name: 'BudgetLine', modelName: 'BudgetLineName', value: 8 },
+  //   { name: 'Project', modelName: 'ProjectName', value: 9 },
+  //   { name: 'Purchase Order Number', modelName: 'PurchaseOrderNumber', value: 10 },
+  //   { name: 'Purchase Order Date', modelName: 'PurchaseDate', value: 11 },
+  //   { name: 'Invoice Date', modelName: 'InvoiceDate', value: 12 },
+  //   { name: 'AssetType', modelName: 'AssetTypeId', value: 13 },
+  //   { name: 'Maker/Country', modelName: 'MakerCountry', value: 14 },
+  //   { name: 'Chasis No', modelName: 'ChasisNo', value: 15 },
+  //   { name: 'Engine/Serial No', modelName: 'EngineSerialNo', value: 16 },
+  //   { name: 'Registration No', modelName: 'RegistrationNo', value: 17 },
+  //   { name: 'Identification No', modelName: 'IdentificationNo',  value: 18 },
+  //   { name: 'Model/Type', modelName: 'ModelType', value: 19 },
+  //   { name: 'Quantity', modelName: 'PurchasedQuantity', value: 21 },
+  //   { name: 'Currency', modelName: 'CurrencyName', value: 22 },
+  //   { name: 'Receipt Date', modelName: 'ReceiptDate', value: 24 },
+  //   { name: 'Depreciation Rate(%)', modelName: 'DepreciationRate', value: 25 },
+  //   { name: 'Depreciation Value At Hand', modelName: 'DepreciatedCost', value: 27 },
+  //   { name: 'Received From Location',  modelName: 'ReceivedFromLocationName', value: 29 },
+  //   { name: 'Status', modelName: 'Status', value: 30 },
+  // ];
   columnsToShow = [
-    { name: 'Store Item Id', modelName: 'ItemId', value: 1, },
-    { name: 'Store Item Code', modelName: 'ItemCode', value: 2 },
-    { name: 'Store Item Name', modelName: 'ItemName', value: 3 },
-    { name: 'Store Item Code & Description', modelName: 'ItemCodeDescription', value: 4 },
-    { name: 'Master Inventory Code', modelName: 'MasterInventoryCode', value: 5 },
-    { name: 'Description', modelName: 'Description', value: 6 },
-    { name: 'Office Code', modelName: 'OfficeCode', value: 7 },
-    { name: 'BudgetLine', modelName: 'BudgetLineName', value: 8 },
-    { name: 'Project', modelName: 'ProjectName', value: 9 },
-    { name: 'Purchase Order Number', modelName: 'PurchaseOrderNumber', value: 10 },
-    { name: 'Purchase Order Date', modelName: 'PurchaseDate', value: 11 },
-    { name: 'Invoice Date', modelName: 'InvoiceDate', value: 12 },
-    { name: 'AssetType', modelName: 'AssetTypeId', value: 13 },
-    { name: 'Maker/Country', modelName: 'MakerCountry', value: 14 },
-    { name: 'Chasis No', modelName: 'ChasisNo', value: 15 },
-    { name: 'Engine/Serial No', modelName: 'EngineSerialNo', value: 16 },
-    { name: 'Registration No', modelName: 'RegistrationNo', value: 17 },
-    { name: 'Identification No', modelName: 'IdentificationNo',  value: 18 },
-    { name: 'Model/Type', modelName: 'ModelType', value: 19 },
-    { name: 'Quantity', modelName: 'PurchasedQuantity', value: 21 },
-    { name: 'Currency', modelName: 'CurrencyName', value: 22 },
-    { name: 'Receipt Date', modelName: 'ReceiptDate', value: 24 },
-    { name: 'Depreciation Rate(%)', modelName: 'DepreciationRate', value: 25 },
-    { name: 'Depreciation Value At Hand', modelName: 'DepreciatedCost', value: 27 },
-    { name: 'Received From Location',  modelName: 'ReceivedFromLocationName', value: 29 },
-    { name: 'Status', modelName: 'Status', value: 30 },
-  ];
-
+    { name: 'Store Item Id', headerName:'Id', modelName: 'Id', value: 1 },
+    { name: 'Store Item Name',headerName:'Item', modelName: 'Item', value: 2 },
+    { name: 'Purchased By', headerName: 'PurchasedBy', modelName: 'PurchasedBy', value: 3 },
+    { name: 'Project', headerName:'Project', modelName: 'Project', value: 4 },
+    { name: 'Original Cost',headerName:'Original Cost', modelName: 'OriginalCost', value: 5 },
+    { name: 'Depriciation Cost', headerName: 'Depricated Cost', modelName: 'DepreciatedCost', value: 6 }]
   selectedOptions: any[] = [];
 
-  constructor(private eRef: ElementRef, private toastr: ToastrService) { }
+  constructor(private eRef: ElementRef, private toastr: ToastrService, private fieldConfig: FieldConfigService) { }
 
   ngOnInit() {
     this.getScreenSize();
+   
   }
 
   show() {
     this.showConfig = true;
-   // this.cdr.detectChanges()
+    // this.cdr.detectChanges()
   }
-  getState(e){
+  getState(e) {
     this.showConfig = e;
 
   }
@@ -80,13 +88,14 @@ export class PurchaseFiledConfigComponent implements OnInit {
   //#endregion
 
   applyConfigFilter() {
-    console.log(this.selectedOptions);
+    // console.log(this.selectedOptions);
   }
   change(list: any[]) {
-    if (list.length > 5) {
+    if (list.length > 6) {
       this.toastr.warning('6 Filter option can be selected at a time');
     } else {
-       this.configFilterAppliedEvent.emit(list);
+      // this.configFilterAppliedEvent.emit(list);
+      this.fieldConfig.updateList(list);
     }
 
   }

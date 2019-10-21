@@ -1,0 +1,59 @@
+<div>
+  <h1 mat-dialog-title>
+    Candidate Details
+    <button mat-icon-button [mat-dialog-close]="data" class="pull-right">
+      <mat-icon aria-label="clear">clear</mat-icon>
+    </button>
+  </h1>
+  <form class="example-form" [formGroup]="candidateDetailForm" (ngSubmit)="onFormSubmit(candidateDetailForm.value)">
+    <div mat-dialog-content>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="row">
+
+            <div class="col-lg-6 col-sm-6">
+              <mat-form-field class="example-full-width">
+                <mat-select placeholder="Attendance Group" formControlName="Id">
+                  <mat-option *ngFor="let item of attendanceGroupList" [value]="item.Id">
+                    {{ item.Name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col-lg-6 col-sm-6">
+              <mat-form-field class="example-full-width">
+                <mat-select placeholder="Employee Contract Type" formControlName="EmployeeContractTypeId">
+                  <mat-option *ngFor="let item of employeeContractist" [value]="item.EmployeeContractTypeId">
+                    {{ item.EmployeeContractTypeName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+              <mat-form-field>
+                <input matInput formControlName="HiredOn" [matDatepicker]="hiredOnDatepicker"
+                  placeholder="Hired On" />
+                <mat-datepicker-toggle matSuffix [for]="hiredOnDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker color="primary" #hiredOnDatepicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div mat-dialog-actions class="pull-right">
+      <button mat-raised-button [mat-dialog-close]="data">Cancel</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="editCandidateDetailLoader">
+        <span *ngIf="!editCandidateDetailLoader; else editeditCandidateDetailLoaderTemplate">Save</span>
+        <ng-template #editeditCandidateDetailLoaderTemplate>
+          <div class="spinner_center padding_top_5 padding_bottom_5">
+            <mat-spinner [diameter]="25"> </mat-spinner>
+          </div>
+        </ng-template>
+      </button>
+    </div>
+  </form>
+</div>

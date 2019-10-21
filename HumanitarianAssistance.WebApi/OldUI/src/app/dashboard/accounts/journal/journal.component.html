@@ -1,0 +1,192 @@
+<div class="main-journal">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="main-heading clearfix">
+        <h3 class="page-headin">Journal</h3>
+      </div>
+    </div>
+    <div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 dxagninptblk">
+
+      <form action="your-action" (submit)="onApplyingFilter(journalFilter)">
+        <dx-form id="form" [(formData)]="journalFilter" [colCount]="5" [readOnly]="false" [showColonAfterLabel]="true"
+          [showValidationSummary]="true" validationGroup="JournalFilterValidation">
+          <dxi-item dataField="OfficesList" editorType="dxTagBox" showCheckBoxesMode="normal" [editorOptions]="{ dataSource: officeDropdown, displayExpr: 'OfficeName', valueExpr: 'OfficeId', multiline: false, maxDisplayedTags: 1, showClearButton:'true', placeholder: 'Select Office', selectAllMode: 'allPages', showSelectionControls: true, value: selectedOffices,  searchEnabled: true  }">
+            <dxo-label text="Office"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+          <dxi-item dataField="CurrencyId" editorType="dxSelectBox" [editorOptions]="{ dataSource: currencyDropdown, value: selectedCurrency, displayExpr: 'CurrencyCode', valueExpr: 'CurrencyId', showClearButton:'true' , placeholder: 'Select Currency' }">
+            <dxo-label text="Currency"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+          <dxi-item dataField="RecordType" editorType="dxSelectBox" [editorOptions]="{ dataSource: recordTypeDropdown, value: defaultRecordType, displayExpr: 'Name', valueExpr: 'Id', placeholder: 'Select Record Type' }">
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+          <dxi-item dataField="JournalCode" editorType="dxTagBox" showCheckBoxesMode="normal" [editorOptions]="{ dataSource: journalDropdown, displayExpr: 'JournalName', valueExpr: 'JournalCode', multiline: false, maxDisplayedTags: 1, showClearButton:'true', placeholder: 'Select Journal', selectAllMode: 'allPages', showSelectionControls: true, value: selectedJournal, searchEnabled: true }">
+            <dxo-label text="Journal"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+          </dxi-item>
+          <dxi-item dataField="accountLists" editorType="dxTagBox"  [editorOptions]="{ dataSource: accountDropdown, displayExpr: 'AccountName', valueExpr: 'AccountCode', multiline: false, maxDisplayedTags: 0, showClearButton:'true' , placeholder: 'Select Accounts', selectAllMode: 'allPages', showSelectionControls: true, value: selectedAccounts, searchEnabled: true }">
+            <dxo-label text="Accounts"></dxo-label>
+            <dxi-validation-rule type="required"> </dxi-validation-rule>
+        </dxi-item>
+
+          <!-- Date range selector -->
+          <dxi-item dataField="Date" class="dsplcal cal-custom-outer">
+            <!-- Date Range Picker -->
+            <div class="cal-custom-in">
+              <dxi-validation-rule type="required"> </dxi-validation-rule>
+              <p-calendar name="journalDateRange" [(ngModel)]="journalDateRange" dateFormat="dd/mm/yy" selectionMode="range"
+                showIcon="true" [style]="{'position': 'relative', 'overflow': 'visible', 'z-index': '999'}"></p-calendar>
+            </div>
+
+          </dxi-item>
+        </dx-form>
+
+
+
+        <br>
+        <div class="row">
+          <div class="col-md-offset-2 col-md-8 text-center">
+            <dx-button text="Update Filter" type="success" validationGroup="JournalFilterValidation"
+              [useSubmitBehavior]="true"></dx-button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+
+  <div class="row" *ngIf="viewPdfFlag; else journalPdfView">
+
+    <div class="col-sm-12 text-right">
+      <dx-button text="View Pdf" (onClick)="showJournalPdf()"></dx-button>
+    </div>
+
+    <div class="col-sm-12">
+      <br>
+      <dx-data-grid id="gridContainer" [showBorders]="true" [dataSource]="journalDataSource" [allowColumnReordering]="true"
+        [allowColumnResizing]="true" [columnAutoWidth]="true">
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true" [height]="450"></dxo-header-filter>
+
+        <dxi-column dataField="EmployeeId" [visible]="false"></dxi-column>
+        <dxi-column dataField="TransactionDate" dataType="date" format="dd/MM/yyyy"></dxi-column>
+        <dxi-column dataField="ReferenceNo" caption="Voucher Code"></dxi-column>
+        <dxi-column dataField="TransactionDescription"></dxi-column>
+        <dxi-column dataField="CurrencyId" caption="Currency">
+          <dxo-lookup [dataSource]="currencyDropdown" valueExpr="CurrencyId" displayExpr="CurrencyName">
+          </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="AccountCode"></dxi-column>
+        <dxi-column dataField="AccountName"></dxi-column>
+
+        <dxi-column dataField="DebitAmount"></dxi-column>
+        <dxi-column dataField="CreditAmount"></dxi-column>
+        <dxi-column dataField="Project"></dxi-column>
+        <dxi-column dataField="BudgetLine"></dxi-column>
+
+        <dxo-summary>
+          <dxi-total-item column="DebitAmount" summaryType="sum" showInColumn="DebitAmount" [customizeText]="customizeValue">
+          </dxi-total-item>
+          <dxi-total-item column="CreditAmount" summaryType="sum" showInColumn="CreditAmount" [customizeText]="customizeValue">
+          </dxi-total-item>
+        </dxo-summary>
+        
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]"></dxo-pager>
+
+      </dx-data-grid>
+    </div>
+  </div>
+
+  <ng-template #journalPdfView>
+    <br>
+    <div class="row">
+      <div class="col-sm-12 text-right">
+        <div class="emp-close-btn">
+          <i class="fa fa-times-circle" aria-hidden="true" (click)="hideJournalPdf()"></i>
+        </div>
+      </div>
+    </div>
+
+
+    <dx-button text="Print" class="button-info btn btn-default btn-green" (click)="printJournalReport()"></dx-button>
+
+
+    <div class="row" id="print-content-journal-report">
+      <div class="col-sm-12">
+
+        <div class="header">
+          <div class="headingPart1">
+
+            <div style="text-align: center;">
+              <h3> Coordination of Humanitarian Assistance (CHA)</h3>
+              <h4> Group Analytical summary</h4>
+            </div>
+
+          </div>
+          <br>
+
+          <div class="mainTable" style="text-align: center;padding-left: 30px; padding-right: 30px; padding-top: 10px;">
+
+            <table style="text-align: center; width: 100%; border-collapse: collapse;" border="1">
+              <tr>
+                <th style="text-align: center;">
+                  Group
+                </th>
+                <th style="text-align: center;">
+                  Account Description
+                </th>
+                <th style="text-align: center;">
+                  Debit
+                </th>
+                <th style="text-align: center;">
+                  Credit
+                </th>
+                <th style="text-align: center;">
+                  Balance
+                </th>
+              </tr>
+
+              <tr *ngFor="let item of journalReportDataSource;">
+                <td>{{item?.AccountCode}}</td>
+                <td>{{item?.AccountName}}</td>
+                <td>{{item?.DebitAmount}}</td>
+                <td>{{item?.CreditAmount}}</td>
+                <td>{{item?.Balance}}</td>
+              </tr>
+
+
+              <tr style="font-weight: bolder;">
+                <td> </td>
+                <td> </td>
+                <td>{{debitSumForReport}} </td>
+                <td>{{creditSumForReport}} </td>
+                <td> {{balanceSumForReport}}</td>
+
+              </tr>
+
+
+
+
+            </table>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <br>
+    <br>
+
+  </ng-template>
+
+
+  <ngx-loading [show]="journalListLoading"></ngx-loading>
+</div>

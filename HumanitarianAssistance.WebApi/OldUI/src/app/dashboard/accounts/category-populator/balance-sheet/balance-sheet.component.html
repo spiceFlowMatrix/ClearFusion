@@ -1,0 +1,329 @@
+<div class="main-balance-sheet">
+
+  <div class="row">
+    <div class="col-sm-12">
+
+      <!-- Capital Assets Written Off -->
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title text-left">Capital Assets Written Off</h3>
+            </div>
+            <div class="panel-body">
+              <dx-data-grid id="gridContainer" [dataSource]="capitalAssetsWrittenOffDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event,1 )" (onInitNewRow)="logEvent('InitNewRow',$event,1 )"
+                (onRowInserting)="logEvent('RowInserting',$event,1 )" (onRowInserted)="logEvent('RowInserted',$event,1 )" (onRowUpdating)="logEvent('RowUpdating',$event,1 )"
+                (onRowUpdated)="logEvent('RowUpdated',$event,1 )" (onRowRemoving)="logEvent('RowRemoving',$event,1 )" (onRowRemoved)="logEvent('RowRemoved',$event,1 )">
+                <dxo-paging [pageSize]="10"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+                </dxo-pager>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+                <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+
+
+                <dxi-column dataField="SubCategoryLabel" caption="Sub Category Label" [visible]="true">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="ChartOfAccountCode" caption="Account" alignment="right">
+                  <dxo-lookup [dataSource]="accountsDataSource" displayExpr="AccountName" valueExpr="AccountCode"></dxo-lookup>
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="ValueSource" caption="Value Source" [width]="150" alignment="right">
+                  <dxo-lookup [dataSource]="ValueSourceDataSource" displayExpr="ValueSourceName" valueExpr="ValueSourceId"></dxo-lookup>
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+
+              </dx-data-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Assets -->
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title text-left">Current Assets</h3>
+            </div>
+            <div class="panel-body">
+              <dx-data-grid id="gridContainer" [dataSource]="currentAssetsDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event, 2)" (onInitNewRow)="logEvent('InitNewRow',$event, 2)"
+                (onRowInserting)="logEvent('RowInserting',$event, 2)" (onRowInserted)="logEvent('RowInserted',$event, 2)" (onRowUpdating)="logEvent('RowUpdating',$event, 2)"
+                (onRowUpdated)="logEvent('RowUpdated',$event, 2)" (onRowRemoving)="logEvent('RowRemoving',$event, 2)" (onRowRemoved)="logEvent('RowRemoved',$event, 2)">
+                <dxo-paging [pageSize]="10"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+                </dxo-pager>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+                <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+
+
+                <dxi-column dataField="SubCategoryLabel" caption="Sub Category Label" [visible]="true">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="ChartOfAccountCode" caption="Account" alignment="right">
+                  <dxo-lookup [dataSource]="accountsDataSource" displayExpr="AccountName" valueExpr="AccountCode"></dxo-lookup>
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="ValueSource" caption="Value Source" [width]="150" alignment="right">
+                  <dxo-lookup [dataSource]="ValueSourceDataSource" displayExpr="ValueSourceName" valueExpr="ValueSourceId"></dxo-lookup>
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+
+              </dx-data-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Funds -->
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title text-left">Funds</h3>
+            </div>
+            <div class="panel-body">
+              <dx-data-grid id="gridContainer" [dataSource]="fundsDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event, 3)" (onInitNewRow)="logEvent('InitNewRow',$event, 3)"
+                (onRowInserting)="logEvent('RowInserting',$event, 3)" (onRowInserted)="logEvent('RowInserted',$event, 3)" (onRowUpdating)="logEvent('RowUpdating',$event, 3)"
+                (onRowUpdated)="logEvent('RowUpdated',$event, 3)" (onRowRemoving)="logEvent('RowRemoving',$event, 3)" (onRowRemoved)="logEvent('RowRemoved',$event, 3)">
+                <dxo-paging [pageSize]="10"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+                </dxo-pager>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+                <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+
+
+                <dxi-column dataField="SubCategoryLabel" caption="Sub Category Label" [visible]="true">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="ChartOfAccountCode" caption="Account" alignment="right">
+                  <dxo-lookup [dataSource]="accountsDataSource" displayExpr="AccountName" valueExpr="AccountCode"></dxo-lookup>
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="ValueSource" caption="Value Source" [width]="150" alignment="right">
+                  <dxo-lookup [dataSource]="ValueSourceDataSource" displayExpr="ValueSourceName" valueExpr="ValueSourceId"></dxo-lookup>
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+
+              </dx-data-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Endownment Fund -->
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title text-left">Endownment Fund</h3>
+            </div>
+            <div class="panel-body">
+              <dx-data-grid id="gridContainer" [dataSource]="endownmentFundDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event, 4)" (onInitNewRow)="logEvent('InitNewRow',$event, 4)"
+                (onRowInserting)="logEvent('RowInserting',$event, 4)" (onRowInserted)="logEvent('RowInserted',$event, 4)" (onRowUpdating)="logEvent('RowUpdating',$event, 4)"
+                (onRowUpdated)="logEvent('RowUpdated',$event, 4)" (onRowRemoving)="logEvent('RowRemoving',$event, 4)" (onRowRemoved)="logEvent('RowRemoved',$event, 4)">
+                <dxo-paging [pageSize]="10"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+                </dxo-pager>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+                <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+
+
+                <dxi-column dataField="SubCategoryLabel" caption="Sub Category Label" [visible]="true">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="ChartOfAccountCode" caption="Account" alignment="right">
+                  <dxo-lookup [dataSource]="accountsDataSource" displayExpr="AccountName" valueExpr="AccountCode"></dxo-lookup>
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="ValueSource" caption="Value Source" [width]="150" alignment="right">
+                  <dxo-lookup [dataSource]="ValueSourceDataSource" displayExpr="ValueSourceName" valueExpr="ValueSourceId"></dxo-lookup>
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+
+              </dx-data-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Reserve Account Adjustment -->
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title text-left">Reserve Account Adjustment</h3>
+            </div>
+            <div class="panel-body">
+              <dx-data-grid id="gridContainer" [dataSource]="reserveAccountAdjustmentDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event, 5)" (onInitNewRow)="logEvent('InitNewRow',$event, 5)"
+                (onRowInserting)="logEvent('RowInserting',$event, 5)" (onRowInserted)="logEvent('RowInserted',$event, 5)" (onRowUpdating)="logEvent('RowUpdating',$event, 5)"
+                (onRowUpdated)="logEvent('RowUpdated',$event, 5)" (onRowRemoving)="logEvent('RowRemoving',$event, 5)" (onRowRemoved)="logEvent('RowRemoved',$event, 5)">
+                <dxo-paging [pageSize]="10"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+                </dxo-pager>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+                <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+
+
+                <dxi-column dataField="SubCategoryLabel" caption="Sub Category Label" [visible]="true">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="ChartOfAccountCode" caption="Account" alignment="right">
+                  <dxo-lookup [dataSource]="accountsDataSource" displayExpr="AccountName" valueExpr="AccountCode"></dxo-lookup>
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="ValueSource" caption="Value Source" [width]="150" alignment="right">
+                  <dxo-lookup [dataSource]="ValueSourceDataSource" displayExpr="ValueSourceName" valueExpr="ValueSourceId"></dxo-lookup>
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+
+              </dx-data-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Long term Liability -->
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title text-left">Long term Liability</h3>
+            </div>
+            <div class="panel-body">
+              <dx-data-grid id="gridContainer" [dataSource]="longtermLiabilityDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event, 6)" (onInitNewRow)="logEvent('InitNewRow',$event, 6)"
+                (onRowInserting)="logEvent('RowInserting',$event, 6)" (onRowInserted)="logEvent('RowInserted',$event, 6)" (onRowUpdating)="logEvent('RowUpdating',$event, 6)"
+                (onRowUpdated)="logEvent('RowUpdated',$event, 6)" (onRowRemoving)="logEvent('RowRemoving',$event, 6)" (onRowRemoved)="logEvent('RowRemoved',$event, 6)">
+                <dxo-paging [pageSize]="10"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+                </dxo-pager>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+                <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+
+
+                <dxi-column dataField="SubCategoryLabel" caption="Sub Category Label" [visible]="true">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="ChartOfAccountCode" caption="Account" alignment="right">
+                  <dxo-lookup [dataSource]="accountsDataSource" displayExpr="AccountName" valueExpr="AccountCode"></dxo-lookup>
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="ValueSource" caption="Value Source" [width]="150" alignment="right">
+                  <dxo-lookup [dataSource]="ValueSourceDataSource" displayExpr="ValueSourceName" valueExpr="ValueSourceId"></dxo-lookup>
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+
+              </dx-data-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Current Liability -->
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title text-left">Current Liability</h3>
+            </div>
+            <div class="panel-body">
+              <dx-data-grid id="gridContainer" [dataSource]="currentLiabilityDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event, 7)" (onInitNewRow)="logEvent('InitNewRow',$event, 7)"
+                (onRowInserting)="logEvent('RowInserting',$event, 7)" (onRowInserted)="logEvent('RowInserted',$event, 7)" (onRowUpdating)="logEvent('RowUpdating',$event, 7)"
+                (onRowUpdated)="logEvent('RowUpdated',$event, 7)" (onRowRemoving)="logEvent('RowRemoving',$event, 7)" (onRowRemoved)="logEvent('RowRemoved',$event, 7)">
+                <dxo-paging [pageSize]="10"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+                </dxo-pager>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+                <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+
+
+                <dxi-column dataField="SubCategoryLabel" caption="Sub Category Label" [visible]="true">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="ChartOfAccountCode" caption="Account" alignment="right">
+                  <dxo-lookup [dataSource]="accountsDataSource" displayExpr="AccountName" valueExpr="AccountCode"></dxo-lookup>
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="ValueSource" caption="Value Source" [width]="150" alignment="right">
+                  <dxo-lookup [dataSource]="ValueSourceDataSource" displayExpr="ValueSourceName" valueExpr="ValueSourceId"></dxo-lookup>
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+
+              </dx-data-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Reserve Account -->
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title text-left">Reserve Account</h3>
+            </div>
+            <div class="panel-body">
+              <dx-data-grid id="gridContainer" [dataSource]="reserveAccountDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event, 8)" (onInitNewRow)="logEvent('InitNewRow',$event, 8)"
+                (onRowInserting)="logEvent('RowInserting',$event, 8)" (onRowInserted)="logEvent('RowInserted',$event, 8)" (onRowUpdating)="logEvent('RowUpdating',$event, 8)"
+                (onRowUpdated)="logEvent('RowUpdated',$event, 8)" (onRowRemoving)="logEvent('RowRemoving',$event, 8)" (onRowRemoved)="logEvent('RowRemoved',$event, 8)">
+                <dxo-paging [pageSize]="10"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+                </dxo-pager>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+                <dxo-editing mode="batch" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+
+
+                <dxi-column dataField="SubCategoryLabel" caption="Sub Category Label" [visible]="true">
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="ChartOfAccountCode" caption="Account" alignment="right">
+                  <dxo-lookup [dataSource]="accountsDataSource" displayExpr="AccountName" valueExpr="AccountCode"></dxo-lookup>
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="ValueSource" caption="Value Source" [width]="150" alignment="right">
+                  <dxo-lookup [dataSource]="ValueSourceDataSource" displayExpr="ValueSourceName" valueExpr="ValueSourceId"></dxo-lookup>
+                  <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+
+              </dx-data-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+  <ngx-loading [show]="balanceSheetloading"></ngx-loading>
+</div>

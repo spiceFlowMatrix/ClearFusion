@@ -1,0 +1,46 @@
+<div>
+  <h1 mat-dialog-title>
+    Add New Account
+  </h1>
+  <hr />
+  <form class="example-form" [formGroup]="addCharOfAccountForm" (ngSubmit)="onFormSubmit(addCharOfAccountForm.value)">
+    <div mat-dialog-content>
+      <div class="row">
+        <div class="col-sm-12">
+          Account Code:
+          <span>{{parentAccountCode}} </span>
+
+          <input [min]="min" [max]="max" [maxlength]="maxlength" formControlName="AccountCode" appNumberOnly="true" [ngClass]="{ 'is-invalid': submitted && f.AccountCode.errors }" />
+          <div *ngIf="submitted && f.AccountCode.errors" class="invalid-feedback">
+              <div *ngIf="f.AccountCode.errors.required" style="color:red">Account Code is required</div>
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <br/>
+          <span>Account Name: </span>
+          <input formControlName="AccountName" [ngClass]="{ 'is-invalid': submitted && f.AccountName.errors }" />
+          <div *ngIf="submitted && f.AccountName.errors" class="invalid-feedback">
+              <div *ngIf="f.AccountName.errors.required" style="color:red">Account Name is required</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row pull-right" mat-dialog-actions>
+
+      <button mat-raised-button color="accent" type="submit" [disabled]="addAccountLoader">
+        <span *ngIf="!addAccountLoader; else addAccountLoaderTemplate">Save</span>
+        <ng-template #addAccountLoaderTemplate>
+          <div class="spinner_center padding_top_5 padding_bottom_5">
+            <mat-spinner [diameter]="25"> </mat-spinner>
+          </div>
+        </ng-template>
+      </button>
+      <button mat-raised-button [mat-dialog-close]="data.data">
+        Cancel
+      </button>
+
+    </div>
+  </form>
+</div>

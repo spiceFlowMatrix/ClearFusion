@@ -2,7 +2,13 @@
   background-color: white;
   height: 55px;
   padding: 10px 15px;
-  box-shadow: 0 0px 10px -5px #000000d6;
+  box-shadow: 0 2px 7px -5px #000000d6;
+}
+.sub_header_template_main1 {
+  background-color: white;
+  height: 55px;
+  padding: 10px 15px;
+  box-shadow: none;
 }
 .float_right { float: right;}
 .display_inline { display: inline-block; margin-top: 0px !important}

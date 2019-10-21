@@ -1,0 +1,178 @@
+<div class="voucher-listing-main">
+<div class="body-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div [class]="colsm6">
+        <mat-card [ngStyle]="scrollStyles">
+          <div class="project-details row">
+            <div class="col-sm-2">
+              <h4 class="main_heading bdr_heading">Policies</h4>
+            </div>
+            <div class="col-sm-2">
+              <button style="margin-left:10px"
+              mat-raised-button *ngIf="isEditingAllowed"
+                  color="accent"
+                (click)="openAddPolicyDialog()">Add Policy</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <mat-form-field class="example-form-field">
+                <input
+                  matInput
+                  placeholder="Search"
+                  [(ngModel)]="policyFiltersForm.searchValues"
+                />
+              </mat-form-field>
+              <!-- Apply -->
+              &nbsp;
+              <button
+                mat-raised-button
+                color="accent"
+                class="margin_left_10"
+                [disabled]="policyFiltersForm.searchValues === ''"
+                (click)="onFilterSubmit($event)"
+              >
+                Apply
+              </button>
+              &nbsp;
+              <!-- Reset -->
+              <button mat-raised-button (click)="ResetPolicyFilters()">
+                Reset
+              </button>
+
+              <!-- Filter -->
+              <button
+                mat-icon-button
+                class="margin_left_10"
+                [matMenuTriggerFor]="menu"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="$event.stopPropagation()">
+                  <mat-checkbox [(ngModel)]="policyFiltersForm.PolicyId"
+                    >Policy Id</mat-checkbox
+                  >
+                </button>
+                <button mat-menu-item (click)="$event.stopPropagation()">
+                  <mat-checkbox
+                  [(ngModel)]="policyFiltersForm.PolicyName"
+                    >Policy Name</mat-checkbox
+                  >
+                </button>
+                <button mat-menu-item (click)="$event.stopPropagation()">
+                  <mat-checkbox
+                  [(ngModel)]="policyFiltersForm.Medium"
+                    >Medium</mat-checkbox
+                  >
+                </button>
+              </mat-menu>
+            </div>
+          </div>
+          <!-- <div class="row">
+            <div class="col-sm-9">
+                <div class="col-sm-2"><button (click)="onFilterSubmit($event)" mat-raised-button
+                  color="accent"  [disabled]="policyFiltersForm.searchValues === ''" class="margin_left_10"  mat-button>Apply</button></div>
+                <div class="col-sm-2" style="margin-left:12px !important"><button class="cstm-btn" (click)="ResetPolicyFilters()"  mat-button>Reset</button></div>
+                <div class="col-sm-1" style="margin-left:12px !important">
+                  <button class="cstm-btn" mat-button [matMenuTriggerFor]="menu" ><i class="fa fa-ellipsis-v"></i></button>
+                    <mat-menu #menu="matMenu">
+                        <div class="col-sm-12">
+                            <button mat-menu-item (click)="$event.stopPropagation()">
+                          <mat-checkbox [(ngModel)]="policyFiltersForm.PolicyId"> Policy Id </mat-checkbox>
+                          </button>
+                        </div>
+                        <div class="col-sm-12">
+                            <button mat-menu-item (click)="$event.stopPropagation()">
+                            <mat-checkbox [(ngModel)]="policyFiltersForm.PolicyName"> Policy Name </mat-checkbox>
+                            </button>
+                        </div>
+                        <div class="col-sm-12">
+                            <button mat-menu-item (click)="$event.stopPropagation()">
+                            <mat-checkbox [(ngModel)]="policyFiltersForm.Medium"> Medium </mat-checkbox>
+                            </button>
+                        </div>
+                    </mat-menu>
+                </div>
+            </div>
+          </div> -->
+          <div class="row">
+              <div
+              *ngIf="policyListLoaderFlag; else policyListTemplate"
+              class="col-sm-12"
+            ><br/><br/><br/>
+              <mat-spinner
+                class="center_loader"
+                diameter="50"
+              ></mat-spinner>
+            </div>
+            <ng-template #policyListTemplate>
+                <div class="col-sm-12">
+              <div class="responsive_table-responsive">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td width="1%"><p class="width_8"></p></td>
+                      <td width="5%"></td>
+                      <!--
+                        <td width="40%"><a class="add_new" routerLink="jobs">Add New....</a></td>
+                      -->
+                      <td width="40%"></td>
+                      <td width="20%"></td>
+                      <td width="20%"></td>
+                      <td width="5%"></td>
+                      <td width="1%"></td>
+                    </tr>
+                    <tr
+                      *ngFor="let db of policyList">
+                      <td width="1%"><p class="width_8"></p></td>
+                      <td class="grey-text" width="5%">
+                        {{ db.PolicyCode }}/{{ db.PolicyId }}
+                      </td>
+                      <td  width="40%" text-align="left">
+                        <p class="diamond"><a (click)="onItemClick(db.PolicyId)"
+                          [ngClass]="{'selected': selectedRowID === db.PolicyId}">{{ db.PolicyName }}</a></p>
+                      </td>
+                      <td class="text-right" width="10%">{{ db.MediumName }}</td>
+                      <td class="text-right" width="30%">
+                          <!-- <button mat-button>Approve</button> -->
+                        <!-- <p class="diamond">{{db.Medium}}</p> -->
+                      </td>
+                      <td class="" width="7">
+                          <button pTooltip="Archive"
+                          tooltipPosition="top" *ngIf="isEditingAllowed" (click)="DeletePolicy(db.PolicyId)" mat-icon-button
+                          color="warn">
+                              <mat-icon>delete</mat-icon>
+                          </button>
+                        <!-- <a class="blue-circle "><i class="far fa-bell"></i></a> -->
+                      </td>
+                      <td class="" width="7"><a class="blue-circle "><i class="far fa-bell"></i></a></td>
+                      <td width="1%" class="text-center"><i *ngIf="selectedRowID === db.PolicyId" class="material-icons font-12"> arrow_forward_ios </i></td>
+
+                    </tr>
+                  </tbody>
+                </table>
+                <mat-paginator
+                [length]="length"
+                [pageSize]="pageSize"
+                [pageSizeOptions]="pageSizeOptions"
+                [pageIndex]="pageIndex"
+                (page)="pagination($event)"
+              >
+              </mat-paginator>
+              </div>
+              </div>
+              </ng-template>
+          </div>
+        </mat-card>
+      </div>
+      <div [hidden]="!showPolicyDetail" class="col-sm-6">
+        <app-broadcast-policy-details [isEditingAllowed]="isEditingAllowed" (updatePolicyDetails)="updatePolicy($event)" [policyId]="policyId"></app-broadcast-policy-details>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+

@@ -10,6 +10,8 @@ import { ToastrService } from 'ngx-toastr';
 import { PurchaseFiledConfigComponent } from '../purchase-filed-config/purchase-filed-config.component';
 import { TableActionsModel } from 'projects/library/src/public_api';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { FieldConfigService } from '../../services/field-config.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-purchase-list',
@@ -35,11 +37,11 @@ export class PurchaseListComponent implements OnInit {
   purchaseListHeaders$ = of(['Id', 'Item', 'Purchased By', 'Project', 'Original Cost', 'Deprecated Cost']);
   subListHeaders$ = of(['Id', 'Date', 'Employee', 'Procured Amount', 'Must Return', 'Returned', 'Returned On']);
   procurementList$: Observable<IProcurementList[]>;
-
+  hideColums: Observable<{ headers?: string[], items?: string[] }>
 
   constructor(private purchaseService: PurchaseService,
     private router: Router, private dialog: MatDialog,
-    private datePipe: DatePipe, private toastr: ToastrService, private loader: CommonLoaderService) {
+    private datePipe: DatePipe, private toastr: ToastrService, private loader: CommonLoaderService, private fieldConfigservice: FieldConfigService) {
 
     this.filterValueModel = {
       CurrencyId: null,
@@ -62,6 +64,7 @@ export class PurchaseListComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.getScreenSize();
     this.actions = {
       items: {
@@ -76,6 +79,14 @@ export class PurchaseListComponent implements OnInit {
       }
 
     }
+    this.fieldConfigservice.data.subscribe(res => {
+      if (res.length > 0) {
+        let headers = res.map(r => r.headerName);
+        let items = res.map(r => r.modelName);
+        this.hideColums = of({headers:headers,items:items});
+      }
+
+    })
   }
 
   //#region "Dynamic Scroll"
@@ -109,9 +120,9 @@ export class PurchaseListComponent implements OnInit {
             DepreciatedCost: element.DepreciatedCost,
             subItems: element.ProcurementList.map((r) => {
               return {
-                Id : r.OrderId,
-                IssueDate : r.IssueDate ? this.datePipe.transform(new Date(r.IssueDate), 'dd/MM/yyyy') : null,
-                Employee : r.EmployeeName,
+                Id: r.OrderId,
+                IssueDate: r.IssueDate ? this.datePipe.transform(new Date(r.IssueDate), 'dd/MM/yyyy') : null,
+                Employee: r.EmployeeName,
                 ProcuredAmount: r.ProcuredAmount,
                 MustReturn: r.MustReturn ? 'Yes' : 'No',
                 Returned: r.Returned ? 'Yes' : 'No',
@@ -168,10 +179,10 @@ export class PurchaseListComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(x => {
-        console.log(x);
+        // console.log(x);
 
         this.purchaseList$.subscribe((purchase) => {
-          console.log(purchase);
+          // console.log(purchase);
 
           const index = purchase.findIndex(i => i.Id === x.PurchaseId);
           if (index !== -1) {
@@ -215,23 +226,24 @@ export class PurchaseListComponent implements OnInit {
   }
 
   configFilterAppliedEvent(event: any) {
+    console.log(event);
 
-    let headers: any[] = [];
+    // let headers: any[] = [];
 
-    event.forEach(element => {
-      headers.push(element.name);
-    });
+    // event.forEach(element => {
+    //   headers.push(element.name);
+    // });
 
-     this.purchaseListHeaders$ = of(headers);
+    //  this.purchaseListHeaders$ = of(headers);
 
-    this.purchaseFilterConfigList$.subscribe(y => {
+    // this.purchaseFilterConfigList$.subscribe(y => {
 
-      // this.purchaseList$ = of(y.map((element) => {
-      //   return {
+    //   // this.purchaseList$ = of(y.map((element) => {
+    //   //   return {
 
-      //   } as IPurchaseList;
-      // }));
-    });
+    //   //   } as IPurchaseList;
+    //   // }));
+    // });
 
   }
 

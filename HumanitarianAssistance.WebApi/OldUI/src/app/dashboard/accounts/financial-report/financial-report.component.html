@@ -1,0 +1,526 @@
+<div class="main-financial-report">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="main-heading clearfix">
+                <h3 class="page-headin">Financial Report</h3>
+            </div>
+        </div>
+        
+        <div class="col-sm-12">
+            <div>
+                <div id="tabs">
+                    <!-- <div class="caption">API</div> -->
+                    <dx-tabs #apiTabs [dataSource]="tabs" [selectedIndex]="0" (onItemClick)="selectTab($event)"></dx-tabs>
+
+                    <!-- Tab 1 "Notes" -->
+                    <div *ngIf="showSelectedTab==0">
+                        <dx-data-grid id="gridContainer" [dataSource]="NotesDataSource" [allowColumnReordering]="true" [allowColumnResizing]="true"
+                            [columnAutoWidth]="true" (onEditingStart)="logEvent('EditingStart',$event)" (onInitNewRow)="logEvent('InitNewRow',$event)"
+                            (onRowInserting)="logEvent('RowInserting',$event)" (onRowInserted)="logEvent('RowInserted',$event)"
+                            (onRowUpdating)="logEvent('RowUpdating',$event)" (onRowUpdated)="logEvent('RowUpdated',$event)" (onRowRemoving)="logEvent('RowRemoving',$event)"
+                            (onRowRemoved)="logEvent('RowRemoved',$event)">
+                            <dxo-paging [pageSize]="5"></dxo-paging>
+                            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"></dxo-pager>
+                            <dxo-filter-row [visible]="true"></dxo-filter-row>
+                            <dxo-header-filter [visible]="true"></dxo-header-filter>
+                           
+                            <dxo-editing mode="popup" [allowUpdating]="true" [allowAdding]="true" [form]="{
+                        items: ['Account','Narration','Notes'] , colCount: '1', shading :'false', shadingColor :'rgba(0, 0, 0, 0.5)'}">
+                                <dxo-popup title="Add/Edit Notes" [showTitle]="true" [width]="700" [height]="345" [closeOnOutsideClick]="true" [position]="{ my: 'center', at: 'center', of: windows }"></dxo-popup>
+                            </dxo-editing>
+
+                            <dxi-column dataField="NoteId" [visible]="false">
+                            </dxi-column>
+
+                            <dxi-column dataField="Account" caption="Account" [visible]="true">
+                                <dxo-lookup [dataSource]="AccountsArr" displayExpr="AccountName" valueExpr="AccountCode" searchExpr="true"></dxo-lookup>
+                                <dxi-validation-rule type="required"></dxi-validation-rule>
+                            </dxi-column>
+
+                            <dxi-column dataField="Narration" caption="Narration">
+                                <dxi-validation-rule type="required"></dxi-validation-rule>
+                            </dxi-column>
+
+                            <dxi-column dataField="Notes" caption="Notes">
+                                <dxo-lookup [dataSource]="NotesArr" displayExpr="NoteId" valueExpr="NoteId"></dxo-lookup>
+                                <dxi-validation-rule type="required"></dxi-validation-rule>
+                            </dxi-column>
+
+                        </dx-data-grid>
+                    </div>
+
+                    <!-- Tab 2 "Balance Sheet"   -->
+                    <div *ngIf="showSelectedTab==1">
+                        <div class="dx-field report-top-hdr">
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <form action="your-action" (submit)="selectedBalanceSheetCurrencyFilter(balanceSheetFilterForm)">
+
+                                        <div class="row filter-padding">
+                                            <div class="col-sm-8">
+                                                <dx-form id="form" [(formData)]="balanceSheetFilterForm" [readOnly]="false" labelLocation="left" [showColonAfterLabel]="true"
+                                                (onFieldDataChanged)="onFieldBalanceSheetChanged($event)" [showValidationSummary]="true" [colCount]="2">
+
+                                                    <dxi-item dataField="Date" editorType="dxDateBox" [editorOptions]="{ type: 'date', value: balanceSheetFilterForm.Date, displayFormat: 'dd/MM/yyyy', placeholder: 'Select Date', showClearButton: true }">
+                                                        <dxo-label text="To Date"></dxo-label>
+                                                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                                                    </dxi-item>
+
+                                                    <dxi-item dataField="SelectType" editorType="dxSelectBox" [editorOptions]="{  value: balanceSheetFilterForm.SelectType, dataSource: selectTypeArr, displayExpr: 'text', valueExpr: 'id', placeholder: 'Select Type', searchEnabled: true  }">
+                                                        <dxo-label text="Select Type"></dxo-label>
+                                                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                                                    </dxi-item>
+
+                                                    <dxi-item dataField="OfficeList" editorType="dxTagBox" showCheckBoxesMode="normal" [editorOptions]="{ dataSource: officeDropdown, displayExpr: 'OfficeName', valueExpr: 'OfficeId', multiline: false, maxDisplayedTags: 1, showClearButton:'true', placeholder: 'Select Office', selectAllMode: 'allPages', showSelectionControls: true, value: selectedOffices,  searchEnabled: true  }">
+                                                        <dxo-label text="Office"></dxo-label>
+                                                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                                                    </dxi-item>
+
+                                                    <dxi-item dataField="Currency" editorType="dxSelectBox" [editorOptions]="{  value: balanceSheetFilterForm.Currency, dataSource: currencyModel, displayExpr: 'CurrencyCode', valueExpr: 'CurrencyId', placeholder: 'Select Currency', searchEnabled: true, showClearButton:'true'  }">
+                                                        <dxo-label text="Currency"></dxo-label>
+                                                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                                                    </dxi-item>
+
+                                                </dx-form>
+
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <dx-button text="Update Filter" type="success" [useSubmitBehavior]="true"></dx-button>
+                                            </div>
+                                        </div>
+
+
+                                    </form>
+                                </div>
+                            </div>
+
+
+
+
+
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6">
+                                    <dx-button text="Print" class="button-info btn btn-default btn-green" (click)="print()"></dx-button>
+                                    <dx-button text="Download" class="button-info btn btn-default btn-green" (click)="pdfHtml()"></dx-button>
+                                </div>
+                                <div class="col-xs-12 col-sm-6">
+                                   
+                                </div>
+                             
+                            </div>
+                            <div id="tempStyleDiv" [ngClass]="{'blurry': setClass == true}"></div>
+                            <div #printsection class="report-bal-sheet-outer" style="background:#FFF" id="print-content">
+                                <div class="reportbs-hdr text-center" style="text-align:center; border-bottom: 1px solid #000;margin-bottom: 50px;padding-top: 10px;padding-bottom: 10px;">
+                                    <h3 style="font-family : arial;">COORDINATION OF HUMANITARIAN ASSISTANCE</h3>
+                                    <h4 style="font-family : arial;">BALANCE SHEET IN ({{SetCurrencyName}}) AS {{setBalanceSheetYear}}</h4>
+                                </div>
+                                <div class="reportbs-content">
+
+                                    <div class="report-table-hdd-box" *ngIf="CapitalAssetsWrittenOff">
+                                        <div class="hdd-underline" style="width: 100%; margin-bottom: 10px; margin-top: 30px;">
+                                            <h3 style="border-bottom: 1px solid #000;font-size: 18px; display: inline-block;padding-bottom: 5px; margin: 0; font-family : arial;">Property & Capital</h3>
+                                        </div>
+
+                                        <!-- CapitalAssetsWrittenOff -->
+                                        <div class="report-tble">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr *ngIf="CapitalAssetsWrittenOff">
+                                                            <td colspan="3">
+                                                                <strong style="font-family : arial;">Capital Assets Written Off</strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tr *ngFor="let item of CapitalAssetsWrittenOff">
+                                                            <td style="width:75%; font-family : arial;">{{item.Narration}}</td>
+                                                            <td style="width:92px; font-family : arial;"> </td>
+                                                            <td style="width:92px;font-family : arial;">{{item.Balance | number:'1.2-3'}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <!-- CurrentAssets -->
+                                        <div class="report-tble">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr *ngIf="CurrentAssets">
+                                                            <td colspan="3">
+                                                                <strong style="font-family : arial;">Current Assets</strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tr *ngFor="let item of CurrentAssets">
+                                                            <td style="width:75%; font-family : arial;">{{item.Narration}}</td>
+                                                            <td style="width:92px; font-family : arial;"> </td>
+                                                            <td style="width:92px;font-family : arial;">{{item.Balance | number:'1.2-3'}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <div class="report-tble m-t-2">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="width:75%; font-family : arial;">
+                                                                <strong>Total Property & Capital</strong>
+                                                            </td>
+                                                            <td style="width:92px; font-family : arial;">&nbsp;</td>
+                                                            <td style="width:92px; font-family : arial;">
+                                                                <strong class=""> {{PropertyAndCapitalTotal | number:'1.2-3'}}</strong>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Funds & Liabilities -->
+                                    <div class="report-table-hdd-box" *ngIf="Funds || EndownmentFund || ReserveAccountAdjustment || LongtermLiability || CurrentLiability || ReserveAccount">
+                                        <div class="hdd-underline" style="width: 100%; margin-bottom: 10px; margin-top: 30px;">
+                                            <h3 style="border-bottom: 1px solid #000;font-size: 18px; display: inline-block;padding-bottom: 5px; margin: 0; font-family : arial;">Funds & Liabilities</h3>
+                                        </div>
+                                        <div class="report-tble">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <tbody>
+
+                                                        <!-- Funds -->
+                                                        <tr *ngIf="Funds != null">
+                                                            <td colspan="3">
+                                                                <strong style="font-family : arial;">Funds</strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tr *ngFor="let item of Funds">
+                                                            <td style="width:75%; font-family : arial;">{{item.Narration}}</td>
+                                                            <td style="width:92px; font-family : arial;"> </td>
+                                                            <td style="width:92px; font-family : arial;">{{item.Balance}}</td>
+                                                        </tr>
+
+                                                        <!-- EndownmentFund -->
+                                                        <tr *ngIf="EndownmentFund">
+                                                            <td colspan="3">
+                                                                <strong style="font-family : arial;">Endownment Fund</strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tr *ngFor="let item of EndownmentFund">
+                                                            <td style="width:75%; font-family : arial;">{{item.Narration}}</td>
+                                                            <td style="width:92px; font-family : arial;"> </td>
+                                                            <td style="width:92px; font-family : arial;">{{item.Balance}}</td>
+                                                        </tr>
+
+                                                        <!-- ReserveAccountAdjustment -->
+                                                        <tr *ngIf="ReserveAccountAdjustment">
+                                                            <td colspan="3">
+                                                                <strong style="font-family : arial;">Reserve Account Adjustment</strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tr *ngFor="let item of ReserveAccountAdjustment">
+                                                            <td style="width:75%; font-family : arial;">{{item.Narration}}</td>
+                                                            <td style="width:92px; font-family : arial;"> </td>
+                                                            <td style="width:92px; font-family : arial;">{{item.Balance}}</td>
+                                                        </tr>
+
+                                                        <!-- LongtermLiability -->
+                                                        <tr *ngIf="LongtermLiability">
+                                                            <td colspan="3">
+                                                                <strong style="font-family : arial;">Long term Liability</strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tr *ngFor="let item of LongtermLiability">
+                                                            <td style="width:75%; font-family : arial;">{{item.Narration}}</td>
+                                                            <td style="width:92px; font-family : arial;"> </td>
+                                                            <td style="width:92px; font-family : arial;">{{item.Balance}}</td>
+                                                        </tr>
+
+                                                        <!-- CurrentLiability -->
+                                                        <tr *ngIf="CurrentLiability">
+                                                            <td colspan="3">
+                                                                <strong style="font-family : arial;">Current Liability</strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tr *ngFor="let item of CurrentLiability">
+                                                            <td style="width:75%; font-family : arial;">{{item.Narration}}</td>
+                                                            <td style="width:92px; font-family : arial;"> </td>
+                                                            <td style="width:92px; font-family : arial;">{{item.Balance | number:'1.2-3'}}</td>
+                                                        </tr>
+
+                                                        <!-- ReserveAccount -->
+                                                        <tr *ngIf="ReserveAccount">
+                                                            <td colspan="3">
+                                                                <strong style="font-family : arial;">Reserve Account</strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tr *ngFor="let item of ReserveAccount">
+                                                            <td style="width:75%; font-family : arial;">{{item.Narration}}</td>
+                                                            <td style="width:92px; font-family : arial;"> </td>
+                                                            <td style="width:92px; font-family : arial;">{{item.Balance | number:'1.2-3'}}</td>
+                                                        </tr>
+
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="report-tble m-t-2">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="width:75%; font-family : arial;">
+                                                                <strong>Difference (Carried Forward to CHA Own Source Funds) </strong>
+                                                            </td>
+                                                            <td style="width:92px; font-family : arial;">&nbsp;</td>
+                                                            <td style="width:92px; font-family : arial;">
+                                                                <strong class=""> {{DifferenceCategoryTotal| number:'1.2-3'}}</strong>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="report-tble m-t-2">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="width:75%; font-family : arial;">
+                                                                <strong>Total Funds & Liabilities</strong>
+                                                            </td>
+                                                            <td style="width:92px; font-family : arial;">&nbsp;</td>
+                                                            <td style="width:92px; font-family : arial;">
+                                                                <strong class=""> {{TotalFundsAndLiabilitiescategoryTotal | number:'1.2-3'}}</strong>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center report-ftr-btn m-b-1">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- tab 3 "Income/Expense" -->
+                    <div *ngIf="showSelectedTab==2">
+                        <div class="dx-field report-top-hdr">
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <form action="your-action" (submit)="selectedIncomeExpenseFilter(balanceSheetFilterForm)">
+
+                                        <div class="row filter-padding">
+                                            <div class="col-sm-8">
+                                                <dx-form id="form" [(formData)]="balanceSheetFilterForm" [readOnly]="false" labelLocation="left" [showColonAfterLabel]="true"
+                                                (onFieldDataChanged)="onFieldIncomeExpenseChanged($event)" [showValidationSummary]="true" [colCount]="2">
+
+                                                    <dxi-item dataField="Date" class="dsplcal cal-custom-outer">
+                                                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                                                        <!-- <p-calendar dateFormat="dd/mm/yy" placeholder="Date Range" [showIcon]="true" [style]="{'position': 'fixed', 'overflow': 'visible', 'z-index': '999'}"></p-calendar> -->
+                                                        <p-calendar name="journalDateRange" [(ngModel)]="incomeExpenseDateRange" (ngModelChange)="onFieldIncomeExpenseChanged($event)" dateFormat="dd/mm/yy" selectionMode="range" showIcon="true"
+                                                            [style]="{'position': 'relative', 'overflow': 'visible', 'z-index': '999'}"></p-calendar>
+                                                    </dxi-item>
+
+                                                    <dxi-item dataField="OfficeList" editorType="dxTagBox" showCheckBoxesMode="normal" [editorOptions]="{ dataSource: officeDropdown, displayExpr: 'OfficeName', valueExpr: 'OfficeId', multiline: false, maxDisplayedTags: 1, showClearButton:'true', placeholder: 'Select Office', selectAllMode: 'allPages', showSelectionControls: true, value: selectedOffices,  searchEnabled: true  }">
+                                                        <dxo-label text="Office"></dxo-label>
+                                                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                                                    </dxi-item>
+
+                                                    <dxi-item dataField="Currency" editorType="dxSelectBox" [editorOptions]="{  value: balanceSheetFilterForm.Currency, dataSource: currencyModel, displayExpr: 'CurrencyCode', valueExpr: 'CurrencyId', placeholder: 'Select Currency', searchEnabled: true, showClearButton:'true'  }">
+                                                        <dxo-label text="Currency"></dxo-label>
+                                                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                                                    </dxi-item>
+
+                                                </dx-form>
+
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <dx-button text="Update Filter" type="success" [useSubmitBehavior]="true"></dx-button>
+                                            </div>
+                                        </div>
+
+
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6">
+                                    <dx-button text="Print" class="button-info btn btn-default btn-green" (click)="printIncomeExpense()"></dx-button>
+                                    <dx-button text="Download" class="button-info btn btn-default btn-green" (click)="pdfHtmlIncomeExpense()"></dx-button>
+                                </div>
+                            </div>
+                           
+                        </div>
+                        <div #printsection1 class="report-bal-sheet-outer" style="background:#FFF" id="print-content-incomeexpense">
+                            <div class="reportbs-hdr text-center" style="text-align:center; border-bottom: 1px solid #000;margin-bottom: 50px;padding-top: 10px;padding-bottom: 10px;">
+                                <h3 style="font-family : arial;">COORDINATION OF HUMANITARIAN ASSISTANCE</h3>
+                                <h4 style="font-family : arial;">INCOME/EXPENDITURE REPORT IN ({{SetCurrencyName }}) AS {{setIncomeExpensefromYear }} TO {{setIncomeExpensetoYear}} </h4>
+                            </div>
+                            <div class="reportbs-content">
+
+                                <!-- Revenue/Income -->
+                                <div class="report-table-hdd-box" *ngIf="IncomeFromDonor || IncomeFromProjects || ProfitOnBankDeposits">
+                                    <div class="hdd-underline" style="width: 100%; margin-bottom: 10px; margin-top: 30px;">
+                                        <h3 style="border-bottom: 1px solid #000;font-size: 18px; display: inline-block;padding-bottom: 5px; margin: 0; font-family : arial;">Revenue/Income</h3>
+                                    </div>
+                                    <div class="report-tble">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                    <!-- IncomeFromDonor -->
+                                                    <tr *ngIf="IncomeFromDonor">
+                                                        <td colspan="3">
+                                                            <strong style="font-family : arial;">Income From Donor</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr *ngFor="let item of IncomeFromDonor">
+                                                        <td style="width:75%; font-family : arial;">{{item.Narration}}</td>
+                                                        <td style="width:92px; font-family : arial;"> </td>
+                                                        <td style="width:92px; font-family : arial;">{{item.Balance | number:'10.2-3'}}</td>
+                                                    </tr>
+
+                                                    <!-- IncomeFromProjects -->
+                                                    <tr *ngIf="IncomeFromProjects">
+                                                        <td colspan="3">
+                                                            <strong style="font-family : arial;">Income From Projects</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr *ngFor="let item of IncomeFromProjects">
+                                                        <td style="width:75%; font-family : arial;">{{item.Narration}}</td>
+                                                        <td style="width:92px; font-family : arial;"> </td>
+                                                        <td style="width:92px; font-family : arial;">{{item.Balance| number:'10.2-3'}}</td>
+                                                    </tr>
+
+                                                    <!-- ProfitOnBankDeposits -->
+                                                    <tr *ngIf="ProfitOnBankDeposits">
+                                                        <td colspan="3">
+                                                            <strong style="font-family : arial;">Profit On Bank Deposits</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr *ngFor="let item of ProfitOnBankDeposits">
+                                                        <td style="width:75%; font-family : arial;">{{item.Narration}}</td>
+                                                        <td style="width:92px; font-family : arial;"> </td>
+                                                        <td style="width:92px; font-family : arial;">{{item.Balance |number:'10.2-3'}}</td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="report-tble m-t-2">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:75%; font-family : arial;">
+                                                            <strong>Total Revenue/Income</strong>
+                                                        </td>
+                                                        <td style="width:92px; font-family : arial;">&nbsp;</td>
+                                                        <td style="width:92px; font-family : arial;">
+                                                            <strong class=""> {{TotalIncomeRevenue | number:'10.2-3'}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Expenses -->
+                                <div class="report-table-hdd-box" *ngIf="IncomeExpenditureFund">
+                                    <div class="hdd-underline" style="width: 100%; margin-bottom: 10px; margin-top: 30px;">
+                                        <h3 style="border-bottom: 1px solid #000;font-size: 18px; display: inline-block;padding-bottom: 5px; margin: 0; font-family : arial;">Expenditure</h3>
+                                    </div>
+                                    <div class="report-tble">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="3">
+                                                            <strong style="font-family : arial;">Funds</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr *ngFor="let item of IncomeExpenditureFund">
+                                                        <td style="width:75%; font-family : arial;">{{item.Narration}}</td>
+                                                        <td style="width:92px; font-family : arial;"></td>
+                                                        <td style="width:92px; font-family : arial;">{{item.Balance | number:'10.2-3'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="report-tble m-t-2">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:75%; font-family : arial;">
+                                                            <strong>Total Expenditure</strong>
+                                                        </td>
+                                                        <td style="width:92px; font-family : arial;">&nbsp;</td>
+                                                        <td style="width:92px; font-family : arial;">
+                                                            <strong class=""> {{IncomeExpenditureFundTotal | number:'10.2-3'}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Grand Total  -->
+                                <div class="report-tble m-t-2">
+                                    <hr />
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="width:75%; font-family : arial;">
+                                                        <strong style="font-family : arial;">Excess of Expenditure (Carried Forward to CHA Own Source Funds)
+                                                        </strong>
+                                                    </td>
+                                                    <td style="width:92px; font-family : arial;">&nbsp;</td>
+                                                    <td style="width:92px; font-family : arial;">
+                                                        <strong class=""> {{ExcessofExpenditureTotal | number:'10.2-3'}}</strong>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center report-ftr-btn m-b-1">
+                            <!-- <dx-button text="Print" class="button-info btn btn-default btn-green" (click)="printIncomeExpense()"></dx-button>
+                            <dx-button text="Download" class="button-info btn btn-default btn-green" (click)="pdfHtmlIncomeExpense()"></dx-button> -->
+                        </div>
+                    </div>
+
+                    <!-- tab 4 "Details Of Notes" -->
+                    <div *ngIf="showSelectedTab==3">
+                        <br/>
+                        <app-details-of-note [financialYearArr]="financialYearArr" [currencyModel]="currencyModel" [accountTypeDropdown]="accountTypeDropdown"></app-details-of-note>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <ngx-loading [show]="financialReportLoader"></ngx-loading>
+</div>

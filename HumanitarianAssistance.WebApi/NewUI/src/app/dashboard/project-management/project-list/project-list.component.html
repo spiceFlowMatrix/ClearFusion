@@ -1,0 +1,179 @@
+<div class="project-list-main">
+  <div class="main_body">
+    <div class="body-content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-10 col-sm-offset-1">
+            <mat-card [ngStyle]="scrollStyles">
+              <div class="scrollable_div">
+                <div class="project-details">
+                  <h4 class="main_heading">
+                    Projects
+                  </h4>
+                </div>
+
+                <!-- code to filter list -->
+                <div class="row">
+                  <div class="col-sm-12">
+                    <mat-form-field class="example-form-field">
+                      <input
+                        matInput
+                        placeholder="Search"
+                        [(ngModel)]="projectFilterModel.FilterValue"
+                        (keyup.enter)="projectFilterModel.FilterValue != '' ? onFilterApplied() : null"
+                      />
+                    </mat-form-field>
+                    <!-- Apply -->
+                    &nbsp;
+                    <button
+                      mat-raised-button
+                      class="margin_left_10"
+                      color="primary"
+                      [disabled]="projectFilterModel.FilterValue === ''"
+                      (click)="onFilterApplied()"
+                    >
+                      Apply
+                    </button>
+                    &nbsp;
+                    <!-- Reset -->
+                    <button mat-raised-button (click)="onFilterReset()">
+                      Reset
+                    </button>
+
+                    <!-- Filter -->
+                    <button
+                      mat-icon-button
+                      class="margin_left_10"
+                      [matMenuTriggerFor]="menu"
+                    >
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                      <div (click)="$event.stopPropagation()">
+                          <button mat-menu-item>
+                              <mat-checkbox
+                                [(ngModel)]="projectFilterModel.ProjectIdFlag"
+                                >ProjectId</mat-checkbox
+                              >
+                            </button>
+                            <button mat-menu-item>
+                              <mat-checkbox
+                                [(ngModel)]="projectFilterModel.ProjectCodeFlag"
+                                >ProjectCode</mat-checkbox
+                              >
+                            </button>
+                            <button mat-menu-item>
+                              <mat-checkbox
+                                [(ngModel)]="projectFilterModel.ProjectNameFlag"
+                                >Project Name</mat-checkbox
+                              >
+                            </button>
+                            <button mat-menu-item>
+                              <mat-checkbox
+                                [(ngModel)]="projectFilterModel.DescriptionFlag"
+                                >Project Description</mat-checkbox
+                              >
+                            </button>
+                      </div>
+                    </mat-menu>
+                  </div>
+                </div>
+
+                <div
+                  *ngIf="projectListLoaderFlag; else projectListTemplate"
+                  class="col-sm-12"
+                >
+                  <mat-spinner
+                    class="center_loader"
+                    diameter="50"
+                  ></mat-spinner>
+                </div>
+                <ng-template #projectListTemplate>
+                  <div
+                    class="responsive_table-responsive  table-responsive mar_tp_40"
+                  >
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr>
+                          <td width="5%"></td>
+                          <td>
+                            <a
+                              class="add_new"
+                              (click)="addNewProject()"
+                              *ngIf="isEditingAllowed"
+                              >Add New....</a
+                            >
+                          </td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td width="5%"></td>
+                        </tr>
+
+                        <tr
+                          *ngFor="let list of projectList"
+                          (click)="onProjectClicked(list.ProjectId)"
+                        >
+                          <td width="5%"></td>
+                          <td class="grey-text">
+                            {{ list.ProjectId }}/{{ list.ProjectCode }}
+                          </td>
+                          <td>
+                            <p
+                              *ngIf="
+                                list.ProjectName != null &&
+                                list.ProjectName != ''
+                              "
+                              class="diamond"
+                            >
+                              {{ list.ProjectName
+                              }}<span *ngIf="list.ProjectDescription != null"
+                                >/{{ list.ProjectDescription }}</span
+                              >
+                            </p>
+                          </td>
+                          <td class="grey-text">
+                            {{ list.TotalDaysinHours }} hours
+                          </td>
+                          <td>
+                            <p
+                              *ngIf="
+                                list.ProjectPhase != null &&
+                                list.ProjectPhase != ''
+                              "
+                              class="diamond"
+                            >
+                              {{ list.ProjectPhase }}
+                            </p>
+                          </td>
+                          <td
+                            ng-class="{'green': list.IsWin == true, 'red': list.IsWin == false,'blue-circle':list.IsWin == null}"
+                          >
+                            <a class="blue-circle"
+                              ><i class="far fa-bell"></i
+                            ></a>
+                          </td>
+                          <td width="5%"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <mat-paginator
+                    [length]="projectFilterModel.totalCount"
+                    [pageSize]="projectFilterModel.pageSize"
+                    [pageIndex]="projectFilterModel.pageIndex"
+                    [pageSizeOptions]="[5, 10, 25, 100]"
+                    (page)="pageEvent($event)"
+                  >
+                  </mat-paginator>
+                </ng-template>
+              </div>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
+    <router-outlet></router-outlet>
+  </div>
+</div>

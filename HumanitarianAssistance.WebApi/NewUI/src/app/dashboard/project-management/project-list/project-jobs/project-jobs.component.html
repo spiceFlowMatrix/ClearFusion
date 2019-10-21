@@ -1,0 +1,92 @@
+<div class="container-fluid">
+  <div class="row">
+    <div [class]="colsm6">
+      <mat-card [ngStyle]="scrollStyles">
+        <h4 class="main_heading">
+          Project Jobs Details<i class="fa fa-cog black_icon pull-right"></i>
+        </h4>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="openAddProjectJobsDialog()"
+          *ngIf="isEditingAllowed"
+        >
+          Add
+        </button>
+        <hr />
+        <div class="row">
+          <div
+            *ngIf="ProjectJobsListLoaderFlag; else projectJobsListTemplate"
+            class="col-sm-12"
+          >
+            <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+          </div>
+          <ng-template #projectJobsListTemplate>
+            <div class="col-sm-12 responsive_table-responsive">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <td width="1%">
+                      <p class="width_8"></p>
+                    </td>
+                    <td width="15%">Code/Id</td>
+                    <td width="83%">Project Job Name</td>
+                    <td width="1%">
+                      <p class="width_8"></p>
+                    </td>
+                  </tr>
+                  <tr
+                    (click)="onItemClick(item.ProjectJobId)"
+                    *ngFor="let item of projectJobDetailList"
+                    [ngClass]="{
+                      selected: selectedProjectJobId == item.ProjectJobId
+                    }"
+                  >
+                    <td width="1%">
+                      <p class="width_8"></p>
+                    </td>
+                    <td width="15%" class="grey-text">
+                      {{ item.ProjectJobCode }}/{{ item.ProjectJobId }}
+                    </td>
+                    <td width="20%">
+                      <p class="diamond">{{ item.ProjectJobName }}</p>
+                    </td>
+                    <td width="1%" class="text-center">
+                      <i
+                        *ngIf="selectedProjectJobId == item.ProjectJobId"
+                        class="material-icons font-12"
+                      >
+                        arrow_forward_ios
+                      </i>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <mat-paginator
+                [length]="projectJobsFilterModel.TotalCount"
+                [pageSize]="projectJobsFilterModel.PageSize"
+                [pageIndex]="projectJobsFilterModel.PageIndex"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+                (page)="pageEvent($event)"
+              >
+              </mat-paginator>
+            </div>
+          </ng-template>
+        </div>
+      </mat-card>
+    </div>
+    <!-- project-budget detail -->
+    <div [hidden]="!showProjectJobsDetail" class="col-sm-6">
+      <mat-card [ngStyle]="scrollStyles">
+        <app-project-jobs-details
+          [projectJobId]="selectedProjectJobId"
+          [projectJobDetailList]="projectJobDetailList"
+          [projectId]="projectId"
+          (projectJobsDetailChanged)="projectJobsDetailChangedEmit($event)"
+          (deleteProjectJob)="deleteProjectChangeEmit($event)"
+        >
+        </app-project-jobs-details>
+      </mat-card>
+    </div>
+  </div>
+</div>

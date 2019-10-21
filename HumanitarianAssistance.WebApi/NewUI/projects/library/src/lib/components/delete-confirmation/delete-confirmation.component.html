@@ -1,0 +1,32 @@
+<div mat-dialog-content>
+  <div class="row">
+    <div class="col-sm-12 min_height text-center">
+      <div *ngIf="isLoading" class="margin_top_20">
+        <mat-spinner [diameter]="60" style="margin: 0 auto;"></mat-spinner>
+      </div>
+
+      <i *ngIf="!isLoading" class="material-icons image_size">
+        error_outline
+      </i>
+    </div>
+    <div class="col-sm-12 text-center">
+      <h4>{{ confirmMessage }}</h4>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <div class="col-sm-12 text-center">
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="confirmAction()"
+      [disabled]="isLoading"
+      cdkFocusInitial
+    >
+      {{ confirmText }}
+    </button>
+    <button mat-raised-button [mat-dialog-close]="data.data">
+      {{ cancelText }}
+    </button>
+  </div>
+</div>
