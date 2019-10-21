@@ -30,7 +30,10 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
             try
             {
-                vehicle = await _dbContext.PurchasedVehicleDetail.Where(x => x.IsDeleted == false && x.Id == request.VehicleId)
+                vehicle = await _dbContext.PurchasedVehicleDetail
+                                          .Include(x=> x.EmployeeDetail)
+                                          .Include(x=> x.StoreItemPurchase)
+                                          .Where(x => x.IsDeleted == false && x.Id == request.VehicleId)
                                         .Select(x => new VehicleModel
                                         {
                                             VehicleId = x.Id,
@@ -42,6 +45,10 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                             MobilOilConsumptionRate = x.MobilOilConsumptionRate,
                                             ModelYear = x.ModelYear,
                                             OfficeId= x.OfficeId,
+                                            EmployeeName= x.EmployeeDetail.EmployeeName,
+                                            PurchaseName= $"{x.StoreItemPurchase.PurchaseName} - {x.StoreItemPurchase.PurchaseDate.ToShortDateString()}-{x.StoreItemPurchase.PurchaseId}",
+                                            PurchaseId= x.StoreItemPurchase.PurchaseId,
+                                            OfficeName = x.OfficeId != 0 ? _dbContext.OfficeDetail.FirstOrDefault(y=> y.IsDeleted== false && y.OfficeId == x.OfficeId).OfficeName : null
                                         }).FirstOrDefaultAsync();
 
                 if (vehicle == null)
