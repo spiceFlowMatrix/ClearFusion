@@ -27,7 +27,7 @@ export class NotifySignalRService {
       .build();
 
     this.hubConnection.on('BroadcastMessage', data => {
-      // console.log(data);
+      console.log(data);
       this.DemoMessage$.next(data);
     });
 
@@ -53,7 +53,7 @@ export class NotifySignalRService {
   //#region "activityPermissionChanged - on"
   public activityPermissionChangedOn(): void {
     this.hubConnection.on('activityPermissionChanged', data => {
-      // console.log(data);
+      console.log(data);
       this.activityPermission$.next(data);
     });
   }
@@ -61,7 +61,7 @@ export class NotifySignalRService {
 
   public addTransferChartDataListener(): void {
     this.hubConnection.on('transferchartdata', data => {
-      // console.log(data);
+      console.log(data);
     });
   }
 }

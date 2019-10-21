@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { AddHoursComponent } from '../add-hours/add-hours.component';
 import { PurchaseService } from '../../services/purchase.service';
+import { IGeneratorTrackerFilter, IGeneratorList } from '../../models/generator';
 
 @Component({
   selector: 'app-generator-tracker',
@@ -15,9 +16,10 @@ import { PurchaseService } from '../../services/purchase.service';
 export class GeneratorTrackerComponent implements OnInit {
   generatorListHeaders$ = of(['Id', 'K.V.', 'Fuel Consumption Rate', 'Incurred Usage(Hours)', 'Total Usage(Hours)', 'Total Cost',
                               'Original Cost']);
-  generatorList$: Observable<IVehicleList[]>;
+  generatorList$: Observable<IGeneratorList[]>;
   actions: TableActionsModel;
   recordsCount: number;
+  generatorTrackerFilter: IGeneratorTrackerFilter;
 
   constructor(private router: Router , private dialog: MatDialog, private purchaseService: PurchaseService) { }
 
@@ -30,19 +32,33 @@ export class GeneratorTrackerComponent implements OnInit {
       },
       subitems: {
       }
+    };
+    this.initializeModel();
+    this.getGeneratorList(this.generatorTrackerFilter);
+  }
 
-    }
+  initializeModel() {
+    this.generatorTrackerFilter = {
+      Voltage: null,
+      OfficeId: null,
+      ModelYear: null,
+      TotalCost: null,
+      pageIndex: 0,
+      pageSize: 10
+    };
   }
+
   goToDetails(e) {
-    this.router.navigate(['store/generator/detail', 1]);
+    this.router.navigate(['store/generator/detail', e.GeneratorId]);
   }
+
   openHoursModal(event) {
+    debugger;
     if (event.type === 'button') {
       const dialogRef = this.dialog.open(AddHoursComponent, {
         width: '850px',
         data: {
-          //value: event.item.Id,
-          //  officeId: this.filterValueModel.OfficeId
+           generatorId: event.item.GeneratorId,
         }
       });
     }
@@ -53,7 +69,7 @@ export class GeneratorTrackerComponent implements OnInit {
       TotalCost: selectedFilter.TotalCost,
       ModelYear: selectedFilter.ModelYear,
       OfficeId: selectedFilter.OfficeId,
-      PlateNo: selectedFilter.Voltage,
+      Voltage: selectedFilter.Voltage,
       pageSize: 10,
       pageIndex: 0
     };
@@ -62,20 +78,28 @@ export class GeneratorTrackerComponent implements OnInit {
   }
 
   getGeneratorList(filter) {
-    this.purchaseService.getVehicleList(filter)
+    this.purchaseService.getGeneratorList(filter)
       .subscribe(response => {
         this.recordsCount = response.TotalRecords;
-        this.generatorList$ = of(response.VehicleList.map((element) => {
+        this.generatorList$ = of(response.GeneratorTrackerList.map((element) => {
           return {
-            VehicleId: element.VehicleId,
-            PlateNo: element.PlateNo,
-            Driver: element.EmployeeName,
+            GeneratorId: element.GeneratorId,
+            Voltage: element.Voltage,
             FCRate: element.FuelConsumptionRate,
-            TotalMileage: element.TotalMileage,
+            IncurredUsage: element.IncurredUsage,
+            TotalUsage: element.TotalUsage,
             TotalCost: element.TotalCost,
             OriginalCost: element.OriginalCost,
           };
         }));
       });
   }
+
+  //#region "pageEvent"
+  pageEvent(e) {
+    this.generatorTrackerFilter.pageIndex = e.pageIndex;
+    this.generatorTrackerFilter.pageSize = e.pageSize;
+    this.getGeneratorList(this.generatorTrackerFilter);
+  }
+  //#endregion
 }

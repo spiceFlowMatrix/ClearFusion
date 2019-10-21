@@ -56,7 +56,7 @@ export class DbheaderComponent implements OnInit, OnDestroy {
           if (response.statusCode === 200 && response.data != null) {
             window.open(response.data, '_blank');
           } else if (response.statusCode === 200) {
-            // console.log(response.message);
+            console.log(response.message);
           }
         },
         (error: any) => {}

@@ -13,8 +13,8 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
 
     [ApiController]
     [Produces("application/json")]
-    [Route("api/VehicleTracker/[Action]")]
-    [ApiExplorerSettings(GroupName = nameof(SwaggerGrouping.VehicleTracker))]
+    [Route("api/GeneratorTracker/[Action]")]
+    [ApiExplorerSettings(GroupName = nameof(SwaggerGrouping.GeneratorTracker))]
     [Authorize]
     public class GeneratorTrackerController: BaseController
     {
@@ -23,7 +23,41 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetGeneratorList(GetVehicleListQuery request)
+        public async Task<IActionResult> GetGeneratorList(GetGeneratorListQuery request)
+        {
+            var result = await Task.FromResult(_mediator.Send(request));
+
+            if (result.Exception == null)
+            {
+                return Ok(await result);
+            }
+            else
+            {
+                return BadRequest(result.Exception.InnerException.Message);
+            }
+        }
+
+        [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetGeneratorById(long id)
+        {
+            var result = await Task.FromResult(_mediator.Send(new GetGeneratorByIdQuery { GeneratorId = id}));
+
+            if (result.Exception == null)
+            {
+                return Ok(await result);
+            }
+            else
+            {
+                return BadRequest(result.Exception.InnerException.Message);
+            }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> AddGeneratorUsageHours(AddGeneratorUsageHoursCommand request)
         {
             var result = await Task.FromResult(_mediator.Send(request));
 
