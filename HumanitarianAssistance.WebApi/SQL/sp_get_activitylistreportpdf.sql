@@ -1,4 +1,5 @@
 --DROP FUNCTION get_activity_list_report_pdf(activity_id bigint[],project_id bigint)
+--select * from get_activity_list_report_pdf('{101,102,103}',28);
 CREATE
 OR REPLACE FUNCTION public.get_activity_list_report_pdf(activity_id bigint [], project_id bigint) returns TABLE (
     serialnumber bigint,

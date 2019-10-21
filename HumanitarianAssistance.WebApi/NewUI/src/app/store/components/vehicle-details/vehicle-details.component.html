@@ -11,7 +11,7 @@
   </div>
 </lib-sub-header-template>
 <mat-divider></mat-divider>
-<mat-tab-group>
+<mat-tab-group [ngStyle]="scrollStyles">
   <mat-tab label="DETAILS">
     <ng-template matTabContent>
       <ng-container *ngTemplateOutlet="vehicleDetails"></ng-container>
@@ -35,39 +35,41 @@
             <tbody>
               <tr>
                 <td>Incurred Mileage(KM)</td>
-                <td>Otto</td>
+
+                <td>{{vehicleDetailForm.IncurredMileage}}</td>
               </tr>
               <tr>
                 <td>Starting Mileage(KM)</td>
-                <td>Otto</td>
+                <td>{{vehicleDetailForm.StartingMileage}}</td>
               </tr>
               <tr>
                 <td>Current Mileage (KM)</td>
-                <td>Otto</td>
+                <td>-</td>
               </tr>
               <tr>
                 <td>Total Fuel Usage (Litres)</td>
-                <td>Otto</td>
+                <td>-</td>
               </tr>
               <tr>
                 <td>Total Mobil Oil Usage (Litres)</td>
-                <td>Otto</td>
+                <td>-</td>
               </tr>
               <tr>
                 <td>Standard Fuel Consumption Rate (Litre Per 100 KM)</td>
-                <td>Otto</td>
+                <td>{{vehicleDetailForm.FuelConsumptionRate}}</td>
               </tr>
               <tr>
                 <td>Actual Fuel Consumption Rate (Litre Per 100 KM)</td>
-                <td>Otto</td>
+                <td>-</td>
               </tr>
               <tr>
                 <td>Standard Mobil Oil Consumption Rate (Litre Per 100 KM)</td>
-                <td>Otto</td>
+                <td>{{vehicleDetailForm.MobilOilConsumptionRate}}</td>
               </tr>
               <tr>
                 <td>Actual Mobil Oil Consumption Rate (Litre Per 100 KM)</td>
-                <td>Otto</td>
+                <td>-</td>
+
               </tr>
             </tbody>
           </table>
@@ -76,27 +78,28 @@
             <tbody>
               <tr>
                 <td>Fuel Total Cost</td>
-                <td>Otto</td>
+
+                <td>-</td>
               </tr>
               <tr>
                 <td>Mobil Oil Total Cost</td>
-                <td>Otto</td>
+                <td>-</td>
               </tr>
               <tr>
                 <td>Spare Parts Total Cost</td>
-                <td>Otto</td>
+                <td>-</td>
               </tr>
               <tr>
                 <td>Services & Maintenance Total Cost</td>
-                <td>Otto</td>
+                <td>-</td>
               </tr>
               <tr>
                 <td>Vehicle Starting Cost</td>
-                <td>Otto</td>
+                <td>-</td>
               </tr>
               <tr>
                 <td>Total Cost</td>
-                <td>Otto</td>
+                <td>-</td>
               </tr>
             </tbody>
           </table>
@@ -108,23 +111,25 @@
             <tbody>
               <tr>
                 <td>Plate No</td>
-                <td>Otto</td>
+
+                <td>{{vehicleDetailForm.PlateNo}}</td>
               </tr>
               <tr>
                 <td>Driver</td>
-                <td>Otto</td>
+                <td>{{vehicleDetailForm.EmployeeName}}</td>
               </tr>
               <tr>
                 <td>Model Year</td>
-                <td>Otto</td>
+                <td>{{vehicleDetailForm.ModelYear}}</td>
               </tr>
               <tr>
                 <td>Location</td>
-                <td>Otto</td>
+                <td>{{vehicleDetailForm.OfficeName}}</td>
               </tr>
               <tr>
                 <td>PurchaseId</td>
-                <td>Otto</td>
+                <td><a>{{vehicleDetailForm.PurchaseName}}</a></td>
+
               </tr>
             </tbody>
           </table>

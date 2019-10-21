@@ -102,12 +102,28 @@ namespace HumanitarianAssistance.WebApi.Controllers
             return File(file, "application/pdf", "TrialBalanceReportJournal.pdf");
         }
 
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetJournalBudgetLineSummaryPdf([FromBody] GetJournalBudgetLineSummaryPdfQuery model) 
+        {
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "BudgetLineSummaryJournal.pdf");
+        }
+
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetJournalLedgerReportPdf([FromBody] GetJournalLedgerReportPdfQuery model) 
+        {
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "LedgerReportJournal.pdf");
+        }
+
          [HttpPost]
         [Produces(contentType: "application/pdf")]
         public async Task<IActionResult> GetCriteriaEvaluationReportPdf([FromBody] GetCriteriaEvaluationDetailReportPdfQuery model)
         {
             var file = await _mediator.Send(model);
-            return File(file, "application/pdf", "ProjectOtherDetailReport.pdf");
+            return File(file, "application/pdf", "CriteriaEvaluationDetailReport.pdf");
         }
     }
 }

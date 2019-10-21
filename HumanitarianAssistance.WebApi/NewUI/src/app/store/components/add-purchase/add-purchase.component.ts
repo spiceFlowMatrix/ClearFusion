@@ -515,9 +515,9 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     this.removeVehicles();
     (<FormArray>this.addPurchaseForm.get('TransportGenerators')).push(this.fb.group({
       'Voltage': ['', [Validators.required, Validators.min(0)]],
-      'StartingUsageHours': ['', Validators.required],
-      'IncurredUsageHours': ['', [Validators.required, Validators.min(0)]],
-      'ModelYear': ['', [Validators.required, Validators.min(0)], Validators.maxLength(4)],
+      'StartingUsage': ['', Validators.required],
+      'IncurredUsage': ['', [Validators.required, Validators.min(0)]],
+      'ModelYear': ['', [Validators.required, Validators.min(0)]],
       'FuelConsumptionRate': ['', [Validators.required, Validators.min(0)]],
       'MobilOilConsumptionRate': ['', [Validators.required, Validators.min(0)]],
       'OfficeId': ['', Validators.required]

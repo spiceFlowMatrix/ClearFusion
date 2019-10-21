@@ -109,6 +109,8 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<ItemSpecificationDetails> ItemSpecificationDetails { get; set; }
         public DbSet<StatusAtTimeOfIssue> StatusAtTimeOfIssue { get; set; }
         public DbSet<ReceiptType> ReceiptType { get; set; }
+        public DbSet<VehicleMileageDetail> VehicleMileageDetail { get; set; }
+        public DbSet<GeneratorUsageHourDetail> GeneratorUsageHourDetail { get; set; }
 
         public DbSet<EmployeeHistoryOutsideOrganization> EmployeeHistoryOutsideOrganization { get; set; }
         public DbSet<EmployeeHistoryOutsideCountry> EmployeeHistoryOutsideCountry { get; set; }
