@@ -8,7 +8,7 @@ const routes: Routes = [
         children: [
             // { path: '', redirectTo: 'project', pathMatch: 'full'},
             { path: 'project', loadChildren: './project-management/project-management.module#ProjectManagementModule' },
-            { path: 'marketing', loadChildren: './marketing/marketing.module#MarketingModule' },
+            // { path: 'marketing', loadChildren: './marketing/marketing.module#MarketingModule' },
             { path: 'accounting', loadChildren: './accounting/accounting.module#AccountingModule' }
         ]
     }

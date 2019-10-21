@@ -34,7 +34,8 @@ import {
   ICEAgeDEtailModel,
   ICEOccupationModel,
   ICEDonorEligibilityModel,
-  ICEisCESubmitModel
+  ICEisCESubmitModel,
+  ICriteriaEvaluationPdfModel
 } from './criteria-evaluation.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -68,7 +69,6 @@ export class CriteriaEvaluationComponent
 
   AllowedByLaw = false; // add one more property
   isSuperadmin = false;
-
 
   //#region "Variables"
   methodOfFundingList = [
@@ -253,7 +253,7 @@ export class CriteriaEvaluationComponent
 
     // Set Menu Header Name
     this.globalService.setMenuHeaderName(this.setProjectHeader);
-    //this.initFeasibilityModel();
+    // this.initFeasibilityModel();
   }
 
   ngOnInit() {
@@ -288,7 +288,7 @@ export class CriteriaEvaluationComponent
     this.getFeasibilityExpertByProjectId(this.ProjectId);
     // this.GetOccupationByProjectId(this.ProjectId);
     this.GetDonorEligibilityCriteriaByProjectId(this.ProjectId);
-  //  this.onProjectallowedByLawChange(this.feasibilityForm.ProjectAllowedBylaw);
+    //  this.onProjectallowedByLawChange(this.feasibilityForm.ProjectAllowedBylaw);
   }
   // to show warning message if the total score is less than 30 -->
   ngAfterViewChecked() {
@@ -1728,7 +1728,7 @@ export class CriteriaEvaluationComponent
             }
           }
         },
-        error => { }
+        error => {}
       );
   }
 
@@ -1939,9 +1939,9 @@ export class CriteriaEvaluationComponent
                   data.data.CriteriaEveluationModel.ThirdPartyContract;
                 if (
                   data.data.CriteriaEveluationModel.CostOfCompensationMonth ==
-                  null ||
+                    null ||
                   data.data.CriteriaEveluationModel.CostOfCompensationMonth ==
-                  undefined
+                    undefined
                 ) {
                   this.feasibilityForm.CostOfCompensationMonth = null;
                 } else {
@@ -1973,8 +1973,10 @@ export class CriteriaEvaluationComponent
 
                 this.feasibilityForm.EnoughTimeForProject =
                   data.data.CriteriaEveluationModel.EnoughTimeForProject;
-                this.feasibilityForm.ProjectAllowedBylaw =
-                  (data.data.CriteriaEveluationModel.ProjectAllowedBylaw ? data.data.CriteriaEveluationModel.ProjectAllowedBylaw : false);
+                this.feasibilityForm.ProjectAllowedBylaw = data.data
+                  .CriteriaEveluationModel.ProjectAllowedBylaw
+                  ? data.data.CriteriaEveluationModel.ProjectAllowedBylaw
+                  : false;
                 if (this.feasibilityForm.ProjectAllowedBylaw === false) {
                   this.disableCriteriaEvaluationForm = true;
                   this.isExpanded = false;
@@ -2053,7 +2055,7 @@ export class CriteriaEvaluationComponent
                 if (
                   data.data.CriteriaEveluationModel.ProjectActivities == null ||
                   data.data.CriteriaEveluationModel.ProjectActivities ==
-                  undefined
+                    undefined
                 ) {
                   this.financialForm.ProjectActivities = 0;
                 } else {
@@ -2232,7 +2234,6 @@ export class CriteriaEvaluationComponent
 
   //#region  add edit purpose of initialting
   AddEditPurposeOfInitiatingForm(model: any) {
-
     if (model != null) {
       const obj: ProductAndServiceCEModel = {
         ProjectId: this.ProjectId,
@@ -2295,7 +2296,7 @@ export class CriteriaEvaluationComponent
       this.criteriaEvalService
         .AddEditProductServiceCEForm(
           this.appurl.getApiUrl() +
-          GLOBAL.API_Project_AddEditPurposeofInitiativeCriteria,
+            GLOBAL.API_Project_AddEditPurposeofInitiativeCriteria,
           obj
         )
         .subscribe(response => {
@@ -2320,7 +2321,7 @@ export class CriteriaEvaluationComponent
       this.criteriaEvalService
         .AddEditEligibilityCriteriaEForm(
           this.appurl.getApiUrl() +
-          GLOBAL.API_Project_AddEditEligibilityCriteriaDetail,
+            GLOBAL.API_Project_AddEditEligibilityCriteriaDetail,
           obj
         )
         .subscribe(response => {
@@ -2375,7 +2376,7 @@ export class CriteriaEvaluationComponent
       this.criteriaEvalService
         .AddEditFeasibilityCriteriaEForm(
           this.appurl.getApiUrl() +
-          GLOBAL.API_Project_AddEditFeasibilityCriteria,
+            GLOBAL.API_Project_AddEditFeasibilityCriteria,
           obj
         )
         .subscribe(response => {
@@ -2532,7 +2533,7 @@ export class CriteriaEvaluationComponent
     this.projectListService
       .AddEditProjectCurrencyDetail(
         this.appurl.getApiUrl() +
-        GLOBAL.API_Project_AddEditProjectCurrencyDetail,
+          GLOBAL.API_Project_AddEditProjectCurrencyDetail,
         currencyModel
       )
       .pipe()
@@ -2559,8 +2560,8 @@ export class CriteriaEvaluationComponent
       (this.donorCEForm.MethodOfFunding === 1
         ? criteriaEvaluationScores.methodOfFunding_Sole
         : this.donorCEForm.MethodOfFunding === 2
-          ? criteriaEvaluationScores.methodOfFunding_Source
-          : criteriaEvaluationScores.methodOfFunding_Default) +
+        ? criteriaEvaluationScores.methodOfFunding_Source
+        : criteriaEvaluationScores.methodOfFunding_Default) +
       (this.donorCEForm.ProposalAccepted === true
         ? criteriaEvaluationScores.proposalAccepted_Yes
         : criteriaEvaluationScores.proposalAccepted_No) +
@@ -2600,24 +2601,24 @@ export class CriteriaEvaluationComponent
       (this.donorCEForm.DonorFinancingHistory === 1
         ? criteriaEvaluationScores.finanacingHistory_Good
         : this.donorCEForm.DonorFinancingHistory === 2
-          ? criteriaEvaluationScores.finanacingHistory_Neutral
-          : this.donorCEForm.DonorFinancingHistory === 3
-            ? criteriaEvaluationScores.finanacingHistory_Bad
-            : criteriaEvaluationScores.finanacingHistory_Neutral) +
+        ? criteriaEvaluationScores.finanacingHistory_Neutral
+        : this.donorCEForm.DonorFinancingHistory === 3
+        ? criteriaEvaluationScores.finanacingHistory_Bad
+        : criteriaEvaluationScores.finanacingHistory_Neutral) +
       (this.donorCEForm.ReligiousStanding === 1
         ? criteriaEvaluationScores.religiousStanding_Good
         : this.donorCEForm.ReligiousStanding === 2
-          ? criteriaEvaluationScores.religiousStanding_Neutral
-          : this.donorCEForm.ReligiousStanding === 3
-            ? criteriaEvaluationScores.religiousStanding_Bad
-            : criteriaEvaluationScores.religiousStanding_Neutral) +
+        ? criteriaEvaluationScores.religiousStanding_Neutral
+        : this.donorCEForm.ReligiousStanding === 3
+        ? criteriaEvaluationScores.religiousStanding_Bad
+        : criteriaEvaluationScores.religiousStanding_Neutral) +
       (this.donorCEForm.PoliticalStanding === 1
         ? criteriaEvaluationScores.politicalStanding_Good
         : this.donorCEForm.PoliticalStanding === 2
-          ? criteriaEvaluationScores.politicalStanding_Neutral
-          : this.donorCEForm.PoliticalStanding === 3
-            ? criteriaEvaluationScores.politicalStanding_Bad
-            : criteriaEvaluationScores.politicalStanding_Neutral) +
+        ? criteriaEvaluationScores.politicalStanding_Neutral
+        : this.donorCEForm.PoliticalStanding === 3
+        ? criteriaEvaluationScores.politicalStanding_Bad
+        : criteriaEvaluationScores.politicalStanding_Neutral) +
       (this.productAndServiceForm.Awareness === true
         ? criteriaEvaluationScores.prodAwareness_Yes
         : criteriaEvaluationScores.prodAwareness_No) +
@@ -2844,7 +2845,7 @@ export class CriteriaEvaluationComponent
         : criteriaEvaluationScores.enoughTimeToPrepareproposal_No) +
       // Note: **don't delete:condition for if the costGreaterThanBudget_Yes value is set to be 0
       (this.feasibilityForm.IsCostGreaterthenBudget === false &&
-        this.feasibilityForm.IsCostGreaterthenBudget != null
+      this.feasibilityForm.IsCostGreaterthenBudget != null
         ? criteriaEvaluationScores.costGreaterThanBudget_No
         : criteriaEvaluationScores.costGreaterThanBudget_Yes) +
       // Note: **don't delete :condition for if the costGreaterThanBudget_Yes value is set to be -1
@@ -2908,7 +2909,7 @@ export class CriteriaEvaluationComponent
       //   ? criteriaEvaluationScores.deliveryFailure_No
       //   : criteriaEvaluationScores.deliveryFailure_Yes) +
       (this.riskForm.DeliveryFaiLure === true ||
-        this.riskForm.DeliveryFaiLure == null
+      this.riskForm.DeliveryFaiLure == null
         ? criteriaEvaluationScores.deliveryFailure_Yes
         : criteriaEvaluationScores.deliveryFailure_No) +
       (this.riskForm.Reputation === true || this.riskForm.Reputation == null
@@ -3068,7 +3069,7 @@ export class CriteriaEvaluationComponent
       this.criteriaEvalService
         .GetPriorityOtherDetailByProjectId(
           this.appurl.getApiUrl() +
-          GLOBAL.API_GetAllPriorityOtherDetailByProjectId,
+            GLOBAL.API_GetAllPriorityOtherDetailByProjectId,
           ProjectId
         )
         .subscribe(
@@ -3282,7 +3283,7 @@ export class CriteriaEvaluationComponent
       this.criteriaEvalService
         .GetPriorityOtherDetailByProjectId(
           this.appurl.getApiUrl() +
-          GLOBAL.API_GetAllFeasibilityExpertDetailByProjectId,
+            GLOBAL.API_GetAllFeasibilityExpertDetailByProjectId,
           ProjectId
         )
         .subscribe(data => {
@@ -3329,7 +3330,7 @@ export class CriteriaEvaluationComponent
     this.criteriaEvalService
       .AddEditFeasibilityExpert(
         this.appurl.getApiUrl() +
-        GLOBAL.API_Project_AddFeasibilityExpertOtherDetail,
+          GLOBAL.API_Project_AddFeasibilityExpertOtherDetail,
         obj
       )
       .subscribe(
@@ -3387,7 +3388,7 @@ export class CriteriaEvaluationComponent
     this.criteriaEvalService
       .AddEditFeasibilityExpert(
         this.appurl.getApiUrl() +
-        GLOBAL.API_Project_EditFeasibilityExpertDetail,
+          GLOBAL.API_Project_EditFeasibilityExpertDetail,
         obj
       )
       .subscribe(
@@ -3493,7 +3494,7 @@ export class CriteriaEvaluationComponent
       this.criteriaEvalService
         .GetPriorityOtherDetailByProjectId(
           this.appurl.getApiUrl() +
-          GLOBAL.API_GetAllAssumptionDetailByProjectId,
+            GLOBAL.API_GetAllAssumptionDetailByProjectId,
           ProjectId
         )
         .subscribe(data => {
@@ -3914,7 +3915,7 @@ export class CriteriaEvaluationComponent
       this.criteriaEvalService
         .GetPriorityOtherDetailByProjectId(
           this.appurl.getApiUrl() +
-          GLOBAL.API_GetAllOccupationDetailByProjectId,
+            GLOBAL.API_GetAllOccupationDetailByProjectId,
           ProjectId
         )
         .subscribe(data => {
@@ -4124,7 +4125,7 @@ export class CriteriaEvaluationComponent
       this.criteriaEvalService
         .GetPriorityOtherDetailByProjectId(
           this.appurl.getApiUrl() +
-          GLOBAL.API_GetAlldonorEligibilityByProjectId,
+            GLOBAL.API_GetAlldonorEligibilityByProjectId,
           ProjectId
         )
         .subscribe(data => {
@@ -4229,7 +4230,7 @@ export class CriteriaEvaluationComponent
     this.criteriaEvalService
       .AddEditDonorEligibilityOther(
         this.appurl.getApiUrl() +
-        GLOBAL.API_Project_EditCEdonorEligibilityDetail,
+          GLOBAL.API_Project_EditCEdonorEligibilityDetail,
         obj
       )
       .subscribe(
@@ -4296,7 +4297,7 @@ export class CriteriaEvaluationComponent
     this.criteriaEvalService
       .DeletePriorityDetailByPriorityId(
         this.appurl.getApiUrl() +
-        GLOBAL.API_Project_DeleteDonorEligibilityDetail,
+          GLOBAL.API_Project_DeleteDonorEligibilityDetail,
         obj.DonorEligibilityDetailId
       )
       .subscribe(
@@ -4351,22 +4352,22 @@ export class CriteriaEvaluationComponent
   //#region "setHeaderMenu"
   setHeaderMenu() {
     this.isSuperadmin = this.localStorageService.GetSuperAdminDetail();
- if (this.isSuperadmin) {
-  this.globalService.setMenuList(this.menuList);
-   // check weather the criteria evaluation is approved and project is win
- } else if (this.IsSubmitCEform.IsCriteriaEvaluationSubmit === true) {
-    // check weather the criteria evaluation is approved
-    this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
-      this.IsSubmitCEform.IsCriteriaEvaluationSubmit
-        ? this.menuList.filter((i, index) => index < 3)
-        : this.menuList.filter((i, index) => index < 2)
-    );
+    if (this.isSuperadmin) {
+      this.globalService.setMenuList(this.menuList);
+      // check weather the criteria evaluation is approved and project is win
+    } else if (this.IsSubmitCEform.IsCriteriaEvaluationSubmit === true) {
+      // check weather the criteria evaluation is approved
+      this.authorizedMenuList = this.localStorageService.GetAuthorizedPages(
+        this.IsSubmitCEform.IsCriteriaEvaluationSubmit
+          ? this.menuList.filter((i, index) => index < 3)
+          : this.menuList.filter((i, index) => index < 2)
+      );
 
-    // Set Menu Header List
-    this.authorizedMenuList.push(this.menuList.find(r=>r.Id===7));
-    this.globalService.setMenuList(this.authorizedMenuList);
-  }
-  //#endregion
+      // Set Menu Header List
+      this.authorizedMenuList.push(this.menuList.find(r => r.Id === 7));
+      this.globalService.setMenuList(this.authorizedMenuList);
+    }
+    //#endregion
   }
   //#region AddIsDeletedEligibilityDetail
   AddIsSubmitCEDetail(model: ICEisCESubmitModel) {
@@ -4401,11 +4402,22 @@ export class CriteriaEvaluationComponent
   }
   //#endregion
 
-
-  downloadPdf(){
-
+  downloadPdf() {
+    debugger;
+    const pdfmodel: ICriteriaEvaluationPdfModel = {
+      ProjectId: this.ProjectId
+    };
+    if (pdfmodel != null && pdfmodel !== undefined) {
+      this.globalService
+        .getFile(
+          this.appurl.getApiUrl() +
+            GLOBAL.API_Pdf_GetCriteriaEvaluationReportPdf,
+            pdfmodel
+        )
+        .pipe()
+        .subscribe();
+    }
   }
-
   ngOnDestroy() {
     this.cdRef.detach();
   }

@@ -13,7 +13,6 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         [Column(Order = 1)]
         public long Id {get; set;}
         public long VehicleId {get; set;}
-        //public DateTime Month {get; set;}
         public DateTime MileageMonth {get; set;}
         public int Mileage {get; set;}
         [ForeignKey("VehicleId")]

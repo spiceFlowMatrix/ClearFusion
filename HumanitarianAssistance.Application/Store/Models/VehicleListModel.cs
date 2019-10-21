@@ -7,12 +7,12 @@ namespace HumanitarianAssistance.Application.Store.Models
     {
         public VehicleTrackerListModel()
         {
-            VehicleList= new List<VehicleListModel>();
+            VehicleList= new List<VehicleTrackerModel>();
         }
         public int TotalRecords {get; set;}
-        public List<VehicleListModel> VehicleList {get; set;}
+        public List<VehicleTrackerModel> VehicleList {get; set;}
     }
-    public class VehicleListModel
+    public class VehicleTrackerModel 
     {
         public long VehicleId { get; set; }
         public string PlateNo {get; set;}

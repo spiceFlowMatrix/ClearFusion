@@ -7850,13 +7850,13 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int>("FuelConsumptionRate");
+                    b.Property<double>("FuelConsumptionRate");
 
-                    b.Property<int>("IncurredUsage");
+                    b.Property<double>("IncurredUsage");
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<int>("MobilOilConsumptionRate");
+                    b.Property<double>("MobilOilConsumptionRate");
 
                     b.Property<int>("ModelYear");
 
@@ -7868,9 +7868,9 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<long>("PurchaseId");
 
-                    b.Property<int>("StartingUsage");
+                    b.Property<double>("StartingUsage");
 
-                    b.Property<int>("Voltage");
+                    b.Property<double>("Voltage");
 
                     b.HasKey("Id");
 
@@ -7890,13 +7890,13 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int>("EmployeeId");
 
-                    b.Property<int>("FuelConsumptionRate");
+                    b.Property<double>("FuelConsumptionRate");
 
-                    b.Property<int>("IncurredMileage");
+                    b.Property<double>("IncurredMileage");
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<int>("MobilOilConsumptionRate");
+                    b.Property<double>("MobilOilConsumptionRate");
 
                     b.Property<int>("ModelYear");
 
@@ -7910,7 +7910,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<long>("PurchaseId");
 
-                    b.Property<int>("StartingMileage");
+                    b.Property<double>("StartingMileage");
 
                     b.HasKey("Id");
 
@@ -8324,8 +8324,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("VehicleId")
-                        .IsUnique();
+                    b.HasIndex("VehicleId");
 
                     b.ToTable("VehicleMileageDetail");
                 });
@@ -10224,8 +10223,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.VehicleMileageDetail", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.PurchasedVehicleDetail", "PurchasedVehicleDetail")
-                        .WithOne("VehicleMileageDetail")
-                        .HasForeignKey("HumanitarianAssistance.Domain.Entities.Store.VehicleMileageDetail", "VehicleId")
+                        .WithMany("VehicleMileageDetail")
+                        .HasForeignKey("VehicleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

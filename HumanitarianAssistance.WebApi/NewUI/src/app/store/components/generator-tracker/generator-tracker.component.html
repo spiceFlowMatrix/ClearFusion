@@ -10,14 +10,14 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-          <app-generator-filters></app-generator-filters>
+          <app-generator-filters (applyFilterEvent)='getFilteredGeneratorList($event)'></app-generator-filters>
           <mat-divider></mat-divider>
           <h4>Vehicles</h4>
           <hum-table [headers]="vehicleListHeaders$" [items]="vehicleList$"
-            (actionClick)="openMilageModal($event)" [actions]="actions" (rowClick)="goToDetails($event)"></hum-table>
-          <!-- <mat-paginator [length]="purchaseRecordCount" [pageSize]="filterValueModel.pageSize"
-            [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
-          </mat-paginator> -->
+          (actionClick)="openHoursModal($event)" [actions]="actions" (rowClick)="goToDetails($event)"></hum-table>
+        <mat-paginator [length]="recordsCount" [pageSize]="vehicleTrackerFilter.pageSize"
+          [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
+        </mat-paginator>
         </div>
       </div>
     </div>

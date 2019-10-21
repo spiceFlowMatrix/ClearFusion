@@ -28,7 +28,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                   .Include(x=> x.StoreItemPurchase)
                                                   .Include(x=> x.EmployeeDetail)
                                                   .Where(x=> x.IsDeleted == false && x.StoreItemPurchase.IsDeleted == false)
-                                                  .Select(x=> new VehicleListModel 
+                                                  .Select(x=> new VehicleTrackerModel 
                                                   {
                                                       VehicleId = x.Id,
                                                       EmployeeName = x.EmployeeDetail.EmployeeName,

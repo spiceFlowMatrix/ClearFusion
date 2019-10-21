@@ -109,8 +109,8 @@ export class VehicleTrackerComponent implements OnInit {
 
 
   goToDetails(e) {
-    this.router.navigate(['store/vehicle/detail', 1]);
-    // console.log(e);
+    debugger;
+    this.router.navigate(['store/vehicle/detail', e.VehicleId]);
   }
 
   openMilageModal(event) {
@@ -118,7 +118,7 @@ export class VehicleTrackerComponent implements OnInit {
       const dialogRef = this.dialog.open(AddMilageComponent, {
         width: '850px',
         data: {
-            vehicleId: event.VehicleId
+            vehicleId: event.item.VehicleId
         }
       });
     }

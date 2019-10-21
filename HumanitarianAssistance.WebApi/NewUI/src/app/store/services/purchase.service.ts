@@ -384,12 +384,19 @@ export class PurchaseService {
 //#region "getVechileList"
 getVehicleList(model: any) {
   return this.globalService
-    .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetVehicleList, model);
+    .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_GetVehicleList, model);
 }
 
+//#region "getGeneratorList"
+getGeneratorList(model: any) {
+  return this.globalService
+    .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_GetVehicleList, model);
+}
+
+// addVehicleMileage
 addVehicleMileage(model: any) {
   return this.globalService
-    .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_AddVehicleMileage, model);
+    .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_AddVehicleMileage, model);
 }
 
 
@@ -409,6 +416,20 @@ addVehicleMileage(model: any) {
       );
   }
   //#endregion
+
+  getVehicleDetailById(Id) {
+    return this.http
+      .get<any>(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_VehicleTracker_GetVehicleById +
+          '?id=' +
+          Id);
+  }
+
+  saveVehicleDetail(model: any) {
+    return this.globalService
+      .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_SaveVehicleDetail, model);
+  }
 
   //#region "getLocalDate"
   getLocalDate(date: any) {
