@@ -361,7 +361,7 @@ export class TrialBalanceReportComponent implements OnInit {
             this.toastr.warning(data.Message);
           }
           this.showHideTrialBalanceLoader(false);
-          // console.log(this.trialbalFilterList$);
+          console.log(this.trialbalFilterList$);
         },
         error => {
           this.showHideTrialBalanceLoader(false);

@@ -4418,6 +4418,7 @@ export class CriteriaEvaluationComponent
         .subscribe();
     }
   }
+
   ngOnDestroy() {
     this.cdRef.detach();
   }

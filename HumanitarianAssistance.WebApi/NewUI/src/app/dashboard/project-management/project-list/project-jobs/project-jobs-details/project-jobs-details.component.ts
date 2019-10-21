@@ -155,11 +155,11 @@ export class ProjectJobsDetailsComponent implements OnInit {
     dialogRef.componentInstance.cancelText = Delete_Confirmation_Texts.noText;
 
     dialogRef.afterClosed().subscribe(result => {
-      // console.log('The dialog was closed');
+      console.log('The dialog was closed');
     });
 
     dialogRef.componentInstance.confirmDelete.subscribe(res => {
-      // console.log(res);
+      console.log(res);
       dialogRef.componentInstance.isLoading = true;
       // this.phaseDetailsForm.disable();
 

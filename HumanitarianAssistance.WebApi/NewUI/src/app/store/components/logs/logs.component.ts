@@ -33,8 +33,8 @@ export class LogsComponent implements OnInit {
         Detail:'2 Liter Diesel Super Fuel Purchased In kjh43-a3f4rh54h-345h3-34'
       }
     ] as ILogs[]);
-    // console.log(this.logList$);
+    console.log(this.logList$);
   }
-
+  
 
 }
