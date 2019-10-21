@@ -78,13 +78,13 @@ export class ActivitiesControlComponent implements OnInit, OnDestroy {
       UserId: data.UserId,
       DateAdded: new Date()
     };
-    // console.log(controlData);
+    console.log(controlData);
 
     this.projectListService.AddUserForActivitiesControl(controlData)
     .pipe(takeUntil(this.destroyed$))
     .subscribe((response: IResponseData) => {
       if (response.data !== 0 && response.statusCode === 200) {
-        // console.log(response.data);
+        console.log(response.data);
         this.tableContentList.push({
           Id: response.data,
           ProjectId: controlData.ProjectId,
@@ -112,7 +112,7 @@ export class ActivitiesControlComponent implements OnInit, OnDestroy {
       UserId: data.UserId,
       DateAdded: new Date()
     };
-    // console.log(controlData);
+    console.log(controlData);
     this.projectListService
       .EditUserForActivitiesControl(controlData)
       .pipe(takeUntil(this.destroyed$))

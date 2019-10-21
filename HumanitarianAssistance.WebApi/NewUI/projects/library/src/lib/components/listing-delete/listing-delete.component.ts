@@ -21,7 +21,7 @@ export class ListingDeleteComponent implements OnInit {
   constructor(public dialog: MatDialog) {}
 
   ngOnInit() {
-    // console.log('tablelist',this.tableContentList);
+    console.log('tablelist',this.tableContentList);
   }
 
   confirmDeleteAction(data: any) {

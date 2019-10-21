@@ -109,7 +109,6 @@ export class VehicleTrackerComponent implements OnInit {
 
 
   goToDetails(e) {
-    debugger;
     this.router.navigate(['store/vehicle/detail', e.VehicleId]);
   }
 

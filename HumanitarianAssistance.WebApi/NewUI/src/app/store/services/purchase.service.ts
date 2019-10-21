@@ -289,7 +289,7 @@ export class PurchaseService {
         { observe: 'response' }
       )
       .pipe(
-       // tap(resp => // console.log('response', resp)),
+       // tap(resp => console.log('response', resp)),
         map((x: Response) => {
           return {
             StatusCode: x.status,

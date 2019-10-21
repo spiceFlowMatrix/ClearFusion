@@ -147,7 +147,7 @@ export class SchedulerAddComponent implements OnInit {
           this.scheduleDetailsForm.scheduleId = response.data.scheduleDetailsModel.ScheduleId;
           this.selectedDays = response.data.RepeatDays;
         }
-        // console.log(this.scheduleDetailsForm);
+        console.log(this.scheduleDetailsForm);
         // this.dayModel = response.data.policyTimeDetailsById;
         response.data.RepeatDays.forEach(element => {
               // tslint:disable-next-line:no-unused-expression
