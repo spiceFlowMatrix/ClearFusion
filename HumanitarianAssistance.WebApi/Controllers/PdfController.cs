@@ -107,7 +107,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
         public async Task<IActionResult> GetCriteriaEvaluationReportPdf([FromBody] GetCriteriaEvaluationDetailReportPdfQuery model)
         {
             var file = await _mediator.Send(model);
-            return File(file, "application/pdf", "ProjectOtherDetailReport.pdf");
+            return File(file, "application/pdf", "CriteriaEvaluationDetailReport.pdf");
         }
     }
 }
