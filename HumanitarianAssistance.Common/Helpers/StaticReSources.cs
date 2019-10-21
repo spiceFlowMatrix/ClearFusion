@@ -56,6 +56,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string RoleCreated = "Role Created";
         public const string RoleAlreadyExist = "Role already exists";
         public const string InvalidUser = "Invalid User";
+        public const string RequestValuesInAppropriate = "Request values are inappropriate";
         public const string InvalidUserCredentials = "Invalid User credentials";
         public const string UserAccountIsInActive = "Account is In-Active";
         public const string RoleAssignedToUser = "Role assigned to user";

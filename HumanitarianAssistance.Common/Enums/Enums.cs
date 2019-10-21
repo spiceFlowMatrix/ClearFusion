@@ -10,6 +10,7 @@
         Marketing = 6,
         PdfExport = 7,
         StorePurchase = 8,
+        VehicleTracker = 9
     }
 
 

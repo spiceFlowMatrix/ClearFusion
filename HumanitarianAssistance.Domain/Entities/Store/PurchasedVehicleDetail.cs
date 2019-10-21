@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using HumanitarianAssistance.Domain.Entities.HR;
@@ -25,5 +26,6 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         [ForeignKey("PurchaseId")]
         public StoreItemPurchase StoreItemPurchase { get; set; }
         public VehicleItemDetail VehicleItemDetail { get; set; }
+        public List<VehicleMileageDetail> VehicleMileageDetail {get; set;}
     }
 }

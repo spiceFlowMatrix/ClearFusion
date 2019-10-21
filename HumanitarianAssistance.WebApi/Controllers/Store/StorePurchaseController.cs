@@ -18,7 +18,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
     [Produces("application/json")]
     [Route("api/StorePurchase/[Action]")]
     [ApiExplorerSettings(GroupName = nameof(SwaggerGrouping.StorePurchase))]
-    [AllowAnonymous]
     public class StorePurchaseController : BaseController
     {
 
@@ -170,6 +169,5 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
                 return BadRequest(result.Exception.InnerException.Message);
             }
         }
-
     }
 }

@@ -4,8 +4,8 @@
       <i class="fas fa-arrow-left"></i>
     </a>
     Vehicle Details
-    <hum-button [type]="'add'" [text]="'ADD MILAGE'" (click)="openMilageModal()"></hum-button>
-    <hum-button [type]="'text'" [text]="'Edit detials'" (click)="goToDetails()"></hum-button>
+    <hum-button [type]="'add'" [text]="'Add Mileage'" (click)="openMilageModal()"></hum-button>
+    <hum-button [type]="'text'" [text]="'Edit Details'" (click)="editVehicleDetail()"></hum-button>
   </span>
   <div class="action_section">
   </div>
@@ -25,7 +25,7 @@
   </mat-tab>
 </mat-tab-group>
 <!-- Vehicle Details template-->
-<ng-template #vehicleDetails>
+<ng-template #vehicleDetails [ngStyle]="scrollStyles">
   <mat-card>
     <div class="row">
       <div class="col-md-12">
@@ -34,15 +34,39 @@
           <table class="table table-striped">
             <tbody>
               <tr>
-                <td>Mark</td>
+                <td>Incurred Mileage(KM)</td>
                 <td>Otto</td>
               </tr>
               <tr>
-                <td>Mark</td>
+                <td>Starting Mileage(KM)</td>
                 <td>Otto</td>
               </tr>
               <tr>
-                <td>Mark</td>
+                <td>Current Mileage (KM)</td>
+                <td>Otto</td>
+              </tr>
+              <tr>
+                <td>Total Fuel Usage (Litres)</td>
+                <td>Otto</td>
+              </tr>
+              <tr>
+                <td>Total Mobil Oil Usage (Litres)</td>
+                <td>Otto</td>
+              </tr>
+              <tr>
+                <td>Standard Fuel Consumption Rate (Litre Per 100 KM)</td>
+                <td>Otto</td>
+              </tr>
+              <tr>
+                <td>Actual Fuel Consumption Rate (Litre Per 100 KM)</td>
+                <td>Otto</td>
+              </tr>
+              <tr>
+                <td>Standard Mobil Oil Consumption Rate (Litre Per 100 KM)</td>
+                <td>Otto</td>
+              </tr>
+              <tr>
+                <td>Actual Mobil Oil Consumption Rate (Litre Per 100 KM)</td>
                 <td>Otto</td>
               </tr>
             </tbody>
@@ -51,15 +75,27 @@
           <table class="table table-striped">
             <tbody>
               <tr>
-                <td>Mark</td>
+                <td>Fuel Total Cost</td>
                 <td>Otto</td>
               </tr>
               <tr>
-                <td>Mark</td>
+                <td>Mobil Oil Total Cost</td>
                 <td>Otto</td>
               </tr>
               <tr>
-                <td>Mark</td>
+                <td>Spare Parts Total Cost</td>
+                <td>Otto</td>
+              </tr>
+              <tr>
+                <td>Services & Maintenance Total Cost</td>
+                <td>Otto</td>
+              </tr>
+              <tr>
+                <td>Vehicle Starting Cost</td>
+                <td>Otto</td>
+              </tr>
+              <tr>
+                <td>Total Cost</td>
                 <td>Otto</td>
               </tr>
             </tbody>
@@ -67,19 +103,27 @@
 
         </div>
         <div class="col-md-6">
-            <h5>Vehicle Usage Analysis</h5>
+            <h5>Vehicle Details</h5>
           <table class="table table-striped">
             <tbody>
               <tr>
-                <td>Mark</td>
+                <td>Plate No</td>
                 <td>Otto</td>
               </tr>
               <tr>
-                <td>Mark</td>
+                <td>Driver</td>
                 <td>Otto</td>
               </tr>
               <tr>
-                <td>Mark</td>
+                <td>Model Year</td>
+                <td>Otto</td>
+              </tr>
+              <tr>
+                <td>Location</td>
+                <td>Otto</td>
+              </tr>
+              <tr>
+                <td>PurchaseId</td>
                 <td>Otto</td>
               </tr>
             </tbody>
