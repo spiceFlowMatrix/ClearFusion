@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-md-8">
+      <h4 style="padding-left: 0px !important">Requests
+        <hum-button [type]="'add'" [text]="'add'" (click)="openAddRequestDialog()"></hum-button>
+      </h4>
+    <hum-table [headers]="logisticListHeaders$" (rowClick)="requestRowClicked($event)" [actions]="actions" [items]="logisticListData$"></hum-table>
+  </div>
+  <div class="col-md-4">
+    <mat-card>
+        <mat-card-title>Detail</mat-card-title>
+        <mat-card-content>
+            Please create Logistic Requests when you need to purchase goods and services for the project.
+            Logistics is focused on procurement and tracking of physical goods for the projects and this page can
+            be used to manage logistics activities for the project.
+        </mat-card-content>
+        <mat-card-subtitle>
+            Instructions
+        </mat-card-subtitle>
+        <mat-card-content>
+            You can add new Procurement Requests and delete them on this page.
+            Clicking on one of the existing Requests will naviagte you to a detail
+            page where you can see the full details of that Request.
+        </mat-card-content>
+    </mat-card>
+  </div>
+</div>

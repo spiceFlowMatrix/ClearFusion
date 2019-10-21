@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-md-12">
+      <form [formGroup]="addLogisticItemsForm">
+          <mat-form-field class="example-full-width">
+              <input matInput formControlName="Item" placeholder="Item">
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+              <input matInput formControlName="Quantity" placeholder="Quantity">
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+              <input matInput formControlName="EstimatedCost" placeholder="Estimated Cost">
+          </mat-form-field>
+          <hum-button [type]="'save'" [text]="'Save'" (click)="addItem()"></hum-button>
+          <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="cancelItem()" class="pull-right"></hum-button>
+
+      </form>
+    </div>
+  </div>

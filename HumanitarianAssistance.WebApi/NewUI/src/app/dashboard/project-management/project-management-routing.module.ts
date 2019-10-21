@@ -25,6 +25,8 @@ import { PeopleComponent } from './project-list/project-details/people/people.co
 import { ProjectIndicatorsComponent } from './project-list/project-indicators/project-indicators.component';
 import { HiringRequestsComponent } from './project-hiring/hiring-requests/hiring-requests.component';
 import { JobDetailComponent } from './project-hiring/job-detail/job-detail.component';
+import { LogisticRequestsComponent } from './project-logistics/logistic-requests/logistic-requests.component';
+import { LogisticRequestDetailsComponent } from './project-logistics/logistic-request-details/logistic-request-details.component';
 
 const moduleId: number = ApplicationModule.Projects;
 
@@ -171,7 +173,7 @@ const routes: Routes = [
               module: moduleId,
               page: projectPagesMaster.HiringRequests
             }
-          },    
+          },
 
           {
             path: 'project-indicators',
@@ -182,9 +184,27 @@ const routes: Routes = [
               page: projectPagesMaster.ProjectIndicators
             }
           },
+          {
+            path: 'logistic-requests',
+            component: LogisticRequestsComponent,
+            canActivate: [RoleGuardService],
+            data: {
+              module: moduleId,
+              page: projectPagesMaster.ProjectIndicators
+            }
+          },
+          {
+            path: 'logistic-requests/:id',
+            component: LogisticRequestDetailsComponent,
+            canActivate: [RoleGuardService],
+            data: {
+              module: moduleId,
+              page: projectPagesMaster.ProjectIndicators
+            }
+          },
         ]
       }
-     
+
     ]
   }
   // { path: 'projects', component: ProjectListComponent},
