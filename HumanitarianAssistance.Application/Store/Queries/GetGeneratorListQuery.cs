@@ -6,7 +6,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
     public class GetGeneratorListQuery:IRequest<GeneratorTrackerListModel>
     {
         public double? TotalCost { get; set; }
-        public int? Voltage { get; set; }
+        public double? Voltage { get; set; }
         public int? ModelYear { get; set; }
         public int? OfficeId { get; set; }
 
