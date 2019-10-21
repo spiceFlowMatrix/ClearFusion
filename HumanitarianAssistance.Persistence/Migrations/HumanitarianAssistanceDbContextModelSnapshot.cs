@@ -5961,49 +5961,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.ToTable("HiringRequestCandidates");
                 });
 
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.JobHiringDetail", b =>
-                {
-                    b.Property<long>("JobId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<int?>("CurrencyId");
-
-                    b.Property<int?>("GradeId");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("JobCode")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("JobDescription");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int>("OfficeId");
-
-                    b.Property<int?>("PayRate");
-
-                    b.Property<int?>("ProfessionId");
-
-                    b.Property<int?>("TotalVacancies");
-
-                    b.HasKey("JobId");
-
-                    b.HasIndex("CurrencyId");
-
-                    b.HasIndex("GradeId");
-
-                    b.HasIndex("OfficeId");
-
-                    b.ToTable("JobHiringDetail");
-                });
-
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.PriorityCriteriaDetail", b =>
                 {
                     b.Property<long>("PriorityCriteriaDetailId")
@@ -9641,22 +9598,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectHiringRequestDetail", "ProjectHiringRequestDetail")
                         .WithMany()
                         .HasForeignKey("HiringRequestId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.JobHiringDetail", b =>
-                {
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.CurrencyDetails", "CurrencyDetail")
-                        .WithMany()
-                        .HasForeignKey("CurrencyId");
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.JobGrade", "JobGrade")
-                        .WithMany()
-                        .HasForeignKey("GradeId");
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.OfficeDetail", "OfficeDetails")
-                        .WithMany()
-                        .HasForeignKey("OfficeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
