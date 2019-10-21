@@ -96,12 +96,12 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
-  openHoursModal() {
+  openHoursModal(event) {
+    debugger;
     const dialogRef = this.dialog.open(AddHoursComponent, {
       width: '850px',
       data: {
-        //value: event.item.Id,
-        //  officeId: this.filterValueModel.OfficeId
+        generatorId: this.generatorId
       }
     });
   }
