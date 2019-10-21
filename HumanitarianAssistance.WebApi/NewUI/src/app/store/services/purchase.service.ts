@@ -387,6 +387,13 @@ getVehicleList(model: any) {
     .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_GetVehicleList, model);
 }
 
+//#region "getGeneratorList"
+getGeneratorList(model: any) {
+  return this.globalService
+    .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_GetVehicleList, model);
+}
+
+// addVehicleMileage
 addVehicleMileage(model: any) {
   return this.globalService
     .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_AddVehicleMileage, model);

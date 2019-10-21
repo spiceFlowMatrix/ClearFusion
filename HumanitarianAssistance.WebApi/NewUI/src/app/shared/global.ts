@@ -457,6 +457,7 @@ export class GLOBAL {
   public static API_VehicleTracker_AddVehicleMileage = 'VehicleTracker/AddVehicleMileage';
   public static API_VehicleTracker_GetVehicleById = 'VehicleTracker/GetVehicleById';
   public static API_VehicleTracker_SaveVehicleDetail = 'VehicleTracker/EditVehicleDetail';
+  public static API_VehicleTracker_GetGeneratorList = 'GeneratorTracker/GetGeneratorList';
 
 }
 
