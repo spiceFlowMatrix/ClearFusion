@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { AddMilageComponent } from '../add-milage/add-milage.component';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-vehicle-details',
@@ -10,21 +10,44 @@ import { Router } from '@angular/router';
 })
 export class VehicleDetailsComponent implements OnInit {
 
-  constructor(private dialog: MatDialog, private router: Router) { }
+  vehicleId: number;
+
+  // screen
+  screenHeight: any;
+  screenWidth: any;
+  scrollStyles: any;
+
+  constructor(private dialog: MatDialog, private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
+    this.activatedRoute.params.subscribe(params => {
+      this.vehicleId = params['id'];
+    });
   }
-  openMilageModal() {
 
+  //#region "Dynamic Scroll"
+  @HostListener('window:resize', ['$event'])
+  getScreenSize(event?) {
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+
+    this.scrollStyles = {
+      'overflow-y': 'auto',
+      height: this.screenHeight - 110 + 'px',
+      'overflow-x': 'hidden'
+    };
+  }
+  //#endregion
+
+  openMilageModal() {
     const dialogRef = this.dialog.open(AddMilageComponent, {
       width: '850px',
       data: {
-        //value: event.item.Id,
-        //  officeId: this.filterValueModel.OfficeId
+        vehicleId: this.vehicleId
       }
     });
   }
-  goToDetails() {
-    this.router.navigate(['store/vehicle/edit',1])
+  editVehicleDetail() {
+    this.router.navigate(['store/vehicle/edit', this.vehicleId]);
   }
 }
