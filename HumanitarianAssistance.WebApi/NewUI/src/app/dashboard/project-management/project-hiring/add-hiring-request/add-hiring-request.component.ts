@@ -19,6 +19,7 @@ export class AddHiringRequestComponent implements OnInit {
   officeList$: Observable<IDropDownModel[]>;
   genderList$: Observable<IDropDownModel[]>;
   jobShiftList$: Observable<IDropDownModel[]>;
+  jobList$: Observable<IDropDownModel[]>;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(
@@ -64,11 +65,12 @@ export class AddHiringRequestComponent implements OnInit {
   }
 
   ngOnInit() {
-    forkJoin([this.getAllProfessionList(), this.getAllOfficeList()])
+    forkJoin([this.getAllProfessionList(), this.getAllOfficeList(), this.getAllJobList()])
       .pipe(takeUntil(this.destroyed$))
       .subscribe(result => {
         this.subscribeProfessionList(result[0]);
         this.subscribeOfficeList(result[1]);
+        this.subscribeJobList(result[1]);
       });
   }
 
@@ -77,6 +79,10 @@ export class AddHiringRequestComponent implements OnInit {
     return this.hiringRequestService.GetProfessionList();
   }
   getAllOfficeList() {
+    this.commonLoader.showLoader();
+    return this.hiringRequestService.GetOfficeList();
+  }
+  getAllJobList() {
     this.commonLoader.showLoader();
     return this.hiringRequestService.GetOfficeList();
   }
