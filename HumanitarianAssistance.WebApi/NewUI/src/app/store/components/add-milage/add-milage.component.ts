@@ -45,11 +45,13 @@ export class AddMilageComponent implements OnInit {
           if (x) {
             this.dialogRef.close(false);
             this.isAddMileageFormSubmitted = false;
+            this.toastr.success('Added Successfully');
           } else {
             this.toastr.warning('Something went wrong');
             this.isAddMileageFormSubmitted = false;
           }
         }, error => {
+          this.toastr.warning('Something went wrong');
           this.isAddMileageFormSubmitted = false;
         });
 

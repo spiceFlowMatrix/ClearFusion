@@ -24,10 +24,6 @@ export class EditVehicleComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(params => {
-      this.vehicleId = params['id'];
-    });
-
     this.vehicleDetailForm = this.fb.group({
       'VehicleId': [null],
       'PlateNo': [null, [Validators.required]],
