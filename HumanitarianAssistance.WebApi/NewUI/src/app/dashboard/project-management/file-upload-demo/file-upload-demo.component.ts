@@ -35,7 +35,7 @@ export class FileUploadDemoComponent implements OnInit, OnDestroy {
 
     this.notifySignalRService.DemoMessage$.subscribe(data => {
       this.Messages.push(data);
-      // console.log(this.Messages);
+      console.log(this.Messages);
     });
   }
 

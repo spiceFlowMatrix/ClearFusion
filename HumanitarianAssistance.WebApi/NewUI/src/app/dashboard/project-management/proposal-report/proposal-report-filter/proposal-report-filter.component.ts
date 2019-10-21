@@ -57,7 +57,7 @@ export class ProposalReportFilterComponent implements OnInit {
   }
 
   onFilterReport() {
-    // console.log(this.reportFilter);
+    console.log(this.reportFilter);
     this.filterReport.emit(this.reportFilter);
   }
 
