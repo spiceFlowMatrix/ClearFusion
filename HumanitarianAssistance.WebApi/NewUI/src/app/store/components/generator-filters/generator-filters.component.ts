@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IDropDownModel } from '../../models/purchase';
 import { Observable } from 'rxjs/internal/Observable';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
@@ -24,7 +24,7 @@ export class GeneratorFiltersComponent implements OnInit, OnDestroy {
   constructor(private _fb: FormBuilder, private purchaseService: PurchaseService) {
     this.generatorTrackerFilterForm = this._fb.group({
       'Voltage': [null],
-      'EmployeeId': [null],
+      'OfficeId': [null],
       'ModelYear': [null],
       'TotalCost': [null]
     });
