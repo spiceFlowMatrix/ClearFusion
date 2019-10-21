@@ -12,15 +12,20 @@ import {
   MatInputModule,
   MatCardModule,
   MatPaginatorModule,
-  MatTabsModule
+  MatTabsModule,
+  MatDialogModule,
+  MatIconModule,
+  MatFormFieldModule,
+  MatSelectModule,
+  MatDatepickerModule,
 } from '@angular/material';
 import { RequestDetailComponent } from './request-detail/request-detail.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-
+import { AddHiringRequestComponent } from './add-hiring-request/add-hiring-request.component';
 
 @NgModule({
   declarations: [
-    HiringRequestsComponent, JobDetailComponent, RequestDetailComponent
+    HiringRequestsComponent, JobDetailComponent, RequestDetailComponent, AddHiringRequestComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -33,8 +38,15 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     MatInputModule,
     MatCardModule,
     MatPaginatorModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDialogModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatDatepickerModule
   ],
-  exports: [HiringRequestsComponent, JobDetailComponent]
+  exports: [HiringRequestsComponent, JobDetailComponent],
+  entryComponents: [
+    AddHiringRequestComponent]
 })
 export class ProjectHiringModule {}

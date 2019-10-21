@@ -181,7 +181,7 @@ const routes: Routes = [
               module: moduleId,
               page: projectPagesMaster.HiringRequests
             }
-          },    
+          },
 
           {
             path: 'project-indicators',
@@ -194,7 +194,7 @@ const routes: Routes = [
           },
         ]
       }
-     
+
     ]
   }
   // { path: 'projects', component: ProjectListComponent},

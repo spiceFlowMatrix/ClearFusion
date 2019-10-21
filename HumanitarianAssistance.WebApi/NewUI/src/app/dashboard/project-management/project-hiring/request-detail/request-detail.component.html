@@ -9,37 +9,51 @@
 </lib-sub-header-template>
 <mat-divider></mat-divider>
 
-<mat-card class="custom-card">
+<mat-card [ngStyle]="scrollStyles">
 
   <div class="row">
     <div class="col-md-12">
 
       <div class="col-md-6">
         <mat-card-title>
-          JB-0001
+          {{hiringRequestDetails.JobCode}}
         </mat-card-title>
         <mat-card-subtitle>
           Description
         </mat-card-subtitle>
         <mat-card-content>
-          description text goes hereJob description text goes hereJob description text goes hereJob description text
-          goes
-          hereJob description text goes hereJob description text goes hereJob description text goes here
+          {{hiringRequestDetails.Description}}
         </mat-card-content>
-        <h5>Vehicle Usage Analysis</h5>
+        <h5>Job Details</h5>
         <table class="table table-striped">
           <tbody>
             <tr>
-              <td>Mark</td>
-              <td>Otto</td>
+              <td>Office</td>
+              <td>{{hiringRequestDetails.Office}}</td>
             </tr>
             <tr>
-              <td>Mark</td>
-              <td>Otto</td>
+              <td>Proffesion/Position</td>
+              <td>{{hiringRequestDetails.Position}}</td>
             </tr>
             <tr>
-              <td>Mark</td>
-              <td>Otto</td>
+              <td>Job Grade</td>
+              <td>{{hiringRequestDetails.JobGrade}}</td>
+            </tr>
+            <tr>
+              <td>Total Vacancies</td>
+              <td>{{hiringRequestDetails.TotalVacancies}}</td>
+            </tr>
+            <tr>
+              <td>Filled Vacancies</td>
+              <td>{{hiringRequestDetails.FilledVacancies}}</td>
+            </tr>
+            <tr>
+              <td>Pay Currency</td>
+              <td>{{hiringRequestDetails.PayCurrency}}</td>
+            </tr>
+            <tr>
+              <td>Pay Hourly Rate</td>
+              <td>{{hiringRequestDetails.PayRate}}</td>
             </tr>
           </tbody>
         </table>

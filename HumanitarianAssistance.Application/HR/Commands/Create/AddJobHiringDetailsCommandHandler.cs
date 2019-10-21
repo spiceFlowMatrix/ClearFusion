@@ -52,7 +52,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     obj.GradeId = request.jobGrade;
                     obj.JobCode = JobCode;
                     obj.JobDescription = request.description;
-                    obj.IsActive = false;
+                    obj.IsActive = true;
                     obj.OfficeId = request.office;
                     obj.Unit = request.totalVacancies;
                     obj.CurrencyId=request.payCurrency;
