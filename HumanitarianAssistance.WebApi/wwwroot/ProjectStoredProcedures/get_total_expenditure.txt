@@ -1,0 +1,21 @@
+
+--DROP FUNCTION get_total_expenditure(bigint,integer,integer,timestamp without time zone);
+
+CREATE OR REPLACE FUNCTION public.get_total_expenditure(
+budget_line_id bigint,
+from_currency_id integer,
+to_currency_id integer,
+transaction_date timestamp without time zone
+)
+returns double precision AS $total$
+DECLARE 
+total DOUBLE PRECISION;
+debit_amt integer;
+Begin
+select sum("Debit") into debit_amt from "VoucherTransactions" where "BudgetLineId" = budget_line_id;
+
+select get_exchangerate_value(debit_amt,from_currency_id,to_currency_id,transaction_date) into total from "VoucherTransactions"
+where "BudgetLineId" = budget_line_id and "IsDeleted" = false;
+RETURN total;
+end;
+$total$ LANGUAGE plpgsql;

@@ -1,0 +1,607 @@
+<div class="row dialog_heading">
+  <div class="col-sm-4">
+    <h4 class="main_heading">
+      Project Details
+    </h4>
+  </div>
+  <div class="col-sm-1">
+      <button mat-stroked-button color="accent" (click)="openPdfOptionDialog()">
+          <mat-icon aria-hidden="false" aria-label="Example home icon">
+            vertical_align_bottom </mat-icon
+          >Export Pdf
+        </button>
+        <!-- <mat-icon class="icon_cursor padding_top_5px" aria-label="download" (click)="onExportPdf()">vertical_align_bottom</mat-icon> -->
+  </div>
+  <div class="col-sm-7">
+        <mat-icon class="pull-right icon_cursor" aria-label="cancel" (click)="closeProgramAreaSectorModal()">clear</mat-icon>
+  </div>
+</div>
+<div *ngIf="projectOtherDetailPageFlag; else projectListTemplate" class="col-sm-12">
+  <mat-spinner class="center_loader" diameter="30"></mat-spinner>
+</div>
+<ng-template #projectListTemplate>
+  <div class="mar_tp_20 " id="Programareasector">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="box-shadow_div">
+          <mat-card class="radius_0">
+            <h5><strong>Opportunity Details</strong></h5>
+            <br>
+            <div class="row">
+              <div class="col-sm-6">
+                <mat-form-field>
+                  <mat-select class="example-full-width" placeholder="Select Opportunity Type"
+                    [(ngModel)]="projectotherDetail.OpportunityType" (selectionChange)="
+                      onOpportunitytypeChange(
+                                    'opportunityType',
+                                    projectotherDetail.OpportunityType
+                                  )
+                                " name="OpportunityType" [disabled]="!isEditingAllowed">
+                    <mat-option *ngFor="let item of OpportunityTypeList" [value]="item.Id">{{ item.Name }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-spinner class="center_loader custom_load" *ngIf="opportunityFlag;" diameter="20">
+                  </mat-spinner>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-6">
+                <lib-search-dropdown placeholder="Select Donor" [multiSelect]="false"
+                  placeholderSearchLabel="Search Donor..." noEntriesFoundLabel="No matching Donor found"
+                  [dataSource]="donorDataSource" [selectedValue]="projectotherDetail.DonorId"
+                  (openedChange)="openedChange($event,'Donor')">
+                </lib-search-dropdown>
+                <mat-spinner class="center_loader right_spinr_load" *ngIf="donorFlag;" diameter="20">
+                </mat-spinner>
+
+                <!-- <mat-form-field class="example-full-width ">
+                <mat-select placeholder=" Select Donor" [(ngModel)]="projectotherDetail.DonorId" [disabled]="!isEditingAllowed"
+                  (selectionChange)="
+                      onProjectotherDetailsChange(
+                                'Donor',
+                                DonorName
+                              )
+                            ">
+                  <mat-option *ngFor="let item of DonorList" [value]="item.DonorId">{{ item.Name }}
+                  </mat-option>
+                </mat-select>
+                <mat-spinner class="center_loader custom_load" *ngIf="opportunityFlag;" diameter="20">
+                  </mat-spinner>
+              </mat-form-field> -->
+              </div>
+            </div>
+
+            <br>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group ">
+                  <mat-form-field class="example-full-width">
+                    <input matInput #opportunityNoID type="text" [(ngModel)]="projectotherDetail.opportunityNo"
+                      placeholder="Opportunity No" name="opportunityNo" required (focusout)="
+                          onProjectotherDetailsChange(
+                            'opportunityNo',
+                            opportunityNoID.value
+                          )
+                        " [disableControl]="!isEditingAllowed" />
+
+                    <mat-error *ngIf="
+                          opportunityNo.hasError('required') &&
+                          opportunityNo.hasError('pattern')
+                        ">
+                      Opportunity number is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <mat-form-field class="example-full-width">
+                    <input matInput #Opportunity type="text" [(ngModel)]="projectotherDetail.opportunity"
+                      placeholder="Opportunity" name="opportunity" required (focusout)="
+                          onProjectotherDetailsChange(
+                            'opportunity',
+                            Opportunity.value
+                          )
+                        " [disableControl]="!isEditingAllowed" />
+                    <mat-error *ngIf="opportunity.hasError('required')">
+                      Opportunity name is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <mat-form-field class="example-full-width">
+                    <textarea rows="4" cols="6" matInput #Opportunitydescription type="text"
+                      [(ngModel)]="projectotherDetail.opportunitydescription" placeholder="Opportunity Description"
+                      name="opportunitydescription" required (focusout)="
+                onProjectotherDetailsChange(
+                  'opportunitydescription',
+                  Opportunitydescription.value
+                )
+              " [disableControl]="!isEditingAllowed"></textarea>
+                    <mat-error *ngIf="opportunitydescription.hasError('required')">
+                      Opportunity description is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <br>
+
+            <div class="row">
+              <div class="col-sm-6">
+                <mat-form-field>
+                  <mat-select class="example-full-width" placeholder="Select Country"
+                    [(ngModel)]="countryMultiSelectModel.CountryId" (selectionChange)="
+                                   onCountryDetailsChange(
+                                  'countrySelction',
+                                  countryMultiSelectModel.CountryId
+                                )
+                              " name="countrySelction"
+                    [disabled]="CountrySelectionList.length < 0 || !isEditingAllowed">
+                    <mat-option *ngFor="let item of CountrySelectionList" [value]="item.value">{{ item.label }}
+                    </mat-option>
+                  </mat-select>
+
+                  <mat-spinner class="center_loader custom_load" *ngIf="countryDistrictFlag;" diameter="20">
+                  </mat-spinner>
+                </mat-form-field>
+
+
+              </div>
+              <div class="col-sm-6">
+                <mat-form-field>
+                  <mat-select class="example-full-width" placeholder="Select Province"
+                    [(ngModel)]="provinceMultiSelectModel.ProvinceId " (selectionChange)="
+                                   onProvinceDetailsChange(
+                                  'provinceSelction',
+                                  provinceMultiSelectModel.ProvinceId
+                                )
+                              " name="provinceSelction"
+                    multiple>
+                    <mat-option *ngFor="let item of ProvinceSelectionList" [value]="item.value">{{ item.label }}
+                    </mat-option>
+                  </mat-select>
+
+                  <mat-spinner class="center_loader custom_load" *ngIf="provinceDistrictFlag;" diameter="20">
+                  </mat-spinner>
+                </mat-form-field>
+
+
+              </div>
+            </div><br>
+            <div class="row">
+              <div class="col-sm-6">
+                <mat-form-field>
+                  <mat-select placeholder="Select District" [(ngModel)]="districtMultiSelctModel.DistrictID"
+                    (selectionChange)="
+                      onDistrictDetailsChange(
+                              'districtSelction',
+                              districtMultiSelctModel.DistrictID
+                            )
+                          " name="districtSelction" multiple>
+                    <mat-option *ngFor="let item of DistrictMultiSelectList" [value]="item.value">{{ item.label }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-spinner class="center_loader custom_load" *ngIf="provinceDistrictFlag || districtFlag;" diameter="20">
+                  </mat-spinner>
+                </mat-form-field>
+
+              </div>
+              <div class="col-sm-6">
+                <lib-search-dropdown placeholder="Select Office" [multiSelect]="false"
+                  placeholderSearchLabel="Search Office..." noEntriesFoundLabel="No matching Office found"
+                  [dataSource]="officeDataSource" [selectedValue]="projectotherDetail.OfficeId"
+                  (openedChange)="openedOfficeChange($event,'Office')">
+                </lib-search-dropdown>
+              </div>
+            </div><br>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="autoComplete">
+                  <mat-form-field class="example-full-width">
+                    <input type="text" placeholder="Select Sector" [value]="Sector" aria-label="Number" matInput
+                      [formControl]="myControlSector" name="myControlSector" [matAutocomplete]="autoNumSector">
+                    <mat-autocomplete #autoNumSector="matAutocomplete" [displayWith]="displaySelectedSector">
+                      <mat-option (onSelectionChange)="AddeditSelectSectorvalue($event)"
+                        *ngFor="let item of filterdOptionSector | async" [value]="item">{{item.SectorName}}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-spinner class="center_loader custom_load" *ngIf="sectorListFlag;" diameter="20"></mat-spinner>
+                  </mat-form-field>
+                  <button *ngIf="isEditingAllowed" type="button" (click)="AddSectorDeatil(myControlSector)">+</button>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="autoComplete">
+                  <mat-form-field class="example-full-width">
+                    <input type="text" placeholder="Select Program" [value]="Program" aria-label="Number" matInput
+                      [formControl]="myControl" [matAutocomplete]="autoNumberss">
+                    <mat-autocomplete #autoNumberss="matAutocomplete" [displayWith]="displaySelectedProgram">
+                      <mat-option (onSelectionChange)="AddeditSelectedProgramvalue($event)"
+                        *ngFor="let item of filteredOptions | async" [value]="item">{{item.ProgramName}}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-spinner class="center_loader custom_load" *ngIf="programListFlag;" diameter="20"></mat-spinner>
+                  </mat-form-field>
+                  <button *ngIf="isEditingAllowed" type="button" (click)="AddProgram(myControl)">+</button>
+                </div>
+              </div>
+            </div><br>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group ">
+                  <span class="ui-float-label">
+                    <mat-form-field>
+                      <input matInput [(ngModel)]="projectotherDetail.StartDate" [matDatepicker]="picker6"
+                        placeholder="Start Date" (dateChange)="
+                              onProjectotherDetailsChange(
+                                'startDate',
+                                projectotherDetail.StartDate
+                              )
+                            " [disabled]="!isEditingAllowed" />
+                      <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+                      <mat-datepicker #picker6></mat-datepicker>
+                    </mat-form-field>
+                  </span>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <span class="ui-float-label">
+                    <mat-form-field>
+                      <input matInput [(ngModel)]="projectotherDetail.EndDate" [matDatepicker]="picker3"
+                        [min]="projectotherDetail.StartDate" placeholder="End Date" (dateChange)="
+                              onProjectotherDetailsChange(
+                                'endDate',
+                                projectotherDetail.EndDate
+                              )
+                            " [disabled]="!isEditingAllowed" />
+                      <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                      <mat-datepicker #picker3></mat-datepicker>
+                    </mat-form-field>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <mat-card class="radius_0">
+          <h5><strong>Project Objective & Goal</strong></h5>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group  ">
+                <mat-form-field class="example-full-width">
+                  <textarea rows="4" matInput #ProjectGoalID type="text" [(ngModel)]="projectotherDetail.projectGoal"
+                    placeholder="Project Goal" name="projectGoal" [formControl]="projectGoal"
+                    (focusout)="
+                        onProjectotherDetailsChange(
+                          'projectGoal',
+                          ProjectGoalID.value
+                        )
+                      " [disableControl]="!isEditingAllowed" ></textarea>
+
+                  <mat-error *ngIf="projectGoal.hasError('required')">
+                    Project Goal is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group ">
+                <mat-form-field class="example-full-width">
+                  <textarea rows="4" matInput #ProjectObjectiveID type="text" [(ngModel)]="projectotherDetail.projectObjective"
+                     placeholder="Project Objective" name="projectObjective"
+                    [formControl]="projectObjective" (focusout)="
+                      onProjectotherDetailsChange(
+                        'projectObjective',
+                        ProjectObjectiveID.value
+                      )
+                    " [disableControl]="!isEditingAllowed" ></textarea>
+
+                  <mat-error *ngIf="projectObjective.hasError('required')">
+                    Project Objective is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group ">
+                <mat-form-field>
+                  <input matInput [(ngModel)]="projectotherDetail.REOIReceiveDate" [matDatepicker]="picker4"
+                    placeholder="REOI Receive Date" (dateChange)="
+                  onProjectotherDetailsChange('rEOIReceiveDate', projectotherDetail.REOIReceiveDate)
+                " [disabled]="!isEditingAllowed" />
+                  <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                  <mat-datepicker #picker4></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group ">
+                <mat-form-field>
+                  <input matInput [(ngModel)]="projectotherDetail.SubmissionDate" [matDatepicker]="picker"
+                    placeholder="Submission Date" (dateChange)="
+                            onProjectotherDetailsChange('submissionDate', projectotherDetail.SubmissionDate)
+                          " [disabled]="!isEditingAllowed" />
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group ">
+                <mat-form-field class="example-full-width">
+                  <textarea rows="4" matInput #MainActivitiesID type="text" [(ngModel)]="projectotherDetail.mainActivities"
+                     placeholder="Main Activities" name="mainActivities" [formControl]="mainActivities"
+                    (focusout)="
+                      onProjectotherDetailsChange(
+                        'mainActivities',
+                        MainActivitiesID.value
+                      )
+                    " [disableControl]="!isEditingAllowed" ></textarea>
+
+                  <mat-error *ngIf="mainActivities.hasError('required')">
+                    Main Activities is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <!-- <div class="col-sm-6">
+            </div> -->
+          </div>
+        </mat-card>
+      </div>
+    </div>
+
+    <div class="clearfix"></div>
+    <div class="row">
+      <div class="col-sm-12">
+        <mat-card class="radius_0">
+          <h5><strong>Beneficiary Details</strong></h5>
+          <br>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <mat-form-field class="example-full-width">
+                  <input matInput #BeneficiaryMaleId type="number" [(ngModel)]="projectotherDetail.beneficiaryMale"
+                    placeholder="Direct Beneficiary Male" name="beneficiaryMale" required (focusout)="
+                    onProjectotherDetailsChange(
+                      'beneficiaryMale',
+                      BeneficiaryMaleId.value
+                    )
+                  " [disableControl]="!isEditingAllowed" />
+
+                  <mat-error *ngIf="beneficiaryMale.hasError('required')">
+                    Direct Beneficiary Male is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <mat-form-field class="example-full-width">
+                  <input matInput #IndirectBeneficiaryMaleId type="number"
+                    [(ngModel)]="projectotherDetail.InDirectBeneficiaryMale" placeholder="InDirect Beneficiary Male"
+                    name="InDirectBeneficiaryMale" required (focusout)="
+                        onProjectotherDetailsChange(
+                          'InDirectBeneficiaryMale',
+                          IndirectBeneficiaryMaleId.value
+                        )
+                      " [disableControl]="!isEditingAllowed" />
+
+                  <mat-error *ngIf="beneficiaryMale.hasError('required')">
+                    InDirect Beneficiary Male is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group ">
+                <mat-form-field class="example-full-width">
+                  <input matInput #BeneficiaryFemaleId type="number" [(ngModel)]="projectotherDetail.beneficiaryFemale"
+                    placeholder="Direct Beneficiary Female" name="beneficiaryFemale" required (focusout)="
+                          onProjectotherDetailsChange(
+                            'beneficiaryFemale',
+                            BeneficiaryFemaleId.value
+                          )
+                        " [disableControl]="!isEditingAllowed" />
+                  <mat-error *ngIf="beneficiaryFemale.hasError('required')">
+                    Direct Beneficiary Female is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group ">
+                <mat-form-field class="example-full-width">
+                  <input matInput #InBeneficiaryFemaleId type="number"
+                    [(ngModel)]="projectotherDetail.InDirectBeneficiaryFemale" placeholder="InDirect Beneficiary Female"
+                    name="InDirectBeneficiaryFemale" required (focusout)="
+                          onProjectotherDetailsChange(
+                            'InDirectBeneficiaryFemale',
+                            InBeneficiaryFemaleId.value
+                          )
+                        " [disableControl]="!isEditingAllowed" />
+                  <mat-error *ngIf="beneficiaryFemale.hasError('required')">
+                    InDirect Beneficiary Female is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+          </div>
+          <br><br>
+          <div class="row">
+            <div class="col-sm-6">
+              Total Direct Beneficaiary:
+              {{projectotherDetail.beneficiaryFemale + projectotherDetail.beneficiaryMale}}
+            </div>
+            <div class="col-sm-6">
+              Total InDirect Beneficaiary:
+              {{projectotherDetail.InDirectBeneficiaryMale + projectotherDetail.InDirectBeneficiaryFemale}}
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <mat-card class="radius_0">
+          <h5><strong> Gender Consideration</strong></h5>
+          <div class="row">
+            <div class="col-sm-6">
+              <lib-search-dropdown placeholder="Strength Consideration"
+                [multiSelect]="false"
+                placeholderSearchLabel="Search Strength Consideration..."
+                noEntriesFoundLabel="No matching Strength found"
+                [dataSource]="strengthDataSource"
+                [selectedValue]="projectotherDetail.StrengthConsiderationId"
+                (openedChange)="openedStrengthChange($event,'strength')">
+              </lib-search-dropdown>
+              <!-- changes 04042019 pk -->
+            </div>
+            <div class="col-sm-6 ">
+              <lib-search-dropdown placeholder="Gender Consideration" [multiSelect]="false"
+                placeholderSearchLabel="Search Gender Consideration..." noEntriesFoundLabel="No matching Gender found"
+                [dataSource]="genderConsiderationDataSource" [selectedValue]="projectotherDetail.GenderConsiderationId"
+                (openedChange)="openedGenderChange($event,'genderConsideration')">
+              </lib-search-dropdown>
+
+              <!-- <mat-form-field class="example-full-width ">
+              <mat-select placeholder="Gender Consideration" [(ngModel)]="projectotherDetail.GenderConsiderationId"
+                [disabled]="!isEditingAllowed" (selectionChange)="
+                          onProjectotherDetailsChange(
+                                    'genderConsideration',
+                                    GenderConsiderationName
+                                  )
+                                ">
+                <mat-option *ngFor="let item of GenderConsiderationvaluelist" [value]="item.GenderConsiderationId">
+                  {{ item.GenderConsiderationName }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field> -->
+
+              <!-- comment 04042019 pk -->
+
+              <!-- <mat-form-field class="example-full-width ">
+              <input type="text" placeholder="Gender Consideration" aria-label="Number" matInput
+                [(ngModel)]="GenderConsiderationName" [matAutocomplete]="auto" [disabled]="!isEditingAllowed" />
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let item of GenderConsiderationvaluelist" [value]="item.GenderConsiderationName"
+                  (onSelectionChange)="
+                    onProjectotherDetailsChange(
+                      'genderConsideration',
+                      item.GenderConsiderationName
+                    )
+                  ">
+                  {{ item.GenderConsiderationName }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field> -->
+            </div>
+            <div class="col-sm-12">
+              <div class="form-group ">
+                <mat-form-field class="example-full-width">
+                  <textarea rows="4" matInput #GenderRemarksID type="text"
+                    [(ngModel)]="projectotherDetail.GenderRemarks" placeholder="Gender Remarks" name="GenderRemarks"
+                    [formControl]="GenderRemarks" (focusout)="
+                    onProjectotherDetailsChange(
+                      'GenderRemarks',
+                      GenderRemarksID.value
+                    )
+                  " [disableControl]="!isEditingAllowed"></textarea>
+
+                  <mat-error *ngIf="GenderRemarks.hasError('required')">
+                    Gender Remarks is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <mat-card class="radius_0">
+          <h5><strong>Security Consideration</strong></h5>
+          <div class="row">
+            <div class="col-sm-6">
+              <lib-search-dropdown placeholder="Select Security" [multiSelect]="false"
+                placeholderSearchLabel="Search Security..." noEntriesFoundLabel="No matching Security found"
+                [dataSource]="securityDataSource" [selectedValue]="projectotherDetail.SecurityId"
+                (openedChange)="openedSecurityChange($event,'Security')">
+              </lib-search-dropdown>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <lib-search-dropdown placeholder="Select Security Consideration" [multiSelect]="true"
+                  placeholderSearchLabel="Search Security Consideration..."
+                  noEntriesFoundLabel="No matching Security found" [dataSource]="securityConsDataSource"
+                  [selectedValue]="securityConsiderationMultiselect.SecurityConsiderationId"
+                  (openedChange)="openedSecurityConsChange($event,'securityConsSelction')">
+                </lib-search-dropdown>
+
+                <!-- <mat-form-field>
+                <mat-select placeholder="Select Security Consideration"
+                  [(ngModel)]="securityConsiderationMultiselect.SecurityConsiderationId" (selectionChange)="
+                          onProjectSecurityConsiderationMultiChange(
+                                  'securityConsSelction',
+                                  securityConsiderationMultiselect.SecurityConsiderationId
+                                )
+                              " name="securityConsSelction" multiple [disabled]="!isEditingAllowed">
+                  <mat-option *ngFor="let item of SecurityConsiderationList" [value]="item.value">{{ item.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field> -->
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group ">
+                <mat-form-field class="example-full-width ">
+                  <textarea rows="4" matInput #SecurityRemarksID type="text"
+                    [(ngModel)]="projectotherDetail.SecurityRemarks" placeholder="Security Remarks"
+                    name="SecurityRemarks" [formControl]="SecurityRemarks" (focusout)="
+                        onProjectotherDetailsChange(
+                          'SecurityRemarks',
+                          SecurityRemarksID.value
+                        )
+                      " [disableControl]="!isEditingAllowed"></textarea>
+
+                  <mat-error *ngIf="SecurityRemarks.hasError('required')">
+                    Security Remarks is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+
+    <div class="row">
+
+    </div>
+
+  </div>
+</ng-template>

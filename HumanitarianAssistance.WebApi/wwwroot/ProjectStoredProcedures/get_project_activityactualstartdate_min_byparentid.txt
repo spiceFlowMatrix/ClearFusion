@@ -1,0 +1,22 @@
+-- FUNCTION: public.get_project_activityactualstartdate_min_byparentid(bigint)
+
+-- DROP FUNCTION public.get_project_activityactualstartdate_min_byparentid(bigint);
+
+CREATE OR REPLACE FUNCTION public.get_project_activityactualstartdate_min_byparentid(
+	parentid bigint)
+    RETURNS timestamp without time zone
+    LANGUAGE 'sql'
+
+    COST 100
+    VOLATILE 
+AS $BODY$
+
+	SELECT MIN(pa."ActualStartDate") FROM "ProjectActivityDetail" AS pa 
+	INNER JOIN "ProjectBudgetLineDetail" AS pbl ON pa."BudgetLineId" = pbl."BudgetLineId"
+	WHERE pa."ParentId" = parentid;
+
+$BODY$;
+
+ALTER FUNCTION public.get_project_activityactualstartdate_min_byparentid(bigint)
+    OWNER TO postgres;
+

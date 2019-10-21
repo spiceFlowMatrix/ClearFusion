@@ -1,0 +1,215 @@
+<div class="proposal-main">
+  <div class="col-sm-10 col-sm-offset-1">
+    <mat-card [ngStyle]="scrollStyles">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="top-header clearfix">
+              <h4 class="main_heading">
+                PROPOSAL
+                <a
+                  class="pull-right"
+                  *ngIf="
+                    startSubmitProposalLoader;
+                    else stopSubmitProposalLoader
+                  "
+                >
+                  <mat-spinner [diameter]="20"></mat-spinner>
+                </a>
+                <ng-template #stopSubmitProposalLoader>
+                  <button
+                    mat-icon-button
+                    *ngIf="
+                      !isProposalDocumentAvailable;
+                      else proposalStartedTemplate
+                    "
+                    class="pull-right"
+                    matTooltip="Please Start Proposal"
+                    matTooltipPosition="left"
+                  >
+                    <mat-icon aria-label="approve" class="grey_color"
+                      >check</mat-icon
+                    >
+                  </button>
+                  <ng-template #proposalStartedTemplate>
+                    <button
+                      mat-icon-button
+                      *ngIf="
+                        IsProposalSubmit == null;
+                        else proposalSubmitedTemplate
+                      "
+                      class="pull-right"
+                      (click)="proposalDetailsChange('proposalAccept', true)"
+                      matTooltip="Click Here to Submit"
+                      matTooltipPosition="left"
+                    >
+                      <mat-icon aria-label="approve" class="grey_color"
+                        >check</mat-icon
+                      >
+                    </button>
+
+                    <ng-template #proposalSubmitedTemplate>
+                      <button
+                        mat-icon-button
+                        *ngIf="
+                          IsApproved == true || IsApproved == null;
+                          else proposalRejectedTemplate
+                        "
+                        class="pull-right"
+                        matTooltip="Approved"
+                        matTooltipPosition="left"
+                      >
+                        <mat-icon aria-label="compDo" class="green"
+                          >check</mat-icon
+                        >
+                      </button>
+                      <ng-template #proposalRejectedTemplate>
+                        <button
+                          mat-icon-button
+                          class="pull-right"
+                          (click)="
+                            proposalDetailsChange('proposalAccept', true)
+                          "
+                          matTooltip="Please Submit Document Again"
+                          matTooltipPosition="left"
+                        >
+                          <mat-icon aria-label="compDoc" class="red"
+                            >check</mat-icon
+                          >
+                        </button>
+                      </ng-template>
+                    </ng-template>
+                  </ng-template>
+                </ng-template>
+              </h4>
+            </div>
+            <div class="row bdr_btm pad_btm_25 mar_tp_20">
+              <div class="col-sm-6">
+                <div class="comment-text ">
+                  <div class="user_name ">
+                    <a class="far fa-credit-card green font_22"></a>
+                  </div>
+                  <div class="user_text">
+                    <div class="two-mat-field-outer">
+                      <mat-form-field class="example-full-width currency_input">
+                        <mat-select
+                          placeholder="Currency"
+                          name="currency"
+                          [value]="proposalModel.CurrencyId"
+                          (selectionChange)="
+                            currencyDetailsChange($event.value)
+                          "
+                        >
+                          <mat-option
+                            *ngFor="let item of currencyList"
+                            [value]="item.CurrencyId"
+                          >
+                            {{ item.CurrencyCode }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-spinner
+                          class="center_loader right_load_r"
+                          *ngIf="currencyDetailLoader"
+                          diameter="20"
+                        >
+                        </mat-spinner>
+                      </mat-form-field>
+                      <mat-form-field class="example-full-width">
+                        <input
+                          matInput
+                          #ProposalBudget
+                          type="number"
+                          [(ngModel)]="proposalModel.ProposalBudget"
+                          maxlength="150"
+                          placeholder="Budget"
+                          name="proposalBudget"
+                          appNumberOnly="true"
+                          (focusout)="
+                            proposalDetailsChange(
+                              'proposalBudget',
+                              ProposalBudget.value
+                            )
+                          "
+                        />
+                      </mat-form-field>
+                      <mat-spinner
+                        class="center_loader right_load"
+                        *ngIf="budgetDetailLoader"
+                        diameter="20"
+                      >
+                      </mat-spinner>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-3">
+                <div class="comment-text ">
+                  <div class="user_text ">
+                    <mat-form-field>
+                      <mat-datepicker-toggle
+                        [ngClass]="{
+                          blue_date: proposalModel.ProposalDueDate != null
+                        }"
+                        matSuffix
+                        [for]="dueDatePicker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #dueDatePicker></mat-datepicker>
+                      <input
+                        matInput
+                        [(ngModel)]="proposalModel.ProposalDueDate"
+                        [min]="proposalModel.ProposalStartDate"
+                        [matDatepicker]="dueDatePicker"
+                        (dateChange)="
+                          proposalDetailsChange(
+                            'dueDate',
+                            proposalModel.ProposalDueDate
+                          )
+                        "
+                        placeholder="Due Date"
+                        [disabled]="proposalModel.ProposalStartDate == null"
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="comment-text ">
+                  <div class="user_text ">
+                    <mat-form-field>
+                      <mat-datepicker-toggle
+                        [ngClass]="{
+                          blue_date: proposalModel.ProposalStartDate != null
+                        }"
+                        matSuffix
+                        [for]="startDatePicker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #startDatePicker></mat-datepicker>
+                      <input
+                        matInput
+                        [(ngModel)]="proposalModel.ProposalStartDate"
+                        [matDatepicker]="startDatePicker"
+                        placeholder="Start Date"
+                        [disabled]="true"
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+            <app-proposal-document
+              (isProposalDocumentAvailable)="changeDocumentAvailableFlag($event)"
+              (changeStartDate)="changeStartDate($event)"
+            ></app-proposal-document>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

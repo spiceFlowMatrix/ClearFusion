@@ -1,0 +1,15 @@
+.mr-top{ margin-top: 11px;
+}
+.mr-top-padding-lft{
+    margin-top: 20px;padding-left: 80px;
+}
+
+.padding-top-padding-right {
+    padding-top: 7px;
+    padding-right: 17px;
+}
+
+.flex-padding-top {
+    display: flex;
+    padding-top: 10px;
+}

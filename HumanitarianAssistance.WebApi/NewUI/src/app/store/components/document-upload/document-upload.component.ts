@@ -1,0 +1,45 @@
+import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { of, Observable } from 'rxjs';
+import { TableActionsModel } from 'projects/library/src/public_api';
+import { IPurchasedFiles } from '../../models/purchase';
+
+@Component({
+  selector: 'app-document-upload',
+  templateUrl: './document-upload.component.html',
+  styleUrls: ['./document-upload.component.scss']
+})
+export class DocumentUploadComponent implements OnInit, OnChanges {
+  actions: TableActionsModel;
+
+  @Input() purchasedDocumentFiles: IPurchasedFiles[];
+  @Output() deleteDocument =  new EventEmitter<any>();
+
+  documentHeaders$: Observable<any>;
+  documentsList$: Observable<any>;
+
+  constructor() {
+    this.actions = {
+      items: {
+        button: { status: false, text: '' },
+        delete: true,
+        download: true,
+      },
+      subitems: {}
+
+    };
+  }
+
+  ngOnInit() {
+    this.documentHeaders$ = of(['Id', 'Name', 'Type', 'Uploaded On', 'Uploaded By']);
+  }
+
+  ngOnChanges() {
+     this.documentsList$ = of(this.purchasedDocumentFiles);
+  }
+
+  documentButtonClick(event) {
+    if (event.type === 'delete') {
+      this.deleteDocument.emit(event.item);
+    }
+  }
+}

@@ -1,0 +1,81 @@
+<div class="body-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div [class]="colsm6">
+        <mat-card [ngStyle]="scrollStyles">
+
+          <div class="row">
+            <div class="col-sm-12">
+              <span class="font_x_large">Project Indicators</span> &nbsp;
+              <button mat-icon-button (click)="onAddNewIndicator()">
+                  <mat-icon aria-label="Add New Indicators">add</mat-icon>
+                </button>
+
+            </div>
+          </div>
+          <div class="row">
+            <div *ngIf="projectIndicatorListLoaderFlag; else projectIndicatorListTemplate" class="col-sm-12">
+              <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+            </div>
+            <ng-template #projectIndicatorListTemplate>
+
+              <div class="col-sm-12">
+                <div class="responsive_table-responsive">
+                  <table class="table table-bordered">
+                    <tbody>
+                      <tr>
+                        <td width="1%">
+                          <p class="width_8"></p>
+                        </td>
+                        <td width="3%"></td>
+                        <td width="30%">Name</td>
+                        <td width="40%">Description</td>
+                        <td width="10%">Questions</td>
+                        <td width="5%"></td>
+                        <td width="1%"></td>
+                      </tr>
+                      <tr *ngFor="let list of projectIndicatorList" (click)="onItemClick(list)"
+                        [ngClass]="{ selected: selectedRowID === list.ProjectIndicatorId }">
+                        <td width="1%">
+                          <p class="width_8"></p>
+                        </td>
+                        <td class="grey-text" width="3%"></td>
+                        <td width="30%" text-align="left">
+                          <p class="diamond">{{ list.IndicatorName }}</p>
+                        </td>
+                        <td class="text-left" width="40%">{{ list.Description }}</td>
+                        <td class="text-left" width="10%">{{ list.Questions }}</td>
+                        <td>
+                            <mat-icon class="icon_cursor small_icon tp_15 icon_width" color="warn" (click)="onDeleteIndicator(list)">
+                                delete
+                              </mat-icon>
+                        </td>
+                        <td class="" width="7"><a class="blue-circle "><i class="far fa-bell"></i></a></td>
+                        <td width="1%" class="text-center"><i *ngIf="selectedRowID === list.ProjectIndicatorId"
+                            class="material-icons font-12">
+                            arrow_forward_ios </i></td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <mat-paginator [length]="indicatorFilterModel.totalCount" [pageSize]="indicatorFilterModel.pageSize"
+                    [pageIndex]="indicatorFilterModel.pageIndex" [pageSizeOptions]="[5, 10, 25, 100]"
+                    (page)="pageEvent($event)">
+                  </mat-paginator>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+
+        </mat-card>
+      </div>
+      <div [ngStyle]="{ visibility: showJobDetail ? 'visible' : 'hidden' }" class="col-sm-6">
+        <!-- <app-donor-master (updateDonor)="updateDonorList($event)" (addDonor)="addDonorList($event)" (deleteDonor)="onDonorDeleted($event)"
+            (hideDetailPanel)="hideProjectDetailPanel($event)" [donorId]="donorId"></app-donor-master> -->
+        <app-project-indicator-detail [indicatorId]="projectIndicatorId" (addIndicator)="addProjectIndicator($event)"
+          [ProjectindicatorDetail]="ProjectindicatorDetail" (indicatorListRefresh)="OnindicatorListRefresh($event)"
+          (editIndicator)="editIndicatorList($event)" (questionDetailListRefresh)=OnQuestionDetailListRefresh($event)></app-project-indicator-detail>
+      </div>
+    </div>
+  </div>
+</div>

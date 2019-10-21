@@ -1,0 +1,121 @@
+<div class="hiring-request-listing-main">
+  <div class="container-fluid">
+    <div class="row">
+      <div [class]="colsm6">
+        <div>
+          <div class="row">
+            <div class="col-sm-12">
+              <span class="font_x_large">Hiring Requests</span> &nbsp;
+              <!-- <button mat-raised-button color="primary" (click)="onAddNewRequestClicked()">
+                Add New Request
+              </button> -->
+              <button mat-raised-button color="accent" (click)="onAddNewRequestClicked()">
+                <mat-icon aria-label="add">add</mat-icon>
+                  Add New Request
+              </button>
+            </div>
+          </div>
+
+          <br />
+          <mat-card [ngStyle]="scrollStyles">
+            <div class="row">
+              <div class="col-sm-12 margin_top_10">
+                <div class="responsive_table-responsive"
+                  *ngIf="!hiringRequestListLoader; else hiringRequestListLoaderTemplate">
+                  <table class="table table-bordered">
+                    <tbody>
+                      <tr>
+                        <td width="1%">
+                          <p class="width_8"></p>
+                        </td>
+                        <td width="20%" class="text-left">
+                          Requested By
+                        </td>
+                        <td width="15%" class="text-left">
+                          Job Grade
+                        </td>
+                        <td width="15%" class="text-left">
+                          Position
+                        </td>
+                        <td width="20%" class="text-left">
+                          Filled Vacancies
+                        </td>
+                        <td width="20%" class="text-left">
+                          Total Vacancies
+                        </td>
+                        <td width="1%" class="text-center"></td>
+                      </tr>
+                      <tr (click)="onItemClick(item)" *ngFor="let item of hiringRequestlist" [ngClass]="{
+                          selected: selectedHiringRequestId == item.HiringRequestId
+                        }">
+                        <td width="1%">
+                          <p class="width_8"></p>
+                        </td>
+                        <td width="37%" class="grey-text">
+                          <p>{{ item.RequestedBy }}</p>
+                        </td>
+                        <td width="10%" text-align="left">
+                          <p class="diamond">
+                            {{ item.GradeName}}
+                          </p>
+                        </td>
+                        <td width="10%" text-align="left">
+                          <p class="text_overflow">
+                            {{ item.Position}}
+                          </p>
+                        </td>
+                        <td width="10%" class="text-left">
+                          {{ item.FilledVacancies }}
+                        </td>
+                        <td width="10%" class="text-left">
+                          {{ item.TotalVacancies }}
+                        </td>
+                        <td width="1%" class="text-center">
+                          <i *ngIf="selectedHiringRequestId == item.HiringRequestId" class="material-icons font-12">
+                            arrow_forward_ios
+                          </i>
+                        </td>
+
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <mat-paginator
+                  [length]="hiringRequestModel.TotalCount"
+                  [pageSize]="hiringRequestModel.pageSize"
+                  [pageIndex]="hiringRequestModel.pageIndex"
+                  [pageSizeOptions]="[5, 10, 25, 100]"
+                  (page)="pageEvent($event)"
+                >
+                </mat-paginator>
+
+                <ng-template #hiringRequestListLoaderTemplate>
+                  <br />
+                  <mat-spinner class="center_loader" diameter="50"></mat-spinner>
+                </ng-template>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+      <div [hidden]="!showHiringReuestDetail" class="col-sm-6">
+        <app-hiring-request-details
+        [hiringRequestId]="selectedHiringRequestId"
+        [currencyList]="currencyList"
+          [hiringRequestDetail]="hiringRequestDetail"
+          [budgetLineList]="budgetLineList"
+          [officeList]="officeList"
+          [jobGradeList]="jobGradeList"
+          [professionList]="professionList"
+          [genderList]="gender"
+          [workingShift]="workingShift"
+          [countryList]="countryList"
+          [provinceList]="provinceList"
+          [jobTypeList]="JobTypeList"
+          (UpdatedHRListRefresh)="OnEditHiringRequestListRefresh($event)">
+        </app-hiring-request-details>
+      </div>
+
+    </div>
+  </div>
+</div>

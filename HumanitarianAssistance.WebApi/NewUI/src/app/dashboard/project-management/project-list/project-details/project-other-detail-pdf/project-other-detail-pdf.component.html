@@ -1,0 +1,139 @@
+<h4>Choose Sections to Export</h4><hr>
+<form [formGroup]="myForm">
+    <mat-checkbox value="isChecked" formControlName="SelectAll" (change)="SelectAllChange()">
+        SelectAll
+        </mat-checkbox>
+  <div class="content-wrapper">
+    <h5><strong>Opportunity Details</strong></h5><br>
+    <div class="row">
+      <div class="col-md-4">
+        <mat-checkbox value="isChecked" formControlName="opportunitytype">
+        Opportunity Type
+        </mat-checkbox>
+        <mat-checkbox value="isChecked" formControlName="donor">
+          Donor
+        </mat-checkbox>
+        <mat-checkbox value="isChecked" formControlName="opportunityno">
+        Opportunity No.
+        </mat-checkbox>
+        <mat-checkbox value="isChecked" formControlName="opportunity">
+        Opportunity
+        </mat-checkbox>
+        <mat-checkbox value="isChecked" formControlName="enddate">
+          End Date
+        </mat-checkbox>
+      </div>
+      <div class="col-md-4" style="width: 28%;">
+        <mat-checkbox  value="isChecked" formControlName="opportunitydesc">
+          Opportunity Desc.
+        </mat-checkbox>
+        <mat-checkbox value="isChecked" formControlName="country">
+          Country
+        </mat-checkbox>
+        <mat-checkbox value="isChecked" formControlName="province">
+          Province
+        </mat-checkbox>
+        <mat-checkbox value="isChecked" formControlName="district">
+          District
+        </mat-checkbox>
+      </div>
+      <div class="col-md-4" style="width: 25%;">
+        <mat-checkbox  value="isChecked" formControlName="office">
+          Office
+        </mat-checkbox>
+        <mat-checkbox value="isChecked" formControlName="sector">
+          Sector
+        </mat-checkbox>
+        <mat-checkbox value="isChecked" formControlName="program">
+          Program
+        </mat-checkbox>
+        <mat-checkbox value="isChecked" formControlName="startdate">
+          Start Date
+        </mat-checkbox>
+      </div>
+    </div><hr>
+    <h5><strong>Project Objective & Goal</strong></h5><br>
+    <div class="row">
+        <div class="col-md-4">
+            <mat-checkbox value="isChecked" formControlName="projgoal">
+            Project Goal
+            </mat-checkbox>
+            <mat-checkbox value="isChecked" formControlName="submissiondate">
+            Submission Date
+            </mat-checkbox>
+        </div>
+        <div class="col-md-4">
+          <mat-checkbox  value="isChecked" formControlName="projobj">
+            Project Objective
+          </mat-checkbox>
+          <mat-checkbox value="isChecked" formControlName="mainactivities">
+            Main Activities
+          </mat-checkbox>
+        </div>
+        <div class="col-md-4">
+          <mat-checkbox  value="isChecked" formControlName="reoidate">
+            REOI Recieve Date
+          </mat-checkbox>
+        </div>
+    </div><hr>
+    <h5><strong>Beneficiary Details</strong></h5><br>
+    <div class="row">
+        <div class="col-md-4">
+            <mat-checkbox value="isChecked" formControlName="dirbenmale">
+            Direct Beneficiary Male
+            </mat-checkbox>
+            <mat-checkbox value="isChecked" formControlName="indirbenfemale">
+              InDirect Beneficiary Female
+            </mat-checkbox>
+        </div>
+        <div class="col-md-4">
+          <mat-checkbox  value="isChecked" formControlName="indirbenmale">
+            InDirect Beneficiary Male
+          </mat-checkbox>
+        </div>
+        <div class="col-md-4" style="width: 22%;">
+          <mat-checkbox  value="isChecked" formControlName="dirbenfemale">
+              Direct Beneficiary Female
+          </mat-checkbox>
+        </div>
+    </div><hr>
+    <h5><strong>Gender Consideration</strong></h5><br>
+    <div class="row">
+        <div class="col-md-4">
+            <mat-checkbox value="isChecked" formControlName="strengthconsideration">
+              Strength Consideration
+            </mat-checkbox>
+        </div>
+        <div class="col-md-4">
+          <mat-checkbox  value="isChecked" formControlName="genderconsideration">
+              Gender Consideration
+          </mat-checkbox>
+        </div>
+        <div class="col-md-4">
+          <mat-checkbox  value="isChecked" formControlName="genderremarks">
+              Gender Remarks
+          </mat-checkbox>
+        </div>
+    </div><hr>
+    <h5><strong>Security Consideration</strong></h5><br>
+    <div class="row">
+        <div class="col-md-4">
+            <mat-checkbox value="isChecked" formControlName="security">
+            Security
+            </mat-checkbox>
+        </div>
+        <div class="col-md-4">
+          <mat-checkbox  value="isChecked" formControlName="securityconsideration">
+              Security Consideration
+          </mat-checkbox>
+        </div>
+        <div class="col-md-4" style="width: 22%;">
+          <mat-checkbox  value="isChecked" formControlName="securityremarks">
+              Security Remarks
+          </mat-checkbox>
+        </div>
+    </div>
+  </div>
+</form><br>
+<button mat-stroked-button color="accent" style="margin-left:34%;" (click)="onExportPdf()">Export</button>
+<button mat-stroked-button color="primary" style="margin-left:10px;" (click)="closeModal()">Cancel</button>

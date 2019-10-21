@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Accounting\Commands\" />
+    <Folder Include="Chat\Commands\Common\" />
+    <Folder Include="Configuration\Commands\Common\" />
+    <Folder Include="FileManagement\Commands\Common\" />
+    <Folder Include="FileManagement\Commands\Update\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="EPPlus.Core" Version="1.5.4" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.40.2.1649" />
+    <PackageReference Include="Google.Cloud.Storage.V1" Version="2.3.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.0.1" />
+
+    <PackageReference Include="itext7" Version="7.1.7" /> 
+    <PackageReference Include="itext7.pdfhtml" Version="2.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HumanitarianAssistance.Common\HumanitarianAssistance.Common.csproj" />
+    <ProjectReference Include="..\HumanitarianAssistance.Persistence\HumanitarianAssistance.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>
