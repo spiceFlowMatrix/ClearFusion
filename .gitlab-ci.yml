@@ -13,10 +13,7 @@ variables:
     CF_CHAPROD_URL: manage.cha-net.org
     CF_APP_NAME: clearfusion-${CI_COMMIT_REF_SLUG}
     CF_APP_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}
-<<<<<<< HEAD
-=======
     ENVIRONMENT: "Production"
->>>>>>> 3d3969cd4e3872ab3f5edca1e34a95233b95d4b8
 
 build-newui:
     image: node:latest
