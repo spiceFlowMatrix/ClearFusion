@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { of, Observable } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IFilterModel, HiringList } from '../models/hiring-Requests-models';
+import { IFilterModel, HiringList } from '../models/hiring-requests-models';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
