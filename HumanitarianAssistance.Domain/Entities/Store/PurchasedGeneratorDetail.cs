@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,5 +22,6 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         [ForeignKey("PurchaseId")]
         public StoreItemPurchase StoreItemPurchase { get; set; }
         public GeneratorItemDetail GeneratorItemDetail { get; set; }
+        public List<GeneratorUsageHourDetail> GeneratorUsageHourList {get; set;}
     }
 }

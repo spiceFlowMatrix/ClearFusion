@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Domain.Entities.Store;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
         {
             _dbContext = dbContext;
         }
-
+        
         public async Task<bool> Handle(AddGeneratorUsageHoursCommand request, CancellationToken cancellationToken)
         {
             bool success= false;
@@ -25,38 +26,38 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                 if(request != null) 
                 {
 
-                //     VehicleMileageDetail mileage = await _dbContext.VehicleMileageDetail.FirstOrDefaultAsync(x=> x.IsDeleted == false &&
-                //                                                                         x.VehicleId == request.GeneratorId &&
-                //                                                                         x.MileageMonth.Month == request.Month.Month);
+                    GeneratorUsageHourDetail usageHours = await _dbContext.GeneratorUsageHourDetail.FirstOrDefaultAsync(x=> x.IsDeleted == false &&
+                                                                                        x.GeneratorId == request.GeneratorId &&
+                                                                                        x.Month.Month == request.Month.Month);
 
-                //     if(mileage == null)
-                //     {
-                //          mileage= new VehicleMileageDetail
-                //         {
-                //             IsDeleted= false,
-                //             CreatedDate= DateTime.UtcNow,
-                //             CreatedById= request.CreatedById,
-                //             VehicleId= request.VehicleId,
-                //             MileageMonth = request.Month,
-                //             Mileage= request.Mileage
-                //         };
+                    if(usageHours == null)
+                    {
+                         usageHours= new GeneratorUsageHourDetail
+                        {
+                            IsDeleted= false,
+                            CreatedDate= DateTime.UtcNow,
+                            CreatedById= request.CreatedById,
+                            GeneratorId= request.GeneratorId,
+                            Month = request.Month,
+                            Hours= request.Hours
+                        };
 
-                //         await _dbContext.VehicleMileageDetail.AddAsync(mileage);
-                //         await _dbContext.SaveChangesAsync();
-                //     }
-                //     else 
-                //     {
-                //         mileage.ModifiedDate = DateTime.UtcNow;
-                //         mileage.ModifiedById = request.CreatedById;
-                //         mileage.VehicleId= request.VehicleId;
-                //         mileage.MileageMonth = request.Month;
-                //         mileage.Mileage= request.Mileage;
+                        await _dbContext.GeneratorUsageHourDetail.AddAsync(usageHours);
+                        await _dbContext.SaveChangesAsync();
+                    }
+                    else 
+                    {
+                        usageHours.ModifiedDate = DateTime.UtcNow;
+                        usageHours.ModifiedById = request.CreatedById;
+                        usageHours.GeneratorId= request.GeneratorId;
+                        usageHours.Month = request.Month;
+                        usageHours.Hours= request.Hours;
 
-                //         _dbContext.VehicleMileageDetail.Update(mileage);
-                //         await _dbContext.SaveChangesAsync();
-                //     }
+                        _dbContext.GeneratorUsageHourDetail.Update(usageHours);
+                        await _dbContext.SaveChangesAsync();
+                    }
 
-                //    success= true;
+                   success= true;
                 }
                 else
                 {

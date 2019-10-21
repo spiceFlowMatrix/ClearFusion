@@ -459,7 +459,7 @@ export class GLOBAL {
   public static API_VehicleTracker_SaveVehicleDetail = 'VehicleTracker/EditVehicleDetail';
   public static API_GeneratorTracker_GetGeneratorList = 'GeneratorTracker/GetGeneratorList';
   public static API_GeneratorTracker_GetGeneratorById = 'GeneratorTracker/GetGeneratorById';
-  public static API_GeneratorTracker_AddGeneratorUsageHours = 'VehicleTracker/AddGeneratorUsageHours';
+  public static API_GeneratorTracker_AddGeneratorUsageHours = 'GeneratorTracker/AddGeneratorUsageHours';
 
 }
 

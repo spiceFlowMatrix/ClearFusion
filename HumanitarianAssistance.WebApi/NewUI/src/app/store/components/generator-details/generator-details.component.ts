@@ -5,6 +5,7 @@ import { AddHoursComponent } from '../add-hours/add-hours.component';
 import { PurchaseService } from '../../services/purchase.service';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { ReplaySubject } from 'rxjs';
+import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 
 @Component({
   selector: 'app-generator-details',
@@ -26,7 +27,7 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(private dialog: MatDialog, private router: Router, private activatedRoute: ActivatedRoute,
-              private purchaseService: PurchaseService) {
+              private purchaseService: PurchaseService, private commonLoader: CommonLoaderService) {
     this.activatedRoute.params.subscribe(params => {
       this.generatorId = params['id'];
     });
@@ -70,6 +71,7 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   //#endregion
 
   getGeneratorDetailById() {
+    this.commonLoader.showLoader();
     this.purchaseService.getGeneratorDetailById(this.generatorId)
     .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
@@ -87,6 +89,10 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
           PurchaseName: x.PurchaseName,
           PurchaseId: x.PurchaseId
         };
+
+        this.commonLoader.hideLoader();
+      }, error => {
+        this.commonLoader.hideLoader();
       });
   }
 

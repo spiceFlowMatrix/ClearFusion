@@ -36,6 +36,7 @@ export class AddHoursComponent implements OnInit {
 
   //#endregion
   addHours() {
+    debugger;
     this.isAddUsageHourFormSubmitted = true;
     if (this.addUsageHourForm.valid) {
       this.purchaseService.addGeneratorUsageHours(this.addUsageHourForm.value)

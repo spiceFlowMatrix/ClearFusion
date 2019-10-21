@@ -57,7 +57,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> AddGeneratorUsageHours(GetGeneratorListQuery request)
+        public async Task<IActionResult> AddGeneratorUsageHours(AddGeneratorUsageHoursCommand request)
         {
             var result = await Task.FromResult(_mediator.Send(request));
 
