@@ -420,6 +420,9 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
                       this.toastr.success(x.Message);
                     }
               }
+            } else {
+              this.addPurchaseForm.reset();
+              this.isAddPurchaseFormSubmitted = false;
             }
 
           } else if (x.StatusCode === 400) {

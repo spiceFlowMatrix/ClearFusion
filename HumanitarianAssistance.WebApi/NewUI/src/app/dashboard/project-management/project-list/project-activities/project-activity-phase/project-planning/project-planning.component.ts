@@ -366,8 +366,8 @@ export class ProjectPlanningComponent implements OnInit, OnChanges, AfterContent
       ParentId: data.ParentId,
       CountryId: data.CountryId,
       ProjectId: this.projectId,
-      ActualStartDate: data.ActualStartDate,
-      ActualEndDate: data.ActualEndDate,
+      ActualStartDate: StaticUtilities.getLocalDate(data.ActualStartDate),
+      ActualEndDate: StaticUtilities.getLocalDate(data.ActualEndDate),
       ReoccuredReferenceId: data.ReoccuredReferenceId
     };
 

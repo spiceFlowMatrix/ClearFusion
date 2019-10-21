@@ -52,7 +52,7 @@ export class ProjectJobsDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-     //this.projectId = +this.routeActive.snapshot.paramMap.get('id');
+     // this.projectId = +this.routeActive.snapshot.paramMap.get('id');
   }
 
   ngOnChanges(): void {

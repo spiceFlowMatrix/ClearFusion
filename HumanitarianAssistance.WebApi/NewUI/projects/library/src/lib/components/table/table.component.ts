@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnChanges, ChangeDetectionStrategy, EventEmit
 import { Observable, of } from 'rxjs';
 import { IDeleteProcurementModel } from 'src/app/store/models/purchase';
 import { TableActionsModel } from '../../models/table-actions-model';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'hum-table',
@@ -16,6 +17,8 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() items: Observable<Array<Object>>;
   @Input() subTitle: string;
   @Input() actions: TableActionsModel
+  @Input() hideColums$: Observable<{ headers: string[], items: string[] }>
+
   @Output() actionClick = new EventEmitter<any>();
   @Output() subActionClick = new EventEmitter<any>();
   @Output() rowClick = new EventEmitter<any>();
@@ -68,7 +71,21 @@ export class TableComponent implements OnInit, OnChanges {
 
       });
     }
+    if (this.hideColums$) {
 
+      this.hideColums$.subscribe(res => {
+        console.log(res);
+        this.itemHeaders.subscribe(headers => {
+          this.itemHeaders = of(headers.filter(r => res.items.includes(r)));
+        })
+        this.headers.subscribe(headers => {
+          console.log(headers);
+          this.headers = of(res.headers);
+         
+        })
+      })
+    }
+    // console.log(this.hideColums);
   }
   action(item, type, e: Event) {
     e.stopPropagation();
@@ -90,7 +107,7 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   switchSubList(i, event) {
-    if (this.subItems.length > 0)   this.isShowSubList[i] = !this.isShowSubList[i];
+    if (this.subItems.length > 0) this.isShowSubList[i] = !this.isShowSubList[i];
     this.rowClick.emit(event);
     
   }

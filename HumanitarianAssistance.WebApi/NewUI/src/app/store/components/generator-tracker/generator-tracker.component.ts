@@ -5,6 +5,7 @@ import { TableActionsModel } from 'projects/library/src/public_api';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { AddHoursComponent } from '../add-hours/add-hours.component';
+import { PurchaseService } from '../../services/purchase.service';
 
 @Component({
   selector: 'app-generator-tracker',
@@ -12,36 +13,15 @@ import { AddHoursComponent } from '../add-hours/add-hours.component';
   styleUrls: ['./generator-tracker.component.scss']
 })
 export class GeneratorTrackerComponent implements OnInit {
-  vehicleListHeaders$ = of(["Plate No", "Driver", "Fuel Consumption Rate", "Total Mileage (KM)", "Total Cost", "Original Cost"]);
-  vehicleList$: Observable<IVehicleList[]>;
+  generatorListHeaders$ = of(['Id', 'K.V.', 'Fuel Consumption Rate', 'Incurred Usage(Hours)', 'Total Usage(Hours)', 'Total Cost',
+                              'Original Cost']);
+  generatorList$: Observable<IVehicleList[]>;
   actions: TableActionsModel;
-  constructor(private router: Router , private dialog:MatDialog) { }
+  recordsCount: number;
+
+  constructor(private router: Router , private dialog: MatDialog, private purchaseService: PurchaseService) { }
 
   ngOnInit() {
-    this.vehicleList$ = of([{
-      PlateNo: 'KBL-3534-32',
-      Driver: 'Employee Name',
-      FCRate: '32.7',
-      TotalMileage: '8700',
-      TotalCost: '8700',
-      OriginalCost: '8700',
-    },
-    {
-      PlateNo: 'KBL-3534-32',
-      Driver: 'Employee Name',
-      FCRate: '32.7',
-      TotalMileage: '8700',
-      TotalCost: '8700',
-      OriginalCost: '8700',
-    }, {
-      PlateNo: 'KBL-3534-32',
-      Driver: 'Employee Name',
-      FCRate: '32.7',
-      TotalMileage: '8700',
-      TotalCost: '8700',
-      OriginalCost: '8700',
-    }] as IVehicleList[]);
-
     this.actions = {
       items: {
         button: { status: true, text: 'Add Hours' },
@@ -56,8 +36,8 @@ export class GeneratorTrackerComponent implements OnInit {
   goToDetails(e) {
     this.router.navigate(['store/generator/detail', 1]);
   }
-  openMilageModal(event) {
-    if (event.type == "button") {
+  openHoursModal(event) {
+    if (event.type === 'button') {
       const dialogRef = this.dialog.open(AddHoursComponent, {
         width: '850px',
         data: {
@@ -66,5 +46,36 @@ export class GeneratorTrackerComponent implements OnInit {
         }
       });
     }
+  }
+
+  getFilteredGeneratorList(selectedFilter) {
+    const filter = {
+      TotalCost: selectedFilter.TotalCost,
+      ModelYear: selectedFilter.ModelYear,
+      OfficeId: selectedFilter.OfficeId,
+      PlateNo: selectedFilter.Voltage,
+      pageSize: 10,
+      pageIndex: 0
+    };
+
+    this.getGeneratorList(filter);
+  }
+
+  getGeneratorList(filter) {
+    this.purchaseService.getVehicleList(filter)
+      .subscribe(response => {
+        this.recordsCount = response.TotalRecords;
+        this.generatorList$ = of(response.VehicleList.map((element) => {
+          return {
+            VehicleId: element.VehicleId,
+            PlateNo: element.PlateNo,
+            Driver: element.EmployeeName,
+            FCRate: element.FuelConsumptionRate,
+            TotalMileage: element.TotalMileage,
+            TotalCost: element.TotalCost,
+            OriginalCost: element.OriginalCost,
+          };
+        }));
+      });
   }
 }
