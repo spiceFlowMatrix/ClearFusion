@@ -1,7 +1,7 @@
 -- FUNCTION: public.get_ledger_report(integer, text, text, integer, integer[], bigint[], boolean)
 
 -- DROP FUNCTION public.get_ledger_report(integer, text, text, integer, integer[], bigint[], boolean);
-
+DROP FUNCTION IF EXISTS public.get_ledger_report(integer, text, text, integer, integer[], bigint[], boolean);
 CREATE OR REPLACE FUNCTION public.get_ledger_report(
 	currency integer,
 	fromdate text,
