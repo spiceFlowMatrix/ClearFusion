@@ -70,7 +70,7 @@ export class AddHiringRequestComponent implements OnInit {
       .subscribe(result => {
         this.subscribeProfessionList(result[0]);
         this.subscribeOfficeList(result[1]);
-        this.subscribeJobList(result[1]);
+       // this.subscribeJobList(result[1]);
       });
   }
 

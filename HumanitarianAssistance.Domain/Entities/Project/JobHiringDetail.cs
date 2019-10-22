@@ -16,7 +16,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public int? ProfessionId { get; set; }
         public int? TotalVacancies { get; set; }  
 
-        public int? PayRate { get; set; }
+        public double? PayRate { get; set; }
         public int OfficeId { get; set; }
         public OfficeDetail OfficeDetails { get; set; }
         public int? GradeId { get; set; }
