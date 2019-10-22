@@ -190,6 +190,4 @@ END;
 
 $BODY$;
 
-ALTER FUNCTION public.get_project_projectactivitylist_filter(bigint, text, text, text, text, text, integer[], bigint[], boolean, boolean, boolean, integer, integer, integer, integer, integer, integer, boolean, boolean, boolean, integer)
-    OWNER TO postgres;
 

@@ -6,6 +6,8 @@ import { IFilterModel, HiringList } from '../models/hiring-requests-models';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { AddHiringRequestComponent } from '../add-hiring-request/add-hiring-request.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-hiring-requests',
@@ -28,7 +30,7 @@ export class HiringRequestsComponent implements OnInit {
   ]);
   hiringList$: Observable<HiringList[]>;
   constructor(
-    private router: Router,
+    public dialog: MatDialog,
     private routeActive: ActivatedRoute,
     public hiringRequestService: HiringRequestsService,
     private loader: CommonLoaderService
@@ -99,4 +101,26 @@ export class HiringRequestsComponent implements OnInit {
       );
   }
   //#endregion
+  // #region adding new hiring request
+  addNewHiringRequest(): void {
+    // NOTE: It open AddHiringRequest dialog and passed the data into the AddHiringRequestsComponent Model
+    const dialogRef = this.dialog.open(AddHiringRequestComponent, {
+      width: '700px',
+      autoFocus: false,
+    });
+
+    // refresh the list after new request created
+    // dialogRef.componentInstance.onHiringRequestListRefresh.subscribe(() => {
+      // do something
+     // this.getAllHiringRequestFilterList();
+    // });
+
+    dialogRef.afterClosed().subscribe(result => {});
+  }
+  //#endregion
+
+  requestDetail(e) {
+    console.log(e.HiringRequestId);
+   // this.router.navigate(['../hiring-request/' + e.HiringRequestId]);
+  }
 }

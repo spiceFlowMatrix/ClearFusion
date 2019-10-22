@@ -1,7 +1,7 @@
 -- FUNCTION: public.get_journal_report(integer, integer, text, text, integer[], integer[], bigint[])
 
 -- DROP FUNCTION public.get_journal_report(integer, integer, text, text, integer[], integer[], bigint[]);
-
+DROP FUNCTION IF EXISTS public.get_journal_report(integer, integer, text, text, integer[], integer[], bigint[]);
 CREATE OR REPLACE FUNCTION public.get_journal_report(
 	currencyid integer,
 	recordtype integer,

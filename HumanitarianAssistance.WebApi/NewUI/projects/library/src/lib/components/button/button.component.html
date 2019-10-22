@@ -1,11 +1,19 @@
 <ng-container [ngSwitch]="type">
 
-  <button *ngSwitchCase="'save'" mat-flat-button class="blue" (click)="btnClick()" cdkFocusInitial [type]="(isSubmit)?'submit':'button'">
+  <button *ngSwitchCase="'save'" mat-flat-button class="blue" (click)="btnClick()" cdkFocusInitial
+    [type]="(isSubmit)?'submit':'button'">
     <h5>
       <i class="fas fa-check"></i>
       {{text | uppercase}}
     </h5>
   </button>
+  <button *ngSwitchCase="'edit'" mat-flat-button class="blue" (click)="btnClick()" cdkFocusInitial
+  [type]="(isSubmit)?'submit':'button'">
+  <h5>
+    <i class="fas fa-edit"></i>
+    {{text | uppercase}}
+  </h5>
+</button>
   <button *ngSwitchCase="'cancel'" mat-flat-button class="red" (click)="btnClick()" type="button">
     <h5>
       <i class="fas fa-times"></i>
@@ -43,20 +51,20 @@
   </button>
   <button *ngSwitchCase="'clear'" mat-flat-button class="blue" (click)="btnClick()" type="button">
     <h5>
-        <i class="fas fa-sync-alt"></i>
-        {{text | uppercase}}
-      </h5>
-    </button>
+      <i class="fas fa-sync-alt"></i>
+      {{text | uppercase}}
+    </h5>
+  </button>
   <button *ngSwitchCase="'loading'" mat-flat-button class="blue" (click)="btnClick()" type="button">
-      <span class="display_inline_block">
-          <mat-spinner [diameter]="15"></mat-spinner>
-        </span>
-        {{text| uppercase}}
-    </button>
+    <span class="display_inline_block">
+      <mat-spinner [diameter]="15"></mat-spinner>
+    </span>
+    {{text| uppercase}}
+  </button>
   <button *ngSwitchCase="'download'" mat-flat-button class="blue" (click)="btnClick()" type="button">
-      <h5>
-          <i class="fas fa-download"></i>
-          {{text | uppercase}}
-        </h5>
-      </button>
+    <h5>
+      <i class="fas fa-download"></i>
+      {{text | uppercase}}
+    </h5>
+  </button>
 </ng-container>
