@@ -5,6 +5,6 @@ namespace HumanitarianAssistance.Application.Accounting.Models
         public long AccountId { get; set; }
         public string AccountName { get; set; }
         public decimal Balance { get; set; }
-        //public string AccountCode { get; set; }
+        public string AccountCode { get; set; }
     }
 }
