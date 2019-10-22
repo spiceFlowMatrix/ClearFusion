@@ -247,16 +247,20 @@
 
     public enum TransportItem
     {
-        VehicleFuel = 1,
-        GeneratorFuel = 2,
-        VehicleMobilOil = 3,
-        GeneratorMobilOil = 4,
-        VehicleSpareParts = 5,
-        GeneratorSpareParts = 6,
-        VehicleMaintenanceService = 7,
-        GeneratorMaintenanceService = 8
+        VehicleFuel = 3,
+        GeneratorFuel = 4,
+        VehicleMobilOil = 5,
+        GeneratorMobilOil = 6,
+        VehicleSpareParts = 7,
+        GeneratorSpareParts = 8,
+        VehicleMaintenanceService = 9,
+        GeneratorMaintenanceService = 10
     }
 
-   
-
+    //#region "StoreItemGroups"
+    public enum StoreItemGroups
+    {
+        Vehicle = 1,
+        Generator = 2
+    }
 }

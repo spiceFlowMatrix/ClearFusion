@@ -6,10 +6,10 @@ import { IDropDownModel, IPurchasedFiles } from '../../models/purchase';
 import { BudgetLineService } from 'src/app/dashboard/project-management/project-list/budgetlines/budget-line.service';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { takeUntil } from 'rxjs/operators';
-import { StoreMasterCategory, StoreItemGroups, FileSourceEntityTypes, DocumentFileTypes } from 'src/app/shared/enum';
+import { StoreMasterCategory, StoreItemGroups, FileSourceEntityTypes, StoreItem } from 'src/app/shared/enum';
 import { VehicleDetailComponent } from '../vehicle-detail/vehicle-detail.component';
 import { AddDocumentComponent } from '../document-upload/add-document.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -38,6 +38,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   employeeList$: Observable<IDropDownModel[]>;
   receiptType$: Observable<IDropDownModel[]>;
   statusList$: Observable<IDropDownModel[]>;
+  purchaseItemDataSource$: Observable<IDropDownModel[]>;
 
   // screen
   screenHeight: any;
@@ -50,10 +51,13 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   selectedItemGroupName = '';
   selectedItemName = '';
   uploadedPurchasedFiles: IPurchasedFiles[] = [];
+  headerText = '';
+  purchaseId: number;
 
   // store enum in a variable to access it in html
   MasterCategory = StoreMasterCategory;
   ItemGroups = StoreItemGroups;
+  StoreItems = StoreItem;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   @ViewChild(VehicleDetailComponent) child;
@@ -62,41 +66,23 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     private fb: FormBuilder, private budgetLineService: BudgetLineService,
     private commonLoader: CommonLoaderService, private toastr: ToastrService,
     private router: Router, private datePipe: DatePipe,
-    private dialog: MatDialog, private globalSharedService: GlobalSharedService) {
+    private dialog: MatDialog, private globalSharedService: GlobalSharedService, private activatedRoute: ActivatedRoute) {
 
-    this.addPurchaseForm = this.fb.group({
-      'InventoryTypeId': [null, [Validators.required]],
-      'InventoryId': [null, [Validators.required]],
-      'ItemGroupId': [null, [Validators.required]],
-      'ItemId': [null, [Validators.required]],
-      'OfficeId': [null, [Validators.required]],
-      'ProjectId': [null],
-      'BudgetLineId': [null],
-      'PurchaseOrderNo': [null],
-      'PurchaseName': [null, [Validators.required]],
-      'ReceiptDate': [null],
-      'PurchaseOrderDate': [null, [Validators.required]],
-      'InvoiceDate': [null],
-      'InvoiceNo': [null],
-      'AssetTypeId': [null],
-      'Unit': [null, [Validators.required]],
-      'Quantity': [null, [Validators.required]],
-      'CurrencyId': [null, [Validators.required]],
-      'Price': [null, [Validators.required]],
-      'ReceivedFromLocation': [null],
-      'ReceivedFromEmployeeId': [null],
-      'ReceiptTypeId': [null, [Validators.required]],
-      'StatusId': [null],
-      'ApplyDepreciation': [false],
-      'DepreciationRate': [null],
-      'TransportVehicles': new FormArray([]),
-      'TransportGenerators': new FormArray([]),
-      'TransportItemId': [null]
-    });
-
+      this.initForm();
     this.addPurchaseForm.valueChanges.subscribe(r => {
       console.log(r);
     });
+
+    this.activatedRoute.params.subscribe(params => {
+      this.purchaseId = params['id'];
+    });
+
+    if (this.purchaseId) {
+      this.headerText = 'Edit Purchase';
+      this.getStorePurchaseById(this.purchaseId);
+    } else {
+      this.headerText = 'Add New Purchase';
+    }
   }
 
 
@@ -131,6 +117,39 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     });
 
     this.getScreenSize();
+
+  }
+
+  initForm() {
+    this.addPurchaseForm = this.fb.group({
+      'InventoryTypeId': [null, [Validators.required]],
+      'InventoryId': [null, [Validators.required]],
+      'ItemGroupId': [null, [Validators.required]],
+      'ItemId': [null, [Validators.required]],
+      'OfficeId': [null, [Validators.required]],
+      'ProjectId': [null],
+      'BudgetLineId': [null],
+      'PurchaseOrderNo': [null],
+      'PurchaseName': [null, [Validators.required]],
+      'ReceiptDate': [null],
+      'PurchaseOrderDate': [null, [Validators.required]],
+      'InvoiceDate': [null],
+      'InvoiceNo': [null],
+      'AssetTypeId': [null],
+      'Unit': [null, [Validators.required]],
+      'Quantity': [null, [Validators.required]],
+      'CurrencyId': [null, [Validators.required]],
+      'Price': [null, [Validators.required]],
+      'ReceivedFromLocation': [null],
+      'ReceivedFromEmployeeId': [null],
+      'ReceiptTypeId': [null, [Validators.required]],
+      'StatusId': [null],
+      'ApplyDepreciation': [false],
+      'DepreciationRate': [null],
+      'TransportVehicles': new FormArray([]),
+      'TransportGenerators': new FormArray([]),
+      'TransportItemId': [null]
+    });
   }
 
   subscribeInventoryTypes(response: any) {
@@ -303,6 +322,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       this.addGenerators();
     }
 
+    this.getTransportItemDataSource();
+
     this.storeItemGroups$.subscribe(x => {
       const index = x.findIndex(y => y.value === event);
       this.selectedItemGroupName = x[index].name;
@@ -314,6 +335,16 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       const index = x.findIndex(y => y.value === event);
       this.selectedItemName = x[index].name;
     });
+
+    // Remove default vehicle or generator if selected item does not match with vehicle or generator
+    if (event !== this.StoreItems.Generator &&
+      event !== this.StoreItems.Vehicle) {
+      this.removeVehicles();
+      this.removeGenerators();
+    }
+
+    this.transportItemPlaceholder = this.addPurchaseForm.get('ItemGroupId').value === this.ItemGroups.Vehicle ? 'Purchased Vehicle Item' :
+                                    'Purchased Generator Item';
   }
 
   getOfficeSelectedValue(event: any) {
@@ -440,6 +471,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   PurchaseDateChange(event: any) {
+    debugger;
     if (event.value) {
       this.checkExchangeRateExists(event.value);
     }
@@ -448,6 +480,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   checkExchangeRateExists(exchangeRateDate: any) {
     if (this.addPurchaseForm.value.OfficeId == null || this.addPurchaseForm.value.OfficeId === undefined ||
       this.addPurchaseForm.value.OfficeId === 0) {
+      this.toastr.warning('Select Office');
+      this.addPurchaseForm.get('PurchaseOrderDate').patchValue(null);
       return;
     }
 
@@ -579,7 +613,44 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     } else {
       this.toastr.warning('Item not found to delete');
     }
+  }
 
+  getTransportItemDataSource() {
+    const model = {
+      InventoryId: this.addPurchaseForm.get('InventoryId').value,
+      InventoryTypeId: this.addPurchaseForm.get('InventoryTypeId').value,
+      ItemGroupId: this.addPurchaseForm.get('ItemGroupId').value,
+      ItemId: this.addPurchaseForm.get('ItemId').value,
+    };
+
+    if (model.InventoryId != null && model.InventoryTypeId != null && model.ItemGroupId != null && model.ItemId != null) {
+      this.commonLoader.showLoader();
+      this.purchaseService.getTransportItemDataSource(model).subscribe(x => {
+        this.purchaseItemDataSource$ = of(x.map(y => {
+          return {
+            value: y.ItemId,
+            name: y.PurchaseIdName
+          };
+        }));
+
+        this.commonLoader.hideLoader();
+
+      }, error => {
+        this.commonLoader.hideLoader();
+      });
+    }
+  }
+
+  getStorePurchaseById(purchaseId: number) {
+    debugger;
+    this.purchaseService.getStorePurchaseById(Number(purchaseId))
+        .subscribe(x => {
+          debugger;
+
+        }, error => {
+
+
+        });
   }
 
   ngOnDestroy() {

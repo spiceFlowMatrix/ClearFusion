@@ -463,6 +463,8 @@ export class GLOBAL {
   public static API_GeneratorTracker_GetGeneratorById = 'GeneratorTracker/GetGeneratorById';
   public static API_GeneratorTracker_AddGeneratorUsageHours = 'GeneratorTracker/AddGeneratorUsageHours';
   public static API_GeneratorTracker_EditGeneratorDetail = 'GeneratorTracker/EditGeneratorDetail';
+  public static API_StorePurchase_GetStorePurchaseById = 'StorePurchase/GetStorePurchaseById';
+  public static API_StorePurchase_GetTransportItemDataSource = 'StorePurchase/GetTransportItemDataSource';
 }
 
 

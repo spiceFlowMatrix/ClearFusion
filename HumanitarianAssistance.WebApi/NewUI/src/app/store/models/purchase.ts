@@ -175,3 +175,8 @@ export interface IPurchasedFiles {
   UploadedBy: string;
   DocumentTypeName: string;
 }
+
+export interface IPurchaseItemDataSource {
+  PurchaseId: number;
+  PurchaseName: string;
+}

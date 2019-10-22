@@ -531,13 +531,16 @@ export enum StoreMasterCategory {
 //#region "StoreItemGroups"
 export enum StoreItemGroups {
 Vehicle = 1,
-Generator = 2,
-Fuel= 3,
-SpareParts= 4,
-MobilOil= 5,
-Services= 6
+Generator = 2
 }
 //#endregion
+
+//#region "StoreItemGroups"
+export enum StoreItem {
+  Vehicle = 1,
+  Generator = 2
+  }
+  //#endregion
 
 export enum DocumentFileTypes {
   PurchaseImage = 1,

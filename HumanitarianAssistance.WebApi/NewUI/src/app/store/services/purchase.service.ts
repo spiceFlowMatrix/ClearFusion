@@ -399,6 +399,18 @@ addVehicleMileage(model: any) {
     .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_AddVehicleMileage, model);
 }
 
+// getStorePurchaseById
+getStorePurchaseById(id: number) {
+  return this.http
+    .get<any>(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetStorePurchaseById + '?id=' + id);
+}
+
+// getTransportItemDataSource
+getTransportItemDataSource(model: any) {
+  return this.globalService
+  .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetTransportItemDataSource, model);
+}
+
 
   //#region "getItemDetailByItemId"
   getItemDetailByPurchaseId(Id) {

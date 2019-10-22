@@ -5,6 +5,12 @@ namespace HumanitarianAssistance.Application.Store.Models
 {
     public class StorePurchaseModel
     {
+        public StorePurchaseModel()
+        {
+            PurchasedVehicleList = new List<PurchasedVehicleModel>();
+            PurchasedGeneratorList= new List<PurchasedGeneratorModel>();
+            StoreDocumentList = new List<StoreDocumentModel>();
+        }
         public long PurchaseId { get; set; }
         public string SerialNo { get; set; }                    // Barcode Value
         public long InventoryItem { get; set; }               // Item Id
@@ -36,6 +42,6 @@ namespace HumanitarianAssistance.Application.Store.Models
         public long? TransportItemId { get; set; }
         public List<PurchasedVehicleModel> PurchasedVehicleList { get; set; }
         public List<PurchasedGeneratorModel> PurchasedGeneratorList { get; set; }
-         
+        public List<StoreDocumentModel> StoreDocumentList {get; set;}
     }
 }
