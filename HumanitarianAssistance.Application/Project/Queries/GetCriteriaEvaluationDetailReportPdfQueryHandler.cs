@@ -378,7 +378,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     ReligiousBeliefs = model.ReligiousBeliefs== true ? "Yes" : "No",
                     Probablydelaysinfunding = model.Probablydelaysinfunding== true ? "Yes" : "No",
                     OtherOrganizationalHarms = model.OtherOrganizationalHarms== true ? "Yes" : "No",
-                    OrganizationalDescription = model.OrganizationalDescription,                   
+                    OrganizationalDescription = model.OrganizationalDescription,  
+                    CheckedIconPath = _env.WebRootFileProvider.GetFileInfo("ReportLogo/icon-checked.png")?.PhysicalPath              
       // ProjectSelectionId
 
                 };

@@ -4,7 +4,7 @@ namespace HumanitarianAssistance.Application.Project.Models
 {
     public class CriteriaEvaluationPdfModel
     {
-         public long ProjectId { get; set; }
+        public long ProjectId { get; set; }
         public long? DonorCEId { get; set; }
         public int? MethodOfFunding { get; set; }
         public string PastFundingExperience { get; set; }
@@ -160,7 +160,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string Culture { get; set; }
         public string ReligiousBeliefs { get; set; }
         public string CurrencyName { get; set; }
-
+        public string CheckedIconPath { get; set; }
     }
 
 

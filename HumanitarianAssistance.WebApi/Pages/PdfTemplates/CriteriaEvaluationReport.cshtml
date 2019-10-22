@@ -4,7 +4,7 @@
 <head>
 </head>
 <body style="background-color:#fafafa;">
-	<table style="width:800px;margin:0 auto;background-color:#ffffff;font-family:'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', 'DejaVu Sans', Verdana, sans-serif" cellpadding="0" cellspacing="0">
+	<table style="width:650px;margin:0 auto;background-color:#ffffff;font-family:'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', 'DejaVu Sans', Verdana, sans-serif" cellpadding="0" cellspacing="0">
     	<tr>
         	<td>
             	<table style="width:100%" cellpadding="25" cellspacing="0">
@@ -202,6 +202,578 @@
                 </table>
             </td>
         </tr>
+<tr>
+        	<td>
+            	<table style="text-align:center;font-weight:bold;background-color:#f7f7f7;width:100%;" cellpadding="15" cellspacing="0">
+                	<tr>
+                        <td>DISABLING CONDITIONS</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="font-weight:bold;width:100%;" cellpadding="15" cellspacing="0">
+                	<tr>
+                        <td><img src="@Model.CheckedIconPath" alt=""></td>
+                        <td><img src="@Model.CheckedIconPath" alt="">
+                        	@if (Model.IsSecurity == "Yes")
+                            {
+                               @Html.Label("Security new")
+                               
+                            }
+                         else 
+                            {
+                             <label><input type="checkbox"> Security</label>
+                            }
+                           
+                        </td>
+                        <td>
+                        	@if (Model.IsGeographical == "Yes")
+                            {
+                               @Html.Label("Geographical new")
+                            }
+                         else 
+                            {
+                             <label><input type="checkbox"> Geographical</label>
+                            }
+                        	
+                        </td>
+                        <td>
+                        	@if (Model.IsSeasonal == "Yes")
+                            {
+                               @Html.Label("Seasonal new")
+                            }
+                         else 
+                            {
+                             <label><input type="checkbox"> Seasonal</label>
+                            }
+                            
+                            
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;border-bottom:1px solid #dfdfdf;" cellpadding="25" cellspacing="0">
+                	<tr>
+                    	<td style="text-transform:uppercase;font-weight:bold;font-size:14px;">Donor</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;" cellpadding="0" cellspacing="0">
+                	<tr>
+                    	<td style="width:50%;">
+                        	<table style="width:100%;font-size:14px;" cellpadding="2" cellspacing="20">
+                            	<tr> <td style="text-align:center;">METHOD OF FUNDING :
+                                    @if(Model.MethodOfFunding == 1)
+                                    {
+                                        @Html.Label("Sole")
+                                    } 
+                                    else 
+                                    {
+                                        @Html.Label("Source/Co-finance")
+                                    }
+                                     </td> </tr>
+                                <tr>
+                                	<td style="text-align:center;">PAST FUNDING EXPERIENCE :<span>@Model.PastFundingExperience</span></td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="2" style="text-align:center;">PROPOSAL ACCEPTED <span>@Model.ProposalAccepted</span></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Proposal Experience</td>
+                                                <td>
+                                                    @if(Model.ProposalExperience == "Yes")
+                                                    {
+                                                        @Html.Label("PRE")
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.Label("POST") 
+                                                    }
+                                                   </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Professional</td>
+                                                <td>@Model.Professional</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+	                                            <td>&nbsp;</td>
+                                            	<td>Funds On Time</td>
+                                                <td>@Model.FundsOnTime</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Effective Communication</td>
+                                                <td>@Model.EffectiveCommunication</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Disputes</td>
+                                                <td>@Model.Dispute</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Other Deliverables</td>
+                                                <td>@Model.OtherDeliverable</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"> @Model.OtherDeliverableType</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                
+                            </table>
+                        </td>
+                        <td>
+                        	<table style="width:100%;" cellpadding="0" cellspacing="20">
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);font-size:14px;" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="2">PAST CRITICISM</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Performance</td>
+                                                <td>@Model.CriticismPerformance</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Time Management</td>
+                                                <td>@Model.TimeManagement</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Money Allocation</td>
+                                                <td>@Model.MoneyAllocation</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+											<tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Accountability</td>
+                                                <td>@Model.Accountability</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Deliverable Quality</td>
+                                                <td>@Model.DeliverableQuality</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td style="text-align:center;font-weight:bold;background-color:#f7f7f7;">DONOR IMAGE & REPUTATION</td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);font-size:14px;" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Financing History</td>
+                                                <td>
+                                                    @if(Model.DonorFinancingHistory==1)
+                                                    {
+                                                        @Html.Label("Good")
+                                                    }
+                                                    else if(Model.DonorFinancingHistory == 2) 
+                                                    {
+                                                         @Html.Label("Neutral")
+                                                    }
+                                                    else if(Model.DonorFinancingHistory == 3) 
+                                                    {
+                                                         @Html.Label("Bad")
+                                                    }
+                                                </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Religious Standing</td>
+                                                <td>@if(Model.ReligiousStanding==1)
+                                                    {
+                                                        @Html.Label("Good")
+                                                    }
+                                                    else if(Model.ReligiousStanding == 2) 
+                                                    {
+                                                         @Html.Label("Neutral")
+                                                    }
+                                                    else if(Model.ReligiousStanding == 3) 
+                                                    {
+                                                         @Html.Label("Bad")
+                                                    }</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Political Standing</td>
+                                                <td>
+                                                    @if(Model.PoliticalStanding==1)
+                                                    {
+                                                        @Html.Label("Good")
+                                                    }
+                                                    else if(Model.PoliticalStanding == 2) 
+                                                    {
+                                                         @Html.Label("Neutral")
+                                                    }
+                                                    else if(Model.PoliticalStanding == 3) 
+                                                    {
+                                                         @Html.Label("Bad")
+                                                    }
+                                                </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;border-bottom:1px solid #dfdfdf;" cellpadding="25" cellspacing="0">
+                	<tr>
+                    	<td style="text-transform:uppercase;font-weight:bold;font-size:14px;">PURPOSE OF INITIATIVE</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;" cellpadding="0" cellspacing="0">
+                    <tr>
+                    	<td>
+                        	<table style="width:100%;font-size:14px;" cellpadding="2" cellspacing="20">
+                            	<tr>
+                                	<td style="text-align:center;font-weight:bold;background-color:#f7f7f7;">SECTOR AND THEMES</td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="6"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="4">Rural Development and Social Protection</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td><label><input type="checkbox"> Awarness</label></td>
+                                                <td><label><input type="checkbox"> Infrastructure</label></td>
+                                                <td><label><input type="checkbox"> Capacity Building</label></td>
+                                                <td><label><input type="checkbox"> Income Generation</label></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td><label><input type="checkbox"> Mobilization</label></td>
+                                                <td><label><input type="checkbox"> Peace-Building</label></td>
+                                                <td><label><input type="checkbox"> Social Protection</label></td>
+                                                <td><label><input type="checkbox"> Sustainable Livelihood</label></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td><label><input type="checkbox"> Advocacy</label></td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="6"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="4">Education</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td><label><input type="checkbox"> Awarness</label></td>
+                                                <td><label><input type="checkbox"> Infrastructure</label></td>
+                                                <td><label><input type="checkbox"> Capacity Building</label></td>
+                                                <td><label><input type="checkbox"> Income Generation</label></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td><label><input type="checkbox"> Mobilization</label></td>
+                                                <td><label><input type="checkbox"> Peace-Building</label></td>
+                                                <td><label><input type="checkbox"> Social Protection</label></td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="6"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="4">Health and Nutrition</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td><label><input type="checkbox"> Awarness</label></td>
+                                                <td><label><input type="checkbox"> Infrastructure</label></td>
+                                                <td><label><input type="checkbox"> Capacity Building</label></td>
+                                                <td><label><input type="checkbox"> Income Generation</label></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td><label><input type="checkbox"> Awarness</label></td>
+                                                <td><label><input type="checkbox"> Infrastructure</label></td>
+                                                <td><label><input type="checkbox"> Capacity Building</label></td>
+                                                <td><label><input type="checkbox"> Income Generation</label></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td><label><input type="checkbox"> Mobilization</label></td>
+                                                <td><label><input type="checkbox"> Peace-Building</label></td>
+                                                <td><label><input type="checkbox"> Social Protection</label></td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="6"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="4">Disaster Risk Reduction</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td><label><input type="checkbox"> Mitigation Projects</label></td>
+                                                <td><label><input type="checkbox"> Infrastructure</label></td>
+                                                <td><label><input type="checkbox"> Capacity Building</label></td>
+                                                <td><label><input type="checkbox"> Income Generation</label></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td><label><input type="checkbox"> Awarness</label></td>
+                                                <td><label><input type="checkbox"> Infrastructure</label></td>
+                                                <td><label><input type="checkbox"> Capacity Building</label></td>
+                                                <td><label><input type="checkbox"> Income Generation</label></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="6"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="4">Agriculture and Livestock</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td><label><input type="checkbox"> Mitigation Projects</label></td>
+                                                <td><label><input type="checkbox"> Infrastructure</label></td>
+                                                <td><label><input type="checkbox"> Capacity Building</label></td>
+                                                <td><label><input type="checkbox"> Income Generation</label></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td><label><input type="checkbox"> Awarness</label></td>
+                                                <td><label><input type="checkbox"> Infrastructure</label></td>
+                                                <td><label><input type="checkbox"> Capacity Building</label></td>
+                                                <td><label><input type="checkbox"> Income Generation</label></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td><label><input type="checkbox"> Awarness</label></td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td style="text-align:center;font-weight:bold;background-color:#f7f7f7;">TARGET BENEFICIARY</td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="6"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="4">Agriculture and Livestock</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td><label><input type="checkbox"> Women</label></td>
+                                                <td><label><input type="checkbox"> Men</label></td>
+                                                <td><label><input type="checkbox"> Youth</label></td>
+                                                <td><label><input type="checkbox"> Children</label></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td><label><input type="checkbox"> Disabled</label></td>
+                                                <td><label><input type="checkbox"> IDPs</label></td>
+                                                <td><label><input type="checkbox"> Returnees</label></td>
+                                                <td><label><input type="checkbox"> Kuchis</label></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td><label><input type="checkbox"> Widows</label></td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;border-bottom:1px solid #dfdfdf;" cellpadding="25" cellspacing="0">
+                	<tr>
+                    	<td style="text-transform:uppercase;font-weight:bold;font-size:14px;">ELIGIBILITY</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;">
+                	<tr>
+                        <td style="text-align:center;font-weight:bold;background-color:#f7f7f7;">DONOR ELIGIBILITY CRITERA MET <span>Yes</span></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                <tr>
+                                    <td colspan="3"></td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>Can eligibility be posssible until the deadline ? <span>Yes</span></td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>Possible co-partnership ? <span>Yes</span></td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4"></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
     </table>
+
+
+
+    
 </body>
 </html> 
