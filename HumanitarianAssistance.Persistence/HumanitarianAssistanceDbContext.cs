@@ -110,6 +110,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<StatusAtTimeOfIssue> StatusAtTimeOfIssue { get; set; }
         public DbSet<ReceiptType> ReceiptType { get; set; }
         public DbSet<VehicleMileageDetail> VehicleMileageDetail { get; set; }
+        public DbSet<GeneratorUsageHourDetail> GeneratorUsageHourDetail { get; set; }
 
         public DbSet<EmployeeHistoryOutsideOrganization> EmployeeHistoryOutsideOrganization { get; set; }
         public DbSet<EmployeeHistoryOutsideCountry> EmployeeHistoryOutsideCountry { get; set; }
@@ -219,6 +220,9 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<VerificationSources> VerificationSources { get; set; }
 
         public DbSet<RatingBasedCriteriaQuestions> RatingBasedCriteriaQuestions { get; set; }
+
+        public DbSet<JobHiringDetail> JobHiringDetail { get; set; }
+        public DbSet<ProjectLogisticRequests> ProjectLogisticRequests { get; set; }          
 
         #endregion  
 

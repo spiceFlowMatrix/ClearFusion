@@ -27,6 +27,7 @@ import { HiringRequestsComponent } from './project-hiring/hiring-requests/hiring
 import { JobDetailComponent } from './project-hiring/job-detail/job-detail.component';
 import { LogisticRequestsComponent } from './project-logistics/logistic-requests/logistic-requests.component';
 import { LogisticRequestDetailsComponent } from './project-logistics/logistic-request-details/logistic-request-details.component';
+import { RequestDetailComponent } from './project-hiring/request-detail/request-detail.component';
 
 const moduleId: number = ApplicationModule.Projects;
 
@@ -159,6 +160,15 @@ const routes: Routes = [
           {
             path: 'hiring-request',
             component: HiringRequestsComponent,
+            canActivate: [RoleGuardService],
+            data: {
+              module: moduleId,
+              page: projectPagesMaster.HiringRequests
+            }
+          },
+          {
+            path: 'hiring-request/:id',
+            component: RequestDetailComponent,
             canActivate: [RoleGuardService],
             data: {
               module: moduleId,

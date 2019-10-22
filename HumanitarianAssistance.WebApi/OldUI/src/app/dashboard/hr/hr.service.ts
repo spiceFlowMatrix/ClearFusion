@@ -9,7 +9,6 @@ import {
 } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { HealthModel } from './employees/employees.component';
-import { ToastrService } from 'ngx-toastr';
 
 export class EmployeeAttendanceList {
   EmployeeId: number;
@@ -60,7 +59,7 @@ export class Tab {
 // HR tabs
 @Injectable()
 export class HrService {
-  constructor(private http: Http, private toastr: ToastrService) {}
+  constructor(private http: Http) {}
 
   getAllAttendanceType(): AttendanceType[] {
     return attendanceType;
@@ -1370,26 +1369,26 @@ export class HrService {
   }
   //#endregion
 
- //#region "Add Leave Info"
- DownloadPDF(url: string, data: any) {
-  const Myheaders = new Headers();
-  Myheaders.append(
-    'Authorization',
-    'Bearer ' + localStorage.getItem('authenticationtoken'),
-  );
-  Myheaders.append('accept', 'application/pdf');
-  const options = new RequestOptions({ headers: Myheaders});
-  return this.http
-    .post(url, data, {responseType: ResponseContentType.Blob, headers: Myheaders})
-    .map((response: Response) => {
-      const result = response.blob();
-      if (result) {
-        return result;
-      }
-    })
-    .catch(this.handleDownloadPdfError);
-}
-//#endregion
+  //#region "Add Leave Info"
+  DownloadPDF(url: string, data: any) {
+    const Myheaders = new Headers();
+    Myheaders.append(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('authenticationtoken'),
+    );
+    Myheaders.append('accept', 'application/pdf');
+    const options = new RequestOptions({ headers: Myheaders});
+    return this.http
+      .post(url, data, {responseType: ResponseContentType.Blob, headers: Myheaders})
+      .map((response: Response) => {
+        const result = response.blob();
+        if (result) {
+          return result;
+        }
+      })
+      .catch(this.handleError);
+  }
+  //#endregion
 
   //#region "Add By Model"
   CheckUserEmailAlreadyExists(url: string, email: any) {
@@ -1412,14 +1411,8 @@ export class HrService {
   //#endregion
 
     private handleError(error: Response) {
-
     return Observable.throw(error.json().error || 'Server error');
   }
-
-  private handleDownloadPdfError(error: any) {
-    const exmessage = error.headers.get('ExMessage');
-    return Observable.throw(error.json().error || exmessage);
-}
 }
 
 export interface GeneralInfo {

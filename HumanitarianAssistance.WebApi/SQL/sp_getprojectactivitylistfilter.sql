@@ -1,3 +1,7 @@
+-- FUNCTION: public.get_project_projectactivitylist_filter(bigint, text, text, text, text, text, integer[], bigint[], boolean, boolean, boolean, integer, integer, integer, integer, integer, integer, boolean, boolean, boolean, integer)
+
+-- DROP FUNCTION public.get_project_projectactivitylist_filter(bigint, text, text, text, text, text, integer[], bigint[], boolean, boolean, boolean, integer, integer, integer, integer, integer, integer, boolean, boolean, boolean, integer);
+
 CREATE OR REPLACE FUNCTION public.get_project_projectactivitylist_filter(
 	project_id bigint,
 	activity_description text DEFAULT ''::text,
@@ -19,15 +23,15 @@ CREATE OR REPLACE FUNCTION public.get_project_projectactivitylist_filter(
 	late_start boolean DEFAULT false,
 	late_end boolean DEFAULT false,
 	on_schedule boolean DEFAULT false,
-	country_id integer DEFAULT 0
-)
-    RETURNS TABLE(activityid bigint, activityname character varying, activitydescription text, budgetlineid bigint, budgetname text, employeeid integer, employeename text, statusid integer, statusname text, plannedstartdate timestamp without time zone, plannedenddate timestamp without time zone, recurring boolean, recurringcount integer, recurrintypeid integer, progress double precision, sleepage double precision,countryid integer) 
+	country_id integer DEFAULT 0)
+    RETURNS TABLE(activityid bigint, activityname character varying, activitydescription text, budgetlineid bigint, budgetname text, employeeid integer, employeename text, statusid integer, statusname text, plannedstartdate timestamp without time zone, plannedenddate timestamp without time zone, recurring boolean, recurringcount integer, recurrintypeid integer, progress double precision, sleepage double precision, countryid integer) 
     LANGUAGE 'plpgsql'
 
     COST 100
     VOLATILE 
     ROWS 1000
 AS $BODY$
+
 
 DECLARE
 	_project_id bigint;
@@ -103,8 +107,7 @@ BEGIN
 			   pa."RecurringCount",
 			   pa."RecurrinTypeId",
 			   get_projectactivityprogress(pa."ActivityId") as progress,
-			   COALESCE(((DATE_PART('day', pa."ActualEndDate":: timestamp  - pa."ActualStartDate":: timestamp )) -
-									(DATE_PART('day', pa."PlannedEndDate":: timestamp  - pa."PlannedStartDate":: timestamp ))),0) as sleepage,
+			   COALESCE((DATE_PART('day', pa."ActualEndDate":: timestamp  - pa."PlannedEndDate":: timestamp )),0) as sleepage,
 									pa."CountryId"
 		FROM "ProjectActivityDetail" AS pa
 		LEFT JOIN "ProjectBudgetLineDetail" AS pbl
@@ -184,4 +187,7 @@ BEGIN
 	
 END;
 
+
 $BODY$;
+
+

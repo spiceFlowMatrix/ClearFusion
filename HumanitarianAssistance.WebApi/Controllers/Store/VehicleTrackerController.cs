@@ -1,15 +1,10 @@
 using System;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using HumanitarianAssistance.Application.Configuration.Queries;
-using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Application.Store.Commands.Create;
 using HumanitarianAssistance.Application.Store.Commands.Update;
-using HumanitarianAssistance.Application.Store.Models;
 using HumanitarianAssistance.Application.Store.Queries;
 using HumanitarianAssistance.Common.Enums;
-using HumanitarianAssistance.Common.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +14,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
     [Produces("application/json")]
     [Route("api/VehicleTracker/[Action]")]
     [ApiExplorerSettings(GroupName = nameof(SwaggerGrouping.VehicleTracker))]
+    [Authorize]
     public class VehicleTrackerController: BaseController
     {
         [HttpPost]

@@ -1,0 +1,207 @@
+@model HumanitarianAssistance.Application.Project.Models.CriteriaEvaluationPdfModel
+<!doctype html>
+<html>
+<head>
+</head>
+<body style="background-color:#fafafa;">
+	<table style="width:800px;margin:0 auto;background-color:#ffffff;font-family:'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', 'DejaVu Sans', Verdana, sans-serif" cellpadding="0" cellspacing="0">
+    	<tr>
+        	<td>
+            	<table style="width:100%" cellpadding="25" cellspacing="0">
+                	<tr>
+                    	<td style="width:300px;">Project allowed by law :</td>
+                        <td>@Model.ProjectAllowedBylaw</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="" cellpadding="25" cellspacing="0">
+                	<tr>
+                    	<td style="text-transform:uppercase;font-weight:bold;font-size:14px;">Feasibility</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;" cellpadding="0" cellspacing="0">
+                	<tr>
+                    	<td style="width:50%;">
+                        	<table style="width:100%;font-size:14px;" cellpadding="2" cellspacing="20">
+                            	<tr>
+                                	<td style="text-align:center;">IS PROJECT PRACTICAL <span>@Model.IsProjectPractical</span><br>CAPACITY AVAILABLE FOR PROJECT : <span> @Model.CapacityAvailableForProject</span></td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="2" style="text-align:center;">COMPENSATION</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Train Staff</td>
+                                                <td>@Model.TrainedStaff</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+	                                            <td>&nbsp;</td>
+                                            	<td>By Equipment</td>
+                                                <td>@Model.ByEquipment</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Expand Scope</td>
+                                                <td>@Model.ExpandScope</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Expand Geographical Presence</td>
+                                                <td>@Model.GeoGraphicalPresence</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="2">ALLOWED 3RD PARTY CONTRACTING <span>@Model.ThirdPartyContract</span></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="2">COST OF COMPENSATION</td> 
+                                                <td>&nbsp; </td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Months</td>
+                                                <td>@Model.CostOfCompensationMonth</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Money</td>
+                                                <td>@Model.CostOfCompensationMoney</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td style="text-align:center;">ANY IN-KIND COMPONENT <span>@Model.AnyInKindComponent</span></td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                            	<td>Useable By Organisation</td>
+                                                <td>@Model.UseableByOrganisation</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>Feasible Experts Deployed</td>
+                                                <td>@Model.FeasibleExpertDeploy</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                        	<table style="width:100%;" cellpadding="0" cellspacing="20">
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);font-size:14px;" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Enough time for quality Work<br><p>"Warning: ratio of *(time delay) over total time should be less than 0.33))"</p></td>
+                                                <td>@Model.EnoughTimeForProject</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Project allowed by Organization leadership</td>
+                                                <td>@Model.ProjectByLeadership</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Presence/Coverage in project location</td>
+                                                <td>@Model.PresenceCoverageInProject</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Project in line with Organisational focus</td>
+                                                <td>@Model.ProjectInLineWithOrgFocus</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+											<tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Enough time to prepare proposal<br><p>"Warning: Minimum time to submit the proposal for old Project is 2 weeks"</p></td>
+                                                <td>@Model.EnoughTimeToPrepareProposal</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td style="text-align:center;font-weight:bold;background-color:#f7f7f7;">COST EFFICIENCY</td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);font-size:14px;" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Real Cost Of Project</td>
+                                                <td>@Model.ProjectRealCost</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>COST GREATER THAN BUDGET</td>
+                                                <td>@Model.IsCostGreaterthenBudget</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>%OF COST GREATER THAN BUDGET</td>
+                                                <td>@Model.PerCostGreaterthenBudget</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>FINANCIAL CONTRIBUTION FULFILLABLE</td>
+                                                <td>@Model.IsFinancialContribution</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html> 

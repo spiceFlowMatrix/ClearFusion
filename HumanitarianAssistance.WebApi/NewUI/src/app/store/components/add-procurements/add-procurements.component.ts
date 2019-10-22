@@ -284,7 +284,7 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
         }
       },
       error => {
-        // console.log(error);
+        console.log(error);
       });
     } else {
       this.toastr.warning('Please correct errors in procurement form and submit again');

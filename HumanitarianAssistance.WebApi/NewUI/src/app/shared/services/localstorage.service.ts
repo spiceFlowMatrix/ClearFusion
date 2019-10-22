@@ -33,7 +33,7 @@ export class LocalStorageService {
         }
       });
 
-      // console.log(menuListFiltered);
+      console.log(menuListFiltered);
     }
 
     return menuListFiltered;

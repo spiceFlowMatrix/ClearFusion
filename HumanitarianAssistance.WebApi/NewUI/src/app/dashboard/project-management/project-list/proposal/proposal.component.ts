@@ -270,7 +270,7 @@ export class ProposalComponent implements OnInit, OnChanges, OnDestroy {
 
   changeDocumentAvailableFlag(flag: boolean) {
     this.isProposalDocumentAvailable = flag;
-    // console.log(this.isProposalDocumentAvailable );
+    console.log(this.isProposalDocumentAvailable );
   }
 
   changeStartDate(data: any) {

@@ -1,2 +1,17 @@
-export interface Generator {
+export interface IGeneratorTrackerFilter {
+  TotalCost?: number;
+  OfficeId?: number;
+  ModelYear?: number;
+  Voltage?: number;
+  pageSize: 10;
+  pageIndex: 0;
+}
+
+export interface IGeneratorList {
+  Voltage?: string;
+  FuelConsumptionRate?: string;
+  IncurredUsage?: string;
+  TotalUsage?: string;
+  TotalCost?: string;
+  OriginalCost?: string;
 }

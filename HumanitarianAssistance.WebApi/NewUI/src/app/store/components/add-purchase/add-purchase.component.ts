@@ -95,7 +95,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     });
 
     this.addPurchaseForm.valueChanges.subscribe(r => {
-      // console.log(r);
+      console.log(r);
     });
   }
 
@@ -395,7 +395,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   addPurchaseFormSubmit() {
-    // console.log(this.addPurchaseForm);
+    console.log(this.addPurchaseForm);
     if (this.addPurchaseForm.valid) {
       this.isAddPurchaseFormSubmitted = true;
       this.purchaseService.addPurchase(this.addPurchaseForm.value)
@@ -411,7 +411,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
                       this.uploadedPurchasedFiles[i].DocumentTypeId)
                     .pipe(takeUntil(this.destroyed$))
                     .subscribe(y => {
-                      // console.log('uploadSuccess', y);
+                      console.log('uploadSuccess', y);
                     } );
 
                     if (i === this.uploadedPurchasedFiles.length - 1) {
@@ -432,7 +432,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         },
           error => {
             this.isAddPurchaseFormSubmitted = false;
-            // console.log(error);
+            console.log(error);
           });
     } else {
       this.toastr.warning('Please correct errors in purchase form and submit again');
@@ -515,9 +515,9 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     this.removeVehicles();
     (<FormArray>this.addPurchaseForm.get('TransportGenerators')).push(this.fb.group({
       'Voltage': ['', [Validators.required, Validators.min(0)]],
-      'StartingUsageHours': ['', Validators.required],
-      'IncurredUsageHours': ['', [Validators.required, Validators.min(0)]],
-      'ModelYear': ['', [Validators.required, Validators.min(0)], Validators.maxLength(4)],
+      'StartingUsage': ['', Validators.required],
+      'IncurredUsage': ['', [Validators.required, Validators.min(0)]],
+      'ModelYear': ['', [Validators.required, Validators.min(0)]],
       'FuelConsumptionRate': ['', [Validators.required, Validators.min(0)]],
       'MobilOilConsumptionRate': ['', [Validators.required, Validators.min(0)]],
       'OfficeId': ['', Validators.required]
@@ -548,7 +548,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      // console.log(result);
+      console.log(result);
       if (result) {
         this.uploadedPurchasedFiles.unshift({
           Id: result.id,
@@ -574,7 +574,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
       } else { // remove file from purchasedDocumentList
         this.uploadedPurchasedFiles.splice(index, 1);
-        // console.log('delete', this.uploadedPurchasedFiles);
+        console.log('delete', this.uploadedPurchasedFiles);
       }
     } else {
       this.toastr.warning('Item not found to delete');

@@ -6,6 +6,8 @@ namespace HumanitarianAssistance.Application.Project.Models
 {
     public class ProjectHiringRequestModel
     {
+        public string Description { get; set; }
+        public string Office { get; set; }
         public string JobCode { get; set; }
         public string JobGrade { get; set; }
         public string Position { get; set; }
@@ -44,7 +46,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         // public string SpecificDutiesAndResponsblities { get; set; }
         // public string KnowladgeAndSkillRequired { get; set; }
         // public string SubmissionGuidlines { get; set; }
-         public long? HiringRequestId { get; set; }
+        public long? HiringRequestId { get; set; }
         // public string HiringRequestCode { get; set; }
         // public int? FilledVacancies { get; set; }
         // public bool? IsCompleted { get; set; }        
