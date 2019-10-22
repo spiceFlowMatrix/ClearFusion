@@ -28,15 +28,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         }
 
         [HttpPost]
-        public async Task<ApiResponse> AddJobHiringDetails([FromBody]AddJobHiringDetailsCommand command)
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            command.CreatedById = userId;
-            command.CreatedDate = DateTime.UtcNow;
-            return await _mediator.Send(command);
-        }
-
-        [HttpPost]
         public async Task<ApiResponse> EditJobHiringDetail([FromBody]EditJobHiringDetailCommand command)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -63,6 +54,16 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         public async Task<ApiResponse> GetJobCode(int officeId)
         {
             return await _mediator.Send(new GetJobCodeQuery { OfficeId = officeId});
+        }
+
+        // New hiring request job
+        [HttpPost]
+        public async Task<ApiResponse> AddJobHiringDetails([FromBody]AddJobHiringDetailsCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
         }
     }
 }

@@ -203,6 +203,7 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public IList<ProjectHiringCandidateDetailModel> ProjectHiringCandidateDetailModel { get; set; }
         public List<EmployeeDetailListModel> EmployeeDetailListData { get; set; }
         public IList<ProjectHiringRequestModel> ProjectHiringRequestModel { get; set; }
+        public ProjectHiringRequestModel ProjectHiringRequestDetails { get; set; }
         public List<OpportunityControlViewModel> OpportunityControlList { get; set; }
         public List<LogisticsControlViewModel> LogisticsControlList { get; set; }
         public List<ActivitiesControlViewModel> ActivitiesControlList { get; set; }
