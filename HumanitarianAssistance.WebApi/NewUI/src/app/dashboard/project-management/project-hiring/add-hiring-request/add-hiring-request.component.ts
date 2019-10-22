@@ -7,6 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { ToastrService } from 'ngx-toastr';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
+import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 
 @Component({
   selector: 'app-add-hiring-request',
@@ -14,6 +15,7 @@ import { HiringRequestsService } from '../../project-list/hiring-requests/hiring
   styleUrls: ['./add-hiring-request.component.scss']
 })
 export class AddHiringRequestComponent implements OnInit {
+
   addHiringRequestForm: FormGroup;
   professionList$: Observable<IDropDownModel[]>;
   officeList$: Observable<IDropDownModel[]>;
@@ -65,49 +67,83 @@ export class AddHiringRequestComponent implements OnInit {
   }
 
   ngOnInit() {
-    forkJoin([this.getAllProfessionList(), this.getAllOfficeList(), this.getAllJobList()])
+    forkJoin([
+      this.getAllJobList()
+    ])
       .pipe(takeUntil(this.destroyed$))
       .subscribe(result => {
-        this.subscribeProfessionList(result[0]);
-        this.subscribeOfficeList(result[1]);
-       // this.subscribeJobList(result[1]);
+        this.subscribeJobList(result[0]);
       });
-  }
-
-  getAllProfessionList() {
-    this.commonLoader.showLoader();
-    return this.hiringRequestService.GetProfessionList();
-  }
-  getAllOfficeList() {
-    this.commonLoader.showLoader();
-    return this.hiringRequestService.GetOfficeList();
   }
   getAllJobList() {
     this.commonLoader.showLoader();
-    return this.hiringRequestService.GetOfficeList();
+    return this.hiringRequestService.GetJobList();
   }
-  subscribeProfessionList(response: any) {
+  subscribeJobList(response: any) {
     this.commonLoader.hideLoader();
-    this.professionList$ = of(
+    this.jobList$ = of(
       response.data.map(y => {
         return {
-          value: y.ProfessionId,
-          name: y.ProfessionName
+          value: y.JobId,
+          name: y.JobCode
         };
       })
     );
   }
-  subscribeOfficeList(response: any) {
-    this.commonLoader.hideLoader();
-    this.officeList$ = of(
-      response.data.map(y => {
-        return {
-          value: y.OfficeId,
-          name: y.OfficeName
-        };
-      })
-    );
+  getAllOfficeList(JobId: number) {
+    this.hiringRequestService
+      .GetOfficeListByJobId(JobId)
+      .subscribe(
+        (response: IResponseData) => {
+          this.commonLoader.showLoader();
+          if (response.statusCode === 200 && response.data !== null) {
+            this.officeList$ = of(
+              response.data.map(element => {
+                return {
+                  value: element.OfficeId,
+                  name: element.OfficeName
+                } as IDropDownModel;
+              })
+            );
+          }
+          this.commonLoader.hideLoader();
+        },
+        error => {
+          this.commonLoader.hideLoader();
+        }
+      );
   }
+  getAllProfessionList(OfficeId: number) {
+    this.hiringRequestService
+      .GetProfessionListByOfficeId(OfficeId)
+      .subscribe(
+        (response: IResponseData) => {
+          this.commonLoader.showLoader();
+          if (response.statusCode === 200 && response.data !== null) {
+            this.professionList$ = of(
+              response.data.map(element => {
+                return {
+                  value: element.ProfessionId,
+                  name: element.ProfessionName
+                } as IDropDownModel;
+              })
+            );
+          }
+          this.commonLoader.hideLoader();
+        },
+        error => {
+          this.commonLoader.hideLoader();
+        }
+      );
+  }
+
+  onChangeJobCategory(e) {
+  this.getAllOfficeList(e);
+  }
+  onChangeDutyStation(e) {
+    this.getAllProfessionList(e);
+    }
+
   onFormSubmit(data: any) {
     if (this.addHiringRequestForm.valid) {
       console.log(data);

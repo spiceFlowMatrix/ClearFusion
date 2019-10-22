@@ -14,10 +14,14 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public string JobCode { get; set; }
         public string JobDescription { get; set; }
         public int? ProfessionId { get; set; }
-        public int? TotalVacancies { get; set; }  
 
-        public double? PayRate { get; set; }
+        [ForeignKey("ProfessionId")]
+        public ProfessionDetails ProfessionDetails { get; set; }  
+        public int? TotalVacancies { get; set; }      
+        public double? PayRate { get; set; }        
         public int OfficeId { get; set; }
+
+        [ForeignKey("OfficeId")]
         public OfficeDetail OfficeDetails { get; set; }
         public int? GradeId { get; set; }
 

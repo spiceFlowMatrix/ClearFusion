@@ -29,7 +29,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
             ApiResponse response = new ApiResponse();
             try
             {
-                JobHiringDetails jobHiringDetails = await _dbContext.JobHiringDetails.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.OfficeId == request.office);
+                JobHiringDetail jobHiringDetails = await _dbContext.JobHiringDetail.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false);
                 string JobCode;
                 if (jobHiringDetails != null && jobHiringDetails.JobCode != null)
                 {
