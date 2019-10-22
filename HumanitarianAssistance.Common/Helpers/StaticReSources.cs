@@ -56,6 +56,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string RoleCreated = "Role Created";
         public const string RoleAlreadyExist = "Role already exists";
         public const string InvalidUser = "Invalid User";
+        public const string RequestValuesInAppropriate = "Request values are inappropriate";
         public const string InvalidUserCredentials = "Invalid User credentials";
         public const string UserAccountIsInActive = "Account is In-Active";
         public const string RoleAssignedToUser = "Role assigned to user";
@@ -361,7 +362,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string PensionPayment = "Pension Payment";
         public const string EmployeeRecordNotFound= "Employee Record Not Found";
         public const string EmployeePayrollCurrencyNotSet= "Employee Payroll Currency Not Set";
-        public const string PayrollDailyHoursNotSaved = "Please Set Payroll Hours for Month= {0}, Office= {1} and Attendance Group= {2}";
+        public const string PayrollDailyHoursNotSaved = "Please Set Payroll Hours for Month {0} for Office {1}";
         public const string LeavesNotDefined = "Leaves Not Defined";
 
         // Marketing

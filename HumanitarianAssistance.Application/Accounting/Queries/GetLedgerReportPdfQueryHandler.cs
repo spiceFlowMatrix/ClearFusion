@@ -103,13 +103,13 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                             }).ToList();
 
                             mainList=spLedgerReportClosing.Select(x=> new LedgerReportMainPdfList(){
-                                //VoucherDate=x.VoucherDate.ToString("dd/MM/yyyy"),
+                                VoucherDate=x.VoucherDate.ToString("dd/MM/yyyy"),
                                 ReferenceNo=x.VoucherReferenceNo,
                                 LineDescription=x.Description,
                                 Currency=x.CurrencyName,
                                 DebitAmount=x.DebitAmount,
-                                CreditAmount=x.CreditAmount
-                                //StatusText=(x.IsVoucherVerified)?"V":"NV"                                
+                                CreditAmount=x.CreditAmount,
+                                StatusText=(x.IsVoucherVerified)?"V":"NV"                                
                             }).ToList();
                             debitSumForReport=mainList.Sum(x=>x.DebitAmount);
                             creditSumForReport=mainList.Sum(x=>x.CreditAmount);
@@ -177,13 +177,13 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                             }).ToList();
                             
                             mainList=spLedgerReportClosing.Select(x=> new LedgerReportMainPdfList(){
-                                //VoucherDate=x.VoucherDate.ToString("dd/MM/yyyy"),
+                                VoucherDate=x.VoucherDate.ToString("dd/MM/yyyy"),
                                 ReferenceNo=x.VoucherReferenceNo,
                                 LineDescription=x.Description,
                                 Currency=x.CurrencyName,
                                 DebitAmount=x.DebitAmount,
-                                CreditAmount=x.CreditAmount
-                                //StatusText=(x.IsVoucherVerified)?"V":"NV"                                
+                                CreditAmount=x.CreditAmount,
+                                StatusText=(x.IsVoucherVerified)?"V":"NV"                                
                             }).ToList();
                             debitSumForReport=mainList.Sum(x=>x.DebitAmount);
                             creditSumForReport=mainList.Sum(x=>x.CreditAmount);

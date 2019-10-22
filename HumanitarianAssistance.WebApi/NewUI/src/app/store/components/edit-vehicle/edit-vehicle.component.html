@@ -1,12 +1,12 @@
 <lib-sub-header-template>
   <span class="action_header">
     Edit Vehicle Details
-     <hum-button [type]="'save'" [text]="'save'" ></hum-button>
-    <hum-button [type]="'cancel'" [text]="'cancel'"></hum-button>
+     <hum-button [type]="'save'" [text]="'save'" (click)="saveVehicleDetail()"></hum-button>
+    <hum-button [type]="'cancel'" [text]="'cancel'" (click)="backToDetails()"></hum-button>
   </span>
   <div class="action_section">
   </div>
 </lib-sub-header-template>
 <mat-card>
-    <app-vehicle-detail></app-vehicle-detail>
+    <app-vehicle-detail [vehicleDetailForm]="vehicleDetailForm"></app-vehicle-detail>
 </mat-card>

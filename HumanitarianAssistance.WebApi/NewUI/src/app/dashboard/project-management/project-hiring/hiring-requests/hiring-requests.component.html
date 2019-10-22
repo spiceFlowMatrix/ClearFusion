@@ -1,0 +1,40 @@
+<lib-sub-header-template [headerClass]="'sub_header_template_main1'">
+  <span class="action_header"
+    >Hiring Requests
+    <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewHiringRequest()"></hum-button>
+    <hum-button [type]="'add'" [text]="'complete request'"></hum-button>
+    <hum-button [type]="'cancel'" [text]="'close request'"></hum-button>
+  </span>
+
+  <div class="action_section">
+    <hum-button
+      [type]="'add'"
+      [text]="'add job'"
+      [routerLink]="['../job-detail']"
+    ></hum-button>
+    <!-- <hum-button [type]="'down'" [text]="'jobs'"></hum-button> (rowClick)="requestDetail($event)"  -->
+  </div>
+</lib-sub-header-template>
+<mat-divider></mat-divider>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <!-- <app-purchase-filters (purchaseFilterSelected)="onpurchaseFilterSelected($event)"></app-purchase-filters> -->
+      <!-- <mat-divider></mat-divider> -->
+
+      <hum-table
+        [headers]="hiringListHeaders$"
+        [items]="hiringList$"
+        (rowClick)="requestDetail($event)"
+      ></hum-table>
+      <mat-paginator
+        [length]="filterModel.TotalCount"
+        [pageSize]="filterModel.pageSize"
+        [pageSizeOptions]="[10, 5, 25, 100]"
+        (page)="pageEvent($event)"
+      >
+      </mat-paginator>
+    </div>
+  </div>
+</div>

@@ -4,14 +4,14 @@
       <i class="fas fa-arrow-left"></i>
     </a>
     Vehicle Details
-    <hum-button [type]="'add'" [text]="'ADD MILAGE'" (click)="openMilageModal()"></hum-button>
-    <hum-button [type]="'text'" [text]="'Edit detials'" (click)="goToDetails()"></hum-button>
+    <hum-button [type]="'add'" [text]="'Add Mileage'" (click)="openMilageModal()"></hum-button>
+    <hum-button [type]="'text'" [text]="'Edit Details'" (click)="editVehicleDetail()"></hum-button>
   </span>
   <div class="action_section">
   </div>
 </lib-sub-header-template>
 <mat-divider></mat-divider>
-<mat-tab-group>
+<mat-tab-group [ngStyle]="scrollStyles">
   <mat-tab label="DETAILS">
     <ng-template matTabContent>
       <ng-container *ngTemplateOutlet="vehicleDetails"></ng-container>
@@ -34,16 +34,40 @@
           <table class="table table-striped">
             <tbody>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>Incurred Mileage(KM)</td>
+                <td>{{vehicleDetailForm.IncurredMileage}}</td>
               </tr>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>Starting Mileage(KM)</td>
+                <td>{{vehicleDetailForm.StartingMileage}}</td>
               </tr>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>Current Mileage (KM)</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>Total Fuel Usage (Litres)</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>Total Mobil Oil Usage (Litres)</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>Standard Fuel Consumption Rate (Litre Per 100 KM)</td>
+                <td>{{vehicleDetailForm.FuelConsumptionRate}}</td>
+              </tr>
+              <tr>
+                <td>Actual Fuel Consumption Rate (Litre Per 100 KM)</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>Standard Mobil Oil Consumption Rate (Litre Per 100 KM)</td>
+                <td>{{vehicleDetailForm.MobilOilConsumptionRate}}</td>
+              </tr>
+              <tr>
+                <td>Actual Mobil Oil Consumption Rate (Litre Per 100 KM)</td>
+                <td>-</td>
               </tr>
             </tbody>
           </table>
@@ -51,36 +75,56 @@
           <table class="table table-striped">
             <tbody>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>Fuel Total Cost</td>
+                <td>-</td>
               </tr>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>Mobil Oil Total Cost</td>
+                <td>-</td>
               </tr>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>Spare Parts Total Cost</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>Services & Maintenance Total Cost</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>Vehicle Starting Cost</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>Total Cost</td>
+                <td>-</td>
               </tr>
             </tbody>
           </table>
 
         </div>
         <div class="col-md-6">
-            <h5>Vehicle Usage Analysis</h5>
+            <h5>Vehicle Details</h5>
           <table class="table table-striped">
             <tbody>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>Plate No</td>
+                <td>{{vehicleDetailForm.PlateNo}}</td>
               </tr>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>Driver</td>
+                <td>{{vehicleDetailForm.EmployeeName}}</td>
               </tr>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>Model Year</td>
+                <td>{{vehicleDetailForm.ModelYear}}</td>
+              </tr>
+              <tr>
+                <td>Location</td>
+                <td>{{vehicleDetailForm.OfficeName}}</td>
+              </tr>
+              <tr>
+                <td>PurchaseId</td>
+                <td><a>{{vehicleDetailForm.PurchaseName}}</a></td>
               </tr>
             </tbody>
           </table>

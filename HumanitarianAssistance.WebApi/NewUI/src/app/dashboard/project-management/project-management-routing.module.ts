@@ -22,8 +22,10 @@ import { ProjectDetailComponent } from './project-list/project-details/project-d
 import { BudgetLineListingComponent } from './project-list/budgetlines/budget-line-listing/budget-line-listing.component';
 import { ProjectActivitiesComponent } from './project-list/project-activities/project-activities.component';
 import { PeopleComponent } from './project-list/project-details/people/people.component';
-import { HiringRequestsComponent } from './project-list/hiring-requests/hiring-requests.component';
 import { ProjectIndicatorsComponent } from './project-list/project-indicators/project-indicators.component';
+import { HiringRequestsComponent } from './project-hiring/hiring-requests/hiring-requests.component';
+import { JobDetailComponent } from './project-hiring/job-detail/job-detail.component';
+import { RequestDetailComponent } from './project-hiring/request-detail/request-detail.component';
 
 const moduleId: number = ApplicationModule.Projects;
 
@@ -147,7 +149,7 @@ const routes: Routes = [
           {
             path: 'people',
             component: PeopleComponent,
-          //  canActivate: [RoleGuardService],
+            //  canActivate: [RoleGuardService],
             data: {
               module: moduleId,
               page: projectPagesMaster.ProjectPeople
@@ -163,6 +165,25 @@ const routes: Routes = [
             }
           },
           {
+            path: 'hiring-request/:id',
+            component: RequestDetailComponent,
+            canActivate: [RoleGuardService],
+            data: {
+              module: moduleId,
+              page: projectPagesMaster.HiringRequests
+            }
+          },
+          {
+            path: 'job-detail',
+            component: JobDetailComponent,
+            canActivate: [RoleGuardService],
+            data: {
+              module: moduleId,
+              page: projectPagesMaster.HiringRequests
+            }
+          },
+
+          {
             path: 'project-indicators',
             component: ProjectIndicatorsComponent,
             canActivate: [RoleGuardService],
@@ -173,6 +194,7 @@ const routes: Routes = [
           },
         ]
       }
+
     ]
   }
   // { path: 'projects', component: ProjectListComponent},
@@ -182,4 +204,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class ProjectManagementRoutingModule {}
+export class ProjectManagementRoutingModule { }

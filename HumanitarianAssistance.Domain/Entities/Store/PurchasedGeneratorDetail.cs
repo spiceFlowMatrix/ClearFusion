@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,11 +10,11 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1)]
         public long Id { get; set; }
-        public int Voltage { get; set; }
-        public int StartingUsage { get; set; }
-        public int IncurredUsage { get; set; }
-        public int FuelConsumptionRate { get; set; }
-        public int MobilOilConsumptionRate { get; set; }
+        public double Voltage { get; set; }
+        public double StartingUsage { get; set; }
+        public double IncurredUsage { get; set; }
+        public double FuelConsumptionRate { get; set; }
+        public double MobilOilConsumptionRate { get; set; }
         public int OfficeId { get; set; }
         public int ModelYear { get; set; }
         public long PurchaseId { get; set; }
@@ -21,5 +22,6 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         [ForeignKey("PurchaseId")]
         public StoreItemPurchase StoreItemPurchase { get; set; }
         public GeneratorItemDetail GeneratorItemDetail { get; set; }
+        public List<GeneratorUsageHourDetail> GeneratorUsageHourList {get; set;}
     }
 }

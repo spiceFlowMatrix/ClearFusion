@@ -325,8 +325,6 @@ export class BudgetLineListingComponent implements OnInit {
       x => x.ProjectJobId === event.ProjectJobId
     ).ProjectJobName;
     // event.DebitPercentage === this.transactionList.reduce((a, { Debit }) => a + Debit, 0);
-
-    // console.log(event);
     this.BudgetLineDetailList[indexOfBudget] = event;
   }
   //#endregion

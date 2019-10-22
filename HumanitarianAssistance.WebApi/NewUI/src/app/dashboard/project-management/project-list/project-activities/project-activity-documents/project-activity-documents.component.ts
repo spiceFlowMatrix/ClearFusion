@@ -56,7 +56,7 @@ export class ProjectActivityDocumentsComponent implements OnInit, OnDestroy {
     this.projectPhaseId = data.ProjectPhaseId;
     this.projectActivityId = data.ProjectActivityId;
     this.monitoringId = data.MonitoringId;
-    // console.log(data.MonitoringId);
+    console.log(data.MonitoringId);
   }
 
   ngOnInit() {
@@ -156,7 +156,7 @@ export class ProjectActivityDocumentsComponent implements OnInit, OnDestroy {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
           // Here you can access the real file
-          //  // console.log(droppedFile.relativePath, file);
+          //  console.log(droppedFile.relativePath, file);
           this.documentName = droppedFile.relativePath;
           const formData = new FormData();
           // formData.append(this.projectActivityId.toString(), file, droppedFile.relativePath);

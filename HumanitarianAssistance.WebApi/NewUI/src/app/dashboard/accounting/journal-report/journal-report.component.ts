@@ -626,6 +626,71 @@ ExportTrialBalPdf(value) {
   };
   this.accountservice.onExportJournalTrialBalancePdf(this.journalFilter);
 }
+
+ExportBudgetlinePdf(value) {
+  this.journalFilter = {
+    CurrencyId: value.CurrencyId,
+    JournalCode: value.JournalCode,
+    OfficesList: value.OfficesList,
+    RecordType:
+      value.RecordType == null ? this.defaultRecordType : value.RecordType,
+    FromDate: new Date(
+      new Date(value.date.begin).getFullYear(),
+      new Date(value.date.begin).getMonth(),
+      new Date(value.date.begin).getDate(),
+      new Date().getHours(),
+      new Date().getMinutes(),
+      new Date().getSeconds()
+    ),
+    ToDate: new Date(
+      new Date(value.date.end).getFullYear(),
+      new Date(value.date.end).getMonth(),
+      new Date(value.date.end).getDate(),
+      new Date().getHours(),
+      new Date().getMinutes(),
+      new Date().getSeconds()
+    ),
+    BudgetLine: value.BudgetLine,
+    Project: value.Project,
+    JobCode: value.JobCode,
+    accountLists: value.accountLists,
+    date: null
+  };
+  this.accountservice.onExportJournalBudgetlinePdf(this.journalFilter);
+}
+
+ExportLedgerPdf(value) {
+  this.journalFilter = {
+    CurrencyId: value.CurrencyId,
+    JournalCode: value.JournalCode,
+    OfficesList: value.OfficesList,
+    RecordType:
+      value.RecordType == null ? this.defaultRecordType : value.RecordType,
+    FromDate: new Date(
+      new Date(value.date.begin).getFullYear(),
+      new Date(value.date.begin).getMonth(),
+      new Date(value.date.begin).getDate(),
+      new Date().getHours(),
+      new Date().getMinutes(),
+      new Date().getSeconds()
+    ),
+    ToDate: new Date(
+      new Date(value.date.end).getFullYear(),
+      new Date(value.date.end).getMonth(),
+      new Date(value.date.end).getDate(),
+      new Date().getHours(),
+      new Date().getMinutes(),
+      new Date().getSeconds()
+    ),
+    BudgetLine: value.BudgetLine,
+    Project: value.Project,
+    JobCode: value.JobCode,
+    accountLists: value.accountLists,
+    date: null
+  };
+  this.accountservice.onExportJournalLedgerPdf(this.journalFilter);
+}
+
 //#region "export pdf"
 printJournalReport(): void {
   let printContents, popupWin;

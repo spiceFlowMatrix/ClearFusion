@@ -25,11 +25,17 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         {
             return await _mediator.Send(query);
         }
+        [HttpPost]
+        public async Task<ApiResponse> GetProjectHiringRequestDetailByHiringRequestId([FromBody]long HiringRequestId)
+        {
+            return await _mediator.Send(new GetProjectHiringRequestDetailByHiringRequestIdQuery { HiringRequestId = HiringRequestId });
+        }
+
         [HttpGet]
         public async Task<ApiResponse> GetAllEmployeeList()
         {
             return await _mediator.Send(new GetAllEmployeeListQuery());
-        }   
+        }
         [HttpPost]
         public async Task<ApiResponse> GetHiringCandidatesListById([FromBody]GetAllCandidateListQuery query)
         {
@@ -85,12 +91,12 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             command.ModifiedDate = DateTime.UtcNow;
             command.CreatedById = userId;
             command.CreatedDate = DateTime.UtcNow;
-            return await _mediator.Send(command); 
+            return await _mediator.Send(command);
         }
         [HttpPost]
         public async Task<ApiResponse> CompleteHiringRequest([FromBody]long hiringRequestId)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value; 
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             return await _mediator.Send(new CompleteHiringRequestCommand
             {
                 hiringRequestId = hiringRequestId,
@@ -105,7 +111,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             command.ModifiedById = userId;
             command.ModifiedDate = DateTime.UtcNow;
             return await _mediator.Send(command);
-        } 
+        }
 
         [HttpGet]
         public async Task<ApiResponse> GetHiringCandidatesByOfficeId([FromQuery] int OfficeId)
