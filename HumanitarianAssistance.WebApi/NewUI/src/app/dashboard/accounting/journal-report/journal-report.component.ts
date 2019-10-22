@@ -468,7 +468,7 @@ GetAllJournalDetails(journalFilter) {
           });
           this.journalFilterList$ = of(this.journalDataSource).pipe(
             map(r => r.map(v => ({
-              Transaction_Date: new Date(v.TransactionDate).getDate() + '/' + new Date(v.TransactionDate).getMonth() +
+              Transaction_Date: new Date(v.TransactionDate).getDate() + '/' + (new Date(v.TransactionDate).getMonth() + 1) +
               '/' + new Date(v.TransactionDate).getFullYear(),
               Voucher_Code: v.ReferenceNo,
               Transaction_Description: v.TransactionDescription,
