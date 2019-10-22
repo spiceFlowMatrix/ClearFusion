@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./request-status.component.scss']
 })
 export class RequestStatusComponent implements OnInit {
-  selected_case = 1;
+  selected_case = 3;
   constructor() { }
 
   ngOnInit() {

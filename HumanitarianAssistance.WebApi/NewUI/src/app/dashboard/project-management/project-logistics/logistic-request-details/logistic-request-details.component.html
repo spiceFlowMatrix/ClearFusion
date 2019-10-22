@@ -1,23 +1,45 @@
-
+<mat-card>
   <div class="container">
     <div class="row">
-      <div class="col-md-7">
-        <h4 class="main-heading" style="padding-left: 0px !important"><i class="fas fa-arrow-left"></i>   Request Details
-        </h4>
+      <div class="col-md-7 mycontent-right">
+          <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
+              <span class="action_header main-heading" style="margin-left: -50px;"><i class="fas fa-arrow-left"></i>  Request Details
+              </span>
+            </lib-sub-header-template>
+        <!-- <h4 class="main-heading" style="padding-left: 0px !important"><i class="fas fa-arrow-left"></i>   Request Details
+        </h4> -->
         <h4 class="sub-heading">Workflow Details</h4>
         <p>This request is viable for Direct Purchase. Please process the <b>Purchase Order</b> below.</p>
-        <mat-divider></mat-divider>
-          <div class="row">
+        <mat-divider style="position: unset;"></mat-divider>
+          <div class="row" *ngIf="true">
             <div class="col-sm-4 margin_top_8">
               <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
-              <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle"></i> Pending</span>
+              <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Pending</span>
             </div>
             <div class="col-sm-8 margin_top_1">
               <hum-button  [type]="'cancel'" [text]="'CANCEL REQUEST'"></hum-button>
               <hum-button  [type]="'save'" [text]="'ISSUE PURCHASE ORDER'"></hum-button>
             </div>
           </div>
-        <mat-divider></mat-divider>
+          <div class="row" *ngIf="false">
+              <div class="col-sm-8 margin_top_8">
+                <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
+                <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Awaiting order items to be purchased</span>
+              </div>
+              <div class="col-sm-4 margin_top_1">
+                <hum-button  [type]="'save'" [text]="'COMPLETE PURCHASING'"></hum-button>
+              </div>
+          </div>
+          <div class="row" *ngIf="false">
+              <div class="col-sm-8 margin_top_8">
+                <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
+                <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_red"></i> Cancelled</span>
+              </div>
+              <div class="col-sm-4 margin_top_1">
+
+              </div>
+          </div>
+        <mat-divider style="position: unset;"></mat-divider>
         <h5 class="letter_spacing_1 margin_top_20">Request Summary</h5>
         <table class="table table-striped" style="width:50%;">
           <tr>
@@ -44,4 +66,4 @@
       </div>
     </div>
   </div>
-
+</mat-card>
