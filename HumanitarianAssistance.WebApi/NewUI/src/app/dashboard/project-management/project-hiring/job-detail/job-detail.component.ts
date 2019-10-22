@@ -129,6 +129,7 @@ export class JobDetailComponent implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe();
       this.isAddJobFormSubmitted = false;
+      this.toastr.success('Job Sucessfully Inserted');
     } else {
       this.toastr.warning('Please correct errors in job form and submit again');
     }
