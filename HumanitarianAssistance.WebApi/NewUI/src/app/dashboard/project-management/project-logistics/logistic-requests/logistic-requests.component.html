@@ -1,13 +1,14 @@
+<mat-card>
 <div class="row">
   <div class="col-md-8">
-      <h4 style="padding-left: 0px !important">Requests
+      <h4 style="padding-left: 0px !important;letter-spacing: 2px;">Requests
         <hum-button [type]="'add'" [text]="'add'" (click)="openAddRequestDialog()"></hum-button>
       </h4>
     <hum-table [headers]="logisticListHeaders$" (rowClick)="requestRowClicked($event)" [actions]="actions" [items]="logisticListData$"></hum-table>
   </div>
   <div class="col-md-4">
     <mat-card>
-        <mat-card-title>Detail</mat-card-title>
+        <h4>Detail</h4>
         <mat-card-content>
             Please create Logistic Requests when you need to purchase goods and services for the project.
             Logistics is focused on procurement and tracking of physical goods for the projects and this page can
@@ -24,3 +25,4 @@
     </mat-card>
   </div>
 </div>
+</mat-card>
