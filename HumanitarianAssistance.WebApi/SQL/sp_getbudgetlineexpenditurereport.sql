@@ -1,3 +1,4 @@
+DROP FUNCTION IF EXISTS public.get_budgetline_expenditure_report(integer, integer, text, text, integer[], integer[], bigint[], bigint[], bigint[], bigint[]);
 CREATE OR REPLACE FUNCTION public.get_budgetline_expenditure_report(
 	currencyid integer,
 	recordtype integer,
