@@ -92,7 +92,7 @@ export class ProjectActivitiesService {
             statusCode: x.StatusCode,
             message: x.Message
           };
-          // console.log(response);
+          console.log(response);
           return response;
         })
       );

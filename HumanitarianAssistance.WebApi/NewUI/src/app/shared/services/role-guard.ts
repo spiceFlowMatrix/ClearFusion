@@ -60,13 +60,13 @@ export class RoleGuardService implements CanActivate {
 
     // for(let i=0; i<expectedRoleArray.length; i++){
     //   if(expectedRoleArray[i]==rolePermissions[0].RoleName){
-    //     // console.log("Roles Matched");
+    //     console.log("Roles Matched");
     //     expectedRole = rolePermissions[0].RoleName;
     //   }
     // }
 
     // if (rolePermissions[0].RoleName == expectedRole) {
-    //   // console.log("User permitted to access the route");
+    //   console.log("User permitted to access the route");
     //   return true;
     // }
      return false;

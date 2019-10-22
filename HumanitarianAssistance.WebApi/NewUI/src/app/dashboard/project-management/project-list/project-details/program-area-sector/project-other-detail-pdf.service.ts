@@ -532,7 +532,7 @@ export class ProjectOtherDetailPdfService {
 
   // headerFooterFormatting(doc, totalPages) {
   //   for (let i = totalPages; i >= 1; i--) {
-  //     // console.log(totalPages);
+  //     console.log(totalPages);
   //     doc.setPage(i);
   //     // header
   //     this.header(doc);

@@ -13,6 +13,6 @@ export class EditGeneratorComponent implements OnInit {
   ngOnInit() {
   }
   backToDetails(){
-  this.router.navigate(['store/generator/detail',1])
+  this.router.navigate(['store/generator/detail', 1])
   }
 }

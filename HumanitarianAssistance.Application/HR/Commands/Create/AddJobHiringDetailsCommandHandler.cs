@@ -6,6 +6,7 @@ using AutoMapper;
 using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities;
+using HumanitarianAssistance.Domain.Entities.Project;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -45,20 +46,19 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                 var jobhiringinfo = await _dbContext.JobHiringDetails.FirstOrDefaultAsync(x => x.JobCode == JobCode && x.IsDeleted == false && x.OfficeId == request.office);
                 if (jobhiringinfo == null)
                 {
-                    JobHiringDetails obj = new JobHiringDetails();
+                    JobHiringDetail obj = new JobHiringDetail();  
                     obj.IsDeleted = false;
                     obj.CreatedById = request.CreatedById;
                     obj.CreatedDate = request.CreatedDate;
                     obj.GradeId = request.jobGrade;
                     obj.JobCode = JobCode;
                     obj.JobDescription = request.description;
-                    obj.IsActive = false;
                     obj.OfficeId = request.office;
-                    obj.Unit = request.totalVacancies;
+                    obj.TotalVacancies = request.totalVacancies;
                     obj.CurrencyId=request.payCurrency;
                     obj.ProfessionId=request.position;
-                    obj.Rate=request.payRate;
-                    await _dbContext.JobHiringDetails.AddAsync(obj);
+                    obj.PayRate=request.payRate;
+                    await _dbContext.JobHiringDetail.AddAsync(obj);
                     await _dbContext.SaveChangesAsync();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";

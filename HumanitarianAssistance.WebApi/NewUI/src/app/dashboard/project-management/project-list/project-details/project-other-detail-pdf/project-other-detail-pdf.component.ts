@@ -54,7 +54,7 @@ export class ProjectOtherDetailPdfComponent implements OnInit {
   ngOnInit() {
   }
   onExportPdf() {
-    // console.log(this.myForm.value);
+    console.log(this.myForm.value);
     // set your pdf values here
     this.myForm.value.ProjectId = this.data.ProjectId;
     this.globalSharedService

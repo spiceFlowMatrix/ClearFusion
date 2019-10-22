@@ -16,7 +16,7 @@ export class AddMilageComponent implements OnInit {
   isAddMileageFormSubmitted = false;
 
   constructor(private fb: FormBuilder, private purchaseService: PurchaseService,
-    private commonLoader: CommonLoaderService, public toastr: ToastrService,
+    public toastr: ToastrService,
     private dialogRef: MatDialogRef<AddMilageComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
     debugger;
