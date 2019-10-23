@@ -176,4 +176,13 @@ export class ReportService {
       .subscribe();
   }
 
+  onExportJournalPdf(value){
+    this.globalSharedService
+      .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetJournalReportPdf,
+      value
+      )
+      .pipe()
+      .subscribe();
+  }
+
 }
