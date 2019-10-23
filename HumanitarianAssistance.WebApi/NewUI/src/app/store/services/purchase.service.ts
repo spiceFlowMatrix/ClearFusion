@@ -464,6 +464,59 @@ saveGeneratorDetail(model: any) {
     .post(this.appurl.getApiUrl() + GLOBAL.API_GeneratorTracker_EditGeneratorDetail, model);
 }
 
+// saveGeneratorDetail
+EditStorePurchase(purchase: any) {
+  const purchaseModel: IAddEditPurchaseModel = {
+    ApplyDepreciation: purchase.ApplyDepreciation,
+    AssetTypeId: purchase.AssetTypeId,
+    BudgetLineId: purchase.BudgetLineId,
+    Currency: purchase.CurrencyId,
+    DeliveryDate: this.getLocalDate(purchase.ReceiptDate),
+    DepreciationRate: purchase.DepreciationRate,
+    InventoryId: purchase.InventoryId,
+    InventoryItem: purchase.ItemId,
+    InvoiceDate: this.getLocalDate(purchase.InvoiceDate),
+    InvoiceNo: purchase.InvoiceNo,
+    OfficeId: purchase.OfficeId,
+    ProjectId: purchase.ProjectId,
+    PurchaseDate: this.getLocalDate(purchase.PurchaseOrderDate),
+    PurchaseName: purchase.PurchaseName,
+    PurchaseOrderNo: purchase.PurchaseOrderNo,
+    PurchasedById: purchase.ReceivedFromEmployeeId,
+    Quantity: purchase.Quantity,
+    ReceivedFromLocation: purchase.ReceivedFromLocation,
+    ReceiptTypeId: purchase.ReceiptTypeId,
+    Status: purchase.StatusId,
+    UnitCost: purchase.Price,
+    UnitType: purchase.Unit,
+    TimezoneOffset: new Date().getTimezoneOffset(),
+    PurchasedVehicleList: purchase.TransportVehicles,
+    PurchasedGeneratorList: purchase.TransportGenerators,
+    TransportItemId: purchase.TransportItemId,
+    PurchaseId: purchase.PurchaseId
+  };
+  return this.globalService
+    .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_EditStorePurchase, purchaseModel);
+}
+
+deleteVehicle(Id) {
+  return this.http
+    .delete<any>(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_VehicleTracker_DeletePurchasedVehicle +
+        '?id=' +
+        Id);
+}
+
+deleteGenerator(Id) {
+  return this.http
+    .delete<any>(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_GeneratorTracker_DeletePurchasedGenerator +
+        '?id=' +
+        Id);
+}
+
   //#region "getLocalDate"
   getLocalDate(date: any) {
     return new Date(

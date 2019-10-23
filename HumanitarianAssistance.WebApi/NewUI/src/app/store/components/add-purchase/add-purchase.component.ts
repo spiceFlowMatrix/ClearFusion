@@ -68,7 +68,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     private router: Router, private datePipe: DatePipe,
     private dialog: MatDialog, private globalSharedService: GlobalSharedService, private activatedRoute: ActivatedRoute) {
 
-      this.initForm();
+    this.initForm();
     this.addPurchaseForm.valueChanges.subscribe(r => {
       console.log(r);
     });
@@ -148,7 +148,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       'DepreciationRate': [null],
       'TransportVehicles': new FormArray([]),
       'TransportGenerators': new FormArray([]),
-      'TransportItemId': [null]
+      'TransportItemId': [null],
+      'PurchaseId': [null]
     });
   }
 
@@ -323,11 +324,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     }
 
     this.getTransportItemDataSource();
-
-    this.storeItemGroups$.subscribe(x => {
-      const index = x.findIndex(y => y.value === event);
-      this.selectedItemGroupName = x[index].name;
-    });
+    this.getSelectedItemGroupName(event);
   }
 
   getItemSelectedValue(event: any) {
@@ -344,7 +341,14 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     }
 
     this.transportItemPlaceholder = this.addPurchaseForm.get('ItemGroupId').value === this.ItemGroups.Vehicle ? 'Purchased Vehicle Item' :
-                                    'Purchased Generator Item';
+      'Purchased Generator Item';
+  }
+
+  getSelectedItemGroupName(event) {
+    this.storeItemGroups$.subscribe(x => {
+      const index = x.findIndex(y => y.value === event);
+      this.selectedItemGroupName = x[index].name;
+    });
   }
 
   getOfficeSelectedValue(event: any) {
@@ -387,7 +391,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       .getInventoriesByInventoryTypeId(inventoryTypeId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
-
         this.storeInventory$ = of(x.data.map(y => {
           return {
             name: y.InventoryCode + '-' + y.InventoryName,
@@ -397,7 +400,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       });
   }
 
-  getAllStoreItemGroups(inventoryId: number) {
+  getAllStoreItemGroups(inventoryId: number, groupId?: any) {
     this.purchaseService
       .getItemGroupByInventoryId(inventoryId)
       .pipe(takeUntil(this.destroyed$))
@@ -408,6 +411,10 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
             value: y.ItemGroupId
           };
         }));
+
+        if (groupId != null) {
+          this.getSelectedItemGroupName(groupId);
+        }
       });
   }
 
@@ -425,6 +432,14 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       });
   }
 
+  purchaseFormSubmit() {
+    if (this.addPurchaseForm.get('PurchaseId').value == null || this.addPurchaseForm.get('PurchaseId').value == undefined ) {
+      this.addPurchaseFormSubmit();
+    } else {
+      this.editPurchaseFormSubmit();
+    }
+  }
+
   addPurchaseFormSubmit() {
     console.log(this.addPurchaseForm);
     if (this.addPurchaseForm.valid) {
@@ -433,27 +448,82 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
           if (x.StatusCode === 200) {
+
             if (this.uploadedPurchasedFiles.length > 0) {
 
               for (let i = 0; i < this.uploadedPurchasedFiles.length; i++) {
 
                 this.globalSharedService
+                  .uploadFile(FileSourceEntityTypes.StorePurchase, x.PurchaseId, this.uploadedPurchasedFiles[i].File[0],
+                    this.uploadedPurchasedFiles[i].DocumentTypeId)
+                  .pipe(takeUntil(this.destroyed$))
+                  .subscribe(y => {
+                    console.log('uploadSuccess', y);
+                  });
+
+                if (i === this.uploadedPurchasedFiles.length - 1) {
+                    this.addPurchaseForm.reset();
+                  this.isAddPurchaseFormSubmitted = false;
+                  this.toastr.success(x.Message);
+                   this.router.navigate(['store/purchases']);
+                }
+              }
+            } else {
+                this.addPurchaseForm.reset();
+              this.isAddPurchaseFormSubmitted = false;
+               this.router.navigate(['store/purchases']);
+            }
+
+          } else if (x.StatusCode === 400) {
+            this.isAddPurchaseFormSubmitted = false;
+            this.toastr.warning(x.Message);
+          }
+        },
+          error => {
+            this.isAddPurchaseFormSubmitted = false;
+            console.log(error);
+          });
+    } else {
+      this.toastr.warning('Please correct errors in purchase form and submit again');
+    }
+  }
+
+  editPurchaseFormSubmit() {
+    console.log(this.addPurchaseForm);
+    if (this.addPurchaseForm.valid) {
+      this.isAddPurchaseFormSubmitted = true;
+      this.purchaseService.EditStorePurchase(this.addPurchaseForm.value)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(x => {
+          if (x) {
+            if (this.uploadedPurchasedFiles.length > 0) {
+
+              for (let i = 0; i < this.uploadedPurchasedFiles.length; i++) {
+
+                if (this.uploadedPurchasedFiles[i].Id === 0) {
+                  this.globalSharedService
                     .uploadFile(FileSourceEntityTypes.StorePurchase, x.PurchaseId, this.uploadedPurchasedFiles[i].File[0],
                       this.uploadedPurchasedFiles[i].DocumentTypeId)
                     .pipe(takeUntil(this.destroyed$))
                     .subscribe(y => {
                       console.log('uploadSuccess', y);
-                    } );
+                    });
 
-                    if (i === this.uploadedPurchasedFiles.length - 1) {
-                      this.addPurchaseForm.reset();
-                      this.isAddPurchaseFormSubmitted = false;
-                      this.toastr.success(x.Message);
-                    }
+                  if (i === this.uploadedPurchasedFiles.length - 1) {
+                     this.addPurchaseForm.reset();
+                    this.isAddPurchaseFormSubmitted = false;
+                    this.toastr.success(x.Message);
+                    this.router.navigate(['store/purchases']);
+                  }
+                } else {
+                  this.addPurchaseForm.reset();
+                  this.router.navigate(['store/purchases']);
+                }
               }
             } else {
-              this.addPurchaseForm.reset();
+               this.addPurchaseForm.reset();
               this.isAddPurchaseFormSubmitted = false;
+              this.router.navigate(['store/purchases']);
             }
 
           } else if (x.StatusCode === 400) {
@@ -471,7 +541,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   PurchaseDateChange(event: any) {
-    debugger;
     if (event.value) {
       this.checkExchangeRateExists(event.value);
     }
@@ -586,12 +655,13 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       if (result) {
         this.uploadedPurchasedFiles.unshift({
           Id: result.id,
-          Filename: result.file[0].name,
+          Filename: result.file === undefined ? result.filename : result.file[0].name,
           DocumentTypeName: result.documentName,
           Date: this.datePipe.transform(result.uploadDate, 'dd-MM-yyyy'),
-          UploadedBy: 'test',
+          UploadedBy: result.uploadBy === undefined ? 'test' : result.uploadBy,
           File: result.file,
-          DocumentTypeId: result.documentType
+          DocumentTypeId: result.documentTypeId,
+          SignedUrl: result.signedUrl
         });
 
         // For ngOnChanges on document-upload component
@@ -642,15 +712,146 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   getStorePurchaseById(purchaseId: number) {
-    debugger;
+    this.commonLoader.showLoader();
     this.purchaseService.getStorePurchaseById(Number(purchaseId))
-        .subscribe(x => {
-          debugger;
+      .subscribe(x => {
+        // get All dropdown datasource
+        this.getInventoriesByInventoryTypeId(x.InventoryTypeId);
+        this.getAllStoreItemGroups(x.InventoryId, x.ItemGroupId);
+        this.getAllStoreItemsByGroupId(x.ItemGroupId);
+        this.getEmployeesByOfficeId(x.OfficeId);
+        this.getBudgetLineByProjectId(x.ProjectId);
 
-        }, error => {
-
-
+        x.StoreDocumentList.forEach(y => {
+          this.uploadedPurchasedFiles.push({
+            Id: y.DocumentFileId,
+            Filename: y.DocumentName,
+            DocumentTypeId: y.DocumentTypeId,
+            Date: this.datePipe.transform(y.UploadedOn, 'dd-MM-yyyy'),
+            UploadedBy: y.UploadedBy,
+            DocumentTypeName: '',
+            File: undefined,
+            SignedUrl: y.SignedURL,
+          });
         });
+
+        // For ngOnChanges on document-upload component
+        this.uploadedPurchasedFiles = this.uploadedPurchasedFiles.slice();
+
+        this.addPurchaseForm.patchValue({
+          InventoryTypeId: x.InventoryTypeId,
+          InventoryId: x.InventoryId,
+          ItemGroupId: x.ItemGroupId,
+          ItemId: x.ItemId,
+          OfficeId: x.OfficeId,
+          ProjectId: x.ProjectId,
+          BudgetLineId: x.BudgetLineId,
+          PurchaseOrderNo: x.SerialNo,
+          PurchaseName: x.PurchaseName,
+          ReceiptDate: x.DeliveryDate,
+          PurchaseOrderDate: x.PurchaseDate,
+          InvoiceDate: x.InvoiceDate,
+          InvoiceNo: x.InvoiceNo,
+          AssetTypeId: x.AssetTypeId,
+          Unit: x.UnitType,
+          Quantity: x.Quantity,
+          CurrencyId: x.Currency,
+          Price: x.UnitCost,
+          ReceivedFromLocation: null,
+          ReceivedFromEmployeeId: x.PurchasedById,
+          ReceiptTypeId: x.ReceiptTypeId,
+          StatusId: x.Status,
+          ApplyDepreciation: x.ApplyDepreciation,
+          DepreciationRate: x.DepreciationRate,
+          TransportItemId: x.TransportItemId,
+          PurchaseId: x.PurchaseId
+        });
+
+        this.setVehicleValue(x.PurchasedVehicleList);
+        this.setGeneratorValue(x.PurchasedGeneratorList);
+
+        this.commonLoader.hideLoader();
+      }, error => {
+
+        this.commonLoader.hideLoader();
+      });
+  }
+
+  setVehicleValue(item: any[]) {
+    const formArray = new FormArray([]);
+    for (const x of item) {
+      formArray.push(this.fb.group({
+        Id: x.Id,
+        PlateNo: x.PlateNo,
+        EmployeeId: x.EmployeeId,
+        StartingMileage: x.StartingMileage,
+        IncurredMileage: x.IncurredMileage,
+        FuelConsumptionRate: x.FuelConsumptionRate,
+        MobilOilConsumptionRate: x.MobilOilConsumptionRate,
+        OfficeId: x.OfficeId,
+        ModelYear: x.ModelYear
+      }));
+    }
+    this.addPurchaseForm.setControl('TransportVehicles', formArray);
+  }
+
+  setGeneratorValue(item: any[]) {
+    const formArray = new FormArray([]);
+    for (const x of item) {
+      formArray.push(this.fb.group({
+        Id: x.Id,
+        Voltage: x.Voltage,
+        StartingUsage: x.StartingUsage,
+        IncurredUsage: x.IncurredUsage,
+        FuelConsumptionRate: x.FuelConsumptionRate,
+        MobilOilConsumptionRate: x.MobilOilConsumptionRate,
+        OfficeId: x.OfficeId,
+        ModelYear: x.ModelYear
+      }));
+    }
+    this.addPurchaseForm.setControl('TransportGenerators', formArray);
+  }
+
+  deleteVehicle(index: number) {
+    const arrayControl = this.addPurchaseForm.get('TransportVehicles') as FormArray;
+
+    const item = arrayControl.at(index);
+
+    if (item.value.Id !== 0) {
+      this.purchaseService.deleteVehicle(item.value.Id).subscribe(x => {
+        if (x) {
+          (<FormArray>this.addPurchaseForm.get('TransportVehicles')).removeAt(index);
+        } else {
+          this.toastr.warning('Something went wrong');
+        }
+
+      }, error => {
+        console.log(error);
+      });
+    } else {
+      (<FormArray>this.addPurchaseForm.get('TransportVehicles')).removeAt(index);
+    }
+  }
+
+  deleteGenerator(index: number) {
+    const arrayControl = this.addPurchaseForm.get('TransportGenerators') as FormArray;
+
+    const item = arrayControl.at(index);
+
+    if (item.value.Id !== 0) {
+      this.purchaseService.deleteGenerator(item.value.Id).subscribe(x => {
+        if (x) {
+          (<FormArray>this.addPurchaseForm.get('TransportGenerators')).removeAt(index);
+        } else {
+          this.toastr.warning('Something went wrong');
+        }
+
+      }, error => {
+        console.log(error);
+      })
+    } else {
+      (<FormArray>this.addPurchaseForm.get('TransportGenerators')).removeAt(index);
+    }
   }
 
   ngOnDestroy() {

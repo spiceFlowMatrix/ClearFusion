@@ -1,20 +1,13 @@
 using System;
 using System.Collections.Generic;
+using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Application.Store.Models;
+using MediatR;
 
-namespace HumanitarianAssistance.Application.Store.Models
+namespace HumanitarianAssistance.Application.Store.Commands.Update
 {
-    public class StorePurchaseModel
+    public class EditStorePurchaseCommand: BaseModel, IRequest<bool>
     {
-        public StorePurchaseModel()
-        {
-            PurchasedVehicleList = new List<PurchasedVehicleModel>();
-            PurchasedGeneratorList= new List<PurchasedGeneratorModel>();
-            StoreDocumentList = new List<StoreDocumentModel>();
-        }
-        public long? InventoryTypeId {get; set;}
-        public long? InventoryId { get; set; }
-        public long? ItemGroupId { get; set; }
-        public long? ItemId { get; set; }
         public long PurchaseId { get; set; }
         public string SerialNo { get; set; }                    // Barcode Value
         public long InventoryItem { get; set; }               // Item Id
@@ -46,6 +39,5 @@ namespace HumanitarianAssistance.Application.Store.Models
         public long? TransportItemId { get; set; }
         public List<PurchasedVehicleModel> PurchasedVehicleList { get; set; }
         public List<PurchasedGeneratorModel> PurchasedGeneratorList { get; set; }
-        public List<StoreDocumentModel> StoreDocumentList {get; set;}
     }
 }

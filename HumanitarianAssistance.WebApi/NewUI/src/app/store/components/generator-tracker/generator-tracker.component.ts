@@ -52,7 +52,6 @@ export class GeneratorTrackerComponent implements OnInit {
   }
 
   openHoursModal(event) {
-    debugger;
     if (event.type === 'button') {
       const dialogRef = this.dialog.open(AddHoursComponent, {
         width: '850px',

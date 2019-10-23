@@ -174,6 +174,7 @@ export interface IPurchasedFiles {
   Filename: string;
   UploadedBy: string;
   DocumentTypeName: string;
+  SignedUrl: string;
 }
 
 export interface IPurchaseItemDataSource {

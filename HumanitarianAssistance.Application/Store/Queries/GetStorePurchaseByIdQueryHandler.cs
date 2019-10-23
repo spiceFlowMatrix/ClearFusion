@@ -35,28 +35,46 @@ namespace HumanitarianAssistance.Application.Store.Queries
                 int orderValue= 0;
 
                 // Get Purchase Document name and Id
+                // var documentsAsync = _dbContext.DocumentFileDetail
+                //                           .Include(x=> x.EntitySourceDocumentDetail)
+                //                           .Where(x=> x.IsDeleted == false && x.PageId == (int)FileSourceEntityTypes.StorePurchase &&
+                //                                 x.EntitySourceDocumentDetail.EntityId == request.PurchaseId)
+                //                           .Select(x=> new StoreDocumentModel {
+                //                              DocumentFileId = x.DocumentFileId,
+                //                              DocumentName= x.Name,
+                //                              DocumentTypeId= x.DocumentTypeId
+                //                           }).ToListAsync();
 
-                var documentsAsync = _dbContext.DocumentFileDetail
-                                          .Include(x=> x.EntitySourceDocumentDetail)
-                                          .Where(x=> x.IsDeleted == false && x.PageId == (int)FileSourceEntityTypes.StorePurchase &&
-                                                x.EntitySourceDocumentDetail.EntityId == request.PurchaseId)
-                                          .Select(x=> new StoreDocumentModel {
-                                             DocumentFileId = x.DocumentFileId,
-                                             DocumentName= x.Name,
-                                             DocumentTypeId= x.DocumentTypeId
-                                          }).ToListAsync();
+
+                var documentsAsync = (from es in _dbContext.EntitySourceDocumentDetails 
+                                join df in _dbContext.DocumentFileDetail on es.DocumentFileId equals df.DocumentFileId
+                                join u in _dbContext.UserDetails on df.CreatedById equals u.AspNetUserId
+                                where df.IsDeleted == false && es.EntityId == request.PurchaseId &&
+                                df.PageId == (int)FileSourceEntityTypes.StorePurchase
+                                select new StoreDocumentModel 
+                                {
+                                    DocumentFileId= df.DocumentFileId,
+                                    DocumentName= df.Name,
+                                    DocumentTypeId= df.DocumentTypeId,
+                                    UploadedBy= $"{u.FirstName} {u.LastName}",
+                                    UploadedOn= df.CreatedDate
+                                }).ToListAsync();
 
                 // Get Purchase Data
-
                 model = await _dbContext.StoreItemPurchases
+                                  .Include(x=> x.StoreInventoryItem)
+                                  .ThenInclude(x=> x.Inventory)
                                   .Include(x=> x.PurchasedVehicleDetailList)
                                   .Include(x=> x.PurchasedGeneratorDetailList)
                                   .Include(x=> x.GeneratorItemDetail)
                                   .Include(x=> x.VehicleItemDetail)
-                                  .Where(x=> x.IsDeleted == false  && x.PurchaseId == request.PurchaseId &&
-                                   x.GeneratorItemDetail.IsDeleted == false && x.VehicleItemDetail.IsDeleted == false)
+                                  .Where(x=> x.IsDeleted == false  && x.PurchaseId == request.PurchaseId)
                                    .Select(z=> new StorePurchaseModel 
                                    {
+                                       InventoryTypeId= z.StoreInventoryItem.Inventory.AssetType,
+                                       InventoryId = z.StoreInventoryItem.ItemInventory,
+                                       ItemGroupId = z.StoreInventoryItem.ItemGroupId,
+                                       ItemId = z.InventoryItem,
                                        PurchaseId = z.PurchaseId,
                                        SerialNo = z.SerialNo,
                                        InventoryItem= z.InventoryItem,
@@ -77,6 +95,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                        Status= z.Status,
                                        ReceiptTypeId= z.ReceiptTypeId,
                                        ReceivedFromLocation= z.ReceivedFromLocation,
+                                       DeliveryDate= z.DeliveryDate,
                                        ProjectId= z.ProjectId,
                                        BudgetLineId= z.BudgetLineId,
                                        PaymentTypeId= z.PaymentTypeId,
@@ -115,9 +134,9 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                                }).ToList()
                                    }).FirstOrDefaultAsync();
 
-                var documents = await documentsAsync;
+                model.StoreDocumentList = await documentsAsync;
 
-                foreach(var item in documents)
+                foreach(var item in model.StoreDocumentList)
                 {
                     FileModel fileModel = new FileModel()
                     {
@@ -135,19 +154,6 @@ namespace HumanitarianAssistance.Application.Store.Queries
                         item.DocumentFileId = documentModel.DocumentFileId;
                     }
                 }
-
-                model.StoreDocumentList = new List<StoreDocumentModel>();
-                model.StoreDocumentList= documents;
-
-                // var docs = documents.Select(x=> new StoreDocumentModel
-                // {
-                //     SignedURL= x.SignedURL,
-                //     DocumentFileId= x.DocumentFileId,
-                //     DocumentName= x.DocumentName,
-                //     DocumentTypeId= x.DocumentTypeId
-                // }).ToList();
-
-                //  model.StoreDocumentList.AddRange(docs);
             }
             catch(Exception exception)
             {

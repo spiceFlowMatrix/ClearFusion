@@ -12,6 +12,9 @@ import { TableActionsModel } from 'projects/library/src/public_api';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { FieldConfigService } from '../../services/field-config.service';
 import { map } from 'rxjs/operators';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
+import { GLOBAL } from 'src/app/shared/global';
 
 @Component({
   selector: 'app-purchase-list',
@@ -41,7 +44,9 @@ export class PurchaseListComponent implements OnInit {
 
   constructor(private purchaseService: PurchaseService,
     private router: Router, private dialog: MatDialog,
-    private datePipe: DatePipe, private toastr: ToastrService, private loader: CommonLoaderService, private fieldConfigservice: FieldConfigService) {
+    private datePipe: DatePipe, private toastr: ToastrService,
+    private loader: CommonLoaderService, private fieldConfigservice: FieldConfigService,
+    private globalSharedService: GlobalSharedService, private appurl: AppUrlService) {
 
     this.filterValueModel = {
       CurrencyId: null,
@@ -131,6 +136,8 @@ export class PurchaseListComponent implements OnInit {
             })
           } as IPurchaseList;
         }));
+        this.loader.hideLoader();
+      }, error => {
         this.loader.hideLoader();
       });
   }
@@ -223,6 +230,14 @@ export class PurchaseListComponent implements OnInit {
         (error) => {
           this.toastr.error(error);
         });
+  }
+
+  onPdfExportClick() {
+    this.globalSharedService
+    .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetStorePurchasePdf, this.filterValueModel
+    )
+    .pipe()
+    .subscribe();
   }
 
   configFilterAppliedEvent(event: any) {

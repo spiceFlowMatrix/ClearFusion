@@ -435,6 +435,7 @@ export class GLOBAL {
 
   public static API_Pdf_GetJournalBudgetLineSummaryPdf  = 'Pdf/GetJournalBudgetLineSummaryPdf';
   public static API_Pdf_GetJournalLedgerReportPdf = 'Pdf/GetJournalLedgerReportPdf';
+  public static API_Pdf_GetStorePurchasePdf = 'Pdf/GetStorePurchasePdf';
   //#endregion
 
   // Store
@@ -459,12 +460,15 @@ export class GLOBAL {
   public static API_VehicleTracker_AddVehicleMileage = 'VehicleTracker/AddVehicleMileage';
   public static API_VehicleTracker_GetVehicleById = 'VehicleTracker/GetVehicleById';
   public static API_VehicleTracker_SaveVehicleDetail = 'VehicleTracker/EditVehicleDetail';
+  public static API_VehicleTracker_DeletePurchasedVehicle = 'VehicleTracker/DeletePurchasedVehicle';
   public static API_GeneratorTracker_GetGeneratorList = 'GeneratorTracker/GetGeneratorList';
   public static API_GeneratorTracker_GetGeneratorById = 'GeneratorTracker/GetGeneratorById';
+  public static API_GeneratorTracker_DeletePurchasedGenerator = 'GeneratorTracker/DeletePurchasedGenerator';
   public static API_GeneratorTracker_AddGeneratorUsageHours = 'GeneratorTracker/AddGeneratorUsageHours';
   public static API_GeneratorTracker_EditGeneratorDetail = 'GeneratorTracker/EditGeneratorDetail';
   public static API_StorePurchase_GetStorePurchaseById = 'StorePurchase/GetStorePurchaseById';
   public static API_StorePurchase_GetTransportItemDataSource = 'StorePurchase/GetTransportItemDataSource';
+  public static API_StorePurchase_EditStorePurchase = 'StorePurchase/EditStorePurchase';
 }
 
 
