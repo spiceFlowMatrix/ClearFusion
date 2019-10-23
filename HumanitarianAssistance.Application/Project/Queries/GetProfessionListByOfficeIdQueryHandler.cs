@@ -29,7 +29,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
             {
                 var ProfessionList = await _dbContext.JobHiringDetail
                     .Include(o => o.ProfessionDetails)
-                    .Where(x => x.OfficeId == request.OfficeId && x.IsDeleted == false).Select(x => new ProfessionListModel
+                    .Where(x => x.OfficeId == request.ProfessionId && x.IsDeleted == false && x.ProjectId==request.ProjectId).Select(x => new ProfessionListModel
                     {
                         ProfessionId = x.ProfessionDetails.ProfessionId,
                         ProfessionName = x.ProfessionDetails.ProfessionName

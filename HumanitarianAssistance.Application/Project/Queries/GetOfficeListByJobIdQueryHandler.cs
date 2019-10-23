@@ -29,7 +29,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
             {
                 var OfficeList = await _dbContext.JobHiringDetail
                     .Include(o => o.OfficeDetails)
-                    .Where(x => x.JobId == request.JobId && x.IsDeleted == false).Select(x => new OfficeDetailListModel
+                    .Where(x => x.JobId == request.ProfessionId && x.IsDeleted == false && x.ProjectId==request.ProjectId).Select(x => new OfficeDetailListModel
                     {
                         OfficeId = x.OfficeDetails.OfficeId,
                         OfficeName = x.OfficeDetails.OfficeName

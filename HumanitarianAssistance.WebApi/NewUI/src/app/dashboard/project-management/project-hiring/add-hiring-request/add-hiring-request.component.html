@@ -17,38 +17,38 @@
 
             <div class="col-lg-6 col-sm-6">
               <lib-hum-dropdown
+                formControlName="Office"
+                [validation]="
+                  addHiringRequestForm.controls['Office'].hasError('required')
+                "
+                [options]="officeList$"
+                [placeHolder]="'Duty Station'"
+                (change)="onChangeDutyStation($event)"
+              ></lib-hum-dropdown>
+            </div>
+
+            <div class="col-lg-6 col-sm-6">
+                <lib-hum-dropdown
+                  formControlName="Position"
+                  [validation]="
+                    addHiringRequestForm.controls['Position'].hasError('required')
+                  "
+                  [options]="professionList$"
+                  [placeHolder]="'Position'"
+                  (change)="onChangePosition($event)"
+                ></lib-hum-dropdown>
+              </div>
+
+            <div class="col-lg-6 col-sm-6">
+              <lib-hum-dropdown
                 formControlName="JobCategory"
                 [validation]="
                   addHiringRequestForm.controls['JobCategory'].hasError('required')
                 "
                 [options]="jobList$"
                 [placeHolder]="'Job Category'"
-                (change)="onChangeJobCategory($event)"
               ></lib-hum-dropdown>
             </div>
-
-            <div class="col-lg-6 col-sm-6">
-                <lib-hum-dropdown
-                  formControlName="Office"
-                  [validation]="
-                    addHiringRequestForm.controls['Office'].hasError('required')
-                  "
-                  [options]="officeList$"
-                  [placeHolder]="'Duty Station'"
-                  (change)="onChangeDutyStation($event)"
-                ></lib-hum-dropdown>
-              </div>
-
-              <div class="col-lg-6 col-sm-6">
-                  <lib-hum-dropdown
-                    formControlName="Position"
-                    [validation]="
-                      addHiringRequestForm.controls['Position'].hasError('required')
-                    "
-                    [options]="professionList$"
-                    [placeHolder]="'Position'"
-                  ></lib-hum-dropdown>
-                </div>
 
             <div class="col-lg-6 col-sm-6">
               <mat-form-field class="example-full-width">
@@ -149,7 +149,28 @@
                 <mat-datepicker #ClosingDatePicker></mat-datepicker>
               </mat-form-field>
             </div>
+            <div class="col-lg-6 col-sm-6">
+                <lib-hum-dropdown
+                  formControlName="Country"
+                  [validation]="
+                    addHiringRequestForm.controls['Country'].hasError('required')
+                  "
+                  [options]="countryList$"
+                  [placeHolder]="'Country'"
+                  (change)="onChangeCountry($event)"
+                ></lib-hum-dropdown>
+              </div>
 
+              <div class="col-lg-6 col-sm-6">
+                  <lib-hum-dropdown
+                    formControlName="Province"
+                    [validation]="
+                      addHiringRequestForm.controls['Province'].hasError('required')
+                    "
+                    [options]="provinceList$"
+                    [placeHolder]="'Province'"
+                  ></lib-hum-dropdown>
+                </div>
             <!-- <div class="col-lg-6 col-sm-6">
               <mat-form-field class="example-full-width">
                 <input

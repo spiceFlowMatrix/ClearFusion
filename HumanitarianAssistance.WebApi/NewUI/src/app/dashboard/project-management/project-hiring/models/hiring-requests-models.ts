@@ -30,3 +30,9 @@ export interface HiringRequestDetailList {
   Status?: string;
   Office?: string;
 }
+
+export interface OfficeDetailModel {
+ProjectId?: any;
+OfficeId?: number;
+ProfessionId?: number;
+}

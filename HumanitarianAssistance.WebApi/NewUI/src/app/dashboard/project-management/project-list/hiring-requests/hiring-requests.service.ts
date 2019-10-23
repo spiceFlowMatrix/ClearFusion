@@ -17,6 +17,7 @@ import {
 } from './models/hiring-requests-model';
 import { BehaviorSubject } from 'rxjs';
 import { IProjectPermissionMode } from '../project-activities/models/project-activities.model';
+import { OfficeDetailModel } from '../../project-hiring/models/hiring-requests-models';
 
 @Injectable({
   providedIn: 'root'
@@ -118,10 +119,76 @@ export class HiringRequestsService {
   }
   //#endregion
 
-  //#region "GetJobList"
-  GetJobList(): any {
+  // //#region "GetOfficeListByJobId"
+  // GetOfficeListByJobId(model: OfficeDetailModel): any {
+  //   return this.globalService
+  //   .post(
+  //     this.appurl.getApiUrl() +
+  //       GLOBAL.API_HiringRequest_GetOfficeListByJobId,
+  //       model
+  //   )
+  //   .pipe(
+  //     map(x => {
+  //       const responseData: IResponseData = {
+  //         data: x.data.OfficeList,
+  //         statusCode: x.StatusCode,
+  //         message: x.Message
+  //       };
+  //       return responseData;
+  //     })
+  //   );
+  // }
+  // //#endregion
+  //#region "GetProfessionListByOfficeId"
+
+  GetProfessionListByOfficeId(model: OfficeDetailModel): any {
     return this.globalService
-      .getList(this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetAllJobs)
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_GetProfessionListByOfficeId,
+        model
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.ProfessionDetailList,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
+  //#region "GetAllDistrictvalueByProvinceId"
+  getAllProvinceListByCountryId( Id: any) {
+    return this.globalService
+      .getListByListId(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Project_GetAllProvinceDetailsByCountryId,
+        Id
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.ProvinceDetailsList,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
+  //#region "GetJobList"
+  GetJobList(model: OfficeDetailModel): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetAllJobs,
+        model
+      )
       .pipe(
         map(x => {
           const responseData: IResponseData = {
@@ -132,45 +199,6 @@ export class HiringRequestsService {
           return responseData;
         })
       );
-  }
-  //#endregion
-
-  //#region "GetOfficeListByJobId"
-  GetOfficeListByJobId(JobId: number): any {
-    return this.globalService
-    .getListById(
-      this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetOfficeListByJobId,
-      JobId
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.data.ProjectBudgetLineDetailList,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
-  }
-  //#endregion
-  //#region "GetProfessionListByOfficeId"
-  GetProfessionListByOfficeId(OfficeId: number): any {
-    return this.globalService
-    .getListById(
-      this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetProfessionListByOfficeId,
-      OfficeId
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.data.ProjectBudgetLineDetailList,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
   }
   //#endregion
 
@@ -513,49 +541,47 @@ export class HiringRequestsService {
   }
   //#endregion
 
-//#region "AddJobHiringDetails"
-addJobHiringDetails(data: any) {
-  console.log(data);
-  return this.globalService
-    .post(
-      this.appurl.getApiUrl() +
-        GLOBAL.API_HREmployee_AddJobHiringDetail,
-      data
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
-}
-//#endregion
+  //#region "AddJobHiringDetails"
+  addJobHiringDetails(data: any) {
+    console.log(data);
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_HREmployee_AddJobHiringDetail,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
 
-
-//#region "GetProjectHiringRequestDetailsByHiringRequestId"
-GetProjectHiringRequestDetailsByHiringRequestId(HiringRequestId: any) {
-  return this.globalService
-    .post(
-      this.appurl.getApiUrl() +
-        GLOBAL.API_HiringRequest_GetProjectHiringRequestDetailsByHiringRequestId,
+  //#region "GetProjectHiringRequestDetailsByHiringRequestId"
+  GetProjectHiringRequestDetailsByHiringRequestId(HiringRequestId: any) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_GetProjectHiringRequestDetailsByHiringRequestId,
         HiringRequestId
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.data.ProjectHiringRequestDetails,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
-}
-//#endregion
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.ProjectHiringRequestDetails,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
 
   setHiringPermissions(permissionList: IProjectPermissionMode[]) {
     this.hiringPermissionSubject.next(permissionList);
