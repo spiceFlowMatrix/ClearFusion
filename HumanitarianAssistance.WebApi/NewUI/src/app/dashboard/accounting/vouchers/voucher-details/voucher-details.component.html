@@ -314,7 +314,7 @@
                                         [multiSelect]="false"
                                         placeholderSearchLabel="Find Account..."
                                         noEntriesFoundLabel="No matching account found"
-                                        [dataSource]="debitaccountDataSource"
+                                        [dataSource]="accountDataSource"
                                         [selectedValue]="item.AccountNo"
                                         (openedChange)="
                                           openedChange($event, item)
@@ -505,7 +505,7 @@
                                         [multiSelect]="false"
                                         placeholderSearchLabel="Find Account..."
                                         noEntriesFoundLabel="No matching account found"
-                                        [dataSource]="creditaccountDataSource"
+                                        [dataSource]="accountDataSource"
                                         [selectedValue]="item.AccountNo"
                                         (openedChange)="
                                           openedChange($event, item)

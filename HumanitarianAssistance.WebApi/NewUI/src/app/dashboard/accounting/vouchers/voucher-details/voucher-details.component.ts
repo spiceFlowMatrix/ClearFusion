@@ -58,6 +58,7 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
 
   debitaccountDataSource: IDataSource[];
   creditaccountDataSource: IDataSource[];
+  accountDataSource: IDataSource[];
   selectedAccount: number[];
 
   voucherDetail: IVoucherDetailModel;
@@ -157,20 +158,25 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
       (response: IResponseData) => {
         this.debitaccountDataSource = [];
         this.creditaccountDataSource = [];
+        this.accountDataSource = [];
         if (response.statusCode === 200 && response.data !== null) {
           response.data.forEach(element => {
-            if (element.AccountHeadTypeId === 2 || element.AccountHeadTypeId === 5 ) {
-              this.debitaccountDataSource.push({
-                Id: element.AccountCode,
-                Name: element.AccountName
-              });
-            }
-            if (element.AccountHeadTypeId === 1 || element.AccountHeadTypeId === 4 ) {
-              this.creditaccountDataSource.push({
-                Id: element.AccountCode,
-                Name: element.AccountName
-              });
-            }
+            this.accountDataSource.push({
+                  Id: element.AccountCode,
+                  Name: element.AccountName
+                });
+            // if (element.AccountHeadTypeId === 2 || element.AccountHeadTypeId === 5 ) {
+            //   this.debitaccountDataSource.push({
+            //     Id: element.AccountCode,
+            //     Name: element.AccountName
+            //   });
+            // }
+            // if (element.AccountHeadTypeId === 1 || element.AccountHeadTypeId === 4 ) {
+            //   this.creditaccountDataSource.push({
+            //     Id: element.AccountCode,
+            //     Name: element.AccountName
+            //   });
+            // }
           });
           //// console.log(this.accountDataSource);
         }
