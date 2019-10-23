@@ -162,5 +162,15 @@ namespace HumanitarianAssistance.Application.Project.Models
         public bool? Culture { get; set; }
         public bool? ReligiousBeliefs { get; set; }
         public string CurrencyName { get; set; }
+        public  List<CEFeasibilityExpertOtherDetailModel> CEFeasibilityExpertOtherDetailModel { get; set; }
+
+
+    }
+     public class CEFeasibilityExpertOtherDetailModel
+    {
+        public long? ExpertOtherDetailId { get; set; }
+        public string Name { get; set; }
+        public long ProjectId { get; set; }
+       
     }
 }

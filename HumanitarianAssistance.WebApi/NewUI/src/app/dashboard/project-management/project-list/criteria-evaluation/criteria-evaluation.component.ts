@@ -2389,6 +2389,7 @@ export class CriteriaEvaluationComponent
 
   //#region add/edit priority ec form
   AddEditPriorityCEForm(model: any) {
+    debugger;
     if (model != null) {
       const obj: PriorityCEmodel = {
         PriorityCriteriaDetailId: model.PriorityCriteriaDetailId,

@@ -120,7 +120,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public bool? NewEquipment { get; set; }
         public bool? CoverageAreaExpansion { get; set; }
         public bool? NewTraining { get; set; }
-        public bool? ExpansionGoal { get; set; }
+        public string ExpansionGoal { get; set; }
         public double? Total { get; set; }
 
         public double? ProjectActivities { get; set; }
@@ -161,8 +161,15 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string ReligiousBeliefs { get; set; }
         public string CurrencyName { get; set; }
         public string CheckedIconPath { get; set; }
+        public string UnCheckedIconPath { get; set; }
+        public List<CEFeasibilityExpertOtherDetailModel> CEFeasibilityExpertOtherDetailModel { get; set; }
     }
 
-
+    // public class CEFeasibilityExpertOtherDetailModel
+    // {
+    //     public long? ExpertOtherDetailId { get; set; }
+    //     public string Name { get; set; }
+       
+    // }
 
 }

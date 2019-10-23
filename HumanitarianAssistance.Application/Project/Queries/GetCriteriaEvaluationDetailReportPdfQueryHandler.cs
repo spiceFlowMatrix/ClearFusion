@@ -36,7 +36,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
             {
                 model =
                                    (from obj in _dbContext.ProjectDetail
-
+                                   join fed in _dbContext.CEFeasibilityExpertOtherDetail on obj.ProjectId equals fed.ProjectId into ed
+                                    from fed in ed.DefaultIfEmpty()
                                     join donor in _dbContext.DonorCriteriaDetail on obj.ProjectId equals donor.ProjectId into a
                                     from donor in a.DefaultIfEmpty()
                                     join purpose in _dbContext.PurposeofInitiativeCriteria on obj.ProjectId equals purpose.ProjectId into d
@@ -55,9 +56,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                     from currency in cr.DefaultIfEmpty()
                                     join cur in _dbContext.CurrencyDetails on currency.CurrencyId equals cur.CurrencyId into cd
                                     from cur in cd.DefaultIfEmpty()
+                                    
                                     where obj.IsDeleted == false && obj.ProjectId == request.ProjectId
-
-
                                     select new CriteriaEveluationModel
                                     {
                                         ProjectId = obj.ProjectId,
@@ -213,9 +213,14 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                         Probablydelaysinfunding = risk.Probablydelaysinfunding,
                                         OtherOrganizationalHarms = risk.OtherOrganizationalHarms,
                                         OrganizationalDescription = risk.OrganizationalDescription,
-
-
+                                        CEFeasibilityExpertOtherDetailModel = ed.Where(c => c.ProjectId == obj.ProjectId && c.IsDeleted == false)
+                                                                                 .Select(c=> new CEFeasibilityExpertOtherDetailModel{
+                                                                                         ExpertOtherDetailId = c.ExpertOtherDetailId,
+                                                                                         Name= c.Name
+                                                                                 }).ToList()  
+                                       
                                     }).FirstOrDefault(x => x.ProjectId == request.ProjectId);
+
 
 
                 pdfModel = new CriteriaEvaluationPdfModel
@@ -341,7 +346,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     NewEquipment = model.NewEquipment,
                     CoverageAreaExpansion = model.CoverageAreaExpansion,
                     NewTraining = model.NewTraining,
-                    ExpansionGoal = model.ExpansionGoal,
+                    ExpansionGoal = model.ExpansionGoal == true ? "Yes" : "No",
 
                     //Finanacial PRofitability 
                     Total = model.Total,
@@ -351,7 +356,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     Lump_Sum = model.Lump_Sum,
 
                     // Risks
-                    Security = model.Security == true ? "Yes" : "No",                                               
+                    Security = model.Security == true ? "Yes" : "No",
                     Staff = model.Staff == true ? "Yes" : "No",
                     ProjectAssets = model.ProjectAssets == true ? "Yes" : "No",
                     Suppliers = model.Suppliers == true ? "Yes" : "No",
@@ -369,19 +374,20 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     Traditional = model.Traditional == true ? "Yes" : "No",
                     FocusDivertingrisk = model.FocusDivertingrisk == true ? "Yes" : "No",
                     Financiallosses = model.Financiallosses == true ? "Yes" : "No",
-                    Opportunityloss = model.Opportunityloss== true ? "Yes" : "No" ,
-                    Geographical = model.Geographical== true ? "Yes" : "No",
-                    Insecurity = model.Insecurity== true ? "Yes" : "No",
-                    Season = model.Season== true ? "Yes" : "No",
-                    Ethnicity = model.Ethnicity== true ? "Yes" : "No",
-                    Culture = model.Culture== true ? "Yes" : "No",
-                    ReligiousBeliefs = model.ReligiousBeliefs== true ? "Yes" : "No",
-                    Probablydelaysinfunding = model.Probablydelaysinfunding== true ? "Yes" : "No",
-                    OtherOrganizationalHarms = model.OtherOrganizationalHarms== true ? "Yes" : "No",
-                    OrganizationalDescription = model.OrganizationalDescription,  
-                    CheckedIconPath = _env.WebRootFileProvider.GetFileInfo("ReportLogo/icon-checked.png")?.PhysicalPath              
-      // ProjectSelectionId
-
+                    Opportunityloss = model.Opportunityloss == true ? "Yes" : "No",
+                    Geographical = model.Geographical == true ? "Yes" : "No",
+                    Insecurity = model.Insecurity == true ? "Yes" : "No",
+                    Season = model.Season == true ? "Yes" : "No",
+                    Ethnicity = model.Ethnicity == true ? "Yes" : "No",
+                    Culture = model.Culture == true ? "Yes" : "No",
+                    ReligiousBeliefs = model.ReligiousBeliefs == true ? "Yes" : "No",
+                    Probablydelaysinfunding = model.Probablydelaysinfunding == true ? "Yes" : "No",
+                    OtherOrganizationalHarms = model.OtherOrganizationalHarms == true ? "Yes" : "No",
+                    OrganizationalDescription = model.OrganizationalDescription,
+                    CheckedIconPath = _env.WebRootFileProvider.GetFileInfo("ReportLogo/check.png")?.PhysicalPath,
+                    UnCheckedIconPath = _env.WebRootFileProvider.GetFileInfo("ReportLogo/uncheck.png")?.PhysicalPath,
+                    // ProjectSelectionId
+                    CEFeasibilityExpertOtherDetailModel = model.CEFeasibilityExpertOtherDetailModel
                 };
 
 
