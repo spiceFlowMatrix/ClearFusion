@@ -19,7 +19,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
         public async Task<ApiResponse> Handle (GetAllJobListQuery request, CancellationToken cancellationToken) {
             ApiResponse response = new ApiResponse ();
             try {
-                var jobDetailList = await _dbContext.JobHiringDetail.Where (x => x.IsDeleted == false).Select(x => new JobHiringDetailModel
+                var jobDetailList = await _dbContext.ProjectJobHiringDetail.Where (x => x.IsDeleted == false).Select(x => new JobHiringDetailModel
                 {
                     JobId = x.JobId,
                     JobCode = x.JobCode
