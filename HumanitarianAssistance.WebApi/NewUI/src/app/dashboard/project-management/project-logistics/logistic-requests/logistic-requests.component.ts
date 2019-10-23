@@ -3,7 +3,7 @@ import { of } from 'rxjs';
 import { TableActionsModel } from 'projects/library/src/lib/models/table-actions-model';
 import { AddLogisticRequestComponent } from '../add-logistic-request/add-logistic-request.component';
 import { MatDialog } from '@angular/material';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-logistic-requests',
@@ -22,7 +22,8 @@ export class LogisticRequestsComponent implements OnInit {
     {'Name': 'Abc', 'Status': 'New Request', 'Total Cost': '9200' }
   ]);
   actions: TableActionsModel;
-  constructor(private dialog: MatDialog, private router: Router) { }
+  projectId;
+  constructor(private dialog: MatDialog, private router: Router, private routeActive: ActivatedRoute) { }
 
   ngOnInit() {
     this.actions = {
@@ -35,12 +36,15 @@ export class LogisticRequestsComponent implements OnInit {
       }
 
     };
+    this.routeActive.parent.params.subscribe(params => {
+      this.projectId = +params['id'];
+    });
   }
 
   openAddRequestDialog(): void {
     const dialogRef = this.dialog.open(AddLogisticRequestComponent, {
-      width: '300px'
-      // data: {name: this.name, animal: this.animal}
+      width: '300px',
+      data: {ProjectId: this.projectId}
     });
 
     dialogRef.afterClosed().subscribe(result => {

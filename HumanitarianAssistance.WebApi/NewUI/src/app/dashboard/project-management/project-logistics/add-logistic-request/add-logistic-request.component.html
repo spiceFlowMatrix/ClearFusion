@@ -8,7 +8,7 @@
             <input type="number" matInput formControlName="TotalCost" placeholder="Total Cost">
         </mat-form-field>
 
-        <hum-button [type]="'save'" [text]="'Save'" (click)="addRequest()"></hum-button>
+        <hum-button [type]="'save'" [text]="'Save'" (click)="addRequest(addLogisticRequestForm.value)"></hum-button>
         <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="cancelRequest()" class="pull-right"></hum-button>
 
     </form>

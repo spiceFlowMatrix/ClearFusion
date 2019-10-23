@@ -257,6 +257,11 @@
         GeneratorMaintenanceService = 8
     }
 
-   
+   public enum LogisticRequestStatus
+   {
+        NewRequest = 1,
+        Cancelled = 2,
+        Approved = 3
+   }
 
 }

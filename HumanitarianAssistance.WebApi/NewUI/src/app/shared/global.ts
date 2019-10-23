@@ -191,6 +191,8 @@ export class GLOBAL {
   public static API_AccountReports_GetAllLedgerDetails = 'AccountReports/GetAllLedgerDetails';
   public static API_AccountReports_GetTrialBalanceReport = 'AccountReports/GetTrialBalanceReport';
 
+  // ProjectLogistics
+  public static API_ProjectLogistics_AddLogisticRequest = 'ProjectLogistic/AddLogisticRequest';
 
 
   // Chart Of Account
