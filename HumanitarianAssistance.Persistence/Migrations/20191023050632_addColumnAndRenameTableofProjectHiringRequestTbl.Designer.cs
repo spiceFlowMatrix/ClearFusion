@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191023050632_addColumnAndRenameTableofProjectHiringRequestTbl")]
+    partial class addColumnAndRenameTableofProjectHiringRequestTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5995,8 +5997,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<bool?>("NewTraining");
 
-                    b.Property<bool?>("Others");
-
                     b.Property<long>("ProjectId");
 
                     b.Property<bool?>("SkillImprove");
@@ -6507,7 +6507,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<string>("JobStatus");
 
-                    b.Property<string>("JobType");
+                    b.Property<int?>("JobType");
 
                     b.Property<string>("KnowladgeAndSkillRequired");
 
@@ -6662,8 +6662,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int?>("CurrencyId");
-
-                    b.Property<int?>("FilledVacancies");
 
                     b.Property<int?>("GradeId");
 

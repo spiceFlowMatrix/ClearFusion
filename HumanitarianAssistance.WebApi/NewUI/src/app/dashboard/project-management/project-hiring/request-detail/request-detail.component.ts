@@ -3,7 +3,7 @@ import { of, Observable, ReplaySubject } from 'rxjs';
 import {
   HiringList,
   HiringRequestDetailList
-} from '../models/hiring-Requests-models';
+} from '../models/hiring-requests-models';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
