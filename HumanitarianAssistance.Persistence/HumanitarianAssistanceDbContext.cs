@@ -221,7 +221,7 @@ namespace HumanitarianAssistance.Persistence
 
         public DbSet<RatingBasedCriteriaQuestions> RatingBasedCriteriaQuestions { get; set; }
 
-        public DbSet<JobHiringDetail> JobHiringDetail { get; set; }
+        public DbSet<ProjectJobHiringDetail> ProjectJobHiringDetail { get; set; }
         public DbSet<ProjectLogisticRequests> ProjectLogisticRequests { get; set; }          
 
         #endregion  

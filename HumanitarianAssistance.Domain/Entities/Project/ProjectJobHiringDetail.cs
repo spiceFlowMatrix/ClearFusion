@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HumanitarianAssistance.Domain.Entities.Project {
-    public class JobHiringDetail : BaseEntity {
+    public class ProjectJobHiringDetail : BaseEntity {
         [Key]
         [DatabaseGenerated (DatabaseGeneratedOption.Identity)]
         [Column (Order = 1)]

@@ -29,7 +29,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
             ApiResponse response = new ApiResponse();
             try
             {
-                JobHiringDetail jobHiringDetails = await _dbContext.JobHiringDetail.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false);
+                ProjectJobHiringDetail jobHiringDetails = await _dbContext.ProjectJobHiringDetail.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync(x => x.IsDeleted == false);
                 string JobCode;
                 if (jobHiringDetails != null && jobHiringDetails.JobCode != null)
                 {
@@ -46,7 +46,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                 var jobhiringinfo = await _dbContext.JobHiringDetails.FirstOrDefaultAsync(x => x.JobCode == JobCode && x.IsDeleted == false && x.OfficeId == request.office);
                 if (jobhiringinfo == null)
                 {
-                    JobHiringDetail obj = new JobHiringDetail();  
+                    ProjectJobHiringDetail obj = new ProjectJobHiringDetail();  
                     obj.IsDeleted = false;
                     obj.CreatedById = request.CreatedById;
                     obj.CreatedDate = request.CreatedDate;
@@ -58,7 +58,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     obj.CurrencyId=request.payCurrency;
                     obj.ProfessionId=request.position;
                     obj.PayRate=request.payRate;
-                    await _dbContext.JobHiringDetail.AddAsync(obj);
+                    await _dbContext.ProjectJobHiringDetail.AddAsync(obj);
                     await _dbContext.SaveChangesAsync();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";

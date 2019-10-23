@@ -78,7 +78,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project {
         public long? JobId { get; set; }
 
         [ForeignKey ("JobId")]
-        public JobHiringDetail JobHiringDetail { get; set; }
+        public ProjectJobHiringDetail ProjectJobHiringDetail { get; set; }
         public string SpecificDutiesAndResponsblities { get; set; }
         public string KnowladgeAndSkillRequired { get; set; }
         public string SubmissionGuidlines { get; set; }
