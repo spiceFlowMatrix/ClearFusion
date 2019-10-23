@@ -66,7 +66,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                     projectHiringRequest.MinimumEducationLevel = request.MinimumEducationLevel;
                     projectHiringRequest.Experience = request.Experience;
                     projectHiringRequest.Organization = request.Organization;
-                    projectHiringRequest.JobCategory = request.JobCategory;
+                    projectHiringRequest.JobId = request.JobCategory;
                     await _dbContext.SaveChangesAsync();
                     // Note : edit ProjectJob in old Ui
                     if (projectHiringRequest.HiringRequestId != 0)

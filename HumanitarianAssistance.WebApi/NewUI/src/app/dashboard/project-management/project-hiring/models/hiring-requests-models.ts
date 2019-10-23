@@ -32,7 +32,33 @@ export interface HiringRequestDetailList {
 }
 
 export interface OfficeDetailModel {
-ProjectId?: any;
-OfficeId?: number;
-ProfessionId?: number;
+  ProjectId?: any;
+  OfficeId?: number;
+  ProfessionId?: number;
+}
+
+export interface IHiringRequestModel {
+  ProjectId: number;
+  JobCategory: number;
+  MinEducationLevel: string;
+  TotalVacancy: number;
+  Position: number;
+  Organization: string;
+  Office: number;
+  ContractType: string;
+  ContractDuration: number;
+  Gender: number;
+  SalaryRange: string;
+  AnouncingDate: Date;
+  ClosingDate: Date;
+  Country: number;
+  Province: number;
+  JobType: string;
+  JobShift: number;
+  JobStatus: string;
+  Experience: string;
+  Background: string;
+  SpecificDutiesAndResponsibilities: string;
+  KnowledgeAndSkillsRequired: string;
+  SubmissionGuidelines: string;
 }

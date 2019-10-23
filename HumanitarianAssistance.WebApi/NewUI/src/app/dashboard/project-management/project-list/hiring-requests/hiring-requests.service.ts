@@ -17,7 +17,7 @@ import {
 } from './models/hiring-requests-model';
 import { BehaviorSubject } from 'rxjs';
 import { IProjectPermissionMode } from '../project-activities/models/project-activities.model';
-import { OfficeDetailModel } from '../../project-hiring/models/hiring-requests-models';
+import { OfficeDetailModel, IHiringRequestModel } from '../../project-hiring/models/hiring-requests-models';
 
 @Injectable({
   providedIn: 'root'
@@ -203,7 +203,7 @@ export class HiringRequestsService {
   //#endregion
 
   //#region "AddHiringRequestDetail"
-  AddHiringRequestDetail(data: IHiringRequestDetailModel) {
+  AddHiringRequestDetail(data: IHiringRequestModel) {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
@@ -222,6 +222,28 @@ export class HiringRequestsService {
       );
   }
   //#endregion
+
+  //#region "GetItemGroupByInventoryId"
+  getRemainingVacancyByJobId(JobId: number): any {
+    return this.globalService
+      .getListByListId(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_GetRemainingVacancyByJobId,
+          JobId
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.FilledVacancies,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
 
   //#region "EditHiringRequestDetail"
   EditHiringRequestDetail(data: IHiringRequestDetailModel) {

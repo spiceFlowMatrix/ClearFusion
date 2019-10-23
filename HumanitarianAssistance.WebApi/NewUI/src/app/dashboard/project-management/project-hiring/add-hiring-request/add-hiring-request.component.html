@@ -47,6 +47,7 @@
                 "
                 [options]="jobList$"
                 [placeHolder]="'Job Category'"
+                (change)="onChangeJobCategory($event)"
               ></lib-hum-dropdown>
             </div>
 
@@ -64,7 +65,7 @@
                 <input
                   matInput
                   formControlName="TotalVacancy"
-                  placeholder="Vacancies (Total No. of Jobs)"
+                  placeholder="Vacancies (Total No. of Jobs Available {{AvailableVacancies}})"
                 />
               </mat-form-field>
             </div>
@@ -207,6 +208,16 @@
                   placeholder="Job Status"
                 />
               </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+              <lib-hum-dropdown
+                formControlName="Nationality"
+                [validation]="
+                  addHiringRequestForm.controls['Nationality'].hasError('required')
+                "
+                [options]="countryList$"
+                [placeHolder]="'Nationality'"
+              ></lib-hum-dropdown>
             </div>
             <div class="col-lg-6 col-sm-6">
               <mat-form-field class="example-full-width">

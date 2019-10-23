@@ -27,7 +27,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
             try
             {
-                var ProfessionList = await _dbContext.JobHiringDetail
+                var ProfessionList = await _dbContext.ProjectJobHiringDetail
                     .Include(o => o.ProfessionDetails)
                     .Where(x => x.OfficeId == request.ProfessionId && x.IsDeleted == false && x.ProjectId==request.ProjectId).Select(x => new ProfessionListModel
                     {

@@ -59,6 +59,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     obj.ProfessionId=request.position;
                     obj.PayRate=request.payRate;
                     obj.ProjectId=request.projectId;
+                    obj.FilledVacancies=0;
                     await _dbContext.ProjectJobHiringDetail.AddAsync(obj);
                     await _dbContext.SaveChangesAsync();
                     response.StatusCode = StaticResource.successStatusCode;

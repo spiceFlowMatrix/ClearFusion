@@ -9,7 +9,10 @@ import { ToastrService } from 'ngx-toastr';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { ActivatedRoute } from '@angular/router';
-import { OfficeDetailModel } from '../models/hiring-requests-models';
+import {
+  OfficeDetailModel,
+  IHiringRequestModel
+} from '../models/hiring-requests-models';
 
 @Component({
   selector: 'app-add-hiring-request',
@@ -19,6 +22,7 @@ import { OfficeDetailModel } from '../models/hiring-requests-models';
 export class AddHiringRequestComponent implements OnInit {
   projectId: number;
   OfficeId: number;
+  AvailableVacancies: number;
   addHiringRequestForm: FormGroup;
   professionList$: Observable<IDropDownModel[]>;
   officeList$: Observable<IDropDownModel[]>;
@@ -38,6 +42,7 @@ export class AddHiringRequestComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.addHiringRequestForm = this.fb.group({
+      ProjectId: [null],
       JobCategory: [null, [Validators.required]],
       MinEducationLevel: [null, [Validators.required]],
       TotalVacancy: [null, [Validators.required]],
@@ -47,6 +52,7 @@ export class AddHiringRequestComponent implements OnInit {
       ContractType: [null, [Validators.required]],
       ContractDuration: [null, [Validators.required]],
       Gender: [null, [Validators.required]],
+      Nationality: [null, [Validators.required]],
       SalaryRange: [null, [Validators.required]],
       AnouncingDate: [null, [Validators.required]],
       ClosingDate: [null, [Validators.required]],
@@ -75,6 +81,7 @@ export class AddHiringRequestComponent implements OnInit {
 
   ngOnInit() {
     this.projectId = 1;
+    this.addHiringRequestForm.controls['ProjectId'].setValue(this.projectId);
     forkJoin([this.getAllOfficeList(), this.getAllCountryList()])
       .pipe(takeUntil(this.destroyed$))
       .subscribe(result => {
@@ -167,19 +174,34 @@ export class AddHiringRequestComponent implements OnInit {
   }
 
   getAllProvinceList(CountryId: number) {
-
-    this.hiringRequestService.getAllProvinceListByCountryId([CountryId]).subscribe(
+    this.hiringRequestService
+      .getAllProvinceListByCountryId([CountryId])
+      .subscribe(
+        (response: IResponseData) => {
+          this.commonLoader.showLoader();
+          if (response.statusCode === 200 && response.data !== null) {
+            this.provinceList$ = of(
+              response.data.map(element => {
+                return {
+                  value: element.ProvinceId,
+                  name: element.ProvinceName
+                } as IDropDownModel;
+              })
+            );
+          }
+          this.commonLoader.hideLoader();
+        },
+        error => {
+          this.commonLoader.hideLoader();
+        }
+      );
+  }
+  getRemainingVacancy(JobId: any) {
+    this.hiringRequestService.getRemainingVacancyByJobId(JobId).subscribe(
       (response: IResponseData) => {
         this.commonLoader.showLoader();
         if (response.statusCode === 200 && response.data !== null) {
-          this.provinceList$ = of(
-            response.data.map(element => {
-              return {
-                value: element.ProvinceId,
-                name: element.ProvinceName
-              } as IDropDownModel;
-            })
-          );
+          this.AvailableVacancies = response.data;
         }
         this.commonLoader.hideLoader();
       },
@@ -188,6 +210,25 @@ export class AddHiringRequestComponent implements OnInit {
       }
     );
   }
+
+  //#region "AddHiringRequest"
+  AddHiringRequest(data: IHiringRequestModel) {
+    this.hiringRequestService.AddHiringRequestDetail(data).subscribe(
+      (response: IResponseData) => {
+        if (response.statusCode === 200) {
+          this.toastr.success('New request is created successfully');
+        } else {
+          this.toastr.error(response.message);
+        }
+        this.onCancelPopup();
+      },
+      error => {
+        this.toastr.error('Someting went wrong. Please try again');
+      }
+    );
+  }
+  //#endregion
+
   onChangeDutyStation(e) {
     this.professionList$ = null;
     this.jobList$ = null;
@@ -200,11 +241,15 @@ export class AddHiringRequestComponent implements OnInit {
     this.getAllJobList(e);
   }
   onChangeCountry(e) {
-    this.jobList$ = null;
+    this.provinceList$ = null;
     this.getAllProvinceList(e);
+  }
+  onChangeJobCategory(e) {
+    this.getRemainingVacancy(e);
   }
   onFormSubmit(data: any) {
     if (this.addHiringRequestForm.valid) {
+      this.AddHiringRequest(data);
       console.log(data);
     }
   }

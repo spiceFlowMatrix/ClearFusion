@@ -137,6 +137,13 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(query);
 
         }
+
+        [HttpPost]
+         public async Task<ApiResponse> GetRemainingVacancyByJobId([FromBody]long JobId)
+        {
+            return await _mediator.Send(new GetRemainingVacancyByJobIdQuery{ JobId=JobId});
+
+        }
     }  
     
 }

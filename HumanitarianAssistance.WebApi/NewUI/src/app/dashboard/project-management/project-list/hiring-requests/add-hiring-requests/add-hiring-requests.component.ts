@@ -172,24 +172,24 @@ export class AddHiringRequestsComponent implements OnInit, OnChanges {
         ProjectId: this.projectId,
         RequestedBy: data.RequestedBy
       };
-      this.hiringRequestService
-        .AddHiringRequestDetail(hiringRequestDetail)
-        .subscribe(
-          (response: IResponseData) => {
-            if (response.statusCode === 200) {
-              this.toastr.success('New request is created successfully');
-            } else {
-              this.toastr.error(response.message);
-            }
-            this.onCancelPopup();
-            this.hiringRequestListRefresh();
-            this.addHiringRequestLoader = false;
-          },
-          error => {
-            this.toastr.error('Someting went wrong. Please try again');
-            this.addHiringRequestLoader = false;
-          }
-        );
+      // this.hiringRequestService
+      //   .AddHiringRequestDetail(hiringRequestDetail)
+      //   .subscribe(
+      //     (response: IResponseData) => {
+      //       if (response.statusCode === 200) {
+      //         this.toastr.success('New request is created successfully');
+      //       } else {
+      //         this.toastr.error(response.message);
+      //       }
+      //       this.onCancelPopup();
+      //       this.hiringRequestListRefresh();
+      //       this.addHiringRequestLoader = false;
+      //     },
+      //     error => {
+      //       this.toastr.error('Someting went wrong. Please try again');
+      //       this.addHiringRequestLoader = false;
+      //     }
+      //   );
     }
   }
   //#endregion

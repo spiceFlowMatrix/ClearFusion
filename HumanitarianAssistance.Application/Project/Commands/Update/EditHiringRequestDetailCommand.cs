@@ -17,7 +17,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
         public int? GradeId { get; set; }
         public long? ProjectId { get; set; }
         public int? CurrencyId { get; set; }
-        public string JobCategory { get; set; }
+        public long? JobCategory { get; set; }
         public string MinimumEducationLevel { get; set; }
         public string Organization { get; set; }
         public int? ProvinceId { get; set; }
@@ -28,7 +28,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
         public DateTime? AnouncingDate { get; set; }
         public DateTime? ClosingDate { get; set; }
         public int? CountryId { get; set; }
-        public int? JobType { get; set; }
+        public string JobType { get; set; }
         public int? Shift { get; set; }
         public string JobStatus { get; set; }
         public string Experience { get; set; }

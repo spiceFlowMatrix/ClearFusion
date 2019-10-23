@@ -7,6 +7,7 @@ using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -53,11 +54,13 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     GenderId=request.Gender,
                     MinimumEducationLevel=request.MinEducationLevel,
                     Experience=request.Experience,
-                    Organization=request.Organization                    
-                };
+                    Organization=request.Organization,                                        
+                };                
                 if(request.JobCategory!=null)
                 {
-                    
+                    var jobdetail = await _dbContext.ProjectJobHiringDetail.Where(x=>x.JobId==request.JobCategory).FirstOrDefaultAsync();
+                    jobdetail.FilledVacancies=jobdetail.TotalVacancies-request.TotalVacancy;
+                    await _dbContext.SaveChangesAsync();
                 }
                 await _dbContext.ProjectHiringRequestDetail.AddAsync(hiringRequestDeatil);
                 await _dbContext.SaveChangesAsync();
