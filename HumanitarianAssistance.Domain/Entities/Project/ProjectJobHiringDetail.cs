@@ -35,5 +35,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project {
 
         [ForeignKey ("ProjectId")]
         public virtual ProjectDetail ProjectDetail { get; set; }
+
+        public int? FilledVacancies { get; set; }
     }
 }

@@ -32,7 +32,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project {
         [ForeignKey ("CountryId")]
         public int? CountryId { get; set; }
         public CountryDetails CountryDetails { get; set; }
-        public int? JobType { get; set; }
+        public string JobType { get; set; }
         public int? Shift { get; set; }
         public string JobStatus { get; set; }
         public string Experience { get; set; }
