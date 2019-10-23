@@ -31,7 +31,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
                 if (request != null)
                 {
-
+                    
                     //get Journal Report from sp get_journal_report by passing parameters
                     var spJournalReport = await _dbContext.LoadStoredProc("get_journal_report")
                                           .WithSqlParam("currencyid", request.CurrencyId)
@@ -61,7 +61,8 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                         VoucherNo = x.VoucherNo,
                         AccountName = x.AccountName,
                         Project = x.ProjectCode,
-                        BudgetLineDescription = x.BudgetCode
+                        BudgetLineDescription = x.BudgetCode,
+                        JobCode=x.ProjectJobCode
                     }).ToList();
 
                     var journalReport = spJournalReport.GroupBy(x => x.ChartOfAccountNewId).ToList();

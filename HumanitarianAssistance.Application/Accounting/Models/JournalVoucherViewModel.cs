@@ -20,5 +20,6 @@ namespace HumanitarianAssistance.Application.Accounting.Models
         public double? DebitAmount { get; set; }
         public string ReferenceNo { get; set; }
         public long ChartOfAccountNewId { get; set; }
+        public string JobCode { get; set; }
     }
 }

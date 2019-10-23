@@ -63,7 +63,7 @@ export class JournalReportComponent implements OnInit {
   currencyId$: Observable<IDropDownModel[]>;
   recordType$: Observable<IDropDownModel[]>;
   journalListHeaders$ = of(['Transaction Date', 'Voucher Code', 'Transaction Description', 'Currency', 'Account Code', 'Account Name',
-  'Debit Amount', 'Credit Amount', 'Project', 'Budget Line']);
+  'Debit Amount', 'Credit Amount', 'Project', 'Budget Line', 'Job Code']);
   journalFilterList$: Observable<IJournalList[]>;
   journalFilterForm: FormGroup;
   screenHeight: number;
@@ -211,10 +211,12 @@ onOpenedOfficeMultiSelectChange(event: IOpenedChange) {
 onOpenedJournalMultiSelectChange(event: IOpenedChange) {
   this.journalFilterForm.controls['JournalCode'].setValue(event.Value);
 }
-onOpenedProjectMultiSelectChange(event: number[]) {
-  this.journalFilterForm.controls['Project'].setValue(event);
-  const projectFilter = event;
-    if (projectFilter.length > 0) {
+onOpenedProjectMultiSelectChange(event:  IOpenedChange) {
+  this.journalFilterForm.controls['Project'].setValue(event.Value);
+    const projectFilter = event.Value;
+    if (event.Flag === true) {
+      return;
+    } else if ((projectFilter.length > 0)) {
       this.multiBudgetLineList = [];
       this.multiProjectJobList = [];
       this.journalFilterForm.controls['JobCode'].setValue([]);
@@ -227,18 +229,20 @@ onOpenedProjectMultiSelectChange(event: number[]) {
       this.journalFilterForm.controls['BudgetLine'].setValue([]);
     }
 }
-onOpenedProjectJobMultiSelectChange(event: number[]) {
-  this.journalFilterForm.controls['JobCode'].setValue(event);
+onOpenedProjectJobMultiSelectChange(event: IOpenedChange) {
+  this.journalFilterForm.controls['JobCode'].setValue(event.Value);
 }
-onOpenedBudgetLineMultiSelectChange(event: number[]) {
-  this.journalFilterForm.controls['BudgetLine'].setValue(event);
-  const projectbudgetFilter = event;
-    if (projectbudgetFilter.length > 0) {
-      this.getProjectJobList(projectbudgetFilter);
-    } else {
-      this.multiProjectJobList = [];
-      this.journalFilterForm.controls['JobCode'].setValue([]);
-    }
+onOpenedBudgetLineMultiSelectChange(event: IOpenedChange) {
+  this.journalFilterForm.controls['BudgetLine'].setValue(event.Value);
+  const projectbudgetFilter = event.Value;
+  if (event.Flag === true) {
+    return;
+  } else if (projectbudgetFilter.length > 0) {
+    this.getProjectJobList(projectbudgetFilter);
+  } else {
+    this.multiProjectJobList = [];
+    this.journalFilterForm.controls['JobCode'].setValue([]);
+  }
 }
 get AccountIds() {
   return this.journalFilterForm.get('accountLists').value;
@@ -478,7 +482,8 @@ GetAllJournalDetails(journalFilter) {
               DebitAmount: v.DebitAmount,
               CreditAmount: v.CreditAmount,
               Project: v.Project,
-              BudgetLine: v.BudgetLineDescription
+              BudgetLine: v.BudgetLineDescription,
+              JobCode: v.JobCode
              }) as IJournalList))
           );
         } else {
@@ -784,4 +789,5 @@ interface IJournalList {
   CreditAmount;
   Project;
   BudgetLine;
+  JobCode;
 }

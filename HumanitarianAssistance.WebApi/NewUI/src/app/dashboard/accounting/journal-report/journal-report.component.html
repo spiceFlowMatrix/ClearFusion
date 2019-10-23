@@ -69,7 +69,7 @@
                 noEntriesFoundLabel="No matching project found"
                 [dataSource]="multiProjectList"
                 [selectedValue]="ProjectIds"
-                (selectionChanged)="onOpenedProjectMultiSelectChange($event)"
+                (openedChange)="onOpenedProjectMultiSelectChange($event)"
               >
               </lib-search-dropdown>
             </div>
@@ -81,7 +81,7 @@
                 noEntriesFoundLabel="No matching budgetline found"
                 [dataSource]="multiBudgetLineList"
                 [selectedValue]="budgetLineIds"
-                (selectionChanged)="onOpenedBudgetLineMultiSelectChange($event)"
+                (openedChange)="onOpenedBudgetLineMultiSelectChange($event)"
               >
               </lib-search-dropdown>
             </div>
@@ -95,7 +95,7 @@
                 noEntriesFoundLabel="No matching project job found"
                 [dataSource]="multiProjectJobList"
                 [selectedValue]="projectJobIds"
-                (selectionChanged)="onOpenedProjectJobMultiSelectChange($event)"
+                (openedChange)="onOpenedProjectJobMultiSelectChange($event)"
                 ></lib-search-dropdown>
             </div>
           </div>
