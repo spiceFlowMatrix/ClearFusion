@@ -229,9 +229,12 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public List<SPProjectProposalReportModel> ProjectProposalReportList { get; set; }
         public List<ProjectProposalModelList> ProjectProposalModelList { get; set; }
         public ProjectProposalModelList ProjectProposalDocumentModel { get; set; }
+        public List<JobHiringDetailModel> JobDetailList { get; set; }
+        public List<OfficeDetailListModel> OfficeList { get; set; }
+        public List<ProfessionListModel> ProfessionDetailList { get; set; }  
 
 
-        //Web Link Url 05082019
+        //Web Link Url 05082019   
         public string SignedUrl { get; set; }
         public WinProjectDetails WinProjectDetails { get; set; }
         public ApproveProjectDetails ApproveProjectDetails { get; set; }

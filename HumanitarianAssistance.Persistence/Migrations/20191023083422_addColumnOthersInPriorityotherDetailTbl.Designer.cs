@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191023083422_addColumnOthersInPriorityotherDetailTbl")]
+    partial class addColumnOthersInPriorityotherDetailTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -7788,7 +7790,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GeneratorPurchaseId");
+                    b.HasIndex("GeneratorPurchaseId")
+                        .IsUnique();
 
                     b.HasIndex("PurchaseId")
                         .IsUnique();
@@ -8404,7 +8407,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("PurchaseId")
                         .IsUnique();
 
-                    b.HasIndex("VehiclePurchaseId");
+                    b.HasIndex("VehiclePurchaseId")
+                        .IsUnique();
 
                     b.ToTable("VehicleItemDetail");
                 });
@@ -10184,8 +10188,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.GeneratorItemDetail", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.PurchasedGeneratorDetail", "PurchasedGeneratorDetail")
-                        .WithMany("GeneratorItemDetail")
-                        .HasForeignKey("GeneratorPurchaseId")
+                        .WithOne("GeneratorItemDetail")
+                        .HasForeignKey("HumanitarianAssistance.Domain.Entities.Store.GeneratorItemDetail", "GeneratorPurchaseId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreItemPurchase", "StoreItemPurchase")
@@ -10364,8 +10368,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.PurchasedVehicleDetail", "PurchasedVehicleDetail")
-                        .WithMany("VehicleItemDetail")
-                        .HasForeignKey("VehiclePurchaseId")
+                        .WithOne("VehicleItemDetail")
+                        .HasForeignKey("HumanitarianAssistance.Domain.Entities.Store.VehicleItemDetail", "VehiclePurchaseId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

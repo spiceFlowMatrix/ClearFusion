@@ -101,7 +101,7 @@ export class HiringRequestsService {
       );
   }
   //#endregion
-  //#region "GetOfficeList"
+  //#region "GetJobGradeList"
   GetJobGradeList(): any {
     return this.globalService
       .getList(this.appurl.getApiUrl() + GLOBAL.API_HREmployee_GetAllJobGrade)
@@ -115,6 +115,62 @@ export class HiringRequestsService {
           return responseData;
         })
       );
+  }
+  //#endregion
+
+  //#region "GetJobList"
+  GetJobList(): any {
+    return this.globalService
+      .getList(this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetAllJobs)
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.JobDetailList,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
+  //#region "GetOfficeListByJobId"
+  GetOfficeListByJobId(JobId: number): any {
+    return this.globalService
+    .getListById(
+      this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetOfficeListByJobId,
+      JobId
+    )
+    .pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x.data.ProjectBudgetLineDetailList,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+  }
+  //#endregion
+  //#region "GetProfessionListByOfficeId"
+  GetProfessionListByOfficeId(OfficeId: number): any {
+    return this.globalService
+    .getListById(
+      this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetProfessionListByOfficeId,
+      OfficeId
+    )
+    .pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x.data.ProjectBudgetLineDetailList,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
   }
   //#endregion
 
