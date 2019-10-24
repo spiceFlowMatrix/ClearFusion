@@ -36,8 +36,14 @@ namespace HumanitarianAssistance.Application.Project.Queries
             {
                 model =
                                    (from obj in _dbContext.ProjectDetail
-                                   join fed in _dbContext.CEFeasibilityExpertOtherDetail on obj.ProjectId equals fed.ProjectId into ed
+                                    join fed in _dbContext.CEFeasibilityExpertOtherDetail on obj.ProjectId equals fed.ProjectId into ed
                                     from fed in ed.DefaultIfEmpty()
+                                    join pod in _dbContext.PriorityOtherDetail on obj.ProjectId equals pod.ProjectId into pd
+                                    from pod in pd.DefaultIfEmpty()
+                                    join ad in _dbContext.CEAssumptionDetail on obj.ProjectId equals ad.ProjectId into asd
+                                    from ad in asd.DefaultIfEmpty()
+                                    join de in _dbContext.DonorEligibilityCriteria on obj.ProjectId equals de.ProjectId into dec
+                                    from de in dec.DefaultIfEmpty()
                                     join donor in _dbContext.DonorCriteriaDetail on obj.ProjectId equals donor.ProjectId into a
                                     from donor in a.DefaultIfEmpty()
                                     join purpose in _dbContext.PurposeofInitiativeCriteria on obj.ProjectId equals purpose.ProjectId into d
@@ -46,17 +52,16 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                     from eligibility in e.DefaultIfEmpty()
                                     join feasibility in _dbContext.FeasibilityCriteriaDetail on obj.ProjectId equals feasibility.ProjectId into g
                                     from feasibility in g.DefaultIfEmpty()
-                                    join Priority in _dbContext.PriorityCriteriaDetail on obj.ProjectId equals Priority.ProjectId into pr
-                                    from Priority in pr.DefaultIfEmpty()
+                                    join priority in _dbContext.PriorityCriteriaDetail on obj.ProjectId equals priority.ProjectId into pr
+                                    from priority in pr.DefaultIfEmpty()
                                     join financial in _dbContext.FinancialCriteriaDetail on obj.ProjectId equals financial.ProjectId into fi
                                     from financial in fi.DefaultIfEmpty()
                                     join risk in _dbContext.RiskCriteriaDetail on obj.ProjectId equals risk.ProjectId into ri
                                     from risk in ri.DefaultIfEmpty()
                                     join currency in _dbContext.ProjectProposalDetail on obj.ProjectId equals currency.ProjectId into cr
                                     from currency in cr.DefaultIfEmpty()
-                                    join cur in _dbContext.CurrencyDetails on currency.CurrencyId equals cur.CurrencyId into cd
-                                    from cur in cd.DefaultIfEmpty()
-                                    
+
+
                                     where obj.IsDeleted == false && obj.ProjectId == request.ProjectId
                                     select new CriteriaEveluationModel
                                     {
@@ -164,23 +169,26 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                         IsSecurity = feasibility.IsSecurity,
                                         IsGeographical = feasibility.IsGeographical,
                                         IsSeasonal = feasibility.IsSeasonal,
-                                        IncreaseEligibility = Priority.IncreaseEligibility,
-                                        IncreaseReputation = Priority.IncreaseReputation,
-                                        ImproveDonorRelationship = Priority.ImproveDonorRelationship,
-                                        GoodCause = Priority.GoodCause,
-                                        ImprovePerformancecapacity = Priority.ImprovePerformancecapacity,
-                                        SkillImprove = Priority.SkillImprove,
-                                        FillingFundingGap = Priority.FillingFundingGap,
-                                        NewSoftware = Priority.NewSoftware,
-                                        NewEquipment = Priority.NewEquipment,
-                                        CoverageAreaExpansion = Priority.CoverageAreaExpansion,
-                                        NewTraining = Priority.NewTraining,
-                                        ExpansionGoal = Priority.ExpansionGoal,
-                                        Total = financial.Total,
+                                        IncreaseEligibility = priority.IncreaseEligibility,
+                                        IncreaseReputation = priority.IncreaseReputation,
+                                        ImproveDonorRelationship = priority.ImproveDonorRelationship,
+                                        GoodCause = priority.GoodCause,
+                                        Others = priority.Others,
+                                        ImprovePerformancecapacity = priority.ImprovePerformancecapacity,
+                                        SkillImprove = priority.SkillImprove,
+                                        FillingFundingGap = priority.FillingFundingGap,
+                                        NewSoftware = priority.NewSoftware,
+                                        NewEquipment = priority.NewEquipment,
+                                        CoverageAreaExpansion = priority.CoverageAreaExpansion,
+                                        NewTraining = priority.NewTraining,
+                                        ExpansionGoal = priority.ExpansionGoal,
+
                                         ProjectActivities = financial.ProjectActivities,
                                         Operational = financial.Operational,
                                         Overhead_Admin = financial.Overhead_Admin,
                                         Lump_Sum = financial.Lump_Sum,
+                                        Total = (financial.ProjectActivities + financial.Operational + financial.Overhead_Admin + financial.Lump_Sum) == null ? null:
+                                                   Math.Round((financial.ProjectActivities + financial.Operational + financial.Overhead_Admin + financial.Lump_Sum).Value, 2),
                                         Security = risk.Security,
                                         Staff = risk.Staff,
                                         ProjectAssets = risk.ProjectAssets,
@@ -207,18 +215,40 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                         Culture = risk.Culture,
                                         ReligiousBeliefs = risk.ReligiousBeliefs,
                                         CurrencyId = currency.CurrencyId,
-                                        CurrencyName = cur.CurrencyName,
+
+
                                         //ProjectSelectionId = selected.ProjectSelectionId,
 
                                         Probablydelaysinfunding = risk.Probablydelaysinfunding,
                                         OtherOrganizationalHarms = risk.OtherOrganizationalHarms,
                                         OrganizationalDescription = risk.OrganizationalDescription,
                                         CEFeasibilityExpertOtherDetailModel = ed.Where(c => c.ProjectId == obj.ProjectId && c.IsDeleted == false)
-                                                                                 .Select(c=> new CEFeasibilityExpertOtherDetailModel{
-                                                                                         ExpertOtherDetailId = c.ExpertOtherDetailId,
-                                                                                         Name= c.Name
-                                                                                 }).ToList()  
-                                       
+                                                                                 .Select(c => new CEFeasibilityExpertOtherDetailModel
+                                                                                 {
+                                                                                     ExpertOtherDetailId = c.ExpertOtherDetailId,
+                                                                                     Name = c.Name
+                                                                                 }).ToList(),
+                                        PriorityOtherDetailModel = pd.Where(p => p.ProjectId == obj.ProjectId && p.IsDeleted == false)
+                                                                    .Select(p => new PriorityOtherDetailModel
+                                                                    {
+                                                                        PriorityOtherDetailId = p.PriorityOtherDetailId,
+                                                                        Name = p.Name
+                                                                    }).ToList(),
+
+                                        AssumptionDetailModel = asd.Where(s => s.ProjectId == obj.ProjectId && s.IsDeleted == false)
+                                                                    .Select(p => new AssumptionDetailModel
+                                                                    {
+                                                                        AssumptionDetailId = p.AssumptionDetailId,
+                                                                        Name = p.Name
+                                                                    }).ToList(),
+
+                                        DonorEligibilityDetailModel = dec.Where(s => s.ProjectId == obj.ProjectId && s.IsDeleted == false)
+                                                                    .Select(p => new DonorEligibilityDetailModel
+                                                                    {
+                                                                        DonorEligibilityDetailId = p.DonorEligibilityDetailId,
+                                                                        Name = p.Name
+                                                                    }).ToList(),
+
                                     }).FirstOrDefault(x => x.ProjectId == request.ProjectId);
 
 
@@ -339,6 +369,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     IncreaseReputation = model.IncreaseReputation,
                     ImproveDonorRelationship = model.ImproveDonorRelationship,
                     GoodCause = model.GoodCause,
+                    Others = model.Others,
                     ImprovePerformancecapacity = model.ImprovePerformancecapacity,
                     SkillImprove = model.SkillImprove,
                     FillingFundingGap = model.FillingFundingGap,
@@ -386,17 +417,47 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     OrganizationalDescription = model.OrganizationalDescription,
                     CheckedIconPath = _env.WebRootFileProvider.GetFileInfo("ReportLogo/check.png")?.PhysicalPath,
                     UnCheckedIconPath = _env.WebRootFileProvider.GetFileInfo("ReportLogo/uncheck.png")?.PhysicalPath,
-                    // ProjectSelectionId
-                    CEFeasibilityExpertOtherDetailModel = model.CEFeasibilityExpertOtherDetailModel
+                    CEFeasibilityExpertOtherDetailModel = model.CEFeasibilityExpertOtherDetailModel,
+                    PriorityOtherDetailModel = model.PriorityOtherDetailModel,
+                     AssumptionDetailModel = model.AssumptionDetailModel,
+                     DonorEligibilityDetailModel = model.DonorEligibilityDetailModel,
+                    TotalScore = request.TotalScore
                 };
 
 
-                List<long?> selectedProjects = await _dbContext.FinancialProjectDetail.Where(x => x.ProjectId == request.ProjectId &&
-                                                                                                   x.IsDeleted == false
-                                                                                                ).Select(x => x.ProjectSelectionId).
-                                                                                                  ToListAsync();
+                var selectedProjects = await _dbContext.FinancialProjectDetail
+                                                        .Where(x => x.ProjectId == request.ProjectId &&
+                                                                                                    x.IsDeleted == false
+                                                                                                  ).Select(x => new
+                                                                                                  {
+                                                                                                      x.ProjectSelectionId,
+                                                                                                      x.ProjectDetail.ProjectName
+                                                                                                  }).
+                                                                                                    ToListAsync();
 
-                pdfModel.ProjectSelectionId = selectedProjects != null ? selectedProjects : null;
+                pdfModel.SelectedProjectsModel = new List<SelectedProjectsModel>();
+                if (selectedProjects.Any())
+                {
+                    SelectedProjectsModel modl = new SelectedProjectsModel();
+                    foreach (var item in selectedProjects)
+                    {
+                        modl.ProjectName = item.ProjectName;
+                    }
+                    pdfModel.SelectedProjectsModel.Add(modl);
+                }
+
+            // Note : currency id Zero check is for old data stored in Proposal detail having currencyId is 0
+                if (model.CurrencyId != null && model.CurrencyId !=0)
+                {
+                    var currencyName = await _dbContext.CurrencyDetails.Where(x => x.CurrencyId == model.CurrencyId).Select(c => new
+                    {
+                        CurrencyName = c.CurrencyName
+                    }).FirstOrDefaultAsync();
+                    pdfModel.CurrencyName = currencyName.CurrencyName;
+                }
+
+
+                // pdfModel.ProjectSelectionId = selectedProjects != null ? selectedProjects : null;
             }
             catch (Exception ex)
             {

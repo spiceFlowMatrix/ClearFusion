@@ -97,7 +97,6 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   }
 
   openHoursModal(event) {
-    debugger;
     const dialogRef = this.dialog.open(AddHoursComponent, {
       width: '850px',
       data: {

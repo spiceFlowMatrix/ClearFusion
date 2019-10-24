@@ -76,7 +76,6 @@ export class VehicleTrackerComponent implements OnInit {
   //#endregion
 
   getFilteredVehicleList(selectedFilter) {
-    debugger;
     const filter = {
       TotalCost: selectedFilter.TotalCost,
       EmployeeId: selectedFilter.EmployeeId,

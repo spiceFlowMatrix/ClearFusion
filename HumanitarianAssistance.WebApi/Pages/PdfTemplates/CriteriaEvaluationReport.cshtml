@@ -10,7 +10,25 @@
         	<td>
             	<table style="width:100%;text-align:right;" cellpadding="25" cellspacing="0">
                 	<tr>
-                    	<td>(The total score must be greater than 30) <strong>Total Score: 30</strong></td>
+                    	<td>
+                            @if(Model.TotalScore <= 30 && Model.ProjectAllowedBylaw == "Yes") 
+                            {
+                                @Html.Label("(The total score must be greater than 30)")
+                            } else if(Model.TotalScore >= 50)
+                            {
+                                @Html.Label("(The evaluation is in very good standing and this project is a candidate for approval.)")
+                            }
+                           
+                        </td>
+                         <td>
+                        @if(Model.ProjectAllowedBylaw == "No")
+                        {
+                            <label>Total Score: 0.0</label>
+                        } else
+                        {
+                           <label> Total Score : @Model.TotalScore </label> 
+                        }
+                        </td>
                     </tr>
                 </table>
             </td>
@@ -435,7 +453,7 @@
                                             	<td>&nbsp;</td>
                                             	<td>Financing History</td>
                                                 <td>
-                                                    @if(Model.DonorFinancingHistory==1)
+                                                    @if(Model.DonorFinancingHistory == 1)
                                                     {
                                                         @Html.Label("Good")
                                                     }
@@ -446,6 +464,10 @@
                                                     else if(Model.DonorFinancingHistory == 3) 
                                                     {
                                                          @Html.Label("Bad")
+                                                    }
+                                                    else if(Model.DonorFinancingHistory== null)
+                                                    {
+                                                        @Html.Label("")
                                                     }
                                                 </td>
                                                 <td>&nbsp;</td>
@@ -464,6 +486,10 @@
                                                     else if(Model.ReligiousStanding == 3) 
                                                     {
                                                          @Html.Label("Bad")
+                                                    }
+                                                     else if(Model.ReligiousStanding == null)
+                                                    {
+                                                        @Html.Label("")
                                                     }</td>
                                                 <td>&nbsp;</td>
                                             </tr>
@@ -482,6 +508,10 @@
                                                     else if(Model.PoliticalStanding == 3) 
                                                     {
                                                          @Html.Label("Bad")
+                                                    }
+                                                     else if(Model.PoliticalStanding == null)
+                                                    {
+                                                        @Html.Label("")
                                                     }
                                                 </td>
                                                 <td>&nbsp;</td>
@@ -1268,6 +1298,15 @@
                 	<tr>
                         <td style="text-align:center;background-color:#f7f7f7;">DONOR ELIGIBILITY CRITERA MET: <span>@Model.DonorCriteriaMet </span>
                         </td>
+                       
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;">
+                            @if(Model.DonorCriteriaMet == "No")
+                            {
+                        <label>"Warning: This is a critical criteria. Project may be unsuitable"</label>
+                            }
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -1434,11 +1473,29 @@
                                                      } 
                                                 </td>
                                                 <td>
-                                                    Other
+                                                    @if (Model.Others == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Other");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Other");
+                                                     }
                                                 </td>
                                                 <td>&nbsp;</td> 
                                                 <td>&nbsp;</td> 
                                             </tr>
+                                           @foreach(var i in @Model.PriorityOtherDetailModel)
+                                           {
+                                            <tr>
+                                                <td>&nbsp;</td> 
+                                                <td>&nbsp;</td> 
+                                                <td> @i.Name</td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td> 
+
+                                            </tr>
+                                           }
                                             <tr>
                                             	<td colspan="4"></td>
                                             </tr>
@@ -1745,9 +1802,17 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td colspan="2">Multiple Opportunity Project Selection</td>
+                                            	<td colspan="2">Multiple Opportunity Project Selection: </td>
                                                 <td>&nbsp;</td>
                                             </tr>
+                                            @foreach(var item in @Model.SelectedProjectsModel)
+                                            {
+                                             <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="2"> @item.ProjectName</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            }
                                             <tr>
                                             	<td>&nbsp;</td>
                                             	<td>Probably Delay/Cuts in funding</td>
@@ -1791,10 +1856,16 @@
         </tr>
         <tr>
         	<td>
-            	<table style="width:100%;" cellpadding="25" cellspacing="0">
+            	<table style="width:100%;" cellpadding="15" cellspacing="0">
                 	<tr>
-                    	<td style="font-size:12px;">ASSUMPTION</td>
+                    	<td style="font-size:12px;">Assumption: </td>
                     </tr>
+                     @foreach(var i in @Model.AssumptionDetailModel)
+                     {
+                      <tr>
+                          <td style="font-size:12px;"> @i.Name</td>
+                      </tr>
+                     }
                 </table>
             </td>
         </tr>
@@ -1803,17 +1874,24 @@
             	<table style="width:100%;border-bottom:1px solid #dfdfdf;" cellpadding="25" cellspacing="0">
                 	<tr>
                     	<td style="text-transform:uppercase;font-weight:bold;font-size:14px;">DONOR ELIGIBILITY CRITERIA
-         </td>
+                         </td>
                     </tr>
                 </table>
             </td>
         </tr>
         <tr>
         	<td>
-            	<table style="width:100%;" cellpadding="25" cellspacing="0">
+            	<table style="width:100%;" cellpadding="15" cellspacing="0">
                 	<tr>
-                    	<td style="font-size:12px;">Criteria</td>
+                    	<td style="font-size:12px;">Criteria:</td>
                     </tr>
+                    @foreach(var i in @Model.DonorEligibilityDetailModel)
+                     {
+                      <tr>
+                          <td style="font-size:12px;"> @i.Name</td>
+                      </tr>
+                     }
+
                 </table>
             </td>
         </tr>

@@ -113,6 +113,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public bool? IncreaseReputation { get; set; }
         public bool? ImproveDonorRelationship { get; set; }
         public bool? GoodCause { get; set; }
+        public bool? Others { get; set; }
         public bool? ImprovePerformancecapacity { get; set; }
         public bool? SkillImprove { get; set; }
         public bool? FillingFundingGap { get; set; }
@@ -163,13 +164,15 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string CheckedIconPath { get; set; }
         public string UnCheckedIconPath { get; set; }
         public List<CEFeasibilityExpertOtherDetailModel> CEFeasibilityExpertOtherDetailModel { get; set; }
+        public List<PriorityOtherDetailModel> PriorityOtherDetailModel { get; set; }
+        public List<AssumptionDetailModel> AssumptionDetailModel { get; set; }
+        public List<DonorEligibilityDetailModel> DonorEligibilityDetailModel { get; set; }
+        public List<SelectedProjectsModel> SelectedProjectsModel { get; set; }
+        public double? TotalScore { get; set; }
     }
-
-    // public class CEFeasibilityExpertOtherDetailModel
-    // {
-    //     public long? ExpertOtherDetailId { get; set; }
-    //     public string Name { get; set; }
-       
-    // }
+    public class SelectedProjectsModel
+    {
+       public string ProjectName { get; set; } 
+    }
 
 }
