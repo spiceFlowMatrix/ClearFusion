@@ -60,7 +60,7 @@ build-backend:
 publish-container:
     image: docker:stable
     services:
-        - docker:dind
+        - docker:18.06-dind
     stage: integration
     script:
         # - rm -r HumanitarianAssistance.WebApi/release/NewUI
