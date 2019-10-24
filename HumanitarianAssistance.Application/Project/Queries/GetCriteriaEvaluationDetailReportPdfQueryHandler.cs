@@ -187,8 +187,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                         Operational = financial.Operational,
                                         Overhead_Admin = financial.Overhead_Admin,
                                         Lump_Sum = financial.Lump_Sum,
-                                        Total = (financial.ProjectActivities + financial.Operational + financial.Overhead_Admin + financial.Lump_Sum) == null ? null:
-                                                   Math.Round((financial.ProjectActivities + financial.Operational + financial.Overhead_Admin + financial.Lump_Sum).Value, 2),
+                                        Total = (double)Math.Round((financial.ProjectActivities ?? 0.0 + financial.Operational ?? 0.0 + financial.Overhead_Admin ?? 0.0 + financial.Lump_Sum ?? 0.0), 2),
                                         Security = risk.Security,
                                         Staff = risk.Staff,
                                         ProjectAssets = risk.ProjectAssets,
