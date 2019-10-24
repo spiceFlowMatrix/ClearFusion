@@ -163,6 +163,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                          NewEquipment = Priority.NewEquipment,
                          CoverageAreaExpansion = Priority.CoverageAreaExpansion,
                          NewTraining = Priority.NewTraining,
+                         Others = Priority.Others,
                          ExpansionGoal = Priority.ExpansionGoal,
                          Total = financial.Total,
                          ProjectActivities = financial.ProjectActivities,
