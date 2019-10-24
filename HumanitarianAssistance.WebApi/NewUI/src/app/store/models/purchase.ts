@@ -30,6 +30,7 @@ export interface IFilterValueModel {
   ItemGroupId: any;
   ItemId: any;
   JobId: any;
+  DisplayCurrency?: number;
   StorePurchasePdfFlags?: IStorePurchasePdfFlags;
 
   PageIndex?: number;

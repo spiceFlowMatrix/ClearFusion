@@ -11,10 +11,10 @@ import { PurchaseFiledConfigComponent } from '../purchase-filed-config/purchase-
 import { TableActionsModel } from 'projects/library/src/public_api';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { FieldConfigService } from '../../services/field-config.service';
-import { map } from 'rxjs/operators';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
+import { IDropDownModel } from 'src/app/dashboard/accounting/report-services/report-models';
 
 @Component({
   selector: 'app-purchase-list',
@@ -27,6 +27,8 @@ export class PurchaseListComponent implements OnInit {
   purchaseFilterConfigList$: Observable<IPurchaseFilterConfigColList[]>;
   filterValueModel: IFilterValueModel;
   purchaseRecordCount = 0;
+  currencyList$: Observable<IDropDownModel[]>;
+  selectedDisplayCurrency: number;
 
   // screen
   screenHeight: any;
@@ -68,13 +70,15 @@ export class PurchaseListComponent implements OnInit {
       ReceiptTypeId: null,
       PageIndex: 0,
       PageSize: 10,
-      TotalCount: null
+      TotalCount: null,
+      DisplayCurrency: null
     };
   }
 
   ngOnInit() {
 
     this.getScreenSize();
+    this.getAllCurrencies();
     this.actions = {
       items: {
         button: { status: true, text: 'Add Procurement' },
@@ -255,36 +259,37 @@ export class PurchaseListComponent implements OnInit {
         });
   }
 
-  onPdfExportClick() {
+  getAllCurrencies() {
+    this.purchaseService.getAllCurrencies()
+      .subscribe(x => {
+        if (x.StatusCode === 200) {
+           this.currencyList$ = of(x.data.CurrencyList.map(y => {
+            return {
+              name: y.CurrencyCode + '-' + y.CurrencyName,
+              value: y.CurrencyId
+            };
+          }));
+        }
+      },
+        (error) => {
+          this.toastr.error(error);
+        });
+  }
 
-    let StorePurchaseFilter: any = this.filterValueModel;
+  selectedDisplayCurrencyChanged() {
+    debugger;
+    this.filterValueModel.DisplayCurrency = this.selectedDisplayCurrency;
+    this.getPurchasesByFilter(this.filterValueModel);
+
+  }
+
+  onPdfExportClick() {
+    const StorePurchaseFilter: any = this.filterValueModel;
     this.globalSharedService
     .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetStorePurchasePdf, StorePurchaseFilter
     )
     .pipe()
     .subscribe();
-  }
-
-  configFilterAppliedEvent(event: any) {
-    console.log(event);
-
-    // let headers: any[] = [];
-
-    // event.forEach(element => {
-    //   headers.push(element.name);
-    // });
-
-    //  this.purchaseListHeaders$ = of(headers);
-
-    // this.purchaseFilterConfigList$.subscribe(y => {
-
-    //   // this.purchaseList$ = of(y.map((element) => {
-    //   //   return {
-
-    //   //   } as IPurchaseList;
-    //   // }));
-    // });
-
   }
 
   showConfiguration() {

@@ -3,6 +3,7 @@ export interface IGeneratorTrackerFilter {
   OfficeId?: number;
   ModelYear?: number;
   Voltage?: number;
+  DisplayCurrency?: number;
   pageSize: 10;
   pageIndex: 0;
 }

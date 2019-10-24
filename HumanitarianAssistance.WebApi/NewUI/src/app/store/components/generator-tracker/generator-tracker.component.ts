@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material';
 import { AddHoursComponent } from '../add-hours/add-hours.component';
 import { PurchaseService } from '../../services/purchase.service';
 import { IGeneratorTrackerFilter, IGeneratorList } from '../../models/generator';
+import { IDropDownModel } from 'src/app/dashboard/accounting/report-services/report-models';
 
 @Component({
   selector: 'app-generator-tracker',
@@ -16,9 +17,11 @@ export class GeneratorTrackerComponent implements OnInit {
   generatorListHeaders$ = of(['Id', 'K.V.', 'Fuel Consumption Rate', 'Incurred Usage(Hours)', 'Total Usage(Hours)', 'Total Cost',
                               'Original Cost']);
   generatorList$: Observable<IGeneratorList[]>;
+  currencyList$: Observable<IDropDownModel[]>;
   actions: TableActionsModel;
   recordsCount: number;
   generatorTrackerFilter: IGeneratorTrackerFilter;
+  selectedDisplayCurrency: number;
 
   // screen
   screenHeight: any;
@@ -40,6 +43,7 @@ export class GeneratorTrackerComponent implements OnInit {
     this.initializeModel();
     this.getGeneratorList(this.generatorTrackerFilter);
     this.getScreenSize();
+    this.getAllCurrencies();
   }
 
   initializeModel() {
@@ -48,6 +52,7 @@ export class GeneratorTrackerComponent implements OnInit {
       OfficeId: null,
       ModelYear: null,
       TotalCost: null,
+      DisplayCurrency: null,
       pageIndex: 0,
       pageSize: 10
     };
@@ -83,7 +88,7 @@ export class GeneratorTrackerComponent implements OnInit {
   }
 
   getFilteredGeneratorList(selectedFilter) {
-    const filter = {
+    this.generatorTrackerFilter = {
       TotalCost: selectedFilter.TotalCost,
       ModelYear: selectedFilter.ModelYear,
       OfficeId: selectedFilter.OfficeId,
@@ -92,7 +97,7 @@ export class GeneratorTrackerComponent implements OnInit {
       pageIndex: 0
     };
 
-    this.getGeneratorList(filter);
+    this.getGeneratorList(this.generatorTrackerFilter);
   }
 
   getGeneratorList(filter) {
@@ -111,6 +116,30 @@ export class GeneratorTrackerComponent implements OnInit {
           };
         }));
       });
+  }
+
+  getAllCurrencies() {
+    this.purchaseService.getAllCurrencies()
+      .subscribe(x => {
+        if (x.StatusCode === 200) {
+           this.currencyList$ = of(x.data.CurrencyList.map(y => {
+            return {
+              name: y.CurrencyCode + '-' + y.CurrencyName,
+              value: y.CurrencyId
+            };
+          }));
+        }
+      },
+        (error) => {
+          console.error(error);
+        });
+  }
+
+  selectedDisplayCurrencyChanged() {
+    debugger;
+    this.generatorTrackerFilter.DisplayCurrency = this.selectedDisplayCurrency;
+    this.getGeneratorList(this.generatorTrackerFilter);
+
   }
 
   //#region "pageEvent"

@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material';
 import { AddMilageComponent } from '../add-milage/add-milage.component';
 import { Router } from '@angular/router';
 import { PurchaseService } from '../../services/purchase.service';
+import { IDropDownModel } from '../../models/purchase';
 
 @Component({
   selector: 'app-vehicle-tracker',
@@ -19,6 +20,8 @@ export class VehicleTrackerComponent implements OnInit {
   vehicleList$: Observable<IVehicleList[]>;
   actions: TableActionsModel;
   vehicleTrackerFilter: IVehicleTrackerFilter;
+  currencyList$: Observable<IDropDownModel[]>;
+  selectedDisplayCurrency: number;
 
   // Paging
   pageSize = 10;
@@ -48,6 +51,7 @@ export class VehicleTrackerComponent implements OnInit {
 
     };
     this.getScreenSize();
+    this.getAllCurrencies();
   }
 
   initializeModel() {
@@ -76,7 +80,7 @@ export class VehicleTrackerComponent implements OnInit {
   //#endregion
 
   getFilteredVehicleList(selectedFilter) {
-    const filter = {
+    this.vehicleTrackerFilter = {
       TotalCost: selectedFilter.TotalCost,
       EmployeeId: selectedFilter.EmployeeId,
       OfficeId: selectedFilter.OfficeId,
@@ -85,7 +89,7 @@ export class VehicleTrackerComponent implements OnInit {
       pageIndex: 0
     };
 
-    this.getVehicleList(filter);
+    this.getVehicleList(this.vehicleTrackerFilter);
   }
 
   getVehicleList(filter) {
@@ -120,6 +124,30 @@ export class VehicleTrackerComponent implements OnInit {
         }
       });
     }
+  }
+
+  getAllCurrencies() {
+    this.purchaseService.getAllCurrencies()
+      .subscribe(x => {
+        if (x.StatusCode === 200) {
+           this.currencyList$ = of(x.data.CurrencyList.map(y => {
+            return {
+              name: y.CurrencyCode + '-' + y.CurrencyName,
+              value: y.CurrencyId
+            };
+          }));
+        }
+      },
+        (error) => {
+          console.error(error);
+        });
+  }
+
+  selectedDisplayCurrencyChanged() {
+    debugger;
+    this.vehicleTrackerFilter.DisplayCurrency = this.selectedDisplayCurrency;
+    this.getVehicleList(this.vehicleTrackerFilter);
+
   }
 
   //#region "pageEvent"

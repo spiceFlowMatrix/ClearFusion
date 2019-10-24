@@ -517,6 +517,13 @@ deleteGenerator(Id) {
         Id);
 }
 
+getAllCurrencies() {
+  return this.http
+      .get<any>(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_code_GetAllCurrency);
+}
+
   //#region "getLocalDate"
   getLocalDate(date: any) {
     return new Date(
