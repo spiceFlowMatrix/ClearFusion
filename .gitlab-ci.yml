@@ -15,6 +15,7 @@ variables:
     CF_APP_NAME: clearfusion-${CI_COMMIT_REF_SLUG}
     CF_APP_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}
     ENVIRONMENT: "Production"
+    DOCKER_TLS_CERTDIR: ""
 
 build-newui:
     image: node:latest
