@@ -3,6 +3,9 @@ import { GlobalService } from 'src/app/shared/services/global-services.service';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
+import { DeleteConfirmationComponent } from 'projects/library/src/lib/components/delete-confirmation/delete-confirmation.component';
+import { Delete_Confirmation_Texts } from 'src/app/shared/enum';
+import { MatDialog } from '@angular/material';
 
 @Injectable({
   providedIn: 'root'
@@ -11,15 +14,61 @@ export class LogisticService {
 
   constructor(
     private globalService: GlobalService,
-    private globalSharedService: GlobalSharedService,
-    private appurl: AppUrlService
+    private appurl: AppUrlService,
+    private dialog: MatDialog,
   ) { }
 
   addLogisticRequest(value) {
-    debugger;
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_AddLogisticRequest,
       value
+    );
+  }
+
+  getAllLogisticRequests(projectId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetAllLogisticRequest,
+      projectId
+    );
+  }
+
+  deleteLogisticRequestById(RequestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_DeleteLogisticRequest,
+      RequestId
+    );
+  }
+
+  openDeleteDialog() {
+    const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
+      width: '300px',
+      height: '250px',
+      data: 'delete',
+      disableClose: false
+    });
+
+    dialogRef.componentInstance.confirmMessage =
+      Delete_Confirmation_Texts.deleteText1;
+
+    dialogRef.componentInstance.confirmText = Delete_Confirmation_Texts.yesText;
+
+    dialogRef.componentInstance.cancelText = Delete_Confirmation_Texts.noText;
+
+    dialogRef.afterClosed().subscribe(result => { });
+
+    return dialogRef.componentInstance.confirmDelete;
+  }
+
+  getLogisticRequestDetail(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetRequestDetailById,
+      requestId
+    );
+  }
+
+  getAllStoreItems() {
+    return this.globalService.getList(
+      this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllStoreInventoryItems
     );
   }
 }

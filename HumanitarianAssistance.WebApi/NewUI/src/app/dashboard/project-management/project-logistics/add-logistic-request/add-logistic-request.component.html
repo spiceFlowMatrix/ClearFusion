@@ -4,9 +4,9 @@
         <mat-form-field class="example-full-width">
             <input matInput formControlName="Name" placeholder="Name">
         </mat-form-field>
-        <mat-form-field class="example-full-width">
+        <!-- <mat-form-field class="example-full-width">
             <input type="number" matInput formControlName="TotalCost" placeholder="Total Cost">
-        </mat-form-field>
+        </mat-form-field> -->
 
         <hum-button [type]="'save'" [text]="'Save'" (click)="addRequest(addLogisticRequestForm.value)"></hum-button>
         <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="cancelRequest()" class="pull-right"></hum-button>

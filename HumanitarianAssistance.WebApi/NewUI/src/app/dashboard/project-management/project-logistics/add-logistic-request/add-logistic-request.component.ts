@@ -25,8 +25,7 @@ export class AddLogisticRequestComponent implements OnInit {
 
   ngOnInit() {
     this.addLogisticRequestForm = this.fb.group({
-      Name: ['', Validators.required],
-      TotalCost: ['', Validators.required]
+      Name: ['', Validators.required]
     });
   }
 
@@ -34,14 +33,15 @@ export class AddLogisticRequestComponent implements OnInit {
     this.commonLoader.showLoader();
     this.model.ProjectId = this.data.ProjectId;
     this.model.RequestName = value.Name;
-    this.model.TotalCost = value.TotalCost;
+    // this.model.TotalCost = value.TotalCost;
     this.logisticservice.addLogisticRequest(this.model).subscribe(res => {
       if (res.StatusCode === 200) {
-        this.dialogRef.close();
+        this.dialogRef.close({data: {RequestId: res.data.logisticRequestId, Status: 1, TotalCost: this.model.TotalCost,
+          RequestName: this.model.RequestName}});
         this.commonLoader.hideLoader();
         this.toastr.success('Request added successfully!');
       } else {
-        this.dialogRef.close();
+        this.dialogRef.close({data: null});
         this.commonLoader.hideLoader();
         this.toastr.error('Something went wrong!');
       }
@@ -49,7 +49,7 @@ export class AddLogisticRequestComponent implements OnInit {
   }
 
   cancelRequest() {
-    this.dialogRef.close();
+    this.dialogRef.close({data: null});
   }
 }
 

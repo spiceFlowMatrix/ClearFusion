@@ -4,7 +4,8 @@
       <h4 style="padding-left: 0px !important;letter-spacing: 2px;">Requests
         <hum-button [type]="'add'" [text]="'add'" (click)="openAddRequestDialog()"></hum-button>
       </h4>
-    <hum-table [headers]="logisticListHeaders$" (rowClick)="requestRowClicked($event)" [actions]="actions" [items]="logisticListData$"></hum-table>
+    <hum-table [headers]="logisticListHeaders$" (rowClick)="requestRowClicked($event)" (actionClick)="onDeleteRequest($event)"
+    [actions]="actions" [items]="logisticListData$"></hum-table>
   </div>
   <div class="col-md-4">
     <mat-card>

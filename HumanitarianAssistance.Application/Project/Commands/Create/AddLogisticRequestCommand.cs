@@ -7,6 +7,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
     {
         public long ProjectId { get; set; }
         public string RequestName { get; set; }
-        public long TotalCost { get; set; }
+        //public long TotalCost { get; set; }
     }
 }

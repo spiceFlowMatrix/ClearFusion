@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ProjectLogisticsRoutingModule } from './project-logistics-routing.module';
 import { LogisticRequestsComponent } from './logistic-requests/logistic-requests.component';
-import { MatDividerModule, MatInputModule, MatCardModule, MatPaginatorModule } from '@angular/material';
+import { MatDividerModule, MatInputModule, MatCardModule, MatPaginatorModule, MatDialogRef } from '@angular/material';
 import { SubHeaderTemplateModule, LibraryModule } from 'projects/library/src/public_api';
 import { AddLogisticRequestComponent } from './add-logistic-request/add-logistic-request.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -28,6 +28,6 @@ import { RequestStatusComponent } from './request-status/request-status.componen
   entryComponents: [
     AddLogisticRequestComponent,
     AddLogisticItemsComponent
-  ]
+  ],
 })
 export class ProjectLogisticsModule { }

@@ -27,13 +27,14 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     ProjectId = request.ProjectId,
                     RequestName = request.RequestName,
                     Status = (int)LogisticRequestStatus.NewRequest,
-                    TotalCost = request.TotalCost,
+                    TotalCost = 0,
                     CreatedDate = request.CreatedDate,
                     CreatedById = request.CreatedById,
                     IsDeleted = false
                 };
                 await _dbContext.ProjectLogisticRequests.AddAsync(obj);
                 await _dbContext.SaveChangesAsync();
+                response.data.logisticRequestId=obj.LogisticRequestsId;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
             }

@@ -11,7 +11,7 @@
         <h4 class="sub-heading">Workflow Details</h4>
         <p>This request is viable for Direct Purchase. Please process the <b>Purchase Order</b> below.</p>
         <mat-divider style="position: unset;"></mat-divider>
-          <div class="row" *ngIf="true">
+          <div class="row" *ngIf="(this.requestDetail.Status==1)">
             <div class="col-sm-4 margin_top_8">
               <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
               <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Pending</span>
@@ -62,7 +62,7 @@
       </div>
       <!-- <mat-divider [vertical]="true" style="height:300px"></mat-divider> -->
       <div class="col-md-5">
-        <app-request-status></app-request-status>
+        <app-request-status [requestStatus]="this.requestDetail.Status"></app-request-status>
       </div>
     </div>
   </div>

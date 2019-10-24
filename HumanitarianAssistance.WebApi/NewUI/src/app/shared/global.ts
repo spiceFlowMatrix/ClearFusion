@@ -193,8 +193,9 @@ export class GLOBAL {
 
   // ProjectLogistics
   public static API_ProjectLogistics_AddLogisticRequest = 'ProjectLogistic/AddLogisticRequest';
-
-
+  public static API_ProjectLogistics_GetAllLogisticRequest = 'ProjectLogistic/GetAllLogisticRequest';
+  public static API_ProjectLogistics_DeleteLogisticRequest = 'ProjectLogistic/DeleteLogisticRequest';
+  public static API_ProjectLogistics_GetRequestDetailById = 'ProjectLogistic/GetRequestDetailById';
   // Chart Of Account
   public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';
   public static API_ChartOfAccount_GetAllAccountsByParentId = 'ChartOfAccount/GetAllAccountsByParentId';
@@ -464,6 +465,7 @@ export class GLOBAL {
   public static API_GeneratorTracker_GetGeneratorList = 'GeneratorTracker/GetGeneratorList';
   public static API_GeneratorTracker_GetGeneratorById = 'GeneratorTracker/GetGeneratorById';
   public static API_GeneratorTracker_AddGeneratorUsageHours = 'GeneratorTracker/AddGeneratorUsageHours';
+  public static API_Store_GetAllStoreInventoryItems = 'Store/GetAllStoreInventoryItems';
 
 }
 
