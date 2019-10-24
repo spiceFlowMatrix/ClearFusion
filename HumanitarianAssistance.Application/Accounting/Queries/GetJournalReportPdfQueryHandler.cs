@@ -1,37 +1,46 @@
-﻿using HumanitarianAssistance.Application.Accounting.Models;
-using HumanitarianAssistance.Application.Infrastructure;
-using HumanitarianAssistance.Common.Helpers;
-using HumanitarianAssistance.Persistence;
-using HumanitarianAssistance.Persistence.Extensions;
-using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using HumanitarianAssistance.Application.Accounting.Models;
+using HumanitarianAssistance.Application.CommonServicesInterface;
+using Microsoft.AspNetCore.Hosting;
+using HumanitarianAssistance.Domain.Entities;
+using HumanitarianAssistance.Persistence;
+using HumanitarianAssistance.Persistence.Extensions;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Application.Accounting.Queries
 {
-    public class GetJournalVoucherDetailsQueryHandler : IRequestHandler<GetJournalVoucherDetailsQuery, ApiResponse>
+    public class GetJournalReportPdfQueryHandler : IRequestHandler<GetJournalReportPdfQuery,byte[]>
     {
-        private readonly HumanitarianAssistanceDbContext _dbContext;
-        public GetJournalVoucherDetailsQueryHandler(HumanitarianAssistanceDbContext dbContext)
+        private HumanitarianAssistanceDbContext _dbContext;
+        private readonly IPdfExportService _pdfExportService;
+        private IHostingEnvironment _env;
+        public GetJournalReportPdfQueryHandler(IPdfExportService pdfExportService,HumanitarianAssistanceDbContext dbContext,IHostingEnvironment env)
         {
             _dbContext = dbContext;
+            _pdfExportService=pdfExportService;
+            _env=env;
         }
-
-        public async Task<ApiResponse> Handle(GetJournalVoucherDetailsQuery request, CancellationToken cancellationToken)
+        public async Task<byte[]> Handle(GetJournalReportPdfQuery request, CancellationToken cancellationToken)
         {
-            ApiResponse response = new ApiResponse();
-            try
-            {
-                int voucherDetailsCount = 0;
+           try
+           {   
+                double? debitSumForReport = 0.0;
+                double? creditSumForReport = 0.0; 
+                double? totalSumForReport = 0.0; 
+                JournalTrialBalancePdfModel pdfreport;
+                List<JournalTrialBalanceMainPdfList> mainList=new List<JournalTrialBalanceMainPdfList>();
+                List<LedgerModel> finalTrialBalanceList = new List<LedgerModel>();
+                //int voucherDetailsCount = 0;
                 List<JournalVoucherViewModel> listJournalView = new List<JournalVoucherViewModel>();
 
                 if (request != null)
                 {
-                    
+
                     //get Journal Report from sp get_journal_report by passing parameters
                     var spJournalReport = await _dbContext.LoadStoredProc("get_journal_report")
                                           .WithSqlParam("currencyid", request.CurrencyId)
@@ -61,8 +70,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                         VoucherNo = x.VoucherNo,
                         AccountName = x.AccountName,
                         Project = x.ProjectCode,
-                        BudgetLineDescription = x.BudgetCode,
-                        JobCode=x.ProjectJobCode
+                        BudgetLineDescription = x.BudgetCode
                     }).ToList();
 
                     var journalReport = spJournalReport.GroupBy(x => x.ChartOfAccountNewId).ToList();
@@ -81,31 +89,45 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                             Balance = Math.Round(Convert.ToDecimal(accountItem.Sum(x => x.DebitAmount) - accountItem.Sum(x => x.CreditAmount)), 4)
                         });
                     }
-
-
-                    response.data.JournalVoucherViewList = listJournalView;
-                    response.data.JournalReportList = journalReportList; //Report
-                    response.data.TotalCount = voucherDetailsCount;
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
-
+                    foreach(var item in journalReportList)
+                    {   
+                        debitSumForReport+=Convert.ToDouble(item.DebitAmount);
+                        creditSumForReport+=Convert.ToDouble(item.CreditAmount);
+                        totalSumForReport+=Convert.ToDouble(item.DebitAmount-item.CreditAmount);
+                        mainList.Add(new JournalTrialBalanceMainPdfList(){
+                            Group=item.AccountCode,
+                            AccountDescription=item.AccountName,
+                            DebitAmount=Convert.ToDouble(item.DebitAmount),
+                            CreditAmount=Convert.ToDouble(item.CreditAmount),
+                            Balance=Convert.ToDouble(item.DebitAmount - item.CreditAmount)
+                        });
+                    }
+                    pdfreport=new JournalTrialBalancePdfModel(){
+                        Logo=_env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath,
+                        reportList=mainList,
+                        TotalDebit=debitSumForReport,
+                        TotalCredit=creditSumForReport,
+                        TotalBalance=totalSumForReport
+                    };
 
                 }
                 else
                 {
-                    response.data.JournalVoucherViewList = null;
-                    response.data.TotalCount = voucherDetailsCount;
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
-
+                   pdfreport=new JournalTrialBalancePdfModel(){
+                        Logo=_env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath,
+                        reportList=mainList,
+                        TotalDebit=debitSumForReport,
+                        TotalCredit=creditSumForReport,
+                        TotalBalance=totalSumForReport
+                    };
                 }
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + ex.Message;
-            }
-            return response;
+                return await _pdfExportService.ExportToPdf(pdfreport, "Pages/PdfTemplates/JournalReport.cshtml"); 
+           }
+           catch(Exception ex)
+           {
+               throw new Exception(ex.Message);
+           }
         }
+       
     }
 }
