@@ -79,8 +79,8 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public ReceiptType ReceiptType { get; set; }
         [ForeignKey("ProjectId")]
         public ProjectDetail ProjectDetail { get; set; }
-        public VehicleItemDetail VehicleItemDetail { get; set; }
-        public GeneratorItemDetail GeneratorItemDetail { get; set; }
+        public List<VehicleItemDetail> VehicleItemDetail { get; set; }
+        public List<GeneratorItemDetail> GeneratorItemDetail { get; set; }
         public List<StorePurchaseOrder> PurchaseOrders { get; set; }
     }
 }
