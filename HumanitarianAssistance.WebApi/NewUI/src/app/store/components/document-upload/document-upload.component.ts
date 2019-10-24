@@ -13,6 +13,7 @@ export class DocumentUploadComponent implements OnInit, OnChanges {
 
   @Input() purchasedDocumentFiles: IPurchasedFiles[];
   @Output() deleteDocument =  new EventEmitter<any>();
+  @Input() hideColums$: Observable<{ headers?: string[], items?: string[] }>;
 
   documentHeaders$: Observable<any>;
   documentsList$: Observable<any>;

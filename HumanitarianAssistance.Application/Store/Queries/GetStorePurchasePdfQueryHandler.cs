@@ -90,11 +90,26 @@ namespace HumanitarianAssistance.Application.Store.Queries
                 model.StorePurchaseList = query.Select(x => new StorePurchasePdf
                 {
                     PurchaseId = x.PurchaseId,
+                    PurchaseDate = x.PurchaseDate.ToShortDateString(),
+                    PurchasedQuantity= x.Quantity,
+                    ReceivedFromEmployee= x.EmployeeDetail.EmployeeName,
+                    ItemCode= x.StoreInventoryItem != null ? x.StoreInventoryItem.ItemCode :"",
                     ItemName = x.StoreInventoryItem != null ? (x.StoreInventoryItem.ItemCode + "-" + x.StoreInventoryItem.ItemName) : "",
-                    PurchasedBy = x.EmployeeDetail != null ? x.EmployeeDetail.EmployeeCode + "-" + x.EmployeeDetail.EmployeeName : "",
+                    ProjectId = x.ProjectId,
                     ProjectName = x.ProjectDetail == null ? "" : x.ProjectDetail.ProjectCode + "-" + x.ProjectDetail.ProjectName,
                     OriginalCost = x.UnitCost * x.Quantity,
-                    DepriciatedCost = (x.UnitCost * x.Quantity) - (Math.Ceiling(DateTime.Now.Date.Subtract(x.PurchaseDate).TotalDays) * x.Quantity * x.DepreciationRate * x.UnitCost / 100),
+                    ItemCodeDescription = x.StoreInventoryItem != null ? (x.StoreInventoryItem.ItemCode + "-" + x.StoreInventoryItem.Description): ""  ,
+                    Description = x.StoreInventoryItem != null ? x.StoreInventoryItem.Description: ""  ,
+                    BudgetLineName= x.ProjectBudgetLineDetail ==null? "" : x.ProjectBudgetLineDetail.BudgetName,
+                    CurrencyName= x.CurrencyDetails == null? "":  x.CurrencyDetails.CurrencyName,
+                    DepreciationRate= x.DepreciationRate,
+                    MasterInventoryCode= x.StoreInventoryItem.MasterInventoryCode,
+                    OfficeCode= x.OfficeDetail.OfficeCode,
+                    ReceiptDate= x.DeliveryDate != null ? x.DeliveryDate.ToShortDateString() :"",
+                    InvoiceDate= x.InvoiceDate != null ? x.InvoiceDate.Value.ToShortDateString(): "",
+                    ReceivedFromLocationName= x.StoreSourceCodeDetail != null? (x.StoreSourceCodeDetail.Code+"-"+x.StoreSourceCodeDetail.Description): "" ,
+                    Status= x.StatusAtTimeOfIssue != null? x.StatusAtTimeOfIssue.StatusName : "",
+                    DepreciatedCost = (x.UnitCost * x.Quantity) - (Math.Ceiling(DateTime.Now.Date.Subtract(x.PurchaseDate).TotalDays) * x.Quantity * x.DepreciationRate * x.UnitCost / 100),
                 }).ToList();
             }
             catch (Exception ex)

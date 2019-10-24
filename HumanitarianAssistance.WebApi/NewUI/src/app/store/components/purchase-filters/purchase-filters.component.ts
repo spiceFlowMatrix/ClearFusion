@@ -60,7 +60,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
     this.purchaseService.getPurchaseFilterList()
     .pipe(takeUntil(this.destroyed$))
     .subscribe(x  => {
-      
+
       this.inventoryType$ = of(x.InventoryTypes.map(y => {
         return {
           value: y.Id,
@@ -113,6 +113,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
       this.loader.hideLoader();
     },
     err => {
+      this.loader.hideLoader();
      console.error(err);
     });
   }

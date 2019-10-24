@@ -1,13 +1,20 @@
 import { FileSourceEntityTypes } from '../enum';
 
  export class SignedUrlObjectName {
+   debugger;
 
-  static getSignedURLObjectName(pageId: number): string {
+  static getSignedURLObjectName(pageId: number, entityId?: number): string {
     let objectName = '';
 
     switch (pageId) {
       case FileSourceEntityTypes.Voucher:
       objectName = 'voucher/';
+      break;
+      case FileSourceEntityTypes.StorePurchase:
+      objectName = 'storepurchase/' + entityId + '/';
+      break;
+      case FileSourceEntityTypes.Employee:
+      objectName = 'employeeprofileimage/' + entityId + '/';
       break;
     }
 

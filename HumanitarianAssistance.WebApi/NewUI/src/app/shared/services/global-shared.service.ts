@@ -81,7 +81,8 @@ export class GlobalSharedService {
 
   //#region "uploadFile"
   uploadFile(pageId: number, entityId: any, file: any, documentTypeId: any = null) {
-    let objectName = SignedUrlObjectName.getSignedURLObjectName(pageId);
+    debugger;
+    let objectName = SignedUrlObjectName.getSignedURLObjectName(pageId, entityId);
 
     if (objectName == null && objectName === '' && objectName === undefined) {
       throw new Error('object name cannot be empty');
@@ -116,6 +117,7 @@ export class GlobalSharedService {
       }), concatMap(res1 => {
         console.log('res1', res1);
           if (res1['status'] === 200) {
+            debugger;
             const data: FileModel = {
               FileName: file.name,
               FilePath: objectName,

@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { IDropDownModel } from '../../models/purchase';
 import { PurchaseService } from '../../services/purchase.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -25,6 +25,7 @@ export class AddDocumentComponent implements OnInit {
       'documentName': [null],
       'uploadDate': [new Date()]
     });
+
   }
 
   ngOnInit() {
@@ -40,6 +41,7 @@ export class AddDocumentComponent implements OnInit {
   }
 
   submitAddDocument() {
+    debugger;
     if (this.addDocumentForm.valid) {
       if (this.data.purchaseDocumentList.length > 0) {
         const index = this.data.purchaseDocumentList.findIndex(x => x.Filename === this.addDocumentForm.controls['file'].value[0].name);
@@ -50,9 +52,9 @@ export class AddDocumentComponent implements OnInit {
         }
       }
 
-      let documentTypes: any[];
+      let documentTypes: any[] = [];
 
-       this.documentTypes$.subscribe(x => documentTypes= x);
+       this.documentTypes$.subscribe(x => documentTypes = x);
 
       const documentName = documentTypes.filter(x => x.value === this.addDocumentForm.get('documentType').value)
 

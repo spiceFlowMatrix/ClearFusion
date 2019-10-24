@@ -37,10 +37,14 @@ export class PurchaseListComponent implements OnInit {
   showConfig = false;
   @ViewChild(PurchaseFiledConfigComponent) fieldConfig: PurchaseFiledConfigComponent;
 
-  purchaseListHeaders$ = of(['Id', 'Item', 'Purchased By', 'Project', 'Original Cost', 'Deprecated Cost']);
+  purchaseListHeaders$ = of(['Id', 'Item', 'Purchased By', 'Project', 'Original Cost', 'Depreciated Cost', 'Purchase Date', 'Currency',
+                            'Purchased Quantity', 'Item Code', 'Project Id', 'Item Code Description', 'Description', 'BudgetLine Name',
+                          'Depreciation Rate', 'Master Inventory Code', 'Office Code', 'Receipt Date', 'Invoice Date',
+                          'Received From Location', 'Status']);
   subListHeaders$ = of(['Id', 'Date', 'Employee', 'Procured Amount', 'Must Return', 'Returned', 'Returned On']);
   procurementList$: Observable<IProcurementList[]>;
-  hideColums: Observable<{ headers?: string[], items?: string[] }>
+  hideColums: Observable<{ headers?: string[], items?: string[] }>;
+  columnsToShownInPdf: any[] = [];
 
   constructor(private purchaseService: PurchaseService,
     private router: Router, private dialog: MatDialog,
@@ -76,6 +80,7 @@ export class PurchaseListComponent implements OnInit {
         button: { status: true, text: 'Add Procurement' },
         delete: false,
         download: false,
+        edit: true
       },
       subitems: {
         button: { status: false, text: '' },
@@ -86,12 +91,12 @@ export class PurchaseListComponent implements OnInit {
     }
     this.fieldConfigservice.data.subscribe(res => {
       if (res.length > 0) {
-        let headers = res.map(r => r.headerName);
-        let items = res.map(r => r.modelName);
-        this.hideColums = of({headers:headers,items:items});
+        const headers = res.map(r => r.headerName);
+        const items = res.map(r => r.modelName);
+        this.hideColums = of({headers: headers, items: items});
+        this.columnsToShownInPdf = res;
       }
-
-    })
+    });
   }
 
   //#region "Dynamic Scroll"
@@ -109,10 +114,11 @@ export class PurchaseListComponent implements OnInit {
   //#endregion
 
   getPurchasesByFilter(filter: IFilterValueModel) {
+    this.loader.showLoader();
     this.filterValueModel = filter;
     this.purchaseService
       .getFilteredPurchaseList(filter).subscribe(x => {
-        this.loader.showLoader();
+
         this.purchaseRecordCount = x.RecordCount;
         this.purchaseFilterConfigList$ = of(x.PurchaseList);
         this.purchaseList$ = of(x.PurchaseList.map((element) => {
@@ -123,6 +129,21 @@ export class PurchaseListComponent implements OnInit {
             Project: element.ProjectName,
             OriginalCost: element.OriginalCost,
             DepreciatedCost: element.DepreciatedCost,
+            PurchaseDate: element.PurchaseDate ? this.datePipe.transform(new Date(element.PurchaseDate), 'dd/MM/yyyy') : null,
+            Currency: element.CurrencyName,
+            PurchasedQuantity: element.PurchasedQuantity,
+            ItemCode: element.ItemCode,
+            ProjectId: element.ProjectId,
+            ItemCodeDescription: element.ItemCodeDescription,
+            Description: element.Description,
+            BudgetLineName: element.BudgetLineName,
+            DepreciationRate: element.DepreciationRate,
+            MasterInventoryCode: element.MasterInventoryCode,
+            OfficeCode: element.OfficeCode,
+            ReceiptDate:  element.ReceiptDate ? this.datePipe.transform(new Date(element.ReceiptDate), 'dd/MM/yyyy') : null,
+            InvoiceDate:  element.InvoiceDate ? this.datePipe.transform(new Date(element.InvoiceDate), 'dd/MM/yyyy') : null,
+            ReceivedFromLocationName: element.ReceivedFromLocationName,
+            Status: element.Status,
             subItems: element.ProcurementList.map((r) => {
               return {
                 Id: r.OrderId,
@@ -175,7 +196,7 @@ export class PurchaseListComponent implements OnInit {
   addPurchase() {
     this.router.navigate(['/store/purchase/add']);
   }
-  openProcurementModal(event: any) {
+  actionEvents(event: any) {
     if (event.type == "button") {
       const dialogRef = this.dialog.open(AddProcurementsComponent, {
         width: '850px',
@@ -194,11 +215,11 @@ export class PurchaseListComponent implements OnInit {
           const index = purchase.findIndex(i => i.Id === x.PurchaseId);
           if (index !== -1) {
             purchase[index].subItems.unshift({
-              OrderId: x.ProcurementId,
+              Id: x.ProcurementId,
               IssueDate: this.datePipe.transform(x.IssueDate, 'dd-MM-yyyy'),
-              EmployeeName: x.EmployeeName,
+              Employee: x.EmployeeName,
               ProcuredAmount: x.IssuedQuantity,
-              MustReturn: x.MustReturn,
+              MustReturn: x.MustReturn === 'Yes' ? true : false,
               Returned: false,
               ReturnedOn: null
             } as IProcurementList);
@@ -206,6 +227,8 @@ export class PurchaseListComponent implements OnInit {
           this.purchaseList$ = of(purchase);
         });
       });
+    } else if (event.type === 'edit') {
+      this.router.navigate(['/store/purchase/edit/' + event.item.Id]);
     }
 
   }
@@ -233,8 +256,10 @@ export class PurchaseListComponent implements OnInit {
   }
 
   onPdfExportClick() {
+
+    let StorePurchaseFilter: any = this.filterValueModel;
     this.globalSharedService
-    .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetStorePurchasePdf, this.filterValueModel
+    .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetStorePurchasePdf, StorePurchaseFilter
     )
     .pipe()
     .subscribe();

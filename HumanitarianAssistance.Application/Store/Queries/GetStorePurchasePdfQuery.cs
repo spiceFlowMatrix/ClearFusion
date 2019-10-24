@@ -1,5 +1,6 @@
 using System;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Application.Store.Models;
 using MediatR;
 
 namespace HumanitarianAssistance.Application.Store.Queries
@@ -19,5 +20,6 @@ namespace HumanitarianAssistance.Application.Store.Queries
         public long ItemGroupId { get; set; }
         public long ItemId { get; set; }
         public long JobId { get; set; }
+        public StorePurchasePdfFlags StorePurchasePdfFlags {get; set;}
     }
 }

@@ -270,6 +270,7 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
 
   addProcurement() {
     if (this.addProcurementForm.valid) {
+      this.commonLoader.showLoader();
       this.purchaseService.addProcurement(this.addProcurementForm.value)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
@@ -279,12 +280,15 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
 
           this.dialogRef.close(this.addProcurementForm.value);
           this.toastr.success(x.Message);
+          this.commonLoader.hideLoader();
         } else if (x.StatusCode === 400) {
           this.toastr.warning(x.Message);
+          this.commonLoader.hideLoader();
         }
       },
       error => {
         console.log(error);
+        this.commonLoader.hideLoader();
       });
     } else {
       this.toastr.warning('Please correct errors in procurement form and submit again');

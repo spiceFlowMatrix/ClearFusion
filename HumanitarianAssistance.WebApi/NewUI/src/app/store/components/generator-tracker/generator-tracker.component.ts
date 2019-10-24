@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { TableActionsModel } from 'projects/library/src/public_api';
 import { Router } from '@angular/router';
@@ -20,6 +20,11 @@ export class GeneratorTrackerComponent implements OnInit {
   recordsCount: number;
   generatorTrackerFilter: IGeneratorTrackerFilter;
 
+  // screen
+  screenHeight: any;
+  screenWidth: any;
+  scrollStyles: any;
+
   constructor(private router: Router , private dialog: MatDialog, private purchaseService: PurchaseService) { }
 
   ngOnInit() {
@@ -34,6 +39,7 @@ export class GeneratorTrackerComponent implements OnInit {
     };
     this.initializeModel();
     this.getGeneratorList(this.generatorTrackerFilter);
+    this.getScreenSize();
   }
 
   initializeModel() {
@@ -46,6 +52,20 @@ export class GeneratorTrackerComponent implements OnInit {
       pageSize: 10
     };
   }
+
+   //#region "Dynamic Scroll"
+   @HostListener('window:resize', ['$event'])
+   getScreenSize(event?) {
+     this.screenHeight = window.innerHeight;
+     this.screenWidth = window.innerWidth;
+
+     this.scrollStyles = {
+       'overflow-y': 'auto',
+       height: this.screenHeight - 110 + 'px',
+       'overflow-x': 'hidden'
+     };
+   }
+   //#endregion
 
   goToDetails(e) {
     this.router.navigate(['store/generator/detail', e.GeneratorId]);

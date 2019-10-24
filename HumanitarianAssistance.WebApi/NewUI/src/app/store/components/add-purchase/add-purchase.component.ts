@@ -39,6 +39,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   receiptType$: Observable<IDropDownModel[]>;
   statusList$: Observable<IDropDownModel[]>;
   purchaseItemDataSource$: Observable<IDropDownModel[]>;
+  hideUnitColums: Observable<{ headers?: string[], items?: string[] }>;
 
   // screen
   screenHeight: any;
@@ -117,6 +118,9 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     });
 
     this.getScreenSize();
+
+    this.hideUnitColums = of({ headers: ['Name', 'Type', 'Uploaded On', 'Uploaded By'],
+    items: ['Filename',  'DocumentTypeName', 'Date', 'UploadedBy'] });
 
   }
 
@@ -448,6 +452,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
           if (x.StatusCode === 200) {
+            debugger;
 
             if (this.uploadedPurchasedFiles.length > 0) {
 
@@ -489,20 +494,24 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   editPurchaseFormSubmit() {
+    debugger;
     console.log(this.addPurchaseForm);
+    const purchaseId = this.addPurchaseForm.value.PurchaseId;
     if (this.addPurchaseForm.valid) {
       this.isAddPurchaseFormSubmitted = true;
       this.purchaseService.EditStorePurchase(this.addPurchaseForm.value)
         .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
+          debugger;
           if (x) {
+            debugger;
             if (this.uploadedPurchasedFiles.length > 0) {
 
               for (let i = 0; i < this.uploadedPurchasedFiles.length; i++) {
 
                 if (this.uploadedPurchasedFiles[i].Id === 0) {
                   this.globalSharedService
-                    .uploadFile(FileSourceEntityTypes.StorePurchase, x.PurchaseId, this.uploadedPurchasedFiles[i].File[0],
+                    .uploadFile(FileSourceEntityTypes.StorePurchase, purchaseId, this.uploadedPurchasedFiles[i].File[0],
                       this.uploadedPurchasedFiles[i].DocumentTypeId)
                     .pipe(takeUntil(this.destroyed$))
                     .subscribe(y => {
@@ -512,7 +521,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
                   if (i === this.uploadedPurchasedFiles.length - 1) {
                      this.addPurchaseForm.reset();
                     this.isAddPurchaseFormSubmitted = false;
-                    this.toastr.success(x.Message);
+                    this.toastr.success('Success');
                     this.router.navigate(['store/purchases']);
                   }
                 } else {
@@ -651,6 +660,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      debugger;
       console.log(result);
       if (result) {
         this.uploadedPurchasedFiles.unshift({
@@ -660,7 +670,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
           Date: this.datePipe.transform(result.uploadDate, 'dd-MM-yyyy'),
           UploadedBy: result.uploadBy === undefined ? 'test' : result.uploadBy,
           File: result.file,
-          DocumentTypeId: result.documentTypeId,
+          DocumentTypeId: result.documentType,
           SignedUrl: result.signedUrl
         });
 

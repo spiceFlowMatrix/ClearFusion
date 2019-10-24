@@ -255,7 +255,7 @@ export enum criteriaEvaluationScores {
   Children_Yes = 2,
   Children_No = 0,
 
-  Disabled_Yes = 2 ,
+  Disabled_Yes = 2,
   Disabled_No = 0,
 
   IDPs_Yes = 1,
@@ -510,8 +510,8 @@ export enum FileSourceEntityTypes {
   ProjectActivityMonitoring = 7,
   ProjectActivityPlanning = 8,
   DonorDetail = 9,
-  StorePurchase= 10,
-  Employee= 11,
+  StorePurchase = 10,
+  Employee = 11,
 }
 //#endregion
 //#region "EmployeeType"
@@ -530,8 +530,8 @@ export enum StoreMasterCategory {
 
 //#region "StoreItemGroups"
 export enum StoreItemGroups {
-Vehicle = 1,
-Generator = 2
+  Vehicle = 1,
+  Generator = 2
 }
 //#endregion
 
@@ -539,12 +539,36 @@ Generator = 2
 export enum StoreItem {
   Vehicle = 1,
   Generator = 2
-  }
-  //#endregion
+}
+//#endregion
 
 export enum DocumentFileTypes {
   PurchaseImage = 1,
   PurchaseInvoice = 2,
   EmployeeProfile = 3,
-  EmployeeDocument= 4
+  EmployeeDocument = 4
+}
+
+export enum SelectedColumnsForStorePdfExport {
+  Id = 1,
+  Item = 2,
+  PurchasedBy = 3,
+  Project = 4,
+  OriginalCost = 5,
+  DepreciatedCost = 6,
+  PurchaseDate = 7,
+  Currency = 8,
+  PurchasedQuantity = 9,
+  ItemCode = 10,
+  ProjectId = 11,
+  ItemCodeDescription = 12,
+  Description = 13,
+  BudgetLineName = 14,
+  DepreciationRate = 15,
+  MasterInventoryCode = 16,
+  OfficeCode = 17,
+  ReceiptDate = 18,
+  InvoiceDate = 19,
+  ReceivedFromLocation = 20,
+  Status = 21
 }
