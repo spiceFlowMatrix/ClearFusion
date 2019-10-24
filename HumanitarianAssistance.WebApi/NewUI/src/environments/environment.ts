@@ -1,12 +1,13 @@
-  export const environment = {
-  production: false,
-  apiUrl: '/api/',
-  docUrl: '/Docs/',
-  hubUrl: '/chathub/',
-  oldUiUrl: '/oldui/#/',
-  notifyHubUrl: '/notifyhub/',
-  uploadUrl: 'https://storage.cloud.google.com/' // proposal doc
-  };
+
+ export const environment = {
+   production: false,
+   apiUrl: '/api/',
+   docUrl: '/Docs/',
+   hubUrl: '/chathub/',
+   oldUiUrl: '/oldui/#/',
+   notifyHubUrl: '/notifyhub/',
+   uploadUrl: 'https://storage.cloud.google.com/' // proposal doc
+   };
 
 //  export const environment = {
 //  production: false,
@@ -17,3 +18,4 @@
 //  hubUrl: 'http://localhost:5000/notifyhub/',
 //  uploadUrl: 'https://storage.cloud.google.com/' // proposal doc
 //  };
+

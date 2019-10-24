@@ -21,5 +21,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
         public bool? CoverageAreaExpansion { get; set; }
         public bool? NewTraining { get; set; }
         public bool? ExpansionGoal { get; set; }
+        public bool? Others { get; set; }
     }
 }

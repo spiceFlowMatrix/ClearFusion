@@ -59,11 +59,12 @@ export interface ICEDonorEligibilityModel{
 export interface ICEisCESubmitModel{
 
   ProjectId?: number;
-  IsCriteriaEvaluationSubmit?: boolean
+  IsCriteriaEvaluationSubmit?: boolean;
 
 
 }
 export interface ICriteriaEvaluationPdfModel {
 ProjectId: number;
+TotalScore: number;
 }
 

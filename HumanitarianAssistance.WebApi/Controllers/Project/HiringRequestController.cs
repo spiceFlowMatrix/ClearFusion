@@ -118,5 +118,24 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         {
             return await _mediator.Send(new GetHiringCandidatesByOfficeIdQuery { OfficeId = OfficeId });
         }
-    }
+        //new Api's
+        [HttpGet]
+        public async Task<ApiResponse> GetAllJobList()
+        {
+            return await _mediator.Send(new GetAllJobListQuery());
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> GetOfficeListByJobId([FromBody]int JobId)
+        {
+            return await _mediator.Send(new GetOfficeListByJobIdQuery { JobId = JobId });
+        }
+        [HttpPost]
+        public async Task<ApiResponse> GetProfessionListByOfficeId([FromBody]int OfficeId)
+        {
+            return await _mediator.Send(new GetProfessionListByOfficeIdQuery { OfficeId = OfficeId });
+
+        }
+    }  
+    
 }
