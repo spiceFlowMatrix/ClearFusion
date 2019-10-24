@@ -29,6 +29,8 @@ export interface MonitoringReviewQuestionModel {
   ProjectIndicatorId: number;
   IsDeleted?: boolean;
   VerificationSources: IVerificationSourceModel[];
+  Score?: number;
+
 }
 export interface IVerificationSourceModel {
   VerificationSourceId?: number;

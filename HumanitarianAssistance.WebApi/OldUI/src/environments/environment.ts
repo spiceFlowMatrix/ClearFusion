@@ -1,10 +1,10 @@
  export const environment = {
-  production: false,
+    production: false,
     apiUrl: '/api/',
     docUrl: '/Docs/',
     hubUrl: '/chathub/'
+ };
 
-};
 
 
 
@@ -14,4 +14,5 @@
 //     docUrl: 'http://localhost:5000/Docs/',
 //     hubUrl: 'http://localhost:5000/notifyhub/'
 // };
+
 

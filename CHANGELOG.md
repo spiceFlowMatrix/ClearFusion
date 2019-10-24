@@ -1,5 +1,16 @@
 # CHANGELOG
 
+<<<<<<< HEAD
+<a name="unreleased"></a>
+## [Unreleased] New In-progress features/bugs in pipeline
+
+### Features
+- Project Other detail pdf export
+- PDF Export for Chart of Accounts `(21 - 26 Aug, 2019)`
+
+### Bug Fixes
+- Null
+=======
 Humanitarian Assistance ERP project features/bug fixes [Testing site](http://cleantestedg.cha-net.org)
 
 ### Blocked
@@ -7,6 +18,7 @@ Humanitarian Assistance ERP project features/bug fixes [Testing site](http://cle
 - Project Other detail pdf export `Blocked`
 
 ### Features [1.2.1]
+>>>>>>> 3d3969cd4e3872ab3f5edca1e34a95233b95d4b8
 
 ### Bug Fixes [1.1.1]
 

@@ -71,6 +71,7 @@ export class VehicleFiltersComponent implements OnInit, OnDestroy {
   }
 
   onApplyFilters() {
+
     this.applyFilterEvent.emit(this.vehicleTrackerFilterForm.value);
   }
 
