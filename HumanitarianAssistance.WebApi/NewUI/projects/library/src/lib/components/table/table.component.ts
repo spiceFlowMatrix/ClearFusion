@@ -104,7 +104,7 @@ export class TableComponent implements OnInit, OnChanges {
   switchSubList(i, event) {
     if (this.subItems.length > 0) this.isShowSubList[i] = !this.isShowSubList[i];
     this.rowClick.emit(event);
-    
+
   }
 
 }

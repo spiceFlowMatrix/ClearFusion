@@ -179,10 +179,10 @@ export class PurchaseListComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(x => {
-        console.log(x);
+        // console.log(x);
 
         this.purchaseList$.subscribe((purchase) => {
-          console.log(purchase);
+          // console.log(purchase);
 
           const index = purchase.findIndex(i => i.Id === x.PurchaseId);
           if (index !== -1) {

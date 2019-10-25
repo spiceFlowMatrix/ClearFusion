@@ -740,7 +740,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         }
 
         [HttpPost]
-        public async Task<ApiResponse> AddEditRiskCriteria([FromBody]AddEditFinancialCriteriaCommand command)
+        public async Task<ApiResponse> AddEditRiskCriteria([FromBody]AddEditRiskCriteriaCommand command)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             command.CreatedById = userId;

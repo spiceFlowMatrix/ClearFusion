@@ -36,6 +36,6 @@ namespace HumanitarianAssistance.Domain.Entities {
         [ForeignKey ("HiringRequestId")]
  
         public long? HiringRequestId { get; set; }
-        public ProjectHiringRequestDetail ProjectHiringRequestDetail { get; set; }
+        // public ProjectHiringRequestDetail ProjectHiringRequestDetail { get; set; }
     }
 }

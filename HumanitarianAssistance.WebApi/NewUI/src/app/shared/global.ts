@@ -403,6 +403,9 @@ export class GLOBAL {
   public static API_HREmployee_AddJobHiringDetail = 'HRJobs/AddJobHiringDetails';
   public static API_HiringRequest_GetProjectHiringRequestDetailsByHiringRequestId =
   'HiringRequest/GetProjectHiringRequestDetailByHiringRequestId';
+  public static API_HiringRequest_GetAllJobs = 'HiringRequest/GetAllJobList';
+  public static API_HiringRequest_GetOfficeListByJobId = 'HiringRequest/GetOfficeListByJobId';
+  public static API_HiringRequest_GetProfessionListByOfficeId = 'HiringRequest/GetProfessionListByOfficeId';
 
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
   public static API_HiringRequest_AddHiringRequestDetail = 'HiringRequest/AddHiringRequestDetail';
@@ -435,6 +438,7 @@ export class GLOBAL {
 
   public static API_Pdf_GetJournalBudgetLineSummaryPdf  = 'Pdf/GetJournalBudgetLineSummaryPdf';
   public static API_Pdf_GetJournalLedgerReportPdf = 'Pdf/GetJournalLedgerReportPdf';
+  public static API_Pdf_GetJournalReportPdf = 'Pdf/GetJournalReportPdf';
   //#endregion
 
   // Store
@@ -459,6 +463,7 @@ export class GLOBAL {
   public static API_VehicleTracker_AddVehicleMileage = 'VehicleTracker/AddVehicleMileage';
   public static API_VehicleTracker_GetVehicleById = 'VehicleTracker/GetVehicleById';
   public static API_VehicleTracker_SaveVehicleDetail = 'VehicleTracker/EditVehicleDetail';
+
   public static API_GeneratorTracker_GetGeneratorList = 'GeneratorTracker/GetGeneratorList';
   public static API_GeneratorTracker_GetGeneratorById = 'GeneratorTracker/GetGeneratorById';
   public static API_GeneratorTracker_AddGeneratorUsageHours = 'GeneratorTracker/AddGeneratorUsageHours';

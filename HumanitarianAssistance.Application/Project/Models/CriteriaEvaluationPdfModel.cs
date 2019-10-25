@@ -4,7 +4,7 @@ namespace HumanitarianAssistance.Application.Project.Models
 {
     public class CriteriaEvaluationPdfModel
     {
-         public long ProjectId { get; set; }
+        public long ProjectId { get; set; }
         public long? DonorCEId { get; set; }
         public int? MethodOfFunding { get; set; }
         public string PastFundingExperience { get; set; }
@@ -113,6 +113,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public bool? IncreaseReputation { get; set; }
         public bool? ImproveDonorRelationship { get; set; }
         public bool? GoodCause { get; set; }
+        public bool? Others { get; set; }
         public bool? ImprovePerformancecapacity { get; set; }
         public bool? SkillImprove { get; set; }
         public bool? FillingFundingGap { get; set; }
@@ -120,7 +121,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public bool? NewEquipment { get; set; }
         public bool? CoverageAreaExpansion { get; set; }
         public bool? NewTraining { get; set; }
-        public bool? ExpansionGoal { get; set; }
+        public string ExpansionGoal { get; set; }
         public double? Total { get; set; }
 
         public double? ProjectActivities { get; set; }
@@ -160,9 +161,18 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string Culture { get; set; }
         public string ReligiousBeliefs { get; set; }
         public string CurrencyName { get; set; }
-
+        public string CheckedIconPath { get; set; }
+        public string UnCheckedIconPath { get; set; }
+        public List<CEFeasibilityExpertOtherDetailModel> CEFeasibilityExpertOtherDetailModel { get; set; }
+        public List<PriorityOtherDetailModel> PriorityOtherDetailModel { get; set; }
+        public List<AssumptionDetailModel> AssumptionDetailModel { get; set; }
+        public List<DonorEligibilityDetailModel> DonorEligibilityDetailModel { get; set; }
+        public List<SelectedProjectsModel> SelectedProjectsModel { get; set; }
+        public double? TotalScore { get; set; }
     }
-
-
+    public class SelectedProjectsModel
+    {
+       public string ProjectName { get; set; } 
+    }
 
 }
