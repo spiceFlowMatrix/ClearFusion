@@ -67,7 +67,7 @@ export class GlobalSharedService {
       .put(url, data, { observe: 'response', 'Content-Type': data.type })
       .pipe(
         map(x => {
-          console.log(x.status);
+          // console.log(x.status);
           const responseData: IResponseData = {
             data: null,
             statusCode: x.status,
@@ -102,7 +102,7 @@ export class GlobalSharedService {
       )
       .pipe(
        concatMap(res => {
-         console.log('res', res);
+         // console.log('res', res);
         const responseData: IResponseData = {
           data: res.data.SignedUrl,
           statusCode: res.StatusCode,
@@ -114,7 +114,7 @@ export class GlobalSharedService {
           throw new Error('Could not get signed URL');
         }
       }), concatMap(res1 => {
-        console.log('res1', res1);
+        // console.log('res1', res1);
           if (res1['status'] === 200) {
             const data: FileModel = {
               FileName: file.name,

@@ -9,6 +9,7 @@ import { VehicleDetailsComponent } from './components/vehicle-details/vehicle-de
 import { GeneratorDetailsComponent } from './components/generator-details/generator-details.component';
 import { EditVehicleComponent } from './components/edit-vehicle/edit-vehicle.component';
 import { EditGeneratorComponent } from './components/edit-generator/edit-generator.component';
+import { StoreConfigurationComponent } from './components/store-configuration/store-configuration.component';
 
 const routes: Routes = [
   {
@@ -23,7 +24,8 @@ const routes: Routes = [
       { path: 'vehicle/detail/:id', component: VehicleDetailsComponent },
       { path: 'generator/detail/:id', component: GeneratorDetailsComponent },
       { path: 'vehicle/edit/:id', component: EditVehicleComponent },
-      { path: 'generator/edit/:id', component: EditGeneratorComponent }
+      { path: 'generator/edit/:id', component: EditGeneratorComponent },
+      { path: 'configuration', component: StoreConfigurationComponent }
     ]
   }
 ];

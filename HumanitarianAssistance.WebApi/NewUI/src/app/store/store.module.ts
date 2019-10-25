@@ -35,6 +35,8 @@ import { EditGeneratorComponent } from './components/edit-generator/edit-generat
 import { AddHoursComponent } from './components/add-hours/add-hours.component';
 import { LogsComponent } from './components/logs/logs.component';
 import { AddDocumentComponent } from './components/document-upload/add-document.component';
+import { StoreConfigurationComponent } from './components/store-configuration/store-configuration.component';
+import { StoreItemConfigComponent } from './components/store-item-config/store-item-config.component';
 
 
 
@@ -61,7 +63,9 @@ import { AddDocumentComponent } from './components/document-upload/add-document.
     EditGeneratorComponent,
     AddHoursComponent,
     LogsComponent,
-    AddDocumentComponent
+    AddDocumentComponent,
+    StoreConfigurationComponent,
+    StoreItemConfigComponent
     // components
     //  DbsidebarComponent,
     // DbheaderComponent,

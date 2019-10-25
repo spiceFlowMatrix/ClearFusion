@@ -1,3 +1,4 @@
+
 import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { AddMilageComponent } from '../add-milage/add-milage.component';
@@ -6,6 +7,7 @@ import { PurchaseService } from '../../services/purchase.service';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 
+
 @Component({
   selector: 'app-vehicle-details',
   templateUrl: './vehicle-details.component.html',
@@ -13,7 +15,9 @@ import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 })
 export class VehicleDetailsComponent implements OnInit, OnDestroy {
 
+
   vehicleDetailForm: any;
+
 
   vehicleId: number;
 
@@ -21,6 +25,7 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
+
 
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
@@ -54,6 +59,7 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
     };
   }
 
+
   //#region "Dynamic Scroll"
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
@@ -76,6 +82,7 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
       }
     });
   }
+
 
   getVehicleDetailById() {
     this.purchaseService.getVehicleDetailById(this.vehicleId)
@@ -105,5 +112,6 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroyed$.next(true);
     this.destroyed$.complete();
+
   }
 }

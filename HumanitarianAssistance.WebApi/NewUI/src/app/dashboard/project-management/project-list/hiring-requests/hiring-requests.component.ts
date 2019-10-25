@@ -40,7 +40,7 @@ getHiringControlPermission() {
       (response: IResponseData) => {
         if (response.statusCode === 200 && response.data != null) {
 
-          // console.log(response.data);
+          // // console.log(response.data);
           this.hiringRequestsService.setHiringPermissions(response.data);
 
         } else {

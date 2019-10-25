@@ -71,7 +71,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
     this.initForm();
     this.addPurchaseForm.valueChanges.subscribe(r => {
-      console.log(r);
+      // console.log(r);
     });
 
     this.activatedRoute.params.subscribe(params => {
@@ -462,7 +462,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   addPurchaseFormSubmit() {
-    console.log(this.addPurchaseForm);
+    // console.log(this.addPurchaseForm);
     if (this.addPurchaseForm.valid) {
       this.isAddPurchaseFormSubmitted = true;
       this.purchaseService.addPurchase(this.addPurchaseForm.value)
@@ -552,7 +552,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         },
           error => {
             this.isAddPurchaseFormSubmitted = false;
-            console.log(error);
+            // console.log(error);
           });
     } else {
       this.toastr.warning('Please correct errors in purchase form and submit again');
@@ -670,7 +670,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
+      // console.log(result);
       if (result) {
         this.uploadedPurchasedFiles.unshift({
           Id: result.id,
