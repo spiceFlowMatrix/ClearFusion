@@ -37,8 +37,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         public async Task<ApiResponse> AddLogisticRequest([FromBody]AddLogisticRequestCommand model)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            model.ModifiedById = userId;
-            model.ModifiedDate = DateTime.UtcNow;
             model.CreatedById = userId;
             model.CreatedDate = DateTime.UtcNow;
             return await _mediator.Send(model);
@@ -67,6 +65,23 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         public async Task<ApiResponse> GetRequestDetailById([FromBody]long RequestId)
         {   
             GetRequestDetailByIdQuery model = new GetRequestDetailByIdQuery();
+            model.RequestId = RequestId; 
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> AddLogisticRequestItems([FromBody]AddLogisticRequestItemsCommand model)
+        {   
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> GetItemsByRequestId([FromBody]long RequestId)
+        {   
+            GetItemsByRequestIdQuery model = new GetItemsByRequestIdQuery();
             model.RequestId = RequestId; 
             return await _mediator.Send(model);
         }

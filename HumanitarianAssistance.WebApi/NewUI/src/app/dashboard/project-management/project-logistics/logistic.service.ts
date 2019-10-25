@@ -71,4 +71,18 @@ export class LogisticService {
       this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllStoreInventoryItems
     );
   }
+
+  addRequestItems(value) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_AddLogisticRequestItems,
+      value
+    );
+  }
+
+  getAllRequestItems(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_AddLogisticRequestItems,
+      requestId
+    );
+  }
 }

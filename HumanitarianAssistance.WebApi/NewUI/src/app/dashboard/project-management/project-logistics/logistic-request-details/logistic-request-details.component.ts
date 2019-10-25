@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import { TableActionsModel } from 'projects/library/src/lib/models/table-actions-model';
 import { AddLogisticItemsComponent } from '../add-logistic-items/add-logistic-items.component';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { LogisticService } from '../logistic.service';
 import { RequestDetailComponent } from '../../project-hiring/request-detail/request-detail.component';
+import { map } from 'rxjs/operators';
 
 
 @Component({
@@ -16,16 +17,15 @@ import { RequestDetailComponent } from '../../project-hiring/request-detail/requ
 export class LogisticRequestDetailsComponent implements OnInit {
 
   requestedItemsHeaders$ = of([
+    'ItemId',
     'Item',
     'Quantity',
     'Estimated Cost',
     'Availability'
   ]);
-  requestedItemsData$ = of([
-    {'Item': 'Item1', 'Quantity': '2', 'Estimated Cost': '8500' , 'Availability': '3'},
-    {'Item': 'Item2', 'Quantity': '3', 'Estimated Cost': '9200' , 'Availability': '4'}
-  ]);
+  requestedItemsData$: Observable<IItemList[]>;
   requestId;
+  requestItemList: any[];
   requestDetail: RequestDetail = {RequestName: '', ProjectId: '', Status: 0, TotalCost: '', RequestId: ''};
   actions: TableActionsModel;
   constructor(private dialog: MatDialog, private routeActive: ActivatedRoute, private logisticservice: LogisticService) { }
@@ -49,8 +49,8 @@ export class LogisticRequestDetailsComponent implements OnInit {
   }
   addItemDialog() {
     const dialogRef = this.dialog.open(AddLogisticItemsComponent, {
-      width: '300px'
-      // data: {name: this.name, animal: this.animal}
+      width: '300px',
+      data: {RequestId: this.requestId}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -69,11 +69,38 @@ export class LogisticRequestDetailsComponent implements OnInit {
     });
   }
 
+  getAllRequestItems() {
+    this.logisticservice.getAllRequestItems(this.requestId).subscribe(res => {
+      this.requestItemList = [];
+      if (res.StatusCode === 200 && res.data.requestItemList != null) {
+        res.data.logisticRequestList.forEach(element => {
+          this.requestItemList.push(element);
+        });
+        this.requestedItemsData$ = of(this.requestItemList).pipe(
+          map(r => r.map(v => ({
+            ItemId: v.ItemId,
+            Item: v.ItemName,
+            Quantity: v.RequestName,
+            EstimatedCost: v.TotalCost,
+            Availability: v.Availability
+           }) as IItemList)));
+      }
+    });
+  }
+
 }
 interface RequestDetail {
-RequestId;
-ProjectId;
-RequestName;
-Status;
-TotalCost;
+  RequestId;
+  ProjectId;
+  RequestName;
+  Status;
+  TotalCost;
+}
+
+interface IItemList {
+  ItemId;
+  Item;
+  Quantity;
+  EstimatedCost;
+  Availability;
 }

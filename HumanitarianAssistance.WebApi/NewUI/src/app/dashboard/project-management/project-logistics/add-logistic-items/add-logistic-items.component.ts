@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LogisticService } from '../logistic.service';
 import { IOpenedChange } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
+import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-add-logistic-items',
@@ -13,8 +15,12 @@ export class AddLogisticItemsComponent implements OnInit {
 
   addLogisticItemsForm: FormGroup;
   storeItemsList: any[];
-  constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<AddLogisticItemsComponent>,
-    private logisticservice: LogisticService) { }
+  constructor(private fb: FormBuilder,
+    private dialogRef: MatDialogRef<AddLogisticItemsComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private logisticservice: LogisticService,
+    private commonLoader: CommonLoaderService,
+    public toastr: ToastrService) { }
 
   ngOnInit() {
     this.addLogisticItemsForm = this.fb.group({
@@ -25,8 +31,26 @@ export class AddLogisticItemsComponent implements OnInit {
     this.getStoreItems();
   }
 
-  addItem() {
-
+  addItem(value) {
+    this.commonLoader.showLoader();
+    const model = {
+      ItemId : value.Item,
+      RequestId : this.data.RequestId,
+      Quantity : value.Quantity,
+      EstimatedCost : value.EstimatedCost
+    };
+    this.logisticservice.addRequestItems(model).subscribe(res => {
+      if (res.StatusCode === 200 && res.CommonId.LongId != null) {
+        this.dialogRef.close();
+        this.commonLoader.hideLoader();
+        this.toastr.success('Item added successfully!');
+        // code goes here
+      } else {
+        this.dialogRef.close();
+        this.commonLoader.hideLoader();
+        this.toastr.warning(res.Message);
+      }
+    });
   }
   cancelItem() {
     this.dialogRef.close();
@@ -48,6 +72,6 @@ export class AddLogisticItemsComponent implements OnInit {
   }
 
   onOpenedItemSelectChange(event: IOpenedChange) {
-    this.addLogisticItemsForm.controls['Item'].setValue(event.Value);
+    this.addLogisticItemsForm.controls['Item'].setValue(event);
   }
 }

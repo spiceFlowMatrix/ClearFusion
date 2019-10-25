@@ -196,6 +196,7 @@ export class GLOBAL {
   public static API_ProjectLogistics_GetAllLogisticRequest = 'ProjectLogistic/GetAllLogisticRequest';
   public static API_ProjectLogistics_DeleteLogisticRequest = 'ProjectLogistic/DeleteLogisticRequest';
   public static API_ProjectLogistics_GetRequestDetailById = 'ProjectLogistic/GetRequestDetailById';
+  public static API_ProjectLogistics_AddLogisticRequestItems = 'ProjectLogistic/AddLogisticRequestItemsj';
   // Chart Of Account
   public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';
   public static API_ChartOfAccount_GetAllAccountsByParentId = 'ChartOfAccount/GetAllAccountsByParentId';
