@@ -41,6 +41,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                   .Include(x => x.EmployeeDetail)
                                   .Include(x => x.ProjectDetail)
                                   .Include(x=> x.ProjectBudgetLineDetail)
+                                  .Include(x=> x.StoreSourceCodeDetail)
                                   .Include(x=> x.OfficeDetail)
                                   .Where(x => x.IsDeleted == false &&
                                         x.StoreInventoryItem.Inventory.AssetType == request.InventoryTypeId &&
@@ -108,7 +109,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     DepreciationRate= x.DepreciationRate,
                     EngineSerialNo= "",
                     IdentificationNo="",
-                    MasterInventoryCode= x.StoreInventoryItem.MasterInventoryCode,
+                    MasterInventoryCode= x.StoreInventoryItem.Inventory.InventoryCode,
                     ModelType="",
                     OfficeCode= x.OfficeDetail.OfficeCode,
                     ReceiptDate= x.DeliveryDate != null ? x.DeliveryDate.ToShortDateString() :"",

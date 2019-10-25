@@ -79,9 +79,9 @@ export interface IProcurementList {
   EmployeeName?: string;
   IssueDate?: string;
   OrderId?: number;
-  MustReturn?: boolean;
+  MustReturn?: string;
   ProcuredAmount?: string;
-  Returned: boolean;
+  Returned: string;
   ReturnedOn?: any;
 }
 

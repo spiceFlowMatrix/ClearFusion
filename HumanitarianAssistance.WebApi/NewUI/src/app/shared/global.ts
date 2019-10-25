@@ -369,7 +369,6 @@ export class GLOBAL {
 
   public static API_Account_GetRoles = 'Account/GetRoles';
   public static API_FileManagement_GetSignedURL = 'FileManagement/GetSignedURL';
-
   public static API_Dashboard_GetTrainingLink = 'Dashboard/GetTrainingLink';
 
 

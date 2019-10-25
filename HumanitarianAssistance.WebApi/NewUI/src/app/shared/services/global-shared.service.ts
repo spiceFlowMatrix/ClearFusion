@@ -198,4 +198,12 @@ export class GlobalSharedService {
     return Math.floor(Math.random() * 10000);
   }
   //#endregion
+
+  //#region "deleteFile"
+  deleteFile(model: any) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_FileManagement_DeleteDocumentFiles, model
+      );
+  }
 }

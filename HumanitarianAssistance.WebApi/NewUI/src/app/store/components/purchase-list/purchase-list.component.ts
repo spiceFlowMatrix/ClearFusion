@@ -223,8 +223,8 @@ export class PurchaseListComponent implements OnInit {
               IssueDate: this.datePipe.transform(x.IssueDate, 'dd-MM-yyyy'),
               Employee: x.EmployeeName,
               ProcuredAmount: x.IssuedQuantity,
-              MustReturn: x.MustReturn === 'Yes' ? true : false,
-              Returned: false,
+              MustReturn: (x.MustReturn === 'Yes' || x.MustReturn)  ? 'Yes' : 'No',
+              Returned: 'No',
               ReturnedOn: null
             } as IProcurementList);
           }

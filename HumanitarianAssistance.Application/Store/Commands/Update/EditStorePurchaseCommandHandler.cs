@@ -42,6 +42,8 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                         }
 
                         StoreItemPurchase purchase = await _dbContext.StoreItemPurchases
+                                                                     .Include(x=> x.VehicleItemDetail)
+                                                                     .Include(x=> x.GeneratorItemDetail)
                                                                      .FirstOrDefaultAsync(x => x.IsDeleted == false && x.PurchaseId == request.PurchaseId);
                        
                         purchase.IsDeleted = false;
@@ -66,6 +68,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                         purchase.Status= request.Status;
                         purchase.UnitCost= request.UnitCost;
                         purchase.UnitType= request.UnitType;
+                        purchase.ApplyDepreciation= request.ApplyDepreciation;
 
                         //Update Purchase
                         _dbContext.StoreItemPurchases.Update(purchase);

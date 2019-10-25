@@ -43,7 +43,7 @@ export class PurchaseFiledConfigComponent implements OnInit {
     { name: 'Office Code', headerName: 'Office Code', modelName: 'OfficeCode', isSelected: false, value: 17 },
     { name: 'Receipt Date', headerName: 'Receipt Date', modelName: 'ReceiptDate', isSelected: false, value: 18 },
     { name: 'Invoice Date', headerName: 'Invoice Date', modelName: 'InvoiceDate', isSelected: false, value: 19 },
-    { name: 'Received From Location', headerName: 'Received From Location', modelName: 'ReceivedFromLocation', isSelected: false,
+    { name: 'Received From Location', headerName: 'Received From Location', modelName: 'ReceivedFromLocationName', isSelected: false,
       value: 20 },
     { name: 'Status', headerName: 'Status', modelName: 'Status', isSelected: false, value: 21 }
   ];

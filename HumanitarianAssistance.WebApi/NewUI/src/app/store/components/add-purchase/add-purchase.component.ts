@@ -528,19 +528,21 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
                       this.uploadedPurchasedFiles[i].DocumentTypeId)
                     .pipe(takeUntil(this.destroyed$))
                     .subscribe(y => {
-                      console.log('uploadSuccess', y);
+
                     });
 
                   if (i === this.uploadedPurchasedFiles.length - 1) {
                     this.isAddPurchaseFormSubmitted = false;
-                    this.toastr.success('Success');
                     // this.router.navigate(['store/purchases']);
+                    this.toastr.success('Success');
                   }
                 } else {
                   // this.router.navigate(['store/purchases']);
+                  this.isAddPurchaseFormSubmitted = false;
                 }
               }
             } else {
+              this.toastr.success('Success');
               this.isAddPurchaseFormSubmitted = false;
               // this.router.navigate(['store/purchases']);
             }
@@ -700,7 +702,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     if (model.InventoryId != null && model.InventoryTypeId != null && model.ItemGroupId != null && model.ItemId != null) {
       this.commonLoader.showLoader();
       this.purchaseService.getTransportItemDataSource(model).subscribe(x => {
-        debugger;
         this.purchaseItemDataSource$ = of(x.map(y => {
           return {
             value: y.ItemId,
@@ -861,16 +862,25 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   onPurchaseDocumentButtonClick(event) {
-
     if (event.type === 'delete') {
       const index = this.uploadedPurchasedFiles.findIndex(obj => obj === event.item);
 
       if (index > -1) {
-        if (this.uploadedPurchasedFiles[index].Id > 0) { // remove file from purchasedDocumentList and backend
+        if (this.uploadedPurchasedFiles[index].Id > 0) {// remove file from purchasedDocumentList and backend
 
+          const model = {
+            PageId: FileSourceEntityTypes.StorePurchase,
+            DocumentFileId: event.item.Id
+          };
+
+          this.globalSharedService.deleteFile(model).subscribe((x) => {
+            if (x.StatusCode === 200) {
+              this.uploadedPurchasedFiles.splice(index, 1);
+              this.uploadedPurchasedFiles =  this.uploadedPurchasedFiles.filter(y => y.Id !== model.DocumentFileId);
+            }
+          });
         } else { // remove file from purchasedDocumentList
           this.uploadedPurchasedFiles.splice(index, 1);
-          console.log('delete', this.uploadedPurchasedFiles);
         }
       } else {
         this.toastr.warning('Item not found to delete');
