@@ -25,7 +25,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public EmployeeDetail EmployeeDetail { get; set; }
         [ForeignKey("PurchaseId")]
         public StoreItemPurchase StoreItemPurchase { get; set; }
-        public VehicleItemDetail VehicleItemDetail { get; set; }
+        public List<VehicleItemDetail> VehicleItemDetail { get; set; }
         public List<VehicleMileageDetail> VehicleMileageDetail {get; set;}
     }
 }

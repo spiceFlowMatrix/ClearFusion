@@ -232,8 +232,12 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public List<LogisticsRequestsModel> logisticRequestList { get; set; }
         public LogisticsRequestsModel logisticRequest { get; set; }
         public long logisticRequestId { get; set; }
+        public List<JobHiringDetailModel> JobDetailList { get; set; }
+        public List<OfficeDetailListModel> OfficeList { get; set; }
+        public List<ProfessionListModel> ProfessionDetailList { get; set; }  
 
-        //Web Link Url 05082019
+
+        //Web Link Url 05082019   
         public string SignedUrl { get; set; }
         public WinProjectDetails WinProjectDetails { get; set; }
         public ApproveProjectDetails ApproveProjectDetails { get; set; }

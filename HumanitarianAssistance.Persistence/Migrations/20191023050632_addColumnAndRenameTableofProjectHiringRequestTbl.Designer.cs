@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191023050632_addColumnAndRenameTableofProjectHiringRequestTbl")]
+    partial class addColumnAndRenameTableofProjectHiringRequestTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5995,8 +5997,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<bool?>("NewTraining");
 
-                    b.Property<bool?>("Others");
-
                     b.Property<long>("ProjectId");
 
                     b.Property<bool?>("SkillImprove");
@@ -6507,7 +6507,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<string>("JobStatus");
 
-                    b.Property<string>("JobType");
+                    b.Property<int?>("JobType");
 
                     b.Property<string>("KnowladgeAndSkillRequired");
 
@@ -6663,8 +6663,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("CurrencyId");
 
-                    b.Property<int?>("FilledVacancies");
-
                     b.Property<int?>("GradeId");
 
                     b.Property<bool>("IsDeleted");
@@ -6701,38 +6699,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectJobHiringDetail");
-                });
-
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectLogisticItems", b =>
-                {
-                    b.Property<long>("LogisticItemId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<double>("EstimatedCost");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<long>("ItemId");
-
-                    b.Property<long>("LogisticRequestsId");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<long>("Quantity");
-
-                    b.HasKey("LogisticItemId");
-
-                    b.HasIndex("ItemId");
-
-                    b.HasIndex("LogisticRequestsId");
-
-                    b.ToTable("ProjectLogisticItems");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectLogisticRequests", b =>
@@ -7820,7 +7786,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GeneratorPurchaseId");
+                    b.HasIndex("GeneratorPurchaseId")
+                        .IsUnique();
 
                     b.HasIndex("PurchaseId")
                         .IsUnique();
@@ -8436,7 +8403,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("PurchaseId")
                         .IsUnique();
 
-                    b.HasIndex("VehiclePurchaseId");
+                    b.HasIndex("VehiclePurchaseId")
+                        .IsUnique();
 
                     b.ToTable("VehicleItemDetail");
                 });
@@ -9996,19 +9964,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectLogisticItems", b =>
-                {
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreInventoryItem", "StoreInventoryItem")
-                        .WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectLogisticRequests", "ProjectLogisticRequests")
-                        .WithMany()
-                        .HasForeignKey("LogisticRequestsId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectLogisticRequests", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectDetail", "ProjectDetail")
@@ -10229,8 +10184,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.GeneratorItemDetail", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.PurchasedGeneratorDetail", "PurchasedGeneratorDetail")
-                        .WithMany("GeneratorItemDetail")
-                        .HasForeignKey("GeneratorPurchaseId")
+                        .WithOne("GeneratorItemDetail")
+                        .HasForeignKey("HumanitarianAssistance.Domain.Entities.Store.GeneratorItemDetail", "GeneratorPurchaseId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreItemPurchase", "StoreItemPurchase")
@@ -10409,8 +10364,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.PurchasedVehicleDetail", "PurchasedVehicleDetail")
-                        .WithMany("VehicleItemDetail")
-                        .HasForeignKey("VehiclePurchaseId")
+                        .WithOne("VehicleItemDetail")
+                        .HasForeignKey("HumanitarianAssistance.Domain.Entities.Store.VehicleItemDetail", "VehiclePurchaseId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
