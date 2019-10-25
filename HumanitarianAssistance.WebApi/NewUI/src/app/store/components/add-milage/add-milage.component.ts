@@ -21,7 +21,6 @@ export class AddMilageComponent implements OnInit {
 
     private dialogRef: MatDialogRef<AddMilageComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
-    debugger;
 
     this.mileageForm = this.fb.group({
       'VehicleId': [data.vehicleId, [Validators.required]],

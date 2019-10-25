@@ -1,0 +1,26 @@
+<lib-sub-header-template>
+  <span class="action_header"> Master Inventories
+    <hum-button [type]="'add'" [text]="'add new'"></hum-button>
+  </span>
+  <div class="action_section">
+
+  </div>
+</lib-sub-header-template>
+<mat-divider></mat-divider>
+
+<mat-card>
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let codeType of sourceCodeTypes" (opened)="openCodeType(codeType)">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{codeType.CodeTypeName}}
+          </mat-panel-title>
+
+        </mat-expansion-panel-header>
+
+        <hum-table [headers]="sourceCodeHeaders$" [items]="sourceCodeByType$" [actions]="unitActions"
+          [hideColums$]="hideSourceCodeColums" (actionClick)="codeAction($event)"></hum-table>
+        <button mat-raised-button color="primary" (click)="codePopUp(codeType.CodeTypeId)">Add</button>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card>

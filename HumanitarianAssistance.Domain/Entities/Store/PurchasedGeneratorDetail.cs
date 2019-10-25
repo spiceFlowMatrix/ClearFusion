@@ -21,7 +21,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
 
         [ForeignKey("PurchaseId")]
         public StoreItemPurchase StoreItemPurchase { get; set; }
-        public GeneratorItemDetail GeneratorItemDetail { get; set; }
+        public List<GeneratorItemDetail> GeneratorItemDetail { get; set; }
         public List<GeneratorUsageHourDetail> GeneratorUsageHourList {get; set;}
     }
 }

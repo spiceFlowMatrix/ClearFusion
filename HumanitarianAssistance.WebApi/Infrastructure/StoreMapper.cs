@@ -34,6 +34,7 @@ namespace HumanitarianAssistance.WebApi.Infrastructure
             CreateMap<EditItemSpecificationsMasterCommand, ItemSpecificationMaster>().ReverseMap();
             CreateMap<EditPurchaseCommand, StoreItemPurchase>().ReverseMap();
             CreateMap<AddStorePurchaseCommand, StoreItemPurchase>().ReverseMap();
+            CreateMap<EditStorePurchaseCommand, StoreItemPurchase>().ReverseMap();
             //CreateMap<List<StoreSourceCodeDetail>, List<StoreSourceCodeDetailModel>>();
 
 

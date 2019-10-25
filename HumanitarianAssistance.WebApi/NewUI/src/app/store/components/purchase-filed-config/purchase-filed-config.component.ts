@@ -17,60 +17,51 @@ export class PurchaseFiledConfigComponent implements OnInit {
   screenWidth: any;
   scrollStyles: any;
 
-  // Input/Output
-  // @Output() configFilterAppliedEvent = new EventEmitter<any>();
+  // name = field to be shown on config filter
+  // headerName= purchaselist header name
+  // modelName=  purchaselist model key name
+  // isSelected= keys to be shown checked by default
+  // value = used at the time of pdf download for identifying selected columns to be printed on pdf
 
-  // columnsToShow = [
-  //   { name: 'Store Item Id', modelName: 'ItemId', value: 1, },
-  //   { name: 'Store Item Code', modelName: 'ItemCode', value: 2 },
-  //   { name: 'Store Item Name', modelName: 'ItemName', value: 3 },
-  //   { name: 'Store Item Code & Description', modelName: 'ItemCodeDescription', value: 4 },
-  //   { name: 'Master Inventory Code', modelName: 'MasterInventoryCode', value: 5 },
-  //   { name: 'Description', modelName: 'Description', value: 6 },
-  //   { name: 'Office Code', modelName: 'OfficeCode', value: 7 },
-  //   { name: 'BudgetLine', modelName: 'BudgetLineName', value: 8 },
-  //   { name: 'Project', modelName: 'ProjectName', value: 9 },
-  //   { name: 'Purchase Order Number', modelName: 'PurchaseOrderNumber', value: 10 },
-  //   { name: 'Purchase Order Date', modelName: 'PurchaseDate', value: 11 },
-  //   { name: 'Invoice Date', modelName: 'InvoiceDate', value: 12 },
-  //   { name: 'AssetType', modelName: 'AssetTypeId', value: 13 },
-  //   { name: 'Maker/Country', modelName: 'MakerCountry', value: 14 },
-  //   { name: 'Chasis No', modelName: 'ChasisNo', value: 15 },
-  //   { name: 'Engine/Serial No', modelName: 'EngineSerialNo', value: 16 },
-  //   { name: 'Registration No', modelName: 'RegistrationNo', value: 17 },
-  //   { name: 'Identification No', modelName: 'IdentificationNo',  value: 18 },
-  //   { name: 'Model/Type', modelName: 'ModelType', value: 19 },
-  //   { name: 'Quantity', modelName: 'PurchasedQuantity', value: 21 },
-  //   { name: 'Currency', modelName: 'CurrencyName', value: 22 },
-  //   { name: 'Receipt Date', modelName: 'ReceiptDate', value: 24 },
-  //   { name: 'Depreciation Rate(%)', modelName: 'DepreciationRate', value: 25 },
-  //   { name: 'Depreciation Value At Hand', modelName: 'DepreciatedCost', value: 27 },
-  //   { name: 'Received From Location',  modelName: 'ReceivedFromLocationName', value: 29 },
-  //   { name: 'Status', modelName: 'Status', value: 30 },
-  // ];
   columnsToShow = [
-    { name: 'Store Item Id', headerName:'Id', modelName: 'Id', value: 1 },
-    { name: 'Store Item Name',headerName:'Item', modelName: 'Item', value: 2 },
-    { name: 'Purchased By', headerName: 'PurchasedBy', modelName: 'PurchasedBy', value: 3 },
-    { name: 'Project', headerName:'Project', modelName: 'Project', value: 4 },
-    { name: 'Original Cost',headerName:'Original Cost', modelName: 'OriginalCost', value: 5 },
-    { name: 'Depriciation Cost', headerName: 'Depricated Cost', modelName: 'DepreciatedCost', value: 6 }]
+    { name: 'Purchase Id', headerName: 'Id', modelName: 'Id', isSelected: true, value: 1 },
+    { name: 'Store Item Name', headerName: 'Item', modelName: 'Item', isSelected: true, value: 2 },
+    { name: 'Purchased By', headerName: 'Purchased By', modelName: 'PurchasedBy', isSelected: true, value: 3 },
+    { name: 'Project', headerName: 'Project', modelName: 'Project', isSelected: true, value: 4 },
+    { name: 'Original Cost', headerName: 'Original Cost', modelName: 'OriginalCost', isSelected: true, value: 5 },
+    { name: 'Depreciated Cost', headerName: 'Depreciated Cost', modelName: 'DepreciatedCost', isSelected: true, value: 6 },
+    { name: 'Purchase Date', headerName: 'Purchase Date', modelName: 'PurchaseDate', isSelected: false, value: 7 },
+    { name: 'Currency', headerName: 'Currency', modelName: 'Currency', isSelected: false, value: 8 },
+    { name: 'PurchasedQuantity', headerName: 'PurchasedQuantity', modelName: 'PurchasedQuantity', isSelected: false, value: 9 },
+    { name: 'Item Code', headerName: 'Item Code', modelName: 'ItemCode', isSelected: false, value: 10 },
+    { name: 'Project Id', headerName: 'Project Id', modelName: 'ProjectId', isSelected: false, value: 11 },
+    { name: 'Item Code Description', headerName: 'Item Code Description', modelName: 'ItemCodeDescription', isSelected: false, value: 12 },
+    { name: 'Description', headerName: 'Description', modelName: 'Description', isSelected: false, value: 13 },
+    { name: 'BudgetLine Name', headerName: 'BudgetLine Name', modelName: 'BudgetLineName', isSelected: false, value: 14 },
+    { name: 'Depreciation Rate', headerName: 'Depreciation Rate', modelName: 'DepreciationRate', isSelected: false, value: 15 },
+    { name: 'Master Inventory Code', headerName: 'Master Inventory Code', modelName: 'MasterInventoryCode', isSelected: false, value: 16 },
+    { name: 'Office Code', headerName: 'Office Code', modelName: 'OfficeCode', isSelected: false, value: 17 },
+    { name: 'Receipt Date', headerName: 'Receipt Date', modelName: 'ReceiptDate', isSelected: false, value: 18 },
+    { name: 'Invoice Date', headerName: 'Invoice Date', modelName: 'InvoiceDate', isSelected: false, value: 19 },
+    { name: 'Received From Location', headerName: 'Received From Location', modelName: 'ReceivedFromLocationName', isSelected: false,
+      value: 20 },
+    { name: 'Status', headerName: 'Status', modelName: 'Status', isSelected: false, value: 21 }
+  ];
   selectedOptions: any[] = [];
 
   constructor(private eRef: ElementRef, private toastr: ToastrService, private fieldConfig: FieldConfigService) { }
 
   ngOnInit() {
     this.getScreenSize();
-   
+    this.change(this.columnsToShow.slice(0, 6));
+    this.selectedOptions.push(this.columnsToShow.slice(0, 6));
   }
 
   show() {
     this.showConfig = true;
-    // this.cdr.detectChanges()
   }
   getState(e) {
     this.showConfig = e;
-
   }
 
   //#region "Dynamic Scroll"
@@ -87,14 +78,10 @@ export class PurchaseFiledConfigComponent implements OnInit {
   }
   //#endregion
 
-  applyConfigFilter() {
-    // console.log(this.selectedOptions);
-  }
   change(list: any[]) {
     if (list.length > 6) {
       this.toastr.warning('6 Filter option can be selected at a time');
     } else {
-      // this.configFilterAppliedEvent.emit(list);
       this.fieldConfig.updateList(list);
     }
 

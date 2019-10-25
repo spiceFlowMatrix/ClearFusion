@@ -7788,8 +7788,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GeneratorPurchaseId")
-                        .IsUnique();
+                    b.HasIndex("GeneratorPurchaseId");
 
                     b.HasIndex("PurchaseId")
                         .IsUnique();
@@ -8405,8 +8404,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("PurchaseId")
                         .IsUnique();
 
-                    b.HasIndex("VehiclePurchaseId")
-                        .IsUnique();
+                    b.HasIndex("VehiclePurchaseId");
 
                     b.ToTable("VehicleItemDetail");
                 });
@@ -10186,8 +10184,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.GeneratorItemDetail", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.PurchasedGeneratorDetail", "PurchasedGeneratorDetail")
-                        .WithOne("GeneratorItemDetail")
-                        .HasForeignKey("HumanitarianAssistance.Domain.Entities.Store.GeneratorItemDetail", "GeneratorPurchaseId")
+                        .WithMany("GeneratorItemDetail")
+                        .HasForeignKey("GeneratorPurchaseId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreItemPurchase", "StoreItemPurchase")
@@ -10366,8 +10364,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.PurchasedVehicleDetail", "PurchasedVehicleDetail")
-                        .WithOne("VehicleItemDetail")
-                        .HasForeignKey("HumanitarianAssistance.Domain.Entities.Store.VehicleItemDetail", "VehiclePurchaseId")
+                        .WithMany("VehicleItemDetail")
+                        .HasForeignKey("VehiclePurchaseId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

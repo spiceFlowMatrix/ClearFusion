@@ -5,7 +5,7 @@
     </a>
     Generator Details
     <hum-button [type]="'add'" [text]="'ADD Hours'" (click)="openHoursModal($event)"></hum-button>
-    <hum-button [type]="'text'" [text]="'Edit detials'" (click)="goToDetails()"></hum-button>
+    <hum-button [type]="'text'" [text]="'Edit details'" (click)="goToDetails()"></hum-button>
   </span>
   <div class="action_section">
   </div>
@@ -124,7 +124,7 @@
               </tr>
               <tr>
                 <td>Purchase Id</td>
-                <td><a>{{generatorDetailForm.PurchaseName}}</a></td>
+                <td><a [routerLink]="['/store/purchase/edit', generatorDetailForm.PurchaseId]">{{generatorDetailForm.PurchaseName}}</a></td>
               </tr>
             </tbody>
           </table>

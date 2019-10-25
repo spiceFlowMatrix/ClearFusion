@@ -6,10 +6,10 @@ import { IDropDownModel, IPurchasedFiles } from '../../models/purchase';
 import { BudgetLineService } from 'src/app/dashboard/project-management/project-list/budgetlines/budget-line.service';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { takeUntil } from 'rxjs/operators';
-import { StoreMasterCategory, StoreItemGroups, FileSourceEntityTypes, DocumentFileTypes } from 'src/app/shared/enum';
+import { StoreMasterCategory, StoreItemGroups, FileSourceEntityTypes, StoreItem } from 'src/app/shared/enum';
 import { VehicleDetailComponent } from '../vehicle-detail/vehicle-detail.component';
 import { AddDocumentComponent } from '../document-upload/add-document.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -38,6 +38,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   employeeList$: Observable<IDropDownModel[]>;
   receiptType$: Observable<IDropDownModel[]>;
   statusList$: Observable<IDropDownModel[]>;
+  purchaseItemDataSource$: Observable<IDropDownModel[]>;
+  hideUnitColums: Observable<{ headers?: string[], items?: string[] }>;
 
   // screen
   screenHeight: any;
@@ -50,10 +52,13 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   selectedItemGroupName = '';
   selectedItemName = '';
   uploadedPurchasedFiles: IPurchasedFiles[] = [];
+  headerText = '';
+  purchaseId: number;
 
   // store enum in a variable to access it in html
   MasterCategory = StoreMasterCategory;
   ItemGroups = StoreItemGroups;
+  StoreItems = StoreItem;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   @ViewChild(VehicleDetailComponent) child;
@@ -62,41 +67,23 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     private fb: FormBuilder, private budgetLineService: BudgetLineService,
     private commonLoader: CommonLoaderService, private toastr: ToastrService,
     private router: Router, private datePipe: DatePipe,
-    private dialog: MatDialog, private globalSharedService: GlobalSharedService) {
+    private dialog: MatDialog, private globalSharedService: GlobalSharedService, private activatedRoute: ActivatedRoute) {
 
-    this.addPurchaseForm = this.fb.group({
-      'InventoryTypeId': [null, [Validators.required]],
-      'InventoryId': [null, [Validators.required]],
-      'ItemGroupId': [null, [Validators.required]],
-      'ItemId': [null, [Validators.required]],
-      'OfficeId': [null, [Validators.required]],
-      'ProjectId': [null],
-      'BudgetLineId': [null],
-      'PurchaseOrderNo': [null],
-      'PurchaseName': [null, [Validators.required]],
-      'ReceiptDate': [null],
-      'PurchaseOrderDate': [null, [Validators.required]],
-      'InvoiceDate': [null],
-      'InvoiceNo': [null],
-      'AssetTypeId': [null],
-      'Unit': [null, [Validators.required]],
-      'Quantity': [null, [Validators.required]],
-      'CurrencyId': [null, [Validators.required]],
-      'Price': [null, [Validators.required]],
-      'ReceivedFromLocation': [null],
-      'ReceivedFromEmployeeId': [null],
-      'ReceiptTypeId': [null, [Validators.required]],
-      'StatusId': [null],
-      'ApplyDepreciation': [false],
-      'DepreciationRate': [null],
-      'TransportVehicles': new FormArray([]),
-      'TransportGenerators': new FormArray([]),
-      'TransportItemId': [null]
-    });
-
+    this.initForm();
     this.addPurchaseForm.valueChanges.subscribe(r => {
       // console.log(r);
     });
+
+    this.activatedRoute.params.subscribe(params => {
+      this.purchaseId = params['id'];
+    });
+
+    if (this.purchaseId) {
+      this.headerText = 'Edit Purchase';
+      this.getStorePurchaseById(this.purchaseId);
+    } else {
+      this.headerText = 'Add New Purchase';
+    }
   }
 
 
@@ -131,6 +118,45 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     });
 
     this.getScreenSize();
+
+    this.hideUnitColums = of({
+      headers: ['Name', 'Type', 'Uploaded On', 'Uploaded By'],
+      items: ['Filename', 'DocumentTypeName', 'Date', 'UploadedBy']
+    });
+
+  }
+
+  initForm() {
+    this.addPurchaseForm = this.fb.group({
+      'InventoryTypeId': [null, [Validators.required]],
+      'InventoryId': [null, [Validators.required]],
+      'ItemGroupId': [null, [Validators.required]],
+      'ItemId': [null, [Validators.required]],
+      'OfficeId': [null, [Validators.required]],
+      'ProjectId': [null],
+      'BudgetLineId': [null],
+      'PurchaseOrderNo': [null],
+      'PurchaseName': [null, [Validators.required]],
+      'ReceiptDate': [null],
+      'PurchaseOrderDate': [null, [Validators.required]],
+      'InvoiceDate': [null],
+      'InvoiceNo': [null],
+      'AssetTypeId': [null],
+      'Unit': [null, [Validators.required]],
+      'Quantity': [null, [Validators.required]],
+      'CurrencyId': [null, [Validators.required]],
+      'Price': [null, [Validators.required]],
+      'ReceivedFromLocation': [null],
+      'ReceivedFromEmployeeId': [null],
+      'ReceiptTypeId': [null, [Validators.required]],
+      'StatusId': [null],
+      'ApplyDepreciation': [false],
+      'DepreciationRate': [null],
+      'TransportVehicles': new FormArray([]),
+      'TransportGenerators': new FormArray([]),
+      'TransportItemId': [null],
+      'PurchaseId': [null]
+    });
   }
 
   subscribeInventoryTypes(response: any) {
@@ -302,14 +328,41 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       event === this.ItemGroups.Generator) {
       this.addGenerators();
     }
+    this.getSelectedItemGroupName(event);
+  }
 
+  getItemSelectedValue(event: any) {
+    this.storeItems$.subscribe(x => {
+      const index = x.findIndex(y => y.value === event);
+      this.selectedItemName = x[index].name;
+    });
+
+    // Remove default vehicle or generator if selected item does not match with vehicle or generator
+    if (event !== this.StoreItems.Generator &&
+      event !== this.StoreItems.Vehicle) {
+      this.removeVehicles();
+      this.removeGenerators();
+    }
+
+    this.transportItemPlaceholder = this.addPurchaseForm.get('ItemGroupId').value === this.ItemGroups.Vehicle ? 'Purchased Vehicle Item' :
+      'Purchased Generator Item';
+
+    this.getTransportItemDataSource();
+
+    this.storeItems$.subscribe(x => {
+      const index = x.findIndex(y => y.value === event);
+      this.selectedItemName = x[index].name;
+    });
+  }
+
+  getSelectedItemGroupName(event) {
     this.storeItemGroups$.subscribe(x => {
       const index = x.findIndex(y => y.value === event);
       this.selectedItemGroupName = x[index].name;
     });
   }
 
-  getItemSelectedValue(event: any) {
+  getSelectedItemName(event) {
     this.storeItems$.subscribe(x => {
       const index = x.findIndex(y => y.value === event);
       this.selectedItemName = x[index].name;
@@ -356,7 +409,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       .getInventoriesByInventoryTypeId(inventoryTypeId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
-
         this.storeInventory$ = of(x.data.map(y => {
           return {
             name: y.InventoryCode + '-' + y.InventoryName,
@@ -366,7 +418,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       });
   }
 
-  getAllStoreItemGroups(inventoryId: number) {
+  getAllStoreItemGroups(inventoryId: number, groupId?: any) {
     this.purchaseService
       .getItemGroupByInventoryId(inventoryId)
       .pipe(takeUntil(this.destroyed$))
@@ -377,10 +429,14 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
             value: y.ItemGroupId
           };
         }));
+
+        if (groupId != null) {
+          this.getSelectedItemGroupName(groupId);
+        }
       });
   }
 
-  getAllStoreItemsByGroupId(groupId: number) {
+  getAllStoreItemsByGroupId(groupId: number, itemId?: any) {
     this.purchaseService
       .getItemsByItemGroupId(groupId)
       .pipe(takeUntil(this.destroyed$))
@@ -391,7 +447,18 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
             value: y.ItemId
           };
         }));
+        if (itemId != null) {
+          this.getSelectedItemName(itemId);
+        }
       });
+  }
+
+  purchaseFormSubmit() {
+    if (this.addPurchaseForm.get('PurchaseId').value == null || this.addPurchaseForm.get('PurchaseId').value == undefined) {
+      this.addPurchaseFormSubmit();
+    } else {
+      this.editPurchaseFormSubmit();
+    }
   }
 
   addPurchaseFormSubmit() {
@@ -402,27 +469,82 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
           if (x.StatusCode === 200) {
+
             if (this.uploadedPurchasedFiles.length > 0) {
 
               for (let i = 0; i < this.uploadedPurchasedFiles.length; i++) {
 
                 this.globalSharedService
-                    .uploadFile(FileSourceEntityTypes.StorePurchase, x.PurchaseId, this.uploadedPurchasedFiles[i].File[0],
-                      this.uploadedPurchasedFiles[i].DocumentTypeId)
-                    .pipe(takeUntil(this.destroyed$))
-                    .subscribe(y => {
-                      // console.log('uploadSuccess', y);
-                    } );
+                  .uploadFile(FileSourceEntityTypes.StorePurchase, x.PurchaseId, this.uploadedPurchasedFiles[i].File[0],
+                    this.uploadedPurchasedFiles[i].DocumentTypeId)
+                  .pipe(takeUntil(this.destroyed$))
+                  .subscribe(y => {
+                    console.log('uploadSuccess', y);
+                  });
 
-                    if (i === this.uploadedPurchasedFiles.length - 1) {
-                      this.addPurchaseForm.reset();
-                      this.isAddPurchaseFormSubmitted = false;
-                      this.toastr.success(x.Message);
-                    }
+                if (i === this.uploadedPurchasedFiles.length - 1) {
+                  this.addPurchaseForm.reset();
+                  this.isAddPurchaseFormSubmitted = false;
+                  this.toastr.success(x.Message);
+                  // this.router.navigate(['store/purchases']);
+                }
               }
             } else {
               this.addPurchaseForm.reset();
               this.isAddPurchaseFormSubmitted = false;
+              // this.router.navigate(['store/purchases']);
+            }
+
+          } else if (x.StatusCode === 400) {
+            this.isAddPurchaseFormSubmitted = false;
+            this.toastr.warning(x.Message);
+          }
+        },
+          error => {
+            this.isAddPurchaseFormSubmitted = false;
+            console.log(error);
+          });
+    } else {
+      this.toastr.warning('Please correct errors in purchase form and submit again');
+    }
+  }
+
+  editPurchaseFormSubmit() {
+    console.log(this.addPurchaseForm);
+    const purchaseId = this.addPurchaseForm.value.PurchaseId;
+    if (this.addPurchaseForm.valid) {
+      this.isAddPurchaseFormSubmitted = true;
+      this.purchaseService.EditStorePurchase(this.addPurchaseForm.value)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(x => {
+          if (x) {
+            if (this.uploadedPurchasedFiles.length > 0) {
+
+              for (let i = 0; i < this.uploadedPurchasedFiles.length; i++) {
+
+                if (this.uploadedPurchasedFiles[i].Id === 0) {
+                  this.globalSharedService
+                    .uploadFile(FileSourceEntityTypes.StorePurchase, purchaseId, this.uploadedPurchasedFiles[i].File[0],
+                      this.uploadedPurchasedFiles[i].DocumentTypeId)
+                    .pipe(takeUntil(this.destroyed$))
+                    .subscribe(y => {
+
+                    });
+
+                  if (i === this.uploadedPurchasedFiles.length - 1) {
+                    this.isAddPurchaseFormSubmitted = false;
+                    // this.router.navigate(['store/purchases']);
+                    this.toastr.success('Success');
+                  }
+                } else {
+                  // this.router.navigate(['store/purchases']);
+                  this.isAddPurchaseFormSubmitted = false;
+                }
+              }
+            } else {
+              this.toastr.success('Success');
+              this.isAddPurchaseFormSubmitted = false;
+              // this.router.navigate(['store/purchases']);
             }
 
           } else if (x.StatusCode === 400) {
@@ -448,6 +570,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   checkExchangeRateExists(exchangeRateDate: any) {
     if (this.addPurchaseForm.value.OfficeId == null || this.addPurchaseForm.value.OfficeId === undefined ||
       this.addPurchaseForm.value.OfficeId === 0) {
+      this.toastr.warning('Select Office');
+      this.addPurchaseForm.get('PurchaseOrderDate').patchValue(null);
       return;
     }
 
@@ -552,12 +676,13 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       if (result) {
         this.uploadedPurchasedFiles.unshift({
           Id: result.id,
-          Filename: result.file[0].name,
+          Filename: result.file === undefined ? result.filename : result.file[0].name,
           DocumentTypeName: result.documentName,
           Date: this.datePipe.transform(result.uploadDate, 'dd-MM-yyyy'),
-          UploadedBy: 'test',
+          UploadedBy: result.uploadBy === undefined ? 'test' : result.uploadBy,
           File: result.file,
-          DocumentTypeId: result.documentType
+          DocumentTypeId: result.documentType,
+          SignedUrl: result.signedUrl
         });
 
         // For ngOnChanges on document-upload component
@@ -566,20 +691,203 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     });
   }
 
-  deletePurchasedDocument(payload) {
-    const index = this.uploadedPurchasedFiles.findIndex(obj => obj === payload);
+  getTransportItemDataSource() {
+    const model = {
+      InventoryId: this.addPurchaseForm.get('InventoryId').value,
+      InventoryTypeId: this.addPurchaseForm.get('InventoryTypeId').value,
+      ItemGroupId: this.addPurchaseForm.get('ItemGroupId').value,
+      ItemId: this.addPurchaseForm.get('ItemId').value,
+    };
 
-    if (index > -1) {
-      if (this.uploadedPurchasedFiles[index].Id > 0) { // remove file from purchasedDocumentList and backend
+    if (model.InventoryId != null && model.InventoryTypeId != null && model.ItemGroupId != null && model.ItemId != null) {
+      this.commonLoader.showLoader();
+      this.purchaseService.getTransportItemDataSource(model).subscribe(x => {
+        this.purchaseItemDataSource$ = of(x.map(y => {
+          return {
+            value: y.ItemId,
+            name: y.PurchaseIdName
+          };
+        }));
 
-      } else { // remove file from purchasedDocumentList
-        this.uploadedPurchasedFiles.splice(index, 1);
-        // console.log('delete', this.uploadedPurchasedFiles);
-      }
-    } else {
-      this.toastr.warning('Item not found to delete');
+        this.commonLoader.hideLoader();
+
+      }, error => {
+        this.commonLoader.hideLoader();
+      });
     }
+  }
 
+  getStorePurchaseById(purchaseId: number) {
+    this.commonLoader.showLoader();
+    this.purchaseService.getStorePurchaseById(Number(purchaseId))
+      .subscribe(x => {
+        // get All dropdown datasource
+        this.getInventoriesByInventoryTypeId(x.InventoryTypeId);
+        this.getAllStoreItemGroups(x.InventoryId, x.ItemGroupId);
+        this.getAllStoreItemsByGroupId(x.ItemGroupId, x.ItemId);
+        this.getEmployeesByOfficeId(x.OfficeId);
+        this.getBudgetLineByProjectId(x.ProjectId);
+
+        x.StoreDocumentList.forEach(y => {
+          this.uploadedPurchasedFiles.push({
+            Id: y.DocumentFileId,
+            Filename: y.DocumentName,
+            DocumentTypeName: y.DocumentTypeName,
+            Date: this.datePipe.transform(y.UploadedOn, 'dd-MM-yyyy'),
+            UploadedBy: y.UploadedBy,
+            DocumentTypeId: y.DocumentTypeId,
+            File: undefined,
+            SignedUrl: y.SignedURL,
+          });
+        });
+
+        // For ngOnChanges on document-upload component
+        this.uploadedPurchasedFiles = this.uploadedPurchasedFiles.slice();
+
+        this.addPurchaseForm.patchValue({
+          InventoryTypeId: x.InventoryTypeId,
+          InventoryId: x.InventoryId,
+          ItemGroupId: x.ItemGroupId,
+          ItemId: x.ItemId,
+          OfficeId: x.OfficeId,
+          ProjectId: x.ProjectId,
+          BudgetLineId: x.BudgetLineId,
+          PurchaseOrderNo: x.SerialNo,
+          PurchaseName: x.PurchaseName,
+          ReceiptDate: x.DeliveryDate,
+          PurchaseOrderDate: x.PurchaseDate,
+          InvoiceDate: x.InvoiceDate,
+          InvoiceNo: x.InvoiceNo,
+          AssetTypeId: x.AssetTypeId,
+          Unit: x.UnitType,
+          Quantity: x.Quantity,
+          CurrencyId: x.Currency,
+          Price: x.UnitCost,
+          ReceivedFromLocation: null,
+          ReceivedFromEmployeeId: x.PurchasedById,
+          ReceiptTypeId: x.ReceiptTypeId,
+          StatusId: x.Status,
+          ApplyDepreciation: x.ApplyDepreciation,
+          DepreciationRate: x.DepreciationRate,
+          TransportItemId: x.TransportItemId,
+          PurchaseId: x.PurchaseId
+        });
+
+        this.setVehicleValue(x.PurchasedVehicleList);
+        this.setGeneratorValue(x.PurchasedGeneratorList);
+        this.getTransportItemDataSource();
+
+        this.commonLoader.hideLoader();
+      }, error => {
+
+        this.commonLoader.hideLoader();
+      });
+  }
+
+  setVehicleValue(item: any[]) {
+    const formArray = new FormArray([]);
+    for (const x of item) {
+      formArray.push(this.fb.group({
+        Id: x.Id,
+        PlateNo: x.PlateNo,
+        EmployeeId: x.EmployeeId,
+        StartingMileage: x.StartingMileage,
+        IncurredMileage: x.IncurredMileage,
+        FuelConsumptionRate: x.FuelConsumptionRate,
+        MobilOilConsumptionRate: x.MobilOilConsumptionRate,
+        OfficeId: x.OfficeId,
+        ModelYear: x.ModelYear
+      }));
+    }
+    this.addPurchaseForm.setControl('TransportVehicles', formArray);
+  }
+
+  setGeneratorValue(item: any[]) {
+    const formArray = new FormArray([]);
+    for (const x of item) {
+      formArray.push(this.fb.group({
+        Id: x.Id,
+        Voltage: x.Voltage,
+        StartingUsage: x.StartingUsage,
+        IncurredUsage: x.IncurredUsage,
+        FuelConsumptionRate: x.FuelConsumptionRate,
+        MobilOilConsumptionRate: x.MobilOilConsumptionRate,
+        OfficeId: x.OfficeId,
+        ModelYear: x.ModelYear
+      }));
+    }
+    this.addPurchaseForm.setControl('TransportGenerators', formArray);
+  }
+
+  deleteVehicle(index: number) {
+    const arrayControl = this.addPurchaseForm.get('TransportVehicles') as FormArray;
+
+    const item = arrayControl.at(index);
+
+    if (item.value.Id !== 0 && item.value.Id !== undefined) {
+      this.purchaseService.deleteVehicle(item.value.Id).subscribe(x => {
+        if (x) {
+          (<FormArray>this.addPurchaseForm.get('TransportVehicles')).removeAt(index);
+        } else {
+          this.toastr.warning('Something went wrong');
+        }
+
+      }, error => {
+        console.log(error);
+      });
+    } else {
+      (<FormArray>this.addPurchaseForm.get('TransportVehicles')).removeAt(index);
+    }
+  }
+
+  deleteGenerator(index: number) {
+    const arrayControl = this.addPurchaseForm.get('TransportGenerators') as FormArray;
+
+    const item = arrayControl.at(index);
+
+    if (item.value.Id !== 0 && item.value.Id !== undefined) {
+      this.purchaseService.deleteGenerator(item.value.Id).subscribe(x => {
+        if (x) {
+          (<FormArray>this.addPurchaseForm.get('TransportGenerators')).removeAt(index);
+        } else {
+          this.toastr.warning('Something went wrong');
+        }
+
+      }, error => {
+        console.log(error);
+      })
+    } else {
+      (<FormArray>this.addPurchaseForm.get('TransportGenerators')).removeAt(index);
+    }
+  }
+
+  onPurchaseDocumentButtonClick(event) {
+    if (event.type === 'delete') {
+      const index = this.uploadedPurchasedFiles.findIndex(obj => obj === event.item);
+
+      if (index > -1) {
+        if (this.uploadedPurchasedFiles[index].Id > 0) {// remove file from purchasedDocumentList and backend
+
+          const model = {
+            PageId: FileSourceEntityTypes.StorePurchase,
+            DocumentFileId: event.item.Id
+          };
+
+          this.globalSharedService.deleteFile(model).subscribe((x) => {
+            if (x.StatusCode === 200) {
+              this.uploadedPurchasedFiles.splice(index, 1);
+              this.uploadedPurchasedFiles =  this.uploadedPurchasedFiles.filter(y => y.Id !== model.DocumentFileId);
+            }
+          });
+        } else { // remove file from purchasedDocumentList
+          this.uploadedPurchasedFiles.splice(index, 1);
+        }
+      } else {
+        this.toastr.warning('Item not found to delete');
+      }
+    } else if ( event.type === 'download') {
+      window.open(event.item.SignedUrl, '_blank');
+    }
   }
 
   ngOnDestroy() {

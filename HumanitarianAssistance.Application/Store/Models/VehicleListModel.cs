@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 
 namespace HumanitarianAssistance.Application.Store.Models
 {
@@ -18,10 +19,12 @@ namespace HumanitarianAssistance.Application.Store.Models
         public string PlateNo {get; set;}
         public int EmployeeId {get; set;}
         public int OfficeId {get; set;}
+        public int CurrencyId {get; set;}
         public string EmployeeName { get; set; }
         public double FuelConsumptionRate { get; set; }
         public double TotalMileage { get; set; }
         public double TotalCost { get; set; }
         public double OriginalCost { get; set; }
+        public DateTime PurchasedDate { get; set; }
     }
 }

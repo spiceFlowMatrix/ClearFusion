@@ -16,6 +16,7 @@ export interface IVehicleTrackerFilter {
   EmployeeId?: number;
   OfficeId?: number;
   PlateNo?: string;
+  DisplayCurrency?: number;
   pageSize: 10;
   pageIndex: 0;
 }

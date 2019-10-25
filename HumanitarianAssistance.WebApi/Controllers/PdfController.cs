@@ -5,6 +5,7 @@ using HumanitarianAssistance.Application.Accounting.Queries;
 using HumanitarianAssistance.Application.HR.Queries;
 using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Application.Project.Queries;
+using HumanitarianAssistance.Application.Store.Queries;
 using HumanitarianAssistance.Common.Enums;
 using Microsoft.AspNetCore.Mvc;
 
@@ -124,6 +125,14 @@ namespace HumanitarianAssistance.WebApi.Controllers
         {
             var file = await _mediator.Send(model);
             return File(file, "application/pdf", "CriteriaEvaluationDetailReport.pdf");
+        }
+
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetStorePurchasePdf([FromBody] GetStorePurchasePdfQuery model)
+        {
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "StorePurchaseReport.pdf");
         }
 
         [HttpPost]
