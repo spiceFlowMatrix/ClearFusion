@@ -247,7 +247,7 @@
         <h4 style="padding-left: 0px !important">Documents
           <hum-button [type]="'add'" [text]="'add'" (click)="openAddDocumentDialog()"></hum-button>
         </h4>
-        <app-document-upload [hideColums$]="hideUnitColums" [purchasedDocumentFiles]="uploadedPurchasedFiles" (deleteDocument)="deletePurchasedDocument($event)"></app-document-upload>
+        <app-document-upload [hideColums$]="hideUnitColums" [purchasedDocumentFiles]="uploadedPurchasedFiles" (documentButtonClicked)="onPurchaseDocumentButtonClick($event)"></app-document-upload>
       </div>
     </div>
   </form>

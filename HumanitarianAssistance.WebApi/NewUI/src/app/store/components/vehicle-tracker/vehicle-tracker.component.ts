@@ -144,7 +144,6 @@ export class VehicleTrackerComponent implements OnInit {
   }
 
   selectedDisplayCurrencyChanged() {
-    debugger;
     this.vehicleTrackerFilter.DisplayCurrency = this.selectedDisplayCurrency;
     this.getVehicleList(this.vehicleTrackerFilter);
 

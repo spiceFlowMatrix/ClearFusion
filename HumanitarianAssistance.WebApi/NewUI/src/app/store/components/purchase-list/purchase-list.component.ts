@@ -277,7 +277,6 @@ export class PurchaseListComponent implements OnInit {
   }
 
   selectedDisplayCurrencyChanged() {
-    debugger;
     this.filterValueModel.DisplayCurrency = this.selectedDisplayCurrency;
     this.getPurchasesByFilter(this.filterValueModel);
 

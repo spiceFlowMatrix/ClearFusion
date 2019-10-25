@@ -63,7 +63,6 @@ export class GlobalSharedService {
 
   //#region "uploadFileBySignedUrl"
   uploadFileBySignedUrl(url: string, data: any, options?: any) {
-    debugger;
     return this.globalService
       .put(url, data, { observe: 'response', 'Content-Type': data.type })
       .pipe(
@@ -82,7 +81,6 @@ export class GlobalSharedService {
 
   //#region "uploadFile"
   uploadFile(pageId: number, entityId: any, file: any, documentTypeId: any = null) {
-    debugger;
     let objectName = SignedUrlObjectName.getSignedURLObjectName(pageId, entityId);
 
     if (objectName == null && objectName === '' && objectName === undefined) {
@@ -104,7 +102,6 @@ export class GlobalSharedService {
       )
       .pipe(
        concatMap(res => {
-         debugger;
          console.log('res', res);
         const responseData: IResponseData = {
           data: res.data.SignedUrl,
@@ -112,16 +109,13 @@ export class GlobalSharedService {
           message: res.Message
         };
         if (responseData.statusCode === 200) {
-          debugger;
           return this.uploadFileBySignedUrl(responseData.data, file);
         } else {
           throw new Error('Could not get signed URL');
         }
       }), concatMap(res1 => {
-        debugger;
         console.log('res1', res1);
           if (res1['status'] === 200) {
-            debugger;
             const data: FileModel = {
               FileName: file.name,
               FilePath: objectName,

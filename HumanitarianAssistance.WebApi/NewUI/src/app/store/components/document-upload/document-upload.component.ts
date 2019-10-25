@@ -12,7 +12,7 @@ export class DocumentUploadComponent implements OnInit, OnChanges {
   actions: TableActionsModel;
 
   @Input() purchasedDocumentFiles: IPurchasedFiles[];
-  @Output() deleteDocument =  new EventEmitter<any>();
+  @Output() documentButtonClicked =  new EventEmitter<any>();
   @Input() hideColums$: Observable<{ headers?: string[], items?: string[] }>;
 
   documentHeaders$: Observable<any>;
@@ -39,8 +39,6 @@ export class DocumentUploadComponent implements OnInit, OnChanges {
   }
 
   documentButtonClick(event) {
-    if (event.type === 'delete') {
-      this.deleteDocument.emit(event.item);
-    }
+      this.documentButtonClicked.emit(event);
   }
 }

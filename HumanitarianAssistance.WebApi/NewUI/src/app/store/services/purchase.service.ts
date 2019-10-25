@@ -171,7 +171,7 @@ export class PurchaseService {
   }
 
   getPurchaseDocumentTypes(): Observable<IDropDownModel[]> {
-    return of([{ name: 'Invoice', value: 1 }, { name: 'Image', value: 2 }]);
+    return of([{ name: 'Image', value: 1 }, { name: 'Invoice', value: 2 }]);
   }
 
   getAllStoreSource() {

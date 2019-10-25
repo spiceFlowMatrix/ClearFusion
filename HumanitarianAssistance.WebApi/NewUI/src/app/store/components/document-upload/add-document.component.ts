@@ -41,7 +41,6 @@ export class AddDocumentComponent implements OnInit {
   }
 
   submitAddDocument() {
-    debugger;
     if (this.addDocumentForm.valid) {
       if (this.data.purchaseDocumentList.length > 0) {
         const index = this.data.purchaseDocumentList.findIndex(x => x.Filename === this.addDocumentForm.controls['file'].value[0].name);

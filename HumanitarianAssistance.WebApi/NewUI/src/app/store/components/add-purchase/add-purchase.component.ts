@@ -119,8 +119,10 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
     this.getScreenSize();
 
-    this.hideUnitColums = of({ headers: ['Name', 'Type', 'Uploaded On', 'Uploaded By'],
-    items: ['Filename',  'DocumentTypeName', 'Date', 'UploadedBy'] });
+    this.hideUnitColums = of({
+      headers: ['Name', 'Type', 'Uploaded On', 'Uploaded By'],
+      items: ['Filename', 'DocumentTypeName', 'Date', 'UploadedBy']
+    });
 
   }
 
@@ -326,8 +328,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       event === this.ItemGroups.Generator) {
       this.addGenerators();
     }
-
-    this.getTransportItemDataSource();
     this.getSelectedItemGroupName(event);
   }
 
@@ -346,12 +346,26 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
     this.transportItemPlaceholder = this.addPurchaseForm.get('ItemGroupId').value === this.ItemGroups.Vehicle ? 'Purchased Vehicle Item' :
       'Purchased Generator Item';
+
+    this.getTransportItemDataSource();
+
+    this.storeItems$.subscribe(x => {
+      const index = x.findIndex(y => y.value === event);
+      this.selectedItemName = x[index].name;
+    });
   }
 
   getSelectedItemGroupName(event) {
     this.storeItemGroups$.subscribe(x => {
       const index = x.findIndex(y => y.value === event);
       this.selectedItemGroupName = x[index].name;
+    });
+  }
+
+  getSelectedItemName(event) {
+    this.storeItems$.subscribe(x => {
+      const index = x.findIndex(y => y.value === event);
+      this.selectedItemName = x[index].name;
     });
   }
 
@@ -422,7 +436,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       });
   }
 
-  getAllStoreItemsByGroupId(groupId: number) {
+  getAllStoreItemsByGroupId(groupId: number, itemId?: any) {
     this.purchaseService
       .getItemsByItemGroupId(groupId)
       .pipe(takeUntil(this.destroyed$))
@@ -433,11 +447,14 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
             value: y.ItemId
           };
         }));
+        if (itemId != null) {
+          this.getSelectedItemName(itemId);
+        }
       });
   }
 
   purchaseFormSubmit() {
-    if (this.addPurchaseForm.get('PurchaseId').value == null || this.addPurchaseForm.get('PurchaseId').value == undefined ) {
+    if (this.addPurchaseForm.get('PurchaseId').value == null || this.addPurchaseForm.get('PurchaseId').value == undefined) {
       this.addPurchaseFormSubmit();
     } else {
       this.editPurchaseFormSubmit();
@@ -452,7 +469,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
           if (x.StatusCode === 200) {
-            debugger;
 
             if (this.uploadedPurchasedFiles.length > 0) {
 
@@ -467,16 +483,16 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
                   });
 
                 if (i === this.uploadedPurchasedFiles.length - 1) {
-                    this.addPurchaseForm.reset();
+                  this.addPurchaseForm.reset();
                   this.isAddPurchaseFormSubmitted = false;
                   this.toastr.success(x.Message);
-                   this.router.navigate(['store/purchases']);
+                  // this.router.navigate(['store/purchases']);
                 }
               }
             } else {
-                this.addPurchaseForm.reset();
+              this.addPurchaseForm.reset();
               this.isAddPurchaseFormSubmitted = false;
-               this.router.navigate(['store/purchases']);
+              // this.router.navigate(['store/purchases']);
             }
 
           } else if (x.StatusCode === 400) {
@@ -494,7 +510,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   editPurchaseFormSubmit() {
-    debugger;
     console.log(this.addPurchaseForm);
     const purchaseId = this.addPurchaseForm.value.PurchaseId;
     if (this.addPurchaseForm.valid) {
@@ -502,9 +517,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       this.purchaseService.EditStorePurchase(this.addPurchaseForm.value)
         .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
-          debugger;
           if (x) {
-            debugger;
             if (this.uploadedPurchasedFiles.length > 0) {
 
               for (let i = 0; i < this.uploadedPurchasedFiles.length; i++) {
@@ -519,20 +532,17 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
                     });
 
                   if (i === this.uploadedPurchasedFiles.length - 1) {
-                     this.addPurchaseForm.reset();
                     this.isAddPurchaseFormSubmitted = false;
                     this.toastr.success('Success');
-                    this.router.navigate(['store/purchases']);
+                    // this.router.navigate(['store/purchases']);
                   }
                 } else {
-                  this.addPurchaseForm.reset();
-                  this.router.navigate(['store/purchases']);
+                  // this.router.navigate(['store/purchases']);
                 }
               }
             } else {
-               this.addPurchaseForm.reset();
               this.isAddPurchaseFormSubmitted = false;
-              this.router.navigate(['store/purchases']);
+              // this.router.navigate(['store/purchases']);
             }
 
           } else if (x.StatusCode === 400) {
@@ -660,7 +670,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      debugger;
       console.log(result);
       if (result) {
         this.uploadedPurchasedFiles.unshift({
@@ -680,21 +689,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     });
   }
 
-  deletePurchasedDocument(payload) {
-    const index = this.uploadedPurchasedFiles.findIndex(obj => obj === payload);
-
-    if (index > -1) {
-      if (this.uploadedPurchasedFiles[index].Id > 0) { // remove file from purchasedDocumentList and backend
-
-      } else { // remove file from purchasedDocumentList
-        this.uploadedPurchasedFiles.splice(index, 1);
-        console.log('delete', this.uploadedPurchasedFiles);
-      }
-    } else {
-      this.toastr.warning('Item not found to delete');
-    }
-  }
-
   getTransportItemDataSource() {
     const model = {
       InventoryId: this.addPurchaseForm.get('InventoryId').value,
@@ -706,6 +700,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     if (model.InventoryId != null && model.InventoryTypeId != null && model.ItemGroupId != null && model.ItemId != null) {
       this.commonLoader.showLoader();
       this.purchaseService.getTransportItemDataSource(model).subscribe(x => {
+        debugger;
         this.purchaseItemDataSource$ = of(x.map(y => {
           return {
             value: y.ItemId,
@@ -728,7 +723,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         // get All dropdown datasource
         this.getInventoriesByInventoryTypeId(x.InventoryTypeId);
         this.getAllStoreItemGroups(x.InventoryId, x.ItemGroupId);
-        this.getAllStoreItemsByGroupId(x.ItemGroupId);
+        this.getAllStoreItemsByGroupId(x.ItemGroupId, x.ItemId);
         this.getEmployeesByOfficeId(x.OfficeId);
         this.getBudgetLineByProjectId(x.ProjectId);
 
@@ -736,10 +731,10 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
           this.uploadedPurchasedFiles.push({
             Id: y.DocumentFileId,
             Filename: y.DocumentName,
-            DocumentTypeId: y.DocumentTypeId,
+            DocumentTypeName: y.DocumentTypeName,
             Date: this.datePipe.transform(y.UploadedOn, 'dd-MM-yyyy'),
             UploadedBy: y.UploadedBy,
-            DocumentTypeName: '',
+            DocumentTypeId: y.DocumentTypeId,
             File: undefined,
             SignedUrl: y.SignedURL,
           });
@@ -779,6 +774,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
         this.setVehicleValue(x.PurchasedVehicleList);
         this.setGeneratorValue(x.PurchasedGeneratorList);
+        this.getTransportItemDataSource();
 
         this.commonLoader.hideLoader();
       }, error => {
@@ -827,7 +823,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
     const item = arrayControl.at(index);
 
-    if (item.value.Id !== 0) {
+    if (item.value.Id !== 0 && item.value.Id !== undefined) {
       this.purchaseService.deleteVehicle(item.value.Id).subscribe(x => {
         if (x) {
           (<FormArray>this.addPurchaseForm.get('TransportVehicles')).removeAt(index);
@@ -848,7 +844,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
     const item = arrayControl.at(index);
 
-    if (item.value.Id !== 0) {
+    if (item.value.Id !== 0 && item.value.Id !== undefined) {
       this.purchaseService.deleteGenerator(item.value.Id).subscribe(x => {
         if (x) {
           (<FormArray>this.addPurchaseForm.get('TransportGenerators')).removeAt(index);
@@ -861,6 +857,26 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       })
     } else {
       (<FormArray>this.addPurchaseForm.get('TransportGenerators')).removeAt(index);
+    }
+  }
+
+  onPurchaseDocumentButtonClick(event) {
+
+    if (event.type === 'delete') {
+      const index = this.uploadedPurchasedFiles.findIndex(obj => obj === event.item);
+
+      if (index > -1) {
+        if (this.uploadedPurchasedFiles[index].Id > 0) { // remove file from purchasedDocumentList and backend
+
+        } else { // remove file from purchasedDocumentList
+          this.uploadedPurchasedFiles.splice(index, 1);
+          console.log('delete', this.uploadedPurchasedFiles);
+        }
+      } else {
+        this.toastr.warning('Item not found to delete');
+      }
+    } else if ( event.type === 'download') {
+      window.open(event.item.SignedUrl, '_blank');
     }
   }
 

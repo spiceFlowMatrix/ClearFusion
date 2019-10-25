@@ -4403,7 +4403,6 @@ export class CriteriaEvaluationComponent
   //#endregion
 
   downloadPdf() {
-    debugger;
     const pdfmodel: ICriteriaEvaluationPdfModel = {
       ProjectId: this.ProjectId
     };

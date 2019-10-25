@@ -116,7 +116,9 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     InvoiceDate= x.InvoiceDate != null ? x.InvoiceDate.Value.ToShortDateString(): "",
                     ReceivedFromLocationName= x.StoreSourceCodeDetail != null? (x.StoreSourceCodeDetail.Code+"-"+x.StoreSourceCodeDetail.Description): "" ,
                     Status= x.StatusAtTimeOfIssue != null? x.StatusAtTimeOfIssue.StatusName : "",
-                    DepreciatedCost = (x.UnitCost * x.Quantity) - (Math.Ceiling(DateTime.Now.Date.Subtract(x.PurchaseDate).TotalDays) * x.Quantity * x.DepreciationRate * x.UnitCost / 100),
+                    // Apply depriciation if true else show original cost
+                    DepreciatedCost = x.ApplyDepreciation? (x.UnitCost * x.Quantity) - (Math.Ceiling(DateTime.Now.Date.Subtract(x.PurchaseDate).TotalDays) * x.Quantity * x.DepreciationRate * x.UnitCost / 100) :
+                                        x.UnitCost * x.Quantity,
                     ProcurementList = x.PurchaseOrders.Where(p=> !p.IsDeleted).Select(z => new ProcurementListModel
                     {
                         OrderId = z.OrderId,

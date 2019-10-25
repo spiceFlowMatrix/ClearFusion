@@ -57,7 +57,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                     DocumentName= df.Name,
                                     DocumentTypeId= df.DocumentTypeId,
                                     UploadedBy= $"{u.FirstName} {u.LastName}",
-                                    UploadedOn= df.CreatedDate
+                                    UploadedOn= df.CreatedDate,
+                                    DocumentTypeName= df.DocumentTypeId== (int)DocumentFileTypes.PurchaseImage ? "Image" : "Invoice"
                                 }).ToListAsync();
 
                 // Get Purchase Data
@@ -142,11 +143,11 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         PageId = (int)FileSourceEntityTypes.StorePurchase,
                         RecordId = request.PurchaseId,
-                        DocumentTypeId = item.DocumentTypeId
+                        DocumentFileId= item.DocumentFileId
                     };
 
                      //get Saved Document ID and Signed URL For Purchase Image
-                     var documentModel = await _fileManagement.GetFilesByRecordIdAndDocumentType(fileModel);
+                     var documentModel = await _fileManagement.GetFilesByDocumentFileId(fileModel);
 
                     if (documentModel != null)
                     {

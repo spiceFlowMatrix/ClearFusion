@@ -136,7 +136,6 @@ export class GeneratorTrackerComponent implements OnInit {
   }
 
   selectedDisplayCurrencyChanged() {
-    debugger;
     this.generatorTrackerFilter.DisplayCurrency = this.selectedDisplayCurrency;
     this.getGeneratorList(this.generatorTrackerFilter);
 

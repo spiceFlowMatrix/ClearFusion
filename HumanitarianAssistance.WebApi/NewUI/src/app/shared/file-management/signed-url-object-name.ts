@@ -1,8 +1,6 @@
 import { FileSourceEntityTypes } from '../enum';
 
  export class SignedUrlObjectName {
-   debugger;
-
   static getSignedURLObjectName(pageId: number, entityId?: number): string {
     let objectName = '';
 
