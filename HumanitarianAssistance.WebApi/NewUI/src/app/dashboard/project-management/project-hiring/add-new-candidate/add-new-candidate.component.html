@@ -1,0 +1,200 @@
+<div>
+  <h1 mat-dialog-title>
+    Employee Details
+    <button mat-icon-button [mat-dialog-close] class="pull-right">
+      <mat-icon aria-label="clear">clear</mat-icon>
+    </button>
+  </h1>
+  <form
+    class="example-form"
+    [formGroup]="addNewCandidateForm"
+    (ngSubmit)="onFormSubmit(addNewCandidateForm.value)"
+  >
+    <div mat-dialog-content>
+      <div class="row">
+        <span class="formHeading">Identity Details</span><br />
+        <div class="col-sm-12">
+          <div class="row">
+            <div class="col-lg-3 col-sm-3">
+              <mat-form-field class="example-full-width">
+                <input
+                  matInput
+                  formControlName="FirstName"
+                  placeholder="First Name"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-lg-3 col-sm-3">
+              <mat-form-field class="example-full-width">
+                <input
+                  matInput
+                  formControlName="LastName"
+                  placeholder="Last Name"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-lg-3 col-sm-3">
+              <mat-form-field class="example-full-width">
+                <input matInput formControlName="Email" placeholder="Email" />
+              </mat-form-field>
+            </div>
+            <div class="col-lg-3 col-sm-3">
+              <mat-form-field class="example-full-width">
+                <input
+                  matInput
+                  formControlName="PhoneNumber"
+                  placeholder="Phone Number"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-lg-3 col-sm-3">
+              <lib-hum-dropdown
+                formControlName="AccountStatus"
+                [validation]="
+                  addNewCandidateForm.controls['AccountStatus'].hasError(
+                    'required'
+                  )
+                "
+                [options]="accountStatusList$"
+                [placeHolder]="'Account Status'"
+              ></lib-hum-dropdown>
+            </div>
+          </div>
+          <div class="row">
+            <span class="formHeading">Employee Personal Details</span><br />
+            <div class="col-sm-12">
+              <div class="row">
+                <div class="col-lg-3 col-sm-3">
+                  <lib-hum-dropdown
+                    formControlName="Gender"
+                    [validation]="
+                      addNewCandidateForm.controls['Gender'].hasError(
+                        'required'
+                      )
+                    "
+                    [options]="genderList$"
+                    [placeHolder]="'Gender'"
+                  ></lib-hum-dropdown>
+                </div>
+                <div class="col-lg-3 col-sm-3">
+                  <mat-form-field class="example-full-width">
+                    <input
+                      matInput
+                      [matDatepicker]="DateOfBirthPicker"
+                      placeholder="Date Of Birth"
+                      formControlName="DateOfBirth"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="DateOfBirthPicker"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #DateOfBirthPicker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-lg-3 col-sm-3">
+                  <lib-hum-dropdown
+                    formControlName="Grade"
+                    [validation]="
+                      addNewCandidateForm.controls['Grade'].hasError('required')
+                    "
+                    [options]="gradeList$"
+                    [placeHolder]="'Grade'"
+                  ></lib-hum-dropdown>
+                </div>
+                <div class="col-lg-3 col-sm-3">
+                  <lib-hum-dropdown
+                    formControlName="Profession"
+                    [validation]="
+                      addNewCandidateForm.controls['Profession'].hasError(
+                        'required'
+                      )
+                    "
+                    [options]="professionList$"
+                    [placeHolder]="'Profession'"
+                  ></lib-hum-dropdown>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-3 col-sm-3">
+                  <lib-hum-dropdown
+                    formControlName="Office"
+                    [validation]="
+                      addNewCandidateForm.controls['Office'].hasError(
+                        'required'
+                      )
+                    "
+                    [options]="officeList$"
+                    [placeHolder]="'Office'"
+                  ></lib-hum-dropdown>
+                </div>
+                <div class="col-lg-3 col-sm-3">
+                  <lib-hum-dropdown
+                    formControlName="Country"
+                    [validation]="
+                      addNewCandidateForm.controls['Country'].hasError(
+                        'required'
+                      )
+                    "
+                    [options]="countryList$"
+                    [placeHolder]="'Country'"
+                    (change)="onChangeCountry($event)"
+                  ></lib-hum-dropdown>
+                </div>
+                <div class="col-lg-3 col-sm-3">
+                  <lib-hum-dropdown
+                    formControlName="Province"
+                    [validation]="
+                      addNewCandidateForm.controls['Province'].hasError(
+                        'required'
+                      )
+                    "
+                    [options]="provinceList$"
+                    [placeHolder]="'Province'"
+                  ></lib-hum-dropdown>
+                </div>
+                <div class="col-lg-3 col-sm-3">
+                  <mat-form-field class="example-full-width">
+                    <input
+                      matInput
+                      formControlName="ExperienceInYear"
+                      placeholder="Experience (Year)"
+                      type="number"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-3 col-sm-3">
+                  <mat-form-field class="example-full-width">
+                    <input
+                      matInput
+                      formControlName="ExperienceInMonth"
+                      placeholder="Experience (Month)"
+                      type="number"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col-lg-3 col-sm-3">
+                    <lib-hum-dropdown
+                      formControlName="District"
+                      [validation]="
+                        addNewCandidateForm.controls['District'].hasError(
+                          'required'
+                        )
+                      "
+                      [options]="districtList$"
+                      [placeHolder]="'District'"
+                    ></lib-hum-dropdown>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div mat-dialog-actions class="pull-right">
+      <button mat-raised-button [mat-dialog-close]>Cancel</button>
+      <button mat-raised-button color="primary" type="submit">Save</button>
+    </div>
+  </form>
+</div>

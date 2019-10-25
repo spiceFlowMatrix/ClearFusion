@@ -106,20 +106,25 @@ export class HiringRequestsComponent implements OnInit {
     const dialogRef = this.dialog.open(AddHiringRequestComponent, {
       width: '700px',
       autoFocus: false,
+      data: {
+        hiringRequestId: 0,
+        projectId: this.projectId
+      }
     });
 
     // refresh the list after new request created
-    // dialogRef.componentInstance.onHiringRequestListRefresh.subscribe(() => {
+    dialogRef.componentInstance.onAddHiringRequestListRefresh.subscribe(() => {
       // do something
-     // this.getAllHiringRequestFilterList();
-    // });
+      this.getAllHiringRequestFilterList();
+    });
 
-    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.afterClosed().subscribe(result => {
+    });
   }
   //#endregion
 
   requestDetail(e) {
-    console.log(e.HiringRequestId);
-   // this.router.navigate(['../hiring-request/' + e.HiringRequestId]);
+    // console.log(e.HiringRequestId);
+    // this.router.navigate(['../hiring-request/' + e.HiringRequestId]);
   }
 }

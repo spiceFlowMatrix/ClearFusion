@@ -1,5 +1,5 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable, forkJoin, ReplaySubject, of } from 'rxjs';
 import { IDropDownModel } from 'src/app/store/models/purchase';
@@ -22,7 +22,9 @@ import {
 export class AddHiringRequestComponent implements OnInit {
   projectId: number;
   OfficeId: number;
+  hiringRequestId: number;
   AvailableVacancies: number;
+  hiringRequestDetail: IHiringRequestModel;
   addHiringRequestForm: FormGroup;
   professionList$: Observable<IDropDownModel[]>;
   officeList$: Observable<IDropDownModel[]>;
@@ -31,18 +33,23 @@ export class AddHiringRequestComponent implements OnInit {
   jobList$: Observable<IDropDownModel[]>;
   countryList$: Observable<IDropDownModel[]>;
   provinceList$: Observable<IDropDownModel[]>;
+  onAddHiringRequestListRefresh = new EventEmitter();
+  onUpdateHiringRequestListRefresh = new EventEmitter();
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(
     public dialogRef: MatDialogRef<AddHiringRequestComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private commonLoader: CommonLoaderService,
     private routeActive: ActivatedRoute,
     private hiringRequestService: HiringRequestsService,
     private toastr: ToastrService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private loader: CommonLoaderService
   ) {
     this.addHiringRequestForm = this.fb.group({
       ProjectId: [null],
+      HiringRequestId: [null],
       JobCategory: [null, [Validators.required]],
       MinEducationLevel: [null, [Validators.required]],
       TotalVacancy: [null, [Validators.required]],
@@ -80,8 +87,13 @@ export class AddHiringRequestComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.projectId = 1;
+    this.projectId = this.data.projectId;
+    this.hiringRequestId = this.data.hiringRequestId;
     this.addHiringRequestForm.controls['ProjectId'].setValue(this.projectId);
+    this.addHiringRequestForm.controls['HiringRequestId'].setValue(this.hiringRequestId);
+    if (this.data.hiringRequestId !== 0) {
+      this.getAllHiringRequestDetail();
+    }
     forkJoin([this.getAllOfficeList(), this.getAllCountryList()])
       .pipe(takeUntil(this.destroyed$))
       .subscribe(result => {
@@ -98,7 +110,90 @@ export class AddHiringRequestComponent implements OnInit {
     this.commonLoader.showLoader();
     return this.hiringRequestService.GetCountryList();
   }
-
+  getAllHiringRequestDetail() {
+    this.hiringRequestService
+      .GetAllProjectHiringRequestDetailByHiringRequestId(this.data.hiringRequestId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        (response: IResponseData) => {
+          this.loader.showLoader();
+          if (response.statusCode === 200 && response.data !== null) {
+            this.hiringRequestDetail = {
+              HiringRequestId: response.data.HiringRequestId,
+              ProjectId: response.data.ProjectId,
+              JobCategory: response.data.JobCategory,
+              MinEducationLevel: response.data.MinEducationLevel,
+              TotalVacancy: response.data.TotalVacancy,
+              Position: response.data.Position,
+              Organization: response.data.Organization,
+              Office: response.data.Office,
+              ContractType: response.data.ContractType,
+              ContractDuration: response.data.ContractDuration,
+              Gender: response.data.Gender,
+              SalaryRange: response.data.SalaryRange,
+              AnouncingDate: response.data.AnouncingDate,
+              ClosingDate: response.data.ClosingDate,
+              Country: response.data.Country,
+              Province: response.data.Province,
+              Nationality: response.data.Nationality,
+              JobType: response.data.JobType,
+              JobShift: response.data.JobShift,
+              JobStatus: response.data.JobStatus,
+              Experience: response.data.Experience,
+              Background: response.data.Background,
+              SpecificDutiesAndResponsibilities:
+                response.data.SpecificDutiesAndResponsibilities,
+              KnowledgeAndSkillsRequired:
+                response.data.KnowledgeAndSkillsRequired,
+              SubmissionGuidelines: response.data.SubmissionGuidelines
+            };
+            this.OfficeId = this.hiringRequestDetail.Office;
+            this.getAllProfessionList(this.hiringRequestDetail.Office);
+            this.getAllJobList(this.hiringRequestDetail.Position);
+            this.getAllProvinceList(this.hiringRequestDetail.Country);
+            this.getRemainingVacancy(this.hiringRequestDetail.JobCategory);
+            this.setHiringRequestDetails(this.hiringRequestDetail);
+          }
+          this.loader.hideLoader();
+        },
+        error => {
+          this.loader.hideLoader();
+        }
+      );
+  }
+  setHiringRequestDetails(data: IHiringRequestModel) {
+    this.loader.showLoader();
+    this.addHiringRequestForm = this.fb.group({
+      HiringRequestId: [data.HiringRequestId],
+      ProjectId: [data.ProjectId],
+      JobCategory: [data.JobCategory],
+      MinEducationLevel: [data.MinEducationLevel],
+      TotalVacancy: [data.TotalVacancy],
+      Position: [data.Position],
+      Organization: [data.Organization],
+      Office: [data.Office],
+      ContractType: [data.ContractType],
+      ContractDuration: [data.ContractDuration],
+      Gender: [data.Gender],
+      Nationality: [data.Nationality],
+      SalaryRange: [data.SalaryRange],
+      AnouncingDate: [data.AnouncingDate],
+      ClosingDate: [data.ClosingDate],
+      Country: [data.Country],
+      Province: [data.Province],
+      JobType: [data.JobType],
+      JobShift: [data.JobShift],
+      JobStatus: [data.JobStatus],
+      Experience: [data.Experience],
+      Background: [data.Background],
+      SpecificDutiesAndResponsibilities: [
+        data.SpecificDutiesAndResponsibilities
+      ],
+      KnowledgeAndSkillsRequired: [data.KnowledgeAndSkillsRequired],
+      SubmissionGuidelines: [data.SubmissionGuidelines]
+    });
+    this.loader.hideLoader();
+  }
   subscribeOfficeList(response: any) {
     this.commonLoader.hideLoader();
     this.officeList$ = of(
@@ -217,6 +312,7 @@ export class AddHiringRequestComponent implements OnInit {
       (response: IResponseData) => {
         if (response.statusCode === 200) {
           this.toastr.success('New request is created successfully');
+          this.AddHiringRequestListRefresh();
         } else {
           this.toastr.error(response.message);
         }
@@ -229,6 +325,24 @@ export class AddHiringRequestComponent implements OnInit {
   }
   //#endregion
 
+  //#region "EditHirinRequest"
+  EditHiringRequest(data: IHiringRequestModel) {
+    this.hiringRequestService.EditHiringRequestDetail(data).subscribe(
+      (response: IResponseData) => {
+        if (response.statusCode === 200) {
+          this.toastr.success('New request is created successfully');
+          this.UpdateHiringRequestListRefresh();
+        } else {
+          this.toastr.error(response.message);
+        }
+        this.onCancelPopup();
+      },
+      error => {
+        this.toastr.error('Someting went wrong. Please try again');
+      }
+    );
+  }
+  //#endregion
   onChangeDutyStation(e) {
     this.professionList$ = null;
     this.jobList$ = null;
@@ -249,7 +363,11 @@ export class AddHiringRequestComponent implements OnInit {
   }
   onFormSubmit(data: any) {
     if (this.addHiringRequestForm.valid) {
-      this.AddHiringRequest(data);
+      if (this.hiringRequestId === 0) {
+        this.AddHiringRequest(data);
+      } else {
+        this.EditHiringRequest(data);
+      }
       console.log(data);
     }
   }
@@ -258,4 +376,13 @@ export class AddHiringRequestComponent implements OnInit {
     this.dialogRef.close();
   }
   //#endregion
+
+    //#region "hiringRequestListRefresh"
+    AddHiringRequestListRefresh() {
+      this.onAddHiringRequestListRefresh.emit();
+    }
+    UpdateHiringRequestListRefresh() {
+      this.onUpdateHiringRequestListRefresh.emit();
+    }
+    //#endregion
 }

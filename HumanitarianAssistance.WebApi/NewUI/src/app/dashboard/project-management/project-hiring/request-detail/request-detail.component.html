@@ -1,6 +1,6 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
   <span class="action_header">Request Details
-    <hum-button [type]="'edit'" [text]="'Edit'"></hum-button>
+    <hum-button [type]="'edit'" [text]="'Edit'" (click)="editHiringRequest()"></hum-button>
     <hum-button [type]="'add'" [text]="'complete '"></hum-button>
     <hum-button [type]="'cancel'" [text]="'close'"></hum-button>
   </span>
@@ -32,7 +32,7 @@
               <td>{{hiringRequestDetails.Office}}</td>
             </tr>
             <tr>
-              <td>Proffesion/Position</td>
+              <td>Profession/Position</td>
               <td>{{hiringRequestDetails.Position}}</td>
             </tr>
             <tr>
@@ -64,7 +64,7 @@
     <div class="col-md-12">
       <mat-tab-group>
         <mat-tab label="New Candidates">
-          <h5>Candidates <hum-button [type]="'add'" [text]="'ADD'"></hum-button>
+          <h5>Candidates <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewCandidate()"></hum-button>
           </h5>
 
           <hum-table [headers]="newCandidatesHeaders$" [items]="newCandidatesList$"></hum-table>

@@ -70,20 +70,17 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
                 var requestDetail = (from hr in _dbContext.ProjectHiringRequestDetail.Where(x => x.IsDeleted == false &&
                                                                                                         x.ProjectId == request.ProjectId)
-                                     join c in _dbContext.CurrencyDetails on hr.CurrencyId equals c.CurrencyId into h
-                                     from c in h.DefaultIfEmpty()
-                                         // join b in _dbContext.ProjectBudgetLineDetail on hr.BudgetLineId equals b.BudgetLineId into bl
-                                         // from b in bl.DefaultIfEmpty()
-                                     join o in _dbContext.OfficeDetail on hr.OfficeId equals o.OfficeId into od
-                                     from o in od.DefaultIfEmpty()
-                                     join g in _dbContext.JobGrade on hr.GradeId equals g.GradeId into gd
-                                     from g in gd.DefaultIfEmpty()
-                                     join j in _dbContext.JobHiringDetails on hr.HiringRequestId equals j.HiringRequestId into jd
+                                     join j in _dbContext.ProjectJobHiringDetail on hr.JobId equals j.JobId into jd
                                      from j in jd.DefaultIfEmpty()
+                                     join c in _dbContext.CurrencyDetails on j.CurrencyId equals c.CurrencyId into h
+                                     from c in h.DefaultIfEmpty()                               
+                                     join g in _dbContext.JobGrade on j.GradeId equals g.GradeId into gd
+                                     from g in gd.DefaultIfEmpty()
+                                     join p in _dbContext.ProfessionDetails on hr.ProfessionId equals p.ProfessionId into pd
+                                     from p in pd.DefaultIfEmpty()
                                          // join e in _dbContext.EmployeeDetail on hr.EmployeeID equals e.EmployeeID into ed
                                          // from e in ed.DefaultIfEmpty()
-                                         // join p in _dbContext.ProfessionDetails on hr.ProfessionId equals p.ProfessionId into pd
-                                         // from p in pd.DefaultIfEmpty()
+                                        
                                          // join u in _dbContext.UserDetails on hr.CreatedById equals u.AspNetUserId into ud
                                          // from u in ud.DefaultIfEmpty()
                                      select new ProjectHiringRequestModel
@@ -91,11 +88,11 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                          HiringRequestId = hr.HiringRequestId,
                                          JobCode = j.JobCode,
                                          JobGrade = g.GradeName,
-                                         Position = hr.Position,
+                                         Position = p.ProfessionName,
                                          TotalVacancies = hr.TotalVacancies,
                                          FilledVacancies = hr.FilledVacancies != null ? hr.FilledVacancies : 0,
                                          PayCurrency = c.CurrencyName,
-                                         PayRate = hr.BasicPay,
+                                         PayRate = j.PayRate,
                                          Status = hr.IsCompleted == true ? "Completed" : "InProgress"
                                      })
                                     .Skip(request.pageSize.Value * request.pageIndex.Value)

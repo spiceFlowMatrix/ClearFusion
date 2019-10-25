@@ -26,8 +26,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
         public string Experience { get; set; }
         public string Background { get; set; }
         public int? Nationality { get; set; }
-        public string SpecificDutiesAndResponsblities { get; set; }
-        public string KnowladgeAndSkillRequired { get; set; }
-        public string SubmissionGuidlines { get; set; }
+        public string SpecificDutiesAndResponsibilities { get; set; }
+        public string KnowledgeAndSkillsRequired { get; set; }
+        public string SubmissionGuidelines { get; set; }
     }
 }

@@ -38,27 +38,29 @@ export interface OfficeDetailModel {
 }
 
 export interface IHiringRequestModel {
-  ProjectId: number;
-  JobCategory: number;
-  MinEducationLevel: string;
-  TotalVacancy: number;
-  Position: number;
-  Organization: string;
-  Office: number;
-  ContractType: string;
-  ContractDuration: number;
-  Gender: number;
-  SalaryRange: string;
-  AnouncingDate: Date;
-  ClosingDate: Date;
-  Country: number;
-  Province: number;
-  JobType: string;
-  JobShift: number;
-  JobStatus: string;
-  Experience: string;
-  Background: string;
-  SpecificDutiesAndResponsibilities: string;
-  KnowledgeAndSkillsRequired: string;
-  SubmissionGuidelines: string;
+  HiringRequestId?: number;
+  ProjectId?: any;
+  JobCategory?: number;
+  MinEducationLevel?: string;
+  TotalVacancy?: number;
+  Position?: number;
+  Organization?: string;
+  Office?: number;
+  ContractType?: string;
+  ContractDuration?: number;
+  Gender?: number;
+  Nationality?: number;
+  SalaryRange?: string;
+  AnouncingDate?: Date;
+  ClosingDate?: Date;
+  Country?: number;
+  Province?: number;
+  JobType?: string;
+  JobShift?: number;
+  JobStatus?: string;
+  Experience?: string;
+  Background?: string;
+  SpecificDutiesAndResponsibilities?: string;
+  KnowledgeAndSkillsRequired?: string;
+  SubmissionGuidelines?: string;
 }
