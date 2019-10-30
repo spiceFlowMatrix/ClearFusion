@@ -150,17 +150,20 @@
                     "
                     [options]="provinceList$"
                     [placeHolder]="'Province'"
+                    (change)="onChangeProvince($event)"
                   ></lib-hum-dropdown>
                 </div>
                 <div class="col-lg-3 col-sm-3">
-                  <mat-form-field class="example-full-width">
-                    <input
-                      matInput
-                      formControlName="ExperienceInYear"
-                      placeholder="Experience (Year)"
-                      type="number"
-                    />
-                  </mat-form-field>
+                  <lib-hum-dropdown
+                    formControlName="District"
+                    [validation]="
+                      addNewCandidateForm.controls['District'].hasError(
+                        'required'
+                      )
+                    "
+                    [options]="districtList$"
+                    [placeHolder]="'District'"
+                  ></lib-hum-dropdown>
                 </div>
               </div>
               <div class="row">
@@ -175,17 +178,15 @@
                   </mat-form-field>
                 </div>
                 <div class="col-lg-3 col-sm-3">
-                    <lib-hum-dropdown
-                      formControlName="District"
-                      [validation]="
-                        addNewCandidateForm.controls['District'].hasError(
-                          'required'
-                        )
-                      "
-                      [options]="districtList$"
-                      [placeHolder]="'District'"
-                    ></lib-hum-dropdown>
-                  </div>
+                  <mat-form-field class="example-full-width">
+                    <input
+                      matInput
+                      formControlName="ExperienceInYear"
+                      placeholder="Experience (Year)"
+                      type="number"
+                    />
+                  </mat-form-field>
+                </div>
               </div>
             </div>
           </div>

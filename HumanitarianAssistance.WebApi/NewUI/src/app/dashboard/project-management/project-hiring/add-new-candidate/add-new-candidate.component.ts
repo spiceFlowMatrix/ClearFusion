@@ -165,7 +165,7 @@ export class AddNewCandidateComponent implements OnInit {
         }
       );
   }
-  getAllDistrictList(ProvinceId: number) {
+  getAllDistrictList(ProvinceId: any) {
     this.hiringRequestService
       .GetAllDistrictvalueByProvinceId([ProvinceId])
       .subscribe(
@@ -176,7 +176,7 @@ export class AddNewCandidateComponent implements OnInit {
               response.data.map(element => {
                 return {
                   value: element.DistrictId,
-                  name: element.DistrictName
+                  name: element.District
                 } as IDropDownModel;
               })
             );
@@ -190,10 +190,11 @@ export class AddNewCandidateComponent implements OnInit {
   }
   onChangeCountry(e) {
     this.provinceList$ = null;
+    this.districtList$ = null;
     this.getAllProvinceList(e);
   }
   onChangeProvince(e) {
-    this.provinceList$ = null;
+    this.districtList$ = null;
     this.getAllDistrictList(e);
   }
   onFormSubmit(data: any) {
