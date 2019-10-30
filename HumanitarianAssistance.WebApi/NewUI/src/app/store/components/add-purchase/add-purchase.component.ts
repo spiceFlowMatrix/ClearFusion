@@ -54,6 +54,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   uploadedPurchasedFiles: IPurchasedFiles[] = [];
   headerText = '';
   purchaseId: number;
+  showDownloadButton = false;
 
   // store enum in a variable to access it in html
   MasterCategory = StoreMasterCategory;
@@ -70,19 +71,17 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     private dialog: MatDialog, private globalSharedService: GlobalSharedService, private activatedRoute: ActivatedRoute) {
 
     this.initForm();
-    this.addPurchaseForm.valueChanges.subscribe(r => {
-      // console.log(r);
-    });
-
     this.activatedRoute.params.subscribe(params => {
       this.purchaseId = params['id'];
     });
 
     if (this.purchaseId) {
       this.headerText = 'Edit Purchase';
+      this.showDownloadButton = true;
       this.getStorePurchaseById(this.purchaseId);
     } else {
       this.headerText = 'Add New Purchase';
+      this.showDownloadButton = false;
     }
   }
 

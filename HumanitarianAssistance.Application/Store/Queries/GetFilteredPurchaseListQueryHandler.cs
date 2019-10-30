@@ -117,9 +117,12 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     InvoiceDate= x.InvoiceDate != null ? x.InvoiceDate.Value.ToShortDateString(): "",
                     ReceivedFromLocationName= x.StoreSourceCodeDetail != null? (x.StoreSourceCodeDetail.Code+"-"+x.StoreSourceCodeDetail.Description): "" ,
                     Status= x.StatusAtTimeOfIssue != null? x.StatusAtTimeOfIssue.StatusName : "",
+                    ApplyDepreciation= x.ApplyDepreciation,
                     // Apply depriciation if true else show original cost
-                    DepreciatedCost = x.ApplyDepreciation? (x.UnitCost * x.Quantity) - (Math.Ceiling(DateTime.Now.Date.Subtract(x.PurchaseDate).TotalDays) * x.Quantity * x.DepreciationRate * x.UnitCost / 100) :
-                                        x.UnitCost * x.Quantity,
+                    DepreciatedCost = x.UnitCost * x.Quantity,
+                    UnitCost= x.UnitCost,
+                    Quantity= x.Quantity,
+
                     ProcurementList = x.PurchaseOrders.Where(p=> !p.IsDeleted).Select(z => new ProcurementListModel
                     {
                         OrderId = z.OrderId,
@@ -135,6 +138,22 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                 model.RecordCount = await queryResult.CountAsync();
                 model.PurchaseList = await queryResult.Skip(request.pageIndex.Value * request.pageSize.Value).Take(request.pageSize.Value).ToListAsync();
+
+                // Calculate Depreciation Cost when Depreciation Comparision Date is not null
+                if(model.PurchaseList.Any())
+                {
+                    foreach(var item in model.PurchaseList)
+                    {
+                        if(item.ApplyDepreciation && request.DepreciationComparisionDate != null)
+                        {
+                            // If comparision date is greater than the date item is purchased on
+                            if(request.DepreciationComparisionDate.Value.Date > item.PurchaseDate.Date)
+                            {
+                                item.DepreciatedCost = item.DepreciatedCost - (Math.Ceiling(request.DepreciationComparisionDate.Value.Date.Subtract(item.PurchaseDate.Date).TotalDays) * item.Quantity * item.DepreciationRate * item.UnitCost / 100);
+                            }
+                        }
+                    }
+                }
 
                 // If Display Currency is selected the display cost after exchange rate
                 if(request.DisplayCurrency != null)

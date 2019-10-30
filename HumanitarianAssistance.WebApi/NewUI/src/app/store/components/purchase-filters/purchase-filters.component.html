@@ -43,7 +43,7 @@
           </div>
           <div class="col-md-3">
             <mat-form-field>
-              <input matInput formControlName="DateOfPurchase" [matDatepicker]="DateOfPurchase"
+              <input matInput formControlName="DateOfPurchase" [matDatepicker]="DateOfPurchase" (dateChange)="getPurchaseDateSelectedValue($event.value)"
                 placeholder="Date of Purchase">
               <mat-datepicker-toggle matSuffix [for]="DateOfPurchase"></mat-datepicker-toggle>
               <mat-datepicker #DateOfPurchase></mat-datepicker>
@@ -51,7 +51,7 @@
           </div>
           <div class="col-md-3">
             <mat-form-field>
-              <input matInput formControlName="DateOfIssue" [matDatepicker]="DateOfIssue" placeholder="Date of Issue">
+              <input matInput formControlName="DateOfIssue" [matDatepicker]="DateOfIssue" placeholder="Date of Issue" (dateChange)="getIssueDateSelectedValue($event.value)">
               <mat-datepicker-toggle matSuffix [for]="DateOfIssue"></mat-datepicker-toggle>
               <mat-datepicker #DateOfIssue></mat-datepicker>
             </mat-form-field>
@@ -71,6 +71,13 @@
           <div class="col-md-3">
             <lib-hum-dropdown [options]="storeItems$" formControlName="ItemId" [placeHolder]="'Item'"
               (change)="getItemSelectedValue($event)"></lib-hum-dropdown>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field>
+              <input matInput formControlName="DepreciationComparisionDate" [matDatepicker]="DepreciationComparisionDate" (dateChange)="getComparisionDateSelectedValue($event.value)" placeholder="Comparision Date">
+              <mat-datepicker-toggle matSuffix [for]="DepreciationComparisionDate"></mat-datepicker-toggle>
+              <mat-datepicker #DepreciationComparisionDate></mat-datepicker>
+            </mat-form-field>
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
+<form [formGroup]='addPurchaseForm' (ngSubmit)="purchaseFormSubmit()">
 <lib-sub-header-template>
   <span class="action_header">{{headerText}}
-    <hum-button *ngIf="!isAddPurchaseFormSubmitted"  (click)='purchaseFormSubmit()' [type]="'save'" [text]="'save'">
+    <hum-button *ngIf="!isAddPurchaseFormSubmitted" [isSubmit]="true" [type]="'save'" [text]="'save'">
     </hum-button>
     <hum-button *ngIf="isAddPurchaseFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
     <hum-button (click)='cancelButtonClicked()' [type]="'cancel'" [text]="'cancel'"></hum-button>
@@ -16,7 +17,6 @@
 </div>
 
 <mat-card [ngStyle]="scrollStyles">
-  <form [formGroup]='addPurchaseForm'>
 
     <div class="row">
         <h4>Item Detail</h4>
@@ -247,8 +247,8 @@
         <h4 style="padding-left: 0px !important">Documents
           <hum-button [type]="'add'" [text]="'add'" (click)="openAddDocumentDialog()"></hum-button>
         </h4>
-        <app-document-upload [hideColums$]="hideUnitColums" [purchasedDocumentFiles]="uploadedPurchasedFiles" (documentButtonClicked)="onPurchaseDocumentButtonClick($event)"></app-document-upload>
+        <app-document-upload [showDownloadButton]="showDownloadButton" [hideColums$]="hideUnitColums" [purchasedDocumentFiles]="uploadedPurchasedFiles" (documentButtonClicked)="onPurchaseDocumentButtonClick($event)"></app-document-upload>
       </div>
     </div>
-  </form>
 </mat-card>
+</form>

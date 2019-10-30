@@ -12,6 +12,7 @@ export class DocumentUploadComponent implements OnInit, OnChanges {
   actions: TableActionsModel;
 
   @Input() purchasedDocumentFiles: IPurchasedFiles[];
+  @Input() showDownloadButton: boolean;
   @Output() documentButtonClicked =  new EventEmitter<any>();
   @Input() hideColums$: Observable<{ headers?: string[], items?: string[] }>;
 
@@ -19,19 +20,19 @@ export class DocumentUploadComponent implements OnInit, OnChanges {
   documentsList$: Observable<any>;
 
   constructor() {
+
+  }
+  ngOnInit() {
+    this.documentHeaders$ = of(['Id', 'Name', 'Type', 'Uploaded On', 'Uploaded By']);
     this.actions = {
       items: {
         button: { status: false, text: '' },
         delete: true,
-        download: true,
+        download: this.showDownloadButton ? true : false,
       },
       subitems: {}
 
     };
-  }
-
-  ngOnInit() {
-    this.documentHeaders$ = of(['Id', 'Name', 'Type', 'Uploaded On', 'Uploaded By']);
   }
 
   ngOnChanges() {

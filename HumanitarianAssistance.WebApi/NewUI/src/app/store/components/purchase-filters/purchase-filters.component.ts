@@ -47,7 +47,8 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
       DateOfIssue: [null],
       InventoryMasterId: [null],
       ItemGroupId: [null],
-      ItemId: [null]
+      ItemId: [null],
+      DepreciationComparisionDate: [null]
     });
   }
 
@@ -157,6 +158,19 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
 
    getItemSelectedValue(event: any) {
      this.onPurchaseFilterSelectionChanged();
+   }
+
+   getPurchaseDateSelectedValue(event: any) {
+    this.onPurchaseFilterSelectionChanged();
+   }
+
+   getIssueDateSelectedValue(event: any) {
+    this.onPurchaseFilterSelectionChanged();
+   }
+
+   getComparisionDateSelectedValue(event: any) {
+     debugger;
+    this.onPurchaseFilterSelectionChanged();
    }
 
   getJobsByProjectId(projectId: number) {

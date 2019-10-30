@@ -31,6 +31,7 @@ export interface IFilterValueModel {
   ItemId: any;
   JobId: any;
   DisplayCurrency?: number;
+  DepreciationComparisionDate: any;
   StorePurchasePdfFlags?: IStorePurchasePdfFlags;
 
   PageIndex?: number;
