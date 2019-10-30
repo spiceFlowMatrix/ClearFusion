@@ -54,7 +54,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
                         Immunization = request.Immunization,
                         InfantandYoungChildFeeding = request.InfantandYoungChildFeeding,
                         Nutrition = request.Nutrition,
-                        CommunicableDisease = request.CommunityBasedEducation,
+                        CommunicableDisease = request.CommunicableDisease,
                         Hygiene = request.Hygiene,
                         EnvironmentalHealth = request.EnvironmentalHealth,
                         MentalHealthandDisabilityService = request.MentalHealthandDisabilityService,

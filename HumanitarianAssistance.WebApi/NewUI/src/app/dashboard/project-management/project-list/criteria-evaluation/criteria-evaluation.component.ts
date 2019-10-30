@@ -782,6 +782,7 @@ export class CriteriaEvaluationComponent
   }
 
   onCommunityBasedEducationChange(value) {
+    debugger;
     this.productAndServiceForm.CommunityBasedEducation = value.checked;
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
@@ -812,6 +813,7 @@ export class CriteriaEvaluationComponent
   }
 
   onCommunicableDiseaseChange(value) {
+    debugger;
     this.productAndServiceForm.CommunicableDisease = value.checked;
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }

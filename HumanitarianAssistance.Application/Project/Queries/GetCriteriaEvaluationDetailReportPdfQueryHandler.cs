@@ -187,7 +187,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                         Operational = financial.Operational,
                                         Overhead_Admin = financial.Overhead_Admin,
                                         Lump_Sum = financial.Lump_Sum,
-                                        Total = (double)Math.Round((financial.ProjectActivities ?? 0.0 + financial.Operational ?? 0.0 + financial.Overhead_Admin ?? 0.0 + financial.Lump_Sum ?? 0.0), 2),
+                                        Total = (double)Math.Round(((financial.ProjectActivities ?? 0.0) + (financial.Operational ?? 0.0) + (financial.Overhead_Admin ?? 0.0) + (financial.Lump_Sum ?? 0.0)), 2),
                                         Security = risk.Security,
                                         Staff = risk.Staff,
                                         ProjectAssets = risk.ProjectAssets,
@@ -418,9 +418,10 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     UnCheckedIconPath = _env.WebRootFileProvider.GetFileInfo("ReportLogo/uncheck.png")?.PhysicalPath,
                     CEFeasibilityExpertOtherDetailModel = model.CEFeasibilityExpertOtherDetailModel,
                     PriorityOtherDetailModel = model.PriorityOtherDetailModel,
-                     AssumptionDetailModel = model.AssumptionDetailModel,
-                     DonorEligibilityDetailModel = model.DonorEligibilityDetailModel,
-                    TotalScore = request.TotalScore
+                    AssumptionDetailModel = model.AssumptionDetailModel,
+                    DonorEligibilityDetailModel = model.DonorEligibilityDetailModel,
+                    TotalScore = request.TotalScore,
+                    LogoPath = _env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath
                 };
 
 
@@ -441,12 +442,12 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     foreach (var item in selectedProjects)
                     {
                         modl.ProjectName = item.ProjectName;
+                        pdfModel.SelectedProjectsModel.Add(modl);
                     }
-                    pdfModel.SelectedProjectsModel.Add(modl);
                 }
 
-            // Note : currency id Zero check is for old data stored in Proposal detail having currencyId is 0
-                if (model.CurrencyId != null && model.CurrencyId !=0)
+                // Note : currency id Zero check is for old data stored in Proposal detail having currencyId is 0
+                if (model.CurrencyId != null && model.CurrencyId != 0)
                 {
                     var currencyName = await _dbContext.CurrencyDetails.Where(x => x.CurrencyId == model.CurrencyId).Select(c => new
                     {

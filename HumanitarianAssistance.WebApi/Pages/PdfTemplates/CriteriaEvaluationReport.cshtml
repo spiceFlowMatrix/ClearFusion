@@ -5,22 +5,32 @@
 </head>
 <body style="background-color:#fafafa;">
 	
-    <table style="width:650px;margin:0 auto;background-color:#ffffff;font-family:'Arial', 'Lucida Sans Unicode', 'Lucida Sans', 'DejaVu Sans', Verdana, sans-serif" cellpadding="0" cellspacing="0">
+    <table style="width:695px;margin:0 auto;background-color:#ffffff;font-family:'Arial', 'Lucida Sans Unicode', 'Lucida Sans', 'DejaVu Sans', Verdana, sans-serif" cellpadding="0" cellspacing="0">
     	<tr>
+           <td>
+               <table cellpadding="5" style="width:100%;">
+                   <tr>
+                       <td><img src="@Model.LogoPath" alt=""></td>
+                       <td style="text-align:center;font-size:18px;font-weight:400;">COORDINATION OF HUMANITARIAN ASSISTANCE(CHA)<br>Criteria Evaluation Report</td>
+                   </tr>
+               </table>
+           </td>
+        </tr>
+        <tr>
         	<td>
-            	<table style="width:100%;text-align:right;" cellpadding="25" cellspacing="0">
+            	<table style="width:100%;" cellpadding="25" cellspacing="0">
                 	<tr>
-                    	<td>
+                    	<td style="width:70%;">
                             @if(Model.TotalScore <= 30 && Model.ProjectAllowedBylaw == "Yes") 
                             {
                                 @Html.Label("(The total score must be greater than 30)")
-                            } else if(Model.TotalScore >= 50)
+                            } else if(Model.TotalScore >= 50 && Model.ProjectAllowedBylaw == "Yes")
                             {
-                                @Html.Label("(The evaluation is in very good standing and this project is a candidate for approval.)")
+                               <label> (The evaluation is in very good standing and this project is a candidate for approval.)</label> 
                             }
                            
                         </td>
-                         <td>
+                         <td style = "text-align: right; width:30%;">
                         @if(Model.ProjectAllowedBylaw == "No")
                         {
                             <label>Total Score: 0.0</label>
@@ -35,18 +45,18 @@
         </tr>
         <tr>
         	<td>
-            	<table style="width:100%" cellpadding="25" cellspacing="0">
+            	<table style="width:100%;border-top:1px solid #dfdfdf;" cellpadding="25" cellspacing="0">
                 	<tr>
-                    	<td style="width:300px;">Project allowed by law: <span>@Model.ProjectAllowedBylaw</span></td>
+                    	<td style="width:50%;">Project allowed by law: <span>@Model.ProjectAllowedBylaw</span></td>
                         <td></td>
-                        <td align="right"> Currency: @Model.CurrencyName</td>
+                        <td align="right; width:50%;"> Currency: @Model.CurrencyName</td>
                     </tr>
                 </table>
             </td>
         </tr>
         <tr>
         	<td >
-            	<table style="width:100%;border-bottom:1px solid #dfdfdf;" cellpadding="25" cellspacing="0">
+            	<table style="width:100%;" cellpadding="25" cellspacing="0">
                 	<tr>
                     	<td style="text-transform:uppercase;font-weight:bold;font-size:14px;">Feasibility</td>
                     </tr>
@@ -554,7 +564,7 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td colspan="4">Rural Development and Social Protection</td>
+                                            	<td colspan="4">Rural Development and Social Protection:</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
@@ -676,7 +686,7 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td colspan="4">Education</td>
+                                            	<td colspan="4">Education:</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
@@ -779,7 +789,7 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td colspan="4">Health and Nutrition</td>
+                                            	<td colspan="4">Health and Nutrition:</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
@@ -930,7 +940,7 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td colspan="4">Disaster Risk Reduction</td>
+                                            	<td colspan="4">Disaster Risk Reduction:</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
@@ -1036,7 +1046,7 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td colspan="4">Agriculture and Livestock</td>
+                                            	<td colspan="4">Agriculture and Livestock:</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
@@ -1858,12 +1868,16 @@
         	<td>
             	<table style="width:100%;" cellpadding="15" cellspacing="0">
                 	<tr>
-                    	<td style="font-size:12px;">Assumption: </td>
+                        <td style="font-size:12px;">Assumption: </td>
+                    	<td>&nbsp;</td>
+
                     </tr>
                      @foreach(var i in @Model.AssumptionDetailModel)
                      {
                       <tr>
                           <td style="font-size:12px;"> @i.Name</td>
+                          <td>&nbsp;</td>
+
                       </tr>
                      }
                 </table>
@@ -1883,12 +1897,16 @@
         	<td>
             	<table style="width:100%;" cellpadding="15" cellspacing="0">
                 	<tr>
-                    	<td style="font-size:12px;">Criteria:</td>
+                   
+                        <td style="font-size:12px;">Criteria:</td>
+                    	<td>&nbsp;</td>
                     </tr>
                     @foreach(var i in @Model.DonorEligibilityDetailModel)
                      {
                       <tr>
+                         
                           <td style="font-size:12px;"> @i.Name</td>
+                          <td>&nbsp;</td>
                       </tr>
                      }
 
