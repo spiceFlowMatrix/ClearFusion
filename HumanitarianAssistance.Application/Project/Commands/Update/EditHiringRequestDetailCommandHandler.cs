@@ -55,7 +55,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                     projectHiringRequest.ProjectId = request.ProjectId;
                     projectHiringRequest.TotalVacancies = request.TotalVacancy;
                     projectHiringRequest.AnouncingDate = request.AnouncingDate;
-                    projectHiringRequest.JobType = request.JobType;
+                    // projectHiringRequest.JobType = request.JobType;
                     projectHiringRequest.Background = request.Background;
                     projectHiringRequest.JobStatus = request.JobStatus;
                     projectHiringRequest.JobId = request.JobCategory;
