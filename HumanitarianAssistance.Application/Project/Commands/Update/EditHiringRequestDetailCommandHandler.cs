@@ -49,7 +49,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                     projectHiringRequest.ProjectId = request.ProjectId;
                     projectHiringRequest.TotalVacancies = request.TotalVacancies;
                     projectHiringRequest.AnouncingDate = request.AnouncingDate;
-                   // projectHiringRequest.JobType = request.JobType;
+                    // projectHiringRequest.JobType = request.JobType;
                     projectHiringRequest.Background = request.Background;
                     projectHiringRequest.JobStatus = request.JobStatus;
                     projectHiringRequest.KnowladgeAndSkillRequired = request.KnowladgeAndSkillRequired;
@@ -66,7 +66,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                     projectHiringRequest.MinimumEducationLevel = request.MinimumEducationLevel;
                     projectHiringRequest.Experience = request.Experience;
                     projectHiringRequest.Organization = request.Organization;
-                   // projectHiringRequest.JobCategory = request.JobCategory;
+                    // projectHiringRequest.JobCategory = request.JobCategory;
                     await _dbContext.SaveChangesAsync();
                     // Note : edit ProjectJob in old Ui
                     if (projectHiringRequest.HiringRequestId != 0)
