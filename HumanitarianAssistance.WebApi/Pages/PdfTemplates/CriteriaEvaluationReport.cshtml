@@ -1815,14 +1815,11 @@
                                             	<td colspan="2">Multiple Opportunity Project Selection: </td>
                                                 <td>&nbsp;</td>
                                             </tr>
-                                            @foreach(var item in @Model.SelectedProjectsModel)
-                                            {
-                                             <tr>
-                                            	<td>&nbsp;</td>
-                                            	<td colspan="2"> @item.ProjectName</td>
+                                          <tr>
+                                              <td>&nbsp;</td>
+                                               <td  colspan="2">@String.Join(", ", Model.SelectedProjectArray.Select(p => p.ProjectName).ToArray())</td>
                                                 <td>&nbsp;</td>
-                                            </tr>
-                                            }
+                                          </tr>                                           
                                             <tr>
                                             	<td>&nbsp;</td>
                                             	<td>Probably Delay/Cuts in funding</td>

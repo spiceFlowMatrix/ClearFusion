@@ -7,6 +7,7 @@ using AutoMapper;
 using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Application.Project.Models;
 using HumanitarianAssistance.Common.Enums;
+using HumanitarianAssistance.Domain.Entities.Project;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
@@ -426,26 +427,24 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
 
                 var selectedProjects = await _dbContext.FinancialProjectDetail
+                                                        .Include(x=> x.SelectedProjectDetail)
                                                         .Where(x => x.ProjectId == request.ProjectId &&
-                                                                                                    x.IsDeleted == false
-                                                                                                  ).Select(x => new
-                                                                                                  {
-                                                                                                      x.ProjectSelectionId,
-                                                                                                      x.ProjectDetail.ProjectName
-                                                                                                  }).
-                                                                                                    ToListAsync();
+                                                                                                    x.IsDeleted == false)
+                                                        .ToListAsync();
 
                 pdfModel.SelectedProjectsModel = new List<SelectedProjectsModel>();
                 if (selectedProjects.Any())
                 {
-                    SelectedProjectsModel modl = new SelectedProjectsModel();
+                    List<ProjectDetail> projrctdetail = await _dbContext.ProjectDetail.Where(x => x.IsDeleted == false).ToListAsync();
                     foreach (var item in selectedProjects)
                     {
-                        modl.ProjectName = item.ProjectName;
+                        SelectedProjectsModel modl = new SelectedProjectsModel();
+
+                        modl.ProjectName = projrctdetail.Where(x => x.ProjectId == item.ProjectSelectionId).FirstOrDefault().ProjectName;
                         pdfModel.SelectedProjectsModel.Add(modl);
                     }
                 }
-
+                pdfModel.SelectedProjectArray =  pdfModel.SelectedProjectsModel.ToArray();
                 // Note : currency id Zero check is for old data stored in Proposal detail having currencyId is 0
                 if (model.CurrencyId != null && model.CurrencyId != 0)
                 {

@@ -168,6 +168,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public List<AssumptionDetailModel> AssumptionDetailModel { get; set; }
         public List<DonorEligibilityDetailModel> DonorEligibilityDetailModel { get; set; }
         public List<SelectedProjectsModel> SelectedProjectsModel { get; set; }
+        public SelectedProjectsModel[] SelectedProjectArray { get; set; }
         public double? TotalScore { get; set; }
         public string LogoPath { get; set; }
     }
