@@ -40,20 +40,20 @@ export class AddLogisticItemsComponent implements OnInit {
       EstimatedCost : value.EstimatedCost
     };
     this.logisticservice.addRequestItems(model).subscribe(res => {
-      if (res.StatusCode === 200 && res.CommonId.LongId != null) {
-        this.dialogRef.close();
+      if (res.StatusCode === 200 && res.data.logisticItem != null) {
+        this.dialogRef.close({data: res.data.logisticItem});
         this.commonLoader.hideLoader();
         this.toastr.success('Item added successfully!');
         // code goes here
       } else {
-        this.dialogRef.close();
+        this.dialogRef.close({data: null});
         this.commonLoader.hideLoader();
         this.toastr.warning(res.Message);
       }
     });
   }
   cancelItem() {
-    this.dialogRef.close();
+    this.dialogRef.close({data: null});
   }
 
   getStoreItems() {

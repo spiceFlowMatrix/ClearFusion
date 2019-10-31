@@ -46,6 +46,7 @@ export class LogisticRequestDetailsComponent implements OnInit {
       this.requestId = +params['id'];
     });
     this.getRequestDetails();
+    this.getAllRequestItems();
   }
   addItemDialog() {
     const dialogRef = this.dialog.open(AddLogisticItemsComponent, {
@@ -54,9 +55,24 @@ export class LogisticRequestDetailsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined && result.data != null ) {
+        this.refreshItemList(result.data);
+      }
     });
   }
 
+  refreshItemList(value) {
+    debugger;
+    this.requestItemList.push(value);
+    this.requestedItemsData$ = of(this.requestItemList).pipe(
+      map(r => r.map(v => ({
+        Id: v.Id,
+        Item: v.Item,
+        Quantity: v.Quantity,
+        EstimatedCost: v.EstimatedCost,
+        Availability: v.Availability
+       }) as IItemList)));
+  }
   getRequestDetails() {
     this.logisticservice.getLogisticRequestDetail(this.requestId).subscribe(res => {
       if (res.StatusCode === 200 && res.data.logisticRequest != null) {
@@ -72,16 +88,16 @@ export class LogisticRequestDetailsComponent implements OnInit {
   getAllRequestItems() {
     this.logisticservice.getAllRequestItems(this.requestId).subscribe(res => {
       this.requestItemList = [];
-      if (res.StatusCode === 200 && res.data.requestItemList != null) {
-        res.data.logisticRequestList.forEach(element => {
+      if (res.StatusCode === 200 && res.data.LogisticsItemList != null) {
+        res.data.LogisticsItemList.forEach(element => {
           this.requestItemList.push(element);
         });
         this.requestedItemsData$ = of(this.requestItemList).pipe(
           map(r => r.map(v => ({
-            ItemId: v.ItemId,
-            Item: v.ItemName,
-            Quantity: v.RequestName,
-            EstimatedCost: v.TotalCost,
+            Id: v.Id,
+            Item: v.Item,
+            Quantity: v.Quantity,
+            EstimatedCost: v.EstimatedCost,
             Availability: v.Availability
            }) as IItemList)));
       }
@@ -98,7 +114,7 @@ interface RequestDetail {
 }
 
 interface IItemList {
-  ItemId;
+  Id;
   Item;
   Quantity;
   EstimatedCost;

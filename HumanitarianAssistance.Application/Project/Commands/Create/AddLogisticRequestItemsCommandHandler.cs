@@ -1,5 +1,6 @@
 using AutoMapper;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Application.Project.Models;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.Project;
 using HumanitarianAssistance.Persistence;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace HumanitarianAssistance.Application.Project.Commands.Create
 {
@@ -40,8 +42,17 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                 };
                 await _dbContext.ProjectLogisticItems.AddAsync(obj);
                 await _dbContext.SaveChangesAsync();
-
-                response.CommonId.LongId = obj.LogisticItemId;
+                var returnobj = await _dbContext.ProjectLogisticItems.Where(x=>x.IsDeleted==false && x.LogisticItemId==obj.LogisticItemId)
+                .Select(y=> new LogisticItemModel{
+                    Id = y.LogisticItemId,
+                    Item = y.StoreInventoryItem.ItemName,
+                    Quantity = y.Quantity,
+                    EstimatedCost = y.EstimatedCost,
+                    Availability = y.Quantity,
+                    ItemId = y.ItemId
+                })
+                .FirstOrDefaultAsync();
+                response.data.logisticItem = returnobj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
             }

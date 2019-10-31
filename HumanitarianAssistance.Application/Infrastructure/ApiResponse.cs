@@ -230,6 +230,8 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public List<ProjectProposalModelList> ProjectProposalModelList { get; set; }
         public ProjectProposalModelList ProjectProposalDocumentModel { get; set; }
         public List<LogisticsRequestsModel> logisticRequestList { get; set; }
+        public List<LogisticItemModel> LogisticsItemList { get; set; }
+        public LogisticItemModel logisticItem { get; set; }
         public LogisticsRequestsModel logisticRequest { get; set; }
         public long logisticRequestId { get; set; }
         public List<JobHiringDetailModel> JobDetailList { get; set; }

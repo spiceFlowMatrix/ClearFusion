@@ -24,12 +24,27 @@ namespace HumanitarianAssistance.Application.Project.Queries
                 ApiResponse response = new ApiResponse();
             try
             {
-                var list= await _dbContext.ProjectLogisticItems.Where(x=>x.IsDeleted==false && x.LogisticRequestsId==request.RequestId)
+                var itemlist= await _dbContext.ProjectLogisticItems.Where(x=>x.IsDeleted==false && x.LogisticRequestsId==request.RequestId)
                 .Select(y=> new LogisticItemModel{
-                    
+                    Id = y.LogisticItemId,
+                    Item = y.StoreInventoryItem.ItemName,
+                    Quantity = y.Quantity,
+                    EstimatedCost = y.EstimatedCost,
+                    Availability = (_dbContext.StoreItemPurchases.Where(a=>a.IsDeleted==false && a.InventoryItem==y.ItemId).Sum(v=>v.Quantity)),
+                    ItemId = y.ItemId
                 })
                 .ToListAsync();
-                response.data.LogisticsControlList = logisticsList;
+
+                // var purchaseitems= await _dbContext.StoreItemPurchases.Where(x=>x.IsDeleted==false)
+                // .GroupBy(y=>y.InventoryItem).Select(z=> new {ItemId=z.Key,TotalPurchase=z.Sum(y=>y.Quantity)}).ToListAsync();
+                
+                // var issueditems= await _dbContext.StorePurchaseOrders.Where(x=>x.IsDeleted==false)
+                // .GroupBy(y=>y.InventoryItem).Select(z=> new {ItemId=z.Key,TotalIssued=z.Sum(y=>y.IssuedQuantity)}).ToListAsync();
+                
+                // foreach(var item in itemlist){
+                //     await purchaseitems.FirstOrDefaultAsync();
+                // }
+                response.data.LogisticsItemList = itemlist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
             }

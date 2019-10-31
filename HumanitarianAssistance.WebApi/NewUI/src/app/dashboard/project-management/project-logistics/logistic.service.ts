@@ -81,7 +81,7 @@ export class LogisticService {
 
   getAllRequestItems(requestId) {
     return this.globalService.post(
-      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_AddLogisticRequestItems,
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetItemsByRequestId,
       requestId
     );
   }
