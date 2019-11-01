@@ -411,6 +411,15 @@ getTransportItemDataSource(model: any) {
   .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetTransportItemDataSource, model);
 }
 
+ //#region "getItemDetailByItemId"
+ GetLoggedInUserUsername() {
+  return this.http
+    .get<any>(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_Account_GetLoggedInUserUserName);
+}
+//#endregion
+
 
   //#region "getItemDetailByItemId"
   getItemDetailByPurchaseId(Id) {

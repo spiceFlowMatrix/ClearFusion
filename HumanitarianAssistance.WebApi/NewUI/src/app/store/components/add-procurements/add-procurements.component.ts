@@ -45,10 +45,10 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.addProcurementForm = this.fb.group({
       'ProcurementId': [null],
-      'InventoryTypeId': [{value: null, disabled : true}, [Validators.required]],
-      'InventoryId': [{value: null, disabled : true}, [Validators.required]],
-      'ItemGroupId': [{value: null, disabled : true}, [Validators.required]],
-      'ItemId': [{value: null, disabled : true}, [Validators.required]],
+      'InventoryTypeId': [null, [Validators.required]],
+      'InventoryId': [null, [Validators.required]],
+      'ItemGroupId': [null, [Validators.required]],
+      'ItemId': [null, [Validators.required]],
       'PurchaseId': [null, [Validators.required]],
       'IssuedQuantity': [1, [Validators.required, Validators.min(1)]],
       'IssuedToEmployeeId': [null, [Validators.required]],
@@ -271,6 +271,7 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
   addProcurement() {
     if (this.addProcurementForm.valid) {
       this.commonLoader.showLoader();
+      debugger;
       this.purchaseService.addProcurement(this.addProcurementForm.value)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
