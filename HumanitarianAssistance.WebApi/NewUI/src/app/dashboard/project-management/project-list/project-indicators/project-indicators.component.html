@@ -8,8 +8,8 @@
             <div class="col-sm-12">
               <span class="font_x_large">Project Indicators</span> &nbsp;
               <button mat-icon-button (click)="onAddNewIndicator()">
-                  <mat-icon aria-label="Add New Indicators">add</mat-icon>
-                </button>
+                <mat-icon aria-label="Add New Indicators">add</mat-icon>
+              </button>
 
             </div>
           </div>
@@ -45,11 +45,20 @@
                         </td>
                         <td class="text-left" width="40%">{{ list.Description }}</td>
                         <td class="text-left" width="10%">{{ list.Questions }}</td>
-                        <td>
-                            <mat-icon class="icon_cursor small_icon tp_15 icon_width" color="warn" (click)="onDeleteIndicator(list)">
-                                delete
-                              </mat-icon>
+                        <td *ngIf="list.CanDelete == null; else notallowed">
+                          <mat-icon class="icon_cursor small_icon tp_15 icon_width" color="warn"
+                            (click)="onDeleteIndicator(list)">
+                            delete
+                          </mat-icon>
                         </td>
+                        <ng-template #notallowed>
+                          <td>
+                            <mat-icon class="icon_cursor small_icon tp_15 icon_width" color="darkgray" matTooltip="Indicator is selected in Project Activity hence not able to Delete."
+                            >
+                            delete
+                          </mat-icon>
+                          </td>
+                        </ng-template>
                         <td class="" width="7"><a class="blue-circle "><i class="far fa-bell"></i></a></td>
                         <td width="1%" class="text-center"><i *ngIf="selectedRowID === list.ProjectIndicatorId"
                             class="material-icons font-12">
@@ -74,7 +83,8 @@
             (hideDetailPanel)="hideProjectDetailPanel($event)" [donorId]="donorId"></app-donor-master> -->
         <app-project-indicator-detail [indicatorId]="projectIndicatorId" (addIndicator)="addProjectIndicator($event)"
           [ProjectindicatorDetail]="ProjectindicatorDetail" (indicatorListRefresh)="OnindicatorListRefresh($event)"
-          (editIndicator)="editIndicatorList($event)" (questionDetailListRefresh)=OnQuestionDetailListRefresh($event)></app-project-indicator-detail>
+          (editIndicator)="editIndicatorList($event)" (questionDetailListRefresh)=OnQuestionDetailListRefresh($event)>
+        </app-project-indicator-detail>
       </div>
     </div>
   </div>

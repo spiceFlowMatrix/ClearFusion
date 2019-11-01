@@ -421,30 +421,29 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     PriorityOtherDetailModel = model.PriorityOtherDetailModel,
                     AssumptionDetailModel = model.AssumptionDetailModel,
                     DonorEligibilityDetailModel = model.DonorEligibilityDetailModel,
-                    TotalScore = request.TotalScore,
+                    // TotalScore = (double)Math.Round( (request.TotalScore ?? 0.0 ),3),
+                    TotalScore = (double)(request.TotalScore ?? 0.0),
+
                     LogoPath = _env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath
                 };
 
 
                 var selectedProjects = await _dbContext.FinancialProjectDetail
-                                                        .Include(x=> x.SelectedProjectDetail)
+                                                        .Include(x => x.SelectedProjectDetail)
                                                         .Where(x => x.ProjectId == request.ProjectId &&
-                                                                                                    x.IsDeleted == false)
+                                                                    x.IsDeleted == false)
                                                         .ToListAsync();
 
                 pdfModel.SelectedProjectsModel = new List<SelectedProjectsModel>();
                 if (selectedProjects.Any())
                 {
-                    List<ProjectDetail> projrctdetail = await _dbContext.ProjectDetail.Where(x => x.IsDeleted == false).ToListAsync();
                     foreach (var item in selectedProjects)
                     {
                         SelectedProjectsModel modl = new SelectedProjectsModel();
-
-                        modl.ProjectName = projrctdetail.Where(x => x.ProjectId == item.ProjectSelectionId).FirstOrDefault().ProjectName;
+                        modl.ProjectName = item.SelectedProjectDetail.ProjectName;
                         pdfModel.SelectedProjectsModel.Add(modl);
                     }
                 }
-                pdfModel.SelectedProjectArray =  pdfModel.SelectedProjectsModel.ToArray();
                 // Note : currency id Zero check is for old data stored in Proposal detail having currencyId is 0
                 if (model.CurrencyId != null && model.CurrencyId != 0)
                 {

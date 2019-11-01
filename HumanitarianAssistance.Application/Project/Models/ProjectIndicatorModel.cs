@@ -12,6 +12,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string IndicatorCode { get; set; }
         public string Description { get; set; }
         public int Questions { get; set; }
+        public bool? CanDelete { get; set; }
     }
 
     public class ProjectIndicatorModel

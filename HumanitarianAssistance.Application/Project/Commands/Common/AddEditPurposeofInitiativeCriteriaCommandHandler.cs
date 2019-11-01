@@ -118,7 +118,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
                     _detail.Immunization = request.Immunization;
                     _detail.InfantandYoungChildFeeding = request.InfantandYoungChildFeeding;
                     _detail.Nutrition = request.Nutrition;
-                    _detail.CommunicableDisease = request.CommunityBasedEducation;
+                    _detail.CommunicableDisease = request.CommunicableDisease;
                     _detail.Hygiene = request.Hygiene;
                     _detail.EnvironmentalHealth = request.EnvironmentalHealth;
                     _detail.MentalHealthandDisabilityService = request.MentalHealthandDisabilityService;
