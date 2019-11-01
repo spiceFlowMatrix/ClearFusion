@@ -6,7 +6,7 @@
         <button mat-icon-button (click)="onQuestionsClick()">
           <mat-icon class="plus_icon" aria-label="Add Question" pTooltip="Add Question">add</mat-icon>
         </button>
-        <button class="pull-right" mat-raised-button color="primary" (click)="onIndicatorEditClick()">
+        <button *ngIf="candeletedCandicate == false" class="pull-right" mat-raised-button color="primary" (click)="onIndicatorEditClick()">
           Edit Indicator Details
         </button>
       </div>

@@ -15,6 +15,7 @@ import { GlobalSharedService } from 'src/app/shared/services/global-shared.servi
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
 import { IDropDownModel } from 'src/app/dashboard/accounting/report-services/report-models';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
 
 @Component({
   selector: 'app-purchase-list',
@@ -68,10 +69,11 @@ export class PurchaseListComponent implements OnInit {
       PurchaseEndDate: null,
       PurchaseStartDate: null,
       ReceiptTypeId: null,
+      DisplayCurrency: null,
+      DepreciationComparisionDate: null,
       PageIndex: 0,
       PageSize: 10,
-      TotalCount: null,
-      DisplayCurrency: null
+      TotalCount: null
     };
   }
 
@@ -170,8 +172,8 @@ export class PurchaseListComponent implements OnInit {
   onpurchaseFilterSelected(event: any) {
     this.filterValueModel = {
       CurrencyId: event.value.CurrencyId,
-      PurchaseStartDate: event.value.DateOfPurchase,
-      IssueStartDate: event.value.DateOfIssue,
+      PurchaseStartDate: StaticUtilities.setLocalDate(event.value.DateOfPurchase),
+      IssueStartDate: StaticUtilities.setLocalDate(event.value.DateOfIssue),
       InventoryTypeId: event.value.InventoryTypeId,
       ReceiptTypeId: event.value.ReceiptTypeId,
       OfficeId: event.value.OfficeId,
@@ -182,6 +184,8 @@ export class PurchaseListComponent implements OnInit {
       ItemId: event.value.ItemId,
       IssueEndDate: null,
       PurchaseEndDate: null,
+      DisplayCurrency: this.selectedDisplayCurrency,
+      DepreciationComparisionDate: StaticUtilities.setLocalDate(event.value.DepreciationComparisionDate),
       PageIndex: this.filterValueModel.PageIndex,
       PageSize: this.filterValueModel.PageSize
     };
@@ -269,6 +273,7 @@ export class PurchaseListComponent implements OnInit {
               value: y.CurrencyId
             };
           }));
+          this.selectedDisplayCurrency = x.data.CurrencyList[0].CurrencyId;
         }
       },
         (error) => {
@@ -283,7 +288,14 @@ export class PurchaseListComponent implements OnInit {
   }
 
   onPdfExportClick() {
-    const StorePurchaseFilter: any = this.filterValueModel;
+    let pdfColumns;
+
+    this.hideColums.subscribe(x => pdfColumns = x.items);
+
+    const StorePurchaseFilter = this.filterValueModel;
+    StorePurchaseFilter.SelectedColumns = [];
+    StorePurchaseFilter.SelectedColumns = pdfColumns;
+
     this.globalSharedService
     .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetStorePurchasePdf, StorePurchaseFilter
     )

@@ -47,6 +47,9 @@ namespace HumanitarianAssistance.Application.Store.Models
         public string Remarks { get; set; }
         public int recordsCount { get; set; }
         public string MakerCountry { get; set; }
+        public bool ApplyDepreciation { get; set; }
+        public int Quantity {get; set;}
+        public double UnitCost {get; set;}
         public List<ProcurementListModel> ProcurementList { get; set; }
     }
 }

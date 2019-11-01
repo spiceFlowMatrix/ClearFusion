@@ -7,6 +7,7 @@ using AutoMapper;
 using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Application.Project.Models;
 using HumanitarianAssistance.Common.Enums;
+using HumanitarianAssistance.Domain.Entities.Project;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
@@ -187,7 +188,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                         Operational = financial.Operational,
                                         Overhead_Admin = financial.Overhead_Admin,
                                         Lump_Sum = financial.Lump_Sum,
-                                        Total = (double)Math.Round((financial.ProjectActivities ?? 0.0 + financial.Operational ?? 0.0 + financial.Overhead_Admin ?? 0.0 + financial.Lump_Sum ?? 0.0), 2),
+                                        Total = (double)Math.Round(((financial.ProjectActivities ?? 0.0) + (financial.Operational ?? 0.0) + (financial.Overhead_Admin ?? 0.0) + (financial.Lump_Sum ?? 0.0)), 2),
                                         Security = risk.Security,
                                         Staff = risk.Staff,
                                         ProjectAssets = risk.ProjectAssets,
@@ -234,12 +235,14 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                                         Name = p.Name
                                                                     }).ToList(),
 
+
                                         AssumptionDetailModel = asd.Where(s => s.ProjectId == obj.ProjectId && s.IsDeleted == false)
                                                                     .Select(p => new AssumptionDetailModel
                                                                     {
                                                                         AssumptionDetailId = p.AssumptionDetailId,
                                                                         Name = p.Name
                                                                     }).ToList(),
+
 
                                         DonorEligibilityDetailModel = dec.Where(s => s.ProjectId == obj.ProjectId && s.IsDeleted == false)
                                                                     .Select(p => new DonorEligibilityDetailModel
@@ -418,35 +421,38 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     UnCheckedIconPath = _env.WebRootFileProvider.GetFileInfo("ReportLogo/uncheck.png")?.PhysicalPath,
                     CEFeasibilityExpertOtherDetailModel = model.CEFeasibilityExpertOtherDetailModel,
                     PriorityOtherDetailModel = model.PriorityOtherDetailModel,
-                     AssumptionDetailModel = model.AssumptionDetailModel,
-                     DonorEligibilityDetailModel = model.DonorEligibilityDetailModel,
-                    TotalScore = request.TotalScore
+
+                    AssumptionDetailModel = model.AssumptionDetailModel,
+                    DonorEligibilityDetailModel = model.DonorEligibilityDetailModel,
+                    // TotalScore = (double)Math.Round( (request.TotalScore ?? 0.0 ),3),
+                    TotalScore = (double)(request.TotalScore ?? 0.0),
+
+                    LogoPath = _env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath
+
                 };
 
 
                 var selectedProjects = await _dbContext.FinancialProjectDetail
+
+                                                        .Include(x => x.SelectedProjectDetail)
                                                         .Where(x => x.ProjectId == request.ProjectId &&
-                                                                                                    x.IsDeleted == false
-                                                                                                  ).Select(x => new
-                                                                                                  {
-                                                                                                      x.ProjectSelectionId,
-                                                                                                      x.ProjectDetail.ProjectName
-                                                                                                  }).
-                                                                                                    ToListAsync();
+                                                                    x.IsDeleted == false)
+                                                        .ToListAsync();
+
 
                 pdfModel.SelectedProjectsModel = new List<SelectedProjectsModel>();
                 if (selectedProjects.Any())
                 {
-                    SelectedProjectsModel modl = new SelectedProjectsModel();
                     foreach (var item in selectedProjects)
                     {
-                        modl.ProjectName = item.ProjectName;
+                        SelectedProjectsModel modl = new SelectedProjectsModel();
+                        modl.ProjectName = item.SelectedProjectDetail.ProjectName;
+                        pdfModel.SelectedProjectsModel.Add(modl);
                     }
-                    pdfModel.SelectedProjectsModel.Add(modl);
                 }
+                // Note : currency id Zero check is for old data stored in Proposal detail having currencyId is 0
+                if (model.CurrencyId != null && model.CurrencyId != 0)
 
-            // Note : currency id Zero check is for old data stored in Proposal detail having currencyId is 0
-                if (model.CurrencyId != null && model.CurrencyId !=0)
                 {
                     var currencyName = await _dbContext.CurrencyDetails.Where(x => x.CurrencyId == model.CurrencyId).Select(c => new
                     {

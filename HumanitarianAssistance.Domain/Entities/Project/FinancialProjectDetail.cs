@@ -16,6 +16,8 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public ProjectDetail ProjectDetail { get; set; }
         public long ProjectId { get; set; }
         public long? ProjectSelectionId { get; set; }
+        [ForeignKey("ProjectSelectionId")]
+        public ProjectDetail SelectedProjectDetail { get; set; }
         public string ProjectName { get; set; }
     }
 }

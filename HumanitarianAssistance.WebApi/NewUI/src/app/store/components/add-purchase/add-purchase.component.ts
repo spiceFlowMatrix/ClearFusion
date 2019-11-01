@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, OnDestroy, ViewChild } from '@angular/core';
-import { Validators, FormGroup, FormBuilder, AbstractControl, FormArray } from '@angular/forms';
+import { Validators, FormGroup, FormBuilder, AbstractControl, FormArray, FormGroupDirective } from '@angular/forms';
 import { PurchaseService } from '../../services/purchase.service';
 import { Observable, of, forkJoin, ReplaySubject } from 'rxjs';
 import { IDropDownModel, IPurchasedFiles } from '../../models/purchase';
@@ -9,11 +9,12 @@ import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { takeUntil } from 'rxjs/operators';
-import { StoreMasterCategory, StoreItemGroups, FileSourceEntityTypes, StoreItem } from 'src/app/shared/enum';
+import { StoreMasterCategory, StoreItemGroups, FileSourceEntityTypes, StoreItem, TransportItemType } from 'src/app/shared/enum';
 import { VehicleDetailComponent } from '../vehicle-detail/vehicle-detail.component';
 import { AddDocumentComponent } from '../document-upload/add-document.component';
 import { MatDialog } from '@angular/material/dialog';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { GeneratorDetailComponent } from '../generator-detail/generator-detail.component';
 
 @Component({
   selector: 'app-add-purchase',
@@ -54,6 +55,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   uploadedPurchasedFiles: IPurchasedFiles[] = [];
   headerText = '';
   purchaseId: number;
+  showDownloadButton = false;
+  selectedTransportItemType: number;
 
   // store enum in a variable to access it in html
   MasterCategory = StoreMasterCategory;
@@ -61,7 +64,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   StoreItems = StoreItem;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  @ViewChild(VehicleDetailComponent) child;
+  @ViewChild(VehicleDetailComponent)  vehicleDetailChild: VehicleDetailComponent;
+  @ViewChild(GeneratorDetailComponent)  generatorDetailChild:GeneratorDetailComponent;
 
   constructor(private purchaseService: PurchaseService,
     private fb: FormBuilder, private budgetLineService: BudgetLineService,
@@ -70,19 +74,17 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     private dialog: MatDialog, private globalSharedService: GlobalSharedService, private activatedRoute: ActivatedRoute) {
 
     this.initForm();
-    this.addPurchaseForm.valueChanges.subscribe(r => {
-      // console.log(r);
-    });
-
     this.activatedRoute.params.subscribe(params => {
       this.purchaseId = params['id'];
     });
 
     if (this.purchaseId) {
       this.headerText = 'Edit Purchase';
+      this.showDownloadButton = true;
       this.getStorePurchaseById(this.purchaseId);
     } else {
       this.headerText = 'Add New Purchase';
+      this.showDownloadButton = false;
     }
   }
 
@@ -306,63 +308,69 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
   getMasterInventorySelectedValue(event: any) {
     this.getAllStoreItemGroups(event);
-    if (event === StoreMasterCategory.Transport &&
-      this.addPurchaseForm.get('ItemGroupId').value === this.ItemGroups.Vehicle) {
-      this.addVehicles();
-    } else if (event === StoreMasterCategory.Transport &&
-      this.addPurchaseForm.get('ItemGroupId').value === this.ItemGroups.Generator) {
-      this.addGenerators();
-    }
   }
 
   getItemGroupSelectedValue(event: any) {
     this.getAllStoreItemsByGroupId(event);
-    // Remove generator or vehicle if any
-    this.removeGenerators();
-    this.removeVehicles();
 
-    if (this.addPurchaseForm.get('InventoryId').value === StoreMasterCategory.Transport &&
-      event === this.ItemGroups.Vehicle) {
-      this.addVehicles();
-    } else if (this.addPurchaseForm.get('InventoryId').value === StoreMasterCategory.Transport &&
-      event === this.ItemGroups.Generator) {
-      this.addGenerators();
-    }
-    this.getSelectedItemGroupName(event);
+    this.transportItemPlaceholder = (this.addPurchaseForm.get('ItemGroupId').value === this.ItemGroups.ConsumableVehicle ||
+      this.addPurchaseForm.get('ItemGroupId').value === this.ItemGroups.ExpandableVehicle ||
+      this.addPurchaseForm.get('ItemGroupId').value === this.ItemGroups.NonExpandableVehicle) ? 'Purchased Vehicle Item' :
+      'Purchased Generator Item';
   }
 
   getItemSelectedValue(event: any) {
+
     this.storeItems$.subscribe(x => {
       const index = x.findIndex(y => y.value === event);
       this.selectedItemName = x[index].name;
     });
 
-    // Remove default vehicle or generator if selected item does not match with vehicle or generator
-    if (event !== this.StoreItems.Generator &&
-      event !== this.StoreItems.Vehicle) {
+    if (event === this.StoreItems.ExpendableVehicle || event === this.StoreItems.NonExpendableVehicle) {
+      this.removeVehicles(); // remove existing vehicle if any
+      this.addVehicles();
+
+      // Used to get transport item data source
+      this.selectedTransportItemType = TransportItemType.Vehicle;
+
+      // Remove validations on Transport Item
+      this.addPurchaseForm.get('TransportItemId').clearValidators();
+      this.addPurchaseForm.controls['TransportItemId'].updateValueAndValidity();
+    } else {
       this.removeVehicles();
+    }
+    if (event === this.StoreItems.ExpendableGenerator || event === this.StoreItems.NonExpendableGenerator) {
+
+      this.removeGenerators(); // remove existing generator if any
+      this.addGenerators();
+
+      // Remove validations on Transport Item
+      this.addPurchaseForm.get('TransportItemId').clearValidators();
+      this.addPurchaseForm.controls['TransportItemId'].updateValueAndValidity();
+    } else {
       this.removeGenerators();
     }
 
-    this.transportItemPlaceholder = this.addPurchaseForm.get('ItemGroupId').value === this.ItemGroups.Vehicle ? 'Purchased Vehicle Item' :
-      'Purchased Generator Item';
-
-    this.getTransportItemDataSource();
-
-    this.storeItems$.subscribe(x => {
-      const index = x.findIndex(y => y.value === event);
-      this.selectedItemName = x[index].name;
-    });
-  }
-
-  getSelectedItemGroupName(event) {
-    this.storeItemGroups$.subscribe(x => {
-      const index = x.findIndex(y => y.value === event);
-      this.selectedItemGroupName = x[index].name;
-    });
+    // Set dynamic required validation for transport item selected and get TransportItem Datasource for based on condition below
+    if (event === this.StoreItems.GeneratorFuel || event === this.StoreItems.GeneratorMaintenanceService ||
+      event === this.StoreItems.GeneratorMobilOil || event === this.StoreItems.GeneratorSpareParts) {
+      this.getTransportItemDataSource(TransportItemType.Generator);
+      this.addPurchaseForm.get('TransportItemId').setValidators([Validators.required]);
+      this.addPurchaseForm.controls['TransportItemId'].updateValueAndValidity();
+    } else if (event === this.StoreItems.VehicleFuel || event === this.StoreItems.VehicleMaintenanceService ||
+      event === this.StoreItems.VehicleMobilOil || event === this.StoreItems.VehicleSpareParts) {
+      this.getTransportItemDataSource(TransportItemType.Vehicle);
+      this.addPurchaseForm.get('TransportItemId').setValidators([Validators.required]);
+      this.addPurchaseForm.controls['TransportItemId'].updateValueAndValidity();
+    }
   }
 
   getSelectedItemName(event) {
+    // this.storeItemGroups$.subscribe(x => {
+    //   const index = x.findIndex(y => y.value === event);
+    //   this.selectedItemGroupName = x[index].name;
+    // });
+
     this.storeItems$.subscribe(x => {
       const index = x.findIndex(y => y.value === event);
       this.selectedItemName = x[index].name;
@@ -429,10 +437,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
             value: y.ItemGroupId
           };
         }));
-
-        if (groupId != null) {
-          this.getSelectedItemGroupName(groupId);
-        }
       });
   }
 
@@ -462,7 +466,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   addPurchaseFormSubmit() {
-    // console.log(this.addPurchaseForm);
     if (this.addPurchaseForm.valid) {
       this.isAddPurchaseFormSubmitted = true;
       this.purchaseService.addPurchase(this.addPurchaseForm.value)
@@ -610,9 +613,9 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   addTransportItemButtonClicked(transportItemType: number) {
-    if (transportItemType === this.ItemGroups.Vehicle) {
+    if (transportItemType === this.StoreItems.ExpendableVehicle || transportItemType === this.StoreItems.NonExpendableVehicle) {
       this.addVehicles();
-    } else if (transportItemType === this.ItemGroups.Generator) {
+    } else if (transportItemType === this.StoreItems.ExpendableGenerator || transportItemType === this.StoreItems.NonExpendableGenerator) {
       this.addGenerators();
     }
   }
@@ -691,12 +694,13 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     });
   }
 
-  getTransportItemDataSource() {
+  getTransportItemDataSource(transportItemTypeId: number) {
     const model = {
       InventoryId: this.addPurchaseForm.get('InventoryId').value,
       InventoryTypeId: this.addPurchaseForm.get('InventoryTypeId').value,
       ItemGroupId: this.addPurchaseForm.get('ItemGroupId').value,
       ItemId: this.addPurchaseForm.get('ItemId').value,
+      TransportItemTypeId: transportItemTypeId
     };
 
     if (model.InventoryId != null && model.InventoryTypeId != null && model.ItemGroupId != null && model.ItemId != null) {
@@ -775,7 +779,16 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
         this.setVehicleValue(x.PurchasedVehicleList);
         this.setGeneratorValue(x.PurchasedGeneratorList);
-        this.getTransportItemDataSource();
+
+        // get TransportItem Datasource for vehicle/generator based on condition below
+        if (x.ItemId === this.StoreItems.GeneratorFuel || x.ItemId === this.StoreItems.GeneratorMaintenanceService ||
+          x.ItemId === this.StoreItems.GeneratorMobilOil || x.ItemId === this.StoreItems.GeneratorSpareParts) {
+          this.getTransportItemDataSource(TransportItemType.Generator);
+        } else if (x.ItemId === this.StoreItems.VehicleFuel || x.ItemId === this.StoreItems.VehicleMaintenanceService ||
+          x.ItemId === this.StoreItems.VehicleMobilOil || x.ItemId === this.StoreItems.VehicleSpareParts) {
+
+          this.getTransportItemDataSource(TransportItemType.Vehicle);
+        }
 
         this.commonLoader.hideLoader();
       }, error => {
@@ -876,7 +889,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
           this.globalSharedService.deleteFile(model).subscribe((x) => {
             if (x.StatusCode === 200) {
               this.uploadedPurchasedFiles.splice(index, 1);
-              this.uploadedPurchasedFiles =  this.uploadedPurchasedFiles.filter(y => y.Id !== model.DocumentFileId);
+              this.uploadedPurchasedFiles = this.uploadedPurchasedFiles.filter(y => y.Id !== model.DocumentFileId);
             }
           });
         } else { // remove file from purchasedDocumentList
@@ -885,7 +898,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       } else {
         this.toastr.warning('Item not found to delete');
       }
-    } else if ( event.type === 'download') {
+    } else if (event.type === 'download') {
       window.open(event.item.SignedUrl, '_blank');
     }
   }

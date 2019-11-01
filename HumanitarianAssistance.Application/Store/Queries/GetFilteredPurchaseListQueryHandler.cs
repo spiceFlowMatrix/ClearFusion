@@ -40,9 +40,9 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                   .ThenInclude(x => x.Inventory)
                                   .Include(x => x.EmployeeDetail)
                                   .Include(x => x.ProjectDetail)
-                                  .Include(x=> x.ProjectBudgetLineDetail)
-                                  .Include(x=> x.StoreSourceCodeDetail)
-                                  .Include(x=> x.OfficeDetail)
+                                  .Include(x => x.ProjectBudgetLineDetail)
+                                  .Include(x => x.StoreSourceCodeDetail)
+                                  .Include(x => x.OfficeDetail)
                                   .Where(x => x.IsDeleted == false &&
                                         x.StoreInventoryItem.Inventory.AssetType == request.InventoryTypeId &&
                                         x.ReceiptTypeId == request.ReceiptTypeId &&
@@ -51,37 +51,37 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                 if (request.InventoryId != 0)
                 {
-                    query= query.Where(x => x.StoreInventoryItem.Inventory.InventoryId == request.InventoryId);
+                    query = query.Where(x => x.StoreInventoryItem.Inventory.InventoryId == request.InventoryId);
                 }
 
                 if (request.ProjectId != 0)
                 {
-                   query= query.Where(x => x.ProjectId == request.ProjectId);
+                    query = query.Where(x => x.ProjectId == request.ProjectId);
                 }
 
                 if (request.JobId != 0)
                 {
-                   query= query.Where(x => x.ProjectDetail.ProjectJobDetail.Select(z => z.ProjectJobId).Contains(request.JobId));
+                    query = query.Where(x => x.ProjectDetail.ProjectJobDetail.Select(z => z.ProjectJobId).Contains(request.JobId));
                 }
 
                 if (request.PurchaseStartDate != null)
                 {
-                   query= query.Where(x => x.PurchaseDate.Date >= request.PurchaseStartDate);
+                    query = query.Where(x => x.PurchaseDate.Date >= request.PurchaseStartDate);
                 }
 
                 if (request.PurchaseEndDate != null)
                 {
-                   query= query.Where(x => x.PurchaseDate.Date <= request.PurchaseEndDate);
+                    query = query.Where(x => x.PurchaseDate.Date <= request.PurchaseEndDate);
                 }
 
                 if (request.ItemGroupId != 0)
                 {
-                   query= query.Where(x => x.StoreInventoryItem.StoreItemGroup.ItemGroupId == request.ItemGroupId);
+                    query = query.Where(x => x.StoreInventoryItem.StoreItemGroup.ItemGroupId == request.ItemGroupId);
                 }
 
                 if (request.ItemId != 0)
                 {
-                   query= query.Where(x => x.StoreInventoryItem.ItemId == request.ItemId);
+                    query = query.Where(x => x.StoreInventoryItem.ItemId == request.ItemId);
                 }
 
                 var queryResult = query.Select(x => new PurchaseListModel
@@ -89,38 +89,41 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     PurchaseId = x.PurchaseId,
                     PurchaseDate = x.PurchaseDate,
                     CurrencyId = x.Currency,
-                    PurchasedQuantity= x.Quantity,
+                    PurchasedQuantity = x.Quantity,
                     ItemId = x.StoreInventoryItem != null ? x.StoreInventoryItem.ItemId : 0,
-                    ItemCode= x.StoreInventoryItem != null ? x.StoreInventoryItem.ItemCode :"",
+                    ItemCode = x.StoreInventoryItem != null ? x.StoreInventoryItem.ItemCode : "",
                     ItemName = x.StoreInventoryItem != null ? (x.StoreInventoryItem.ItemCode + "-" + x.StoreInventoryItem.ItemName) : "",
                     EmployeeName = x.EmployeeDetail != null ? x.EmployeeDetail.EmployeeCode + "-" + x.EmployeeDetail.EmployeeName : "",
                     ProjectId = x.ProjectId,
                     ProjectName = x.ProjectDetail == null ? "" : x.ProjectDetail.ProjectCode + "-" + x.ProjectDetail.ProjectName,
                     OriginalCost = x.UnitCost * x.Quantity,
-                    ItemCodeDescription = x.StoreInventoryItem != null ? (x.StoreInventoryItem.ItemCode + "-" + x.StoreInventoryItem.Description): ""  ,
-                    AssetTypeId= x.AssetTypeId,
-                    Description = x.StoreInventoryItem != null ? x.StoreInventoryItem.Description: ""  ,
+                    ItemCodeDescription = x.StoreInventoryItem != null ? (x.StoreInventoryItem.ItemCode + "-" + (x.StoreInventoryItem.Description == null ? "" : x.StoreInventoryItem.Description)) : "",
+                    AssetTypeId = x.AssetTypeId,
+                    Description = x.StoreInventoryItem != null ? x.StoreInventoryItem.Description : "",
                     BudgetLineId = x.BudgetLineId,
-                    BudgetLineName= x.ProjectBudgetLineDetail ==null? "" : x.ProjectBudgetLineDetail.BudgetName,
-                    ChasisNo="",
-                    MakerCountry="",
-                    RegistrationNo="",
-                    CurrencyName= x.CurrencyDetails == null? "":  x.CurrencyDetails.CurrencyName,
-                    DepreciationRate= x.DepreciationRate,
-                    EngineSerialNo= "",
-                    IdentificationNo="",
-                    MasterInventoryCode= x.StoreInventoryItem.Inventory.InventoryCode,
-                    ModelType="",
-                    OfficeCode= x.OfficeDetail.OfficeCode,
-                    ReceiptDate= x.DeliveryDate != null ? x.DeliveryDate.ToShortDateString() :"",
-                   // PurchaseOrderNo= Convert.ToInt64(x.SerialNo),
-                    InvoiceDate= x.InvoiceDate != null ? x.InvoiceDate.Value.ToShortDateString(): "",
-                    ReceivedFromLocationName= x.StoreSourceCodeDetail != null? (x.StoreSourceCodeDetail.Code+"-"+x.StoreSourceCodeDetail.Description): "" ,
-                    Status= x.StatusAtTimeOfIssue != null? x.StatusAtTimeOfIssue.StatusName : "",
+                    BudgetLineName = x.ProjectBudgetLineDetail == null ? "" : x.ProjectBudgetLineDetail.BudgetName,
+                    ChasisNo = "",
+                    MakerCountry = "",
+                    RegistrationNo = "",
+                    CurrencyName = x.CurrencyDetails == null ? "" : x.CurrencyDetails.CurrencyName,
+                    DepreciationRate = x.DepreciationRate,
+                    EngineSerialNo = "",
+                    IdentificationNo = "",
+                    MasterInventoryCode = x.StoreInventoryItem.Inventory.InventoryCode,
+                    ModelType = "",
+                    OfficeCode = x.OfficeDetail.OfficeCode,
+                    ReceiptDate = x.DeliveryDate != null ? x.DeliveryDate.ToShortDateString() : "",
+                    // PurchaseOrderNo= Convert.ToInt64(x.SerialNo),
+                    InvoiceDate = x.InvoiceDate != null ? x.InvoiceDate.Value.ToShortDateString() : "",
+                    ReceivedFromLocationName = x.StoreSourceCodeDetail != null ? (x.StoreSourceCodeDetail.Code + "-" + x.StoreSourceCodeDetail.Description) : "",
+                    Status = x.StatusAtTimeOfIssue != null ? x.StatusAtTimeOfIssue.StatusName : "",
+                    ApplyDepreciation = x.ApplyDepreciation,
                     // Apply depriciation if true else show original cost
-                    DepreciatedCost = x.ApplyDepreciation? (x.UnitCost * x.Quantity) - (Math.Ceiling(DateTime.Now.Date.Subtract(x.PurchaseDate).TotalDays) * x.Quantity * x.DepreciationRate * x.UnitCost / 100) :
-                                        x.UnitCost * x.Quantity,
-                    ProcurementList = x.PurchaseOrders.Where(p=> !p.IsDeleted).Select(z => new ProcurementListModel
+                    DepreciatedCost = x.UnitCost * x.Quantity,
+                    UnitCost = x.UnitCost,
+                    Quantity = x.Quantity,
+
+                    ProcurementList = x.PurchaseOrders.Where(p => !p.IsDeleted).Select(z => new ProcurementListModel
                     {
                         OrderId = z.OrderId,
                         EmployeeName = z.EmployeeDetail.EmployeeCode + "-" + z.EmployeeDetail.EmployeeName,
@@ -136,29 +139,45 @@ namespace HumanitarianAssistance.Application.Store.Queries
                 model.RecordCount = await queryResult.CountAsync();
                 model.PurchaseList = await queryResult.Skip(request.pageIndex.Value * request.pageSize.Value).Take(request.pageSize.Value).ToListAsync();
 
-                // If Display Currency is selected the display cost after exchange rate
-                if(request.DisplayCurrency != null)
+                // Calculate Depreciation Cost when Depreciation Comparision Date is not null
+                if (model.PurchaseList.Any())
                 {
-                     List<ExchangeRateDetail> exchangeRateList= await _dbContext.ExchangeRateDetail
-                                                                     .Where(x=> x.IsDeleted== false &&
-                                                                      x.ToCurrency == request.DisplayCurrency.Value &&
-                                                                     model.PurchaseList.Select(y=> y.PurchaseDate.Date).Contains(x.Date.Date)).ToListAsync();
-
-                foreach(var item in model.PurchaseList)
-                {
-                    ExchangeRateDetail exchangeRate= exchangeRateList.FirstOrDefault(x=> x.Date.Date == item.PurchaseDate.Date &&
-                                                                     x.FromCurrency== item.CurrencyId && x.ToCurrency == request.DisplayCurrency.Value);
-
-                    if(exchangeRate== null)
+                    foreach (var item in model.PurchaseList)
                     {
-                        throw new Exception(string.Format(StaticResource.ExchangeRateNotPresent, item.PurchaseDate.Date.ToShortDateString()));
+                        if (item.ApplyDepreciation && request.DepreciationComparisionDate != null)
+                        {
+                            // If comparision date is greater than the date item is purchased on
+                            if (request.DepreciationComparisionDate.Value.Date > item.PurchaseDate.Date)
+                            {
+                                item.DepreciatedCost = item.DepreciatedCost - (Math.Ceiling(request.DepreciationComparisionDate.Value.Date.Subtract(item.PurchaseDate.Date).TotalDays) * item.Quantity * item.DepreciationRate * item.UnitCost / 100);
+                            }
+                        }
                     }
-
-                    item.OriginalCost = Math.Round(item.OriginalCost * (double)exchangeRate.Rate, 4) ;
-                    item.DepreciatedCost = Math.Round(item.DepreciatedCost * (double)exchangeRate.Rate, 4) ;
-                
                 }
-            }
+
+                // If Display Currency is selected then display original cost && depreciated cost after exchange rate
+                if (request.DisplayCurrency != null)
+                {
+                    List<ExchangeRateDetail> exchangeRateList = await _dbContext.ExchangeRateDetail
+                                                                    .Where(x => x.IsDeleted == false &&
+                                                                     x.ToCurrency == request.DisplayCurrency.Value &&
+                                                                    model.PurchaseList.Select(y => y.PurchaseDate.Date).Contains(x.Date.Date)).ToListAsync();
+
+                    foreach (var item in model.PurchaseList)
+                    {
+                        ExchangeRateDetail exchangeRate = exchangeRateList.FirstOrDefault(x => x.Date.Date == item.PurchaseDate.Date &&
+                                                                          x.FromCurrency == item.CurrencyId && x.ToCurrency == request.DisplayCurrency.Value);
+
+                        if (exchangeRate == null)
+                        {
+                            throw new Exception(string.Format(StaticResource.ExchangeRateNotPresent, item.PurchaseDate.Date.ToShortDateString()));
+                        }
+
+                        item.OriginalCost = Math.Round(item.OriginalCost * (double)exchangeRate.Rate, 4);
+                        item.DepreciatedCost = Math.Round(item.DepreciatedCost * (double)exchangeRate.Rate, 4);
+
+                    }
+                }
             }
             catch (Exception ex)
             {
