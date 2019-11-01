@@ -326,8 +326,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       this.selectedItemName = x[index].name;
     });
 
-    debugger;
-
     if (event === this.StoreItems.ExpendableVehicle || event === this.StoreItems.NonExpendableVehicle) {
       this.removeVehicles(); // remove existing vehicle if any
       this.addVehicles();
@@ -368,8 +366,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   getSelectedItemName(event) {
-    debugger;
-
     // this.storeItemGroups$.subscribe(x => {
     //   const index = x.findIndex(y => y.value === event);
     //   this.selectedItemGroupName = x[index].name;
@@ -470,7 +466,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   addPurchaseFormSubmit() {
-    debugger;
     if (this.addPurchaseForm.valid) {
       this.isAddPurchaseFormSubmitted = true;
       this.purchaseService.addPurchase(this.addPurchaseForm.value)
@@ -630,7 +625,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   addVehicles() {
-    debugger;
     this.removeGenerators();
     (<FormArray>this.addPurchaseForm.get('TransportVehicles')).push(this.fb.group({
       'PlateNo': ['', Validators.required],
@@ -731,7 +725,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     this.commonLoader.showLoader();
     this.purchaseService.getStorePurchaseById(Number(purchaseId))
       .subscribe(x => {
-        debugger;
         // get All dropdown datasource
         this.getInventoriesByInventoryTypeId(x.InventoryTypeId);
         this.getAllStoreItemGroups(x.InventoryId, x.ItemGroupId);

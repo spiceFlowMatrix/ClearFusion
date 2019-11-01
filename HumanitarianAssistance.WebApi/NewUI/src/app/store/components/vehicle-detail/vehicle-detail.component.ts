@@ -42,7 +42,6 @@ export class VehicleDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges() {
-    debugger;
     if (this.officeId !== undefined && this.officeId != null) {
       this.getEmployeesByOfficeId(this.officeId);
     }
@@ -75,15 +74,12 @@ export class VehicleDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onSubmit() {
-    debugger;
-
     // to validate child vehicle form from add purchase form
     this.markFormGroupTouched(this.vehicleDetailForm);
     this.vehicleDetailForm.updateValueAndValidity();
   }
 
   public markFormGroupTouched(formGroup: FormGroup) {
-    debugger;
     (<any>Object).values(formGroup.controls).forEach(control => {
       control.markAsTouched();
 

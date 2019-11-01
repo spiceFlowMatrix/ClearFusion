@@ -169,7 +169,6 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
    }
 
    getComparisionDateSelectedValue(event: any) {
-     debugger;
     this.onPurchaseFilterSelectionChanged();
    }
 

@@ -288,7 +288,6 @@ export class PurchaseListComponent implements OnInit {
   }
 
   onPdfExportClick() {
-    debugger;
     let pdfColumns;
 
     this.hideColums.subscribe(x => pdfColumns = x.items);
