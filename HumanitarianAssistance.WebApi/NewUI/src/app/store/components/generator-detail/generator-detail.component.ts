@@ -26,6 +26,7 @@ export class GeneratorDetailComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getAllOffice();
     // console.log(this.generatorDetailForm);
+    this.markFormGroupTouched(this.generatorDetailForm);
   }
 
   getAllOffice() {
@@ -39,6 +40,16 @@ export class GeneratorDetailComponent implements OnInit, OnDestroy {
           };
         }));
       });
+  }
+
+  public markFormGroupTouched(formGroup: FormGroup) {
+    (<any>Object).values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+
+      if (control.controls) {
+        this.markFormGroupTouched(control);
+      }
+    });
   }
 
   ngOnDestroy() {
