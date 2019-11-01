@@ -115,6 +115,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         this.subscribeAllReceiptType(result[8]);
       });
 
+      this.getLoggedInUserUsername();
+
     this.addPurchaseForm.valueChanges.subscribe((data) => {
       // this.logValidationErrors(this.addPurchaseForm);
     });
@@ -719,6 +721,14 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         this.commonLoader.hideLoader();
       });
     }
+  }
+
+
+  getLoggedInUserUsername() {
+      this.purchaseService.GetLoggedInUserUsername().subscribe(x => {
+        debugger;
+        localStorage.setItem('LoggedInUserName', x);
+      });
   }
 
   getStorePurchaseById(purchaseId: number) {

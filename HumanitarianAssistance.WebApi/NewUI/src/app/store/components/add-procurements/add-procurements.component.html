@@ -8,15 +8,15 @@
           <div class="row">
               <div class="col-md-12">
                 <div class="col-md-4">
-                  <lib-hum-dropdown [disabled]="true"  [validation]="addProcurementForm.controls['InventoryTypeId'].hasError('required')"  [options]="inventoryType$" formControlName='InventoryTypeId' [placeHolder]="'Inventory'"
+                  <lib-hum-dropdown  [validation]="addProcurementForm.controls['InventoryTypeId'].hasError('required')"  [options]="inventoryType$" formControlName='InventoryTypeId' [placeHolder]="'Inventory'"
                     ></lib-hum-dropdown>
                 </div>
                 <div class="col-md-4">
-                  <lib-hum-dropdown [disabled]="true" [validation]="addProcurementForm.controls['InventoryId'].hasError('required')" [options]="storeInventory$" formControlName='InventoryId' [placeHolder]="'Inventory(Master)'"
+                  <lib-hum-dropdown [validation]="addProcurementForm.controls['InventoryId'].hasError('required')" [options]="storeInventory$" formControlName='InventoryId' [placeHolder]="'Inventory(Master)'"
                     (change)="getMasterInventorySelectedValue($event)"></lib-hum-dropdown>
                 </div>
                 <div class="col-md-4">
-                  <lib-hum-dropdown [disabled]="true" [validation]="addProcurementForm.controls['ItemGroupId'].hasError('required')" [options]="storeItemGroups$" formControlName='ItemGroupId' [placeHolder]="'Item Group'"
+                  <lib-hum-dropdown [validation]="addProcurementForm.controls['ItemGroupId'].hasError('required')" [options]="storeItemGroups$" formControlName='ItemGroupId' [placeHolder]="'Item Group'"
                     (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
                 </div>
               </div>
@@ -24,11 +24,11 @@
             <div class="row">
                 <div class="col-md-12">
                   <div class="col-md-4">
-                    <lib-hum-dropdown [disabled]="true" [validation]="addProcurementForm.controls['ItemId'].hasError('required')" [options]="storeItems$" formControlName='ItemId' [placeHolder]="'Item'"
+                    <lib-hum-dropdown [validation]="addProcurementForm.controls['ItemId'].hasError('required')" [options]="storeItems$" formControlName='ItemId' [placeHolder]="'Item'"
                       ></lib-hum-dropdown>
                   </div>
                   <div class="col-md-4">
-                    <lib-hum-dropdown [disabled]="true" [validation]="addProcurementForm.controls['PurchaseId'].hasError('required')" [options]="purchases$" formControlName='PurchaseId' [placeHolder]="'Purchase Name'"
+                    <lib-hum-dropdown [validation]="addProcurementForm.controls['PurchaseId'].hasError('required')" [options]="purchases$" formControlName='PurchaseId' [placeHolder]="'Purchase Name'"
                       ></lib-hum-dropdown>
                   </div>
                 </div>

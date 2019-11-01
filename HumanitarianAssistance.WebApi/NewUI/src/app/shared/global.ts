@@ -182,6 +182,7 @@ export class GLOBAL {
   public static API_Project_AddEditProjectCurrencyDetail = 'Project/AddEditProjectCurrencyDetail';
 
   public static API_Account_GetAllUserDetails = 'Account/GetAllUserList';
+  public static API_Account_GetLoggedInUserUserName = 'Account/GetLoggedInUserUserName';
   public static API_Project_AddEditTargetBeneficiary = 'Project/AddEditTargetBeneficiary';
 
   public static API_Code_GetAllAccountByAccountHeadTypeId = 'Code/GetAllAccountByAccountHeadTypeId';
