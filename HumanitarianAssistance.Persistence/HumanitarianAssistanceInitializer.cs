@@ -1597,17 +1597,14 @@ namespace HumanitarianAssistance.Persistence
         {
             try
             {
-                StoreInventory inventory= new StoreInventory 
+                List<StoreInventory> list = new List<StoreInventory>
                 {
-                    AssetType= (int)InventoryMasterType.Consumables,
-                    InventoryCode= "C01",
-                    InventoryName="Transport",
-                    InventoryDescription ="Transport",
-                    IsDeleted= false,
-                    CreatedDate= DateTime.UtcNow
+                    new StoreInventory { AssetType= (int)InventoryMasterType.Consumables, InventoryCode= "C01", InventoryName="Transport", InventoryDescription ="Transport", IsDeleted= false, CreatedDate= DateTime.UtcNow },
+                    new StoreInventory { AssetType= (int)InventoryMasterType.Expendables, InventoryCode= "E01", InventoryName="Transport", InventoryDescription ="Transport", IsDeleted= false, CreatedDate= DateTime.UtcNow },
+                    new StoreInventory { AssetType= (int)InventoryMasterType.NonExpendables, InventoryCode= "N01", InventoryName="Transport", InventoryDescription ="Transport", IsDeleted= false, CreatedDate= DateTime.UtcNow }
                 };
-
-                await context.StoreInventories.AddAsync(inventory);
+               
+                await context.StoreInventories.AddRangeAsync(list);
                 await context.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -1624,6 +1621,10 @@ namespace HumanitarianAssistance.Persistence
                 {
                     new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="C01-01", ItemGroupName= "Vehicle", InventoryId =1},
                     new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="C01-02", ItemGroupName= "Generator", InventoryId =1},
+                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="E01-01", ItemGroupName= "Vehicle", InventoryId =2},
+                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="E01-02", ItemGroupName= "Generator", InventoryId =2},
+                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="N01-01", ItemGroupName= "Vehicle", InventoryId =3},
+                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="N01-02", ItemGroupName= "Generator", InventoryId =3},
                 };
                 await context.StoreItemGroups.AddRangeAsync(list);
                 await context.SaveChangesAsync();
@@ -1640,16 +1641,18 @@ namespace HumanitarianAssistance.Persistence
             {
                 List<StoreInventoryItem> list = new List<StoreInventoryItem>
                 {
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=1, ItemCode ="C01-01-01", ItemName= "Vehicle"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=2, ItemCode ="C01-02-01", ItemName= "Generator"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=1, ItemCode ="C01-01-02", ItemName= "Vehicle Fuel"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=2, ItemCode ="C01-02-02", ItemName= "Generator Fuel"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=1, ItemCode ="C01-01-03", ItemName= "Vehicle Mobil Oil"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=2, ItemCode ="C01-02-03", ItemName= "Generator Mobil Oil"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=1, ItemCode ="C01-01-04", ItemName= "Vehicle Spare Parts"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=2, ItemCode ="C01-02-04", ItemName= "Generator Spare Parts"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=1, ItemCode ="C01-01-05", ItemName= "Vehicle Maintenance Service"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=2, ItemCode ="C01-02-05", ItemName= "Generator Maintenance Service"}
+                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=1, ItemCode ="C01-01-01", ItemName= "Vehicle Fuel"},
+                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=2, ItemCode ="C01-02-01", ItemName= "Generator Fuel"},
+                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=1, ItemCode ="C01-01-02", ItemName= "Vehicle Mobil Oil"},
+                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=2, ItemCode ="C01-02-02", ItemName= "Generator Mobil Oil"},
+                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=1, ItemCode ="C01-01-03", ItemName= "Vehicle Maintenance Service"},
+                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=2, ItemCode ="C01-02-03", ItemName= "Generator Maintenance Service"},
+                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 2, ItemGroupId=3, ItemCode ="E01-01-01", ItemName= "Vehicle"},
+                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 2, ItemGroupId=4, ItemCode ="E01-02-01", ItemName= "Generator"},
+                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 2, ItemGroupId=3, ItemCode ="E01-01-02", ItemName= "Vehicle Spare Parts"},
+                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 2, ItemGroupId=4, ItemCode ="E01-02-02", ItemName= "Generator Spare Parts"},
+                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 3, ItemGroupId=5, ItemCode ="N01-01-01", ItemName= "Vehicle"},
+                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 3, ItemGroupId=6, ItemCode ="N01-02-01", ItemName= "Generator"},
                 };
 
                 await context.InventoryItems.AddRangeAsync(list);

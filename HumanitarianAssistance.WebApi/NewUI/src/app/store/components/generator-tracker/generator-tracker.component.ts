@@ -41,7 +41,6 @@ export class GeneratorTrackerComponent implements OnInit {
       }
     };
     this.initializeModel();
-    this.getGeneratorList(this.generatorTrackerFilter);
     this.getScreenSize();
     this.getAllCurrencies();
   }
@@ -93,6 +92,7 @@ export class GeneratorTrackerComponent implements OnInit {
       ModelYear: selectedFilter.ModelYear,
       OfficeId: selectedFilter.OfficeId,
       Voltage: selectedFilter.Voltage,
+      DisplayCurrency: this.selectedDisplayCurrency,
       pageSize: 10,
       pageIndex: 0
     };
@@ -122,12 +122,17 @@ export class GeneratorTrackerComponent implements OnInit {
     this.purchaseService.getAllCurrencies()
       .subscribe(x => {
         if (x.StatusCode === 200) {
+
+          this.selectedDisplayCurrency = x.data.CurrencyList[0].CurrencyId;
+
            this.currencyList$ = of(x.data.CurrencyList.map(y => {
             return {
               name: y.CurrencyCode + '-' + y.CurrencyName,
               value: y.CurrencyId
             };
           }));
+
+          this.getGeneratorList(this.generatorTrackerFilter);
         }
       },
         (error) => {

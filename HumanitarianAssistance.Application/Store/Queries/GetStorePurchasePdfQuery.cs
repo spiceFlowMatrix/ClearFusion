@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Application.Store.Models;
 using MediatR;
@@ -7,6 +8,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
 {
     public class GetStorePurchasePdfQuery: BaseModel, IRequest<byte[]>
     {
+
         public int InventoryTypeId { get; set; }
         public int ReceiptTypeId { get; set; }
         public int OfficeId { get; set; }
@@ -20,6 +22,9 @@ namespace HumanitarianAssistance.Application.Store.Queries
         public long ItemGroupId { get; set; }
         public long ItemId { get; set; }
         public long JobId { get; set; }
-        public StorePurchasePdfFlags StorePurchasePdfFlags {get; set;}
+        public List<string> SelectedColumns {get; set;}
+        public int? DisplayCurrency { get; set;}
+        public DateTime? DepreciationComparisionDate { get; set; }
+        
     }
 }

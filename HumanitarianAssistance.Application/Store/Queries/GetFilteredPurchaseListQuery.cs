@@ -22,6 +22,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
         public long ItemId { get; set; }
         public long JobId { get; set; }
         public int? DisplayCurrency { get; set;}
+        public DateTime? DepreciationComparisionDate { get; set; }
 
         public int? pageIndex { get; set; }
         public int? pageSize { get; set; }

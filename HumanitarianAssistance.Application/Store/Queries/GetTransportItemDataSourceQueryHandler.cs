@@ -1,4 +1,6 @@
 using HumanitarianAssistance.Application.Store.Models;
+using HumanitarianAssistance.Common.Enums;
+using HumanitarianAssistance.Domain.Entities.Store;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -25,47 +27,35 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
             try
             {
-                var result = await _dbContext.StoreItemPurchases
-                                        .Include(x => x.PurchasedVehicleDetailList)
-                                        .Include(x => x.PurchasedGeneratorDetailList)
-                                        .Include(x => x.StoreInventoryItem)
-                                        .ThenInclude(x => x.Inventory)
-                                        .Include(x => x.StoreInventoryItem)
-                                        .ThenInclude(x => x.StoreItemGroup)
-                                        .Where(x => x.IsDeleted == false && x.StoreInventoryItem.Inventory.AssetType == request.InventoryTypeId
-                                        && x.StoreInventoryItem.Inventory.InventoryId == request.InventoryId && x.StoreInventoryItem.ItemGroupId == request.ItemGroupId).ToListAsync();
-
-                foreach (var item in result)
+                if (request.TransportItemTypeId == (int)TransportItemTypes.Vehicle)
                 {
+                    List<PurchasedVehicleDetail> purchasedVehicles = new List<PurchasedVehicleDetail>();
+                    purchasedVehicles = await _dbContext.PurchasedVehicleDetail.Where(x => x.IsDeleted == false).ToListAsync();
 
-                    if (item.PurchasedVehicleDetailList.Any())
+                    foreach (var item in purchasedVehicles)
                     {
-                        foreach (var vehicle in item.PurchasedVehicleDetailList)
+                        TransportItemDataSourceModel tItem = new TransportItemDataSourceModel
                         {
-                            TransportItemDataSourceModel tItem = new TransportItemDataSourceModel
-                            {
-                                PurchaseIdName = $"{vehicle.PlateNo}-{vehicle.PurchaseId}",
-                                ItemId = vehicle.Id
-                            };
-
-                            model.Add(tItem);
-                        }
+                            PurchaseIdName = $"{item.PlateNo}-{item.PurchaseId}",
+                            ItemId = item.Id
+                        };
+                        model.Add(tItem);
                     }
-                    else
-                    {
-                        if (item.PurchasedGeneratorDetailList.Any())
-                        {
-                            foreach (var generator in item.PurchasedGeneratorDetailList)
-                            {
-                                TransportItemDataSourceModel tItem = new TransportItemDataSourceModel
-                                {
-                                    PurchaseIdName = $"{generator.Voltage}-{generator.PurchaseId}",
-                                    ItemId = generator.Id
-                                };
+                }
+                else
+                {
+                    List<PurchasedGeneratorDetail> purchasedGenerators = new List<PurchasedGeneratorDetail>();
+                    purchasedGenerators = await _dbContext.PurchasedGeneratorDetail.Where(x => x.IsDeleted == false).ToListAsync();
 
-                                model.Add(tItem);
-                            }
-                        }
+                    foreach (var item in purchasedGenerators)
+                    {
+                        TransportItemDataSourceModel tItem = new TransportItemDataSourceModel
+                        {
+                            PurchaseIdName = $"{item.Voltage}-{item.PurchaseId}",
+                            ItemId = item.Id
+                        };
+
+                        model.Add(tItem);
                     }
                 }
             }
@@ -73,7 +63,6 @@ namespace HumanitarianAssistance.Application.Store.Queries
             {
                 throw ex;
             }
-
             return model;
         }
     }
