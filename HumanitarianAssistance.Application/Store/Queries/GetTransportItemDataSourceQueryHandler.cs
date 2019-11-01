@@ -33,7 +33,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                         .Include(x => x.StoreInventoryItem)
                                         .ThenInclude(x => x.StoreItemGroup)
                                         .Where(x => x.IsDeleted == false && x.StoreInventoryItem.Inventory.AssetType == request.InventoryTypeId
-                                        && x.StoreInventoryItem.Inventory.InventoryId == request.InventoryId && x.StoreInventoryItem.ItemGroupId == request.ItemGroupId).ToListAsync();
+                                        && x.StoreInventoryItem.Inventory.InventoryId == request.InventoryId &&
+                                        x.StoreInventoryItem.ItemGroupId == request.ItemGroupId).ToListAsync();
 
                 foreach (var item in result)
                 {

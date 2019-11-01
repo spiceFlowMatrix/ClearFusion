@@ -8,5 +8,6 @@ namespace HumanitarianAssistance.Application.Store.Queries
         public long InventoryId {get; set;}
         public long ItemGroupId {get; set;}
         public long ItemId {get; set;}
+        public int TransportItemType {get; set;}
     }
 }

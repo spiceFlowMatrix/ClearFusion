@@ -247,14 +247,14 @@
 
     public enum TransportItem
     {
-        VehicleFuel = 3,
-        GeneratorFuel = 4,
-        VehicleMobilOil = 5,
-        GeneratorMobilOil = 6,
-        VehicleSpareParts = 7,
-        GeneratorSpareParts = 8,
-        VehicleMaintenanceService = 9,
-        GeneratorMaintenanceService = 10
+        VehicleFuel = 1,
+        GeneratorFuel = 2,
+        VehicleMobilOil = 3,
+        GeneratorMobilOil = 4,
+        VehicleMaintenanceService = 5,
+        GeneratorMaintenanceService = 6,
+        VehicleSpareParts = 9,
+        GeneratorSpareParts = 10,
     }
 
     //#region "StoreItemGroups"
@@ -263,4 +263,29 @@
         Vehicle = 1,
         Generator = 2
     }
+
+    // public enum StoreConfigFilter
+    // {
+    //     Id=1,
+    //     Item=2,
+    //     PurchasedBy=3,
+    //     Project=4,
+    //     OriginalCost=5,
+    //     DepreciatedCost=6,
+    //     PurchaseDate=7,
+    //     Currency=8,
+    //     PurchasedQuantity=9,
+    //     ItemCode=10,
+    //     ProjectId=11,
+    //     ItemCodeDescription=12,
+    //     Description=13,
+    //     BudgetLineName=14,
+    //     DepreciationRate=15,
+    //     MasterInventoryCode=16,
+    //     OfficeCode=17,
+    //     ReceiptDate=18,
+    //     InvoiceDate=19,
+    //     ReceivedFromLocationName=20,
+    //     Status=21
+    // }
 }

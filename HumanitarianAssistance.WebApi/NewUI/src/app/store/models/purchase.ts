@@ -32,7 +32,7 @@ export interface IFilterValueModel {
   JobId: any;
   DisplayCurrency?: number;
   DepreciationComparisionDate: any;
-  StorePurchasePdfFlags?: IStorePurchasePdfFlags;
+  SelectedColumns?: any[];
 
   PageIndex?: number;
   PageSize?: number;
@@ -185,26 +185,26 @@ export interface IPurchaseItemDataSource {
   PurchaseName: string;
 }
 
-export interface IStorePurchasePdfFlags {
-  PurchaseId: boolean;
-  ItemCode: boolean;
-  ItemCodeDescription: boolean;
-  MasterInventoryCode: boolean;
-  Description: boolean;
-  OfficeCode: boolean;
-  BudgetLineName: boolean;
-  InvoiceDate: boolean;
-  ItemName: boolean;
-  ProjectId: boolean;
-  ProjectName: boolean;
-  OriginalCost: boolean;
-  DepreciatedCost: boolean;
-  PurchasedQuantity: boolean;
-  PurchaseDate: boolean;
-  CurrencyName: boolean;
-  ReceiptDate: boolean;
-  DepreciationRate: boolean;
-  ReceivedFromEmployee: boolean;
-  ReceivedFromLocationName: boolean;
-  Status: boolean;
-}
+// export interface IStorePurchasePdfFlags {
+//   PurchaseId: boolean;
+//   ItemCode: boolean;
+//   ItemCodeDescription: boolean;
+//   MasterInventoryCode: boolean;
+//   Description: boolean;
+//   OfficeCode: boolean;
+//   BudgetLineName: boolean;
+//   InvoiceDate: boolean;
+//   ItemName: boolean;
+//   ProjectId: boolean;
+//   ProjectName: boolean;
+//   OriginalCost: boolean;
+//   DepreciatedCost: boolean;
+//   PurchasedQuantity: boolean;
+//   PurchaseDate: boolean;
+//   CurrencyName: boolean;
+//   ReceiptDate: boolean;
+//   DepreciationRate: boolean;
+//   ReceivedFromEmployee: boolean;
+//   ReceivedFromLocationName: boolean;
+//   Status: boolean;
+// }

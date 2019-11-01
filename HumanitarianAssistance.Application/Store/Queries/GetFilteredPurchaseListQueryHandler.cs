@@ -97,7 +97,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     ProjectId = x.ProjectId,
                     ProjectName = x.ProjectDetail == null ? "" : x.ProjectDetail.ProjectCode + "-" + x.ProjectDetail.ProjectName,
                     OriginalCost = x.UnitCost * x.Quantity,
-                    ItemCodeDescription = x.StoreInventoryItem != null ? (x.StoreInventoryItem.ItemCode + "-" + x.StoreInventoryItem.Description): ""  ,
+                    ItemCodeDescription = x.StoreInventoryItem != null ? (x.StoreInventoryItem.ItemCode + "-" + (x.StoreInventoryItem.Description == null? "": x.StoreInventoryItem.Description)): ""  ,
                     AssetTypeId= x.AssetTypeId,
                     Description = x.StoreInventoryItem != null ? x.StoreInventoryItem.Description: ""  ,
                     BudgetLineId = x.BudgetLineId,

@@ -41,22 +41,183 @@
                 <td>
                     <table cellpadding="5" style="width:100%;font-size:14px;" border="1" bordercolor="#bfbfbf" cellspacing="0">
                         <tr>
-                            <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Id</th>
-                            <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Item</th>
-                            <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Purchased By</th>
-                            <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Project</th>
-                            <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Original Cost</th>
-                            <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Depriciated Cost</th>
+                            @if(Model.StorePurchasePdfFlags.Id)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Id</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Item)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Item</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.PurchasedBy)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Purchased By</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Project)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Project</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.OriginalCost)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Original Cost</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.DepreciatedCost)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Depriciated Cost</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.PurchaseDate)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Purchase Date</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Currency)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Currency</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.PurchasedQuantity)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Purchased Quantity</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ItemCode)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Item Code</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ProjectId)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Project Id</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ItemCodeDescription)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Item Code Description</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.BudgetLineName)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Budget Line Name</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.DepreciationRate)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Depreciation Rate</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.MasterInventoryCode)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Master Inventory Code</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.OfficeCode)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Office Code</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ReceiptDate)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Receipt Date</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.CurrencyName)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Currency Name</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.InvoiceDate)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Invoice Date</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ReceivedFromLocationName)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Received From Location</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Status)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Status</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Description)
+                            {
+                                <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Description</th>
+                            }
+                            
                         </tr>
                         @foreach (var item in @Model.StorePurchaseList)
                         {
                             <tr>
+                                @if(Model.StorePurchasePdfFlags.Id)
+                            {
                                 <td>@item.PurchaseId</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Item)
+                            {
                                 <td>@item.ItemName</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.PurchasedBy)
+                            {
                                 <td>@item.ReceivedFromEmployee</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Project)
+                            {
                                 <td>@item.ProjectName</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.OriginalCost)
+                            {
                                 <td>@item.OriginalCost</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.DepreciatedCost)
+                            {
                                 <td>@item.DepreciatedCost</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.PurchaseDate)
+                            {
+                                <td>@item.PurchaseDate</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Currency)
+                            {
+                               <td>@item.CurrencyName</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.PurchasedQuantity)
+                            {
+                                <td>@item.PurchasedQuantity</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ItemCode)
+                            {
+                                <td>@item.ItemCode</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ProjectId)
+                            {
+                                <td>@item.ProjectId</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ItemCodeDescription)
+                            {
+                                <td>@item.ItemCodeDescription</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.BudgetLineName)
+                            {
+                                <td>@item.BudgetLineName</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.DepreciationRate)
+                            {
+                                <td>@item.DepreciationRate</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.MasterInventoryCode)
+                            {
+                                <td>@item.MasterInventoryCode</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.OfficeCode)
+                            {
+                                <td>@item.OfficeCode</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ReceiptDate)
+                            {
+                                <td>@item.ReceiptDate</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.InvoiceDate)
+                            {
+                                <td>@item.InvoiceDate</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ReceivedFromLocationName)
+                            {
+                                <td>@item.ReceivedFromLocationName</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Status)
+                            {
+                                <td>@item.Status</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Description)
+                            {
+                                <td>@item.Description</td>
+                            }
                             </tr>
                         }
                     </table>

@@ -524,19 +524,42 @@ export enum EmployeeType {
 
 //#region "StoreMasterCategory"
 export enum StoreMasterCategory {
-  Transport = 1
+  ConsumableTransport = 1,
+  ExpendableTransport = 2,
+  NonExpendableTransport = 3
 }
 //#endregion
 
 //#region "StoreItemGroups"
 export enum StoreItemGroups {
-  Vehicle = 1,
-  Generator = 2
+  ConsumableVehicle = 1,
+  ConsumableGenerator = 2,
+  ExpandableVehicle = 3,
+  ExpandableGenerator = 4,
+  NonExpandableVehicle = 5,
+  NonExpandableGenerator = 6,
 }
 //#endregion
 
 //#region "StoreItemGroups"
 export enum StoreItem {
+  VehicleFuel = 1,
+  GeneratorFuel = 2,
+  VehicleMobilOil = 3,
+  GeneratorMobilOil = 4,
+  VehicleMaintenanceService = 5,
+  GeneratorMaintenanceService = 6,
+  ExpendableVehicle = 7,
+  ExpendableGenerator = 8,
+  VehicleSpareParts= 9,
+  GeneratorSpareParts= 10,
+  NonExpendableVehicle= 11,
+  NonExpendableGenerator = 12
+}
+//#endregion
+
+//#region "TransportItemType"
+export enum TransportItemType {
   Vehicle = 1,
   Generator = 2
 }
@@ -547,28 +570,4 @@ export enum DocumentFileTypes {
   PurchaseInvoice = 2,
   EmployeeProfile = 3,
   EmployeeDocument = 4
-}
-
-export enum SelectedColumnsForStorePdfExport {
-  Id = 1,
-  Item = 2,
-  PurchasedBy = 3,
-  Project = 4,
-  OriginalCost = 5,
-  DepreciatedCost = 6,
-  PurchaseDate = 7,
-  Currency = 8,
-  PurchasedQuantity = 9,
-  ItemCode = 10,
-  ProjectId = 11,
-  ItemCodeDescription = 12,
-  Description = 13,
-  BudgetLineName = 14,
-  DepreciationRate = 15,
-  MasterInventoryCode = 16,
-  OfficeCode = 17,
-  ReceiptDate = 18,
-  InvoiceDate = 19,
-  ReceivedFromLocation = 20,
-  Status = 21
 }

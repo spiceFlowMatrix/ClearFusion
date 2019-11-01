@@ -184,6 +184,7 @@ export class PurchaseListComponent implements OnInit {
       ItemId: event.value.ItemId,
       IssueEndDate: null,
       PurchaseEndDate: null,
+      DisplayCurrency: this.selectedDisplayCurrency,
       DepreciationComparisionDate: StaticUtilities.setLocalDate(event.value.DepreciationComparisionDate),
       PageIndex: this.filterValueModel.PageIndex,
       PageSize: this.filterValueModel.PageSize
@@ -272,6 +273,7 @@ export class PurchaseListComponent implements OnInit {
               value: y.CurrencyId
             };
           }));
+          this.selectedDisplayCurrency = x.data.CurrencyList[0].CurrencyId;
         }
       },
         (error) => {
@@ -286,7 +288,15 @@ export class PurchaseListComponent implements OnInit {
   }
 
   onPdfExportClick() {
-    const StorePurchaseFilter: any = this.filterValueModel;
+    debugger;
+    let pdfColumns;
+
+    this.hideColums.subscribe(x => pdfColumns = x.items);
+
+    const StorePurchaseFilter = this.filterValueModel;
+    StorePurchaseFilter.SelectedColumns = [];
+    StorePurchaseFilter.SelectedColumns = pdfColumns;
+
     this.globalSharedService
     .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetStorePurchasePdf, StorePurchaseFilter
     )
