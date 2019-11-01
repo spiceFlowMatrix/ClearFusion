@@ -10,6 +10,7 @@
             placeholderSearchLabel="Find Items..."
             noEntriesFoundLabel="No matching items found"
             [dataSource]="storeItemsList"
+            [selectedValue]="ItemIds"
             (selectionChanged)="onOpenedItemSelectChange($event)"
             ></lib-search-dropdown>
           <mat-form-field class="example-full-width">

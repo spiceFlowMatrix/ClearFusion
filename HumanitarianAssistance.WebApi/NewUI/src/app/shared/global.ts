@@ -198,6 +198,10 @@ export class GLOBAL {
   public static API_ProjectLogistics_GetRequestDetailById = 'ProjectLogistic/GetRequestDetailById';
   public static API_ProjectLogistics_AddLogisticRequestItems = 'ProjectLogistic/AddLogisticRequestItems';
   public static API_ProjectLogistics_GetItemsByRequestId = 'ProjectLogistic/GetItemsByRequestId';
+  public static API_ProjectLogistics_DeleteLogisticRequestItem = 'ProjectLogistic/DeleteLogisticRequestItem';
+  public static API_ProjectLogistics_EditLogisticRequestItems = 'ProjectLogistic/EditLogisticRequestItems';
+  public static API_ProjectLogistics_CancelLogisticRequest = 'ProjectLogistic/CancelLogisticRequest';
+  public static API_ProjectLogistics_IssuePurchaseOrder = 'ProjectLogistic/IssuePurchaseOrder';
 
   // Chart Of Account
   public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';

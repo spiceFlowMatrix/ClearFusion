@@ -85,6 +85,48 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.RequestId = RequestId; 
             return await _mediator.Send(model);
         }
+
+        [HttpPost]
+        public async Task<ApiResponse> DeleteLogisticRequestItem([FromBody]long ItemId)
+        {   
+            DeleteLogisticRequestItemCommand model = new DeleteLogisticRequestItemCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            model.ItemId = ItemId; 
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> EditLogisticRequestItems([FromBody]EditLogisticRequestItemsCommand model)
+        {   
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> CancelLogisticRequest([FromBody]long RequestId)
+        {   
+            CancelLogisticRequestCommand model = new CancelLogisticRequestCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            model.RequestId = RequestId; 
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> IssuePurchaseOrder([FromBody]long RequestId)
+        {   
+            IssuePurchaseOrderCommand model = new IssuePurchaseOrderCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            model.RequestId = RequestId; 
+            return await _mediator.Send(model);
+        }
     }
 
 }

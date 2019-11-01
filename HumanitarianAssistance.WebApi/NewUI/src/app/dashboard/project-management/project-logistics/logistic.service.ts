@@ -39,6 +39,13 @@ export class LogisticService {
     );
   }
 
+  deleteLogisticRequestItemsById(ItemId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_DeleteLogisticRequestItem,
+      ItemId
+    );
+  }
+
   openDeleteDialog() {
     const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
       width: '300px',
@@ -79,10 +86,31 @@ export class LogisticService {
     );
   }
 
+  editRequestItems(value) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_EditLogisticRequestItems,
+      value
+    );
+  }
+
   getAllRequestItems(requestId) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetItemsByRequestId,
       requestId
+    );
+  }
+
+  cancelLogisticRequest(RequestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_CancelLogisticRequest,
+      RequestId
+    );
+  }
+
+  issuePurchaseOrder(RequestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_IssuePurchaseOrder,
+      RequestId
     );
   }
 }

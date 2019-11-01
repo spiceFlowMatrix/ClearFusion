@@ -30,9 +30,13 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     ProjectId = y.ProjectId,
                     RequestName = y.RequestName,
                     Status = y.Status,
-                    TotalCost = y.TotalCost
+                    //TotalCost = y.TotalCost
                 })
                 .ToListAsync();
+                
+                foreach(var item in list) {
+                    item.TotalCost =   _dbContext.ProjectLogisticItems.Where(x=>x.IsDeleted==false && x.LogisticRequestsId==item.RequestId).Sum(y=>y.EstimatedCost);
+                }
                 response.data.logisticRequestList = list;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

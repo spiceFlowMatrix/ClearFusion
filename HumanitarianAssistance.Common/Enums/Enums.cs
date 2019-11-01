@@ -261,7 +261,11 @@
    {
         NewRequest = 1,
         Cancelled = 2,
-        Approved = 3
+        IssuePurchaseOrder = 3,
+        Approved = 4,
+        CompletePurchase = 5,
+        ControlApproved = 6,
+        ControlRejected = 7
    }
 
 }

@@ -23,37 +23,63 @@ export class AddLogisticItemsComponent implements OnInit {
     public toastr: ToastrService) { }
 
   ngOnInit() {
+    this.getStoreItems();
     this.addLogisticItemsForm = this.fb.group({
       Item: ['', Validators.required],
-      Quantity: ['', Validators.required],
-      EstimatedCost: ['', Validators.required]
+      Quantity: [this.data.Quantity, Validators.required],
+      EstimatedCost: [this.data.EstimatedCost, Validators.required]
     });
-    this.getStoreItems();
   }
 
   addItem(value) {
     this.commonLoader.showLoader();
-    const model = {
-      ItemId : value.Item,
-      RequestId : this.data.RequestId,
-      Quantity : value.Quantity,
-      EstimatedCost : value.EstimatedCost
-    };
-    this.logisticservice.addRequestItems(model).subscribe(res => {
-      if (res.StatusCode === 200 && res.data.logisticItem != null) {
-        this.dialogRef.close({data: res.data.logisticItem});
-        this.commonLoader.hideLoader();
-        this.toastr.success('Item added successfully!');
-        // code goes here
-      } else {
-        this.dialogRef.close({data: null});
-        this.commonLoader.hideLoader();
-        this.toastr.warning(res.Message);
-      }
-    });
+    if (this.data.Id !== undefined && this.data.Id != null ) {
+      const model = {
+        Id: this.data.Id,
+        ItemId : value.Item,
+        RequestId : this.data.RequestId,
+        Quantity : value.Quantity,
+        EstimatedCost : value.EstimatedCost
+      };
+      this.logisticservice.editRequestItems(model).subscribe(res => {
+        if (res.StatusCode === 200 && res.data.logisticItem != null) {
+          this.dialogRef.close({data: res.data.logisticItem});
+          this.commonLoader.hideLoader();
+          this.toastr.success('Updated successfully!');
+          // code goes here
+        } else {
+          this.dialogRef.close({data: null});
+          this.commonLoader.hideLoader();
+          this.toastr.warning(res.Message);
+        }
+      });
+    } else {
+      const model = {
+        ItemId : value.Item,
+        RequestId : this.data.RequestId,
+        Quantity : value.Quantity,
+        EstimatedCost : value.EstimatedCost
+      };
+      this.logisticservice.addRequestItems(model).subscribe(res => {
+        if (res.StatusCode === 200 && res.data.logisticItem != null) {
+          this.dialogRef.close({data: res.data.logisticItem});
+          this.commonLoader.hideLoader();
+          this.toastr.success('Item added successfully!');
+          // code goes here
+        } else {
+          this.dialogRef.close({data: null});
+          this.commonLoader.hideLoader();
+          this.toastr.warning(res.Message);
+        }
+      });
+    }
   }
   cancelItem() {
     this.dialogRef.close({data: null});
+  }
+
+  get ItemIds() {
+    return this.addLogisticItemsForm.get('Item').value;
   }
 
   getStoreItems() {
@@ -67,6 +93,7 @@ export class AddLogisticItemsComponent implements OnInit {
             Name: element.ItemName
           });
         });
+        this.addLogisticItemsForm.controls['Item'].setValue(this.data.ItemId);
       }
     });
   }
