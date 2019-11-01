@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, OnDestroy, ViewChild } from '@angular/core';
-import { Validators, FormGroup, FormBuilder, AbstractControl, FormArray } from '@angular/forms';
+import { Validators, FormGroup, FormBuilder, AbstractControl, FormArray, FormGroupDirective } from '@angular/forms';
 import { PurchaseService } from '../../services/purchase.service';
 import { Observable, of, forkJoin, ReplaySubject } from 'rxjs';
 import { IDropDownModel, IPurchasedFiles } from '../../models/purchase';
@@ -14,6 +14,7 @@ import { VehicleDetailComponent } from '../vehicle-detail/vehicle-detail.compone
 import { AddDocumentComponent } from '../document-upload/add-document.component';
 import { MatDialog } from '@angular/material/dialog';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { GeneratorDetailComponent } from '../generator-detail/generator-detail.component';
 
 @Component({
   selector: 'app-add-purchase',
@@ -63,7 +64,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   StoreItems = StoreItem;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  @ViewChild(VehicleDetailComponent) child;
+  @ViewChild(VehicleDetailComponent)  vehicleDetailChild: VehicleDetailComponent;
+  @ViewChild(GeneratorDetailComponent)  generatorDetailChild:GeneratorDetailComponent;
 
   constructor(private purchaseService: PurchaseService,
     private fb: FormBuilder, private budgetLineService: BudgetLineService,
@@ -368,10 +370,10 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   getSelectedItemName(event) {
     debugger;
 
-    this.storeItemGroups$.subscribe(x => {
-      const index = x.findIndex(y => y.value === event);
-      this.selectedItemGroupName = x[index].name;
-    });
+    // this.storeItemGroups$.subscribe(x => {
+    //   const index = x.findIndex(y => y.value === event);
+    //   this.selectedItemGroupName = x[index].name;
+    // });
 
     this.storeItems$.subscribe(x => {
       const index = x.findIndex(y => y.value === event);
@@ -468,7 +470,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   addPurchaseFormSubmit() {
-    // console.log(this.addPurchaseForm);
+    debugger;
     if (this.addPurchaseForm.valid) {
       this.isAddPurchaseFormSubmitted = true;
       this.purchaseService.addPurchase(this.addPurchaseForm.value)
@@ -628,6 +630,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   addVehicles() {
+    debugger;
     this.removeGenerators();
     (<FormArray>this.addPurchaseForm.get('TransportVehicles')).push(this.fb.group({
       'PlateNo': ['', Validators.required],
@@ -728,6 +731,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     this.commonLoader.showLoader();
     this.purchaseService.getStorePurchaseById(Number(purchaseId))
       .subscribe(x => {
+        debugger;
         // get All dropdown datasource
         this.getInventoriesByInventoryTypeId(x.InventoryTypeId);
         this.getAllStoreItemGroups(x.InventoryId, x.ItemGroupId);
@@ -786,7 +790,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         // get TransportItem Datasource for vehicle/generator based on condition below
         if (x.ItemId === this.StoreItems.GeneratorFuel || x.ItemId === this.StoreItems.GeneratorMaintenanceService ||
           x.ItemId === this.StoreItems.GeneratorMobilOil || x.ItemId === this.StoreItems.GeneratorSpareParts) {
-
           this.getTransportItemDataSource(TransportItemType.Generator);
         } else if (x.ItemId === this.StoreItems.VehicleFuel || x.ItemId === this.StoreItems.VehicleMaintenanceService ||
           x.ItemId === this.StoreItems.VehicleMobilOil || x.ItemId === this.StoreItems.VehicleSpareParts) {

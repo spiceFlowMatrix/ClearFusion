@@ -189,6 +189,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     ReceivedFromLocationName= x.StoreSourceCodeDetail != null? (x.StoreSourceCodeDetail.Code+"-"+x.StoreSourceCodeDetail.Description): "" ,
                     Status= x.StatusAtTimeOfIssue != null? x.StatusAtTimeOfIssue.StatusName : "",
                     DepreciatedCost = x.UnitCost * x.Quantity,
+                    UnitCost= x.UnitCost
                 }).ToList();
 
                 // Calculate Depreciation Cost when Depreciation Comparision Date is not null

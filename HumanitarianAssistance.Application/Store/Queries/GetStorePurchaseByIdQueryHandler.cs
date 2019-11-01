@@ -103,8 +103,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                        OfficeId= z.OfficeId,
                                        JournalCode= z.JournalCode,
                                        PurchaseName= z.PurchaseName,
-                                       TransportItemId= z.GeneratorItemDetail != null ? z.GeneratorItemDetail.Id :
-                                                        z.VehicleItemDetail != null ? z.VehicleItemDetail.Id : 0,
+                                       TransportItemId= z.GeneratorItemDetail != null ? z.GeneratorItemDetail.GeneratorPurchaseId :
+                                                        z.VehicleItemDetail != null ? z.VehicleItemDetail.VehiclePurchaseId : 0,
                                        PurchasedVehicleList = z.PurchasedVehicleDetailList.Where(x=> x.IsDeleted == false)
                                                                .Select(y=> new PurchasedVehicleModel 
                                                                {

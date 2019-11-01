@@ -38,6 +38,7 @@ export class VehicleDetailComponent implements OnInit, OnChanges, OnDestroy {
     this.vehicleDetailForm.controls['OfficeId'].valueChanges.subscribe(x => {
       this.getEmployeesByOfficeId(x);
     });
+    this.markFormGroupTouched(this.vehicleDetailForm);
   }
 
   ngOnChanges() {
@@ -45,8 +46,6 @@ export class VehicleDetailComponent implements OnInit, OnChanges, OnDestroy {
     if (this.officeId !== undefined && this.officeId != null) {
       this.getEmployeesByOfficeId(this.officeId);
     }
-    this.vehicleDetailForm.markAsTouched();
-    this.vehicleDetailForm.updateValueAndValidity();
   }
 
   getEmployeesByOfficeId(officeId: any) {
@@ -73,6 +72,25 @@ export class VehicleDetailComponent implements OnInit, OnChanges, OnDestroy {
           };
         }));
       });
+  }
+
+  onSubmit() {
+    debugger;
+
+    // to validate child vehicle form from add purchase form
+    this.markFormGroupTouched(this.vehicleDetailForm);
+    this.vehicleDetailForm.updateValueAndValidity();
+  }
+
+  public markFormGroupTouched(formGroup: FormGroup) {
+    debugger;
+    (<any>Object).values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+
+      if (control.controls) {
+        this.markFormGroupTouched(control);
+      }
+    });
   }
 
   ngOnDestroy() {

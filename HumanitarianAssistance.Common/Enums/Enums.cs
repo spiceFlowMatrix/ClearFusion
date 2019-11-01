@@ -258,7 +258,7 @@
     }
 
     //#region "StoreItemGroups"
-    public enum StoreItemGroups
+    public enum TransportItemTypes
     {
         Vehicle = 1,
         Generator = 2
