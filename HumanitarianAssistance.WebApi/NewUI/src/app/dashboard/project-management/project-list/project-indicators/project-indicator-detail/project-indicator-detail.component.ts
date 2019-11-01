@@ -80,6 +80,7 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
       this.projectId = +params['id'];
     });
     this.initQuestionModel();
+    console.log("projectdetai", this.ProjectindicatorDetail);
   }
 
   ngOnChanges() {
@@ -123,17 +124,27 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
     this.indicatorForm = this.fb.group({
       IndicatorName: this.ProjectindicatorDetail.IndicatorName,
       Description: this.ProjectindicatorDetail.Description,
-      ProjectIndicatorId: this.ProjectindicatorDetail.ProjectIndicatorId
+      ProjectIndicatorId: this.ProjectindicatorDetail.ProjectIndicatorId,
+      CanDelete: this.ProjectindicatorDetail.CanDelete
     });
   }
   get questions(): FormArray {
     return this.indicatorForm.get('questions') as FormArray;
   }
-
+ // note : check if candidate is able to delete/edit
+  get candeletedCandicate() {
+   const isselected = this.indicatorForm.get('CanDelete').value;
+   if (isselected === true) {
+     return true;
+   } else {
+     return false;
+   }
+  }
   initializeModel() {
     this.indicatorForm = this.fb.group({
       ProjectIndicatorName: ['', Validators.required],
-      Description: ['', Validators.required]
+      Description: ['', Validators.required],
+      CanDelete: ['']
     });
   }
 

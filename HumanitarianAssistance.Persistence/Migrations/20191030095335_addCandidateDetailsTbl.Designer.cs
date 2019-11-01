@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191030095335_addCandidateDetailsTbl")]
+    partial class addCandidateDetailsTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5953,8 +5955,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.HasIndex("ProjectSelectionId");
-
                     b.ToTable("FinancialProjectDetail");
                 });
 
@@ -9795,10 +9795,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectDetail", "SelectedProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectSelectionId");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.HiringRequestCandidates", b =>

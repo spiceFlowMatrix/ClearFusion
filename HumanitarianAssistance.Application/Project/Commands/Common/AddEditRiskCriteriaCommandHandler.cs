@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 namespace HumanitarianAssistance.Application.Project.Commands.Common
@@ -123,9 +124,9 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
                     //if exist then remove
                     if (projectPresent)
                     {
-                        FinancialProjectDetail projectExist = await _dbContext.FinancialProjectDetail
-                                                                                       .FirstOrDefaultAsync(x => x.ProjectId == request.ProjectId &&
-                                                                                                                 x.IsDeleted == false);
+                        List<FinancialProjectDetail> projectExist = await _dbContext.FinancialProjectDetail
+                                                                                       .Where(x => x.ProjectId == request.ProjectId &&
+                                                                                                                 x.IsDeleted == false).ToListAsync();
 
                         // if exist then remove it
                         _dbContext.FinancialProjectDetail.RemoveRange(projectExist);
