@@ -4403,6 +4403,7 @@ export class CriteriaEvaluationComponent
   }
   //#endregion
 
+
   downloadPdf() {
     const pdfmodel: ICriteriaEvaluationPdfModel = {
       ProjectId: this.ProjectId,
@@ -4418,6 +4419,7 @@ export class CriteriaEvaluationComponent
         .pipe()
         .subscribe();
     }
+
   }
 
   ngOnDestroy() {

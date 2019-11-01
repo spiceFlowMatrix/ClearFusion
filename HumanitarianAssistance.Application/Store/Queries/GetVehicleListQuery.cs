@@ -10,6 +10,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
         public string PlateNo { get; set; }
         public int? EmployeeId { get; set; }
         public int? OfficeId { get; set; }
+        public int? DisplayCurrency { get; set; }
 
         public int? pageIndex { get; set; }
         public int? pageSize { get; set; }

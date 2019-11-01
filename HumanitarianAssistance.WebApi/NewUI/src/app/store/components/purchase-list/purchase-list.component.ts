@@ -11,7 +11,10 @@ import { PurchaseFiledConfigComponent } from '../purchase-filed-config/purchase-
 import { TableActionsModel } from 'projects/library/src/public_api';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { FieldConfigService } from '../../services/field-config.service';
-import { map } from 'rxjs/operators';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
+import { GLOBAL } from 'src/app/shared/global';
+import { IDropDownModel } from 'src/app/dashboard/accounting/report-services/report-models';
 
 @Component({
   selector: 'app-purchase-list',
@@ -24,6 +27,8 @@ export class PurchaseListComponent implements OnInit {
   purchaseFilterConfigList$: Observable<IPurchaseFilterConfigColList[]>;
   filterValueModel: IFilterValueModel;
   purchaseRecordCount = 0;
+  currencyList$: Observable<IDropDownModel[]>;
+  selectedDisplayCurrency: number;
 
   // screen
   screenHeight: any;
@@ -34,14 +39,20 @@ export class PurchaseListComponent implements OnInit {
   showConfig = false;
   @ViewChild(PurchaseFiledConfigComponent) fieldConfig: PurchaseFiledConfigComponent;
 
-  purchaseListHeaders$ = of(['Id', 'Item', 'Purchased By', 'Project', 'Original Cost', 'Deprecated Cost']);
+  purchaseListHeaders$ = of(['Id', 'Item', 'Purchased By', 'Project', 'Original Cost', 'Depreciated Cost', 'Purchase Date', 'Currency',
+                            'Purchased Quantity', 'Item Code', 'Project Id', 'Item Code Description', 'Description', 'BudgetLine Name',
+                          'Depreciation Rate', 'Master Inventory Code', 'Office Code', 'Receipt Date', 'Invoice Date',
+                          'Received From Location', 'Status']);
   subListHeaders$ = of(['Id', 'Date', 'Employee', 'Procured Amount', 'Must Return', 'Returned', 'Returned On']);
   procurementList$: Observable<IProcurementList[]>;
-  hideColums: Observable<{ headers?: string[], items?: string[] }>
+  hideColums: Observable<{ headers?: string[], items?: string[] }>;
+  columnsToShownInPdf: any[] = [];
 
   constructor(private purchaseService: PurchaseService,
     private router: Router, private dialog: MatDialog,
-    private datePipe: DatePipe, private toastr: ToastrService, private loader: CommonLoaderService, private fieldConfigservice: FieldConfigService) {
+    private datePipe: DatePipe, private toastr: ToastrService,
+    private loader: CommonLoaderService, private fieldConfigservice: FieldConfigService,
+    private globalSharedService: GlobalSharedService, private appurl: AppUrlService) {
 
     this.filterValueModel = {
       CurrencyId: null,
@@ -59,18 +70,21 @@ export class PurchaseListComponent implements OnInit {
       ReceiptTypeId: null,
       PageIndex: 0,
       PageSize: 10,
-      TotalCount: null
+      TotalCount: null,
+      DisplayCurrency: null
     };
   }
 
   ngOnInit() {
 
     this.getScreenSize();
+    this.getAllCurrencies();
     this.actions = {
       items: {
         button: { status: true, text: 'Add Procurement' },
         delete: false,
         download: false,
+        edit: true
       },
       subitems: {
         button: { status: false, text: '' },
@@ -81,12 +95,12 @@ export class PurchaseListComponent implements OnInit {
     }
     this.fieldConfigservice.data.subscribe(res => {
       if (res.length > 0) {
-        let headers = res.map(r => r.headerName);
-        let items = res.map(r => r.modelName);
-        this.hideColums = of({headers:headers,items:items});
+        const headers = res.map(r => r.headerName);
+        const items = res.map(r => r.modelName);
+        this.hideColums = of({headers: headers, items: items});
+        this.columnsToShownInPdf = res;
       }
-
-    })
+    });
   }
 
   //#region "Dynamic Scroll"
@@ -104,10 +118,11 @@ export class PurchaseListComponent implements OnInit {
   //#endregion
 
   getPurchasesByFilter(filter: IFilterValueModel) {
+    this.loader.showLoader();
     this.filterValueModel = filter;
     this.purchaseService
       .getFilteredPurchaseList(filter).subscribe(x => {
-        this.loader.showLoader();
+
         this.purchaseRecordCount = x.RecordCount;
         this.purchaseFilterConfigList$ = of(x.PurchaseList);
         this.purchaseList$ = of(x.PurchaseList.map((element) => {
@@ -118,6 +133,21 @@ export class PurchaseListComponent implements OnInit {
             Project: element.ProjectName,
             OriginalCost: element.OriginalCost,
             DepreciatedCost: element.DepreciatedCost,
+            PurchaseDate: element.PurchaseDate ? this.datePipe.transform(new Date(element.PurchaseDate), 'dd/MM/yyyy') : null,
+            Currency: element.CurrencyName,
+            PurchasedQuantity: element.PurchasedQuantity,
+            ItemCode: element.ItemCode,
+            ProjectId: element.ProjectId,
+            ItemCodeDescription: element.ItemCodeDescription,
+            Description: element.Description,
+            BudgetLineName: element.BudgetLineName,
+            DepreciationRate: element.DepreciationRate,
+            MasterInventoryCode: element.MasterInventoryCode,
+            OfficeCode: element.OfficeCode,
+            ReceiptDate:  element.ReceiptDate ? this.datePipe.transform(new Date(element.ReceiptDate), 'dd/MM/yyyy') : null,
+            InvoiceDate:  element.InvoiceDate ? this.datePipe.transform(new Date(element.InvoiceDate), 'dd/MM/yyyy') : null,
+            ReceivedFromLocationName: element.ReceivedFromLocationName,
+            Status: element.Status,
             subItems: element.ProcurementList.map((r) => {
               return {
                 Id: r.OrderId,
@@ -131,6 +161,8 @@ export class PurchaseListComponent implements OnInit {
             })
           } as IPurchaseList;
         }));
+        this.loader.hideLoader();
+      }, error => {
         this.loader.hideLoader();
       });
   }
@@ -168,7 +200,7 @@ export class PurchaseListComponent implements OnInit {
   addPurchase() {
     this.router.navigate(['/store/purchase/add']);
   }
-  openProcurementModal(event: any) {
+  actionEvents(event: any) {
     if (event.type == "button") {
       const dialogRef = this.dialog.open(AddProcurementsComponent, {
         width: '850px',
@@ -179,26 +211,28 @@ export class PurchaseListComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(x => {
-        console.log(x);
+        // console.log(x);
 
         this.purchaseList$.subscribe((purchase) => {
-          console.log(purchase);
+          // console.log(purchase);
 
           const index = purchase.findIndex(i => i.Id === x.PurchaseId);
           if (index !== -1) {
             purchase[index].subItems.unshift({
-              OrderId: x.ProcurementId,
+              Id: x.ProcurementId,
               IssueDate: this.datePipe.transform(x.IssueDate, 'dd-MM-yyyy'),
-              EmployeeName: x.EmployeeName,
+              Employee: x.EmployeeName,
               ProcuredAmount: x.IssuedQuantity,
-              MustReturn: x.MustReturn,
-              Returned: false,
+              MustReturn: (x.MustReturn === 'Yes' || x.MustReturn)  ? 'Yes' : 'No',
+              Returned: 'No',
               ReturnedOn: null
             } as IProcurementList);
           }
           this.purchaseList$ = of(purchase);
         });
       });
+    } else if (event.type === 'edit') {
+      this.router.navigate(['/store/purchase/edit/' + event.item.Id]);
     }
 
   }
@@ -225,26 +259,36 @@ export class PurchaseListComponent implements OnInit {
         });
   }
 
-  configFilterAppliedEvent(event: any) {
-    console.log(event);
+  getAllCurrencies() {
+    this.purchaseService.getAllCurrencies()
+      .subscribe(x => {
+        if (x.StatusCode === 200) {
+           this.currencyList$ = of(x.data.CurrencyList.map(y => {
+            return {
+              name: y.CurrencyCode + '-' + y.CurrencyName,
+              value: y.CurrencyId
+            };
+          }));
+        }
+      },
+        (error) => {
+          this.toastr.error(error);
+        });
+  }
 
-    // let headers: any[] = [];
+  selectedDisplayCurrencyChanged() {
+    this.filterValueModel.DisplayCurrency = this.selectedDisplayCurrency;
+    this.getPurchasesByFilter(this.filterValueModel);
 
-    // event.forEach(element => {
-    //   headers.push(element.name);
-    // });
+  }
 
-    //  this.purchaseListHeaders$ = of(headers);
-
-    // this.purchaseFilterConfigList$.subscribe(y => {
-
-    //   // this.purchaseList$ = of(y.map((element) => {
-    //   //   return {
-
-    //   //   } as IPurchaseList;
-    //   // }));
-    // });
-
+  onPdfExportClick() {
+    const StorePurchaseFilter: any = this.filterValueModel;
+    this.globalSharedService
+    .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetStorePurchasePdf, StorePurchaseFilter
+    )
+    .pipe()
+    .subscribe();
   }
 
   showConfiguration() {

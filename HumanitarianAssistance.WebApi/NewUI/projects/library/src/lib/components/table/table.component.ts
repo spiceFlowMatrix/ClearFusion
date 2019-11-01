@@ -40,12 +40,9 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-
-    console.log(this.actions)
   }
   ngOnChanges(): void {
     this.itemActions = this.actions
-    console.log(this.itemActions)
     if (this.items) {
       this.items.subscribe(res => {
         this.subItems = [];
@@ -74,18 +71,16 @@ export class TableComponent implements OnInit, OnChanges {
     if (this.hideColums$) {
 
       this.hideColums$.subscribe(res => {
-        console.log(res);
         this.itemHeaders.subscribe(headers => {
           this.itemHeaders = of(headers.filter(r => res.items.includes(r)));
         })
         this.headers.subscribe(headers => {
-          console.log(headers);
           this.headers = of(res.headers);
          
         })
       })
     }
-    // console.log(this.hideColums);
+
   }
   action(item, type, e: Event) {
     e.stopPropagation();
@@ -109,7 +104,7 @@ export class TableComponent implements OnInit, OnChanges {
   switchSubList(i, event) {
     if (this.subItems.length > 0) this.isShowSubList[i] = !this.isShowSubList[i];
     this.rowClick.emit(event);
-    
+
   }
 
 }

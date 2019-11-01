@@ -32,7 +32,7 @@ namespace HumanitarianAssistance.Application.CommonServices
 
                     fileModel = await _dbContext.EntitySourceDocumentDetails
                                        .Include(x => x.DocumentFileDetail)
-                                       .Where(x => x.IsDeleted == false && x.DocumentFileDetail.IsDeleted== false && x.EntityId == model.RecordId
+                                       .Where(x => x.IsDeleted == false && x.DocumentFileDetail.IsDeleted == false && x.EntityId == model.RecordId
                                               && x.DocumentFileDetail.PageId == model.PageId &&
                                               x.DocumentFileDetail.DocumentTypeId == model.DocumentTypeId)
                                        .Select(x => new FileListModel
@@ -65,7 +65,7 @@ namespace HumanitarianAssistance.Application.CommonServices
         public async Task<ApiResponse> DownloadFileFromBucket(DownloadObjectGCBucketModel model)
         {
             ApiResponse response = new ApiResponse();
-            
+
             try
             {
                 string bucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
@@ -82,6 +82,47 @@ namespace HumanitarianAssistance.Application.CommonServices
             return response;
         }
         #endregion
-        
+
+        public async Task<StoreDocumentModel> GetFilesByDocumentFileId(FileModel model)
+        {
+            StoreDocumentModel documentModel = new StoreDocumentModel();
+
+            try
+            {
+                if (model != null)
+                {
+
+                    FileListModel fileModel = new FileListModel();
+
+                    fileModel = await _dbContext.EntitySourceDocumentDetails
+                                       .Include(x => x.DocumentFileDetail)
+                                       .Where(x => x.IsDeleted == false && x.DocumentFileDetail.IsDeleted == false &&
+                                       x.DocumentFileId== model.DocumentFileId)
+                                       .Select(x => new FileListModel
+                                       {
+                                           FileName = x.DocumentFileDetail.Name,
+                                           FilePath = x.DocumentFileDetail.StorageDirectoryPath,
+                                           DocumentFileId = x.DocumentFileId,
+                                           DocumentTypeId = x.DocumentFileDetail.DocumentTypeId
+                                       }).FirstOrDefaultAsync();
+
+                    if (fileModel != null)
+                    {
+                        DownloadObjectGCBucketModel bucketModel = new DownloadObjectGCBucketModel();
+                        bucketModel.ObjectName = fileModel.FilePath;
+                        ApiResponse responses = await DownloadFileFromBucket(bucketModel);
+
+                        documentModel.SignedURL = responses.data.SignedUrl;
+                        documentModel.DocumentFileId = fileModel.DocumentFileId ?? 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return documentModel;
+        }
+
     }
 }

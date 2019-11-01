@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Configuration.Queries;
 using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Application.Store.Commands.Create;
+using HumanitarianAssistance.Application.Store.Commands.Update;
 using HumanitarianAssistance.Application.Store.Models;
 using HumanitarianAssistance.Application.Store.Queries;
 using HumanitarianAssistance.Common.Enums;
@@ -166,6 +167,60 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
             else
             {
                 
+                return BadRequest(result.Exception.InnerException.Message);
+            }
+        }
+
+        [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetStorePurchaseById([FromQuery] long id)
+        {
+            var result = await Task.FromResult(_mediator.Send(new GetStorePurchaseByIdQuery { PurchaseId = id}));
+
+            if (result.Exception == null)
+            {
+                return Ok(await result);
+            }
+            else
+            {
+                return BadRequest(result.Exception.InnerException.Message);
+            }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetTransportItemDataSource([FromBody] GetTransportItemDataSourceQuery request)
+        {
+            var result = await Task.FromResult(_mediator.Send(request));
+
+            if (result.Exception == null)
+            {
+                return Ok(await result);
+            }
+            else
+            {
+                return BadRequest(result.Exception.InnerException.Message);
+            }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> EditStorePurchase([FromBody] EditStorePurchaseCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.ModifiedById = userId;
+            command.ModifiedDate = DateTime.UtcNow;
+            var result = await Task.FromResult(_mediator.Send(command));
+
+            if (result.Exception == null)
+            {
+                return Ok(await result);
+            }
+            else
+            {
                 return BadRequest(result.Exception.InnerException.Message);
             }
         }

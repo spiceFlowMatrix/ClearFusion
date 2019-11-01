@@ -51,7 +51,9 @@ export class GeneratorFiltersComponent implements OnInit, OnDestroy {
     this.applyFilterEvent.emit(this.generatorTrackerFilterForm.value);
   }
 
-  clearFilters() { }
+  clearFilters() {
+    this.generatorTrackerFilterForm.reset();
+  }
 
 
   ngOnDestroy() {

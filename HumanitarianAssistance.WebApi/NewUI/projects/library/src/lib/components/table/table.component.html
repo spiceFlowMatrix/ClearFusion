@@ -21,7 +21,7 @@
           <i *ngIf="itemActions.items?.download" class="fas fa-download" (click)='action(item,"download",$event)'></i>
         </span>
         <span class="action-span">
-          <i *ngIf="itemActions.items?.edit" class="fas fa-edit" (click)='action(item,"edit",$event)'></i>
+          <i *ngIf="itemActions.items?.edit" class="fa fa-pencil" (click)='action(item,"edit",$event)'></i>
         </span>
         <span class="action-span">
           <i *ngIf="itemActions.items?.delete" class="fas fa-trash" (click)='action(item,"delete",$event)'></i>
@@ -60,7 +60,7 @@
                       (click)='subaction(subItem, item ,"download")'></i>
                   </span>
                   <span class="action-span">
-                    <i *ngIf="itemActions.subitems?.edit" class="fas fa-edit"
+                    <i *ngIf="itemActions.subitems?.edit" class="fa fa-pencil"
                       (click)='subAction(subItem, item ,"edit")'></i>
                   </span>
                   <span class="action-span">

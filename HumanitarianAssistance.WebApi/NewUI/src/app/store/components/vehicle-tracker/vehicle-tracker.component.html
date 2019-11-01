@@ -1,11 +1,26 @@
 <lib-sub-header-template>
   <span class="action_header">Vehicle Tracker
-    <hum-button [type]="'down'" [text]="'DISPLAY CURRENCY'"></hum-button>
+    <!-- <hum-button [type]="'down'" [text]="'DISPLAY CURRENCY'"></hum-button> -->
   </span>
   <div class="action_section">
   </div>
 </lib-sub-header-template>
 <mat-divider></mat-divider>
+<mat-card [ngStyle]="scrollStyles">
+    <div style="padding-left: 50px;">
+    <div class="row">
+      <div class="col-md-12">
+          <mat-form-field>
+              <mat-label>Display Currency</mat-label>
+              <mat-select [(ngModel)]="selectedDisplayCurrency" (selectionChange)='selectedDisplayCurrencyChanged()'>
+                <mat-option *ngFor="let currency of currencyList$ | async" [value]="currency.value">
+                  {{currency.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+      </div>
+    </div>
+  </div>
 <mat-card [ngStyle]="scrollStyles">
   <div class="container">
     <div class="row">
@@ -21,4 +36,5 @@
       </div>
     </div>
   </div>
+</mat-card>
 </mat-card>

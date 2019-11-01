@@ -235,12 +235,14 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                                         Name = p.Name
                                                                     }).ToList(),
 
+
                                         AssumptionDetailModel = asd.Where(s => s.ProjectId == obj.ProjectId && s.IsDeleted == false)
                                                                     .Select(p => new AssumptionDetailModel
                                                                     {
                                                                         AssumptionDetailId = p.AssumptionDetailId,
                                                                         Name = p.Name
                                                                     }).ToList(),
+
 
                                         DonorEligibilityDetailModel = dec.Where(s => s.ProjectId == obj.ProjectId && s.IsDeleted == false)
                                                                     .Select(p => new DonorEligibilityDetailModel
@@ -419,20 +421,24 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     UnCheckedIconPath = _env.WebRootFileProvider.GetFileInfo("ReportLogo/uncheck.png")?.PhysicalPath,
                     CEFeasibilityExpertOtherDetailModel = model.CEFeasibilityExpertOtherDetailModel,
                     PriorityOtherDetailModel = model.PriorityOtherDetailModel,
+
                     AssumptionDetailModel = model.AssumptionDetailModel,
                     DonorEligibilityDetailModel = model.DonorEligibilityDetailModel,
                     // TotalScore = (double)Math.Round( (request.TotalScore ?? 0.0 ),3),
                     TotalScore = (double)(request.TotalScore ?? 0.0),
 
                     LogoPath = _env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath
+
                 };
 
 
                 var selectedProjects = await _dbContext.FinancialProjectDetail
+
                                                         .Include(x => x.SelectedProjectDetail)
                                                         .Where(x => x.ProjectId == request.ProjectId &&
                                                                     x.IsDeleted == false)
                                                         .ToListAsync();
+
 
                 pdfModel.SelectedProjectsModel = new List<SelectedProjectsModel>();
                 if (selectedProjects.Any())
@@ -446,6 +452,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                 }
                 // Note : currency id Zero check is for old data stored in Proposal detail having currencyId is 0
                 if (model.CurrencyId != null && model.CurrencyId != 0)
+
                 {
                     var currencyName = await _dbContext.CurrencyDetails.Where(x => x.CurrencyId == model.CurrencyId).Select(c => new
                     {

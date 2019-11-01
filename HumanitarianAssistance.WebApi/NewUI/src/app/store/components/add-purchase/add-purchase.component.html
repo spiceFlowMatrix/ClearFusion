@@ -1,6 +1,6 @@
 <lib-sub-header-template>
-  <span class="action_header">Add New Purchase
-    <hum-button *ngIf="!isAddPurchaseFormSubmitted"  (click)='addPurchaseFormSubmit()' [type]="'save'" [text]="'save'">
+  <span class="action_header">{{headerText}}
+    <hum-button *ngIf="!isAddPurchaseFormSubmitted"  (click)='purchaseFormSubmit()' [type]="'save'" [text]="'save'">
     </hum-button>
     <hum-button *ngIf="isAddPurchaseFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
     <hum-button (click)='cancelButtonClicked()' [type]="'cancel'" [text]="'cancel'"></hum-button>
@@ -65,8 +65,9 @@
     <!-- Transport Details-->
     <div class="row" *ngIf="addPurchaseForm.controls['InventoryId'].value === MasterCategory.Transport">
 
-      <div *ngIf="addPurchaseForm.controls['ItemGroupId'].value === ItemGroups.Vehicle ||
-                              addPurchaseForm.controls['ItemGroupId'].value === ItemGroups.Generator">
+      <div *ngIf="(addPurchaseForm.controls['ItemGroupId'].value === ItemGroups.Vehicle ||
+                              addPurchaseForm.controls['ItemGroupId'].value === ItemGroups.Generator) &&
+                              addPurchaseForm.controls['ItemId'].value == StoreItems.Vehicle || addPurchaseForm.controls['ItemId'].value == StoreItems.Generator">
         <div class="col-md-10">
           <strong>Note:</strong>The item you have selected is <strong>{{selectedItemGroupName}}</strong>. Therefore, the
           following <strong>transport related metadata</strong> must be filled out.
@@ -78,7 +79,7 @@
           </div>
         </div>
       </div>
-      <div class="row" *ngIf="addPurchaseForm.controls['ItemGroupId'].value === ItemGroups.Vehicle">
+      <div class="row" *ngIf="addPurchaseForm.controls['ItemGroupId'].value === ItemGroups.Vehicle && addPurchaseForm.controls['ItemId'].value === StoreItems.Vehicle">
         <div class="col-md-12">
           <mat-accordion>
             <mat-expansion-panel formArrayName="TransportVehicles"
@@ -87,6 +88,7 @@
                 <mat-panel-title>
                   <h4>New Vehicle Detail Form - {{item.get('PlateNo').value}}</h4>
                 </mat-panel-title>
+                <hum-button (click)='deleteVehicle(i)' [type]="'remove'" [text]="'Remove'"></hum-button>
               </mat-expansion-panel-header>
               <app-vehicle-detail [formGroupName]="i" [officeId]='addPurchaseForm.controls["OfficeId"].value'
                 [vehicleDetailForm]='item'></app-vehicle-detail>
@@ -95,7 +97,7 @@
         </div>
       </div>
 
-      <div class="row" *ngIf="addPurchaseForm.controls['ItemGroupId'].value === ItemGroups.Generator">
+      <div class="row" *ngIf="addPurchaseForm.controls['ItemGroupId'].value === ItemGroups.Generator && addPurchaseForm.controls['ItemId'].value === StoreItems.Generator">
         <div class="col-md-12">
           <mat-accordion>
             <mat-expansion-panel formArrayName="TransportGenerators"
@@ -104,6 +106,7 @@
                 <mat-panel-title>
                   <h4>New Generator Detail Form - {{item.get('Voltage').value}}</h4>
                 </mat-panel-title>
+                <hum-button (click)='deleteGenerator(i)' [type]="'remove'" [text]="'Remove'"></hum-button>
               </mat-expansion-panel-header>
               <app-generator-detail [formGroupName]="i" [officeId]='addPurchaseForm.controls["OfficeId"].value'
                 [generatorDetailForm]='item'></app-generator-detail>
@@ -112,9 +115,8 @@
         </div>
       </div>
 
-      <div *ngIf="addPurchaseForm.controls['ItemGroupId'].value ===ItemGroups.Fuel ||
-      addPurchaseForm.controls['ItemGroupId'].value ===ItemGroups.SpareParts || addPurchaseForm.controls['ItemGroupId'].value ===ItemGroups.MobilOil
-      || addPurchaseForm.controls['ItemGroupId'].value ===ItemGroups.Services" class="paddingleft">
+      <div *ngIf="(addPurchaseForm.controls['ItemId'].value !== StoreItems.Vehicle && addPurchaseForm.controls['ItemId'].value !== StoreItems.Generator)
+                  && (addPurchaseForm.controls['ItemGroupId'].value == ItemGroups.Generator || addPurchaseForm.controls['ItemGroupId'].value == ItemGroups.Vehicle) && addPurchaseForm.controls['ItemId'].value != null" class="paddingleft">
       <div class="row">
         <div class="col-md-12">
           <strong>Note:</strong>The item you have selected is <strong>{{selectedItemName}}</strong>. Therefore, the
@@ -124,9 +126,8 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <lib-hum-dropdown [validation]="addPurchaseForm.controls['OfficeId'].hasError('required')"
-            [options]="offices$" formControlName='OfficeId' [placeHolder]="transportItemPlaceholder"
-            (change)="getOfficeSelectedValue($event)"></lib-hum-dropdown>
+          <lib-hum-dropdown [validation]="addPurchaseForm.controls['TransportItemId'].hasError('required')"
+            [options]="purchaseItemDataSource$" formControlName='TransportItemId' [placeHolder]="transportItemPlaceholder"></lib-hum-dropdown>
         </div>
       </div>
       </div>
@@ -246,7 +247,7 @@
         <h4 style="padding-left: 0px !important">Documents
           <hum-button [type]="'add'" [text]="'add'" (click)="openAddDocumentDialog()"></hum-button>
         </h4>
-        <app-document-upload [purchasedDocumentFiles]="uploadedPurchasedFiles" (deleteDocument)="deletePurchasedDocument($event)"></app-document-upload>
+        <app-document-upload [hideColums$]="hideUnitColums" [purchasedDocumentFiles]="uploadedPurchasedFiles" (documentButtonClicked)="onPurchaseDocumentButtonClick($event)"></app-document-upload>
       </div>
     </div>
   </form>
