@@ -99,7 +99,7 @@ minLengthValidator(accountType): ValidatorFn {
       return { 'minLengthValidator': true };
     }
     const regexp = new RegExp('^[0-9]+$');
-    if (!regexp.test(control.value)) {
+    if (!regexp.test(control.value) && (control.value !== '')) {
       return { 'numValidator': true };
     }
     return null;
