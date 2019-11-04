@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'; ;
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn } from '@angular/forms'; ;
 import { ChartOfAccountModel } from '../models/chart-of-account.model';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { GlobalService } from 'src/app/shared/services/global-services.service';
@@ -81,7 +81,7 @@ export class AddAccountComponent implements OnInit {
 initForm(AccountCode: any) {
   this.parentAccountCode = AccountCode;
   this.addCharOfAccountForm = this.fb.group({
-    AccountCode: [null, Validators.required],
+    AccountCode: ['', [Validators.required, this.minLengthValidator(this.AccountLevel)]],
     AccountName: [null, Validators.required],
     AccountHeadType: this.AccountHeadType,
     AccountLevel: this.AccountLevel
@@ -93,6 +93,18 @@ get f() {
   return this.addCharOfAccountForm.controls;
 }
 
+minLengthValidator(accountType): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: boolean } | null => {
+    if ((accountType === AccountLevels.SubLevel || accountType === AccountLevels.InputLevel) && (control.value.length < 2)) {
+      return { 'minLengthValidator': true };
+    }
+    const regexp = new RegExp('^[0-9]+$');
+    if (!regexp.test(control.value)) {
+      return { 'numValidator': true };
+    }
+    return null;
+  };
+}
 //#region "onFormSubmit"
 onFormSubmit(data: any) {
   this.submitted = true;
