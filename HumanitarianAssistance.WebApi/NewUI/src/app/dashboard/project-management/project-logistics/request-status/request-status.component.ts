@@ -12,6 +12,7 @@ export class RequestStatusComponent implements OnInit {
   purchasedItemsData$ = of([{'Item': 'Item1', 'Quantity': '12', 'Final Cost': '2500'}]);
 
   @Input() requestStatus = 0;
+  @Input() totalCost = 0;
   constructor() { }
 
   ngOnInit() {
