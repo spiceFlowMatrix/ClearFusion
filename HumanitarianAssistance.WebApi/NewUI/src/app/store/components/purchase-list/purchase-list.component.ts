@@ -114,7 +114,8 @@ export class PurchaseListComponent implements OnInit {
     this.scrollStyles = {
       'overflow-y': 'auto',
       height: this.screenHeight - 110 + 'px',
-      'overflow-x': 'hidden'
+      'overflow-x': 'scroll',
+      width: this.screenWidth
     };
   }
   //#endregion

@@ -684,7 +684,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
           Filename: result.file === undefined ? result.filename : result.file[0].name,
           DocumentTypeName: result.documentName,
           Date: this.datePipe.transform(result.uploadDate, 'dd-MM-yyyy'),
-          UploadedBy: result.uploadBy === undefined ? 'test' : result.uploadBy,
+          UploadedBy: result.uploadBy === undefined ? localStorage.getItem('LoggedInUserName') : result.uploadBy,
           File: result.file,
           DocumentTypeId: result.documentType,
           SignedUrl: result.signedUrl
@@ -726,7 +726,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
   getLoggedInUserUsername() {
       this.purchaseService.GetLoggedInUserUsername().subscribe(x => {
-        debugger;
         localStorage.setItem('LoggedInUserName', x);
       });
   }
