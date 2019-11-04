@@ -79,12 +79,6 @@ export class PurchaseFiledConfigComponent implements OnInit {
   //#endregion
 
   change(list: any[]) {
-    if (list.length > 6) {
-      this.toastr.warning('6 Filter option can be selected at a time');
-    } else {
-      this.fieldConfig.updateList(list);
-    }
-
+    this.fieldConfig.updateList(list);
   }
-
 }

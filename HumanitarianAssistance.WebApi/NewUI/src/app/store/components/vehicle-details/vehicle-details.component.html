@@ -17,7 +17,99 @@
       <ng-container *ngTemplateOutlet="vehicleDetails"></ng-container>
     </ng-template>
   </mat-tab>
-  <mat-tab label="MONTHLY BREAKDOWN"> Content 2 </mat-tab>
+  <mat-tab label="MONTHLY BREAKDOWN">
+      <mat-card>
+          <mat-form-field>
+              <input matInput [matDatepicker]="picker" placeholder="Choose a month" [formControl]="date">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker (monthSelected)="monthSelected($event)" startView="multi-year"></mat-datepicker>
+            </mat-form-field>
+
+      <mat-card>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <h5>Vehicle Usage Analysis</h5>
+                <table class="table table-striped">
+                  <tbody>
+                    <tr>
+                      <td>Incurred Mileage(KM)</td>
+
+                      <td>{{vehicleDetailForm.IncurredMileage}}</td>
+                    </tr>
+                    <tr>
+                      <td>Starting Mileage(KM)</td>
+                      <td>{{vehicleDetailForm.StartingMileage}}</td>
+                    </tr>
+                    <tr>
+                      <td>Current Mileage (KM)</td>
+                      <td>-</td>
+                    </tr>
+                    <tr>
+                      <td>Total Fuel Usage (Litres)</td>
+                      <td>-</td>
+                    </tr>
+                    <tr>
+                      <td>Total Mobil Oil Usage (Litres)</td>
+                      <td>-</td>
+                    </tr>
+                    <tr>
+                      <td>Standard Fuel Consumption Rate (Litre Per 100 KM)</td>
+                      <td>{{vehicleDetailForm.FuelConsumptionRate}}</td>
+                    </tr>
+                    <tr>
+                      <td>Actual Fuel Consumption Rate (Litre Per 100 KM)</td>
+                      <td>-</td>
+                    </tr>
+                    <tr>
+                      <td>Standard Mobil Oil Consumption Rate (Litre Per 100 KM)</td>
+                      <td>{{vehicleDetailForm.MobilOilConsumptionRate}}</td>
+                    </tr>
+                    <tr>
+                      <td>Actual Mobil Oil Consumption Rate (Litre Per 100 KM)</td>
+                      <td>-</td>
+
+                    </tr>
+                  </tbody>
+                </table>
+                <h5>Vehicle Cost Analysis</h5>
+                <table class="table table-striped">
+                  <tbody>
+                    <tr>
+                      <td>Fuel Total Cost</td>
+
+                      <td>-</td>
+                    </tr>
+                    <tr>
+                      <td>Mobil Oil Total Cost</td>
+                      <td>-</td>
+                    </tr>
+                    <tr>
+                      <td>Spare Parts Total Cost</td>
+                      <td>-</td>
+                    </tr>
+                    <tr>
+                      <td>Services & Maintenance Total Cost</td>
+                      <td>-</td>
+                    </tr>
+                    <tr>
+                      <td>Vehicle Starting Cost</td>
+                      <td>-</td>
+                    </tr>
+                    <tr>
+                      <td>Total Cost</td>
+                      <td>-</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </mat-card>
+
+  </mat-tab>
   <mat-tab label="LOGS">
     <ng-template matTabContent>
       <app-logs></app-logs>
@@ -44,31 +136,31 @@
               </tr>
               <tr>
                 <td>Current Mileage (KM)</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.CurrentMileage}}</td>
               </tr>
               <tr>
                 <td>Total Fuel Usage (Litres)</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.TotalFuelUsage}}</td>
               </tr>
               <tr>
                 <td>Total Mobil Oil Usage (Litres)</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.TotalMobilOilUsage}}</td>
               </tr>
               <tr>
                 <td>Standard Fuel Consumption Rate (Litre Per 100 KM)</td>
-                <td>{{vehicleDetailForm.FuelConsumptionRate}}</td>
+                <td>{{vehicleDetailForm.StandardFuelConsumptionRate}}</td>
               </tr>
               <tr>
                 <td>Actual Fuel Consumption Rate (Litre Per 100 KM)</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.ActualFuelConsumptionRate}}</td>
               </tr>
               <tr>
                 <td>Standard Mobil Oil Consumption Rate (Litre Per 100 KM)</td>
-                <td>{{vehicleDetailForm.MobilOilConsumptionRate}}</td>
+                <td>{{vehicleDetailForm.StandardMobilOilConsumptionRate}}</td>
               </tr>
               <tr>
                 <td>Actual Mobil Oil Consumption Rate (Litre Per 100 KM)</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.ActualMobilOilConsumptionRate}}</td>
 
               </tr>
             </tbody>
@@ -79,27 +171,32 @@
               <tr>
                 <td>Fuel Total Cost</td>
 
-                <td>-</td>
+                <td>{{vehicleDetailForm.FuelTotalCost}}</td>
               </tr>
               <tr>
                 <td>Mobil Oil Total Cost</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.MobilOilTotalCost}}</td>
               </tr>
               <tr>
                 <td>Spare Parts Total Cost</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.SparePartsTotalCost}}</td>
               </tr>
               <tr>
                 <td>Services & Maintenance Total Cost</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.ServiceAndMaintenanceTotalCost}}</td>
               </tr>
               <tr>
                 <td>Vehicle Starting Cost</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.VehicleStartingCost}}</td>
               </tr>
               <tr>
                 <td>Total Cost</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.FuelTotalCost+
+                  vehicleDetailForm.MobilOilTotalCost+
+                  vehicleDetailForm.SparePartsTotalCost+
+                  vehicleDetailForm.ServiceAndMaintenanceTotalCost+
+                  vehicleDetailForm.VehicleStartingCost
+                }}</td>
               </tr>
             </tbody>
           </table>
