@@ -24,5 +24,7 @@ namespace HumanitarianAssistance.Application.Accounting.Models
         public List<JournalReportPdfModel> reportList { get; set; }
         public string fromDate { get; set; }
         public string toDate { get; set; }
+        public double? TotalDebit { get; set; }
+        public double? TotalCredit { get; set; }
     }
 }

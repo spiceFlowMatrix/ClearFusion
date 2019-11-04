@@ -32,6 +32,8 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                 MainJournalReportPdfModel pdfreport;
                 List<JournalReportPdfModel> listJournalView = new List<JournalReportPdfModel>();
                 double? Balance =0.0;
+                double? TotalDebit = 0.0;
+                double? TotalCredit = 0.0;
                 if (request != null)
                 {
                     var currencyList = await _dbContext.CurrencyDetails.ToListAsync();
@@ -65,11 +67,17 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                         item.Balance = Balance + (item.DebitAmount - item.CreditAmount);
                         Balance = item.Balance;
                     }
+                    
+                    TotalDebit= listJournalView.Sum(x=>x.DebitAmount);
+                    TotalCredit= listJournalView.Sum(x=>x.CreditAmount);
+
                     pdfreport=new MainJournalReportPdfModel(){
                         Logo=_env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath,
                         reportList=listJournalView,
                         fromDate = request.fromdate.ToString("dd/MM/yyyy"),
-                        toDate = request.todate.ToString("dd/MM/yyyy")
+                        toDate = request.todate.ToString("dd/MM/yyyy"),
+                        TotalDebit = TotalDebit,
+                        TotalCredit =TotalCredit
                     };
                 }
                 else
@@ -78,7 +86,9 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                         Logo=_env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath,
                         reportList=listJournalView,
                         fromDate = request.fromdate.ToString("dd/MM/yyyy"),
-                        toDate = request.todate.ToString("dd/MM/yyyy")
+                        toDate = request.todate.ToString("dd/MM/yyyy"),
+                        TotalDebit = TotalDebit,
+                        TotalCredit =TotalCredit
                     };
                 }
                 return await _pdfExportService.ExportToPdf(pdfreport, "Pages/PdfTemplates/JournalReport.cshtml"); 
