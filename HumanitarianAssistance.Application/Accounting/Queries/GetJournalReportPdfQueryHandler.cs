@@ -28,20 +28,13 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
         public async Task<byte[]> Handle(GetJournalReportPdfQuery request, CancellationToken cancellationToken)
         {
            try
-           {   
-                double? debitSumForReport = 0.0;
-                double? creditSumForReport = 0.0; 
-                double? totalSumForReport = 0.0; 
-                JournalTrialBalancePdfModel pdfreport;
-                List<JournalTrialBalanceMainPdfList> mainList=new List<JournalTrialBalanceMainPdfList>();
-                List<LedgerModel> finalTrialBalanceList = new List<LedgerModel>();
-                //int voucherDetailsCount = 0;
-                List<JournalVoucherViewModel> listJournalView = new List<JournalVoucherViewModel>();
-
+           {  
+                MainJournalReportPdfModel pdfreport;
+                List<JournalReportPdfModel> listJournalView = new List<JournalReportPdfModel>();
+                double? Balance =0.0;
                 if (request != null)
                 {
-
-                    //get Journal Report from sp get_journal_report by passing parameters
+                    var currencyList = await _dbContext.CurrencyDetails.ToListAsync();
                     var spJournalReport = await _dbContext.LoadStoredProc("get_journal_report")
                                           .WithSqlParam("currencyid", request.CurrencyId)
                                           .WithSqlParam("recordtype", request.RecordType)
@@ -54,71 +47,38 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                           .WithSqlParam("budgetline", request.BudgetLine)
                                           .WithSqlParam("projectjob", request.JobCode)
                                           .ExecuteStoredProc<SPJournalReport>();
-
-
-                    listJournalView = spJournalReport.Select(x => new JournalVoucherViewModel
+                    
+                    listJournalView = spJournalReport.Select(x => new JournalReportPdfModel
                     {
-                        AccountCode = x.AccountCode,
-                        ChartOfAccountNewId = x.ChartOfAccountNewId,
-                        JournalCode = x.JournalCode,
-                        CreditAmount = x.CreditAmount,
-                        CurrencyId = x.Currency,
-                        DebitAmount = x.DebitAmount,
+                        TransactionDate = x.TransactionDate.ToString("dd/MM/yyyy"),
                         ReferenceNo = x.ReferenceNo,
-                        TransactionDate = x.TransactionDate,
+                        AccountCode = x.AccountCode,
                         TransactionDescription = x.TransactionDescription,
-                        VoucherNo = x.VoucherNo,
-                        AccountName = x.AccountName,
-                        Project = x.ProjectCode,
-                        BudgetLineDescription = x.BudgetCode
+                        DebitAmount = x.DebitAmount,
+                        CreditAmount = x.CreditAmount,
+                        Currency = currencyList.Where(y=>y.CurrencyId==x.Currency).Select(z=>z.CurrencyCode).FirstOrDefault(),
+                        BudgetLine = x.BudgetCode,
+                        Project = x.ProjectCode
                     }).ToList();
-
-                    var journalReport = spJournalReport.GroupBy(x => x.ChartOfAccountNewId).ToList();
-
-                    List<JournalReportViewModel> journalReportList = new List<JournalReportViewModel>();
-
-                    foreach (var accountItem in journalReport)
-                    {
-                        journalReportList.Add(new JournalReportViewModel
-                        {
-                            ChartOfAccountNewId = accountItem.Key,
-                            AccountCode = accountItem.FirstOrDefault(x => x.ChartOfAccountNewId == accountItem.Key).AccountCode,
-                            AccountName = accountItem.FirstOrDefault().AccountName,
-                            DebitAmount = Math.Round(Convert.ToDecimal(accountItem.Sum(x => x.DebitAmount)), 4),
-                            CreditAmount = Math.Round(Convert.ToDecimal(accountItem.Sum(x => x.CreditAmount)), 4),
-                            Balance = Math.Round(Convert.ToDecimal(accountItem.Sum(x => x.DebitAmount) - accountItem.Sum(x => x.CreditAmount)), 4)
-                        });
+                    
+                    foreach( var item in listJournalView){
+                        item.Balance = Balance + (item.DebitAmount - item.CreditAmount);
+                        Balance = item.Balance;
                     }
-                    foreach(var item in journalReportList)
-                    {   
-                        debitSumForReport+=Convert.ToDouble(item.DebitAmount);
-                        creditSumForReport+=Convert.ToDouble(item.CreditAmount);
-                        totalSumForReport+=Convert.ToDouble(item.DebitAmount-item.CreditAmount);
-                        mainList.Add(new JournalTrialBalanceMainPdfList(){
-                            Group=item.AccountCode,
-                            AccountDescription=item.AccountName,
-                            DebitAmount=Convert.ToDouble(item.DebitAmount),
-                            CreditAmount=Convert.ToDouble(item.CreditAmount),
-                            Balance=Convert.ToDouble(item.DebitAmount - item.CreditAmount)
-                        });
-                    }
-                    pdfreport=new JournalTrialBalancePdfModel(){
+                    pdfreport=new MainJournalReportPdfModel(){
                         Logo=_env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath,
-                        reportList=mainList,
-                        TotalDebit=debitSumForReport,
-                        TotalCredit=creditSumForReport,
-                        TotalBalance=totalSumForReport
+                        reportList=listJournalView,
+                        fromDate = request.fromdate.ToString("dd/MM/yyyy"),
+                        toDate = request.todate.ToString("dd/MM/yyyy")
                     };
-
                 }
                 else
                 {
-                   pdfreport=new JournalTrialBalancePdfModel(){
+                   pdfreport=new MainJournalReportPdfModel(){
                         Logo=_env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath,
-                        reportList=mainList,
-                        TotalDebit=debitSumForReport,
-                        TotalCredit=creditSumForReport,
-                        TotalBalance=totalSumForReport
+                        reportList=listJournalView,
+                        fromDate = request.fromdate.ToString("dd/MM/yyyy"),
+                        toDate = request.todate.ToString("dd/MM/yyyy")
                     };
                 }
                 return await _pdfExportService.ExportToPdf(pdfreport, "Pages/PdfTemplates/JournalReport.cshtml"); 
