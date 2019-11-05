@@ -1,9 +1,7 @@
-<div [ngSwitch]="requestStatus">
+<div [ngSwitch]="requestStatus" *ngIf="(this.totalCost<=199)">
     <div *ngSwitchCase="1" style="margin-top: 25%;">
       <i class="fas fa-info-circle icon_align icon_color_pending"></i>
-      <h3 class="text-center" *ngIf="this.totalCost<=199">PURCHASE ORDER PENDING</h3>
-      <h3 class="text-center" *ngIf="(this.totalCost>=200 && this.totalCost<=9999)">STATEMENT REQUEST PENDING</h3>
-      <h3 class="text-center" *ngIf="(this.totalCost>=10000 && this.totalCost<=59999)">TENDER REQUEST PENDING</h3>
+      <h3 class="text-center">PURCHASE ORDER PENDING</h3>
     </div>
     <div *ngSwitchCase="2" style="margin-top: 25%;">
         <i class="fas fa-exclamation-circle icon_align icon_color_cancel"></i>
@@ -37,4 +35,82 @@
     <div *ngSwitchDefault>
 
     </div>
+</div>
+
+<div [ngSwitch]="requestStatus" *ngIf="(this.totalCost>=200 && this.totalCost<=9999)">
+  <div *ngSwitchCase="1" style="margin-top: 25%;">
+    <i class="fas fa-info-circle icon_align icon_color_pending"></i>
+    <h3 class="text-center">STATEMENT REQUEST PENDING</h3>
+  </div>
+  <div *ngSwitchCase="2" style="margin-top: 25%;">
+      <i class="fas fa-exclamation-circle icon_align icon_color_cancel"></i>
+      <h3 class="text-center">CANCELLED REQUEST</h3>
+  </div>
+  <div *ngSwitchCase="3" >
+    <h4 class="letter_spacing_2">Purchase Order Details</h4>
+    <p>These are all the items that have been purchased for this logistics procurement request.
+      You will find these purchases in the store pages as well.
+    </p>
+    <p>
+      <strong>Note</strong>: Users can only select items that have been specified in the logistics procurement
+      request as items that can be added into the purchased items list below. If an item is not specified in the procurement
+      request specification to the left, you will not be able to select here.
+    </p>
+    <div *ngIf="true">
+      <h4>Purchased Items
+          <hum-button [type]="'add'" [text]="'SUBMIT PURCHASES'"></hum-button>
+      </h4>
+      <span><i class="fas fa-info-circle icon_color_yellow"></i> Awaiting <b>Store Officer</b> to <b>Submit</b> purchased items list.</span>
+    </div>
+    <div *ngIf="false">
+      <h4>Purchased Items
+          <hum-button [type]="'cancel'" [text]="'REJECT'"></hum-button>
+          <hum-button [type]="'save'" [text]="'APPROVE'"></hum-button>
+      </h4>
+      <span><i class="fas fa-info-circle icon_color_yellow"></i> Submitted. Awaiting <b>Control Officer</b> to <b>Approve</b> purchased items list.</span>
+      <hum-table [headers]="purchasedItemsHeaders$" [items]="purchasedItemsData$"></hum-table>
+    </div>
+  </div>
+  <div *ngSwitchDefault>
+
+  </div>
+</div>
+
+<div [ngSwitch]="requestStatus" *ngIf="(this.totalCost>=10000 && this.totalCost<=59999)">
+  <div *ngSwitchCase="1" style="margin-top: 25%;">
+    <i class="fas fa-info-circle icon_align icon_color_pending"></i>
+    <h3 class="text-center">TENDER REQUEST PENDING</h3>
+  </div>
+  <div *ngSwitchCase="2" style="margin-top: 25%;">
+      <i class="fas fa-exclamation-circle icon_align icon_color_cancel"></i>
+      <h3 class="text-center">CANCELLED REQUEST</h3>
+  </div>
+  <div *ngSwitchCase="3" >
+    <h4 class="letter_spacing_2">Purchase Order Details</h4>
+    <p>These are all the items that have been purchased for this logistics procurement request.
+      You will find these purchases in the store pages as well.
+    </p>
+    <p>
+      <strong>Note</strong>: Users can only select items that have been specified in the logistics procurement
+      request as items that can be added into the purchased items list below. If an item is not specified in the procurement
+      request specification to the left, you will not be able to select here.
+    </p>
+    <div *ngIf="true">
+      <h4>Purchased Items
+          <hum-button [type]="'add'" [text]="'SUBMIT PURCHASES'"></hum-button>
+      </h4>
+      <span><i class="fas fa-info-circle icon_color_yellow"></i> Awaiting <b>Store Officer</b> to <b>Submit</b> purchased items list.</span>
+    </div>
+    <div *ngIf="false">
+      <h4>Purchased Items
+          <hum-button [type]="'cancel'" [text]="'REJECT'"></hum-button>
+          <hum-button [type]="'save'" [text]="'APPROVE'"></hum-button>
+      </h4>
+      <span><i class="fas fa-info-circle icon_color_yellow"></i> Submitted. Awaiting <b>Control Officer</b> to <b>Approve</b> purchased items list.</span>
+      <hum-table [headers]="purchasedItemsHeaders$" [items]="purchasedItemsData$"></hum-table>
+    </div>
+  </div>
+  <div *ngSwitchDefault>
+
+  </div>
 </div>

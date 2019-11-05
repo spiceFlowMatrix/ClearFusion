@@ -76,13 +76,23 @@
                   <hum-button  [type]="'save'" [text]="'COMPLETE PURCHASING'"></hum-button>
                 </div>
             </div>
-            <div class="row" *ngIf="(this.requestDetail.Status==2)">
-                <div class="col-sm-8 margin_top_8">
-                  <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
-                  <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_red"></i> Cancelled</span>
+            <div *ngIf="(this.requestDetail.Status==2)">
+                <div class="row">
+                  <div class="col-sm-5 margin_top_8">
+                    <span class="display_inline_block" style="font-size: 14px;color: gray;">Comparative Statement</span>
+                    <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_red"></i> Cancelled</span>
+                  </div>
+                  <div class="col-sm-7 margin_top_1">
+                  </div>
                 </div>
-                <div class="col-sm-4 margin_top_1">
-
+                <mat-divider style="position: unset;"></mat-divider>
+                <div class="row">
+                  <div class="col-sm-8 margin_top_8">
+                    <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
+                    <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_red"></i> Cancelled</span>
+                  </div>
+                  <div class="col-sm-4 margin_top_1">
+                  </div>
                 </div>
             </div>
           <mat-divider style="position: unset;"></mat-divider>
@@ -136,11 +146,11 @@
         <table class="table table-striped" style="width:50%;">
           <tr>
             <td class="font_weight_600">Total Cost</td>
-            <td>{{this.totalCost}}</td>
+            <td>${{this.totalCost}}</td>
           </tr>
           <tr>
             <td class="font_weight_600">Cost of Unavailable Items</td>
-            <td>{{this.unavailableItemCost | number : '1.2-2'}}</td>
+            <td>${{this.unavailableItemCost | number : '1.2-2'}}</td>
           </tr>
           <tr>
             <td class="font_weight_600">Availability Percentage</td>
@@ -148,7 +158,7 @@
           </tr>
         </table>
         <h4 class="main-heading" style="padding-left: 0px !important">Requested Items
-            <hum-button [type]="'add'" [text]="'add'" (click)="addItemDialog()" *ngIf=""></hum-button>
+            <hum-button [type]="'add'" [text]="'add'" (click)="addItemDialog()" *ngIf="(this.requestDetail.Status==1)"></hum-button>
         </h4>
         <hum-table [headers]="requestedItemsHeaders$" [actions]="actions" [items]="requestedItemsData$" (actionClick)="onActionClick($event)"></hum-table>
       </div>

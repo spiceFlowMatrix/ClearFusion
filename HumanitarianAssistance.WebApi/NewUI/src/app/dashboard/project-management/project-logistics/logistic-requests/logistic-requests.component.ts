@@ -73,7 +73,7 @@ export class LogisticRequestsComponent implements OnInit {
       map(r => r.map(v => ({
         Id: v.RequestId,
         Name: v.RequestName,
-        Status: ((LogisticRequestStatus[v.Status] === 'NewRequest') ? 'New Request' : LogisticRequestStatus[v.Status]),
+        Status: LogisticRequestStatus[v.Status],
         TotalCost: v.TotalCost
        }) as IRequestList)));
   }
