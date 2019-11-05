@@ -1,4 +1,4 @@
-@model HumanitarianAssistance.Application.Accounting.Models.JournalTrialBalancePdfModel
+@model HumanitarianAssistance.Application.Accounting.Models.MainJournalReportPdfModel
 <html>
 	<head>
     	<title></title>
@@ -30,7 +30,7 @@
                         <table cellpadding="5" style="width:100%;">
                             <tr>
                                 <td width="150"><img src="@Model.Logo" alt=""></td>
-                                <td align="center" style="font-size:20px;font-weight:500;">COORDINATION OF HUMANITARIAN ASSISTANCE<br>GROUP ANALYTICAL SUMMARY</td>
+                                <td align="center" style="font-size:20px;font-weight:500;">COORDINATION OF HUMANITARIAN ASSISTANCE<br>JOURNAL</td>
                             </tr>
                         </table>
                     </td>
@@ -45,34 +45,45 @@
                     </td>
                 </tr>
                 <tr>
+                   <td>
+                       PERIOD: @Model.fromDate TO @Model.toDate
+                   </td> 
+                </tr>
+                <tr>
                 	<td>
-                    	<table cellpadding="5" style="width:100%;font-size:14px;" border="1" bordercolor="#bfbfbf" cellspacing="0">
+                    	<table cellpadding="5" style="width:100%;font-size:12px;" border="1" bordercolor="#bfbfbf" cellspacing="0">
                         	<tr>
-								<th>Group</th>
-                                <th>Account Description</th>
-                                <th>Debit</th>
-                                <th>Credit</th>
-								<th>Balance</th>
+								<th>VoucherDate</th>
+                                <th>ReferenceNo</th>
+                                <th>AccountNo</th>
+                                <th>LineDescription</th>
+								<th>Dr</th>
+                                <th>Cr</th>
+                                <th>Currency</th>
+                                <th>BLine</th>
+                                <th>Project</th>
+                                <th>Balance</th>
                             </tr>
                             @foreach (var item in @Model.reportList)
                             {
                                 <tr>
-                                    <td>@item.Group</td>
-                                    <td>@item.AccountDescription</td>
+                                    <td>@item.TransactionDate</td>
+                                    <td>@item.ReferenceNo</td>
+                                    <td>@item.AccountCode</td>
+                                    <td>@item.TransactionDescription</td>
                                     <td>@item.DebitAmount</td>
                                     <td>@item.CreditAmount</td>
+                                    <td>@item.Currency</td>
+                                    <td>@item.BudgetLine</td>
+                                    <td>@item.Project</td>
                                     <td>@item.Balance</td>
                                 </tr>
                             }
-                            @if(@Model.reportList.Count > 0)
-                            {
-                                <tr class="page-break-before">
-                                    <td colspan="2" style="font-weight:500;">Total:</td>
-                                    <td style="font-weight:500;" align="right">@Model.TotalDebit</td>
-                                    <td style="font-weight:500;" align="right">@Model.TotalCredit</td>
-                                    <td style="font-weight:500;" align="right">@Model.TotalBalance</td>
-                                </tr>
-                            }
+                            <tr>
+                                <td colspan="4">Total</td>
+                                <td>@Model.TotalDebit</td>
+                                <td>@Model.TotalCredit</td>
+                            </tr>
                         </table>
                     </td>
                 </tr>

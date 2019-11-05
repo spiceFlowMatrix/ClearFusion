@@ -2,11 +2,12 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Persistence;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Application.Configuration.Queries
 {
-    public class GetLoggedInUserUserNameQueryHandler
+    public class GetLoggedInUserUserNameQueryHandler: IRequestHandler<GetLoggedInUserUserNameQuery, string>
     {
         private HumanitarianAssistanceDbContext _dbContext;
         
@@ -27,7 +28,6 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                 {
                     username= $"{user.FirstName} {user.LastName}";
                 }
-                
             }
             catch(Exception exception)
             {

@@ -271,7 +271,6 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
   addProcurement() {
     if (this.addProcurementForm.valid) {
       this.commonLoader.showLoader();
-      debugger;
       this.purchaseService.addProcurement(this.addProcurementForm.value)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
