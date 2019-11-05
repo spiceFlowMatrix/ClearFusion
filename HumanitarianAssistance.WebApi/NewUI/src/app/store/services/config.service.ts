@@ -14,7 +14,7 @@ import { Delete_Confirmation_Texts } from 'src/app/shared/enum';
 })
 export class ConfigService {
 
-  constructor(private globalService: GlobalService, private appurl: AppUrlService, private dialog: MatDialog ) { }
+  constructor(private globalService: GlobalService, private appurl: AppUrlService, private dialog: MatDialog) { }
   getUnitType() {
     return this.globalService.getList(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllPurchaseUnitType)
   }
@@ -34,11 +34,11 @@ export class ConfigService {
   }
   getSourceCodeById(id) {
     return this.globalService.getList(this.appurl.getApiUrl() + GLOBAL.API_Store_GetAllStoreSourceCode + '?typeId=' + id)
-    .pipe(
-      map(x => {
-        return x.data.SourceCodeDatalist;
-      })
-    );
+      .pipe(
+        map(x => {
+          return x.data.SourceCodeDatalist;
+        })
+      );
   }
   getAllStoreSource(): Observable<SourceCode[]> {
     return this.globalService
@@ -55,31 +55,36 @@ export class ConfigService {
   saveCode(data: SourceCode) {
     return this.globalService.post(this.appurl.getApiUrl() + GLOBAL.API_Store_AddStoreSourceCode, data)
   }
-  editCode(data:SourceCode){
+  editCode(data: SourceCode) {
     return this.globalService.post(this.appurl.getApiUrl() + GLOBAL.API_Store_EditStoreSourceCode, data)
   }
-  deleteCode(id){
+  deleteCode(id) {
     return this.globalService.getList(this.appurl.getApiUrl() + GLOBAL.API_Store_DeleteStoreSourceCode + '?Id=' + id + '')
   }
 
-    // common methods
-    openDeleteDialog() {
-      const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
-        width: '300px',
-        height: '250px',
-        data: 'delete',
-        disableClose: false
-      });
-  
-      dialogRef.componentInstance.confirmMessage =
-        Delete_Confirmation_Texts.deleteText1;
-  
-      dialogRef.componentInstance.confirmText = Delete_Confirmation_Texts.yesText;
-  
-      dialogRef.componentInstance.cancelText = Delete_Confirmation_Texts.noText;
-  
-      dialogRef.afterClosed().subscribe(result => { });
-      
-      return dialogRef.componentInstance.confirmDelete
-    }
+  // Inventories
+  getInventories(assettype) {
+    return this.globalService.getList(this.appurl.getApiUrl() + GLOBAL.API_GetInventories + '?AssetType=' + assettype)
+  }
+
+  // common methods
+  openDeleteDialog() {
+    const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
+      width: '300px',
+      height: '250px',
+      data: 'delete',
+      disableClose: false
+    });
+
+    dialogRef.componentInstance.confirmMessage =
+      Delete_Confirmation_Texts.deleteText1;
+
+    dialogRef.componentInstance.confirmText = Delete_Confirmation_Texts.yesText;
+
+    dialogRef.componentInstance.cancelText = Delete_Confirmation_Texts.noText;
+
+    dialogRef.afterClosed().subscribe(result => { });
+
+    return dialogRef.componentInstance.confirmDelete
+  }
 }
