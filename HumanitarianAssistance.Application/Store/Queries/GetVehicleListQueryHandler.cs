@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Store.Models;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.Accounting;
 using HumanitarianAssistance.Persistence;
@@ -27,16 +28,33 @@ namespace HumanitarianAssistance.Application.Store.Queries
             {
 
                 var purchasedVehiclesQuery = _dbContext.PurchasedVehicleDetail
-                                                  .Include(x=> x.StoreItemPurchase)
-                                                  .Include(x=> x.EmployeeDetail)
-                                                  .Where(x=> x.IsDeleted == false && x.StoreItemPurchase.IsDeleted == false)
-                                                  .Select(x=> new VehicleTrackerModel 
+                                                    .Include(x => x.EmployeeDetail)
+                                                    .Include(x => x.StoreItemPurchase)
+                                                    .Include(x => x.VehicleMileageDetail)
+                                                    .Include(x => x.VehicleItemDetail)
+                                                    .ThenInclude(x => x.StoreItemPurchase)
+                                                    .ThenInclude(x => x.StoreInventoryItem)
+                                                    .Where(x=> x.IsDeleted == false && x.StoreItemPurchase.IsDeleted == false)
+                                                    .Select(x=> new VehicleTrackerModel 
                                                   {
                                                       VehicleId = x.Id,
                                                       EmployeeName = x.EmployeeDetail.EmployeeName,
                                                       FuelConsumptionRate = x.FuelConsumptionRate,
-                                                      TotalMileage= x.IncurredMileage,
-                                                      TotalCost = x.StoreItemPurchase.UnitCost,
+                                                      TotalMileage= x.IncurredMileage + x.StartingMileage + x.VehicleMileageDetail.Where(z=> z.IsDeleted == false)
+                                                                                                                                         .Select(y=> y.Mileage).DefaultIfEmpty(0).Sum(),
+                                                      TotalCost = x.StoreItemPurchase.UnitCost +
+                                                                  x.VehicleItemDetail.Where(y => y.IsDeleted == false &&
+                                                                  y.VehiclePurchaseId == x.Id && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleFuel)
+                                                                               .Select(z => z.StoreItemPurchase.Quantity * z.StoreItemPurchase.UnitCost).DefaultIfEmpty(0).Sum() +
+                                                                  x.VehicleItemDetail.Where(y => y.IsDeleted == false &&
+                                                                  y.VehiclePurchaseId == x.Id && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil)
+                                                                               .Select(z => z.StoreItemPurchase.Quantity * z.StoreItemPurchase.UnitCost).DefaultIfEmpty(0).Sum() +
+                                                                  x.VehicleItemDetail.Where(y => y.IsDeleted == false &&
+                                                                  y.VehiclePurchaseId == x.Id && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleSpareParts)
+                                                                               .Select(z => z.StoreItemPurchase.Quantity * z.StoreItemPurchase.UnitCost).DefaultIfEmpty(0).Sum() +
+                                                                  x.VehicleItemDetail.Where(y => y.IsDeleted == false &&
+                                                                  y.VehiclePurchaseId == x.Id && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMaintenanceService)
+                                                                               .Select(z => z.StoreItemPurchase.Quantity * z.StoreItemPurchase.UnitCost).DefaultIfEmpty(0).Sum(),
                                                       OriginalCost = x.StoreItemPurchase.UnitCost,
                                                       PlateNo = x.PlateNo,
                                                       EmployeeId = x.EmployeeDetail.EmployeeID,

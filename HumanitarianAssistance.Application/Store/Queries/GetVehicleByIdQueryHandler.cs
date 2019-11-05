@@ -82,8 +82,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     VehicleStartingCost= vehicles.StoreItemPurchase.UnitCost,
                 };
                 
-                    vehicle.ActualFuelConsumptionRate= vehicle.TotalFuelUsage !=0 ? ((vehicle.TotalFuelUsage/vehicle.CurrentMileage)*100) :0;
-                    vehicle.ActualMobilOilConsumptionRate= vehicle.TotalMobilOilUsage !=0 ? ((vehicle.TotalMobilOilUsage/vehicle.CurrentMileage)*100): 0;
+                    vehicle.ActualFuelConsumptionRate= vehicle.TotalFuelUsage !=0 ? Math.Round((vehicle.TotalFuelUsage/vehicle.CurrentMileage)*100, 4) :0;
+                    vehicle.ActualMobilOilConsumptionRate= vehicle.TotalMobilOilUsage !=0 ? Math.Round((vehicle.TotalMobilOilUsage/vehicle.CurrentMileage)*100, 4): 0;
                 
             }
             catch (Exception ex)
