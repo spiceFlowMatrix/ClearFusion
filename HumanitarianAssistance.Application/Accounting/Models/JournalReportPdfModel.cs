@@ -15,6 +15,7 @@ namespace HumanitarianAssistance.Application.Accounting.Models
         public double? CreditAmount { get; set; }
         public double? DebitAmount { get; set; }
         public string ReferenceNo { get; set; }
+        public string Program { get; set; }
         public double? Balance { get; set; }
     }
 

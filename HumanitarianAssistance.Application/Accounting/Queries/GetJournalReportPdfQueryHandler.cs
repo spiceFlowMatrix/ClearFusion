@@ -37,6 +37,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                 if (request != null)
                 {
                     var currencyList = await _dbContext.CurrencyDetails.ToListAsync();
+                    var programList = await _dbContext.ProjectProgram.Include(x=>x.ProjectDetail).Include(x=>x.ProgramDetail).ToListAsync();
                     var spJournalReport = await _dbContext.LoadStoredProc("get_journal_report")
                                           .WithSqlParam("currencyid", request.CurrencyId)
                                           .WithSqlParam("recordtype", request.RecordType)
@@ -60,7 +61,8 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                         CreditAmount = x.CreditAmount,
                         Currency = currencyList.Where(y=>y.CurrencyId==x.Currency).Select(z=>z.CurrencyCode).FirstOrDefault(),
                         BudgetLine = x.BudgetCode,
-                        Project = x.ProjectCode
+                        Project = x.ProjectCode,
+                        Program = programList.Where(y=>y.ProjectDetail.ProjectCode==x.ProjectCode).Select(y=>y.ProgramDetail.ProgramCode).FirstOrDefault()
                     }).ToList();
                     
                     foreach( var item in listJournalView){
