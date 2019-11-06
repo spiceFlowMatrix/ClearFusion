@@ -9,7 +9,29 @@
 <mat-divider></mat-divider>
 
 <mat-card>
-    <mat-accordion>
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+      <button mat-icon-button ></button>
+  <!-- This is the tree node template for leaf nodes -->
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+    <!-- use a disabled button to provide padding for tree leaf -->
+    <button mat-icon-button disabled></button>
+    {{node.code}} - {{node.name}}
+    <hum-button [type]="'edit'" [text]="node.editText"></hum-button>
+  </mat-tree-node>
+  <!-- This is the tree node template for expandable nodes -->
+  <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+    <button mat-icon-button matTreeNodeToggle
+            [attr.aria-label]="'toggle ' + node.name">
+      <mat-icon class="mat-icon-rtl-mirror">
+        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+      </mat-icon>
+    </button>
+    {{node.code}} - {{node.name}}
+    <hum-button [type]="'add'" [text]="node.addText"></hum-button>
+    <hum-button [type]="'edit'" [text]="node.editText"></hum-button>
+  </mat-tree-node>
+</mat-tree>
+    <!-- <mat-accordion>
       <mat-expansion-panel *ngFor="let codeType of sourceCodeTypes" (opened)="openCodeType(codeType)">
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -22,5 +44,5 @@
           [hideColums$]="hideSourceCodeColums" (actionClick)="codeAction($event)"></hum-table>
         <button mat-raised-button color="primary" (click)="codePopUp(codeType.CodeTypeId)">Add</button>
       </mat-expansion-panel>
-    </mat-accordion>
+    </mat-accordion> -->
   </mat-card>

@@ -498,6 +498,7 @@ export class GLOBAL {
   public static API_Store_GetStoreTypeCode= 'Store/GetStoreTypeCode';
   public static API_Store_EditStoreSourceCode = 'Store/EditStoreSourceCode';
   public static API_Store_DeleteStoreSourceCode = 'Store/DeleteStoreSourceCode';
+  public static API_GetInventories = 'Store/GetInventories';
 
 
 }
