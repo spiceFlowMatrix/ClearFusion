@@ -2,7 +2,22 @@ using System.Collections.Generic;
 
 namespace HumanitarianAssistance.Application.Store.Models
 {
-    public class VehicleMonthlyBreakdownDataModel
+    public class MonthlyBreakdownDataModel
+    {
+        public MonthlyBreakdownDataModel()
+        {
+            MonthlyBreakDownList = new List<MonthlyBreakDown>();
+        }
+
+        public double IncurredMileage { get; set; }
+        public double StartingMileage { get; set; }
+        public double StandardFuelConsumptionRate { get; set; }
+        public double StandardMobilOilConsumptionRate { get; set; }
+        public double StartingCost { get; set; }
+        public List<MonthlyBreakDown> MonthlyBreakDownList { get; set; }
+    }
+
+    public class MonthlyBreakDown
     {
         public string Header { get; set; }
         public double January { get; set; }
