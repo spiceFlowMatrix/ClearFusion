@@ -44,7 +44,7 @@
                     </tr>
                     <tr>
                     	<td>Duration:</td>
-                        <td>@Model.ProjectDuration</td>
+                        <td>@Model.ProjectDuration <label>Days </label></td>
                         <td>&nbsp;</td>
                         <td>District:</td>
                         <td>@String.Join(",", Model.District)</td>
@@ -61,8 +61,8 @@
             	<table style="width:100%;text-align:left;border-bottom:2px solid #787878;" cellpadding="20" cellspacing="0">
                 	
                     <tr>
-                    	<td colspan="2" style="font-weight:bold">Activity Code: @activity.ActivityCode</td>
-                    	<td colspan="2" style="font-weight:bold">Main Activity: @activity.MainActivity</td>
+                    	<td colspan="2" style="font-weight:bold">Activity Code:<span> @activity.ActivityCode</span></td>
+                    	<td colspan="2" style="font-weight:bold ;">Main Activity:<span> @activity.MainActivity </span></td>
                     </tr>
                     <tr>
                     	<td style="width:150px;">Actual Start Date:</td>
@@ -87,8 +87,8 @@
         	<td>
             	<table style="width:100%;text-align:left;border-bottom:2px solid #787878;" cellpadding="20" cellspacing="0">
                 	<tr>
-                    	<td style="width:170px;font-weight:bold">@monitoring.DisplayMonitoringDate</td>
-                        <td align="right" style="font-weight:bold">Monitoring Entry Rating</td>
+                    	<td style="font-weight:bold">Monitoring Entry Date: @monitoring.DisplayMonitoringDate</td>
+                        <td align="right" style="font-weight:bold">Monitoring Entry Rating: @monitoring.Rating</td>
                     </tr>
                     <tr>
                     	<td valign="top">Strong Points:</td>
@@ -106,9 +106,7 @@
             </td>
         </tr>
        
-         @foreach(var indicator in monitoring.MonitoringReviewModel)
-         {
-
+       
        
         <tr>
         	<td>
@@ -116,7 +114,9 @@
                 	<tr>
                     	<td style="font-weight:bold">Indicator Questions</td>
                     </tr>
-                    <tr>
+                     @foreach(var indicator in monitoring.MonitoringReviewModel)
+                      {
+                       <tr>
                     	<td>
                         	<table width="100%" cellpadding="15" cellspacing="0" style="background-color:#efefef">
                             	<tr>
@@ -142,11 +142,12 @@
                              
                             </table>
                         </td>
-                    </tr>
+                       </tr>
+                      }
                 </table>
             </td>
         </tr>
-          }
+        
         }
       }
 
