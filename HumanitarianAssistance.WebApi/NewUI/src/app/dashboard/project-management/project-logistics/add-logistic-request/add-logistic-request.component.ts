@@ -36,7 +36,7 @@ export class AddLogisticRequestComponent implements OnInit {
     // this.model.TotalCost = value.TotalCost;
     this.logisticservice.addLogisticRequest(this.model).subscribe(res => {
       if (res.StatusCode === 200) {
-        this.dialogRef.close({data: {RequestId: res.data.logisticRequestId, Status: 1, TotalCost: this.model.TotalCost,
+        this.dialogRef.close({data: {RequestId: res.data.logisticRequestId, Status: 1, TotalCost: 0,
           RequestName: this.model.RequestName}});
         this.commonLoader.hideLoader();
         this.toastr.success('Request added successfully!');
