@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Application.Store.Queries
 {
-    public class GetVehicleMonthlyBreakdownDataByIdQueryHandler: IRequestHandler<GetVehicleMonthlyBreakdownDataByIdQuery, List<VehicleMonthlyBreakdownDataModel>>
+    public class GetVehicleMonthlyBreakdownDataByIdQueryHandler: IRequestHandler<GetVehicleMonthlyBreakdownDataByIdQuery, MonthlyBreakdownDataModel>
     {
         private HumanitarianAssistanceDbContext _dbContext;
         public GetVehicleMonthlyBreakdownDataByIdQueryHandler(HumanitarianAssistanceDbContext dbContext)
@@ -19,9 +19,9 @@ namespace HumanitarianAssistance.Application.Store.Queries
             _dbContext = dbContext;
         }
 
-        public async Task<List<VehicleMonthlyBreakdownDataModel>> Handle(GetVehicleMonthlyBreakdownDataByIdQuery request, CancellationToken cancellationToken)
+        public async Task<MonthlyBreakdownDataModel> Handle(GetVehicleMonthlyBreakdownDataByIdQuery request, CancellationToken cancellationToken)
         {
-            List<VehicleMonthlyBreakdownDataModel> model = new List<VehicleMonthlyBreakdownDataModel>();
+            MonthlyBreakdownDataModel model = new MonthlyBreakdownDataModel();
 
             try
             {
@@ -54,15 +54,13 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                           })
                                           .FirstOrDefaultAsync();
 
-                    VehicleMonthlyBreakdownDataModel IncurredUsageHours= new VehicleMonthlyBreakdownDataModel()
+                    if(vehicle != null)
                     {
-                        Header ="Current Usage",
-                        January= vehicle.CreatedDate.Value.Month
+                        MonthlyBreakDown CurrentMileage= new MonthlyBreakDown();
+
+                        // if(vehicle.)
 
                     }
-
-
-
             }
             catch(Exception ex)
             {
