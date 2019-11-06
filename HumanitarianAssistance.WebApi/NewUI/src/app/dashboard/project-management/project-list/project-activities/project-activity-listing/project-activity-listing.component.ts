@@ -361,7 +361,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
 
   //#endregion
 
-  //#region "getAllProjectActivityList" Note used for list with filter record
+  //#region "getAllProjectActivityList" Note: used for list with filter record
   getAllProjectActivityList() {
     const filterData: any = {
       ProjectId: this.projectId,
@@ -911,19 +911,51 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   //#endregion
   //#region "onExportPdf"
   onExportPdf() {
-    if (this.projectActivityList.length > 0) {
-      this.projectActivityList.forEach(element => {
-        this.pdfExportModel.ActivityId.push(element.ActivityId);
-      });
-      this.pdfExportModel.ProjectId = this.projectId;
-    }
+    // if (this.projectActivityList.length > 0) {
+    //   this.projectActivityList.forEach(element => {
+    //     this.pdfExportModel.ActivityId.push(element.ActivityId);
+    //   });
+    //   this.pdfExportModel.ProjectId = this.projectId;
+    // }
+    // this.globalSharedService
+    //   .getFile(
+    //     this.appurl.getApiUrl() + GLOBAL.API_Pdf_ProjectActivityReportPdf,
+    //     this.pdfExportModel
+    //   )
+    //   .pipe(takeUntil(this.destroyed$))
+    //   .subscribe();
+
+    // today
+    const filterData: any = {
+      ProjectId: this.projectId,
+      ActivityDescription: this.projectActivityFilter.FilterValue
+    };
     this.globalSharedService
       .getFile(
         this.appurl.getApiUrl() + GLOBAL.API_Pdf_ProjectActivityReportPdf,
-        this.pdfExportModel
+        filterData
       )
       .pipe(takeUntil(this.destroyed$))
       .subscribe();
+
+    // this.activitiesService
+    //   .GetProjectActivityAdvanceFilterList(filterData)
+    //   .subscribe(
+    //     (response: IResponseData) => {
+    //       this.projectActivityList = [];
+    //       if (response.statusCode === 200 && response.data !== null) {
+    //         this.totalCount = response.total;
+    //         this.setActivityList(response.data);
+
+    //         // this.onSelectedProvinceDetailId(response.data.ProvinceId);
+    //       }
+    //       this.activityListLoader = false;
+    //     },
+    //     error => {
+    //       this.activityListLoader = false;
+    //     }
+    //   );
+
   }
   //#endregion
 

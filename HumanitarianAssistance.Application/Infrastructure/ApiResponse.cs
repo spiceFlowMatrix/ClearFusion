@@ -229,9 +229,16 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public List<SPProjectProposalReportModel> ProjectProposalReportList { get; set; }
         public List<ProjectProposalModelList> ProjectProposalModelList { get; set; }
         public ProjectProposalModelList ProjectProposalDocumentModel { get; set; }
+        public List<LogisticsRequestsModel> logisticRequestList { get; set; }
+        public List<LogisticItemModel> LogisticsItemList { get; set; }
+        public LogisticItemModel logisticItem { get; set; }
+        public LogisticsRequestsModel logisticRequest { get; set; }
+        public long logisticRequestId { get; set; }
         public List<JobHiringDetailModel> JobDetailList { get; set; }
         public List<OfficeDetailListModel> OfficeList { get; set; }
         public List<ProfessionListModel> ProfessionDetailList { get; set; }  
+      public ProjectHiringRequestDetailModel ProjectHiringRequestAllDetail { get; set; }  
+        public int? FilledVacancies { get; set; } 
 
 
         //Web Link Url 05082019   

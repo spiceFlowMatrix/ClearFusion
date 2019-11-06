@@ -126,6 +126,19 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
+  onTabClick(event) {
+    debugger;
+    const data = {
+      VehicleId: +this.vehicleId,
+      SelectedYear: 2019
+    };
+    if(event.index === 1) {
+      this.purchaseService.getVehicleMonthlyBreakdown(data)
+      .pipe(takeUntil(this.destroyed$))
+        .subscribe(x => {});
+    }
+  }
+
   editVehicleDetail() {
     this.router.navigate(['store/vehicle/edit', this.vehicleId]);
   }

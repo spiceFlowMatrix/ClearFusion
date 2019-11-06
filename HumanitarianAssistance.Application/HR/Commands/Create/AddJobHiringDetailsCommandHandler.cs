@@ -43,7 +43,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     JobCode = "JC" + String.Format("{0:D4}", 1);
                 }
 
-                var jobhiringinfo = await _dbContext.JobHiringDetails.FirstOrDefaultAsync(x => x.JobCode == JobCode && x.IsDeleted == false && x.OfficeId == request.office);
+                var jobhiringinfo = await _dbContext.JobHiringDetails.FirstOrDefaultAsync(x => x.JobCode == JobCode && x.IsDeleted == false);
                 if (jobhiringinfo == null)
                 {
                     ProjectJobHiringDetail obj = new ProjectJobHiringDetail();  
@@ -58,6 +58,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     obj.CurrencyId=request.payCurrency;
                     obj.ProfessionId=request.position;
                     obj.PayRate=request.payRate;
+                    obj.ProjectId=request.projectId;
+                    obj.FilledVacancies=request.totalVacancies;
                     await _dbContext.ProjectJobHiringDetail.AddAsync(obj);
                     await _dbContext.SaveChangesAsync();
                     response.StatusCode = StaticResource.successStatusCode;

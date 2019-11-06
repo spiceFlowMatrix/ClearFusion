@@ -192,7 +192,17 @@ export class GLOBAL {
   public static API_AccountReports_GetAllLedgerDetails = 'AccountReports/GetAllLedgerDetails';
   public static API_AccountReports_GetTrialBalanceReport = 'AccountReports/GetTrialBalanceReport';
 
-
+  // ProjectLogistics
+  public static API_ProjectLogistics_AddLogisticRequest = 'ProjectLogistic/AddLogisticRequest';
+  public static API_ProjectLogistics_GetAllLogisticRequest = 'ProjectLogistic/GetAllLogisticRequest';
+  public static API_ProjectLogistics_DeleteLogisticRequest = 'ProjectLogistic/DeleteLogisticRequest';
+  public static API_ProjectLogistics_GetRequestDetailById = 'ProjectLogistic/GetRequestDetailById';
+  public static API_ProjectLogistics_AddLogisticRequestItems = 'ProjectLogistic/AddLogisticRequestItems';
+  public static API_ProjectLogistics_GetItemsByRequestId = 'ProjectLogistic/GetItemsByRequestId';
+  public static API_ProjectLogistics_DeleteLogisticRequestItem = 'ProjectLogistic/DeleteLogisticRequestItem';
+  public static API_ProjectLogistics_EditLogisticRequestItems = 'ProjectLogistic/EditLogisticRequestItems';
+  public static API_ProjectLogistics_CancelLogisticRequest = 'ProjectLogistic/CancelLogisticRequest';
+  public static API_ProjectLogistics_IssuePurchaseOrder = 'ProjectLogistic/IssuePurchaseOrder';
 
   // Chart Of Account
   public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';
@@ -404,8 +414,11 @@ export class GLOBAL {
   public static API_HiringRequest_GetProjectHiringRequestDetailsByHiringRequestId =
   'HiringRequest/GetProjectHiringRequestDetailByHiringRequestId';
   public static API_HiringRequest_GetAllJobs = 'HiringRequest/GetAllJobList';
-  public static API_HiringRequest_GetOfficeListByJobId = 'HiringRequest/GetOfficeListByJobId';
+  // public static API_HiringRequest_GetOfficeListByJobId = 'HiringRequest/GetOfficeListByJobId';
   public static API_HiringRequest_GetProfessionListByOfficeId = 'HiringRequest/GetProfessionListByOfficeId';
+  public static API_HiringRequest_GetRemainingVacancyByJobId = 'HiringRequest/GetRemainingVacancyByJobId';
+  public static API_HiringRequest_GetAllProjectHiringRequestDetailByHiringRequestId =
+  'HiringRequest/GetAllProjectHiringRequestDetailByHiringRequestId';
 
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
   public static API_HiringRequest_AddHiringRequestDetail = 'HiringRequest/AddHiringRequestDetail';
@@ -465,11 +478,15 @@ export class GLOBAL {
   public static API_VehicleTracker_GetVehicleById = 'VehicleTracker/GetVehicleById';
   public static API_VehicleTracker_SaveVehicleDetail = 'VehicleTracker/EditVehicleDetail';
   public static API_VehicleTracker_DeletePurchasedVehicle = 'VehicleTracker/DeletePurchasedVehicle';
+  public static API_VehicleTracker_GetVehicleMonthlyBreakdownDataById = 'VehicleTracker/GetVehicleMonthlyBreakdownDataById';
 
   public static API_GeneratorTracker_GetGeneratorList = 'GeneratorTracker/GetGeneratorList';
   public static API_GeneratorTracker_GetGeneratorById = 'GeneratorTracker/GetGeneratorById';
   public static API_GeneratorTracker_DeletePurchasedGenerator = 'GeneratorTracker/DeletePurchasedGenerator';
   public static API_GeneratorTracker_AddGeneratorUsageHours = 'GeneratorTracker/AddGeneratorUsageHours';
+
+  public static API_Store_GetAllStoreInventoryItems = 'Store/GetAllStoreInventoryItems';
+
   public static API_GeneratorTracker_EditGeneratorDetail = 'GeneratorTracker/EditGeneratorDetail';
   public static API_StorePurchase_GetStorePurchaseById = 'StorePurchase/GetStorePurchaseById';
   public static API_StorePurchase_GetTransportItemDataSource = 'StorePurchase/GetTransportItemDataSource';
@@ -484,6 +501,8 @@ export class GLOBAL {
   public static API_Store_GetStoreTypeCode= 'Store/GetStoreTypeCode';
   public static API_Store_EditStoreSourceCode = 'Store/EditStoreSourceCode';
   public static API_Store_DeleteStoreSourceCode = 'Store/DeleteStoreSourceCode';
+  public static API_GetInventories = 'Store/GetInventories';
+
 
 }
 

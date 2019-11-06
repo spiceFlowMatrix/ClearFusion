@@ -257,6 +257,18 @@
         GeneratorSpareParts = 10,
     }
 
+
+   public enum LogisticRequestStatus
+   {
+        NewRequest = 1,
+        Cancelled = 2,
+        IssuePurchaseOrder = 3,
+        Approved = 4,
+        CompletePurchase = 5,
+        ControlApproved = 6,
+        ControlRejected = 7
+   }
+
     //#region "StoreItemGroups"
     public enum TransportItemTypes
     {
@@ -264,28 +276,21 @@
         Generator = 2
     }
 
-    // public enum StoreConfigFilter
-    // {
-    //     Id=1,
-    //     Item=2,
-    //     PurchasedBy=3,
-    //     Project=4,
-    //     OriginalCost=5,
-    //     DepreciatedCost=6,
-    //     PurchaseDate=7,
-    //     Currency=8,
-    //     PurchasedQuantity=9,
-    //     ItemCode=10,
-    //     ProjectId=11,
-    //     ItemCodeDescription=12,
-    //     Description=13,
-    //     BudgetLineName=14,
-    //     DepreciationRate=15,
-    //     MasterInventoryCode=16,
-    //     OfficeCode=17,
-    //     ReceiptDate=18,
-    //     InvoiceDate=19,
-    //     ReceivedFromLocationName=20,
-    //     Status=21
-    // }
+
+    public enum Month
+    {
+        NotSet = 0,
+        January = 1,
+        February = 2,
+        March = 3,
+        April = 4,
+        May = 5,
+        June = 6,
+        July = 7,
+        August = 8,
+        September = 9,
+        October = 10,
+        November = 11,
+        December = 12
+    }
 }

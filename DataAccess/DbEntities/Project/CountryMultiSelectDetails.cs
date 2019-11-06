@@ -9,8 +9,9 @@ namespace DataAccess.DbEntities.Project
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1)]
         public long CountryMultiSelectId { get; set; }
-        [ForeignKey("ProjectId")]
+      
         public long ProjectId { get; set; }
+        [ForeignKey("ProjectId")]
         public ProjectDetail ProjectDetail { get; set; }
         [ForeignKey("CountryId")]
         public int? CountryId { get; set; }

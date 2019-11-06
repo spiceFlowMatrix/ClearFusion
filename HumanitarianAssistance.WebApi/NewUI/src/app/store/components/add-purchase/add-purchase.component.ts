@@ -491,13 +491,13 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
                   this.addPurchaseForm.reset();
                   this.isAddPurchaseFormSubmitted = false;
                   this.toastr.success(x.Message);
-                  // this.router.navigate(['store/purchases']);
+                  this.router.navigate(['store/purchases']);
                 }
               }
             } else {
               this.addPurchaseForm.reset();
               this.isAddPurchaseFormSubmitted = false;
-              // this.router.navigate(['store/purchases']);
+              this.router.navigate(['store/purchases']);
             }
 
           } else if (x.StatusCode === 400) {
@@ -538,18 +538,18 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
                   if (i === this.uploadedPurchasedFiles.length - 1) {
                     this.isAddPurchaseFormSubmitted = false;
-                    // this.router.navigate(['store/purchases']);
+                     this.router.navigate(['store/purchases']);
                     this.toastr.success('Success');
                   }
                 } else {
-                  // this.router.navigate(['store/purchases']);
+                   this.router.navigate(['store/purchases']);
                   this.isAddPurchaseFormSubmitted = false;
                 }
               }
             } else {
               this.toastr.success('Success');
               this.isAddPurchaseFormSubmitted = false;
-              // this.router.navigate(['store/purchases']);
+               this.router.navigate(['store/purchases']);
             }
 
           } else if (x.StatusCode === 400) {

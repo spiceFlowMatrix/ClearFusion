@@ -29,14 +29,16 @@ namespace HumanitarianAssistance.Application.Project.Queries
             {
                 var requestDetail = await (from hr in _dbContext.ProjectHiringRequestDetail.Where(x => x.IsDeleted == false &&
                                                                                                       x.HiringRequestId == request.HiringRequestId)
-                                           join c in _dbContext.CurrencyDetails on hr.CurrencyId equals c.CurrencyId into h
+                                           join j in _dbContext.ProjectJobHiringDetail on hr.JobId equals j.JobId into jd
+                                           from j in jd.DefaultIfEmpty() 
+                                           join c in _dbContext.CurrencyDetails on j.CurrencyId equals c.CurrencyId into h
                                            from c in h.DefaultIfEmpty()
                                            join o in _dbContext.OfficeDetail on hr.OfficeId equals o.OfficeId into od
                                            from o in od.DefaultIfEmpty()
-                                           join g in _dbContext.JobGrade on hr.GradeId equals g.GradeId into gd
+                                           join g in _dbContext.JobGrade on j.GradeId equals g.GradeId into gd
                                            from g in gd.DefaultIfEmpty()
-                                           join j in _dbContext.JobHiringDetails on hr.HiringRequestId equals j.HiringRequestId into jd
-                                           from j in jd.DefaultIfEmpty()                                           
+                                           join p in _dbContext.ProfessionDetails on hr.ProfessionId equals p.ProfessionId into pd
+                                           from p in pd.DefaultIfEmpty()                                                                                    
                                            select new ProjectHiringRequestModel
                                            {
                                                Description = j.JobDescription,
@@ -44,11 +46,11 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                Office = o.OfficeName,
                                                JobCode = j.JobCode,
                                                JobGrade = g.GradeName,
-                                               Position = hr.Position,
+                                               Position = p.ProfessionName,
                                                TotalVacancies = hr.TotalVacancies,
                                                FilledVacancies = hr.FilledVacancies != null ? hr.FilledVacancies : 0,
                                                PayCurrency = c.CurrencyName,
-                                               PayRate = hr.BasicPay,
+                                               PayRate = j.PayRate,
                                                Status = hr.IsCompleted == true ? "Completed" : "InProgress"
                                            }).FirstOrDefaultAsync();
                 response.data.ProjectHiringRequestDetails = requestDetail;
