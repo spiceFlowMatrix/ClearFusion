@@ -255,7 +255,7 @@ export enum criteriaEvaluationScores {
   Children_Yes = 2,
   Children_No = 0,
 
-  Disabled_Yes = 2 ,
+  Disabled_Yes = 2,
   Disabled_No = 0,
 
   IDPs_Yes = 1,
@@ -510,8 +510,8 @@ export enum FileSourceEntityTypes {
   ProjectActivityMonitoring = 7,
   ProjectActivityPlanning = 8,
   DonorDetail = 9,
-  StorePurchase= 10,
-  Employee= 11,
+  StorePurchase = 10,
+  Employee = 11,
 }
 //#endregion
 //#region "EmployeeType"
@@ -524,18 +524,44 @@ export enum EmployeeType {
 
 //#region "StoreMasterCategory"
 export enum StoreMasterCategory {
-  Transport = 1
+  ConsumableTransport = 1,
+  ExpendableTransport = 2,
+  NonExpendableTransport = 3
 }
 //#endregion
 
 //#region "StoreItemGroups"
 export enum StoreItemGroups {
-Vehicle = 1,
-Generator = 2,
-Fuel= 3,
-SpareParts= 4,
-MobilOil= 5,
-Services= 6
+  ConsumableVehicle = 1,
+  ConsumableGenerator = 2,
+  ExpandableVehicle = 3,
+  ExpandableGenerator = 4,
+  NonExpandableVehicle = 5,
+  NonExpandableGenerator = 6,
+}
+//#endregion
+
+//#region "StoreItemGroups"
+export enum StoreItem {
+  VehicleFuel = 1,
+  GeneratorFuel = 2,
+  VehicleMobilOil = 3,
+  GeneratorMobilOil = 4,
+  VehicleMaintenanceService = 5,
+  GeneratorMaintenanceService = 6,
+  ExpendableVehicle = 7,
+  ExpendableGenerator = 8,
+  VehicleSpareParts= 9,
+  GeneratorSpareParts= 10,
+  NonExpendableVehicle= 11,
+  NonExpendableGenerator = 12
+}
+//#endregion
+
+//#region "TransportItemType"
+export enum TransportItemType {
+  Vehicle = 1,
+  Generator = 2
 }
 //#endregion
 
@@ -543,5 +569,11 @@ export enum DocumentFileTypes {
   PurchaseImage = 1,
   PurchaseInvoice = 2,
   EmployeeProfile = 3,
-  EmployeeDocument= 4
+  EmployeeDocument = 4
+}
+
+export enum LogisticRequestStatus {
+  'New Request' = 1,
+  'Cancelled' = 2,
+  'Issue Purchase Order' = 3
 }

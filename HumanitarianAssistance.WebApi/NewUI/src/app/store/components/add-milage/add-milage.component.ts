@@ -16,10 +16,11 @@ export class AddMilageComponent implements OnInit {
   isAddMileageFormSubmitted = false;
 
   constructor(private fb: FormBuilder, private purchaseService: PurchaseService,
-    public toastr: ToastrService,
+
+    private commonLoader: CommonLoaderService, public toastr: ToastrService,
+
     private dialogRef: MatDialogRef<AddMilageComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
-    debugger;
 
     this.mileageForm = this.fb.group({
       'VehicleId': [data.vehicleId, [Validators.required]],

@@ -4,24 +4,62 @@
 <head>
 </head>
 <body style="background-color:#fafafa;">
-	<table style="width:800px;margin:0 auto;background-color:#ffffff;font-family:'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', 'DejaVu Sans', Verdana, sans-serif" cellpadding="0" cellspacing="0">
+	
+    <table style="width:695px;margin:0 auto;background-color:#ffffff;font-family:'Arial', 'Lucida Sans Unicode', 'Lucida Sans', 'DejaVu Sans', Verdana, sans-serif" cellpadding="0" cellspacing="0">
     	<tr>
+           <td>
+               <table cellpadding="5" style="width:100%;">
+                   <tr>
+                       <td><img src="@Model.LogoPath" alt=""></td>
+                       <td style="text-align:center;font-size:18px;font-weight:400;">COORDINATION OF HUMANITARIAN ASSISTANCE(CHA)<br>Criteria Evaluation Report</td>
+                   </tr>
+               </table>
+           </td>
+        </tr>
+        <tr>
         	<td>
-            	<table style="width:100%" cellpadding="25" cellspacing="0">
+            	<table style="width:100%;" cellpadding="25" cellspacing="0">
                 	<tr>
-                    	<td style="width:300px;">Project allowed by law :</td>
-                        <td>@Model.ProjectAllowedBylaw</td>
-                        <td></td>
+                    	<td style="width:70%;">
+                            @if(Model.TotalScore <= 30 && Model.ProjectAllowedBylaw == "Yes") 
+                            {
+                                @Html.Label("(The total score must be greater than 30)")
+                            } else if(Model.TotalScore >= 50 && Model.ProjectAllowedBylaw == "Yes")
+                            {
+                               <label> (The evaluation is in very good standing and this project is a candidate for approval.)</label> 
+                            }
+                           
+                        </td>
+                         <td style = "text-align: right; width:30%;">
+                        @if(Model.ProjectAllowedBylaw == "No")
+                        {
+                            <label>Total Score: 0.0</label>
+                        } else
+                        {
+                           <label> Total Score : @Model.TotalScore </label> 
+                        }
+                        </td>
                     </tr>
                 </table>
             </td>
         </tr>
         <tr>
         	<td>
-            	<table style="" cellpadding="25" cellspacing="0">
+            	<table style="width:100%;border-top:1px solid #dfdfdf;" cellpadding="25" cellspacing="0">
+                	<tr>
+                    	<td style="width:50%;">Project allowed by law: <span>@Model.ProjectAllowedBylaw</span></td>
+                        <td></td>
+                        <td align="right; width:50%;"> Currency: @Model.CurrencyName</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td >
+            	<table style="width:100%;" cellpadding="25" cellspacing="0">
                 	<tr>
                     	<td style="text-transform:uppercase;font-weight:bold;font-size:14px;">Feasibility</td>
-                    </tr>
+                  </tr>
                 </table>
             </td>
         </tr>
@@ -29,10 +67,10 @@
         	<td>
             	<table style="width:100%;" cellpadding="0" cellspacing="0">
                 	<tr>
-                    	<td style="width:50%;">
+                    	<td style="width:50%;vertical-align:top;">
                         	<table style="width:100%;font-size:14px;" cellpadding="2" cellspacing="20">
                             	<tr>
-                                	<td style="text-align:center;">IS PROJECT PRACTICAL <span>@Model.IsProjectPractical</span><br>CAPACITY AVAILABLE FOR PROJECT : <span> @Model.CapacityAvailableForProject</span></td>
+                                	<td style="text-align:center;">IS PROJECT PRACTICAL: <span>@Model.IsProjectPractical</span><br>CAPACITY AVAILABLE FOR PROJECT : <span> @Model.CapacityAvailableForProject</span></td>
                                 </tr>
                                 <tr>
                                 	<td>
@@ -98,7 +136,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                	<td style="text-align:center;">ANY IN-KIND COMPONENT <span>@Model.AnyInKindComponent</span></td>
+                                	<td style="text-align:center;">ANY IN-KIND COMPONENT:  <span>@Model.AnyInKindComponent</span></td>
                                 </tr>
                                 <tr>
                                 	<td>
@@ -110,6 +148,18 @@
                                             <tr>
                                             	<td>Feasible Experts Deployed</td>
                                                 <td>@Model.FeasibleExpertDeploy</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Experts: </td>
+                                            </tr>
+                                            @foreach(var item in @Model.CEFeasibilityExpertOtherDetailModel)
+                                            {
+                                                <tr>
+                                                 <td>
+                                                    @item.Name
+                                                 </td>
+                                                </tr>
+                                            }
                                             </tr>
                                         </table>
                                     </td>
@@ -148,7 +198,7 @@
                                                 <td>@Model.ProjectInLineWithOrgFocus</td>
                                                 <td>&nbsp;</td>
                                             </tr>
-											<tr>
+										                      	<tr>
                                             	<td>&nbsp;</td>
                                             	<td>Enough time to prepare proposal<br><p>"Warning: Minimum time to submit the proposal for old Project is 2 weeks"</p></td>
                                                 <td>@Model.EnoughTimeToPrepareProposal</td>
@@ -158,7 +208,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                	<td style="text-align:center;font-weight:bold;background-color:#f7f7f7;">COST EFFICIENCY</td>
+                                	<td style="text-align:center;background-color:#f7f7f7;">COST EFFICIENCY</td>
                                 </tr>
                                 <tr>
                                 	<td>
@@ -202,6 +252,1666 @@
                 </table>
             </td>
         </tr>
+        <tr>
+        	<td>
+            	<table style="text-align:center;background-color:#f7f7f7;width:100%;" cellpadding="15" cellspacing="0">
+                	<tr>
+                        <td>DISABLING CONDITIONS</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;" cellpadding="15" cellspacing="0">
+                	<tr>
+                        <td>
+                        	@if (Model.IsSecurity == "Yes")
+                            {
+                               <img src="@Model.CheckedIconPath" alt="">
+                               <label> Security </label>
+                            }
+                             else 
+                            {
+                               <img src="@Model.UnCheckedIconPath" alt="">
+                                @Html.Label("Security")
+                            }
+                           
+                        </td>
+                        <td>
+                        	@if (Model.IsGeographical == "Yes")
+                            {
+                               
+                               <img src="@Model.CheckedIconPath" alt="">
+                               @Html.Label("Geographical")
+                            }
+                         else 
+                            {
+                              <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Geographical") 
+                            }
+                        	
+                        </td>
+                        <td>
+                        	@if (Model.IsSeasonal == "Yes")
+                            {
+                               <img src="@Model.CheckedIconPath" alt="">
+                               @Html.Label("Seasonal");
+                            }
+                         else 
+                            {
+                             <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Seasonal");
+                            }
+                            
+                            
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;border-bottom:1px solid #dfdfdf;" cellpadding="25" cellspacing="0">
+                	<tr>
+                    	<td style="text-transform:uppercase;font-weight:bold;font-size:14px;">Donor</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;" cellpadding="0" cellspacing="0">
+                	<tr>
+                    	<td style="width:50%;">
+                        	<table style="width:100%;font-size:14px;" cellpadding="2" cellspacing="20">
+                            	<tr> <td style="text-align:center;">METHOD OF FUNDING :
+                                    @if(Model.MethodOfFunding == 1)
+                                    {
+                                        @Html.Label("Sole")
+                                    } 
+                                    else 
+                                    {
+                                        @Html.Label("Source/Co-finance")
+                                    }
+                                     </td> </tr>
+                                <tr>
+                                	<td style="text-align:center;">PAST FUNDING EXPERIENCE: <span>@Model.PastFundingExperience</span></td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="2" style="text-align:center;">PROPOSAL ACCEPTED:  <span>@Model.ProposalAccepted</span></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Proposal Experience</td>
+                                                <td>
+                                                    @if(Model.ProposalExperience == "Yes")
+                                                    {
+                                                        @Html.Label("PRE")
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.Label("POST") 
+                                                    }
+                                                   </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Professional</td>
+                                                <td>@Model.Professional</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+	                                            <td>&nbsp;</td>
+                                            	<td>Funds On Time</td>
+                                                <td>@Model.FundsOnTime</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Effective Communication</td>
+                                                <td>@Model.EffectiveCommunication</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Disputes</td>
+                                                <td>@Model.Dispute</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Other Deliverables</td>
+                                                <td>@Model.OtherDeliverable</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"> @Model.OtherDeliverableType</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                
+                            </table>
+                        </td>
+                        <td>
+                        	<table style="width:100%;" cellpadding="0" cellspacing="20">
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);font-size:14px;" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="2">PAST CRITICISM</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Performance</td>
+                                                <td>@Model.CriticismPerformance</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Time Management</td>
+                                                <td>@Model.TimeManagement</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Money Allocation</td>
+                                                <td>@Model.MoneyAllocation</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+											<tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Accountability</td>
+                                                <td>@Model.Accountability</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Deliverable Quality</td>
+                                                <td>@Model.DeliverableQuality</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td style="text-align:center;background-color:#f7f7f7;">DONOR IMAGE & REPUTATION</td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);font-size:14px;" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Financing History</td>
+                                                <td>
+                                                    @if(Model.DonorFinancingHistory == 1)
+                                                    {
+                                                        @Html.Label("Good")
+                                                    }
+                                                    else if(Model.DonorFinancingHistory == 2) 
+                                                    {
+                                                         @Html.Label("Neutral")
+                                                    }
+                                                    else if(Model.DonorFinancingHistory == 3) 
+                                                    {
+                                                         @Html.Label("Bad")
+                                                    }
+                                                    else if(Model.DonorFinancingHistory== null)
+                                                    {
+                                                        @Html.Label("")
+                                                    }
+                                                </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Religious Standing</td>
+                                                <td>@if(Model.ReligiousStanding==1)
+                                                    {
+                                                        @Html.Label("Good")
+                                                    }
+                                                    else if(Model.ReligiousStanding == 2) 
+                                                    {
+                                                         @Html.Label("Neutral")
+                                                    }
+                                                    else if(Model.ReligiousStanding == 3) 
+                                                    {
+                                                         @Html.Label("Bad")
+                                                    }
+                                                     else if(Model.ReligiousStanding == null)
+                                                    {
+                                                        @Html.Label("")
+                                                    }</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Political Standing</td>
+                                                <td>
+                                                    @if(Model.PoliticalStanding==1)
+                                                    {
+                                                        @Html.Label("Good")
+                                                    }
+                                                    else if(Model.PoliticalStanding == 2) 
+                                                    {
+                                                         @Html.Label("Neutral")
+                                                    }
+                                                    else if(Model.PoliticalStanding == 3) 
+                                                    {
+                                                         @Html.Label("Bad")
+                                                    }
+                                                     else if(Model.PoliticalStanding == null)
+                                                    {
+                                                        @Html.Label("")
+                                                    }
+                                                </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;border-bottom:1px solid #dfdfdf;" cellpadding="25" cellspacing="0">
+                	<tr>
+                    	<td style="text-transform:uppercase;font-weight:bold;font-size:14px;">PURPOSE OF INITIATIVE</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;" cellpadding="0" cellspacing="0">
+                    <tr>
+                    	<td>
+                        	<table style="width:100%;font-size:14px;" cellpadding="2" cellspacing="20">
+                            	<tr>
+                                	<td style="text-align:center;font-weight:bold;background-color:#f7f7f7;">SECTOR AND THEMES</td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="6"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="4">Rural Development and Social Protection:</td>
+                                              <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>
+                                                    @if (Model.Awareness == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Awarness");
+                                                     }
+                                                     else 
+                                                     {
+                                                      <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Awarness");
+                                                     }
+                                                 </td>
+                                                <td>
+                                                     @if (Model.Infrastructure == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Infrastructure");
+                                                     }
+                                                     else 
+                                                     {
+                                                       <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Infrastructure");
+                                                     }
+                                                </td>
+                                                <td>
+                                                    @if (Model.CapacityBuilding == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Capacity Building")
+                                                     }
+                                                     else 
+                                                     {
+                                                      <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Capacity Building")
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.IncomeGeneration == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Income Generation")
+                                                     }
+                                                     else 
+                                                     {
+                                                      <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Income Generation")
+                                                     }  
+                                                </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>
+                                                     @if (Model.Mobilization == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Mobilization");
+                                                     }
+                                                     else 
+                                                     {
+                                                      <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Mobilization");
+                                                     } 
+                                                    </td>
+                                                <td>
+                                                     @if (Model.PeaceBuilding == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">@Html.Label("Peace-Building");
+                                                     }
+                                                     else 
+                                                     {
+                                                      <img src="@Model.UnCheckedIconPath" alt="">@Html.Label("Peace-Building");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.SocialProtection == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Social Protection");
+                                                     }
+                                                     else 
+                                                     {
+                                                      <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Social Protection");
+                                                     }
+                                                </td>
+                                                <td>
+                                                     @if (Model.SustainableLivelihood == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Sustainable Livelihood");
+                                                     }
+                                                     else 
+                                                     {
+                                                      <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Sustainable Livelihood");
+                                                     }
+                                                </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>
+                                                     @if (Model.Advocacy == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">@Html.Label("Advocacy");
+                                                     }
+                                                     else 
+                                                     {
+                                                      <img src="@Model.UnCheckedIconPath" alt="">@Html.Label("Advocacy");
+                                                     } 
+                                                </td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="6"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="4">Education:</td>
+                                              <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>
+                                                    @if (Model.Literacy == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Literacy");
+                                                     }
+                                                     else 
+                                                     {
+                                                      <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Literacy");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                     @if (Model.EducationCapacityBuilding == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Capacity Building");
+                                                     }
+                                                     else 
+                                                     {
+                                                      <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Capacity Building");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                     @if (Model.SchoolUpgrading == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("School Upgrading");
+                                                     }
+                                                     else 
+                                                     {
+                                                      <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("School Upgrading");
+                                                     } 
+                                                </td>
+                                               
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	 <td>
+                                                     @if (Model.EducationInEmergency == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Education In Emergency");
+                                                     }
+                                                     else 
+                                                     {
+                                                      <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Education In Emergency");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                     @if (Model.OnlineEducation == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Online Education");
+                                                     }
+                                                     else 
+                                                     {
+                                                      <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Online Education");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                     @if (Model.CommunityBasedEducation == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Community Based Education");
+                                                     }
+                                                     else 
+                                                     {
+                                                       <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Community Based Education");
+                                                     } 
+                                                </td>
+                                               
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td>&nbsp;</td>
+                                                <td>
+                                                     @if (Model.AcceleratedLearningProgram == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Accelerated Learning Program");
+                                                     }
+                                                     else 
+                                                     {
+                                                       <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Accelerated Learning Program");
+                                                     } 
+                                                </td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="6"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="4">Health and Nutrition:</td>
+                                              <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>
+                                                    @if (Model.PrimaryHealthServices == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Primary Health Services");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Primary Health Services");
+                                                      
+                                                     } 
+                                                </td>   
+                                                <td>
+                                                    @if (Model.ReproductiveHealth == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Reproductive Health");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Reproductive Health");
+                                                     } 
+                                                </td> 
+                                                <td>
+                                                    @if (Model.Immunization == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">@Html.Label("Immunization");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt="">@Html.Label("Immunization");
+                                                     } 
+                                                </td> 
+                                                
+
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>
+                                                    @if (Model.Nutrition == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Nutrition");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Nutrition");
+                                                     } 
+                                                </td> 
+                                                <td>
+                                                    @if (Model.CommunicableDisease == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Communicable Disease");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Communicable Disease");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.Hygiene == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Hygiene");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Hygiene");
+                                                     } 
+                                                </td>
+                                               
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	 <td>
+                                                    @if (Model.EnvironmentalHealth == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Environmental Health");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Environmental Health");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.HealthCapacityBuilding == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Capacity Building");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Capacity Building");
+                                                     } 
+                                                </td>
+                                                
+                                                <td>
+                                                    @if (Model.Telemedicine == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Telemedicine");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Telemedicine");
+                                                     } 
+                                                </td>
+                                                
+                                                <td>&nbsp;</td>
+                                                
+                                            </tr>
+                                            <tr>
+                                                <td>&nbsp;</td>
+                                                <td>
+                                                     @if (Model.InfantandYoungChildFeeding == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Infant and Young Child Feeding");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Infant and Young Child Feeding");
+                                                     }        
+                                                </td>
+                                                <td>
+                                                    @if (Model.MentalHealthandDisabilityService == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Mental Health and Disability Service");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Mental Health and Disability Service");
+                                                     } 
+                                                </td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="6"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="4">Disaster Risk Reduction:</td>
+                                              <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>
+                                                    @if (Model.MitigationProjects == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Mitigation Projects");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Mitigation Projects");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.WaterSupply == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Water Supply");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Water Supply");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.Sanitation == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Sanitation");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Sanitation");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.DisasterRiskHygiene == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Hygiene");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Hygiene");
+                                                     } 
+                                                </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	
+                                                <td>
+                                                    @if (Model.DisasterCapacityBuilding == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt="">  @Html.Label("Capacity Building");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt="">  @Html.Label("Capacity Building");
+                                                     }     
+                                                </td>
+                                                <td>
+                                                    @if (Model.EmergencyResponse == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Emergency Response");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Emergency Response");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.RenewableEnergy == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Renewable Energy");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Renewable Energy");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.Shelter == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Shelter");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Shelter");
+                                                     } 
+                                                </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="6"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="4">Agriculture and Livestock:</td>
+                                              <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>
+                                                     @if (Model.NaturalResourceManagement == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Natural Resource Management");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Natural Resource Management");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                     @if (Model.AggriculutreCapacityBuilding == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Capacity Building");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Capacity Building");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                     @if (Model.LivestockManagement == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Livestock Management");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Livestock Management");
+                                                     } 
+                                                </td>
+                                                
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>
+                                                     @if (Model.FoodSecurity == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Food Security");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Food Security");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                     @if (Model.ResearchandPublication == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Research and Publication");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Research and Publication");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                     @if (Model.Horticulture == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Horticulture");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Horticulture");
+                                                     } 
+                                                </td>
+                                               
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	 <td>
+                                                     @if (Model.Irrigation == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Irrigation");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Irrigation");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                     @if (Model.Livelihood == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Livelihood");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Livelihood");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                     @if (Model.ValueChain == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("ValueChain");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("ValueChain");
+                                                     }
+                                                </td>
+                                                
+                                                <!-- <td>&nbsp;</td> -->
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td style="text-align:center;font-weight:bold;background-color:#f7f7f7;">TARGET BENEFICIARY</td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="6"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>
+                                                    @if (Model.Women == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Women");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Women");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.Men == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Men");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Men");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.Youth == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Youth");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Youth");
+                                                     } 
+                                                 </td>
+                                                <td>
+                                                    @if (Model.Children == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Children");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Children");
+                                                     } 
+                                                </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>
+                                                     @if (Model.Disabled == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Disabled");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Disabled");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.IDPs == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("IDPs");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("IDPs");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.Returnees == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Returnees");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Returnees");
+                                                     } 
+                                                 </td>
+                                                <td>
+                                                    @if (Model.Kuchis == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Kuchis");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Kuchis");
+                                                     } 
+                                                 </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>
+                                                    @if (Model.Widows == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Widows");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Widows");
+                                                     } 
+                                                </td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td colspan="4"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;border-bottom:1px solid #dfdfdf;" cellpadding="25" cellspacing="0">
+                	<tr>
+                    	<td style="text-transform:uppercase;font-weight:bold;font-size:14px;">ELIGIBILITY </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;">
+                	<tr>
+                        <td style="text-align:center;background-color:#f7f7f7;">DONOR ELIGIBILITY CRITERA MET: <span>@Model.DonorCriteriaMet </span>
+                        </td>
+                       
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;">
+                            @if(Model.DonorCriteriaMet == "No")
+                            {
+                        <label>"Warning: This is a critical criteria. Project may be unsuitable"</label>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                <tr>
+                                    <td colspan="3"></td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td style="text-align:center;">Can eligibility be posssible until the deadline ? <span>@Model.EligibilityDealine</span></td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td style="text-align:center;">Possible co-partnership ? <span>@Model.CoPartnership</span></td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4"></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;border-bottom:1px solid #dfdfdf;" cellpadding="25" cellspacing="0">
+                	<tr>
+                    	<td style="text-transform:uppercase;font-weight:bold;font-size:14px;">PRIORITY ADDED VALUE</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;" cellpadding="0" cellspacing="0">
+                    <tr>
+                    	<td>
+                        	<table style="width:100%;font-size:14px;" cellpadding="2" cellspacing="20">
+                            	<tr>
+                                	<td style="text-align:center;font-weight:bold;background-color:#f7f7f7;">NON MONITORING VALUE</td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="5"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>
+                                                     @if (Model.IncreaseReputation == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Increased Reputation");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Increased Reputation");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.ImproveDonorRelationship == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Improve Donor Relationship");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Improve Donor Relationship");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.GoodCause == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Good Cause");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Good Cause");
+                                                     } 
+                                                </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>
+                                                     @if (Model.ImprovePerformancecapacity == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Improve Performance Capacity");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Improve Performance Capacity");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                     @if (Model.SkillImprove == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Skill Improve");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Skill Improve");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                     @if (Model.FillingFundingGap == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Filling Funding Gaps");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Filling Funding Gaps");
+                                                     } 
+                                                </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>
+                                                    @if (Model.NewSoftware == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("New Software");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("New Software");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.NewEquipment == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("New Equipment");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("New Equipment");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.CoverageAreaExpansion == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Coverage Area Expansion");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Coverage Area Expansion");
+                                                     } 
+                                                </td>
+                                                <td>&nbsp;</td>
+                                                
+                                            </tr>
+                                            <tr>
+                                               	<td>&nbsp;</td>
+                                                   <td>
+                                                    @if (Model.NewTraining == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("New Training");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("New Training");
+                                                     } 
+                                                </td>
+                                                <td>
+                                                    @if (Model.Others == true)
+                                                     {
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Other");
+                                                     }
+                                                     else 
+                                                     {
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Other");
+                                                     }
+                                                </td>
+                                                <td>&nbsp;</td> 
+                                                <td>&nbsp;</td> 
+                                            </tr>
+                                           @foreach(var i in @Model.PriorityOtherDetailModel)
+                                           {
+                                            <tr>
+                                                <td>&nbsp;</td> 
+                                                <td>&nbsp;</td> 
+                                                <td> @i.Name</td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td> 
+
+                                            </tr>
+                                           }
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;">
+                    <tr>
+                        <td>
+                            <table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                <tr>
+                                    <td colspan="3"></td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>PROJECT IN LINE WITH ORGANISATION EXPANSION GOALS: <span>@Model.ExpansionGoal</span></td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4"></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;border-bottom:1px solid #dfdfdf;" cellpadding="25" cellspacing="0">
+                	<tr>
+                    	<td style="text-transform:uppercase;font-weight:bold;font-size:14px;">FINANCIAL PROFITABILITY (Funds)</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;" cellpadding="0" cellspacing="0">
+                    <tr>
+                    	<td>
+                        	<table style="width:100%;font-size:14px;" cellpadding="2" cellspacing="20">
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="5"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Direct Cost</td>
+                                                <td>Operational Overhead</td>
+                                                <td>Admin Overhead</td>
+                                                <td>Organizational Contribution</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>@Model.ProjectActivities</td>
+                                                <td>@Model.Operational</td>
+                                                <td>@Model.Overhead_Admin</td>
+                                                <td>@Model.Lump_Sum</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="4"><strong>Total:</strong> @Model.Total</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="4">Total must be greater than 6000</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;border-bottom:1px solid #dfdfdf;" cellpadding="25" cellspacing="0">
+                	<tr>
+                    	<td style="text-transform:uppercase;font-weight:bold;font-size:14px;">RISKS</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;" cellpadding="0" cellspacing="0">
+                	<tr>
+                    	<td style="width:50%;">
+                        	<table style="width:100%;font-size:14px;" cellpadding="2" cellspacing="20">
+                            	<tr>
+                                	<td style="text-align:center;">SECURITY: <span>@Model.Security</span></td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Staff</td>
+                                                <td>@Model.Staff</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+	                                            <td>&nbsp;</td>
+                                            	<td>Project Assets</td>
+                                                <td>@Model.ProjectAssets</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Suppliers</td>
+                                                <td>@Model.Suppliers</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Beneficiaries</td>
+                                                <td>@Model.Beneficiaries</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Overall Organization</td>
+                                                <td>@Model.OverallOrganization</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td style="text-align:center;">REPUTATION:  <span>@Model.Reputation</span></td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);" cellpadding="5" cellspacing="0">
+                                        	
+                                            <tr>
+                                            	<td colspan="4" align="center">REQUIRED REFORM IN VALUES</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Religious</td>
+                                                <td>@Model.Religious</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+	                                            <td>&nbsp;</td>
+                                            	<td>Sectarian</td>
+                                                <td>@Model.Sectarian</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Ethnic</td>
+                                                <td>@Model.Ethinc</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Social</td>
+                                                <td>@Model.Social</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Traditional</td>
+                                                <td>@Model.Traditional</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Geographical</td>
+                                                <td>@Model.Geographical</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Insecurity</td>
+                                                <td>@Model.Insecurity</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Season</td>
+                                                <td>@Model.Season</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Ethnicity</td>
+                                                <td>@Model.Ethnicity</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Culture</td>
+                                                <td>@Model.Culture</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Religious Beliefs</td>
+                                                <td>@Model.ReligiousBeliefs</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4" align="center">FOCUS DIVERTING RISK <span>@Model.FocusDivertingrisk</span></td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                        	<table style="width:100%;" cellpadding="0" cellspacing="20">
+                                <tr>
+                                	<td style="text-align:center;">DELIVERY FAILURE: <span>@Model.DeliveryFaiLure</span></td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);font-size:14px;" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Premature Seizure</td>
+                                                <td>@Model.PrematureSeizure</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Government Confiscation</td>
+                                                <td>@Model.GovernmentConfiscation</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Distruction by Terrorist Activity</td>
+                                                <td>@Model.DesctructionByTerroristActivity</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td style="text-align:center;">FINANCIAL</td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<table style="width:100%;border:1px solid #fbfbfb;box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);font-size:14px;" cellpadding="5" cellspacing="0">
+                                        	<tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Financial Losses</td>
+                                                <td>@Model.Financiallosses</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="2" style="font-size:12px;">"Warning: If the organization stands to make financial losses by foregoing this project, it puts this project at a greater value to the organization."</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Opportunity Loss</td>
+                                                <td>@Model.Opportunityloss</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="2" style="font-size:12px;">"Warning: If the organization stands to make financial losses by foregoing this project, it puts this project at a greater value to the organization."</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="2">Multiple Opportunity Project Selection: </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                          <tr>
+                                              <td>&nbsp;</td>
+                                               <td  colspan="2">@String.Join(", ", Model.SelectedProjectsModel.Select(p => p.ProjectName).ToArray())</td>
+                                                <td>&nbsp;</td>
+                                          </tr>                                           
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td>Probably Delay/Cuts in funding</td>
+                                                <td>@Model.Probablydelaysinfunding</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td>&nbsp;</td>
+                                            	<td colspan="2" style="font-size:12px;">"Warning: If the organization stands to make financial losses by foregoing this project, it puts this project at a greater value to the organization."</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="4"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td style="text-align:center;">OTHER ORGANIZATIONAL HARMS <span>@Model.OtherOrganizationalHarms</span></td>
+                                </tr>
+                                <tr>
+                                	<td>Describe Organisational Harms here...</td>
+                                </tr>
+                                <tr>
+                                    <td> @Model.OrganizationalDescription</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;border-bottom:1px solid #dfdfdf;" cellpadding="25" cellspacing="0">
+                	<tr>
+                    	<td style="text-transform:uppercase;font-weight:bold;font-size:14px;">ASSUMPTION</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;" cellpadding="15" cellspacing="0">
+                	<tr>
+                        <td style="font-size:12px;">Assumption: </td>
+                    	<td>&nbsp;</td>
+                  
+                  </tr>
+                     @foreach(var i in @Model.AssumptionDetailModel)
+                     {
+                      <tr>
+                          <td style="font-size:12px;"> @i.Name</td>
+                          <td>&nbsp;</td>
+                    
+                     </tr>
+                     }
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;border-bottom:1px solid #dfdfdf;" cellpadding="25" cellspacing="0">
+                	<tr>
+                    	
+                    <td style="text-transform:uppercase;font-weight:bold;font-size:14px;">DONOR ELIGIBILITY CRITERIA
+                         </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+        	<td>
+            	<table style="width:100%;" cellpadding="15" cellspacing="0">
+                	<tr>
+                   
+                        <td style="font-size:12px;">Criteria:</td>
+                    	<td>&nbsp;</td>
+                    </tr>
+                    @foreach(var i in @Model.DonorEligibilityDetailModel)
+                     {
+                      <tr>
+
+                        <td style="font-size:12px;"> @i.Name</td>
+                          <td>&nbsp;</td>
+                      </tr>
+                     }
+
+                </table>
+            </td>
+        </tr>
     </table>
+    
 </body>
 </html> 

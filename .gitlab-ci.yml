@@ -10,7 +10,7 @@ variables:
     GKE_PROJECT: clear-fusion-193608
     GKE_ZONE: europe-west4-b
     CF_CLEAN_URL: cleantestedg.cha-net.org
-    CF_REVIEW_URL: cleantestedg.cha-net.org
+    CF_REVIEW_URL: review.cha-net.org
     CF_CHAPROD_URL: manage.cha-net.org
     CF_APP_NAME: clearfusion-${CI_COMMIT_REF_SLUG}
     CF_APP_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}

@@ -196,7 +196,7 @@ export class LedgerStatementReportComponent implements OnInit {
   //#endregion
 
   getCurrencyCodeList(response: any) {
-    console.log(response);
+    // console.log(response);
     if (response.StatusCode === 200 && response.data.CurrencyList != null) {
       this.currencyDropdown = [];
       response.data.CurrencyList.forEach(element => {
@@ -216,7 +216,7 @@ export class LedgerStatementReportComponent implements OnInit {
   }
 
   getOfficeCodeList(response: any) {
-    console.log(response);
+    // console.log(response);
 
     if (
       response.StatusCode === 200 &&
@@ -256,7 +256,7 @@ export class LedgerStatementReportComponent implements OnInit {
   }
 
   GetAccountDetails(response: any) {
-    console.log(response);
+    // console.log(response);
 
     this.accountDropdown = [];
     this.selectedAccounts = [];
@@ -365,7 +365,7 @@ export class LedgerStatementReportComponent implements OnInit {
             });
             this.ledgerFilterList$ = of(this.dataSource).pipe(
               map(r => r.map(v => ({
-                Transaction_Date: new Date(v.TransactionDate).getDate() + '/' + new Date(v.TransactionDate).getMonth() +
+                Transaction_Date: new Date(v.TransactionDate).getDate() + '/' + (new Date(v.TransactionDate).getMonth() + 1) +
                 '/' + new Date(v.TransactionDate).getFullYear(),
                 Voucher: v.VoucherReferenceNo,
                 Description: v.Description,

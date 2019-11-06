@@ -9,7 +9,8 @@
           </div>
           <div class="col-md-3">
             <lib-hum-dropdown [validation]="vehicleDetailForm.controls['EmployeeId'].hasError('required')"
-            [options]="employeeList$" formControlName='EmployeeId' [placeHolder]="'Driver'"></lib-hum-dropdown>
+            [options]="employeeList$" formControlName='EmployeeId' [placeHolder]="'Driver'">
+            </lib-hum-dropdown>
           </div>
           <div class="col-md-3">
               <mat-form-field class="example-full-width">

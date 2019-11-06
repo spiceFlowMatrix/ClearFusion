@@ -74,7 +74,7 @@ export class BudgetLineDocumentsComponent implements OnInit {
         this.dialogRef.componentInstance.onClosePopup();
       },
       error => {
-        console.log(error);
+        // console.log(error);
         this.dialogRef.componentInstance.onClosePopup();
         this.toastr.error('Something went Wrong. Please try again');
       }

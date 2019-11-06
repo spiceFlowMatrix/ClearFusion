@@ -175,14 +175,14 @@ export class ProjectJobsComponent implements OnInit {
     });
     // list refeshed from add-budget to listing page
     dialogRef.componentInstance.onListRefresh.subscribe(() => {
-      console.log('Refreshed');
+      // console.log('Refreshed');
       this.getAllProjectJobsFilterList();
       this.projectJobListRefresh.emit();
       // this.getProjectJobList();
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      // console.log(result);
+      // // console.log(result);
     });
   }
   //#endregion
@@ -255,7 +255,7 @@ export class ProjectJobsComponent implements OnInit {
   //#region projectJobsDetailChangedEmit changes to list
 
   projectJobsDetailChangedEmit(event: IProjectJobModel) {
-    console.log(event);
+    // console.log(event);
     const data = this.projectJobDetailList.find(
       x => x.ProjectJobId === event.ProjectJobId
     );

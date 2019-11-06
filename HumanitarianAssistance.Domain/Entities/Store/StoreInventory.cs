@@ -28,6 +28,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public long? InventoryCreditAccount { get; set; }
         [ForeignKey("InventoryCreditAccount")]
         public ChartOfAccountNew ChartCreditAccountDetails { get; set; }
+        public List<StoreItemGroup> StoreItemGroups { get; set; }
 
         public List<StoreInventoryItem> InventoryItems { get; set; }
     }

@@ -179,6 +179,12 @@ export class ProjectListService {
       PageId: projectPagesMaster.ProjectIndicators,
       Text: 'Project Indicators',
       Link: 'project-indicators'
+    },
+    {
+      Id: 10,
+      PageId: projectPagesMaster.ProjectBudgetLine,
+      Text: 'Logistics',
+      Link: 'logistic-requests'
     }
   ];
 

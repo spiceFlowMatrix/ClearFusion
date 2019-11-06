@@ -1,0 +1,119 @@
+<lib-sub-header-template>
+  <span class="action_header">Configuration
+  </span>
+  <div class="action_section">
+  </div>
+</lib-sub-header-template>
+<mat-divider></mat-divider>
+<mat-tab-group [ngStyle]="scrollStyles">
+  <mat-tab label="GENERAL">
+    <ng-template matTabContent>
+      <ng-container *ngTemplateOutlet="general"></ng-container>
+    </ng-template>
+  </mat-tab>
+  <!-- <mat-tab label="CONSUMABLES">
+    <ng-template matTabContent>
+      <app-store-item-config [assetType]="'1'"></app-store-item-config>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="EXPANDABLES">
+    <ng-template matTabContent>
+        <app-store-item-config [assetType]="'2'"></app-store-item-config>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="NON EXPANDBALES">
+    <ng-template matTabContent>
+        <app-store-item-config [assetType]="'3'"></app-store-item-config>
+    </ng-template>
+  </mat-tab> -->
+</mat-tab-group>
+
+<ng-template #general>
+  <mat-card>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Unit Types
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="row">
+          <div class="col-md-4">
+            <hum-table [headers]="unitListHeaders$" [items]="unitItems$" [actions]="unitActions"
+              [hideColums$]="hideUnitColums" (actionClick)="unitAction($event)"></hum-table>
+          </div>
+        </div>
+        <button mat-raised-button color="primary" (click)="openUnitType()">Add</button>
+        <!-- <hum-button [type]="'add'" [text]="'Add'" ></hum-button> -->
+      </mat-expansion-panel>
+      <mat-expansion-panel *ngFor="let codeType of sourceCodeTypes" (opened)="openCodeType(codeType)">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{codeType.CodeTypeName}}
+          </mat-panel-title>
+
+        </mat-expansion-panel-header>
+
+        <hum-table [headers]="sourceCodeHeaders$" [items]="sourceCodeByType$" [actions]="unitActions"
+          [hideColums$]="hideSourceCodeColums" (actionClick)="codeAction($event)"></hum-table>
+        <button mat-raised-button color="primary" (click)="codePopUp(codeType.CodeTypeId)">Add</button>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card>
+</ng-template>
+<ng-template #unittype>
+  <div mat-dialog-content>
+    <mat-form-field>
+      <input matInput placeholder="Unit Type" [formControl]="typeName">
+      <mat-error *ngIf="typeName.invalid">Required</mat-error>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <hum-button [disabled]="typeName.invalid" [type]="'save'" [text]="'Save'" (click)="saveUnit()"></hum-button>
+  </div>
+</ng-template>
+<ng-template #sourceCode>
+
+  <form [formGroup]="sourCodeForm">
+    <div mat-dialog-content>
+      <div class="code-container">
+        <mat-form-field>
+          <input matInput placeholder="Code" [readonly]="true" formControlName="code">
+
+        </mat-form-field>
+        <mat-form-field>
+          <textarea matInput placeholder="Description" formControlName="description"></textarea>
+          <mat-error *ngIf="sourCodeForm.controls['description'].errors?.required">Required</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <textarea matInput placeholder="Address" formControlName="address"></textarea>
+
+          <mat-error *ngIf="sourCodeForm.controls['address'].errors?.required">Required</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Email Address" formControlName="emailAddress">
+
+          <mat-error *ngIf="sourCodeForm.controls['emailAddress'].errors?.email">Invalid email</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Fax" formControlName="fax">
+
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Guarantor" formControlName="guarantor">
+
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Phone" formControlName="phone">
+          <mat-error *ngIf="sourCodeForm.controls['phone'].errors">Phone no should be between 10 - 14 characters</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div mat-dialog-actions>
+      <hum-button [disabled]="sourCodeForm.invalid" [type]="'save'" [isSubmit]="'true'" [text]="'Save'"
+        (click)="saveCode()"></hum-button>
+    </div>
+  </form>
+
+
+</ng-template>

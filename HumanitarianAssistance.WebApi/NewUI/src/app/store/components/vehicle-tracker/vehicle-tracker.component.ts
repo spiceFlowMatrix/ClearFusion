@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material';
 import { AddMilageComponent } from '../add-milage/add-milage.component';
 import { Router } from '@angular/router';
 import { PurchaseService } from '../../services/purchase.service';
+import { IDropDownModel } from '../../models/purchase';
 
 @Component({
   selector: 'app-vehicle-tracker',
@@ -19,6 +20,8 @@ export class VehicleTrackerComponent implements OnInit {
   vehicleList$: Observable<IVehicleList[]>;
   actions: TableActionsModel;
   vehicleTrackerFilter: IVehicleTrackerFilter;
+  currencyList$: Observable<IDropDownModel[]>;
+  selectedDisplayCurrency: number;
 
   // Paging
   pageSize = 10;
@@ -36,7 +39,7 @@ export class VehicleTrackerComponent implements OnInit {
 
   ngOnInit() {
     this.initializeModel();
-    this.getVehicleList(this.vehicleTrackerFilter);
+
     this.actions = {
       items: {
         button: { status: true, text: 'Add Mileage' },
@@ -48,6 +51,7 @@ export class VehicleTrackerComponent implements OnInit {
 
     };
     this.getScreenSize();
+    this.getAllCurrencies();
   }
 
   initializeModel() {
@@ -56,6 +60,7 @@ export class VehicleTrackerComponent implements OnInit {
       OfficeId: null,
       PlateNo: null,
       TotalCost: null,
+      DisplayCurrency: null,
       pageIndex: 0,
       pageSize: 10
     };
@@ -76,17 +81,17 @@ export class VehicleTrackerComponent implements OnInit {
   //#endregion
 
   getFilteredVehicleList(selectedFilter) {
-    debugger;
-    const filter = {
+    this.vehicleTrackerFilter = {
       TotalCost: selectedFilter.TotalCost,
       EmployeeId: selectedFilter.EmployeeId,
       OfficeId: selectedFilter.OfficeId,
       PlateNo: selectedFilter.PlateNo,
+      DisplayCurrency: this.selectedDisplayCurrency,
       pageSize: 10,
       pageIndex: 0
     };
 
-    this.getVehicleList(filter);
+    this.getVehicleList(this.vehicleTrackerFilter);
   }
 
   getVehicleList(filter) {
@@ -121,6 +126,32 @@ export class VehicleTrackerComponent implements OnInit {
         }
       });
     }
+  }
+
+  getAllCurrencies() {
+    this.purchaseService.getAllCurrencies()
+      .subscribe(x => {
+        if (x.StatusCode === 200) {
+          this.selectedDisplayCurrency = x.data.CurrencyList[0].CurrencyId;
+           this.currencyList$ = of(x.data.CurrencyList.map(y => {
+            return {
+              name: y.CurrencyCode + '-' + y.CurrencyName,
+              value: y.CurrencyId
+            };
+          }));
+          this.vehicleTrackerFilter.DisplayCurrency = this.selectedDisplayCurrency;
+          this.getVehicleList(this.vehicleTrackerFilter);
+        }
+      },
+        (error) => {
+          console.error(error);
+        });
+  }
+
+  selectedDisplayCurrencyChanged() {
+    this.vehicleTrackerFilter.DisplayCurrency = this.selectedDisplayCurrency;
+    this.getVehicleList(this.vehicleTrackerFilter);
+
   }
 
   //#region "pageEvent"

@@ -54,7 +54,7 @@ export class AddProjectIndicatorComponent implements OnInit {
     this.indicatorForm = this.fb.group({
       IndicatorName: ['', Validators.required],
       Description: ['', Validators.required],
-      ProjectIndicatorId: []
+      ProjectIndicatorId: [],
     });
   }
   //#endregion

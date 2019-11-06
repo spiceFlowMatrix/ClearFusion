@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 
 namespace HumanitarianAssistance.Application.Store.Models
 {
@@ -26,5 +27,7 @@ namespace HumanitarianAssistance.Application.Store.Models
         public int OfficeId { get; set; }
         public int ModelYear { get; set; }
         public long PurchaseId { get; set; }
+        public int CurrencyId { get; set; }
+        public DateTime PurchasedDate {get; set;}
     }
 }
