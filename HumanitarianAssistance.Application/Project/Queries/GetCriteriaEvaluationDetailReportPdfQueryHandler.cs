@@ -425,7 +425,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     AssumptionDetailModel = model.AssumptionDetailModel,
                     DonorEligibilityDetailModel = model.DonorEligibilityDetailModel,
                     // TotalScore = (double)Math.Round( (request.TotalScore ?? 0.0 ),3),
-                    TotalScore = (double)(request.TotalScore ?? 0.0),
+                    TotalScore = (double)Math.Round((request.TotalScore ?? 0.0),2),
 
                     LogoPath = _env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath
 
