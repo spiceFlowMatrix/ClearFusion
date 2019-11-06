@@ -43,31 +43,31 @@
               </tr>
               <tr>
                 <td>Current Usage(Hours)</td>
-                <td>-</td>
+                <td>{{generatorDetailForm.CurrentUsage}}</td>
               </tr>
               <tr>
                 <td>Total Fuel Usage(Liter)</td>
-                <td>-</td>
+                <td>{{generatorDetailForm.TotalFuelUsage}}</td>
               </tr>
               <tr>
                 <td>Total Mobil Oil Usage(Liter)</td>
-                <td>-</td>
+                <td>{{generatorDetailForm.TotalMobilOilUsage}}</td>
               </tr>
               <tr>
                 <td>Standard Fuel Consumption Rate(Liter Per Hour)</td>
-                <td>{{generatorDetailForm.FuelConsumptionRate}}</td>
+                <td>{{generatorDetailForm.StandardFuelConsumptionRate}}</td>
               </tr>
               <tr>
                 <td>Actual Fuel Consumption Rate(Liter Per Hour)</td>
-                <td>-</td>
+                <td>{{generatorDetailForm.ActualFuelConsumptionRate}}</td>
               </tr>
               <tr>
                 <td>Standard Mobil Oil Consumption Rate(Liter Per Hour)</td>
-                <td>{{generatorDetailForm.MobilOilConsumptionRate}}</td>
+                <td>{{generatorDetailForm.StandardMobilOilConsumptionRate}}</td>
               </tr>
               <tr>
                 <td>Actual Mobil Oil Consumption Rate(Liter Per Hour)</td>
-                <td>-</td>
+                <td>{{generatorDetailForm.ActualMobilOilConsumptionRate}}</td>
               </tr>
             </tbody>
           </table>
@@ -76,27 +76,32 @@
             <tbody>
               <tr>
                 <td>Total Fuel Cost</td>
-                <td>-</td>
+                <td>{{generatorDetailForm.FuelTotalCost}}</td>
               </tr>
               <tr>
                 <td>Mobil Oil Total Cost</td>
-                <td>-</td>
+                <td>{{generatorDetailForm.MobilOilTotalCost}}</td>
               </tr>
               <tr>
                 <td>Spare Parts Total Cost</td>
-                <td>-</td>
+                <td>{{generatorDetailForm.SparePartsTotalCost}}</td>
               </tr>
               <tr>
                 <td>Services & Maintenance Total Cost</td>
-                <td>-</td>
+                <td>{{generatorDetailForm.ServicesAndMaintenanceTotalCost}}</td>
               </tr>
               <tr>
                 <td>Generator Starting Cost</td>
-                <td>-</td>
+                <td>{{generatorDetailForm.GeneratorStartingCost}}</td>
               </tr>
               <tr>
                 <td>Total Cost</td>
-                <td>-</td>
+                <td>{{generatorDetailForm.FuelTotalCost+
+                    generatorDetailForm.MobilOilTotalCost+
+                    generatorDetailForm.SparePartsTotalCost+
+                    generatorDetailForm.ServicesAndMaintenanceTotalCost+
+                    generatorDetailForm.GeneratorStartingCost
+                }}</td>
               </tr>
             </tbody>
           </table>

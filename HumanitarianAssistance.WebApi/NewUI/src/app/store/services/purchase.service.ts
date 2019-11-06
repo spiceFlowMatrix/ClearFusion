@@ -468,6 +468,12 @@ addGeneratorUsageHours(model: any) {
     .post(this.appurl.getApiUrl() + GLOBAL.API_GeneratorTracker_AddGeneratorUsageHours, model);
 }
 
+ // addGeneratorUsageHours
+ getVehicleMonthlyBreakdown(model: any) {
+  return this.globalService
+    .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_GetVehicleMonthlyBreakdownDataById, model);
+}
+
 // saveGeneratorDetail
 saveGeneratorDetail(model: any) {
   return this.globalService
