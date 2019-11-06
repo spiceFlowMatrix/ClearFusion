@@ -19,14 +19,13 @@ namespace HumanitarianAssistance.Application.Project.Queries {
         public async Task<ApiResponse> Handle (GetAllJobListQuery request, CancellationToken cancellationToken) {
             ApiResponse response = new ApiResponse ();
             try {
-                var jobDetailList = await _dbContext.ProjectJobHiringDetail.Where (x => x.IsDeleted == false).Select(x => new JobHiringDetailModel
-                {
+                var jobDetailList = await _dbContext.ProjectJobHiringDetail.Where (x => x.IsDeleted == false && x.ProjectId == request.ProjectId && x.ProfessionId == request.ProfessionId && x.OfficeId == request.OfficeId).Select (x => new JobHiringDetailModel {
                     JobId = x.JobId,
-                    JobCode = x.JobCode
-                }).ToListAsync();
+                        JobCode = x.JobCode
+                }).ToListAsync ();
 
                 response.data.JobDetailList = jobDetailList;
-                response.StatusCode = StaticResource.successStatusCode; 
+                response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
 
             } catch (Exception ex) {

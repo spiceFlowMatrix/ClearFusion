@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { GlobalService } from 'src/app/shared/services/global-services.service';
-import { AppUrlService } from 'src/app/shared/services/app-url.service';
-import { GLOBAL } from 'src/app/shared/global';
-import { map } from 'rxjs/operators';
-import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
+import { Injectable } from "@angular/core";
+import { GlobalService } from "src/app/shared/services/global-services.service";
+import { AppUrlService } from "src/app/shared/services/app-url.service";
+import { GLOBAL } from "src/app/shared/global";
+import { map } from "rxjs/operators";
+import { IResponseData } from "src/app/dashboard/accounting/vouchers/models/status-code.model";
 import {
   IHiringRequestDetailModel,
   ProjectHiringRequestFilterModel,
@@ -14,12 +14,16 @@ import {
   CandidateDetailModel,
   IFilterModel,
   ICountryList
-} from './models/hiring-requests-model';
-import { BehaviorSubject } from 'rxjs';
-import { IProjectPermissionMode } from '../project-activities/models/project-activities.model';
+} from "./models/hiring-requests-model";
+import { BehaviorSubject } from "rxjs";
+import { IProjectPermissionMode } from "../project-activities/models/project-activities.model";
+import {
+  OfficeDetailModel,
+  IHiringRequestModel
+} from "../../project-hiring/models/hiring-requests-models";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class HiringRequestsService {
   public hiringPermissionSubject = new BehaviorSubject<
@@ -118,10 +122,95 @@ export class HiringRequestsService {
   }
   //#endregion
 
-  //#region "GetJobList"
-  GetJobList(): any {
+  // //#region "GetOfficeListByJobId"
+  // GetOfficeListByJobId(model: OfficeDetailModel): any {
+  //   return this.globalService
+  //   .post(
+  //     this.appurl.getApiUrl() +
+  //       GLOBAL.API_HiringRequest_GetOfficeListByJobId,
+  //       model
+  //   )
+  //   .pipe(
+  //     map(x => {
+  //       const responseData: IResponseData = {
+  //         data: x.data.OfficeList,
+  //         statusCode: x.StatusCode,
+  //         message: x.Message
+  //       };
+  //       return responseData;
+  //     })
+  //   );
+  // }
+  // //#endregion
+  //#region "GetProfessionListByOfficeId"
+
+  GetProfessionListByOfficeId(model: OfficeDetailModel): any {
     return this.globalService
-      .getList(this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetAllJobs)
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_GetProfessionListByOfficeId,
+        model
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.ProfessionDetailList,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
+  //#region "getAllProvinceListByCountryId"
+  getAllProvinceListByCountryId(Id: any) {
+    return this.globalService
+      .getListByListId(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Project_GetAllProvinceDetailsByCountryId,
+        Id
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.ProvinceDetailsList,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+  //#region "GetAllDistrictvalueByProvinceId"
+  GetAllDistrictvalueByProvinceId(id) {
+    return this.globalService
+      .getListByListId(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Project_GetAllDistrictvalueByProvinceId,
+        id
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.Districtlist,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+  //#region "GetJobList"
+  GetJobList(model: OfficeDetailModel): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetAllJobs,
+        model
+      )
       .pipe(
         map(x => {
           const responseData: IResponseData = {
@@ -135,47 +224,8 @@ export class HiringRequestsService {
   }
   //#endregion
 
-  //#region "GetOfficeListByJobId"
-  GetOfficeListByJobId(JobId: number): any {
-    return this.globalService
-    .getListById(
-      this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetOfficeListByJobId,
-      JobId
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.data.ProjectBudgetLineDetailList,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
-  }
-  //#endregion
-  //#region "GetProfessionListByOfficeId"
-  GetProfessionListByOfficeId(OfficeId: number): any {
-    return this.globalService
-    .getListById(
-      this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetProfessionListByOfficeId,
-      OfficeId
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.data.ProjectBudgetLineDetailList,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
-  }
-  //#endregion
-
   //#region "AddHiringRequestDetail"
-  AddHiringRequestDetail(data: IHiringRequestDetailModel) {
+  AddHiringRequestDetail(data: IHiringRequestModel) {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
@@ -195,8 +245,29 @@ export class HiringRequestsService {
   }
   //#endregion
 
+  //#region "GetItemGroupByInventoryId"
+  getRemainingVacancyByJobId(JobId: number): any {
+    return this.globalService
+      .getListByListId(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_GetRemainingVacancyByJobId,
+        JobId
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.FilledVacancies,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
   //#region "EditHiringRequestDetail"
-  EditHiringRequestDetail(data: IHiringRequestDetailModel) {
+  EditHiringRequestDetail(data: IHiringRequestModel) {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
@@ -283,7 +354,7 @@ export class HiringRequestsService {
       .getDataById(
         this.appurl.getApiUrl() +
           GLOBAL.API_HiringRequest_GetEmployeeListByOfficeId +
-          '?OfficeId=' +
+          "?OfficeId=" +
           OfficeId
       )
       .pipe(
@@ -513,49 +584,68 @@ export class HiringRequestsService {
   }
   //#endregion
 
-//#region "AddJobHiringDetails"
-addJobHiringDetails(data: any) {
-  console.log(data);
-  return this.globalService
-    .post(
-      this.appurl.getApiUrl() +
-        GLOBAL.API_HREmployee_AddJobHiringDetail,
-      data
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
-}
-//#endregion
+  //#region "AddJobHiringDetails"
+  addJobHiringDetails(data: any) {
+    console.log(data);
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_HREmployee_AddJobHiringDetail,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
 
-
-//#region "GetProjectHiringRequestDetailsByHiringRequestId"
-GetProjectHiringRequestDetailsByHiringRequestId(HiringRequestId: any) {
-  return this.globalService
-    .post(
-      this.appurl.getApiUrl() +
-        GLOBAL.API_HiringRequest_GetProjectHiringRequestDetailsByHiringRequestId,
+  //#region "GetProjectHiringRequestDetailsByHiringRequestId"
+  GetProjectHiringRequestDetailsByHiringRequestId(HiringRequestId: any) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_GetProjectHiringRequestDetailsByHiringRequestId,
         HiringRequestId
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.data.ProjectHiringRequestDetails,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
-}
-//#endregion
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.ProjectHiringRequestDetails,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
+  //#region "GetProjectHiringRequestDetailsByHiringRequestId"
+  GetAllProjectHiringRequestDetailByHiringRequestId(HiringRequestId: any) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_GetAllProjectHiringRequestDetailByHiringRequestId,
+        HiringRequestId
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.ProjectHiringRequestAllDetail,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
 
   setHiringPermissions(permissionList: IProjectPermissionMode[]) {
     this.hiringPermissionSubject.next(permissionList);
