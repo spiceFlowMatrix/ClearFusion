@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Store.Models;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.Accounting;
 using HumanitarianAssistance.Persistence;
@@ -37,14 +38,27 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                       FuelConsumptionRate = x.FuelConsumptionRate,
                                                       StartingUsage= x.StartingUsage,
                                                       IncurredUsage= x.IncurredUsage,
-                                                      TotalUsage= x.StartingUsage + x.IncurredUsage,
+                                                      TotalUsage= x.StartingUsage + x.IncurredUsage+ x.GeneratorUsageHourList.Where(z=> z.IsDeleted == false)
+                                                                                                                                         .Select(y=> y.Hours).DefaultIfEmpty(0).Sum(),
                                                       MobilOilConsumptionRate= x.MobilOilConsumptionRate,
                                                       ModelYear= x.ModelYear,
                                                       PurchaseId= x.PurchaseId,
-                                                      TotalCost = x.StoreItemPurchase.UnitCost,
+                                                      TotalCost = x.StoreItemPurchase.UnitCost +
+                                                                  x.GeneratorItemDetail.Where(y => y.IsDeleted == false &&
+                                                                  y.GeneratorPurchaseId == x.Id && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorFuel)
+                                                                               .Select(z => z.StoreItemPurchase.Quantity * z.StoreItemPurchase.UnitCost).DefaultIfEmpty(0).Sum() +
+                                                                  x.GeneratorItemDetail.Where(y => y.IsDeleted == false &&
+                                                                  y.GeneratorPurchaseId == x.Id && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil)
+                                                                               .Select(z => z.StoreItemPurchase.Quantity * z.StoreItemPurchase.UnitCost).DefaultIfEmpty(0).Sum() +
+                                                                  x.GeneratorItemDetail.Where(y => y.IsDeleted == false &&
+                                                                  y.GeneratorPurchaseId == x.Id && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorSpareParts)
+                                                                               .Select(z => z.StoreItemPurchase.Quantity * z.StoreItemPurchase.UnitCost).DefaultIfEmpty(0).Sum() +
+                                                                  x.GeneratorItemDetail.Where(y => y.IsDeleted == false &&
+                                                                  y.GeneratorPurchaseId == x.Id && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMaintenanceService)
+                                                                               .Select(z => z.StoreItemPurchase.Quantity * z.StoreItemPurchase.UnitCost).DefaultIfEmpty(0).Sum(),
                                                       OriginalCost = x.StoreItemPurchase.UnitCost,
                                                       OfficeId = x.OfficeId,
-                                                    CurrencyId= x.StoreItemPurchase.Currency,
+                                                      CurrencyId= x.StoreItemPurchase.Currency,
                                                       PurchasedDate= x.StoreItemPurchase.PurchaseDate
                                                   })
                                                   .AsQueryable();

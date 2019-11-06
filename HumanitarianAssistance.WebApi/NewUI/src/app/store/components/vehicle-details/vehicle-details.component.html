@@ -11,7 +11,7 @@
   </div>
 </lib-sub-header-template>
 <mat-divider></mat-divider>
-<mat-tab-group [ngStyle]="scrollStyles">
+<mat-tab-group [ngStyle]="scrollStyles" (selectedTabChange)="onTabClick($event)">
   <mat-tab label="DETAILS">
     <ng-template matTabContent>
       <ng-container *ngTemplateOutlet="vehicleDetails"></ng-container>
@@ -19,61 +19,48 @@
   </mat-tab>
   <mat-tab label="MONTHLY BREAKDOWN">
       <mat-card>
-          <mat-form-field>
-              <input matInput [matDatepicker]="picker" placeholder="Choose a month" [formControl]="date">
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker (monthSelected)="monthSelected($event)" startView="multi-year"></mat-datepicker>
-            </mat-form-field>
-
-      <mat-card>
           <div class="row">
             <div class="col-md-12">
-              <div class="col-md-6">
-                <h5>Vehicle Usage Analysis</h5>
+              <div class="col-md-12">
                 <table class="table table-striped">
-                  <tbody>
-                    <tr>
-                      <td>Incurred Mileage(KM)</td>
+                  <thead>
+                    <th><h5>Vehicle Usage Analysis</h5></th>
+                    <th><h5>Jan</h5></th>
+                    <th><h5>Feb</h5></th>
+                    <th><h5>Mar</h5></th>
+                    <th><h5>Apr</h5></th>
+                    <th><h5>May</h5></th>
+                    <th><h5>Jun</h5></th>
+                    <th><h5>Jul</h5></th>
+                    <th><h5>Aug</h5></th>
+                    <th><h5>Sept</h5></th>
+                    <th><h5>Oct</h5></th>
+                    <th><h5>Nov</h5></th>
+                    <th><h5>Dec</h5></th>
+                  </thead>
+                 <tbody>
+                   <tr>
 
-                      <td>{{vehicleDetailForm.IncurredMileage}}</td>
-                    </tr>
-                    <tr>
-                      <td>Starting Mileage(KM)</td>
-                      <td>{{vehicleDetailForm.StartingMileage}}</td>
-                    </tr>
-                    <tr>
-                      <td>Current Mileage (KM)</td>
-                      <td>-</td>
-                    </tr>
-                    <tr>
-                      <td>Total Fuel Usage (Litres)</td>
-                      <td>-</td>
-                    </tr>
-                    <tr>
-                      <td>Total Mobil Oil Usage (Litres)</td>
-                      <td>-</td>
-                    </tr>
-                    <tr>
-                      <td>Standard Fuel Consumption Rate (Litre Per 100 KM)</td>
-                      <td>{{vehicleDetailForm.FuelConsumptionRate}}</td>
-                    </tr>
-                    <tr>
-                      <td>Actual Fuel Consumption Rate (Litre Per 100 KM)</td>
-                      <td>-</td>
-                    </tr>
-                    <tr>
-                      <td>Standard Mobil Oil Consumption Rate (Litre Per 100 KM)</td>
-                      <td>{{vehicleDetailForm.MobilOilConsumptionRate}}</td>
-                    </tr>
-                    <tr>
-                      <td>Actual Mobil Oil Consumption Rate (Litre Per 100 KM)</td>
-                      <td>-</td>
-
-                    </tr>
-                  </tbody>
+                   </tr>
+                 </tbody>
                 </table>
-                <h5>Vehicle Cost Analysis</h5>
+
                 <table class="table table-striped">
+                    <thead>
+                        <th><h5>Vehicle Cost Analysis</h5></th>
+                        <th><h5>Jan</h5></th>
+                        <th><h5>Feb</h5></th>
+                        <th><h5>Mar</h5></th>
+                        <th><h5>Apr</h5></th>
+                        <th><h5>May</h5></th>
+                        <th><h5>Jun</h5></th>
+                        <th><h5>Jul</h5></th>
+                        <th><h5>Aug</h5></th>
+                        <th><h5>Sept</h5></th>
+                        <th><h5>Oct</h5></th>
+                        <th><h5>Nov</h5></th>
+                        <th><h5>Dec</h5></th>
+                      </thead>
                   <tbody>
                     <tr>
                       <td>Fuel Total Cost</td>
@@ -107,7 +94,6 @@
             </div>
           </div>
         </mat-card>
-      </mat-card>
 
   </mat-tab>
   <mat-tab label="LOGS">
