@@ -27,14 +27,14 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
             try
             {
-                // var ProfessionList = await _dbContext.JobHiringDetail
-                //     .Include(o => o.ProfessionDetails)
-                //     .Where(x => x.OfficeId == request.OfficeId && x.IsDeleted == false).Select(x => new ProfessionListModel
-                //     {
-                //         ProfessionId = x.ProfessionDetails.ProfessionId,
-                //         ProfessionName = x.ProfessionDetails.ProfessionName
-                //     }).ToListAsync();
-                // response.data.ProfessionDetailList = ProfessionList;
+                var ProfessionList = await _dbContext.ProjectJobHiringDetail
+                    .Include(o => o.ProfessionDetails)
+                    .Where(x => x.OfficeId == request.OfficeId && x.IsDeleted == false).Select(x => new ProfessionListModel
+                    {
+                        ProfessionId = x.ProfessionDetails.ProfessionId,
+                        ProfessionName = x.ProfessionDetails.ProfessionName
+                    }).ToListAsync();
+                response.data.ProfessionDetailList = ProfessionList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

@@ -116,7 +116,6 @@ export class AppHeaderComponent implements OnInit {
         '',
         Validators.compose([
           Validators.required,
-          Validators.minLength(5),
           Validators.maxLength(20)
         ])
       ],
@@ -125,7 +124,6 @@ export class AppHeaderComponent implements OnInit {
         Validators.compose([
           CustomValidation.ConfirmPassword,
           Validators.required,
-          Validators.minLength(5),
           Validators.maxLength(20)
         ])
       ]

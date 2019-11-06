@@ -82,5 +82,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public VehicleItemDetail VehicleItemDetail { get; set; }
         public GeneratorItemDetail GeneratorItemDetail { get; set; }
         public List<StorePurchaseOrder> PurchaseOrders { get; set; }
+        public List<PurchasedVehicleDetail> PurchasedVehicleDetailList {get; set;}
+        public List<PurchasedGeneratorDetail> PurchasedGeneratorDetailList {get; set;}
     }
 }

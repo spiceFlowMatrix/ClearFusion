@@ -99,7 +99,7 @@ export class ProjectIndicatorsComponent implements OnInit {
     }
     this.selectedRowID = item.ProjectIndicatorId;
     this.ProjectindicatorDetail = item;
-    // console.log('detail', this.ProjectindicatorDetail);
+    // // console.log('detail', this.ProjectindicatorDetail);
     this.showProjectDetailPanel();
   }
 
@@ -145,6 +145,7 @@ export class ProjectIndicatorsComponent implements OnInit {
                     IndicatorCode: element.IndicatorCode,
                     Description: element.Description,
                     Questions: element.Questions,
+                    CanDelete: element.CanDelete
                   });
                   // this.DonorDetailModel = this.donorList;
                 }

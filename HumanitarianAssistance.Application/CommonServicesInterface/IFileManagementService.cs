@@ -9,5 +9,6 @@ namespace HumanitarianAssistance.Application.CommonServicesInterface
     {
          Task<StoreDocumentModel> GetFilesByRecordIdAndDocumentType(FileModel model);
          Task<ApiResponse> DownloadFileFromBucket(DownloadObjectGCBucketModel model);
+         Task<StoreDocumentModel> GetFilesByDocumentFileId(FileModel model);
     }
 }

@@ -279,7 +279,7 @@ export class ProjectActivityAddComponent implements OnInit, OnDestroy {
 
 
   onRecurringChange(event: any) {
-    console.log(event);
+    // console.log(event);
     if (event.checked === true) {
       this.diasbleEndDate = true;
     } else {

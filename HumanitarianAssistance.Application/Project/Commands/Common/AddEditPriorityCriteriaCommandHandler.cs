@@ -46,7 +46,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
                         ProjectId = request.ProjectId,
                         IsDeleted = false,
                         CreatedById = request.CreatedById,
-                        CreatedDate = DateTime.UtcNow
+                        CreatedDate = DateTime.UtcNow,
+                        Others = request.Others
                     };
                     await _dbContext.PriorityCriteriaDetail.AddAsync(_detail);
                     await _dbContext.SaveChangesAsync();
@@ -67,6 +68,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
                     _detail.ExpansionGoal = request.ExpansionGoal;
                     _detail.ProjectId = request.ProjectId;
                     _detail.IsDeleted = false;
+                    _detail.Others = request.Others;
                     _detail.ModifiedById = request.ModifiedById;
                     _detail.ModifiedDate = DateTime.UtcNow;
                     await _dbContext.SaveChangesAsync();

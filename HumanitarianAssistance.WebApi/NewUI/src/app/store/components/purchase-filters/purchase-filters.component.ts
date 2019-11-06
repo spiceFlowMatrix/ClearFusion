@@ -47,7 +47,8 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
       DateOfIssue: [null],
       InventoryMasterId: [null],
       ItemGroupId: [null],
-      ItemId: [null]
+      ItemId: [null],
+      DepreciationComparisionDate: [null]
     });
   }
 
@@ -60,7 +61,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
     this.purchaseService.getPurchaseFilterList()
     .pipe(takeUntil(this.destroyed$))
     .subscribe(x  => {
-      
+
       this.inventoryType$ = of(x.InventoryTypes.map(y => {
         return {
           value: y.Id,
@@ -113,6 +114,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
       this.loader.hideLoader();
     },
     err => {
+      this.loader.hideLoader();
      console.error(err);
     });
   }
@@ -156,6 +158,18 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
 
    getItemSelectedValue(event: any) {
      this.onPurchaseFilterSelectionChanged();
+   }
+
+   getPurchaseDateSelectedValue(event: any) {
+    this.onPurchaseFilterSelectionChanged();
+   }
+
+   getIssueDateSelectedValue(event: any) {
+    this.onPurchaseFilterSelectionChanged();
+   }
+
+   getComparisionDateSelectedValue(event: any) {
+    this.onPurchaseFilterSelectionChanged();
    }
 
   getJobsByProjectId(projectId: number) {

@@ -27,7 +27,7 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(private dialog: MatDialog, private router: Router, private activatedRoute: ActivatedRoute,
-              private purchaseService: PurchaseService, private commonLoader: CommonLoaderService) {
+    private purchaseService: PurchaseService, private commonLoader: CommonLoaderService) {
     this.activatedRoute.params.subscribe(params => {
       this.generatorId = params['id'];
     });
@@ -45,14 +45,24 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
       Voltage: null,
       StartingUsage: null,
       IncurredUsage: null,
-      MobilOilConsumptionRate: null,
+      StandardMobilOilConsumptionRate: null,
       ModelYear: null,
       OfficeId: null,
-      FuelConsumptionRate: null,
+      StandardFuelConsumptionRate: null,
       PurchaseName: null,
       PurchaseId: null,
       OfficeName: null,
       PurchasedBy: null,
+      TotalFuelUsage: null,
+      TotalMobilOilUsage: null,
+      FuelTotalCost: null,
+      MobilOilTotalCost: null,
+      SparePartsTotalCost: null,
+      ServicesAndMaintenanceTotalCost: null,
+      CurrentUsage: null,
+      GeneratorStartingCost: null,
+      ActualFuelConsumptionRate: null,
+      ActualMobilOilConsumptionRate: null
     };
   }
 
@@ -73,21 +83,31 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   getGeneratorDetailById() {
     this.commonLoader.showLoader();
     this.purchaseService.getGeneratorDetailById(this.generatorId)
-    .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
         this.generatorDetailForm = {
           GeneratorId: x.GeneratorId,
           Voltage: x.Voltage,
           StartingUsage: x.StartingUsage,
           IncurredUsage: x.IncurredUsage,
-          OfficeName: x.OfficeName,
-          MobilOilConsumptionRate: x.MobilOilConsumptionRate,
+          StandardMobilOilConsumptionRate: x.StandardMobilOilConsumptionRate,
           ModelYear: x.ModelYear,
           OfficeId: x.OfficeId,
-          FuelConsumptionRate: x.FuelConsumptionRate,
-          PurchasedBy: x.PurchasedBy,
+          StandardFuelConsumptionRate: x.StandardFuelConsumptionRate,
           PurchaseName: x.PurchaseName,
-          PurchaseId: x.PurchaseId
+          PurchaseId: x.PurchaseId,
+          OfficeName: x.OfficeName,
+          PurchasedBy: x.PurchasedBy,
+          TotalFuelUsage: x.TotalFuelUsage,
+          TotalMobilOilUsage: x.TotalMobilOilUsage,
+          FuelTotalCost: x.FuelTotalCost,
+          MobilOilTotalCost: x.MobilOilTotalCost,
+          SparePartsTotalCost: x.SparePartsTotalCost,
+          ServicesAndMaintenanceTotalCost: x.ServicesAndMaintenanceTotalCost,
+          CurrentUsage: x.CurrentUsage,
+          GeneratorStartingCost: x.GeneratorStartingCost,
+          ActualFuelConsumptionRate: x.ActualFuelConsumptionRate,
+          ActualMobilOilConsumptionRate: x.ActualMobilOilConsumptionRate
         };
 
         this.commonLoader.hideLoader();
@@ -97,7 +117,6 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   }
 
   openHoursModal(event) {
-    debugger;
     const dialogRef = this.dialog.open(AddHoursComponent, {
       width: '850px',
       data: {
@@ -106,7 +125,7 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
     });
   }
   goToDetails() {
-    this.router.navigate(['store/generator/edit', 1]);
+    this.router.navigate(['store/generator/edit', this.generatorId]);
   }
 
   ngOnDestroy() {
