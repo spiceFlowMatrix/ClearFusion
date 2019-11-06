@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { IVehicleList } from '../../models/vehicles';
 import { TableActionsModel } from 'projects/library/src/public_api';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { AddHoursComponent } from '../add-hours/add-hours.component';
 import { PurchaseService } from '../../services/purchase.service';
 import { IGeneratorTrackerFilter, IGeneratorList } from '../../models/generator';
+import { IDropDownModel } from 'src/app/dashboard/accounting/report-services/report-models';
 
 @Component({
   selector: 'app-generator-tracker',
@@ -17,9 +17,16 @@ export class GeneratorTrackerComponent implements OnInit {
   generatorListHeaders$ = of(['Id', 'K.V.', 'Fuel Consumption Rate', 'Incurred Usage(Hours)', 'Total Usage(Hours)', 'Total Cost',
                               'Original Cost']);
   generatorList$: Observable<IGeneratorList[]>;
+  currencyList$: Observable<IDropDownModel[]>;
   actions: TableActionsModel;
   recordsCount: number;
   generatorTrackerFilter: IGeneratorTrackerFilter;
+  selectedDisplayCurrency: number;
+
+  // screen
+  screenHeight: any;
+  screenWidth: any;
+  scrollStyles: any;
 
   constructor(private router: Router , private dialog: MatDialog, private purchaseService: PurchaseService) { }
 
@@ -34,7 +41,8 @@ export class GeneratorTrackerComponent implements OnInit {
       }
     };
     this.initializeModel();
-    this.getGeneratorList(this.generatorTrackerFilter);
+    this.getScreenSize();
+    this.getAllCurrencies();
   }
 
   initializeModel() {
@@ -43,10 +51,25 @@ export class GeneratorTrackerComponent implements OnInit {
       OfficeId: null,
       ModelYear: null,
       TotalCost: null,
+      DisplayCurrency: null,
       pageIndex: 0,
       pageSize: 10
     };
   }
+
+   //#region "Dynamic Scroll"
+   @HostListener('window:resize', ['$event'])
+   getScreenSize(event?) {
+     this.screenHeight = window.innerHeight;
+     this.screenWidth = window.innerWidth;
+
+     this.scrollStyles = {
+       'overflow-y': 'auto',
+       height: this.screenHeight - 110 + 'px',
+       'overflow-x': 'hidden'
+     };
+   }
+   //#endregion
 
   goToDetails(e) {
     this.router.navigate(['store/generator/detail', e.GeneratorId]);
@@ -64,16 +87,17 @@ export class GeneratorTrackerComponent implements OnInit {
   }
 
   getFilteredGeneratorList(selectedFilter) {
-    const filter = {
+    this.generatorTrackerFilter = {
       TotalCost: selectedFilter.TotalCost,
       ModelYear: selectedFilter.ModelYear,
       OfficeId: selectedFilter.OfficeId,
       Voltage: selectedFilter.Voltage,
+      DisplayCurrency: this.selectedDisplayCurrency,
       pageSize: 10,
       pageIndex: 0
     };
 
-    this.getGeneratorList(filter);
+    this.getGeneratorList(this.generatorTrackerFilter);
   }
 
   getGeneratorList(filter) {
@@ -92,6 +116,34 @@ export class GeneratorTrackerComponent implements OnInit {
           };
         }));
       });
+  }
+
+  getAllCurrencies() {
+    this.purchaseService.getAllCurrencies()
+      .subscribe(x => {
+        if (x.StatusCode === 200) {
+
+          this.selectedDisplayCurrency = x.data.CurrencyList[0].CurrencyId;
+
+           this.currencyList$ = of(x.data.CurrencyList.map(y => {
+            return {
+              name: y.CurrencyCode + '-' + y.CurrencyName,
+              value: y.CurrencyId
+            };
+          }));
+
+          this.getGeneratorList(this.generatorTrackerFilter);
+        }
+      },
+        (error) => {
+          console.error(error);
+        });
+  }
+
+  selectedDisplayCurrencyChanged() {
+    this.generatorTrackerFilter.DisplayCurrency = this.selectedDisplayCurrency;
+    this.getGeneratorList(this.generatorTrackerFilter);
+
   }
 
   //#region "pageEvent"

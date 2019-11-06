@@ -251,12 +251,46 @@
         GeneratorFuel = 2,
         VehicleMobilOil = 3,
         GeneratorMobilOil = 4,
-        VehicleSpareParts = 5,
-        GeneratorSpareParts = 6,
-        VehicleMaintenanceService = 7,
-        GeneratorMaintenanceService = 8
+        VehicleMaintenanceService = 5,
+        GeneratorMaintenanceService = 6,
+        VehicleSpareParts = 9,
+        GeneratorSpareParts = 10,
     }
 
-   
 
+   public enum LogisticRequestStatus
+   {
+        NewRequest = 1,
+        Cancelled = 2,
+        IssuePurchaseOrder = 3,
+        Approved = 4,
+        CompletePurchase = 5,
+        ControlApproved = 6,
+        ControlRejected = 7
+   }
+
+    //#region "StoreItemGroups"
+    public enum TransportItemTypes
+    {
+        Vehicle = 1,
+        Generator = 2
+    }
+
+
+    public enum Month
+    {
+        NotSet = 0,
+        January = 1,
+        February = 2,
+        March = 3,
+        April = 4,
+        May = 5,
+        June = 6,
+        July = 7,
+        August = 8,
+        September = 9,
+        October = 10,
+        November = 11,
+        December = 12
+    }
 }

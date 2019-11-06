@@ -12,25 +12,27 @@ export class DocumentUploadComponent implements OnInit, OnChanges {
   actions: TableActionsModel;
 
   @Input() purchasedDocumentFiles: IPurchasedFiles[];
-  @Output() deleteDocument =  new EventEmitter<any>();
+  @Input() showDownloadButton: boolean;
+  @Output() documentButtonClicked =  new EventEmitter<any>();
+  @Input() hideColums$: Observable<{ headers?: string[], items?: string[] }>;
 
   documentHeaders$: Observable<any>;
   documentsList$: Observable<any>;
 
   constructor() {
+
+  }
+  ngOnInit() {
+    this.documentHeaders$ = of(['Id', 'Name', 'Type', 'Uploaded On', 'Uploaded By']);
     this.actions = {
       items: {
         button: { status: false, text: '' },
         delete: true,
-        download: true,
+        download: this.showDownloadButton ? true : false,
       },
       subitems: {}
 
     };
-  }
-
-  ngOnInit() {
-    this.documentHeaders$ = of(['Id', 'Name', 'Type', 'Uploaded On', 'Uploaded By']);
   }
 
   ngOnChanges() {
@@ -38,8 +40,6 @@ export class DocumentUploadComponent implements OnInit, OnChanges {
   }
 
   documentButtonClick(event) {
-    if (event.type === 'delete') {
-      this.deleteDocument.emit(event.item);
-    }
+      this.documentButtonClicked.emit(event);
   }
 }

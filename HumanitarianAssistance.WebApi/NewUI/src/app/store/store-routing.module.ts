@@ -18,6 +18,7 @@ const routes: Routes = [
 
       { path: 'purchases', component: PurchaseListComponent },
       { path: 'purchase/add', component: AddPurchaseComponent },
+      { path: 'purchase/edit/:id', component: AddPurchaseComponent },
       { path: 'vehicle/tracker', component: VehicleTrackerComponent },
       { path: 'generator/tracker', component: GeneratorTrackerComponent },
       { path: 'vehicle/detail/:id', component: VehicleDetailsComponent },

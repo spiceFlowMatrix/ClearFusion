@@ -13,7 +13,9 @@
           <input [min]="min" [max]="max" [maxlength]="maxlength" formControlName="AccountCode" appNumberOnly="true" [ngClass]="{ 'is-invalid': submitted && f.AccountCode.errors }" />
           <div *ngIf="submitted && f.AccountCode.errors" class="invalid-feedback">
               <div *ngIf="f.AccountCode.errors.required" style="color:red">Account Code is required</div>
-          </div>
+              <div *ngIf="f.AccountCode.errors.minLengthValidator" style="color:red">You must input 2 digit for this level</div>
+              <div *ngIf="f.AccountCode.errors.numValidator" style="color:red">Account Code must be numeric</div>
+            </div>
         </div>
         <div class="col-sm-12">
           <br/>

@@ -5,6 +5,7 @@ using HumanitarianAssistance.Application.Accounting.Commands.Common;
 using HumanitarianAssistance.Application.Accounting.Commands.Create;
 using HumanitarianAssistance.Application.Accounting.Commands.Update;
 using HumanitarianAssistance.Application.Accounting.Queries;
+using HumanitarianAssistance.Application.Configuration.Queries;
 using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Common.Enums;
 using Microsoft.AspNetCore.Authorization;
@@ -241,8 +242,12 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
             return await _mediator.Send(model);
         }
 
-
-
-
+        [HttpGet]
+        public async Task<string> GetLoggedInUserUserName()
+        {
+            GetLoggedInUserUserNameQuery model = new GetLoggedInUserUserNameQuery();
+            model.Id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return await _mediator.Send(model);
+        }
     }
 }

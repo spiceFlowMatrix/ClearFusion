@@ -171,7 +171,7 @@ export class PurchaseService {
   }
 
   getPurchaseDocumentTypes(): Observable<IDropDownModel[]> {
-    return of([{ name: 'Invoice', value: 1 }, { name: 'Image', value: 2 }]);
+    return of([{ name: 'Image', value: 1 }, { name: 'Invoice', value: 2 }]);
   }
 
   getAllStoreSource() {
@@ -399,6 +399,27 @@ addVehicleMileage(model: any) {
     .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_AddVehicleMileage, model);
 }
 
+// getStorePurchaseById
+getStorePurchaseById(id: number) {
+  return this.http
+    .get<any>(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetStorePurchaseById + '?id=' + id);
+}
+
+// getTransportItemDataSource
+getTransportItemDataSource(model: any) {
+  return this.globalService
+  .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetTransportItemDataSource, model);
+}
+
+ //#region "getItemDetailByItemId"
+ GetLoggedInUserUsername() {
+  return this.http
+    .get<any>(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_Account_GetLoggedInUserUserName);
+}
+//#endregion
+
 
   //#region "getItemDetailByItemId"
   getItemDetailByPurchaseId(Id) {
@@ -445,6 +466,78 @@ addVehicleMileage(model: any) {
 addGeneratorUsageHours(model: any) {
   return this.globalService
     .post(this.appurl.getApiUrl() + GLOBAL.API_GeneratorTracker_AddGeneratorUsageHours, model);
+}
+
+ // addGeneratorUsageHours
+ getVehicleMonthlyBreakdown(model: any) {
+  return this.globalService
+    .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_GetVehicleMonthlyBreakdownDataById, model);
+}
+
+// saveGeneratorDetail
+saveGeneratorDetail(model: any) {
+  return this.globalService
+    .post(this.appurl.getApiUrl() + GLOBAL.API_GeneratorTracker_EditGeneratorDetail, model);
+}
+
+// saveGeneratorDetail
+EditStorePurchase(purchase: any) {
+  const purchaseModel: IAddEditPurchaseModel = {
+    ApplyDepreciation: purchase.ApplyDepreciation,
+    AssetTypeId: purchase.AssetTypeId,
+    BudgetLineId: purchase.BudgetLineId,
+    Currency: purchase.CurrencyId,
+    DeliveryDate: this.getLocalDate(purchase.ReceiptDate),
+    DepreciationRate: purchase.DepreciationRate,
+    InventoryId: purchase.InventoryId,
+    InventoryItem: purchase.ItemId,
+    InvoiceDate: this.getLocalDate(purchase.InvoiceDate),
+    InvoiceNo: purchase.InvoiceNo,
+    OfficeId: purchase.OfficeId,
+    ProjectId: purchase.ProjectId,
+    PurchaseDate: this.getLocalDate(purchase.PurchaseOrderDate),
+    PurchaseName: purchase.PurchaseName,
+    PurchaseOrderNo: purchase.PurchaseOrderNo,
+    PurchasedById: purchase.ReceivedFromEmployeeId,
+    Quantity: purchase.Quantity,
+    ReceivedFromLocation: purchase.ReceivedFromLocation,
+    ReceiptTypeId: purchase.ReceiptTypeId,
+    Status: purchase.StatusId,
+    UnitCost: purchase.Price,
+    UnitType: purchase.Unit,
+    TimezoneOffset: new Date().getTimezoneOffset(),
+    PurchasedVehicleList: purchase.TransportVehicles,
+    PurchasedGeneratorList: purchase.TransportGenerators,
+    TransportItemId: purchase.TransportItemId,
+    PurchaseId: purchase.PurchaseId
+  };
+  return this.globalService
+    .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_EditStorePurchase, purchaseModel);
+}
+
+deleteVehicle(Id) {
+  return this.http
+    .delete<any>(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_VehicleTracker_DeletePurchasedVehicle +
+        '?id=' +
+        Id);
+}
+
+deleteGenerator(Id) {
+  return this.http
+    .delete<any>(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_GeneratorTracker_DeletePurchasedGenerator +
+        '?id=' +
+        Id);
+}
+
+getAllCurrencies() {
+  return this.http
+      .get<any>(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_code_GetAllCurrency);
 }
 
   //#region "getLocalDate"

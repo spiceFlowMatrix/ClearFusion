@@ -1,0 +1,235 @@
+@model HumanitarianAssistance.Application.Store.Models.StorePurchasePdfModel
+
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+    <style>
+			body { font-family: 'Roboto', sans-serif;}
+			.container { margin:0 auto;max-width:900px;}
+			@Html.Raw("@")CHARSET "UTF-8";
+			@Html.Raw("@")media print{
+				.page-break {
+				  page-break-after: always;
+				  page-break-inside: avoid;
+				  clear:both;
+				}
+				.page-break-before {
+				  page-break-before: always;
+				  page-break-inside: avoid;
+				  clear:both;
+				}
+			}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <table style="width:100%;">
+            <tr>
+                <td>
+                    <table cellpadding="5" style="width:100%;">
+                        <tr>
+                            <td width="150"><img src="@Model.LogoPath" alt=""></td>
+                            <td align="center" style="font-size:20px;font-weight:500;">COORDINATION OF HUMANITARIAN ASSISTANCE(CHA)<br>Store Purchase Report</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table cellpadding="5" style="width:100%;font-size:12px;" border="1" bordercolor="#bfbfbf" cellspacing="0">
+                        <tr>
+                            @if(Model.StorePurchasePdfFlags.Id)
+                            {
+                                <th>Id</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Item)
+                            {
+                                <th>Item</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.PurchasedBy)
+                            {
+                                <th>Purchased By</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Project)
+                            {
+                                <th>Project</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.OriginalCost)
+                            {
+                                <th>Original Cost</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.DepreciatedCost)
+                            {
+                                <th>Depreciated Cost</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.PurchaseDate)
+                            {
+                                <th>Purchase Date</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Currency)
+                            {
+                                <th>Currency</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.PurchasedQuantity)
+                            {
+                                <th>Purchased Quantity</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ItemCode)
+                            {
+                                <th>Item Code</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ProjectId)
+                            {
+                                <th>Project Id</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ItemCodeDescription)
+                            {
+                                <th>Item Code Description</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.BudgetLineName)
+                            {
+                                <th>Budget Line Name</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.DepreciationRate)
+                            {
+                                <th>Depreciation Rate</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.MasterInventoryCode)
+                            {
+                                <th>Master Inventory Code</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.OfficeCode)
+                            {
+                                <th>Office Code</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ReceiptDate)
+                            {
+                                <th>Receipt Date</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.CurrencyName)
+                            {
+                                <th>Currency Name</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.InvoiceDate)
+                            {
+                                <th>Invoice Date</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ReceivedFromLocationName)
+                            {
+                                <th>Received From Location</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Status)
+                            {
+                                <th>Status</th>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Description)
+                            {
+                                <th>Description</th>
+                            }
+                            
+                        </tr>
+                        @foreach (var item in @Model.StorePurchaseList)
+                        {
+                            <tr>
+                                @if(Model.StorePurchasePdfFlags.Id)
+                            {
+                                <td>@item.PurchaseId</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Item)
+                            {
+                                <td>@item.ItemName</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.PurchasedBy)
+                            {
+                                <td>@item.ReceivedFromEmployee</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Project)
+                            {
+                                <td>@item.ProjectName</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.OriginalCost)
+                            {
+                                <td>@item.OriginalCost</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.DepreciatedCost)
+                            {
+                                <td>@item.DepreciatedCost</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.PurchaseDate)
+                            {
+                                <td>@item.PurchaseDateDisplay</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Currency)
+                            {
+                               <td>@item.CurrencyName</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.PurchasedQuantity)
+                            {
+                                <td>@item.PurchasedQuantity</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ItemCode)
+                            {
+                                <td>@item.ItemCode</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ProjectId)
+                            {
+                                <td>@item.ProjectId</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ItemCodeDescription)
+                            {
+                                <td>@item.ItemCodeDescription</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.BudgetLineName)
+                            {
+                                <td>@item.BudgetLineName</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.DepreciationRate)
+                            {
+                                <td>@item.DepreciationRate</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.MasterInventoryCode)
+                            {
+                                <td>@item.MasterInventoryCode</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.OfficeCode)
+                            {
+                                <td>@item.OfficeCode</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ReceiptDate)
+                            {
+                                <td>@item.ReceiptDate</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.InvoiceDate)
+                            {
+                                <td>@item.InvoiceDate</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.ReceivedFromLocationName)
+                            {
+                                <td>@item.ReceivedFromLocationName</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Status)
+                            {
+                                <td>@item.Status</td>
+                            }
+                            @if(Model.StorePurchasePdfFlags.Description)
+                            {
+                                <td>@item.Description</td>
+                            }
+                            </tr>
+                        }
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

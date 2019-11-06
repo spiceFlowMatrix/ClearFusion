@@ -11,13 +11,91 @@
   </div>
 </lib-sub-header-template>
 <mat-divider></mat-divider>
-<mat-tab-group [ngStyle]="scrollStyles">
+<mat-tab-group [ngStyle]="scrollStyles" (selectedTabChange)="onTabClick($event)">
   <mat-tab label="DETAILS">
     <ng-template matTabContent>
       <ng-container *ngTemplateOutlet="vehicleDetails"></ng-container>
     </ng-template>
   </mat-tab>
-  <mat-tab label="MONTHLY BREAKDOWN"> Content 2 </mat-tab>
+  <mat-tab label="MONTHLY BREAKDOWN">
+      <mat-card>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="col-md-12">
+                <table class="table table-striped">
+                  <thead>
+                    <th><h5>Vehicle Usage Analysis</h5></th>
+                    <th><h5>Jan</h5></th>
+                    <th><h5>Feb</h5></th>
+                    <th><h5>Mar</h5></th>
+                    <th><h5>Apr</h5></th>
+                    <th><h5>May</h5></th>
+                    <th><h5>Jun</h5></th>
+                    <th><h5>Jul</h5></th>
+                    <th><h5>Aug</h5></th>
+                    <th><h5>Sept</h5></th>
+                    <th><h5>Oct</h5></th>
+                    <th><h5>Nov</h5></th>
+                    <th><h5>Dec</h5></th>
+                  </thead>
+                 <tbody>
+                   <tr>
+
+                   </tr>
+                 </tbody>
+                </table>
+
+                <table class="table table-striped">
+                    <thead>
+                        <th><h5>Vehicle Cost Analysis</h5></th>
+                        <th><h5>Jan</h5></th>
+                        <th><h5>Feb</h5></th>
+                        <th><h5>Mar</h5></th>
+                        <th><h5>Apr</h5></th>
+                        <th><h5>May</h5></th>
+                        <th><h5>Jun</h5></th>
+                        <th><h5>Jul</h5></th>
+                        <th><h5>Aug</h5></th>
+                        <th><h5>Sept</h5></th>
+                        <th><h5>Oct</h5></th>
+                        <th><h5>Nov</h5></th>
+                        <th><h5>Dec</h5></th>
+                      </thead>
+                  <tbody>
+                    <tr>
+                      <td>Fuel Total Cost</td>
+
+                      <td>-</td>
+                    </tr>
+                    <tr>
+                      <td>Mobil Oil Total Cost</td>
+                      <td>-</td>
+                    </tr>
+                    <tr>
+                      <td>Spare Parts Total Cost</td>
+                      <td>-</td>
+                    </tr>
+                    <tr>
+                      <td>Services & Maintenance Total Cost</td>
+                      <td>-</td>
+                    </tr>
+                    <tr>
+                      <td>Vehicle Starting Cost</td>
+                      <td>-</td>
+                    </tr>
+                    <tr>
+                      <td>Total Cost</td>
+                      <td>-</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+              </div>
+            </div>
+          </div>
+        </mat-card>
+
+  </mat-tab>
   <mat-tab label="LOGS">
     <ng-template matTabContent>
       <app-logs></app-logs>
@@ -44,62 +122,67 @@
               </tr>
               <tr>
                 <td>Current Mileage (KM)</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.CurrentMileage}}</td>
               </tr>
               <tr>
                 <td>Total Fuel Usage (Litres)</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.TotalFuelUsage}}</td>
               </tr>
               <tr>
                 <td>Total Mobil Oil Usage (Litres)</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.TotalMobilOilUsage}}</td>
               </tr>
               <tr>
                 <td>Standard Fuel Consumption Rate (Litre Per 100 KM)</td>
-                <td>{{vehicleDetailForm.FuelConsumptionRate}}</td>
+                <td>{{vehicleDetailForm.StandardFuelConsumptionRate}}</td>
               </tr>
               <tr>
                 <td>Actual Fuel Consumption Rate (Litre Per 100 KM)</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.ActualFuelConsumptionRate}}</td>
               </tr>
               <tr>
                 <td>Standard Mobil Oil Consumption Rate (Litre Per 100 KM)</td>
-                <td>{{vehicleDetailForm.MobilOilConsumptionRate}}</td>
+                <td>{{vehicleDetailForm.StandardMobilOilConsumptionRate}}</td>
               </tr>
               <tr>
                 <td>Actual Mobil Oil Consumption Rate (Litre Per 100 KM)</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.ActualMobilOilConsumptionRate}}</td>
 
               </tr>
             </tbody>
           </table>
-          <h5>Vehicle Usage Analysis</h5>
+          <h5>Vehicle Cost Analysis</h5>
           <table class="table table-striped">
             <tbody>
               <tr>
                 <td>Fuel Total Cost</td>
 
-                <td>-</td>
+                <td>{{vehicleDetailForm.FuelTotalCost}}</td>
               </tr>
               <tr>
                 <td>Mobil Oil Total Cost</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.MobilOilTotalCost}}</td>
               </tr>
               <tr>
                 <td>Spare Parts Total Cost</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.SparePartsTotalCost}}</td>
               </tr>
               <tr>
                 <td>Services & Maintenance Total Cost</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.ServiceAndMaintenanceTotalCost}}</td>
               </tr>
               <tr>
                 <td>Vehicle Starting Cost</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.VehicleStartingCost}}</td>
               </tr>
               <tr>
                 <td>Total Cost</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.FuelTotalCost+
+                  vehicleDetailForm.MobilOilTotalCost+
+                  vehicleDetailForm.SparePartsTotalCost+
+                  vehicleDetailForm.ServiceAndMaintenanceTotalCost+
+                  vehicleDetailForm.VehicleStartingCost
+                }}</td>
               </tr>
             </tbody>
           </table>
@@ -128,7 +211,7 @@
               </tr>
               <tr>
                 <td>PurchaseId</td>
-                <td><a>{{vehicleDetailForm.PurchaseName}}</a></td>
+                <td><a [routerLink]="['/store/purchase/edit', vehicleDetailForm.PurchaseId]">{{vehicleDetailForm.PurchaseName}}</a></td>
 
               </tr>
             </tbody>

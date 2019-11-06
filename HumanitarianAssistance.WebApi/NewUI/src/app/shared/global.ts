@@ -182,6 +182,7 @@ export class GLOBAL {
   public static API_Project_AddEditProjectCurrencyDetail = 'Project/AddEditProjectCurrencyDetail';
 
   public static API_Account_GetAllUserDetails = 'Account/GetAllUserList';
+  public static API_Account_GetLoggedInUserUserName = 'Account/GetLoggedInUserUserName';
   public static API_Project_AddEditTargetBeneficiary = 'Project/AddEditTargetBeneficiary';
 
   public static API_Code_GetAllAccountByAccountHeadTypeId = 'Code/GetAllAccountByAccountHeadTypeId';
@@ -191,7 +192,17 @@ export class GLOBAL {
   public static API_AccountReports_GetAllLedgerDetails = 'AccountReports/GetAllLedgerDetails';
   public static API_AccountReports_GetTrialBalanceReport = 'AccountReports/GetTrialBalanceReport';
 
-
+  // ProjectLogistics
+  public static API_ProjectLogistics_AddLogisticRequest = 'ProjectLogistic/AddLogisticRequest';
+  public static API_ProjectLogistics_GetAllLogisticRequest = 'ProjectLogistic/GetAllLogisticRequest';
+  public static API_ProjectLogistics_DeleteLogisticRequest = 'ProjectLogistic/DeleteLogisticRequest';
+  public static API_ProjectLogistics_GetRequestDetailById = 'ProjectLogistic/GetRequestDetailById';
+  public static API_ProjectLogistics_AddLogisticRequestItems = 'ProjectLogistic/AddLogisticRequestItems';
+  public static API_ProjectLogistics_GetItemsByRequestId = 'ProjectLogistic/GetItemsByRequestId';
+  public static API_ProjectLogistics_DeleteLogisticRequestItem = 'ProjectLogistic/DeleteLogisticRequestItem';
+  public static API_ProjectLogistics_EditLogisticRequestItems = 'ProjectLogistic/EditLogisticRequestItems';
+  public static API_ProjectLogistics_CancelLogisticRequest = 'ProjectLogistic/CancelLogisticRequest';
+  public static API_ProjectLogistics_IssuePurchaseOrder = 'ProjectLogistic/IssuePurchaseOrder';
 
   // Chart Of Account
   public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';
@@ -369,7 +380,6 @@ export class GLOBAL {
 
   public static API_Account_GetRoles = 'Account/GetRoles';
   public static API_FileManagement_GetSignedURL = 'FileManagement/GetSignedURL';
-
   public static API_Dashboard_GetTrainingLink = 'Dashboard/GetTrainingLink';
 
 
@@ -438,6 +448,7 @@ export class GLOBAL {
 
   public static API_Pdf_GetJournalBudgetLineSummaryPdf  = 'Pdf/GetJournalBudgetLineSummaryPdf';
   public static API_Pdf_GetJournalLedgerReportPdf = 'Pdf/GetJournalLedgerReportPdf';
+  public static API_Pdf_GetStorePurchasePdf = 'Pdf/GetStorePurchasePdf';
   public static API_Pdf_GetJournalReportPdf = 'Pdf/GetJournalReportPdf';
   //#endregion
 
@@ -463,21 +474,32 @@ export class GLOBAL {
   public static API_VehicleTracker_AddVehicleMileage = 'VehicleTracker/AddVehicleMileage';
   public static API_VehicleTracker_GetVehicleById = 'VehicleTracker/GetVehicleById';
   public static API_VehicleTracker_SaveVehicleDetail = 'VehicleTracker/EditVehicleDetail';
+  public static API_VehicleTracker_DeletePurchasedVehicle = 'VehicleTracker/DeletePurchasedVehicle';
+  public static API_VehicleTracker_GetVehicleMonthlyBreakdownDataById = 'VehicleTracker/GetVehicleMonthlyBreakdownDataById';
 
   public static API_GeneratorTracker_GetGeneratorList = 'GeneratorTracker/GetGeneratorList';
   public static API_GeneratorTracker_GetGeneratorById = 'GeneratorTracker/GetGeneratorById';
+  public static API_GeneratorTracker_DeletePurchasedGenerator = 'GeneratorTracker/DeletePurchasedGenerator';
   public static API_GeneratorTracker_AddGeneratorUsageHours = 'GeneratorTracker/AddGeneratorUsageHours';
+
+  public static API_Store_GetAllStoreInventoryItems = 'Store/GetAllStoreInventoryItems';
+
+  public static API_GeneratorTracker_EditGeneratorDetail = 'GeneratorTracker/EditGeneratorDetail';
+  public static API_StorePurchase_GetStorePurchaseById = 'StorePurchase/GetStorePurchaseById';
+  public static API_StorePurchase_GetTransportItemDataSource = 'StorePurchase/GetTransportItemDataSource';
+  public static API_StorePurchase_EditStorePurchase = 'StorePurchase/EditStorePurchase';
 
   public static API_Store_AddPurchaseUnitType = 'Store/AddPurchaseUnitType';
   public static API_Store_EditPurchaseUnitType = 'Store/EditPurchaseUnitType';
   public static API_Store_DeletePurchaseUnitType = 'Store/DeletePurchaseUnitType';
-  
+
   public static API_Store_GetAllStoreSourceType = 'Store/GetAllStoreSourceType';
   public static API_Store_AddStoreSourceCode = 'Store/AddStoreSourceCode';
   public static API_Store_GetStoreTypeCode= 'Store/GetStoreTypeCode';
   public static API_Store_EditStoreSourceCode = 'Store/EditStoreSourceCode';
   public static API_Store_DeleteStoreSourceCode = 'Store/DeleteStoreSourceCode';
   public static API_GetInventories = 'Store/GetInventories';
+
 
 }
 

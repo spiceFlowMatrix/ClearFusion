@@ -9,7 +9,7 @@ import { AddProcurementsComponent } from './components/add-procurements/add-proc
 import { EntryComponentComponent } from './components/entry-component/entry-component.component';
 import {
   MatIconModule, MatMenuModule, MatSidenavModule, MatCardModule, MatButtonModule,
-  MatInputModule, MatDividerModule, MatListModule, MatExpansionModule, MatTabsModule, MatTreeModule
+  MatInputModule, MatDividerModule, MatListModule, MatExpansionModule, MatTabsModule, MatSelectModule, MatOptionModule, MatTreeModule
 } from '@angular/material';
 import { ShareLayoutModule } from '../shared/share-layout.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -95,7 +95,9 @@ import { StoreItemConfigComponent } from './components/store-item-config/store-i
     MatListModule,
     MatExpansionModule,
     MatTabsModule,
-    MatTreeModule
+    MatTreeModule,
+    MatSelectModule,
+    MatOptionModule
     // MatRangeDatepickerModule,
     // MatNativeDateModule
 

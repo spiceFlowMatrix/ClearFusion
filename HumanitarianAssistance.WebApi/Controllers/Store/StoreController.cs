@@ -539,6 +539,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
             return await _mediator.Send(new GetAllStoreItemGroupsQuery { InventoryId = Id });
         }
 
+        [HttpGet]
+        public async Task<ApiResponse> GetAllStoreInventoryItems()
+        {
+            return await _mediator.Send(new GetAllStoreInventoryItemsQuery());
+        }
         #endregion 
     }
 }
