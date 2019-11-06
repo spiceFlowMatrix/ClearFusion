@@ -9,6 +9,7 @@ import { Observable, of, forkJoin, ReplaySubject } from 'rxjs';
 import { IDropDownModel } from 'src/app/store/models/purchase';
 import { takeUntil } from 'rxjs/operators';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
+import { ICandidateDetailModel } from '../models/hiring-requests-models';
 
 @Component({
   selector: 'app-add-new-candidate',
@@ -188,6 +189,31 @@ export class AddNewCandidateComponent implements OnInit {
         }
       );
   }
+
+   //#region "AddNewCandidate"
+   AddNewCandidate(data: ICandidateDetailModel) {
+    // this.hiringRequestService.AddNewCandidateDetail(data).subscribe(
+    //   (response: IResponseData) => {
+    //     if (response.statusCode === 200) {
+    //       this.toastr.success('New request is created successfully');
+    //     } else {
+    //       this.toastr.error(response.message);
+    //     }
+    //     this.onCancelPopup();
+    //   },
+    //   error => {
+    //     this.toastr.error('Someting went wrong. Please try again');
+    //   }
+    // );
+  }
+  //#endregion
+
+//#region "onCancelPopup"
+onCancelPopup(): void {
+  this.dialogRef.close();
+}
+//#endregion
+
   onChangeCountry(e) {
     this.provinceList$ = null;
     this.districtList$ = null;
@@ -198,6 +224,6 @@ export class AddNewCandidateComponent implements OnInit {
     this.getAllDistrictList(e);
   }
   onFormSubmit(data: any) {
-    console.log(data);
+
   }
 }

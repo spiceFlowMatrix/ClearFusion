@@ -37,6 +37,24 @@ export interface OfficeDetailModel {
   ProfessionId?: number;
 }
 
+export interface ICandidateDetailModel {
+FirstName?: string;
+LastName?: string;
+Email?: string;
+PhoneNumber?: string;
+AccountStatus?: number;
+Gender?: number;
+DateOfBirth?: Date;
+Grade?: number;
+Profession?: number;
+Office?: number;
+Country?: number;
+Province?: number;
+District?: number;
+ExperienceInMonth?: number;
+ExperienceInYear?: number;
+}
+
 export interface IHiringRequestModel {
   HiringRequestId?: number;
   ProjectId?: any;
