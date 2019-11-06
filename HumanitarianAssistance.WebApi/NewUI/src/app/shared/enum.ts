@@ -571,3 +571,9 @@ export enum DocumentFileTypes {
   EmployeeProfile = 3,
   EmployeeDocument = 4
 }
+
+export enum LogisticRequestStatus {
+  'New Request' = 1,
+  'Cancelled' = 2,
+  'Issue Purchase Order' = 3
+}
