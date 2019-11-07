@@ -479,6 +479,8 @@ export class GLOBAL {
   public static API_VehicleTracker_SaveVehicleDetail = 'VehicleTracker/EditVehicleDetail';
   public static API_VehicleTracker_DeletePurchasedVehicle = 'VehicleTracker/DeletePurchasedVehicle';
   public static API_VehicleTracker_GetVehicleMonthlyBreakdownDataById = 'VehicleTracker/GetVehicleMonthlyBreakdownDataById';
+  public static API_GeneratorTracker_GetGeneratorMonthlyBreakdownDataById = 'GeneratorTracker/GetGeneratorMonthlyBreakdownDataById';
+
 
   public static API_GeneratorTracker_GetGeneratorList = 'GeneratorTracker/GetGeneratorList';
   public static API_GeneratorTracker_GetGeneratorById = 'GeneratorTracker/GetGeneratorById';
