@@ -1,8 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { of } from 'rxjs';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { SubmitPurchaseListComponent } from '../submit-purchase-list/submit-purchase-list.component';
 import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-request-status',
@@ -12,13 +13,15 @@ import { ActivatedRoute } from '@angular/router';
 export class RequestStatusComponent implements OnInit {
   selected_case = 3;
   purchasedItemsHeaders$ = of(['Item', 'Quantity', 'Final Cost']);
-  purchasedItemsData$ = of([{'Item': 'Item1', 'Quantity': '12', 'Final Cost': '2500'}]);
+  purchasedItemsData$ = of([]);
   requestId;
   selectedItems: any[];
 
   @Input() requestStatus = 0;
   @Input() totalCost = 0;
   @Input() requestedItems: any[];
+  @Output() selectedItemChange = new EventEmitter();
+
   constructor(private dialog: MatDialog,
     private routeActive: ActivatedRoute) { }
 
@@ -37,6 +40,13 @@ export class RequestStatusComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined && result.data != null ) {
         this.selectedItems = result.data;
+        this.purchasedItemsData$ = of(this.selectedItems).pipe(
+          map(r => r.map(v => ({
+            Item: v.Items,
+            Quantity: v.Quantity,
+            FinalCost: v.EstimatedCost,
+           }) )));
+        this.selectedItemChange.emit(this.selectedItems);
       }
     });
   }
