@@ -4,8 +4,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AddHoursComponent } from '../add-hours/add-hours.component';
 import { PurchaseService } from '../../services/purchase.service';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
-import { ReplaySubject } from 'rxjs';
+import { ReplaySubject, Observable } from 'rxjs';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { FormControl } from '@angular/forms';
+import { IDropDownModel } from '../../models/purchase';
 
 @Component({
   selector: 'app-generator-details',
@@ -23,6 +25,10 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   generatorDetailForm: any;
   generatorId: number;
 
+  monthlyBreakdownYear = new FormControl();
+  monthlyBreakdownYearList$: Observable<IDropDownModel[]>;
+  generatorMonthlyBreakdownList: any;
+
   // subject
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
@@ -37,6 +43,7 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
     this.getScreenSize();
     this.initForm();
     this.getGeneratorDetailById();
+    this.getMonthlyBreakDownYears();
   }
 
   initForm() {
@@ -63,6 +70,14 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
       GeneratorStartingCost: null,
       ActualFuelConsumptionRate: null,
       ActualMobilOilConsumptionRate: null
+    };
+
+    this.generatorMonthlyBreakdownList = {
+      StartingMileage: null,
+      IncurredMileage: null,
+      StandardMobilOilConsumptionRate: null,
+      StandardFuelConsumptionRate: null,
+      StartingCost: null
     };
   }
 
@@ -124,6 +139,45 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  onTabClick(event) {
+
+    if (event.index === 1) {
+      this.getGeneratorMonthlyBreakdownData();
+    }
+  }
+
+  getGeneratorMonthlyBreakdownData() {
+    debugger;
+    const data = {
+      GeneratorId: +this.generatorId,
+      SelectedYear: this.monthlyBreakdownYear.value
+    };
+
+    this.purchaseService.getGeneratorMonthlyBreakdown(data)
+      .pipe(takeUntil(this.destroyed$))
+        .subscribe(x => {
+          this.generatorMonthlyBreakdownList = {
+            StartingUsage: x.StartingUsage,
+            IncurredUsage: x.IncurredUsage,
+            StandardMobilOilConsumptionRate: x.StandardMobilOilConsumptionRate,
+            StandardFuelConsumptionRate: x.StandardFuelConsumptionRate,
+            StartingCost: x.StartingCost
+          };
+        });
+  }
+
+  getMonthlyBreakdownYear(event) {
+    this.monthlyBreakdownYear = event;
+  }
+
+  getMonthlyBreakDownYears() {
+    this.monthlyBreakdownYearList$ = this.purchaseService.getMonthlyBreakDownYears();
+    this.monthlyBreakdownYearList$.subscribe(x => {
+      this.monthlyBreakdownYear.setValue(x[0].value);
+    });
+  }
+
   goToDetails() {
     this.router.navigate(['store/generator/edit', this.generatorId]);
   }

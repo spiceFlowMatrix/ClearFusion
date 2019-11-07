@@ -468,10 +468,16 @@ addGeneratorUsageHours(model: any) {
     .post(this.appurl.getApiUrl() + GLOBAL.API_GeneratorTracker_AddGeneratorUsageHours, model);
 }
 
- // addGeneratorUsageHours
+ // getVehicleMonthlyBreakdown
  getVehicleMonthlyBreakdown(model: any) {
   return this.globalService
     .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_GetVehicleMonthlyBreakdownDataById, model);
+}
+
+ // addGeneratorUsageHours
+ getGeneratorMonthlyBreakdown(model: any) {
+  return this.globalService
+    .post(this.appurl.getApiUrl() + GLOBAL.API_GeneratorTracker_GetGeneratorMonthlyBreakdownDataById, model);
 }
 
 // saveGeneratorDetail
@@ -538,6 +544,17 @@ getAllCurrencies() {
       .get<any>(
         this.appurl.getApiUrl() +
           GLOBAL.API_code_GetAllCurrency);
+}
+
+getMonthlyBreakDownYears(): Observable<IDropDownModel[]> {
+
+  let yearDropDown: IDropDownModel[] = [];
+  const year = new Date().getFullYear();
+  for (let i = 0; i <= 10; i++) {
+    yearDropDown.push({name: (year - i).toString(),
+    value: year - i});
+  }
+  return of(yearDropDown);
 }
 
   //#region "getLocalDate"
