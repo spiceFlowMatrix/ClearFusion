@@ -51,8 +51,13 @@ export class SubmitPurchaseListComponent implements OnInit {
   }
 
   submitPurchase() {
-    console.log(this.selection.selected);
+    if (this.selection.selected.length === 0) {
+      return false;
+    } else {
+      this.dialogRef.close({data: this.selection.selected});
+    }
   }
+
   cancelSubmission() {
     this.dialogRef.close({data: null});
   }

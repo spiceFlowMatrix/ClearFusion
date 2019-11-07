@@ -14,6 +14,7 @@ export class RequestStatusComponent implements OnInit {
   purchasedItemsHeaders$ = of(['Item', 'Quantity', 'Final Cost']);
   purchasedItemsData$ = of([{'Item': 'Item1', 'Quantity': '12', 'Final Cost': '2500'}]);
   requestId;
+  selectedItems: any[];
 
   @Input() requestStatus = 0;
   @Input() totalCost = 0;
@@ -35,7 +36,7 @@ export class RequestStatusComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined && result.data != null ) {
-        // this.refreshRequestList(result.data);
+        this.selectedItems = result.data;
       }
     });
   }
