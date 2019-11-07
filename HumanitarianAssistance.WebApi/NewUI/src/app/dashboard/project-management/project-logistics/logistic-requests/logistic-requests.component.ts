@@ -78,7 +78,7 @@ export class LogisticRequestsComponent implements OnInit {
        }) as IRequestList)));
   }
   requestRowClicked(event) {
-    this.router.navigate(['logistic-requests/', 1]);
+    this.router.navigate([event.Id], { relativeTo: this.routeActive });
   }
 
   getAllRequest() {

@@ -1,0 +1,60 @@
+<div class="row">
+  <div class="col-md-12">
+    <div mat-dialog-title><h4>Select items to Submit Purchase</h4></div>
+    <form>
+      <table mat-table [dataSource]="dataSource" style="width: 100%;">
+
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()"
+                          [aria-label]="checkboxLabel()">
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)"
+                          [aria-label]="checkboxLabel(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="Id">
+          <th mat-header-cell *matHeaderCellDef [style.display]="'none'"> Id </th>
+          <td mat-cell *matCellDef="let element" [style.display]="'none'"> {{element.Id}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="Items">
+          <th mat-header-cell *matHeaderCellDef> Item </th>
+          <td mat-cell *matCellDef="let element"> {{element.Items}} </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="Quantity">
+          <th mat-header-cell *matHeaderCellDef> Quantity </th>
+          <td mat-cell *matCellDef="let element"> {{element.Quantity}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="EstimatedCost">
+          <th mat-header-cell *matHeaderCellDef> Estimated Cost </th>
+          <td mat-cell *matCellDef="let element"> {{element.EstimatedCost}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            >
+        </tr>
+      </table>
+      <div class="text-center" style="margin-top: 15px;">
+        <hum-button [type]="'save'" [text]="'SUBMIT PURCHASE'" (click)="submitPurchase()"></hum-button>
+        <hum-button [type]="'cancel'" [text]="'CANCEL'" (click)="cancelSubmission()"></hum-button>
+      </div>
+    </form>
+  </div>
+</div>

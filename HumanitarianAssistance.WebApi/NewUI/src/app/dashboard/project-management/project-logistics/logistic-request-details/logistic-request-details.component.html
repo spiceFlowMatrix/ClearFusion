@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-7 mycontent-right">
           <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
-              <span class="action_header main-heading" style="margin-left: -50px;"><i class="fas fa-arrow-left"></i>  Request Details
+              <span class="action_header main-heading" style="margin-left: -50px;" (click)="onBackClick()"><i class="fas fa-arrow-left"></i>  Request Details
               </span>
             </lib-sub-header-template>
         <!-- <h4 class="main-heading" style="padding-left: 0px !important"><i class="fas fa-arrow-left"></i>   Request Details
@@ -164,7 +164,7 @@
       </div>
       <!-- <mat-divider [vertical]="true" style="height:300px"></mat-divider> -->
       <div class="col-md-5">
-        <app-request-status [requestStatus]="this.requestDetail.Status" [totalCost]="this.totalCost"></app-request-status>
+        <app-request-status [requestStatus]="this.requestDetail.Status" [totalCost]="this.totalCost" [requestedItems]="this.requestItemList"></app-request-status>
       </div>
     </div>
   </div>
