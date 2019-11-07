@@ -41,9 +41,9 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit() {
+    this.getScreenSize();
     this.initForm();
     this.getVehicleDetailById();
-    this.getScreenSize();
     this.getMonthlyBreakDownYears();
   }
 
@@ -148,7 +148,6 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
   }
 
   getVehicleMonthlyBreakdownData() {
-    debugger;
     const data = {
       VehicleId: +this.vehicleId,
       SelectedYear: this.monthlyBreakdownYear.value

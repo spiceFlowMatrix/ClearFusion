@@ -148,7 +148,6 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   }
 
   getGeneratorMonthlyBreakdownData() {
-    debugger;
     const data = {
       GeneratorId: +this.generatorId,
       SelectedYear: this.monthlyBreakdownYear.value

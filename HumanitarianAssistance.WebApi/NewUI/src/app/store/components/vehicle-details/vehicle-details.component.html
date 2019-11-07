@@ -190,7 +190,7 @@
   </mat-tab>
 </mat-tab-group>
 <!-- Vehicle Details template-->
-<ng-template #vehicleDetails [ngStyle]="scrollStyles">
+<ng-template #vehicleDetails>
   <mat-card>
     <div class="row">
       <div class="col-md-12">
@@ -298,7 +298,7 @@
               </tr>
               <tr>
                 <td>PurchaseId</td>
-                <td><a
+                <td><a *ngIf="vehicleDetailForm && vehicleDetailForm.PurchaseId != null"
                     [routerLink]="['/store/purchase/edit', vehicleDetailForm.PurchaseId]">{{vehicleDetailForm.PurchaseName}}</a>
                 </td>
 

@@ -294,7 +294,7 @@
               </tr>
               <tr>
                 <td>Purchase Id</td>
-                <td><a [routerLink]="['/store/purchase/edit', generatorDetailForm.PurchaseId]">{{generatorDetailForm.PurchaseName}}</a></td>
+                <td><a *ngIf="generatorDetailForm && generatorDetailForm.PurchaseId != null" [routerLink]="['/store/purchase/edit', generatorDetailForm?.PurchaseId]">{{generatorDetailForm.PurchaseName}}</a></td>
               </tr>
             </tbody>
           </table>
