@@ -47,10 +47,10 @@ export class EditGeneratorComponent implements OnInit, OnDestroy {
           Voltage: x.Voltage,
           StartingUsage: x.StartingUsage,
           IncurredUsage: x.IncurredUsage,
-          MobilOilConsumptionRate: x.MobilOilConsumptionRate,
+          MobilOilConsumptionRate: x.StandardMobilOilConsumptionRate,
           ModelYear: x.ModelYear,
           OfficeId: x.OfficeId,
-          FuelConsumptionRate: x.FuelConsumptionRate
+          FuelConsumptionRate: x.StandardFuelConsumptionRate
         });
       });
   }

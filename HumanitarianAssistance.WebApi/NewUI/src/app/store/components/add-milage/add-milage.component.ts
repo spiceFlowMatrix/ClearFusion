@@ -39,8 +39,8 @@ export class AddMilageComponent implements OnInit {
 
   //#endregion
   addMilage() {
-    this.isAddMileageFormSubmitted = true;
     if (this.mileageForm.valid) {
+      this.isAddMileageFormSubmitted = true;
       this.purchaseService.addVehicleMileage(this.mileageForm.value)
         .subscribe(x => {
           if (x) {

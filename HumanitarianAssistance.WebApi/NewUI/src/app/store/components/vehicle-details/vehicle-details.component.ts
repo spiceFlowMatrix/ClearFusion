@@ -20,7 +20,7 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
   vehicleDetailForm: any;
   vehicleId: number;
   date = new FormControl();
-  monthlyBreakdownYear = new FormControl();
+  monthlyBreakdownYear: number;
   monthlyBreakdownYearList$: Observable<IDropDownModel[]>;
   vehicleMonthlyBreakdownList: IMonthlyBreakDown;
 
@@ -107,6 +107,10 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
         vehicleId: this.vehicleId
       }
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.getVehicleDetailById();
+    });
   }
 
 
@@ -152,13 +156,12 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
   getVehicleMonthlyBreakdownData() {
     const data = {
       VehicleId: +this.vehicleId,
-      SelectedYear: this.monthlyBreakdownYear.value
+      SelectedYear: this.monthlyBreakdownYear
     };
 
     this.purchaseService.getVehicleMonthlyBreakdown(data)
       .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
-          debugger;
           this.vehicleMonthlyBreakdownList = {
             StartingMileage: x.StartingMileage,
             IncurredMileage: x.IncurredMileage,
@@ -187,7 +190,7 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
   getMonthlyBreakDownYears() {
     this.monthlyBreakdownYearList$ = this.purchaseService.getMonthlyBreakDownYears();
     this.monthlyBreakdownYearList$.subscribe(x => {
-      this.monthlyBreakdownYear.setValue(x[0].value);
+      this.monthlyBreakdownYear = x[0].value;
     });
   }
 

@@ -186,8 +186,10 @@ export interface IPurchaseItemDataSource {
 }
 
 export interface IMonthlyBreakDown {
-  StartingMileage: number;
-  IncurredMileage: number;
+  StartingMileage?: number;
+  IncurredMileage?: number;
+  StartingUsage?: number;
+  IncurredUsage?: number;
   StandardMobilOilConsumptionRate: number;
   StandardFuelConsumptionRate: number;
   StartingCost: number;

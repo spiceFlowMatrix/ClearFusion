@@ -33,7 +33,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                           .Include(x => x.VehicleItemDetail)
                                           .ThenInclude(x => x.StoreItemPurchase)
                                           .ThenInclude(x => x.StoreInventoryItem)
-                                          .Where(x => x.IsDeleted == false && x.Id == request.VehicleId).ToListAsync();
+                                          .Where(x => x.IsDeleted == false && x.Id == request.VehicleId && x.CreatedDate.Value.Year == request.SelectedYear).ToListAsync();
 
 
                 MonthlyBreakDownModel vehicle = vehicleData
@@ -85,6 +85,32 @@ namespace HumanitarianAssistance.Application.Store.Queries
                         SwitchCaseStatement(vehicle, request.SelectedYear, (int)val, out Usagedata, out Costdata);
                         model.CostAnalysisBreakDownList.Add(Costdata);
                     }
+
+                    CostAnalysisBreakDown totalCost = new CostAnalysisBreakDown();
+
+                    totalCost.Header = "Total Cost";
+                    totalCost.January = model.CostAnalysisBreakDownList.Sum(x=> x.January) + (vehicle.CreatedDate.Month <= (int)Month.January? vehicle.OriginalCost : 0);
+                    totalCost.February = model.CostAnalysisBreakDownList.Sum(x=> x.February)+ (vehicle.CreatedDate.Month <= (int)Month.February? vehicle.OriginalCost : 0);
+                    totalCost.March = model.CostAnalysisBreakDownList.Sum(x=> x.March)+ (vehicle.CreatedDate.Month <= (int)Month.March? vehicle.OriginalCost : 0);
+                    totalCost.April = model.CostAnalysisBreakDownList.Sum(x=> x.April)+ (vehicle.CreatedDate.Month <= (int)Month.April? vehicle.OriginalCost : 0);
+                    totalCost.May = model.CostAnalysisBreakDownList.Sum(x=> x.May)+ (vehicle.CreatedDate.Month <= (int)Month.May? vehicle.OriginalCost : 0);
+                    totalCost.June = model.CostAnalysisBreakDownList.Sum(x=> x.June)+ (vehicle.CreatedDate.Month <= (int)Month.June? vehicle.OriginalCost : 0);
+                    totalCost.July = model.CostAnalysisBreakDownList.Sum(x=> x.July)+ (vehicle.CreatedDate.Month <= (int)Month.July? vehicle.OriginalCost : 0);
+                    totalCost.August = model.CostAnalysisBreakDownList.Sum(x=> x.August)+ (vehicle.CreatedDate.Month <= (int)Month.August? vehicle.OriginalCost : 0);
+                    totalCost.September = model.CostAnalysisBreakDownList.Sum(x=> x.September)+ (vehicle.CreatedDate.Month <= (int)Month.September? vehicle.OriginalCost : 0);
+                    totalCost.October = model.CostAnalysisBreakDownList.Sum(x=> x.October)+ (vehicle.CreatedDate.Month <= (int)Month.October? vehicle.OriginalCost : 0);
+                    totalCost.November = model.CostAnalysisBreakDownList.Sum(x=> x.November)+ (vehicle.CreatedDate.Month <= (int)Month.November? vehicle.OriginalCost : 0);
+                    totalCost.December = model.CostAnalysisBreakDownList.Sum(x=> x.December)+ (vehicle.CreatedDate.Month <= (int)Month.December? vehicle.OriginalCost : 0);
+
+                    model.CostAnalysisBreakDownList.Add(totalCost);
+                }
+                else
+                {
+                    model.IncurredMileage = 0;
+                    model.StandardFuelConsumptionRate = 0;
+                    model.StandardMobilOilConsumptionRate = 0;
+                    model.StartingMileage = 0;
+                    model.StartingCost = 0;
                 }
             }
             catch (Exception ex)
@@ -252,7 +278,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                             if (mileageTravelledInaMonth != null && purchaseFuelInMonth != null)
                             {
-                                monthData = (purchaseFuelInMonth.Value / mileageTravelledInaMonth.Mileage) * 100;
+                                monthData = Math.Round((purchaseFuelInMonth.Value / mileageTravelledInaMonth.Mileage) * 100,4);
                             }
                         }
                     }
@@ -273,7 +299,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                             if (purchaseFuelInMonth != null && mileageTravelledInaMonth != null && mileageTravelledInaMonth.Mileage != 0)
                             {
-                                monthData = (purchaseFuelInMonth.Value / mileageTravelledInaMonth.Mileage) * 100;
+                                monthData = Math.Round((purchaseFuelInMonth.Value / mileageTravelledInaMonth.Mileage) * 100, 4);
                             }
                         }
                     }
@@ -294,7 +320,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                             if (purchaseFuelInMonth != null && mileageTravelledInaMonth != null && mileageTravelledInaMonth.Mileage > 0)
                             {
-                                monthData = (purchaseFuelInMonth.Value / mileageTravelledInaMonth.Mileage) * 100;
+                                monthData = Math.Round((purchaseFuelInMonth.Value / mileageTravelledInaMonth.Mileage) * 100, 4);
                             }
                         }
                     }
@@ -316,7 +342,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             if (purchaseFuelInMonth != null && mileageTravelledInaMonth != null && mileageTravelledInaMonth.Mileage != 0)
                             {
                                 actualRate = (purchaseFuelInMonth.Value / mileageTravelledInaMonth.Mileage) * 100;
-                                monthData = vehicle.StandardFuelConsumptionRate - actualRate;
+                                monthData = Math.Round(vehicle.StandardFuelConsumptionRate - actualRate, 4);
                             }
                         }
                     }
@@ -339,7 +365,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             if (purchaseFuelInMonth != null && mileageTravelledInaMonth != null && mileageTravelledInaMonth.Mileage > 0)
                             {
                                 actualMobilOilRate = (purchaseFuelInMonth.Value / mileageTravelledInaMonth.Mileage) * 100;
-                                monthData = vehicle.StandardMobilOilConsumptionRate - actualMobilOilRate;
+                                monthData = Math.Round(vehicle.StandardMobilOilConsumptionRate - actualMobilOilRate, 4);
                             }
                         }
                     }

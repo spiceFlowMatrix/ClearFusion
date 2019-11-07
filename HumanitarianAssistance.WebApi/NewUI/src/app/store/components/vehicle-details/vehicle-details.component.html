@@ -21,9 +21,14 @@
     <div style="padding-left: 50px;">
       <div class="row">
         <div class="col-md-2">
-          <lib-hum-dropdown [options]="monthlyBreakdownYearList$" [formControl]="monthlyBreakdownYear"
-            (change)="getMonthlyBreakdownYear($event)" [placeHolder]="'Year'">
-          </lib-hum-dropdown>
+            <mat-form-field>
+                <mat-label>Year</mat-label>
+                <mat-select [(ngModel)]="monthlyBreakdownYear" (selectionChange)='getVehicleMonthlyBreakdownData()'>
+                  <mat-option *ngFor="let item of monthlyBreakdownYearList$ | async" [value]="item.value">
+                    {{item.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
         </div>
         <div class="col-md-2">
           <mat-card>

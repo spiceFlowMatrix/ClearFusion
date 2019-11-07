@@ -21,9 +21,17 @@
         <div style="padding-left: 50px;">
           <div class="row">
             <div class="col-md-2">
-              <lib-hum-dropdown [options]="monthlyBreakdownYearList$" [formControl]="monthlyBreakdownYear"
+              <!-- <lib-hum-dropdown [options]="monthlyBreakdownYearList$" [formControl]="monthlyBreakdownYear"
                 (change)="getMonthlyBreakdownYear($event)" [placeHolder]="'Year'">
-              </lib-hum-dropdown>
+              </lib-hum-dropdown> -->
+              <mat-form-field>
+                  <mat-label>Year</mat-label>
+                  <mat-select [(ngModel)]="monthlyBreakdownYear" (selectionChange)='getGeneratorMonthlyBreakdownData()'>
+                    <mat-option *ngFor="let item of monthlyBreakdownYearList$ | async" [value]="item.value">
+                      {{item.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
             </div>
             <div class="col-md-2">
               <mat-card>
@@ -100,9 +108,21 @@
                     </th>
                   </thead>
                   <tbody>
-                    <tr>
-
-                    </tr>
+                      <tr *ngFor="let item of generatorMonthlyBreakdownList.UsageAnalysisBreakDownList">
+                          <td>{{item.Header}}</td>
+                          <td>{{item.January}}</td>
+                          <td>{{item.February}}</td>
+                          <td>{{item.March}}</td>
+                          <td>{{item.April}}</td>
+                          <td>{{item.May}}</td>
+                          <td>{{item.June}}</td>
+                          <td>{{item.July}}</td>
+                          <td>{{item.August}}</td>
+                          <td>{{item.September}}</td>
+                          <td>{{item.October}}</td>
+                          <td>{{item.November}}</td>
+                          <td>{{item.December}}</td>
+                        </tr>
                   </tbody>
                 </table>
 
@@ -149,31 +169,21 @@
                     </th>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Fuel Total Cost</td>
-
-                      <td>-</td>
-                    </tr>
-                    <tr>
-                      <td>Mobil Oil Total Cost</td>
-                      <td>-</td>
-                    </tr>
-                    <tr>
-                      <td>Spare Parts Total Cost</td>
-                      <td>-</td>
-                    </tr>
-                    <tr>
-                      <td>Services & Maintenance Total Cost</td>
-                      <td>-</td>
-                    </tr>
-                    <tr>
-                      <td>Vehicle Starting Cost</td>
-                      <td>-</td>
-                    </tr>
-                    <tr>
-                      <td>Total Cost</td>
-                      <td>-</td>
-                    </tr>
+                      <tr *ngFor="let item of generatorMonthlyBreakdownList.CostAnalysisBreakDownList">
+                          <td>{{item.Header}}</td>
+                          <td>{{item.January}}</td>
+                          <td>{{item.February}}</td>
+                          <td>{{item.March}}</td>
+                          <td>{{item.April}}</td>
+                          <td>{{item.May}}</td>
+                          <td>{{item.June}}</td>
+                          <td>{{item.July}}</td>
+                          <td>{{item.August}}</td>
+                          <td>{{item.September}}</td>
+                          <td>{{item.October}}</td>
+                          <td>{{item.November}}</td>
+                          <td>{{item.December}}</td>
+                        </tr>
                   </tbody>
                 </table>
 

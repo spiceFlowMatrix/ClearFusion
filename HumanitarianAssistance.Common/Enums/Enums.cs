@@ -329,7 +329,5 @@ namespace HumanitarianAssistance.Common.Enums
         SparePartsTotalCost=102,
         [Display(Name="Service And Maintenance Total Cost")]
         ServiceAndMaintenanceTotalCost=103,
-        [Display(Name="Total Cost")]
-        TotalCost=104
     }
 }
