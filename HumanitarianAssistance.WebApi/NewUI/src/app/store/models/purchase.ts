@@ -185,26 +185,13 @@ export interface IPurchaseItemDataSource {
   PurchaseName: string;
 }
 
-// export interface IStorePurchasePdfFlags {
-//   PurchaseId: boolean;
-//   ItemCode: boolean;
-//   ItemCodeDescription: boolean;
-//   MasterInventoryCode: boolean;
-//   Description: boolean;
-//   OfficeCode: boolean;
-//   BudgetLineName: boolean;
-//   InvoiceDate: boolean;
-//   ItemName: boolean;
-//   ProjectId: boolean;
-//   ProjectName: boolean;
-//   OriginalCost: boolean;
-//   DepreciatedCost: boolean;
-//   PurchasedQuantity: boolean;
-//   PurchaseDate: boolean;
-//   CurrencyName: boolean;
-//   ReceiptDate: boolean;
-//   DepreciationRate: boolean;
-//   ReceivedFromEmployee: boolean;
-//   ReceivedFromLocationName: boolean;
-//   Status: boolean;
-// }
+export interface IMonthlyBreakDown {
+  StartingMileage: number;
+  IncurredMileage: number;
+  StandardMobilOilConsumptionRate: number;
+  StandardFuelConsumptionRate: number;
+  StartingCost: number;
+  UsageAnalysisBreakDownList: any[];
+  CostAnalysisBreakDownList: any[];
+
+}

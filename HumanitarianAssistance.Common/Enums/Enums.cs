@@ -312,21 +312,24 @@ namespace HumanitarianAssistance.Common.Enums
         RemainingKmForMobilOilChange=6,
         [Display(Name="Mobil Oil Change Rotation")]
         MobilOilChangeRotation=7,
-        [Display(Name="Fuel Total Cost")]
-        FuelTotalCost=8,
-         [Display(Name="Mobil Oil Total Cost")]
-        MobilOilTotalCost=9,
-        [Display(Name="Spare Parts Total Cost")]
-        SparePartsTotalCost=10,
-        [Display(Name="Service And Maintenance Total Cost")]
-        ServiceAndMaintenanceTotalCost=11,
-        [Display(Name="Total Cost")]
-        TotalCost=12,
         [Display(Name="Current Usage")]
-        CurrentUsage=13,
+        CurrentUsage=8,
         [Display(Name="Actual Mobil Oil Consumption Rate")]
-        ActualMobilConsumptionRate=14,
+        ActualMobilConsumptionRate=9,
         [Display(Name="Mobil Oil Consumption Difference")]
-        MobilOilConsumptionDifference=15,
+        MobilOilConsumptionDifference=10,
+    }
+
+    public enum CostAnalysis{
+        [Display(Name="Fuel Total Cost")]
+        FuelTotalCost=100,
+         [Display(Name="Mobil Oil Total Cost")]
+        MobilOilTotalCost=101,
+        [Display(Name="Spare Parts Total Cost")]
+        SparePartsTotalCost=102,
+        [Display(Name="Service And Maintenance Total Cost")]
+        ServiceAndMaintenanceTotalCost=103,
+        [Display(Name="Total Cost")]
+        TotalCost=104
     }
 }

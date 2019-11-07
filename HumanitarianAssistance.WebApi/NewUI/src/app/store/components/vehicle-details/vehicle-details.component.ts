@@ -7,7 +7,7 @@ import { PurchaseService } from '../../services/purchase.service';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { FormControl } from '@angular/forms';
-import { IDropDownModel } from '../../models/purchase';
+import { IDropDownModel, IMonthlyBreakDown } from '../../models/purchase';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
@@ -22,7 +22,7 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
   date = new FormControl();
   monthlyBreakdownYear = new FormControl();
   monthlyBreakdownYearList$: Observable<IDropDownModel[]>;
-  vehicleMonthlyBreakdownList: any;
+  vehicleMonthlyBreakdownList: IMonthlyBreakDown;
 
   // screen
   screenHeight: any;
@@ -79,7 +79,9 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
       IncurredMileage: null,
       StandardMobilOilConsumptionRate: null,
       StandardFuelConsumptionRate: null,
-      StartingCost: null
+      StartingCost: null,
+      CostAnalysisBreakDownList: [],
+      UsageAnalysisBreakDownList: []
     };
   }
 
@@ -156,12 +158,15 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
     this.purchaseService.getVehicleMonthlyBreakdown(data)
       .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
+          debugger;
           this.vehicleMonthlyBreakdownList = {
             StartingMileage: x.StartingMileage,
             IncurredMileage: x.IncurredMileage,
             StandardMobilOilConsumptionRate: x.StandardMobilOilConsumptionRate,
             StandardFuelConsumptionRate: x.StandardFuelConsumptionRate,
-            StartingCost: x.StartingCost
+            StartingCost: x.StartingCost,
+            CostAnalysisBreakDownList: x.CostAnalysisBreakDownList,
+            UsageAnalysisBreakDownList: x.UsageAnalysisBreakDownList
           };
         });
   }

@@ -100,8 +100,20 @@
                 </th>
               </thead>
               <tbody>
-                <tr>
-
+                <tr *ngFor="let item of vehicleMonthlyBreakdownList.UsageAnalysisBreakDownList">
+                  <td>{{item.Header}}</td>
+                  <td>{{item.January}}</td>
+                  <td>{{item.February}}</td>
+                  <td>{{item.March}}</td>
+                  <td>{{item.April}}</td>
+                  <td>{{item.May}}</td>
+                  <td>{{item.June}}</td>
+                  <td>{{item.July}}</td>
+                  <td>{{item.August}}</td>
+                  <td>{{item.September}}</td>
+                  <td>{{item.October}}</td>
+                  <td>{{item.November}}</td>
+                  <td>{{item.December}}</td>
                 </tr>
               </tbody>
             </table>
@@ -149,31 +161,21 @@
                 </th>
               </thead>
               <tbody>
-                <tr>
-                  <td>Fuel Total Cost</td>
-
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>Mobil Oil Total Cost</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>Spare Parts Total Cost</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>Services & Maintenance Total Cost</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>Vehicle Starting Cost</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>Total Cost</td>
-                  <td>-</td>
-                </tr>
+                  <tr *ngFor="let item of vehicleMonthlyBreakdownList.CostAnalysisBreakDownList">
+                      <td>{{item.Header}}</td>
+                      <td>{{item.January}}</td>
+                      <td>{{item.February}}</td>
+                      <td>{{item.March}}</td>
+                      <td>{{item.April}}</td>
+                      <td>{{item.May}}</td>
+                      <td>{{item.June}}</td>
+                      <td>{{item.July}}</td>
+                      <td>{{item.August}}</td>
+                      <td>{{item.September}}</td>
+                      <td>{{item.October}}</td>
+                      <td>{{item.November}}</td>
+                      <td>{{item.December}}</td>
+                    </tr>
               </tbody>
             </table>
 
