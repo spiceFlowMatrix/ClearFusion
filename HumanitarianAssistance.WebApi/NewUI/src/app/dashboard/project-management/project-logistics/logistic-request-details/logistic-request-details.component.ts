@@ -9,6 +9,7 @@ import { RequestDetailComponent } from '../../project-hiring/request-detail/requ
 import { map } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { LogisticRequestStatus } from 'src/app/shared/enum';
 
 
 @Component({
@@ -235,7 +236,13 @@ export class LogisticRequestDetailsComponent implements OnInit {
     if (this.submitPurchaseItems.length === 0) {
       this.toastr.warning('Submit Purchase items first!');
     } else {
-
+      const requestItems = this.submitPurchaseItems.map(function(val) {
+        return val.Id;
+      });
+      const model = {
+        Id: requestItems,
+        Status : LogisticRequestStatus['Complete Purchase']
+      };
     }
   }
 

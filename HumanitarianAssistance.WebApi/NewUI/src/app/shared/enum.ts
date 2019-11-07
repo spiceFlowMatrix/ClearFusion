@@ -575,5 +575,8 @@ export enum DocumentFileTypes {
 export enum LogisticRequestStatus {
   'New Request' = 1,
   'Cancelled' = 2,
-  'Issue Purchase Order' = 3
+  'Issue Purchase Order' = 3,
+  'Complete Purchase' = 4,
+  'Control Approved'= 5,
+  'Control Rejected'= 6
 }
