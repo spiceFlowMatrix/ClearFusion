@@ -180,12 +180,12 @@ export class ProjectListService {
       Text: 'Project Indicators',
       Link: 'project-indicators'
     },
-    {
-      Id: 10,
-      PageId: projectPagesMaster.ProjectBudgetLine,
-      Text: 'Logistics',
-      Link: 'logistic-requests'
-    }
+    // {
+    //   Id: 10,
+    //   PageId: projectPagesMaster.ProjectBudgetLine,
+    //   Text: 'Logistics',
+    //   Link: 'logistic-requests'
+    // }
   ];
 
   constructor(
