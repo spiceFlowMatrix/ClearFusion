@@ -580,3 +580,12 @@ export enum LogisticRequestStatus {
   'Control Approved'= 5,
   'Control Rejected'= 6
 }
+
+export enum LogisticComparativeStatus {
+  'Pending' = 1,
+  'Cancelled' = 2,
+  'Issued' = 3,
+  'Statement Submitted' = 4,
+  'Approve Statement' = 5,
+  'Reject Statement' = 6,
+}

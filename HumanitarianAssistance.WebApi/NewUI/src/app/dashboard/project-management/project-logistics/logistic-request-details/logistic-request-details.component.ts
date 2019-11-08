@@ -30,7 +30,7 @@ export class LogisticRequestDetailsComponent implements OnInit {
   requestedItemsData$: Observable<IItemList[]>;
   requestId;
   requestItemList: any[];
-  requestDetail: RequestDetail = {RequestName: '', ProjectId: '', Status: 0, TotalCost: '', RequestId: ''};
+  requestDetail: RequestDetail = {RequestName: '', ProjectId: '', Status: 0, TotalCost: '', RequestId: '' , ComparativeStatus: 0};
   actions: TableActionsModel;
   totalCost = 0;
   unavailableItemCost = 0;
@@ -97,6 +97,7 @@ export class LogisticRequestDetailsComponent implements OnInit {
         this.requestDetail.RequestName = res.data.logisticRequest.RequestName;
         this.requestDetail.Status = res.data.logisticRequest.Status;
         this.requestDetail.TotalCost = res.data.logisticRequest.TotalCost;
+        this.requestDetail.ComparativeStatus = 1;
       }
     });
   }
@@ -264,6 +265,7 @@ interface RequestDetail {
   RequestName;
   Status;
   TotalCost;
+  ComparativeStatus;
 }
 
 interface IItemList {
