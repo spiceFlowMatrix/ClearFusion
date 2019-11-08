@@ -19,6 +19,8 @@ import {
   MatSelectModule,
   MatDatepickerModule,
   MatButtonModule,
+  MatTableModule,
+  MatCheckboxModule,
 } from '@angular/material';
 import { RequestDetailComponent } from './request-detail/request-detail.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -46,7 +48,9 @@ import { AddNewCandidateComponent } from './add-new-candidate/add-new-candidate.
     MatFormFieldModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTableModule,
+    MatCheckboxModule
   ],
   exports: [HiringRequestsComponent, JobDetailComponent],
   entryComponents: [

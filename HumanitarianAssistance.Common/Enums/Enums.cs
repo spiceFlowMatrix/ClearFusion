@@ -329,4 +329,13 @@ namespace HumanitarianAssistance.Common.Enums
         [Display(Name="Service And Maintenance Total Cost")]
         ServiceAndMaintenanceTotalCost=103,
     }
+
+
+    public enum HiringRequestStatus
+    {
+        Open = 1,
+        InProgress=2,
+        Completed = 3,
+        Closed = 4
+    }
 }

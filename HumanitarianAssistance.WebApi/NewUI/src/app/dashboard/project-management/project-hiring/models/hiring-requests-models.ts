@@ -1,5 +1,5 @@
 export interface HiringList {
-  HiringRequestId?: string;
+  HiringRequestId?: number;
   JobCode?: string;
   JobGrade?: string;
   Position?: string;
@@ -16,6 +16,8 @@ export interface IFilterModel {
   pageSize?: number;
   ProjectId?: number;
   TotalCount?: number;
+  IsOpenFlagId?: number;
+  IsInProgress?: number;
 }
 export interface HiringRequestDetailList {
   HiringRequestId?: string;
@@ -81,4 +83,8 @@ export interface IHiringRequestModel {
   SpecificDutiesAndResponsibilities?: string;
   KnowledgeAndSkillsRequired?: string;
   SubmissionGuidelines?: string;
+}
+export interface CompleteHiringRequestModel {
+  HiringRequestId: number[];
+  ProjectId: number;
 }

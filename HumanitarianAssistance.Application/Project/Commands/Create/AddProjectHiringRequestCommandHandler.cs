@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Domain.Entities.Project;
@@ -49,6 +50,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                     MinimumEducationLevel = request.MinEducationLevel,
                     Experience = request.Experience,
                     Organization = request.Organization,
+                    HiringRequestStatus = (int)HiringRequestStatus.Open
                 };
                 await _dbContext.ProjectHiringRequestDetail.AddAsync (hiringRequestDeatil);
                 await _dbContext.SaveChangesAsync ();
