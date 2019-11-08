@@ -19,6 +19,8 @@ export interface SourceCode {
 }
 export interface InventoryModel {
     Id?: number;
+    InventoryId?:number;
+    ItemGroupId?:number;
     Code?: string;
     Name?: string;
     Description?: string;
@@ -40,6 +42,7 @@ export interface ItemGroup {
     Name?: string;
     addText?: string;
     editText?: string;
+    Description?: string;
     // addText:"add item";
     // editText:"edit item category";
 
@@ -48,10 +51,41 @@ export interface InventoryItem {
     Code?: string;
     ItemGroupId?: number;
     Id?: number;
-    ItemInventory?: number;
+    InventoryId?: number;
     Name?: string;
     addText?: string;
     editText?: string;
+    Description?: string;
     // addText:"";
     // editText:"edit item ";
-} 
+}
+
+
+export class MasterInventoryModel {
+    InventoryId?: any;
+    InventoryCode?: any;
+    InventoryName?: any;
+    InventoryDescription?: any;
+    InventoryDebitAccount?: any;
+    InventoryCreditAccount?: any;
+    AssetType?: any;
+}
+
+export class MasterItemGroupModel {
+    ItemGroupId?: any;
+    ItemGroupName?: any;
+    ItemGroupCode?: any;
+    Description?: any;
+    InventoryId?: any;
+}
+
+export class MasterInventoryItemModel {
+    ItemId?: any;
+    ItemName?: any;
+    ItemCode?: any;
+    Description?: any;
+    ItemType?: any;
+    ItemGroupId?: any;
+    ItemInventory?:any;
+    // Voucher: any;
+}

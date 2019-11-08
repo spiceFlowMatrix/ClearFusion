@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { GlobalService } from '../../shared/services/global-services.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
-import { UnitType, SourceCode } from '../models/store-configuration';
+import { UnitType, SourceCode, MasterInventoryModel, MasterItemGroupModel, MasterInventoryItemModel } from '../models/store-configuration';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material';
@@ -66,6 +66,41 @@ export class ConfigService {
   getInventories(assettype) {
     return this.globalService.getList(this.appurl.getApiUrl() + GLOBAL.API_GetInventories + '?AssetType=' + assettype)
   }
+  getAllAccounts() {
+    return this.globalService.getList(this.appurl.getApiUrl() + GLOBAL.API_Accounting_GetAccountDetails);
+  }
+  getGroupItemCode(inventoryId, assetType) {
+    return this.globalService.getList(this.appurl.getApiUrl() + GLOBAL.API_Store_GetStoreGroupItemCode
+      + '?Id=' + inventoryId + '&TypeId=' + assetType)
+  }
+  getItemCode(groupId, assetType) {
+    return this.globalService.getList(this.appurl.getApiUrl() + GLOBAL.API_Store_GetInventoryItemCode
+      + '?Id=' + groupId + '&TypeId=' + assetType)
+  }
+  getInventoryCode(id: number) {
+    return this.globalService.getList(this.appurl.getApiUrl() + GLOBAL.API_Store_GetInventoryCode + '?Id=' + id)
+  }
+  AddMasterInventory(data: MasterInventoryModel) {
+    return this.globalService.post(this.appurl.getApiUrl() + GLOBAL.API_Store_AddInventory, data);
+  }
+  AddItemGroup(data: MasterItemGroupModel) {
+    return this.globalService.post(this.appurl.getApiUrl() + GLOBAL.API_Store_AddStoreItemGroup, data);
+  }
+  AddItem(data: MasterInventoryItemModel) {
+    return this.globalService.post(this.appurl.getApiUrl() + GLOBAL.API_Store_AddInventoryItems, data);
+
+  }
+  EditMasterInventory(data: MasterInventoryModel) {
+    return this.globalService.post(this.appurl.getApiUrl() + GLOBAL.API_Store_EditInventory, data);
+  }
+  EditItemGroup(data: MasterItemGroupModel) {
+    return this.globalService.post(this.appurl.getApiUrl() + GLOBAL.API_Store_EditStoreItemGroup, data);
+  }
+  EditItem(data: MasterInventoryItemModel) {
+    return this.globalService.post(this.appurl.getApiUrl() + GLOBAL.API_Store_EditInventoryItems, data);
+
+  }
+
 
   // common methods
   openDeleteDialog() {
@@ -87,4 +122,5 @@ export class ConfigService {
 
     return dialogRef.componentInstance.confirmDelete
   }
+
 }

@@ -26,6 +26,9 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                 ProjectLogisticRequests obj= new ProjectLogisticRequests{
                     ProjectId = request.ProjectId,
                     RequestName = request.RequestName,
+                    CurrencyId = request.CurrencyId,
+                    BudgetLineId = request.BudgetLineId,
+                    OfficeId = request.OfficeId,
                     Status = (int)LogisticRequestStatus.NewRequest,
                     TotalCost = 0,
                     CreatedDate = request.CreatedDate,
