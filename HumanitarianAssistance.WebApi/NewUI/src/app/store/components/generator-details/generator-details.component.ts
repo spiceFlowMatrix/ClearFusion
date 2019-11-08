@@ -143,6 +143,7 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(result => {
       this.getGeneratorDetailById();
+      this.getGeneratorMonthlyBreakdownData();
     });
   }
 

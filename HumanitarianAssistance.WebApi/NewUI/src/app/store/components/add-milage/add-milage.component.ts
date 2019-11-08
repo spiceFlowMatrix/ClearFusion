@@ -4,6 +4,7 @@ import { PurchaseService } from '../../services/purchase.service';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
 
 @Component({
   selector: 'app-add-milage',
@@ -40,6 +41,7 @@ export class AddMilageComponent implements OnInit {
   //#endregion
   addMilage() {
     if (this.mileageForm.valid) {
+      this.mileageForm.value.Month = StaticUtilities.setLocalDate(this.mileageForm.value.Month);
       this.isAddMileageFormSubmitted = true;
       this.purchaseService.addVehicleMileage(this.mileageForm.value)
         .subscribe(x => {

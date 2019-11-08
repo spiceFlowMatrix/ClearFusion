@@ -110,6 +110,7 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       this.getVehicleDetailById();
+      this.getVehicleMonthlyBreakdownData();
     });
   }
 
