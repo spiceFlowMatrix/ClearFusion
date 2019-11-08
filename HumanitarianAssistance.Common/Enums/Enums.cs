@@ -328,4 +328,13 @@ namespace HumanitarianAssistance.Common.Enums
         [Display(Name="Mobil Oil Consumption Difference")]
         MobilOilConsumptionDifference=15,
     }
+
+
+    public enum HiringRequestStatus
+    {
+        Open = 1,
+        InProgress=2,
+        Completed = 3,
+        Closed = 4
+    }
 }

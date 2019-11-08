@@ -99,15 +99,22 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(command);
         }
         [HttpPost]
-        public async Task<ApiResponse> CompleteHiringRequest([FromBody]long hiringRequestId)
+        public async Task<ApiResponse> CompleteHiringRequest([FromBody]CompleteHiringRequestCommand command)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            return await _mediator.Send(new CompleteHiringRequestCommand
-            {
-                hiringRequestId = hiringRequestId,
-                ModifiedById = userId,
-                ModifiedDate = DateTime.UtcNow
-            });
+            command.ModifiedById = userId;
+            command.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+            
+        }
+         [HttpPost]
+        public async Task<ApiResponse> ClosedHiringRequest([FromBody]ClosedHiringRequestCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.ModifiedById = userId;
+            command.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+            
         }
         [HttpPost]
         public async Task<ApiResponse> DeleteCandidatDetail([FromBody]DeleteCandidateDetailCommand command)

@@ -17,6 +17,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public double? PayRate { get; set; }
         public string Status { get; set; }
         public long? HiringRequestId { get; set; }
+        public int HiringRequestStatus { get; set; }
 
     }
 }

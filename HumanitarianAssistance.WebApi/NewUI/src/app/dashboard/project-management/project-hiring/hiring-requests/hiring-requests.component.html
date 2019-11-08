@@ -1,8 +1,8 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
   <span class="action_header">Hiring Requests
     <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewHiringRequest()"></hum-button>
-    <hum-button [type]="'save'" [text]="'complete request'" (click)= "onComplteRequest()"></hum-button>
-    <hum-button [type]="'cancel'" [text]="'close request'"></hum-button>
+    <hum-button *ngIf="filterModel.IsOpenFlagId == 1 && filterModel.IsInProgress == 2" [type]="'save'" [text]="'complete request'" (click)= "onComplteRequest()"></hum-button>
+    <hum-button *ngIf="filterModel.IsOpenFlagId == 1 && filterModel.IsInProgress == 2" [type]="'cancel'" [text]="'close request'" (click)= "onCloseRequest()" ></hum-button>
   </span>
 
   <div class="action_section">
@@ -20,14 +20,14 @@
   </mat-tab-group>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-    <ng-container matColumnDef="select">
+    <ng-container  matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
-        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+        <mat-checkbox *ngIf="selectCheckBoxFlag == false" (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
           [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
         </mat-checkbox>
       </th>
       <td mat-cell *matCellDef="let row">
-        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+        <mat-checkbox *ngIf="selectCheckBoxFlag == false" (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
           [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
         </mat-checkbox>
       </td>
@@ -35,7 +35,7 @@
 
     <ng-container matColumnDef="HiringRequestId">
       <th mat-header-cell *matHeaderCellDef> Hiring Request Id </th>
-      <td mat-cell *matCellDef="let element"> {{element.HiringRequestId}} </td>
+      <td mat-cell *matCellDef="let element" (click)="requestDetail(element)"> {{element.HiringRequestId}} </td>
     </ng-container>
 
     <ng-container matColumnDef="JobCode">

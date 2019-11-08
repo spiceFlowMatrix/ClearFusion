@@ -11,5 +11,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
         public int? pageSize { get; set; }
         public int? TotalCount { get; set; }  
         public string FilterValue { get; set; }  
+        public int IsInProgress { get; set; }
+        public int IsOpenFlagId { get; set; }
     }
 }

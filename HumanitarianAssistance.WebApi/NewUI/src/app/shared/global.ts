@@ -432,6 +432,7 @@ export class GLOBAL {
   public static API_HiringRequest_EditHiringRequestCandidate = 'HiringRequest/EditHiringRequestCandidate';
   public static API_HiringRequest_HiringRequestSelectCandidate = 'HiringRequest/HiringRequestSelectCandidate';
   public static API_HiringRequest_CompleteHiringRequest = 'HiringRequest/CompleteHiringRequest';
+  public static API_HiringRequest_ClosedHiringRequest = 'HiringRequest/ClosedHiringRequest';
   public static API_Code_GetAttendanceGroupst = 'Code/GetAttendanceGroups';
   public static API_HREmployee_GetAllEmployeeContractType = 'Code/GetAllEmployeeContractType';
   public static API_HREmployee_EditEmployeeProfessionalDetail = 'EmployeeDetail/EditEmployeeProfessionalDetail';
