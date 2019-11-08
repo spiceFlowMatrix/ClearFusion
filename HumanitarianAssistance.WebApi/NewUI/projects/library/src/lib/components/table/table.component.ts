@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, ChangeDetectionStrategy, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, ChangeDetectionStrategy, EventEmitter, Output, AfterViewInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { IDeleteProcurementModel } from 'src/app/store/models/purchase';
 import { TableActionsModel } from '../../models/table-actions-model';
@@ -10,13 +10,13 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./table.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableComponent implements OnInit, OnChanges {
+export class TableComponent implements OnInit, OnChanges, AfterViewInit {
 
   @Input() headers: Observable<string[]>;
   @Input() subHeaders: Observable<string[]>;
   @Input() items: Observable<Array<Object>>;
   @Input() subTitle: string;
-  @Input() actions: TableActionsModel
+  @Input() actions: TableActionsModel;
   @Input() hideColums$: Observable<{ headers: string[], items: string[] }>
 
   @Output() actionClick = new EventEmitter<any>();
@@ -68,15 +68,14 @@ export class TableComponent implements OnInit, OnChanges {
 
       });
     }
-    if (this.hideColums$) {
-
+    if (this.hideColums$ && this.itemHeaders) {
       this.hideColums$.subscribe(res => {
         this.itemHeaders.subscribe(headers => {
           this.itemHeaders = of(headers.filter(r => res.items.includes(r)));
         })
         this.headers.subscribe(headers => {
           this.headers = of(res.headers);
-         
+
         })
       })
     }
@@ -100,6 +99,21 @@ export class TableComponent implements OnInit, OnChanges {
 
     this.subActionClick.emit(model);
   }
+
+  ngAfterViewInit() {
+    if (this.hideColums$ && this.itemHeaders) {
+      this.hideColums$.subscribe(res => {
+        this.itemHeaders.subscribe(headers => {
+          this.itemHeaders = of(headers.filter(r => res.items.includes(r)));
+        })
+        this.headers.subscribe(headers => {
+          this.headers = of(res.headers);
+
+        })
+      })
+    }
+
+     }
 
   switchSubList(i, event) {
     if (this.subItems.length > 0) this.isShowSubList[i] = !this.isShowSubList[i];
