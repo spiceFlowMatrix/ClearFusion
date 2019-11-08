@@ -92,7 +92,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                                                 .Select(a => new ActiivtyListModel
                                                                                 {
                                                                                     ActivityCode = a.ActivityId,
-                                                                                    MainActivity = a.ActivityName,
+                                                                                    MainActivity = a.ActivityDescription ,// Note : activity name = description
                                                                                     ActualStartDate = a.ActualStartDate == null ? "" : a.ActualStartDate.Value.ToShortDateString(),
                                                                                     ActualEndDate = a.ActualEndDate == null ? "" : a.ActualEndDate.Value.ToShortDateString(),
 
@@ -104,7 +104,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                                                             NegativePoints = x.NegativePoints,
                                                                                             PositivePoints = x.PostivePoints,
                                                                                             ProjectId = x.ProjectId,
-                                                                                            DisplayMonitoringDate = x.MonitoringDate == null ? "": x.MonitoringDate.Value.ToShortDateString(),
+                                                                                            DisplayMonitoringDate = x.MonitoringDate == null ? "" : x.MonitoringDate.Value.ToShortDateString(),
                                                                                             Recommendations = x.Recommendations,
                                                                                             Remarks = x.Remarks,
                                                                                             ProjectMonitoringReviewId = x.ProjectMonitoringReviewId,
@@ -157,17 +157,21 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
 
                 //  Note : for rating 
-                //  if (projectMonitoring.Any())
-                //   {
-                //       foreach (var item in projectMonitoring)
-                //       {
-                //           if (item.MonitoringReviewModel.Any())
-                //           {
-                //               item.MonitoringReviewModel.ForEach(x => x.TotalScore = x.IndicatorQuestions.Sum(y => y.Score));
-                //               item.Rating = Math.Round(((float)item.MonitoringReviewModel.Sum(y => y.TotalScore.Value) / (float)item.MonitoringReviewModel.Count), 2);
-                //           }
-                //       }
-                //   }
+                if (activityDetail.ActiivtyListModel.Any())
+                {
+                    foreach (var item in activityDetail.ActiivtyListModel)
+                    {
+                        foreach (var i in item.ProjectMonitoringViewModel)
+                        {
+                            if (i.MonitoringReviewModel.Any())
+                            {
+                                i.MonitoringReviewModel.ForEach(x => x.TotalScore = x.IndicatorQuestions.Sum(y => y.Score));
+                                i.Rating = Math.Round(((float)i.MonitoringReviewModel.Sum(y => y.TotalScore.Value) / (float)i.MonitoringReviewModel.Count), 2);
+                            }
+
+                        }
+                    }
+                }
 
 
                 return await _pdfExportService.ExportToPdf(activityDetail, "Pages/PdfTemplates/ProjectActivityReport.cshtml");

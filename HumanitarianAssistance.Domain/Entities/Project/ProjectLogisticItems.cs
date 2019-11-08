@@ -16,6 +16,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public long Quantity { get; set; }
         public double EstimatedCost { get; set; }
         public long ItemId { get; set; }
+        public bool PurchaseSubmitted { get; set; }
         public long LogisticRequestsId { get; set; }
         [ForeignKey("LogisticRequestsId")]
         public virtual ProjectLogisticRequests ProjectLogisticRequests { get; set; }

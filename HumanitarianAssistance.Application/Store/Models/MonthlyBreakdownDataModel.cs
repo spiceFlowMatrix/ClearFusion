@@ -6,18 +6,20 @@ namespace HumanitarianAssistance.Application.Store.Models
     {
         public MonthlyBreakdownDataModel()
         {
-            MonthlyBreakDownList = new List<MonthlyBreakDown>();
+            MonthlyBreakDownList = new List<MonthlyBreakDownData>();
         }
 
         public double IncurredMileage { get; set; }
         public double StartingMileage { get; set; }
+        public double IncurredUsage{ get; set; }
+        public double StartingUsage { get; set; }
         public double StandardFuelConsumptionRate { get; set; }
         public double StandardMobilOilConsumptionRate { get; set; }
         public double StartingCost { get; set; }
-        public List<MonthlyBreakDown> MonthlyBreakDownList { get; set; }
+        public List<MonthlyBreakDownData> MonthlyBreakDownList { get; set; }
     }
 
-    public class MonthlyBreakDown
+    public class MonthlyBreakDownData
     {
         public string Header { get; set; }
         public double January { get; set; }

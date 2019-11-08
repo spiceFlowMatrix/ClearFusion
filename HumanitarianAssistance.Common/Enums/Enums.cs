@@ -1,4 +1,6 @@
-﻿namespace HumanitarianAssistance.Common.Enums
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HumanitarianAssistance.Common.Enums
 {
     public enum SwaggerGrouping
     {
@@ -263,10 +265,9 @@
         NewRequest = 1,
         Cancelled = 2,
         IssuePurchaseOrder = 3,
-        Approved = 4,
-        CompletePurchase = 5,
-        ControlApproved = 6,
-        ControlRejected = 7
+        CompletePurchase = 4,
+        ControlApproved = 5,
+        ControlRejected = 6
    }
 
     //#region "StoreItemGroups"
@@ -292,5 +293,39 @@
         October = 10,
         November = 11,
         December = 12
+    }
+
+    public enum UsageType
+    {
+        [Display(Name="Total Fuel Usage")]
+        TotalFuelUsage=1,
+        [Display(Name="Current Mileage")]
+        CurrentMileage=2,
+        [Display(Name="Actual Fuel Consumption Rate")]
+        ActualFuelConsumptionRate=3,
+        [Display(Name="Fuel Consumption Difference")]
+        FuelConsumptionDifference=4,
+        [Display(Name="Total Mobil Oil Usage")]
+        TotalMobilOilUsage=5,
+        [Display(Name="Remaining Km For Mobil Oil Change")]
+        RemainingKmForMobilOilChange=6,
+        [Display(Name="Mobil Oil Change Rotation")]
+        MobilOilChangeRotation=7,
+        [Display(Name="Fuel Total Cost")]
+        FuelTotalCost=8,
+         [Display(Name="Mobil Oil Total Cost")]
+        MobilOilTotalCost=9,
+        [Display(Name="Spare Parts Total Cost")]
+        SparePartsTotalCost=10,
+        [Display(Name="Service And Maintenance Total Cost")]
+        ServiceAndMaintenanceTotalCost=11,
+        [Display(Name="Total Cost")]
+        TotalCost=12,
+        [Display(Name="Current Usage")]
+        CurrentUsage=13,
+        [Display(Name="Actual Mobil Oil Consumption Rate")]
+        ActualMobilConsumptionRate=14,
+        [Display(Name="Mobil Oil Consumption Difference")]
+        MobilOilConsumptionDifference=15,
     }
 }

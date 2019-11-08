@@ -3,12 +3,13 @@ import { of, Observable } from 'rxjs';
 import { TableActionsModel } from 'projects/library/src/lib/models/table-actions-model';
 import { AddLogisticItemsComponent } from '../add-logistic-items/add-logistic-items.component';
 import { MatDialog } from '@angular/material';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LogisticService } from '../logistic.service';
 import { RequestDetailComponent } from '../../project-hiring/request-detail/request-detail.component';
 import { map } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { LogisticRequestStatus } from 'src/app/shared/enum';
 
 
 @Component({
@@ -34,10 +35,13 @@ export class LogisticRequestDetailsComponent implements OnInit {
   totalCost = 0;
   unavailableItemCost = 0;
   availabilityPercentage = 0;
+  submitPurchaseItems: any[] = [];
+
   constructor(private dialog: MatDialog, private routeActive: ActivatedRoute,
     private logisticservice: LogisticService,
     public toastr: ToastrService,
-    private commonLoader: CommonLoaderService) { }
+    private commonLoader: CommonLoaderService,
+    private router: Router) { }
 
   ngOnInit() {
     this.actions = {
@@ -218,6 +222,28 @@ export class LogisticRequestDetailsComponent implements OnInit {
         this.commonLoader.hideLoader();
       }
     });
+  }
+
+  onBackClick() {
+    this.router.navigate(['../../logistic-requests'] , { relativeTo: this.routeActive });
+  }
+
+  selectedItemChange(value) {
+    this.submitPurchaseItems = value;
+  }
+
+  completePurchaseOrder() {
+    if (this.submitPurchaseItems.length === 0) {
+      this.toastr.warning('Submit Purchase items first!');
+    } else {
+      const requestItems = this.submitPurchaseItems.map(function(val) {
+        return val.Id;
+      });
+      const model = {
+        Id: requestItems,
+        Status : LogisticRequestStatus['Complete Purchase']
+      };
+    }
   }
 
 }

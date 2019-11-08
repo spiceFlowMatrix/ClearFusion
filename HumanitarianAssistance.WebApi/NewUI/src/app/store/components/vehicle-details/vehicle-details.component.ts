@@ -7,6 +7,8 @@ import { PurchaseService } from '../../services/purchase.service';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { FormControl } from '@angular/forms';
+import { IDropDownModel } from '../../models/purchase';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
   selector: 'app-vehicle-details',
@@ -18,6 +20,9 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
   vehicleDetailForm: any;
   vehicleId: number;
   date = new FormControl();
+  monthlyBreakdownYear = new FormControl();
+  monthlyBreakdownYearList$: Observable<IDropDownModel[]>;
+  vehicleMonthlyBreakdownList: any;
 
   // screen
   screenHeight: any;
@@ -36,9 +41,10 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit() {
+    this.getScreenSize();
     this.initForm();
     this.getVehicleDetailById();
-    this.getScreenSize();
+    this.getMonthlyBreakDownYears();
   }
 
   initForm() {
@@ -66,6 +72,14 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
       ServiceAndMaintenanceTotalCost: null,
       CurrentMileage: null,
       VehicleStartingCost: null
+    };
+
+    this.vehicleMonthlyBreakdownList = {
+      StartingMileage: null,
+      IncurredMileage: null,
+      StandardMobilOilConsumptionRate: null,
+      StandardFuelConsumptionRate: null,
+      StartingCost: null
     };
   }
 
@@ -127,16 +141,33 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
   }
 
   onTabClick(event) {
-    debugger;
+
+    if (event.index === 1) {
+      this.getVehicleMonthlyBreakdownData();
+    }
+  }
+
+  getVehicleMonthlyBreakdownData() {
     const data = {
       VehicleId: +this.vehicleId,
-      SelectedYear: 2019
+      SelectedYear: this.monthlyBreakdownYear.value
     };
-    if(event.index === 1) {
-      this.purchaseService.getVehicleMonthlyBreakdown(data)
+
+    this.purchaseService.getVehicleMonthlyBreakdown(data)
       .pipe(takeUntil(this.destroyed$))
-        .subscribe(x => {});
-    }
+        .subscribe(x => {
+          this.vehicleMonthlyBreakdownList = {
+            StartingMileage: x.StartingMileage,
+            IncurredMileage: x.IncurredMileage,
+            StandardMobilOilConsumptionRate: x.StandardMobilOilConsumptionRate,
+            StandardFuelConsumptionRate: x.StandardFuelConsumptionRate,
+            StartingCost: x.StartingCost
+          };
+        });
+  }
+
+  getMonthlyBreakdownYear(event) {
+    this.monthlyBreakdownYear = event;
   }
 
   editVehicleDetail() {
@@ -146,6 +177,13 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
   monthSelected(params) {
     this.date.setValue(params);
     this.picker.close();
+  }
+
+  getMonthlyBreakDownYears() {
+    this.monthlyBreakdownYearList$ = this.purchaseService.getMonthlyBreakDownYears();
+    this.monthlyBreakdownYearList$.subscribe(x => {
+      this.monthlyBreakdownYear.setValue(x[0].value);
+    });
   }
 
   ngOnDestroy() {
