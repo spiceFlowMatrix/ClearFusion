@@ -127,4 +127,24 @@ export class LogisticService {
       RequestId
     );
   }
+
+  GetAllCurrencyCodeList() {
+    return this.globalService.getList(
+      this.appurl.getApiUrl() + GLOBAL.API_code_GetAllCurrency
+    );
+  }
+
+  GetAllOfficeCodeList() {
+    return this.globalService.getList(
+      this.appurl.getApiUrl() + GLOBAL.API_code_GetAllOffice
+    );
+  }
+
+  GetBudgetLineListByProjectId(ProjectId) {
+    return this.globalService.getListById(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_BudgetLine_GetProjectBudgetLineDetail,
+        ProjectId
+    );
+  }
 }
