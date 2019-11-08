@@ -475,9 +475,11 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         .subscribe(x => {
           if (x.StatusCode === 200) {
 
-            if (this.uploadedPurchasedFiles.length > 0) {
+            const filteredRecords = this.uploadedPurchasedFiles.filter(z => z.Id === 0);
 
-              for (let i = 0; i < this.uploadedPurchasedFiles.length; i++) {
+            if ( filteredRecords !== undefined) {
+
+              for (let i = 0; i < filteredRecords.length; i++) {
 
                 this.globalSharedService
                   .uploadFile(FileSourceEntityTypes.StorePurchase, x.PurchaseId, this.uploadedPurchasedFiles[i].File[0],
@@ -485,14 +487,12 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
                   .pipe(takeUntil(this.destroyed$))
                   .subscribe(y => {
                     console.log('uploadSuccess', y);
+                    if (i === filteredRecords.length - 1) {
+                      this.isAddPurchaseFormSubmitted = false;
+                      this.toastr.success(x.Message);
+                      this.router.navigate(['store/purchases']);
+                    }
                   });
-
-                if (i === this.uploadedPurchasedFiles.length - 1) {
-                  this.addPurchaseForm.reset();
-                  this.isAddPurchaseFormSubmitted = false;
-                  this.toastr.success(x.Message);
-                  this.router.navigate(['store/purchases']);
-                }
               }
             } else {
               this.addPurchaseForm.reset();
@@ -523,9 +523,10 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
           if (x) {
-            if (this.uploadedPurchasedFiles.length > 0) {
 
-              for (let i = 0; i < this.uploadedPurchasedFiles.length; i++) {
+            const filteredRecords = this.uploadedPurchasedFiles.filter(z => z.Id === 0);
+            if (filteredRecords !== undefined) {
+              for (let i = 0; i < filteredRecords.length; i++) {
 
                 if (this.uploadedPurchasedFiles[i].Id === 0) {
                   this.globalSharedService
@@ -533,23 +534,19 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
                       this.uploadedPurchasedFiles[i].DocumentTypeId)
                     .pipe(takeUntil(this.destroyed$))
                     .subscribe(y => {
-
+                      if (i === filteredRecords.length - 1) {
+                        this.isAddPurchaseFormSubmitted = false;
+                        console.log('uploadsuccess');
+                        this.router.navigate(['store/purchases']);
+                        this.toastr.success('Success');
+                      }
                     });
-
-                  if (i === this.uploadedPurchasedFiles.length - 1) {
-                    this.isAddPurchaseFormSubmitted = false;
-                     this.router.navigate(['store/purchases']);
-                    this.toastr.success('Success');
-                  }
-                } else {
-                   this.router.navigate(['store/purchases']);
-                  this.isAddPurchaseFormSubmitted = false;
                 }
               }
             } else {
               this.toastr.success('Success');
               this.isAddPurchaseFormSubmitted = false;
-               this.router.navigate(['store/purchases']);
+              this.router.navigate(['store/purchases']);
             }
 
           } else if (x.StatusCode === 400) {
@@ -753,7 +750,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
             SignedUrl: y.SignedURL,
           });
         });
-
         // For ngOnChanges on document-upload component
         this.uploadedPurchasedFiles = this.uploadedPurchasedFiles.slice();
 

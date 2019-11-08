@@ -50,7 +50,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                      PurchaseId = x.StoreItemPurchase.PurchaseId,
                                                      OfficeName = x.OfficeId != 0 ? _dbContext.OfficeDetail.FirstOrDefault(y => y.IsDeleted == false && y.OfficeId == x.OfficeId).OfficeName : null,
                                                      GeneratorItemDetail = x.GeneratorItemDetail.Where(y => y.IsDeleted == false && y.CreatedDate.Value.Date.Year == request.SelectedYear).ToList(),
-                                                     GeneratorUsageHourDetail = x.GeneratorUsageHourList.Where(y => y.IsDeleted == false && y.CreatedDate.Value.Date.Year == request.SelectedYear).ToList()
+                                                     GeneratorUsageHourDetail = x.GeneratorUsageHourList.Where(y => y.IsDeleted == false && y.CreatedDate.Value.Date.Year >= (request.SelectedYear - 1)).ToList()
                                                  }).FirstOrDefault();
 
                 if (generator != null)
@@ -427,15 +427,35 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     }
                     else if (usageType == (int)UsageType.RemainingKmForMobilOilChange)
                     {
-                        // // if mobil oil is present for the month
-                        // if (generator.GeneratorItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                        //     x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil))
-                        // {
-                        //     // get sum of all mobil oil of all previous months if any
-                        //     monthData = generator.GeneratorItemDetail.Where(x => x.CreatedDate.Value.Month == month
-                        //                                                 && x.CreatedDate.Value.Year == selectedYear &&
-                        //                                                 x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil).Count();
-                        // }
+                        if (generator.GeneratorItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
+                             x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil))
+                        {
+                            double quantity = generator.GeneratorItemDetail
+                                               .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
+                                                      && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil)
+                                               .Select(x => x.StoreItemPurchase.Quantity)
+                                               .DefaultIfEmpty(0).Sum();
+                            if(quantity != 0)
+                            {
+                                monthData = (100/generator.StandardMobilOilConsumptionRate) * quantity; // (100Km/stdmobiloilconsumptionrate(per hour))* total quantity of purchased mobil oil
+                            }
+                        }
+                        else
+                        {
+                            TotalMobilOilAndMonth data = new TotalMobilOilAndMonth();
+                            data = GetTotalUsageTillMobilOilChange(month, selectedYear, generator);
+
+                            double totalHoursUsed = generator.GeneratorUsageHourDetail
+                                                            .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Year == data.Year && x.Month.Month > data.Month
+                                                            && x.Month.Month<= month)
+                                                            .Select(x => x.Hours).DefaultIfEmpty(0).Sum();
+
+
+                            double totalHoursGeneratorCanBeUsed= Math.Round(generator.StandardMobilOilConsumptionRate* data.TotalMobilOil, 4);
+
+                            monthData= totalHoursGeneratorCanBeUsed- totalHoursUsed;
+
+                        }
                     }
                 }
             }
@@ -445,6 +465,35 @@ namespace HumanitarianAssistance.Application.Store.Queries
             }
 
             return monthData;
+        }
+
+        private TotalMobilOilAndMonth GetTotalUsageTillMobilOilChange(int month, int year, MonthlyBreakDownModel generator)
+        {
+            TotalMobilOilAndMonth mobilOilAndMonth = new TotalMobilOilAndMonth();
+            mobilOilAndMonth.Year= year;
+            mobilOilAndMonth.Month= month;
+            mobilOilAndMonth.TotalMobilOil=0;
+
+            var item = generator.GeneratorItemDetail.FirstOrDefault(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == year &&
+                             x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil);
+
+            if (item == null && month == (int)Month.January && generator.CreatedDate.Date.Year< year)
+            {
+                mobilOilAndMonth = GetTotalUsageTillMobilOilChange((int)Month.December, year - 1, generator);
+            }
+            else if (item == null && generator.CreatedDate.Date.Year== year && month != (int)Month.January)
+            {
+                mobilOilAndMonth = GetTotalUsageTillMobilOilChange(month - 1, year, generator);
+            }
+
+            if (item != null)
+            {
+                mobilOilAndMonth.TotalMobilOil = item.StoreItemPurchase.Quantity;
+                mobilOilAndMonth.Month = month;
+                mobilOilAndMonth.Year = year;
+            }
+
+            return mobilOilAndMonth;
         }
 
         private void SwitchCaseStatement(MonthlyBreakDownModel generator, int selectedYear, int usageType, out UsageAnalysisBreakDown usageBreakDown, out CostAnalysisBreakDown costBreakDown)
