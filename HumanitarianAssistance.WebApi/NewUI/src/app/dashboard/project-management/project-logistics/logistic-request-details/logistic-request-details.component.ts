@@ -236,6 +236,7 @@ export class LogisticRequestDetailsComponent implements OnInit {
     if (this.submitPurchaseItems.length === 0) {
       this.toastr.warning('Submit Purchase items first!');
     } else {
+      this.commonLoader.showLoader();
       const requestItems = this.submitPurchaseItems.map(function(val) {
         return val.Id;
       });
@@ -243,6 +244,16 @@ export class LogisticRequestDetailsComponent implements OnInit {
         Id: requestItems,
         Status : LogisticRequestStatus['Complete Purchase']
       };
+      this.logisticservice.completePurchaseOrder(model).subscribe(res => {
+        if (res.StatusCode === 200) {
+          this.commonLoader.hideLoader();
+          this.getRequestDetails();
+        } else {
+          this.commonLoader.hideLoader();
+          this.toastr.error('Something went wrong!');
+        }
+      });
+      console.log(model);
     }
   }
 
