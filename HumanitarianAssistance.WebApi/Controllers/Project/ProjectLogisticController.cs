@@ -127,6 +127,25 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.RequestId = RequestId; 
             return await _mediator.Send(model);
         }
+
+        [HttpPost]
+        public async Task<ApiResponse> CompletePurchaseOrder([FromBody]CompletePurchaseOrderCommand model)
+        {   
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+        
+        [HttpPost]
+        public async Task<ApiResponse> GetPurchasedItemsList([FromBody]long RequestId)
+        {   
+            GetPurchasedItemsListQuery model = new GetPurchasedItemsListQuery();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.RequestId = RequestId; 
+            return await _mediator.Send(model);
+        }
+        
     }
 
 }

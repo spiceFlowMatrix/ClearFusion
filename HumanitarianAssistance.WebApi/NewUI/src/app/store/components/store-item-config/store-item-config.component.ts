@@ -81,9 +81,10 @@ export class StoreItemConfigComponent implements OnInit {
     })
   }
   openMasterInv(data: MasterInventoryModel) {
+    this.masterInventory = data;
     const dg = this.dialog.open(AddMasterInventoryComponent, {
       width: this.modelWidth,
-      data: { data }
+      data: this.masterInventory
     })
     dg.afterClosed().subscribe(res => {
       this.getAllInventories();
@@ -132,15 +133,51 @@ export class StoreItemConfigComponent implements OnInit {
     switch (level) {
       case 0:
         const inventory = this.inventories.find(x => x.Id == level2ID);
-        console.log(inventory);
+        this.masterInventory.InventoryId = inventory.Id;
+        this.masterInventory.AssetType = inventory.AssetType;
+        this.masterInventory.InventoryCode = inventory.Code;
+        this.masterInventory.InventoryDebitAccount = inventory.InventoryDebitAccount;
+        this.masterInventory.InventoryDescription = inventory.Description;
+        this.masterInventory.InventoryName = inventory.Name;
+        const dg = this.dialog.open(AddMasterInventoryComponent, {
+          width: this.modelWidth,
+          data: this.masterInventory
+        });
+        dg.afterClosed().subscribe(res => {
+          this.getAllInventories();
+        });
         break;
       case 1:
         const itemgroup = this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level2ID);
-        console.log(itemgroup);
+        this.masterInventoryGroup.Description = itemgroup.Description;
+        this.masterInventoryGroup.InventoryId = itemgroup.InventoryId;
+        this.masterInventoryGroup.ItemGroupCode = itemgroup.Code;
+        this.masterInventoryGroup.ItemGroupId = itemgroup.Id;
+        this.masterInventoryGroup.ItemGroupName = itemgroup.Name;
+        const dgGroup = this.dialog.open(AddItemCategoryComponent, {
+          width: this.modelWidth,
+          data: this.masterInventoryGroup
+        })
+        dgGroup.afterClosed().subscribe(res => {
+          this.getAllInventories();
+        })
         break;
       case 2:
         const item = this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level0ID).children.find(x => x.Id = level2ID);
-        console.log(item);
+        this.masterInventoryItem.Description = item.Description;
+        this.masterInventoryItem.ItemCode = item.Code;
+        this.masterInventoryItem.ItemGroupId = item.ItemGroupId;
+        this.masterInventoryItem.ItemId = item.Id;
+        this.masterInventoryItem.ItemInventory = item.InventoryId;
+        this.masterInventoryItem.ItemName = item.Name;
+        this.masterInventoryItem.ItemType = 4;
+        const dgItem = this.dialog.open(AddItemComponent, {
+          width: this.modelWidth,
+          data: this.masterInventoryItem
+        })
+        dgItem.afterClosed().subscribe(res => {
+          this.getAllInventories();
+        })
         break;
 
       default:

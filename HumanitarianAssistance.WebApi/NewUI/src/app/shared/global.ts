@@ -203,7 +203,8 @@ export class GLOBAL {
   public static API_ProjectLogistics_EditLogisticRequestItems = 'ProjectLogistic/EditLogisticRequestItems';
   public static API_ProjectLogistics_CancelLogisticRequest = 'ProjectLogistic/CancelLogisticRequest';
   public static API_ProjectLogistics_IssuePurchaseOrder = 'ProjectLogistic/IssuePurchaseOrder';
-
+  public static API_ProjectLogistics_CompletePurchaseOrder = 'ProjectLogistic/CompletePurchaseOrder';
+  public static API_ProjectLogistics_GetPurchasedItemsList = 'ProjectLogistic/GetPurchasedItemsList';
   // Chart Of Account
   public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';
   public static API_ChartOfAccount_GetAllAccountsByParentId = 'ChartOfAccount/GetAllAccountsByParentId';

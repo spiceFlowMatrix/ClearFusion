@@ -18,13 +18,23 @@ export class AddMasterInventoryComponent implements OnInit {
   masterForm: FormGroup
   masterInventory: MasterInventoryModel = {};
   accounts$: Observable<IDropDownModel[]>;
+  isSaving = false;
   constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<AddMasterInventoryComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: any, private configService: ConfigService, private toastr: ToastrService) { }
+    @Inject(MAT_DIALOG_DATA) private data: MasterInventoryModel, private configService: ConfigService, private toastr: ToastrService) { }
 
   ngOnInit() {
 
     this.createForm();
     this.getAccountCodes();
+    if (this.data.InventoryId) {
+      this.masterForm.controls.name.setValue(this.data.InventoryName);
+      this.masterForm.controls.description.setValue(this.data.InventoryDescription);
+      this.masterForm.controls.accountId.setValue(this.data.InventoryDebitAccount);
+    } else {
+
+    }
+
+
   }
   createForm() {
     this.masterForm = this.fb.group({
@@ -49,18 +59,33 @@ export class AddMasterInventoryComponent implements OnInit {
     this.dialogRef.close();
   }
   submit() {
-    if (this.masterForm.value) {
-      this.masterInventory.AssetType = this.data.data.AssetType;
-      this.masterInventory.InventoryCode = this.data.data.InventoryCode;
+    if (this.masterForm.valid) {
+      this.isSaving = true;
+      this.masterInventory.AssetType = this.data.AssetType;
+      this.masterInventory.InventoryCode = this.data.InventoryCode;
       this.masterInventory.InventoryName = this.masterForm.value.name;
       this.masterInventory.InventoryDescription = this.masterForm.value.description;
       this.masterInventory.InventoryDebitAccount = this.masterForm.value.accountId;
       this.masterInventory.InventoryCreditAccount = null;
-      this.configService.AddMasterInventory(this.masterInventory).subscribe(() => {
-        this.toastr.success('Inventory added');
-        this.cancel()
+      if (this.data.InventoryId) {
+        this.masterInventory.InventoryId = this.data.InventoryId;
+        this.configService.EditMasterInventory(this.masterInventory).subscribe(() => {
+          this.isSaving = false;
+          this.toastr.success('Inventory Updated');
+          this.cancel()
+        }
+        )
+
+      } else {
+        this.configService.AddMasterInventory(this.masterInventory).subscribe(() => {
+          this.isSaving = false;
+          this.toastr.success('Inventory added');
+          this.cancel()
+        }
+        )
+
       }
-      )
+
     }
 
 
