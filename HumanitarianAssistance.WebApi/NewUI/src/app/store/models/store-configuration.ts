@@ -42,6 +42,7 @@ export interface ItemGroup {
     Name?: string;
     addText?: string;
     editText?: string;
+    Description?: string;
     // addText:"add item";
     // editText:"edit item category";
 
@@ -50,10 +51,11 @@ export interface InventoryItem {
     Code?: string;
     ItemGroupId?: number;
     Id?: number;
-    ItemInventory?: number;
+    InventoryId?: number;
     Name?: string;
     addText?: string;
     editText?: string;
+    Description?: string;
     // addText:"";
     // editText:"edit item ";
 }

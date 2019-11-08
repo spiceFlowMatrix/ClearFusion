@@ -90,6 +90,16 @@ export class ConfigService {
     return this.globalService.post(this.appurl.getApiUrl() + GLOBAL.API_Store_AddInventoryItems, data);
 
   }
+  EditMasterInventory(data: MasterInventoryModel) {
+    return this.globalService.post(this.appurl.getApiUrl() + GLOBAL.API_Store_EditInventory, data);
+  }
+  EditItemGroup(data: MasterItemGroupModel) {
+    return this.globalService.post(this.appurl.getApiUrl() + GLOBAL.API_Store_EditStoreItemGroup, data);
+  }
+  EditItem(data: MasterInventoryItemModel) {
+    return this.globalService.post(this.appurl.getApiUrl() + GLOBAL.API_Store_EditInventoryItems, data);
+
+  }
 
 
   // common methods

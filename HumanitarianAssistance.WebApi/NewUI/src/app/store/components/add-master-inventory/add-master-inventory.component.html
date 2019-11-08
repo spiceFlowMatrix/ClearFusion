@@ -1,6 +1,6 @@
 <form [formGroup]="masterForm" (ngSubmit)="submit()">
   <mat-card-title>
-    Add New Master Inventory {{data.data.InventoryCode}}
+    Add New Master Inventory
   </mat-card-title>
   <mat-card-subtitle>
   </mat-card-subtitle>
@@ -17,8 +17,8 @@
             [options]="accounts$" formControlName='accountId' [placeHolder]="'Account'"></lib-hum-dropdown>
   </mat-card-content>
   <mat-card-actions>
-    <hum-button [disabled]="masterForm.invalid" [isSubmit]="true" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
-    <!-- <hum-button *ngIf="isAddPurchaseFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button> -->
+    <hum-button *ngIf="!isSaving" [disabled]="masterForm.invalid" [isSubmit]="true" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
+    <hum-button *ngIf="isSaving" [type]="'loading'" [text]="'Saving....'"></hum-button>
     <hum-button (click)='cancel()' [type]="'cancel'" [text]="'cancel'"></hum-button>
   </mat-card-actions>
 </form>
