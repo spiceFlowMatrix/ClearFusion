@@ -36,7 +36,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                     List<StoreInventoryModelNew> invModelList = inventoryList.Select(v => new StoreInventoryModelNew
                     {
-                        Id = v.StoreItemGroups.Count(),
+                        Id = v.InventoryId,
                         Code = v.InventoryCode,
                         Name = v.InventoryName,
                         Description = v.InventoryDescription,
@@ -53,7 +53,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             children = y.InventoryItems.Where(m => m.IsDeleted == false).Select(s => new StoreInventoryItemModelNew
                             {
                                 Id = s.ItemId,
-                                ItemInventory = s.ItemInventory,
+                                InventoryId = s.ItemInventory,
                                 Name = s.ItemName,
                                 Code = s.ItemCode,
                                 Description = s.Description,

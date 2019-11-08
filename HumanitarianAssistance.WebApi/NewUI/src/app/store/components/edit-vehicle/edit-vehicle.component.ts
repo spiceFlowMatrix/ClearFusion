@@ -50,10 +50,10 @@ export class EditVehicleComponent implements OnInit, OnDestroy {
           EmployeeId: x.EmployeeId,
           StartingMileage: x.StartingMileage,
           IncurredMileage: x.IncurredMileage,
-          MobilOilConsumptionRate: x.MobilOilConsumptionRate,
+          MobilOilConsumptionRate: x.StandardMobilOilConsumptionRate,
           ModelYear: x.ModelYear,
           OfficeId: x.OfficeId,
-          FuelConsumptionRate: x.FuelConsumptionRate
+          FuelConsumptionRate: x.StandardFuelConsumptionRate
         });
       });
   }

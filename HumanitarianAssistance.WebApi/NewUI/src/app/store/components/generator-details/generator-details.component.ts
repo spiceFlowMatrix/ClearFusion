@@ -7,7 +7,7 @@ import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { ReplaySubject, Observable } from 'rxjs';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { FormControl } from '@angular/forms';
-import { IDropDownModel } from '../../models/purchase';
+import { IDropDownModel, IMonthlyBreakDown } from '../../models/purchase';
 
 @Component({
   selector: 'app-generator-details',
@@ -25,9 +25,9 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   generatorDetailForm: any;
   generatorId: number;
 
-  monthlyBreakdownYear = new FormControl();
+  monthlyBreakdownYear: number;
   monthlyBreakdownYearList$: Observable<IDropDownModel[]>;
-  generatorMonthlyBreakdownList: any;
+  generatorMonthlyBreakdownList: IMonthlyBreakDown;
 
   // subject
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
@@ -75,9 +75,13 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
     this.generatorMonthlyBreakdownList = {
       StartingMileage: null,
       IncurredMileage: null,
+      StartingUsage: null,
+      IncurredUsage: null,
       StandardMobilOilConsumptionRate: null,
       StandardFuelConsumptionRate: null,
-      StartingCost: null
+      StartingCost: null,
+      CostAnalysisBreakDownList: [],
+      UsageAnalysisBreakDownList: []
     };
   }
 
@@ -124,7 +128,6 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
           ActualFuelConsumptionRate: x.ActualFuelConsumptionRate,
           ActualMobilOilConsumptionRate: x.ActualMobilOilConsumptionRate
         };
-
         this.commonLoader.hideLoader();
       }, error => {
         this.commonLoader.hideLoader();
@@ -138,6 +141,9 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
         generatorId: this.generatorId
       }
     });
+    dialogRef.afterClosed().subscribe(result => {
+      this.getGeneratorDetailById();
+    });
   }
 
   onTabClick(event) {
@@ -150,7 +156,7 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   getGeneratorMonthlyBreakdownData() {
     const data = {
       GeneratorId: +this.generatorId,
-      SelectedYear: this.monthlyBreakdownYear.value
+      SelectedYear: this.monthlyBreakdownYear
     };
 
     this.purchaseService.getGeneratorMonthlyBreakdown(data)
@@ -161,19 +167,17 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
             IncurredUsage: x.IncurredUsage,
             StandardMobilOilConsumptionRate: x.StandardMobilOilConsumptionRate,
             StandardFuelConsumptionRate: x.StandardFuelConsumptionRate,
-            StartingCost: x.StartingCost
+            StartingCost: x.StartingCost,
+            CostAnalysisBreakDownList: x.CostAnalysisBreakDownList,
+            UsageAnalysisBreakDownList: x.UsageAnalysisBreakDownList
           };
         });
-  }
-
-  getMonthlyBreakdownYear(event) {
-    this.monthlyBreakdownYear = event;
   }
 
   getMonthlyBreakDownYears() {
     this.monthlyBreakdownYearList$ = this.purchaseService.getMonthlyBreakDownYears();
     this.monthlyBreakdownYearList$.subscribe(x => {
-      this.monthlyBreakdownYear.setValue(x[0].value);
+      this.monthlyBreakdownYear = x[0].value;
     });
   }
 
