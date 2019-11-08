@@ -507,7 +507,7 @@ export class HiringRequestsService {
   }
   //#endregion
   //#region edit selected candidate detail
-  IsCompltedeHrDEtail(hiringRequestId: number) {
+  IsCompltedeHrDEtail(hiringRequestId: number[]) {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +

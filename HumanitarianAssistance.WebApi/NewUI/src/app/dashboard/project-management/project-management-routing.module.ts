@@ -23,11 +23,11 @@ import { BudgetLineListingComponent } from './project-list/budgetlines/budget-li
 import { ProjectActivitiesComponent } from './project-list/project-activities/project-activities.component';
 import { PeopleComponent } from './project-list/project-details/people/people.component';
 import { ProjectIndicatorsComponent } from './project-list/project-indicators/project-indicators.component';
-import { HiringRequestsComponent } from './project-list/hiring-requests/hiring-requests.component';
 import { JobDetailComponent } from './project-hiring/job-detail/job-detail.component';
 import { LogisticRequestsComponent } from './project-logistics/logistic-requests/logistic-requests.component';
 import { LogisticRequestDetailsComponent } from './project-logistics/logistic-request-details/logistic-request-details.component';
 import { RequestDetailComponent } from './project-hiring/request-detail/request-detail.component';
+import { HiringRequestsComponent } from './project-hiring/hiring-requests/hiring-requests.component';
 
 const moduleId: number = ApplicationModule.Projects;
 

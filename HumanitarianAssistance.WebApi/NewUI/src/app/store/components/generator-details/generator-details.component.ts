@@ -6,7 +6,7 @@ import { PurchaseService } from '../../services/purchase.service';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { ReplaySubject, Observable } from 'rxjs';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { IDropDownModel } from '../../models/purchase';
 
 @Component({

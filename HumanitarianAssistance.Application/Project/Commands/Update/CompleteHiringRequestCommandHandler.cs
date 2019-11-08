@@ -6,6 +6,7 @@ using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,11 +27,11 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
             try
             {
                 ProjectHiringRequestDetail projectHiringRequestDetail = new ProjectHiringRequestDetail();
-                if (request.hiringRequestId != 0)
+                if (request.HiringRequestId != null)
                 {
-                    projectHiringRequestDetail = await _dbContext.ProjectHiringRequestDetail
-                                                                          .FirstOrDefaultAsync(x => x.IsDeleted == false &&
-                                                                                                    x.HiringRequestId == request.hiringRequestId);
+                    projectHiringRequestDetail =  _dbContext.ProjectHiringRequestDetail
+                                                                          .Where(x => x.IsDeleted == false).FirstOrDefault();
+                                                                                                  
 
                     projectHiringRequestDetail.IsCompleted = true;
                     projectHiringRequestDetail.ModifiedById = request.ModifiedById;

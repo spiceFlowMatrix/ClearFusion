@@ -1,5 +1,5 @@
 export interface HiringList {
-  HiringRequestId?: string;
+  HiringRequestId?: number;
   JobCode?: string;
   JobGrade?: string;
   Position?: string;

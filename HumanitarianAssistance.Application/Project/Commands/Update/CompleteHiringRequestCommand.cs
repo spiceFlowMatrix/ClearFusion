@@ -5,7 +5,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
 {
     public class CompleteHiringRequestCommand : BaseModel, IRequest<ApiResponse>
     {
-        public long hiringRequestId { get; set; }
+        public long[] HiringRequestId { get; set; }
     }
 }
  

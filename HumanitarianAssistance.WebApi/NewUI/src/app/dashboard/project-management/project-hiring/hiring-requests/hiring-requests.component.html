@@ -1,40 +1,99 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
-  <span class="action_header"
-    >Hiring Requests
+  <span class="action_header">Hiring Requests
     <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewHiringRequest()"></hum-button>
-    <hum-button [type]="'add'" [text]="'complete request'"></hum-button>
+    <hum-button [type]="'save'" [text]="'complete request'" (click)= "onComplteRequest()"></hum-button>
     <hum-button [type]="'cancel'" [text]="'close request'"></hum-button>
   </span>
 
   <div class="action_section">
-    <hum-button
-      [type]="'add'"
-      [text]="'add job'"
-      [routerLink]="['../job-detail']"
-    ></hum-button>
+    <hum-button [type]="'add'" [text]="'add job'" [routerLink]="['../job-detail']"></hum-button>
     <!-- <hum-button [type]="'down'" [text]="'jobs'"></hum-button> (rowClick)="requestDetail($event)"  -->
   </div>
 </lib-sub-header-template>
-<mat-divider></mat-divider>
+<div >
+  <mat-divider></mat-divider>
+  <mat-tab-group (selectedTabChange)="onTabClick($event)">
+    <mat-tab label="Active">
+    </mat-tab>
+    <mat-tab label="Archived">
+    </mat-tab>
+  </mat-tab-group>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-<div class="container">
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="HiringRequestId">
+      <th mat-header-cell *matHeaderCellDef> Hiring Request Id </th>
+      <td mat-cell *matCellDef="let element"> {{element.HiringRequestId}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="JobCode">
+      <th mat-header-cell *matHeaderCellDef> Job Code </th>
+      <td mat-cell *matCellDef="let element"> {{element.JobCode}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="JobGrade">
+      <th mat-header-cell *matHeaderCellDef> Job Grade </th>
+      <td mat-cell *matCellDef="let element"> {{element.JobGrade}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Position">
+      <th mat-header-cell *matHeaderCellDef> Position </th>
+      <td mat-cell *matCellDef="let element"> {{element.Position}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="TotalVacancies">
+      <th mat-header-cell *matHeaderCellDef> Total Vacancies </th>
+      <td mat-cell *matCellDef="let element"> {{element.TotalVacancies}} </td>
+    </ng-container>
+    <ng-container matColumnDef="FilledVacancies">
+      <th mat-header-cell *matHeaderCellDef> Filled Vacancies </th>
+      <td mat-cell *matCellDef="let element"> {{element.FilledVacancies}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="PayCurrency">
+      <th mat-header-cell *matHeaderCellDef> Pay Currency </th>
+      <td mat-cell *matCellDef="let element"> {{element.PayCurrency}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="PayRate">
+      <th mat-header-cell *matHeaderCellDef> Pay Rate </th>
+      <td mat-cell *matCellDef="let element"> {{element.PayRate}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Status">
+      <th mat-header-cell *matHeaderCellDef> Status </th>
+      <td mat-cell *matCellDef="let element"> {{element.Status}} </td>
+    </ng-container>
+
+
+
+    <tr mat-header-row *matHeaderRowDef="displayHeaderColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayHeaderColumns;" (click)="selection.toggle(row)">
+    </tr>
+  </table>
+  <mat-paginator [length]="filterModel.TotalCount" [pageSize]="filterModel.pageSize"
+    [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
+  </mat-paginator>
+</div>
+<!-- <div class="container">
   <div class="row">
     <div class="col-md-12">
-      <!-- <app-purchase-filters (purchaseFilterSelected)="onpurchaseFilterSelected($event)"></app-purchase-filters> -->
-      <!-- <mat-divider></mat-divider> -->
-
-      <hum-table
-        [headers]="hiringListHeaders$"
-        [items]="hiringList$"
-        (rowClick)="requestDetail($event)"
-      ></hum-table>
-      <mat-paginator
-        [length]="filterModel.TotalCount"
-        [pageSize]="filterModel.pageSize"
-        [pageSizeOptions]="[10, 5, 25, 100]"
-        (page)="pageEvent($event)"
-      >
+      <hum-table [headers]="hiringListHeaders$" [items]="hiringList$" (rowClick)="requestDetail($event)"></hum-table>
+      <mat-paginator [length]="filterModel.TotalCount" [pageSize]="filterModel.pageSize"
+        [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
       </mat-paginator>
     </div>
   </div>
-</div>
+</div> -->
