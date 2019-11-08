@@ -21,34 +21,46 @@
     <div style="padding-left: 50px;">
       <div class="row">
         <div class="col-md-2">
-          <lib-hum-dropdown [options]="monthlyBreakdownYearList$" [formControl]="monthlyBreakdownYear"
-            (change)="getMonthlyBreakdownYear($event)" [placeHolder]="'Year'">
-          </lib-hum-dropdown>
+          <div class="padding_top_10">
+            <mat-form-field>
+              <mat-label>Year</mat-label>
+              <mat-select [(ngModel)]="monthlyBreakdownYear" (selectionChange)='getVehicleMonthlyBreakdownData()'>
+                <mat-option *ngFor="let item of monthlyBreakdownYearList$ | async" [value]="item.value">
+                  {{item.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
         </div>
         <div class="col-md-2">
           <mat-card>
-            <p>Starting Mileage:</p><h4>{{vehicleMonthlyBreakdownList.StartingMileage}}</h4>
+            <p>Starting Mileage:</p>
+            <h4>{{vehicleMonthlyBreakdownList.StartingMileage}}</h4>
           </mat-card>
         </div>
         <div class="col-md-2">
           <mat-card>
-              <p>Incurred Mileage:</p><h4>{{vehicleMonthlyBreakdownList.IncurredMileage}}</h4>
-            </mat-card>
+            <p>Incurred Mileage:</p>
+            <h4>{{vehicleMonthlyBreakdownList.IncurredMileage}}</h4>
+          </mat-card>
         </div>
         <div class="col-md-2">
           <mat-card title="Standard Fuel Consumption Rate">
-              <p>SFC Rate:</p><h4>{{vehicleMonthlyBreakdownList.StandardFuelConsumptionRate}}</h4>
-            </mat-card>
+            <p>SFC Rate:</p>
+            <h4>{{vehicleMonthlyBreakdownList.StandardFuelConsumptionRate}}</h4>
+          </mat-card>
         </div>
         <div class="col-md-2">
-            <mat-card title="Standard Mobil Oil Consumption Rate">
-                <p>SMOC Rate:</p><h4>{{vehicleMonthlyBreakdownList.StandardMobilOilConsumptionRate}}</h4>
-              </mat-card>
+          <mat-card title="Standard Mobil Oil Consumption Rate">
+            <p>SMOC Rate:</p>
+            <h4>{{vehicleMonthlyBreakdownList.StandardMobilOilConsumptionRate}}</h4>
+          </mat-card>
         </div>
         <div class="col-md-2">
           <mat-card>
-              <p>Starting Cost:</p><h4>{{vehicleMonthlyBreakdownList.StartingCost}}</h4>
-            </mat-card>
+            <p>Starting Cost:</p>
+            <h4>{{vehicleMonthlyBreakdownList.StartingCost}}</h4>
+          </mat-card>
         </div>
       </div>
     </div>
@@ -100,8 +112,20 @@
                 </th>
               </thead>
               <tbody>
-                <tr>
-
+                <tr *ngFor="let item of vehicleMonthlyBreakdownList.UsageAnalysisBreakDownList">
+                  <td>{{item.Header}}</td>
+                  <td>{{item.January==0 ? '-' : item.January}}</td>
+                  <td>{{item.February==0 ? '-': item.February}}</td>
+                  <td>{{item.March==0 ? '-': item.March}}</td>
+                  <td>{{item.April==0? '-': item.April}}</td>
+                  <td>{{item.May==0? '-': item.May}}</td>
+                  <td>{{item.June==0? '-': item.June}}</td>
+                  <td>{{item.July==0? '-': item.July}}</td>
+                  <td>{{item.August==0? '-': item.August}}</td>
+                  <td>{{item.September==0? '-': item.September}}</td>
+                  <td>{{item.October==0? '-': item.October}}</td>
+                  <td>{{item.November==0? '-': item.November}}</td>
+                  <td>{{item.December==0? '-': item.December}}</td>
                 </tr>
               </tbody>
             </table>
@@ -149,30 +173,20 @@
                 </th>
               </thead>
               <tbody>
-                <tr>
-                  <td>Fuel Total Cost</td>
-
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>Mobil Oil Total Cost</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>Spare Parts Total Cost</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>Services & Maintenance Total Cost</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>Vehicle Starting Cost</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>Total Cost</td>
-                  <td>-</td>
+                <tr *ngFor="let item of vehicleMonthlyBreakdownList.CostAnalysisBreakDownList">
+                  <td>{{item.Header}}</td>
+                  <td>{{item.January==0 ? '-' : item.January}}</td>
+                  <td>{{item.February==0 ? '-': item.February}}</td>
+                  <td>{{item.March==0 ? '-': item.March}}</td>
+                  <td>{{item.April==0? '-': item.April}}</td>
+                  <td>{{item.May==0? '-': item.May}}</td>
+                  <td>{{item.June==0? '-': item.June}}</td>
+                  <td>{{item.July==0? '-': item.July}}</td>
+                  <td>{{item.August==0? '-': item.August}}</td>
+                  <td>{{item.September==0? '-': item.September}}</td>
+                  <td>{{item.October==0? '-': item.October}}</td>
+                  <td>{{item.November==0? '-': item.November}}</td>
+                  <td>{{item.December==0? '-': item.December}}</td>
                 </tr>
               </tbody>
             </table>

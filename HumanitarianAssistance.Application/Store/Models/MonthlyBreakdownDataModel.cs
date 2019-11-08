@@ -6,7 +6,8 @@ namespace HumanitarianAssistance.Application.Store.Models
     {
         public MonthlyBreakdownDataModel()
         {
-            MonthlyBreakDownList = new List<MonthlyBreakDownData>();
+            UsageAnalysisBreakDownList = new List<UsageAnalysisBreakDown>();
+            CostAnalysisBreakDownList= new List<CostAnalysisBreakDown>();
         }
 
         public double IncurredMileage { get; set; }
@@ -16,10 +17,28 @@ namespace HumanitarianAssistance.Application.Store.Models
         public double StandardFuelConsumptionRate { get; set; }
         public double StandardMobilOilConsumptionRate { get; set; }
         public double StartingCost { get; set; }
-        public List<MonthlyBreakDownData> MonthlyBreakDownList { get; set; }
+        public List<UsageAnalysisBreakDown> UsageAnalysisBreakDownList { get; set; }
+        public List<CostAnalysisBreakDown> CostAnalysisBreakDownList { get; set; }
     }
 
-    public class MonthlyBreakDownData
+    public class UsageAnalysisBreakDown
+    {
+        public string Header { get; set; }
+        public double January { get; set; }
+        public double February { get; set; }
+        public double March { get; set; }
+        public double April { get; set; }
+        public double May { get; set; }
+        public double June { get; set; }
+        public double July { get; set; }
+        public double August { get; set; }
+        public double September { get; set; }
+        public double October { get; set; }
+        public double November { get; set; }
+        public double December { get; set; }
+    }
+
+    public class CostAnalysisBreakDown
     {
         public string Header { get; set; }
         public double January { get; set; }

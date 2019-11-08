@@ -147,14 +147,17 @@ export class PurchaseListComponent implements OnInit {
             DepreciationRate: element.DepreciationRate,
             MasterInventoryCode: element.MasterInventoryCode,
             OfficeCode: element.OfficeCode,
-            ReceiptDate:  element.ReceiptDate ? this.datePipe.transform(new Date(element.ReceiptDate), 'dd/MM/yyyy') : null,
-            InvoiceDate:  element.InvoiceDate ? this.datePipe.transform(new Date(element.InvoiceDate), 'dd/MM/yyyy') : null,
+            ReceiptDate:  (element.ReceiptDate != null && element.ReceiptDate !== undefined) ?
+                          this.datePipe.transform(new Date(element.ReceiptDate), 'dd/MM/yyyy') : null,
+            InvoiceDate:  (element.InvoiceDate != null && element.InvoiceDate !== undefined) ?
+                          this.datePipe.transform(new Date(element.InvoiceDate), 'dd/MM/yyyy') : null,
             ReceivedFromLocationName: element.ReceivedFromLocationName,
             Status: element.Status,
             subItems: element.ProcurementList.map((r) => {
               return {
                 Id: r.OrderId,
-                IssueDate: r.IssueDate ? this.datePipe.transform(new Date(r.IssueDate), 'dd/MM/yyyy') : null,
+                IssueDate: (r.IssueDate != null && element.IssueDate !== undefined) ?
+                          this.datePipe.transform(new Date(r.IssueDate), 'dd/MM/yyyy') : null,
                 Employee: r.EmployeeName,
                 ProcuredAmount: r.ProcuredAmount,
                 MustReturn: r.MustReturn ? 'Yes' : 'No',

@@ -7,7 +7,7 @@ import { PurchaseService } from '../../services/purchase.service';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { FormControl } from '@angular/forms';
-import { IDropDownModel } from '../../models/purchase';
+import { IDropDownModel, IMonthlyBreakDown } from '../../models/purchase';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
@@ -20,9 +20,9 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
   vehicleDetailForm: any;
   vehicleId: number;
   date = new FormControl();
-  monthlyBreakdownYear = new FormControl();
+  monthlyBreakdownYear: number;
   monthlyBreakdownYearList$: Observable<IDropDownModel[]>;
-  vehicleMonthlyBreakdownList: any;
+  vehicleMonthlyBreakdownList: IMonthlyBreakDown;
 
   // screen
   screenHeight: any;
@@ -79,7 +79,9 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
       IncurredMileage: null,
       StandardMobilOilConsumptionRate: null,
       StandardFuelConsumptionRate: null,
-      StartingCost: null
+      StartingCost: null,
+      CostAnalysisBreakDownList: [],
+      UsageAnalysisBreakDownList: []
     };
   }
 
@@ -104,6 +106,10 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
       data: {
         vehicleId: this.vehicleId
       }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.getVehicleDetailById();
     });
   }
 
@@ -150,7 +156,7 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
   getVehicleMonthlyBreakdownData() {
     const data = {
       VehicleId: +this.vehicleId,
-      SelectedYear: this.monthlyBreakdownYear.value
+      SelectedYear: this.monthlyBreakdownYear
     };
 
     this.purchaseService.getVehicleMonthlyBreakdown(data)
@@ -161,7 +167,9 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
             IncurredMileage: x.IncurredMileage,
             StandardMobilOilConsumptionRate: x.StandardMobilOilConsumptionRate,
             StandardFuelConsumptionRate: x.StandardFuelConsumptionRate,
-            StartingCost: x.StartingCost
+            StartingCost: x.StartingCost,
+            CostAnalysisBreakDownList: x.CostAnalysisBreakDownList,
+            UsageAnalysisBreakDownList: x.UsageAnalysisBreakDownList
           };
         });
   }
@@ -182,7 +190,7 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
   getMonthlyBreakDownYears() {
     this.monthlyBreakdownYearList$ = this.purchaseService.getMonthlyBreakDownYears();
     this.monthlyBreakdownYearList$.subscribe(x => {
-      this.monthlyBreakdownYear.setValue(x[0].value);
+      this.monthlyBreakdownYear = x[0].value;
     });
   }
 
