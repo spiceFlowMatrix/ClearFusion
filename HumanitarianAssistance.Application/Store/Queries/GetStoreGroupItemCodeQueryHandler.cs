@@ -31,7 +31,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                 if (request.InventoryId != 0)
                 {
                     StoreItemGroup storeItemGroup = await _dbContext.StoreItemGroups
-                                                                             .OrderByDescending(x => x.CreatedDate)
+                                                                             .OrderByDescending(x => x.ItemGroupId)
                                                                              .Include(x => x.StoreInventory)
                                                                              .FirstOrDefaultAsync(x => x.IsDeleted == false && x.InventoryId == request.InventoryId);
                     if (storeItemGroup != null)

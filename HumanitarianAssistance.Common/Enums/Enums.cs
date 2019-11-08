@@ -265,10 +265,9 @@ namespace HumanitarianAssistance.Common.Enums
         NewRequest = 1,
         Cancelled = 2,
         IssuePurchaseOrder = 3,
-        Approved = 4,
-        CompletePurchase = 5,
-        ControlApproved = 6,
-        ControlRejected = 7
+        CompletePurchase = 4,
+        ControlApproved = 5,
+        ControlRejected = 6
    }
 
     //#region "StoreItemGroups"

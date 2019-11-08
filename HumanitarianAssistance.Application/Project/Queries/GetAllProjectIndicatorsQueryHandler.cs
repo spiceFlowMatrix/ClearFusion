@@ -46,15 +46,17 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                            .Select(x => x.ProjectMonitoringIndicatorDetail.Select(y => y.ProjectIndicatorId).ToList())
                                                  .FirstOrDefault();
 
-
-                commonInicatorIdList = commonInicatorIdList.Intersect(selectedIndicatorId).ToList();
-
                 var indicotorList = await indicators.ToListAsync();
 
-                foreach (var item in commonInicatorIdList)
+                if (selectedIndicatorId != null )
                 {
-                    var index = indicotorList.FindIndex(x => x.ProjectIndicatorId == item);
-                    indicotorList[index].CanDelete = true;
+                    commonInicatorIdList = commonInicatorIdList.Intersect(selectedIndicatorId).ToList();
+
+                    foreach (var item in commonInicatorIdList)
+                    {
+                        var index = indicotorList.FindIndex(x => x.ProjectIndicatorId == item);
+                        indicotorList[index].CanDelete = true;
+                    }
                 }
 
                 long recordCount = await indicators.CountAsync();
