@@ -28,6 +28,7 @@ export interface ProjectIndicatorFilterModel {
     Description: string;
     QuestionType?: boolean;
     Questions?: number;
+    CanDelete?: boolean;
   }
 
 export interface IIndicatorDataSource {

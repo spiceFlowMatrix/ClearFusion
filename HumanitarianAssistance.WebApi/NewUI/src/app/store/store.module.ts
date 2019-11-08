@@ -9,7 +9,7 @@ import { AddProcurementsComponent } from './components/add-procurements/add-proc
 import { EntryComponentComponent } from './components/entry-component/entry-component.component';
 import {
   MatIconModule, MatMenuModule, MatSidenavModule, MatCardModule, MatButtonModule,
-  MatInputModule, MatDividerModule, MatListModule, MatExpansionModule, MatTabsModule
+  MatInputModule, MatDividerModule, MatListModule, MatExpansionModule, MatTabsModule, MatSelectModule, MatOptionModule, MatTreeModule
 } from '@angular/material';
 import { ShareLayoutModule } from '../shared/share-layout.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -35,6 +35,11 @@ import { EditGeneratorComponent } from './components/edit-generator/edit-generat
 import { AddHoursComponent } from './components/add-hours/add-hours.component';
 import { LogsComponent } from './components/logs/logs.component';
 import { AddDocumentComponent } from './components/document-upload/add-document.component';
+import { StoreConfigurationComponent } from './components/store-configuration/store-configuration.component';
+import { StoreItemConfigComponent } from './components/store-item-config/store-item-config.component';
+import { AddMasterInventoryComponent } from './components/add-master-inventory/add-master-inventory.component';
+import { AddItemCategoryComponent } from './components/add-item-category/add-item-category.component';
+import { AddItemComponent } from './components/add-item/add-item.component';
 
 
 
@@ -61,7 +66,12 @@ import { AddDocumentComponent } from './components/document-upload/add-document.
     EditGeneratorComponent,
     AddHoursComponent,
     LogsComponent,
-    AddDocumentComponent
+    AddDocumentComponent,
+    StoreConfigurationComponent,
+    StoreItemConfigComponent,
+    AddMasterInventoryComponent,
+    AddItemCategoryComponent,
+    AddItemComponent
     // components
     //  DbsidebarComponent,
     // DbheaderComponent,
@@ -90,13 +100,17 @@ import { AddDocumentComponent } from './components/document-upload/add-document.
     MatProgressSpinnerModule,
     MatListModule,
     MatExpansionModule,
-    MatTabsModule
+    MatTabsModule,
+    MatTreeModule,
+    MatSelectModule,
+    MatOptionModule
     // MatRangeDatepickerModule,
     // MatNativeDateModule
 
 
 
   ],
-  entryComponents: [AddProcurementsComponent, AddMilageComponent, AddHoursComponent, AddDocumentComponent]
+  entryComponents: [AddProcurementsComponent, AddMilageComponent,
+    AddHoursComponent, AddDocumentComponent, AddMasterInventoryComponent, AddItemCategoryComponent, AddItemComponent]
 })
 export class StoreModule { }

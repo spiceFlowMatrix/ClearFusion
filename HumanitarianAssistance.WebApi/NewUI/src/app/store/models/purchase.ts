@@ -30,6 +30,9 @@ export interface IFilterValueModel {
   ItemGroupId: any;
   ItemId: any;
   JobId: any;
+  DisplayCurrency?: number;
+  DepreciationComparisionDate: any;
+  SelectedColumns?: any[];
 
   PageIndex?: number;
   PageSize?: number;
@@ -77,9 +80,9 @@ export interface IProcurementList {
   EmployeeName?: string;
   IssueDate?: string;
   OrderId?: number;
-  MustReturn?: boolean;
+  MustReturn?: string;
   ProcuredAmount?: string;
-  Returned: boolean;
+  Returned: string;
   ReturnedOn?: any;
 }
 
@@ -174,4 +177,23 @@ export interface IPurchasedFiles {
   Filename: string;
   UploadedBy: string;
   DocumentTypeName: string;
+  SignedUrl: string;
+}
+
+export interface IPurchaseItemDataSource {
+  PurchaseId: number;
+  PurchaseName: string;
+}
+
+export interface IMonthlyBreakDown {
+  StartingMileage?: number;
+  IncurredMileage?: number;
+  StartingUsage?: number;
+  IncurredUsage?: number;
+  StandardMobilOilConsumptionRate: number;
+  StandardFuelConsumptionRate: number;
+  StartingCost: number;
+  UsageAnalysisBreakDownList: any[];
+  CostAnalysisBreakDownList: any[];
+
 }

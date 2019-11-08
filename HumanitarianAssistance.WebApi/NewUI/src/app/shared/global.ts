@@ -182,6 +182,7 @@ export class GLOBAL {
   public static API_Project_AddEditProjectCurrencyDetail = 'Project/AddEditProjectCurrencyDetail';
 
   public static API_Account_GetAllUserDetails = 'Account/GetAllUserList';
+  public static API_Account_GetLoggedInUserUserName = 'Account/GetLoggedInUserUserName';
   public static API_Project_AddEditTargetBeneficiary = 'Project/AddEditTargetBeneficiary';
 
   public static API_Code_GetAllAccountByAccountHeadTypeId = 'Code/GetAllAccountByAccountHeadTypeId';
@@ -191,8 +192,19 @@ export class GLOBAL {
   public static API_AccountReports_GetAllLedgerDetails = 'AccountReports/GetAllLedgerDetails';
   public static API_AccountReports_GetTrialBalanceReport = 'AccountReports/GetTrialBalanceReport';
 
-
-
+  // ProjectLogistics
+  public static API_ProjectLogistics_AddLogisticRequest = 'ProjectLogistic/AddLogisticRequest';
+  public static API_ProjectLogistics_GetAllLogisticRequest = 'ProjectLogistic/GetAllLogisticRequest';
+  public static API_ProjectLogistics_DeleteLogisticRequest = 'ProjectLogistic/DeleteLogisticRequest';
+  public static API_ProjectLogistics_GetRequestDetailById = 'ProjectLogistic/GetRequestDetailById';
+  public static API_ProjectLogistics_AddLogisticRequestItems = 'ProjectLogistic/AddLogisticRequestItems';
+  public static API_ProjectLogistics_GetItemsByRequestId = 'ProjectLogistic/GetItemsByRequestId';
+  public static API_ProjectLogistics_DeleteLogisticRequestItem = 'ProjectLogistic/DeleteLogisticRequestItem';
+  public static API_ProjectLogistics_EditLogisticRequestItems = 'ProjectLogistic/EditLogisticRequestItems';
+  public static API_ProjectLogistics_CancelLogisticRequest = 'ProjectLogistic/CancelLogisticRequest';
+  public static API_ProjectLogistics_IssuePurchaseOrder = 'ProjectLogistic/IssuePurchaseOrder';
+  public static API_ProjectLogistics_CompletePurchaseOrder = 'ProjectLogistic/CompletePurchaseOrder';
+  public static API_ProjectLogistics_GetPurchasedItemsList = 'ProjectLogistic/GetPurchasedItemsList';
   // Chart Of Account
   public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';
   public static API_ChartOfAccount_GetAllAccountsByParentId = 'ChartOfAccount/GetAllAccountsByParentId';
@@ -302,49 +314,49 @@ export class GLOBAL {
   //#endregion
 
   //#region budgetLine
-   public static API_BudgetLine_AddBudgetLineDetail = 'Project/AddBudgetLineDetail';
-   public static API_BudgetLine_GetProjectJobDetail = 'Project/GetProjectJobDetail';
-   public static API_BudgetLine_GetProjectJobDetailByProjectId = 'Project/GetProjectJobDetailByProjectId';
+  public static API_BudgetLine_AddBudgetLineDetail = 'Project/AddBudgetLineDetail';
+  public static API_BudgetLine_GetProjectJobDetail = 'Project/GetProjectJobDetail';
+  public static API_BudgetLine_GetProjectJobDetailByProjectId = 'Project/GetProjectJobDetailByProjectId';
 
-   public static API_BudgetLine_GetProjectBudgetLineDetail = 'Project/GetProjectBudgetLineDetail';
-   public static API_BudgetLine_GetBudgetLineDetailByBudgetId = 'Project/GetBudgetLineDetailByBudgetId';
-   public static API_BudgetLine_GetTransactionList = 'Project/GetTransactionList';
-   public static API_BudgetLine_GetAllBudgetLineList = 'Project/GetAllBudgetLineList';
-   public static API_BudgetLine_ExcelImportOfBudgetLine = 'Project/ExcelImportOfBudgetLine';
-   public static API_BudgetLine_CreateAndDownloadExcelFormat = 'Project/CreateAndDownloadExcelFormat';
+  public static API_BudgetLine_GetProjectBudgetLineDetail = 'Project/GetProjectBudgetLineDetail';
+  public static API_BudgetLine_GetBudgetLineDetailByBudgetId = 'Project/GetBudgetLineDetailByBudgetId';
+  public static API_BudgetLine_GetTransactionList = 'Project/GetTransactionList';
+  public static API_BudgetLine_GetAllBudgetLineList = 'Project/GetAllBudgetLineList';
+  public static API_BudgetLine_ExcelImportOfBudgetLine = 'Project/ExcelImportOfBudgetLine';
+  public static API_BudgetLine_CreateAndDownloadExcelFormat = 'Project/CreateAndDownloadExcelFormat';
 
 
-   //#endregion
+  //#endregion
 
-   //#region "Project Activity"
-   public static API_Project_GetProjectActivityDetail = 'Project/GetProjectActivityDetail';
-   public static API_Project_GetProjectActivityDetailByActivityId = 'Project/GetProjectActivityDetailByActivityId';
-   public static API_Project_AddProjectActivityDetail = 'Project/AddProjectActivityDetail';
-   public static API_Project_EditProjectActivityDetail = 'Project/EditProjectActivityDetail';
-   public static API_Project_GetProjectSubActivityDetail = 'Project/GetProjectSubActivityDetail';
-   public static API_Project_AddProjectSubActivityDetail = 'Project/AddProjectSubActivityDetail';
-   public static API_Project_EditProjectSubActivityDetail = 'Project/EditProjectSubActivity';
-   public static API_Project_ProjectSubActivityIscomplete = 'Project/ProjectSubActivityIscomplete';
-   public static API_Project_StartProjectSubActivity = 'Project/StartProjectSubActivity';
-   public static API_Project_EndProjectSubActivity = 'Project/EndProjectSubActivity';
+  //#region "Project Activity"
+  public static API_Project_GetProjectActivityDetail = 'Project/GetProjectActivityDetail';
+  public static API_Project_GetProjectActivityDetailByActivityId = 'Project/GetProjectActivityDetailByActivityId';
+  public static API_Project_AddProjectActivityDetail = 'Project/AddProjectActivityDetail';
+  public static API_Project_EditProjectActivityDetail = 'Project/EditProjectActivityDetail';
+  public static API_Project_GetProjectSubActivityDetail = 'Project/GetProjectSubActivityDetail';
+  public static API_Project_AddProjectSubActivityDetail = 'Project/AddProjectSubActivityDetail';
+  public static API_Project_EditProjectSubActivityDetail = 'Project/EditProjectSubActivity';
+  public static API_Project_ProjectSubActivityIscomplete = 'Project/ProjectSubActivityIscomplete';
+  public static API_Project_StartProjectSubActivity = 'Project/StartProjectSubActivity';
+  public static API_Project_EndProjectSubActivity = 'Project/EndProjectSubActivity';
 
 
   //  public static API_Project_StartProjectActivity = 'Project/StartProjectActivity';
   //  public static API_Project_EndProjectActivity = 'Project/EndProjectActivity';
-   public static API_Project_MarkImplementationAsCompleted = 'Project/MarkImplementationAsCompleted';
-   public static API_Project_MarkMonitoringAsCompleted = 'Project/MarkMonitoringAsCompleted';
-   public static API_Project_AllActivityStatus = 'Project/AllActivityStatus';
-   public static API_Project_DeleteActivityDetail = 'Project/DeleteActivityDetail';
-   public static API_Project_UploadProjectDocumnentFile = 'Project/UploadProjectDocumnentFile';
-   public static API_Project_GetActivityDocumentDetail = 'Project/GetActivityDocumentDetail ';
-   public static API_Project_GetActivityDocumentDetails = 'Project/GetActivityDocumentDetails ';
-   public static API_Project_GetProjectMonitoringList = 'Project/GetProjectMonitoringList';
-   public static API_Project_GetProjectMonitoringByMonitoringId = 'Project/GetProjectMonitoringByMonitoringId';
+  public static API_Project_MarkImplementationAsCompleted = 'Project/MarkImplementationAsCompleted';
+  public static API_Project_MarkMonitoringAsCompleted = 'Project/MarkMonitoringAsCompleted';
+  public static API_Project_AllActivityStatus = 'Project/AllActivityStatus';
+  public static API_Project_DeleteActivityDetail = 'Project/DeleteActivityDetail';
+  public static API_Project_UploadProjectDocumnentFile = 'Project/UploadProjectDocumnentFile';
+  public static API_Project_GetActivityDocumentDetail = 'Project/GetActivityDocumentDetail ';
+  public static API_Project_GetActivityDocumentDetails = 'Project/GetActivityDocumentDetails ';
+  public static API_Project_GetProjectMonitoringList = 'Project/GetProjectMonitoringList';
+  public static API_Project_GetProjectMonitoringByMonitoringId = 'Project/GetProjectMonitoringByMonitoringId';
 
 
-   public static API_Project_GetProjectActivityExtension = 'Project/GetProjectActivityExtension';
-   public static API_Project_AddProjectActivityExtension = 'Project/AddProjectActivityExtension';
-   public static API_Project_DeleteProjectActivityExtension = 'Project/DeleteProjectActivityExtension';
+  public static API_Project_GetProjectActivityExtension = 'Project/GetProjectActivityExtension';
+  public static API_Project_AddProjectActivityExtension = 'Project/AddProjectActivityExtension';
+  public static API_Project_DeleteProjectActivityExtension = 'Project/DeleteProjectActivityExtension';
 
 
   //#endregion
@@ -369,7 +381,6 @@ export class GLOBAL {
 
   public static API_Account_GetRoles = 'Account/GetRoles';
   public static API_FileManagement_GetSignedURL = 'FileManagement/GetSignedURL';
-
   public static API_Dashboard_GetTrainingLink = 'Dashboard/GetTrainingLink';
 
 
@@ -402,7 +413,13 @@ export class GLOBAL {
   //#region "Hiring request"
   public static API_HREmployee_AddJobHiringDetail = 'HRJobs/AddJobHiringDetails';
   public static API_HiringRequest_GetProjectHiringRequestDetailsByHiringRequestId =
-  'HiringRequest/GetProjectHiringRequestDetailByHiringRequestId';
+    'HiringRequest/GetProjectHiringRequestDetailByHiringRequestId';
+  public static API_HiringRequest_GetAllJobs = 'HiringRequest/GetAllJobList';
+  // public static API_HiringRequest_GetOfficeListByJobId = 'HiringRequest/GetOfficeListByJobId';
+  public static API_HiringRequest_GetProfessionListByOfficeId = 'HiringRequest/GetProfessionListByOfficeId';
+  public static API_HiringRequest_GetRemainingVacancyByJobId = 'HiringRequest/GetRemainingVacancyByJobId';
+  public static API_HiringRequest_GetAllProjectHiringRequestDetailByHiringRequestId =
+    'HiringRequest/GetAllProjectHiringRequestDetailByHiringRequestId';
 
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
   public static API_HiringRequest_AddHiringRequestDetail = 'HiringRequest/AddHiringRequestDetail';
@@ -433,8 +450,10 @@ export class GLOBAL {
   public static API_Pdf_JournalTrialBalanceReportPdf = 'Pdf/GetJournalTrialBalanceReportPdf';
   public static API_Pdf_GetCriteriaEvaluationReportPdf = 'Pdf/GetCriteriaEvaluationReportPdf';
 
-  public static API_Pdf_GetJournalBudgetLineSummaryPdf  = 'Pdf/GetJournalBudgetLineSummaryPdf';
+  public static API_Pdf_GetJournalBudgetLineSummaryPdf = 'Pdf/GetJournalBudgetLineSummaryPdf';
   public static API_Pdf_GetJournalLedgerReportPdf = 'Pdf/GetJournalLedgerReportPdf';
+  public static API_Pdf_GetStorePurchasePdf = 'Pdf/GetStorePurchasePdf';
+  public static API_Pdf_GetJournalReportPdf = 'Pdf/GetJournalReportPdf';
   //#endregion
 
   // Store
@@ -459,10 +478,50 @@ export class GLOBAL {
   public static API_VehicleTracker_AddVehicleMileage = 'VehicleTracker/AddVehicleMileage';
   public static API_VehicleTracker_GetVehicleById = 'VehicleTracker/GetVehicleById';
   public static API_VehicleTracker_SaveVehicleDetail = 'VehicleTracker/EditVehicleDetail';
+  public static API_VehicleTracker_DeletePurchasedVehicle = 'VehicleTracker/DeletePurchasedVehicle';
+  public static API_VehicleTracker_GetVehicleMonthlyBreakdownDataById = 'VehicleTracker/GetVehicleMonthlyBreakdownDataById';
+  public static API_GeneratorTracker_GetGeneratorMonthlyBreakdownDataById = 'GeneratorTracker/GetGeneratorMonthlyBreakdownDataById';
+
 
   public static API_GeneratorTracker_GetGeneratorList = 'GeneratorTracker/GetGeneratorList';
   public static API_GeneratorTracker_GetGeneratorById = 'GeneratorTracker/GetGeneratorById';
+  public static API_GeneratorTracker_DeletePurchasedGenerator = 'GeneratorTracker/DeletePurchasedGenerator';
   public static API_GeneratorTracker_AddGeneratorUsageHours = 'GeneratorTracker/AddGeneratorUsageHours';
+
+  public static API_Store_GetAllStoreInventoryItems = 'Store/GetAllStoreInventoryItems';
+
+  public static API_GeneratorTracker_EditGeneratorDetail = 'GeneratorTracker/EditGeneratorDetail';
+  public static API_StorePurchase_GetStorePurchaseById = 'StorePurchase/GetStorePurchaseById';
+  public static API_StorePurchase_GetTransportItemDataSource = 'StorePurchase/GetTransportItemDataSource';
+  public static API_StorePurchase_EditStorePurchase = 'StorePurchase/EditStorePurchase';
+
+  public static API_Store_AddPurchaseUnitType = 'Store/AddPurchaseUnitType';
+  public static API_Store_EditPurchaseUnitType = 'Store/EditPurchaseUnitType';
+  public static API_Store_DeletePurchaseUnitType = 'Store/DeletePurchaseUnitType';
+
+  public static API_Store_GetAllStoreSourceType = 'Store/GetAllStoreSourceType';
+  public static API_Store_AddStoreSourceCode = 'Store/AddStoreSourceCode';
+  public static API_Store_GetStoreTypeCode = 'Store/GetStoreTypeCode';
+  public static API_Store_EditStoreSourceCode = 'Store/EditStoreSourceCode';
+  public static API_Store_DeleteStoreSourceCode = 'Store/DeleteStoreSourceCode';
+
+  public static API_GetInventories = 'Store/GetInventories';
+  public static API_Store_AddInventory = 'Store/AddInventory';
+  public static API_Store_EditInventory = 'Store/EditInventory';
+  public static API_Store_DeleteInventory = 'Store/DeleteInventory';
+  public static API_Store_GetInventoryCode = 'Store/GetInventoryCode';
+  public static API_Store_GetInventoryItemCode = 'Store/GetInventoryItemCode';
+
+
+  public static API_Store_AddStoreItemGroup = 'Store/AddStoreItemGroup';
+  public static API_Store_EditStoreItemGroup = 'Store/EditStoreItemGroup';
+  // public static API_Store_DeleteInventoryItems = 'Store/DeleteInventoryItems';
+  public static API_Store_GetStoreGroupItemCode = 'Store/GetStoreGroupItemCode';
+  public static API_Store_AddInventoryItems = 'Store/AddInventoryItems';
+  public static API_Store_EditInventoryItems = 'Store/EditInventoryItems';
+  public static API_Store_DeleteInventoryItems = 'Store/DeleteInventoryItems';
+
+
 
 }
 

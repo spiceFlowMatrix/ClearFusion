@@ -1,12 +1,14 @@
 
-import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { Component, OnInit, HostListener, OnDestroy, ViewChild } from '@angular/core';
+import { MatDialog, MatDatepicker, NativeDateAdapter } from '@angular/material';
 import { AddMilageComponent } from '../add-milage/add-milage.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PurchaseService } from '../../services/purchase.service';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
-
+import { FormControl } from '@angular/forms';
+import { IDropDownModel, IMonthlyBreakDown } from '../../models/purchase';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
   selector: 'app-vehicle-details',
@@ -15,17 +17,19 @@ import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 })
 export class VehicleDetailsComponent implements OnInit, OnDestroy {
 
-
   vehicleDetailForm: any;
-
-
   vehicleId: number;
+  date = new FormControl();
+  monthlyBreakdownYear: number;
+  monthlyBreakdownYearList$: Observable<IDropDownModel[]>;
+  vehicleMonthlyBreakdownList: IMonthlyBreakDown;
 
   // screen
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
 
+  @ViewChild(MatDatepicker) picker;
 
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
@@ -37,9 +41,10 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit() {
+    this.getScreenSize();
     this.initForm();
     this.getVehicleDetailById();
-    this.getScreenSize();
+    this.getMonthlyBreakDownYears();
   }
 
   initForm() {
@@ -49,13 +54,34 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
       EmployeeId: null,
       StartingMileage: null,
       IncurredMileage: null,
-      MobilOilConsumptionRate: null,
+      StandardMobilOilConsumptionRate: null,
       ModelYear: null,
       OfficeId: null,
-      FuelConsumptionRate: null,
+      StandardFuelConsumptionRate: null,
       EmployeeName: null,
       PurchaseName: null,
-      PurchaseId: null
+      PurchaseId: null,
+      OfficeName: null,
+      TotalFuelUsage: null,
+      TotalMobilOilUsage: null,
+      ActualFuelConsumptionRate: null,
+      ActualMobilOilConsumptionRate: null,
+      FuelTotalCost: null,
+      MobilOilTotalCost: null,
+      SparePartsTotalCost: null,
+      ServiceAndMaintenanceTotalCost: null,
+      CurrentMileage: null,
+      VehicleStartingCost: null
+    };
+
+    this.vehicleMonthlyBreakdownList = {
+      StartingMileage: null,
+      IncurredMileage: null,
+      StandardMobilOilConsumptionRate: null,
+      StandardFuelConsumptionRate: null,
+      StartingCost: null,
+      CostAnalysisBreakDownList: [],
+      UsageAnalysisBreakDownList: []
     };
   }
 
@@ -81,6 +107,10 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
         vehicleId: this.vehicleId
       }
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.getVehicleDetailById();
+    });
   }
 
 
@@ -94,24 +124,78 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
           EmployeeId: x.EmployeeId,
           StartingMileage: x.StartingMileage,
           IncurredMileage: x.IncurredMileage,
-          MobilOilConsumptionRate: x.MobilOilConsumptionRate,
+          StandardMobilOilConsumptionRate: x.StandardMobilOilConsumptionRate,
           ModelYear: x.ModelYear,
           OfficeId: x.OfficeId,
-          FuelConsumptionRate: x.FuelConsumptionRate,
+          StandardFuelConsumptionRate: x.StandardFuelConsumptionRate,
           EmployeeName: x.EmployeeName,
           PurchaseName: x.PurchaseName,
-          PurchaseId: x.PurchaseId
+          PurchaseId: x.PurchaseId,
+          OfficeName: x.OfficeName,
+          TotalFuelUsage: x.TotalFuelUsage,
+          TotalMobilOilUsage: x.TotalMobilOilUsage,
+          ActualFuelConsumptionRate: x.ActualFuelConsumptionRate,
+          ActualMobilOilConsumptionRate: x.ActualMobilOilConsumptionRate,
+          FuelTotalCost: x.FuelTotalCost,
+          MobilOilTotalCost: x.MobilOilTotalCost,
+          SparePartsTotalCost: x.SparePartsTotalCost,
+          ServiceAndMaintenanceTotalCost: x.ServiceAndMaintenanceTotalCost,
+          CurrentMileage: x.CurrentMileage,
+          VehicleStartingCost: x.VehicleStartingCost
         };
       });
+  }
+
+  onTabClick(event) {
+
+    if (event.index === 1) {
+      this.getVehicleMonthlyBreakdownData();
+    }
+  }
+
+  getVehicleMonthlyBreakdownData() {
+    const data = {
+      VehicleId: +this.vehicleId,
+      SelectedYear: this.monthlyBreakdownYear
+    };
+
+    this.purchaseService.getVehicleMonthlyBreakdown(data)
+      .pipe(takeUntil(this.destroyed$))
+        .subscribe(x => {
+          this.vehicleMonthlyBreakdownList = {
+            StartingMileage: x.StartingMileage,
+            IncurredMileage: x.IncurredMileage,
+            StandardMobilOilConsumptionRate: x.StandardMobilOilConsumptionRate,
+            StandardFuelConsumptionRate: x.StandardFuelConsumptionRate,
+            StartingCost: x.StartingCost,
+            CostAnalysisBreakDownList: x.CostAnalysisBreakDownList,
+            UsageAnalysisBreakDownList: x.UsageAnalysisBreakDownList
+          };
+        });
+  }
+
+  getMonthlyBreakdownYear(event) {
+    this.monthlyBreakdownYear = event;
   }
 
   editVehicleDetail() {
     this.router.navigate(['store/vehicle/edit', this.vehicleId]);
   }
 
+  monthSelected(params) {
+    this.date.setValue(params);
+    this.picker.close();
+  }
+
+  getMonthlyBreakDownYears() {
+    this.monthlyBreakdownYearList$ = this.purchaseService.getMonthlyBreakDownYears();
+    this.monthlyBreakdownYearList$.subscribe(x => {
+      this.monthlyBreakdownYear = x[0].value;
+    });
+  }
+
   ngOnDestroy() {
     this.destroyed$.next(true);
     this.destroyed$.complete();
-
   }
 }

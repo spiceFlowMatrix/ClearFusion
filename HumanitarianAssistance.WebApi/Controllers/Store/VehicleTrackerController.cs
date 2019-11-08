@@ -2,6 +2,7 @@ using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Store.Commands.Create;
+using HumanitarianAssistance.Application.Store.Commands.Delete;
 using HumanitarianAssistance.Application.Store.Commands.Update;
 using HumanitarianAssistance.Application.Store.Queries;
 using HumanitarianAssistance.Common.Enums;
@@ -86,5 +87,39 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
                 return BadRequest(result.Exception.InnerException.Message);
             }
         }
+
+         [HttpDelete]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> DeletePurchasedVehicle(long id)
+        {
+            var result = await Task.FromResult(_mediator.Send(new DeletePurchasedVehicleCommand { PurchasedVehicleId = id }));
+
+            if (result.Exception == null)
+            {
+                return Ok(await result);
+            }
+            else
+            {
+                return BadRequest(result.Exception.InnerException.Message);
+            }
+        }
+
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetVehicleMonthlyBreakdownDataById(GetVehicleMonthlyBreakdownDataByIdQuery request)
+        {
+            var result = await Task.FromResult(_mediator.Send(request));
+
+            if (result.Exception == null)
+            {
+                return Ok(await result);
+            }
+            else
+            {
+                return BadRequest(result.Exception.InnerException.Message);
+            }
+        }
+
     }
 }

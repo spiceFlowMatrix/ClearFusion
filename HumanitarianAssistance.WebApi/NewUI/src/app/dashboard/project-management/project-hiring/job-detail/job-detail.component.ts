@@ -39,6 +39,7 @@ export class JobDetailComponent implements OnInit {
       totalVacancies: ['', [Validators.required]],
       payCurrency: ['', [Validators.required]],
       payRate: ['', [Validators.required]],
+      projectId: ['']
     });
   }
 
@@ -124,11 +125,13 @@ export class JobDetailComponent implements OnInit {
 
   addJobFormSubmit() {
     if (this.addJobForm.valid) {
+      this.addJobForm.controls['projectId'].setValue(this.projectId);
       this.isAddJobFormSubmitted = true;
       this.hiringRequestService.addJobHiringDetails(this.addJobForm.value)
       .pipe(takeUntil(this.destroyed$))
       .subscribe();
       this.isAddJobFormSubmitted = false;
+      this.toastr.success('Job Sucessfully Inserted');
     } else {
       this.toastr.warning('Please correct errors in job form and submit again');
     }

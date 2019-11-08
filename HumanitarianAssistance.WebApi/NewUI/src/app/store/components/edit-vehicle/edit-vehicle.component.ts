@@ -4,6 +4,7 @@ import { PurchaseService } from '../../services/purchase.service';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
+import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 
 @Component({
   selector: 'app-edit-vehicle',
@@ -17,7 +18,7 @@ export class EditVehicleComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(private router: Router, private purchaseService: PurchaseService,
-    private activatedRoute: ActivatedRoute, private fb: FormBuilder) {
+    private activatedRoute: ActivatedRoute, private fb: FormBuilder, private commonLoader: CommonLoaderService) {
     this.activatedRoute.params.subscribe(params => {
       this.vehicleId = params['id'];
     });
@@ -49,21 +50,25 @@ export class EditVehicleComponent implements OnInit, OnDestroy {
           EmployeeId: x.EmployeeId,
           StartingMileage: x.StartingMileage,
           IncurredMileage: x.IncurredMileage,
-          MobilOilConsumptionRate: x.MobilOilConsumptionRate,
+          MobilOilConsumptionRate: x.StandardMobilOilConsumptionRate,
           ModelYear: x.ModelYear,
           OfficeId: x.OfficeId,
-          FuelConsumptionRate: x.FuelConsumptionRate
+          FuelConsumptionRate: x.StandardFuelConsumptionRate
         });
       });
   }
 
   saveVehicleDetail() {
+    this.commonLoader.showLoader();
     if (this.vehicleDetailForm.valid) {
       this.purchaseService.saveVehicleDetail(this.vehicleDetailForm.value)
                           .subscribe(x => {
                             if (x) {
                               this.backToDetails();
+                              this.commonLoader.hideLoader();
                             }
+                          }, error => {
+                            this.commonLoader.hideLoader();
                           });
     }
   }

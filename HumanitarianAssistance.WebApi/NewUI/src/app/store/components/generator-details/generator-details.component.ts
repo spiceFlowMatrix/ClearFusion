@@ -4,8 +4,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AddHoursComponent } from '../add-hours/add-hours.component';
 import { PurchaseService } from '../../services/purchase.service';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
-import { ReplaySubject } from 'rxjs';
+import { ReplaySubject, Observable } from 'rxjs';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { FormControl } from '@angular/forms';
+import { IDropDownModel, IMonthlyBreakDown } from '../../models/purchase';
 
 @Component({
   selector: 'app-generator-details',
@@ -23,11 +25,15 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   generatorDetailForm: any;
   generatorId: number;
 
+  monthlyBreakdownYear: number;
+  monthlyBreakdownYearList$: Observable<IDropDownModel[]>;
+  generatorMonthlyBreakdownList: IMonthlyBreakDown;
+
   // subject
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(private dialog: MatDialog, private router: Router, private activatedRoute: ActivatedRoute,
-              private purchaseService: PurchaseService, private commonLoader: CommonLoaderService) {
+    private purchaseService: PurchaseService, private commonLoader: CommonLoaderService) {
     this.activatedRoute.params.subscribe(params => {
       this.generatorId = params['id'];
     });
@@ -37,6 +43,7 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
     this.getScreenSize();
     this.initForm();
     this.getGeneratorDetailById();
+    this.getMonthlyBreakDownYears();
   }
 
   initForm() {
@@ -45,14 +52,36 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
       Voltage: null,
       StartingUsage: null,
       IncurredUsage: null,
-      MobilOilConsumptionRate: null,
+      StandardMobilOilConsumptionRate: null,
       ModelYear: null,
       OfficeId: null,
-      FuelConsumptionRate: null,
+      StandardFuelConsumptionRate: null,
       PurchaseName: null,
       PurchaseId: null,
       OfficeName: null,
       PurchasedBy: null,
+      TotalFuelUsage: null,
+      TotalMobilOilUsage: null,
+      FuelTotalCost: null,
+      MobilOilTotalCost: null,
+      SparePartsTotalCost: null,
+      ServicesAndMaintenanceTotalCost: null,
+      CurrentUsage: null,
+      GeneratorStartingCost: null,
+      ActualFuelConsumptionRate: null,
+      ActualMobilOilConsumptionRate: null
+    };
+
+    this.generatorMonthlyBreakdownList = {
+      StartingMileage: null,
+      IncurredMileage: null,
+      StartingUsage: null,
+      IncurredUsage: null,
+      StandardMobilOilConsumptionRate: null,
+      StandardFuelConsumptionRate: null,
+      StartingCost: null,
+      CostAnalysisBreakDownList: [],
+      UsageAnalysisBreakDownList: []
     };
   }
 
@@ -73,23 +102,32 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   getGeneratorDetailById() {
     this.commonLoader.showLoader();
     this.purchaseService.getGeneratorDetailById(this.generatorId)
-    .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
         this.generatorDetailForm = {
           GeneratorId: x.GeneratorId,
           Voltage: x.Voltage,
           StartingUsage: x.StartingUsage,
           IncurredUsage: x.IncurredUsage,
-          OfficeName: x.OfficeName,
-          MobilOilConsumptionRate: x.MobilOilConsumptionRate,
+          StandardMobilOilConsumptionRate: x.StandardMobilOilConsumptionRate,
           ModelYear: x.ModelYear,
           OfficeId: x.OfficeId,
-          FuelConsumptionRate: x.FuelConsumptionRate,
-          PurchasedBy: x.PurchasedBy,
+          StandardFuelConsumptionRate: x.StandardFuelConsumptionRate,
           PurchaseName: x.PurchaseName,
-          PurchaseId: x.PurchaseId
+          PurchaseId: x.PurchaseId,
+          OfficeName: x.OfficeName,
+          PurchasedBy: x.PurchasedBy,
+          TotalFuelUsage: x.TotalFuelUsage,
+          TotalMobilOilUsage: x.TotalMobilOilUsage,
+          FuelTotalCost: x.FuelTotalCost,
+          MobilOilTotalCost: x.MobilOilTotalCost,
+          SparePartsTotalCost: x.SparePartsTotalCost,
+          ServicesAndMaintenanceTotalCost: x.ServicesAndMaintenanceTotalCost,
+          CurrentUsage: x.CurrentUsage,
+          GeneratorStartingCost: x.GeneratorStartingCost,
+          ActualFuelConsumptionRate: x.ActualFuelConsumptionRate,
+          ActualMobilOilConsumptionRate: x.ActualMobilOilConsumptionRate
         };
-
         this.commonLoader.hideLoader();
       }, error => {
         this.commonLoader.hideLoader();
@@ -97,16 +135,54 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   }
 
   openHoursModal(event) {
-    debugger;
     const dialogRef = this.dialog.open(AddHoursComponent, {
       width: '850px',
       data: {
         generatorId: this.generatorId
       }
     });
+    dialogRef.afterClosed().subscribe(result => {
+      this.getGeneratorDetailById();
+    });
   }
+
+  onTabClick(event) {
+
+    if (event.index === 1) {
+      this.getGeneratorMonthlyBreakdownData();
+    }
+  }
+
+  getGeneratorMonthlyBreakdownData() {
+    const data = {
+      GeneratorId: +this.generatorId,
+      SelectedYear: this.monthlyBreakdownYear
+    };
+
+    this.purchaseService.getGeneratorMonthlyBreakdown(data)
+      .pipe(takeUntil(this.destroyed$))
+        .subscribe(x => {
+          this.generatorMonthlyBreakdownList = {
+            StartingUsage: x.StartingUsage,
+            IncurredUsage: x.IncurredUsage,
+            StandardMobilOilConsumptionRate: x.StandardMobilOilConsumptionRate,
+            StandardFuelConsumptionRate: x.StandardFuelConsumptionRate,
+            StartingCost: x.StartingCost,
+            CostAnalysisBreakDownList: x.CostAnalysisBreakDownList,
+            UsageAnalysisBreakDownList: x.UsageAnalysisBreakDownList
+          };
+        });
+  }
+
+  getMonthlyBreakDownYears() {
+    this.monthlyBreakdownYearList$ = this.purchaseService.getMonthlyBreakDownYears();
+    this.monthlyBreakdownYearList$.subscribe(x => {
+      this.monthlyBreakdownYear = x[0].value;
+    });
+  }
+
   goToDetails() {
-    this.router.navigate(['store/generator/edit', 1]);
+    this.router.navigate(['store/generator/edit', this.generatorId]);
   }
 
   ngOnDestroy() {

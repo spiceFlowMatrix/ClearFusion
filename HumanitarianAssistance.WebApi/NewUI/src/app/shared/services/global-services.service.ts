@@ -129,6 +129,27 @@ export class GlobalService {
     );
   }
 
+  //#region "deleteById"
+  deleteById(url: string, options?: any): Observable<any> {
+    return this.http.delete<any>(url, options).pipe(
+      map((response) => response),
+      retryWhen(errors =>
+
+        errors.pipe(
+          tap(r => {
+            this.toastr.warning('Slow internet connection retrying ...')
+          }
+          ),
+          delay(10000),
+          take(3)
+        )
+      ),
+      finalize(() => {
+        // this.loader.hideLoader();
+      })
+    );
+  }
+
   //#region "GET_LIST_BY_ID And Date"
   getListByIdAndDate(url: string, data): Observable<any> {
     return this.http.post(url, data).pipe(

@@ -63,7 +63,7 @@ export class JournalReportComponent implements OnInit {
   currencyId$: Observable<IDropDownModel[]>;
   recordType$: Observable<IDropDownModel[]>;
   journalListHeaders$ = of(['Transaction Date', 'Voucher Code', 'Transaction Description', 'Currency', 'Account Code', 'Account Name',
-  'Debit Amount', 'Credit Amount', 'Project', 'Budget Line']);
+  'Debit Amount', 'Credit Amount', 'Project', 'Budget Line', 'Job Code']);
   journalFilterList$: Observable<IJournalList[]>;
   journalFilterForm: FormGroup;
   screenHeight: number;
@@ -211,10 +211,12 @@ onOpenedOfficeMultiSelectChange(event: IOpenedChange) {
 onOpenedJournalMultiSelectChange(event: IOpenedChange) {
   this.journalFilterForm.controls['JournalCode'].setValue(event.Value);
 }
-onOpenedProjectMultiSelectChange(event: number[]) {
-  this.journalFilterForm.controls['Project'].setValue(event);
-  const projectFilter = event;
-    if (projectFilter.length > 0) {
+onOpenedProjectMultiSelectChange(event:  IOpenedChange) {
+  this.journalFilterForm.controls['Project'].setValue(event.Value);
+    const projectFilter = event.Value;
+    if (event.Flag === true) {
+      return;
+    } else if ((projectFilter.length > 0)) {
       this.multiBudgetLineList = [];
       this.multiProjectJobList = [];
       this.journalFilterForm.controls['JobCode'].setValue([]);
@@ -227,18 +229,20 @@ onOpenedProjectMultiSelectChange(event: number[]) {
       this.journalFilterForm.controls['BudgetLine'].setValue([]);
     }
 }
-onOpenedProjectJobMultiSelectChange(event: number[]) {
-  this.journalFilterForm.controls['JobCode'].setValue(event);
+onOpenedProjectJobMultiSelectChange(event: IOpenedChange) {
+  this.journalFilterForm.controls['JobCode'].setValue(event.Value);
 }
-onOpenedBudgetLineMultiSelectChange(event: number[]) {
-  this.journalFilterForm.controls['BudgetLine'].setValue(event);
-  const projectbudgetFilter = event;
-    if (projectbudgetFilter.length > 0) {
-      this.getProjectJobList(projectbudgetFilter);
-    } else {
-      this.multiProjectJobList = [];
-      this.journalFilterForm.controls['JobCode'].setValue([]);
-    }
+onOpenedBudgetLineMultiSelectChange(event: IOpenedChange) {
+  this.journalFilterForm.controls['BudgetLine'].setValue(event.Value);
+  const projectbudgetFilter = event.Value;
+  if (event.Flag === true) {
+    return;
+  } else if (projectbudgetFilter.length > 0) {
+    this.getProjectJobList(projectbudgetFilter);
+  } else {
+    this.multiProjectJobList = [];
+    this.journalFilterForm.controls['JobCode'].setValue([]);
+  }
 }
 get AccountIds() {
   return this.journalFilterForm.get('accountLists').value;
@@ -468,7 +472,7 @@ GetAllJournalDetails(journalFilter) {
           });
           this.journalFilterList$ = of(this.journalDataSource).pipe(
             map(r => r.map(v => ({
-              Transaction_Date: new Date(v.TransactionDate).getDate() + '/' + new Date(v.TransactionDate).getMonth() +
+              Transaction_Date: new Date(v.TransactionDate).getDate() + '/' + (new Date(v.TransactionDate).getMonth() + 1) +
               '/' + new Date(v.TransactionDate).getFullYear(),
               Voucher_Code: v.ReferenceNo,
               Transaction_Description: v.TransactionDescription,
@@ -478,7 +482,8 @@ GetAllJournalDetails(journalFilter) {
               DebitAmount: v.DebitAmount,
               CreditAmount: v.CreditAmount,
               Project: v.Project,
-              BudgetLine: v.BudgetLineDescription
+              BudgetLine: v.BudgetLineDescription,
+              JobCode: v.JobCode
              }) as IJournalList))
           );
         } else {
@@ -690,6 +695,37 @@ ExportLedgerPdf(value) {
   };
   this.accountservice.onExportJournalLedgerPdf(this.journalFilter);
 }
+ExportJournalPdf(value){
+  this.journalFilter = {
+    CurrencyId: value.CurrencyId,
+    JournalCode: value.JournalCode,
+    OfficesList: value.OfficesList,
+    RecordType:
+      value.RecordType == null ? this.defaultRecordType : value.RecordType,
+    FromDate: new Date(
+      new Date(value.date.begin).getFullYear(),
+      new Date(value.date.begin).getMonth(),
+      new Date(value.date.begin).getDate(),
+      new Date().getHours(),
+      new Date().getMinutes(),
+      new Date().getSeconds()
+    ),
+    ToDate: new Date(
+      new Date(value.date.end).getFullYear(),
+      new Date(value.date.end).getMonth(),
+      new Date(value.date.end).getDate(),
+      new Date().getHours(),
+      new Date().getMinutes(),
+      new Date().getSeconds()
+    ),
+    BudgetLine: value.BudgetLine,
+    Project: value.Project,
+    JobCode: value.JobCode,
+    accountLists: value.accountLists,
+    date: null
+  };
+  this.accountservice.onExportJournalPdf(this.journalFilter);
+}
 
 //#region "export pdf"
 printJournalReport(): void {
@@ -784,4 +820,5 @@ interface IJournalList {
   CreditAmount;
   Project;
   BudgetLine;
+  JobCode;
 }

@@ -31,6 +31,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(new GetProjectHiringRequestDetailByHiringRequestIdQuery { HiringRequestId = HiringRequestId });
         }
 
+        [HttpPost]
+        public async Task<ApiResponse> GetAllProjectHiringRequestDetailByHiringRequestId([FromBody]long HiringRequestId)
+        {
+            return await _mediator.Send(new GetAllProjectHiringRequestDetailByHiringRequestIdQuery { HiringRequestId = HiringRequestId });
+        }
         [HttpGet]
         public async Task<ApiResponse> GetAllEmployeeList()
         {
@@ -118,5 +123,31 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         {
             return await _mediator.Send(new GetHiringCandidatesByOfficeIdQuery { OfficeId = OfficeId });
         }
-    }
+        //new Api's
+        [HttpPost]
+        public async Task<ApiResponse> GetAllJobList([FromBody]GetAllJobListQuery query)
+        {
+            return await _mediator.Send(query);
+        }
+
+        // [HttpPost]
+        // public async Task<ApiResponse> GetOfficeListByJobId([FromBody]GetOfficeListByJobIdQuery query)
+        // {
+        //     return await _mediator.Send(query);
+        // }
+        
+        [HttpPost]
+        public async Task<ApiResponse> GetProfessionListByOfficeId([FromBody]GetProfessionListByOfficeIdQuery query)
+        {
+            return await _mediator.Send(query);
+
+        }
+
+        [HttpPost]
+         public async Task<ApiResponse> GetRemainingVacancyByJobId([FromBody]long JobId)
+        {
+            return await _mediator.Send(new GetRemainingVacancyByJobIdQuery{ JobId=JobId});
+        }
+    }  
+    
 }

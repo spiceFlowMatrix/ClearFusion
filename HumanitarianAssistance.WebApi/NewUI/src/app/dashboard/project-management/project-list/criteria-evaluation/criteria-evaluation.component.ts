@@ -2025,6 +2025,7 @@ export class CriteriaEvaluationComponent
                   data.data.CriteriaEveluationModel.ImproveDonorRelationship;
                 this.priorityForm.GoodCause =
                   data.data.CriteriaEveluationModel.GoodCause;
+                  this.priorityForm.Others = data.data.CriteriaEveluationModel.Others;
                 this.priorityForm.ImprovePerformancecapacity =
                   data.data.CriteriaEveluationModel.ImprovePerformancecapacity;
                 this.priorityForm.SkillImprove =
@@ -4404,9 +4405,9 @@ export class CriteriaEvaluationComponent
 
 
   downloadPdf() {
-    debugger;
     const pdfmodel: ICriteriaEvaluationPdfModel = {
-      ProjectId: this.ProjectId
+      ProjectId: this.ProjectId,
+      TotalScore: this.totalScore
     };
     if (pdfmodel != null && pdfmodel !== undefined) {
       this.globalService

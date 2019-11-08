@@ -26,9 +26,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [HttpGet]
         public async Task<ApiResponse> GetAllInventories(int? AssetType)
         {
-            return await _mediator.Send(new GetAllInventoriesQuery { AssetType = AssetType });
+            return await _mediator.Send(new GetAllInventoriesQuery { AssetType = AssetType});
         }
 
+        [HttpGet]
+        public async Task<ApiResponse> GetInventories(int? AssetType)
+        {
+            return await _mediator.Send(new GetInventoriesQuery { AssetType = AssetType });
+        }
         [HttpPost]
         public async Task<ApiResponse> AddInventory([FromBody]AddInventoryCommand command)
         {
@@ -534,6 +539,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
             return await _mediator.Send(new GetAllStoreItemGroupsQuery { InventoryId = Id });
         }
 
+        [HttpGet]
+        public async Task<ApiResponse> GetAllStoreInventoryItems()
+        {
+            return await _mediator.Send(new GetAllStoreInventoryItemsQuery());
+        }
         #endregion 
     }
 }

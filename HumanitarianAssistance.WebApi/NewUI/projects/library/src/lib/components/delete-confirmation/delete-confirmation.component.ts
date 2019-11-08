@@ -28,6 +28,7 @@ export class DeleteConfirmationComponent implements OnInit {
 
   confirmAction() {
     this.confirmDelete.emit(true);
+    this.dialogRef.close();
   }
 
   onCancelPopup(): void {

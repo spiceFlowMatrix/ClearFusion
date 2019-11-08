@@ -4,7 +4,7 @@
   <div mat-dialog-subtitle><b>Note:</b> User may provide a negative value if the vehicle's total incurred mileage needs to be
     reduced for some reason..</div>
   <br/>
-  <form [formGroup]="mileageForm">
+  <form [formGroup]="mileageForm" (ngSubmit)="addMilage()">
 
 
     <mat-dialog-content>
@@ -26,7 +26,7 @@
       </div>
     </mat-dialog-content>
     <mat-dialog-actions class="items-float-right">
-      <hum-button *ngIf="!isAddMileageFormSubmitted" (click)='addMilage()' [type]="'save'" [text]="'save'"></hum-button>
+      <hum-button *ngIf="!isAddMileageFormSubmitted" [disabled]="!mileageForm.valid" [type]="'save'" [text]="'save'" [isSubmit]='true'></hum-button>
       <hum-button *ngIf="isAddMileageFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
       <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
     </mat-dialog-actions>

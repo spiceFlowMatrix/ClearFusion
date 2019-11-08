@@ -81,7 +81,7 @@ export class GlobalSharedService {
 
   //#region "uploadFile"
   uploadFile(pageId: number, entityId: any, file: any, documentTypeId: any = null) {
-    let objectName = SignedUrlObjectName.getSignedURLObjectName(pageId);
+    let objectName = SignedUrlObjectName.getSignedURLObjectName(pageId, entityId);
 
     if (objectName == null && objectName === '' && objectName === undefined) {
       throw new Error('object name cannot be empty');
@@ -198,4 +198,12 @@ export class GlobalSharedService {
     return Math.floor(Math.random() * 10000);
   }
   //#endregion
+
+  //#region "deleteFile"
+  deleteFile(model: any) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_FileManagement_DeleteDocumentFiles, model
+      );
+  }
 }

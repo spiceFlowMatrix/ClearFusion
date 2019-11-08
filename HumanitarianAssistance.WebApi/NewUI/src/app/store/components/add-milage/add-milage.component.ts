@@ -21,7 +21,6 @@ export class AddMilageComponent implements OnInit {
 
     private dialogRef: MatDialogRef<AddMilageComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
-    debugger;
 
     this.mileageForm = this.fb.group({
       'VehicleId': [data.vehicleId, [Validators.required]],
@@ -40,8 +39,8 @@ export class AddMilageComponent implements OnInit {
 
   //#endregion
   addMilage() {
-    this.isAddMileageFormSubmitted = true;
     if (this.mileageForm.valid) {
+      this.isAddMileageFormSubmitted = true;
       this.purchaseService.addVehicleMileage(this.mileageForm.value)
         .subscribe(x => {
           if (x) {

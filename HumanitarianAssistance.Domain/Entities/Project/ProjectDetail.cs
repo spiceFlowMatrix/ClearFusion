@@ -30,6 +30,10 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public ProjectProposalDetail ProjectProposalDetail { get; set; }
         public List<ProjectJobDetail> ProjectJobDetail { get; set; }
         public ProjectOtherDetail ProjectOtherDetail { get; set; }
+        public List<CountryMultiSelectDetails> CountryMultiSelectDetails { get; set; }
+        public List<ProvinceMultiSelect> ProvinceMultiSelect { get; set; }
+        public List<DistrictMultiSelect> DistrictMultiSelect { get; set; }
+        public List<ProjectActivityDetail> ProjectActivityDetail { get; set; }
 
     }
 }

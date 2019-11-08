@@ -6,7 +6,7 @@
         <button mat-icon-button (click)="onQuestionsClick()">
           <mat-icon class="plus_icon" aria-label="Add Question" pTooltip="Add Question">add</mat-icon>
         </button>
-        <button class="pull-right" mat-raised-button color="primary" (click)="onIndicatorEditClick()">
+        <button *ngIf="candeletedCandicate == false" class="pull-right" mat-raised-button color="primary" (click)="onIndicatorEditClick()">
           Edit Indicator Details
         </button>
       </div>
@@ -22,6 +22,9 @@
           <section matSort class="mat-elevation-z2 mat-header-row">
             <span class="mat-header-cell" mat-sort-header="Question">Question</span>
             <span class="mat-header-cell" mat-sort-header="Question Type">Question Type</span>
+            <span></span>
+            <span></span>
+
           </section>
 
           <mat-expansion-panel *ngFor="let item of indicatorQuestionList; let j= index;" [expanded]="step === j"
@@ -31,12 +34,12 @@
               <span class="mat-cell">{{item.QuestionTypeName}}</span>
               <span>
                 <button mat-icon-button (click)="onQuestionEditClick(item)">
-                  <mat-icon class="icon_cursor small_icon tp_15 icon_width mr_btm" aria-label="Edit Question">edit
+                  <mat-icon *ngIf="candeletedCandicate == false" class="icon_cursor small_icon tp_15 icon_width mr_btm" aria-label="Edit Question">edit
                   </mat-icon>
                 </button>
               </span>
               <span>
-                <mat-icon class="icon_cursor small_icon tp_15 icon_width" color="warn" (click)="onDeleteQuestion(item)">
+                <mat-icon  *ngIf="candeletedCandicate == false" class="icon_cursor small_icon tp_15 icon_width" color="warn" (click)="onDeleteQuestion(item)">
                   delete
                 </mat-icon>
               </span>

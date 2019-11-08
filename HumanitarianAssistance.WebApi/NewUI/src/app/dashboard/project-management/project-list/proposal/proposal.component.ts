@@ -105,7 +105,7 @@ export class ProposalComponent implements OnInit, OnChanges, OnDestroy {
       ProposalBudget: null,
       ProposalDueDate: null,
       IsProposalAccept: null,
-      CurrencyId: 0,
+      CurrencyId: null,
       IsApproved: false
     };
   }
@@ -163,7 +163,7 @@ export class ProposalComponent implements OnInit, OnChanges, OnDestroy {
       }
       if (ev === 'proposalBudget') {
         if (
-          this.proposalModel.CurrencyId !== 0 &&
+          // this.proposalModel.CurrencyId !== 0 &&
           this.proposalModel.CurrencyId != null &&
           this.proposalModel.CurrencyId !== undefined
         ) {

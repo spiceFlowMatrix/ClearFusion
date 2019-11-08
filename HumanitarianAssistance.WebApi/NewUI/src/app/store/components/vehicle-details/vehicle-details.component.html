@@ -11,13 +11,192 @@
   </div>
 </lib-sub-header-template>
 <mat-divider></mat-divider>
-<mat-tab-group [ngStyle]="scrollStyles">
+<mat-tab-group [ngStyle]="scrollStyles" (selectedTabChange)="onTabClick($event)">
   <mat-tab label="DETAILS">
     <ng-template matTabContent>
       <ng-container *ngTemplateOutlet="vehicleDetails"></ng-container>
     </ng-template>
   </mat-tab>
-  <mat-tab label="MONTHLY BREAKDOWN"> Content 2 </mat-tab>
+  <mat-tab label="MONTHLY BREAKDOWN">
+    <div style="padding-left: 50px;">
+      <div class="row">
+        <div class="col-md-2">
+          <div class="padding_top_10">
+            <mat-form-field>
+              <mat-label>Year</mat-label>
+              <mat-select [(ngModel)]="monthlyBreakdownYear" (selectionChange)='getVehicleMonthlyBreakdownData()'>
+                <mat-option *ngFor="let item of monthlyBreakdownYearList$ | async" [value]="item.value">
+                  {{item.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <mat-card>
+            <p>Starting Mileage:</p>
+            <h4>{{vehicleMonthlyBreakdownList.StartingMileage}}</h4>
+          </mat-card>
+        </div>
+        <div class="col-md-2">
+          <mat-card>
+            <p>Incurred Mileage:</p>
+            <h4>{{vehicleMonthlyBreakdownList.IncurredMileage}}</h4>
+          </mat-card>
+        </div>
+        <div class="col-md-2">
+          <mat-card title="Standard Fuel Consumption Rate">
+            <p>SFC Rate:</p>
+            <h4>{{vehicleMonthlyBreakdownList.StandardFuelConsumptionRate}}</h4>
+          </mat-card>
+        </div>
+        <div class="col-md-2">
+          <mat-card title="Standard Mobil Oil Consumption Rate">
+            <p>SMOC Rate:</p>
+            <h4>{{vehicleMonthlyBreakdownList.StandardMobilOilConsumptionRate}}</h4>
+          </mat-card>
+        </div>
+        <div class="col-md-2">
+          <mat-card>
+            <p>Starting Cost:</p>
+            <h4>{{vehicleMonthlyBreakdownList.StartingCost}}</h4>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+
+    <mat-card style="margin-top: 5px;">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-12">
+            <table class="table table-striped">
+              <thead>
+                <th>
+                  <h5>Vehicle Usage Analysis</h5>
+                </th>
+                <th>
+                  <h5>Jan</h5>
+                </th>
+                <th>
+                  <h5>Feb</h5>
+                </th>
+                <th>
+                  <h5>Mar</h5>
+                </th>
+                <th>
+                  <h5>Apr</h5>
+                </th>
+                <th>
+                  <h5>May</h5>
+                </th>
+                <th>
+                  <h5>Jun</h5>
+                </th>
+                <th>
+                  <h5>Jul</h5>
+                </th>
+                <th>
+                  <h5>Aug</h5>
+                </th>
+                <th>
+                  <h5>Sept</h5>
+                </th>
+                <th>
+                  <h5>Oct</h5>
+                </th>
+                <th>
+                  <h5>Nov</h5>
+                </th>
+                <th>
+                  <h5>Dec</h5>
+                </th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of vehicleMonthlyBreakdownList.UsageAnalysisBreakDownList">
+                  <td>{{item.Header}}</td>
+                  <td>{{item.January==0 ? '-' : item.January}}</td>
+                  <td>{{item.February==0 ? '-': item.February}}</td>
+                  <td>{{item.March==0 ? '-': item.March}}</td>
+                  <td>{{item.April==0? '-': item.April}}</td>
+                  <td>{{item.May==0? '-': item.May}}</td>
+                  <td>{{item.June==0? '-': item.June}}</td>
+                  <td>{{item.July==0? '-': item.July}}</td>
+                  <td>{{item.August==0? '-': item.August}}</td>
+                  <td>{{item.September==0? '-': item.September}}</td>
+                  <td>{{item.October==0? '-': item.October}}</td>
+                  <td>{{item.November==0? '-': item.November}}</td>
+                  <td>{{item.December==0? '-': item.December}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table table-striped">
+              <thead>
+                <th>
+                  <h5>Vehicle Cost Analysis</h5>
+                </th>
+                <th>
+                  <h5>Jan</h5>
+                </th>
+                <th>
+                  <h5>Feb</h5>
+                </th>
+                <th>
+                  <h5>Mar</h5>
+                </th>
+                <th>
+                  <h5>Apr</h5>
+                </th>
+                <th>
+                  <h5>May</h5>
+                </th>
+                <th>
+                  <h5>Jun</h5>
+                </th>
+                <th>
+                  <h5>Jul</h5>
+                </th>
+                <th>
+                  <h5>Aug</h5>
+                </th>
+                <th>
+                  <h5>Sept</h5>
+                </th>
+                <th>
+                  <h5>Oct</h5>
+                </th>
+                <th>
+                  <h5>Nov</h5>
+                </th>
+                <th>
+                  <h5>Dec</h5>
+                </th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of vehicleMonthlyBreakdownList.CostAnalysisBreakDownList">
+                  <td>{{item.Header}}</td>
+                  <td>{{item.January==0 ? '-' : item.January}}</td>
+                  <td>{{item.February==0 ? '-': item.February}}</td>
+                  <td>{{item.March==0 ? '-': item.March}}</td>
+                  <td>{{item.April==0? '-': item.April}}</td>
+                  <td>{{item.May==0? '-': item.May}}</td>
+                  <td>{{item.June==0? '-': item.June}}</td>
+                  <td>{{item.July==0? '-': item.July}}</td>
+                  <td>{{item.August==0? '-': item.August}}</td>
+                  <td>{{item.September==0? '-': item.September}}</td>
+                  <td>{{item.October==0? '-': item.October}}</td>
+                  <td>{{item.November==0? '-': item.November}}</td>
+                  <td>{{item.December==0? '-': item.December}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+  </mat-tab>
   <mat-tab label="LOGS">
     <ng-template matTabContent>
       <app-logs></app-logs>
@@ -25,7 +204,7 @@
   </mat-tab>
 </mat-tab-group>
 <!-- Vehicle Details template-->
-<ng-template #vehicleDetails [ngStyle]="scrollStyles">
+<ng-template #vehicleDetails>
   <mat-card>
     <div class="row">
       <div class="col-md-12">
@@ -44,69 +223,74 @@
               </tr>
               <tr>
                 <td>Current Mileage (KM)</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.CurrentMileage}}</td>
               </tr>
               <tr>
                 <td>Total Fuel Usage (Litres)</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.TotalFuelUsage}}</td>
               </tr>
               <tr>
                 <td>Total Mobil Oil Usage (Litres)</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.TotalMobilOilUsage}}</td>
               </tr>
               <tr>
                 <td>Standard Fuel Consumption Rate (Litre Per 100 KM)</td>
-                <td>{{vehicleDetailForm.FuelConsumptionRate}}</td>
+                <td>{{vehicleDetailForm.StandardFuelConsumptionRate}}</td>
               </tr>
               <tr>
                 <td>Actual Fuel Consumption Rate (Litre Per 100 KM)</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.ActualFuelConsumptionRate}}</td>
               </tr>
               <tr>
                 <td>Standard Mobil Oil Consumption Rate (Litre Per 100 KM)</td>
-                <td>{{vehicleDetailForm.MobilOilConsumptionRate}}</td>
+                <td>{{vehicleDetailForm.StandardMobilOilConsumptionRate}}</td>
               </tr>
               <tr>
                 <td>Actual Mobil Oil Consumption Rate (Litre Per 100 KM)</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.ActualMobilOilConsumptionRate}}</td>
 
               </tr>
             </tbody>
           </table>
-          <h5>Vehicle Usage Analysis</h5>
+          <h5>Vehicle Cost Analysis</h5>
           <table class="table table-striped">
             <tbody>
               <tr>
                 <td>Fuel Total Cost</td>
 
-                <td>-</td>
+                <td>{{vehicleDetailForm.FuelTotalCost}}</td>
               </tr>
               <tr>
                 <td>Mobil Oil Total Cost</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.MobilOilTotalCost}}</td>
               </tr>
               <tr>
                 <td>Spare Parts Total Cost</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.SparePartsTotalCost}}</td>
               </tr>
               <tr>
                 <td>Services & Maintenance Total Cost</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.ServiceAndMaintenanceTotalCost}}</td>
               </tr>
               <tr>
                 <td>Vehicle Starting Cost</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.VehicleStartingCost}}</td>
               </tr>
               <tr>
                 <td>Total Cost</td>
-                <td>-</td>
+                <td>{{vehicleDetailForm.FuelTotalCost+
+                  vehicleDetailForm.MobilOilTotalCost+
+                  vehicleDetailForm.SparePartsTotalCost+
+                  vehicleDetailForm.ServiceAndMaintenanceTotalCost+
+                  vehicleDetailForm.VehicleStartingCost
+                }}</td>
               </tr>
             </tbody>
           </table>
 
         </div>
         <div class="col-md-6">
-            <h5>Vehicle Details</h5>
+          <h5>Vehicle Details</h5>
           <table class="table table-striped">
             <tbody>
               <tr>
@@ -128,7 +312,9 @@
               </tr>
               <tr>
                 <td>PurchaseId</td>
-                <td><a>{{vehicleDetailForm.PurchaseName}}</a></td>
+                <td><a *ngIf="vehicleDetailForm && vehicleDetailForm.PurchaseId != null"
+                    [routerLink]="['/store/purchase/edit', vehicleDetailForm.PurchaseId]">{{vehicleDetailForm.PurchaseName}}</a>
+                </td>
 
               </tr>
             </tbody>

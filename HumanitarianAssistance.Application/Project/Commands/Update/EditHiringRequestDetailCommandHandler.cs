@@ -7,6 +7,7 @@ using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,63 +32,48 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
 
                 if (recordExists)
                 {
-
                     ProjectHiringRequestDetail projectHiringRequest = await _dbContext.ProjectHiringRequestDetail
                                                                                               .FirstOrDefaultAsync(x => x.HiringRequestId == request.HiringRequestId &&
                                                                                                                         x.IsDeleted == false);
-                    projectHiringRequest.BasicPay = request.BasicPay;
-                    projectHiringRequest.BudgetLineId = request.BudgetLineId;
-                    projectHiringRequest.ModifiedById = request.ModifiedById;
-                    projectHiringRequest.ModifiedDate = request.ModifiedDate;
-                    projectHiringRequest.CurrencyId = request.CurrencyId;
-                    projectHiringRequest.Description = request.Description;
-                    projectHiringRequest.GradeId = request.GradeId;
+                                 // Note : edit ProjectJob in old Ui
+                if (request.JobCategory != null && request.TotalVacancy!=projectHiringRequest.TotalVacancies  ) {
+                    var jobdetail = await _dbContext.ProjectJobHiringDetail.Where (x => x.JobId == request.JobCategory).FirstOrDefaultAsync ();
+                    var temp=projectHiringRequest.TotalVacancies - request.TotalVacancy;
+                    if(temp>0)
+                    {
+                        jobdetail.FilledVacancies=jobdetail.FilledVacancies+temp;
+                    }else{
+                            jobdetail.FilledVacancies=jobdetail.FilledVacancies-(temp * -1);
+                    }
+                    await _dbContext.SaveChangesAsync ();
+                }
+                    projectHiringRequest.ModifiedById = request.CreatedById;
+                    projectHiringRequest.ModifiedDate = request.CreatedDate;
                     projectHiringRequest.IsDeleted = false;
-                    projectHiringRequest.OfficeId = request.OfficeId;
-                    projectHiringRequest.Position = request.Position;
-                    projectHiringRequest.ProfessionId = request.ProfessionId;
+                    projectHiringRequest.OfficeId = request.Office;
+                    projectHiringRequest.ProfessionId = request.Position;
                     projectHiringRequest.ProjectId = request.ProjectId;
-                    projectHiringRequest.TotalVacancies = request.TotalVacancies;
+                    projectHiringRequest.TotalVacancies = request.TotalVacancy;
                     projectHiringRequest.AnouncingDate = request.AnouncingDate;
-                    projectHiringRequest.JobType = request.JobType;
+                   // projectHiringRequest.JobType = request.JobType;
                     projectHiringRequest.Background = request.Background;
                     projectHiringRequest.JobStatus = request.JobStatus;
-                    projectHiringRequest.KnowladgeAndSkillRequired = request.KnowladgeAndSkillRequired;
+                    projectHiringRequest.JobId = request.JobCategory;
+                    projectHiringRequest.KnowladgeAndSkillRequired = request.KnowledgeAndSkillsRequired;
                     projectHiringRequest.SalaryRange = request.SalaryRange;
-                    projectHiringRequest.Shift = request.Shift;
-                    projectHiringRequest.ProvinceId = request.ProvinceId;
-                    projectHiringRequest.SpecificDutiesAndResponsblities = request.SpecificDutiesAndResponsblities;
-                    projectHiringRequest.SubmissionGuidlines = request.SubmissionGuidlines;
+                    projectHiringRequest.Shift = request.JobShift;
+                    projectHiringRequest.ProvinceId = request.Province;
+                    projectHiringRequest.SpecificDutiesAndResponsblities = request.SpecificDutiesAndResponsibilities;
+                    projectHiringRequest.SubmissionGuidlines = request.SubmissionGuidelines;
                     projectHiringRequest.ClosingDate = request.ClosingDate;
                     projectHiringRequest.ContractDuration = request.ContractDuration;
                     projectHiringRequest.ContractType = request.ContractType;
-                    projectHiringRequest.CountryId = request.CountryId;
-                    projectHiringRequest.GenderId = request.GenderId;
-                    projectHiringRequest.MinimumEducationLevel = request.MinimumEducationLevel;
+                    projectHiringRequest.CountryId = request.Country;
+                    projectHiringRequest.GenderId = request.Gender;
+                    projectHiringRequest.MinimumEducationLevel = request.MinEducationLevel;
                     projectHiringRequest.Experience = request.Experience;
                     projectHiringRequest.Organization = request.Organization;
-                    projectHiringRequest.JobCategory = request.JobCategory;
-                    await _dbContext.SaveChangesAsync();
-                    // Note : edit ProjectJob in old Ui
-                    if (projectHiringRequest.HiringRequestId != 0)
-                    {
-                        JobHiringDetails jobDetail = await _dbContext.JobHiringDetails.FirstOrDefaultAsync(x => x.HiringRequestId == request.HiringRequestId &&
-                                                                                                            x.IsDeleted == false);
-                        if (jobDetail != null)
-                        {
-                            jobDetail.JobDescription = request.Description;
-                            jobDetail.ProfessionId = request.ProfessionId;
-                            jobDetail.OfficeId = request.OfficeId;
-                            jobDetail.IsActive = true;
-                            jobDetail.GradeId = request.GradeId;
-                            jobDetail.HiringRequestId = projectHiringRequest.HiringRequestId;
-                            jobDetail.IsDeleted = false;
-                            jobDetail.ModifiedById = request.ModifiedById;
-                            jobDetail.ModifiedDate = DateTime.UtcNow;
-                            jobDetail.Unit = request.TotalVacancies.Value;
-                            await _dbContext.SaveChangesAsync();
-                        }
-                    }
+                    await _dbContext.SaveChangesAsync();   
                 }
                 else
                 {

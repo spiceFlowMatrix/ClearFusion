@@ -1,55 +1,55 @@
 <ng-container [ngSwitch]="type">
 
-  <button *ngSwitchCase="'save'" mat-flat-button class="blue" (click)="btnClick()" cdkFocusInitial
+  <button *ngSwitchCase="'save'" [disabled]="disabled" mat-flat-button class="blue" (click)="btnClick()" cdkFocusInitial
     [type]="(isSubmit)?'submit':'button'">
     <h5>
       <i class="fas fa-check"></i>
       {{text | uppercase}}
     </h5>
   </button>
-  <button *ngSwitchCase="'edit'" mat-flat-button class="blue" (click)="btnClick()" cdkFocusInitial
+  <button *ngSwitchCase="'edit'" [disabled]="disabled" mat-flat-button class="blue" (click)="btnClick()" cdkFocusInitial
   [type]="(isSubmit)?'submit':'button'">
   <h5>
     <i class="fas fa-edit"></i>
     {{text | uppercase}}
   </h5>
 </button>
-  <button *ngSwitchCase="'cancel'" mat-flat-button class="red" (click)="btnClick()" type="button">
+  <button *ngSwitchCase="'cancel'" [disabled]="disabled" mat-flat-button class="red" (click)="btnClick()" type="button">
     <h5>
       <i class="fas fa-times"></i>
       {{text | uppercase}}
     </h5>
   </button>
-  <button *ngSwitchCase="'remove'" mat-flat-button class="red" (click)="btnClick()" type="button">
+  <button *ngSwitchCase="'remove'" [disabled]="disabled" mat-flat-button class="red" (click)="btnClick()" type="button">
     <h5>
       <i class="fas fa-trash-alt"></i>
       {{text | uppercase}}
     </h5>
   </button>
-  <button *ngSwitchCase="'add'" mat-flat-button class="blue" (click)="btnClick()" type="button">
+  <button *ngSwitchCase="'add'" [disabled]="disabled" mat-flat-button class="blue" (click)="btnClick()" type="button">
     <h5>
       <i class="fas fa-plus"></i>
       {{text | uppercase}}
     </h5>
   </button>
-  <button *ngSwitchCase="'filter'" mat-flat-button class="blue" (click)="btnClick()" type="button">
+  <button *ngSwitchCase="'filter'" [disabled]="disabled" mat-flat-button class="blue" (click)="btnClick()" type="button">
     <h5>
       <i class="fas fa-filter"></i>
       {{text | uppercase}}
     </h5>
   </button>
-  <button *ngSwitchCase="'down'" mat-flat-button class="blue" (click)="btnClick()" type="button">
+  <button *ngSwitchCase="'down'" [disabled]="disabled" mat-flat-button class="blue" (click)="btnClick()" type="button">
     <h5>
       {{text | uppercase}}
       <i class="fas fa-caret-down"></i>
     </h5>
   </button>
-  <button *ngSwitchCase="'text'" mat-flat-button class="blue" (click)="btnClick()" type="button">
+  <button *ngSwitchCase="'text'" [disabled]="disabled" mat-flat-button class="blue" (click)="btnClick()" type="button">
     <h5>
       {{text | uppercase}}
     </h5>
   </button>
-  <button *ngSwitchCase="'clear'" mat-flat-button class="blue" (click)="btnClick()" type="button">
+  <button *ngSwitchCase="'clear'" [disabled]="disabled" mat-flat-button class="blue" (click)="btnClick()" type="button">
     <h5>
       <i class="fas fa-sync-alt"></i>
       {{text | uppercase}}
@@ -61,7 +61,7 @@
     </span>
     {{text| uppercase}}
   </button>
-  <button *ngSwitchCase="'download'" mat-flat-button class="blue" (click)="btnClick()" type="button">
+  <button *ngSwitchCase="'download'" [disabled]="disabled" mat-flat-button class="blue" (click)="btnClick()" type="button">
     <h5>
       <i class="fas fa-download"></i>
       {{text | uppercase}}

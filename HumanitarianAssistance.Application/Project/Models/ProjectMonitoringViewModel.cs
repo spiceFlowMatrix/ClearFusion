@@ -20,5 +20,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public long? ProjectMonitoringReviewId { get; set; }
         public DateTime? MonitoringDate { get; set; }
         public double? Rating { get; set; }
+        public string DisplayMonitoringDate { get; set; }
+
     }
 }

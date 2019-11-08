@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, EventEmitter, Output } from '@angular/core';
 import { of, Observable, ReplaySubject } from 'rxjs';
 import {
   HiringList,
@@ -9,6 +9,9 @@ import { HiringRequestsService } from '../../project-list/hiring-requests/hiring
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
+import { AddHiringRequestComponent } from '../add-hiring-request/add-hiring-request.component';
+import { MatDialog } from '@angular/material';
+import { AddNewCandidateComponent } from '../add-new-candidate/add-new-candidate.component';
 
 @Component({
   selector: 'app-request-detail',
@@ -27,10 +30,12 @@ export class RequestDetailComponent implements OnInit {
   newCandidatesList$: Observable<HiringList[]>;
   hiringRequestDetails: HiringRequestDetailList;
   hiringRequestId: any;
+  projectId: any;
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
   constructor(
+    public dialog: MatDialog,
     private routeActive: ActivatedRoute,
     public hiringRequestService: HiringRequestsService,
     private loader: CommonLoaderService
@@ -61,6 +66,9 @@ export class RequestDetailComponent implements OnInit {
     ] as HiringList[]);
     this.routeActive.params.subscribe(params => {
       this.hiringRequestId = +params['id'];
+    });
+    this.routeActive.parent.params.subscribe(params => {
+      this.projectId = +params['id'];
     });
 
     this.getHiringRequestDetailsByHiringRequestId();
@@ -110,6 +118,85 @@ export class RequestDetailComponent implements OnInit {
         }
       );
   }
+
+  // #region edit hiring request
+  editHiringRequest(): void {
+    // NOTE: It open AddHiringRequest (AddHiringRequestsComponent)
+    const dialogRef = this.dialog.open(AddHiringRequestComponent, {
+      width: '700px',
+      autoFocus: false,
+      data: {
+        hiringRequestId: this.hiringRequestDetails.HiringRequestId,
+        projectId: this.projectId
+      }
+    });
+
+    // refresh the list after new request created
+    dialogRef.componentInstance.onUpdateHiringRequestListRefresh.subscribe(() => {
+      this.getHiringRequestDetailsByHiringRequestId();
+    });
+    dialogRef.afterClosed().subscribe(result => {
+
+    });
+  }
+
+   // #region adding new hiring request
+   addNewCandidate(): void {
+    // NOTE: It open AddHiringRequest dialog and passed the data into the AddHiringRequestsComponent Model
+    const dialogRef = this.dialog.open(AddNewCandidateComponent, {
+      width: '1000px',
+      autoFocus: false,
+    });
+    // // refresh the list after new request created
+    // dialogRef.componentInstance.onAddHiringRequestListRefresh.subscribe(() => {
+    //   // do something
+    //   this.getAllHiringRequestFilterList();
+    // });
+
+    // dialogRef.afterClosed().subscribe(result => {
+    // });
+  }
   //#endregion
+
+  //#endregion
+  // //#region "GetCandidateList"
+  // GetCandidateList(data: number) {
+  //   if (data != null) {
+  //     this.candidateList = [];
+  //     const candidateDetail: IReuestedCandidateDetailModel = {
+  //       HiringRequestId: data
+  //     };
+  //     this.hiringRequestService
+  //       .GetRequestedCandidateById(candidateDetail)
+  //       .subscribe(
+  //         (response: IResponseData) => {
+  //           if (response.statusCode === 200 && response.data != null) {
+  //             response.data.forEach(element => {
+  //               this.candidateList.push({
+  //                 CandidateId: element.CandidateId,
+  //                 EmployeeID: element.EmployeeID,
+  //                 EmployeeCode: element.EmployeeCode,
+  //                 EmployeeName: element.EmployeeName,
+  //                 EmployeeTypeName: element.EmployeeTypeName,
+  //                 Gender: element.Gender,
+  //                 EmployeeTypeId: element.EmployeeTypeId,
+  //                 IsInterViewed: element.IsInterViewed,
+  //                 IsShortListed: element.IsShortListed,
+  //                 IsSelected: element.IsSelected,
+  //                 IsSelectedFlag: false
+  //               });
+  //             });
+  //           } else {
+  //             this.toastr.error(response.message);
+  //           }
+  //           this.getCandidateDetailLoader = false;
+  //         },
+  //         error => {
+  //           this.toastr.error('Someting went wrong');
+  //           this.getCandidateDetailLoader = false;
+  //         }
+  //       );
+  //   }
+  // }
+  // //#endregion
 }
-//GetRequestedCandidateById
