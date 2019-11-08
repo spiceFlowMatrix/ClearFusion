@@ -10,6 +10,7 @@ import { LogisticRequestStatus } from 'src/app/shared/enum';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { ToastrService } from 'ngx-toastr';
 import { DeleteConfirmationComponent } from 'projects/library/src/lib/components/delete-confirmation/delete-confirmation.component';
+import { IDropDownModel } from 'src/app/dashboard/accounting/report-services/report-models';
 
 @Component({
   selector: 'app-logistic-requests',
@@ -28,6 +29,11 @@ export class LogisticRequestsComponent implements OnInit {
   actions: TableActionsModel;
   projectId;
   logisticRequestList;
+  officeDropdown: any[];
+  currencyDropdown: any[];
+  currencyId$: Observable<IDropDownModel[]>;
+  budgetLineId$: Observable<IDropDownModel[]>;
+  officeId$: Observable<IDropDownModel[]>;
   constructor(
     private dialog: MatDialog,
     private router: Router,
@@ -52,12 +58,15 @@ export class LogisticRequestsComponent implements OnInit {
       this.projectId = +params['id'];
     });
     this.getAllRequest();
+    this.getCurrencyCodeList();
+    this.getOfficeCodeList();
+    this.getBudgetLineList();
   }
 
   openAddRequestDialog(): void {
     const dialogRef = this.dialog.open(AddLogisticRequestComponent, {
-      width: '300px',
-      data: {ProjectId: this.projectId}
+      width: '450px',
+      data: {ProjectId: this.projectId, Currency: this.currencyId$, Office: this.officeId$, BudgetLine: this.budgetLineId$}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -128,6 +137,99 @@ export class LogisticRequestsComponent implements OnInit {
         Status: ((LogisticRequestStatus[v.Status] === 'NewRequest') ? 'New Request' : LogisticRequestStatus[v.Status]),
         TotalCost: v.TotalCost
        }) as IRequestList)));
+  }
+
+  getCurrencyCodeList() {
+    this.logisticservice
+      .GetAllCurrencyCodeList()
+      .subscribe(
+        data => {
+          this.currencyDropdown = [];
+          if (data.data.CurrencyList != null) {
+            data.data.CurrencyList.forEach(element => {
+              this.currencyDropdown.push(element);
+            });
+
+            // this.selectedCurrency = this.currencyDropdown[0].CurrencyId;
+            // this.addLogisticRequestForm.controls['CurrencyId'].setValue(this.selectedCurrency);
+            this.currencyId$ = of(this.currencyDropdown.map(y => {
+              return {
+                value: y.CurrencyId,
+                name: y.CurrencyCode + '-' + y.CurrencyName
+              };
+            }));
+          }
+        },
+        error => {
+          if (error.StatusCode === 500) {
+            this.toastr.error('Internal Server Error....');
+          } else if (error.StatusCode === 401) {
+            this.toastr.error('Unauthorized Access Error....');
+          } else if (error.StatusCode === 403) {
+            this.toastr.error('Forbidden Error....');
+          }
+        }
+      );
+  }
+
+  getOfficeCodeList() {
+    this.logisticservice
+      .GetAllOfficeCodeList()
+      .subscribe(
+        data => {
+          if (data.data.OfficeDetailsList != null) {
+            this.officeDropdown = [];
+            data.data.OfficeDetailsList.forEach(element => {
+              this.officeDropdown.push({
+                Id: element.OfficeId,
+                Name: element.OfficeName
+              });
+            });
+            this.officeId$ = of(this.officeDropdown.map(y => {
+              return {
+                value: y.Id,
+                name: y.Name
+              };
+            }));
+          }
+        },
+        error => {
+          if (error.StatusCode === 500) {
+            this.toastr.error('Internal Server Error....');
+          } else if (error.StatusCode === 401) {
+            this.toastr.error('Unauthorized Access Error....');
+          } else if (error.StatusCode === 403) {
+            this.toastr.error('Forbidden Error....');
+          }
+        }
+      );
+  }
+
+  getBudgetLineList() {
+    this.logisticservice
+      .GetBudgetLineListByProjectId(this.projectId)
+      .subscribe(
+        data => {
+          this.currencyDropdown = [];
+          if (data.data.ProjectBudgetLineDetailList != null) {
+            this.budgetLineId$ = of(data.data.ProjectBudgetLineDetailList.map(y => {
+              return {
+                value: y.BudgetLineId,
+                name: y.BudgetName
+              };
+            }));
+          }
+        },
+        error => {
+          if (error.StatusCode === 500) {
+            this.toastr.error('Internal Server Error....');
+          } else if (error.StatusCode === 401) {
+            this.toastr.error('Unauthorized Access Error....');
+          } else if (error.StatusCode === 403) {
+            this.toastr.error('Forbidden Error....');
+          }
+        }
+      );
   }
 }
 
