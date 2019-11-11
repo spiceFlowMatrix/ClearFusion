@@ -1,17 +1,31 @@
 <div class="row">
   <div class="col-md-12">
     <div mat-dialog-title><h4>Add New Request</h4></div>
-    <form [formGroup]="addLogisticRequestForm">
-        <mat-form-field class="example-full-width">
-            <input matInput formControlName="Name" placeholder="Name">
-        </mat-form-field>
-        <!-- <mat-form-field class="example-full-width">
-            <input type="number" matInput formControlName="TotalCost" placeholder="Total Cost">
-        </mat-form-field> -->
+    <form [formGroup]="addLogisticRequestForm" (ngSubmit)="addRequest(addLogisticRequestForm.value)">
+      <div class="row">
+        <div class="col-md-6">
+          <mat-form-field class="example-full-width">
+              <input matInput formControlName="Name" placeholder="Name">
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+            <lib-hum-dropdown [validation]="addLogisticRequestForm.controls['OfficeId'].hasError('required')" [options]="officeId$" formControlName="OfficeId" [placeHolder]="'Office'"
+            ></lib-hum-dropdown>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+            <lib-hum-dropdown [validation]="addLogisticRequestForm.controls['BudgetLineId'].hasError('required')" [options]="budgetLineId$" formControlName="BudgetLineId" [placeHolder]="'BudgetLine'"
+            ></lib-hum-dropdown>
+        </div>
+        <div class="col-md-6">
+          <lib-hum-dropdown [validation]="addLogisticRequestForm.controls['CurrencyId'].hasError('required')" [options]="currencyId$" formControlName="CurrencyId" [placeHolder]="'Currency'"
+          ></lib-hum-dropdown>
+        </div>
+      </div>
 
-        <hum-button [type]="'save'" [text]="'Save'" (click)="addRequest(addLogisticRequestForm.value)"></hum-button>
-        <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="cancelRequest()" class="pull-right"></hum-button>
-
+      <hum-button [type]="'save'" [text]="'Save'" [isSubmit]='true'></hum-button>
+      <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="cancelRequest()" class="pull-right"></hum-button>
     </form>
   </div>
 </div>

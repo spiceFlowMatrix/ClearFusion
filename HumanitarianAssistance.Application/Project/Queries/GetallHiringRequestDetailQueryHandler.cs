@@ -8,6 +8,7 @@ using HumanitarianAssistance.Persistence;
 using MediatR;
 using System.Threading;
 using HumanitarianAssistance.Application.Project.Models;
+using HumanitarianAssistance.Common.Enums;
 
 namespace HumanitarianAssistance.Application.Project.Queries
 {
@@ -24,7 +25,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
             ApiResponse response = new ApiResponse();
             try
             {
-                int totalCount = await _dbContext.ProjectHiringRequestDetail.CountAsync(x => x.IsDeleted == false && x.ProjectId == request.ProjectId);
+                int totalCount = await _dbContext.ProjectHiringRequestDetail.CountAsync(x => x.IsDeleted == false && x.ProjectId == request.ProjectId && x.HiringRequestStatus == request.IsInProgress || x.HiringRequestStatus == request.IsOpenFlagId);
 
                 // var requestDetail = (from hr in _dbContext.ProjectHiringRequestDetail.Where(x => x.IsDeleted == false &&
                 //                                                                                  x.ProjectId == request.ProjectId)
@@ -69,7 +70,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                 //                      .ToList();
 
                 var requestDetail = (from hr in _dbContext.ProjectHiringRequestDetail.Where(x => x.IsDeleted == false &&
-                                                                                                        x.ProjectId == request.ProjectId)
+                                                                                                        x.ProjectId == request.ProjectId && x.HiringRequestStatus == request.IsInProgress || x.HiringRequestStatus == request.IsOpenFlagId)  
                                      join j in _dbContext.ProjectJobHiringDetail on hr.JobId equals j.JobId into jd
                                      from j in jd.DefaultIfEmpty()
                                      join c in _dbContext.CurrencyDetails on j.CurrencyId equals c.CurrencyId into h
@@ -93,7 +94,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                          FilledVacancies = hr.FilledVacancies != null ? hr.FilledVacancies : 0,
                                          PayCurrency = c.CurrencyName,
                                          PayRate = j.PayRate,
-                                         Status = hr.IsCompleted == true ? "Completed" : "InProgress"
+                                         HiringRequestStatus = hr.HiringRequestStatus 
                                      })
                                     .Skip(request.pageSize.Value * request.pageIndex.Value)
                                     .Take(request.pageSize.Value)
