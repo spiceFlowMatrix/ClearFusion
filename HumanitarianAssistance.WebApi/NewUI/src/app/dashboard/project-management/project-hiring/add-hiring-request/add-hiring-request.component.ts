@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Observable, forkJoin, ReplaySubject, of } from 'rxjs';
 import { IDropDownModel } from 'src/app/store/models/purchase';
 import { takeUntil } from 'rxjs/operators';
@@ -291,7 +291,7 @@ export class AddHiringRequestComponent implements OnInit {
         }
       );
   }
-  getRemainingVacancy(JobId: any) {
+  getRemainingVacancy(JobId: number) {
     this.hiringRequestService.getRemainingVacancyByJobId(JobId).subscribe(
       (response: IResponseData) => {
         this.commonLoader.showLoader();
