@@ -132,7 +132,7 @@ export class HiringRequestsComponent implements OnInit {
     filterModel.ProjectId = this.projectId;
     filterModel.TotalCount = 0;
     this.hiringRequestList = [];
-    // this.loader.showLoader();
+     this.loader.showLoader();
     //  this.hiringRequestListLoader = true;
     this.hiringRequestService
       .GetProjectHiringRequestFilterList(this.filterModel)
