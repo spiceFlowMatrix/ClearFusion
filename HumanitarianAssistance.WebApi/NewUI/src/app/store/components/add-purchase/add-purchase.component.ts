@@ -151,7 +151,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       'CurrencyId': [null, [Validators.required]],
       'Price': [null, [Validators.required]],
       'ReceivedFromLocation': [null],
-      'ReceivedFromEmployeeId': [null],
+      'ReceivedFromEmployeeId': [null, [Validators.required]],
       'ReceiptTypeId': [null, [Validators.required]],
       'StatusId': [null],
       'ApplyDepreciation': [false],
@@ -401,7 +401,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   getBudgetLineByProjectId(projectId: any) {
-    this.budgetLineService.GetProjectBudgetLineList(projectId)
+    if (projectId !== undefined) {
+      this.budgetLineService.GetProjectBudgetLineList(projectId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
         this.budgetLine$ = of(x.data.map(y => {
@@ -411,6 +412,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
           };
         }));
       });
+    }
   }
 
 
@@ -477,7 +479,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
             const filteredRecords = this.uploadedPurchasedFiles.filter(z => z.Id === 0);
 
-            if ( filteredRecords !== undefined) {
+            if ( filteredRecords !== undefined && filteredRecords.length > 0) {
 
               for (let i = 0; i < filteredRecords.length; i++) {
 
@@ -523,7 +525,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
           if (x) {
-            debugger;
 
             const filteredRecords = this.uploadedPurchasedFiles.filter(z => z.Id === 0);
             if (filteredRecords !== undefined && filteredRecords.length > 0) {

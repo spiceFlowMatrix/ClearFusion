@@ -8,9 +8,17 @@
                 </mat-form-field>
           </div>
           <div class="col-md-3">
-            <lib-hum-dropdown [validation]="vehicleDetailForm.controls['EmployeeId'].hasError('required')"
+            <!-- <lib-hum-dropdown [validation]="vehicleDetailForm.controls['EmployeeId'].touched"
             [options]="employeeList$" formControlName='EmployeeId' [placeHolder]="'Driver'">
-            </lib-hum-dropdown>
+            </lib-hum-dropdown> -->
+            <mat-form-field>
+              <mat-label>Driver</mat-label>
+              <mat-select formControlName='EmployeeId'>
+                <mat-option *ngFor="let employee of employeeList$ | async" [value]="employee.value">
+                  {{employee.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
           <div class="col-md-3">
               <mat-form-field class="example-full-width">
@@ -38,8 +46,17 @@
                 </mat-form-field>
           </div>
           <div class="col-md-3">
-            <lib-hum-dropdown [validation]="vehicleDetailForm.controls['OfficeId'].hasError('required')"
-            [options]="offices$" formControlName='OfficeId' [placeHolder]="'Location'"></lib-hum-dropdown>
+            <!-- <lib-hum-dropdown [validation]="vehicleDetailForm.controls['OfficeId'].hasError('required') || vehicleDetailForm.controls['EmployeeId'].touched"
+            [options]="offices$" formControlName='OfficeId' [placeHolder]="'Location'"></lib-hum-dropdown> -->
+
+            <mat-form-field>
+              <mat-label>Location</mat-label>
+              <mat-select formControlName='OfficeId'>
+                <mat-option *ngFor="let office of offices$ | async" [value]="office.value">
+                  {{office.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
           <div class="col-md-3">
             <mat-form-field class="example-full-width">
