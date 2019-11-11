@@ -508,7 +508,7 @@ export class HiringRequestsService {
   }
   //#endregion
   //#region edit selected candidate detail
-  IsCompltedeHrDEtail(model: CompleteHiringRequestModel) {
+  IsCompltedeHrDetail(model: CompleteHiringRequestModel) {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
@@ -528,7 +528,7 @@ export class HiringRequestsService {
   }
   //#endregion
   //#region edit selected candidate detail
-  IsCloasedHrDEtail(model: CompleteHiringRequestModel) {
+  IsCloasedHrDetail(model: CompleteHiringRequestModel) {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
