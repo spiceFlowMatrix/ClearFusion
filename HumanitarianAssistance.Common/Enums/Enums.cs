@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace HumanitarianAssistance.Common.Enums
 {
@@ -297,36 +298,36 @@ namespace HumanitarianAssistance.Common.Enums
 
     public enum UsageType
     {
-        [Display(Name="Total Fuel Usage")]
+        [Description("Total Fuel Usage")]
         TotalFuelUsage=1,
-        [Display(Name="Current Mileage")]
+        [Description("Current Mileage")]
         CurrentMileage=2,
-        [Display(Name="Actual Fuel Consumption Rate")]
+        [Description("Actual Fuel Consumption Rate")]
         ActualFuelConsumptionRate=3,
-        [Display(Name="Fuel Consumption Difference")]
+        [Description("Fuel Consumption Difference")]
         FuelConsumptionDifference=4,
-        [Display(Name="Total Mobil Oil Usage")]
+        [Description("Total Mobil Oil Usage")]
         TotalMobilOilUsage=5,
-        [Display(Name="Remaining Km For Mobil Oil Change")]
+        [Description("Remaining Km For Mobil Oil Change")]
         RemainingKmForMobilOilChange=6,
-        [Display(Name="Mobil Oil Change Rotation")]
+        [Description("Mobil Oil Change Rotation")]
         MobilOilChangeRotation=7,
-        [Display(Name="Current Usage")]
+        [Description("Current Usage")]
         CurrentUsage=8,
-        [Display(Name="Actual Mobil Oil Consumption Rate")]
+        [Description("Actual Mobil Oil Consumption Rate")]
         ActualMobilConsumptionRate=9,
-        [Display(Name="Mobil Oil Consumption Difference")]
+        [Description("Mobil Oil Consumption Difference")]
         MobilOilConsumptionDifference=10,
     }
 
     public enum CostAnalysis{
-        [Display(Name="Fuel Total Cost")]
+        [Description("Fuel Total Cost")]
         FuelTotalCost=100,
-         [Display(Name="Mobil Oil Total Cost")]
+         [Description("Mobil Oil Total Cost")]
         MobilOilTotalCost=101,
-        [Display(Name="Spare Parts Total Cost")]
+        [Description("Spare Parts Total Cost")]
         SparePartsTotalCost=102,
-        [Display(Name="Service And Maintenance Total Cost")]
+        [Description("Service And Maintenance Total Cost")]
         ServiceAndMaintenanceTotalCost=103,
     }
 }

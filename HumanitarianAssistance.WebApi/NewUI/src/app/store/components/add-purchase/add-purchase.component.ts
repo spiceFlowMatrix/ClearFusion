@@ -523,9 +523,10 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
           if (x) {
+            debugger;
 
             const filteredRecords = this.uploadedPurchasedFiles.filter(z => z.Id === 0);
-            if (filteredRecords !== undefined) {
+            if (filteredRecords !== undefined && filteredRecords.length > 0) {
               for (let i = 0; i < filteredRecords.length; i++) {
 
                 if (this.uploadedPurchasedFiles[i].Id === 0) {
