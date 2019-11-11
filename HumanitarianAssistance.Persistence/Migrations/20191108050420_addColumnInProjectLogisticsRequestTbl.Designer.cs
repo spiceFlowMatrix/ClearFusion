@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191108050420_addColumnInProjectLogisticsRequestTbl")]
+    partial class addColumnInProjectLogisticsRequestTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -8386,34 +8388,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.ToTable("StoreItemPurchases");
                 });
 
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.StoreLogger", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<string>("EventType");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("LogText");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<long?>("PurchaseId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PurchaseId");
-
-                    b.ToTable("StoreLogger");
-                });
-
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.StorePurchaseOrder", b =>
                 {
                     b.Property<long>("OrderId")
@@ -10508,13 +10482,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Accounting.VoucherDetail", "VoucherDetail")
                         .WithMany()
                         .HasForeignKey("VoucherId");
-                });
-
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.StoreLogger", b =>
-                {
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreItemPurchase", "StoreItemPurchase")
-                        .WithMany()
-                        .HasForeignKey("PurchaseId");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Store.StorePurchaseOrder", b =>
