@@ -43,7 +43,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     JobCode = "JC" + String.Format("{0:D4}", 1);
                 }
 
-                var jobhiringinfo = await _dbContext.JobHiringDetails.FirstOrDefaultAsync(x => x.JobCode == JobCode && x.IsDeleted == false);
+                var jobhiringinfo = await _dbContext.ProjectJobHiringDetail.FirstOrDefaultAsync(x => x.JobCode == JobCode && x.IsDeleted == false);
                 if (jobhiringinfo == null)
                 {
                     ProjectJobHiringDetail obj = new ProjectJobHiringDetail();  
