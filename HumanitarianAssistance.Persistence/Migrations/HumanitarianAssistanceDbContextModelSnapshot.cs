@@ -6800,6 +6800,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<long>("BudgetLineId");
 
+                    b.Property<int>("ComparativeStatus");
+
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
@@ -8199,6 +8201,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<bool>("IsDeleted");
 
+                    b.Property<bool>("IsTransportCategory");
+
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
@@ -8235,6 +8239,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("ItemType");
 
+                    b.Property<int?>("ItemTypeCategory");
+
                     b.Property<string>("MasterInventoryCode");
 
                     b.Property<string>("ModifiedById");
@@ -8270,6 +8276,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<string>("ItemGroupCode");
 
                     b.Property<string>("ItemGroupName");
+
+                    b.Property<int?>("ItemTypeCategory");
 
                     b.Property<string>("ModifiedById");
 

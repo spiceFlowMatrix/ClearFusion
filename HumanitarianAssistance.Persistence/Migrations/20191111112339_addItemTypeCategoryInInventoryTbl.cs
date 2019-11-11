@@ -4,10 +4,32 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
-    public partial class StoreLoggerTblAdd : Migration
+    public partial class addItemTypeCategoryInInventoryTbl : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<int>(
+                name: "ItemTypeCategory",
+                table: "StoreItemGroups",
+                nullable: true);
+
+            migrationBuilder.AddColumn<bool>(
+                name: "IsTransportCategory",
+                table: "StoreInventories",
+                nullable: false,
+                defaultValue: false);
+
+            migrationBuilder.AddColumn<int>(
+                name: "ComparativeStatus",
+                table: "ProjectLogisticRequests",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.AddColumn<int>(
+                name: "ItemTypeCategory",
+                table: "InventoryItems",
+                nullable: true);
+
             migrationBuilder.CreateTable(
                 name: "StoreLogger",
                 columns: table => new
@@ -44,6 +66,22 @@ namespace HumanitarianAssistance.Persistence.Migrations
         {
             migrationBuilder.DropTable(
                 name: "StoreLogger");
+
+            migrationBuilder.DropColumn(
+                name: "ItemTypeCategory",
+                table: "StoreItemGroups");
+
+            migrationBuilder.DropColumn(
+                name: "IsTransportCategory",
+                table: "StoreInventories");
+
+            migrationBuilder.DropColumn(
+                name: "ComparativeStatus",
+                table: "ProjectLogisticRequests");
+
+            migrationBuilder.DropColumn(
+                name: "ItemTypeCategory",
+                table: "InventoryItems");
         }
     }
 }

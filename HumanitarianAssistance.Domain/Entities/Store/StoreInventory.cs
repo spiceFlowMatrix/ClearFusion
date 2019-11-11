@@ -21,6 +21,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public string InventoryDescription { get; set; }
         //public long InventoryChartOfAccount { get; set; }
         public int AssetType { get; set; }
+        public bool IsTransportCategory { get; set; }
         public long? InventoryDebitAccount { get; set; }
         [ForeignKey("InventoryDebitAccount")]
         public ChartOfAccountNew ChartDebitAccountDetails { get; set; }
