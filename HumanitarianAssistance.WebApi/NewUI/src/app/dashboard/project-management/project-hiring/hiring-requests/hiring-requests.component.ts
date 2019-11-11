@@ -69,7 +69,7 @@ export class HiringRequestsComponent implements OnInit {
   selection = new SelectionModel<HiringList>(true, []);
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
-    console.log('this.selection.selected', this.selection.selected);
+    // console.log('this.selection.selected', this.selection.selected);
     const numSelected = this.selection.selected.length;
     const numRows = this.hiringRequestList.length;
     return numSelected === numRows;

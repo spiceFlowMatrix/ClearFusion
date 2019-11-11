@@ -1,6 +1,13 @@
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl,
+  ValidatorFn,
+  AbstractControl
+} from '@angular/forms';
 import { Observable, forkJoin, ReplaySubject, of } from 'rxjs';
 import { IDropDownModel } from 'src/app/store/models/purchase';
 import { takeUntil } from 'rxjs/operators';
@@ -52,7 +59,8 @@ export class AddHiringRequestComponent implements OnInit {
       HiringRequestId: [null],
       JobCategory: [null, [Validators.required]],
       MinEducationLevel: [null, [Validators.required]],
-      TotalVacancy: [null, [Validators.required]],
+      TotalVacancy: [null, [Validators.required,  Validators.min(1),
+        (control: AbstractControl) => Validators.max(this.AvailableVacancies)(control)]],
       Position: [null, [Validators.required]],
       Organization: [null, [Validators.required]],
       Office: [null, [Validators.required]],
@@ -90,7 +98,9 @@ export class AddHiringRequestComponent implements OnInit {
     this.projectId = this.data.projectId;
     this.hiringRequestId = this.data.hiringRequestId;
     this.addHiringRequestForm.controls['ProjectId'].setValue(this.projectId);
-    this.addHiringRequestForm.controls['HiringRequestId'].setValue(this.hiringRequestId);
+    this.addHiringRequestForm.controls['HiringRequestId'].setValue(
+      this.hiringRequestId
+    );
     if (this.data.hiringRequestId !== 0) {
       this.getAllHiringRequestDetail();
     }
@@ -112,7 +122,9 @@ export class AddHiringRequestComponent implements OnInit {
   }
   getAllHiringRequestDetail() {
     this.hiringRequestService
-      .GetAllProjectHiringRequestDetailByHiringRequestId(this.data.hiringRequestId)
+      .GetAllProjectHiringRequestDetailByHiringRequestId(
+        this.data.hiringRequestId
+      )
       .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (response: IResponseData) => {
@@ -377,12 +389,12 @@ export class AddHiringRequestComponent implements OnInit {
   }
   //#endregion
 
-    //#region "hiringRequestListRefresh"
-    AddHiringRequestListRefresh() {
-      this.onAddHiringRequestListRefresh.emit();
-    }
-    UpdateHiringRequestListRefresh() {
-      this.onUpdateHiringRequestListRefresh.emit();
-    }
-    //#endregion
+  //#region "hiringRequestListRefresh"
+  AddHiringRequestListRefresh() {
+    this.onAddHiringRequestListRefresh.emit();
+  }
+  UpdateHiringRequestListRefresh() {
+    this.onUpdateHiringRequestListRefresh.emit();
+  }
+  //#endregion
 }

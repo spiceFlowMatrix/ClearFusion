@@ -67,7 +67,7 @@
                   formControlName="TotalVacancy"
                   placeholder="Vacancies (Jobs Availability {{AvailableVacancies}})"
                 />
-                <mat-error *ngIf="addHiringRequestForm.controls['TotalVacancy'].hasError">
+                <mat-error *ngIf="addHiringRequestForm.controls['TotalVacancy'].hasError(max)">
                 </mat-error>
               </mat-form-field>
             </div>
