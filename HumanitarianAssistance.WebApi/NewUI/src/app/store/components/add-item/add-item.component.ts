@@ -31,7 +31,6 @@ export class AddItemComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private data: MasterInventoryItemModel, private configService: ConfigService, private toastr: ToastrService) { }
   isSaving = false;
   ngOnInit() {
-    console.log(this.data);
     this.createForm();
     switch (this.data.AssetType) {
       case 1:
