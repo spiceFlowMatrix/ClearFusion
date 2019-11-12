@@ -31,23 +31,20 @@ export class AddItemComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private data: MasterInventoryItemModel, private configService: ConfigService, private toastr: ToastrService) { }
   isSaving = false;
   ngOnInit() {
+    console.log(this.data);
     this.createForm();
     switch (this.data.AssetType) {
       case 1:
         const ids1 = [6, 3, 4]
         this.itemsTypes$ = of(this.items.filter(x => ids1.includes(x.value)));
-        console.log(this.itemsTypes$);
-        
         break;
       case 2:
         const ids2 = [5]
         this.itemsTypes$ = of(this.items.filter(x => ids2.includes(x.value)));
-        console.log(this.itemsTypes$);
         break;
       case 3:
         const ids3 = [1, 2]
         this.itemsTypes$ = of(this.items.filter(x => ids3.includes(x.value)));
-        console.log(this.itemsTypes$);
         break;
       default:
         break;
@@ -56,7 +53,7 @@ export class AddItemComponent implements OnInit {
     if (this.data.ItemId) {
       this.masterForm.controls.name.setValue(this.data.ItemName);
       this.masterForm.controls.description.setValue(this.data.Description);
-      this.masterForm.controls.itemtypecategory.setValue(this.data.ItemTypeCategory?this.data.ItemTypeCategory.toString():null);
+      this.masterForm.controls.itemtypecategory.setValue(this.data.ItemTypeCategory?this.data.ItemTypeCategory:null);
 
     }
   }
@@ -87,7 +84,6 @@ export class AddItemComponent implements OnInit {
           this.dialogRef.close();
         })
       } else {
-        console.log(this.inventoryItem);
         this.configService.AddItem(this.inventoryItem).subscribe(() => {
           this.isSaving = false;
           this.toastr.success('Item added successfully');
@@ -99,6 +95,6 @@ export class AddItemComponent implements OnInit {
     }
   }
   cancel() {
-    this.dialogRef.close();
+    this.dialogRef.close('cancel');
   }
 }

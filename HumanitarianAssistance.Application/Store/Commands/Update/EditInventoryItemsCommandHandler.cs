@@ -31,12 +31,13 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                     editItem.ModifiedDate = request.ModifiedDate;
                     editItem.ModifiedById = request.ModifiedById;
                     editItem.Description = request.Description;
-                    editItem.ItemCode = request.ItemCode;
+                   // editItem.ItemCode = request.ItemCode;
                     editItem.ItemGroupId = request.ItemGroupId;
                     editItem.ItemName = request.ItemName;
                     editItem.ItemType = request.ItemType;
                     editItem.IsDeleted = false;
                     editItem.ItemInventory = request.ItemInventory;
+                    editItem.ItemTypeCategory = request.ItemTypeCategory;
 
                     await _dbContext.SaveChangesAsync();
 
