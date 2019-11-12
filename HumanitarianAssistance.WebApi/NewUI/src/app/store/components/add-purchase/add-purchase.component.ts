@@ -64,8 +64,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   StoreItems = StoreItem;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  @ViewChild(VehicleDetailComponent)  vehicleDetailChild: VehicleDetailComponent;
-  @ViewChild(GeneratorDetailComponent)  generatorDetailChild:GeneratorDetailComponent;
+  @ViewChild(VehicleDetailComponent) vehicleDetailChild: VehicleDetailComponent;
+  @ViewChild(GeneratorDetailComponent) generatorDetailChild: GeneratorDetailComponent;
 
   constructor(private purchaseService: PurchaseService,
     private fb: FormBuilder, private budgetLineService: BudgetLineService,
@@ -115,7 +115,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         this.subscribeAllReceiptType(result[8]);
       });
 
-      this.getLoggedInUserUsername();
+    this.getLoggedInUserUsername();
 
     this.addPurchaseForm.valueChanges.subscribe((data) => {
       // this.logValidationErrors(this.addPurchaseForm);
@@ -384,6 +384,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   getProjectSelectedValue(event: any) {
+    debugger;
     this.getBudgetLineByProjectId(event);
   }
 
@@ -724,9 +725,9 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
 
   getLoggedInUserUsername() {
-      this.purchaseService.GetLoggedInUserUsername().subscribe(x => {
-        localStorage.setItem('LoggedInUserName', x);
-      });
+    this.purchaseService.GetLoggedInUserUsername().subscribe(x => {
+      localStorage.setItem('LoggedInUserName', x);
+    });
   }
 
   getStorePurchaseById(purchaseId: number) {
