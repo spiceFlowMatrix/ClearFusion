@@ -557,6 +557,14 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
   }
   //#endregion
 
+  onOpenedBudgetLineChange(event, item) {
+    debugger;
+    item.BudgetLineId = event.Value;
+    this.onTransactionDetailChanged(
+      item,
+      'BudgetLine'
+    );
+  }
   //#region "getBudgetLineOnProjectId"
   GetProjectJobDetailByBudgetLineId(item: any) {
     this.projectJobService
@@ -593,7 +601,19 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
       (response: IResponseData) => {
         // this.voucherDetail = null;
         if (response.statusCode === 200) {
-          response.data.forEach(x => item.BudgetLineList.push(x));
+          item.BudgetLineList = [];
+          // response.data.forEach(x => item.BudgetLineList.push(x));
+          response.data.forEach(x => item.BudgetLineList.push({
+            Id: x.BudgetLineId,
+            Name: x.BudgetCodeName
+          }));
+
+          // item.BudgetLineList.forEach(e => {
+          //   this.BudgetLineDropdown.push({
+          //     Id: e.BudgetLineId,
+          //     Name: e.BudgetCodeName
+          //   });
+          // });
           // this.toastr.success('Transaction Deleted Successfully');
         } else if (response.statusCode === 400) {
           this.toastr.warning(response.message);

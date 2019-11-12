@@ -586,6 +586,6 @@ export enum LogisticComparativeStatus {
   'Cancelled' = 2,
   'Issued' = 3,
   'Statement Submitted' = 4,
-  'Approve Statement' = 5,
-  'Reject Statement' = 6,
+  'Reject Statement' = 5,
+  'Approve Statement' = 6,
 }

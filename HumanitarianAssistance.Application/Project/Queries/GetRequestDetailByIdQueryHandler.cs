@@ -31,7 +31,10 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     ProjectId = y.ProjectId,
                     RequestName = y.RequestName,
                     Status = y.Status,
-                    TotalCost = y.TotalCost
+                    TotalCost = y.TotalCost,
+                    BudgetLine = y.ProjectBudgetLineDetail.BudgetCode,
+                    Currency = y.CurrencyDetails.CurrencyCode,
+                    Office = y.OfficeDetail.OfficeName
                 }).FirstOrDefaultAsync();
 
                 if(req == null) {

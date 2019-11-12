@@ -113,7 +113,8 @@ export interface IEditTransactionModel {
   IsDeleted?: boolean; // using in post method and it will be treated as edit in backend
 
   // use for handling Add, Edit, Delete on frontend only (don't use to post it)
-  BudgetLineList?: IBudgetLineModel[];
+  // BudgetLineList?: IBudgetLineModel[];
+  BudgetLineList?: any[];
   JobName?: string;
   JobId?: number;
   _IsId?: number;
