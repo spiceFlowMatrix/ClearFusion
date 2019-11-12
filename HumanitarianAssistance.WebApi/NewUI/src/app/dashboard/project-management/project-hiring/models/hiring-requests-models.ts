@@ -53,8 +53,9 @@ Office?: number;
 Country?: number;
 Province?: number;
 District?: number;
-ExperienceInMonth?: number;
-ExperienceInYear?: number;
+TotalExperienceInYear?: number;
+RelevantExperienceInYear?: number;
+IrrelevantExperienceInYear?: number;
 }
 
 export interface IHiringRequestModel {

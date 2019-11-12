@@ -44,6 +44,7 @@
                   matInput
                   formControlName="PhoneNumber"
                   placeholder="Phone Number"
+                  type="number"
                 />
               </mat-form-field>
             </div>
@@ -153,6 +154,7 @@
                     (change)="onChangeProvince($event)"
                   ></lib-hum-dropdown>
                 </div>
+
                 <div class="col-lg-3 col-sm-3">
                   <lib-hum-dropdown
                     formControlName="District"
@@ -171,8 +173,8 @@
                   <mat-form-field class="example-full-width">
                     <input
                       matInput
-                      formControlName="ExperienceInMonth"
-                      placeholder="Experience (Month)"
+                      formControlName="TotalExperienceInYear"
+                      placeholder="Total Experience (Year)"
                       type="number"
                     />
                   </mat-form-field>
@@ -181,8 +183,18 @@
                   <mat-form-field class="example-full-width">
                     <input
                       matInput
-                      formControlName="ExperienceInYear"
-                      placeholder="Experience (Year)"
+                      formControlName="RelevantExperienceInYear"
+                      placeholder="Relevant Experience (Year)"
+                      type="number"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col-lg-3 col-sm-3">
+                  <mat-form-field class="example-full-width">
+                    <input
+                      matInput
+                      formControlName="IrrelevantExperienceInYear"
+                      placeholder="Irrelevant Experience (Year)"
                       type="number"
                     />
                   </mat-form-field>

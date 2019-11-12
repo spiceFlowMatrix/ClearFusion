@@ -52,8 +52,9 @@ export class AddNewCandidateComponent implements OnInit {
       Grade: ['', [Validators.required]],
       Office: ['', [Validators.required]],
       DateOfBirth: ['', [Validators.required]],
-      ExperienceInYear: ['', [Validators.required]],
-      ExperienceInMonth: ['', [Validators.required]]
+      TotalExperienceInYear: ['', [Validators.required]],
+      RelevantExperienceInYear: ['', [Validators.required]],
+      IrrelevantExperienceInYear: ['', [Validators.required]]
     });
 
     this.accountStatusList$ = of([
@@ -176,7 +177,7 @@ export class AddNewCandidateComponent implements OnInit {
             this.districtList$ = of(
               response.data.map(element => {
                 return {
-                  value: element.DistrictId,
+                  value: element.DistrictID,
                   name: element.District
                 } as IDropDownModel;
               })
@@ -224,6 +225,6 @@ onCancelPopup(): void {
     this.getAllDistrictList(e);
   }
   onFormSubmit(data: any) {
-
+console.log(data);
   }
 }
