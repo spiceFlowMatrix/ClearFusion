@@ -125,8 +125,8 @@ export class StoreItemConfigComponent implements OnInit {
             this.getAllInventories();
           })
         })
-    
-     
+
+
         break;
       default:
         break;
@@ -171,7 +171,14 @@ export class StoreItemConfigComponent implements OnInit {
         })
         break;
       case 2:
-        const item = this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level0ID).children.find(x => x.Id = level2ID);
+        const item = this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level0ID).children.find(x => x.Id == level2ID);
+        if (this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level0ID).ItemTypeCategory != null) {
+          this.masterInventoryItem.isGenerator = this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level0ID).ItemTypeCategory == 2 ? true : false;
+        } else {
+          this.masterInventoryItem.isGenerator = null;
+        }
+
+        this.masterInventoryItem.ItemTypeCategory = Number(this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level0ID).children.find(x => x.Id == level2ID).ItemTypeCategory);
         this.masterInventoryItem.Description = item.Description;
         this.masterInventoryItem.ItemCode = item.Code;
         this.masterInventoryItem.ItemGroupId = item.ItemGroupId;
@@ -179,13 +186,16 @@ export class StoreItemConfigComponent implements OnInit {
         this.masterInventoryItem.ItemInventory = item.InventoryId;
         this.masterInventoryItem.ItemName = item.Name;
         this.masterInventoryItem.ItemType = null;
-        this.masterInventoryItem.AssetType = this.assetType;
+        this.masterInventoryItem.AssetType = Number(this.assetType);
+        // console.log(level, level2ID, level1ID, level0ID, isTransport, itemcattype)
         const dgItem = this.dialog.open(AddItemComponent, {
           width: this.modelWidth,
           data: this.masterInventoryItem
         })
         dgItem.afterClosed().subscribe(res => {
-          this.getAllInventories();
+          if(res == 'cancel'){}
+          else{this.getAllInventories();}
+          
         })
         break;
 
