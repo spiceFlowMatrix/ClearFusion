@@ -193,8 +193,8 @@ export class HiringRequestsComponent implements OnInit {
 
   requestDetail(e) {
     // console.log(e.HiringRequestId);
-    this.route.navigate([e.HiringRequestId], { relativeTo: this.routeActive });
-     // this.router.navigate(['../hiring-request/' + e.HiringRequestId]);
+    // this.route.navigate([e.HiringRequestId], { relativeTo: this.routeActive });
+    // this.router.navigate(['../hiring-request/' + e.HiringRequestId]);
   }
 
   // 07-09-2019
