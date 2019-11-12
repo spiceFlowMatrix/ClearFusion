@@ -809,14 +809,14 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     for (const x of item) {
       formArray.push(this.fb.group({
         Id: x.Id,
-        PlateNo: x.PlateNo,
-        EmployeeId: x.EmployeeId,
-        StartingMileage: x.StartingMileage,
-        IncurredMileage: x.IncurredMileage,
-        FuelConsumptionRate: x.FuelConsumptionRate,
-        MobilOilConsumptionRate: x.MobilOilConsumptionRate,
-        OfficeId: x.OfficeId,
-        ModelYear: x.ModelYear
+        PlateNo: [{ value: x.PlateNo, disabled: true }],
+        EmployeeId: [{ value: x.EmployeeId, disabled: true }],
+        StartingMileage: [{ value: x.StartingMileage, disabled: true }],
+        IncurredMileage: [{ value: x.IncurredMileage, disabled: true }],
+        FuelConsumptionRate: [{ value: x.FuelConsumptionRate, disabled: true }],
+        MobilOilConsumptionRate: [{ value: x.MobilOilConsumptionRate, disabled: true }],
+        OfficeId: [{ value: x.OfficeId, disabled: true }],
+        ModelYear: [{ value: x.ModelYear, disabled: true }]
       }));
     }
     this.addPurchaseForm.setControl('TransportVehicles', formArray);
@@ -827,13 +827,13 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     for (const x of item) {
       formArray.push(this.fb.group({
         Id: x.Id,
-        Voltage: x.Voltage,
-        StartingUsage: x.StartingUsage,
-        IncurredUsage: x.IncurredUsage,
-        FuelConsumptionRate: x.FuelConsumptionRate,
-        MobilOilConsumptionRate: x.MobilOilConsumptionRate,
-        OfficeId: x.OfficeId,
-        ModelYear: x.ModelYear
+        Voltage: [{ value: x.Voltage, disabled: true }],
+        StartingUsage: [{ value: x.StartingUsage, disabled: true }],
+        IncurredUsage: [{ value: x.IncurredUsage, disabled: true }],
+        FuelConsumptionRate: [{ value: x.FuelConsumptionRate, disabled: true }],
+        MobilOilConsumptionRate: [{ value: x.MobilOilConsumptionRate, disabled: true }],
+        OfficeId: [{ value: x.OfficeId, disabled: true }],
+        ModelYear: [{ value: x.ModelYear, disabled: true }]
       }));
     }
     this.addPurchaseForm.setControl('TransportGenerators', formArray);
