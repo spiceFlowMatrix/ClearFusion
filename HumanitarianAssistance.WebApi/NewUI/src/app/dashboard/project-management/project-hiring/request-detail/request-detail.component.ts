@@ -186,7 +186,7 @@ export class RequestDetailComponent implements OnInit {
                 Email: element.Email,
                 Interview: '<a>Interview Id</a>',
                 // PhoneNumber: element.PhoneNumber,
-                AccountStatus: '<p style="color: #bcbc1e";>' + element.AccountStatus + '</p>',
+                AccountStatus: element.AccountStatus,
                 // Gender: element.Gender,
                 // DateOfBirth: element.DateOfBirth,
                 // EducationDegree: element.EducationDegree,
