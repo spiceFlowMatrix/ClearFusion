@@ -12,20 +12,36 @@ using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace HumanitarianAssistance.Application.Project.Commands.Create
-{
-        public class AddNewCandidateDetailCommandHandler : IRequestHandler<AddNewCandidateDetailCommand, ApiResponse> {
+namespace HumanitarianAssistance.Application.Project.Commands.Create {
+    public class AddNewCandidateDetailCommandHandler : IRequestHandler<AddNewCandidateDetailCommand, ApiResponse> {
         private HumanitarianAssistanceDbContext _dbContext;
         public AddNewCandidateDetailCommandHandler (HumanitarianAssistanceDbContext dbContext) {
             _dbContext = dbContext;
         }
         public async Task<ApiResponse> Handle (AddNewCandidateDetailCommand request, CancellationToken cancellationToken) {
             ApiResponse response = new ApiResponse ();
-             try {
-                ProjectHiringRequestDetail hiringRequestDeatil = new ProjectHiringRequestDetail () {
+            try {
+                CandidateDetails candidateDeatil = new CandidateDetails () {
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    Email = request.Email,
+                    PhoneNumber = request.PhoneNumber,
+                    AccountStatus = request.AccountStatus,
+                    GenderId = request.Gender,
+                    DateOfBirth = request.DateOfBirth,
+                    EducationDegreeId = request.EducationDegree,
+                    GradeId = request.Grade,
+                    ProfessionId = request.Profession,
+                    OfficeId = request.Office,
+                    CountryId = request.Country,
+                    ProvinceId = request.Province,
+                    DistrictID = request.District,
+                    TotalExperienceInYear = request.TotalExperienceInYear,
+                    RelevantExperienceInYear = request.RelevantExperienceInYear,
+                    IrrelevantExperienceInYear = request.IrrelevantExperienceInYear,
                     CreatedById = request.CreatedById,
                     CreatedDate = request.CreatedDate,
-                    IsDeleted = false,                    
+                    IsDeleted = false,
                 };
                 await _dbContext.ProjectHiringRequestDetail.AddAsync (hiringRequestDeatil);
                 await _dbContext.SaveChangesAsync ();
