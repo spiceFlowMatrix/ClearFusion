@@ -22,6 +22,7 @@
             <hum-button [type]="'add'" [text]="'SUBMIT PURCHASES'" (click)="submitPurchase()"></hum-button>
         </h4>
         <span><i class="fas fa-info-circle icon_color_yellow"></i> Awaiting <b>Store Officer</b> to <b>Submit</b> purchased items list.</span>
+        <hum-table [headers]="purchasedItemsHeaders$" [items]="purchasedItemsData$" *ngIf="this.selectedItems!=undefined"></hum-table>
       </div>
     </div>
     <div *ngSwitchCase="4" >
