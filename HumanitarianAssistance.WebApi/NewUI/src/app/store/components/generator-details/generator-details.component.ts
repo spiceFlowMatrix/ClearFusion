@@ -147,8 +147,6 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   }
 
   onTabClick(event) {
-    debugger;
-
     if (event.index === 1) {
       this.getGeneratorMonthlyBreakdownData();
     } else if(event.index === 0) {

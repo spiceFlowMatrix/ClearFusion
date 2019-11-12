@@ -69,7 +69,7 @@ export class HiringRequestsComponent implements OnInit {
   selection = new SelectionModel<HiringList>(true, []);
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
-    console.log('this.selection.selected', this.selection.selected);
+    // console.log('this.selection.selected', this.selection.selected);
     const numSelected = this.selection.selected.length;
     const numRows = this.hiringRequestList.length;
     return numSelected === numRows;
@@ -132,7 +132,7 @@ export class HiringRequestsComponent implements OnInit {
     filterModel.ProjectId = this.projectId;
     filterModel.TotalCount = 0;
     this.hiringRequestList = [];
-    // this.loader.showLoader();
+     this.loader.showLoader();
     //  this.hiringRequestListLoader = true;
     this.hiringRequestService
       .GetProjectHiringRequestFilterList(this.filterModel)
