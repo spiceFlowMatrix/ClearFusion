@@ -10,7 +10,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project {
         [DatabaseGenerated (DatabaseGeneratedOption.Identity)]
         [Column (Order = 1)]
         public long EducationDegreeId { get; set; }
-
+        
         [StringLength (100)]
         public string EducationDegreeName { get; set; }
     }

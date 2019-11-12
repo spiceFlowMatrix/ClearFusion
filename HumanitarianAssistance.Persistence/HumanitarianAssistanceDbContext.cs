@@ -225,7 +225,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<ProjectLogisticRequests> ProjectLogisticRequests { get; set; } 
         public DbSet<ProjectLogisticItems> ProjectLogisticItems { get; set; }           
         public DbSet<CandidateDetails> CandidateDetails { get; set; }  
-        public DbSet<EducationDegreeDetail> EducationDegreeDetails { get; set; }          
+        public DbSet<EducationDegreeDetail> EducationDegreeDetails { get; set; }  
         #endregion  
 
         #region Marketing
