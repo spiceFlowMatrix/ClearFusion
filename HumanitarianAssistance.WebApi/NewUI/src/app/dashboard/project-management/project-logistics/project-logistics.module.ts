@@ -12,10 +12,11 @@ import { LogisticRequestDetailsComponent } from './logistic-request-details/logi
 import { AddLogisticItemsComponent } from './add-logistic-items/add-logistic-items.component';
 import { RequestStatusComponent } from './request-status/request-status.component';
 import { SubmitPurchaseListComponent } from './submit-purchase-list/submit-purchase-list.component';
+import { ComparativeStatementComponent } from './comparative-statement/comparative-statement.component';
 
 @NgModule({
   declarations: [LogisticRequestsComponent, AddLogisticRequestComponent,
-    LogisticRequestDetailsComponent, AddLogisticItemsComponent, RequestStatusComponent, SubmitPurchaseListComponent],
+    LogisticRequestDetailsComponent, AddLogisticItemsComponent, RequestStatusComponent, SubmitPurchaseListComponent, ComparativeStatementComponent],
   imports: [
     CommonModule,
     MatTableModule,
