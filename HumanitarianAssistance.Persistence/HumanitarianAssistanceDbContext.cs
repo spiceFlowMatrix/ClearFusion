@@ -264,6 +264,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<ProjectProposalDocument> ProjectProposalDocument { get; set; }
         public DbSet<PurchaseUnitType> PurchaseUnitType { get; set; }
         public DbSet<ErrorLogger> ErrorLogger { get; set; }
+        public DbSet<StoreLogger> StoreLogger { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

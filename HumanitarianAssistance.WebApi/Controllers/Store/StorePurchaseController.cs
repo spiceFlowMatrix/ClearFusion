@@ -224,5 +224,23 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
                 return BadRequest(result.Exception.InnerException.Message);
             }
         }
+
+        [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetVehicleGeneratorTrackerLogs()
+        {
+            var result = await Task.FromResult(_mediator.Send(new GetVehicleGeneratorTrackerLogsQuery { }));
+
+            if (result.Exception == null)
+            {
+                return Ok(await result);
+            }
+            else
+            {
+                return BadRequest(result.Exception.InnerException.Message);
+            }
+        }
+
     }
 }

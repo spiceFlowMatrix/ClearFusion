@@ -151,6 +151,8 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
 
     if (event.index === 1) {
       this.getVehicleMonthlyBreakdownData();
+    } else if(event.index === 0) {
+      this.getVehicleDetailById();
     }
   }
 

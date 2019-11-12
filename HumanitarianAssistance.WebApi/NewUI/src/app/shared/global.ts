@@ -433,6 +433,7 @@ export class GLOBAL {
   public static API_HiringRequest_EditHiringRequestCandidate = 'HiringRequest/EditHiringRequestCandidate';
   public static API_HiringRequest_HiringRequestSelectCandidate = 'HiringRequest/HiringRequestSelectCandidate';
   public static API_HiringRequest_CompleteHiringRequest = 'HiringRequest/CompleteHiringRequest';
+  public static API_HiringRequest_ClosedHiringRequest = 'HiringRequest/ClosedHiringRequest';
   public static API_Code_GetAttendanceGroupst = 'Code/GetAttendanceGroups';
   public static API_HREmployee_GetAllEmployeeContractType = 'Code/GetAllEmployeeContractType';
   public static API_HREmployee_EditEmployeeProfessionalDetail = 'EmployeeDetail/EditEmployeeProfessionalDetail';
@@ -481,7 +482,7 @@ export class GLOBAL {
   public static API_VehicleTracker_DeletePurchasedVehicle = 'VehicleTracker/DeletePurchasedVehicle';
   public static API_VehicleTracker_GetVehicleMonthlyBreakdownDataById = 'VehicleTracker/GetVehicleMonthlyBreakdownDataById';
   public static API_GeneratorTracker_GetGeneratorMonthlyBreakdownDataById = 'GeneratorTracker/GetGeneratorMonthlyBreakdownDataById';
-
+  public static API_StorePurchase_GetVehicleGeneratorTrackerLogs = 'StorePurchase/GetVehicleGeneratorTrackerLogs';
 
   public static API_GeneratorTracker_GetGeneratorList = 'GeneratorTracker/GetGeneratorList';
   public static API_GeneratorTracker_GetGeneratorById = 'GeneratorTracker/GetGeneratorById';
@@ -512,7 +513,6 @@ export class GLOBAL {
   public static API_Store_GetInventoryCode = 'Store/GetInventoryCode';
   public static API_Store_GetInventoryItemCode = 'Store/GetInventoryItemCode';
 
-
   public static API_Store_AddStoreItemGroup = 'Store/AddStoreItemGroup';
   public static API_Store_EditStoreItemGroup = 'Store/EditStoreItemGroup';
   // public static API_Store_DeleteInventoryItems = 'Store/DeleteInventoryItems';
@@ -520,9 +520,6 @@ export class GLOBAL {
   public static API_Store_AddInventoryItems = 'Store/AddInventoryItems';
   public static API_Store_EditInventoryItems = 'Store/EditInventoryItems';
   public static API_Store_DeleteInventoryItems = 'Store/DeleteInventoryItems';
-
-
-
 }
 
 

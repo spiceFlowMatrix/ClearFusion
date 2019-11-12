@@ -61,7 +61,6 @@ export class RequestStatusComponent implements OnInit, OnChanges {
   }
 
   getPurchasedItemsList() {
-    debugger;
     this.logisticservice.getPurchasedItemsList(this.requestId).subscribe(res => {
       if (res.StatusCode === 200 && res.data.LogisticsItemList != null) {
         this.purchasedItemsData$ = of(res.data.LogisticsItemList).pipe(

@@ -110,7 +110,6 @@ export enum criteriaEvaluationScores {
 
   // Products && services
 
-
   prodAwareness_Yes = 1,
   prodAwareness_No = 0,
 
@@ -270,7 +269,6 @@ export enum criteriaEvaluationScores {
   Widows_Yes = 2,
   Widows_No = 0,
 
-
   // donor Eligibility criteria
   onDonorELegibilityCrteria_Yes = 1,
   onDonorELegibilityCrteria_No = 0,
@@ -409,7 +407,6 @@ export enum criteriaEvaluationScores {
   riskSecurity_Yes = 0,
   riskSecurity_No = 1,
 
-
   riskReputation_Yes = 0,
   riskReputation_No = 1,
 
@@ -447,7 +444,7 @@ export enum criteriaEvaluationScores {
   Culture_No = 0,
 
   ReligiousBeliefs_Yes = -2,
-  ReligiousBeliefs_No = 0,
+  ReligiousBeliefs_No = 0
 
   //#endregion
 }
@@ -511,7 +508,7 @@ export enum FileSourceEntityTypes {
   ProjectActivityPlanning = 8,
   DonorDetail = 9,
   StorePurchase = 10,
-  Employee = 11,
+  Employee = 11
 }
 //#endregion
 //#region "EmployeeType"
@@ -537,7 +534,7 @@ export enum StoreItemGroups {
   ExpandableVehicle = 3,
   ExpandableGenerator = 4,
   NonExpandableVehicle = 5,
-  NonExpandableGenerator = 6,
+  NonExpandableGenerator = 6
 }
 //#endregion
 
@@ -551,9 +548,9 @@ export enum StoreItem {
   GeneratorMaintenanceService = 6,
   ExpendableVehicle = 7,
   ExpendableGenerator = 8,
-  VehicleSpareParts= 9,
-  GeneratorSpareParts= 10,
-  NonExpendableVehicle= 11,
+  VehicleSpareParts = 9,
+  GeneratorSpareParts = 10,
+  NonExpendableVehicle = 11,
   NonExpendableGenerator = 12
 }
 //#endregion
@@ -577,8 +574,14 @@ export enum LogisticRequestStatus {
   'Cancelled' = 2,
   'Issue Purchase Order' = 3,
   'Complete Purchase' = 4,
-  'Control Approved'= 5,
-  'Control Rejected'= 6
+  'Control Approved' = 5,
+  'Control Rejected' = 6
+}
+export enum HiringRequestStatus {
+  'Open' = 1,
+  'In-Progress' = 2,
+  'Completed' = 3,
+  'Closed' = 4
 }
 
 export enum LogisticComparativeStatus {

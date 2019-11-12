@@ -6,7 +6,6 @@ import { PurchaseService } from '../../services/purchase.service';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { ReplaySubject, Observable } from 'rxjs';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
-import { FormControl } from '@angular/forms';
 import { IDropDownModel, IMonthlyBreakDown } from '../../models/purchase';
 
 @Component({
@@ -148,9 +147,10 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   }
 
   onTabClick(event) {
-
     if (event.index === 1) {
       this.getGeneratorMonthlyBreakdownData();
+    } else if(event.index === 0) {
+      this.getGeneratorDetailById();
     }
   }
 

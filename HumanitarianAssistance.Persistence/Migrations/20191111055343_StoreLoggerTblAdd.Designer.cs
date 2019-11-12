@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191111055343_StoreLoggerTblAdd")]
+    partial class StoreLoggerTblAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -6553,8 +6555,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<string>("HiringRequestCode");
 
-                    b.Property<int>("HiringRequestStatus");
-
                     b.Property<bool>("IsCompleted");
 
                     b.Property<bool>("IsDeleted");
@@ -6798,21 +6798,15 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<long>("LogisticRequestsId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<long>("BudgetLineId");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<int>("CurrencyId");
 
                     b.Property<bool>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int>("OfficeId");
 
                     b.Property<long>("ProjectId");
 
@@ -6823,12 +6817,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<double>("TotalCost");
 
                     b.HasKey("LogisticRequestsId");
-
-                    b.HasIndex("BudgetLineId");
-
-                    b.HasIndex("CurrencyId");
-
-                    b.HasIndex("OfficeId");
 
                     b.HasIndex("ProjectId");
 
@@ -10131,21 +10119,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectLogisticRequests", b =>
                 {
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectBudgetLineDetail", "ProjectBudgetLineDetail")
-                        .WithMany()
-                        .HasForeignKey("BudgetLineId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.CurrencyDetails", "CurrencyDetails")
-                        .WithMany()
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.OfficeDetail", "OfficeDetail")
-                        .WithMany()
-                        .HasForeignKey("OfficeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectDetail", "ProjectDetail")
                         .WithMany()
                         .HasForeignKey("ProjectId")
