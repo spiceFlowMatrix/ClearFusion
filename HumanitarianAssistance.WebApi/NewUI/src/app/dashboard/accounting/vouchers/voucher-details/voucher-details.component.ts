@@ -51,7 +51,7 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
   @Input() journalList: IJournalListModel;
   @Input() currencyList: ICurrencyListModel;
   @Input() officeList: IOfficeListModel;
-  @Input() projectList: IProjectListModel;
+  @Input() projectList: IProjectListModel[];
   @Input() voucherTypeList: IVoucherListModel;
   @Input() isEditingAllowed: boolean;
   @Output() voucherDetailChanged = new EventEmitter<IVoucherDetailModel>();
@@ -68,6 +68,7 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
   projectJobList: IProjectJobModel[] = [];
   budgetLineLoader = false;
   transactionListTEMP: IEditTransactionModel[] = [];
+  projectDropdownList: any[];
 
   checkTransactionFlag = false;
 
@@ -115,6 +116,11 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
       this.getTransactionByVoucherId(this.voucherId);
       this.getAllProjectJobDetail();
     }
+    this.projectDropdownList = [];
+    this.projectList.forEach(x => this.projectDropdownList.push({
+      Id: x.ProjectId,
+      Name: x.ProjectNameCode
+    }));
   }
   //#endregion
 
@@ -558,11 +564,19 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
   //#endregion
 
   onOpenedBudgetLineChange(event, item) {
-    debugger;
     item.BudgetLineId = event.Value;
     this.onTransactionDetailChanged(
       item,
       'BudgetLine'
+    );
+  }
+
+  onOpenedProjectChange(event, item) {
+    debugger;
+    item.ProjectId = event;
+    this.onTransactionDetailChanged(
+      item,
+      'Project'
     );
   }
   //#region "getBudgetLineOnProjectId"
