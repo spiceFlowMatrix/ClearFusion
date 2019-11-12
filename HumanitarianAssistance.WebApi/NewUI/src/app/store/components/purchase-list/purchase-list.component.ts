@@ -125,7 +125,6 @@ export class PurchaseListComponent implements OnInit {
     this.filterValueModel = filter;
     this.purchaseService
       .getFilteredPurchaseList(filter).subscribe(x => {
-
         this.purchaseRecordCount = x.RecordCount;
         this.purchaseFilterConfigList$ = of(x.PurchaseList);
         this.purchaseList$ = of(x.PurchaseList.map((element) => {
@@ -156,7 +155,7 @@ export class PurchaseListComponent implements OnInit {
             subItems: element.ProcurementList.map((r) => {
               return {
                 Id: r.OrderId,
-                IssueDate: (r.IssueDate != null && element.IssueDate !== undefined) ?
+                IssueDate: (r.IssueDate != null && r.IssueDate !== undefined) ?
                           this.datePipe.transform(new Date(r.IssueDate), 'dd/MM/yyyy') : null,
                 Employee: r.EmployeeName,
                 ProcuredAmount: r.ProcuredAmount,
@@ -222,6 +221,7 @@ export class PurchaseListComponent implements OnInit {
         // console.log(x);
 
         this.purchaseList$.subscribe((purchase) => {
+          debugger;
           // console.log(purchase);
 
           const index = purchase.findIndex(i => i.Id === x.PurchaseId);
