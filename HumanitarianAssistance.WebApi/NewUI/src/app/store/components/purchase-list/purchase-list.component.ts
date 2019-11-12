@@ -221,7 +221,6 @@ export class PurchaseListComponent implements OnInit {
         // console.log(x);
 
         this.purchaseList$.subscribe((purchase) => {
-          debugger;
           // console.log(purchase);
 
           const index = purchase.findIndex(i => i.Id === x.PurchaseId);
