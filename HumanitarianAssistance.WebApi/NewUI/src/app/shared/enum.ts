@@ -583,3 +583,12 @@ export enum HiringRequestStatus {
   'Completed' = 3,
   'Closed' = 4
 }
+
+export enum LogisticComparativeStatus {
+  'Pending' = 1,
+  'Cancelled' = 2,
+  'Issued' = 3,
+  'Statement Submitted' = 4,
+  'Reject Statement' = 5,
+  'Approve Statement' = 6,
+}

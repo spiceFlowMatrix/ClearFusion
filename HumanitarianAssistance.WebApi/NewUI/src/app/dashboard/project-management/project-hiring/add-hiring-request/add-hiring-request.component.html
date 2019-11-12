@@ -63,10 +63,12 @@
             <div class="col-lg-6 col-sm-6">
               <mat-form-field class="example-full-width">
                 <input
-                  matInput
+                  matInput type = "number" min="1" max="AvailableVacancies"
                   formControlName="TotalVacancy"
-                  placeholder="Vacancies (Total No. of Jobs Available {{AvailableVacancies}})"
+                  placeholder="Vacancies (Jobs Availability {{AvailableVacancies}})"
                 />
+                <mat-error *ngIf="addHiringRequestForm.controls['TotalVacancy'].hasError(max)">
+                </mat-error>
               </mat-form-field>
             </div>
 
@@ -113,7 +115,7 @@
             <div class="col-lg-6 col-sm-6">
               <mat-form-field class="example-full-width">
                 <input
-                  matInput type = "number" min="0"
+                  matInput
                   formControlName="SalaryRange"
                   placeholder="Salary Range"
                 />

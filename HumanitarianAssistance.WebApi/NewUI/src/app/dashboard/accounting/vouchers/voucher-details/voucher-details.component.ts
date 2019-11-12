@@ -51,7 +51,7 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
   @Input() journalList: IJournalListModel;
   @Input() currencyList: ICurrencyListModel;
   @Input() officeList: IOfficeListModel;
-  @Input() projectList: IProjectListModel;
+  @Input() projectList: IProjectListModel[];
   @Input() voucherTypeList: IVoucherListModel;
   @Input() isEditingAllowed: boolean;
   @Output() voucherDetailChanged = new EventEmitter<IVoucherDetailModel>();
@@ -68,6 +68,7 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
   projectJobList: IProjectJobModel[] = [];
   budgetLineLoader = false;
   transactionListTEMP: IEditTransactionModel[] = [];
+  projectDropdownList: any[];
 
   checkTransactionFlag = false;
 
@@ -115,6 +116,11 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
       this.getTransactionByVoucherId(this.voucherId);
       this.getAllProjectJobDetail();
     }
+    this.projectDropdownList = [];
+    this.projectList.forEach(x => this.projectDropdownList.push({
+      Id: x.ProjectId,
+      Name: x.ProjectNameCode
+    }));
   }
   //#endregion
 
@@ -557,6 +563,22 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
   }
   //#endregion
 
+  onOpenedBudgetLineChange(event, item) {
+    item.BudgetLineId = event.Value;
+    this.onTransactionDetailChanged(
+      item,
+      'BudgetLine'
+    );
+  }
+
+  onOpenedProjectChange(event, item) {
+    debugger;
+    item.ProjectId = event;
+    this.onTransactionDetailChanged(
+      item,
+      'Project'
+    );
+  }
   //#region "getBudgetLineOnProjectId"
   GetProjectJobDetailByBudgetLineId(item: any) {
     this.projectJobService
@@ -593,7 +615,19 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
       (response: IResponseData) => {
         // this.voucherDetail = null;
         if (response.statusCode === 200) {
-          response.data.forEach(x => item.BudgetLineList.push(x));
+          item.BudgetLineList = [];
+          // response.data.forEach(x => item.BudgetLineList.push(x));
+          response.data.forEach(x => item.BudgetLineList.push({
+            Id: x.BudgetLineId,
+            Name: x.BudgetCodeName
+          }));
+
+          // item.BudgetLineList.forEach(e => {
+          //   this.BudgetLineDropdown.push({
+          //     Id: e.BudgetLineId,
+          //     Name: e.BudgetCodeName
+          //   });
+          // });
           // this.toastr.success('Transaction Deleted Successfully');
         } else if (response.statusCode === 400) {
           this.toastr.warning(response.message);

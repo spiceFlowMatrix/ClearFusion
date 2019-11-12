@@ -64,8 +64,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   StoreItems = StoreItem;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  @ViewChild(VehicleDetailComponent)  vehicleDetailChild: VehicleDetailComponent;
-  @ViewChild(GeneratorDetailComponent)  generatorDetailChild:GeneratorDetailComponent;
+  @ViewChild(VehicleDetailComponent) vehicleDetailChild: VehicleDetailComponent;
+  @ViewChild(GeneratorDetailComponent) generatorDetailChild: GeneratorDetailComponent;
 
   constructor(private purchaseService: PurchaseService,
     private fb: FormBuilder, private budgetLineService: BudgetLineService,
@@ -115,7 +115,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         this.subscribeAllReceiptType(result[8]);
       });
 
-      this.getLoggedInUserUsername();
+    this.getLoggedInUserUsername();
 
     this.addPurchaseForm.valueChanges.subscribe((data) => {
       // this.logValidationErrors(this.addPurchaseForm);
@@ -151,7 +151,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       'CurrencyId': [null, [Validators.required]],
       'Price': [null, [Validators.required]],
       'ReceivedFromLocation': [null],
-      'ReceivedFromEmployeeId': [null],
+      'ReceivedFromEmployeeId': [null, [Validators.required]],
       'ReceiptTypeId': [null, [Validators.required]],
       'StatusId': [null],
       'ApplyDepreciation': [false],
@@ -384,6 +384,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   getProjectSelectedValue(event: any) {
+    debugger;
     this.getBudgetLineByProjectId(event);
   }
 
@@ -401,7 +402,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   getBudgetLineByProjectId(projectId: any) {
-    this.budgetLineService.GetProjectBudgetLineList(projectId)
+    if (projectId !== undefined) {
+      this.budgetLineService.GetProjectBudgetLineList(projectId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
         this.budgetLine$ = of(x.data.map(y => {
@@ -411,6 +413,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
           };
         }));
       });
+    }
   }
 
 
@@ -477,7 +480,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
             const filteredRecords = this.uploadedPurchasedFiles.filter(z => z.Id === 0);
 
-            if ( filteredRecords !== undefined) {
+            if ( filteredRecords !== undefined && filteredRecords.length > 0) {
 
               for (let i = 0; i < filteredRecords.length; i++) {
 
@@ -525,7 +528,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
           if (x) {
 
             const filteredRecords = this.uploadedPurchasedFiles.filter(z => z.Id === 0);
-            if (filteredRecords !== undefined) {
+            if (filteredRecords !== undefined && filteredRecords.length > 0) {
               for (let i = 0; i < filteredRecords.length; i++) {
 
                 if (this.uploadedPurchasedFiles[i].Id === 0) {
@@ -722,9 +725,9 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
 
   getLoggedInUserUsername() {
-      this.purchaseService.GetLoggedInUserUsername().subscribe(x => {
-        localStorage.setItem('LoggedInUserName', x);
-      });
+    this.purchaseService.GetLoggedInUserUsername().subscribe(x => {
+      localStorage.setItem('LoggedInUserName', x);
+    });
   }
 
   getStorePurchaseById(purchaseId: number) {

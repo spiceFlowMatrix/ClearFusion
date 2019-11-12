@@ -30,7 +30,8 @@ export class LogisticRequestDetailsComponent implements OnInit {
   requestedItemsData$: Observable<IItemList[]>;
   requestId;
   requestItemList: any[];
-  requestDetail: RequestDetail = {RequestName: '', ProjectId: '', Status: 0, TotalCost: '', RequestId: ''};
+  requestDetail: RequestDetail = {RequestName: '', ProjectId: '', Status: 0, TotalCost: '', RequestId: '' , ComparativeStatus: 0,
+Currency: '', BudgetLine: '', Office: ''};
   actions: TableActionsModel;
   totalCost = 0;
   unavailableItemCost = 0;
@@ -69,7 +70,7 @@ export class LogisticRequestDetailsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined && result.data != null ) {
-        this.refreshItemList(result.data);
+        this.getAllRequestItems();
       }
     });
   }
@@ -97,6 +98,10 @@ export class LogisticRequestDetailsComponent implements OnInit {
         this.requestDetail.RequestName = res.data.logisticRequest.RequestName;
         this.requestDetail.Status = res.data.logisticRequest.Status;
         this.requestDetail.TotalCost = res.data.logisticRequest.TotalCost;
+        this.requestDetail.Currency = res.data.logisticRequest.Currency;
+        this.requestDetail.BudgetLine = res.data.logisticRequest.BudgetLine;
+        this.requestDetail.Office = res.data.logisticRequest.Office;
+        this.requestDetail.ComparativeStatus = 1;
       }
     });
   }
@@ -264,6 +269,10 @@ interface RequestDetail {
   RequestName;
   Status;
   TotalCost;
+  ComparativeStatus;
+  Currency;
+  BudgetLine;
+  Office;
 }
 
 interface IItemList {

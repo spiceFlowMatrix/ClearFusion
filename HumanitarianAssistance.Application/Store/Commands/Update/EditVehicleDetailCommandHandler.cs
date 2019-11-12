@@ -39,8 +39,23 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                 vehicle.MobilOilConsumptionRate= request.MobilOilConsumptionRate;
                 vehicle.ModelYear= request.ModelYear;
                 vehicle.OfficeId = request.OfficeId;
+                vehicle.ModifiedById = request.ModifiedById;
+                vehicle.ModifiedDate= DateTime.UtcNow;
 
                 _dbContext.PurchasedVehicleDetail.Update(vehicle);
+
+                 //log details
+                StoreLogger logger = new StoreLogger
+                {
+                    CreatedDate = DateTime.UtcNow,
+                    CreatedById = request.ModifiedById,
+                    IsDeleted = false,
+                    EventType = "Vehicle Edited",
+                    LogText = $"Generator details were edited for generator id-{request.VehicleId}"
+                };
+
+                await _dbContext.StoreLogger.AddAsync(logger);
+                await _dbContext.SaveChangesAsync();
                 await _dbContext.SaveChangesAsync();
                 isSuccess= true;
             }

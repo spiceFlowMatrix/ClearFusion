@@ -19,6 +19,7 @@ export class RequestStatusComponent implements OnInit, OnChanges {
   selectedItems: any[];
 
   @Input() requestStatus = 0;
+  @Input() comparativeStatus = 1;
   @Input() totalCost = 0;
   @Input() requestedItems: any[];
   @Output() selectedItemChange = new EventEmitter();
@@ -60,7 +61,6 @@ export class RequestStatusComponent implements OnInit, OnChanges {
   }
 
   getPurchasedItemsList() {
-    debugger;
     this.logisticservice.getPurchasedItemsList(this.requestId).subscribe(res => {
       if (res.StatusCode === 200 && res.data.LogisticsItemList != null) {
         this.purchasedItemsData$ = of(res.data.LogisticsItemList).pipe(

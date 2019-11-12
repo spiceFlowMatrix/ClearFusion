@@ -47,11 +47,16 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                        JobId = x.JobId,
                                        JobName = x.ProjectJobDetail.ProjectJobName,
                                        BudgetLineList = x.ProjectDetail.ProjectBudgetLineDetails
+                                                                    .Select(s => new ProjectBudgetLineDetailModel{
+                                                                        Id = s.BudgetLineId,
+                                                                        Name = s.BudgetCode + '-' + s.BudgetName
+                                                                    }).ToList()
+                                        /* BudgetLineList = x.ProjectDetail.ProjectBudgetLineDetails
                                                                     .Select(s => new ProjectBudgetLineDetailModel
                                                                     {
                                                                         BudgetLineId = s.BudgetLineId,
-                                                                        BudgetName = s.BudgetName
-                                                                    }).ToList()
+                                                                        BudgetName = s.BudgetCodeName
+                                                                    }).ToList() */
                                    }).ToListAsync();
 
                 response.data.VoucherTransactions = voucherTransactionsList;
