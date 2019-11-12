@@ -4,6 +4,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { LogisticService } from '../logistic.service';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { ToastrService } from 'ngx-toastr';
+import { of, Observable } from 'rxjs';
+import { IDropDownModel } from 'src/app/store/models/purchase';
 
 @Component({
   selector: 'app-add-logistic-request',
@@ -13,7 +15,11 @@ import { ToastrService } from 'ngx-toastr';
 export class AddLogisticRequestComponent implements OnInit {
 
   addLogisticRequestForm: FormGroup;
-  model: AddLogisticRequestModel = {ProjectId: '', TotalCost: '', RequestName: ''};
+  model: AddLogisticRequestModel = {ProjectId: '', RequestName: '', CurrencyId: '' , BudgetLineId: '', OfficeId: ''};
+  selectedCurrency;
+  currencyId$: Observable<IDropDownModel[]>;
+  budgetLineId$: Observable<IDropDownModel[]>;
+  officeId$: Observable<IDropDownModel[]>;
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<AddLogisticRequestComponent>,
@@ -25,14 +31,29 @@ export class AddLogisticRequestComponent implements OnInit {
 
   ngOnInit() {
     this.addLogisticRequestForm = this.fb.group({
-      Name: ['', Validators.required]
+      Name: ['', Validators.required],
+      CurrencyId : ['', Validators.required],
+      OfficeId : ['', Validators.required],
+      BudgetLineId : ['', Validators.required]
     });
+    this.currencyId$ = this.data.Currency;
+    this.officeId$ = this.data.Office;
+    this.budgetLineId$ = this.data.BudgetLine;
   }
 
   addRequest(value) {
+    if (!this.addLogisticRequestForm.valid) {
+      this.toastr.warning('Please fill all required fields!');
+      return false;
+    }
     this.commonLoader.showLoader();
-    this.model.ProjectId = this.data.ProjectId;
-    this.model.RequestName = value.Name;
+    this.model = {
+      ProjectId: this.data.ProjectId,
+      RequestName: value.Name,
+      CurrencyId: value.CurrencyId,
+      OfficeId: value.OfficeId,
+      BudgetLineId: value.BudgetLineId
+    };
     // this.model.TotalCost = value.TotalCost;
     this.logisticservice.addLogisticRequest(this.model).subscribe(res => {
       if (res.StatusCode === 200) {
@@ -55,6 +76,8 @@ export class AddLogisticRequestComponent implements OnInit {
 
 export class AddLogisticRequestModel {
   ProjectId;
-  TotalCost;
   RequestName;
+  CurrencyId;
+  BudgetLineId;
+  OfficeId;
 }

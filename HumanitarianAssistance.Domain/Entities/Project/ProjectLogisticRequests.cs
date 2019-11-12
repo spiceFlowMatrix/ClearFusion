@@ -18,5 +18,15 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public long ProjectId { get; set; }
         [ForeignKey("ProjectId")]
         public virtual ProjectDetail ProjectDetail { get; set; }
+        public int OfficeId { get; set; }
+        public long BudgetLineId { get; set; }
+        public int CurrencyId { get; set; }
+        public int ComparativeStatus{ get; set; }
+        [ForeignKey("OfficeId")]
+        public virtual OfficeDetail OfficeDetail { get; set; }
+        [ForeignKey("BudgetLineId")]
+        public virtual ProjectBudgetLineDetail ProjectBudgetLineDetail { get; set; }
+        [ForeignKey("CurrencyId")]
+        public virtual CurrencyDetails CurrencyDetails { get; set; }
     }
 }

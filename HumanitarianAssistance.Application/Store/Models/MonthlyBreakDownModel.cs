@@ -30,4 +30,11 @@ namespace HumanitarianAssistance.Application.Store.Models
         public List<GeneratorItemDetail> GeneratorItemDetail { get; set; }
         public List<GeneratorUsageHourDetail> GeneratorUsageHourDetail { get; set; }
     }
+
+    public class TotalMobilOilAndMonth 
+    {
+        public double TotalMobilOil { get; set; }
+        public int Month { get; set; }
+        public int Year { get; set; }
+    }
 }

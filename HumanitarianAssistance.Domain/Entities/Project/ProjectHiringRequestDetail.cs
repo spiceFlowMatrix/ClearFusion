@@ -82,6 +82,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project {
         public string SpecificDutiesAndResponsblities { get; set; }
         public string KnowladgeAndSkillRequired { get; set; }
         public string SubmissionGuidlines { get; set; }
+        public int HiringRequestStatus { get; set; }
 
     }
 }

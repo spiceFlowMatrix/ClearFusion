@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PurchaseService } from '../../services/purchase.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
 
 @Component({
   selector: 'app-add-hours',
@@ -38,6 +39,8 @@ export class AddHoursComponent implements OnInit {
   addHours() {
     if (this.addUsageHourForm.valid) {
       this.isAddUsageHourFormSubmitted = true;
+
+      this.addUsageHourForm.value.Month = StaticUtilities.setLocalDate(this.addUsageHourForm.value.Month);
       this.purchaseService.addGeneratorUsageHours(this.addUsageHourForm.value)
         .subscribe(x => {
           if (x) {

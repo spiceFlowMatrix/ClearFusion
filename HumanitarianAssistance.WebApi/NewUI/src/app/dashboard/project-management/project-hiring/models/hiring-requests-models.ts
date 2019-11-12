@@ -1,5 +1,5 @@
 export interface HiringList {
-  HiringRequestId?: string;
+  HiringRequestId?: number;
   JobCode?: string;
   JobGrade?: string;
   Position?: string;
@@ -16,6 +16,8 @@ export interface IFilterModel {
   pageSize?: number;
   ProjectId?: number;
   TotalCount?: number;
+  IsOpenFlagId?: number;
+  IsInProgress?: number;
 }
 export interface HiringRequestDetailList {
   HiringRequestId?: string;
@@ -45,14 +47,16 @@ PhoneNumber?: string;
 AccountStatus?: number;
 Gender?: number;
 DateOfBirth?: Date;
+EducationDegree?: number;
 Grade?: number;
 Profession?: number;
 Office?: number;
 Country?: number;
 Province?: number;
 District?: number;
-ExperienceInMonth?: number;
-ExperienceInYear?: number;
+TotalExperienceInYear?: number;
+RelevantExperienceInYear?: number;
+IrrelevantExperienceInYear?: number;
 }
 
 export interface IHiringRequestModel {
@@ -82,3 +86,29 @@ export interface IHiringRequestModel {
   KnowledgeAndSkillsRequired?: string;
   SubmissionGuidelines?: string;
 }
+export interface CompleteHiringRequestModel {
+  HiringRequestId: number[];
+  ProjectId: number;
+}
+
+export interface ICandidateDetailList {
+  CandidateId?: number;
+  FirstName?: string;
+  LastName?: string;
+  Email?: string;
+  PhoneNumber?: string;
+  AccountStatus?: string;
+  Gender?: string;
+  DateOfBirth?: Date;
+  EducationDegree?: string;
+  Grade?: string;
+  Profession?: string;
+  Office?: string;
+  Country?: string;
+  Province?: string;
+  District?: string;
+  TotalExperienceInYear?: string;
+  RelevantExperienceInYear?: string;
+  IrrelevantExperienceInYear?: string;
+  Interview?: string;
+  }

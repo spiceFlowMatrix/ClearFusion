@@ -41,6 +41,7 @@ import { AddMasterInventoryComponent } from './components/add-master-inventory/a
 import { AddItemCategoryComponent } from './components/add-item-category/add-item-category.component';
 import { AddItemComponent } from './components/add-item/add-item.component';
 
+import {MatRadioModule} from '@angular/material/radio';
 
 
 @NgModule({
@@ -103,7 +104,8 @@ import { AddItemComponent } from './components/add-item/add-item.component';
     MatTabsModule,
     MatTreeModule,
     MatSelectModule,
-    MatOptionModule
+    MatOptionModule,
+    MatRadioModule
     // MatRangeDatepickerModule,
     // MatNativeDateModule
 

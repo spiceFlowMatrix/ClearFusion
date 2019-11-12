@@ -25,6 +25,8 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
         public async Task<bool> Handle(EditStorePurchaseCommand request, CancellationToken cancellationToken)
         {
             bool success = false;
+            string unitName = string.Empty;
+            string eventType = string.Empty;
 
             request.PurchaseDate = request.TimezoneOffset == null ? request.PurchaseDate : request.PurchaseDate.AddMinutes(Math.Abs((double)request.TimezoneOffset));
 
@@ -40,6 +42,9 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                         {
                             throw new Exception($"Exchange Rates not defined for Date {request.PurchaseDate.Date.ToString("dd/MM/yyyy")}");
                         }
+
+                        List<PurchaseUnitType> PurchaseUnitTypeList = await _dbContext.PurchaseUnitType.Where(x => x.IsDeleted == false).ToListAsync();
+                        unitName = PurchaseUnitTypeList.Any(x => x.UnitTypeId == request.UnitType) ? PurchaseUnitTypeList.First(x => x.UnitTypeId == request.UnitType).UnitTypeName : "";
 
                         StoreItemPurchase purchase = await _dbContext.StoreItemPurchases
                                                                      .Include(x=> x.VehicleItemDetail)
@@ -124,6 +129,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                             }
 
                             await _dbContext.SaveChangesAsync();
+                            eventType="Vehicle";
                         }
 
                         //Add Purchased generator List
@@ -174,6 +180,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                                 }
                             }
                             await _dbContext.SaveChangesAsync();
+                            eventType="Generator";
                         }
 
                         //Update purchased vehicle Item
@@ -187,6 +194,9 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                             purchase.VehicleItemDetail.ModifiedDate = request.ModifiedDate;
                             purchase.VehicleItemDetail.VehiclePurchaseId = request.TransportItemId.Value;
                             await _dbContext.SaveChangesAsync();
+
+                            //get EventType
+                            eventType = GetEventTypeName(request.InventoryItem);
                         }
 
                         //Update purchased generator Item
@@ -200,7 +210,24 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                             purchase.GeneratorItemDetail.ModifiedDate = request.ModifiedDate;
                             purchase.GeneratorItemDetail.GeneratorPurchaseId = request.TransportItemId.Value;
                             await _dbContext.SaveChangesAsync();
+
+                            //get EventType
+                            eventType = GetEventTypeName(request.InventoryItem);
                         }
+
+                        //log details
+                        StoreLogger logger = new StoreLogger
+                        {
+                            CreatedDate = DateTime.UtcNow,
+                            CreatedById = request.CreatedById,
+                            IsDeleted = false,
+                            EventType = $"{eventType} Purchase Edited",
+                            LogText = $"{eventType} Purchase Edited in Purchase Id {request.PurchaseId}",
+                            PurchaseId = request.PurchaseId
+                        };
+
+                        await _dbContext.StoreLogger.AddAsync(logger);
+                        await _dbContext.SaveChangesAsync();
 
                         tran.Commit();
                         success = true;
@@ -218,6 +245,40 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
             }
 
             return success;
+        }
+
+        private string GetEventTypeName(long inventoryItem)
+        {
+            string eventTypeName = "";
+
+            switch (inventoryItem)
+            {
+                case (int)TransportItem.VehicleFuel:
+                    eventTypeName = TransportItem.VehicleFuel.ToString();
+                    break;
+                case (int)TransportItem.VehicleMaintenanceService:
+                    eventTypeName = TransportItem.VehicleMaintenanceService.ToString();
+                    break;
+                case (int)TransportItem.VehicleMobilOil:
+                    eventTypeName = TransportItem.VehicleMobilOil.ToString();
+                    break;
+                case (int)TransportItem.VehicleSpareParts:
+                    eventTypeName = TransportItem.VehicleSpareParts.ToString();
+                    break;
+                case (int)TransportItem.GeneratorFuel:
+                    eventTypeName = TransportItem.GeneratorFuel.ToString();
+                    break;
+                case (int)TransportItem.GeneratorMaintenanceService:
+                    eventTypeName = TransportItem.GeneratorMaintenanceService.ToString();
+                    break;
+                case (int)TransportItem.GeneratorMobilOil:
+                    eventTypeName = TransportItem.GeneratorMobilOil.ToString();
+                    break;
+                case (int)TransportItem.GeneratorSpareParts:
+                    eventTypeName = TransportItem.GeneratorSpareParts.ToString();
+                    break;
+            }
+            return eventTypeName;
         }
     }
 }

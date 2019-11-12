@@ -29,5 +29,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
         public string SpecificDutiesAndResponsibilities { get; set; }
         public string KnowledgeAndSkillsRequired { get; set; }
         public string SubmissionGuidelines { get; set; }
+        public int HiringRequestStatus { get; set; }
     }
 }

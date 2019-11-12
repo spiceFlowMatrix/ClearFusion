@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.Project;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,19 +28,26 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
             ApiResponse response = new ApiResponse();
             try
             {
-                ProjectHiringRequestDetail projectHiringRequestDetail = new ProjectHiringRequestDetail();
-                if (request.hiringRequestId != 0)
+                 List<ProjectHiringRequestDetail> selelctedRequest = new List<ProjectHiringRequestDetail>();
+                if (request.HiringRequestId != null)
                 {
-                    projectHiringRequestDetail = await _dbContext.ProjectHiringRequestDetail
-                                                                          .FirstOrDefaultAsync(x => x.IsDeleted == false &&
-                                                                                                    x.HiringRequestId == request.hiringRequestId);
+                    var HiringRequestDetail = await _dbContext.ProjectHiringRequestDetail
+                                                                         .Where(x => x.IsDeleted == false
+                                                                         && x.ProjectId == request.ProjectId
+                                                                         && x.HiringRequestStatus == (int)HiringRequestStatus.Open || x.HiringRequestStatus == (int)HiringRequestStatus.InProgress).ToListAsync();
 
-                    projectHiringRequestDetail.IsCompleted = true;
-                    projectHiringRequestDetail.ModifiedById = request.ModifiedById;
-                    projectHiringRequestDetail.ModifiedDate = request.ModifiedDate;
+                    selelctedRequest = HiringRequestDetail.Where(x => request.HiringRequestId.Contains(x.HiringRequestId)).ToList();
+                    foreach (var item in selelctedRequest)
+                    {
+                       
+                        item.HiringRequestStatus = (int)HiringRequestStatus.Completed;
+                        item.ModifiedById = request.ModifiedById;
+                        item.ModifiedDate = request.ModifiedDate;
+                    }
+                     _dbContext.ProjectHiringRequestDetail.UpdateRange(selelctedRequest);
+
                     await _dbContext.SaveChangesAsync();
                 }
-                response.ResponseData = projectHiringRequestDetail;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

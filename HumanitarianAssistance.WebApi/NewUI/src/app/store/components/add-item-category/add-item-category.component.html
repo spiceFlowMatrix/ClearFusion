@@ -1,22 +1,33 @@
 <form [formGroup]="masterForm" (ngSubmit)="submit()">
-    <mat-card-title>
-        Add New Item Category
-    </mat-card-title>
-    <mat-card-subtitle>
-    </mat-card-subtitle>
-    <mat-card-content>
-      <mat-card-subtitle>What is the name of the Item Category?</mat-card-subtitle>
-      <mat-form-field class="full-width">
-        <input matInput placeholder="Item Name" formControlName="name">
-      </mat-form-field>
-      <mat-card-subtitle>Please describe the Item Category</mat-card-subtitle>
-      <mat-form-field class="full-width">
-        <textarea formControlName="description" [mat-autosize]="true" [cdkAutosizeMinRows]="3" matInput placeholder="Description"></textarea>
-      </mat-form-field>
-    </mat-card-content>
-    <mat-card-actions>
-      <hum-button *ngIf="!isSaving" [disabled]="masterForm.invalid" [isSubmit]="true" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
-      <hum-button *ngIf="isSaving" [type]="'loading'" [text]="'Saving....'"></hum-button>
-      <hum-button (click)='cancel()' [type]="'cancel'" [text]="'cancel'"></hum-button>
-    </mat-card-actions>
-  </form>
+  <mat-card-title>
+    Add New Item Category
+  </mat-card-title>
+  <mat-card-subtitle>
+  </mat-card-subtitle>
+  <mat-card-content>
+    <mat-card-subtitle>What is the name of the Item Category?</mat-card-subtitle>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Item Name" formControlName="name">
+    </mat-form-field>
+    <mat-card-subtitle>Please describe the Item Category</mat-card-subtitle>
+    <mat-form-field class="full-width">
+      <textarea formControlName="description" [mat-autosize]="true" [cdkAutosizeMinRows]="3" matInput
+        placeholder="Description"></textarea>
+    </mat-form-field>
+    <div [hidden]="!data.IsTransportCategory">
+      <mat-card-subtitle><b>This Item Category is for a Transport Master Inventory</b></mat-card-subtitle>
+      <mat-card-subtitle>Please select the Transport category for this Item Category.</mat-card-subtitle>
+
+      <mat-radio-group aria-label="Select an option" formControlName="inventorytype">
+        <mat-radio-button value="1">Vehicle</mat-radio-button>
+        <mat-radio-button value="2">Generator</mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <hum-button *ngIf="!isSaving" [disabled]="masterForm.invalid" [isSubmit]="true" [type]="'save'" [text]="'save'"
+      [isSubmit]="true"></hum-button>
+    <hum-button *ngIf="isSaving" [type]="'loading'" [text]="'Saving....'"></hum-button>
+    <hum-button (click)='cancel()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+  </mat-card-actions>
+</form>

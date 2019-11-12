@@ -13,6 +13,8 @@ namespace HumanitarianAssistance.Application.Store.Models
         public int AssetType { get; set; }
         public long? InventoryDebitAccount { get; set; }
         public long? InventoryCreditAccount { get; set; }
+        public bool? IsTransportCategory { get; set; }
+
 
         public List<StoreItemGroupModelNew> children { get; set; }
 
