@@ -67,7 +67,9 @@
           <h5>Candidates <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewCandidate()"></hum-button>
           </h5>
 
-          <hum-table [headers]="newCandidatesHeaders$" [items]="newCandidatesList$"></hum-table>
+          <hum-table [headers]="newCandidatesHeaders$" [items]="newCandidatesList$"  [subHeaders]="subListHeaders$"
+          [subTitle]="'Other Details'"
+          ></hum-table>
         </mat-tab>
         <mat-tab label="Existing Candidates"> Content 2 </mat-tab>
       </mat-tab-group>
