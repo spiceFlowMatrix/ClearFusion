@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191111113434_updateCoulmnsInCandidateDetailsTbl")]
+    partial class updateCoulmnsInCandidateDetailsTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5788,29 +5790,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("DonorEligibilityCriteria");
-                });
-
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.EducationDegreeDetail", b =>
-                {
-                    b.Property<long>("EducationDegreeId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<string>("EducationDegreeName")
-                        .HasMaxLength(100);
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.HasKey("EducationDegreeId");
-
-                    b.ToTable("EducationDegreeDetails");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.EligibilityCriteriaDetail", b =>

@@ -546,6 +546,13 @@ getAllCurrencies() {
           GLOBAL.API_code_GetAllCurrency);
 }
 
+getStoreLogs() {
+  return this.http
+      .get<any>(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_StorePurchase_GetVehicleGeneratorTrackerLogs);
+}
+
 getMonthlyBreakDownYears(): Observable<IDropDownModel[]> {
 
   let yearDropDown: IDropDownModel[] = [];

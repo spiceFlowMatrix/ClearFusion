@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Application.Store.Commands.Update
 {
-    public class EditGeneratorDetailCommandHandler: IRequestHandler<EditGeneratorDetailCommand, bool>
+    public class EditGeneratorDetailCommandHandler : IRequestHandler<EditGeneratorDetailCommand, bool>
     {
-         private HumanitarianAssistanceDbContext _dbContext;
+        private HumanitarianAssistanceDbContext _dbContext;
         public EditGeneratorDetailCommandHandler(HumanitarianAssistanceDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -23,27 +23,40 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
 
             try
             {
-                if(command == null)
+                if (command == null)
                 {
                     throw new Exception(StaticResource.RequestValuesInAppropriate);
                 }
 
-                PurchasedGeneratorDetail generator= await _dbContext.PurchasedGeneratorDetail
-                                                          .FirstOrDefaultAsync(x=> x.IsDeleted == false && x.Id == command.GeneratorId);
-
+                PurchasedGeneratorDetail generator = await _dbContext.PurchasedGeneratorDetail
+                                                          .FirstOrDefaultAsync(x => x.IsDeleted == false && x.Id == command.GeneratorId);
+                generator.ModifiedDate = DateTime.UtcNow;
+                generator.ModifiedById = command.ModifiedById;
                 generator.Voltage = command.Voltage;
-                generator.StartingUsage= command.StartingUsage;
-                generator.IncurredUsage= command.IncurredUsage;
-                generator.FuelConsumptionRate= command.FuelConsumptionRate;
-                generator.MobilOilConsumptionRate= command.MobilOilConsumptionRate;
-                generator.ModelYear= command.ModelYear;
+                generator.StartingUsage = command.StartingUsage;
+                generator.IncurredUsage = command.IncurredUsage;
+                generator.FuelConsumptionRate = command.FuelConsumptionRate;
+                generator.MobilOilConsumptionRate = command.MobilOilConsumptionRate;
+                generator.ModelYear = command.ModelYear;
                 generator.OfficeId = command.OfficeId;
 
                 _dbContext.PurchasedGeneratorDetail.Update(generator);
+
+                //log details
+                StoreLogger logger = new StoreLogger
+                {
+                    CreatedDate = DateTime.UtcNow,
+                    CreatedById = command.ModifiedById,
+                    IsDeleted = false,
+                    EventType = "Generator Edited",
+                    LogText = $"Generator details were edited for generator id-{command.GeneratorId}"
+                };
+
+                await _dbContext.StoreLogger.AddAsync(logger);
                 await _dbContext.SaveChangesAsync();
-                isSuccess= true;
+                isSuccess = true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }

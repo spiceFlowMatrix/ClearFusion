@@ -18,5 +18,9 @@ namespace HumanitarianAssistance.Application.CommonModels
         public double? DebitPercentage { get; set; }
         public DateTime? CreatedDate { get; set; }
         public double? Expenditure { get; set; }
+
+        // for dropdown
+        public long? Id { get; set; }
+        public string Name { get; set; }
     }
 }

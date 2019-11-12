@@ -37,6 +37,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                     storeItemGroup.InventoryId = request.InventoryId;
                     storeItemGroup.ItemGroupCode = request.ItemGroupCode;
                     storeItemGroup.ItemGroupName = request.ItemGroupName;
+                    storeItemGroup.ItemTypeCategory = request.ItemTypeCategory;
 
                     await _dbContext.SaveChangesAsync();
                 }
