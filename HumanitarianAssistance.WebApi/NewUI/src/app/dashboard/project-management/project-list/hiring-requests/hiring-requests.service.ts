@@ -20,7 +20,8 @@ import { IProjectPermissionMode } from '../project-activities/models/project-act
 import {
   OfficeDetailModel,
   IHiringRequestModel,
-  CompleteHiringRequestModel
+  CompleteHiringRequestModel,
+  ICandidateDetailModel
 } from '../../project-hiring/models/hiring-requests-models';
 
 @Injectable({
@@ -303,6 +304,50 @@ export class HiringRequestsService {
       );
   }
   //#endregion
+
+ //#region "AddNewCandidateDetail"
+ AddNewCandidateDetail(data: ICandidateDetailModel) {
+  return this.globalService
+    .post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HiringRequest_AddNewCandidateDetail,
+      data
+    )
+    .pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+}
+//#endregion
+
+  //#region "getAllCandidateList"
+  getAllCandidateList(data: IFilterModel): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_GetAllCandidateList,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.CandidateList,
+            total: x.data.TotalCount,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
 
   //#region "EditCandidateDetail"
   EditCandidateDetail(data: CandidateDetailModel) {

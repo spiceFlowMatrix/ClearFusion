@@ -212,19 +212,19 @@ export class AddNewCandidateComponent implements OnInit {
 
   //#region "AddNewCandidate"
   AddNewCandidate(data: ICandidateDetailModel) {
-    // this.hiringRequestService.AddNewCandidateDetail(data).subscribe(
-    //   (response: IResponseData) => {
-    //     if (response.statusCode === 200) {
-    //       this.toastr.success('New request is created successfully');
-    //     } else {
-    //       this.toastr.error(response.message);
-    //     }
-    //     this.onCancelPopup();
-    //   },
-    //   error => {
-    //     this.toastr.error('Someting went wrong. Please try again');
-    //   }
-    // );
+    this.hiringRequestService.AddNewCandidateDetail(data).subscribe(
+      (response: IResponseData) => {
+        if (response.statusCode === 200) {
+          this.toastr.success('New request is created successfully');
+        } else {
+          this.toastr.error(response.message);
+        }
+        this.onCancelPopup();
+      },
+      error => {
+        this.toastr.error('Someting went wrong. Please try again');
+      }
+    );
   }
   //#endregion
 

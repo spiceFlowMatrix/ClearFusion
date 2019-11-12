@@ -90,3 +90,25 @@ export interface CompleteHiringRequestModel {
   HiringRequestId: number[];
   ProjectId: number;
 }
+
+export interface ICandidateDetailList {
+  CandidateId?: number;
+  FirstName?: string;
+  LastName?: string;
+  Email?: string;
+  PhoneNumber?: string;
+  AccountStatus?: string;
+  Gender?: string;
+  DateOfBirth?: Date;
+  EducationDegree?: string;
+  Grade?: string;
+  Profession?: string;
+  Office?: string;
+  Country?: string;
+  Province?: string;
+  District?: string;
+  TotalExperienceInYear?: string;
+  RelevantExperienceInYear?: string;
+  IrrelevantExperienceInYear?: string;
+  Interview?: string;
+  }

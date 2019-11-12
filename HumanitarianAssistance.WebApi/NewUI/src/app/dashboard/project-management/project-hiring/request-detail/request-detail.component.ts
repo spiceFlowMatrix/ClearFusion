@@ -1,8 +1,11 @@
-import { Component, OnInit, HostListener, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { of, Observable, ReplaySubject } from 'rxjs';
 import {
   HiringList,
-  HiringRequestDetailList
+  HiringRequestDetailList,
+  ICandidateDetailModel,
+  IFilterModel,
+  ICandidateDetailList
 } from '../models/hiring-requests-models';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
@@ -20,15 +23,25 @@ import { AddNewCandidateComponent } from '../add-new-candidate/add-new-candidate
 })
 export class RequestDetailComponent implements OnInit {
   newCandidatesHeaders$ = of([
-    'Employee Code',
-    'Full Name',
+    'First Name',
+    'Last Name',
     'Gender',
     'Interview',
     'Candidate Status'
   ]);
+  subListHeaders$ = of([
+    'Education',
+    'Phone Number',
+    'Profession',
+    'Email Address',
+    'Relevant Experience',
+    'Irrelevant Experience',
+    'Total Experience'
+  ]);
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-  newCandidatesList$: Observable<HiringList[]>;
+  newCandidatesList$: Observable<[ICandidateDetailList]>;
   hiringRequestDetails: HiringRequestDetailList;
+  filterValueModel: IFilterModel;
   hiringRequestId: any;
   projectId: any;
   screenHeight: any;
@@ -39,7 +52,17 @@ export class RequestDetailComponent implements OnInit {
     private routeActive: ActivatedRoute,
     public hiringRequestService: HiringRequestsService,
     private loader: CommonLoaderService
-  ) {}
+  ) {
+    this.filterValueModel = {
+      pageIndex: 0,
+      pageSize: 10,
+      TotalCount: null,
+      FilterValue: '',
+      ProjectId: null,
+      IsOpenFlagId: null,
+      IsInProgress: null
+    };
+  }
 
   ngOnInit() {
     this.hiringRequestDetails = {
@@ -55,15 +78,6 @@ export class RequestDetailComponent implements OnInit {
       Status: '',
       Office: ''
     };
-    this.newCandidatesList$ = of([
-      {
-        JobCode: 'E1534',
-        JobGrade: 'Employee Name',
-        FilledVacancies: 'Male',
-        PayCurrency: '<a>Interview Id</a>',
-        PayRate: '<p style="color: #bcbc1e";>pending interview</p>'
-      }
-    ] as HiringList[]);
     this.routeActive.params.subscribe(params => {
       this.hiringRequestId = +params['id'];
     });
@@ -72,6 +86,7 @@ export class RequestDetailComponent implements OnInit {
     });
 
     this.getHiringRequestDetailsByHiringRequestId();
+    this.GetAllCandidateList(this.filterValueModel);
     this.getScreenSize();
   }
 
@@ -132,20 +147,20 @@ export class RequestDetailComponent implements OnInit {
     });
 
     // refresh the list after new request created
-    dialogRef.componentInstance.onUpdateHiringRequestListRefresh.subscribe(() => {
-      this.getHiringRequestDetailsByHiringRequestId();
-    });
-    dialogRef.afterClosed().subscribe(result => {
-
-    });
+    dialogRef.componentInstance.onUpdateHiringRequestListRefresh.subscribe(
+      () => {
+        this.getHiringRequestDetailsByHiringRequestId();
+      }
+    );
+    dialogRef.afterClosed().subscribe(result => {});
   }
 
-   // #region adding new hiring request
-   addNewCandidate(): void {
+  // #region adding new hiring request
+  addNewCandidate(): void {
     // NOTE: It open AddHiringRequest dialog and passed the data into the AddHiringRequestsComponent Model
     const dialogRef = this.dialog.open(AddNewCandidateComponent, {
       width: '1000px',
-      autoFocus: false,
+      autoFocus: false
     });
     // // refresh the list after new request created
     // dialogRef.componentInstance.onAddHiringRequestListRefresh.subscribe(() => {
@@ -158,45 +173,42 @@ export class RequestDetailComponent implements OnInit {
   }
   //#endregion
 
-  //#endregion
-  // //#region "GetCandidateList"
-  // GetCandidateList(data: number) {
-  //   if (data != null) {
-  //     this.candidateList = [];
-  //     const candidateDetail: IReuestedCandidateDetailModel = {
-  //       HiringRequestId: data
-  //     };
-  //     this.hiringRequestService
-  //       .GetRequestedCandidateById(candidateDetail)
-  //       .subscribe(
-  //         (response: IResponseData) => {
-  //           if (response.statusCode === 200 && response.data != null) {
-  //             response.data.forEach(element => {
-  //               this.candidateList.push({
-  //                 CandidateId: element.CandidateId,
-  //                 EmployeeID: element.EmployeeID,
-  //                 EmployeeCode: element.EmployeeCode,
-  //                 EmployeeName: element.EmployeeName,
-  //                 EmployeeTypeName: element.EmployeeTypeName,
-  //                 Gender: element.Gender,
-  //                 EmployeeTypeId: element.EmployeeTypeId,
-  //                 IsInterViewed: element.IsInterViewed,
-  //                 IsShortListed: element.IsShortListed,
-  //                 IsSelected: element.IsSelected,
-  //                 IsSelectedFlag: false
-  //               });
-  //             });
-  //           } else {
-  //             this.toastr.error(response.message);
-  //           }
-  //           this.getCandidateDetailLoader = false;
-  //         },
-  //         error => {
-  //           this.toastr.error('Someting went wrong');
-  //           this.getCandidateDetailLoader = false;
-  //         }
-  //       );
-  //   }
-  // }
-  // //#endregion
+  GetAllCandidateList(filter: IFilterModel) {
+    this.loader.showLoader();
+    this.hiringRequestService.getAllCandidateList(filter).subscribe(
+      (response: IResponseData) => {
+        if (response.statusCode === 200 && response.data !== null) {
+          this.newCandidatesList$ = of(
+            response.data.map(element => {
+              return {
+               // CandidateId: element.CandidateId,
+                FirstName: element.FirstName,
+                LastName: element.LastName,
+                Email: element.Email,
+                Interview: 'sd',
+                // PhoneNumber: element.PhoneNumber,
+                AccountStatus: element.AccountStatus,
+                // Gender: element.Gender,
+                // DateOfBirth: element.DateOfBirth,
+                // EducationDegree: element.EducationDegree,
+                // Grade: element.Grade,
+                // Profession: element.Profession,
+                // Office: element.Office,
+                // Country: element.Country,
+                // Province: element.Province,
+                // District: element.District,
+                // TotalExperienceInYear: element.TotalExperienceInYear,
+                // RelevantExperienceInYear: element.RelevantExperienceInYear,
+                // IrrelevantExperienceInYear: element.IrrelevantExperienceInYear
+              } as ICandidateDetailList;
+            })
+          );
+        }
+        this.loader.hideLoader();
+      },
+      error => {
+        this.loader.hideLoader();
+      }
+    );
+  }
 }

@@ -421,6 +421,10 @@ export class GLOBAL {
   public static API_HiringRequest_GetRemainingVacancyByJobId = 'HiringRequest/GetRemainingVacancyByJobId';
   public static API_HiringRequest_GetAllProjectHiringRequestDetailByHiringRequestId =
     'HiringRequest/GetAllProjectHiringRequestDetailByHiringRequestId';
+    public static API_HiringRequest_AddNewCandidateDetail =
+    'HiringRequest/AddNewCandidateDetail';
+    public static API_HiringRequest_GetAllCandidateList =
+    'HiringRequest/GetAllCandidateList';
 
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
   public static API_HiringRequest_AddHiringRequestDetail = 'HiringRequest/AddHiringRequestDetail';

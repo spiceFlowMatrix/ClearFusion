@@ -163,6 +163,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             command.CreatedById = userId;
             command.CreatedDate = DateTime.UtcNow;
             return await _mediator.Send(command);
-        }        
+        } 
+       [HttpPost]
+        public async Task<ApiResponse> GetAllCandidateList([FromBody]GetAllCandidateListQuery query)
+        {
+            return await _mediator.Send(query);
+        }       
     }  
 }
