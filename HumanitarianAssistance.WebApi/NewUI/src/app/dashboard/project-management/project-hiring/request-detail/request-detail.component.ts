@@ -162,14 +162,13 @@ export class RequestDetailComponent implements OnInit {
       width: '1000px',
       autoFocus: false
     });
-    // // refresh the list after new request created
-    // dialogRef.componentInstance.onAddHiringRequestListRefresh.subscribe(() => {
-    //   // do something
-    //   this.getAllHiringRequestFilterList();
-    // });
-
-    // dialogRef.afterClosed().subscribe(result => {
-    // });
+    // refresh the list after new request created
+    dialogRef.componentInstance.onAddCandidateListRefresh.subscribe(() => {
+      // do something
+      this.GetAllCandidateList(this.filterValueModel);
+    });
+    dialogRef.afterClosed().subscribe(result => {
+    });
   }
   //#endregion
 
@@ -185,9 +184,9 @@ export class RequestDetailComponent implements OnInit {
                 FirstName: element.FirstName,
                 LastName: element.LastName,
                 Email: element.Email,
-                Interview: 'sd',
+                Interview: '<a>Interview Id</a>',
                 // PhoneNumber: element.PhoneNumber,
-                AccountStatus: element.AccountStatus,
+                AccountStatus: '<p style="color: #bcbc1e";>' + element.AccountStatus + '</p>',
                 // Gender: element.Gender,
                 // DateOfBirth: element.DateOfBirth,
                 // EducationDegree: element.EducationDegree,

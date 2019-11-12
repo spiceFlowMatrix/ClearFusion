@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { ActivatedRoute } from '@angular/router';
@@ -28,6 +28,7 @@ export class AddNewCandidateComponent implements OnInit {
   genderList$: Observable<IDropDownModel[]>;
   gradeList$: Observable<IDropDownModel[]>;
   educationDegreeList$: Observable<IDropDownModel[]>;
+  onAddCandidateListRefresh = new EventEmitter();
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     public dialogRef: MatDialogRef<AddNewCandidateComponent>,
@@ -216,6 +217,7 @@ export class AddNewCandidateComponent implements OnInit {
       (response: IResponseData) => {
         if (response.statusCode === 200) {
           this.toastr.success('New request is created successfully');
+          this.AddCandidateListRefresh();
         } else {
           this.toastr.error(response.message);
         }
@@ -249,4 +251,9 @@ export class AddNewCandidateComponent implements OnInit {
     }
     console.log(data);
   }
+      //#region "hiringRequestListRefresh"
+      AddCandidateListRefresh() {
+        this.onAddCandidateListRefresh.emit();
+      }
+      // #endregion
 }
