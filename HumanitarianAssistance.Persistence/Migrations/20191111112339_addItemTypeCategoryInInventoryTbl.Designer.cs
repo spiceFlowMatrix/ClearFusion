@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    [Migration("20191111055343_StoreLoggerTblAdd")]
-    partial class StoreLoggerTblAdd
+    [Migration("20191111112339_addItemTypeCategoryInInventoryTbl")]
+    partial class addItemTypeCategoryInInventoryTbl
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -6555,6 +6555,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<string>("HiringRequestCode");
 
+                    b.Property<int>("HiringRequestStatus");
+
                     b.Property<bool>("IsCompleted");
 
                     b.Property<bool>("IsDeleted");
@@ -6798,15 +6800,23 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<long>("LogisticRequestsId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<long>("BudgetLineId");
+
+                    b.Property<int>("ComparativeStatus");
+
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int>("CurrencyId");
 
                     b.Property<bool>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int>("OfficeId");
 
                     b.Property<long>("ProjectId");
 
@@ -6817,6 +6827,12 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<double>("TotalCost");
 
                     b.HasKey("LogisticRequestsId");
+
+                    b.HasIndex("BudgetLineId");
+
+                    b.HasIndex("CurrencyId");
+
+                    b.HasIndex("OfficeId");
 
                     b.HasIndex("ProjectId");
 
@@ -8187,6 +8203,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<bool>("IsDeleted");
 
+                    b.Property<bool>("IsTransportCategory");
+
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
@@ -8223,6 +8241,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("ItemType");
 
+                    b.Property<int?>("ItemTypeCategory");
+
                     b.Property<string>("MasterInventoryCode");
 
                     b.Property<string>("ModifiedById");
@@ -8258,6 +8278,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<string>("ItemGroupCode");
 
                     b.Property<string>("ItemGroupName");
+
+                    b.Property<int?>("ItemTypeCategory");
 
                     b.Property<string>("ModifiedById");
 
@@ -10119,6 +10141,21 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectLogisticRequests", b =>
                 {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectBudgetLineDetail", "ProjectBudgetLineDetail")
+                        .WithMany()
+                        .HasForeignKey("BudgetLineId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.CurrencyDetails", "CurrencyDetails")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.OfficeDetail", "OfficeDetail")
+                        .WithMany()
+                        .HasForeignKey("OfficeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectDetail", "ProjectDetail")
                         .WithMany()
                         .HasForeignKey("ProjectId")
