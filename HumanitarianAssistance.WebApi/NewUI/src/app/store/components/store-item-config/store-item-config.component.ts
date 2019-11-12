@@ -33,7 +33,9 @@ export class StoreItemConfigComponent implements OnInit {
       code: node.Code,
       description: node.Description,
       addText: node.addText,
-      editText: node.editText
+      editText: node.editText,
+      isTransportCategory: node.IsTransportCategory ? node.IsTransportCategory : null,
+      itemTypeCategory: node.ItemTypeCategory
     };
   }
   treeControl = new FlatTreeControl<ExampleFlatNode>(
@@ -92,12 +94,13 @@ export class StoreItemConfigComponent implements OnInit {
   }
 
 
-  openItem(level, inventoryId, invId) {
+  openItem(level, inventoryId, invId, isTransportCategory) {
     switch (level) {
       case 0:
         this.configService.getGroupItemCode(inventoryId, this.assetType).subscribe(res => {
           this.masterInventoryGroup.InventoryId = inventoryId;
-          this.masterInventoryGroup.ItemGroupCode = res.data.ItemGroupCode
+          this.masterInventoryGroup.ItemGroupCode = res.data.ItemGroupCode;
+          this.masterInventoryGroup.IsTransportCategory = isTransportCategory;
         })
         const dg = this.dialog.open(AddItemCategoryComponent, {
           width: this.modelWidth,
@@ -113,23 +116,24 @@ export class StoreItemConfigComponent implements OnInit {
           this.masterInventoryItem.ItemGroupId = new Number(inventoryId);
           this.masterInventoryItem.ItemCode = res.data.InventoryItemCode;
           this.masterInventoryItem.ItemInventory = new Number(invId);
+          this.masterInventoryItem.AssetType = Number(this.assetType);
+          const dgItem = this.dialog.open(AddItemComponent, {
+            width: this.modelWidth,
+            data: this.masterInventoryItem
+          })
+          dgItem.afterClosed().subscribe(res => {
+            this.getAllInventories();
+          })
         })
-        const dgItem = this.dialog.open(AddItemComponent, {
-          width: this.modelWidth,
-          data: this.masterInventoryItem
-        })
-        dgItem.afterClosed().subscribe(res => {
-          this.getAllInventories();
-        })
+    
+     
         break;
       default:
         break;
     }
 
   }
-  openEditItem(level, level2ID, level1ID, level0ID) {
-
-    console.log(level, level2ID, level1ID, level0ID)
+  openEditItem(level, level2ID, level1ID, level0ID, isTransport, itemcattype) {
     switch (level) {
       case 0:
         const inventory = this.inventories.find(x => x.Id == level2ID);
@@ -139,6 +143,7 @@ export class StoreItemConfigComponent implements OnInit {
         this.masterInventory.InventoryDebitAccount = inventory.InventoryDebitAccount;
         this.masterInventory.InventoryDescription = inventory.Description;
         this.masterInventory.InventoryName = inventory.Name;
+        this.masterInventory.IsTransportCategory = isTransport;
         const dg = this.dialog.open(AddMasterInventoryComponent, {
           width: this.modelWidth,
           data: this.masterInventory
@@ -149,11 +154,14 @@ export class StoreItemConfigComponent implements OnInit {
         break;
       case 1:
         const itemgroup = this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level2ID);
+        const isTransportCategory = this.inventories.find(x => x.Id == level1ID).IsTransportCategory;
         this.masterInventoryGroup.Description = itemgroup.Description;
         this.masterInventoryGroup.InventoryId = itemgroup.InventoryId;
         this.masterInventoryGroup.ItemGroupCode = itemgroup.Code;
         this.masterInventoryGroup.ItemGroupId = itemgroup.Id;
         this.masterInventoryGroup.ItemGroupName = itemgroup.Name;
+        this.masterInventoryGroup.IsTransportCategory = isTransportCategory
+        this.masterInventoryGroup.ItemTypeCategory = itemcattype;
         const dgGroup = this.dialog.open(AddItemCategoryComponent, {
           width: this.modelWidth,
           data: this.masterInventoryGroup
@@ -170,7 +178,8 @@ export class StoreItemConfigComponent implements OnInit {
         this.masterInventoryItem.ItemId = item.Id;
         this.masterInventoryItem.ItemInventory = item.InventoryId;
         this.masterInventoryItem.ItemName = item.Name;
-        this.masterInventoryItem.ItemType = 4;
+        this.masterInventoryItem.ItemType = null;
+        this.masterInventoryItem.AssetType = this.assetType;
         const dgItem = this.dialog.open(AddItemComponent, {
           width: this.modelWidth,
           data: this.masterInventoryItem
@@ -183,39 +192,6 @@ export class StoreItemConfigComponent implements OnInit {
       default:
         break;
     }
-
-    // switch (level) {
-    //   case 0:
-    //     this.configService.getGroupItemCode(inventoryId, this.assetType).subscribe(res => {
-    //       this.masterInventoryGroup.InventoryId = inventoryId;
-    //       this.masterInventoryGroup.ItemGroupCode = res.data.ItemGroupCode
-    //     })
-    //     const dg = this.dialog.open(AddItemCategoryComponent, {
-    //       width: this.modelWidth,
-    //       data: this.masterInventoryGroup
-    //     })
-    //     dg.afterClosed().subscribe(res => {
-    //       this.getAllInventories();
-    //     })
-    //     break;
-    //   case 1:
-
-    //     this.configService.getItemCode(inventoryId, this.assetType).subscribe(res => {
-    //       this.masterInventoryItem.ItemGroupId = new Number(inventoryId);
-    //       this.masterInventoryItem.ItemCode = res.data.InventoryItemCode;
-    //       this.masterInventoryItem.ItemInventory =  new Number(invId);
-    //     })
-    //     const dgItem = this.dialog.open(AddItemComponent, {
-    //       width: this.modelWidth,
-    //       data: this.masterInventoryItem
-    //     })
-    //     dgItem.afterClosed().subscribe(res => {
-    //       this.getAllInventories();
-    //     })
-    //     break;
-    //   default:
-    //     break;
-    // }
 
   }
 }
@@ -232,5 +208,7 @@ interface ExampleFlatNode {
   description: string;
   addText: string;
   editText: string;
+  isTransportCategory?: boolean;
+  itemTypeCategory
 }
 
