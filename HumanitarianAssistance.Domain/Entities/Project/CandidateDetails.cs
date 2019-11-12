@@ -30,5 +30,8 @@ namespace HumanitarianAssistance.Domain.Entities.Project {
         public double IrrelevantExperienceInYear { get; set; }
         public bool IsShortlisted { get; set; }
         public bool IsSelected { get; set; }
+        [ForeignKey ("EducationDegreeId")]
+        public long EducationDegreeId { get; set; }
+        public EducationDegreeDetail EducationDegreeDetails { get; set; }
     }
 }
