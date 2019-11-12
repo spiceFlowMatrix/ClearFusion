@@ -21,7 +21,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
         public async Task<ApiResponse> Handle (AddNewCandidateDetailCommand request, CancellationToken cancellationToken) {
             ApiResponse response = new ApiResponse ();
             try {
-                CandidateDetails candidateDeatil = new CandidateDetails () {
+                CandidateDetails candidateDetail = new CandidateDetails () {
                     FirstName = request.FirstName,
                     LastName = request.LastName,
                     Email = request.Email,
@@ -43,7 +43,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                     CreatedDate = request.CreatedDate,
                     IsDeleted = false,
                 };
-                await _dbContext.ProjectHiringRequestDetail.AddAsync (hiringRequestDeatil);
+                await _dbContext.CandidateDetails.AddAsync (candidateDetail);
                 await _dbContext.SaveChangesAsync ();
 
                 response.StatusCode = StaticResource.successStatusCode;
