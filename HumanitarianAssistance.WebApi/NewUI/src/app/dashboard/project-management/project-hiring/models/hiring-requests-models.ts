@@ -47,6 +47,7 @@ PhoneNumber?: string;
 AccountStatus?: number;
 Gender?: number;
 DateOfBirth?: Date;
+EducationDegree?: number;
 Grade?: number;
 Profession?: number;
 Office?: number;

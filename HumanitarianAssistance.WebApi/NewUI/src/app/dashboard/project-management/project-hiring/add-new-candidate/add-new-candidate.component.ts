@@ -40,29 +40,28 @@ export class AddNewCandidateComponent implements OnInit {
     private loader: CommonLoaderService
   ) {
     this.addNewCandidateForm = this.fb.group({
-      FirstName: ['', [Validators.required]],
-      LastName: ['', [Validators.required]],
-      Email: ['', [Validators.required, Validators.email]],
-      PhoneNumber: ['', [Validators.required, Validators.maxLength(14)]],
-      AccountStatus: ['', [Validators.required]],
-      EducationDegree: ['', [Validators.required]],
-      Gender: ['', [Validators.required]],
-      Country: ['', [Validators.required]],
-      Province: ['', [Validators.required]],
-      District: ['', [Validators.required]],
+      FirstName: [null, [Validators.required]],
+      LastName: [null, [Validators.required]],
+      Email: [null, [Validators.required, Validators.email]],
+      PhoneNumber: [null, [Validators.required, Validators.maxLength(14)]],
+      AccountStatus: [null, [Validators.required]],
+      EducationDegree: [null, [Validators.required]],
+      Gender: [null, [Validators.required]],
+      Country: [null, [Validators.required]],
+      Province: [null, [Validators.required]],
+      District: [null, [Validators.required]],
       Profession: [, [Validators.required]],
-      Grade: ['', [Validators.required]],
-      Office: ['', [Validators.required]],
-      DateOfBirth: ['', [Validators.required]],
-      TotalExperienceInYear: ['', [Validators.required]],
-      RelevantExperienceInYear: ['', [Validators.required]],
-      IrrelevantExperienceInYear: ['', [Validators.required]]
+      Grade: [null, [Validators.required]],
+      Office: [null, [Validators.required]],
+      DateOfBirth: [null, [Validators.required]],
+      TotalExperienceInYear: [null, [Validators.required]],
+      RelevantExperienceInYear: [null, [Validators.required]],
+      IrrelevantExperienceInYear: [null, [Validators.required]]
     });
 
     this.accountStatusList$ = of([
       { name: 'Active', value: 1 },
-      { name: 'Nonactive', value: 2 },
-
+      { name: 'Nonactive', value: 2 }
     ] as IDropDownModel[]);
 
     this.genderList$ = of([
@@ -77,15 +76,16 @@ export class AddNewCandidateComponent implements OnInit {
       this.getAllCountryList(),
       this.getAllJobGradeList(),
       this.getAllProfessionList(),
-      this.getAllEducationDegreeList()])
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe(result => {
-      this.subscribeOfficeList(result[0]);
-      this.subscribeCountryList(result[1]);
-      this.subscribeGradeList(result[2]);
-      this.subscribeProfessionList(result[3]);
-      this.subscribeEducationDegreeList(result[4]);
-    });
+      this.getAllEducationDegreeList()
+    ])
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(result => {
+        this.subscribeOfficeList(result[0]);
+        this.subscribeCountryList(result[1]);
+        this.subscribeGradeList(result[2]);
+        this.subscribeProfessionList(result[3]);
+        this.subscribeEducationDegreeList(result[4]);
+      });
   }
   getAllOfficeList() {
     this.commonLoader.showLoader();
@@ -210,8 +210,8 @@ export class AddNewCandidateComponent implements OnInit {
       );
   }
 
-   //#region "AddNewCandidate"
-   AddNewCandidate(data: ICandidateDetailModel) {
+  //#region "AddNewCandidate"
+  AddNewCandidate(data: ICandidateDetailModel) {
     // this.hiringRequestService.AddNewCandidateDetail(data).subscribe(
     //   (response: IResponseData) => {
     //     if (response.statusCode === 200) {
@@ -228,11 +228,11 @@ export class AddNewCandidateComponent implements OnInit {
   }
   //#endregion
 
-//#region "onCancelPopup"
-onCancelPopup(): void {
-  this.dialogRef.close();
-}
-//#endregion
+  //#region "onCancelPopup"
+  onCancelPopup(): void {
+    this.dialogRef.close();
+  }
+  //#endregion
 
   onChangeCountry(e) {
     this.provinceList$ = null;
@@ -244,6 +244,9 @@ onCancelPopup(): void {
     this.getAllDistrictList(e);
   }
   onFormSubmit(data: any) {
-console.log(data);
+    if (this.addNewCandidateForm.valid) {
+      this.AddNewCandidate(data);
+    }
+    console.log(data);
   }
 }

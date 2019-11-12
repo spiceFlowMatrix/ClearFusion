@@ -155,6 +155,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         {
             return await _mediator.Send(new GetRemainingVacancyByJobIdQuery{ JobId=JobId});
         }
+
+       [HttpPost]
+        public async Task<ApiResponse> AddNewCandidateDetail([FromBody]AddNewCandidateDetailCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+        }        
     }  
-    
 }
