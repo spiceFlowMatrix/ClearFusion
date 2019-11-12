@@ -27,6 +27,7 @@ export class AddNewCandidateComponent implements OnInit {
   accountStatusList$: Observable<IDropDownModel[]>;
   genderList$: Observable<IDropDownModel[]>;
   gradeList$: Observable<IDropDownModel[]>;
+  educationDegreeList$: Observable<IDropDownModel[]>;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     public dialogRef: MatDialogRef<AddNewCandidateComponent>,
@@ -44,6 +45,7 @@ export class AddNewCandidateComponent implements OnInit {
       Email: ['', [Validators.required, Validators.email]],
       PhoneNumber: ['', [Validators.required, Validators.maxLength(14)]],
       AccountStatus: ['', [Validators.required]],
+      EducationDegree: ['', [Validators.required]],
       Gender: ['', [Validators.required]],
       Country: ['', [Validators.required]],
       Province: ['', [Validators.required]],
@@ -74,13 +76,15 @@ export class AddNewCandidateComponent implements OnInit {
       this.getAllOfficeList(),
       this.getAllCountryList(),
       this.getAllJobGradeList(),
-      this.getAllProfessionList()])
+      this.getAllProfessionList(),
+      this.getAllEducationDegreeList()])
     .pipe(takeUntil(this.destroyed$))
     .subscribe(result => {
       this.subscribeOfficeList(result[0]);
       this.subscribeCountryList(result[1]);
       this.subscribeGradeList(result[2]);
       this.subscribeProfessionList(result[3]);
+      this.subscribeEducationDegreeList(result[4]);
     });
   }
   getAllOfficeList() {
@@ -99,6 +103,10 @@ export class AddNewCandidateComponent implements OnInit {
   getAllProfessionList() {
     this.commonLoader.showLoader();
     return this.hiringRequestService.GetProfessionList();
+  }
+  getAllEducationDegreeList() {
+    this.commonLoader.showLoader();
+    return this.hiringRequestService.GetEducationDegreeList();
   }
   subscribeOfficeList(response: any) {
     this.commonLoader.hideLoader();
@@ -140,6 +148,17 @@ export class AddNewCandidateComponent implements OnInit {
         return {
           value: y.ProfessionId,
           name: y.ProfessionName
+        };
+      })
+    );
+  }
+  subscribeEducationDegreeList(response: any) {
+    this.commonLoader.hideLoader();
+    this.educationDegreeList$ = of(
+      response.data.map(y => {
+        return {
+          value: y.EducationDegreeId,
+          name: y.EducationDegreeName
         };
       })
     );
