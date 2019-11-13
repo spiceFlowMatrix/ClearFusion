@@ -318,9 +318,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
   getItemGroupSelectedValue(event: any) {
     this.getAllStoreItemsByGroupId(event);
-
-    this.transportItemPlaceholder = (this.ItemTransportCategory === this.ItemTransportCategoryEnum.Vehicle) ? 'Purchased Vehicle Item' :
-      'Purchased Generator Item';
   }
 
   getItemSelectedValue(event: any) {
@@ -364,15 +361,15 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   getBudgetLineByProjectId(projectId: any) {
     if (projectId !== undefined) {
       this.budgetLineService.GetProjectBudgetLineList(projectId)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(x => {
-        this.budgetLine$ = of(x.data.map(y => {
-          return {
-            name: y.BudgetCode + '-' + y.BudgetName,
-            value: y.BudgetLineId
-          };
-        }));
-      });
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(x => {
+          this.budgetLine$ = of(x.data.map(y => {
+            return {
+              name: y.BudgetCode + '-' + y.BudgetName,
+              value: y.BudgetLineId
+            };
+          }));
+        });
     }
   }
 
@@ -443,16 +440,19 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
           // set default quantity
           this.addPurchaseForm.controls['Quantity'].setValue(1);
 
-           // disable quantity
-           this.addPurchaseForm.controls['Quantity'].disable();
+          // disable quantity
+          this.addPurchaseForm.controls['Quantity'].disable();
         }
         // else {
         //   this.removeGenerators();
         // }
         else {
           // enable quantity
-          this.addPurchaseForm.controls['Quantity'].enable();
-          this.addPurchaseForm.controls['Quantity'].setValue(null);
+          if (this.addPurchaseForm.controls['Quantity'].disabled) {
+            this.addPurchaseForm.controls['Quantity'].enable();
+            this.addPurchaseForm.controls['Quantity'].setValue(null);
+          }
+
           this.removeGenerators();
           this.removeVehicles();
         }
@@ -460,8 +460,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         // Set dynamic required validation for transport item selected and get TransportItem Datasource for based on condition below
         if ((this.ItemGroupTransportCategory === this.ItemTransportCategoryEnum.Vehicle &&
           this.ItemTransportCategory !== this.ItemTransportCategoryEnum.Vehicle) ||
-        (this.ItemGroupTransportCategory === this.ItemTransportCategoryEnum.Generator &&
-          this.ItemTransportCategory !== this.ItemTransportCategoryEnum.Generator)) {
+          (this.ItemGroupTransportCategory === this.ItemTransportCategoryEnum.Generator &&
+            this.ItemTransportCategory !== this.ItemTransportCategoryEnum.Generator)) {
           this.getTransportItemDataSource(this.ItemTransportCategory);
           this.addPurchaseForm.get('TransportItemId').setValidators([Validators.required]);
           this.addPurchaseForm.controls['TransportItemId'].updateValueAndValidity();
@@ -484,7 +484,9 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       .getItemsByItemGroupId(groupId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
-        this.ItemGroupTransportCategory = x.ItemGroupTransportType;
+        this.ItemGroupTransportCategory = x.data.length > 0 ? x.data[0].ItemGroupTransportType : null;
+        this.transportItemPlaceholder = (this.ItemGroupTransportCategory === this.ItemTransportCategoryEnum.Vehicle) ?
+          'Purchased Vehicle Item' : 'Purchased Generator Item';
         this.storeItems$ = of(x.data.map(y => {
           return {
             name: y.ItemCode + '-' + y.ItemName,
@@ -515,7 +517,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
             const filteredRecords = this.uploadedPurchasedFiles.filter(z => z.Id === 0);
 
-            if ( filteredRecords !== undefined && filteredRecords.length > 0) {
+            if (filteredRecords !== undefined && filteredRecords.length > 0) {
 
               for (let i = 0; i < filteredRecords.length; i++) {
 
@@ -736,17 +738,17 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   getTransportItemDataSource(transportItemTypeId: number) {
-    const model = {
-      InventoryId: this.addPurchaseForm.get('InventoryId').value,
-      InventoryTypeId: this.addPurchaseForm.get('InventoryTypeId').value,
-      ItemGroupId: this.addPurchaseForm.get('ItemGroupId').value,
-      ItemId: this.addPurchaseForm.get('ItemId').value,
-      TransportItemTypeId: transportItemTypeId
-    };
+    // const model = {
+    //   InventoryId: this.addPurchaseForm.get('InventoryId').value,
+    //   InventoryTypeId: this.addPurchaseForm.get('InventoryTypeId').value,
+    //   ItemGroupId: this.addPurchaseForm.get('ItemGroupId').value,
+    //   ItemId: this.addPurchaseForm.get('ItemId').value,
+    //   TransportItemTypeId: transportItemTypeId
+    // };
 
-    if (model.InventoryId != null && model.InventoryTypeId != null && model.ItemGroupId != null && model.ItemId != null) {
+    if (this.ItemGroupTransportCategory) {
       this.commonLoader.showLoader();
-      this.purchaseService.getTransportItemDataSource(model).subscribe(x => {
+      this.purchaseService.getTransportItemDataSource(this.ItemGroupTransportCategory).subscribe(x => {
         this.purchaseItemDataSource$ = of(x.map(y => {
           return {
             value: y.ItemId,
@@ -956,6 +958,29 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     } else if (event.type === 'download') {
       window.open(event.item.SignedUrl, '_blank');
     }
+  }
+
+  enableVehicleGeneratorDiv(): boolean {
+    let isEnable = false;
+    if ((this.ItemGroupTransportCategory === this.ItemTransportCategoryEnum.Vehicle &&
+        this.ItemTransportCategory !== this.ItemTransportCategoryEnum.Vehicle) ||
+    (this.ItemGroupTransportCategory === this.ItemTransportCategoryEnum.Generator &&
+      this.ItemTransportCategory !== this.ItemTransportCategoryEnum.Generator) && this.ItemTransportCategory) {
+        isEnable = true;
+      }
+      return isEnable;
+  }
+
+  enablePurchaseItem() {
+    let isEnable = false;
+    if (this.ItemTransportCategory === this.ItemTransportCategoryEnum.MobilOil ||
+      this.ItemTransportCategory === this.ItemTransportCategoryEnum.Fuel ||
+      this.ItemTransportCategory === this.ItemTransportCategoryEnum.MaintenanceService ||
+      this.ItemTransportCategory === this.ItemTransportCategoryEnum.SpareParts
+      ) {
+        isEnable = true;
+      }
+      return isEnable;
   }
 
   ngOnDestroy() {

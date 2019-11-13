@@ -418,9 +418,9 @@ getStorePurchaseById(id: number) {
 }
 
 // getTransportItemDataSource
-getTransportItemDataSource(model: any) {
-  return this.globalService
-  .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetTransportItemDataSource, model);
+getTransportItemDataSource(id: number) {
+  return this.http
+  .get<any>(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetTransportItemDataSource + '?id=' + id);
 }
 
  //#region "getItemDetailByItemId"

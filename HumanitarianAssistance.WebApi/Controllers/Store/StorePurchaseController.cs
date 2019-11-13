@@ -188,12 +188,12 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetTransportItemDataSource([FromBody] GetTransportItemDataSourceQuery request)
+        public async Task<IActionResult> GetTransportItemDataSource([FromQuery] int id)
         {
-            var result = await Task.FromResult(_mediator.Send(request));
+            var result = await Task.FromResult(_mediator.Send(new GetTransportItemDataSourceQuery {ItemGroupTransportType = id }));
 
             if (result.Exception == null)
             {

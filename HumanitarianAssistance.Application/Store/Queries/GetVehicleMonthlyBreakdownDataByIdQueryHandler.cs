@@ -29,10 +29,13 @@ namespace HumanitarianAssistance.Application.Store.Queries
                 var vehicleData = await _dbContext.PurchasedVehicleDetail
                                           .Include(x => x.EmployeeDetail)
                                           .Include(x => x.StoreItemPurchase)
+                                          .ThenInclude(x => x.StoreInventoryItem)
+                                          .ThenInclude(x => x.StoreItemGroup)
                                           .Include(x => x.VehicleMileageDetail)
                                           .Include(x => x.VehicleItemDetail)
                                           .ThenInclude(x => x.StoreItemPurchase)
                                           .ThenInclude(x => x.StoreInventoryItem)
+                                          .ThenInclude(x => x.StoreItemGroup)
                                           .Where(x => x.IsDeleted == false && x.Id == request.VehicleId && x.CreatedDate.Value.Year == request.SelectedYear).ToListAsync();
 
 
@@ -55,7 +58,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                      PurchaseId = x.StoreItemPurchase.PurchaseId,
                                                      OfficeName = x.OfficeId != 0 ? _dbContext.OfficeDetail.FirstOrDefault(y => y.IsDeleted == false && y.OfficeId == x.OfficeId).OfficeName : null,
                                                      VehicleItemDetail = x.VehicleItemDetail.Where(y => y.IsDeleted == false && y.CreatedDate.Value.Date.Year == request.SelectedYear).ToList(),
-                                                     VehicleMileageDetail = x.VehicleMileageDetail.Where(y => y.IsDeleted == false && y.CreatedDate.Value.Date.Year >= (request.SelectedYear - 1)).ToList() // write a comment why using -1
+                                                     VehicleMileageDetail = x.VehicleMileageDetail.Where(y => y.IsDeleted == false && y.CreatedDate.Value.Date.Year >= (request.SelectedYear - 1)).ToList() // selectedYear -1 =
                                                  }).FirstOrDefault();
 
                 if (vehicle != null)
@@ -153,17 +156,20 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if Fuel is present for the month
                         if (vehicle.VehicleItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                           x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleFuel))
+                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                           x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel))
                         {
                             // get sum of all fuel of all previous months if any
                             monthData = vehicle.VehicleItemDetail
-                                               .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                      && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleFuel)
+                                               .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month &&
+                                               x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                .Select(x => x.StoreItemPurchase.Quantity * x.StoreItemPurchase.UnitCost)
                                                .DefaultIfEmpty(0).Sum() +
                                         vehicle.VehicleItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                         && x.CreatedDate.Value.Year == selectedYear &&
-                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleFuel)
+                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                                  .Select(y => y.StoreItemPurchase.UnitCost * y.StoreItemPurchase.Quantity)
                                                                  .First();
                         }
@@ -172,7 +178,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             // get sum of all fuel purchase of all previous months if any
                             monthData = vehicle.VehicleItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                     && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleFuel)
+                                                     && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                     x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                .Select(x => x.StoreItemPurchase.Quantity * x.StoreItemPurchase.UnitCost).DefaultIfEmpty(0)
                                                .Sum();
                         }
@@ -181,17 +188,20 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if mobil oil is present for the month
                         if (vehicle.VehicleItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil))
+                            x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                     x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil))
                         {
                             // get sum of all mobil oil of all previous months if any
                             monthData = vehicle.VehicleItemDetail
-                                               .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                      && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil)
+                                               .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month &&
+                                               x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                .Select(x => x.StoreItemPurchase.Quantity * x.StoreItemPurchase.UnitCost)
                                                .DefaultIfEmpty(0).Sum() +
-                                        vehicle.VehicleItemDetail.Where(x => x.CreatedDate.Value.Month == month
+                                               vehicle.VehicleItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                         && x.CreatedDate.Value.Year == selectedYear &&
-                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil)
+                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                                  .Select(y => y.StoreItemPurchase.UnitCost * y.StoreItemPurchase.Quantity)
                                                                  .First();
                         }
@@ -199,8 +209,9 @@ namespace HumanitarianAssistance.Application.Store.Queries
                         {
                             // get sum of all mobil oil purchase of all previous months if any
                             monthData = vehicle.VehicleItemDetail
-                                               .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                     && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil)
+                                               .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month &&
+                                               x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                .Select(x => x.StoreItemPurchase.Quantity * x.StoreItemPurchase.UnitCost).DefaultIfEmpty(0)
                                                .Sum();
                         }
@@ -209,17 +220,20 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if fuel is present for the month
                         if (vehicle.VehicleItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleFuel))
+                            x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel))
                         {
                             // get sum of all fuel of all previous months if any
                             monthData = vehicle.VehicleItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                      && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleFuel)
+                                                      && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                .Select(x => x.StoreItemPurchase.Quantity)
                                                .DefaultIfEmpty(0).Sum() +
                                         vehicle.VehicleItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                         && x.CreatedDate.Value.Year == selectedYear &&
-                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleFuel)
+                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                                  .Select(y => y.StoreItemPurchase.Quantity)
                                                                  .First();
                         }
@@ -228,7 +242,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             // get sum of all fuel purchase of all previous months if any
                             monthData = vehicle.VehicleItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                     && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleFuel)
+                                                    && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                .Select(x => x.StoreItemPurchase.Quantity).DefaultIfEmpty(0)
                                                .Sum();
                         }
@@ -237,17 +252,20 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if mobil oil is present for the month
                         if (vehicle.VehicleItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil))
+                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil))
                         {
                             // get sum of all mobil oil of all previous months if any
                             monthData = vehicle.VehicleItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                      && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil)
+                                                      && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                .Select(x => x.StoreItemPurchase.Quantity)
                                                .DefaultIfEmpty(0).Sum() +
                                         vehicle.VehicleItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                         && x.CreatedDate.Value.Year == selectedYear &&
-                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil)
+                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                                  .Select(y => y.StoreItemPurchase.Quantity)
                                                                  .First();
                         }
@@ -256,7 +274,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             // get sum of all mobil oil purchase of all previous months if any
                             monthData = vehicle.VehicleItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                     && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil)
+                                                     && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                .Select(x => x.StoreItemPurchase.Quantity).DefaultIfEmpty(0)
                                                .Sum();
                         }
@@ -265,14 +284,16 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if fuel is present for the month
                         if (vehicle.VehicleItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleFuel))
+                            x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel))
                         {
 
                             var mileageTravelledInaMonth = vehicle.VehicleMileageDetail.FirstOrDefault(x => x.MileageMonth.Month == month && x.MileageMonth.Year == selectedYear);
                             // get sum of all fuel purchase in a month
                             double? purchaseFuelInMonth = vehicle.VehicleItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                                     && x.CreatedDate.Value.Year == selectedYear &&
-                                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil)
+                                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                                                     .Select(y => y.StoreItemPurchase.Quantity)
                                                                                     .FirstOrDefault();
 
@@ -286,14 +307,16 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if fuel is present for the month
                         if (vehicle.VehicleItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil))
+                            x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil))
                         {
 
                             var mileageTravelledInaMonth = vehicle.VehicleMileageDetail.FirstOrDefault(x => x.MileageMonth.Month == month && x.MileageMonth.Year == selectedYear);
                             // get sum of all fuel purchase in a month
                             double? purchaseFuelInMonth = vehicle.VehicleItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                                     && x.CreatedDate.Value.Year == selectedYear &&
-                                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil)
+                                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                                                     .Select(y => y.StoreItemPurchase.Quantity)
                                                                                     .FirstOrDefault();
 
@@ -303,39 +326,20 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             }
                         }
                     }
-                    else if (usageType == (int)UsageType.ActualMobilConsumptionRate)
-                    {
-                        // if fuel is present for the month
-                        if (vehicle.VehicleItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil))
-                        {
-
-                            var mileageTravelledInaMonth = vehicle.VehicleMileageDetail.FirstOrDefault(x => x.MileageMonth.Month == month && x.MileageMonth.Year == selectedYear);
-                            // get sum of all fuel purchase in a month
-                            double? purchaseFuelInMonth = vehicle.VehicleItemDetail.Where(x => x.CreatedDate.Value.Month == month
-                                                                                    && x.CreatedDate.Value.Year == selectedYear &&
-                                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil)
-                                                                                    .Select(y => y.StoreItemPurchase.Quantity)
-                                                                                    .FirstOrDefault();
-
-                            if (purchaseFuelInMonth != null && mileageTravelledInaMonth != null && mileageTravelledInaMonth.Mileage > 0)
-                            {
-                                monthData = Math.Round((purchaseFuelInMonth.Value / mileageTravelledInaMonth.Mileage) * 100, 4);
-                            }
-                        }
-                    }
                     else if (usageType == (int)UsageType.FuelConsumptionDifference)
                     {
                         // if fuel is present for the month
                         if (vehicle.VehicleItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil))
+                            x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel))
                         {
                             double actualRate = 0;
                             var mileageTravelledInaMonth = vehicle.VehicleMileageDetail.FirstOrDefault(x => x.MileageMonth.Month == month && x.MileageMonth.Year == selectedYear);
                             // get sum of all fuel purchase in a month
                             double? purchaseFuelInMonth = vehicle.VehicleItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                                     && x.CreatedDate.Value.Year == selectedYear &&
-                                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil)
+                                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                                                     .Select(y => y.StoreItemPurchase.Quantity)
                                                                                     .FirstOrDefault();
 
@@ -350,7 +354,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if fuel is present for the month
                         if (vehicle.VehicleItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil))
+                            x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil))
                         {
                             double actualMobilOilRate = 0;
 
@@ -358,7 +363,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             // get sum of all fuel purchase in a month
                             double? purchaseFuelInMonth = vehicle.VehicleItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                                     && x.CreatedDate.Value.Year == selectedYear &&
-                                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil)
+                                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                                                     .Select(y => y.StoreItemPurchase.Quantity)
                                                                                     .First();
 
@@ -373,17 +379,20 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if vehicle spare parts is present for the month
                         if (vehicle.VehicleItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                           x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleSpareParts))
+                           x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.SpareParts))
                         {
                             // get sum of all vehicle spare parts of all previous months if any
                             monthData = vehicle.VehicleItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                      && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleSpareParts)
+                                                      && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.SpareParts)
                                                .Select(x => x.StoreItemPurchase.Quantity * x.StoreItemPurchase.UnitCost)
                                                .DefaultIfEmpty(0).Sum() +
                                         vehicle.VehicleItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                         && x.CreatedDate.Value.Year == selectedYear &&
-                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleSpareParts)
+                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.SpareParts)
                                                                  .Select(y => y.StoreItemPurchase.UnitCost * y.StoreItemPurchase.Quantity)
                                                                  .First();
                         }
@@ -392,7 +401,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             // get sum of all vehicle spare parts purchase of all previous months if any
                             monthData = vehicle.VehicleItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                     && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleSpareParts)
+                                                     && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.SpareParts)
                                                .Select(x => x.StoreItemPurchase.Quantity * x.StoreItemPurchase.UnitCost).DefaultIfEmpty(0)
                                                .Sum();
                         }
@@ -401,17 +411,20 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if vehicle maintenance service is present for the month
                         if (vehicle.VehicleItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                           x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMaintenanceService))
+                           x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MaintenanceService))
                         {
                             // get sum of all vehicle maintenance service of all previous months if any
                             monthData = vehicle.VehicleItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                      && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMaintenanceService)
+                                                      && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MaintenanceService)
                                                .Select(x => x.StoreItemPurchase.Quantity * x.StoreItemPurchase.UnitCost)
                                                .DefaultIfEmpty(0).Sum() +
                                         vehicle.VehicleItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                         && x.CreatedDate.Value.Year == selectedYear &&
-                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMaintenanceService)
+                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MaintenanceService)
                                                                  .Select(y => y.StoreItemPurchase.UnitCost * y.StoreItemPurchase.Quantity)
                                                                  .First();
                         }
@@ -420,7 +433,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             // get sum of all vehicle maintenance service purchase of all previous months if any
                             monthData = vehicle.VehicleItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                     && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMaintenanceService)
+                                                     && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MaintenanceService)
                                                .Select(x => x.StoreItemPurchase.Quantity * x.StoreItemPurchase.UnitCost).DefaultIfEmpty(0)
                                                .Sum();
                         }
@@ -430,12 +444,14 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if mobil oil is present for the month
                         if (vehicle.VehicleItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil))
+                            x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil))
                         {
                             // get sum of all mobil oil of all previous months if any
                             monthData = vehicle.VehicleItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                         && x.CreatedDate.Value.Year == selectedYear &&
-                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil).Count();
+                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil).Count();
                         }
                     }
                     else if (usageType == (int)UsageType.RemainingKmForMobilOilChange)
@@ -443,16 +459,18 @@ namespace HumanitarianAssistance.Application.Store.Queries
                         // double mobilOilPerKm = Math.Round(vehicle.StandardMobilOilConsumptionRate / 100, 4);
 
                         if (vehicle.VehicleItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                             x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil))
+                             x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil))
                         {
                             double quantity = vehicle.VehicleItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                      && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil)
+                                                      && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                .Select(x => x.StoreItemPurchase.Quantity)
                                                .DefaultIfEmpty(0).Sum();
-                            if(quantity != 0)
+                            if (quantity != 0)
                             {
-                                monthData = (100/vehicle.StandardMobilOilConsumptionRate) * quantity; // (100Km/stdmobiloilconsumptionrate(per 100 km))* total quantity of purchased mobil oil
+                                monthData = (100 / vehicle.StandardMobilOilConsumptionRate) * quantity; // (100Km/stdmobiloilconsumptionrate(per 100 km))* total quantity of purchased mobil oil
                             }
                         }
                         else
@@ -462,13 +480,13 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                             double totalDistanceTravelled = vehicle.VehicleMileageDetail
                                                             .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Year == data.Year && x.MileageMonth.Month > data.Month
-                                                            && x.MileageMonth.Month<= month)
+                                                            && x.MileageMonth.Month <= month)
                                                             .Select(x => x.Mileage).DefaultIfEmpty(0).Sum();
 
 
-                            double distanceVehicleCanTravel= Math.Round((100/vehicle.StandardMobilOilConsumptionRate)* data.TotalMobilOil, 4);
+                            double distanceVehicleCanTravel = Math.Round((100 / vehicle.StandardMobilOilConsumptionRate) * data.TotalMobilOil, 4);
 
-                            monthData= distanceVehicleCanTravel- totalDistanceTravelled;
+                            monthData = distanceVehicleCanTravel - totalDistanceTravelled;
 
                         }
                     }
@@ -485,18 +503,19 @@ namespace HumanitarianAssistance.Application.Store.Queries
         private TotalMobilOilAndMonth GetTotalKmTravelledTillMobilOilChange(int month, int year, MonthlyBreakDownModel vehicle)
         {
             TotalMobilOilAndMonth mobilOilAndMonth = new TotalMobilOilAndMonth();
-            mobilOilAndMonth.Year= year;
-            mobilOilAndMonth.Month= month;
-            mobilOilAndMonth.TotalMobilOil=0;
+            mobilOilAndMonth.Year = year;
+            mobilOilAndMonth.Month = month;
+            mobilOilAndMonth.TotalMobilOil = 0;
 
             var item = vehicle.VehicleItemDetail.FirstOrDefault(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == year &&
-                             x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil);
+                             x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil);
 
-            if (item == null && month == (int)Month.January && vehicle.CreatedDate.Date.Year< year)
+            if (item == null && month == (int)Month.January && vehicle.CreatedDate.Date.Year < year)
             {
                 mobilOilAndMonth = GetTotalKmTravelledTillMobilOilChange((int)Month.December, year - 1, vehicle);
             }
-            else if (item == null && vehicle.CreatedDate.Date.Year== year && month != (int)Month.January)
+            else if (item == null && vehicle.CreatedDate.Date.Year == year && month != (int)Month.January)
             {
                 mobilOilAndMonth = GetTotalKmTravelledTillMobilOilChange(month - 1, year, vehicle);
             }

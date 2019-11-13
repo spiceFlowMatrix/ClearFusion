@@ -31,6 +31,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                            .Include(x => x.GeneratorItemDetail)
                                            .ThenInclude(x => x.StoreItemPurchase)
                                            .ThenInclude(x => x.StoreInventoryItem)
+                                           .ThenInclude(x=> x.StoreItemGroup)
                                            .Where(x => x.IsDeleted == false && x.Id == request.GeneratorId && x.CreatedDate.Value.Year == request.SelectedYear)
                                            .ToListAsync();
 
@@ -140,17 +141,20 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if Fuel is present for the month
                         if (generator.GeneratorItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                           x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorFuel))
+                           x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel))
                         {
                             // get sum of all fuel of all previous months if any
                             monthData = generator.GeneratorItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                      && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorFuel)
+                                                      && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                .Select(x => x.StoreItemPurchase.Quantity * x.StoreItemPurchase.UnitCost)
                                                .DefaultIfEmpty(0).Sum() +
                                         generator.GeneratorItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                         && x.CreatedDate.Value.Year == selectedYear &&
-                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorFuel)
+                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                                  .Select(y => y.StoreItemPurchase.UnitCost * y.StoreItemPurchase.Quantity)
                                                                  .First();
                         }
@@ -159,7 +163,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             // get sum of all fuel purchase of all previous months if any
                             monthData = generator.GeneratorItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                     && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorFuel)
+                                                     && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                .Select(x => x.StoreItemPurchase.Quantity * x.StoreItemPurchase.UnitCost).DefaultIfEmpty(0)
                                                .Sum();
                         }
@@ -168,17 +173,20 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if mobil oil is present for the month
                         if (generator.GeneratorItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil))
+                            x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil))
                         {
                             // get sum of all mobil oil of all previous months if any
                             monthData = generator.GeneratorItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                      && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil)
+                                                      && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                .Select(x => x.StoreItemPurchase.Quantity * x.StoreItemPurchase.UnitCost)
                                                .DefaultIfEmpty(0).Sum() +
                                         generator.GeneratorItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                         && x.CreatedDate.Value.Year == selectedYear &&
-                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil)
+                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                                  .Select(y => y.StoreItemPurchase.UnitCost * y.StoreItemPurchase.Quantity)
                                                                  .First();
                         }
@@ -187,7 +195,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             // get sum of all mobil oil purchase of all previous months if any
                             monthData = generator.GeneratorItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                     && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil)
+                                                     && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                .Select(x => x.StoreItemPurchase.Quantity * x.StoreItemPurchase.UnitCost).DefaultIfEmpty(0)
                                                .Sum();
                         }
@@ -196,17 +205,20 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if fuel is present for the month
                         if (generator.GeneratorItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorFuel))
+                            x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel))
                         {
                             // get sum of all fuel of all previous months if any
                             monthData = generator.GeneratorItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                      && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorFuel)
+                                                      && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                .Select(x => x.StoreItemPurchase.Quantity)
                                                .DefaultIfEmpty(0).Sum() +
                                         generator.GeneratorItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                         && x.CreatedDate.Value.Year == selectedYear &&
-                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorFuel)
+                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                                  .Select(y => y.StoreItemPurchase.Quantity)
                                                                  .First();
                         }
@@ -215,7 +227,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             // get sum of all fuel purchase of all previous months if any
                             monthData = generator.GeneratorItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                     && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorFuel)
+                                                     && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                .Select(x => x.StoreItemPurchase.Quantity).DefaultIfEmpty(0)
                                                .Sum();
                         }
@@ -224,17 +237,20 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if mobil oil is present for the month
                         if (generator.GeneratorItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil))
+                            x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil))
                         {
                             // get sum of all mobil oil of all previous months if any
                             monthData = generator.GeneratorItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                      && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil)
+                                                      && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                .Select(x => x.StoreItemPurchase.Quantity)
                                                .DefaultIfEmpty(0).Sum() +
                                         generator.GeneratorItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                         && x.CreatedDate.Value.Year == selectedYear &&
-                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil)
+                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                                  .Select(y => y.StoreItemPurchase.Quantity)
                                                                  .First();
                         }
@@ -243,7 +259,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             // get sum of all mobil oil purchase of all previous months if any
                             monthData = generator.GeneratorItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                     && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil)
+                                                     && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                .Select(x => x.StoreItemPurchase.Quantity).DefaultIfEmpty(0)
                                                .Sum();
                         }
@@ -252,14 +269,16 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if fuel is present for the month
                         if (generator.GeneratorItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorFuel))
+                            x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel))
                         {
 
                             var usageInaMonth = generator.GeneratorUsageHourDetail.FirstOrDefault(x => x.Month.Month == month && x.Month.Year == selectedYear);
                             // get sum of all fuel purchase in a month
                             double? purchaseFuelInMonth = generator.GeneratorItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                                     && x.CreatedDate.Value.Year == selectedYear &&
-                                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorFuel)
+                                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                                                     .Select(y => y.StoreItemPurchase.Quantity)
                                                                                     .FirstOrDefault();
 
@@ -273,14 +292,16 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if fuel is present for the month
                         if (generator.GeneratorItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil))
+                            x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil))
                         {
 
                             var usageInaMonth = generator.GeneratorUsageHourDetail.FirstOrDefault(x => x.Month.Month == month && x.Month.Year == selectedYear);
                             // get sum of all fuel purchase in a month
                             double? purchaseFuelInMonth = generator.GeneratorItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                                     && x.CreatedDate.Value.Year == selectedYear &&
-                                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil)
+                                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                                                     .Select(y => y.StoreItemPurchase.Quantity)
                                                                                     .FirstOrDefault();
 
@@ -290,39 +311,20 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             }
                         }
                     }
-                    else if (usageType == (int)UsageType.ActualMobilConsumptionRate)
-                    {
-                        // if fuel is present for the month
-                        if (generator.GeneratorItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil))
-                        {
-
-                            var usageInaMonth = generator.GeneratorUsageHourDetail.FirstOrDefault(x => x.Month.Month == month && x.Month.Year == selectedYear);
-                            // get sum of all fuel purchase in a month
-                            double? purchaseFuelInMonth = generator.GeneratorItemDetail.Where(x => x.CreatedDate.Value.Month == month
-                                                                                    && x.CreatedDate.Value.Year == selectedYear &&
-                                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil)
-                                                                                    .Select(y => y.StoreItemPurchase.Quantity)
-                                                                                    .FirstOrDefault();
-
-                            if (purchaseFuelInMonth != null && usageInaMonth != null && usageInaMonth.Hours > 0)
-                            {
-                                monthData = Math.Round((purchaseFuelInMonth.Value / usageInaMonth.Hours) * 100);
-                            }
-                        }
-                    }
                     else if (usageType == (int)UsageType.FuelConsumptionDifference)
                     {
                         // if fuel is present for the month
                         if (generator.GeneratorItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil))
+                            x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel))
                         {
                             double actualRate = 0;
                             var usageInaMonth = generator.GeneratorUsageHourDetail.FirstOrDefault(x => x.Month.Month == month && x.Month.Year == selectedYear);
                             // get sum of all fuel purchase in a month
                             double? purchaseFuelInMonth = generator.GeneratorItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                                     && x.CreatedDate.Value.Year == selectedYear &&
-                                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil)
+                                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                                                     .Select(y => y.StoreItemPurchase.Quantity)
                                                                                     .FirstOrDefault();
 
@@ -337,7 +339,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if fuel is present for the month
                         if (generator.GeneratorItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil))
+                            x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil))
                         {
                             double actualMobilOilRate = 0;
 
@@ -345,7 +348,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             // get sum of all fuel purchase in a month
                             double? purchaseFuelInMonth = generator.GeneratorItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                                     && x.CreatedDate.Value.Year == selectedYear &&
-                                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil)
+                                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                                                     .Select(y => y.StoreItemPurchase.Quantity)
                                                                                     .First();
 
@@ -360,17 +364,20 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if generator spare parts is present for the month
                         if (generator.GeneratorItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                           x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorSpareParts))
+                           x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.SpareParts))
                         {
                             // get sum of all generator spare parts of all previous months if any
                             monthData = generator.GeneratorItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                      && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorSpareParts)
+                                                      && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.SpareParts)
                                                .Select(x => x.StoreItemPurchase.Quantity * x.StoreItemPurchase.UnitCost)
                                                .DefaultIfEmpty(0).Sum() +
                                         generator.GeneratorItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                         && x.CreatedDate.Value.Year == selectedYear &&
-                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorSpareParts)
+                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.SpareParts)
                                                                  .Select(y => y.StoreItemPurchase.UnitCost * y.StoreItemPurchase.Quantity)
                                                                  .First();
                         }
@@ -379,7 +386,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             // get sum of all generator spare parts purchase of all previous months if any
                             monthData = generator.GeneratorItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                     && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorSpareParts)
+                                                     && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.SpareParts)
                                                .Select(x => x.StoreItemPurchase.Quantity * x.StoreItemPurchase.UnitCost).DefaultIfEmpty(0)
                                                .Sum();
                         }
@@ -388,17 +396,20 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if generator maintenance service is present for the month
                         if (generator.GeneratorItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                           x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMaintenanceService))
+                           x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MaintenanceService))
                         {
                             // get sum of all generator maintenance service of all previous months if any
                             monthData = generator.GeneratorItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                      && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMaintenanceService)
+                                                      && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MaintenanceService)
                                                .Select(x => x.StoreItemPurchase.Quantity * x.StoreItemPurchase.UnitCost)
                                                .DefaultIfEmpty(0).Sum() +
                                         generator.GeneratorItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                         && x.CreatedDate.Value.Year == selectedYear &&
-                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMaintenanceService)
+                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MaintenanceService)
                                                                  .Select(y => y.StoreItemPurchase.UnitCost * y.StoreItemPurchase.Quantity)
                                                                  .First();
                         }
@@ -407,7 +418,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             // get sum of all generator maintenance service purchase of all previous months if any
                             monthData = generator.GeneratorItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                     && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMaintenanceService)
+                                                     && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MaintenanceService)
                                                .Select(x => x.StoreItemPurchase.Quantity * x.StoreItemPurchase.UnitCost).DefaultIfEmpty(0)
                                                .Sum();
                         }
@@ -417,22 +429,26 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     {
                         // if mobil oil is present for the month
                         if (generator.GeneratorItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                            x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil))
+                            x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil))
                         {
                             // get sum of all mobil oil of all previous months if any
                             monthData = generator.GeneratorItemDetail.Where(x => x.CreatedDate.Value.Month == month
                                                                         && x.CreatedDate.Value.Year == selectedYear &&
-                                                                        x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil).Count();
+                                                                        x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil).Count();
                         }
                     }
                     else if (usageType == (int)UsageType.RemainingKmForMobilOilChange)
                     {
                         if (generator.GeneratorItemDetail.Any(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == selectedYear &&
-                             x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil))
+                             x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil))
                         {
                             double quantity = generator.GeneratorItemDetail
                                                .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Month < month
-                                                      && x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil)
+                                                      && x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                .Select(x => x.StoreItemPurchase.Quantity)
                                                .DefaultIfEmpty(0).Sum();
                             if(quantity != 0)
@@ -475,7 +491,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
             mobilOilAndMonth.TotalMobilOil=0;
 
             var item = generator.GeneratorItemDetail.FirstOrDefault(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == year &&
-                             x.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil);
+                             x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                               x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil);
 
             if (item == null && month == (int)Month.January && generator.CreatedDate.Date.Year< year)
             {

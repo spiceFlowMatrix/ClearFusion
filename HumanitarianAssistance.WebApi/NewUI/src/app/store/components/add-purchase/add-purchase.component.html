@@ -66,7 +66,7 @@
     <div class="row">
 
       <div *ngIf="(ItemGroupTransportCategory == ItemTransportCategoryEnum.Vehicle && ItemTransportCategory ==ItemTransportCategoryEnum.Vehicle) ||
-                  (ItemGroupTransportCategory == ItemTransportCategoryEnum.Generator && ItemTransportCategory ==ItemTransportCategoryEnum.Generator)">
+      (ItemGroupTransportCategory == ItemTransportCategoryEnum.Generator && ItemTransportCategory ==ItemTransportCategoryEnum.Generator)">
         <div class="col-md-10">
           <strong>Note:</strong>The item you have selected is <strong>{{selectedItemName}}</strong>. Therefore, the
           following <strong>transport related metadata</strong> must be filled out.
@@ -77,7 +77,7 @@
               [type]="'add'" [text]="'Add'"></hum-button>
           </div>
         </div>
-      </div>
+
       <div class="row" *ngIf="ItemTransportCategory ==ItemTransportCategoryEnum.Vehicle">
         <div class="col-md-12">
           <mat-accordion>
@@ -113,9 +113,9 @@
           </mat-accordion>
         </div>
       </div>
+    </div>
 
-      <div *ngIf="(ItemGroupTransportCategory == ItemTransportCategoryEnum.Vehicle && ItemTransportCategory != ItemTransportCategoryEnum.Vehicle) ||
-      (ItemGroupTransportCategory == ItemTransportCategoryEnum.Generator && ItemTransportCategory !=ItemTransportCategoryEnum.Generator)" class="paddingleft">
+      <div *ngIf="enablePurchaseItem()" class="paddingleft">
       <div class="row">
         <div class="col-md-12">
           <strong>Note:</strong>The item you have selected is <strong>{{selectedItemName}}</strong>. Therefore, the
