@@ -70,8 +70,6 @@ export class StoreItemConfigComponent implements OnInit {
         return res;
       })
       this.dataSource.data = this.inventories;
-
-      console.log(this.dataSource.data);
     })
   }
   // master inventory region
@@ -89,7 +87,8 @@ export class StoreItemConfigComponent implements OnInit {
       data: this.masterInventory
     })
     dg.afterClosed().subscribe(res => {
-      this.getAllInventories();
+      if (res == 1)
+        this.getAllInventories();
     })
   }
 
@@ -107,12 +106,19 @@ export class StoreItemConfigComponent implements OnInit {
           data: this.masterInventoryGroup
         })
         dg.afterClosed().subscribe(res => {
-          this.getAllInventories();
+          if (res == 1)
+            this.getAllInventories();
         })
         break;
       case 1:
 
         this.configService.getItemCode(inventoryId, this.assetType).subscribe(res => {
+          this.masterInventoryItem.ItemTypeCategory = Number(this.inventories.find(x => x.Id == invId).children.find(x => x.Id == inventoryId).ItemTypeCategory);
+          if (this.masterInventoryItem.ItemTypeCategory) {
+            this.masterInventoryItem.isGenerator = this.masterInventoryItem.ItemTypeCategory == 2 ? true : false;
+          } else {
+            this.masterInventoryItem.isGenerator = null
+          }
           this.masterInventoryItem.ItemGroupId = new Number(inventoryId);
           this.masterInventoryItem.ItemCode = res.data.InventoryItemCode;
           this.masterInventoryItem.ItemInventory = new Number(invId);
@@ -122,11 +128,12 @@ export class StoreItemConfigComponent implements OnInit {
             data: this.masterInventoryItem
           })
           dgItem.afterClosed().subscribe(res => {
-            this.getAllInventories();
+            if (res == 1)
+              this.getAllInventories();
           })
         })
-    
-     
+
+
         break;
       default:
         break;
@@ -149,11 +156,15 @@ export class StoreItemConfigComponent implements OnInit {
           data: this.masterInventory
         });
         dg.afterClosed().subscribe(res => {
-          this.getAllInventories();
+          if (res == 1)
+            this.getAllInventories();
         });
         break;
       case 1:
+
         const itemgroup = this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level2ID);
+
+
         const isTransportCategory = this.inventories.find(x => x.Id == level1ID).IsTransportCategory;
         this.masterInventoryGroup.Description = itemgroup.Description;
         this.masterInventoryGroup.InventoryId = itemgroup.InventoryId;
@@ -167,11 +178,19 @@ export class StoreItemConfigComponent implements OnInit {
           data: this.masterInventoryGroup
         })
         dgGroup.afterClosed().subscribe(res => {
-          this.getAllInventories();
+          if (res == 1)
+            this.getAllInventories();
         })
         break;
       case 2:
-        const item = this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level0ID).children.find(x => x.Id = level2ID);
+        const item = this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level0ID).children.find(x => x.Id == level2ID);
+        if (this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level0ID).ItemTypeCategory != null) {
+          this.masterInventoryItem.isGenerator = this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level0ID).ItemTypeCategory == 2 ? true : false;
+        } else {
+          this.masterInventoryItem.isGenerator = null;
+        }
+
+        this.masterInventoryItem.ItemTypeCategory = Number(this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level0ID).children.find(x => x.Id == level2ID).ItemTypeCategory);
         this.masterInventoryItem.Description = item.Description;
         this.masterInventoryItem.ItemCode = item.Code;
         this.masterInventoryItem.ItemGroupId = item.ItemGroupId;
@@ -179,13 +198,16 @@ export class StoreItemConfigComponent implements OnInit {
         this.masterInventoryItem.ItemInventory = item.InventoryId;
         this.masterInventoryItem.ItemName = item.Name;
         this.masterInventoryItem.ItemType = null;
-        this.masterInventoryItem.AssetType = this.assetType;
+        this.masterInventoryItem.AssetType = Number(this.assetType);
+        // console.log(level, level2ID, level1ID, level0ID, isTransport, itemcattype)
         const dgItem = this.dialog.open(AddItemComponent, {
           width: this.modelWidth,
           data: this.masterInventoryItem
         })
         dgItem.afterClosed().subscribe(res => {
-          this.getAllInventories();
+          if (res == 1)
+            this.getAllInventories();
+
         })
         break;
 

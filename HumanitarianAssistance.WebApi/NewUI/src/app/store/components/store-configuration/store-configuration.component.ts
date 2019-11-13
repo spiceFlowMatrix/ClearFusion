@@ -73,7 +73,6 @@ export class StoreConfigurationComponent implements OnInit {
   }
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
-    console.log(window.innerHeight)
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
 

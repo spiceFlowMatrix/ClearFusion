@@ -329,7 +329,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     });
 
     if (event === this.StoreItems.ExpendableVehicle || event === this.StoreItems.NonExpendableVehicle) {
-      this.removeVehicles(); // remove existing vehicle if any
+      // this.removeVehicles(); // remove existing vehicle if any
       this.addVehicles();
 
       // Used to get transport item data source
@@ -338,19 +338,39 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       // Remove validations on Transport Item
       this.addPurchaseForm.get('TransportItemId').clearValidators();
       this.addPurchaseForm.controls['TransportItemId'].updateValueAndValidity();
-    } else {
-      this.removeVehicles();
-    }
-    if (event === this.StoreItems.ExpendableGenerator || event === this.StoreItems.NonExpendableGenerator) {
 
-      this.removeGenerators(); // remove existing generator if any
+      // set default quantity
+      this.addPurchaseForm.controls['Quantity'].setValue(1);
+      // disable quantity
+      this.addPurchaseForm.controls['Quantity'].disable();
+    }
+    // else {
+    //   this.removeVehicles();
+    // }
+    else if (event === this.StoreItems.ExpendableGenerator || event === this.StoreItems.NonExpendableGenerator) {
+
+      // this.removeGenerators(); // remove existing generator if any
       this.addGenerators();
 
       // Remove validations on Transport Item
       this.addPurchaseForm.get('TransportItemId').clearValidators();
       this.addPurchaseForm.controls['TransportItemId'].updateValueAndValidity();
-    } else {
+
+      // set default quantity
+      this.addPurchaseForm.controls['Quantity'].setValue(1);
+
+       // disable quantity
+       this.addPurchaseForm.controls['Quantity'].disable();
+    }
+    // else {
+    //   this.removeGenerators();
+    // }
+    else {
+      // enable quantity
+      this.addPurchaseForm.controls['Quantity'].enable();
+      this.addPurchaseForm.controls['Quantity'].setValue(null);
       this.removeGenerators();
+      this.removeVehicles();
     }
 
     // Set dynamic required validation for transport item selected and get TransportItem Datasource for based on condition below
@@ -359,20 +379,19 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       this.getTransportItemDataSource(TransportItemType.Generator);
       this.addPurchaseForm.get('TransportItemId').setValidators([Validators.required]);
       this.addPurchaseForm.controls['TransportItemId'].updateValueAndValidity();
+      // enable quantity
+      this.addPurchaseForm.controls['Quantity'].enable();
     } else if (event === this.StoreItems.VehicleFuel || event === this.StoreItems.VehicleMaintenanceService ||
       event === this.StoreItems.VehicleMobilOil || event === this.StoreItems.VehicleSpareParts) {
       this.getTransportItemDataSource(TransportItemType.Vehicle);
       this.addPurchaseForm.get('TransportItemId').setValidators([Validators.required]);
       this.addPurchaseForm.controls['TransportItemId'].updateValueAndValidity();
+      // enable quantity
+      this.addPurchaseForm.controls['Quantity'].enable();
     }
   }
 
   getSelectedItemName(event) {
-    // this.storeItemGroups$.subscribe(x => {
-    //   const index = x.findIndex(y => y.value === event);
-    //   this.selectedItemGroupName = x[index].name;
-    // });
-
     this.storeItems$.subscribe(x => {
       const index = x.findIndex(y => y.value === event);
       this.selectedItemName = x[index].name;
@@ -473,7 +492,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   addPurchaseFormSubmit() {
     if (this.addPurchaseForm.valid) {
       this.isAddPurchaseFormSubmitted = true;
-      this.purchaseService.addPurchase(this.addPurchaseForm.value)
+      this.purchaseService.addPurchase(this.addPurchaseForm.getRawValue())
         .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
           if (x.StatusCode === 200) {
@@ -522,7 +541,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     const purchaseId = this.addPurchaseForm.value.PurchaseId;
     if (this.addPurchaseForm.valid) {
       this.isAddPurchaseFormSubmitted = true;
-      this.purchaseService.EditStorePurchase(this.addPurchaseForm.value)
+      this.purchaseService.EditStorePurchase(this.addPurchaseForm.getRawValue())
         .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
           if (x) {
@@ -616,8 +635,12 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
   addTransportItemButtonClicked(transportItemType: number) {
     if (transportItemType === this.StoreItems.ExpendableVehicle || transportItemType === this.StoreItems.NonExpendableVehicle) {
+      // set default quantity
+      this.addPurchaseForm.controls['Quantity'].setValue(this.addPurchaseForm.get('Quantity').value + 1);
       this.addVehicles();
     } else if (transportItemType === this.StoreItems.ExpendableGenerator || transportItemType === this.StoreItems.NonExpendableGenerator) {
+      // set default quantity
+      this.addPurchaseForm.controls['Quantity'].setValue(this.addPurchaseForm.get('Quantity').value + 1);
       this.addGenerators();
     }
   }
@@ -785,6 +808,10 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
           PurchaseId: x.PurchaseId
         });
 
+        if (x.PurchasedVehicleList.length > 0 || x.PurchasedGeneratorList.length > 0) {
+          this.addPurchaseForm.controls['Quantity'].disable();
+        }
+
         this.setVehicleValue(x.PurchasedVehicleList);
         this.setGeneratorValue(x.PurchasedGeneratorList);
 
@@ -810,14 +837,14 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     for (const x of item) {
       formArray.push(this.fb.group({
         Id: x.Id,
-        PlateNo: x.PlateNo,
-        EmployeeId: x.EmployeeId,
-        StartingMileage: x.StartingMileage,
-        IncurredMileage: x.IncurredMileage,
-        FuelConsumptionRate: x.FuelConsumptionRate,
-        MobilOilConsumptionRate: x.MobilOilConsumptionRate,
-        OfficeId: x.OfficeId,
-        ModelYear: x.ModelYear
+        PlateNo: [{ value: x.PlateNo, disabled: true }],
+        EmployeeId: [{ value: x.EmployeeId, disabled: true }],
+        StartingMileage: [{ value: x.StartingMileage, disabled: true }],
+        IncurredMileage: [{ value: x.IncurredMileage, disabled: true }],
+        FuelConsumptionRate: [{ value: x.FuelConsumptionRate, disabled: true }],
+        MobilOilConsumptionRate: [{ value: x.MobilOilConsumptionRate, disabled: true }],
+        OfficeId: [{ value: x.OfficeId, disabled: true }],
+        ModelYear: [{ value: x.ModelYear, disabled: true }]
       }));
     }
     this.addPurchaseForm.setControl('TransportVehicles', formArray);
@@ -828,19 +855,23 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     for (const x of item) {
       formArray.push(this.fb.group({
         Id: x.Id,
-        Voltage: x.Voltage,
-        StartingUsage: x.StartingUsage,
-        IncurredUsage: x.IncurredUsage,
-        FuelConsumptionRate: x.FuelConsumptionRate,
-        MobilOilConsumptionRate: x.MobilOilConsumptionRate,
-        OfficeId: x.OfficeId,
-        ModelYear: x.ModelYear
+        Voltage: [{ value: x.Voltage, disabled: true }],
+        StartingUsage: [{ value: x.StartingUsage, disabled: true }],
+        IncurredUsage: [{ value: x.IncurredUsage, disabled: true }],
+        FuelConsumptionRate: [{ value: x.FuelConsumptionRate, disabled: true }],
+        MobilOilConsumptionRate: [{ value: x.MobilOilConsumptionRate, disabled: true }],
+        OfficeId: [{ value: x.OfficeId, disabled: true }],
+        ModelYear: [{ value: x.ModelYear, disabled: true }]
       }));
     }
     this.addPurchaseForm.setControl('TransportGenerators', formArray);
   }
 
   deleteVehicle(index: number) {
+
+    // decrease quantity
+    this.addPurchaseForm.controls['Quantity'].setValue(this.addPurchaseForm.get('Quantity').value - 1);
+
     const arrayControl = this.addPurchaseForm.get('TransportVehicles') as FormArray;
 
     const item = arrayControl.at(index);
@@ -862,8 +893,11 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   deleteGenerator(index: number) {
-    const arrayControl = this.addPurchaseForm.get('TransportGenerators') as FormArray;
 
+    // decrease quantity
+    this.addPurchaseForm.controls['Quantity'].setValue(this.addPurchaseForm.get('Quantity').value - 1);
+
+    const arrayControl = this.addPurchaseForm.get('TransportGenerators') as FormArray;
     const item = arrayControl.at(index);
 
     if (item.value.Id !== 0 && item.value.Id !== undefined) {
@@ -873,10 +907,9 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         } else {
           this.toastr.warning('Something went wrong');
         }
-
       }, error => {
         console.log(error);
-      })
+      });
     } else {
       (<FormArray>this.addPurchaseForm.get('TransportGenerators')).removeAt(index);
     }

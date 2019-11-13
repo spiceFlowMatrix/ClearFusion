@@ -20,7 +20,8 @@ import { IProjectPermissionMode } from '../project-activities/models/project-act
 import {
   OfficeDetailModel,
   IHiringRequestModel,
-  CompleteHiringRequestModel
+  CompleteHiringRequestModel,
+  ICandidateDetailModel
 } from '../../project-hiring/models/hiring-requests-models';
 
 @Injectable({
@@ -106,6 +107,22 @@ export class HiringRequestsService {
       );
   }
   //#endregion
+    //#region "GetEducationDegreeList"
+    GetEducationDegreeList(): any {
+      return this.globalService
+        .getList(this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllEducationDegree)
+        .pipe(
+          map(x => {
+            const responseData: IResponseData = {
+              data: x.data.EducationDegreeList,
+              statusCode: x.StatusCode,
+              message: x.Message
+            };
+            return responseData;
+          })
+        );
+    }
+    //#endregion
   //#region "GetJobGradeList"
   GetJobGradeList(): any {
     return this.globalService
@@ -287,6 +304,50 @@ export class HiringRequestsService {
       );
   }
   //#endregion
+
+ //#region "AddNewCandidateDetail"
+ AddNewCandidateDetail(data: ICandidateDetailModel) {
+  return this.globalService
+    .post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HiringRequest_AddNewCandidateDetail,
+      data
+    )
+    .pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+}
+//#endregion
+
+  //#region "getAllCandidateList"
+  getAllCandidateList(data: IFilterModel): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_GetAllCandidateList,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.CandidateList,
+            total: x.data.TotalCount,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
 
   //#region "EditCandidateDetail"
   EditCandidateDetail(data: CandidateDetailModel) {
@@ -508,7 +569,7 @@ export class HiringRequestsService {
   }
   //#endregion
   //#region edit selected candidate detail
-  IsCompltedeHrDEtail(model: CompleteHiringRequestModel) {
+  IsCompltedeHrDetail(model: CompleteHiringRequestModel) {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
@@ -528,7 +589,7 @@ export class HiringRequestsService {
   }
   //#endregion
   //#region edit selected candidate detail
-  IsCloasedHrDEtail(model: CompleteHiringRequestModel) {
+  IsCloasedHrDetail(model: CompleteHiringRequestModel) {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
