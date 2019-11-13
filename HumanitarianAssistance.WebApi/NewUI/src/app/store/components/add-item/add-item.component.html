@@ -14,6 +14,7 @@
       <textarea formControlName="description" [mat-autosize]="true" [cdkAutosizeMinRows]="3" matInput
         placeholder="Description"></textarea>
     </mat-form-field>
+    {{data.isGenerator}}
     <div *ngIf="data.isGenerator!=null">
       <mat-card-subtitle *ngIf="data.isGenerator"><b>This Item Configuration is for a Generator Item Category.</b></mat-card-subtitle>
       <mat-card-subtitle *ngIf="data.isGenerator">Please select the Generator Item Type for this Item.</mat-card-subtitle>
