@@ -240,6 +240,7 @@ namespace HumanitarianAssistance.Application.Infrastructure
          public List<EducationDegreeModel> EducationDegreeList { get; set; } 
       public ProjectHiringRequestDetailModel ProjectHiringRequestAllDetail { get; set; }  
       public List<CandidateDetailsModel> CandidateList{ get; set; } 
+      public CandidateDetails CandidateDetails{ get; set; } 
         public int? FilledVacancies { get; set; } 
 
 

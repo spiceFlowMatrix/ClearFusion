@@ -42,6 +42,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                     CreatedById = request.CreatedById,
                     CreatedDate = request.CreatedDate,
                     IsDeleted = false,
+                    CandidateStatus=0,
+                    InterviewId=0
                 };
                 await _dbContext.CandidateDetails.AddAsync (candidateDetail);
                 await _dbContext.SaveChangesAsync ();

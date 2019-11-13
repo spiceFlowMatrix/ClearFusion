@@ -425,6 +425,8 @@ export class GLOBAL {
     'HiringRequest/AddNewCandidateDetail';
     public static API_HiringRequest_GetAllCandidateList =
     'HiringRequest/GetAllCandidateList';
+    public static API_HiringRequest_UpdateCandidateStatusByStatusId =
+    'HiringRequest/UpdateCandidateStatusByStatusId';
 
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
   public static API_HiringRequest_AddHiringRequestDetail = 'HiringRequest/AddHiringRequestDetail';
@@ -460,6 +462,8 @@ export class GLOBAL {
   public static API_Pdf_GetJournalLedgerReportPdf = 'Pdf/GetJournalLedgerReportPdf';
   public static API_Pdf_GetStorePurchasePdf = 'Pdf/GetStorePurchasePdf';
   public static API_Pdf_GetJournalReportPdf = 'Pdf/GetJournalReportPdf';
+
+  public static API_Pdf_GetCandidateDetailReportPdf = 'Pdf/GetCandidateDetailReportPdf';
   //#endregion
 
   // Store

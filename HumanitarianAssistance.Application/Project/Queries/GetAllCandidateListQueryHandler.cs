@@ -53,6 +53,8 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                             Country = c.CountryName,
                             Province = pr.ProvinceName,
                             District = d.District,
+                            InterviewId = cd.InterviewId,
+                            CandidateStatus = cd.CandidateStatus,
                             TotalExperienceInYear = cd.TotalExperienceInYear,
                             RelevantExperienceInYear = cd.RelevantExperienceInYear,
                             IrrelevantExperienceInYear = cd.IrrelevantExperienceInYear,

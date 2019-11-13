@@ -592,3 +592,15 @@ export enum LogisticComparativeStatus {
   'Reject Statement' = 5,
   'Approve Statement' = 6,
 }
+export enum CandidateStatus {
+  'Pending Shortlist' = 0,
+  'Pending Interview' = 1,
+  'Pending Selection' = 2,
+  'Selected' = 3,
+  'Rejected' = 4
+}
+export enum CandidateAction {
+  'Shortlist' = 0,
+  'Interview' = 1,
+  'Select' = 2,
+}

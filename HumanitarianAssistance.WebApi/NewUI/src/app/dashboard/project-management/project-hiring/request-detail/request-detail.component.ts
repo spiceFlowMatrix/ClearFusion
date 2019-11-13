@@ -1,12 +1,11 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { of, Observable, ReplaySubject } from 'rxjs';
 import {
-  HiringList,
   HiringRequestDetailList,
-  ICandidateDetailModel,
   IFilterModel,
   ICandidateDetailList,
-  ISubCandidateList
+  ISubCandidateList,
+  TableActionsModel
 } from '../models/hiring-requests-models';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
@@ -16,7 +15,10 @@ import { takeUntil } from 'rxjs/operators';
 import { AddHiringRequestComponent } from '../add-hiring-request/add-hiring-request.component';
 import { MatDialog } from '@angular/material';
 import { AddNewCandidateComponent } from '../add-new-candidate/add-new-candidate.component';
-import { TableActionsModel } from 'projects/library/src/public_api';
+import { CandidateStatus, CandidateAction } from 'src/app/shared/enum';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
+import { GLOBAL } from 'src/app/shared/global';
 
 @Component({
   selector: 'app-request-detail',
@@ -25,11 +27,13 @@ import { TableActionsModel } from 'projects/library/src/public_api';
 })
 export class RequestDetailComponent implements OnInit {
   newCandidatesHeaders$ = of([
+    'Candidate Id',
     'First Name',
     'Last Name',
     'Gender',
     'Interview',
-    'Candidate Status'
+    'Candidate Status',
+    'firstText'
   ]);
   subListHeaders$ = of([
     'Education',
@@ -49,8 +53,11 @@ export class RequestDetailComponent implements OnInit {
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
+  actions: TableActionsModel;
   constructor(
     public dialog: MatDialog,
+    private globalSharedService: GlobalSharedService,
+    private appurl: AppUrlService,
     private routeActive: ActivatedRoute,
     public hiringRequestService: HiringRequestsService,
     private loader: CommonLoaderService
@@ -86,6 +93,21 @@ export class RequestDetailComponent implements OnInit {
     this.routeActive.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
+
+    this.actions = {
+      items: {
+        button: { status: true, text: '' },
+        delete: false,
+        download: false,
+        edit: false
+      },
+      subitems: {
+        button: { status: false, text: '' },
+        delete: false,
+        download: false
+      }
+    };
+
     this.getHiringRequestDetailsByHiringRequestId();
     this.GetAllCandidateList(this.filterValueModel);
     this.getScreenSize();
@@ -93,7 +115,7 @@ export class RequestDetailComponent implements OnInit {
 
   //#region "Dynamic Scroll"
   @HostListener('window:resize', ['$event'])
-  getScreenSize(event?) {
+  getScreenSize() {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
 
@@ -129,7 +151,7 @@ export class RequestDetailComponent implements OnInit {
           }
           this.loader.hideLoader();
         },
-        error => {
+        () => {
           this.loader.hideLoader();
         }
       );
@@ -153,7 +175,7 @@ export class RequestDetailComponent implements OnInit {
         this.getHiringRequestDetailsByHiringRequestId();
       }
     );
-    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.afterClosed().subscribe(() => {});
   }
 
   // #region adding new hiring request
@@ -168,7 +190,7 @@ export class RequestDetailComponent implements OnInit {
       // do something
       this.GetAllCandidateList(this.filterValueModel);
     });
-    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.afterClosed().subscribe(() => {});
   }
   //#endregion
 
@@ -180,12 +202,13 @@ export class RequestDetailComponent implements OnInit {
           this.newCandidatesList$ = of(
             response.data.map(element => {
               return {
-                // CandidateId: element.CandidateId,
+                CandidateId: element.CandidateId,
                 FirstName: element.FirstName,
                 LastName: element.LastName,
                 Gender: element.Gender,
                 Interview: '<a>Interview Id</a>',
-                AccountStatus: element.AccountStatus,
+                CandidateStatus: CandidateStatus[element.CandidateStatus],
+                firstText: CandidateAction[element.CandidateStatus],
                 subItems: [
                   {
                     EducationDegree: element.EducationDegree,
@@ -194,13 +217,15 @@ export class RequestDetailComponent implements OnInit {
                     Email: element.Email,
                     TotalExperienceInYear: element.TotalExperienceInYear,
                     RelevantExperienceInYear: element.RelevantExperienceInYear,
-                    IrrelevantExperienceInYear: element.IrrelevantExperienceInYear
+                    IrrelevantExperienceInYear:
+                      element.IrrelevantExperienceInYear
                     // DateOfBirth: element.DateOfBirth,
                     // Grade: element.Grade,
                     // Office: element.Office,
                     // Country: element.Country,
                     // Province: element.Province,
-                    // District: element.District
+                    // District: element.District,
+                    // AccountStatus: element.AccountStatus,
                   }
                 ] as ISubCandidateList[]
               } as ICandidateDetailList;
@@ -209,9 +234,54 @@ export class RequestDetailComponent implements OnInit {
         }
         this.loader.hideLoader();
       },
-      error => {
+      () => {
         this.loader.hideLoader();
       }
     );
   }
+  updateCandidateStatus(candidateDetails: any) {
+    this.hiringRequestService
+      .UpdateCandidateStatus(candidateDetails)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        (response: IResponseData) => {
+          this.loader.showLoader();
+          if (response.statusCode === 200 && response.data !== null) {
+            console.log(response.data);
+          }
+          this.loader.hideLoader();
+        },
+        () => {
+          this.loader.hideLoader();
+        }
+      );
+  }
+
+  actionEvents(data: any) {
+    const candidateDetails: any = {
+      statusId: +CandidateStatus[data.item.CandidateStatus],
+      candidateId: data.item.CandidateId
+    };
+    this.updateCandidateStatus(candidateDetails);
+  }
+  rejectCandidate(data: any) {
+    const candidateDetails: any = {
+      statusId: 4,
+      candidateId: data.item.CandidateId
+    };
+    this.updateCandidateStatus(candidateDetails);
+  }
+
+  //#region "onExportPdf"
+  onExportPdf() {
+    const data: any = {};
+    this.globalSharedService
+      .getFile(
+        this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetCandidateDetailReportPdf,
+        data
+      )
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe();
+  }
+  //#endregion
 }

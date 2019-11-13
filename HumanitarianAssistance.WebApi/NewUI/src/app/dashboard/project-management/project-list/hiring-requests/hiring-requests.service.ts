@@ -348,6 +348,26 @@ export class HiringRequestsService {
   }
   //#endregion
 
+  //#region "UpdateCandidateStatus"
+  UpdateCandidateStatus(data: any) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_UpdateCandidateStatusByStatusId,
+          data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.CandidateDetails,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
 
   //#region "EditCandidateDetail"
   EditCandidateDetail(data: CandidateDetailModel) {

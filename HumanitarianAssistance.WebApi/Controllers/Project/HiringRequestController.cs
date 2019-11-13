@@ -168,6 +168,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         public async Task<ApiResponse> GetAllCandidateList([FromBody]GetAllCandidateListQuery query)
         {
             return await _mediator.Send(query);
-        }       
+        }  
+       [HttpPost]
+         public async Task<ApiResponse> UpdateCandidateStatusByStatusId([FromBody]UpdateCandidateStatusByStatusIdCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.ModifiedById = userId;
+            command.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+        }             
     }  
 }
