@@ -60,7 +60,7 @@ export class AddItemComponent implements OnInit {
     this.masterForm = this.fb.group({
       name: ['', Validators.required],
       description: [''],
-      itemtypecategory: ['', Validators.required]
+      itemtypecategory: ['']
     })
   }
   submit() {
@@ -80,13 +80,13 @@ export class AddItemComponent implements OnInit {
         this.configService.EditItem(this.inventoryItem).subscribe(() => {
           this.isSaving = false;
           this.toastr.success('Item updated successfully');
-          this.dialogRef.close();
+          this.dialogRef.close(1);
         })
       } else {
         this.configService.AddItem(this.inventoryItem).subscribe(() => {
           this.isSaving = false;
           this.toastr.success('Item added successfully');
-          this.dialogRef.close();
+          this.dialogRef.close(1);
         })
       }
 
@@ -94,6 +94,6 @@ export class AddItemComponent implements OnInit {
     }
   }
   cancel() {
-    this.dialogRef.close('cancel');
+    this.dialogRef.close();
   }
 }
