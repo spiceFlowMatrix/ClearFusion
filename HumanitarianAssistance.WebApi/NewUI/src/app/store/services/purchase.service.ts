@@ -83,6 +83,16 @@ export class PurchaseService {
   }
   //#endregion
 
+  //#region "getTransportItemCategoryType"
+  getTransportItemCategoryType(Id: number): any {
+    return this.globalService
+      .getItemById(
+        this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetTransportItemCategoryType,
+        Id
+      );
+  }
+  //#endregion
+
   //#region "GetItemsByItemGroupId"
   getItemsByItemGroupId(Id: number): any {
     return this.globalService

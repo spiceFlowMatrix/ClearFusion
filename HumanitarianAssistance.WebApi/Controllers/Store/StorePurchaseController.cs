@@ -242,5 +242,22 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
             }
         }
 
+        [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetTransportItemCategoryType(long Id)
+        {
+            var result = await Task.FromResult(_mediator.Send(new GetTransportItemCategoryTypeQuery { ItemId = Id}));
+
+            if (result.Exception == null)
+            {
+                return Ok(await result);
+            }
+            else
+            {
+                return BadRequest(result.Exception.InnerException.Message);
+            }
+        }
+
     }
 }

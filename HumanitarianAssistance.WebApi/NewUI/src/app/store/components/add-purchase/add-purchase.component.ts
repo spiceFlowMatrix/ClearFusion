@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { takeUntil } from 'rxjs/operators';
-import { StoreMasterCategory, StoreItemGroups, FileSourceEntityTypes, StoreItem, TransportItemType } from 'src/app/shared/enum';
+import { StoreMasterCategory, StoreItemGroups, FileSourceEntityTypes, StoreItem, TransportItemType, TransportItemCategory } from 'src/app/shared/enum';
 import { VehicleDetailComponent } from '../vehicle-detail/vehicle-detail.component';
 import { AddDocumentComponent } from '../document-upload/add-document.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -46,6 +46,9 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
+  ItemGroupTransportCategory: any;
+  ItemTransportCategory: any;
+
 
   exchangeRateMessage = '';
   isAddPurchaseFormSubmitted = false;
@@ -62,6 +65,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   MasterCategory = StoreMasterCategory;
   ItemGroups = StoreItemGroups;
   StoreItems = StoreItem;
+  TransportItemCategories = TransportItemCategory;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   @ViewChild(VehicleDetailComponent) vehicleDetailChild: VehicleDetailComponent;
@@ -323,6 +327,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
   getItemSelectedValue(event: any) {
 
+    this.getTransportItemCategoryType(event);
+
     this.storeItems$.subscribe(x => {
       const index = x.findIndex(y => y.value === event);
       this.selectedItemName = x[index].name;
@@ -403,7 +409,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   getProjectSelectedValue(event: any) {
-    debugger;
     this.getBudgetLineByProjectId(event);
   }
 
@@ -464,11 +469,21 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       });
   }
 
+  getTransportItemCategoryType(itemId: number) {
+    this.purchaseService
+      .getTransportItemCategoryType(itemId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(x => {
+        this.ItemTransportCategory = x;
+      });
+  }
+
   getAllStoreItemsByGroupId(groupId: number, itemId?: any) {
     this.purchaseService
       .getItemsByItemGroupId(groupId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
+        this.ItemGroupTransportCategory = x.ItemGroupTransportType;
         this.storeItems$ = of(x.data.map(y => {
           return {
             name: y.ItemCode + '-' + y.ItemName,
@@ -745,7 +760,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       });
     }
   }
-
 
   getLoggedInUserUsername() {
     this.purchaseService.GetLoggedInUserUsername().subscribe(x => {

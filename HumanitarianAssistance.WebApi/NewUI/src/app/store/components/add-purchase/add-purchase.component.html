@@ -65,8 +65,8 @@
     <!-- Transport Details-->
     <div class="row">
 
-      <div *ngIf="addPurchaseForm.controls['ItemId'].value == StoreItems.ExpendableVehicle ||
-                  addPurchaseForm.controls['ItemId'].value == StoreItems.NonExpendableVehicle ||
+      <div *ngIf="ItemGroupTransportCategory == TransportItemCategories.Vehicle ||
+                  ItemGroupTransportCategory == TransportItemCategories.Generator ||
                   addPurchaseForm.controls['ItemId'].value == StoreItems.ExpendableGenerator ||
                   addPurchaseForm.controls['ItemId'].value == StoreItems.NonExpendableGenerator">
         <div class="col-md-10">
