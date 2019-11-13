@@ -65,10 +65,8 @@
     <!-- Transport Details-->
     <div class="row">
 
-      <div *ngIf="ItemGroupTransportCategory == TransportItemCategories.Vehicle ||
-                  ItemGroupTransportCategory == TransportItemCategories.Generator ||
-                  addPurchaseForm.controls['ItemId'].value == StoreItems.ExpendableGenerator ||
-                  addPurchaseForm.controls['ItemId'].value == StoreItems.NonExpendableGenerator">
+      <div *ngIf="(ItemGroupTransportCategory == ItemTransportCategoryEnum.Vehicle && ItemTransportCategory ==ItemTransportCategoryEnum.Vehicle) ||
+                  (ItemGroupTransportCategory == ItemTransportCategoryEnum.Generator && ItemTransportCategory ==ItemTransportCategoryEnum.Generator)">
         <div class="col-md-10">
           <strong>Note:</strong>The item you have selected is <strong>{{selectedItemName}}</strong>. Therefore, the
           following <strong>transport related metadata</strong> must be filled out.
@@ -80,7 +78,7 @@
           </div>
         </div>
       </div>
-      <div class="row" *ngIf="addPurchaseForm.controls['ItemId'].value === StoreItems.ExpendableVehicle || addPurchaseForm.controls['ItemId'].value === StoreItems.NonExpendableVehicle">
+      <div class="row" *ngIf="ItemTransportCategory ==ItemTransportCategoryEnum.Vehicle">
         <div class="col-md-12">
           <mat-accordion>
             <mat-expansion-panel formArrayName="TransportVehicles"
@@ -98,7 +96,7 @@
         </div>
       </div>
 
-      <div class="row" *ngIf="addPurchaseForm.controls['ItemId'].value === StoreItems.ExpendableGenerator || addPurchaseForm.controls['ItemId'].value === StoreItems.NonExpendableGenerator">
+      <div class="row" *ngIf="ItemTransportCategory ==ItemTransportCategoryEnum.Generator">
         <div class="col-md-12">
           <mat-accordion>
             <mat-expansion-panel formArrayName="TransportGenerators"
@@ -116,14 +114,8 @@
         </div>
       </div>
 
-      <div *ngIf="addPurchaseForm.controls['ItemId'].value === StoreItems.VehicleFuel ||
-                  addPurchaseForm.controls['ItemId'].value === StoreItems.GeneratorFuel ||
-                  addPurchaseForm.controls['ItemId'].value === StoreItems.VehicleMobilOil ||
-                  addPurchaseForm.controls['ItemId'].value === StoreItems.GeneratorMobilOil ||
-                  addPurchaseForm.controls['ItemId'].value === StoreItems.VehicleMaintenanceService ||
-                  addPurchaseForm.controls['ItemId'].value === StoreItems.GeneratorMaintenanceService ||
-                  addPurchaseForm.controls['ItemId'].value === StoreItems.VehicleSpareParts ||
-                  addPurchaseForm.controls['ItemId'].value === StoreItems.GeneratorSpareParts" class="paddingleft">
+      <div *ngIf="(ItemGroupTransportCategory == ItemTransportCategoryEnum.Vehicle && ItemTransportCategory != ItemTransportCategoryEnum.Vehicle) ||
+      (ItemGroupTransportCategory == ItemTransportCategoryEnum.Generator && ItemTransportCategory !=ItemTransportCategoryEnum.Generator)" class="paddingleft">
       <div class="row">
         <div class="col-md-12">
           <strong>Note:</strong>The item you have selected is <strong>{{selectedItemName}}</strong>. Therefore, the
