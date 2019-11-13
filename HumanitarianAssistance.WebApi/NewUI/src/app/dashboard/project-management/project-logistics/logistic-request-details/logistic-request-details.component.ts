@@ -243,10 +243,13 @@ Currency: '', BudgetLine: '', Office: ''};
     } else {
       this.commonLoader.showLoader();
       const requestItems = this.submitPurchaseItems.map(function(val) {
-        return val.Id;
+        return {
+          Id: val.Id,
+          FinalCost: val.EstimatedCost
+        };
       });
       const model = {
-        Id: requestItems,
+        submittedList: requestItems,
         Status : LogisticRequestStatus['Complete Purchase']
       };
       this.logisticservice.completePurchaseOrder(model).subscribe(res => {

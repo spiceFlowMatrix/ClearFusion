@@ -27,9 +27,10 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
             ApiResponse response = new ApiResponse();
             try
             {
-                var list = await _dbContext.ProjectLogisticItems.Where(x=>x.IsDeleted==false && request.Id.Contains(x.LogisticItemId)).ToListAsync();
+                var list = await _dbContext.ProjectLogisticItems.Where(x=>x.IsDeleted==false && request.submittedList.Select(y=>y.Id).Contains(x.LogisticItemId)).ToListAsync();
                 foreach(var item in list) {
                     item.PurchaseSubmitted = true;
+                    item.FinalCost=request.submittedList.Where(x=>x.Id==item.LogisticItemId).Select(x=>x.FinalCost).FirstOrDefault();
                 }
                 var requestId = list.Where(x=>x.IsDeleted==false).Select(x=>x.LogisticRequestsId).FirstOrDefault();
                 var logRequest = await _dbContext.ProjectLogisticRequests.FirstOrDefaultAsync(x=>x.IsDeleted==false && x.LogisticRequestsId == requestId);
