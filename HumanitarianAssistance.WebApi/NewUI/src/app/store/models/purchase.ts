@@ -114,6 +114,8 @@ export interface IAddEditPurchaseModel {
   DepreciationRate: any;
   TimezoneOffset: any;
   TransportItemId?: number;
+  ItemGroupTransportCategory?: number;
+  ItemTransportCategory?: number;
   PurchasedVehicleList: IPurchasedVehicleModel[];
   PurchasedGeneratorList: IPurchasedGeneratorModel[];
 

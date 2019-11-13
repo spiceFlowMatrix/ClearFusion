@@ -262,7 +262,7 @@ export class PurchaseService {
       );
   }
 
-  addPurchase(purchase: any) {
+  addPurchase(purchase: any, itemGroupTransportCategory: number, itemTransportCategory: number) {
     const purchaseModel: IAddEditPurchaseModel = {
       ApplyDepreciation: purchase.ApplyDepreciation,
       AssetTypeId: purchase.AssetTypeId,
@@ -289,7 +289,9 @@ export class PurchaseService {
       TimezoneOffset: new Date().getTimezoneOffset(),
       PurchasedVehicleList: purchase.TransportVehicles,
       PurchasedGeneratorList: purchase.TransportGenerators,
-      TransportItemId: purchase.TransportItemId
+      TransportItemId: purchase.TransportItemId,
+      ItemGroupTransportCategory: itemGroupTransportCategory,
+      ItemTransportCategory: itemTransportCategory
     };
 
     return this.globalService

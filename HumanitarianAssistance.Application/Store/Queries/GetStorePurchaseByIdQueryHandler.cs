@@ -69,6 +69,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                 model = await _dbContext.StoreItemPurchases
                                   .Include(x=> x.StoreInventoryItem)
                                   .ThenInclude(x=> x.Inventory)
+                                  .Include(x=> x.StoreInventoryItem)
+                                  .ThenInclude(x=> x.StoreItemGroup)
                                   .Include(x=> x.PurchasedVehicleDetailList)
                                   .Include(x=> x.PurchasedGeneratorDetailList)
                                   .Include(x=> x.GeneratorItemDetail)
@@ -107,6 +109,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                        OfficeId= z.OfficeId,
                                        JournalCode= z.JournalCode,
                                        PurchaseName= z.PurchaseName,
+                                       TransportItemTypeCategory= z.StoreInventoryItem.ItemTypeCategory,
+                                       ItemGroupTransportCategory= z.StoreInventoryItem.StoreItemGroup.ItemTypeCategory,
                                        TransportItemId= z.GeneratorItemDetail != null ? z.GeneratorItemDetail.GeneratorPurchaseId :
                                                         z.VehicleItemDetail != null ? z.VehicleItemDetail.VehiclePurchaseId : 0,
                                        PurchasedVehicleList = z.PurchasedVehicleDetailList.Where(x=> x.IsDeleted == false)
