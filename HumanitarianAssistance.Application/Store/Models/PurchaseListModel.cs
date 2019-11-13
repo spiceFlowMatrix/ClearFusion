@@ -31,7 +31,7 @@ namespace HumanitarianAssistance.Application.Store.Models
         public double OriginalCost { get; set; }
         public double DepreciatedCost { get; set; }
         public int PurchasedQuantity { get; set; }
-        public string PurchaseDate {get; set;}
+        public DateTime PurchaseDate {get; set;}
         public string ChasisNo { get; set; }
         public string EngineSerialNo { get; set; }
         public string RegistrationNo { get; set; }
@@ -47,6 +47,9 @@ namespace HumanitarianAssistance.Application.Store.Models
         public string Remarks { get; set; }
         public int recordsCount { get; set; }
         public string MakerCountry { get; set; }
+        public bool ApplyDepreciation { get; set; }
+        public int Quantity {get; set;}
+        public double UnitCost {get; set;}
         public List<ProcurementListModel> ProcurementList { get; set; }
     }
 }

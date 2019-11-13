@@ -314,7 +314,7 @@
                                         [multiSelect]="false"
                                         placeholderSearchLabel="Find Account..."
                                         noEntriesFoundLabel="No matching account found"
-                                        [dataSource]="debitaccountDataSource"
+                                        [dataSource]="accountDataSource"
                                         [selectedValue]="item.AccountNo"
                                         (openedChange)="
                                           openedChange($event, item)
@@ -394,7 +394,18 @@
                                       </mat-form-field>
                                     </td>
                                     <td width="12%" class="text-center">
-                                      <mat-form-field
+                                        <lib-search-dropdown
+                                        placeholder="Budget Line"
+                                        [multiSelect]="false"
+                                        placeholderSearchLabel="Find BudgetLine..."
+                                        noEntriesFoundLabel="No matching BudgetLine found"
+                                        [dataSource]="item.BudgetLineList"
+                                        [selectedValue]="item.BudgetLineId"
+                                        (openedChange)="
+                                        onOpenedBudgetLineChange($event,item)"
+                                      >
+                                      </lib-search-dropdown>
+                                      <!-- <mat-form-field
                                         class="example-full-width"
                                       >
                                         <mat-select
@@ -417,7 +428,7 @@
                                             {{ i.BudgetName }}
                                           </mat-option>
                                         </mat-select>
-                                      </mat-form-field>
+                                      </mat-form-field> -->
                                     </td>
                                     <td width="12%" class="text-center">
                                       Job: {{ item.JobName }}
@@ -505,7 +516,7 @@
                                         [multiSelect]="false"
                                         placeholderSearchLabel="Find Account..."
                                         noEntriesFoundLabel="No matching account found"
-                                        [dataSource]="creditaccountDataSource"
+                                        [dataSource]="accountDataSource"
                                         [selectedValue]="item.AccountNo"
                                         (openedChange)="
                                           openedChange($event, item)
@@ -585,7 +596,18 @@
                                       </mat-form-field>
                                     </td>
                                     <td width="12%" class="text-center">
-                                      <mat-form-field
+                                      <lib-search-dropdown
+                                        placeholder="Budget Line"
+                                        [multiSelect]="false"
+                                        placeholderSearchLabel="Find BudgetLine..."
+                                        noEntriesFoundLabel="No matching BudgetLine found"
+                                        [dataSource]="item.BudgetLineList"
+                                        [selectedValue]="item.BudgetLineId"
+                                        (openedChange)="
+                                        onOpenedBudgetLineChange($event,item)"
+                                      >
+                                      </lib-search-dropdown>
+                                      <!-- <mat-form-field
                                         class="example-full-width"
                                       >
                                         <mat-select
@@ -608,7 +630,7 @@
                                             {{ i.BudgetName }}
                                           </mat-option>
                                         </mat-select>
-                                      </mat-form-field>
+                                      </mat-form-field> -->
                                     </td>
                                     <td width="12%" class="text-center">
                                       Job: {{ item.JobName }}

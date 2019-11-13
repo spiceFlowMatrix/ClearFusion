@@ -6,6 +6,7 @@ import { PurchaseService } from '../../services/purchase.service';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { of } from 'rxjs/internal/observable/of';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-vehicle-detail',
@@ -20,13 +21,24 @@ export class VehicleDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() officeId: number;
   @Input() vehicleDetailForm: FormGroup;
+  vehicleId: number;
 
-  constructor(private purchaseService: PurchaseService) {
-
+  constructor(private purchaseService: PurchaseService, private activatedRoute: ActivatedRoute,
+              private fb: FormBuilder) {
+    this.activatedRoute.params.subscribe(params => {
+      this.vehicleId = params['id'];
+    });
   }
 
   ngOnInit() {
     this.getAllOffice();
+
+
+
+    this.vehicleDetailForm.controls['OfficeId'].valueChanges.subscribe(x => {
+      this.getEmployeesByOfficeId(x);
+    });
+    this.markFormGroupTouched(this.vehicleDetailForm);
   }
 
   ngOnChanges() {
@@ -59,6 +71,22 @@ export class VehicleDetailComponent implements OnInit, OnChanges, OnDestroy {
           };
         }));
       });
+  }
+
+  onSubmit() {
+    // to validate child vehicle form from add purchase form
+    this.markFormGroupTouched(this.vehicleDetailForm);
+    this.vehicleDetailForm.updateValueAndValidity();
+  }
+
+  public markFormGroupTouched(formGroup: FormGroup) {
+    (<any>Object).values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+
+      if (control.controls) {
+        this.markFormGroupTouched(control);
+      }
+    });
   }
 
   ngOnDestroy() {

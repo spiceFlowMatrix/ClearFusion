@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HumanitarianAssistance.Application.Project.Models
 {
-   public class CriteriaEveluationModel
+    public class CriteriaEveluationModel
     {
         public long ProjectId { get; set; }
         public long? DonorCEId { get; set; }
@@ -162,5 +162,38 @@ namespace HumanitarianAssistance.Application.Project.Models
         public bool? Culture { get; set; }
         public bool? ReligiousBeliefs { get; set; }
         public string CurrencyName { get; set; }
+        public bool? Others { get; set; }
+        public List<CEFeasibilityExpertOtherDetailModel> CEFeasibilityExpertOtherDetailModel { get; set; }
+        public List<PriorityOtherDetailModel> PriorityOtherDetailModel { get; set; }
+        public List<AssumptionDetailModel> AssumptionDetailModel { get; set; }
+        public List<DonorEligibilityDetailModel> DonorEligibilityDetailModel { get; set; }
+    }
+    public class CEFeasibilityExpertOtherDetailModel
+    {
+        public long? ExpertOtherDetailId { get; set; }
+        public string Name { get; set; }
+        public long ProjectId { get; set; }
+
+    }
+    public class PriorityOtherDetailModel
+    {
+        public long? PriorityOtherDetailId { get; set; }
+        public string Name { get; set; }
+        public long ProjectId { get; set; }
+
+    }
+    public class AssumptionDetailModel
+    {
+        public long? AssumptionDetailId { get; set; }
+        public string Name { get; set; }
+        public long ProjectId { get; set; }
+
+    }
+    public class DonorEligibilityDetailModel
+    {
+        public long? DonorEligibilityDetailId { get; set; }
+        public string Name { get; set; }
+        public long ProjectId { get; set; }
+
     }
 }

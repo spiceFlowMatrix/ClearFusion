@@ -8,7 +8,10 @@
   </thead>
   <tbody *ngFor="let item of items | async; let i=index;">
     <tr (click)="switchSubList(i,item)" class="main-table">
-      <td *ngFor="let header of itemHeaders | async; let j=index "> {{(item[header] != null) ? item[header] : "N/A"}}</td>
+      <td *ngFor="let header of itemHeaders | async; let j=index ">
+        <span [innerHtml]="((item[header] != null) ? item[header] : 'N/A')"></span>
+        <!-- {{(item[header] != null) ? item[header] : "N/A"}} -->
+      </td>
       <td *ngIf="itemActions && (itemActions.items)">
         <span class="action-span">
           <hum-button *ngIf="itemActions.items?.button?.status" [type]="'add'" [text]="itemActions.items.button.text"
@@ -18,7 +21,7 @@
           <i *ngIf="itemActions.items?.download" class="fas fa-download" (click)='action(item,"download",$event)'></i>
         </span>
         <span class="action-span">
-          <i *ngIf="itemActions.items?.edit" class="fas fa-edit" (click)='action(item,"edit",$event)'></i>
+          <i *ngIf="itemActions.items?.edit" class="fa fa-pencil" (click)='action(item,"edit",$event)'></i>
         </span>
         <span class="action-span">
           <i *ngIf="itemActions.items?.delete" class="fas fa-trash" (click)='action(item,"delete",$event)'></i>
@@ -43,7 +46,9 @@
             <tbody *ngIf="subItems[i]">
               <tr *ngFor="let subItem of subItems[i]">
                 <td *ngFor="let header of subItemHeaders | async; let j=index ">
-                  {{subItem[header] != null ? subItem[header] : "N/A"}}</td>
+                  <span [innerHtml]="((subItem[header] != null) ? subItem[header] : 'N/A')"></span>
+                  <!-- {{subItem[header] != null ? subItem[header] : "N/A"}} -->
+                </td>
 
                 <td *ngIf="itemActions && (itemActions.subitems)">
                   <span class="action-span">
@@ -55,7 +60,7 @@
                       (click)='subaction(subItem, item ,"download")'></i>
                   </span>
                   <span class="action-span">
-                    <i *ngIf="itemActions.subitems?.edit" class="fas fa-edit"
+                    <i *ngIf="itemActions.subitems?.edit" class="fa fa-pencil"
                       (click)='subAction(subItem, item ,"edit")'></i>
                   </span>
                   <span class="action-span">

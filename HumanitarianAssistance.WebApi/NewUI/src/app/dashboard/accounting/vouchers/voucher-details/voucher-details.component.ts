@@ -58,6 +58,7 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
 
   debitaccountDataSource: IDataSource[];
   creditaccountDataSource: IDataSource[];
+  accountDataSource: IDataSource[];
   selectedAccount: number[];
 
   voucherDetail: IVoucherDetailModel;
@@ -157,22 +158,27 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
       (response: IResponseData) => {
         this.debitaccountDataSource = [];
         this.creditaccountDataSource = [];
+        this.accountDataSource = [];
         if (response.statusCode === 200 && response.data !== null) {
           response.data.forEach(element => {
-            if (element.AccountHeadTypeId === 2 || element.AccountHeadTypeId === 5 ) {
-              this.debitaccountDataSource.push({
-                Id: element.AccountCode,
-                Name: element.AccountName
-              });
-            }
-            if (element.AccountHeadTypeId === 1 || element.AccountHeadTypeId === 4 ) {
-              this.creditaccountDataSource.push({
-                Id: element.AccountCode,
-                Name: element.AccountName
-              });
-            }
+            this.accountDataSource.push({
+                  Id: element.AccountCode,
+                  Name: element.AccountName
+                });
+            // if (element.AccountHeadTypeId === 2 || element.AccountHeadTypeId === 5 ) {
+            //   this.debitaccountDataSource.push({
+            //     Id: element.AccountCode,
+            //     Name: element.AccountName
+            //   });
+            // }
+            // if (element.AccountHeadTypeId === 1 || element.AccountHeadTypeId === 4 ) {
+            //   this.creditaccountDataSource.push({
+            //     Id: element.AccountCode,
+            //     Name: element.AccountName
+            //   });
+            // }
           });
-          //console.log(this.accountDataSource);
+          //// console.log(this.accountDataSource);
         }
       },
       error => {}
@@ -551,6 +557,14 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
   }
   //#endregion
 
+  onOpenedBudgetLineChange(event, item) {
+    debugger;
+    item.BudgetLineId = event.Value;
+    this.onTransactionDetailChanged(
+      item,
+      'BudgetLine'
+    );
+  }
   //#region "getBudgetLineOnProjectId"
   GetProjectJobDetailByBudgetLineId(item: any) {
     this.projectJobService
@@ -587,7 +601,19 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
       (response: IResponseData) => {
         // this.voucherDetail = null;
         if (response.statusCode === 200) {
-          response.data.forEach(x => item.BudgetLineList.push(x));
+          item.BudgetLineList = [];
+          // response.data.forEach(x => item.BudgetLineList.push(x));
+          response.data.forEach(x => item.BudgetLineList.push({
+            Id: x.BudgetLineId,
+            Name: x.BudgetCodeName
+          }));
+
+          // item.BudgetLineList.forEach(e => {
+          //   this.BudgetLineDropdown.push({
+          //     Id: e.BudgetLineId,
+          //     Name: e.BudgetCodeName
+          //   });
+          // });
           // this.toastr.success('Transaction Deleted Successfully');
         } else if (response.statusCode === 400) {
           this.toastr.warning(response.message);

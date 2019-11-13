@@ -11,6 +11,7 @@ export class ButtonComponent implements OnInit {
   @Input() text: string;
   @Input() isSubmit = false;
   @Input() click = new EventEmitter<any>();
+  @Input() disabled = false;
 
   btnType = '';
   constructor() { }

@@ -770,28 +770,28 @@ export class HiringRequestDetailsComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region "onCompleteHiringRequestClicked"
-  onCompleteHiringRequestClicked() {
-    this.isCompletedFlag = true;
-    this.SelctedHiringRequestId = this.hiringRequestForm.get(
-      'HiringRequestId'
-    ).value;
-    this.hiringRequestService
-      .IsCompltedeHrDEtail(this.SelctedHiringRequestId)
-      .subscribe(
-        (response: IResponseData) => {
-          if (response.statusCode === 200) {
-            this.isCompleted = response.data.IsCompleted;
-          } else {
-            this.toastr.error(response.message);
-          }
-          this.isCompletedFlag = false;
-        },
-        error => {
-          this.toastr.error('Someting went wrong');
-          this.isCompletedFlag = false;
-        }
-      );
-  }
+  // onCompleteHiringRequestClicked() {
+  //   this.isCompletedFlag = true;
+  //   this.SelctedHiringRequestId = this.hiringRequestForm.get(
+  //     'HiringRequestId'
+  //   ).value;
+  //   this.hiringRequestService
+  //     .IsCompltedeHrDEtail(this.SelctedHiringRequestId)
+  //     .subscribe(
+  //       (response: IResponseData) => {
+  //         if (response.statusCode === 200) {
+  //           this.isCompleted = response.data.IsCompleted;
+  //         } else {
+  //           this.toastr.error(response.message);
+  //         }
+  //         this.isCompletedFlag = false;
+  //       },
+  //       error => {
+  //         this.toastr.error('Someting went wrong');
+  //         this.isCompletedFlag = false;
+  //       }
+  //     );
+  // }
   //#endregion
 
   //#region delete donar datail

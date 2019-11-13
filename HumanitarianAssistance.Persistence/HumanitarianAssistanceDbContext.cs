@@ -109,6 +109,8 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<ItemSpecificationDetails> ItemSpecificationDetails { get; set; }
         public DbSet<StatusAtTimeOfIssue> StatusAtTimeOfIssue { get; set; }
         public DbSet<ReceiptType> ReceiptType { get; set; }
+        public DbSet<VehicleMileageDetail> VehicleMileageDetail { get; set; }
+        public DbSet<GeneratorUsageHourDetail> GeneratorUsageHourDetail { get; set; }
 
         public DbSet<EmployeeHistoryOutsideOrganization> EmployeeHistoryOutsideOrganization { get; set; }
         public DbSet<EmployeeHistoryOutsideCountry> EmployeeHistoryOutsideCountry { get; set; }
@@ -219,6 +221,11 @@ namespace HumanitarianAssistance.Persistence
 
         public DbSet<RatingBasedCriteriaQuestions> RatingBasedCriteriaQuestions { get; set; }
 
+        public DbSet<ProjectJobHiringDetail> ProjectJobHiringDetail { get; set; }
+        public DbSet<ProjectLogisticRequests> ProjectLogisticRequests { get; set; } 
+        public DbSet<ProjectLogisticItems> ProjectLogisticItems { get; set; }           
+        public DbSet<CandidateDetails> CandidateDetails { get; set; }  
+        public DbSet<EducationDegreeDetail> EducationDegreeDetails { get; set; }  
         #endregion  
 
         #region Marketing
@@ -258,6 +265,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<ProjectProposalDocument> ProjectProposalDocument { get; set; }
         public DbSet<PurchaseUnitType> PurchaseUnitType { get; set; }
         public DbSet<ErrorLogger> ErrorLogger { get; set; }
+        public DbSet<StoreLogger> StoreLogger { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

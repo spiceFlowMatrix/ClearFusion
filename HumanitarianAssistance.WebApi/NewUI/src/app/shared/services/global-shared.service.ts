@@ -67,7 +67,7 @@ export class GlobalSharedService {
       .put(url, data, { observe: 'response', 'Content-Type': data.type })
       .pipe(
         map(x => {
-          console.log(x.status);
+          // console.log(x.status);
           const responseData: IResponseData = {
             data: null,
             statusCode: x.status,
@@ -81,7 +81,7 @@ export class GlobalSharedService {
 
   //#region "uploadFile"
   uploadFile(pageId: number, entityId: any, file: any, documentTypeId: any = null) {
-    let objectName = SignedUrlObjectName.getSignedURLObjectName(pageId);
+    let objectName = SignedUrlObjectName.getSignedURLObjectName(pageId, entityId);
 
     if (objectName == null && objectName === '' && objectName === undefined) {
       throw new Error('object name cannot be empty');
@@ -114,7 +114,7 @@ export class GlobalSharedService {
           throw new Error('Could not get signed URL');
         }
       }), concatMap(res1 => {
-        console.log('res1', res1);
+        // console.log('res1', res1);
           if (res1['status'] === 200) {
             const data: FileModel = {
               FileName: file.name,
@@ -198,4 +198,12 @@ export class GlobalSharedService {
     return Math.floor(Math.random() * 10000);
   }
   //#endregion
+
+  //#region "deleteFile"
+  deleteFile(model: any) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_FileManagement_DeleteDocumentFiles, model
+      );
+  }
 }

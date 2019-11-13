@@ -52,6 +52,13 @@ export class DataInterceptor implements HttpInterceptor {
 
     // DELETE
     if (req.method === 'DELETE') {
+      req = req.clone({
+        headers: req.headers
+          .append(
+            'Authorization',
+            'Bearer ' + localStorage.getItem('authenticationtoken')
+          )
+      });
       return next.handle(req);
     }
 

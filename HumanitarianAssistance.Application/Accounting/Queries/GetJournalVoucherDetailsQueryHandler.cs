@@ -31,7 +31,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
                 if (request != null)
                 {
-
+                    
                     //get Journal Report from sp get_journal_report by passing parameters
                     var spJournalReport = await _dbContext.LoadStoredProc("get_journal_report")
                                           .WithSqlParam("currencyid", request.CurrencyId)
@@ -41,9 +41,9 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                           .WithSqlParam("officelist", request.OfficesList)
                                           .WithSqlParam("journalno", request.JournalCode)
                                           .WithSqlParam("accountslist", request.AccountLists)
-                                          //.WithSqlParam("project", request.Project)
-                                          //.WithSqlParam("budgetline", request.BudgetLine)
-                                          //.WithSqlParam("projectjob", request.JobCode)
+                                          .WithSqlParam("project", request.Project)
+                                          .WithSqlParam("budgetline", request.BudgetLine)
+                                          .WithSqlParam("projectjob", request.JobCode)
                                           .ExecuteStoredProc<SPJournalReport>();
 
 
@@ -59,9 +59,10 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                         TransactionDate = x.TransactionDate,
                         TransactionDescription = x.TransactionDescription,
                         VoucherNo = x.VoucherNo,
-                        AccountName = x.AccountName
-                        // Project = x.ProjectCode,
-                        // BudgetLineDescription = x.BudgetCode
+                        AccountName = x.AccountName,
+                        Project = x.ProjectCode,
+                        BudgetLineDescription = x.BudgetCode,
+                        JobCode=x.ProjectJobCode
                     }).ToList();
 
                     var journalReport = spJournalReport.GroupBy(x => x.ChartOfAccountNewId).ToList();

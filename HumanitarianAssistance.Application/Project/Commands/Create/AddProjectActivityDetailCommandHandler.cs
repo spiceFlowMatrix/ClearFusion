@@ -179,7 +179,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
 
 
         }
-        // note:  Common Add Project activty with or with recurrence
+        // note:  Common Add Project activty with or without recurrence
 
         public void AddProjectActivity(ProjectActivityDetail obj, ref List<ProjectActivityDetail> activityDetail)
         {

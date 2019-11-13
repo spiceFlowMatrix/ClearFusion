@@ -9,12 +9,12 @@
         </div>
         <div class="col-md-3">
           <mat-form-field class="example-full-width">
-            <input matInput type='number'  min="0" oninput="validity.valid||(value='');"formControlName="StartingUsageHours" placeholder="Starting Usage(Hours)">
+            <input matInput type='number'  min="0" oninput="validity.valid||(value='');"formControlName="StartingUsage" placeholder="Starting Usage(Hours)">
             </mat-form-field>
         </div>
         <div class="col-md-3">
             <mat-form-field class="example-full-width">
-                <input matInput type='number' min="0" oninput="validity.valid||(value='');" formControlName="IncurredUsageHours" placeholder="Incurred Usage(Hours)">
+                <input matInput type='number' min="0" oninput="validity.valid||(value='');" formControlName="IncurredUsage" placeholder="Incurred Usage(Hours)">
               </mat-form-field>
         </div>
         <div class="col-md-3">
@@ -29,17 +29,25 @@
       <div class="col-md-12">
         <div class="col-md-3">
           <mat-form-field class="example-full-width">
-            <input matInput type='number' min="0" oninput="validity.valid||(value='');" formControlName="FuelConsumptionRate" placeholder="Fuel Consumption Rate(litres/100KM)">
+            <input matInput type='number' min="0" oninput="validity.valid||(value='');" formControlName="FuelConsumptionRate" placeholder="Standard Fuel Consumption Rate(litres/hr)">
           </mat-form-field>
         </div>
         <div class="col-md-3">
             <mat-form-field class="example-full-width">
-                <input matInput type='number' min="0" oninput="validity.valid||(value='');" formControlName="MobilOilConsumptionRate" placeholder="Fuel Consumption Rate(litres/100KM)">
+                <input matInput type='number' min="0" oninput="validity.valid||(value='');" formControlName="MobilOilConsumptionRate" placeholder="Standard Mobil Oil Consumption Rate(litres/hr)">
               </mat-form-field>
         </div>
         <div class="col-md-3">
-          <lib-hum-dropdown [validation]="generatorDetailForm.controls['OfficeId'].hasError('required')"
-          [options]="offices$" formControlName='OfficeId' [placeHolder]="'Location'"></lib-hum-dropdown>
+          <!-- <lib-hum-dropdown [validation]="generatorDetailForm.controls['OfficeId'].hasError('required')"
+          [options]="offices$" formControlName='OfficeId' [placeHolder]="'Location'"></lib-hum-dropdown> -->
+          <mat-form-field>
+            <mat-label>Location</mat-label>
+            <mat-select formControlName='OfficeId'>
+              <mat-option *ngFor="let office of offices$ | async" [value]="office.value">
+                {{office.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
       </div>
     </div>

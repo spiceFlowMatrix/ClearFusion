@@ -43,7 +43,7 @@ export class AddQuestionsDialogComponent implements OnInit {
   ) {
     this.IndicatorDetail = data.ProjectindicatorDetail;
     this.questionDetail = data.QuestionDetail;
-    console.log('wwhuh', this.questionDetail);
+    // console.log('wwhuh', this.questionDetail);
   }
 
   ngOnInit() {

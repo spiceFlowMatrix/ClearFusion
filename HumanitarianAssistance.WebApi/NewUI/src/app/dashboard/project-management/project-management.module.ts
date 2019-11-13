@@ -85,6 +85,8 @@ import { ProposalDocumentComponent } from './project-list/proposal/proposal-docu
 import { AddProjectIndicatorComponent } from './project-list/project-indicators/add-project-indicator/add-project-indicator.component';
 import { AddQuestionsDialogComponent } from './project-list/project-indicators/add-questions-dialog/add-questions-dialog.component';
 import { ProjectOtherDetailPdfComponent } from './project-list/project-details/project-other-detail-pdf/project-other-detail-pdf.component';
+import { ProjectHiringModule } from './project-hiring/project-hiring.module';
+import { ProjectLogisticsModule } from './project-logistics/project-logistics.module';
 
 @NgModule({
   imports: [
@@ -107,7 +109,9 @@ import { ProjectOtherDetailPdfComponent } from './project-list/project-details/p
     MatBadgeModule,
     Ng5SliderModule,
     ListingDeleteModule,
-    MatTabsModule
+    MatTabsModule,
+    ProjectHiringModule,
+    ProjectLogisticsModule
 
   ],
   declarations: [
@@ -180,7 +184,7 @@ import { ProjectOtherDetailPdfComponent } from './project-list/project-details/p
     ProposalReportService,
     MessageService,
 
-    //pdf
+    // pdf
     ProjectOtherDetailPdfService
   ],
   entryComponents: [

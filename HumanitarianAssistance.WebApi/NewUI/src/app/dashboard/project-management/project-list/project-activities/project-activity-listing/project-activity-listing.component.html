@@ -54,7 +54,7 @@
             <mat-card>
                 <p>Project Duration</p>
               <div>
-                  <h4>{{ activitySummary.ProjectDuration }} Days</h4>
+                  <h4>{{ activitySummary.ProjectDuration }}<span  class="font-12"> Days</span></h4>
               </div>
               <!-- <ng-template #projectDurationLoaderTemplate>
                   <div class="spinner_center padding_top_5 padding_bottom_5">
@@ -77,11 +77,14 @@
             </mat-card>
           </div>
           <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
-            <mat-card>
+            <mat-card  title="Number of Activities">
                 <p>Late Start</p>
               <div >
-                  <h4>{{ activitySummary.LateStart }}</h4>
-              </div>
+                  <h4>{{ activitySummary.LateStart }} <span *ngIf="activitySummary.LateStart > 1 ; else lateStart" class="font-12">Activities</span></h4>
+              <ng-template #lateStart>
+                <span class="font-12">Activity</span>
+              </ng-template>
+                </div>
               <!-- <ng-template #lateStartLoaderTemplate>
                 <div class="spinner_center padding_top_5 padding_bottom_5">
                   <mat-spinner [diameter]="25"></mat-spinner>
@@ -90,10 +93,13 @@
             </mat-card>
           </div>
           <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
-            <mat-card>
+            <mat-card title="Number of Activities" >
                 <p>Late End</p>
               <div>
-                  <h4>{{ activitySummary.LateEnd }}</h4>
+                  <h4>{{ activitySummary.LateEnd }} <span *ngIf="activitySummary.LateEnd > 1 ; else lateEnd" class="font-12"> Activities</span></h4>
+                  <ng-template #lateEnd>
+                    <span class="font-12">Activity</span>
+                  </ng-template>
               </div>
               <!-- <ng-template #lateEndLoaderTemplate>
                   <div class="spinner_center padding_top_5 padding_bottom_5">
@@ -103,11 +109,14 @@
             </mat-card>
           </div>
           <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
-            <mat-card>
+            <mat-card title="Number of Activities">
                 <p>Slippage</p>
               <div >
-                  <h4>{{ activitySummary.Slippage }}</h4>
-              </div>
+                  <h4>{{ activitySummary.Slippage }} <span *ngIf="activitySummary.Slippage > 1 ; else slippage" class="font-12"> Activities</span></h4>
+                  <ng-template #slippage>
+                    <span class="font-12"> Activity</span>
+                  </ng-template>
+                </div>
               <!-- <ng-template #activitySummaryLoaderTemplate>
                   <div class="spinner_center padding_top_5 padding_bottom_5">
                     <mat-spinner [diameter]="25"></mat-spinner>
@@ -116,12 +125,13 @@
             </mat-card>
           </div>
           <div class="col-12 col-lg-2 col-md-6 col-sm-6 margin_top_20">
-            <mat-card>
+            <mat-card title = "Progress of all completed Activities">
                 <p>Progress</p>
               <div *ngIf="
               !activitySummaryLoader;
               else activityProgressLoaderTemplate">
-                  <h4>{{ activitySummary.Progress | number: "2.2-2" }} %</h4>
+                  <h4>{{ activitySummary.Progress | number: "2.2-2" }} %
+                  <span class="font-12">(All activities) </span></h4>
               </div>
               <ng-template #activityProgressLoaderTemplate>
                   <div class="spinner_center padding_top_5 padding_bottom_5">
@@ -137,7 +147,7 @@
       <div [class]="colsm6">
         <div>
           <div class="row">
-            <div class="col-sm-11">
+            <div class="col-sm-9">
               <span class="font_x_large">Project Activities</span> &nbsp;
               <button
                 mat-raised-button
@@ -147,7 +157,7 @@
                 Add Activity
               </button>
             </div>
-            <div class="col-sm-1">
+            <div class="col-sm-3">
                 <!-- <mat-icon
                   class="icon_cursor display_inline_block"
                   ia-hidden="false"
@@ -159,6 +169,11 @@
                 >
                   vertical_align_bottom
                 </mat-icon> -->
+                <button mat-stroked-button color="accent" (click)="onExportPdf()">
+                  <mat-icon aria-hidden="false" aria-label="Example home icon">
+                    vertical_align_bottom </mat-icon
+                  >Export Pdf
+                </button>
               </div>
               <!-- <div class="col-sm-1">
               <button mat-raised-button color="primary" class="pull-right">

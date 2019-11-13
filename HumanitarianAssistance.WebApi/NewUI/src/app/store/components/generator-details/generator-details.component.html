@@ -1,86 +1,319 @@
 <lib-sub-header-template>
   <span class="action_header">
-    <a class="back_arrow" routerLink="/store/vehicle/tracker">
+    <a class="back_arrow" routerLink="/store/generator/tracker">
       <i class="fas fa-arrow-left"></i>
     </a>
     Generator Details
-    <hum-button [type]="'add'" [text]="'ADD Hours'" (click)="openMilageModal()"></hum-button>
-    <hum-button [type]="'text'" [text]="'Edit detials'" (click)="goToDetails()"></hum-button>
+    <hum-button [type]="'add'" [text]="'ADD Hours'" (click)="openHoursModal($event)"></hum-button>
+    <hum-button [type]="'text'" [text]="'Edit details'" (click)="goToDetails()"></hum-button>
   </span>
   <div class="action_section">
   </div>
 </lib-sub-header-template>
 <mat-divider></mat-divider>
-<mat-tab-group>
-    <mat-tab label="DETAILS">
-      <ng-template matTabContent>
-        <ng-container *ngTemplateOutlet="generatorDetails"></ng-container>
-      </ng-template>
-    </mat-tab>
-    <mat-tab label="MONTHLY BREAKDOWN"> Content 2 </mat-tab>
-    <mat-tab label="LOGS">
-      <ng-template matTabContent>
-        <app-logs></app-logs>
-      </ng-template>
-    </mat-tab>
-  </mat-tab-group>
+<mat-tab-group [ngStyle]="scrollStyles" (selectedTabChange)="onTabClick($event)">
+  <mat-tab label="DETAILS">
+    <ng-template matTabContent>
+      <ng-container *ngTemplateOutlet="generatorDetails"></ng-container>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="MONTHLY BREAKDOWN">
+    <div style="padding-left: 50px;">
+      <div class="row">
+        <div class="col-md-2">
+          <!-- <lib-hum-dropdown [options]="monthlyBreakdownYearList$" [formControl]="monthlyBreakdownYear"
+                (change)="getMonthlyBreakdownYear($event)" [placeHolder]="'Year'">
+              </lib-hum-dropdown> -->
+          <div class="padding_top_10">
+            <mat-form-field>
+              <mat-label>Year</mat-label>
+              <mat-select [(ngModel)]="monthlyBreakdownYear" (selectionChange)='getGeneratorMonthlyBreakdownData()'>
+                <mat-option *ngFor="let item of monthlyBreakdownYearList$ | async" [value]="item.value">
+                  {{item.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <mat-card>
+            <p>Starting Usage:</p>
+            <h4>{{generatorMonthlyBreakdownList.StartingUsage}}</h4>
+          </mat-card>
+        </div>
+        <div class="col-md-2">
+          <mat-card>
+            <p>Incurred Usage:</p>
+            <h4>{{generatorMonthlyBreakdownList.IncurredUsage}}</h4>
+          </mat-card>
+        </div>
+        <div class="col-md-2">
+          <mat-card title="Standard Fuel Consumption Rate">
+            <p>SFC Rate:</p>
+            <h4>{{generatorMonthlyBreakdownList.StandardFuelConsumptionRate}}</h4>
+          </mat-card>
+        </div>
+        <div class="col-md-2">
+          <mat-card title="Standard Mobil Oil Consumption Rate">
+            <p>SMOC Rate:</p>
+            <h4>{{generatorMonthlyBreakdownList.StandardMobilOilConsumptionRate}}</h4>
+          </mat-card>
+        </div>
+        <div class="col-md-2">
+          <mat-card>
+            <p>Starting Cost:</p>
+            <h4>{{generatorMonthlyBreakdownList.StartingCost}}</h4>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+
+    <mat-card style="margin-top: 5px;">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-12">
+            <table class="table table-striped">
+              <thead>
+                <th>
+                  <h5>Generator Usage Analysis</h5>
+                </th>
+                <th>
+                  <h5>Jan</h5>
+                </th>
+                <th>
+                  <h5>Feb</h5>
+                </th>
+                <th>
+                  <h5>Mar</h5>
+                </th>
+                <th>
+                  <h5>Apr</h5>
+                </th>
+                <th>
+                  <h5>May</h5>
+                </th>
+                <th>
+                  <h5>Jun</h5>
+                </th>
+                <th>
+                  <h5>Jul</h5>
+                </th>
+                <th>
+                  <h5>Aug</h5>
+                </th>
+                <th>
+                  <h5>Sept</h5>
+                </th>
+                <th>
+                  <h5>Oct</h5>
+                </th>
+                <th>
+                  <h5>Nov</h5>
+                </th>
+                <th>
+                  <h5>Dec</h5>
+                </th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of generatorMonthlyBreakdownList.UsageAnalysisBreakDownList">
+                  <td>{{item.Header}}</td>
+                  <td>{{item.January==0 ? '-' : item.January}}</td>
+                  <td>{{item.February==0 ? '-': item.February}}</td>
+                  <td>{{item.March==0 ? '-': item.March}}</td>
+                  <td>{{item.April==0? '-': item.April}}</td>
+                  <td>{{item.May==0? '-': item.May}}</td>
+                  <td>{{item.June==0? '-': item.June}}</td>
+                  <td>{{item.July==0? '-': item.July}}</td>
+                  <td>{{item.August==0? '-': item.August}}</td>
+                  <td>{{item.September==0? '-': item.September}}</td>
+                  <td>{{item.October==0? '-': item.October}}</td>
+                  <td>{{item.November==0? '-': item.November}}</td>
+                  <td>{{item.December==0? '-': item.December}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table table-striped">
+              <thead>
+                <th>
+                  <h5>Vehicle Cost Analysis</h5>
+                </th>
+                <th>
+                  <h5>Jan</h5>
+                </th>
+                <th>
+                  <h5>Feb</h5>
+                </th>
+                <th>
+                  <h5>Mar</h5>
+                </th>
+                <th>
+                  <h5>Apr</h5>
+                </th>
+                <th>
+                  <h5>May</h5>
+                </th>
+                <th>
+                  <h5>Jun</h5>
+                </th>
+                <th>
+                  <h5>Jul</h5>
+                </th>
+                <th>
+                  <h5>Aug</h5>
+                </th>
+                <th>
+                  <h5>Sept</h5>
+                </th>
+                <th>
+                  <h5>Oct</h5>
+                </th>
+                <th>
+                  <h5>Nov</h5>
+                </th>
+                <th>
+                  <h5>Dec</h5>
+                </th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of generatorMonthlyBreakdownList.CostAnalysisBreakDownList">
+                  <td>{{item.Header}}</td>
+                  <td>{{item.January==0 ? '-' : item.January}}</td>
+                  <td>{{item.February==0 ? '-': item.February}}</td>
+                  <td>{{item.March==0 ? '-': item.March}}</td>
+                  <td>{{item.April==0? '-': item.April}}</td>
+                  <td>{{item.May==0? '-': item.May}}</td>
+                  <td>{{item.June==0? '-': item.June}}</td>
+                  <td>{{item.July==0? '-': item.July}}</td>
+                  <td>{{item.August==0? '-': item.August}}</td>
+                  <td>{{item.September==0? '-': item.September}}</td>
+                  <td>{{item.October==0? '-': item.October}}</td>
+                  <td>{{item.November==0? '-': item.November}}</td>
+                  <td>{{item.December==0? '-': item.December}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+  </mat-tab>
+  <mat-tab label="LOGS">
+    <ng-template matTabContent>
+      <app-logs></app-logs>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
 <!-- Generator Details template-->
 <ng-template #generatorDetails>
   <mat-card>
     <div class="row">
       <div class="col-md-12">
         <div class="col-md-6">
-          <h5>Vehicle Usage Analysis</h5>
+          <h5>Generator Usage Analysis</h5>
           <table class="table table-striped">
             <tbody>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>Incurred Usage(Hours)</td>
+                <td>{{generatorDetailForm.IncurredUsage}}</td>
               </tr>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>Starting Usage(Hours)</td>
+                <td>{{generatorDetailForm.StartingUsage}}</td>
               </tr>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>Current Usage(Hours)</td>
+                <td>{{generatorDetailForm.CurrentUsage}}</td>
+              </tr>
+              <tr>
+                <td>Total Fuel Usage(Liter)</td>
+                <td>{{generatorDetailForm.TotalFuelUsage}}</td>
+              </tr>
+              <tr>
+                <td>Total Mobil Oil Usage(Liter)</td>
+                <td>{{generatorDetailForm.TotalMobilOilUsage}}</td>
+              </tr>
+              <tr>
+                <td>Standard Fuel Consumption Rate(Liter Per Hour)</td>
+                <td>{{generatorDetailForm.StandardFuelConsumptionRate}}</td>
+              </tr>
+              <tr>
+                <td>Actual Fuel Consumption Rate(Liter Per Hour)</td>
+                <td>{{generatorDetailForm.ActualFuelConsumptionRate}}</td>
+              </tr>
+              <tr>
+                <td>Standard Mobil Oil Consumption Rate(Liter Per Hour)</td>
+                <td>{{generatorDetailForm.StandardMobilOilConsumptionRate}}</td>
+              </tr>
+              <tr>
+                <td>Actual Mobil Oil Consumption Rate(Liter Per Hour)</td>
+                <td>{{generatorDetailForm.ActualMobilOilConsumptionRate}}</td>
               </tr>
             </tbody>
           </table>
-          <h5>Vehicle Usage Analysis</h5>
+          <h5>Generator Cost Analysis</h5>
           <table class="table table-striped">
             <tbody>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>Total Fuel Cost</td>
+                <td>{{generatorDetailForm.FuelTotalCost}}</td>
               </tr>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>Mobil Oil Total Cost</td>
+                <td>{{generatorDetailForm.MobilOilTotalCost}}</td>
               </tr>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>Spare Parts Total Cost</td>
+                <td>{{generatorDetailForm.SparePartsTotalCost}}</td>
+              </tr>
+              <tr>
+                <td>Services & Maintenance Total Cost</td>
+                <td>{{generatorDetailForm.ServicesAndMaintenanceTotalCost}}</td>
+              </tr>
+              <tr>
+                <td>Generator Starting Cost</td>
+                <td>{{generatorDetailForm.GeneratorStartingCost}}</td>
+              </tr>
+              <tr>
+                <td>Total Cost</td>
+                <td>{{generatorDetailForm.FuelTotalCost+
+                    generatorDetailForm.MobilOilTotalCost+
+                    generatorDetailForm.SparePartsTotalCost+
+                    generatorDetailForm.ServicesAndMaintenanceTotalCost+
+                    generatorDetailForm.GeneratorStartingCost
+                }}</td>
               </tr>
             </tbody>
           </table>
 
         </div>
         <div class="col-md-6">
-          <h5>Vehicle Usage Analysis</h5>
+          <h5>Generator Details</h5>
           <table class="table table-striped">
             <tbody>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>KV</td>
+                <td>{{generatorDetailForm.Voltage}}</td>
               </tr>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>Employee Name</td>
+                <td>{{generatorDetailForm.PurchasedBy}}</td>
               </tr>
               <tr>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>Model Year</td>
+                <td>{{generatorDetailForm.ModelYear}}</td>
+              </tr>
+              <tr>
+                <td>Location</td>
+                <td>{{generatorDetailForm.OfficeName}}</td>
+              </tr>
+              <tr>
+                <td>Purchase Id</td>
+                <td><a *ngIf="generatorDetailForm && generatorDetailForm.PurchaseId != null"
+                    [routerLink]="['/store/purchase/edit', generatorDetailForm?.PurchaseId]">{{generatorDetailForm.PurchaseName}}</a>
+                </td>
               </tr>
             </tbody>
           </table>

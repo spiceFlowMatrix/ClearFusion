@@ -5,6 +5,7 @@ using HumanitarianAssistance.Application.Accounting.Queries;
 using HumanitarianAssistance.Application.HR.Queries;
 using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Application.Project.Queries;
+using HumanitarianAssistance.Application.Store.Queries;
 using HumanitarianAssistance.Common.Enums;
 using Microsoft.AspNetCore.Mvc;
 
@@ -102,12 +103,44 @@ namespace HumanitarianAssistance.WebApi.Controllers
             return File(file, "application/pdf", "TrialBalanceReportJournal.pdf");
         }
 
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetJournalBudgetLineSummaryPdf([FromBody] GetJournalBudgetLineSummaryPdfQuery model) 
+        {
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "BudgetLineSummaryJournal.pdf");
+        }
+
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetJournalLedgerReportPdf([FromBody] GetJournalLedgerReportPdfQuery model) 
+        {
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "LedgerReportJournal.pdf");
+        }
+
          [HttpPost]
         [Produces(contentType: "application/pdf")]
         public async Task<IActionResult> GetCriteriaEvaluationReportPdf([FromBody] GetCriteriaEvaluationDetailReportPdfQuery model)
         {
             var file = await _mediator.Send(model);
-            return File(file, "application/pdf", "ProjectOtherDetailReport.pdf");
+            return File(file, "application/pdf", "CriteriaEvaluationDetailReport.pdf");
+        }
+
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetStorePurchasePdf([FromBody] GetStorePurchasePdfQuery model)
+        {
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "StorePurchaseReport.pdf");
+        }
+
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetJournalReportPdf([FromBody] GetJournalReportPdfQuery model) 
+        {
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "JournalReport.pdf");
         }
     }
 }

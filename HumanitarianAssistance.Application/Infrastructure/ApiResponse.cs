@@ -203,6 +203,7 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public IList<ProjectHiringCandidateDetailModel> ProjectHiringCandidateDetailModel { get; set; }
         public List<EmployeeDetailListModel> EmployeeDetailListData { get; set; }
         public IList<ProjectHiringRequestModel> ProjectHiringRequestModel { get; set; }
+        public ProjectHiringRequestModel ProjectHiringRequestDetails { get; set; }
         public List<OpportunityControlViewModel> OpportunityControlList { get; set; }
         public List<LogisticsControlViewModel> LogisticsControlList { get; set; }
         public List<ActivitiesControlViewModel> ActivitiesControlList { get; set; }
@@ -228,9 +229,19 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public List<SPProjectProposalReportModel> ProjectProposalReportList { get; set; }
         public List<ProjectProposalModelList> ProjectProposalModelList { get; set; }
         public ProjectProposalModelList ProjectProposalDocumentModel { get; set; }
+        public List<LogisticsRequestsModel> logisticRequestList { get; set; }
+        public List<LogisticItemModel> LogisticsItemList { get; set; }
+        public LogisticItemModel logisticItem { get; set; }
+        public LogisticsRequestsModel logisticRequest { get; set; }
+        public long logisticRequestId { get; set; }
+        public List<JobHiringDetailModel> JobDetailList { get; set; }
+        public List<OfficeDetailListModel> OfficeList { get; set; }
+        public List<ProfessionListModel> ProfessionDetailList { get; set; }  
+      public ProjectHiringRequestDetailModel ProjectHiringRequestAllDetail { get; set; }  
+        public int? FilledVacancies { get; set; } 
 
 
-        //Web Link Url 05082019
+        //Web Link Url 05082019   
         public string SignedUrl { get; set; }
         public WinProjectDetails WinProjectDetails { get; set; }
         public ApproveProjectDetails ApproveProjectDetails { get; set; }

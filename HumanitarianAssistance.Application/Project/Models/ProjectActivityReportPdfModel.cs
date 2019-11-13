@@ -6,27 +6,35 @@ namespace HumanitarianAssistance.Application.Project.Models
 {
     public class ProjectActivityReportPdfModel
     {
+        public ProjectActivityReportPdfModel()
+        {
+            ActiivtyListModel = new List<ActiivtyListModel>();
+        }
         public string ProjectCode { get; set; }
         public string ProjectName { get; set; }
         public string ProjectGoal { get; set; }
-        public string MainActivity { get; set; }
-        public List<MonitoringReviewModel> MonitoringReviewModel { get; set; }
-        public DateTime? ProjectStartDate { get; set; }
-        public DateTime? ProjectEndDate { get; set; }
+        public double ProjectDuration { get; set; }
+        public string ProjectStartDate { get; set; }
+        public string ProjectEndDate { get; set; }
         public string Country { get; set; }
-        public string Province { get; set; }
-        public string District { get; set; } 
-        public DateTime? ActualStartDate { get; set; }
-        public DateTime? ActualEndDate { get; set; }
+        public List<string> Province { get; set; }
+        public List<string> District { get; set; }
+        public List<ActiivtyListModel> ActiivtyListModel { get; set; }
+        public string LogoPath { get; set; }
     }
-    public class MonitoringReviewModel
+
+    public class ActiivtyListModel
     {
-        public string IndicatorName { get; set; }
-        public List<string> ActivityQuestions { get; set; }
-        public string Ratings { get; set; }
-        public string StrongPoint { get; set; }
-        public string WeakPoints { get; set; }
-        public string Recommendations { get; set; }
+        public ActiivtyListModel()
+        {
+            ProjectMonitoringViewModel = new List<ProjectMonitoringViewModel>();
+        }
+        public long ActivityCode { get; set; }
+        public string MainActivity { get; set; }
+        public double ActivityDuration { get; set; }
+        public string ActualStartDate { get; set; }
+        public string ActualEndDate { get; set; }
+        public List<ProjectMonitoringViewModel> ProjectMonitoringViewModel { get; set; }
 
     }
 }

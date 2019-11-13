@@ -1,0 +1,133 @@
+<lib-sub-header-template [headerClass]="'sub_header_template_main1'">
+  <span class="action_header"
+    >Job Details
+    <hum-button
+
+      *ngIf="!isAddJobFormSubmitted"
+
+      (click)="addJobFormSubmit()"
+      [type]="'save'"
+      [text]="'save'"
+    >
+    </hum-button>
+    <hum-button
+      *ngIf="isAddJobFormSubmitted"
+      [type]="'loading'"
+      [text]="'Saving....'"
+    ></hum-button>
+    <hum-button
+      [routerLink]="['../hiring-request']"
+      [type]="'cancel'"
+      [text]="'cancel'"
+    ></hum-button>
+  </span>
+  <div class="action_section">
+    <hum-button
+      [type]="'text'"
+      [text]="'All Jobs'"
+      [routerLink]="['job-detail']"
+    ></hum-button>
+    <!-- <hum-button [type]="'down'" [text]="'jobs'"></hum-button> -->
+  </div>
+</lib-sub-header-template>
+<mat-divider></mat-divider>
+
+<mat-card>
+  <div class="container">
+    <form [formGroup]="addJobForm">
+      <div class="row">
+        <div class="col-md-6">
+          <mat-form-field class="example-full-width">
+            <textarea
+              matInput
+              formControlName="description"
+              placeholder="Description"
+            ></textarea>
+            <mat-error
+              *ngIf="addJobForm.controls['description'].hasError('required')"
+              >*Required</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="col-md-6">
+            <lib-hum-dropdown
+              formControlName="office"
+              [validation]="addJobForm.controls['office'].hasError('required')"
+              [options]="officeList$"
+              [placeHolder]="'Office'"
+            ></lib-hum-dropdown>
+          </div>
+          <div class="col-md-6">
+            <lib-hum-dropdown
+              formControlName="position"
+              [validation]="
+                addJobForm.controls['position'].hasError('required')
+              "
+              [options]="ProfessionList$"
+              [placeHolder]="'Position'"
+            ></lib-hum-dropdown>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="col-md-6">
+            <lib-hum-dropdown
+              formControlName="jobGrade"
+              [validation]="
+                addJobForm.controls['jobGrade'].hasError('required')
+              "
+              [options]="gradeList$"
+              [placeHolder]="'Job Grade'"
+            ></lib-hum-dropdown>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="example-full-width">
+              <input
+                matInput type="number" min="0"
+                formControlName="totalVacancies"
+                placeholder="Total Vacancies"
+              />
+              <mat-error
+                *ngIf="
+                  addJobForm.controls['totalVacancies'].hasError('required')
+                "
+                >Required</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="col-md-6">
+            <lib-hum-dropdown
+              formControlName="payCurrency"
+              [validation]="
+                addJobForm.controls['payCurrency'].hasError('required')
+              "
+              [options]="payCurrencyList$"
+              [placeHolder]="'Pay Currency'"
+            ></lib-hum-dropdown>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="example-full-width">
+              <input
+                matInput type="number" min="0"
+                formControlName="payRate"
+                placeholder="Pay Hourly Rate"
+              />
+              <mat-error
+                *ngIf="addJobForm.controls['payRate'].hasError('required')"
+                >Required</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</mat-card>
