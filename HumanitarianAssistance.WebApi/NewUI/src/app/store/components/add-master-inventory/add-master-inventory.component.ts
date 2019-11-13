@@ -62,8 +62,8 @@ export class AddMasterInventoryComponent implements OnInit {
       )
     });
   }
-  cancel() {
-    this.dialogRef.close();
+  cancel(res) {
+    this.dialogRef.close(res);
   }
   submit() {
     if (this.masterForm.valid) {
@@ -80,7 +80,7 @@ export class AddMasterInventoryComponent implements OnInit {
         this.configService.EditMasterInventory(this.masterInventory).subscribe(() => {
           this.isSaving = false;
           this.toastr.success('Inventory Updated');
-          this.cancel()
+          this.cancel(1)
         }
         )
 
@@ -88,7 +88,7 @@ export class AddMasterInventoryComponent implements OnInit {
         this.configService.AddMasterInventory(this.masterInventory).subscribe(() => {
           this.isSaving = false;
           this.toastr.success('Inventory added');
-          this.cancel()
+          this.cancel(1)
         }
         )
 

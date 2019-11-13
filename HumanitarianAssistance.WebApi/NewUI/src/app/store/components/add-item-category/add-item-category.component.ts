@@ -46,14 +46,14 @@ export class AddItemCategoryComponent implements OnInit {
         this.configService.EditItemGroup(this.masterInventoryCategory).subscribe(() => {
           this.isSaving = false;
           this.toastr.success("Group updated successfully");
-          this.dialogRef.close();
+          this.dialogRef.close(1);
         })
 
       } else {
         this.configService.AddItemGroup(this.masterInventoryCategory).subscribe(() => {
           this.isSaving = false;
           this.toastr.success("Group added successfully");
-          this.dialogRef.close();
+          this.dialogRef.close(1);
         })
       }
 
