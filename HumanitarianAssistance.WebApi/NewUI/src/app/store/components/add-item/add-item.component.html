@@ -17,8 +17,8 @@
     <div *ngIf="data.isGenerator!=null">
       <mat-card-subtitle *ngIf="data.isGenerator"><b>This Item Configuration is for a Generator Item Category.</b></mat-card-subtitle>
       <mat-card-subtitle *ngIf="data.isGenerator">Please select the Generator Item Type for this Item.</mat-card-subtitle>
-      <mat-card-subtitle *ngIf="!data.isGenerator"><b>This Item Configuration is for a Generator Item Category.</b></mat-card-subtitle>
-      <mat-card-subtitle *ngIf="!data.isGenerator">Please select the Generator Item Type for this Item.</mat-card-subtitle>
+      <mat-card-subtitle *ngIf="!data.isGenerator"><b>This Item Configuration is for a Vehicle Item Category.</b></mat-card-subtitle>
+      <mat-card-subtitle *ngIf="!data.isGenerator">Please select the Vehicle Item Type for this Item.</mat-card-subtitle>
       <lib-hum-dropdown [validation]="masterForm.controls['itemtypecategory'].hasError('required')"
         [options]="itemsTypes$" formControlName="itemtypecategory" [placeHolder]="'Item Type'">
       </lib-hum-dropdown>
