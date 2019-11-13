@@ -5,7 +5,8 @@ import {
   HiringRequestDetailList,
   ICandidateDetailModel,
   IFilterModel,
-  ICandidateDetailList
+  ICandidateDetailList,
+  ISubCandidateList
 } from '../models/hiring-requests-models';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
@@ -15,6 +16,7 @@ import { takeUntil } from 'rxjs/operators';
 import { AddHiringRequestComponent } from '../add-hiring-request/add-hiring-request.component';
 import { MatDialog } from '@angular/material';
 import { AddNewCandidateComponent } from '../add-new-candidate/add-new-candidate.component';
+import { TableActionsModel } from 'projects/library/src/public_api';
 
 @Component({
   selector: 'app-request-detail',
@@ -34,9 +36,9 @@ export class RequestDetailComponent implements OnInit {
     'Phone Number',
     'Profession',
     'Email Address',
+    'Total Experience',
     'Relevant Experience',
-    'Irrelevant Experience',
-    'Total Experience'
+    'Irrelevant Experience'
   ]);
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   newCandidatesList$: Observable<[ICandidateDetailList]>;
@@ -84,7 +86,6 @@ export class RequestDetailComponent implements OnInit {
     this.routeActive.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
-
     this.getHiringRequestDetailsByHiringRequestId();
     this.GetAllCandidateList(this.filterValueModel);
     this.getScreenSize();
@@ -167,8 +168,7 @@ export class RequestDetailComponent implements OnInit {
       // do something
       this.GetAllCandidateList(this.filterValueModel);
     });
-    dialogRef.afterClosed().subscribe(result => {
-    });
+    dialogRef.afterClosed().subscribe(result => {});
   }
   //#endregion
 
@@ -180,25 +180,29 @@ export class RequestDetailComponent implements OnInit {
           this.newCandidatesList$ = of(
             response.data.map(element => {
               return {
-               // CandidateId: element.CandidateId,
+                // CandidateId: element.CandidateId,
                 FirstName: element.FirstName,
                 LastName: element.LastName,
-                Email: element.Email,
+                Gender: element.Gender,
                 Interview: '<a>Interview Id</a>',
-                // PhoneNumber: element.PhoneNumber,
                 AccountStatus: element.AccountStatus,
-                // Gender: element.Gender,
-                // DateOfBirth: element.DateOfBirth,
-                // EducationDegree: element.EducationDegree,
-                // Grade: element.Grade,
-                // Profession: element.Profession,
-                // Office: element.Office,
-                // Country: element.Country,
-                // Province: element.Province,
-                // District: element.District,
-                // TotalExperienceInYear: element.TotalExperienceInYear,
-                // RelevantExperienceInYear: element.RelevantExperienceInYear,
-                // IrrelevantExperienceInYear: element.IrrelevantExperienceInYear
+                subItems: [
+                  {
+                    EducationDegree: element.EducationDegree,
+                    PhoneNumber: element.PhoneNumber,
+                    Profession: element.Profession,
+                    Email: element.Email,
+                    TotalExperienceInYear: element.TotalExperienceInYear,
+                    RelevantExperienceInYear: element.RelevantExperienceInYear,
+                    IrrelevantExperienceInYear: element.IrrelevantExperienceInYear
+                    // DateOfBirth: element.DateOfBirth,
+                    // Grade: element.Grade,
+                    // Office: element.Office,
+                    // Country: element.Country,
+                    // Province: element.Province,
+                    // District: element.District
+                  }
+                ] as ISubCandidateList[]
               } as ICandidateDetailList;
             })
           );
