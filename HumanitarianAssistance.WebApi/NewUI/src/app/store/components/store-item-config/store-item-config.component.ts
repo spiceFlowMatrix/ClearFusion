@@ -70,8 +70,6 @@ export class StoreItemConfigComponent implements OnInit {
         return res;
       })
       this.dataSource.data = this.inventories;
-
-      console.log(this.dataSource.data);
     })
   }
   // master inventory region
@@ -89,7 +87,8 @@ export class StoreItemConfigComponent implements OnInit {
       data: this.masterInventory
     })
     dg.afterClosed().subscribe(res => {
-      this.getAllInventories();
+      if (res == 1)
+        this.getAllInventories();
     })
   }
 
@@ -107,12 +106,19 @@ export class StoreItemConfigComponent implements OnInit {
           data: this.masterInventoryGroup
         })
         dg.afterClosed().subscribe(res => {
-          this.getAllInventories();
+          if (res == 1)
+            this.getAllInventories();
         })
         break;
       case 1:
 
         this.configService.getItemCode(inventoryId, this.assetType).subscribe(res => {
+          this.masterInventoryItem.ItemTypeCategory = Number(this.inventories.find(x => x.Id == invId).children.find(x => x.Id == inventoryId).ItemTypeCategory);
+          if (this.masterInventoryItem.ItemTypeCategory) {
+            this.masterInventoryItem.isGenerator = this.masterInventoryItem.ItemTypeCategory == 2 ? true : false;
+          } else {
+            this.masterInventoryItem.isGenerator = null
+          }
           this.masterInventoryItem.ItemGroupId = new Number(inventoryId);
           this.masterInventoryItem.ItemCode = res.data.InventoryItemCode;
           this.masterInventoryItem.ItemInventory = new Number(invId);
@@ -122,7 +128,8 @@ export class StoreItemConfigComponent implements OnInit {
             data: this.masterInventoryItem
           })
           dgItem.afterClosed().subscribe(res => {
-            this.getAllInventories();
+            if (res == 1)
+              this.getAllInventories();
           })
         })
 
@@ -149,11 +156,15 @@ export class StoreItemConfigComponent implements OnInit {
           data: this.masterInventory
         });
         dg.afterClosed().subscribe(res => {
-          this.getAllInventories();
+          if (res == 1)
+            this.getAllInventories();
         });
         break;
       case 1:
+
         const itemgroup = this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level2ID);
+
+
         const isTransportCategory = this.inventories.find(x => x.Id == level1ID).IsTransportCategory;
         this.masterInventoryGroup.Description = itemgroup.Description;
         this.masterInventoryGroup.InventoryId = itemgroup.InventoryId;
@@ -167,7 +178,8 @@ export class StoreItemConfigComponent implements OnInit {
           data: this.masterInventoryGroup
         })
         dgGroup.afterClosed().subscribe(res => {
-          this.getAllInventories();
+          if (res == 1)
+            this.getAllInventories();
         })
         break;
       case 2:
@@ -193,9 +205,9 @@ export class StoreItemConfigComponent implements OnInit {
           data: this.masterInventoryItem
         })
         dgItem.afterClosed().subscribe(res => {
-          if(res == 'cancel'){}
-          else{this.getAllInventories();}
-          
+          if (res == 1)
+            this.getAllInventories();
+
         })
         break;
 
