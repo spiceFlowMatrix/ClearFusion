@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191112064347_updateColumnOfCandidateDetailsTbl")]
+    partial class updateColumnOfCandidateDetailsTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5597,8 +5599,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<DateTime>("DateOfBirth");
-
                     b.Property<long>("DistrictID");
 
                     b.Property<long>("EducationDegreeId");
@@ -5608,8 +5608,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<string>("FirstName");
 
                     b.Property<int>("GenderId");
-
-                    b.Property<int>("GradeId");
 
                     b.Property<double>("IrrelevantExperienceInYear");
 
@@ -5625,11 +5623,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<int>("OfficeId");
-
                     b.Property<string>("PhoneNumber");
-
-                    b.Property<int>("ProfessionId");
 
                     b.Property<int>("ProvinceId");
 
@@ -5644,12 +5638,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("DistrictID");
 
                     b.HasIndex("EducationDegreeId");
-
-                    b.HasIndex("GradeId");
-
-                    b.HasIndex("OfficeId");
-
-                    b.HasIndex("ProfessionId");
 
                     b.HasIndex("ProvinceId");
 
@@ -9811,21 +9799,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.EducationDegreeDetail", "EducationDegreeDetails")
                         .WithMany()
                         .HasForeignKey("EducationDegreeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.JobGrade", "JobGrade")
-                        .WithMany()
-                        .HasForeignKey("GradeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.OfficeDetail", "OfficeDetail")
-                        .WithMany()
-                        .HasForeignKey("OfficeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.ProfessionDetails", "ProfessionDetails")
-                        .WithMany()
-                        .HasForeignKey("ProfessionId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.ProvinceDetails", "ProvinceDetail")

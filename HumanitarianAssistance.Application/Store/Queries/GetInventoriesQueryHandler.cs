@@ -63,7 +63,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                 Description = s.Description,
                                 ItemType = s.ItemType,
                                 ItemGroupId = (long)s.ItemGroupId,
-                                ItemTypeCategory = y.ItemTypeCategory
+                                ItemTypeCategory = s.ItemTypeCategory
                             }).ToList()
                         }).ToList()
 

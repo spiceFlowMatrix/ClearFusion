@@ -47,14 +47,16 @@ PhoneNumber?: string;
 AccountStatus?: number;
 Gender?: number;
 DateOfBirth?: Date;
+EducationDegree?: number;
 Grade?: number;
 Profession?: number;
 Office?: number;
 Country?: number;
 Province?: number;
 District?: number;
-ExperienceInMonth?: number;
-ExperienceInYear?: number;
+TotalExperienceInYear?: number;
+RelevantExperienceInYear?: number;
+IrrelevantExperienceInYear?: number;
 }
 
 export interface IHiringRequestModel {
@@ -88,3 +90,25 @@ export interface CompleteHiringRequestModel {
   HiringRequestId: number[];
   ProjectId: number;
 }
+
+export interface ICandidateDetailList {
+  CandidateId?: number;
+  FirstName?: string;
+  LastName?: string;
+  Email?: string;
+  PhoneNumber?: string;
+  AccountStatus?: string;
+  Gender?: string;
+  DateOfBirth?: Date;
+  EducationDegree?: string;
+  Grade?: string;
+  Profession?: string;
+  Office?: string;
+  Country?: string;
+  Province?: string;
+  District?: string;
+  TotalExperienceInYear?: string;
+  RelevantExperienceInYear?: string;
+  IrrelevantExperienceInYear?: string;
+  Interview?: string;
+  }

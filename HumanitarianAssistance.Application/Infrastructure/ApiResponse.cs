@@ -237,7 +237,9 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public List<JobHiringDetailModel> JobDetailList { get; set; }
         public List<OfficeDetailListModel> OfficeList { get; set; }
         public List<ProfessionListModel> ProfessionDetailList { get; set; }  
+         public List<EducationDegreeModel> EducationDegreeList { get; set; } 
       public ProjectHiringRequestDetailModel ProjectHiringRequestAllDetail { get; set; }  
+      public List<CandidateDetailsModel> CandidateList{ get; set; } 
         public int? FilledVacancies { get; set; } 
 
 
