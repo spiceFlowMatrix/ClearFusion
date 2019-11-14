@@ -36,18 +36,14 @@ export class AddItemComponent implements OnInit {
       case 1:
         const ids1 = [6, 3, 4]
         this.itemsTypes$ = of(this.items.filter(x => ids1.includes(x.value)));
-        console.log(this.itemsTypes$);
-        
         break;
       case 2:
-        const ids2 = [5]
+        const ids2 = [5, 1, 2]
         this.itemsTypes$ = of(this.items.filter(x => ids2.includes(x.value)));
-        console.log(this.itemsTypes$);
         break;
       case 3:
         const ids3 = [1, 2]
         this.itemsTypes$ = of(this.items.filter(x => ids3.includes(x.value)));
-        console.log(this.itemsTypes$);
         break;
       default:
         break;
@@ -56,7 +52,7 @@ export class AddItemComponent implements OnInit {
     if (this.data.ItemId) {
       this.masterForm.controls.name.setValue(this.data.ItemName);
       this.masterForm.controls.description.setValue(this.data.Description);
-      this.masterForm.controls.itemtypecategory.setValue(this.data.ItemTypeCategory?this.data.ItemTypeCategory.toString():null);
+      this.masterForm.controls.itemtypecategory.setValue(this.data.ItemTypeCategory ? this.data.ItemTypeCategory : null);
 
     }
   }
@@ -64,7 +60,7 @@ export class AddItemComponent implements OnInit {
     this.masterForm = this.fb.group({
       name: ['', Validators.required],
       description: [''],
-      itemtypecategory: ['', Validators.required]
+      itemtypecategory: ['']
     })
   }
   submit() {
@@ -77,21 +73,20 @@ export class AddItemComponent implements OnInit {
       this.inventoryItem.ItemType = null;
       this.inventoryItem.ItemInventory = this.data.ItemInventory;
       this.inventoryItem.ItemTypeCategory = this.masterForm.controls.itemtypecategory.value;
-      
+
 
       if (this.data.ItemId) {
         this.inventoryItem.ItemId = this.data.ItemId;
         this.configService.EditItem(this.inventoryItem).subscribe(() => {
           this.isSaving = false;
           this.toastr.success('Item updated successfully');
-          this.dialogRef.close();
+          this.dialogRef.close(1);
         })
       } else {
-        console.log(this.inventoryItem);
         this.configService.AddItem(this.inventoryItem).subscribe(() => {
           this.isSaving = false;
           this.toastr.success('Item added successfully');
-          this.dialogRef.close();
+          this.dialogRef.close(1);
         })
       }
 

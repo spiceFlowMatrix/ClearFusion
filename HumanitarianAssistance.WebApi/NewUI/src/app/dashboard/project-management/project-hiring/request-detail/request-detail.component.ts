@@ -295,7 +295,10 @@ export class RequestDetailComponent implements OnInit {
   //#region "onExportPdf"
   onExportPdf() {
     this.loader.showLoader();
-    const data: any = {};
+    const data: any = {
+      HiringRequestId : this.hiringRequestId,
+      ProjectId: this.projectId
+    };
     this.globalSharedService
       .getFile(
         this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetCandidateDetailReportPdf,

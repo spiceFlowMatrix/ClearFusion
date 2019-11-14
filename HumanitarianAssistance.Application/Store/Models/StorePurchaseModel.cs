@@ -44,6 +44,8 @@ namespace HumanitarianAssistance.Application.Store.Models
         public int? TimezoneOffset { get; set; }
         public string PurchaseName { get; set; }
         public long? TransportItemId { get; set; }
+        public int? TransportItemTypeCategory { get; set; }
+        public int? ItemGroupTransportCategory { get; set; }
         public List<PurchasedVehicleModel> PurchasedVehicleList { get; set; }
         public List<PurchasedGeneratorModel> PurchasedGeneratorList { get; set; }
         public List<StoreDocumentModel> StoreDocumentList {get; set;}

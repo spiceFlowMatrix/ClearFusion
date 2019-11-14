@@ -604,3 +604,13 @@ export enum CandidateAction {
   'Interview' = 1,
   'Select' = 2,
 }
+
+export enum TransportItemCategory
+{
+    Vehicle= 1,
+    Generator= 2,
+    MobilOil= 3,
+    MaintenanceService= 4,
+    SpareParts= 5,
+    Fuel= 6
+}

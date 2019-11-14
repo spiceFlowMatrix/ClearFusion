@@ -94,7 +94,8 @@ export class MasterInventoryItemModel {
     ItemType?: any;
     ItemGroupId?: any;
     ItemInventory?: any;
-    AssetType?:number;
+    AssetType?: number;
     ItemTypeCategory?: number;
+    isGenerator?: boolean;
     // Voucher: any;
 }
