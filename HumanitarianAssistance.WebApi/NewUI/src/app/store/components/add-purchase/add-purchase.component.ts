@@ -529,7 +529,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
                     console.log('uploadSuccess', y);
                     if (i === filteredRecords.length - 1) {
                       this.isAddPurchaseFormSubmitted = false;
-                      this.toastr.success(x.Message);
+                      this.toastr.success('Success');
                       this.router.navigate(['store/purchases']);
                     }
                   });
@@ -537,6 +537,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
             } else {
               this.addPurchaseForm.reset();
               this.isAddPurchaseFormSubmitted = false;
+              this.toastr.success('Success');
               this.router.navigate(['store/purchases']);
             }
 
