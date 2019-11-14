@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
-namespace HumanitarianAssistance.Domain.Entities.Project {
+namespace HumanitarianAssistance.Domain.Entities.Project
+{
     public class CandidateDetails : BaseEntity {
         [Key]
         [DatabaseGenerated (DatabaseGeneratedOption.Identity)]
@@ -31,8 +30,6 @@ namespace HumanitarianAssistance.Domain.Entities.Project {
         public double TotalExperienceInYear { get; set; }
         public double RelevantExperienceInYear { get; set; }
         public double IrrelevantExperienceInYear { get; set; }
-        public int CandidateStatus { get; set; }
-        public long InterviewId { get; set; }
 
         [ForeignKey ("EducationDegreeId")]
         public long EducationDegreeId { get; set; }
@@ -50,5 +47,14 @@ namespace HumanitarianAssistance.Domain.Entities.Project {
         [ForeignKey ("ProfessionId")]
         public int ProfessionId { get; set; }
         public ProfessionDetails ProfessionDetails { get; set; }
+
+        [ForeignKey ("ProjectId")]
+        public long? ProjectId { get; set; }
+        public ProjectDetail ProjectDetail { get; set; }
+
+        [ForeignKey ("HiringRequestId")]
+        public long HiringRequestId { get; set; }
+        public ProjectHiringRequestDetail ProjectHiringRequestDetail { get; set; }
+
     }
 }
