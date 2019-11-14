@@ -8,6 +8,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
 {
     public class GetCandidateDetailReportPdfQuery  : BaseModel, IRequest<byte[]>
     {    
-         
+         public long HiringRequestId { get; set; }
+         public long ProjectId { get; set; }
     }
 }

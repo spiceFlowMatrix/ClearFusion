@@ -72,7 +72,17 @@
           [subTitle]="'Other Details'" [actions]="actions" (actionClick)="actionEvents($event)"
           ></hum-table>
         </mat-tab>
-        <mat-tab label="Existing Candidates"> Content 2 </mat-tab>
+        <mat-tab label="Existing Candidates">
+          <h5>Candidates
+             <!-- <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewCandidate()"></hum-button> -->
+             <lib-hum-dropdown
+             [options]="existingEmployeesList$"
+             [placeHolder]="'Select Existing Employee'"
+           ></lib-hum-dropdown>
+            </h5>
+            <hum-table [headers]="existingCandidatesHeaders$" [isDefaultAction]="false" [items]="newCandidatesList$"
+            ></hum-table>
+          </mat-tab>
       </mat-tab-group>
     </div>
   </div>

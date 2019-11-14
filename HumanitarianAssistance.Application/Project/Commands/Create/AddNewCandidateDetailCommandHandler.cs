@@ -22,8 +22,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
             ApiResponse response = new ApiResponse ();
             try {
                 CandidateDetails candidateDetail = new CandidateDetails () {
-                    ProjectId = request.ProjectId,
-                    HiringRequestId = request.HiringRequestId,
                     FirstName = request.FirstName,
                     LastName = request.LastName,
                     Email = request.Email,
@@ -49,6 +47,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                 await _dbContext.SaveChangesAsync ();
                 if (candidateDetail.CandidateId != 0) {
                     HiringRequestCandidateStatus obj = new HiringRequestCandidateStatus () {
+                    ProjectId = request.ProjectId,
+                    HiringRequestId = request.HiringRequestId,
                     CandidateId = candidateDetail.CandidateId,
                     CandidateStatus = 0,
                     InterviewId = 0,

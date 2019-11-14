@@ -20,6 +20,7 @@ import { CandidateStatus, CandidateAction } from 'src/app/shared/enum';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
+import { IDropDownModel } from 'src/app/store/models/purchase';
 
 @Component({
   selector: 'app-request-detail',
@@ -45,7 +46,17 @@ export class RequestDetailComponent implements OnInit {
     'Relevant Experience',
     'Irrelevant Experience'
   ]);
+  existingCandidatesHeaders$ = of([
+    'Employee Code',
+    'First Name',
+    'Last Name',
+    'Gender',
+    'Interview',
+    'Employee Status',
+    'firstText'
+  ]);
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  existingEmployeesList$: Observable<IDropDownModel[]>;
   newCandidatesList$: Observable<[ICandidateDetailList]>;
   hiringRequestDetails: HiringRequestDetailList;
   filterValueModel: ICandidateFilterModel;
@@ -71,6 +82,10 @@ export class RequestDetailComponent implements OnInit {
       ProjectId: this.projectId,
       HiringRequestId: this.hiringRequestId
     };
+    this.existingEmployeesList$ = of([
+      { name: 'First', value: 1 },
+      { name: 'Second', value: 2 }
+    ] as IDropDownModel[]);
   }
 
   ngOnInit() {
