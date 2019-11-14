@@ -184,10 +184,8 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                         }
 
                         //Update purchased vehicle Item
-                        if (request.InventoryItem == (int)TransportItem.VehicleFuel ||
-                        request.InventoryItem == (int)TransportItem.VehicleMaintenanceService ||
-                        request.InventoryItem == (int)TransportItem.VehicleMobilOil ||
-                        request.InventoryItem == (int)TransportItem.VehicleSpareParts)
+                        if ((request.ItemGroupTransportCategory == (int)TransportItemCategory.Vehicle) &&
+                            (request.ItemTransportCategory != (int)TransportItemCategory.Vehicle))
                         {
 
                             purchase.VehicleItemDetail.ModifiedById = request.ModifiedById;
@@ -196,7 +194,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                             await _dbContext.SaveChangesAsync();
 
                             //get EventType
-                            eventType = GetEventTypeName(request.InventoryItem);
+                            eventType = GetEventTypeName(request.ItemGroupTransportCategory, request.ItemTransportCategory);
                         }
 
                         //Update purchased generator Item
@@ -212,7 +210,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                             await _dbContext.SaveChangesAsync();
 
                             //get EventType
-                            eventType = GetEventTypeName(request.InventoryItem);
+                            eventType = GetEventTypeName(request.ItemGroupTransportCategory, request.ItemTransportCategory);
                         }
 
                         //log details
@@ -247,37 +245,57 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
             return success;
         }
 
-        private string GetEventTypeName(long inventoryItem)
+        private string GetEventTypeName(int? itemGroupTransportCategory, int? itemTransportCategory)
         {
             string eventTypeName = "";
 
-            switch (inventoryItem)
+            if (itemGroupTransportCategory == (int)TransportItemCategory.Vehicle)
             {
-                case (int)TransportItem.VehicleFuel:
-                    eventTypeName = TransportItem.VehicleFuel.ToString();
-                    break;
-                case (int)TransportItem.VehicleMaintenanceService:
-                    eventTypeName = TransportItem.VehicleMaintenanceService.ToString();
-                    break;
-                case (int)TransportItem.VehicleMobilOil:
-                    eventTypeName = TransportItem.VehicleMobilOil.ToString();
-                    break;
-                case (int)TransportItem.VehicleSpareParts:
-                    eventTypeName = TransportItem.VehicleSpareParts.ToString();
-                    break;
-                case (int)TransportItem.GeneratorFuel:
-                    eventTypeName = TransportItem.GeneratorFuel.ToString();
-                    break;
-                case (int)TransportItem.GeneratorMaintenanceService:
-                    eventTypeName = TransportItem.GeneratorMaintenanceService.ToString();
-                    break;
-                case (int)TransportItem.GeneratorMobilOil:
-                    eventTypeName = TransportItem.GeneratorMobilOil.ToString();
-                    break;
-                case (int)TransportItem.GeneratorSpareParts:
-                    eventTypeName = TransportItem.GeneratorSpareParts.ToString();
-                    break;
+                if (itemTransportCategory == (int)TransportItemCategory.Vehicle)
+                {
+                    eventTypeName = TransportItemCategory.Vehicle.ToString();
+                }
+                else if (itemTransportCategory == (int)TransportItemCategory.Fuel)
+                {
+                    eventTypeName = TransportItemCategory.Vehicle.ToString() + " " + TransportItemCategory.Fuel.ToString();
+                }
+                else if (itemTransportCategory == (int)TransportItemCategory.MaintenanceService)
+                {
+                    eventTypeName = TransportItemCategory.Vehicle.ToString() + " " + TransportItemCategory.MaintenanceService.ToString();
+                }
+                else if (itemTransportCategory == (int)TransportItemCategory.MobilOil)
+                {
+                    eventTypeName = TransportItemCategory.Vehicle.ToString() + " " + TransportItemCategory.MobilOil.ToString();
+                }
+                else if (itemTransportCategory == (int)TransportItemCategory.SpareParts)
+                {
+                    eventTypeName = TransportItemCategory.Vehicle.ToString() + " " + TransportItemCategory.SpareParts.ToString();
+                }
             }
+            else if (itemGroupTransportCategory == (int)TransportItemCategory.Generator)
+            {
+                if (itemTransportCategory == (int)TransportItemCategory.Generator)
+                {
+                    eventTypeName = TransportItemCategory.Generator.ToString();
+                }
+                else if (itemTransportCategory == (int)TransportItemCategory.Fuel)
+                {
+                    eventTypeName = TransportItemCategory.Generator.ToString() + " " + TransportItemCategory.Fuel.ToString();
+                }
+                else if (itemTransportCategory == (int)TransportItemCategory.MaintenanceService)
+                {
+                    eventTypeName = TransportItemCategory.Generator.ToString() + " " + TransportItemCategory.MaintenanceService.ToString();
+                }
+                else if (itemTransportCategory == (int)TransportItemCategory.MobilOil)
+                {
+                    eventTypeName = TransportItemCategory.Generator.ToString() + " " + TransportItemCategory.MobilOil.ToString();
+                }
+                else if (itemTransportCategory == (int)TransportItemCategory.SpareParts)
+                {
+                    eventTypeName = TransportItemCategory.Generator.ToString() + " " + TransportItemCategory.SpareParts.ToString();
+                }
+            }
+
             return eventTypeName;
         }
     }

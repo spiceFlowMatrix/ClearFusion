@@ -23,12 +23,14 @@ export class AddItemCategoryComponent implements OnInit {
     if (this.data.ItemGroupId) {
       this.masterForm.controls.name.setValue(this.data.ItemGroupName);
       this.masterForm.controls.description.setValue(this.data.Description);
+      this.masterForm.controls.inventorytype.setValue(this.data.ItemTypeCategory?this.data.ItemTypeCategory.toString():null);
     }
   }
   createForm() {
     this.masterForm = this.fb.group({
       name: ['', Validators.required],
-      description: ['']
+      description: [''],
+      inventorytype:['1']
     })
   }
   submit() {
@@ -38,19 +40,20 @@ export class AddItemCategoryComponent implements OnInit {
       this.masterInventoryCategory.InventoryId = this.data.InventoryId;
       this.masterInventoryCategory.ItemGroupCode = this.data.ItemGroupCode;
       this.masterInventoryCategory.ItemGroupName = this.masterForm.controls.name.value;
+      this.masterInventoryCategory.ItemTypeCategory = Number(this.masterForm.controls.inventorytype.value);
       if (this.data.ItemGroupId) {
         this.masterInventoryCategory.ItemGroupId = this.data.ItemGroupId;
         this.configService.EditItemGroup(this.masterInventoryCategory).subscribe(() => {
           this.isSaving = false;
           this.toastr.success("Group updated successfully");
-          this.dialogRef.close();
+          this.dialogRef.close(1);
         })
 
       } else {
         this.configService.AddItemGroup(this.masterInventoryCategory).subscribe(() => {
           this.isSaving = false;
           this.toastr.success("Group added successfully");
-          this.dialogRef.close();
+          this.dialogRef.close(1);
         })
       }
 

@@ -42,7 +42,9 @@ namespace HumanitarianAssistance.Application.Store.Queries
                         Description = v.InventoryDescription,
                         InventoryCreditAccount = v.InventoryCreditAccount,
                         InventoryDebitAccount = v.InventoryDebitAccount,
+                        IsTransportCategory = v.IsTransportCategory,
                         AssetType = v.AssetType,
+                       
                         children = v.StoreItemGroups.Where(y => y.IsDeleted == false).Select(y => new StoreItemGroupModelNew
                         {
                             Description = y.Description,
@@ -50,6 +52,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             Code = y.ItemGroupCode,
                             Id = y.ItemGroupId,
                             Name = y.ItemGroupName,
+                            ItemTypeCategory = y.ItemTypeCategory,
+                           
                             children = y.InventoryItems.Where(m => m.IsDeleted == false).Select(s => new StoreInventoryItemModelNew
                             {
                                 Id = s.ItemId,
@@ -58,7 +62,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                 Code = s.ItemCode,
                                 Description = s.Description,
                                 ItemType = s.ItemType,
-                                ItemGroupId = (long)s.ItemGroupId
+                                ItemGroupId = (long)s.ItemGroupId,
+                                ItemTypeCategory = s.ItemTypeCategory
                             }).ToList()
                         }).ToList()
 

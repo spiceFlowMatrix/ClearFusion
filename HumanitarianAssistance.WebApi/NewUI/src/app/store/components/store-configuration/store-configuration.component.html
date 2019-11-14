@@ -5,9 +5,9 @@
   </div>
 </lib-sub-header-template>
 <mat-divider></mat-divider>
-<mat-tab-group [ngStyle]="scrollStyles">
+<mat-tab-group >
   <mat-tab label="GENERAL">
-    <ng-template matTabContent>
+    <ng-template matTabContent >
       <ng-container *ngTemplateOutlet="general"></ng-container>
     </ng-template>
   </mat-tab>
@@ -29,7 +29,7 @@
 </mat-tab-group>
 
 <ng-template #general>
-  <mat-card>
+  <mat-card humAddScroll>
     <mat-accordion>
       <mat-expansion-panel>
         <mat-expansion-panel-header>

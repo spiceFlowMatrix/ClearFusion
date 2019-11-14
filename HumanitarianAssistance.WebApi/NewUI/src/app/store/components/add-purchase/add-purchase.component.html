@@ -65,22 +65,20 @@
     <!-- Transport Details-->
     <div class="row">
 
-      <div *ngIf="addPurchaseForm.controls['ItemId'].value == StoreItems.ExpendableVehicle ||
-                  addPurchaseForm.controls['ItemId'].value == StoreItems.NonExpendableVehicle ||
-                  addPurchaseForm.controls['ItemId'].value == StoreItems.ExpendableGenerator ||
-                  addPurchaseForm.controls['ItemId'].value == StoreItems.NonExpendableGenerator">
+      <div *ngIf="(ItemGroupTransportCategory == ItemTransportCategoryEnum.Vehicle && ItemTransportCategory ==ItemTransportCategoryEnum.Vehicle) ||
+      (ItemGroupTransportCategory == ItemTransportCategoryEnum.Generator && ItemTransportCategory ==ItemTransportCategoryEnum.Generator)">
         <div class="col-md-10">
           <strong>Note:</strong>The item you have selected is <strong>{{selectedItemName}}</strong>. Therefore, the
           following <strong>transport related metadata</strong> must be filled out.
         </div>
-        <div class="col-md-2">
+        <div class="col-md-2" *ngIf="addPurchaseForm.get('PurchaseId').value == null">
           <div class="items-float-right">
             <hum-button (click)='addTransportItemButtonClicked(addPurchaseForm.controls["ItemId"].value)'
               [type]="'add'" [text]="'Add'"></hum-button>
           </div>
         </div>
-      </div>
-      <div class="row" *ngIf="addPurchaseForm.controls['ItemId'].value === StoreItems.ExpendableVehicle || addPurchaseForm.controls['ItemId'].value === StoreItems.NonExpendableVehicle">
+
+      <div class="row" *ngIf="ItemTransportCategory ==ItemTransportCategoryEnum.Vehicle">
         <div class="col-md-12">
           <mat-accordion>
             <mat-expansion-panel formArrayName="TransportVehicles"
@@ -89,7 +87,7 @@
                 <mat-panel-title>
                   <h4>New Vehicle Detail Form - {{item.get('PlateNo').value}}</h4>
                 </mat-panel-title>
-                <hum-button (click)='deleteVehicle(i)' [type]="'remove'" [text]="'Remove'"></hum-button>
+                <hum-button (click)='deleteVehicle(i)' [type]="'remove'" [text]="'Remove'" *ngIf="addPurchaseForm.get('PurchaseId').value == null && addPurchaseForm.controls['TransportVehicles'].length > 1"></hum-button>
               </mat-expansion-panel-header>
               <app-vehicle-detail [formGroupName]="i" [officeId]='addPurchaseForm.controls["OfficeId"].value'
                 [vehicleDetailForm]='item'></app-vehicle-detail>
@@ -98,7 +96,7 @@
         </div>
       </div>
 
-      <div class="row" *ngIf="addPurchaseForm.controls['ItemId'].value === StoreItems.ExpendableGenerator || addPurchaseForm.controls['ItemId'].value === StoreItems.NonExpendableGenerator">
+      <div class="row" *ngIf="ItemTransportCategory ==ItemTransportCategoryEnum.Generator">
         <div class="col-md-12">
           <mat-accordion>
             <mat-expansion-panel formArrayName="TransportGenerators"
@@ -107,7 +105,7 @@
                 <mat-panel-title>
                   <h4>New Generator Detail Form - {{item.get('Voltage').value}}</h4>
                 </mat-panel-title>
-                <hum-button (click)='deleteGenerator(i)' [type]="'remove'" [text]="'Remove'"></hum-button>
+                <hum-button (click)='deleteGenerator(i)' [type]="'remove'" [text]="'Remove'" *ngIf="addPurchaseForm.get('PurchaseId').value == null && addPurchaseForm.controls['TransportGenerators'].length > 1"></hum-button>
               </mat-expansion-panel-header>
               <app-generator-detail [formGroupName]="i" [officeId]='addPurchaseForm.controls["OfficeId"].value'
                 [generatorDetailForm]='item'></app-generator-detail>
@@ -115,15 +113,9 @@
           </mat-accordion>
         </div>
       </div>
+    </div>
 
-      <div *ngIf="addPurchaseForm.controls['ItemId'].value === StoreItems.VehicleFuel ||
-                  addPurchaseForm.controls['ItemId'].value === StoreItems.GeneratorFuel ||
-                  addPurchaseForm.controls['ItemId'].value === StoreItems.VehicleMobilOil ||
-                  addPurchaseForm.controls['ItemId'].value === StoreItems.GeneratorMobilOil ||
-                  addPurchaseForm.controls['ItemId'].value === StoreItems.VehicleMaintenanceService ||
-                  addPurchaseForm.controls['ItemId'].value === StoreItems.GeneratorMaintenanceService ||
-                  addPurchaseForm.controls['ItemId'].value === StoreItems.VehicleSpareParts ||
-                  addPurchaseForm.controls['ItemId'].value === StoreItems.GeneratorSpareParts" class="paddingleft">
+      <div *ngIf="enablePurchaseItem()" class="paddingleft">
       <div class="row">
         <div class="col-md-12">
           <strong>Note:</strong>The item you have selected is <strong>{{selectedItemName}}</strong>. Therefore, the

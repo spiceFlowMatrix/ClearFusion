@@ -73,13 +73,12 @@ export class StoreConfigurationComponent implements OnInit {
   }
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
-    console.log(window.innerHeight)
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
 
     this.scrollStyles = {
       'overflow-y': 'auto',
-      height: this.screenHeight - 110 + 'px',
+      height: this.screenHeight - 80 + 'px',
       'overflow-x': 'hidden'
     };
   }
@@ -100,7 +99,7 @@ export class StoreConfigurationComponent implements OnInit {
       if (this.unitType.UnitTypeId) {
         this.unitType.UnitTypeName = this.typeName.value;
         this.configservice.editUnit(this.unitType).subscribe(res => {
-          this.configservice.getAllSourceCodeTypes().subscribe(res1 => {
+          this.configservice.getUnitType().subscribe(res1 => {
             this.getAllUnitTypes(res1);
           })
           this.unitType = {};
@@ -109,7 +108,7 @@ export class StoreConfigurationComponent implements OnInit {
       } else {
         this.unitType.UnitTypeName = this.typeName.value;
         this.configservice.saveUnit(this.unitType).subscribe(res => {
-          this.configservice.getAllSourceCodeTypes().subscribe(res1 => {
+          this.configservice.getUnitType().subscribe(res1 => {
             this.getAllUnitTypes(res1);
           })
           this.dialog.closeAll();
@@ -124,7 +123,7 @@ export class StoreConfigurationComponent implements OnInit {
         if (res) {
           this.unitType = data.item;
           this.configservice.deleteUnit(this.unitType).subscribe(res => {
-            this.configservice.getAllSourceCodeTypes().subscribe(res1 => {
+            this.configservice.getUnitType().subscribe(res1 => {
               this.getAllUnitTypes(res1);
             })
           })

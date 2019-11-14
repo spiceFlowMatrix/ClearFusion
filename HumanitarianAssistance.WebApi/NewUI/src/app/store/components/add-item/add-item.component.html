@@ -1,22 +1,34 @@
 <form [formGroup]="masterForm" (ngSubmit)="submit()">
-    <mat-card-title>
-        Add New Item Configuration
-    </mat-card-title>
-    <mat-card-subtitle>
-    </mat-card-subtitle>
-    <mat-card-content>
-      <mat-card-subtitle>What is the name of the Item?</mat-card-subtitle>
-      <mat-form-field class="full-width">
-        <input matInput placeholder="Item Name" formControlName="name">
-      </mat-form-field>
-      <mat-card-subtitle>Please describe the Item</mat-card-subtitle>
-      <mat-form-field class="full-width">
-        <textarea formControlName="description" [mat-autosize]="true" [cdkAutosizeMinRows]="3" matInput placeholder="Description"></textarea>
-      </mat-form-field>
-    </mat-card-content>
-    <mat-card-actions>
-      <hum-button *ngIf="!isSaving" [disabled]="masterForm.invalid" [isSubmit]="true" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
-      <hum-button *ngIf="isSaving" [type]="'loading'" [text]="'Saving....'"></hum-button>
-      <hum-button (click)='cancel()' [type]="'cancel'" [text]="'cancel'"></hum-button>
-    </mat-card-actions>
-  </form>
+  <mat-card-title>
+    Add New Item Configuration
+  </mat-card-title>
+  <mat-card-subtitle>
+  </mat-card-subtitle>
+  <mat-card-content>
+    <mat-card-subtitle>What is the name of the Item?</mat-card-subtitle>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Item Name" formControlName="name">
+    </mat-form-field>
+    <mat-card-subtitle>Please describe the Item</mat-card-subtitle>
+    <mat-form-field class="full-width">
+      <textarea formControlName="description" [mat-autosize]="true" [cdkAutosizeMinRows]="3" matInput
+        placeholder="Description"></textarea>
+    </mat-form-field>
+    {{data.isGenerator}}
+    <div *ngIf="data.isGenerator!=null">
+      <mat-card-subtitle *ngIf="data.isGenerator"><b>This Item Configuration is for a Generator Item Category.</b></mat-card-subtitle>
+      <mat-card-subtitle *ngIf="data.isGenerator">Please select the Generator Item Type for this Item.</mat-card-subtitle>
+      <mat-card-subtitle *ngIf="!data.isGenerator"><b>This Item Configuration is for a Vehicle Item Category.</b></mat-card-subtitle>
+      <mat-card-subtitle *ngIf="!data.isGenerator">Please select the Vehicle Item Type for this Item.</mat-card-subtitle>
+      <lib-hum-dropdown [validation]="masterForm.controls['itemtypecategory'].hasError('required')"
+        [options]="itemsTypes$" formControlName="itemtypecategory" [placeHolder]="'Item Type'">
+      </lib-hum-dropdown>
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <hum-button *ngIf="!isSaving" [disabled]="masterForm.invalid" [isSubmit]="true" [type]="'save'" [text]="'save'"
+      [isSubmit]="true"></hum-button>
+    <hum-button *ngIf="isSaving" [type]="'loading'" [text]="'Saving....'"></hum-button>
+    <hum-button (click)='cancel()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+  </mat-card-actions>
+</form>

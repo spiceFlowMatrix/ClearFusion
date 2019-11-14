@@ -253,6 +253,7 @@ export class GLOBAL {
   public static API_Project_GetProjectBudgetLineDetail = 'Project/GetProjectBudgetLineDetail';
   public static API_Project_GetProjectJobDetail = 'Project/GetProjectJobDetail';
   public static API_Code_GetAllProfession = 'Code/GetAllProfession';
+  public static API_Code_GetAllEducationDegree = 'Code/GetAllEducationDegree';
 
   //#region criteria evaluation form
 
@@ -420,6 +421,10 @@ export class GLOBAL {
   public static API_HiringRequest_GetRemainingVacancyByJobId = 'HiringRequest/GetRemainingVacancyByJobId';
   public static API_HiringRequest_GetAllProjectHiringRequestDetailByHiringRequestId =
     'HiringRequest/GetAllProjectHiringRequestDetailByHiringRequestId';
+    public static API_HiringRequest_AddNewCandidateDetail =
+    'HiringRequest/AddNewCandidateDetail';
+    public static API_HiringRequest_GetAllCandidateList =
+    'HiringRequest/GetAllCandidateList';
 
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
   public static API_HiringRequest_AddHiringRequestDetail = 'HiringRequest/AddHiringRequestDetail';
@@ -495,6 +500,7 @@ export class GLOBAL {
   public static API_StorePurchase_GetStorePurchaseById = 'StorePurchase/GetStorePurchaseById';
   public static API_StorePurchase_GetTransportItemDataSource = 'StorePurchase/GetTransportItemDataSource';
   public static API_StorePurchase_EditStorePurchase = 'StorePurchase/EditStorePurchase';
+  public static API_StorePurchase_GetTransportItemCategoryType = 'StorePurchase/GetTransportItemCategoryType';
 
   public static API_Store_AddPurchaseUnitType = 'Store/AddPurchaseUnitType';
   public static API_Store_EditPurchaseUnitType = 'Store/EditPurchaseUnitType';

@@ -30,6 +30,12 @@ export class AddMasterInventoryComponent implements OnInit {
       this.masterForm.controls.name.setValue(this.data.InventoryName);
       this.masterForm.controls.description.setValue(this.data.InventoryDescription);
       this.masterForm.controls.accountId.setValue(this.data.InventoryDebitAccount);
+      if(this.data.IsTransportCategory == true){
+        this.masterForm.controls.istransport.setValue("0");
+      }else{
+        this.masterForm.controls.istransport.setValue("1");
+      }
+     
     } else {
 
     }
@@ -40,7 +46,8 @@ export class AddMasterInventoryComponent implements OnInit {
     this.masterForm = this.fb.group({
       name: ['', Validators.required],
       description: [''],
-      accountId: ['', Validators.required]
+      accountId: ['', Validators.required],
+      istransport: [false]
     })
   }
   getAccountCodes() {
@@ -55,8 +62,8 @@ export class AddMasterInventoryComponent implements OnInit {
       )
     });
   }
-  cancel() {
-    this.dialogRef.close();
+  cancel(res) {
+    this.dialogRef.close(res);
   }
   submit() {
     if (this.masterForm.valid) {
@@ -67,12 +74,13 @@ export class AddMasterInventoryComponent implements OnInit {
       this.masterInventory.InventoryDescription = this.masterForm.value.description;
       this.masterInventory.InventoryDebitAccount = this.masterForm.value.accountId;
       this.masterInventory.InventoryCreditAccount = null;
+      this.masterInventory.IsTransportCategory = (this.masterForm.value.istransport = "0") ? true : false;
       if (this.data.InventoryId) {
         this.masterInventory.InventoryId = this.data.InventoryId;
         this.configService.EditMasterInventory(this.masterInventory).subscribe(() => {
           this.isSaving = false;
           this.toastr.success('Inventory Updated');
-          this.cancel()
+          this.cancel(1)
         }
         )
 
@@ -80,7 +88,7 @@ export class AddMasterInventoryComponent implements OnInit {
         this.configService.AddMasterInventory(this.masterInventory).subscribe(() => {
           this.isSaving = false;
           this.toastr.success('Inventory added');
-          this.cancel()
+          this.cancel(1)
         }
         )
 

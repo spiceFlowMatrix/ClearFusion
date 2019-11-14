@@ -53,18 +53,18 @@ export class HiringRequestsComponent implements OnInit {
   dataSource: any;
   // **
 
-  hiringListHeaders$ = of([
-    'Hiring Request Id',
-    'Job Code',
-    'Job Grade',
-    'Position',
-    'Total Vacancies',
-    'Filled Vacancies',
-    'Pay Currency',
-    'Pay Rate',
-    'Status'
-  ]);
-  hiringList$: Observable<HiringList[]>;
+  // hiringListHeaders$ = of([
+  //   'Hiring Request Id',
+  //   'Job Code',
+  //   'Job Grade',
+  //   'Position',
+  //   'Total Vacancies',
+  //   'Filled Vacancies',
+  //   'Pay Currency',
+  //   'Pay Rate',
+  //   'Status'
+  // ]);
+  // hiringList$: Observable<HiringList[]>;
 
   selection = new SelectionModel<HiringList>(true, []);
   /** Whether the number of selected elements matches the total number of rows. */
@@ -193,8 +193,8 @@ export class HiringRequestsComponent implements OnInit {
 
   requestDetail(e) {
     // console.log(e.HiringRequestId);
-    //this.route.navigate([e.HiringRequestId], { relativeTo: this.routeActive });
-     //this.router.navigate(['../hiring-request/' + e.HiringRequestId]);
+    // this.route.navigate([e.HiringRequestId], { relativeTo: this.routeActive });
+    // this.router.navigate(['../hiring-request/' + e.HiringRequestId]);
   }
 
   // 07-09-2019
@@ -238,7 +238,7 @@ export class HiringRequestsComponent implements OnInit {
         this.completeRequestModel.HiringRequestId.push(element.HiringRequestId);
       });
       this.hiringRequestService
-        .IsCompltedeHrDEtail(this.completeRequestModel)
+        .IsCompltedeHrDetail(this.completeRequestModel)
         .subscribe(
           (responseData: IResponseData) => {
             if (responseData.statusCode === 200 ) {
@@ -266,7 +266,7 @@ export class HiringRequestsComponent implements OnInit {
         this.completeRequestModel.HiringRequestId.push(element.HiringRequestId);
       });
       this.hiringRequestService
-        .IsCloasedHrDEtail(this.completeRequestModel)
+        .IsCloasedHrDetail(this.completeRequestModel)
         .subscribe((responseData: IResponseData) => {
           if (responseData.statusCode === 200) {
             this.getAllHiringRequestFilterList(this.filterModel);

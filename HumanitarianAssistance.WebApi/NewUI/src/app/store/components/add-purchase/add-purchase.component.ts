@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { takeUntil } from 'rxjs/operators';
-import { StoreMasterCategory, StoreItemGroups, FileSourceEntityTypes, StoreItem, TransportItemType } from 'src/app/shared/enum';
+import { StoreMasterCategory, StoreItemGroups, FileSourceEntityTypes, StoreItem, TransportItemCategory } from 'src/app/shared/enum';
 import { VehicleDetailComponent } from '../vehicle-detail/vehicle-detail.component';
 import { AddDocumentComponent } from '../document-upload/add-document.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -46,6 +46,9 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
+  ItemGroupTransportCategory: any;
+  ItemTransportCategory: any;
+
 
   exchangeRateMessage = '';
   isAddPurchaseFormSubmitted = false;
@@ -62,6 +65,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   MasterCategory = StoreMasterCategory;
   ItemGroups = StoreItemGroups;
   StoreItems = StoreItem;
+  ItemTransportCategoryEnum = TransportItemCategory;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   @ViewChild(VehicleDetailComponent) vehicleDetailChild: VehicleDetailComponent;
@@ -314,65 +318,19 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
   getItemGroupSelectedValue(event: any) {
     this.getAllStoreItemsByGroupId(event);
-
-    this.transportItemPlaceholder = (this.addPurchaseForm.get('ItemGroupId').value === this.ItemGroups.ConsumableVehicle ||
-      this.addPurchaseForm.get('ItemGroupId').value === this.ItemGroups.ExpandableVehicle ||
-      this.addPurchaseForm.get('ItemGroupId').value === this.ItemGroups.NonExpandableVehicle) ? 'Purchased Vehicle Item' :
-      'Purchased Generator Item';
   }
 
   getItemSelectedValue(event: any) {
+
+    this.getTransportItemCategoryType(event);
 
     this.storeItems$.subscribe(x => {
       const index = x.findIndex(y => y.value === event);
       this.selectedItemName = x[index].name;
     });
-
-    if (event === this.StoreItems.ExpendableVehicle || event === this.StoreItems.NonExpendableVehicle) {
-      this.removeVehicles(); // remove existing vehicle if any
-      this.addVehicles();
-
-      // Used to get transport item data source
-      this.selectedTransportItemType = TransportItemType.Vehicle;
-
-      // Remove validations on Transport Item
-      this.addPurchaseForm.get('TransportItemId').clearValidators();
-      this.addPurchaseForm.controls['TransportItemId'].updateValueAndValidity();
-    } else {
-      this.removeVehicles();
-    }
-    if (event === this.StoreItems.ExpendableGenerator || event === this.StoreItems.NonExpendableGenerator) {
-
-      this.removeGenerators(); // remove existing generator if any
-      this.addGenerators();
-
-      // Remove validations on Transport Item
-      this.addPurchaseForm.get('TransportItemId').clearValidators();
-      this.addPurchaseForm.controls['TransportItemId'].updateValueAndValidity();
-    } else {
-      this.removeGenerators();
-    }
-
-    // Set dynamic required validation for transport item selected and get TransportItem Datasource for based on condition below
-    if (event === this.StoreItems.GeneratorFuel || event === this.StoreItems.GeneratorMaintenanceService ||
-      event === this.StoreItems.GeneratorMobilOil || event === this.StoreItems.GeneratorSpareParts) {
-      this.getTransportItemDataSource(TransportItemType.Generator);
-      this.addPurchaseForm.get('TransportItemId').setValidators([Validators.required]);
-      this.addPurchaseForm.controls['TransportItemId'].updateValueAndValidity();
-    } else if (event === this.StoreItems.VehicleFuel || event === this.StoreItems.VehicleMaintenanceService ||
-      event === this.StoreItems.VehicleMobilOil || event === this.StoreItems.VehicleSpareParts) {
-      this.getTransportItemDataSource(TransportItemType.Vehicle);
-      this.addPurchaseForm.get('TransportItemId').setValidators([Validators.required]);
-      this.addPurchaseForm.controls['TransportItemId'].updateValueAndValidity();
-    }
   }
 
   getSelectedItemName(event) {
-    // this.storeItemGroups$.subscribe(x => {
-    //   const index = x.findIndex(y => y.value === event);
-    //   this.selectedItemGroupName = x[index].name;
-    // });
-
     this.storeItems$.subscribe(x => {
       const index = x.findIndex(y => y.value === event);
       this.selectedItemName = x[index].name;
@@ -384,7 +342,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   getProjectSelectedValue(event: any) {
-    debugger;
     this.getBudgetLineByProjectId(event);
   }
 
@@ -404,15 +361,15 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   getBudgetLineByProjectId(projectId: any) {
     if (projectId !== undefined) {
       this.budgetLineService.GetProjectBudgetLineList(projectId)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(x => {
-        this.budgetLine$ = of(x.data.map(y => {
-          return {
-            name: y.BudgetCode + '-' + y.BudgetName,
-            value: y.BudgetLineId
-          };
-        }));
-      });
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(x => {
+          this.budgetLine$ = of(x.data.map(y => {
+            return {
+              name: y.BudgetCode + '-' + y.BudgetName,
+              value: y.BudgetLineId
+            };
+          }));
+        });
     }
   }
 
@@ -445,11 +402,91 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       });
   }
 
+  getTransportItemCategoryType(itemId: number) {
+    this.purchaseService
+      .getTransportItemCategoryType(itemId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(x => {
+        this.ItemTransportCategory = x;
+
+        if (this.ItemTransportCategory === this.ItemTransportCategoryEnum.Vehicle) {
+          // this.removeVehicles(); // remove existing vehicle if any
+          this.addVehicles();
+
+          // Used to get transport item data source
+          this.selectedTransportItemType = this.ItemTransportCategoryEnum.Vehicle;
+
+          // Remove validations on Transport Item
+          this.addPurchaseForm.get('TransportItemId').clearValidators();
+          this.addPurchaseForm.controls['TransportItemId'].updateValueAndValidity();
+
+          // set default quantity
+          this.addPurchaseForm.controls['Quantity'].setValue(1);
+          // disable quantity
+          this.addPurchaseForm.controls['Quantity'].disable();
+        }
+        // else {
+        //   this.removeVehicles();
+        // }
+        else if (this.ItemTransportCategory === this.ItemTransportCategoryEnum.Generator) {
+
+          // this.removeGenerators(); // remove existing generator if any
+          this.addGenerators();
+
+          // Remove validations on Transport Item
+          this.addPurchaseForm.get('TransportItemId').clearValidators();
+          this.addPurchaseForm.controls['TransportItemId'].updateValueAndValidity();
+
+          // set default quantity
+          this.addPurchaseForm.controls['Quantity'].setValue(1);
+
+          // disable quantity
+          this.addPurchaseForm.controls['Quantity'].disable();
+        }
+        // else {
+        //   this.removeGenerators();
+        // }
+        else {
+          // enable quantity
+          if (this.addPurchaseForm.controls['Quantity'].disabled) {
+            this.addPurchaseForm.controls['Quantity'].enable();
+            this.addPurchaseForm.controls['Quantity'].setValue(null);
+          }
+
+          this.removeGenerators();
+          this.removeVehicles();
+        }
+
+        // Set dynamic required validation for transport item selected and get TransportItem Datasource for based on condition below
+        if ((this.ItemGroupTransportCategory === this.ItemTransportCategoryEnum.Vehicle &&
+          this.ItemTransportCategory !== this.ItemTransportCategoryEnum.Vehicle) ||
+          (this.ItemGroupTransportCategory === this.ItemTransportCategoryEnum.Generator &&
+            this.ItemTransportCategory !== this.ItemTransportCategoryEnum.Generator)) {
+          this.getTransportItemDataSource(this.ItemTransportCategory);
+          this.addPurchaseForm.get('TransportItemId').setValidators([Validators.required]);
+          this.addPurchaseForm.controls['TransportItemId'].updateValueAndValidity();
+          // enable quantity
+          this.addPurchaseForm.controls['Quantity'].enable();
+        }
+        // else if (event === this.StoreItems.VehicleFuel || event === this.StoreItems.VehicleMaintenanceService ||
+        //   event === this.StoreItems.VehicleMobilOil || event === this.StoreItems.VehicleSpareParts) {
+        //   this.getTransportItemDataSource(TransportItemType.Vehicle);
+        //   this.addPurchaseForm.get('TransportItemId').setValidators([Validators.required]);
+        //   this.addPurchaseForm.controls['TransportItemId'].updateValueAndValidity();
+        //   // enable quantity
+        //   this.addPurchaseForm.controls['Quantity'].enable();
+        // }
+      });
+  }
+
   getAllStoreItemsByGroupId(groupId: number, itemId?: any) {
     this.purchaseService
       .getItemsByItemGroupId(groupId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
+        this.ItemGroupTransportCategory = x.data.length > 0 ? x.data[0].ItemGroupTransportType : null;
+        this.transportItemPlaceholder = (this.ItemGroupTransportCategory === this.ItemTransportCategoryEnum.Vehicle) ?
+          'Purchased Vehicle Item' : 'Purchased Generator Item';
         this.storeItems$ = of(x.data.map(y => {
           return {
             name: y.ItemCode + '-' + y.ItemName,
@@ -473,14 +510,14 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   addPurchaseFormSubmit() {
     if (this.addPurchaseForm.valid) {
       this.isAddPurchaseFormSubmitted = true;
-      this.purchaseService.addPurchase(this.addPurchaseForm.value)
+      this.purchaseService.addPurchase(this.addPurchaseForm.getRawValue(), this.ItemGroupTransportCategory, this.ItemTransportCategory)
         .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
           if (x.StatusCode === 200) {
 
             const filteredRecords = this.uploadedPurchasedFiles.filter(z => z.Id === 0);
 
-            if ( filteredRecords !== undefined && filteredRecords.length > 0) {
+            if (filteredRecords !== undefined && filteredRecords.length > 0) {
 
               for (let i = 0; i < filteredRecords.length; i++) {
 
@@ -492,7 +529,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
                     console.log('uploadSuccess', y);
                     if (i === filteredRecords.length - 1) {
                       this.isAddPurchaseFormSubmitted = false;
-                      this.toastr.success(x.Message);
+                      this.toastr.success('Success');
                       this.router.navigate(['store/purchases']);
                     }
                   });
@@ -500,6 +537,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
             } else {
               this.addPurchaseForm.reset();
               this.isAddPurchaseFormSubmitted = false;
+              this.toastr.success('Success');
               this.router.navigate(['store/purchases']);
             }
 
@@ -522,7 +560,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     const purchaseId = this.addPurchaseForm.value.PurchaseId;
     if (this.addPurchaseForm.valid) {
       this.isAddPurchaseFormSubmitted = true;
-      this.purchaseService.EditStorePurchase(this.addPurchaseForm.value)
+      this.purchaseService.EditStorePurchase(this.addPurchaseForm.getRawValue())
         .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
           if (x) {
@@ -615,9 +653,13 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   addTransportItemButtonClicked(transportItemType: number) {
-    if (transportItemType === this.StoreItems.ExpendableVehicle || transportItemType === this.StoreItems.NonExpendableVehicle) {
+    if (this.ItemTransportCategory === this.ItemTransportCategoryEnum.Vehicle) {
+      // set default quantity
+      this.addPurchaseForm.controls['Quantity'].setValue(this.addPurchaseForm.get('Quantity').value + 1);
       this.addVehicles();
-    } else if (transportItemType === this.StoreItems.ExpendableGenerator || transportItemType === this.StoreItems.NonExpendableGenerator) {
+    } else if (this.ItemTransportCategory === this.ItemTransportCategoryEnum.Generator) {
+      // set default quantity
+      this.addPurchaseForm.controls['Quantity'].setValue(this.addPurchaseForm.get('Quantity').value + 1);
       this.addGenerators();
     }
   }
@@ -697,17 +739,17 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   getTransportItemDataSource(transportItemTypeId: number) {
-    const model = {
-      InventoryId: this.addPurchaseForm.get('InventoryId').value,
-      InventoryTypeId: this.addPurchaseForm.get('InventoryTypeId').value,
-      ItemGroupId: this.addPurchaseForm.get('ItemGroupId').value,
-      ItemId: this.addPurchaseForm.get('ItemId').value,
-      TransportItemTypeId: transportItemTypeId
-    };
+    // const model = {
+    //   InventoryId: this.addPurchaseForm.get('InventoryId').value,
+    //   InventoryTypeId: this.addPurchaseForm.get('InventoryTypeId').value,
+    //   ItemGroupId: this.addPurchaseForm.get('ItemGroupId').value,
+    //   ItemId: this.addPurchaseForm.get('ItemId').value,
+    //   TransportItemTypeId: transportItemTypeId
+    // };
 
-    if (model.InventoryId != null && model.InventoryTypeId != null && model.ItemGroupId != null && model.ItemId != null) {
+    if (this.ItemGroupTransportCategory) {
       this.commonLoader.showLoader();
-      this.purchaseService.getTransportItemDataSource(model).subscribe(x => {
+      this.purchaseService.getTransportItemDataSource(this.ItemGroupTransportCategory).subscribe(x => {
         this.purchaseItemDataSource$ = of(x.map(y => {
           return {
             value: y.ItemId,
@@ -722,7 +764,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       });
     }
   }
-
 
   getLoggedInUserUsername() {
     this.purchaseService.GetLoggedInUserUsername().subscribe(x => {
@@ -785,17 +826,23 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
           PurchaseId: x.PurchaseId
         });
 
+        this.ItemTransportCategory = x.TransportItemTypeCategory;
+        this.ItemGroupTransportCategory = x.ItemGroupTransportCategory;
+
+        if (x.PurchasedVehicleList.length > 0 || x.PurchasedGeneratorList.length > 0) {
+          this.addPurchaseForm.controls['Quantity'].disable();
+        }
+
         this.setVehicleValue(x.PurchasedVehicleList);
         this.setGeneratorValue(x.PurchasedGeneratorList);
 
         // get TransportItem Datasource for vehicle/generator based on condition below
-        if (x.ItemId === this.StoreItems.GeneratorFuel || x.ItemId === this.StoreItems.GeneratorMaintenanceService ||
-          x.ItemId === this.StoreItems.GeneratorMobilOil || x.ItemId === this.StoreItems.GeneratorSpareParts) {
-          this.getTransportItemDataSource(TransportItemType.Generator);
-        } else if (x.ItemId === this.StoreItems.VehicleFuel || x.ItemId === this.StoreItems.VehicleMaintenanceService ||
-          x.ItemId === this.StoreItems.VehicleMobilOil || x.ItemId === this.StoreItems.VehicleSpareParts) {
-
-          this.getTransportItemDataSource(TransportItemType.Vehicle);
+        if (this.ItemGroupTransportCategory === this.ItemTransportCategoryEnum.Generator &&
+          this.ItemTransportCategory !== this.ItemTransportCategoryEnum.Generator) {
+          this.getTransportItemDataSource(this.ItemTransportCategory);
+        } else if (this.ItemGroupTransportCategory === this.ItemTransportCategoryEnum.Vehicle &&
+          this.ItemTransportCategory !== this.ItemTransportCategoryEnum.Vehicle) {
+          this.getTransportItemDataSource(this.ItemTransportCategory);
         }
 
         this.commonLoader.hideLoader();
@@ -810,14 +857,14 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     for (const x of item) {
       formArray.push(this.fb.group({
         Id: x.Id,
-        PlateNo: x.PlateNo,
-        EmployeeId: x.EmployeeId,
-        StartingMileage: x.StartingMileage,
-        IncurredMileage: x.IncurredMileage,
-        FuelConsumptionRate: x.FuelConsumptionRate,
-        MobilOilConsumptionRate: x.MobilOilConsumptionRate,
-        OfficeId: x.OfficeId,
-        ModelYear: x.ModelYear
+        PlateNo: [{ value: x.PlateNo, disabled: true }],
+        EmployeeId: [{ value: x.EmployeeId, disabled: true }],
+        StartingMileage: [{ value: x.StartingMileage, disabled: true }],
+        IncurredMileage: [{ value: x.IncurredMileage, disabled: true }],
+        FuelConsumptionRate: [{ value: x.FuelConsumptionRate, disabled: true }],
+        MobilOilConsumptionRate: [{ value: x.MobilOilConsumptionRate, disabled: true }],
+        OfficeId: [{ value: x.OfficeId, disabled: true }],
+        ModelYear: [{ value: x.ModelYear, disabled: true }]
       }));
     }
     this.addPurchaseForm.setControl('TransportVehicles', formArray);
@@ -828,21 +875,23 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     for (const x of item) {
       formArray.push(this.fb.group({
         Id: x.Id,
-        Voltage: x.Voltage,
-        StartingUsage: x.StartingUsage,
-        IncurredUsage: x.IncurredUsage,
-        FuelConsumptionRate: x.FuelConsumptionRate,
-        MobilOilConsumptionRate: x.MobilOilConsumptionRate,
-        OfficeId: x.OfficeId,
-        ModelYear: x.ModelYear
+        Voltage: [{ value: x.Voltage, disabled: true }],
+        StartingUsage: [{ value: x.StartingUsage, disabled: true }],
+        IncurredUsage: [{ value: x.IncurredUsage, disabled: true }],
+        FuelConsumptionRate: [{ value: x.FuelConsumptionRate, disabled: true }],
+        MobilOilConsumptionRate: [{ value: x.MobilOilConsumptionRate, disabled: true }],
+        OfficeId: [{ value: x.OfficeId, disabled: true }],
+        ModelYear: [{ value: x.ModelYear, disabled: true }]
       }));
     }
     this.addPurchaseForm.setControl('TransportGenerators', formArray);
   }
 
   deleteVehicle(index: number) {
-    const arrayControl = this.addPurchaseForm.get('TransportVehicles') as FormArray;
 
+    // decrease quantity
+    this.addPurchaseForm.controls['Quantity'].setValue(this.addPurchaseForm.get('Quantity').value - 1);
+    const arrayControl = this.addPurchaseForm.get('TransportVehicles') as FormArray;
     const item = arrayControl.at(index);
 
     if (item.value.Id !== 0 && item.value.Id !== undefined) {
@@ -862,8 +911,10 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   deleteGenerator(index: number) {
-    const arrayControl = this.addPurchaseForm.get('TransportGenerators') as FormArray;
 
+    // decrease quantity
+    this.addPurchaseForm.controls['Quantity'].setValue(this.addPurchaseForm.get('Quantity').value - 1);
+    const arrayControl = this.addPurchaseForm.get('TransportGenerators') as FormArray;
     const item = arrayControl.at(index);
 
     if (item.value.Id !== 0 && item.value.Id !== undefined) {
@@ -873,10 +924,9 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         } else {
           this.toastr.warning('Something went wrong');
         }
-
       }, error => {
         console.log(error);
-      })
+      });
     } else {
       (<FormArray>this.addPurchaseForm.get('TransportGenerators')).removeAt(index);
     }
@@ -909,6 +959,29 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     } else if (event.type === 'download') {
       window.open(event.item.SignedUrl, '_blank');
     }
+  }
+
+  enableVehicleGeneratorDiv(): boolean {
+    let isEnable = false;
+    if ((this.ItemGroupTransportCategory === this.ItemTransportCategoryEnum.Vehicle &&
+        this.ItemTransportCategory !== this.ItemTransportCategoryEnum.Vehicle) ||
+    (this.ItemGroupTransportCategory === this.ItemTransportCategoryEnum.Generator &&
+      this.ItemTransportCategory !== this.ItemTransportCategoryEnum.Generator) && this.ItemTransportCategory) {
+        isEnable = true;
+      }
+      return isEnable;
+  }
+
+  enablePurchaseItem() {
+    let isEnable = false;
+    if (this.ItemTransportCategory === this.ItemTransportCategoryEnum.MobilOil ||
+      this.ItemTransportCategory === this.ItemTransportCategoryEnum.Fuel ||
+      this.ItemTransportCategory === this.ItemTransportCategoryEnum.MaintenanceService ||
+      this.ItemTransportCategory === this.ItemTransportCategoryEnum.SpareParts
+      ) {
+        isEnable = true;
+      }
+      return isEnable;
   }
 
   ngOnDestroy() {

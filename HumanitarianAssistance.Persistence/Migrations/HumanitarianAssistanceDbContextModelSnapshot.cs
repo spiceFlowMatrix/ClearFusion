@@ -5591,13 +5591,19 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int>("AccountStatus");
 
+                    b.Property<int>("CandidateStatus");
+
                     b.Property<int>("CountryId");
 
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
 
+                    b.Property<DateTime>("DateOfBirth");
+
                     b.Property<long>("DistrictID");
+
+                    b.Property<long>("EducationDegreeId");
 
                     b.Property<string>("Email");
 
@@ -5605,13 +5611,13 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int>("GenderId");
 
+                    b.Property<int>("GradeId");
+
+                    b.Property<long>("InterviewId");
+
                     b.Property<double>("IrrelevantExperienceInYear");
 
                     b.Property<bool>("IsDeleted");
-
-                    b.Property<bool>("IsSelected");
-
-                    b.Property<bool>("IsShortlisted");
 
                     b.Property<string>("LastName");
 
@@ -5619,7 +5625,11 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
+                    b.Property<int>("OfficeId");
+
                     b.Property<string>("PhoneNumber");
+
+                    b.Property<int>("ProfessionId");
 
                     b.Property<int>("ProvinceId");
 
@@ -5632,6 +5642,14 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("CountryId");
 
                     b.HasIndex("DistrictID");
+
+                    b.HasIndex("EducationDegreeId");
+
+                    b.HasIndex("GradeId");
+
+                    b.HasIndex("OfficeId");
+
+                    b.HasIndex("ProfessionId");
 
                     b.HasIndex("ProvinceId");
 
@@ -6794,6 +6812,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<DateTime?>("CreatedDate");
 
                     b.Property<double>("EstimatedCost");
+
+                    b.Property<double?>("FinalCost");
 
                     b.Property<bool>("IsDeleted");
 
@@ -9788,6 +9808,26 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.DistrictDetail", "DistrictDetail")
                         .WithMany()
                         .HasForeignKey("DistrictID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.EducationDegreeDetail", "EducationDegreeDetails")
+                        .WithMany()
+                        .HasForeignKey("EducationDegreeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.JobGrade", "JobGrade")
+                        .WithMany()
+                        .HasForeignKey("GradeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.OfficeDetail", "OfficeDetail")
+                        .WithMany()
+                        .HasForeignKey("OfficeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.ProfessionDetails", "ProfessionDetails")
+                        .WithMany()
+                        .HasForeignKey("ProfessionId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.ProvinceDetails", "ProvinceDetail")
