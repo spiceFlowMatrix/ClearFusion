@@ -592,3 +592,13 @@ export enum LogisticComparativeStatus {
   'Reject Statement' = 5,
   'Approve Statement' = 6,
 }
+
+export enum TransportItemCategory
+{
+    Vehicle= 1,
+    Generator= 2,
+    MobilOil= 3,
+    MaintenanceService= 4,
+    SpareParts= 5,
+    Fuel= 6
+}

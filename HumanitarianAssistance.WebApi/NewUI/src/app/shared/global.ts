@@ -500,6 +500,7 @@ export class GLOBAL {
   public static API_StorePurchase_GetStorePurchaseById = 'StorePurchase/GetStorePurchaseById';
   public static API_StorePurchase_GetTransportItemDataSource = 'StorePurchase/GetTransportItemDataSource';
   public static API_StorePurchase_EditStorePurchase = 'StorePurchase/EditStorePurchase';
+  public static API_StorePurchase_GetTransportItemCategoryType = 'StorePurchase/GetTransportItemCategoryType';
 
   public static API_Store_AddPurchaseUnitType = 'Store/AddPurchaseUnitType';
   public static API_Store_EditPurchaseUnitType = 'Store/EditPurchaseUnitType';

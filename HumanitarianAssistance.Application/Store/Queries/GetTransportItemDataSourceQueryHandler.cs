@@ -27,7 +27,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
             try
             {
-                if (request.TransportItemTypeId == (int)TransportItemTypes.Vehicle)
+                if (request.ItemGroupTransportType == (int)TransportItemTypes.Vehicle)
                 {
                     List<PurchasedVehicleDetail> purchasedVehicles = new List<PurchasedVehicleDetail>();
                     purchasedVehicles = await _dbContext.PurchasedVehicleDetail.Where(x => x.IsDeleted == false).ToListAsync();

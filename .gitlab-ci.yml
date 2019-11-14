@@ -31,6 +31,12 @@ build-newui:
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/NewUI/dist/
+    only:
+        refs:
+            - cleanarch
+            - review
+            - master
+
 
 build-oldui:
     image: node:latest
@@ -45,6 +51,11 @@ build-oldui:
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/OldUI/dist/
+    only:
+        refs:
+            - cleanarch
+            - review
+            - master
 
 build-backend:
     image: microsoft/dotnet:latest
@@ -57,6 +68,11 @@ build-backend:
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/release/
+    only:
+        refs:
+            - cleanarch
+            - review
+            - master
 
 publish-container:
     image: docker:stable
@@ -74,6 +90,11 @@ publish-container:
         - docker pull ${CF_APP_IMAGE} || true
         - docker build --cache-from ${CF_APP_IMAGE} -t ${CF_APP_IMAGE} -f ./Dockerfile .
         - docker push ${CF_APP_IMAGE}
+    only:
+        refs:
+            - cleanarch
+            - review
+            - master
 
 deploy-cleanarch:
     stage: deploy
