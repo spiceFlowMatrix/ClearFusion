@@ -26,5 +26,5 @@ export interface ILogs {
     EventBy?: string;
     EventOn?: string;
     Detail?: string;
-
+    PurchaseId?: number;
 }

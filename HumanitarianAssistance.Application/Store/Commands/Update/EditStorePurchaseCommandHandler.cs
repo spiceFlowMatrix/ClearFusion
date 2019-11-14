@@ -130,6 +130,10 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
 
                             await _dbContext.SaveChangesAsync();
                             eventType="Vehicle";
+                            string logText = $"{purchase.PurchaseName} Purchase Edited";
+
+                            // log details
+                            LogStoreInfo(request.CreatedById, eventType, logText, null);
                         }
 
                         //Add Purchased generator List
@@ -181,6 +185,10 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                             }
                             await _dbContext.SaveChangesAsync();
                             eventType="Generator";
+                            string logText = $"{purchase.PurchaseName} Purchase Edited";
+
+                            // log details
+                            LogStoreInfo(request.CreatedById, eventType, logText, null);
                         }
 
                         //Update purchased vehicle Item
@@ -195,6 +203,10 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
 
                             //get EventType
                             eventType = GetEventTypeName(request.ItemGroupTransportCategory, request.ItemTransportCategory);
+                            string logText = $"{purchase.PurchaseName} Purchase Edited";
+
+                            // log details
+                            LogStoreInfo(request.CreatedById, eventType, logText, null);
                         }
 
                         //Update purchased generator Item
@@ -211,21 +223,11 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
 
                             //get EventType
                             eventType = GetEventTypeName(request.ItemGroupTransportCategory, request.ItemTransportCategory);
+                            string logText = $"{purchase.PurchaseName} Purchase Edited";
+
+                            // log details
+                            LogStoreInfo(request.CreatedById, eventType, logText, null);
                         }
-
-                        //log details
-                        StoreLogger logger = new StoreLogger
-                        {
-                            CreatedDate = DateTime.UtcNow,
-                            CreatedById = request.CreatedById,
-                            IsDeleted = false,
-                            EventType = $"{eventType} Purchase Edited",
-                            LogText = $"{eventType} Purchase Edited in Purchase Id {request.PurchaseId}",
-                            PurchaseId = request.PurchaseId
-                        };
-
-                        await _dbContext.StoreLogger.AddAsync(logger);
-                        await _dbContext.SaveChangesAsync();
 
                         tran.Commit();
                         success = true;
@@ -297,6 +299,23 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
             }
 
             return eventTypeName;
+        }
+
+        private void LogStoreInfo(string createdById, string eventType, string logText, long? purchaseId)
+        {
+            //log details
+            StoreLogger logger = new StoreLogger
+            {
+                CreatedDate = DateTime.UtcNow,
+                CreatedById = createdById,
+                IsDeleted = false,
+                EventType = $"{eventType} Purchased",
+                LogText = logText,
+                PurchaseId = purchaseId
+            };
+
+            _dbContext.StoreLogger.AddAsync(logger);
+            _dbContext.SaveChangesAsync();
         }
     }
 }

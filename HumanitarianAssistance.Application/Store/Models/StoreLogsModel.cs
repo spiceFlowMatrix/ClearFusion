@@ -6,5 +6,6 @@ namespace HumanitarianAssistance.Application.Store.Models
         public string EventBy {get; set;}  
         public string EventOn {get; set;} 
         public string LogText { get; set; }
+        public long? PurchaseId { get; set; }
     }
 }

@@ -33,7 +33,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             EventType = u.EventType,
                             EventBy=  $"{usd.FirstName} {usd.LastName}",
                             EventOn= u.CreatedDate != null ? u.CreatedDate.Value.ToShortDateString() : "",
-                            LogText= u.LogText
+                            LogText= u.LogText,
+                            PurchaseId= u.PurchaseId
                         }).ToList();
             }
             catch(Exception ex)
