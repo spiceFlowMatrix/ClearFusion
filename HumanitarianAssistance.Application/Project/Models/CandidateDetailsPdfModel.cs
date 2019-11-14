@@ -4,7 +4,7 @@ namespace HumanitarianAssistance.Application.Project.Models
 {
     public class CandidateDetailsPdfModel
     {
-        public long CandidateId { get; set; }
+        public long SerialNumber { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }

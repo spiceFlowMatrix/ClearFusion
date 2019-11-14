@@ -22,7 +22,7 @@
                     <table cellpadding="5" style="width:100%;">
                         <tr>
                             <td width="60"><img src="logo.jpg" alt=""></td>
-                            <td style="font-size:20px;font-weight:500;text-align:center;">Humanitarian Assistance (CHA)<br><p style="font-size:16px;font-weight:400;text-align:center;">Candidate Details Report<p> </td>
+                            <td style="font-size:20px;font-weight:500;text-align:center;">Coordination of Humanitarian Assistance (CHA)<br><p style="font-size:16px;font-weight:400;text-align:center;">Candidate Details Report<p> </td>
 
                         </tr>
                     </table>
@@ -32,7 +32,7 @@
                 <td>
                     <table cellpadding="5" style="width:100%;font-size:14px;text-align:center;" border="1" bordercolor="#bfbfbf" cellspacing="0">
                         <tr>
-                            <th style="text-align:center; font-weight:200;font-size:10px;background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;">Candidate Id</th>
+                            <th style="text-align:center; font-weight:200;font-size:10px;background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;">S#</th>
                             <th style="text-align:center; font-weight:200;font-size:10px;background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;">First Name</th>
                             <th style="text-align:center; font-weight:200;font-size:10px;background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;">Last Name</th>
                             <th style="text-align:center; font-weight:200;font-size:10px;background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;">Gender</th>
@@ -48,7 +48,7 @@
                         @foreach (var Item in Model)
                         {
                         <tr>
-                            <td>@Item.CandidateId</td>
+                            <td>@Item.SerialNumber</td>
                             <td>@Item.FirstName</td>
                             <td>@Item.LastName</td>
                             <td>@Item.Gender</td>

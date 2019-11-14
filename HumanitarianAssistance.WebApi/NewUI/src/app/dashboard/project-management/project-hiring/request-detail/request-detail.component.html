@@ -65,7 +65,7 @@
       <mat-tab-group>
         <mat-tab label="New Candidates">
           <h5>Candidates <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewCandidate()"></hum-button>
-            <hum-button [type]="'download'" [text]="'Candidate Details PDF'" (click)="onExportPdf()"></hum-button>
+            <hum-button [type]="'download'" [text]="'PDF Export'" (click)="onExportPdf()"></hum-button>
           </h5>
 
           <hum-table [headers]="newCandidatesHeaders$" [isDefaultAction]="false" [items]="newCandidatesList$"  [subHeaders]="subListHeaders$"

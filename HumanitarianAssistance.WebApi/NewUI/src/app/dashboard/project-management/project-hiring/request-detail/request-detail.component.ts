@@ -240,6 +240,7 @@ export class RequestDetailComponent implements OnInit {
     );
   }
   updateCandidateStatus(candidateDetails: any) {
+    this.loader.showLoader();
     this.hiringRequestService
       .UpdateCandidateStatus(candidateDetails)
       .pipe(takeUntil(this.destroyed$))
@@ -274,6 +275,7 @@ export class RequestDetailComponent implements OnInit {
 
   //#region "onExportPdf"
   onExportPdf() {
+    this.loader.showLoader();
     const data: any = {};
     this.globalSharedService
       .getFile(
@@ -282,6 +284,7 @@ export class RequestDetailComponent implements OnInit {
       )
       .pipe(takeUntil(this.destroyed$))
       .subscribe();
+      this.loader.hideLoader();
   }
   //#endregion
 }
