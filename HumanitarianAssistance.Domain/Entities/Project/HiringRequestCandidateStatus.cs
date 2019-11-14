@@ -11,11 +11,11 @@ namespace HumanitarianAssistance.Domain.Entities.Project {
         public long CandidateStatusId { get; set; }
 
         [ForeignKey ("CandidateId")]
-        public long CandidateId { get; set; }
+        public long? CandidateId { get; set; }
         public CandidateDetails CandidateDetails { get; set; }
         
         [ForeignKey ("EmployeeID")]
-        public int EmployeeID { get; set; }
+        public int? EmployeeID { get; set; }
         public EmployeeDetail EmployeeDetails { get; set; }
         public int CandidateStatus { get; set; }
         public int InterviewId { get; set; }         
