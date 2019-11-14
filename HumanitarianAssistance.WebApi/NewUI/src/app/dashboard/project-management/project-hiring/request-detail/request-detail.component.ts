@@ -5,7 +5,8 @@ import {
   IFilterModel,
   ICandidateDetailList,
   ISubCandidateList,
-  TableActionsModel
+  TableActionsModel,
+  ICandidateFilterModel
 } from '../models/hiring-requests-models';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
@@ -47,7 +48,7 @@ export class RequestDetailComponent implements OnInit {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   newCandidatesList$: Observable<[ICandidateDetailList]>;
   hiringRequestDetails: HiringRequestDetailList;
-  filterValueModel: IFilterModel;
+  filterValueModel: ICandidateFilterModel;
   hiringRequestId: any;
   projectId: any;
   screenHeight: any;
@@ -67,9 +68,8 @@ export class RequestDetailComponent implements OnInit {
       pageSize: 10,
       TotalCount: null,
       FilterValue: '',
-      ProjectId: null,
-      IsOpenFlagId: null,
-      IsInProgress: null
+      ProjectId: this.projectId,
+      HiringRequestId: this.hiringRequestId
     };
   }
 
@@ -183,7 +183,11 @@ export class RequestDetailComponent implements OnInit {
     // NOTE: It open AddHiringRequest dialog and passed the data into the AddHiringRequestsComponent Model
     const dialogRef = this.dialog.open(AddNewCandidateComponent, {
       width: '1000px',
-      autoFocus: false
+      autoFocus: false,
+      data: {
+        hiringRequestId: this.hiringRequestDetails.HiringRequestId,
+        projectId: this.projectId
+      }
     });
     // refresh the list after new request created
     dialogRef.componentInstance.onAddCandidateListRefresh.subscribe(() => {
@@ -194,7 +198,7 @@ export class RequestDetailComponent implements OnInit {
   }
   //#endregion
 
-  GetAllCandidateList(filter: IFilterModel) {
+  GetAllCandidateList(filter: ICandidateFilterModel) {
     this.loader.showLoader();
     this.hiringRequestService.getAllCandidateList(filter).subscribe(
       (response: IResponseData) => {

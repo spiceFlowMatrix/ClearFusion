@@ -22,6 +22,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
             ApiResponse response = new ApiResponse ();
             try {
                 CandidateDetails candidateDetail = new CandidateDetails () {
+                    ProjectId = request.ProjectId,
+                    HiringRequestId = request.HiringRequestId,
                     FirstName = request.FirstName,
                     LastName = request.LastName,
                     Email = request.Email,
@@ -42,12 +44,20 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                     CreatedById = request.CreatedById,
                     CreatedDate = request.CreatedDate,
                     IsDeleted = false,
-                    CandidateStatus=0,
-                    InterviewId=0
                 };
                 await _dbContext.CandidateDetails.AddAsync (candidateDetail);
                 await _dbContext.SaveChangesAsync ();
-
+                if (candidateDetail.CandidateId != 0) {
+                    HiringRequestCandidateStatus obj = new HiringRequestCandidateStatus () {
+                    CandidateId = candidateDetail.CandidateId,
+                    CandidateStatus = 0,
+                    InterviewId = 0,
+                    CreatedById = request.CreatedById,
+                    CreatedDate = request.CreatedDate
+                    };
+                    await _dbContext.HiringRequestCandidateStatus.AddAsync (obj);
+                    await _dbContext.SaveChangesAsync ();
+                }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             } catch (Exception ex) {

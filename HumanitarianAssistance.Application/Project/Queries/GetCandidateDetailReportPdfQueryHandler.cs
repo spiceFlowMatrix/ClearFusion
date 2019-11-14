@@ -10,8 +10,7 @@ using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 
-namespace HumanitarianAssistance.Application.Project.Queries
-{
+namespace HumanitarianAssistance.Application.Project.Queries {
     public class GetCandidateDetailReportPdfQueryHandler : IRequestHandler<GetCandidateDetailReportPdfQuery, byte[]> {
         private HumanitarianAssistanceDbContext _dbContext;
         private readonly IPdfExportService _pdfExportService;
@@ -25,7 +24,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
             try {
                 // model logic here
                 var candidateDetail = (from cd in _dbContext.CandidateDetails
-                    .Where (x => x.IsDeleted == false) join g in _dbContext.JobGrade on cd.GradeId equals g.GradeId into gd from g in gd.DefaultIfEmpty () join p in _dbContext.ProfessionDetails on cd.ProfessionId equals p.ProfessionId into pd from p in pd.DefaultIfEmpty () join o in _dbContext.OfficeDetail on cd.OfficeId equals o.OfficeId into od from o in od.DefaultIfEmpty () join e in _dbContext.EducationDegreeDetails on cd.EducationDegreeId equals e.EducationDegreeId into ed from e in ed.DefaultIfEmpty () join c in _dbContext.CountryDetails on cd.CountryId equals c.CountryId into cod from c in cod.DefaultIfEmpty () join pr in _dbContext.ProvinceDetails on cd.ProvinceId equals pr.ProvinceId into prd from pr in prd.DefaultIfEmpty () join d in _dbContext.DistrictDetail on cd.DistrictID equals d.DistrictID into dd from d in dd.DefaultIfEmpty () select new CandidateDetailsModel {
+                    .Where (x => x.IsDeleted == false) join s in _dbContext.HiringRequestCandidateStatus on cd.CandidateId equals s.CandidateId into hs from s in hs.DefaultIfEmpty () join g in _dbContext.JobGrade on cd.GradeId equals g.GradeId into gd from g in gd.DefaultIfEmpty () join p in _dbContext.ProfessionDetails on cd.ProfessionId equals p.ProfessionId into pd from p in pd.DefaultIfEmpty () join o in _dbContext.OfficeDetail on cd.OfficeId equals o.OfficeId into od from o in od.DefaultIfEmpty () join e in _dbContext.EducationDegreeDetails on cd.EducationDegreeId equals e.EducationDegreeId into ed from e in ed.DefaultIfEmpty () join c in _dbContext.CountryDetails on cd.CountryId equals c.CountryId into cod from c in cod.DefaultIfEmpty () join pr in _dbContext.ProvinceDetails on cd.ProvinceId equals pr.ProvinceId into prd from pr in prd.DefaultIfEmpty () join d in _dbContext.DistrictDetail on cd.DistrictID equals d.DistrictID into dd from d in dd.DefaultIfEmpty () select new CandidateDetailsModel {
                         CandidateId = cd.CandidateId,
                             FirstName = cd.FirstName,
                             LastName = cd.LastName,
@@ -34,7 +33,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                             Gender = cd.GenderId == 1 ? "Male" : cd.GenderId == 2 ? "Female" : "Other",
                             EducationDegree = e.EducationDegreeName,
                             Profession = p.ProfessionName,
-                            CandidateStatus = cd.CandidateStatus,
+                            CandidateStatus = s.CandidateStatus,
                             TotalExperienceInYear = cd.TotalExperienceInYear,
                             RelevantExperienceInYear = cd.RelevantExperienceInYear,
                             IrrelevantExperienceInYear = cd.IrrelevantExperienceInYear,
@@ -51,7 +50,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                             Gender = item.Gender,
                             EducationDegree = item.EducationDegree,
                             Profession = item.Profession,
-                            Status = ((CandidateStatus)item.CandidateStatus).ToString (),
+                            Status = ((CandidateStatus) item.CandidateStatus).ToString (),
                             // Status = item.CandidateStatus == 0 ? "Shortlist Panding" : item.CandidateStatus == 1 ? "Interview Panding" : "Selection Panding",
                             TotalExperienceInYear = item.TotalExperienceInYear,
                             RelevantExperienceInYear = item.RelevantExperienceInYear,

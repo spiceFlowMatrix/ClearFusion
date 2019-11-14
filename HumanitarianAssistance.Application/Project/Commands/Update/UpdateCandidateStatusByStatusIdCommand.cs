@@ -7,5 +7,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
     {
         public int statusId { get; set; }
         public long candidateId { get; set; }
+        public int employeeId { get; set; }
     }
 }

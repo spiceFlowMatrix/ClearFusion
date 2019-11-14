@@ -16,15 +16,12 @@ using HumanitarianAssistance.Domain.Entities.Marketing;
 using HumanitarianAssistance.Domain.Entities.Project;
 using HumanitarianAssistance.Domain.Entities.Store;
 
-namespace HumanitarianAssistance.Application.Infrastructure
-{
-    public class ApiResponse
-    {
-        public ApiResponse()
-        {
-            data = new Data();
-            ItemAmount = new ItemAmount();
-            CommonId = new CommonId();
+namespace HumanitarianAssistance.Application.Infrastructure {
+    public class ApiResponse {
+        public ApiResponse () {
+            data = new Data ();
+            ItemAmount = new ItemAmount ();
+            CommonId = new CommonId ();
         }
         public int StatusCode { get; set; }
         public string Message { get; set; }
@@ -35,8 +32,7 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public CommonId CommonId { get; set; }
 
     }
-    public class Data
-    {
+    public class Data {
 
         // login
         public string AspNetUserId { get; set; }
@@ -104,9 +100,6 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public List<AppraisalGeneralQuestions> AppraisalList { get; set; }
         public List<LanguageDetail> LanguageDetail { get; set; }
 
-
-
-
         // Marketing
         public byte[] pdf { get; set; }
         public dynamic contractDetailsModel { get; set; }
@@ -167,7 +160,6 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public ScheduleDetails schedulerDetails { get; set; }
         public PlayoutMinutes playoutMinutesDetails { get; set; }
 
-
         //Project
         public ICollection<DonorDetail> DonorDetail { get; set; }
         public DonorDetail DonorDetailById { get; set; }
@@ -193,11 +185,6 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public List<long> DistrictMultiSelectById { get; set; }
         public List<DistrictDetail> Districtlist { get; set; }
         public List<long> SecurityConsiderationMultiSelectById { get; set; }
-
-
-
-
-
 
         //Project
         public IList<ProjectHiringCandidateDetailModel> ProjectHiringCandidateDetailModel { get; set; }
@@ -236,13 +223,12 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public long logisticRequestId { get; set; }
         public List<JobHiringDetailModel> JobDetailList { get; set; }
         public List<OfficeDetailListModel> OfficeList { get; set; }
-        public List<ProfessionListModel> ProfessionDetailList { get; set; }  
-         public List<EducationDegreeModel> EducationDegreeList { get; set; } 
-      public ProjectHiringRequestDetailModel ProjectHiringRequestAllDetail { get; set; }  
-      public List<CandidateDetailsModel> CandidateList{ get; set; } 
-      public CandidateDetails CandidateDetails{ get; set; } 
-        public int? FilledVacancies { get; set; } 
-
+        public List<ProfessionListModel> ProfessionDetailList { get; set; }
+        public List<EducationDegreeModel> EducationDegreeList { get; set; }
+        public ProjectHiringRequestDetailModel ProjectHiringRequestAllDetail { get; set; }
+        public List<CandidateDetailsModel> CandidateList { get; set; }
+        public HiringRequestCandidateStatus CandidateStatus { get; set; }
+        public int? FilledVacancies { get; set; }
 
         //Web Link Url 05082019   
         public string SignedUrl { get; set; }
@@ -283,9 +269,7 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public string ConceptWebLinkExtType { get; set; }
         public string PresentationWebLinkExtType { get; set; }
 
-
         #endregion
-
 
         #region "Code"
         public IList<ProjectDetail> ProjectDetailList { get; set; }
@@ -308,10 +292,8 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public ICollection<PayrollAccountHead> PayrollAccountHead { get; set; }
         public long? PensionDebitAccountId { get; set; }
         public List<AttendanceGroupMasterModel> AttendanceGroupMasterList { get; set; }
-        public List<RatingBasedCriteriaQuestionsModel> RatingBasedCriteriaQuestionList { get; set; }  
+        public List<RatingBasedCriteriaQuestionsModel> RatingBasedCriteriaQuestionList { get; set; }
         #endregion
-
-
 
         // Store
         public string ItemGroupCode { get; set; }
@@ -351,7 +333,7 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public IList<EmployeeApplyLeaveModel> EmployeeApplyLeaveList { get; set; }
         public List<EmployeeMonthlyPayrollModel> EmployeeMonthlyPayrollApprovedList { get; set; }
         public IList<EmployeeMonthlyPayrollModel> EmployeeMonthlyPayrolllist { get; set; }
-        public EmployeePensionModel EmployeePensionModel {get; set;}
+        public EmployeePensionModel EmployeePensionModel { get; set; }
         public List<SalaryTaxReportModel> SalaryTaxReportModelList { get; set; }
         public List<PensionPaymentModel> PensionPayment { get; set; }
         public List<PensionPaymentHistoryModel> PensionPaymentHistory { get; set; }
@@ -365,8 +347,8 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public List<EmployeeContractModel> EmployeeContractDetails { get; set; }
         public ContractTypeContent ContractTypeContentList { get; set; }
         public List<EmployeeContractType> EmployeeContractTypeList { get; set; }
-       public List<EmployeeSummaryDetailModel> EmployeeSummaryDetailsList { get; set; }
-       public IList<ApplyLeaveModel> ApplyLeaveList { get; set; }
+        public List<EmployeeSummaryDetailModel> EmployeeSummaryDetailsList { get; set; }
+        public IList<ApplyLeaveModel> ApplyLeaveList { get; set; }
         public int? TotalEmployees { get; set; }
         public double? TotalGrossSalary { get; set; }
         public double? TotalDeductions { get; set; }
@@ -423,16 +405,13 @@ namespace HumanitarianAssistance.Application.Infrastructure
         public List<DetailOfNotesSummaryModel> DetailsOfNotesFinalList { get; set; }
     }
 
-
-    public class ItemAmount
-    {
+    public class ItemAmount {
         public int ProcuredAmount { get; set; }
         public int SpentAmount { get; set; }
         public int CurrentAmount { get; set; }
     }
 
-    public class LoggerDetailsModel
-    {
+    public class LoggerDetailsModel {
         public int LoggerDetailsId { get; set; }
         public int NotificationId { get; set; }
         public bool IsRead { get; set; }
@@ -444,8 +423,7 @@ namespace HumanitarianAssistance.Application.Infrastructure
     }
 
     //Get common Id for Project
-    public class CommonId
-    {
+    public class CommonId {
         public int Id { get; set; }
         public bool IsApproved { get; set; }
         public long LongId { get; set; }

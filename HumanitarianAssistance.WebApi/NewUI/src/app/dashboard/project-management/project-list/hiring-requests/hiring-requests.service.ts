@@ -21,7 +21,8 @@ import {
   OfficeDetailModel,
   IHiringRequestModel,
   CompleteHiringRequestModel,
-  ICandidateDetailModel
+  ICandidateDetailModel,
+  ICandidateFilterModel
 } from '../../project-hiring/models/hiring-requests-models';
 
 @Injectable({
@@ -327,7 +328,7 @@ export class HiringRequestsService {
 //#endregion
 
   //#region "getAllCandidateList"
-  getAllCandidateList(data: IFilterModel): any {
+  getAllCandidateList(data: ICandidateFilterModel): any {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
@@ -359,7 +360,7 @@ export class HiringRequestsService {
       .pipe(
         map(x => {
           const responseData: IResponseData = {
-            data: x.data.CandidateDetails,
+            data: x.data.CandidateStatus,
             statusCode: x.StatusCode,
             message: x.Message
           };

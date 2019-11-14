@@ -9,6 +9,14 @@ export interface HiringList {
   PayRate?: string;
   Status?: string;
 }
+export interface ICandidateFilterModel {
+  HiringRequestId?: number;
+  FilterValue: string;
+  pageIndex?: number;
+  pageSize?: number;
+  ProjectId?: number;
+  TotalCount?: number;
+}
 
 export interface IFilterModel {
   FilterValue: string;

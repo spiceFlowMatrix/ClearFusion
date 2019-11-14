@@ -19,10 +19,12 @@ namespace HumanitarianAssistance.Application.Project.Queries {
         public async Task<ApiResponse> Handle (GetAllCandidateListQuery request, CancellationToken cancellationToken) {
             ApiResponse response = new ApiResponse ();
             try {
-                int totalCount = await _dbContext.CandidateDetails.CountAsync (x => x.IsDeleted == false);
+                int totalCount = await _dbContext.CandidateDetails.CountAsync (x => x.IsDeleted == false && x.ProjectId==request.ProjectId && x.HiringRequestId==request.HiringRequestId);
 
                 var candidateDetail = (from cd in _dbContext.CandidateDetails
                 .Where (x => x.IsDeleted == false) 
+                join s in _dbContext.HiringRequestCandidateStatus on cd.CandidateId equals s.CandidateId into hs 
+                from s in hs.DefaultIfEmpty () 
                 join g in _dbContext.JobGrade on cd.GradeId equals g.GradeId into gd 
                 from g in gd.DefaultIfEmpty () 
                 join p in _dbContext.ProfessionDetails on cd.ProfessionId equals p.ProfessionId into pd 
@@ -53,8 +55,8 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                             Country = c.CountryName,
                             Province = pr.ProvinceName,
                             District = d.District,
-                            InterviewId = cd.InterviewId,
-                            CandidateStatus = cd.CandidateStatus,
+                            InterviewId = s.InterviewId,
+                            CandidateStatus = s.CandidateStatus,
                             TotalExperienceInYear = cd.TotalExperienceInYear,
                             RelevantExperienceInYear = cd.RelevantExperienceInYear,
                             IrrelevantExperienceInYear = cd.IrrelevantExperienceInYear,

@@ -17,8 +17,10 @@ import { ICandidateDetailModel } from '../models/hiring-requests-models';
   styleUrls: ['./add-new-candidate.component.scss']
 })
 export class AddNewCandidateComponent implements OnInit {
-  addNewCandidateForm: FormGroup;
 
+  projectId: number;
+  hiringRequestId: number;
+  addNewCandidateForm: FormGroup;
   professionList$: Observable<IDropDownModel[]>;
   officeList$: Observable<IDropDownModel[]>;
   countryList$: Observable<IDropDownModel[]>;
@@ -41,6 +43,8 @@ export class AddNewCandidateComponent implements OnInit {
     private loader: CommonLoaderService
   ) {
     this.addNewCandidateForm = this.fb.group({
+      ProjectId: [null],
+      HiringRequestId: [null],
       FirstName: [null, [Validators.required]],
       LastName: [null, [Validators.required]],
       Email: [null, [Validators.required, Validators.email]],
@@ -87,6 +91,12 @@ export class AddNewCandidateComponent implements OnInit {
         this.subscribeProfessionList(result[3]);
         this.subscribeEducationDegreeList(result[4]);
       });
+      this.projectId = this.data.projectId;
+      this.hiringRequestId = this.data.hiringRequestId;
+      this.addNewCandidateForm.controls['ProjectId'].setValue(this.projectId);
+      this.addNewCandidateForm.controls['HiringRequestId'].setValue(
+        this.hiringRequestId
+      );
   }
   getAllOfficeList() {
     this.commonLoader.showLoader();
