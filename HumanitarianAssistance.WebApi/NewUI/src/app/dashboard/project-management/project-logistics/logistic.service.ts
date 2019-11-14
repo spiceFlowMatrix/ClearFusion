@@ -147,4 +147,12 @@ export class LogisticService {
         ProjectId
     );
   }
+
+  cancelComparativeRequest(RequestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_CancelComparativeRequest,
+        RequestId
+    );
+  }
 }

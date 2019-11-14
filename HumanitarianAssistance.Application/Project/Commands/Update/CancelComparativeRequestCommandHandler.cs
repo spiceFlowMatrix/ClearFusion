@@ -31,7 +31,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                     throw new Exception("No request found!");
                 }
                 logisticrequest.Status=(int)LogisticRequestStatus.Cancelled;
-                logisticrequest.ComparativeStatus=(int)
+                logisticrequest.ComparativeStatus=(int)LogisticComparativeStatus.Cancelled;
                 await _dbContext.SaveChangesAsync();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

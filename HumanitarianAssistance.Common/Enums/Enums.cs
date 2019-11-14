@@ -270,7 +270,14 @@ namespace HumanitarianAssistance.Common.Enums
         ControlApproved = 5,
         ControlRejected = 6
    }
-
+    public enum LogisticComparativeStatus {
+        Pending = 1,
+        Cancelled = 2,
+        Issued = 3,
+        StatementSubmitted = 4,
+        RejectStatement = 5,
+        ApproveStatement = 6,
+    }
     //#region "StoreItemGroups"
     public enum TransportItemTypes
     {

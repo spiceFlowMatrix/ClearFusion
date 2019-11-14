@@ -145,6 +145,15 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.RequestId = RequestId; 
             return await _mediator.Send(model);
         }
+
+        [HttpPost]
+        public async Task<ApiResponse> CancelComparativeRequest([FromBody]long RequestId)
+        {   
+            CancelComparativeRequestCommand model = new CancelComparativeRequestCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.RequestId = RequestId; 
+            return await _mediator.Send(model);
+        }
         
     }
 

@@ -96,12 +96,12 @@ Currency: '', BudgetLine: '', Office: ''};
         this.requestDetail.RequestId = res.data.logisticRequest.RequestId;
         this.requestDetail.ProjectId = res.data.logisticRequest.ProjectId;
         this.requestDetail.RequestName = res.data.logisticRequest.RequestName;
-        this.requestDetail.Status = res.data.logisticRequest.Status;
+        this.requestDetail.Status = res.data.logisticRequest.ComparativeStatus;
         this.requestDetail.TotalCost = res.data.logisticRequest.TotalCost;
         this.requestDetail.Currency = res.data.logisticRequest.Currency;
         this.requestDetail.BudgetLine = res.data.logisticRequest.BudgetLine;
         this.requestDetail.Office = res.data.logisticRequest.Office;
-        this.requestDetail.ComparativeStatus = 1;
+        this.requestDetail.ComparativeStatus = res.data.logisticRequest.ComparativeStatus;
       }
     });
   }
@@ -261,8 +261,20 @@ Currency: '', BudgetLine: '', Office: ''};
           this.toastr.error('Something went wrong!');
         }
       });
-      console.log(model);
     }
+  }
+
+  cancelComparativeRequest() {
+    this.commonLoader.showLoader();
+    this.logisticservice.cancelComparativeRequest(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.getRequestDetails();
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
   }
 
 }
