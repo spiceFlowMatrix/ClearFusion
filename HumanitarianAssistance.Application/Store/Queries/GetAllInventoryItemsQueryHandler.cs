@@ -34,6 +34,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                     inventoryItemsList = await _dbContext.InventoryItems
                                                    .Where(x => x.IsDeleted == false && x.ItemGroupId == request.ItemGroupId)
+                                                   .Include(x=> x.StoreItemGroup)
                                                    .OrderByDescending(x=> x.CreatedDate)
                                                    .ToListAsync();
                 }
@@ -41,6 +42,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                 {
                     inventoryItemsList = await _dbContext.InventoryItems
                                                    .Where(x => x.IsDeleted == false)
+                                                   .Include(x=> x.StoreItemGroup)
                                                    .OrderByDescending(x=> x.CreatedDate)
                                                    .ToListAsync(); 
                 }
@@ -53,7 +55,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     ItemCode = v.ItemCode,
                     Description = v.Description,
                     ItemType = v.ItemType,
-                    ItemGroupId = (long)v.ItemGroupId
+                    ItemGroupId = (long)v.ItemGroupId,
+                    ItemGroupTransportType = v.StoreItemGroup.ItemTypeCategory
                 }).ToList();
 
                 response.data.InventoryItemList = invModelList;

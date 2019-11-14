@@ -48,23 +48,29 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                 var documentsAsync = (from es in _dbContext.EntitySourceDocumentDetails 
                                 join df in _dbContext.DocumentFileDetail on es.DocumentFileId equals df.DocumentFileId
-                                join u in _dbContext.UserDetails on df.CreatedById equals u.AspNetUserId
-                                where df.IsDeleted == false && es.EntityId == request.PurchaseId &&
-                                df.PageId == (int)FileSourceEntityTypes.StorePurchase
+                                into docs
+                                from doc in docs.DefaultIfEmpty()
+                                join u in _dbContext.UserDetails on doc.CreatedById equals u.AspNetUserId
+                                into finaldocs
+                                from final in finaldocs.DefaultIfEmpty()
+                                where doc.IsDeleted == false && es.EntityId == request.PurchaseId &&
+                                doc.PageId == (int)FileSourceEntityTypes.StorePurchase
                                 select new StoreDocumentModel 
                                 {
-                                    DocumentFileId= df.DocumentFileId,
-                                    DocumentName= df.Name,
-                                    DocumentTypeId= df.DocumentTypeId,
-                                    UploadedBy= $"{u.FirstName} {u.LastName}",
-                                    UploadedOn= df.CreatedDate,
-                                    DocumentTypeName= df.DocumentTypeId== (int)DocumentFileTypes.PurchaseImage ? "Image" : "Invoice"
+                                    DocumentFileId= doc.DocumentFileId,
+                                    DocumentName= doc.Name,
+                                    DocumentTypeId= doc.DocumentTypeId,
+                                    UploadedBy= $"{final.FirstName} {final.LastName}",
+                                    UploadedOn= doc.CreatedDate,
+                                    DocumentTypeName= doc.DocumentTypeId== (int)DocumentFileTypes.PurchaseImage ? "Image" : "Invoice"
                                 }).ToListAsync();
 
                 // Get Purchase Data
                 model = await _dbContext.StoreItemPurchases
                                   .Include(x=> x.StoreInventoryItem)
                                   .ThenInclude(x=> x.Inventory)
+                                  .Include(x=> x.StoreInventoryItem)
+                                  .ThenInclude(x=> x.StoreItemGroup)
                                   .Include(x=> x.PurchasedVehicleDetailList)
                                   .Include(x=> x.PurchasedGeneratorDetailList)
                                   .Include(x=> x.GeneratorItemDetail)
@@ -103,6 +109,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                        OfficeId= z.OfficeId,
                                        JournalCode= z.JournalCode,
                                        PurchaseName= z.PurchaseName,
+                                       TransportItemTypeCategory= z.StoreInventoryItem.ItemTypeCategory,
+                                       ItemGroupTransportCategory= z.StoreInventoryItem.StoreItemGroup.ItemTypeCategory,
                                        TransportItemId= z.GeneratorItemDetail != null ? z.GeneratorItemDetail.GeneratorPurchaseId :
                                                         z.VehicleItemDetail != null ? z.VehicleItemDetail.VehiclePurchaseId : 0,
                                        PurchasedVehicleList = z.PurchasedVehicleDetailList.Where(x=> x.IsDeleted == false)

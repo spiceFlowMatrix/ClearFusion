@@ -93,7 +93,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                         TotalCredit =TotalCredit
                     };
                 }
-                return await _pdfExportService.ExportToPdf(pdfreport, "Pages/PdfTemplates/JournalReport.cshtml"); 
+                return await _pdfExportService.ExportToPdf(pdfreport, "Pages/PdfTemplates/JournalReport.cshtml",true); 
            }
            catch(Exception ex)
            {

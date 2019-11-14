@@ -4,7 +4,7 @@
   <div mat-dialog-subtitle><b>Note:</b> User may provide a negative value if the generator's total incurred usage needs
     to be reduced for some reason.</div>
   <br />
-  <form [formGroup]="addUsageHourForm">
+  <form [formGroup]="addUsageHourForm" (ngSubmit)="addHours()">
 
 
     <mat-dialog-content>
@@ -26,7 +26,7 @@
       </div>
     </mat-dialog-content>
     <mat-dialog-actions class="items-float-right">
-      <hum-button *ngIf="!isAddUsageHourFormSubmitted" (click)='addHours()' [type]="'save'" [text]="'save'"></hum-button>
+      <hum-button *ngIf="!isAddUsageHourFormSubmitted" [disabled]="!addUsageHourForm.valid" [type]="'save'" [text]="'save'" [isSubmit]='true'></hum-button>
       <hum-button *ngIf="isAddUsageHourFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
       <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
     </mat-dialog-actions>

@@ -19,6 +19,8 @@ export interface SourceCode {
 }
 export interface InventoryModel {
     Id?: number;
+    InventoryId?: number;
+    ItemGroupId?: number;
     Code?: string;
     Name?: string;
     Description?: string;
@@ -27,6 +29,8 @@ export interface InventoryModel {
     AssetType?: number;
     addText?: string;
     editText?: string;
+    IsTransportCategory?: boolean;
+    ItemTypeCategory?: number;
     // addText:"add item category";
     // editText:"edit master inventory";
     children?: ItemGroup[];
@@ -40,6 +44,8 @@ export interface ItemGroup {
     Name?: string;
     addText?: string;
     editText?: string;
+    Description?: string;
+    ItemTypeCategory?: number;
     // addText:"add item";
     // editText:"edit item category";
 
@@ -48,10 +54,48 @@ export interface InventoryItem {
     Code?: string;
     ItemGroupId?: number;
     Id?: number;
-    ItemInventory?: number;
+    InventoryId?: number;
     Name?: string;
     addText?: string;
     editText?: string;
+    Description?: string;
+    ItemTypeCategory?: number;
     // addText:"";
     // editText:"edit item ";
-} 
+}
+
+
+export class MasterInventoryModel {
+    InventoryId?: any;
+    InventoryCode?: any;
+    InventoryName?: any;
+    InventoryDescription?: any;
+    InventoryDebitAccount?: any;
+    InventoryCreditAccount?: any;
+    IsTransportCategory?: boolean;
+    AssetType?: any;
+}
+
+export class MasterItemGroupModel {
+    ItemGroupId?: any;
+    ItemGroupName?: any;
+    ItemGroupCode?: any;
+    Description?: any;
+    InventoryId?: any;
+    IsTransportCategory?: boolean;
+    ItemTypeCategory?: number;
+}
+
+export class MasterInventoryItemModel {
+    ItemId?: any;
+    ItemName?: any;
+    ItemCode?: any;
+    Description?: any;
+    ItemType?: any;
+    ItemGroupId?: any;
+    ItemInventory?: any;
+    AssetType?: number;
+    ItemTypeCategory?: number;
+    isGenerator?: boolean;
+    // Voucher: any;
+}

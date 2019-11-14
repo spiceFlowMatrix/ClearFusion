@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { ActivatedRoute } from '@angular/router';
@@ -27,6 +27,8 @@ export class AddNewCandidateComponent implements OnInit {
   accountStatusList$: Observable<IDropDownModel[]>;
   genderList$: Observable<IDropDownModel[]>;
   gradeList$: Observable<IDropDownModel[]>;
+  educationDegreeList$: Observable<IDropDownModel[]>;
+  onAddCandidateListRefresh = new EventEmitter();
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     public dialogRef: MatDialogRef<AddNewCandidateComponent>,
@@ -39,27 +41,28 @@ export class AddNewCandidateComponent implements OnInit {
     private loader: CommonLoaderService
   ) {
     this.addNewCandidateForm = this.fb.group({
-      FirstName: ['', [Validators.required]],
-      LastName: ['', [Validators.required]],
-      Email: ['', [Validators.required, Validators.email]],
-      PhoneNumber: ['', [Validators.required, Validators.maxLength(14)]],
-      AccountStatus: ['', [Validators.required]],
-      Gender: ['', [Validators.required]],
-      Country: ['', [Validators.required]],
-      Province: ['', [Validators.required]],
-      District: ['', [Validators.required]],
+      FirstName: [null, [Validators.required]],
+      LastName: [null, [Validators.required]],
+      Email: [null, [Validators.required, Validators.email]],
+      PhoneNumber: [null, [Validators.required, Validators.maxLength(14)]],
+      AccountStatus: [null, [Validators.required]],
+      EducationDegree: [null, [Validators.required]],
+      Gender: [null, [Validators.required]],
+      Country: [null, [Validators.required]],
+      Province: [null, [Validators.required]],
+      District: [null, [Validators.required]],
       Profession: [, [Validators.required]],
-      Grade: ['', [Validators.required]],
-      Office: ['', [Validators.required]],
-      DateOfBirth: ['', [Validators.required]],
-      ExperienceInYear: ['', [Validators.required]],
-      ExperienceInMonth: ['', [Validators.required]]
+      Grade: [null, [Validators.required]],
+      Office: [null, [Validators.required]],
+      DateOfBirth: [null, [Validators.required]],
+      TotalExperienceInYear: [null, [Validators.required]],
+      RelevantExperienceInYear: [null, [Validators.required]],
+      IrrelevantExperienceInYear: [null, [Validators.required]]
     });
 
     this.accountStatusList$ = of([
       { name: 'Active', value: 1 },
-      { name: 'Nonactive', value: 2 },
-
+      { name: 'Nonactive', value: 2 }
     ] as IDropDownModel[]);
 
     this.genderList$ = of([
@@ -73,14 +76,17 @@ export class AddNewCandidateComponent implements OnInit {
       this.getAllOfficeList(),
       this.getAllCountryList(),
       this.getAllJobGradeList(),
-      this.getAllProfessionList()])
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe(result => {
-      this.subscribeOfficeList(result[0]);
-      this.subscribeCountryList(result[1]);
-      this.subscribeGradeList(result[2]);
-      this.subscribeProfessionList(result[3]);
-    });
+      this.getAllProfessionList(),
+      this.getAllEducationDegreeList()
+    ])
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(result => {
+        this.subscribeOfficeList(result[0]);
+        this.subscribeCountryList(result[1]);
+        this.subscribeGradeList(result[2]);
+        this.subscribeProfessionList(result[3]);
+        this.subscribeEducationDegreeList(result[4]);
+      });
   }
   getAllOfficeList() {
     this.commonLoader.showLoader();
@@ -98,6 +104,10 @@ export class AddNewCandidateComponent implements OnInit {
   getAllProfessionList() {
     this.commonLoader.showLoader();
     return this.hiringRequestService.GetProfessionList();
+  }
+  getAllEducationDegreeList() {
+    this.commonLoader.showLoader();
+    return this.hiringRequestService.GetEducationDegreeList();
   }
   subscribeOfficeList(response: any) {
     this.commonLoader.hideLoader();
@@ -143,6 +153,17 @@ export class AddNewCandidateComponent implements OnInit {
       })
     );
   }
+  subscribeEducationDegreeList(response: any) {
+    this.commonLoader.hideLoader();
+    this.educationDegreeList$ = of(
+      response.data.map(y => {
+        return {
+          value: y.EducationDegreeId,
+          name: y.EducationDegreeName
+        };
+      })
+    );
+  }
   getAllProvinceList(CountryId: number) {
     this.hiringRequestService
       .getAllProvinceListByCountryId([CountryId])
@@ -176,7 +197,7 @@ export class AddNewCandidateComponent implements OnInit {
             this.districtList$ = of(
               response.data.map(element => {
                 return {
-                  value: element.DistrictId,
+                  value: element.DistrictID,
                   name: element.District
                 } as IDropDownModel;
               })
@@ -190,29 +211,30 @@ export class AddNewCandidateComponent implements OnInit {
       );
   }
 
-   //#region "AddNewCandidate"
-   AddNewCandidate(data: ICandidateDetailModel) {
-    // this.hiringRequestService.AddNewCandidateDetail(data).subscribe(
-    //   (response: IResponseData) => {
-    //     if (response.statusCode === 200) {
-    //       this.toastr.success('New request is created successfully');
-    //     } else {
-    //       this.toastr.error(response.message);
-    //     }
-    //     this.onCancelPopup();
-    //   },
-    //   error => {
-    //     this.toastr.error('Someting went wrong. Please try again');
-    //   }
-    // );
+  //#region "AddNewCandidate"
+  AddNewCandidate(data: ICandidateDetailModel) {
+    this.hiringRequestService.AddNewCandidateDetail(data).subscribe(
+      (response: IResponseData) => {
+        if (response.statusCode === 200) {
+          this.toastr.success('New request is created successfully');
+          this.AddCandidateListRefresh();
+        } else {
+          this.toastr.error(response.message);
+        }
+        this.onCancelPopup();
+      },
+      error => {
+        this.toastr.error('Someting went wrong. Please try again');
+      }
+    );
   }
   //#endregion
 
-//#region "onCancelPopup"
-onCancelPopup(): void {
-  this.dialogRef.close();
-}
-//#endregion
+  //#region "onCancelPopup"
+  onCancelPopup(): void {
+    this.dialogRef.close();
+  }
+  //#endregion
 
   onChangeCountry(e) {
     this.provinceList$ = null;
@@ -224,6 +246,14 @@ onCancelPopup(): void {
     this.getAllDistrictList(e);
   }
   onFormSubmit(data: any) {
-
+    if (this.addNewCandidateForm.valid) {
+      this.AddNewCandidate(data);
+    }
+    console.log(data);
   }
+      //#region "hiringRequestListRefresh"
+      AddCandidateListRefresh() {
+        this.onAddCandidateListRefresh.emit();
+      }
+      // #endregion
 }

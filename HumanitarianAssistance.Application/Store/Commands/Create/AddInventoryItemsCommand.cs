@@ -11,6 +11,9 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
         public string ItemCode { get; set; }
         public string Description { get; set; }
         public long ItemGroupId { get; set; }
-        public int ItemType { get; set; }
+        public int? ItemType { get; set; }
+        public int? ItemTypeCategory { get; set; }
+        
+
     }
 }

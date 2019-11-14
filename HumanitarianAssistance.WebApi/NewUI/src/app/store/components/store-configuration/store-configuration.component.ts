@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, HostListener } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { of, Observable, forkJoin } from 'rxjs';
 import { TableActionsModel } from 'projects/library/src/public_api';
@@ -35,7 +35,10 @@ export class StoreConfigurationComponent implements OnInit {
   sourceCode: SourceCode = {}
 
   isEditCode = false;
-
+  // screen
+  screenHeight: any;
+  screenWidth: any;
+  scrollStyles: any;
 
 
   @ViewChild("unittype") dialogRef: TemplateRef<any>;
@@ -44,7 +47,8 @@ export class StoreConfigurationComponent implements OnInit {
   constructor(private dialog: MatDialog,
     private configservice: ConfigService,
     private fb: FormBuilder, private loader: CommonLoaderService) { }
-
+  //#region "Dynamic Scroll"
+  
   ngOnInit() {
     this.typeName = new FormControl('', Validators.required);
     this.unitActions = {
@@ -67,6 +71,17 @@ export class StoreConfigurationComponent implements OnInit {
 
     this.createSourceCodeForm();
   }
+  @HostListener('window:resize', ['$event'])
+  getScreenSize(event?) {
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+
+    this.scrollStyles = {
+      'overflow-y': 'auto',
+      height: this.screenHeight - 80 + 'px',
+      'overflow-x': 'hidden'
+    };
+  }
 
   // Unit type configurations start
   getAllUnitTypes(res) {
@@ -84,7 +99,7 @@ export class StoreConfigurationComponent implements OnInit {
       if (this.unitType.UnitTypeId) {
         this.unitType.UnitTypeName = this.typeName.value;
         this.configservice.editUnit(this.unitType).subscribe(res => {
-          this.configservice.getAllSourceCodeTypes().subscribe(res1=>{
+          this.configservice.getUnitType().subscribe(res1 => {
             this.getAllUnitTypes(res1);
           })
           this.unitType = {};
@@ -93,7 +108,7 @@ export class StoreConfigurationComponent implements OnInit {
       } else {
         this.unitType.UnitTypeName = this.typeName.value;
         this.configservice.saveUnit(this.unitType).subscribe(res => {
-          this.configservice.getAllSourceCodeTypes().subscribe(res1=>{
+          this.configservice.getUnitType().subscribe(res1 => {
             this.getAllUnitTypes(res1);
           })
           this.dialog.closeAll();
@@ -108,7 +123,7 @@ export class StoreConfigurationComponent implements OnInit {
         if (res) {
           this.unitType = data.item;
           this.configservice.deleteUnit(this.unitType).subscribe(res => {
-            this.configservice.getAllSourceCodeTypes().subscribe(res1=>{
+            this.configservice.getUnitType().subscribe(res1 => {
               this.getAllUnitTypes(res1);
             })
           })

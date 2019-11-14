@@ -12,5 +12,6 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
         public int AssetType { get; set; }
         public long InventoryDebitAccount { get; set; }
         public long? InventoryCreditAccount { get; set; }
+        public bool? IsTransportCategory { get; set; }
     }
 }

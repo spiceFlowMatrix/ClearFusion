@@ -370,7 +370,18 @@
                                       </mat-form-field>
                                     </td>
                                     <td width="12%" class="text-center">
-                                      <mat-form-field
+                                        <lib-search-dropdown
+                                        placeholder="Project"
+                                        [multiSelect]="false"
+                                        placeholderSearchLabel="Find Projects..."
+                                        noEntriesFoundLabel="No matching Project found"
+                                        [dataSource]="projectDropdownList"
+                                        [selectedValue]="item.ProjectId"
+                                        (selectionChanged)="
+                                        onOpenedProjectChange($event,item)"
+                                      >
+                                      </lib-search-dropdown>
+                                      <!-- <mat-form-field
                                         class="example-full-width"
                                       >
                                         <mat-select
@@ -391,10 +402,21 @@
                                             {{ i.ProjectNameCode }}
                                           </mat-option>
                                         </mat-select>
-                                      </mat-form-field>
+                                      </mat-form-field> -->
                                     </td>
                                     <td width="12%" class="text-center">
-                                      <mat-form-field
+                                        <lib-search-dropdown
+                                        placeholder="Budget Line"
+                                        [multiSelect]="false"
+                                        placeholderSearchLabel="Find BudgetLine..."
+                                        noEntriesFoundLabel="No matching BudgetLine found"
+                                        [dataSource]="item.BudgetLineList"
+                                        [selectedValue]="item.BudgetLineId"
+                                        (openedChange)="
+                                        onOpenedBudgetLineChange($event,item)"
+                                      >
+                                      </lib-search-dropdown>
+                                      <!-- <mat-form-field
                                         class="example-full-width"
                                       >
                                         <mat-select
@@ -417,7 +439,7 @@
                                             {{ i.BudgetName }}
                                           </mat-option>
                                         </mat-select>
-                                      </mat-form-field>
+                                      </mat-form-field> -->
                                     </td>
                                     <td width="12%" class="text-center">
                                       Job: {{ item.JobName }}
@@ -561,31 +583,31 @@
                                       </mat-form-field>
                                     </td>
                                     <td width="12%" class="text-center">
-                                      <mat-form-field
-                                        class="example-full-width"
+                                        <lib-search-dropdown
+                                        placeholder="Project"
+                                        [multiSelect]="false"
+                                        placeholderSearchLabel="Find Projects..."
+                                        noEntriesFoundLabel="No matching Project found"
+                                        [dataSource]="projectDropdownList"
+                                        [selectedValue]="item.ProjectId"
+                                        (selectionChanged)="
+                                        onOpenedProjectChange($event,item)"
                                       >
-                                        <mat-select
-                                          placeholder="Project"
-                                          [(ngModel)]="item.ProjectId"
-                                          (selectionChange)="
-                                            onTransactionDetailChanged(
-                                              item,
-                                              'Project'
-                                            )
-                                          "
-                                          [disabled]="!isEditingAllowed"
-                                        >
-                                          <mat-option
-                                            *ngFor="let i of projectList"
-                                            [value]="i.ProjectId"
-                                          >
-                                            {{ i.ProjectNameCode }}
-                                          </mat-option>
-                                        </mat-select>
-                                      </mat-form-field>
+                                      </lib-search-dropdown>
                                     </td>
                                     <td width="12%" class="text-center">
-                                      <mat-form-field
+                                      <lib-search-dropdown
+                                        placeholder="Budget Line"
+                                        [multiSelect]="false"
+                                        placeholderSearchLabel="Find BudgetLine..."
+                                        noEntriesFoundLabel="No matching BudgetLine found"
+                                        [dataSource]="item.BudgetLineList"
+                                        [selectedValue]="item.BudgetLineId"
+                                        (openedChange)="
+                                        onOpenedBudgetLineChange($event,item)"
+                                      >
+                                      </lib-search-dropdown>
+                                      <!-- <mat-form-field
                                         class="example-full-width"
                                       >
                                         <mat-select
@@ -608,7 +630,7 @@
                                             {{ i.BudgetName }}
                                           </mat-option>
                                         </mat-select>
-                                      </mat-form-field>
+                                      </mat-form-field> -->
                                     </td>
                                     <td width="12%" class="text-center">
                                       Job: {{ item.JobName }}

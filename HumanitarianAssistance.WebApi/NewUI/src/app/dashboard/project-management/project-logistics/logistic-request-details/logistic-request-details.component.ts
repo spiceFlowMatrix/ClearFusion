@@ -9,6 +9,7 @@ import { RequestDetailComponent } from '../../project-hiring/request-detail/requ
 import { map } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { LogisticRequestStatus } from 'src/app/shared/enum';
 
 
 @Component({
@@ -29,11 +30,14 @@ export class LogisticRequestDetailsComponent implements OnInit {
   requestedItemsData$: Observable<IItemList[]>;
   requestId;
   requestItemList: any[];
-  requestDetail: RequestDetail = {RequestName: '', ProjectId: '', Status: 0, TotalCost: '', RequestId: ''};
+  requestDetail: RequestDetail = {RequestName: '', ProjectId: '', Status: 0, TotalCost: '', RequestId: '' , ComparativeStatus: 0,
+Currency: '', BudgetLine: '', Office: ''};
   actions: TableActionsModel;
   totalCost = 0;
   unavailableItemCost = 0;
   availabilityPercentage = 0;
+  submitPurchaseItems: any[] = [];
+
   constructor(private dialog: MatDialog, private routeActive: ActivatedRoute,
     private logisticservice: LogisticService,
     public toastr: ToastrService,
@@ -66,7 +70,7 @@ export class LogisticRequestDetailsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined && result.data != null ) {
-        this.refreshItemList(result.data);
+        this.getAllRequestItems();
       }
     });
   }
@@ -94,6 +98,10 @@ export class LogisticRequestDetailsComponent implements OnInit {
         this.requestDetail.RequestName = res.data.logisticRequest.RequestName;
         this.requestDetail.Status = res.data.logisticRequest.Status;
         this.requestDetail.TotalCost = res.data.logisticRequest.TotalCost;
+        this.requestDetail.Currency = res.data.logisticRequest.Currency;
+        this.requestDetail.BudgetLine = res.data.logisticRequest.BudgetLine;
+        this.requestDetail.Office = res.data.logisticRequest.Office;
+        this.requestDetail.ComparativeStatus = 1;
       }
     });
   }
@@ -225,6 +233,38 @@ export class LogisticRequestDetailsComponent implements OnInit {
     this.router.navigate(['../../logistic-requests'] , { relativeTo: this.routeActive });
   }
 
+  selectedItemChange(value) {
+    this.submitPurchaseItems = value;
+  }
+
+  completePurchaseOrder() {
+    if (this.submitPurchaseItems.length === 0) {
+      this.toastr.warning('Submit Purchase items first!');
+    } else {
+      this.commonLoader.showLoader();
+      const requestItems = this.submitPurchaseItems.map(function(val) {
+        return {
+          Id: val.Id,
+          FinalCost: val.EstimatedCost
+        };
+      });
+      const model = {
+        submittedList: requestItems,
+        Status : LogisticRequestStatus['Complete Purchase']
+      };
+      this.logisticservice.completePurchaseOrder(model).subscribe(res => {
+        if (res.StatusCode === 200) {
+          this.commonLoader.hideLoader();
+          this.getRequestDetails();
+        } else {
+          this.commonLoader.hideLoader();
+          this.toastr.error('Something went wrong!');
+        }
+      });
+      console.log(model);
+    }
+  }
+
 }
 interface RequestDetail {
   RequestId;
@@ -232,6 +272,10 @@ interface RequestDetail {
   RequestName;
   Status;
   TotalCost;
+  ComparativeStatus;
+  Currency;
+  BudgetLine;
+  Office;
 }
 
 interface IItemList {

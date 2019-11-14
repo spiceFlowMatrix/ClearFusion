@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { GlobalService } from "src/app/shared/services/global-services.service";
-import { AppUrlService } from "src/app/shared/services/app-url.service";
-import { GLOBAL } from "src/app/shared/global";
-import { map } from "rxjs/operators";
-import { IResponseData } from "src/app/dashboard/accounting/vouchers/models/status-code.model";
+import { Injectable } from '@angular/core';
+import { GlobalService } from 'src/app/shared/services/global-services.service';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
+import { GLOBAL } from 'src/app/shared/global';
+import { map } from 'rxjs/operators';
+import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import {
   IHiringRequestDetailModel,
   ProjectHiringRequestFilterModel,
@@ -14,16 +14,18 @@ import {
   CandidateDetailModel,
   IFilterModel,
   ICountryList
-} from "./models/hiring-requests-model";
-import { BehaviorSubject } from "rxjs";
-import { IProjectPermissionMode } from "../project-activities/models/project-activities.model";
+} from './models/hiring-requests-model';
+import { BehaviorSubject } from 'rxjs';
+import { IProjectPermissionMode } from '../project-activities/models/project-activities.model';
 import {
   OfficeDetailModel,
-  IHiringRequestModel
-} from "../../project-hiring/models/hiring-requests-models";
+  IHiringRequestModel,
+  CompleteHiringRequestModel,
+  ICandidateDetailModel
+} from '../../project-hiring/models/hiring-requests-models';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class HiringRequestsService {
   public hiringPermissionSubject = new BehaviorSubject<
@@ -105,6 +107,22 @@ export class HiringRequestsService {
       );
   }
   //#endregion
+    //#region "GetEducationDegreeList"
+    GetEducationDegreeList(): any {
+      return this.globalService
+        .getList(this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllEducationDegree)
+        .pipe(
+          map(x => {
+            const responseData: IResponseData = {
+              data: x.data.EducationDegreeList,
+              statusCode: x.StatusCode,
+              message: x.Message
+            };
+            return responseData;
+          })
+        );
+    }
+    //#endregion
   //#region "GetJobGradeList"
   GetJobGradeList(): any {
     return this.globalService
@@ -287,6 +305,50 @@ export class HiringRequestsService {
   }
   //#endregion
 
+ //#region "AddNewCandidateDetail"
+ AddNewCandidateDetail(data: ICandidateDetailModel) {
+  return this.globalService
+    .post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HiringRequest_AddNewCandidateDetail,
+      data
+    )
+    .pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+}
+//#endregion
+
+  //#region "getAllCandidateList"
+  getAllCandidateList(data: IFilterModel): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_GetAllCandidateList,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.CandidateList,
+            total: x.data.TotalCount,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
+
   //#region "EditCandidateDetail"
   EditCandidateDetail(data: CandidateDetailModel) {
     return this.globalService
@@ -354,7 +416,7 @@ export class HiringRequestsService {
       .getDataById(
         this.appurl.getApiUrl() +
           GLOBAL.API_HiringRequest_GetEmployeeListByOfficeId +
-          "?OfficeId=" +
+          '?OfficeId=' +
           OfficeId
       )
       .pipe(
@@ -507,12 +569,32 @@ export class HiringRequestsService {
   }
   //#endregion
   //#region edit selected candidate detail
-  IsCompltedeHrDEtail(hiringRequestId: number) {
+  IsCompltedeHrDetail(model: CompleteHiringRequestModel) {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
           GLOBAL.API_HiringRequest_CompleteHiringRequest,
-        hiringRequestId
+          model
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.ResponseData,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+  //#region edit selected candidate detail
+  IsCloasedHrDetail(model: CompleteHiringRequestModel) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_ClosedHiringRequest,
+          model
       )
       .pipe(
         map(x => {

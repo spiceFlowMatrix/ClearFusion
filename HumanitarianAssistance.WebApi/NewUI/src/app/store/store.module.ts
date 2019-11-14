@@ -37,7 +37,11 @@ import { LogsComponent } from './components/logs/logs.component';
 import { AddDocumentComponent } from './components/document-upload/add-document.component';
 import { StoreConfigurationComponent } from './components/store-configuration/store-configuration.component';
 import { StoreItemConfigComponent } from './components/store-item-config/store-item-config.component';
+import { AddMasterInventoryComponent } from './components/add-master-inventory/add-master-inventory.component';
+import { AddItemCategoryComponent } from './components/add-item-category/add-item-category.component';
+import { AddItemComponent } from './components/add-item/add-item.component';
 
+import {MatRadioModule} from '@angular/material/radio';
 
 
 @NgModule({
@@ -65,7 +69,10 @@ import { StoreItemConfigComponent } from './components/store-item-config/store-i
     LogsComponent,
     AddDocumentComponent,
     StoreConfigurationComponent,
-    StoreItemConfigComponent
+    StoreItemConfigComponent,
+    AddMasterInventoryComponent,
+    AddItemCategoryComponent,
+    AddItemComponent
     // components
     //  DbsidebarComponent,
     // DbheaderComponent,
@@ -97,13 +104,15 @@ import { StoreItemConfigComponent } from './components/store-item-config/store-i
     MatTabsModule,
     MatTreeModule,
     MatSelectModule,
-    MatOptionModule
+    MatOptionModule,
+    MatRadioModule
     // MatRangeDatepickerModule,
     // MatNativeDateModule
 
 
 
   ],
-  entryComponents: [AddProcurementsComponent, AddMilageComponent, AddHoursComponent, AddDocumentComponent]
+  entryComponents: [AddProcurementsComponent, AddMilageComponent,
+    AddHoursComponent, AddDocumentComponent, AddMasterInventoryComponent, AddItemCategoryComponent, AddItemComponent]
 })
 export class StoreModule { }

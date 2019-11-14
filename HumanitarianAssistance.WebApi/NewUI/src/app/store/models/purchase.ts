@@ -114,6 +114,8 @@ export interface IAddEditPurchaseModel {
   DepreciationRate: any;
   TimezoneOffset: any;
   TransportItemId?: number;
+  ItemGroupTransportCategory?: number;
+  ItemTransportCategory?: number;
   PurchasedVehicleList: IPurchasedVehicleModel[];
   PurchasedGeneratorList: IPurchasedGeneratorModel[];
 
@@ -185,26 +187,15 @@ export interface IPurchaseItemDataSource {
   PurchaseName: string;
 }
 
-// export interface IStorePurchasePdfFlags {
-//   PurchaseId: boolean;
-//   ItemCode: boolean;
-//   ItemCodeDescription: boolean;
-//   MasterInventoryCode: boolean;
-//   Description: boolean;
-//   OfficeCode: boolean;
-//   BudgetLineName: boolean;
-//   InvoiceDate: boolean;
-//   ItemName: boolean;
-//   ProjectId: boolean;
-//   ProjectName: boolean;
-//   OriginalCost: boolean;
-//   DepreciatedCost: boolean;
-//   PurchasedQuantity: boolean;
-//   PurchaseDate: boolean;
-//   CurrencyName: boolean;
-//   ReceiptDate: boolean;
-//   DepreciationRate: boolean;
-//   ReceivedFromEmployee: boolean;
-//   ReceivedFromLocationName: boolean;
-//   Status: boolean;
-// }
+export interface IMonthlyBreakDown {
+  StartingMileage?: number;
+  IncurredMileage?: number;
+  StartingUsage?: number;
+  IncurredUsage?: number;
+  StandardMobilOilConsumptionRate: number;
+  StandardFuelConsumptionRate: number;
+  StartingCost: number;
+  UsageAnalysisBreakDownList: any[];
+  CostAnalysisBreakDownList: any[];
+
+}

@@ -32,6 +32,10 @@ export class AddLogisticItemsComponent implements OnInit {
   }
 
   addItem(value) {
+    if (!this.addLogisticItemsForm.valid) {
+      this.toastr.warning('Please fill all required fields');
+      return false;
+    }
     this.commonLoader.showLoader();
     if (this.data.Id !== undefined && this.data.Id != null ) {
       const model = {

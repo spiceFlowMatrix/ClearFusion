@@ -1,0 +1,34 @@
+<form [formGroup]="masterForm" (ngSubmit)="submit()">
+  <mat-card-title>
+    Add New Master Inventory
+  </mat-card-title>
+  <mat-card-subtitle>
+  </mat-card-subtitle>
+  <mat-card-content>
+    <mat-card-subtitle>What is the name of the Master Inventory?</mat-card-subtitle>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Item Name" formControlName="name">
+    </mat-form-field>
+    <mat-card-subtitle>Please describe the Master Inventory</mat-card-subtitle>
+    <mat-form-field class="full-width">
+      <textarea formControlName="description" [mat-autosize]="true" [cdkAutosizeMinRows]="3" matInput
+        placeholder="Description"></textarea>
+    </mat-form-field>
+    <lib-hum-dropdown [validation]="masterForm.controls['accountId'].hasError('required')" [options]="accounts$"
+      formControlName='accountId' [placeHolder]="'Account'"></lib-hum-dropdown>
+  </mat-card-content>
+
+  <mat-card-subtitle>Is this a Transport related Master Inventory?</mat-card-subtitle>
+
+  <mat-radio-group aria-label="Select an option" formControlName="istransport">
+    <mat-radio-button value="0">Yes</mat-radio-button>
+    <mat-radio-button value="1">No</mat-radio-button>
+  </mat-radio-group>
+
+  <mat-card-actions>
+    <hum-button *ngIf="!isSaving" [disabled]="masterForm.invalid" [isSubmit]="true" [type]="'save'" [text]="'save'"
+      [isSubmit]="true"></hum-button>
+    <hum-button *ngIf="isSaving" [type]="'loading'" [text]="'Saving....'"></hum-button>
+    <hum-button (click)='cancel()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+  </mat-card-actions>
+</form>

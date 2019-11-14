@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace HumanitarianAssistance.Common.Enums
 {
@@ -265,10 +266,9 @@ namespace HumanitarianAssistance.Common.Enums
         NewRequest = 1,
         Cancelled = 2,
         IssuePurchaseOrder = 3,
-        Approved = 4,
-        CompletePurchase = 5,
-        ControlApproved = 6,
-        ControlRejected = 7
+        CompletePurchase = 4,
+        ControlApproved = 5,
+        ControlRejected = 6
    }
 
     //#region "StoreItemGroups"
@@ -296,37 +296,57 @@ namespace HumanitarianAssistance.Common.Enums
         December = 12
     }
 
+    public enum TransportItemCategory
+    {
+        Vehicle=1,
+        Generator=2,
+        MobilOil=3,
+        MaintenanceService=4,
+        SpareParts=5,
+        Fuel= 6
+    }
+
     public enum UsageType
     {
-        [Display(Name="Total Fuel Usage")]
+        [Description("Total Fuel Usage")]
         TotalFuelUsage=1,
-        [Display(Name="Current Mileage")]
+        [Description("Current Mileage")]
         CurrentMileage=2,
-        [Display(Name="Actual Fuel Consumption Rate")]
+        [Description("Actual Fuel Consumption Rate")]
         ActualFuelConsumptionRate=3,
-        [Display(Name="Fuel Consumption Difference")]
+        [Description("Fuel Consumption Difference")]
         FuelConsumptionDifference=4,
-        [Display(Name="Total Mobil Oil Usage")]
+        [Description("Total Mobil Oil Usage")]
         TotalMobilOilUsage=5,
-        [Display(Name="Remaining Km For Mobil Oil Change")]
+        [Description("Remaining Km For Mobil Oil Change")]
         RemainingKmForMobilOilChange=6,
-        [Display(Name="Mobil Oil Change Rotation")]
+        [Description("Mobil Oil Change Rotation")]
         MobilOilChangeRotation=7,
-        [Display(Name="Fuel Total Cost")]
-        FuelTotalCost=8,
-         [Display(Name="Mobil Oil Total Cost")]
-        MobilOilTotalCost=9,
-        [Display(Name="Spare Parts Total Cost")]
-        SparePartsTotalCost=10,
-        [Display(Name="Service And Maintenance Total Cost")]
-        ServiceAndMaintenanceTotalCost=11,
-        [Display(Name="Total Cost")]
-        TotalCost=12,
-        [Display(Name="Current Usage")]
-        CurrentUsage=13,
-        [Display(Name="Actual Mobil Oil Consumption Rate")]
-        ActualMobilConsumptionRate=14,
-        [Display(Name="Mobil Oil Consumption Difference")]
-        MobilOilConsumptionDifference=15,
+        [Description("Current Usage")]
+        CurrentUsage=8,
+        [Description("Actual Mobil Oil Consumption Rate")]
+        ActualMobilConsumptionRate=9,
+        [Description("Mobil Oil Consumption Difference")]
+        MobilOilConsumptionDifference=10,
+    }
+
+    public enum CostAnalysis{
+        [Description("Fuel Total Cost")]
+        FuelTotalCost=100,
+         [Description("Mobil Oil Total Cost")]
+        MobilOilTotalCost=101,
+        [Description("Spare Parts Total Cost")]
+        SparePartsTotalCost=102,
+        [Description("Service And Maintenance Total Cost")]
+        ServiceAndMaintenanceTotalCost=103,
+    }
+
+
+    public enum HiringRequestStatus
+    {
+        Open = 1,
+        InProgress=2,
+        Completed = 3,
+        Closed = 4
     }
 }

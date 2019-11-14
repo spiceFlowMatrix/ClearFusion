@@ -113,4 +113,38 @@ export class LogisticService {
       RequestId
     );
   }
+
+  completePurchaseOrder(value) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_CompletePurchaseOrder,
+      value
+    );
+  }
+
+  getPurchasedItemsList(RequestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetPurchasedItemsList,
+      RequestId
+    );
+  }
+
+  GetAllCurrencyCodeList() {
+    return this.globalService.getList(
+      this.appurl.getApiUrl() + GLOBAL.API_code_GetAllCurrency
+    );
+  }
+
+  GetAllOfficeCodeList() {
+    return this.globalService.getList(
+      this.appurl.getApiUrl() + GLOBAL.API_code_GetAllOffice
+    );
+  }
+
+  GetBudgetLineListByProjectId(ProjectId) {
+    return this.globalService.getListById(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_BudgetLine_GetProjectBudgetLineDetail,
+        ProjectId
+    );
+  }
 }

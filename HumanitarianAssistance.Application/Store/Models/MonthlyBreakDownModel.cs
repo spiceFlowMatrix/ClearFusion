@@ -25,9 +25,17 @@ namespace HumanitarianAssistance.Application.Store.Models
         public string PurchaseName { get; set; }
         public long PurchaseId { get; set; }
         public string OfficeName { get; set; }
+        public StoreItemPurchase StoreItemPurchase {get; set;}
         public List<VehicleItemDetail> VehicleItemDetail { get; set; }
         public List<VehicleMileageDetail> VehicleMileageDetail { get; set; }
         public List<GeneratorItemDetail> GeneratorItemDetail { get; set; }
         public List<GeneratorUsageHourDetail> GeneratorUsageHourDetail { get; set; }
+    }
+
+    public class TotalMobilOilAndMonth 
+    {
+        public double TotalMobilOil { get; set; }
+        public int Month { get; set; }
+        public int Year { get; set; }
     }
 }
