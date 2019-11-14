@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191113061458_AddColumnToLogisticItemsTbl")]
+    partial class AddColumnToLogisticItemsTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5591,6 +5593,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int>("AccountStatus");
 
+                    b.Property<int>("CandidateStatus");
+
                     b.Property<int>("CountryId");
 
                     b.Property<string>("CreatedById");
@@ -5611,7 +5615,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int>("GradeId");
 
-                    b.Property<long>("HiringRequestId");
+                    b.Property<long>("InterviewId");
 
                     b.Property<double>("IrrelevantExperienceInYear");
 
@@ -5629,8 +5633,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int>("ProfessionId");
 
-                    b.Property<long?>("ProjectId");
-
                     b.Property<int>("ProvinceId");
 
                     b.Property<double>("RelevantExperienceInYear");
@@ -5647,13 +5649,9 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasIndex("GradeId");
 
-                    b.HasIndex("HiringRequestId");
-
                     b.HasIndex("OfficeId");
 
                     b.HasIndex("ProfessionId");
-
-                    b.HasIndex("ProjectId");
 
                     b.HasIndex("ProvinceId");
 
@@ -6025,38 +6023,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasKey("GenderConsiderationId");
 
                     b.ToTable("GenderConsiderationDetail");
-                });
-
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.HiringRequestCandidateStatus", b =>
-                {
-                    b.Property<long>("CandidateStatusId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long>("CandidateId");
-
-                    b.Property<int>("CandidateStatus");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<int>("EmployeeID");
-
-                    b.Property<int>("InterviewId");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.HasKey("CandidateStatusId");
-
-                    b.HasIndex("CandidateId");
-
-                    b.HasIndex("EmployeeID");
-
-                    b.ToTable("HiringRequestCandidateStatus");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.HiringRequestCandidates", b =>
@@ -9856,11 +9822,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .HasForeignKey("GradeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectHiringRequestDetail", "ProjectHiringRequestDetail")
-                        .WithMany()
-                        .HasForeignKey("HiringRequestId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("HumanitarianAssistance.Domain.Entities.OfficeDetail", "OfficeDetail")
                         .WithMany()
                         .HasForeignKey("OfficeId")
@@ -9870,10 +9831,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("ProfessionId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId");
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.ProvinceDetails", "ProvinceDetail")
                         .WithMany()
@@ -9961,19 +9918,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectDetail", "SelectedProjectDetail")
                         .WithMany()
                         .HasForeignKey("ProjectSelectionId");
-                });
-
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.HiringRequestCandidateStatus", b =>
-                {
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.CandidateDetails", "CandidateDetails")
-                        .WithMany()
-                        .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetails")
-                        .WithMany()
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.HiringRequestCandidates", b =>
