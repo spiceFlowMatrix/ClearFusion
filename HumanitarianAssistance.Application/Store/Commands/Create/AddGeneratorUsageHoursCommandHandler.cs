@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.Store;
 using HumanitarianAssistance.Persistence;
@@ -51,7 +52,8 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                             CreatedById = request.CreatedById,
                             IsDeleted = false,
                             EventType= "Usage Added",
-                            LogText= $"{request.Hours} Hour added to Generator Id {request.GeneratorId}"
+                            LogText= $"{request.Hours} Hour added to Generator Id {request.GeneratorId}",
+                            TransportType= (int)TransportItemCategory.Generator
                         };
 
                         await _dbContext.StoreLogger.AddAsync(logger);
@@ -74,7 +76,8 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                             CreatedById = request.CreatedById,
                             IsDeleted = false,
                             EventType= "Usage Updated",
-                            LogText= $"{request.Hours} Hour added to Generator Id {request.GeneratorId}"
+                            LogText= $"{request.Hours} Hour added to Generator Id {request.GeneratorId}",
+                            TransportType= (int)TransportItemCategory.Generator
                         };
 
                         await _dbContext.StoreLogger.AddAsync(logger);

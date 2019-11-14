@@ -79,117 +79,120 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                         _dbContext.StoreItemPurchases.Update(purchase);
                         await _dbContext.SaveChangesAsync();
 
-                        //Add Purchased vehicle List
-                        if (request.PurchasedVehicleList.Any())
-                        {
-                             List<PurchasedVehicleDetail> ExistingVehicleList = await _dbContext.PurchasedVehicleDetail
-                                                                                         .Where(x => x.IsDeleted == false && x.PurchaseId == request.PurchaseId).ToListAsync();
 
-                            foreach (var vehicle in request.PurchasedVehicleList)
-                            {
-                                if (vehicle.Id == null || vehicle.Id == 0)
-                                {
-                                    PurchasedVehicleDetail vehicleDetail = new PurchasedVehicleDetail
-                                    {
-                                        CreatedById = request.CreatedById,
-                                        CreatedDate = request.CreatedDate,
-                                        IsDeleted = false,
-                                        PurchaseId = purchase.PurchaseId,
-                                        EmployeeId = vehicle.EmployeeId,
-                                        FuelConsumptionRate = vehicle.FuelConsumptionRate,
-                                        IncurredMileage = vehicle.IncurredMileage,
-                                        MobilOilConsumptionRate = vehicle.MobilOilConsumptionRate,
-                                        ModelYear = vehicle.ModelYear,
-                                        OfficeId = vehicle.OfficeId,
-                                        PlateNo = vehicle.PlateNo,
-                                        StartingMileage = vehicle.StartingMileage,
-                                    };
-                                    await _dbContext.PurchasedVehicleDetail.AddAsync(vehicleDetail);
-                                }
-                                else
-                                {
-                                    PurchasedVehicleDetail vehicleToUpdate = ExistingVehicleList.FirstOrDefault(x => x.Id == vehicle.Id);
+                        // NOTE: Vehicle and Generator not to be added/updated form store purchase
 
-                                    if (vehicleToUpdate != null)
-                                    {
-                                        vehicleToUpdate.ModifiedById = request.ModifiedById;
-                                        vehicleToUpdate.ModifiedDate = request.ModifiedDate;
-                                        vehicleToUpdate.PurchaseId = purchase.PurchaseId;
-                                        vehicleToUpdate.EmployeeId = vehicle.EmployeeId;
-                                        vehicleToUpdate.FuelConsumptionRate = vehicle.FuelConsumptionRate;
-                                        vehicleToUpdate.IncurredMileage = vehicle.IncurredMileage;
-                                        vehicleToUpdate.MobilOilConsumptionRate = vehicle.MobilOilConsumptionRate;
-                                        vehicleToUpdate.ModelYear = vehicle.ModelYear;
-                                        vehicleToUpdate.OfficeId = vehicle.OfficeId;
-                                        vehicleToUpdate.PlateNo = vehicle.PlateNo;
-                                        vehicleToUpdate.StartingMileage = vehicle.StartingMileage;
-                                        _dbContext.PurchasedVehicleDetail.Update(vehicleToUpdate);
-                                    }
-                                }
-                            }
+                        // //Add Purchased vehicle List
+                        // if (request.PurchasedVehicleList.Any())
+                        // {
+                        //      List<PurchasedVehicleDetail> ExistingVehicleList = await _dbContext.PurchasedVehicleDetail
+                        //                                                                  .Where(x => x.IsDeleted == false && x.PurchaseId == request.PurchaseId).ToListAsync();
 
-                            await _dbContext.SaveChangesAsync();
-                            eventType="Vehicle";
-                            string logText = $"{purchase.PurchaseName} Purchase Edited";
+                        //     foreach (var vehicle in request.PurchasedVehicleList)
+                        //     {
+                        //         if (vehicle.Id == null || vehicle.Id == 0)
+                        //         {
+                        //             PurchasedVehicleDetail vehicleDetail = new PurchasedVehicleDetail
+                        //             {
+                        //                 CreatedById = request.CreatedById,
+                        //                 CreatedDate = request.CreatedDate,
+                        //                 IsDeleted = false,
+                        //                 PurchaseId = purchase.PurchaseId,
+                        //                 EmployeeId = vehicle.EmployeeId,
+                        //                 FuelConsumptionRate = vehicle.FuelConsumptionRate,
+                        //                 IncurredMileage = vehicle.IncurredMileage,
+                        //                 MobilOilConsumptionRate = vehicle.MobilOilConsumptionRate,
+                        //                 ModelYear = vehicle.ModelYear,
+                        //                 OfficeId = vehicle.OfficeId,
+                        //                 PlateNo = vehicle.PlateNo,
+                        //                 StartingMileage = vehicle.StartingMileage,
+                        //             };
+                        //             await _dbContext.PurchasedVehicleDetail.AddAsync(vehicleDetail);
+                        //         }
+                        //         else
+                        //         {
+                        //             PurchasedVehicleDetail vehicleToUpdate = ExistingVehicleList.FirstOrDefault(x => x.Id == vehicle.Id);
 
-                            // log details
-                            LogStoreInfo(request.CreatedById, eventType, logText, null);
-                        }
+                        //             if (vehicleToUpdate != null)
+                        //             {
+                        //                 vehicleToUpdate.ModifiedById = request.ModifiedById;
+                        //                 vehicleToUpdate.ModifiedDate = request.ModifiedDate;
+                        //                 vehicleToUpdate.PurchaseId = purchase.PurchaseId;
+                        //                 vehicleToUpdate.EmployeeId = vehicle.EmployeeId;
+                        //                 vehicleToUpdate.FuelConsumptionRate = vehicle.FuelConsumptionRate;
+                        //                 vehicleToUpdate.IncurredMileage = vehicle.IncurredMileage;
+                        //                 vehicleToUpdate.MobilOilConsumptionRate = vehicle.MobilOilConsumptionRate;
+                        //                 vehicleToUpdate.ModelYear = vehicle.ModelYear;
+                        //                 vehicleToUpdate.OfficeId = vehicle.OfficeId;
+                        //                 vehicleToUpdate.PlateNo = vehicle.PlateNo;
+                        //                 vehicleToUpdate.StartingMileage = vehicle.StartingMileage;
+                        //                 _dbContext.PurchasedVehicleDetail.Update(vehicleToUpdate);
+                        //             }
+                        //         }
+                        //     }
 
-                        //Add Purchased generator List
-                        if (request.PurchasedGeneratorList.Any())
-                        {
+                        //     await _dbContext.SaveChangesAsync();
+                        //     eventType="Vehicle";
+                        //     string logText = $"{purchase.PurchaseName} Purchase Edited";
+
+                        //     // log details
+                        //     LogStoreInfo(request.CreatedById, eventType, logText, null, (int)TransportItemCategory.Vehicle);
+                        // }
+
+                        // //Add Purchased generator List
+                        // if (request.PurchasedGeneratorList.Any())
+                        // {
                            
-                             List<PurchasedGeneratorDetail> ExistingGeneratorList = await _dbContext.PurchasedGeneratorDetail
-                                                                                        .Where(x => x.IsDeleted == false && x.PurchaseId == request.PurchaseId).ToListAsync();
+                        //      List<PurchasedGeneratorDetail> ExistingGeneratorList = await _dbContext.PurchasedGeneratorDetail
+                        //                                                                 .Where(x => x.IsDeleted == false && x.PurchaseId == request.PurchaseId).ToListAsync();
 
-                            foreach (var generator in request.PurchasedGeneratorList)
-                            {
-                                if (generator.Id == null || generator.Id == 0)
-                                {
-                                    PurchasedGeneratorDetail generatorDetail = new PurchasedGeneratorDetail
-                                    {
-                                        CreatedById = request.ModifiedById,
-                                        CreatedDate = request.ModifiedDate,
-                                        IsDeleted = false,
-                                        PurchaseId = purchase.PurchaseId,
-                                        FuelConsumptionRate = generator.FuelConsumptionRate,
-                                        IncurredUsage = generator.IncurredUsage,
-                                        MobilOilConsumptionRate = generator.MobilOilConsumptionRate,
-                                        ModelYear = generator.ModelYear,
-                                        OfficeId = generator.OfficeId,
-                                        StartingUsage = generator.StartingUsage,
-                                        Voltage = generator.Voltage,
-                                    };
-                                    await _dbContext.PurchasedGeneratorDetail.AddAsync(generatorDetail);
-                                }
-                                else
-                                {
-                                    PurchasedGeneratorDetail generatorToUpdate = ExistingGeneratorList.FirstOrDefault(x => x.Id == generator.Id);
+                        //     foreach (var generator in request.PurchasedGeneratorList)
+                        //     {
+                        //         if (generator.Id == null || generator.Id == 0)
+                        //         {
+                        //             PurchasedGeneratorDetail generatorDetail = new PurchasedGeneratorDetail
+                        //             {
+                        //                 CreatedById = request.ModifiedById,
+                        //                 CreatedDate = request.ModifiedDate,
+                        //                 IsDeleted = false,
+                        //                 PurchaseId = purchase.PurchaseId,
+                        //                 FuelConsumptionRate = generator.FuelConsumptionRate,
+                        //                 IncurredUsage = generator.IncurredUsage,
+                        //                 MobilOilConsumptionRate = generator.MobilOilConsumptionRate,
+                        //                 ModelYear = generator.ModelYear,
+                        //                 OfficeId = generator.OfficeId,
+                        //                 StartingUsage = generator.StartingUsage,
+                        //                 Voltage = generator.Voltage,
+                        //             };
+                        //             await _dbContext.PurchasedGeneratorDetail.AddAsync(generatorDetail);
+                        //         }
+                        //         else
+                        //         {
+                        //             PurchasedGeneratorDetail generatorToUpdate = ExistingGeneratorList.FirstOrDefault(x => x.Id == generator.Id);
 
-                                    if (generatorToUpdate != null)
-                                    {
-                                        generatorToUpdate.ModifiedById = request.ModifiedById;
-                                        generatorToUpdate.ModifiedDate = request.ModifiedDate;
-                                        generatorToUpdate.PurchaseId = purchase.PurchaseId;
-                                        generatorToUpdate.FuelConsumptionRate = generator.FuelConsumptionRate;
-                                        generatorToUpdate.IncurredUsage = generator.IncurredUsage;
-                                        generatorToUpdate.MobilOilConsumptionRate = generator.MobilOilConsumptionRate;
-                                        generatorToUpdate.ModelYear = generator.ModelYear;
-                                        generatorToUpdate.OfficeId = generator.OfficeId;
-                                        generatorToUpdate.Voltage = generator.Voltage;
-                                        generatorToUpdate.StartingUsage = generator.StartingUsage;
-                                        _dbContext.PurchasedGeneratorDetail.Update(generatorToUpdate);
-                                    }
-                                }
-                            }
-                            await _dbContext.SaveChangesAsync();
-                            eventType="Generator";
-                            string logText = $"{purchase.PurchaseName} Purchase Edited";
+                        //             if (generatorToUpdate != null)
+                        //             {
+                        //                 generatorToUpdate.ModifiedById = request.ModifiedById;
+                        //                 generatorToUpdate.ModifiedDate = request.ModifiedDate;
+                        //                 generatorToUpdate.PurchaseId = purchase.PurchaseId;
+                        //                 generatorToUpdate.FuelConsumptionRate = generator.FuelConsumptionRate;
+                        //                 generatorToUpdate.IncurredUsage = generator.IncurredUsage;
+                        //                 generatorToUpdate.MobilOilConsumptionRate = generator.MobilOilConsumptionRate;
+                        //                 generatorToUpdate.ModelYear = generator.ModelYear;
+                        //                 generatorToUpdate.OfficeId = generator.OfficeId;
+                        //                 generatorToUpdate.Voltage = generator.Voltage;
+                        //                 generatorToUpdate.StartingUsage = generator.StartingUsage;
+                        //                 _dbContext.PurchasedGeneratorDetail.Update(generatorToUpdate);
+                        //             }
+                        //         }
+                        //     }
+                        //     await _dbContext.SaveChangesAsync();
+                        //     eventType="Generator";
+                        //     string logText = $"{purchase.PurchaseName} Purchase Edited";
 
-                            // log details
-                            LogStoreInfo(request.CreatedById, eventType, logText, null);
-                        }
+                        //     // log details
+                        //     LogStoreInfo(request.CreatedById, eventType, logText, null, (int)TransportItemCategory.Generator);
+                        // }
 
                         //Update purchased vehicle Item
                         if ((request.ItemGroupTransportCategory == (int)TransportItemCategory.Vehicle) &&
@@ -206,7 +209,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                             string logText = $"{purchase.PurchaseName} Purchase Edited";
 
                             // log details
-                            LogStoreInfo(request.CreatedById, eventType, logText, null);
+                            LogStoreInfo(request.CreatedById, eventType, logText, null, (int)TransportItemCategory.Vehicle);
                         }
 
                         //Update purchased generator Item
@@ -226,7 +229,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                             string logText = $"{purchase.PurchaseName} Purchase Edited";
 
                             // log details
-                            LogStoreInfo(request.CreatedById, eventType, logText, null);
+                            LogStoreInfo(request.CreatedById, eventType, logText, null, (int)TransportItemCategory.Generator);
                         }
 
                         tran.Commit();
@@ -301,7 +304,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
             return eventTypeName;
         }
 
-        private void LogStoreInfo(string createdById, string eventType, string logText, long? purchaseId)
+        private void LogStoreInfo(string createdById, string eventType, string logText, long? purchaseId, int transportType)
         {
             //log details
             StoreLogger logger = new StoreLogger
@@ -311,11 +314,12 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                 IsDeleted = false,
                 EventType = $"{eventType} Purchased",
                 LogText = logText,
-                PurchaseId = purchaseId
+                PurchaseId = purchaseId,
+                TransportType= transportType
             };
 
-            _dbContext.StoreLogger.AddAsync(logger);
-            _dbContext.SaveChangesAsync();
+            _dbContext.StoreLogger.Add(logger);
+            _dbContext.SaveChanges();
         }
     }
 }

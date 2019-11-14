@@ -26,7 +26,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
             {
                 var item = await _dbContext.StoreLogger.Where(x => x.IsDeleted == false).ToListAsync();
 
-                model = (from u in await _dbContext.StoreLogger.Where(x => x.IsDeleted == false).ToListAsync()
+                model = (from u in await _dbContext.StoreLogger.Where(x => x.IsDeleted == false && x.TransportType == request.TransportType).ToListAsync()
                         join usd in await _dbContext.UserDetails.Where(x=> x.IsDeleted == false).ToListAsync() on u.CreatedById equals usd.AspNetUserId
                         select new StoreLogsModel
                         {

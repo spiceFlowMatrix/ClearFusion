@@ -228,9 +228,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetVehicleGeneratorTrackerLogs()
+        public async Task<IActionResult> GetVehicleGeneratorTrackerLogs(int id)
         {
-            var result = await Task.FromResult(_mediator.Send(new GetVehicleGeneratorTrackerLogsQuery { }));
+            var result = await Task.FromResult(_mediator.Send(new GetVehicleGeneratorTrackerLogsQuery { TransportType = id }));
 
             if (result.Exception == null)
             {

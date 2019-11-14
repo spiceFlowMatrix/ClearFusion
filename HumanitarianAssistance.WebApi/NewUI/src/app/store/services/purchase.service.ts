@@ -558,11 +558,11 @@ getAllCurrencies() {
           GLOBAL.API_code_GetAllCurrency);
 }
 
-getStoreLogs() {
+getStoreLogs(id: number) {
   return this.http
       .get<any>(
         this.appurl.getApiUrl() +
-          GLOBAL.API_StorePurchase_GetVehicleGeneratorTrackerLogs);
+          GLOBAL.API_StorePurchase_GetVehicleGeneratorTrackerLogs + '?id=' + id);
 }
 
 getMonthlyBreakDownYears(): Observable<IDropDownModel[]> {

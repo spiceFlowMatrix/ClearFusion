@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Observable, of, ReplaySubject } from 'rxjs';
 import { ILogs } from '../../models/vehicles';
 import { PurchaseService } from '../../services/purchase.service';
@@ -16,6 +16,8 @@ export class LogsComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   hideUnitColums: Observable<{ headers?: string[], items?: string[] }>;
 
+  @Input() transportType: number;
+
   constructor(private purchaseService: PurchaseService) { }
 
   ngOnInit() {
@@ -27,7 +29,7 @@ export class LogsComponent implements OnInit, OnDestroy {
   }
 
   getLogs() {
-    this.purchaseService.getStoreLogs()
+    this.purchaseService.getStoreLogs(this.transportType)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
         debugger;

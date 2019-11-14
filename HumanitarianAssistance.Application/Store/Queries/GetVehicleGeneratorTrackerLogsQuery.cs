@@ -6,6 +6,6 @@ namespace HumanitarianAssistance.Application.Store.Queries
 {
     public class GetVehicleGeneratorTrackerLogsQuery: IRequest<List<StoreLogsModel>>
     {
-        
+        public int TransportType { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.Store;
 using HumanitarianAssistance.Persistence;
@@ -51,7 +52,8 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                             CreatedById = request.CreatedById,
                             IsDeleted = false,
                             EventType = "Mileage Added",
-                            LogText = $"{request.Mileage} Mileage added to Vehicle Id {request.VehicleId}"
+                            LogText = $"{request.Mileage} Mileage added to Vehicle Id {request.VehicleId}",
+                            TransportType= (int)TransportItemCategory.Vehicle
                         };
 
                         await _dbContext.StoreLogger.AddAsync(logger);
@@ -74,7 +76,8 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                             CreatedById = request.CreatedById,
                             IsDeleted = false,
                             EventType = "Mileage Updated",
-                            LogText = $"{request.Mileage} Mileage added to Vehcile Id {request.VehicleId}"
+                            LogText = $"{request.Mileage} Mileage added to Vehcile Id {request.VehicleId}",
+                            TransportType= (int)TransportItemCategory.Vehicle
                         };
 
                         await _dbContext.StoreLogger.AddAsync(logger);

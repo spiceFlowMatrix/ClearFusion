@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.Store;
 using HumanitarianAssistance.Persistence;
@@ -51,11 +52,11 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                     CreatedById = request.ModifiedById,
                     IsDeleted = false,
                     EventType = "Vehicle Edited",
-                    LogText = $"Generator details were edited for generator id-{request.VehicleId}"
+                    LogText = $"Vehicle details were edited for id-{request.VehicleId}",
+                    TransportType = (int)TransportItemCategory.Vehicle
                 };
 
                 await _dbContext.StoreLogger.AddAsync(logger);
-                await _dbContext.SaveChangesAsync();
                 await _dbContext.SaveChangesAsync();
                 isSuccess= true;
             }
