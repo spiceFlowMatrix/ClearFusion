@@ -47,7 +47,6 @@ export class LogsComponent implements OnInit, OnDestroy {
     this.purchaseService.getStoreLogs()
       .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
-        debugger;
 
       });
   }

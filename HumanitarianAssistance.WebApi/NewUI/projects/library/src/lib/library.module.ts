@@ -23,6 +23,7 @@ import { TableComponent } from './components/table/table.component';
 import { ButtonComponent } from './components/button/button.component';
 import { ConfigCardComponent } from './components/config-card/config-card.component';
 import { MatCardModule, MatDividerModule } from '@angular/material';
+import { AddScrollDirective } from './directives/add-scroll.directive';
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import { MatCardModule, MatDividerModule } from '@angular/material';
     HumDropdownComponent,
     TableComponent,
     ButtonComponent,
-    ConfigCardComponent
+    ConfigCardComponent,
+    AddScrollDirective
   ],
   exports: [
     LibraryComponent,
@@ -69,6 +71,7 @@ import { MatCardModule, MatDividerModule } from '@angular/material';
     TableComponent,
     ButtonComponent,
     ConfigCardComponent,
+    AddScrollDirective
   ],
   entryComponents: [
     DeleteConfirmationComponent

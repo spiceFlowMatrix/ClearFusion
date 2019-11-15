@@ -303,6 +303,16 @@ namespace HumanitarianAssistance.Common.Enums
         December = 12
     }
 
+    public enum TransportItemCategory
+    {
+        Vehicle=1,
+        Generator=2,
+        MobilOil=3,
+        MaintenanceService=4,
+        SpareParts=5,
+        Fuel= 6
+    }
+
     public enum UsageType
     {
         [Description("Total Fuel Usage")]

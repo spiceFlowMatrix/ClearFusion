@@ -25,6 +25,7 @@ namespace HumanitarianAssistance.Application.Store.Models
         public string PurchaseName { get; set; }
         public long PurchaseId { get; set; }
         public string OfficeName { get; set; }
+        public StoreItemPurchase StoreItemPurchase {get; set;}
         public List<VehicleItemDetail> VehicleItemDetail { get; set; }
         public List<VehicleMileageDetail> VehicleMileageDetail { get; set; }
         public List<GeneratorItemDetail> GeneratorItemDetail { get; set; }
