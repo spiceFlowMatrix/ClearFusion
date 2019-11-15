@@ -216,7 +216,6 @@ export class HiringRequestsComponent implements OnInit {
       HiringRequestId: [],
       ProjectId: this.projectId
     };
-    console.log('id', this.selection.selected);
     if (
       this.selection.selected.length > 0 &&
       this.selection.selected.length !== undefined
@@ -228,7 +227,7 @@ export class HiringRequestsComponent implements OnInit {
         .IsCompltedeHrDetail(this.completeRequestModel)
         .subscribe(
           (responseData: IResponseData) => {
-            if (responseData.statusCode === 200 && responseData.data !== null) {
+            if (responseData.statusCode === 200 ) {
               this.getAllHiringRequestFilterList(this.filterModel);
             } else if (responseData.statusCode === 400) {
               this.toastr.error('Something went wrong .Please try again.');
@@ -255,7 +254,7 @@ export class HiringRequestsComponent implements OnInit {
       this.hiringRequestService
         .IsCloasedHrDetail(this.completeRequestModel)
         .subscribe((responseData: IResponseData) => {
-          if (responseData.statusCode === 200 && responseData.data !== null) {
+          if (responseData.statusCode === 200) {
             this.getAllHiringRequestFilterList(this.filterModel);
           } else if (responseData.statusCode === 400) {
             this.toastr.error('Something went wrong .Please try again.');

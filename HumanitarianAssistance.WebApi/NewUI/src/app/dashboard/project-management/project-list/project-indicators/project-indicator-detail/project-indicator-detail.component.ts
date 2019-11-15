@@ -80,7 +80,6 @@ export class ProjectIndicatorDetailComponent implements OnInit, OnChanges {
       this.projectId = +params['id'];
     });
     this.initQuestionModel();
-    console.log("projectdetai", this.ProjectindicatorDetail);
   }
 
   ngOnChanges() {
