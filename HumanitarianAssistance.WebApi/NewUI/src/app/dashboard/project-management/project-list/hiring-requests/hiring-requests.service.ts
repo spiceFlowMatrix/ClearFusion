@@ -327,6 +327,27 @@ export class HiringRequestsService {
 }
 //#endregion
 
+ //#region "AddExistingCandidateDetail"
+ AddExistingCandidateDetail(data: any) {
+  return this.globalService
+    .post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HiringRequest_AddExistingCandidateDetail,
+      data
+    )
+    .pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+}
+//#endregion
+
   //#region "getAllCandidateList"
   getAllCandidateList(data: ICandidateFilterModel): any {
     return this.globalService
@@ -339,6 +360,28 @@ export class HiringRequestsService {
         map(x => {
           const responseData: IResponseData = {
             data: x.data.CandidateList,
+            total: x.data.TotalCount,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
+  //#region "GetAllExistingCandidateList"
+  GetAllExistingCandidateList(data: ICandidateFilterModel): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_GetAllExistingCandidateList,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.ExistingCandidateList,
             total: x.data.TotalCount,
             statusCode: x.StatusCode,
             message: x.Message

@@ -169,6 +169,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         {
             return await _mediator.Send(query);
         }  
+        
        [HttpPost]
          public async Task<ApiResponse> UpdateCandidateStatusByStatusId([FromBody]UpdateCandidateStatusByStatusIdCommand command)
         {
@@ -176,6 +177,21 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             command.ModifiedById = userId;
             command.ModifiedDate = DateTime.UtcNow;
             return await _mediator.Send(command);
-        }             
+        } 
+       
+        [HttpPost]
+        public async Task<ApiResponse> AddExistingCandidateDetail([FromBody]AddExistingCandidateDetailCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+        } 
+
+        [HttpPost]
+        public async Task<ApiResponse> GetAllExistingCandidateList([FromBody]GetAllExistingCandidateListQuery query)
+        {
+            return await _mediator.Send(query);
+        }              
     }  
 }

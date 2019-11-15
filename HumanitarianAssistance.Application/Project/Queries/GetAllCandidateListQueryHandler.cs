@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 namespace HumanitarianAssistance.Application.Project.Queries {
     public class GetAllCandidateListQueryHandler : IRequestHandler<GetAllCandidateListQuery, ApiResponse> {
         private HumanitarianAssistanceDbContext _dbContext;
-
         public GetAllCandidateListQueryHandler (HumanitarianAssistanceDbContext dbContext) {
             _dbContext = dbContext;
         }
@@ -21,11 +20,10 @@ namespace HumanitarianAssistance.Application.Project.Queries {
             try {
                 int totalCount = await _dbContext.CandidateDetails.CountAsync (x => x.IsDeleted == false);
 
-                var candidateDetail = (from cd in _dbContext.CandidateDetails
-                .Where (x => x.IsDeleted == false) 
-
-                join s in _dbContext.HiringRequestCandidateStatus on cd.CandidateId equals s.CandidateId 
-                where s.HiringRequestId == request.HiringRequestId && s.ProjectId == request.ProjectId
+                var candidateDetail = (from s in _dbContext.HiringRequestCandidateStatus
+                .Where (x => x.IsDeleted == false && x.CandidateId !=null && x.HiringRequestId == request.HiringRequestId && x.ProjectId == request.ProjectId) 
+                join cd in _dbContext.CandidateDetails on s.CandidateId equals cd.CandidateId into cdl 
+                from cd in cdl.DefaultIfEmpty () 
                 join g in _dbContext.JobGrade on cd.GradeId equals g.GradeId into gd 
                 from g in gd.DefaultIfEmpty () 
                 join p in _dbContext.ProfessionDetails on cd.ProfessionId equals p.ProfessionId into pd 

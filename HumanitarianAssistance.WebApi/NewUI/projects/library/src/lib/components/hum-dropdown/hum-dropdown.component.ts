@@ -39,8 +39,8 @@ export class HumDropdownComponent implements OnInit, ControlValueAccessor {
   }
   // handle change event
   optionChange(event) {
-    this.onChange(event);
-    this.onTouch();
+   // this.onChange(event);
+   // this.onTouch();
     this.value = event;
     this.change.emit(event);
   }

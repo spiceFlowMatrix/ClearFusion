@@ -2,11 +2,11 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { of, Observable, ReplaySubject } from 'rxjs';
 import {
   HiringRequestDetailList,
-  IFilterModel,
   ICandidateDetailList,
   ISubCandidateList,
   TableActionsModel,
-  ICandidateFilterModel
+  ICandidateFilterModel,
+  IExistingCandidateList
 } from '../models/hiring-requests-models';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
@@ -14,13 +14,14 @@ import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/stat
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { AddHiringRequestComponent } from '../add-hiring-request/add-hiring-request.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSelectChange } from '@angular/material';
 import { AddNewCandidateComponent } from '../add-new-candidate/add-new-candidate.component';
 import { CandidateStatus, CandidateAction } from 'src/app/shared/enum';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
 import { IDropDownModel } from 'src/app/store/models/purchase';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-request-detail',
@@ -28,6 +29,13 @@ import { IDropDownModel } from 'src/app/store/models/purchase';
   styleUrls: ['./request-detail.component.scss']
 })
 export class RequestDetailComponent implements OnInit {
+  statusFilter: any[] = [
+    { Id: 0, value: 'Pending Shortlist' },
+    { Id: 1, value: 'Pending Interview' },
+    { Id: 2, value: 'Pending Selection' },
+    { Id: 3, value: 'Selected' },
+    { Id: 4, value: 'Rejected' }
+  ];
   newCandidatesHeaders$ = of([
     'Candidate Id',
     'First Name',
@@ -47,11 +55,10 @@ export class RequestDetailComponent implements OnInit {
     'Irrelevant Experience'
   ]);
   existingCandidatesHeaders$ = of([
+    'Employee Id',
     'Employee Code',
-    'First Name',
-    'Last Name',
+    'Full Name',
     'Gender',
-    'Interview',
     'Employee Status',
     'firstText'
   ]);
@@ -59,6 +66,8 @@ export class RequestDetailComponent implements OnInit {
   existingEmployeesList$: Observable<IDropDownModel[]>;
   newCandidatesList$: Observable<[ICandidateDetailList]>;
   hiringRequestDetails: HiringRequestDetailList;
+  existingCandidatesList$: Observable<IExistingCandidateList[]>;
+  existingCandidatesList2$: Observable<IExistingCandidateList[]>;
   filterValueModel: ICandidateFilterModel;
   hiringRequestId: any;
   projectId: any;
@@ -70,6 +79,7 @@ export class RequestDetailComponent implements OnInit {
     public dialog: MatDialog,
     private globalSharedService: GlobalSharedService,
     private appurl: AppUrlService,
+    private toastr: ToastrService,
     private routeActive: ActivatedRoute,
     public hiringRequestService: HiringRequestsService,
     private loader: CommonLoaderService
@@ -79,13 +89,9 @@ export class RequestDetailComponent implements OnInit {
       pageSize: 10,
       TotalCount: null,
       FilterValue: '',
-      ProjectId: this.projectId,
-      HiringRequestId: this.hiringRequestId
+      ProjectId: null,
+      HiringRequestId: null
     };
-    this.existingEmployeesList$ = of([
-      { name: 'First', value: 1 },
-      { name: 'Second', value: 2 }
-    ] as IDropDownModel[]);
   }
 
   ngOnInit() {
@@ -124,7 +130,9 @@ export class RequestDetailComponent implements OnInit {
     };
 
     this.getHiringRequestDetailsByHiringRequestId();
-    this.GetAllCandidateList(this.filterValueModel);
+    this.getAllCandidateList(this.filterValueModel);
+    this.getAllExistingCandidateList(this.filterValueModel);
+    this.getExistingEmployeeDropDownList();
     this.getScreenSize();
   }
 
@@ -207,13 +215,15 @@ export class RequestDetailComponent implements OnInit {
     // refresh the list after new request created
     dialogRef.componentInstance.onAddCandidateListRefresh.subscribe(() => {
       // do something
-      this.GetAllCandidateList(this.filterValueModel);
+      this.getAllCandidateList(this.filterValueModel);
     });
     dialogRef.afterClosed().subscribe(() => {});
   }
   //#endregion
 
-  GetAllCandidateList(filter: ICandidateFilterModel) {
+  getAllCandidateList(filter: ICandidateFilterModel) {
+    filter.ProjectId = this.projectId;
+    filter.HiringRequestId = this.hiringRequestId;
     this.loader.showLoader();
     this.hiringRequestService.getAllCandidateList(filter).subscribe(
       (response: IResponseData) => {
@@ -258,6 +268,57 @@ export class RequestDetailComponent implements OnInit {
       }
     );
   }
+  getExistingEmployeeDropDownList() {
+    this.hiringRequestService.GetAllEmployeeList().subscribe(
+      (response: IResponseData) => {
+        this.loader.showLoader();
+        if (response.statusCode === 200 && response.data !== null) {
+          this.existingEmployeesList$ = of(
+            response.data.map(element => {
+              return {
+                value: element.EmployeeId,
+                name: element.EmployeeName
+              } as IDropDownModel;
+            })
+          );
+        }
+        this.loader.hideLoader();
+      },
+      error => {
+        this.loader.hideLoader();
+      }
+    );
+  }
+
+  getAllExistingCandidateList(filter: ICandidateFilterModel) {
+    filter.ProjectId = this.projectId;
+    filter.HiringRequestId = this.hiringRequestId;
+    this.loader.showLoader();
+    this.hiringRequestService.GetAllExistingCandidateList(filter).subscribe(
+      (response: IResponseData) => {
+        if (response.statusCode === 200 && response.data !== null) {
+          this.existingCandidatesList2$ = of(
+            response.data.map(element => {
+              return {
+                EmployeeId: element.EmployeeId,
+                EmployeeCode: element.EmployeeCode,
+                FullName: element.FullName,
+                Gender: element.Gender,
+                CandidateStatus: CandidateStatus[element.CandidateStatus],
+                firstText: CandidateAction[element.CandidateStatus]
+              } as IExistingCandidateList;
+            })
+          );
+          this.existingCandidatesList$ = this.existingCandidatesList2$;
+        }
+        this.loader.hideLoader();
+      },
+      () => {
+        this.loader.hideLoader();
+      }
+    );
+  }
+
   updateCandidateStatus(candidateDetails: any) {
     this.loader.showLoader();
     this.hiringRequestService
@@ -277,12 +338,43 @@ export class RequestDetailComponent implements OnInit {
       );
   }
 
-  actionEvents(data: any) {
+  OnExistingEmployeeSelection(data: any) {
     const candidateDetails: any = {
-      statusId: +CandidateStatus[data.item.CandidateStatus],
-      candidateId: data.item.CandidateId
+      HiringRequestId: this.hiringRequestId,
+      ProjectId: this.projectId,
+      EmployeeId: data
     };
-    this.updateCandidateStatus(candidateDetails);
+    this.hiringRequestService
+      .AddExistingCandidateDetail(candidateDetails)
+      .subscribe(
+        (response: IResponseData) => {
+          if (response.statusCode === 200) {
+            this.getAllExistingCandidateList(this.filterValueModel);
+            this.toastr.success('Employee successfully added');
+          } else {
+            this.toastr.error(response.message);
+          }
+        },
+        error => {
+          this.toastr.error('Someting went wrong. Please try again');
+        }
+      );
+  }
+
+  actionEvents(data: any) {
+    if (data.item.CandidateId > 0) {
+      const candidateDetails: any = {
+        statusId: +CandidateStatus[data.item.CandidateStatus],
+        candidateId: data.item.CandidateId
+      };
+      this.updateCandidateStatus(candidateDetails);
+    } else if (data.item.EmployeeId > 0) {
+      const candidateDetails: any = {
+        statusId: +CandidateStatus[data.item.CandidateStatus],
+        employeeId: data.item.EmployeeId
+      };
+      this.updateCandidateStatus(candidateDetails);
+    }
   }
   rejectCandidate(data: any) {
     const candidateDetails: any = {
@@ -296,7 +388,7 @@ export class RequestDetailComponent implements OnInit {
   onExportPdf() {
     this.loader.showLoader();
     const data: any = {
-      HiringRequestId : this.hiringRequestId,
+      HiringRequestId: this.hiringRequestId,
       ProjectId: this.projectId
     };
     this.globalSharedService
@@ -306,7 +398,21 @@ export class RequestDetailComponent implements OnInit {
       )
       .pipe(takeUntil(this.destroyed$))
       .subscribe();
-      this.loader.hideLoader();
+    this.loader.hideLoader();
   }
   //#endregion
+
+  onStatusFilter(data: MatSelectChange) {
+    if (data.value == '') {
+      this.getAllExistingCandidateList(this.filterValueModel);
+    } else {
+      this.existingCandidatesList2$.subscribe(res => {
+        this.existingCandidatesList$ = of(
+          res.filter(x =>
+            data.value.includes(CandidateStatus[x.CandidateStatus])
+          )
+        );
+      });
+    }
+  }
 }

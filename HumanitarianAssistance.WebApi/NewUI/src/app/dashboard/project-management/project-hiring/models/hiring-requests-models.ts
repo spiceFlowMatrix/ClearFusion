@@ -110,6 +110,15 @@ export interface ICandidateDetailList {
   subItems?: ISubCandidateList[];
 }
 
+export interface IExistingCandidateList {
+  EmployeeId?: number;
+  EmployeeCode?: string;
+  FullName?: string;
+  Gender?: string;
+  CandidateStatus?: string;
+  firstText?: string;
+}
+
 export interface ISubCandidateList {
   PhoneNumber?: string;
   Email?: string;

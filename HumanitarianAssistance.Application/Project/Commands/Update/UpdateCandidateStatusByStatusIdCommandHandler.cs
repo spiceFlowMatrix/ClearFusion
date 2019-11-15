@@ -32,9 +32,20 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update {
                     }
                     await _dbContext.SaveChangesAsync ();
                     response.data.CandidateStatus = candidateDetails;
-                    response.StatusCode = StaticResource.successStatusCode;
-                    response.Message = "Success";
+                } else if (request.employeeId != 0) {
+                    var candidateDetails = await _dbContext.HiringRequestCandidateStatus.Where (x => x.EmployeeID == request.employeeId && x.IsDeleted == false).FirstOrDefaultAsync ();
+                    if (request.statusId == 4) {
+                        candidateDetails.CandidateStatus = 4;
+                    } else if (candidateDetails.CandidateStatus != 3 || candidateDetails.CandidateStatus != 4) {
+                        candidateDetails.CandidateStatus = candidateDetails.CandidateStatus + 1;
+                        candidateDetails.ModifiedById = request.ModifiedById;
+                        candidateDetails.ModifiedDate = request.ModifiedDate;
+                    }
+                    await _dbContext.SaveChangesAsync ();
+                    response.data.CandidateStatus = candidateDetails;
                 }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
             } catch (Exception ex) {
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;

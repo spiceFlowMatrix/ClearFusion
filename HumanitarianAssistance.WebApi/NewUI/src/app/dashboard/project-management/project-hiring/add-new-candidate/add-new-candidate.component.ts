@@ -65,8 +65,8 @@ export class AddNewCandidateComponent implements OnInit {
     });
 
     this.accountStatusList$ = of([
-      { name: 'Active', value: 1 },
-      { name: 'Nonactive', value: 2 }
+      { name: 'Prospective', value: 1 },
+      { name: 'Active', value: 2 }
     ] as IDropDownModel[]);
 
     this.genderList$ = of([
