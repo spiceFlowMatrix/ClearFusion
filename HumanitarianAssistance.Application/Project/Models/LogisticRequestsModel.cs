@@ -14,5 +14,6 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string BudgetLine { get; set; }
         public string Currency { get; set; }
         public string Office { get; set; }   
+        public int ComparativeStatus { get; set; }
     }
 }
