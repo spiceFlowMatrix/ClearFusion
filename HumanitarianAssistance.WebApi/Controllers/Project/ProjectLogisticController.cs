@@ -155,6 +155,52 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(model);
         }
         
+        [HttpPost]
+        public async Task<ApiResponse> IssueComparativeStatement([FromBody]long RequestId)
+        {   
+            IssueComparativeStatementCommand model = new IssueComparativeStatementCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.RequestId = RequestId; 
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> AddLogisticSupplier([FromBody]AddLogisticSupplierCommand model)
+        {   
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> GetLogisticSupplierList([FromBody]long RequestId)
+        {   
+            GetLogisticSupplierListQuery model = new GetLogisticSupplierListQuery();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.requestId = RequestId; 
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> DeleteLogisticSupplier([FromBody]long SupplierId)
+        {   
+            DeleteLogisticSupplierCommand model = new DeleteLogisticSupplierCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            model.SupplierId = SupplierId; 
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> EditLogisticSupplier([FromBody]EditLogisticSupplierCommand model)
+        {   
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
     }
 
 }

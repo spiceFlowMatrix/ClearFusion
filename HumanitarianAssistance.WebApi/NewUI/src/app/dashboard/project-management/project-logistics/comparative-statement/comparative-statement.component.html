@@ -13,9 +13,9 @@
     <p>Due to technology limitations in previous systems, only 3 suppliers could be listed for evaluation. Now we can easily add as many as needed.</p>
     <div>
       <h4>Suppliers
-        <hum-button [type]="'add'" [text]="'ADD SUPPLIER'"></hum-button>
+        <hum-button (click)="openAddSupplierDialog()" [type]="'add'" [text]="'ADD SUPPLIER'"></hum-button>
       </h4>
-      <hum-table [headers]="supplierHeaders$" [items]="supplierData$" [subHeaders]="supplierSubHeaders$" [hideColums$]="hideSupplierColums"></hum-table>
+      <hum-table [actions]="actions" (actionClick)="onActionClick($event)" [headers]="supplierHeaders$" [items]="supplierData$" [subHeaders]="supplierSubHeaders$" [hideColums$]="hideSupplierColums"></hum-table>
     </div>
     <mat-divider></mat-divider>
     <div style="padding-top: 1px;">

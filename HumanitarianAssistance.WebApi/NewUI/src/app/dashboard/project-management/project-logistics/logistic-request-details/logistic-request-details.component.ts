@@ -277,6 +277,19 @@ Currency: '', BudgetLine: '', Office: ''};
     });
   }
 
+  issueComparativeStatement() {
+    this.commonLoader.showLoader();
+    this.logisticservice.IssueComparativeStatement(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.getRequestDetails();
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
 }
 interface RequestDetail {
   RequestId;
