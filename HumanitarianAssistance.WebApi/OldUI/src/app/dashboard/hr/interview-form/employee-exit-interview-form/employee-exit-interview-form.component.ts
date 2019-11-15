@@ -1,4 +1,10 @@
-import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  SimpleChanges,
+  OnChanges
+} from '@angular/core';
 import { HrService } from '../../hr.service';
 import { CodeService } from '../../../code/code.service';
 import { Router } from '@angular/router';
@@ -6,7 +12,10 @@ import { ToastrService } from 'ngx-toastr';
 import { GLOBAL } from '../../../../shared/global';
 import { AppSettingsService } from '../../../../service/app-settings.service';
 import { CommonService } from '../../../../service/common.service';
-import { IEmpExitInterviewFormModel, IEmployeeListModel } from '../interview-form.models';
+import {
+  IEmpExitInterviewFormModel,
+  IEmployeeListModel
+} from '../interview-form.models';
 
 @Component({
   selector: 'app-employee-exit-interview-form',
@@ -45,6 +54,8 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
 
   // Loader
   empInterviewExitFormLoader = false;
+
+  fileName: any;
 
   //#endregion
 
@@ -165,7 +176,6 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-
     if (changes !== undefined && changes.officeId !== undefined) {
       this.officeId = changes.officeId.currentValue;
 
@@ -304,7 +314,6 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
             if (data.data.EmployeeDetailListData == null) {
               // this.toastr.warning('No record found!');
             } else if (data.StatusCode === 400) {
-
               this.toastr.error('Something went wrong!');
             }
           }
@@ -672,7 +681,6 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
   }
   //#endregion
 
-
   //#region "onDeleteEmpExitInterviewShowPopup"
   onDeleteEmpExitInterviewShowPopup(data: any) {
     if (data != null) {
@@ -746,5 +754,118 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
     this.deleteConfVisiblePopup = false;
   }
   //#endregion
-}
+  //#region "exportPdf"
+  exportPdf(modelData: any) {
+    console.log(modelData);
+    if (modelData != null && modelData !== undefined) {
+      this.empExitInterviewFormMainForm = {
+        ExistInterviewDetailsId: modelData.ExistInterviewDetailsId,
+        EmployeeId: modelData.EmployeeId,
 
+        EmployeeCode: modelData.EmployeeCode,
+        EmployeeName: modelData.EmployeeName,
+        Position: modelData.Position,
+        Department: modelData.Department,
+        TenureWithCHA: modelData.TenureWithCHA,
+        Gender:
+          modelData.Gender.toLowerCase() === 'male'
+            ? 1
+            : modelData.Gender.toLowerCase() === 'female'
+            ? 2
+            : 3,
+
+        // FeelingAboutEmployee
+        DutiesOfJob: modelData.DutiesOfJob,
+        TrainingAndDevelopmentPrograms:
+          modelData.TrainingAndDevelopmentPrograms,
+        OpportunityAdvancement: modelData.OpportunityAdvancement,
+        SalaryTreatment: modelData.SalaryTreatment,
+        BenefitProgram: modelData.BenefitProgram,
+        WorkingConditions: modelData.WorkingConditions,
+        WorkingHours: modelData.WorkingHours,
+        CoWorkers: modelData.CoWorkers,
+        Supervisors: modelData.Supervisors,
+        GenderFriendlyEnvironment: modelData.GenderFriendlyEnvironment,
+        OverallJobSatisfaction: modelData.OverallJobSatisfaction,
+
+        // ReasonOfLeaving
+        Benefits: modelData.Benefits,
+        BetterJobOpportunity: modelData.BetterJobOpportunity,
+        FamilyReasons: modelData.FamilyReasons,
+        NotChallenged: modelData.NotChallenged,
+        Pay: modelData.Pay,
+        PersonalReasons: modelData.PersonalReasons,
+        Relocation: modelData.Relocation,
+        ReturnToSchool: modelData.ReturnToSchool,
+        ConflictWithSuoervisors: modelData.ConflictWithSuoervisors,
+        ConflictWithOther: modelData.ConflictWithOther,
+        WorkRelationship: modelData.WorkRelationship,
+        CompanyInstability: modelData.CompanyInstability,
+        CareerChange: modelData.CareerChange,
+        HealthIssue: modelData.HealthIssue,
+
+        // TheDepartment
+        HadGoodSynergy: modelData.HadGoodSynergy,
+        HadAdequateEquipment: modelData.HadAdequateEquipment,
+        WasAdequatelyStaffed: modelData.WasAdequatelyStaffed,
+        WasEfficient: modelData.WasEfficient,
+
+        // TheJobItself
+        JobWasChallenging: modelData.JobWasChallenging,
+        SkillsEffectivelyUsed: modelData.SkillsEffectivelyUsed,
+        JobOrientation: modelData.JobOrientation,
+        WorkLoadReasonable: modelData.WorkLoadReasonable,
+        SufficientResources: modelData.SufficientResources,
+        WorkEnvironment: modelData.WorkEnvironment,
+        ComfortableAppropriately: modelData.ComfortableAppropriately,
+        Equipped: modelData.Equipped,
+
+        // MySupervisor
+        HadKnowledgeOfJob: modelData.HadKnowledgeOfJob,
+        HadKnowledgeSupervision: modelData.HadKnowledgeSupervision,
+        WasOpenSuggestions: modelData.WasOpenSuggestions,
+        RecognizedEmployeesContribution:
+          modelData.RecognizedEmployeesContribution,
+
+        // TheManagement
+        GaveFairTreatment: modelData.GaveFairTreatment,
+        WasAvailableToDiscuss: modelData.WasAvailableToDiscuss,
+        WelcomedSuggestions: modelData.WelcomedSuggestions,
+        MaintainedConsistent: modelData.MaintainedConsistent,
+        ProvidedRecognition: modelData.ProvidedRecognition,
+        EncouragedCooperation: modelData.EncouragedCooperation,
+        ProvidedDevelopment: modelData.ProvidedDevelopment,
+
+        Question: modelData.Question === true ? 'Yes' : 'No',
+        Explain: modelData.Explain,
+        OfficeId: modelData.OfficeId
+      };
+
+
+      this.hrService
+        .DownloadPDF(
+          this.setting.getBaseUrl() + GLOBAL.API_Pdf_GetEmployeeExitInteviewPdf,
+          this.empExitInterviewFormMainForm
+        )
+        .subscribe(
+          x => {
+            this.fileName = 'EmployeeLeaveReport' + '.pdf';
+            if (window.navigator.msSaveOrOpenBlob) {
+              window.navigator.msSaveOrOpenBlob(x, this.fileName);
+            } else {
+              const link = document.createElement('a');
+              link.setAttribute('type', 'hidden');
+              link.download = this.fileName;
+              link.href = window.URL.createObjectURL(x);
+              document.body.appendChild(link);
+              link.click();
+            }
+          },
+          error => {
+            this.toastr.warning(error);
+          }
+        );
+    }
+    //#endregion
+  }
+}
