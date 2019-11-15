@@ -56,6 +56,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                         purchase.ModifiedDate = request.ModifiedDate;
                         purchase.SerialNo = request.PurchaseOrderNo.ToString();
                         purchase.Currency= request.Currency;
+                        purchase.AssetTypeId = request.AssetTypeId;
                         purchase.DeliveryDate= request.DeliveryDate;
                         purchase.DepreciationRate= request.DepreciationRate;
                         purchase.InventoryItem= request.InventoryItem;
