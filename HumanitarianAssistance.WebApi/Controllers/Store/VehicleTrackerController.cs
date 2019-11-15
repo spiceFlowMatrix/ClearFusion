@@ -43,16 +43,16 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             command.CreatedById = userId;
             command.CreatedDate = DateTime.UtcNow;
-            var result = await Task.FromResult(_mediator.Send(command));
+            var result = _mediator.Send(command);
 
-            if (result.Exception == null)
-            {
-                return Ok(await result);
-            }
-            else
-            {
-                return BadRequest(result.Exception.InnerException.Message);
-            }
+            // if (result.Exception == null)
+            // {
+                 return Ok(await result);
+            // }
+            // else
+            // {
+            //     return BadRequest(result.Exception.InnerException.Message);
+            // }
         }
         
         [ProducesResponseType(200)]
@@ -76,6 +76,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [ProducesResponseType(400)]
         public async Task<IActionResult> EditVehicleDetail(EditVehicleDetailCommand command)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.ModifiedById = userId;
+            command.ModifiedDate = DateTime.UtcNow;
             var result = await Task.FromResult(_mediator.Send(command));
 
             if (result.Exception == null)
@@ -93,7 +96,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [ProducesResponseType(400)]
         public async Task<IActionResult> DeletePurchasedVehicle(long id)
         {
-            var result = await Task.FromResult(_mediator.Send(new DeletePurchasedVehicleCommand { PurchasedVehicleId = id }));
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+           
+            var result = await Task.FromResult(_mediator.Send(new DeletePurchasedVehicleCommand { PurchasedVehicleId = id, ModifiedById= userId, ModifiedDate= DateTime.UtcNow }));
 
             if (result.Exception == null)
             {

@@ -816,7 +816,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
           Quantity: x.Quantity,
           CurrencyId: x.Currency,
           Price: x.UnitCost,
-          ReceivedFromLocation: null,
+          ReceivedFromLocation: x.ReceivedFromLocation,
           ReceivedFromEmployeeId: x.PurchasedById,
           ReceiptTypeId: x.ReceiptTypeId,
           StatusId: x.Status,

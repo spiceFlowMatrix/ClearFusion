@@ -14,25 +14,20 @@ export class LogsComponent implements OnInit, OnDestroy {
    logList$: Observable<ILogs[]>;
   // subject
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-  hideUnitColums: Observable<{ headers?: string[], items?: string[] }>;
 
-  @Input() transportType: number;
+  @Input() transportType: number; // TransportType vehicle or generator
+  @Input() entityId: number; // VehicleId or GeneratorId
 
   constructor(private purchaseService: PurchaseService) { }
 
   ngOnInit() {
     this.getLogs();
-    this.hideUnitColums = of({
-      headers: ['Event Type', 'By', 'Event On', 'Detail'],
-      items: ['EventType', 'EventBy', 'EventOn', 'Detail']
-    });
   }
 
   getLogs() {
-    this.purchaseService.getStoreLogs(this.transportType)
+    this.purchaseService.getStoreLogs(this.transportType, this.entityId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
-        debugger;
         if (x !== undefined && x.length > 0) {
           this.logList$ = of(x.map(y => {
             return {
@@ -40,8 +35,7 @@ export class LogsComponent implements OnInit, OnDestroy {
               EventBy: y.EventBy,
               EventOn: y.EventOn,
               Detail: y.LogText + (y.PurchaseId ? '<a href=store/purchase/edit/' + y.PurchaseId
-                                                  + '> Go To Purchase</a>' : ''),
-              PurchaseId: y.PurchaseId
+                                                  + '>' + y.PurchaseName + '</a>' : ''),
             } as ILogs;
           }));
         }

@@ -83,16 +83,20 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                                     StartingMileage = vehicle.StartingMileage,
                                 };
 
-                                purchasedVehicleList.Add(vehicleDetail);
+                                await _dbContext.PurchasedVehicleDetail.AddAsync(vehicleDetail);
+                                await _dbContext.SaveChangesAsync();
+
+                                //purchasedVehicleList.Add(vehicleDetail);
+
+                                eventType = "Vehicle";
+                                string logText = $"{request.Quantity} {unitName} purchased in ";
+
+                                // log details
+                                LogStoreInfo(request.CreatedById, eventType, logText, purchaseId, (int)TransportItemCategory.Vehicle, vehicleDetail.Id);
                             }
 
-                            await _dbContext.PurchasedVehicleDetail.AddRangeAsync(purchasedVehicleList);
-                            await _dbContext.SaveChangesAsync();
-                            eventType = "Vehicle";
-                            string logText = $"{request.Quantity} {unitName} purchased in ";
-
-                            // log details
-                            LogStoreInfo(request.CreatedById, eventType, logText, purchaseId, (int)TransportItemCategory.Vehicle);
+                            // await _dbContext.PurchasedVehicleDetail.AddRangeAsync(purchasedVehicleList);
+                            // await _dbContext.SaveChangesAsync();
                         }
 
                         //Add Purchased generator List
@@ -116,16 +120,20 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                                     Voltage = generator.Voltage,
                                 };
 
-                                purchasedGeneratorList.Add(generatorDetail);
+                                await _dbContext.PurchasedGeneratorDetail.AddRangeAsync(generatorDetail);
+                                await _dbContext.SaveChangesAsync();
+
+                                // purchasedGeneratorList.Add(generatorDetail);
+
+                                eventType = "Generator";
+                                string logText = $"{request.Quantity} {unitName} purchased in ";
+
+                                // log details
+                                LogStoreInfo(request.CreatedById, eventType, logText, purchaseId, (int)TransportItemCategory.Generator, generatorDetail.Id);
                             }
 
-                            await _dbContext.PurchasedGeneratorDetail.AddRangeAsync(purchasedGeneratorList);
-                            await _dbContext.SaveChangesAsync();
-                            eventType = "Generator";
-                            string logText = $"{request.Quantity} {unitName} purchased in ";
 
-                            // log details
-                            LogStoreInfo(request.CreatedById, eventType, logText, purchaseId, (int)TransportItemCategory.Generator);
+
                         }
 
                         //Add purchased vehicle Item
@@ -149,7 +157,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                             string logText = $"{request.Quantity} {unitName} purchased in ";
 
                             // log details
-                            LogStoreInfo(request.CreatedById, eventType, logText, purchaseId, (int)TransportItemCategory.Vehicle);
+                            LogStoreInfo(request.CreatedById, eventType, logText, purchaseId, (int)TransportItemCategory.Vehicle, request.TransportItemId.Value);
                         }
                         //Add purchased generator Item
                         else if ((request.ItemGroupTransportCategory == (int)TransportItemCategory.Generator) &&
@@ -172,7 +180,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                             string logText = $"{request.Quantity} {unitName} purchased in ";
 
                             // log details
-                           bool logged= LogStoreInfo(request.CreatedById, eventType, logText, purchaseId, (int)TransportItemCategory.Generator);
+                            LogStoreInfo(request.CreatedById, eventType, logText, purchaseId, (int)TransportItemCategory.Generator, request.TransportItemId.Value);
                         }
 
                         tran.Commit();
@@ -246,10 +254,8 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
             return eventTypeName;
         }
 
-        private bool LogStoreInfo(string createdById, string eventType, string logText, long purchaseId, int transportType)
+        private void LogStoreInfo(string createdById, string eventType, string logText, long purchaseId, int transportType, long entityId)
         {
-            bool saved = false;
-
             try
             {
                 //log details
@@ -261,18 +267,17 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                     EventType = $"{eventType} Purchased",
                     LogText = logText,
                     PurchaseId = purchaseId,
-                    TransportType = transportType
+                    TransportType = transportType,
+                    TransportTypeEntityId = entityId
                 };
 
                 _dbContext.StoreLogger.Add(logger);
                 _dbContext.SaveChanges();
-                saved= true;
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            return saved;
         }
     }
 }

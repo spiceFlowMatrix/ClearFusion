@@ -209,7 +209,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                             string logText = $"{purchase.PurchaseName} Purchase Edited";
 
                             // log details
-                            LogStoreInfo(request.CreatedById, eventType, logText, null, (int)TransportItemCategory.Vehicle);
+                            LogStoreInfo(request.CreatedById, eventType, logText, null, (int)TransportItemCategory.Vehicle, request.TransportItemId.Value);
                         }
 
                         //Update purchased generator Item
@@ -229,7 +229,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                             string logText = $"{purchase.PurchaseName} Purchase Edited";
 
                             // log details
-                            LogStoreInfo(request.CreatedById, eventType, logText, null, (int)TransportItemCategory.Generator);
+                            LogStoreInfo(request.CreatedById, eventType, logText, null, (int)TransportItemCategory.Generator, request.TransportItemId.Value);
                         }
 
                         tran.Commit();
@@ -304,7 +304,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
             return eventTypeName;
         }
 
-        private void LogStoreInfo(string createdById, string eventType, string logText, long? purchaseId, int transportType)
+        private void LogStoreInfo(string createdById, string eventType, string logText, long? purchaseId, int transportType, long entityId)
         {
             //log details
             StoreLogger logger = new StoreLogger
@@ -315,7 +315,8 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                 EventType = $"{eventType} Purchased",
                 LogText = logText,
                 PurchaseId = purchaseId,
-                TransportType= transportType
+                TransportType= transportType,
+                TransportTypeEntityId= entityId
             };
 
             _dbContext.StoreLogger.Add(logger);

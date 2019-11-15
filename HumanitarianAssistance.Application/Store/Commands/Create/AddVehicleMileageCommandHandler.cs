@@ -27,12 +27,27 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                 if (request != null)
                 {
 
-                    VehicleMileageDetail mileage = await _dbContext.VehicleMileageDetail.FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                    VehicleMileageDetail mileage = await _dbContext.VehicleMileageDetail.Include(x => x.PurchasedVehicleDetail)
+                                                                        .FirstOrDefaultAsync(x => x.IsDeleted == false &&
                                                                                         x.VehicleId == request.VehicleId &&
                                                                                         x.MileageMonth.Month == request.Month.Month);
 
+
                     if (mileage == null)
                     {
+
+                        var vehicle = await _dbContext.PurchasedVehicleDetail.FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                                                                                        x.Id == request.VehicleId);
+
+                        if (vehicle != null)
+                        {
+                            if (request.Month.Month < vehicle.CreatedDate.Value.Month &&
+                            request.Month.Year <= vehicle.CreatedDate.Value.Year)
+                            {
+                                throw new Exception(StaticResource.MileageMonthNotValid);
+                            }
+                        }
+
                         mileage = new VehicleMileageDetail
                         {
                             IsDeleted = false,
@@ -52,8 +67,9 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                             CreatedById = request.CreatedById,
                             IsDeleted = false,
                             EventType = "Mileage Added",
-                            LogText = $"{request.Mileage} Mileage added to Vehicle Id {request.VehicleId}",
-                            TransportType= (int)TransportItemCategory.Vehicle
+                            LogText = $"{request.Mileage} Mileage added to this vehicle",
+                            TransportType = (int)TransportItemCategory.Vehicle,
+                            TransportTypeEntityId = request.VehicleId
                         };
 
                         await _dbContext.StoreLogger.AddAsync(logger);
@@ -76,8 +92,9 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                             CreatedById = request.CreatedById,
                             IsDeleted = false,
                             EventType = "Mileage Updated",
-                            LogText = $"{request.Mileage} Mileage added to Vehcile Id {request.VehicleId}",
-                            TransportType= (int)TransportItemCategory.Vehicle
+                            LogText = $"{request.Mileage} Mileage added to this Vehcile",
+                            TransportType = (int)TransportItemCategory.Vehicle,
+                            TransportTypeEntityId = request.VehicleId
                         };
 
                         await _dbContext.StoreLogger.AddAsync(logger);

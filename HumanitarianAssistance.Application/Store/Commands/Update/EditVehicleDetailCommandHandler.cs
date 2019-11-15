@@ -32,6 +32,11 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                 PurchasedVehicleDetail vehicle= await _dbContext.PurchasedVehicleDetail
                                                           .FirstOrDefaultAsync(x=> x.IsDeleted == false && x.Id == request.VehicleId);
 
+                if(vehicle == null)
+                {
+                    throw new Exception(StaticResource.RecordNotFound);
+                }
+
                 vehicle.PlateNo = request.PlateNo;
                 vehicle.EmployeeId= request.EmployeeId;
                 vehicle.StartingMileage= request.StartingMileage;
@@ -52,8 +57,9 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                     CreatedById = request.ModifiedById,
                     IsDeleted = false,
                     EventType = "Vehicle Edited",
-                    LogText = $"Vehicle details were edited for id-{request.VehicleId}",
-                    TransportType = (int)TransportItemCategory.Vehicle
+                    LogText = $"Vehicle details were edited",
+                    TransportType = (int)TransportItemCategory.Vehicle,
+                    TransportTypeEntityId= request.VehicleId
                 };
 
                 await _dbContext.StoreLogger.AddAsync(logger);
