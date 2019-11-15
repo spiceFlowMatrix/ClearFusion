@@ -142,6 +142,23 @@ namespace HumanitarianAssistance.WebApi.Controllers
             var file = await _mediator.Send(model);
             return File(file, "application/pdf", "JournalReport.pdf");
         }
+
+         [HttpPost]
+        public async Task<IActionResult> GetEmployeeExitInteviewPdf([FromBody] GetAllEmployeeLeavePdfQuery model)
+        {
+            try
+            {
+                var file = await _mediator.Send(model);
+                return File(file, "application/pdf", "EmployeeLeaveReport.pdf");
+            }
+            catch (Exception ex)
+            {
+
+                Response.Headers.Add("ExMessage", ex.Message);
+                return BadRequest();
+            }
+        }
+
     }
 }
 
