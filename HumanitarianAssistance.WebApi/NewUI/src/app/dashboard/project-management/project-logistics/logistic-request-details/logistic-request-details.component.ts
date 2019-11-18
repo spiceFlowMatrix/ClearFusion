@@ -93,10 +93,11 @@ Currency: '', BudgetLine: '', Office: ''};
   getRequestDetails() {
     this.logisticservice.getLogisticRequestDetail(this.requestId).subscribe(res => {
       if (res.StatusCode === 200 && res.data.logisticRequest != null) {
+        debugger;
         this.requestDetail.RequestId = res.data.logisticRequest.RequestId;
         this.requestDetail.ProjectId = res.data.logisticRequest.ProjectId;
         this.requestDetail.RequestName = res.data.logisticRequest.RequestName;
-        this.requestDetail.Status = res.data.logisticRequest.ComparativeStatus;
+        this.requestDetail.Status = res.data.logisticRequest.Status;
         this.requestDetail.TotalCost = res.data.logisticRequest.TotalCost;
         this.requestDetail.Currency = res.data.logisticRequest.Currency;
         this.requestDetail.BudgetLine = res.data.logisticRequest.BudgetLine;
