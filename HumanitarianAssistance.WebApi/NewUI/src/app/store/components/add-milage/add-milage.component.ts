@@ -54,7 +54,7 @@ export class AddMilageComponent implements OnInit {
             this.isAddMileageFormSubmitted = false;
           }
         }, error => {
-          this.toastr.warning('Something went wrong');
+          this.toastr.warning(error);
           this.isAddMileageFormSubmitted = false;
         });
 

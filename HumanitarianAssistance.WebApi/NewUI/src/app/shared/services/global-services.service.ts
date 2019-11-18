@@ -5,7 +5,8 @@ import { GlobalErrorHandler } from './global-error-handler';
 import { CommonLoaderService } from '../common-loader/common-loader.service';
 import { finalize } from 'rxjs/internal/operators/finalize';
 import { Observable } from 'rxjs/internal/Observable';
-import { timeout, retryWhen, tap, delay, take } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { timeout, retryWhen, tap, delay, take, catchError } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
@@ -15,30 +16,32 @@ export class GlobalService {
 
   errHandler: GlobalErrorHandler;
 
-  constructor(private http: HttpClient, private loader: CommonLoaderService,public toastr: ToastrService) { }
+  constructor(private http: HttpClient, private loader: CommonLoaderService, public toastr: ToastrService) { }
 
   //#region  "POST"
   post(url: string, data, options?: any): Observable<any> {
     return this.http.post<any>(url, data, options).pipe(
+
       map((response) => response),
-      timeout(200000),
-      retryWhen(errors =>
+      catchError(this.handleError),
+      // timeout(200000),
+      // retryWhen(errors =>
 
-        errors.pipe(
-          tap(r => {
-            this.toastr.warning('Slow internet connection retrying ...')
-          }
-          ),
-          delay(10000),
-          take(3)
-        )
-      ),
-      finalize(() => {
-        // this.loader.hideLoader();
-      }
-      )
+      //   errors.pipe(
+      //     tap(r => {
+      //       this.toastr.warning('Slow internet connection retrying ...')
+      //     }
+      //     ),
+      //     delay(10000),
+      //     take(3)
+      //   )
+      // ),
+      // finalize(() => {
+      //   // this.loader.hideLoader();
+      // }
+      //)
 
-      // catchError(this.errHandler.handleError('dfdf', []))
+
       // catchError((error) => { // console.log(error); return ""; })
     );
   }
@@ -206,4 +209,22 @@ export class GlobalService {
   }
   //#endregion
 
+  // public handleError = (error: any) => {
+  //   this.toastr.warning(error.error.error);
+  //   // Do messaging and error handling here
+  //   return throwError(error);
+  // }
+
+  handleError(error) {
+    // let errorMessage = '';
+    // if (error.error instanceof ErrorEvent) {
+    //   // client-side error
+    //   errorMessage = `Error: ${error.error.message}`;
+    // } else {
+    //   // server-side error
+    //   errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    // }
+    // window.alert(errorMessage);
+    return throwError(error.error.error);
+  }
 }
