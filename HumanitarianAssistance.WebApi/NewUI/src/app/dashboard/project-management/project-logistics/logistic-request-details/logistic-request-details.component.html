@@ -62,8 +62,8 @@
                   <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Pending</span>
                 </div>
                 <div class="col-sm-7 margin_top_1">
-                  <hum-button  [type]="'cancel'" [text]="'CANCEL REQUEST'"></hum-button>
-                  <hum-button  [type]="'save'" [text]="'REQUEST STATEMENT'"></hum-button>
+                  <hum-button (click)="cancelComparativeRequest()" [type]="'cancel'" [text]="'CANCEL REQUEST'"></hum-button>
+                  <hum-button  (click)="issueComparativeStatement()" [type]="'save'" [text]="'REQUEST STATEMENT'"></hum-button>
                 </div>
               </div>
               <mat-divider style="position: unset;"></mat-divider>

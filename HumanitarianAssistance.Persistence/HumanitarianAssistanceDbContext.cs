@@ -223,12 +223,14 @@ namespace HumanitarianAssistance.Persistence
 
         public DbSet<ProjectJobHiringDetail> ProjectJobHiringDetail { get; set; }
         public DbSet<ProjectLogisticRequests> ProjectLogisticRequests { get; set; } 
-        public DbSet<ProjectLogisticItems> ProjectLogisticItems { get; set; }           
+        public DbSet<ProjectLogisticItems> ProjectLogisticItems { get; set; }   
+        public DbSet<ProjectLogisticSuppliers> ProjectLogisticSuppliers { get; set; }         
         public DbSet<CandidateDetails> CandidateDetails { get; set; }  
         public DbSet<EducationDegreeDetail> EducationDegreeDetails { get; set; }  
+        public DbSet<HiringRequestCandidateStatus> HiringRequestCandidateStatus { get; set; } 
         #endregion  
 
-        #region Marketing
+        #region Marketing 
         public DbSet<InvoiceGeneration> InvoiceGeneration { get; set; }
         public DbSet<InvoiceApproval> InvoiceApproval { get; set; }
         public DbSet<PlayoutMinutes> PlayoutMinutes { get; set; }

@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.Store;
 using HumanitarianAssistance.Persistence;
@@ -26,12 +27,25 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                 if (request != null)
                 {
 
-                    GeneratorUsageHourDetail usageHours = await _dbContext.GeneratorUsageHourDetail.FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                    GeneratorUsageHourDetail usageHours = await _dbContext.GeneratorUsageHourDetail.Include(x=> x.PurchasedGeneratorDetail)
+                                                                            .FirstOrDefaultAsync(x => x.IsDeleted == false &&
                                                                                         x.GeneratorId == request.GeneratorId &&
                                                                                         x.Month.Month == request.Month.Month);
 
                     if (usageHours == null)
                     {
+                         var generator = await _dbContext.PurchasedGeneratorDetail.FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                                                                                        x.Id == request.GeneratorId);
+
+                        if (generator != null)
+                        {
+                            if (request.Month.Month < generator.CreatedDate.Value.Month &&
+                            request.Month.Year <= generator.CreatedDate.Value.Year)
+                            {
+                                throw new Exception(StaticResource.MileageMonthNotValid);
+                            }
+                        }
+
                         usageHours = new GeneratorUsageHourDetail
                         {
                             IsDeleted = false,
@@ -51,7 +65,9 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                             CreatedById = request.CreatedById,
                             IsDeleted = false,
                             EventType= "Usage Added",
-                            LogText= $"{request.Hours} Hour added to Generator Id {request.GeneratorId}"
+                            LogText= $"{request.Hours} Hour added to this generator",
+                            TransportType= (int)TransportItemCategory.Generator,
+                            TransportTypeEntityId= request.GeneratorId
                         };
 
                         await _dbContext.StoreLogger.AddAsync(logger);
@@ -74,7 +90,9 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                             CreatedById = request.CreatedById,
                             IsDeleted = false,
                             EventType= "Usage Updated",
-                            LogText= $"{request.Hours} Hour added to Generator Id {request.GeneratorId}"
+                            LogText= $"{request.Hours} Hour added to this generator",
+                            TransportType= (int)TransportItemCategory.Generator,
+                            TransportTypeEntityId= request.GeneratorId
                         };
 
                         await _dbContext.StoreLogger.AddAsync(logger);

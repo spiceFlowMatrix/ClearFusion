@@ -380,7 +380,6 @@ export class AddHiringRequestComponent implements OnInit {
       } else {
         this.EditHiringRequest(data);
       }
-      console.log(data);
     }
   }
   //#region "onCancelPopup"

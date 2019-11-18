@@ -1,12 +1,9 @@
- export const environment = {
+export const environment = {
   production: false,
     apiUrl: '/api/',
     docUrl: '/Docs/',
     hubUrl: '/chathub/'
-
 };
-
-
 
 //  export const environment = {
 //    production: false,

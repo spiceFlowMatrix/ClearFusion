@@ -71,12 +71,14 @@
           <strong>Note:</strong>The item you have selected is <strong>{{selectedItemName}}</strong>. Therefore, the
           following <strong>transport related metadata</strong> must be filled out.
         </div>
+
         <div class="col-md-2" *ngIf="addPurchaseForm.get('PurchaseId').value == null">
           <div class="items-float-right">
             <hum-button (click)='addTransportItemButtonClicked(addPurchaseForm.controls["ItemId"].value)'
               [type]="'add'" [text]="'Add'"></hum-button>
           </div>
         </div>
+        <br>
 
       <div class="row" *ngIf="ItemTransportCategory ==ItemTransportCategoryEnum.Vehicle">
         <div class="col-md-12">
@@ -123,6 +125,7 @@
             related metadata</strong> must be filled out.
         </div>
       </div>
+      <br>
       <div class="row">
         <div class="col-md-12">
           <lib-hum-dropdown [validation]="addPurchaseForm.controls['TransportItemId'].hasError('required')"

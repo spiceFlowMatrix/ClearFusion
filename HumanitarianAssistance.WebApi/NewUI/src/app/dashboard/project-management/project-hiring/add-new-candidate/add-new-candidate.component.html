@@ -218,8 +218,11 @@
       </div>
     </div>
     <div mat-dialog-actions class="pull-right">
-      <button mat-raised-button [mat-dialog-close]>Cancel</button>
-      <button mat-raised-button color="primary" type="submit">Save</button>
+        <hum-button [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
+        <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+
+      <!-- <button mat-raised-button [mat-dialog-close]>Cancel</button>
+      <button mat-raised-button color="primary" type="submit">Save</button> -->
     </div>
   </form>
 </div>

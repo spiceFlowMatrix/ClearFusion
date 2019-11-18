@@ -45,7 +45,19 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                 };
                 await _dbContext.CandidateDetails.AddAsync (candidateDetail);
                 await _dbContext.SaveChangesAsync ();
-
+                if (candidateDetail.CandidateId != 0) {
+                    HiringRequestCandidateStatus obj = new HiringRequestCandidateStatus () {
+                    ProjectId = request.ProjectId,
+                    HiringRequestId = request.HiringRequestId,
+                    CandidateId = candidateDetail.CandidateId,
+                    CandidateStatus = 0,
+                    InterviewId = 0,
+                    CreatedById = request.CreatedById,
+                    CreatedDate = request.CreatedDate
+                    };
+                    await _dbContext.HiringRequestCandidateStatus.AddAsync (obj);
+                    await _dbContext.SaveChangesAsync ();
+                }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             } catch (Exception ex) {
