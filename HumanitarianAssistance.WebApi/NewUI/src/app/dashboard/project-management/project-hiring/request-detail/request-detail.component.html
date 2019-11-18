@@ -65,13 +65,47 @@
       <mat-tab-group>
         <mat-tab label="New Candidates">
           <h5>Candidates <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewCandidate()"></hum-button>
+            <hum-button [type]="'download'" [text]="'PDF Export'" (click)="onExportPdf()"></hum-button>
           </h5>
 
-          <hum-table [headers]="newCandidatesHeaders$" [items]="newCandidatesList$"  [subHeaders]="subListHeaders$"
-          [subTitle]="'Other Details'"
+          <hum-table [headers]="newCandidatesHeaders$" [isDefaultAction]="false" [items]="newCandidatesList$"  [subHeaders]="subListHeaders$"
+          [subTitle]="'Other Details'" [actions]="actions" (actionClick)="actionEvents($event)"
           ></hum-table>
         </mat-tab>
-        <mat-tab label="Existing Candidates"> Content 2 </mat-tab>
+        <mat-tab label="Existing Candidates">
+          <h5>Candidates &nbsp;&nbsp;&nbsp;&nbsp;
+             <lib-hum-dropdown
+             [options]="existingEmployeesList$"
+             [placeHolder]="'Select Existing Employee'"
+             (change)="OnExistingEmployeeSelection($event)"
+           ></lib-hum-dropdown>
+           &nbsp;&nbsp;&nbsp;&nbsp;
+           <mat-form-field>
+           <mat-select placeholder="Status Filter"
+           (selectionChange)="
+           onStatusFilter($event)"
+                     name="statusFilter"
+           multiple>
+           <mat-option *ngFor="let item of statusFilter" [value]="item.Id">{{ item.value }}
+           </mat-option>
+         </mat-select>
+        </mat-form-field>
+         <!-- <mat-select class="example-full-width" placeholder="Select Province"
+         [(ngModel)]="provinceMultiSelectModel.ProvinceId " (selectionChange)="
+                        onProvinceDetailsChange(
+                       'provinceSelction',
+                       provinceMultiSelectModel.ProvinceId
+                     )
+                   " name="provinceSelction"
+         multiple>
+         <mat-option *ngFor="let item of ProvinceSelectionList" [value]="item.value">{{ item.label }}
+         </mat-option>
+       </mat-select> -->
+            </h5>
+            <hum-table [headers]="existingCandidatesHeaders$" [isDefaultAction]="false" [items]="existingCandidatesList$"
+            [actions]="actions" (actionClick)="actionEvents($event)"
+            ></hum-table>
+          </mat-tab>
       </mat-tab-group>
     </div>
   </div>

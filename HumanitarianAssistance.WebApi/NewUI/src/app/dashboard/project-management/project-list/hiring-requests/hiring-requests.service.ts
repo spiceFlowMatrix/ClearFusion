@@ -21,7 +21,8 @@ import {
   OfficeDetailModel,
   IHiringRequestModel,
   CompleteHiringRequestModel,
-  ICandidateDetailModel
+  ICandidateDetailModel,
+  ICandidateFilterModel
 } from '../../project-hiring/models/hiring-requests-models';
 
 @Injectable({
@@ -326,8 +327,29 @@ export class HiringRequestsService {
 }
 //#endregion
 
+ //#region "AddExistingCandidateDetail"
+ AddExistingCandidateDetail(data: any) {
+  return this.globalService
+    .post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HiringRequest_AddExistingCandidateDetail,
+      data
+    )
+    .pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+}
+//#endregion
+
   //#region "getAllCandidateList"
-  getAllCandidateList(data: IFilterModel): any {
+  getAllCandidateList(data: ICandidateFilterModel): any {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
@@ -348,6 +370,48 @@ export class HiringRequestsService {
   }
   //#endregion
 
+  //#region "GetAllExistingCandidateList"
+  GetAllExistingCandidateList(data: ICandidateFilterModel): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_GetAllExistingCandidateList,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.ExistingCandidateList,
+            total: x.data.TotalCount,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
+  //#region "UpdateCandidateStatus"
+  UpdateCandidateStatus(data: any) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_UpdateCandidateStatusByStatusId,
+          data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.CandidateStatus,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
 
   //#region "EditCandidateDetail"
   EditCandidateDetail(data: CandidateDetailModel) {
