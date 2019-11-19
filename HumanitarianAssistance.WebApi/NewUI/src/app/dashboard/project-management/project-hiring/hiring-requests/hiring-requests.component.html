@@ -40,36 +40,36 @@
 
     <ng-container matColumnDef="JobCode">
       <th mat-header-cell *matHeaderCellDef> Job Code </th>
-      <td mat-cell *matCellDef="let element"> {{element.JobCode}} </td>
+      <td mat-cell *matCellDef="let element" (click)="requestDetail(element)"> {{element.JobCode}} </td>
     </ng-container>
 
     <ng-container matColumnDef="JobGrade">
       <th mat-header-cell *matHeaderCellDef> Job Grade </th>
-      <td mat-cell *matCellDef="let element"> {{element.JobGrade}} </td>
+      <td mat-cell *matCellDef="let element" (click)="requestDetail(element)"> {{element.JobGrade}} </td>
     </ng-container>
 
     <ng-container matColumnDef="Position">
       <th mat-header-cell *matHeaderCellDef> Position </th>
-      <td mat-cell *matCellDef="let element"> {{element.Position}} </td>
+      <td mat-cell *matCellDef="let element" (click)="requestDetail(element)"> {{element.Position}} </td>
     </ng-container>
 
     <ng-container matColumnDef="TotalVacancies">
       <th mat-header-cell *matHeaderCellDef> Total Vacancies </th>
-      <td mat-cell *matCellDef="let element"> {{element.TotalVacancies}} </td>
+      <td mat-cell *matCellDef="let element" (click)="requestDetail(element)"> {{element.TotalVacancies}} </td>
     </ng-container>
     <ng-container matColumnDef="FilledVacancies">
       <th mat-header-cell *matHeaderCellDef> Filled Vacancies </th>
-      <td mat-cell *matCellDef="let element"> {{element.FilledVacancies}} </td>
+      <td mat-cell *matCellDef="let element" (click)="requestDetail(element)"> {{element.FilledVacancies}} </td>
     </ng-container>
 
     <ng-container matColumnDef="PayCurrency">
       <th mat-header-cell *matHeaderCellDef> Pay Currency </th>
-      <td mat-cell *matCellDef="let element"> {{element.PayCurrency}} </td>
+      <td mat-cell *matCellDef="let element" (click)="requestDetail(element)"> {{element.PayCurrency}} </td>
     </ng-container>
 
     <ng-container matColumnDef="PayRate">
       <th mat-header-cell *matHeaderCellDef> Pay Rate </th>
-      <td mat-cell *matCellDef="let element"> {{element.PayRate}} </td>
+      <td mat-cell *matCellDef="let element" (click)="requestDetail(element)"> {{element.PayRate}} </td>
     </ng-container>
 
     <ng-container matColumnDef="Status">

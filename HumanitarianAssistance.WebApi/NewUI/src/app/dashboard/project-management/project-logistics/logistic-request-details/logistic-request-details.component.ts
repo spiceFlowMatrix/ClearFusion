@@ -64,7 +64,7 @@ Currency: '', BudgetLine: '', Office: ''};
   }
   addItemDialog() {
     const dialogRef = this.dialog.open(AddLogisticItemsComponent, {
-      width: '300px',
+      width: '400px',
       data: {RequestId: this.requestId}
     });
 
@@ -93,6 +93,7 @@ Currency: '', BudgetLine: '', Office: ''};
   getRequestDetails() {
     this.logisticservice.getLogisticRequestDetail(this.requestId).subscribe(res => {
       if (res.StatusCode === 200 && res.data.logisticRequest != null) {
+        debugger;
         this.requestDetail.RequestId = res.data.logisticRequest.RequestId;
         this.requestDetail.ProjectId = res.data.logisticRequest.ProjectId;
         this.requestDetail.RequestName = res.data.logisticRequest.RequestName;
@@ -101,7 +102,7 @@ Currency: '', BudgetLine: '', Office: ''};
         this.requestDetail.Currency = res.data.logisticRequest.Currency;
         this.requestDetail.BudgetLine = res.data.logisticRequest.BudgetLine;
         this.requestDetail.Office = res.data.logisticRequest.Office;
-        this.requestDetail.ComparativeStatus = 1;
+        this.requestDetail.ComparativeStatus = res.data.logisticRequest.ComparativeStatus;
       }
     });
   }
@@ -173,7 +174,7 @@ Currency: '', BudgetLine: '', Office: ''};
     }
     if (event.type === 'edit') {
       const dialogRef = this.dialog.open(AddLogisticItemsComponent, {
-        width: '300px',
+        width: '400px',
         data: {Id: event.item.Id, ItemId: event.item.ItemId, Quantity: event.item.Quantity,
           EstimatedCost: event.item.EstimatedCost, RequestId: this.requestId}
       });
@@ -261,8 +262,33 @@ Currency: '', BudgetLine: '', Office: ''};
           this.toastr.error('Something went wrong!');
         }
       });
-      console.log(model);
     }
+  }
+
+  cancelComparativeRequest() {
+    this.commonLoader.showLoader();
+    this.logisticservice.cancelComparativeRequest(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.getRequestDetails();
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  issueComparativeStatement() {
+    this.commonLoader.showLoader();
+    this.logisticservice.IssueComparativeStatement(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.getRequestDetails();
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
   }
 
 }

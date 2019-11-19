@@ -21,15 +21,19 @@ import {
   MatButtonModule,
   MatTableModule,
   MatCheckboxModule,
+  MatExpansionModule,
+  MatSlideToggleModule,
 } from '@angular/material';
 import { RequestDetailComponent } from './request-detail/request-detail.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AddHiringRequestComponent } from './add-hiring-request/add-hiring-request.component';
 import { AddNewCandidateComponent } from './add-new-candidate/add-new-candidate.component';
+import { InterviewDetailComponent } from './interview-detail/interview-detail.component';
 
 @NgModule({
   declarations: [
-    HiringRequestsComponent, JobDetailComponent, RequestDetailComponent, AddHiringRequestComponent, AddNewCandidateComponent
+    HiringRequestsComponent, JobDetailComponent, RequestDetailComponent, AddHiringRequestComponent,
+    AddNewCandidateComponent, InterviewDetailComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -50,7 +54,9 @@ import { AddNewCandidateComponent } from './add-new-candidate/add-new-candidate.
     MatDatepickerModule,
     MatButtonModule,
     MatTableModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatExpansionModule,
+    MatSlideToggleModule
   ],
   exports: [HiringRequestsComponent, JobDetailComponent],
   entryComponents: [
