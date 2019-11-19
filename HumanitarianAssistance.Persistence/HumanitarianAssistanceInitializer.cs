@@ -212,23 +212,6 @@ namespace HumanitarianAssistance.Persistence
             {
                 await AddProjectPhaseDetails(context);
             }
-
-            if (!context.StoreInventories.Any())
-            {
-                await AddStoreInventorySeedData(context);
-            }
-
-            if (!context.StoreItemGroups.Any())
-            {
-                await AddStoreItemGroupSeedData(context);
-            }
-
-             if (!context.InventoryItems.Any())
-            {
-                await AddStoreItemSeedData(context);
-            }
-
-
         }
         private static async Task CreateDefaultUserAndRoleForApplication(
              HumanitarianAssistanceDbContext context,
@@ -1592,77 +1575,5 @@ namespace HumanitarianAssistance.Persistence
                 throw new Exception(ex.Message);
             }
         }
-
-        private static async Task AddStoreInventorySeedData(HumanitarianAssistanceDbContext context)
-        {
-            try
-            {
-                List<StoreInventory> list = new List<StoreInventory>
-                {
-                    new StoreInventory { AssetType= (int)InventoryMasterType.Consumables, InventoryCode= "C01", InventoryName="Transport", InventoryDescription ="Transport", IsDeleted= false, CreatedDate= DateTime.UtcNow },
-                    new StoreInventory { AssetType= (int)InventoryMasterType.Expendables, InventoryCode= "E01", InventoryName="Transport", InventoryDescription ="Transport", IsDeleted= false, CreatedDate= DateTime.UtcNow },
-                    new StoreInventory { AssetType= (int)InventoryMasterType.NonExpendables, InventoryCode= "N01", InventoryName="Transport", InventoryDescription ="Transport", IsDeleted= false, CreatedDate= DateTime.UtcNow }
-                };
-               
-                await context.StoreInventories.AddRangeAsync(list);
-                await context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        private static async Task AddStoreItemGroupSeedData(HumanitarianAssistanceDbContext context)
-        {
-            try
-            {
-                List<StoreItemGroup> list = new List<StoreItemGroup>
-                {
-                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="C01-01", ItemGroupName= "Vehicle", InventoryId =1},
-                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="C01-02", ItemGroupName= "Generator", InventoryId =1},
-                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="E01-01", ItemGroupName= "Vehicle", InventoryId =2},
-                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="E01-02", ItemGroupName= "Generator", InventoryId =2},
-                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="N01-01", ItemGroupName= "Vehicle", InventoryId =3},
-                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="N01-02", ItemGroupName= "Generator", InventoryId =3},
-                };
-                await context.StoreItemGroups.AddRangeAsync(list);
-                await context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        private static async Task AddStoreItemSeedData(HumanitarianAssistanceDbContext context)
-        {
-            try
-            {
-                List<StoreInventoryItem> list = new List<StoreInventoryItem>
-                {
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=1, ItemCode ="C01-01-01", ItemName= "Vehicle Fuel"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=2, ItemCode ="C01-02-01", ItemName= "Generator Fuel"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=1, ItemCode ="C01-01-02", ItemName= "Vehicle Mobil Oil"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=2, ItemCode ="C01-02-02", ItemName= "Generator Mobil Oil"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=1, ItemCode ="C01-01-03", ItemName= "Vehicle Maintenance Service"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=2, ItemCode ="C01-02-03", ItemName= "Generator Maintenance Service"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 2, ItemGroupId=3, ItemCode ="E01-01-01", ItemName= "Vehicle"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 2, ItemGroupId=4, ItemCode ="E01-02-01", ItemName= "Generator"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 2, ItemGroupId=3, ItemCode ="E01-01-02", ItemName= "Vehicle Spare Parts"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 2, ItemGroupId=4, ItemCode ="E01-02-02", ItemName= "Generator Spare Parts"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 3, ItemGroupId=5, ItemCode ="N01-01-01", ItemName= "Vehicle"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 3, ItemGroupId=6, ItemCode ="N01-02-01", ItemName= "Generator"},
-                };
-
-                await context.InventoryItems.AddRangeAsync(list);
-                await context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
     }
 }

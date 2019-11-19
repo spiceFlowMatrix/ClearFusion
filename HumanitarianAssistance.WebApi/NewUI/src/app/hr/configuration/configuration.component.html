@@ -1,0 +1,28 @@
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav mode="side" opened="true">
+    <app-dbsidebar></app-dbsidebar>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-card class="header header_mat_card">
+   <div class="container-fluid">
+      <div class="row">
+          <div class="col-sm-12 col-xs-12">
+            <app-dbheader></app-dbheader>
+          </div>
+        </div>
+   </div>
+    </mat-card>
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link
+         *ngFor="let link of navLinks"
+         [routerLink]="link.link"
+         routerLinkActive #rla="routerLinkActive"
+         [active]="rla.isActive">
+        {{link.label}}
+      </a>
+    </nav>
+
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
