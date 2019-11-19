@@ -775,6 +775,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     this.commonLoader.showLoader();
     this.purchaseService.getStorePurchaseById(Number(purchaseId))
       .subscribe(x => {
+        debugger;
         // get All dropdown datasource
         this.getInventoriesByInventoryTypeId(x.InventoryTypeId);
         this.getAllStoreItemGroups(x.InventoryId, x.ItemGroupId);
@@ -816,7 +817,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
           Quantity: x.Quantity,
           CurrencyId: x.Currency,
           Price: x.UnitCost,
-          ReceivedFromLocation: null,
+          ReceivedFromLocation: x.ReceivedFromLocation,
           ReceivedFromEmployeeId: x.PurchasedById,
           ReceiptTypeId: x.ReceiptTypeId,
           StatusId: x.Status,

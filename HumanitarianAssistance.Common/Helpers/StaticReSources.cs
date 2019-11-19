@@ -348,6 +348,8 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string DeleteProcurementsFirst = "Please Delete Procurements First";
         public const string AccountNoteNotExists = "Account doesn't exists";
         public const string InventoryCodeAlreadyExists = "Inventory Code already exists";
+        public const string MileageMonthNotValid = "Mileage Month must be equal or greater to the month of Vehicle Purchase";
+        public const string UsageMonthNotValid = "Usage Month must be equal or greater to the month of Generator Purchase";
 
         //ExchangeRate
         public const string ExchagneRateNotDefined = "Exchange rate is not defined";
