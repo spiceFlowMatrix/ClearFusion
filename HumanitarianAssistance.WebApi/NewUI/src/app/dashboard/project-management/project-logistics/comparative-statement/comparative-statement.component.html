@@ -20,9 +20,14 @@
     <mat-divider></mat-divider>
     <div style="padding-top: 1px;">
       <h4>Statement
-        <hum-button [type]="'add'" [text]="'SUBMIT A STATEMENT'"></hum-button>
+        <hum-button (click)="submitStatement()" [type]="'add'" [text]="'SUBMIT A STATEMENT'"></hum-button>
       </h4>
-      <span><i class="fas fa-info-circle icon_color_yellow"></i> Pending statement submission by <b>Logistics Officer</b></span>
+      <span *ngIf="true"><i class="fas fa-info-circle icon_color_yellow"></i> Pending statement submission by <b>Logistics Officer</b></span>
+      <div *ngIf="false">
+        <span><i class="fas fa-info-circle icon_color_yellow"></i> Statement submitted by Engr Amir Shah. <b>Awaiting Control Officer Approval</b>.</span>
+        <h5><i class="fa fa-list fa-1" aria-hidden="true"></i> Selected Suppliers</h5>
+        <h5><i class="fa fa-paperclip fa-1" aria-hidden="true"></i> Attachments</h5>
+      </div>
     </div>
   </div>
   <div *ngSwitchDefault>

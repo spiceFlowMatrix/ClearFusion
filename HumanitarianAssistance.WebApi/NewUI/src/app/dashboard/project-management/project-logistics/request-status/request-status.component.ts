@@ -35,43 +35,10 @@ export class RequestStatusComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    if (this.requestStatus === 4) {
-      this.getPurchasedItemsList();
-    }
+
   }
 
-  submitPurchase() {
-    const dialogRef = this.dialog.open(SubmitPurchaseListComponent, {
-      width: '600px',
-      data: {requestedItems: this.requestedItems}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined && result.data != null ) {
-        this.selectedItems = result.data;
-        this.purchasedItemsData$ = of(this.selectedItems).pipe(
-          map(r => r.map(v => ({
-            Item: v.Items,
-            Quantity: v.Quantity,
-            FinalCost: v.EstimatedCost,
-           }) )));
-        this.selectedItemChange.emit(this.selectedItems);
-      }
-    });
-  }
-
-  getPurchasedItemsList() {
-    this.logisticservice.getPurchasedItemsList(this.requestId).subscribe(res => {
-      if (res.StatusCode === 200 && res.data.LogisticsItemList != null) {
-        this.purchasedItemsData$ = of(res.data.LogisticsItemList).pipe(
-          map(r => r.map(v => ({
-            Item: v.Item,
-            Quantity: v.Quantity,
-            FinalCost: v.EstimatedCost,
-           }) )));
-      } else {
-        // this.toastr.error('Something went wrong!');
-      }
-    });
+  selectedPurchaseItemChange(value) {
+    this.selectedItemChange.emit(value);
   }
 }

@@ -7,6 +7,8 @@ import { LogisticService } from '../logistic.service';
 import { map } from 'rxjs/operators';
 import { TableActionsModel } from 'projects/library/src/public_api';
 import { ToastrService } from 'ngx-toastr';
+import { SubmitPurchaseListComponent } from '../submit-purchase-list/submit-purchase-list.component';
+import { SubmitComparativeStatementComponent } from '../submit-comparative-statement/submit-comparative-statement.component';
 
 @Component({
   selector: 'app-comparative-statement',
@@ -142,6 +144,18 @@ export class ComparativeStatementComponent implements OnInit {
         Quantity: v.Quantity,
         FinalPrice: v.FinalPrice,
        }) )));
+  }
+
+  submitStatement() {
+    const dialogRef = this.dialog.open(SubmitComparativeStatementComponent, {
+      width: '650px',
+      data: {SupplierList: this.supplierList}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined && result.data != null ) {
+      }
+    });
   }
 
 }
