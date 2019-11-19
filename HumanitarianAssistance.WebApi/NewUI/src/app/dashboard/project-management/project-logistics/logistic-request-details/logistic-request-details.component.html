@@ -240,7 +240,7 @@
         </div>
 
         <h4 class="main-heading" style="padding-left: 0px !important">Requested Items
-            <hum-button [type]="'add'" [text]="'add'" (click)="addItemDialog()" *ngIf="(this.requestDetail.Status==1)"></hum-button>
+            <hum-button [type]="'add'" [text]="'add'" (click)="addItemDialog()" *ngIf="(this.requestDetail.Status==1 && this.requestDetail.ComparativeStatus==1)"></hum-button>
         </h4>
         <hum-table [headers]="requestedItemsHeaders$" [actions]="actions" [items]="requestedItemsData$" (actionClick)="onActionClick($event)"></hum-table>
       </div>

@@ -104,6 +104,19 @@ Currency: '', BudgetLine: '', Office: ''};
         this.requestDetail.Office = res.data.logisticRequest.Office;
         this.requestDetail.ComparativeStatus = res.data.logisticRequest.ComparativeStatus;
       }
+
+      if (!(this.requestDetail.Status === 1) || !(this.requestDetail.ComparativeStatus === 1)) {
+        this.actions = {
+          items: {
+            button: { status: false, text: '' },
+            edit: false,
+            delete: false,
+            download: false,
+          },
+          subitems: {
+          }
+        };
+      }
     });
   }
 
