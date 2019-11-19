@@ -15,6 +15,7 @@ namespace HumanitarianAssistance.Domain.Entities
         [StringLength(100)]
         public string Designation { get; set; }
         public string DesignationDari { get; set; }
+        public string Description { get; set; }
 
     }
 }
