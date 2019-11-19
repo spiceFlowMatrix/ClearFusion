@@ -437,6 +437,7 @@ export class GLOBAL {
     'HiringRequest/AddExistingCandidateDetail';
     public static API_HiringRequest_GetAllExistingCandidateList =
     'HiringRequest/GetAllExistingCandidateList';
+    public static API_Code_GetRatingBasedCriteriaQuestions = 'Code/GetAllRatingBasedCriteriaQuestionsByOfficeId';
 
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
   public static API_HiringRequest_AddHiringRequestDetail = 'HiringRequest/AddHiringRequestDetail';

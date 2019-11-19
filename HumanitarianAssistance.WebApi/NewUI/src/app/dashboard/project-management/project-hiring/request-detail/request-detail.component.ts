@@ -63,8 +63,9 @@ export class RequestDetailComponent implements OnInit {
     'firstText'
   ]);
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-  existingEmployeesList$: Observable<IDropDownModel[]>;
-  newCandidatesList$: Observable<[ICandidateDetailList]>;
+ // existingEmployeesList$: Observable<IDropDownModel[]>;
+  existingEmployeesList: any[] = [];
+  newCandidatesList$: Observable<ICandidateDetailList[]>;
   hiringRequestDetails: HiringRequestDetailList;
   existingCandidatesList$: Observable<IExistingCandidateList[]>;
   existingCandidatesList2$: Observable<IExistingCandidateList[]>;
@@ -273,14 +274,20 @@ export class RequestDetailComponent implements OnInit {
       (response: IResponseData) => {
         this.loader.showLoader();
         if (response.statusCode === 200 && response.data !== null) {
-          this.existingEmployeesList$ = of(
-            response.data.map(element => {
-              return {
-                value: element.EmployeeId,
-                name: element.EmployeeName
-              } as IDropDownModel;
-            })
-          );
+          response.data.forEach(element => {
+            this.existingEmployeesList.push({
+              Id: element.EmployeeId,
+              value: element.EmployeeName,
+            });
+          });
+          // this.existingEmployeesList$ = of(
+          //   response.data.map(element => {
+          //     return {
+          //       value: element.EmployeeId,
+          //       name: element.EmployeeName
+          //     } as IDropDownModel;
+          //   })
+          // );
         }
         this.loader.hideLoader();
       },
@@ -338,11 +345,12 @@ export class RequestDetailComponent implements OnInit {
       );
   }
 
-  OnExistingEmployeeSelection(data: any) {
+  OnExistingEmployeeSelection(data: MatSelectChange) {
+    this.loader.showLoader();
     const candidateDetails: any = {
       HiringRequestId: this.hiringRequestId,
       ProjectId: this.projectId,
-      EmployeeId: data
+      EmployeeId: data.value
     };
     this.hiringRequestService
       .AddExistingCandidateDetail(candidateDetails)
@@ -351,12 +359,15 @@ export class RequestDetailComponent implements OnInit {
           if (response.statusCode === 200) {
             this.getAllExistingCandidateList(this.filterValueModel);
             this.toastr.success('Employee successfully added');
+            this.loader.hideLoader();
           } else {
             this.toastr.error(response.message);
+            this.loader.hideLoader();
           }
         },
         error => {
           this.toastr.error('Someting went wrong. Please try again');
+          this.loader.hideLoader();
         }
       );
   }
