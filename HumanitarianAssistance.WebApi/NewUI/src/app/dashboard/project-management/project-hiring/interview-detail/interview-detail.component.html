@@ -13,90 +13,110 @@
   <div class="row">
     <div class="col-md-12">
       <div class="col-md-6">
-        <h5>Employee Summary</h5>
+        <h5>Candidate Summary</h5>
         <table class="table table-striped">
           <tbody>
             <tr>
-              <td>Employee Code</td>
-              <td>row data for testing</td>
-            </tr>
-            <tr>
               <td>Full Name</td>
-              <td>row data for testing</td>
+              <td>{{ candidateDetails.FullName }}</td>
             </tr>
             <tr>
               <td>Duty Station</td>
-              <td>row data for testing</td>
+              <td>{{ candidateDetails.DutyStation }}</td>
             </tr>
             <tr>
               <td>Gender</td>
-              <td>row data for testing</td>
+              <td>{{ candidateDetails.Gender }}</td>
             </tr>
             <tr>
               <td>Tazkira/Passwort No</td>
-              <td>row data for testing</td>
+              <td>-</td>
             </tr>
             <tr>
               <td>Qualification</td>
-              <td>row data for testing</td>
+              <td>{{ candidateDetails.Qualification }}</td>
             </tr>
             <tr>
               <td>Institute/University</td>
-              <td>row data for testing</td>
+              <td>-</td>
             </tr>
             <tr>
               <td>Date of Birth</td>
-              <td>row data for testing</td>
+              <td>{{ candidateDetails.DateOfBirth }}</td>
             </tr>
             <tr>
               <td>Place of Birth</td>
-              <td>row data for testing</td>
+              <td>-</td>
             </tr>
             <tr>
               <td>Tazkira Issued Place</td>
-              <td>row data for testing</td>
+              <td>-</td>
             </tr>
             <tr>
               <td>Marital Status</td>
-              <td>row data for testing</td>
+              <td>-</td>
             </tr>
           </tbody>
         </table>
         <br />
-        <h5>Job Summary</h5>
+        <h5>Hiring Request Details</h5>
         <table class="table table-striped">
           <tbody>
             <tr>
-              <td>Job Code</td>
-              <td>row data for testing</td>
+              <td>Office</td>
+              <td>{{hiringRequestDetail.Office}}</td>
             </tr>
             <tr>
-              <td>Office</td>
-              <td>row data for testing</td>
+              <td>Position/Designation</td>
+              <td>{{hiringRequestDetail.Position}}</td>
             </tr>
             <tr>
               <td>Job Grade</td>
-              <td>row data for testing</td>
+              <td>{{hiringRequestDetail.JobGrade}}</td>
             </tr>
             <tr>
-              <td>Gender</td>
-              <td>row data for testing</td>
+              <td>Total Vacancies</td>
+              <td>{{hiringRequestDetail.TotalVacancy}}</td>
+            </tr>
+            <tr>
+              <td>Filled Vacancies</td>
+              <td>{{hiringRequestDetail.FilledVacancy}}</td>
             </tr>
             <tr>
               <td>Pay Currency</td>
-              <td>row data for testing</td>
+              <td>{{hiringRequestDetail.PayCurrency}}</td>
             </tr>
             <tr>
               <td>Pay Hourly Rate</td>
-              <td>row data for testing</td>
-            </tr>
-            <tr>
-              <td>Project</td>
-              <td>row data for testing</td>
+              <td>{{hiringRequestDetail.PayHourlyRate}}</td>
             </tr>
             <tr>
               <td>Budget Line</td>
-              <td>row data for testing</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td>Job Type</td>
+              <td>{{hiringRequestDetail.JobType}}</td>
+            </tr>
+            <tr>
+              <td>Announcing Date</td>
+              <td>{{hiringRequestDetail.AnouncingDate}}</td>
+            </tr>
+            <tr>
+              <td>Closing Date</td>
+              <td>{{hiringRequestDetail.ClosingDate}}</td>
+            </tr>
+            <tr>
+              <td>Contract Type</td>
+              <td>{{hiringRequestDetail.ContractType}}</td>
+            </tr>
+            <tr>
+              <td>Contract Duration</td>
+              <td>{{hiringRequestDetail.ContractDuration}}</td>
+            </tr>
+            <tr>
+              <td>Job Shift</td>
+              <td>{{hiringRequestDetail.JobShift}}</td>
             </tr>
           </tbody>
         </table>
@@ -149,7 +169,7 @@
       </mat-accordion>
       <mat-card style="margin-top: 2px;">
         <h5>
-          Languages <hum-button [type]="'add'" [text]="'ADD'"></hum-button>
+          Languages <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewLanguage()"></hum-button>
         </h5>
         <hum-table
           [headers]="languagesHeaders$"
@@ -158,7 +178,7 @@
         ></hum-table>
       </mat-card>
       <mat-card style="margin-top: 2px;">
-        <h5>Traning <hum-button [type]="'add'" [text]="'ADD'"></hum-button></h5>
+        <h5>Traning <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewTraning()"></hum-button></h5>
         <hum-table
           [headers]="traningHeaders$"
           [isDefaultAction]="false"

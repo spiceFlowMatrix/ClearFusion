@@ -1,0 +1,91 @@
+<div>
+  <h1 mat-dialog-title>
+    Add Traning
+    <button mat-icon-button [mat-dialog-close] class="pull-right">
+      <mat-icon aria-label="clear">clear</mat-icon>
+    </button>
+  </h1>
+  <form
+    class="example-form"
+    [formGroup]="traningDetailForm"
+    (ngSubmit)="onFormSubmit(traningDetailForm.value)"
+  >
+    <div mat-dialog-content>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="row">
+            <div class="col-lg-3 col-sm-3">
+              <mat-form-field class="example-full-width">
+                <input
+                  matInput
+                  formControlName="TraningType"
+                  placeholder="Traning Type"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-lg-3 col-sm-3">
+              <mat-form-field class="example-full-width">
+                <input
+                  matInput
+                  formControlName="TraningName"
+                  placeholder="Traning Name"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-lg-3 col-sm-3">
+              <mat-form-field class="example-full-width">
+                <input
+                  matInput
+                  formControlName="TraningCountryAndCity"
+                  placeholder="Traning Country, City"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-lg-3 col-sm-3">
+              <mat-form-field class="example-full-width">
+                <input
+                  matInput
+                  [matDatepicker]="StartDatePicker"
+                  placeholder="Start Date"
+                  formControlName="TraningStartDate"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="StartDatePicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #StartDatePicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-3 col-sm-3">
+              <mat-form-field class="example-full-width">
+                <input
+                  matInput
+                  [matDatepicker]="EndDatePicker"
+                  placeholder="End Date"
+                  formControlName="TraningEndDate"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="EndDatePicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #EndDatePicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div mat-dialog-actions class="pull-right">
+        <hum-button
+          [type]="'save'"
+          [text]="'save'"
+          [isSubmit]="true"
+        ></hum-button>
+        <hum-button
+          (click)="onCancelPopup()"
+          [type]="'cancel'"
+          [text]="'cancel'"
+        ></hum-button>
+      </div>
+    </div>
+  </form>
+</div>

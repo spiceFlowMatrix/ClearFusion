@@ -192,6 +192,18 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         public async Task<ApiResponse> GetAllExistingCandidateList([FromBody]GetAllExistingCandidateListQuery query)
         {
             return await _mediator.Send(query);
-        }              
+        } 
+
+        [HttpPost]
+         public async Task<ApiResponse> GetCandidateDetailsByCandidateId([FromBody]long CandidateId)
+        {
+            return await _mediator.Send(new GetCandidateDetailsByCandidateIdQuery{ CandidateId=CandidateId});
+        }  
+
+        [HttpPost]
+        public async Task<ApiResponse> GetAllHiringRequestDetailForInterviewByHiringRequestId([FromBody] GetAllHiringRequestDetailForInterviewByHiringRequestIdQuery query)
+        {
+            return await _mediator.Send(query);
+        }       
     }  
 }

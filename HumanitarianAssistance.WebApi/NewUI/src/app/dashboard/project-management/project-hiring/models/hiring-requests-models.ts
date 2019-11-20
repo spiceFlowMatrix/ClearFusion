@@ -150,3 +150,34 @@ export interface TableActionsModel {
     download?: boolean;
   };
 }
+export interface ICandidateDetail {
+  FullName?: string;
+  DutyStation?: string;
+  Gender?: string;
+  Qualification?: string;
+  DateOfBirth?: Date;
+}
+
+export interface IHiringRequestDetailModel {
+  Office?: string;
+  Position?: string;
+  JobGrade?: string;
+  TotalVacancy?: number;
+  FilledVacancy?: number;
+  PayCurrency?: string;
+  PayHourlyRate?: number;
+  BudgetLine?: string;
+  JobType?: string;
+  AnouncingDate?: Date;
+  ClosingDate?: Date;
+  ContractType?: string;
+  ContractDuration?: number;
+  JobShift?: string;
+}
+export interface ILanguageDetailModel {
+  LanguageName?: string;
+  LanguageReading?: number;
+  LanguageWriting?: number;
+  LanguageListining?: number;
+  LanguageSpeaking?: number;
+}

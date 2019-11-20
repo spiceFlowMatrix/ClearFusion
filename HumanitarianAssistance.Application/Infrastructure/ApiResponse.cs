@@ -230,6 +230,8 @@ namespace HumanitarianAssistance.Application.Infrastructure {
         public List<CandidateDetailsModel> CandidateList { get; set; }
         public List<ExistingCandidateDetailsModel> ExistingCandidateList { get; set; }
         public HiringRequestCandidateStatus CandidateStatus { get; set; }
+        public CandidateAllDetailsModel CandidateDetails { get; set; }
+        public HiringRequestDetailsModel HiringRequestDetails { get; set; }
         public int? FilledVacancies { get; set; }
 
         //Web Link Url 05082019   

@@ -1,12 +1,21 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Inject } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { ActivatedRoute } from '@angular/router';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
 import { ToastrService } from 'ngx-toastr';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
-import { of, Observable } from 'rxjs';
+import { of, Observable, ReplaySubject } from 'rxjs';
 import { IDropDownModel } from 'src/app/store/models/purchase';
+import {
+  ICandidateDetail,
+  IHiringRequestDetailModel,
+  ILanguageDetailModel
+} from '../models/hiring-requests-models';
+import { takeUntil } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
+import { AddNewLanguageComponent } from './add-new-language/add-new-language.component';
+import { AddNewTraningComponent } from './add-new-traning/add-new-traning.component';
 
 @Component({
   selector: 'app-interview-detail',
@@ -20,7 +29,7 @@ export class InterviewDetailComponent implements OnInit {
     'Reading',
     'Writing',
     'Listining',
-    'Speaking',
+    'Speaking'
   ]);
   traningHeaders$ = of([
     'Traning Id',
@@ -28,25 +37,25 @@ export class InterviewDetailComponent implements OnInit {
     'Name',
     'Country/City',
     'Start Date',
-    'End Date',
+    'End Date'
   ]);
-  interviewersHeaders$ = of([
-    'Employee Id',
-    'Employee Code',
-    'Full Name',
-  ]);
+  interviewersHeaders$ = of(['Employee Id', 'Employee Code', 'Full Name']);
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
   interviewDetailForm: FormGroup;
+  hiringRequestDetail: IHiringRequestDetailModel;
+  candidateDetails: ICandidateDetail;
   noticePeriodList$: Observable<IDropDownModel[]>;
   statusList$: Observable<IDropDownModel[]>;
-  languagesList$: Observable<any[]>;
+  languagesList$: Observable<ILanguageDetailModel[]>;
   traningList$: Observable<any[]>;
   interviewersList$: Observable<any[]>;
   ratingBasedCriteriaQuestionList: any[] = [];
   ratingBasedDropDown: any[];
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
+    public dialog: MatDialog,
     private fb: FormBuilder,
     private commonLoader: CommonLoaderService,
     private routeActive: ActivatedRoute,
@@ -99,13 +108,54 @@ export class InterviewDetailComponent implements OnInit {
     this.statusList$ = of([
       { name: 'Hire', value: 1 },
       { name: 'Not Hire', value: 2 },
-      { name: 'Other', value: 3 },
+      { name: 'Other', value: 3 }
     ] as IDropDownModel[]);
   }
 
   ngOnInit() {
+    this.candidateDetails = {
+      FullName: '',
+      DutyStation: '',
+      Gender: '',
+      Qualification: '',
+      DateOfBirth: null
+    };
+    this.hiringRequestDetail = {
+      Office: '',
+      Position: '',
+      JobGrade: '',
+      TotalVacancy: null,
+      FilledVacancy: null,
+      PayCurrency: '',
+      PayHourlyRate: null,
+      BudgetLine: '',
+      JobType: '',
+      AnouncingDate: null,
+      ClosingDate: null,
+      ContractType: '',
+      ContractDuration: null,
+      JobShift: ''
+    };
+
+    // this.jobShiftList$ = of([
+    //   { name: 'Day', value: 1 },
+    //   { name: 'Night', value: 2 }
+    // ] as IDropDownModel[]);
+
+    this.languagesList$ = of([
+      {
+        LanguageName: '',
+        LanguageReading: null,
+        LanguageWriting: null,
+        LanguageListining: null,
+        LanguageSpeaking: null
+      }
+    ] as ILanguageDetailModel[]);
+
     this.getScreenSize();
     this.getRatingBasedCriteriaQuestion();
+    this.getCandidateDetails();
+    this.getAllHiringRequestDetails();
   }
 
   //#region "Dynamic Scroll"
@@ -122,6 +172,8 @@ export class InterviewDetailComponent implements OnInit {
   }
 
   //#endregion
+
+  // #region "getRatingBasedCriteriaQuestion"
   getRatingBasedCriteriaQuestion() {
     const OfficeId = 1;
 
@@ -145,6 +197,109 @@ export class InterviewDetailComponent implements OnInit {
           this.commonLoader.hideLoader();
         }
       );
+  }
+  //#endregion
+
+  // #region "getCandidateDetails"
+  getCandidateDetails() {
+    const CandidateId = 1;
+    // this.candidateDetails = null;
+    this.hiringRequestService
+      .GetCandidateDetailsByCandidateId(CandidateId)
+      .subscribe(
+        (response: IResponseData) => {
+          this.commonLoader.showLoader();
+          if (response.statusCode === 200 && response.data !== null) {
+            this.candidateDetails = {
+              FullName: response.data.FullName,
+              DutyStation: response.data.DutyStation,
+              Gender: response.data.Gender,
+              Qualification: response.data.Qualification,
+              DateOfBirth: response.data.DateOfBirth
+            };
+            console.log(this.ratingBasedCriteriaQuestionList);
+          }
+          this.commonLoader.hideLoader();
+        },
+        error => {
+          this.commonLoader.hideLoader();
+        }
+      );
+  }
+  //#endregion
+
+  // #region "getAllHiringRequestDetails"
+  getAllHiringRequestDetails() {
+    const model: any = {
+      HiringRequestId: 2,
+      ProjectId: 2
+    };
+    // this.candidateDetails = null;
+    this.hiringRequestService
+      .GetAllHiringRequestDetailForInterviewByHiringRequestId(model)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        (response: IResponseData) => {
+          this.commonLoader.showLoader();
+          if (response.statusCode === 200 && response.data !== null) {
+            this.hiringRequestDetail = {
+              Office: response.data.Office,
+              Position: response.data.Position,
+              JobGrade: response.data.JobGrade,
+              TotalVacancy: response.data.TotalVacancy,
+              FilledVacancy: response.data.FilledVacancy,
+              PayCurrency: response.data.PayCurrency,
+              PayHourlyRate: response.data.PayHourlyRate,
+              BudgetLine: response.data.BudgetLine,
+              JobType: response.data.JobType,
+              AnouncingDate: response.data.AnouncingDate,
+              ClosingDate: response.data.ClosingDate,
+              ContractType: response.data.ContractType,
+              ContractDuration: response.data.ContractDuration,
+              JobShift: response.data.JobShift
+            };
+          }
+          this.commonLoader.hideLoader();
+        },
+        error => {
+          this.commonLoader.hideLoader();
+        }
+      );
+  }
+  //#endregion
+
+  addNewLanguage(): void {
+    const dialogRef = this.dialog.open(AddNewLanguageComponent, {
+      width: '850px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      this.languagesList$.subscribe(res => {
+        res.push(result);
+        this.languagesList$ = of(res);
+      });
+      // this.languagesList$ = of(
+      //   result.map(element => {
+      //     return {
+      //       LanguageName: element.LanguageName,
+      //       LanguageReading: element.LanguageReading,
+      //       LanguageWriting: element.LanguageWriting,
+      //       LanguageListining: element.LanguageListining,
+      //       LanguageSpeaking: element.LanguageSpeaking
+      //     } as ILanguageDetailModel;
+      //   })
+      // );
+    });
+  }
+  addNewTraning(): void {
+    const dialogRef = this.dialog.open(AddNewTraningComponent, {
+      width: '850px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+    });
   }
   onFormSubmit(data: any) {
     console.log(data);

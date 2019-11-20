@@ -772,7 +772,7 @@ export class HiringRequestsService {
   }
   //#endregion
 
-  //#region "GetProjectHiringRequestDetailsByHiringRequestId"
+  //#region "GetAllProjectHiringRequestDetailByHiringRequestId"
   GetAllProjectHiringRequestDetailByHiringRequestId(HiringRequestId: any) {
     return this.globalService
       .post(
@@ -818,4 +818,45 @@ GetRatingBasedCriteriaQuestion(OfficeId: number): any {
 }
 //#endregion
 
+  //#region "GetCandidateDetailsByCandidateId"
+  GetCandidateDetailsByCandidateId(CandidateId: number) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_GetCandidateDetailsByCandidateId,
+          CandidateId
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.CandidateDetails,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
+   //#region "GetProjectHiringRequestDetailsByHiringRequestId"
+   GetAllHiringRequestDetailForInterviewByHiringRequestId(model: any) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_GetAllHiringRequestDetailForInterviewByHiringRequestId,
+        model
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.HiringRequestDetails,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
 }
