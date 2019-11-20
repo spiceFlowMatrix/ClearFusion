@@ -1,9 +1,6 @@
-using HumanitarianAssistance.Application.Infrastructure;
-using MediatR;
-
-namespace HumanitarianAssistance.Application.HR.Queries
+namespace HumanitarianAssistance.Application.HR.Models
 {
-    public class GetEmployeeExitInterviewPdfQuery : BaseModel, IRequest<byte[]>
+    public class EmployeeExitInteviewPdfModel
     {
         public int ExistInterviewDetailsId { get; set; }
         public int EmployeeId { get; set; }
@@ -71,10 +68,11 @@ namespace HumanitarianAssistance.Application.HR.Queries
         public bool Question { get; set; }
         public string Explain { get; set; }
         public int OfficeId { get; set; }
-
-
-
-        
-
+        public string LogoPath { get; set; }
+        public string CheckRadioPath { get; set; }
+        public string UncheckRadioPath { get; set; }
+        public string CheckedIconPath { get; set; }
+        public string UnCheckedIconPath { get; set; }
+        public string PersianChaName { get; set; }
     }
 }

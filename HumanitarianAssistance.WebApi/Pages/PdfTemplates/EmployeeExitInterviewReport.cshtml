@@ -1,6 +1,1995 @@
+@model HumanitarianAssistance.Application.HR.Models.EmployeeExitInteviewPdfModel
 <!doctype html>
 <html>
 <head>
-	<title>Humanitarian</title>
+	<title></title>
 </head>
+<body>
+    <div class="container">
+        <table style="width:100%;font-family:Arial, Verdana, sans-serif;">
+            <tr>
+                <td>
+                    <table cellpadding="5" style="width:100%;">
+                        <tr>
+                            <td><img src="@Model.LogoPath" alt=""></td>
+                            <td style="text-align:left"> <img src = "@Model.PersianChaName" alt = ""> </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" align="center" style="font-size:20px;font-weight:500;">COORDINATION OF HUMANITARIAN ASSISTANCE(CHA)<br>Employee Exit Interview Report</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table cellpadding="0" style="width:100%;">
+                        <tr>
+                            <td width="120" style="color:#333;padding:30px 0 15px;">Employee Name:</td>
+                            <td width="120" style="font-weight:500; color:#636363;padding:30px 0 15px;">@Model.EmployeeName</td>
+                            <td>&nbsp;</td>
+                            <td width="120" style="color:#333;padding:30px 0 15px;">Employee Code: </td>
+                            <td width="120" style="font-weight:500; color:#636363;padding:30px 0 15px;">@Model.EmployeeCode</td>
+                        </tr>
+                        <tr>
+                            <td style="color:#333;padding:5px 0 15px;">Designation: </td>
+                            <td style="font-weight:500;padding:5px 0 15px;">@Model.Position</td>
+                            <td>&nbsp;</td>
+                            <td style="color:#333;padding:5px 0 15px;">Department:</td>
+                            <td style="font-weight:500;padding:5px 0 15px;">@Model.Department</td>
+                        </tr>
+                         <tr>
+                            <td style="color:#333;padding:5px 0 15px;">Tenure with CHA: </td>
+                            <td style="font-weight:500;padding:5px 0 15px;">@Model.TenureWithCHA</td>
+                            <td>&nbsp;</td>
+                            <td style="color:#333;padding:5px 0 15px;">Gender:</td>
+                            <td style="font-weight:500;padding:5px 0 15px;">@Model.Gender</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" style="padding:30px 0 15px;"> <p  style="color:#333;" >In order to get your honest comments/feedback on CHA organizational working environment, and use it for further improvement of the organizational,
+                                </p></td>
+
+                        </tr>
+                        <tr> <td colspan= "5" style="color:#636363;padding:5px 0px;"> Check which best describes your feelings about the following aspects of your employment. This information will be kept confidential.</tr>
+                    </table>
+                </td>
+            
+            </tr>
+            <tr>
+                <td>
+                     <table cellpadding="0" style="width:100%;">
+                         <tr>
+                             <td colspan="2" style="padding:5px"></td>
+                             <td style="padding:5px 0px;text-align:center;"> Very Satisfied </td>
+                             <td style="padding:5px 0px;text-align:center;">Satisfied</td>
+                             <td style="padding:5px 0px;text-align:center;">Dissatisfied  </td>
+
+                         </tr>
+                         <tr>
+                            <td colspan="2" width="120" style="color:#636363;padding:5px 0px;">Duties of the job</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.DutiesOfJob == "Very Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+
+                            <td width="120" style="padding:5px ;text-align:center;">
+                                @if (Model.DutiesOfJob == "Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                             </td>
+                            <td width="120" style="padding:5px;text-align:center;">
+                                 @if (Model.DutiesOfJob == "Dissatisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                         </tr>
+                         <tr>
+                            <td colspan="2" width="120" style="color:#636363;padding:5px 0px;">Training & development programs</td>
+                           <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.TrainingAndDevelopmentPrograms == "Very Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+
+                            <td width="120" style="text-align:center;padding:5px;">
+                                @if (Model.TrainingAndDevelopmentPrograms == "Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                             </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                                 @if (Model.TrainingAndDevelopmentPrograms == "Dissatisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                         </tr>
+                         <tr>
+                            <td colspan="2" width="120" style="color:#636363;padding:5px 0px;">Opportunities for advancement</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.OpportunityAdvancement == "Very Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+
+                            <td width="120" style="text-align:center;padding:5px;">
+                                @if (Model.OpportunityAdvancement == "Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                             </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                                 @if (Model.OpportunityAdvancement == "Dissatisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>                     
+
+                         </tr>
+                         <tr>
+                            <td colspan="2" width="120" style="color:#636363;padding:5px 0px;">Salary treatment</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.SalaryTreatment == "Very Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+
+                            <td width="120" style="text-align:center;padding:5px;">
+                                @if (Model.SalaryTreatment == "Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                             </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                                 @if (Model.SalaryTreatment == "Dissatisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                           
+                         </tr>
+                         <tr>
+                            <td colspan="2" width="120" style="color:#636363;padding:5px 0px;">Benefit programs</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.BenefitProgram == "Very Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+
+                            <td width="120" style="text-align:center;padding:5px;">
+                                @if (Model.BenefitProgram == "Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                             </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                                 @if (Model.BenefitProgram == "Dissatisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                         </tr>
+                         <tr>
+                            <td colspan="2" width="120" style="color:#636363;padding:5px 0px;">Working conditions</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WorkingConditions == "Very Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+
+                            <td width="120" style="text-align:center;padding:5px;">
+                                @if (Model.WorkingConditions == "Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                             </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                                 @if (Model.WorkingConditions == "Dissatisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                         </tr>
+                         <tr>
+                            <td colspan="2" width="120" style="color:#636363;padding:5px 0px;">Working hours</td>
+                           <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WorkingHours == "Very Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+
+                            <td width="120" style="text-align:center;padding:5px;">
+                                @if (Model.WorkingHours == "Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                             </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                                 @if (Model.WorkingHours == "Dissatisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                         </tr>
+                         <tr>
+                            <td colspan="2" width="120" style="color:#636363;padding:5px 0px;">Co-workers</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.CoWorkers == "Very Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+
+                            <td width="120" style="text-align:center;padding:5px;">
+                                @if (Model.CoWorkers == "Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                             </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                                 @if (Model.CoWorkers == "Dissatisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                         </tr>
+                         <tr>
+                            <td colspan="2" width="120" style="color:#636363;padding:5px 0px;">Supervisors</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.Supervisors == "Very Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+
+                            <td width="120" style="text-align:center;padding:5px;">
+                                @if (Model.Supervisors == "Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                             </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                                 @if (Model.Supervisors == "Dissatisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                         </tr>
+                         <tr>
+                            <td colspan="2" width="120" style="color:#636363;padding:5px 0px;">Gender Friendly Environment</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.GenderFriendlyEnvironment == "Very Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+
+                            <td width="120" style="text-align:center;padding:5px;">
+                                @if (Model.GenderFriendlyEnvironment == "Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                             </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                                 @if (Model.GenderFriendlyEnvironment == "Dissatisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                         </tr>
+                         <tr>
+                            <td colspan="2" width="120" style="color:#636363;padding:5px 0px;">Overall job satisfaction</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.OverallJobSatisfaction == "Very Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+
+                            <td width="120" style="text-align:center;padding:5px;">
+                                @if (Model.OverallJobSatisfaction == "Satisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                             </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                                 @if (Model.OverallJobSatisfaction == "Dissatisfied")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                         </tr>
+                         
+                     </table>
+                </td>
+            </tr>
+           
+         
+            <tr>
+                <td>
+                     <table cellpadding="0" style="width:100%;">
+                         <tr>
+                             <td colspan="2" style="font-weight:500;font-size: 18px; color:#333;padding:30px 0 15px;"> Reason for Leaving: (Check all that apply)</td>
+                             
+                          </tr>
+                          <tr>
+                              <td width="250px" style="color:#636363;padding:0px 0px 5px;">Benefits</td>
+                              <td>
+                                @if (Model.Benefits == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }
+                              </td>
+
+                          </tr>
+                           <tr>
+                              <td width="250px" style="color:#636363;padding:0px 0px 5px;">Better job opportunity</td>
+                              <td >
+                                @if (Model.BetterJobOpportunity == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }
+                              </td>
+
+                          </tr>
+                           <tr>
+                              <td width="250px" style="color:#636363;padding:0px 0px 5px;">Family reasons</td>
+                              <td>
+                                 @if (Model.FamilyReasons == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }  
+                              </td>
+
+                          </tr>
+                           <tr>
+                              <td width="250px" style="color:#636363;padding:0px 0px 5px;">Not challenged</td>
+                              <td>
+                                  @if (Model.NotChallenged == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                } 
+                              </td>
+
+                          </tr>
+                           <tr>
+                              <td width="250px" style="color:#636363;padding:0px 0px 5px;">Pay</td>
+                              <td>
+                                   @if (Model.Pay == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }</td>
+
+                          </tr>
+                           <tr>
+                              <td width="250px" style="color:#636363;padding:0px 0px 5px;">Personal reasons</td>
+                              <td>
+                                   @if (Model.PersonalReasons == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }
+                              </td>
+
+                          </tr>
+                           <tr>
+                              <td width="250px" style="color:#636363;padding:0px 0px 5px;">Relocation/move</td>
+                              <td>
+                                   @if (Model.Relocation == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }</td>
+
+                          </tr>
+                           <tr>
+                              <td width="250px" style="color:#636363;padding:0px 0px 5px;">Return to school</td>
+                              <td>
+                                   @if (Model.ReturnToSchool == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }
+                              </td>
+
+                          </tr>
+                           <tr>
+                              <td width="250px" style="color:#636363;padding:0px 0px 5px;">Conflict with Supervisors</td>
+                              <td>
+                                   @if (Model.ConflictWithSuoervisors == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }
+                              </td>
+
+                          </tr> <tr>
+                              <td width="250px" style="color:#636363;padding:0px 0px 5px;">Conflict with other employees</td>
+                              <td>
+                                   @if (Model.ConflictWithOther == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }
+                              </td>
+
+                          </tr> <tr>
+                              <td width="250px" style="color:#636363;padding:0px 0px 5px;">Work Relationship</td>
+                              <td>
+                                   @if (Model.WorkRelationship == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }
+                              </td>
+
+                          </tr> <tr>
+                              <td width="250px" style="color:#636363;padding:0px 0px 5px;">Company Instability</td>
+                              <td>
+                                   @if (Model.CompanyInstability == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }</td>
+
+                          </tr>
+                           <tr>
+                              <td width="250px" style="color:#636363;padding:0px 0px 5px;">Career Change</td>
+                              <td> 
+                                  @if (Model.CareerChange == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }</td>
+
+                          </tr> 
+                          <tr>
+                              <td width="250px" style="color:#636363;padding:0px 0px 5px;">Health Issue</td>
+                              <td>
+                                   @if (Model.HealthIssue == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }
+                              </td>
+
+                          </tr>
+
+                     </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <table cellpadding="0" style="width:100%;">
+                        <tr>
+                            <td colspan="6" style="font-weight:500;font-size: 18px; color:#333;padding:30px 0 15px;"> The Department:
+                            </td>
+                        </tr>
+                        <tr>
+                             <td colspan="2" style="padding:5px 0px;text-align:right;">Strongly Disagre
+                            </td>
+                             <td style="padding:5px 0px;text-align:center;">Disagree    
+                            </td>
+                             <td style="padding:5px 0px;text-align:center;">Neutral      
+                            </td>
+                             <td style="padding:5px 0px;text-align:center;">Agree         
+                            </td>
+                             <td style="padding:5px 0px;text-align:center;">Strongly Agree
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Had good synergy</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadGoodSynergy == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadGoodSynergy == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadGoodSynergy == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadGoodSynergy == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadGoodSynergy == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Had adequate equipment </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadAdequateEquipment == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadAdequateEquipment == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadAdequateEquipment == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadAdequateEquipment == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadAdequateEquipment == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Was adequately staffed</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasAdequatelyStaffed == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasAdequatelyStaffed == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasAdequatelyStaffed == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasAdequatelyStaffed == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasAdequatelyStaffed == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Was efficient</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasEfficient == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasEfficient == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasEfficient == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasEfficient == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasEfficient == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                    </table>
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table cellpadding="0" style="width:100%;">
+                        <tr>
+                            <td colspan="6" style="font-weight:500;font-size: 18px; color:#333;padding:30px 0 15px;">The Job Itself:
+                            </td>
+                        </tr>
+                       
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Job was challenging</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.JobWasChallenging == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.JobWasChallenging == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.JobWasChallenging == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.JobWasChallenging == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.JobWasChallenging == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Skills were effectively used </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.SkillsEffectivelyUsed == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.SkillsEffectivelyUsed == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.SkillsEffectivelyUsed == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.SkillsEffectivelyUsed == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.SkillsEffectivelyUsed == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Job orientation was effective</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.JobOrientation == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.JobOrientation == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.JobOrientation == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.JobOrientation == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.JobOrientation == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Work load was reasonable</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WorkLoadReasonable == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WorkLoadReasonable == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WorkLoadReasonable == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WorkLoadReasonable == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WorkLoadReasonable == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Sufficient resources were available</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.SufficientResources == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.SufficientResources == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.SufficientResources == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.SufficientResources == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.SufficientResources == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Work environment was safe</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WorkEnvironment == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WorkEnvironment == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WorkEnvironment == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WorkEnvironment == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WorkEnvironment == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Comfortable and appropriately </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.ComfortableAppropriately == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.ComfortableAppropriately == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.ComfortableAppropriately == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.ComfortableAppropriately == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.ComfortableAppropriately == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Equipped</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.Equipped == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.Equipped == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.Equipped == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.Equipped == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.Equipped == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                    </table>
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table cellpadding="0" style="width:100%;">
+                        <tr>
+                            <td colspan="6" style="font-weight:500;font-size: 18px; color:#333;padding:30px 0 15px;">My Supervisor:
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Had knowledge of the job</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadKnowledgeOfJob == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadKnowledgeOfJob == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadKnowledgeOfJob == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadKnowledgeOfJob == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadKnowledgeOfJob == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                       
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Had knowledge of supervision </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadKnowledgeSupervision == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadKnowledgeSupervision == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadKnowledgeSupervision == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadKnowledgeSupervision == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.HadKnowledgeSupervision == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Was open to suggestions</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasOpenSuggestions == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasOpenSuggestions == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasOpenSuggestions == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasOpenSuggestions == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasOpenSuggestions == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Recognized employees contribution</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.RecognizedEmployeesContribution == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.RecognizedEmployeesContribution == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.RecognizedEmployeesContribution == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.RecognizedEmployeesContribution == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.RecognizedEmployeesContribution == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                    </table>
+
+                </td>
+            </tr>
+
+            <!-- the management -->
+             <tr>
+                <td>
+                    <table cellpadding="0" style="width:100%;">
+                        <tr>
+                            <td colspan="6" style="font-weight:500;font-size: 18px; color:#333;padding:30px 0 15px;">The Management:
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Gave fair and equal treatment</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.GaveFairTreatment == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.GaveFairTreatment == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.GaveFairTreatment == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.GaveFairTreatment == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.GaveFairTreatment == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                      
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Was available to discuss job related issues </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasAvailableToDiscuss == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasAvailableToDiscuss == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasAvailableToDiscuss == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasAvailableToDiscuss == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WasAvailableToDiscuss == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Welcomed suggestions and encouraged feedback</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WelcomedSuggestions == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WelcomedSuggestions == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WelcomedSuggestions == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WelcomedSuggestions == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.WelcomedSuggestions == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Maintained consistent policies and practices</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.MaintainedConsistent == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.MaintainedConsistent == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.MaintainedConsistent == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.MaintainedConsistent == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.MaintainedConsistent == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Provided recognition for achievements</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.ProvidedRecognition == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.ProvidedRecognition == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.ProvidedRecognition == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.ProvidedRecognition == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.ProvidedRecognition == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Encouraged cooperation/collegiality</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.EncouragedCooperation == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.EncouragedCooperation == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.EncouragedCooperation == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.EncouragedCooperation == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.EncouragedCooperation == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="350px" style="color:#636363;padding:5px 0px;color:#636363">Provided development opportunities</td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.ProvidedDevelopment == "Strongly Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.ProvidedDevelopment == "Disagree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.ProvidedDevelopment == "Neutral")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.ProvidedDevelopment == "Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                            <td width="120" style="text-align:center;padding:5px;">
+                              @if (Model.ProvidedDevelopment == "Strongly Agree")
+                                {
+                                   <img src="@Model.CheckRadioPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UncheckRadioPath" alt=""> 
+                                }
+                            </td>
+                        </tr>
+                    </table>
+
+                </td>
+            </tr>
+            <!-- last section -->
+            <tr>
+                <td>
+                    <table cellpadding="0" style="width:100%;">
+                        <tr>
+                            <td style="padding:30px 0 15px;">Are there any other unresolved issues or additional comments? </td>
+                        </tr>
+                        <tr>
+                            <td style="padding:0 0 5px;">
+                                <table cellpadding="0" style="width:100%;">
+                                    <tr>
+                                        <td width="10">
+                                            <div style="width:70px;float:left;color:#636363;">
+                                                Yes <span>
+                                                       @if (Model.Question == true)
+                                                        {
+                                                        <img src="@Model.CheckRadioPath" alt=""> 
+                                                        }
+                                                        else 
+                                                        {
+                                                        <img src="@Model.UncheckRadioPath" alt=""> 
+                                                        }
+                                                    </span>
+                                            </div>
+                                            <div style="float:left;color:#636363;">
+                                                No <span>
+                                                     @if (Model.Question == false)
+                                                        {
+                                                        <img src="@Model.CheckRadioPath" alt=""> 
+                                                        }
+                                                        else 
+                                                        {
+                                                        <img src="@Model.UncheckRadioPath" alt=""> 
+                                                        }</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                             <td style="padding:0 0 5px;color:#636363;">If answer is “yes”, explain fully:</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:0 0 5px;color:#636363;">
+                                <textarea style="width:100%;height:80px;border:1px solid #000;">@Model.Explain</textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table cellpadding="0" style="width:100%;">
+                                    <tr>
+                                        <td width="70%" style="padding:80px 0 15px;">Signature of Interviewer</td>
+                                        <td style="padding:80px 0 15px;">Signature of Employee </td>
+                                    <tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <!-- end here -->
+        </table>
+     </div>
+</body>
 </html>

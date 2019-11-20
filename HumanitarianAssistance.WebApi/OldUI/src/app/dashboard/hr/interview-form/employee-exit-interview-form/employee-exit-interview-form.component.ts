@@ -756,89 +756,83 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
   //#endregion
   //#region "exportPdf"
   exportPdf(modelData: any) {
-    console.log(modelData);
-    if (modelData != null && modelData !== undefined) {
+    if (modelData.data != null && modelData.data !== undefined) {
       this.empExitInterviewFormMainForm = {
-        ExistInterviewDetailsId: modelData.ExistInterviewDetailsId,
-        EmployeeId: modelData.EmployeeId,
+        ExistInterviewDetailsId: modelData.data.ExistInterviewDetailsId,
+        EmployeeId: modelData.data.EmployeeId,
 
-        EmployeeCode: modelData.EmployeeCode,
-        EmployeeName: modelData.EmployeeName,
-        Position: modelData.Position,
-        Department: modelData.Department,
-        TenureWithCHA: modelData.TenureWithCHA,
-        Gender:
-          modelData.Gender.toLowerCase() === 'male'
-            ? 1
-            : modelData.Gender.toLowerCase() === 'female'
-            ? 2
-            : 3,
+        EmployeeCode: modelData.data.EmployeeCode,
+        EmployeeName: modelData.data.EmployeeName,
+        Position: null,
+        Department: modelData.data.Department,
+        TenureWithCHA: modelData.data.TenureWithCHA,
+        Gender: modelData.data.Gender,
 
         // FeelingAboutEmployee
-        DutiesOfJob: modelData.DutiesOfJob,
+        DutiesOfJob: modelData.data.DutiesOfJob,
         TrainingAndDevelopmentPrograms:
-          modelData.TrainingAndDevelopmentPrograms,
-        OpportunityAdvancement: modelData.OpportunityAdvancement,
-        SalaryTreatment: modelData.SalaryTreatment,
-        BenefitProgram: modelData.BenefitProgram,
-        WorkingConditions: modelData.WorkingConditions,
-        WorkingHours: modelData.WorkingHours,
-        CoWorkers: modelData.CoWorkers,
-        Supervisors: modelData.Supervisors,
-        GenderFriendlyEnvironment: modelData.GenderFriendlyEnvironment,
-        OverallJobSatisfaction: modelData.OverallJobSatisfaction,
+          modelData.data.TrainingAndDevelopmentPrograms,
+        OpportunityAdvancement: modelData.data.OpportunityAdvancement,
+        SalaryTreatment: modelData.data.SalaryTreatment,
+        BenefitProgram: modelData.data.BenefitProgram,
+        WorkingConditions: modelData.data.WorkingConditions,
+        WorkingHours: modelData.data.WorkingHours,
+        CoWorkers: modelData.data.CoWorkers,
+        Supervisors: modelData.data.Supervisors,
+        GenderFriendlyEnvironment: modelData.data.GenderFriendlyEnvironment,
+        OverallJobSatisfaction: modelData.data.OverallJobSatisfaction,
 
         // ReasonOfLeaving
-        Benefits: modelData.Benefits,
-        BetterJobOpportunity: modelData.BetterJobOpportunity,
-        FamilyReasons: modelData.FamilyReasons,
-        NotChallenged: modelData.NotChallenged,
-        Pay: modelData.Pay,
-        PersonalReasons: modelData.PersonalReasons,
-        Relocation: modelData.Relocation,
-        ReturnToSchool: modelData.ReturnToSchool,
-        ConflictWithSuoervisors: modelData.ConflictWithSuoervisors,
-        ConflictWithOther: modelData.ConflictWithOther,
-        WorkRelationship: modelData.WorkRelationship,
-        CompanyInstability: modelData.CompanyInstability,
-        CareerChange: modelData.CareerChange,
-        HealthIssue: modelData.HealthIssue,
+        Benefits: modelData.data.Benefits,
+        BetterJobOpportunity: modelData.data.BetterJobOpportunity,
+        FamilyReasons: modelData.data.FamilyReasons,
+        NotChallenged: modelData.data.NotChallenged,
+        Pay: modelData.data.Pay,
+        PersonalReasons: modelData.data.PersonalReasons,
+        Relocation: modelData.data.Relocation,
+        ReturnToSchool: modelData.data.ReturnToSchool,
+        ConflictWithSuoervisors: modelData.data.ConflictWithSuoervisors,
+        ConflictWithOther: modelData.data.ConflictWithOther,
+        WorkRelationship: modelData.data.WorkRelationship,
+        CompanyInstability: modelData.data.CompanyInstability,
+        CareerChange: modelData.data.CareerChange,
+        HealthIssue: modelData.data.HealthIssue,
 
         // TheDepartment
-        HadGoodSynergy: modelData.HadGoodSynergy,
-        HadAdequateEquipment: modelData.HadAdequateEquipment,
-        WasAdequatelyStaffed: modelData.WasAdequatelyStaffed,
-        WasEfficient: modelData.WasEfficient,
+        HadGoodSynergy: modelData.data.HadGoodSynergy,
+        HadAdequateEquipment: modelData.data.HadAdequateEquipment,
+        WasAdequatelyStaffed: modelData.data.WasAdequatelyStaffed,
+        WasEfficient: modelData.data.WasEfficient,
 
         // TheJobItself
-        JobWasChallenging: modelData.JobWasChallenging,
-        SkillsEffectivelyUsed: modelData.SkillsEffectivelyUsed,
-        JobOrientation: modelData.JobOrientation,
-        WorkLoadReasonable: modelData.WorkLoadReasonable,
-        SufficientResources: modelData.SufficientResources,
-        WorkEnvironment: modelData.WorkEnvironment,
-        ComfortableAppropriately: modelData.ComfortableAppropriately,
-        Equipped: modelData.Equipped,
+        JobWasChallenging: modelData.data.JobWasChallenging,
+        SkillsEffectivelyUsed: modelData.data.SkillsEffectivelyUsed,
+        JobOrientation: modelData.data.JobOrientation,
+        WorkLoadReasonable: modelData.data.WorkLoadReasonable,
+        SufficientResources: modelData.data.SufficientResources === undefined ? null : modelData.data.SufficientResources,
+        WorkEnvironment: modelData.data.WorkEnvironment,
+        ComfortableAppropriately: modelData.data.ComfortableAppropriately,
+        Equipped: modelData.data.Equipped,
 
         // MySupervisor
-        HadKnowledgeOfJob: modelData.HadKnowledgeOfJob,
-        HadKnowledgeSupervision: modelData.HadKnowledgeSupervision,
-        WasOpenSuggestions: modelData.WasOpenSuggestions,
+        HadKnowledgeOfJob: modelData.data.HadKnowledgeOfJob,
+        HadKnowledgeSupervision: modelData.data.HadKnowledgeSupervision,
+        WasOpenSuggestions: modelData.data.WasOpenSuggestions,
         RecognizedEmployeesContribution:
-          modelData.RecognizedEmployeesContribution,
+          modelData.data.RecognizedEmployeesContribution,
 
         // TheManagement
-        GaveFairTreatment: modelData.GaveFairTreatment,
-        WasAvailableToDiscuss: modelData.WasAvailableToDiscuss,
-        WelcomedSuggestions: modelData.WelcomedSuggestions,
-        MaintainedConsistent: modelData.MaintainedConsistent,
-        ProvidedRecognition: modelData.ProvidedRecognition,
-        EncouragedCooperation: modelData.EncouragedCooperation,
-        ProvidedDevelopment: modelData.ProvidedDevelopment,
+        GaveFairTreatment: modelData.data.GaveFairTreatment,
+        WasAvailableToDiscuss: modelData.data.WasAvailableToDiscuss,
+        WelcomedSuggestions: modelData.data.WelcomedSuggestions === undefined ? null : modelData.data.WelcomedSuggestions,
+        MaintainedConsistent: modelData.data.MaintainedConsistent === undefined ? null : modelData.data.MaintainedConsistent,
+        ProvidedRecognition: modelData.data.ProvidedRecognition,
+        EncouragedCooperation: modelData.data.EncouragedCooperation,
+        ProvidedDevelopment: modelData.data.ProvidedDevelopment,
 
-        Question: modelData.Question === true ? 'Yes' : 'No',
-        Explain: modelData.Explain,
-        OfficeId: modelData.OfficeId
+        Question: modelData.data.Question,
+        Explain: modelData.data.Explain === undefined ? null : modelData.data.Explain,
+        OfficeId: modelData.data.OfficeId
       };
 
 
@@ -849,7 +843,7 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
         )
         .subscribe(
           x => {
-            this.fileName = 'EmployeeLeaveReport' + '.pdf';
+            this.fileName = 'EmployeeExitInterviewReport' + '.pdf';
             if (window.navigator.msSaveOrOpenBlob) {
               window.navigator.msSaveOrOpenBlob(x, this.fileName);
             } else {
