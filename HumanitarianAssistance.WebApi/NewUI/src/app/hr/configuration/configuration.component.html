@@ -2,7 +2,6 @@
   <mat-sidenav #sidenav mode="side" opened="true">
     <app-dbsidebar></app-dbsidebar>
   </mat-sidenav>
-
   <mat-sidenav-content>
     <mat-card class="header header_mat_card">
    <div class="container-fluid">
@@ -13,6 +12,12 @@
         </div>
    </div>
     </mat-card>
+    <lib-sub-header-template>
+        <span class="action_header">Configuration
+        </span>
+        <div class="action_section">
+        </div>
+      </lib-sub-header-template>
     <nav mat-tab-nav-bar>
       <a mat-tab-link
          *ngFor="let link of navLinks"

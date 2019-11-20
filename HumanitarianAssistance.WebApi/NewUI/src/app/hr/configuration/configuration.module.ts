@@ -11,6 +11,11 @@ import { MatCardModule } from '@angular/material/card';
 import { ShareLayoutModule } from 'src/app/shared/share-layout.module';
 import { LibraryModule, SubHeaderTemplateModule } from 'projects/library/src/public_api';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatDialogModule } from '@angular/material/dialog';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { TextFieldModule } from '@angular/cdk/text-field';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -25,9 +30,16 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatSidenavModule,
     MatCardModule,
     MatTabsModule,
+    MatDialogModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatDividerModule,
+    TextFieldModule,
+    FormsModule,
     ShareLayoutModule,
     SubHeaderTemplateModule,
     LibraryModule
-  ]
+  ],
+  entryComponents: [AddDesignationComponent]
 })
 export class ConfigurationModule { }

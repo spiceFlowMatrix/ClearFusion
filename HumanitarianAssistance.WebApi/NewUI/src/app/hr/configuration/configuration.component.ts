@@ -14,7 +14,7 @@ export class ConfigurationComponent implements OnInit {
 
   navLinks: any[] = [];
   activeLinkIndex = -1;
-  setConfigurationHeader = 'Configuration';
+  setConfigurationHeader = 'HR';
 
   constructor(private router: Router, private globalService: GlobalSharedService) {
 
