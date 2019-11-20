@@ -34,9 +34,10 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     TotalCost = y.TotalCost,
                     BudgetLine = y.ProjectBudgetLineDetail.BudgetCode,
                     Currency = y.CurrencyDetails.CurrencyCode,
-                    Office = y.OfficeDetail.OfficeName
+                    Office = y.OfficeDetail.OfficeName,
+                    ComparativeStatus = y.ComparativeStatus
                 }).FirstOrDefaultAsync();
-
+                
                 if(req == null) {
                     throw new Exception("Request doesnot exist!");
                 }

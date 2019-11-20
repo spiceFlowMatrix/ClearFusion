@@ -558,16 +558,16 @@ getAllCurrencies() {
           GLOBAL.API_code_GetAllCurrency);
 }
 
-getStoreLogs() {
+getStoreLogs(id: number, entityId: number) {
   return this.http
       .get<any>(
         this.appurl.getApiUrl() +
-          GLOBAL.API_StorePurchase_GetVehicleGeneratorTrackerLogs);
+          GLOBAL.API_StorePurchase_GetVehicleGeneratorTrackerLogs + '?id=' + id + '&entityId=' + entityId);
 }
 
 getMonthlyBreakDownYears(): Observable<IDropDownModel[]> {
 
-  let yearDropDown: IDropDownModel[] = [];
+  const yearDropDown: IDropDownModel[] = [];
   const year = new Date().getFullYear();
   for (let i = 0; i <= 10; i++) {
     yearDropDown.push({name: (year - i).toString(),

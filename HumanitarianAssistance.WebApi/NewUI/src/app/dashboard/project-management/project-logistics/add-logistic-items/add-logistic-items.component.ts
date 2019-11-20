@@ -94,7 +94,7 @@ export class AddLogisticItemsComponent implements OnInit {
           // this.storeItemsList.push(element);
           this.storeItemsList.push({
             Id: element.ItemId,
-            Name: element.ItemName
+            Name: element.ItemCode + '-' + element.ItemName
           });
         });
         this.addLogisticItemsForm.controls['Item'].setValue(this.data.ItemId);

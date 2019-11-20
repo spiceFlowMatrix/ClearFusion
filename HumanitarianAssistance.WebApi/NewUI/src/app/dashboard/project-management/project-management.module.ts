@@ -87,6 +87,7 @@ import { AddQuestionsDialogComponent } from './project-list/project-indicators/a
 import { ProjectOtherDetailPdfComponent } from './project-list/project-details/project-other-detail-pdf/project-other-detail-pdf.component';
 import { ProjectHiringModule } from './project-hiring/project-hiring.module';
 import { ProjectLogisticsModule } from './project-logistics/project-logistics.module';
+import { InterviewDetailComponent } from './project-hiring/interview-detail/interview-detail.component';
 
 @NgModule({
   imports: [

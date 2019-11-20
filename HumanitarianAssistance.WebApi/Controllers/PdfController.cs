@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Accounting.Queries;
 using HumanitarianAssistance.Application.HR.Queries;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Application.Project.Models;
 using HumanitarianAssistance.Application.Project.Queries;
 using HumanitarianAssistance.Application.Store.Queries;
 using HumanitarianAssistance.Common.Enums;
@@ -97,7 +99,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
 
         [HttpPost]
         [Produces(contentType: "application/pdf")]
-        public async Task<IActionResult> GetJournalTrialBalanceReportPdf([FromBody] GetJournalTrialBalanceReportPdfQuery model) 
+        public async Task<IActionResult> GetJournalTrialBalanceReportPdf([FromBody] GetJournalTrialBalanceReportPdfQuery model)
         {
             var file = await _mediator.Send(model);
             return File(file, "application/pdf", "TrialBalanceReportJournal.pdf");
@@ -105,7 +107,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
 
         [HttpPost]
         [Produces(contentType: "application/pdf")]
-        public async Task<IActionResult> GetJournalBudgetLineSummaryPdf([FromBody] GetJournalBudgetLineSummaryPdfQuery model) 
+        public async Task<IActionResult> GetJournalBudgetLineSummaryPdf([FromBody] GetJournalBudgetLineSummaryPdfQuery model)
         {
             var file = await _mediator.Send(model);
             return File(file, "application/pdf", "BudgetLineSummaryJournal.pdf");
@@ -113,13 +115,13 @@ namespace HumanitarianAssistance.WebApi.Controllers
 
         [HttpPost]
         [Produces(contentType: "application/pdf")]
-        public async Task<IActionResult> GetJournalLedgerReportPdf([FromBody] GetJournalLedgerReportPdfQuery model) 
+        public async Task<IActionResult> GetJournalLedgerReportPdf([FromBody] GetJournalLedgerReportPdfQuery model)
         {
             var file = await _mediator.Send(model);
             return File(file, "application/pdf", "LedgerReportJournal.pdf");
         }
 
-         [HttpPost]
+        [HttpPost]
         [Produces(contentType: "application/pdf")]
         public async Task<IActionResult> GetCriteriaEvaluationReportPdf([FromBody] GetCriteriaEvaluationDetailReportPdfQuery model)
         {
@@ -137,31 +139,14 @@ namespace HumanitarianAssistance.WebApi.Controllers
 
         [HttpPost]
         [Produces(contentType: "application/pdf")]
-        public async Task<IActionResult> GetJournalReportPdf([FromBody] GetJournalReportPdfQuery model) 
+        public async Task<IActionResult> GetJournalReportPdf([FromBody] GetJournalReportPdfQuery model)
         {
             var file = await _mediator.Send(model);
             return File(file, "application/pdf", "JournalReport.pdf");
         }
 
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-         [HttpPost]
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
         public async Task<IActionResult> GetEmployeeExitInteviewPdf([FromBody] GetEmployeeExitInterviewPdfQuery model)
         {
             try
@@ -177,6 +162,13 @@ namespace HumanitarianAssistance.WebApi.Controllers
             }
         }
 
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetCandidateDetailReportPdf([FromBody]GetCandidateDetailReportPdfQuery model)
+        {
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "CandidateDetailReport.pdf");
+        }
     }
 }
 

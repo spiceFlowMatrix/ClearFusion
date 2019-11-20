@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 namespace HumanitarianAssistance.Application.Project.Queries {
     public class GetAllCandidateListQueryHandler : IRequestHandler<GetAllCandidateListQuery, ApiResponse> {
         private HumanitarianAssistanceDbContext _dbContext;
-
         public GetAllCandidateListQueryHandler (HumanitarianAssistanceDbContext dbContext) {
             _dbContext = dbContext;
         }
@@ -21,8 +20,10 @@ namespace HumanitarianAssistance.Application.Project.Queries {
             try {
                 int totalCount = await _dbContext.CandidateDetails.CountAsync (x => x.IsDeleted == false);
 
-                var candidateDetail = (from cd in _dbContext.CandidateDetails
-                .Where (x => x.IsDeleted == false) 
+                var candidateDetail = (from s in _dbContext.HiringRequestCandidateStatus
+                .Where (x => x.IsDeleted == false && x.CandidateId !=null && x.HiringRequestId == request.HiringRequestId && x.ProjectId == request.ProjectId) 
+                join cd in _dbContext.CandidateDetails on s.CandidateId equals cd.CandidateId into cdl 
+                from cd in cdl.DefaultIfEmpty () 
                 join g in _dbContext.JobGrade on cd.GradeId equals g.GradeId into gd 
                 from g in gd.DefaultIfEmpty () 
                 join p in _dbContext.ProfessionDetails on cd.ProfessionId equals p.ProfessionId into pd 
@@ -53,6 +54,8 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                             Country = c.CountryName,
                             Province = pr.ProvinceName,
                             District = d.District,
+                            InterviewId = s.InterviewId,
+                            CandidateStatus = s.CandidateStatus,
                             TotalExperienceInYear = cd.TotalExperienceInYear,
                             RelevantExperienceInYear = cd.RelevantExperienceInYear,
                             IrrelevantExperienceInYear = cd.IrrelevantExperienceInYear,

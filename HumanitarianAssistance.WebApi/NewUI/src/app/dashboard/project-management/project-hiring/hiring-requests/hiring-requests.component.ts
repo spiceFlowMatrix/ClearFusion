@@ -51,20 +51,6 @@ export class HiringRequestsComponent implements OnInit {
 
   hiringRequestList: HiringList[] = [];
   dataSource: any;
-  // **
-
-  // hiringListHeaders$ = of([
-  //   'Hiring Request Id',
-  //   'Job Code',
-  //   'Job Grade',
-  //   'Position',
-  //   'Total Vacancies',
-  //   'Filled Vacancies',
-  //   'Pay Currency',
-  //   'Pay Rate',
-  //   'Status'
-  // ]);
-  // hiringList$: Observable<HiringList[]>;
 
   selection = new SelectionModel<HiringList>(true, []);
   /** Whether the number of selected elements matches the total number of rows. */
@@ -193,7 +179,7 @@ export class HiringRequestsComponent implements OnInit {
 
   requestDetail(e) {
     // console.log(e.HiringRequestId);
-    // this.route.navigate([e.HiringRequestId], { relativeTo: this.routeActive });
+     this.route.navigate([e.HiringRequestId], { relativeTo: this.routeActive });
     // this.router.navigate(['../hiring-request/' + e.HiringRequestId]);
   }
 

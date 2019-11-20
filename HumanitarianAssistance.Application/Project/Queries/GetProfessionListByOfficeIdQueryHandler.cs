@@ -33,7 +33,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     {
                         ProfessionId = x.ProfessionDetails.ProfessionId,
                         ProfessionName = x.ProfessionDetails.ProfessionName
-                    }).ToListAsync();
+                    }).Distinct().ToListAsync();
                 response.data.ProfessionDetailList = ProfessionList;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

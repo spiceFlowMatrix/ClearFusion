@@ -58,7 +58,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                      PurchaseId = x.StoreItemPurchase.PurchaseId,
                                                      OfficeName = x.OfficeId != 0 ? _dbContext.OfficeDetail.FirstOrDefault(y => y.IsDeleted == false && y.OfficeId == x.OfficeId).OfficeName : null,
                                                      VehicleItemDetail = x.VehicleItemDetail.Where(y => y.IsDeleted == false && y.CreatedDate.Value.Date.Year == request.SelectedYear).ToList(),
-                                                     VehicleMileageDetail = x.VehicleMileageDetail.Where(y => y.IsDeleted == false && y.CreatedDate.Value.Date.Year >= (request.SelectedYear - 1)).ToList() // selectedYear -1 =
+                                                     VehicleMileageDetail = x.VehicleMileageDetail.Where(y => y.IsDeleted == false && y.CreatedDate.Value.Date.Year >= (request.SelectedYear)).ToList() // selectedYear -1 =
                                                  }).FirstOrDefault();
 
                 if (vehicle != null)
@@ -138,18 +138,20 @@ namespace HumanitarianAssistance.Application.Store.Queries
                         // if mileage is present for the month
                         if (vehicle.VehicleMileageDetail.Any(x => x.MileageMonth.Month == month && x.CreatedDate.Value.Year == selectedYear))
                         {
-                            // get sum of all mileages of all previous months if any
+                            // get sum of all mileages of all previous months if any then add mileage of current month and if vehicle is purchase in current month then add starting mileage and incurred mileage
                             monthData = vehicle.VehicleMileageDetail
                                                             .Where(x => x.CreatedDate.Value.Year == selectedYear && x.MileageMonth.Month < month)
                                                             .Select(x => x.Mileage).DefaultIfEmpty(0).Sum() + vehicle.VehicleMileageDetail.First(x => x.MileageMonth.Month == month
-                                                                                                                 && x.CreatedDate.Value.Year == selectedYear).Mileage;
+                                                                                                                 && x.CreatedDate.Value.Year == selectedYear).Mileage +
+                                                                                                                 ((vehicle.CreatedDate.Date.Month == month && vehicle.CreatedDate.Year <= selectedYear) ? (vehicle.StartingMileage+ vehicle.IncurredMileage) : 0);
                         }
                         else // if mileage is not present for the month then sum previous months mileages
                         {
                             // get sum of all mileages of all previous months if any
                             monthData = vehicle.VehicleMileageDetail
                                                             .Where(x => x.CreatedDate.Value.Year == selectedYear && x.MileageMonth.Month < month)
-                                                            .Select(x => x.Mileage).DefaultIfEmpty(0).Sum();
+                                                            .Select(x => x.Mileage).DefaultIfEmpty(0).Sum() +
+                                                            ((vehicle.CreatedDate.Date.Month <= month && vehicle.CreatedDate.Year == selectedYear) ? (vehicle.StartingMileage+ vehicle.IncurredMileage) : 0);
                         }
                     }
                     else if (usageType == (int)CostAnalysis.FuelTotalCost)

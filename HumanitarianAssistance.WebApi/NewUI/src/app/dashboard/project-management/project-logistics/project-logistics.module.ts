@@ -13,10 +13,11 @@ import { AddLogisticItemsComponent } from './add-logistic-items/add-logistic-ite
 import { RequestStatusComponent } from './request-status/request-status.component';
 import { SubmitPurchaseListComponent } from './submit-purchase-list/submit-purchase-list.component';
 import { ComparativeStatementComponent } from './comparative-statement/comparative-statement.component';
+import { AddSupplierComponent } from './add-supplier/add-supplier.component';
 
 @NgModule({
   declarations: [LogisticRequestsComponent, AddLogisticRequestComponent,
-    LogisticRequestDetailsComponent, AddLogisticItemsComponent, RequestStatusComponent, SubmitPurchaseListComponent, ComparativeStatementComponent],
+    LogisticRequestDetailsComponent, AddLogisticItemsComponent, RequestStatusComponent, SubmitPurchaseListComponent, ComparativeStatementComponent, AddSupplierComponent],
   imports: [
     CommonModule,
     MatTableModule,
@@ -34,7 +35,8 @@ import { ComparativeStatementComponent } from './comparative-statement/comparati
   entryComponents: [
     AddLogisticRequestComponent,
     AddLogisticItemsComponent,
-    SubmitPurchaseListComponent
+    SubmitPurchaseListComponent,
+    AddSupplierComponent
   ],
 })
 export class ProjectLogisticsModule { }

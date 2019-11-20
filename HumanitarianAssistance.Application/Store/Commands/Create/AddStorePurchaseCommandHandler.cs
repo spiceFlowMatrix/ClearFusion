@@ -83,12 +83,20 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                                     StartingMileage = vehicle.StartingMileage,
                                 };
 
-                                purchasedVehicleList.Add(vehicleDetail);
+                                await _dbContext.PurchasedVehicleDetail.AddAsync(vehicleDetail);
+                                await _dbContext.SaveChangesAsync();
+
+                                //purchasedVehicleList.Add(vehicleDetail);
+
+                                eventType = "Vehicle";
+                                string logText = $"{request.Quantity} {unitName} purchased in ";
+
+                                // log details
+                                LogStoreInfo(request.CreatedById, eventType, logText, purchaseId, (int)TransportItemCategory.Vehicle, vehicleDetail.Id);
                             }
 
-                            await _dbContext.PurchasedVehicleDetail.AddRangeAsync(purchasedVehicleList);
-                            await _dbContext.SaveChangesAsync();
-                            eventType = "Vehicle";
+                            // await _dbContext.PurchasedVehicleDetail.AddRangeAsync(purchasedVehicleList);
+                            // await _dbContext.SaveChangesAsync();
                         }
 
                         //Add Purchased generator List
@@ -112,12 +120,20 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                                     Voltage = generator.Voltage,
                                 };
 
-                                purchasedGeneratorList.Add(generatorDetail);
+                                await _dbContext.PurchasedGeneratorDetail.AddRangeAsync(generatorDetail);
+                                await _dbContext.SaveChangesAsync();
+
+                                // purchasedGeneratorList.Add(generatorDetail);
+
+                                eventType = "Generator";
+                                string logText = $"{request.Quantity} {unitName} purchased in ";
+
+                                // log details
+                                LogStoreInfo(request.CreatedById, eventType, logText, purchaseId, (int)TransportItemCategory.Generator, generatorDetail.Id);
                             }
 
-                            await _dbContext.PurchasedGeneratorDetail.AddRangeAsync(purchasedGeneratorList);
-                            await _dbContext.SaveChangesAsync();
-                            eventType = "Vehicle";
+
+
                         }
 
                         //Add purchased vehicle Item
@@ -138,6 +154,10 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
 
                             //get EventType
                             eventType = GetEventTypeName(request.ItemGroupTransportCategory, request.ItemTransportCategory);
+                            string logText = $"{request.Quantity} {unitName} purchased in ";
+
+                            // log details
+                            LogStoreInfo(request.CreatedById, eventType, logText, purchaseId, (int)TransportItemCategory.Vehicle, request.TransportItemId.Value);
                         }
                         //Add purchased generator Item
                         else if ((request.ItemGroupTransportCategory == (int)TransportItemCategory.Generator) &&
@@ -157,21 +177,11 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
 
                             //get EventType
                             eventType = GetEventTypeName(request.ItemGroupTransportCategory, request.ItemTransportCategory);
+                            string logText = $"{request.Quantity} {unitName} purchased in ";
+
+                            // log details
+                            LogStoreInfo(request.CreatedById, eventType, logText, purchaseId, (int)TransportItemCategory.Generator, request.TransportItemId.Value);
                         }
-
-                        //log details
-                        StoreLogger logger = new StoreLogger
-                        {
-                            CreatedDate = DateTime.UtcNow,
-                            CreatedById = request.CreatedById,
-                            IsDeleted = false,
-                            EventType = $"{eventType} Purchased",
-                            LogText = $"{request.Quantity} {unitName} purchased in {purchaseId}",
-                            PurchaseId = purchaseId
-                        };
-
-                        await _dbContext.StoreLogger.AddAsync(logger);
-                        await _dbContext.SaveChangesAsync();
 
                         tran.Commit();
                     }
@@ -242,6 +252,32 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
             }
 
             return eventTypeName;
+        }
+
+        private void LogStoreInfo(string createdById, string eventType, string logText, long purchaseId, int transportType, long entityId)
+        {
+            try
+            {
+                //log details
+                StoreLogger logger = new StoreLogger
+                {
+                    CreatedDate = DateTime.UtcNow,
+                    CreatedById = createdById,
+                    IsDeleted = false,
+                    EventType = $"{eventType} Purchased",
+                    LogText = logText,
+                    PurchaseId = purchaseId,
+                    TransportType = transportType,
+                    TransportTypeEntityId = entityId
+                };
+
+                _dbContext.StoreLogger.Add(logger);
+                _dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

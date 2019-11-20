@@ -13,6 +13,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public string LogText { get; set; }
         public long? PurchaseId { get; set; }
         public int? TransportType { get; set; }
+        public long? TransportTypeEntityId { get; set; } // vehicle or generator id
         [ForeignKey("PurchaseId")]
         public StoreItemPurchase StoreItemPurchase {get; set;}
     }

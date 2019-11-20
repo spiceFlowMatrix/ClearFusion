@@ -9,6 +9,7 @@ import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { FormControl } from '@angular/forms';
 import { IDropDownModel, IMonthlyBreakDown } from '../../models/purchase';
 import { Observable } from 'rxjs/internal/Observable';
+import { TransportItemCategory } from 'src/app/shared/enum';
 
 @Component({
   selector: 'app-vehicle-details',
@@ -23,6 +24,7 @@ export class VehicleDetailsComponent implements OnInit, OnDestroy {
   monthlyBreakdownYear: number;
   monthlyBreakdownYearList$: Observable<IDropDownModel[]>;
   vehicleMonthlyBreakdownList: IMonthlyBreakDown;
+  transportType = TransportItemCategory.Vehicle;
 
   // screen
   screenHeight: any;

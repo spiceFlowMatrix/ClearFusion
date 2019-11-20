@@ -4,6 +4,8 @@ using MediatR;
 
 namespace HumanitarianAssistance.Application.Project.Commands.Create {
     public class AddNewCandidateDetailCommand : BaseModel, IRequest<ApiResponse> {
+        public long ProjectId { get; set; }
+        public long HiringRequestId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }

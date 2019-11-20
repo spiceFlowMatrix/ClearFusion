@@ -47,14 +47,5 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         [ForeignKey ("ProfessionId")]
         public int ProfessionId { get; set; }
         public ProfessionDetails ProfessionDetails { get; set; }
-
-        [ForeignKey ("ProjectId")]
-        public long? ProjectId { get; set; }
-        public ProjectDetail ProjectDetail { get; set; }
-
-        [ForeignKey ("HiringRequestId")]
-        public long HiringRequestId { get; set; }
-        public ProjectHiringRequestDetail ProjectHiringRequestDetail { get; set; }
-
     }
 }

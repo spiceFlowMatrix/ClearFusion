@@ -5611,8 +5611,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int>("GradeId");
 
-                    b.Property<long>("HiringRequestId");
-
                     b.Property<double>("IrrelevantExperienceInYear");
 
                     b.Property<bool>("IsDeleted");
@@ -5628,8 +5626,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<string>("PhoneNumber");
 
                     b.Property<int>("ProfessionId");
-
-                    b.Property<long?>("ProjectId");
 
                     b.Property<int>("ProvinceId");
 
@@ -5647,13 +5643,9 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasIndex("GradeId");
 
-                    b.HasIndex("HiringRequestId");
-
                     b.HasIndex("OfficeId");
 
                     b.HasIndex("ProfessionId");
-
-                    b.HasIndex("ProjectId");
 
                     b.HasIndex("ProvinceId");
 
@@ -6042,6 +6034,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("EmployeeID");
 
+                    b.Property<long>("HiringRequestId");
+
                     b.Property<int>("InterviewId");
 
                     b.Property<bool>("IsDeleted");
@@ -6050,11 +6044,17 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
+                    b.Property<long?>("ProjectId");
+
                     b.HasKey("CandidateStatusId");
 
                     b.HasIndex("CandidateId");
 
                     b.HasIndex("EmployeeID");
+
+                    b.HasIndex("HiringRequestId");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("HiringRequestCandidateStatus");
                 });
@@ -8528,6 +8528,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("TransportType");
 
+                    b.Property<long?>("TransportTypeEntityId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PurchaseId");
@@ -9888,11 +9890,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .HasForeignKey("GradeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectHiringRequestDetail", "ProjectHiringRequestDetail")
-                        .WithMany()
-                        .HasForeignKey("HiringRequestId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("HumanitarianAssistance.Domain.Entities.OfficeDetail", "OfficeDetail")
                         .WithMany()
                         .HasForeignKey("OfficeId")
@@ -9902,10 +9899,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("ProfessionId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
-                        .HasForeignKey("ProjectId");
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.ProvinceDetails", "ProvinceDetail")
                         .WithMany()
@@ -10004,6 +9997,15 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetails")
                         .WithMany()
                         .HasForeignKey("EmployeeID");
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectHiringRequestDetail", "ProjectHiringRequestDetail")
+                        .WithMany()
+                        .HasForeignKey("HiringRequestId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectDetail", "ProjectDetail")
+                        .WithMany()
+                        .HasForeignKey("ProjectId");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.HiringRequestCandidates", b =>

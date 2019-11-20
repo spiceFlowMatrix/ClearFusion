@@ -28,6 +28,7 @@ import { LogisticRequestsComponent } from './project-logistics/logistic-requests
 import { LogisticRequestDetailsComponent } from './project-logistics/logistic-request-details/logistic-request-details.component';
 import { RequestDetailComponent } from './project-hiring/request-detail/request-detail.component';
 import { HiringRequestsComponent } from './project-hiring/hiring-requests/hiring-requests.component';
+import { InterviewDetailComponent } from './project-hiring/interview-detail/interview-detail.component';
 
 const moduleId: number = ApplicationModule.Projects;
 
@@ -184,7 +185,15 @@ const routes: Routes = [
               page: projectPagesMaster.HiringRequests
             }
           },
-
+          {
+            path: 'interview-detail',
+            component: InterviewDetailComponent,
+            canActivate: [RoleGuardService],
+            data: {
+              module: moduleId,
+              page: projectPagesMaster.HiringRequests
+            }
+          },
           {
             path: 'project-indicators',
             component: ProjectIndicatorsComponent,
