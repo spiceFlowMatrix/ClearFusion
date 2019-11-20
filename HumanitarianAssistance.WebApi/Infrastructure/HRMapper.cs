@@ -5,6 +5,7 @@ using HumanitarianAssistance.Application.HR.Commands.Create;
 using HumanitarianAssistance.Application.HR.Commands.Delete;
 using HumanitarianAssistance.Application.HR.Commands.Update;
 using HumanitarianAssistance.Application.HR.Models;
+using HumanitarianAssistance.Application.HR.Queries;
 using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Domain.Entities.HR;
 
@@ -52,6 +53,7 @@ namespace HumanitarianAssistance.WebApi.Infrastructure
             CreateMap<AddEmployeeInfoReferencesCommand, EmployeeInfoReferences>().ReverseMap();
             CreateMap<EditEmployeeSalaryBudgetsCommand, EmployeeSalaryBudget>().ReverseMap();
             CreateMap<EditExitInterviewCommand,ExistInterviewDetails>().ReverseMap();
+            CreateMap<GetEmployeeExitInterviewPdfQuery,EmployeeExitInteviewPdfModel>().ReverseMap();
         }
     }
 }

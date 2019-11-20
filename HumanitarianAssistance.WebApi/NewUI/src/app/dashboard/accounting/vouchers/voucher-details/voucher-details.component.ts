@@ -572,7 +572,6 @@ export class VoucherDetailsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onOpenedProjectChange(event, item) {
-    debugger;
     item.ProjectId = event;
     this.onTransactionDetailChanged(
       item,
