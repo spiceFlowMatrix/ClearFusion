@@ -796,4 +796,26 @@ export class HiringRequestsService {
   setHiringPermissions(permissionList: IProjectPermissionMode[]) {
     this.hiringPermissionSubject.next(permissionList);
   }
+
+//#region "GetRatingBasedCriteriaQuestion"
+GetRatingBasedCriteriaQuestion(OfficeId: number): any {
+  return this.globalService
+    .getDataById(
+      this.appurl.getApiUrl() + GLOBAL.API_Code_GetRatingBasedCriteriaQuestions +
+      '?OfficeId=' +
+      OfficeId
+    )
+    .pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x.data.RatingBasedCriteriaQuestionList,
+          statusCode: x.StatusCode,
+          // message: x.Message
+        };
+        return responseData;
+      })
+    );
+}
+//#endregion
+
 }

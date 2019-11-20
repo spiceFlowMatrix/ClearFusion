@@ -64,7 +64,7 @@ Currency: '', BudgetLine: '', Office: ''};
   }
   addItemDialog() {
     const dialogRef = this.dialog.open(AddLogisticItemsComponent, {
-      width: '300px',
+      width: '400px',
       data: {RequestId: this.requestId}
     });
 
@@ -174,7 +174,7 @@ Currency: '', BudgetLine: '', Office: ''};
     }
     if (event.type === 'edit') {
       const dialogRef = this.dialog.open(AddLogisticItemsComponent, {
-        width: '300px',
+        width: '400px',
         data: {Id: event.item.Id, ItemId: event.item.ItemId, Quantity: event.item.Quantity,
           EstimatedCost: event.item.EstimatedCost, RequestId: this.requestId}
       });
