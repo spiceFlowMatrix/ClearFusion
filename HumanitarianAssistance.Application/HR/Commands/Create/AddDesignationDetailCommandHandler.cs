@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities;
+using HumanitarianAssistance.Domain.Entities.HR;
 using HumanitarianAssistance.Persistence;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace HumanitarianAssistance.Application.HR.Commands.Create
@@ -28,12 +31,43 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
             {
                 try
                 {
-                    DesignationDetail designation= new DesignationDetail();
+                    DesignationDetail designation = await _dbContext.DesignationDetail.FirstOrDefaultAsync(x=> x.IsDeleted == false && x.Designation == command.DesignationName.Trim());
+
+                    if(designation != null)
+                    {
+                        throw new Exception(StaticResource.DesignationNameAlreadyExists);
+                    }
+
+                    designation= new DesignationDetail();
                     designation.Designation= command.DesignationName;
                     designation.Description= command.Description;
+                    designation.CreatedDate = DateTime.UtcNow;
+                    designation.CreatedById= command.CreatedById;
+                    designation.IsDeleted = false;
 
                     await _dbContext.DesignationDetail.AddAsync(designation);
                     await _dbContext.SaveChangesAsync();
+
+                    List<TechnicalQuestion> tQuestions= new List<TechnicalQuestion>();
+
+                    foreach(var item in command.Questions)
+                    {
+                        TechnicalQuestion question = new TechnicalQuestion()
+                        {
+                            Question = item.Question,
+                            DesignationId= designation.DesignationId,
+                            CreatedById= command.CreatedById,
+                            CreatedDate= DateTime.UtcNow,
+                            IsDeleted = false
+                        };
+
+                        tQuestions.Add(question);
+                    }
+
+                    await _dbContext.TechnicalQuestion.AddRangeAsync(tQuestions);
+                    await _dbContext.SaveChangesAsync();
+
+                    success = true;
 
                     tran.Commit();
                 }
@@ -43,7 +77,6 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     throw ex;
                 }
             }
-
             return success;
         }
     }

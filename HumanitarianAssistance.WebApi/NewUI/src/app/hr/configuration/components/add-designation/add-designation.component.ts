@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HrService } from 'src/app/hr/services/hr.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -13,9 +13,11 @@ export class AddDesignationComponent implements OnInit {
 
   addDesignationForm: FormGroup;
   isFormSubmitted = false;
+  title = 'Add Designation';
 
   constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<AddDesignationComponent>,
-              private hrService: HrService, private toastr: ToastrService) { }
+              private hrService: HrService, private toastr: ToastrService,
+              @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
     this.addDesignationForm = this.fb.group({
@@ -24,11 +26,26 @@ export class AddDesignationComponent implements OnInit {
       'Description': [null, [Validators.required]],
       'Questions': this.fb.array([], Validators.required),
     });
-    this.addQuestion();
+
+    if (this.data) {
+      this.title = 'Edit Designation';
+      this.addDesignationForm.get('Id').patchValue(this.data.Id);
+      this.addDesignationForm.get('DesignationName').patchValue(this.data.Designation);
+      this.addDesignationForm.get('Description').patchValue(this.data.Description);
+
+      if ( this.data.subItems === undefined && this.data.subItems.length < 0) {
+        this.addQuestion();
+      } else {
+        this.data.subItems.forEach(x=> {
+          this.editQuestionPatchValue(x);
+        });
+      }
+    } else {
+      this.addQuestion();
+    }
   }
 
   addQuestion() {
-   // const questionArray = this.addDesignationForm.controls.Questions as FormArray;
     (<FormArray>this.addDesignationForm.get('Questions')).push(this.fb.group({
       QuestionId: [0],
       Question: ['', Validators.required]
@@ -43,23 +60,55 @@ export class AddDesignationComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  editQuestionPatchValue(item: any) {
+    (<FormArray>this.addDesignationForm.get('Questions')).push(this.fb.group({
+      QuestionId: [item.QuestionId],
+      Question: [item.Question, Validators.required]
+    }));
+  }
+
   addDesignation() {
-    if (this.addDesignationForm.valid) {
       this.isFormSubmitted = true;
       this.hrService.addDesignation(this.addDesignationForm.value).subscribe(x=> {
-        debugger;
-        if (x.SuccessCode === 200) {
+        if (x) {
           this.toastr.success('Success');
           this.isFormSubmitted = false;
           this.dialogRef.close();
         } else {
-          this.toastr.warning(x.Message);
+          this.toastr.warning('Something went wrong');
           this.isFormSubmitted = false;
         }
       }, error => {
-        this.toastr.warning('Something went wrong');
+        this.toastr.warning(error);
         this.isFormSubmitted = false;
       });
+  }
+
+  editDesignation() {
+    this.isFormSubmitted = true;
+    this.hrService.editDesignation(this.addDesignationForm.value).subscribe(x => {
+      if (x) {
+        this.toastr.success('Success');
+        this.isFormSubmitted = false;
+        this.dialogRef.close();
+      } else {
+        this.toastr.warning('Something went wrong');
+        this.isFormSubmitted = false;
+      }
+    }, error => {
+      this.toastr.warning(error);
+      this.isFormSubmitted = false;
+    });
+}
+
+  saveDesignation() {
+    if (this.addDesignationForm.valid) {
+
+      if (this.addDesignationForm.value.Id == null) {
+        this.addDesignation();
+      } else {
+        this.editDesignation();
+      }
     }
   }
 }

@@ -1,8 +1,8 @@
 <div>
-  <h1 mat-dialog-title>Add Designation</h1>
+  <h1 mat-dialog-title>{{title}}</h1>
   <hr>
 </div>
-<form [formGroup]='addDesignationForm' (ngSubmit)="addDesignation()">
+<form [formGroup]='addDesignationForm' (ngSubmit)="saveDesignation()">
   <mat-dialog-content>
     <div class="row">
       <div class="col-sm-12">
@@ -27,13 +27,11 @@
     <mat-divider></mat-divider>
     <div class="row">
       <div class="col-sm-12">
-        <div class="col-sm-3">
+        <div class="col-sm-4">
           <h4>Technical Questions</h4>
         </div>
         <div class="col-sm-4">
           <hum-button [type]="'add'" [text]="'ADD NEW TECHNICAL QUESTION'" (click)="addQuestion()"></hum-button>
-        </div>
-        <div class="col-sm-5">
         </div>
         <div class="col-sm-12" formArrayName="Questions">
           <div class="row">
@@ -55,7 +53,7 @@
     </div>
   </mat-dialog-content>
   <mat-dialog-actions class="items-float-right">
-    <hum-button [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
+    <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
     <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
     <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
   </mat-dialog-actions>

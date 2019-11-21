@@ -14,10 +14,10 @@ export class HrService {
     private http: HttpClient) { }
 
   //#region "getDesignatonList"
-  getDesignationList(): any {
+  getDesignationList(pageModel: any): any {
     return this.globalService
-      .getList(
-        this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllDesignation
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_GetAllDesignationDetail, pageModel
       );
   }
   //#endregion
@@ -26,7 +26,16 @@ export class HrService {
   addDesignation(model: any): any {
     return this.globalService
       .post(
-        this.appurl.getApiUrl() + GLOBAL.API_Code_AddDesignation, model
+        this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_AddDesignationDetail, model
+      );
+  }
+  //#endregion
+
+  //#region "editDesignation"
+  editDesignation(model: any): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_EditDesignationDetail, model
       );
   }
   //#endregion
