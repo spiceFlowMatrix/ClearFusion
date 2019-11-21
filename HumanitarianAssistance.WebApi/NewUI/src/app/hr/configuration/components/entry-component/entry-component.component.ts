@@ -8,12 +8,10 @@ import { GlobalSharedService } from 'src/app/shared/services/global-shared.servi
 })
 export class EntryComponentComponent implements OnInit {
 
-  constructor(private globalservice : GlobalSharedService) {
-
-  }
+  constructor(private globalservice: GlobalSharedService) { }
 
   ngOnInit() {
-    this.globalservice.setMenuHeaderName('Store');
+    this.globalservice.setMenuHeaderName('HR');
   }
 
 }

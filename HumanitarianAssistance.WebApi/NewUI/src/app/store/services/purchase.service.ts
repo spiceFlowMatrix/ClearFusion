@@ -26,19 +26,19 @@ export class PurchaseService {
     private http: HttpClient
   ) {}
 
-  //#region "GetPurchaseFilterList"
-  getPurchaseFilterList(): any {
-    return this.globalService
-      .getList(
-        this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetAllPurchaseFilters
-      )
-      .pipe(
-        map(x => {
-          return x;
-        })
-      );
-  }
-  //#endregion
+//#region "GetPurchaseFilterList"
+getPurchaseFilterList(): any {
+  return this.globalService
+    .getList(
+      this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetAllPurchaseFilters
+    )
+    .pipe(
+      map(x => {
+        return x;
+      })
+    );
+}
+//#endregion
 
   //#region "GetInventoriesByInventoryTypeId"
   getInventoriesByInventoryTypeId(Id: number): any {
