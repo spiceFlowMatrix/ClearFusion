@@ -16,5 +16,9 @@ namespace HumanitarianAssistance.Application.Project.Models {
         public string ContractType { get; set; }
         public int? ContractDuration { get; set; }
         public string JobShift { get; set; }
+        public string Profession { get; set; }
+        public string KnowledgeAndSkillsRequired { get; set; }
+        public string EducationDegree { get; set; }
+        public string TotalExperienceInYear { get; set; }
     }
 }

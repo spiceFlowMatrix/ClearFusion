@@ -22,7 +22,8 @@ import {
   IHiringRequestModel,
   CompleteHiringRequestModel,
   ICandidateDetailModel,
-  ICandidateFilterModel
+  ICandidateFilterModel,
+  InterviewDetailModel
 } from '../../project-hiring/models/hiring-requests-models';
 
 @Injectable({
@@ -818,6 +819,27 @@ GetRatingBasedCriteriaQuestion(OfficeId: number): any {
 }
 //#endregion
 
+//#region "GetTechnicalQuestionsByDesignationId"
+GetTechnicalQuestionsByDesignationId(DesignationId: number): any {
+  return this.globalService
+  .post(
+    this.appurl.getApiUrl() +
+      GLOBAL.API_HiringRequest_GetTechnicalQuestionsByDesignationId,
+      DesignationId
+  )
+  .pipe(
+    map(x => {
+      const responseData: IResponseData = {
+        data: x.data.TechnicalQuestionsList,
+        statusCode: x.StatusCode,
+        message: x.Message
+      };
+      return responseData;
+    })
+  );
+}
+//#endregion
+
   //#region "GetCandidateDetailsByCandidateId"
   GetCandidateDetailsByCandidateId(CandidateId: number) {
     return this.globalService
@@ -859,4 +881,25 @@ GetRatingBasedCriteriaQuestion(OfficeId: number): any {
       );
   }
   //#endregion
+
+//#region "AddInterviewDetails"
+AddInterviewDetails(data: InterviewDetailModel) {
+  return this.globalService
+    .post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HiringRequest_AddInterviewDetails,
+      data
+    )
+    .pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+}
+//#endregion
 }

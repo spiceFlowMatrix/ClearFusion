@@ -446,6 +446,11 @@ export class GLOBAL {
     public static API_HiringRequest_GetCandidateDetailsByCandidateId = 'HiringRequest/GetCandidateDetailsByCandidateId';
     public static API_HiringRequest_GetAllHiringRequestDetailForInterviewByHiringRequestId =
      'HiringRequest/GetAllHiringRequestDetailForInterviewByHiringRequestId';
+     public static API_HiringRequest_GetTechnicalQuestionsByDesignationId =
+     'HiringRequest/GetTechnicalQuestionsByDesignationId';
+     public static API_HiringRequest_AddInterviewDetails =
+     'HiringRequest/AddInterviewDetails';
+
 
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
   public static API_Code_GetAllDesignation = 'Code/GetAllDesignation';

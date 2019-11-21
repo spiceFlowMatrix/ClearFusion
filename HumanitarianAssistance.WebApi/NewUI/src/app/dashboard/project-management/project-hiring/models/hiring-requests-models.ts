@@ -173,6 +173,10 @@ export interface IHiringRequestDetailModel {
   ContractType?: string;
   ContractDuration?: number;
   JobShift?: string;
+  KnowledgeAndSkillsRequired?: string;
+  Profession?: string;
+  EducationDegree?: string;
+  TotalExperienceInYear?: string;
 }
 export interface ILanguageDetailModel {
   LanguageName?: string;
@@ -192,4 +196,35 @@ export interface IInterviewerDetailModel {
   EmployeeId?: number;
   EmployeeCode?: string;
   EmployeeName?: string;
+}
+export interface InterviewQuestionDetailModel {
+  QuestionId?: number;
+  Score?: number;
+}
+
+export interface InterviewDetailModel {
+  RatingBasedCriteriaList?: InterviewQuestionDetailModel[];
+  TechnicalQuestionList?: InterviewQuestionDetailModel[];
+  LanguageList?: ILanguageDetailModel[];
+  TraningList?: ITraningDetailModel[];
+  InterviewerList?: IInterviewerDetailModel[];
+  Description?: string;
+  NoticePeriod?: number;
+  AvailableDate?: Date;
+  WrittenTestMarks?: number;
+  CurrentBase?: number;
+  CurrentOther?: number;
+  ExpectationBase?: number;
+  ExpectationOther?: number;
+  Status?: number;
+  InterviewQuestionOne?: boolean;
+  InterviewQuestionTwo?: boolean;
+  InterviewQuestionThree?: boolean;
+  CurrentTransport?: boolean;
+  CurrentMeal?: boolean;
+  ExpectationTransport?: boolean;
+  ExpectationMeal?: boolean;
+  ProfessionalCriteriaMark?: number;
+  MarksObtain?: number;
+  TotalMarksObtain?: number;
 }

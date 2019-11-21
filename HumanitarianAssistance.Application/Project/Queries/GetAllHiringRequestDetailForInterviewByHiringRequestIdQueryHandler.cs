@@ -24,8 +24,8 @@ namespace HumanitarianAssistance.Application.Project.Queries {
             try {
                 var hiringRequestDetails = await (from hrd in _dbContext.ProjectHiringRequestDetail
                         .Where (x => x.HiringRequestId == request.HiringRequestId &&
-                         x.ProjectId == request.ProjectId &&
-                         x.IsDeleted == false) 
+                            x.ProjectId == request.ProjectId &&
+                            x.IsDeleted == false) 
                             join p in _dbContext.ProjectJobHiringDetail 
                             on hrd.JobId equals p.JobId into pd from p in pd.DefaultIfEmpty () 
                             join o in _dbContext.OfficeDetail 
@@ -33,13 +33,13 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                             join j in _dbContext.JobGrade 
                             on p.GradeId equals j.GradeId into gd from j in gd.DefaultIfEmpty () 
                             join c in _dbContext.CurrencyDetails 
-                            on p.CurrencyId equals c.CurrencyId into cd from c in cd.DefaultIfEmpty ()
+                            on p.CurrencyId equals c.CurrencyId into cd from c in cd.DefaultIfEmpty () 
                             join pr in _dbContext.ProfessionDetails 
-                            on hrd.ProfessionId equals pr.ProfessionId into prd from pr in prd.DefaultIfEmpty ()  
+                            on hrd.ProfessionId equals pr.ProfessionId into prd from pr in prd.DefaultIfEmpty () 
                             join b in _dbContext.ProjectBudgetLineDetail 
-                            on hrd.BudgetLineId equals b.BudgetLineId into bd from b in bd.DefaultIfEmpty ()
-                         select new HiringRequestDetailsModel {
-                                Office = o.OfficeName,
+                            on hrd.BudgetLineId equals b.BudgetLineId into bd from b in bd.DefaultIfEmpty () 
+                            select new HiringRequestDetailsModel {
+                            Office = o.OfficeName,
                                 Position = pr.ProfessionName,
                                 JobGrade = j.GradeName,
                                 TotalVacancy = hrd.TotalVacancies,
@@ -52,7 +52,11 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                                 ClosingDate = hrd.ClosingDate,
                                 ContractType = hrd.ContractType,
                                 ContractDuration = hrd.ContractDuration,
-                                JobShift = hrd.Shift == 1 ? "Day" : hrd.Shift == 2 ? "Night" : "Others",
+                                JobShift = hrd.Shift == 1 ? "Day" : hrd.Shift == 2 ? "Night" : "Others",                               
+                                Profession = pr.ProfessionName,
+                                KnowledgeAndSkillsRequired = hrd.KnowladgeAndSkillRequired,
+                                EducationDegree = hrd.MinimumEducationLevel,
+                                TotalExperienceInYear = hrd.Experience
                         })
                     .FirstOrDefaultAsync ();
 
