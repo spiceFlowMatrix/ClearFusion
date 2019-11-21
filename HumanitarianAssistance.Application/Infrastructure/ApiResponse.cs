@@ -15,6 +15,7 @@ using HumanitarianAssistance.Domain.Entities.HR;
 using HumanitarianAssistance.Domain.Entities.Marketing;
 using HumanitarianAssistance.Domain.Entities.Project;
 using HumanitarianAssistance.Domain.Entities.Store;
+using HumanitarianAssistance.Application.Project.Queries;
 
 namespace HumanitarianAssistance.Application.Infrastructure {
     public class ApiResponse {
@@ -221,6 +222,7 @@ namespace HumanitarianAssistance.Application.Infrastructure {
         public List<LogisticItemModel> LogisticsItemList { get; set; }
         public LogisticItemModel logisticItem { get; set; }
         public LogisticsRequestsModel logisticRequest { get; set; }
+        public ComparativeStatementModel ComparativeStatement { get; set; }
         public long logisticRequestId { get; set; }
         public List<JobHiringDetailModel> JobDetailList { get; set; }
         public List<OfficeDetailListModel> OfficeList { get; set; }

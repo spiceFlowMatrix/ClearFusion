@@ -36,11 +36,10 @@
                     </td>
                   </tr>
                   <tr
-                    (click)="onItemClick(item.ProjectJobId)"
                     *ngFor="let item of projectJobDetailList"
                     [ngClass]="{
                       selected: selectedProjectJobId == item.ProjectJobId
-                    }"
+                    }"  (click)="onItemClick(item)"
                   >
                     <td width="1%">
                       <p class="width_8"></p>
@@ -84,6 +83,7 @@
           [projectId]="projectId"
           (projectJobsDetailChanged)="projectJobsDetailChangedEmit($event)"
           (deleteProjectJob)="deleteProjectChangeEmit($event)"
+          [selectedProjectJobDetail] = "selectedProjectJobDetail"
         >
         </app-project-jobs-details>
       </mat-card>

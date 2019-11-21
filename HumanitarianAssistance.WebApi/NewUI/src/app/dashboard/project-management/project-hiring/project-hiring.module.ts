@@ -28,13 +28,11 @@ import { RequestDetailComponent } from './request-detail/request-detail.componen
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AddHiringRequestComponent } from './add-hiring-request/add-hiring-request.component';
 import { AddNewCandidateComponent } from './add-new-candidate/add-new-candidate.component';
-import {
-  InterviewDetailComponent
-} from './interview-detail/interview-detail.component';
+import { InterviewDetailComponent } from './interview-detail/interview-detail.component';
 import { AddNewLanguageComponent } from './interview-detail/add-new-language/add-new-language.component';
 import { AddNewTraningComponent } from './interview-detail/add-new-traning/add-new-traning.component';
 import { AddNewInterviewerComponent } from './interview-detail/add-new-interviewer/add-new-interviewer.component';
-
+import { EntryComponentComponent } from './entry-component/entry-component.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +44,9 @@ import { AddNewInterviewerComponent } from './interview-detail/add-new-interview
     InterviewDetailComponent,
     AddNewLanguageComponent,
     AddNewTraningComponent,
-    AddNewInterviewerComponent
+    AddNewInterviewerComponent,
+    InterviewDetailComponent,
+    EntryComponentComponent
   ],
   imports: [
     ReactiveFormsModule,

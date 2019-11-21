@@ -11,7 +11,7 @@ import {
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { AddHiringRequestComponent } from '../add-hiring-request/add-hiring-request.component';
 import { MatDialog, MatSelectChange } from '@angular/material';
@@ -42,8 +42,7 @@ export class RequestDetailComponent implements OnInit {
     'Last Name',
     'Gender',
     'Interview',
-    'Candidate Status',
-    'firstText'
+    'Candidate Status'
   ]);
   subListHeaders$ = of([
     'Education',
@@ -59,11 +58,10 @@ export class RequestDetailComponent implements OnInit {
     'Employee Code',
     'Full Name',
     'Gender',
-    'Employee Status',
-    'firstText'
+    'Employee Status'
   ]);
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
- // existingEmployeesList$: Observable<IDropDownModel[]>;
+  // existingEmployeesList$: Observable<IDropDownModel[]>;
   existingEmployeesList: any[] = [];
   newCandidatesList$: Observable<ICandidateDetailList[]>;
   hiringRequestDetails: HiringRequestDetailList;
@@ -83,7 +81,8 @@ export class RequestDetailComponent implements OnInit {
     private toastr: ToastrService,
     private routeActive: ActivatedRoute,
     public hiringRequestService: HiringRequestsService,
-    private loader: CommonLoaderService
+    private loader: CommonLoaderService,
+    private router: Router
   ) {
     this.filterValueModel = {
       pageIndex: 0,
@@ -112,7 +111,7 @@ export class RequestDetailComponent implements OnInit {
     this.routeActive.params.subscribe(params => {
       this.hiringRequestId = +params['id'];
     });
-    this.routeActive.parent.params.subscribe(params => {
+    this.routeActive.parent.parent.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
 
@@ -145,7 +144,7 @@ export class RequestDetailComponent implements OnInit {
 
     this.scrollStyles = {
       'overflow-y': 'auto',
-      height: this.screenHeight - 110 + 'px',
+      height: this.screenHeight - 130 + 'px',
       'overflow-x': 'hidden'
     };
   }
@@ -199,7 +198,7 @@ export class RequestDetailComponent implements OnInit {
         this.getHiringRequestDetailsByHiringRequestId();
       }
     );
-    dialogRef.afterClosed().subscribe(() => {});
+    dialogRef.afterClosed().subscribe(() => { });
   }
 
   // #region adding new hiring request
@@ -218,7 +217,7 @@ export class RequestDetailComponent implements OnInit {
       // do something
       this.getAllCandidateList(this.filterValueModel);
     });
-    dialogRef.afterClosed().subscribe(() => {});
+    dialogRef.afterClosed().subscribe(() => { });
   }
   //#endregion
 
@@ -236,9 +235,19 @@ export class RequestDetailComponent implements OnInit {
                 FirstName: element.FirstName,
                 LastName: element.LastName,
                 Gender: element.Gender,
-                Interview: '<a>Interview Id</a>',
+                Interview: (element.CandidateStatus == 0) || (element.CandidateStatus == 1) ? 'Not Interviewed' : '<a href="/interview-detail">Interview Id</a>',
                 CandidateStatus: CandidateStatus[element.CandidateStatus],
-                firstText: CandidateAction[element.CandidateStatus],
+                itemAction: (element.CandidateStatus != CandidateStatus.Rejected) && (element.CandidateStatus != CandidateStatus.Selected) ? [{
+                  button: { status: true, text: 'Reject', type: 'cancel' },
+                  delete: false,
+                  download: false,
+                  edit: false
+                }, {
+                  button: { status: true, text: CandidateAction[element.CandidateStatus], type: 'save' },
+                  delete: false,
+                  download: false,
+                  edit: false
+                }] : [],
                 subItems: [
                   {
                     EducationDegree: element.EducationDegree,
@@ -312,7 +321,17 @@ export class RequestDetailComponent implements OnInit {
                 FullName: element.FullName,
                 Gender: element.Gender,
                 CandidateStatus: CandidateStatus[element.CandidateStatus],
-                firstText: CandidateAction[element.CandidateStatus]
+                itemAction: (element.CandidateStatus != CandidateStatus.Rejected) && (element.CandidateStatus != CandidateStatus.Selected) ? [{
+                  button: { status: true, text: 'Reject', type: 'cancel' },
+                  delete: false,
+                  download: false,
+                  edit: false
+                }, {
+                  button: { status: true, text: CandidateAction[element.CandidateStatus], type: 'save' },
+                  delete: false,
+                  download: false,
+                  edit: false
+                }] : [],
               } as IExistingCandidateList;
             })
           );
@@ -335,6 +354,30 @@ export class RequestDetailComponent implements OnInit {
         (response: IResponseData) => {
           this.loader.showLoader();
           if (response.statusCode === 200 && response.data !== null) {
+            const data = response.data
+            if (data.EmployeeID) {
+              this.existingCandidatesList$.subscribe(res => {
+                const index = res.findIndex(x => x.EmployeeId == data.EmployeeID);
+                const employee = res.find(x => x.EmployeeId == data.EmployeeID);
+                employee.CandidateStatus = CandidateStatus[data.CandidateStatus];
+                employee.itemAction = [];
+
+                res[index] = employee;
+                console.log(res);
+                this.existingCandidatesList$ = of(res);
+              })
+            } else {
+              // this.newCandidatesList$.subscribe(res => {
+              //   const index = res.findIndex(x => x.CandidateId == data.CandidateID);
+              //   const employee = res.find(x => x.CandidateId == data.CandidateId);
+              //   employee.CandidateStatus = CandidateStatus[data.CandidateStatus];
+              //   //employee.itemAction = [];
+
+              //   res[index] = employee;
+              //   this.newCandidatesList$ = of(res);
+              // })
+              this.getAllCandidateList(this.filterValueModel);
+            }
             console.log(response.data);
           }
           this.loader.hideLoader();
@@ -346,51 +389,91 @@ export class RequestDetailComponent implements OnInit {
   }
 
   OnExistingEmployeeSelection(data: MatSelectChange) {
-    this.loader.showLoader();
-    const candidateDetails: any = {
-      HiringRequestId: this.hiringRequestId,
-      ProjectId: this.projectId,
-      EmployeeId: data.value
-    };
-    this.hiringRequestService
-      .AddExistingCandidateDetail(candidateDetails)
-      .subscribe(
-        (response: IResponseData) => {
-          if (response.statusCode === 200) {
-            this.getAllExistingCandidateList(this.filterValueModel);
-            this.toastr.success('Employee successfully added');
-            this.loader.hideLoader();
-          } else {
-            this.toastr.error(response.message);
-            this.loader.hideLoader();
-          }
-        },
-        error => {
-          this.toastr.error('Someting went wrong. Please try again');
-          this.loader.hideLoader();
-        }
-      );
+
+    this.existingCandidatesList2$.subscribe(res => {
+      if (res.findIndex(x => x.EmployeeId == data.value) > -1) {
+        this.toastr.warning("Employee already selected");
+      }
+      else {
+        this.loader.showLoader();
+        const candidateDetails: any = {
+          HiringRequestId: this.hiringRequestId,
+          ProjectId: this.projectId,
+          EmployeeId: data.value
+        };
+
+        this.hiringRequestService
+          .AddExistingCandidateDetail(candidateDetails)
+          .subscribe(
+            (response: IResponseData) => {
+              if (response.statusCode === 200) {
+                this.getAllExistingCandidateList(this.filterValueModel);
+                this.toastr.success('Employee successfully added');
+                this.loader.hideLoader();
+              } else {
+                this.toastr.error(response.message);
+                this.loader.hideLoader();
+              }
+            },
+            error => {
+              this.toastr.error('Someting went wrong. Please try again');
+              this.loader.hideLoader();
+            }
+          );
+
+      }
+    })
+
   }
 
-  actionEvents(data: any) {
-    if (data.item.CandidateId > 0) {
-      const candidateDetails: any = {
-        statusId: +CandidateStatus[data.item.CandidateStatus],
-        candidateId: data.item.CandidateId
-      };
-      this.updateCandidateStatus(candidateDetails);
-    } else if (data.item.EmployeeId > 0) {
-      const candidateDetails: any = {
-        statusId: +CandidateStatus[data.item.CandidateStatus],
-        employeeId: data.item.EmployeeId
-      };
-      this.updateCandidateStatus(candidateDetails);
+  newCandActionEvents(data: any) {
+    switch (data.type) {
+      case "Reject":
+        this.rejectCandidate(data);
+        break;
+      case "Shortlist":
+        const candidateDetails: any = {
+          statusId: +CandidateStatus[data.item.CandidateStatus],
+          candidateId: data.item.CandidateId
+        };
+        this.updateCandidateStatus(candidateDetails);
+        break;
+      case "Interview":
+        this.router.navigate(['interview-detail'], { relativeTo: this.routeActive.parent, queryParams: { candId: 1, hiringId: 1 } });
+        break;
+      default:
+        break;
+    }
+  }
+  empActionEvents(data: any) {
+    // console.log(data);
+    switch (data.type) {
+      case "Reject":
+        this.rejectEmployee(data);
+        break;
+      case "Select":
+        const candidateDetails: any = {
+          statusId: +CandidateStatus[data.item.CandidateStatus],
+          employeeId: data.item.EmployeeId
+        };
+        this.updateCandidateStatus(candidateDetails);
+        break;
+
+      default:
+        break;
     }
   }
   rejectCandidate(data: any) {
     const candidateDetails: any = {
       statusId: 4,
       candidateId: data.item.CandidateId
+    };
+    this.updateCandidateStatus(candidateDetails);
+  }
+  rejectEmployee(data: any) {
+    const candidateDetails: any = {
+      statusId: 4,
+      employeeId: data.item.EmployeeId
     };
     this.updateCandidateStatus(candidateDetails);
   }
