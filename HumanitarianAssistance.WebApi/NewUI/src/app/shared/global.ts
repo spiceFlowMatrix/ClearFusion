@@ -91,6 +91,9 @@ export class GLOBAL {
   public static API_Code_GetAllEmployeeList = 'Code/GetAllEmployeeList';
   public static API_Code_AddAccountType = 'Code/AddAccountType';
   public static API_Code_EditAccountType = 'Code/EditAccountType';
+  public static API_HRConfiguration_AddDesignationDetail = 'HRConfiguration/AddDesignationDetail';
+  public static API_HRConfiguration_EditDesignationDetail = 'HRConfiguration/EditDesignationDetail';
+  public static API_HRConfiguration_GetAllDesignationDetail = 'HRConfiguration/GetAllDesignationDetail';
   public static API_Policy_AddNewPolicy = 'Policy/AddEditPolicy';
   public static API_Policy_AddPolicyRepeatDays = 'Policy/AddPolicyRepeatDays';
   public static API_Policy_AddNewPolicyTimeSchedule = 'Policy/AddEditPolicyTimeSchedule';
@@ -445,6 +448,7 @@ export class GLOBAL {
      'HiringRequest/GetAllHiringRequestDetailForInterviewByHiringRequestId';
 
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
+  public static API_Code_GetAllDesignation = 'Code/GetAllDesignation';
   public static API_HiringRequest_AddHiringRequestDetail = 'HiringRequest/AddHiringRequestDetail';
   public static API_HiringRequest_GetProjectHiringRequestDetail = 'HiringRequest/GetProjectHiringRequestDetail';
   public static API_HiringRequest_EditHiringRequestDetail = 'HiringRequest/EditHiringRequestDetail';

@@ -29,7 +29,8 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                                       select new DesignationModel
                                       {
                                           DesignationId = c.DesignationId,
-                                          Designation = c.Designation
+                                          Designation = c.Designation,
+                                          Description = c.Description
                                       }).ToListAsync();
 
                 response.data.DesignationList = designationlist;

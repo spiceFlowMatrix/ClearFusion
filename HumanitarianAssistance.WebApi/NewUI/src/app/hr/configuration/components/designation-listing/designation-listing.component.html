@@ -1,0 +1,22 @@
+<lib-sub-header-template>
+  <span class="action_header">Designation
+    <hum-button [type]="'add'" [text]="'ADD NEW DESIGNATION'" (click)="addDesignation()"></hum-button>
+  </span>
+</lib-sub-header-template>
+
+<mat-card humAddScroll>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="designationTable">
+        <hum-table [headers]="designationListHeaders$" [items]="designationList$" [subHeaders]="subListHeaders$"
+          [subTitle]="'Technical Questions'" (actionClick)="actionEvents($event)"
+          (subActionClick)="deleteProcurement($event)" [actions]="actions" [hideColums$]="hideColums"></hum-table>
+        </div>
+        <mat-paginator [length]="RecordCount" [pageSize]="pageModel.PageSize"
+          [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
+</mat-card>
