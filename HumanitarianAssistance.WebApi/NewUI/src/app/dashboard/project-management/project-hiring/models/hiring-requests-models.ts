@@ -176,8 +176,20 @@ export interface IHiringRequestDetailModel {
 }
 export interface ILanguageDetailModel {
   LanguageName?: string;
-  LanguageReading?: number;
-  LanguageWriting?: number;
-  LanguageListining?: number;
-  LanguageSpeaking?: number;
+  LanguageReading?: string;
+  LanguageWriting?: string;
+  LanguageListining?: string;
+  LanguageSpeaking?: string;
+}
+export interface ITraningDetailModel {
+  TraningType?: string;
+  TraningName?: string;
+  TraningCountryAndCity?: string;
+  TraningStartDate?: Date;
+  TraningEndDate?: Date;
+}
+export interface IInterviewerDetailModel {
+  EmployeeId?: number;
+  EmployeeCode?: string;
+  EmployeeName?: string;
 }

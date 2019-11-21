@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { HiringRequestsService } from '../../../project-list/hiring-requests/hiring-requests.service';
 import { ToastrService } from 'ngx-toastr';
@@ -40,16 +40,20 @@ export class AddNewLanguageComponent implements OnInit {
       }
     ];
     this.languageDetailForm = this.fb.group({
-      LanguageName: '',
-      LanguageReading: '',
-      LanguageWriting: '',
-      LanguageListining: '',
-      LanguageSpeaking: ''
+      LanguageName: ['', [Validators.required]],
+      LanguageReading: ['', [Validators.required]],
+      LanguageWriting: ['', [Validators.required]],
+      LanguageListining: ['', [Validators.required]],
+      LanguageSpeaking: ['', [Validators.required]]
     });
   }
   ngOnInit() {}
   onFormSubmit(data: any) {
+    if (this.languageDetailForm.valid) {
     this.dialogRef.close(data);
+    } else {
+      this.toastr.warning('Form is Not Valid');
+    }
   }
   //#region "onCancelPopup"
   onCancelPopup(): void {

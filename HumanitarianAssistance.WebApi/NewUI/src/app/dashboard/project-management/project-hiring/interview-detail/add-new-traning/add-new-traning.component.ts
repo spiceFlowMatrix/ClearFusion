@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { HiringRequestsService } from '../../../project-list/hiring-requests/hiring-requests.service';
 import { ToastrService } from 'ngx-toastr';
@@ -39,16 +39,20 @@ export class AddNewTraningComponent implements OnInit {
       }
     ];
     this.traningDetailForm = this.fb.group({
-      TraningType: '',
-      TraningName: '',
-      TraningCountryAndCity: '',
-      TraningStartDate: '',
-      TraningEndDate: ''
+      TraningType: ['', [Validators.required]],
+      TraningName: ['', [Validators.required]],
+      TraningCountryAndCity: ['', [Validators.required]],
+      TraningStartDate: ['', [Validators.required]],
+      TraningEndDate: ['', [Validators.required]]
     });
   }
   ngOnInit() {}
   onFormSubmit(data: any) {
-    this.dialogRef.close(data);
+    if (this.traningDetailForm.valid) {
+      this.dialogRef.close(data);
+      } else {
+        this.toastr.warning('Form is Not Valid');
+      }
   }
   //#region "onCancelPopup"
   onCancelPopup(): void {

@@ -33,6 +33,7 @@ import {
 } from './interview-detail/interview-detail.component';
 import { AddNewLanguageComponent } from './interview-detail/add-new-language/add-new-language.component';
 import { AddNewTraningComponent } from './interview-detail/add-new-traning/add-new-traning.component';
+import { AddNewInterviewerComponent } from './interview-detail/add-new-interviewer/add-new-interviewer.component';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { AddNewTraningComponent } from './interview-detail/add-new-traning/add-n
     AddNewCandidateComponent,
     InterviewDetailComponent,
     AddNewLanguageComponent,
-    AddNewTraningComponent
+    AddNewTraningComponent,
+    AddNewInterviewerComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -74,7 +76,8 @@ import { AddNewTraningComponent } from './interview-detail/add-new-traning/add-n
     AddHiringRequestComponent,
     AddNewCandidateComponent,
     AddNewLanguageComponent,
-    AddNewTraningComponent
+    AddNewTraningComponent,
+    AddNewInterviewerComponent
   ]
 })
 export class ProjectHiringModule {}

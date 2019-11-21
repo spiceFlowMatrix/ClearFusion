@@ -10,12 +10,16 @@ import { IDropDownModel } from 'src/app/store/models/purchase';
 import {
   ICandidateDetail,
   IHiringRequestDetailModel,
-  ILanguageDetailModel
+  ILanguageDetailModel,
+  ITraningDetailModel,
+  IInterviewerDetailModel
 } from '../models/hiring-requests-models';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { AddNewLanguageComponent } from './add-new-language/add-new-language.component';
 import { AddNewTraningComponent } from './add-new-traning/add-new-traning.component';
+import { RatingAction } from 'src/app/shared/enum';
+import { AddNewInterviewerComponent } from './add-new-interviewer/add-new-interviewer.component';
 
 @Component({
   selector: 'app-interview-detail',
@@ -23,8 +27,8 @@ import { AddNewTraningComponent } from './add-new-traning/add-new-traning.compon
   styleUrls: ['./interview-detail.component.scss']
 })
 export class InterviewDetailComponent implements OnInit {
+  temp = 0;
   languagesHeaders$ = of([
-    'Language Id',
     'Language',
     'Reading',
     'Writing',
@@ -32,14 +36,13 @@ export class InterviewDetailComponent implements OnInit {
     'Speaking'
   ]);
   traningHeaders$ = of([
-    'Traning Id',
     'Traning Type',
     'Name',
     'Country/City',
     'Start Date',
     'End Date'
   ]);
-  interviewersHeaders$ = of(['Employee Id', 'Employee Code', 'Full Name']);
+  interviewerHeaders$ = of(['Employee Id', 'Employee Code', 'Full Name']);
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
@@ -49,8 +52,8 @@ export class InterviewDetailComponent implements OnInit {
   noticePeriodList$: Observable<IDropDownModel[]>;
   statusList$: Observable<IDropDownModel[]>;
   languagesList$: Observable<ILanguageDetailModel[]>;
-  traningList$: Observable<any[]>;
-  interviewersList$: Observable<any[]>;
+  traningList$: Observable<ITraningDetailModel[]>;
+  interviewerList$: Observable<IInterviewerDetailModel[]>;
   ratingBasedCriteriaQuestionList: any[] = [];
   ratingBasedDropDown: any[];
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
@@ -90,7 +93,14 @@ export class InterviewDetailComponent implements OnInit {
       CurrentOther: '',
       ExpectationBase: '',
       ExpectationOther: '',
-      Status: ''
+      Status: '',
+      InterviewQuestionOne: false,
+      InterviewQuestionTwo: false,
+      InterviewQuestionThree: false,
+      CurrentTransport: false,
+      CurrentMeal: false,
+      ExpectationTransport: false,
+      ExpectationMeal: false
     });
 
     this.noticePeriodList$ = of([
@@ -136,22 +146,6 @@ export class InterviewDetailComponent implements OnInit {
       ContractDuration: null,
       JobShift: ''
     };
-
-    // this.jobShiftList$ = of([
-    //   { name: 'Day', value: 1 },
-    //   { name: 'Night', value: 2 }
-    // ] as IDropDownModel[]);
-
-    this.languagesList$ = of([
-      {
-        LanguageName: '',
-        LanguageReading: null,
-        LanguageWriting: null,
-        LanguageListining: null,
-        LanguageSpeaking: null
-      }
-    ] as ILanguageDetailModel[]);
-
     this.getScreenSize();
     this.getRatingBasedCriteriaQuestion();
     this.getCandidateDetails();
@@ -189,7 +183,6 @@ export class InterviewDetailComponent implements OnInit {
                 value: element.Question
               });
             });
-            console.log(this.ratingBasedCriteriaQuestionList);
           }
           this.commonLoader.hideLoader();
         },
@@ -217,7 +210,6 @@ export class InterviewDetailComponent implements OnInit {
               Qualification: response.data.Qualification,
               DateOfBirth: response.data.DateOfBirth
             };
-            console.log(this.ratingBasedCriteriaQuestionList);
           }
           this.commonLoader.hideLoader();
         },
@@ -274,22 +266,28 @@ export class InterviewDetailComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-      this.languagesList$.subscribe(res => {
-        res.push(result);
-        this.languagesList$ = of(res);
-      });
-      // this.languagesList$ = of(
-      //   result.map(element => {
-      //     return {
-      //       LanguageName: element.LanguageName,
-      //       LanguageReading: element.LanguageReading,
-      //       LanguageWriting: element.LanguageWriting,
-      //       LanguageListining: element.LanguageListining,
-      //       LanguageSpeaking: element.LanguageSpeaking
-      //     } as ILanguageDetailModel;
-      //   })
-      // );
+      if (this.languagesList$ === undefined) {
+        this.languagesList$ = of([
+          {
+            LanguageName: result.LanguageName,
+            LanguageReading: RatingAction[result.LanguageReading],
+            LanguageWriting: RatingAction[result.LanguageWriting],
+            LanguageListining: RatingAction[result.LanguageListining],
+            LanguageSpeaking: RatingAction[result.LanguageSpeaking]
+          }
+        ] as ILanguageDetailModel[]);
+      } else {
+        result.LanguageName = result.LanguageName;
+        result.LanguageReading = RatingAction[result.LanguageReading];
+        result.LanguageWriting = RatingAction[result.LanguageWriting];
+        result.LanguageListining = RatingAction[result.LanguageListining];
+        result.LanguageSpeaking = RatingAction[result.LanguageSpeaking];
+        this.languagesList$.subscribe(res => {
+          res.push(result);
+          this.languagesList$ = of(res);
+        });
+      }
+      this.toastr.success('Language Added Successfully');
     });
   }
   addNewTraning(): void {
@@ -298,8 +296,97 @@ export class InterviewDetailComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
+      if (this.traningList$ === undefined) {
+        this.traningList$ = of([
+          {
+            TraningType: result.TraningType,
+            TraningName: result.TraningName,
+            TraningCountryAndCity: result.TraningCountryAndCity,
+            TraningStartDate: result.TraningStartDate,
+            TraningEndDate: result.TraningEndDate
+          }
+        ] as ITraningDetailModel[]);
+      } else {
+        this.traningList$.subscribe(res => {
+          res.push(result);
+          this.traningList$ = of(res);
+        });
+      }
+      this.toastr.success('Traning Added Successfully');
     });
+  }
+
+  addInterviewers(): void {
+    const dialogRef = this.dialog.open(AddNewInterviewerComponent, {
+      width: '500px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+        result.forEach(element => {
+          if (this.temp === 0) {
+            this.interviewerList$ = of([
+              {
+                EmployeeId: element.EmployeeId,
+                EmployeeCode: element.EmployeeCode,
+                EmployeeName: element.EmployeeName
+              }
+            ] as IInterviewerDetailModel[]);
+            this.temp = 1;
+            this.toastr.success(
+              'Added Successfully',
+              element.EmployeeName
+            );
+          } else {
+            this.interviewerList$.subscribe(res => {
+              if (res.find(x => x.EmployeeId === element.EmployeeId) != null) {
+                this.toastr.warning(' Already Selected', element.EmployeeName);
+              } else {
+                res.push(element);
+                this.interviewerList$ = of(res);
+                this.toastr.success(
+                  'Added Successfully',
+                  element.EmployeeName
+                );
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
+  onQuestionsChange(value) {
+    if (value.source.name === 'QuestionOne') {
+      this.interviewDetailForm.controls['InterviewQuestionOne'].setValue(
+        value.checked
+      );
+    } else if (value.source.name === 'QuestionTwo') {
+      this.interviewDetailForm.controls['InterviewQuestionTwo'].setValue(
+        value.checked
+      );
+    } else if (value.source.name === 'QuestionThree') {
+      this.interviewDetailForm.controls['InterviewQuestionThree'].setValue(
+        value.checked
+      );
+    }
+  }
+  onCheckBoxChange(value) {
+    if (value.source.name === 'CurrentTransport') {
+      this.interviewDetailForm.controls['CurrentTransport'].setValue(
+        value.checked
+      );
+    } else if (value.source.name === 'CurrentMeal') {
+      this.interviewDetailForm.controls['CurrentMeal'].setValue(value.checked);
+    } else if (value.source.name === 'ExpectationTransport') {
+      this.interviewDetailForm.controls['ExpectationTransport'].setValue(
+        value.checked
+      );
+    } else if (value.source.name === 'ExpectationMeal') {
+      this.interviewDetailForm.controls['ExpectationMeal'].setValue(
+        value.checked
+      );
+    }
   }
   onFormSubmit(data: any) {
     console.log(data);

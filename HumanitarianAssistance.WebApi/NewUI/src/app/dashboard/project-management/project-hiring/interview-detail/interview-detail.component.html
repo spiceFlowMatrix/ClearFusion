@@ -1,7 +1,7 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
   <span class="action_header">
     Interview Details
-    <hum-button [type]="'add'" [text]="'Save '"></hum-button>
+    <hum-button [type]="'add'" [text]="'Save '" [isSubmit]="true" (click)="onFormSubmit(interviewDetailForm.value)"></hum-button>
     <hum-button [type]="'cancel'" [text]="'close'"></hum-button>
     <hum-button [type]="'download'" [text]="'PDF Export'"></hum-button>
   </span>
@@ -128,7 +128,6 @@
     <form
       class="example-form"
       [formGroup]="interviewDetailForm"
-      (ngSubmit)="onFormSubmit(interviewDetailForm.value)"
     >
       <mat-accordion>
         <mat-expansion-panel>
@@ -196,17 +195,17 @@
             <div class="row shift-left">
               <span
                 >Are you willing to travel to other provinces if required?</span
-              ><mat-slide-toggle class="pull-right"></mat-slide-toggle>
+              ><mat-slide-toggle class="pull-right" name="QuestionOne" (change)="onQuestionsChange($event)"></mat-slide-toggle>
             </div>
             <div class="row shift-left">
               <span>Do you have any health related issues?</span
-              ><mat-slide-toggle class="pull-right"></mat-slide-toggle>
+              ><mat-slide-toggle class="pull-right" name="QuestionTwo" (change)="onQuestionsChange($event)"></mat-slide-toggle>
             </div>
             <div class="row shift-left">
               <span
                 >Are yoy willing to consider opportunity if it's based in the
                 provinces?</span
-              ><mat-slide-toggle class="pull-right"></mat-slide-toggle>
+              ><mat-slide-toggle class="pull-right" name="QuestionThree" (change)="onQuestionsChange($event)"></mat-slide-toggle>
             </div>
             <div class="row shift-left">
               <span
@@ -299,11 +298,11 @@
               <div class="row shift-left">
                 <div class="col-lg-4">
                   <span>Transport</span
-                  ><mat-checkbox class="pull-right"></mat-checkbox>
+                  ><mat-checkbox class="pull-right" name="CurrentTransport" (change)="onCheckBoxChange($event)"></mat-checkbox>
                 </div>
                 <div class="col-lg-4">
                   <span>Meal</span
-                  ><mat-checkbox class="pull-right"></mat-checkbox>
+                  ><mat-checkbox class="pull-right" name="CurrentMeal" (change)="onCheckBoxChange($event)"></mat-checkbox>
                 </div>
               </div>
               <div class="row shift-left">
@@ -332,11 +331,11 @@
               <div class="row shift-left">
                 <div class="col-lg-4">
                   <span>Transport</span
-                  ><mat-checkbox class="pull-right"></mat-checkbox>
+                  ><mat-checkbox class="pull-right" name="ExpectationTransport" (change)="onCheckBoxChange($event)"></mat-checkbox>
                 </div>
                 <div class="col-lg-4">
                   <span>Meal</span
-                  ><mat-checkbox class="pull-right"></mat-checkbox>
+                  ><mat-checkbox class="pull-right" name="ExpectationMeal" (change)="onCheckBoxChange($event)"></mat-checkbox>
                 </div>
               </div>
             </div>
@@ -363,12 +362,12 @@
             <div class="row shift-left">
               <h5>
                 Interviewers
-                <hum-button [type]="'add'" [text]="'ADD'"></hum-button>
+                <hum-button [type]="'add'" [text]="'ADD'" (click)="addInterviewers()"></hum-button>
               </h5>
               <hum-table
-                [headers]="interviewersHeaders$"
+                [headers]="interviewerHeaders$"
                 [isDefaultAction]="false"
-                [items]="interviewersList$"
+                [items]="interviewerList$"
               ></hum-table>
             </div>
           </div>
