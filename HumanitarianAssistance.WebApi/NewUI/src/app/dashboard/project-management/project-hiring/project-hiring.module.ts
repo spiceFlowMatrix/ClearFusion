@@ -29,11 +29,12 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AddHiringRequestComponent } from './add-hiring-request/add-hiring-request.component';
 import { AddNewCandidateComponent } from './add-new-candidate/add-new-candidate.component';
 import { InterviewDetailComponent } from './interview-detail/interview-detail.component';
+import { EntryComponentComponent } from './entry-component/entry-component.component';
 
 @NgModule({
   declarations: [
     HiringRequestsComponent, JobDetailComponent, RequestDetailComponent, AddHiringRequestComponent,
-    AddNewCandidateComponent, InterviewDetailComponent
+    AddNewCandidateComponent, InterviewDetailComponent, EntryComponentComponent
   ],
   imports: [
     ReactiveFormsModule,
