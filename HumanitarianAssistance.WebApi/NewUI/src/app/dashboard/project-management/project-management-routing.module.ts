@@ -160,40 +160,25 @@ const routes: Routes = [
           },
           {
             path: 'hiring-request',
-            component: HiringRequestsComponent,
+            loadChildren:'./project-hiring/project-hiring.module#ProjectHiringModule',
             canActivate: [RoleGuardService],
             data: {
               module: moduleId,
               page: projectPagesMaster.HiringRequests
             }
+       
           },
-          {
-            path: 'hiring-request/:id',
-            component: RequestDetailComponent,
-            canActivate: [RoleGuardService],
-            data: {
-              module: moduleId,
-              page: projectPagesMaster.HiringRequests
-            }
-          },
-          {
-            path: 'job-detail',
-            component: JobDetailComponent,
-            canActivate: [RoleGuardService],
-            data: {
-              module: moduleId,
-              page: projectPagesMaster.HiringRequests
-            }
-          },
-          {
-            path: 'interview-detail',
-            component: InterviewDetailComponent,
-            canActivate: [RoleGuardService],
-            data: {
-              module: moduleId,
-              page: projectPagesMaster.HiringRequests
-            }
-          },
+        
+          // {
+          //   path: 'job-detail',
+          //   component: JobDetailComponent,
+          //   canActivate: [RoleGuardService],
+          //   data: {
+          //     module: moduleId,
+          //     page: projectPagesMaster.HiringRequests
+          //   }
+          // },
+
           {
             path: 'project-indicators',
             component: ProjectIndicatorsComponent,

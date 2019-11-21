@@ -116,7 +116,7 @@ export interface IExistingCandidateList {
   FullName?: string;
   Gender?: string;
   CandidateStatus?: string;
-  firstText?: string;
+  itemAction?: any[];
 }
 
 export interface ISubCandidateList {

@@ -88,8 +88,7 @@ export class HiringRequestsComponent implements OnInit {
       IsInProgress: HiringRequestStatus['In-Progress'],
       IsOpenFlagId: HiringRequestStatus.Open
     };
-
-    this.routeActive.parent.params.subscribe(params => {
+    this.routeActive.parent.parent.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
     this.getAllHiringRequestFilterList(this.filterModel);
@@ -179,7 +178,7 @@ export class HiringRequestsComponent implements OnInit {
 
   requestDetail(e) {
     // console.log(e.HiringRequestId);
-     this.route.navigate([e.HiringRequestId], { relativeTo: this.routeActive });
+     this.route.navigate([e.HiringRequestId], { relativeTo: this.routeActive.parent });
     // this.router.navigate(['../hiring-request/' + e.HiringRequestId]);
   }
 
