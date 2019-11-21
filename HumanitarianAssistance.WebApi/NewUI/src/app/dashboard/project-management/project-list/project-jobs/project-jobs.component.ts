@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener, EventEmitter, Input } from '@angular/core';
 import { Output } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { AddprojectJobsComponent } from './addproject-jobs/addproject-jobs.component';
 import {
@@ -10,7 +10,6 @@ import {
 import { ProjectJobsService } from '../project-jobs/project-jobs.service';
 import { ToastrService } from 'ngx-toastr';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
-import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { GLOBAL } from 'src/app/shared/global';
 import { ProjectListService } from '../service/project-list.service';
 import { LocalStorageService } from 'src/app/shared/services/localstorage.service';
@@ -270,7 +269,7 @@ export class ProjectJobsComponent implements OnInit {
   deleteProjectChangeEmit(id: number) {
     const index = this.projectJobDetailList.findIndex(
       r => r.ProjectJobId === id
-    );
+    )
     this.projectJobDetailList.splice(index, 1);
   }
 }
