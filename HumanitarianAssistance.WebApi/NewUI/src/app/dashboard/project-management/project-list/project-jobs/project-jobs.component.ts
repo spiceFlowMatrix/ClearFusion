@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, EventEmitter } from '@angular/core';
+import { Component, OnInit, HostListener, EventEmitter, Input } from '@angular/core';
 import { Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
@@ -38,6 +38,7 @@ export class ProjectJobsComponent implements OnInit {
 
   @Output() projectJobsDetailChanged = new EventEmitter<IProjectJobModel>();
   @Output() projectJobListRefresh = new EventEmitter<any>();
+  selectedProjectJobDetail: any;
   projectId: number;
 
   projectJobsFilterModel: ProjectJobsFilterModel;
@@ -104,7 +105,7 @@ export class ProjectJobsComponent implements OnInit {
       PageIndex: 0,
       PageSize: 10,
       TotalCount: 0,
-      ProjectId: null
+      ProjectId: null,
     };
   }
   //#endregion
@@ -138,17 +139,18 @@ export class ProjectJobsComponent implements OnInit {
         data => {
           this.projectJobDetailList = [];
           if (
-            data.data.ProjectJobDetail.length > 0 &&
+            data.data.ProjectJobDetailModel.length > 0 &&
             data.StatusCode === 200
           ) {
             this.projectJobsFilterModel.TotalCount =
               data.data.TotalCount != null ? data.data.TotalCount : 0;
-            data.data.ProjectJobDetail.forEach(element => {
+            data.data.ProjectJobDetailModel.forEach(element => {
               this.projectJobDetailList.push({
                 ProjectJobId: element.ProjectJobId,
                 ProjectJobName: element.ProjectJobName,
                 ProjectJobCode: element.ProjectJobCode,
-                ProjectId: element.ProjectId
+                ProjectId: element.ProjectId,
+                CanDelete: element.CanDelete
               });
               this.ProjectJobDetail = this.projectJobDetailList;
             });
@@ -209,9 +211,10 @@ export class ProjectJobsComponent implements OnInit {
   //#endregion
 
   //#region "onItemClick"
-  onItemClick(item: number) {
+  onItemClick(item: any) {
     if (this.isEditingAllowed) {
-      this.selectedProjectJobId = item;
+      this.selectedProjectJobId = item.ProjectJobId;
+      this.selectedProjectJobDetail = item;
       this.showProjectJobsDetailDetailPanel();
     }
   }
@@ -264,9 +267,9 @@ export class ProjectJobsComponent implements OnInit {
   }
   //#endregion
   //#region "Delete Project Change emit"
-  deleteProjectChangeEmit(id) {
+  deleteProjectChangeEmit(id: number) {
     const index = this.projectJobDetailList.findIndex(
-      r => r.ProjectJobId === id.id
+      r => r.ProjectJobId === id
     );
     this.projectJobDetailList.splice(index, 1);
   }

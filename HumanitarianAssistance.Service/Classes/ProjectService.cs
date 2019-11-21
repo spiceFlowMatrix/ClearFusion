@@ -4980,8 +4980,8 @@ namespace HumanitarianAssistance.Service.Classes
         {
             ProjectDetail projectDetail = await _uow.GetDbContext().ProjectDetail.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId &&
                                                                                                            x.IsDeleted == false);
-            long projectjobCount = await _uow.GetDbContext().ProjectJobDetail.LongCountAsync(x => x.ProjectId == model.ProjectId &&
-                                                                                                  x.IsDeleted == false);
+            long projectjobCount = await _uow.GetDbContext().ProjectJobDetail.LongCountAsync(x => x.ProjectId == model.ProjectId 
+                                                                                                  );
 
             return ProjectUtility.GenerateProjectJobCode(projectDetail.ProjectCode, projectjobCount++);
         }
