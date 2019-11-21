@@ -1,8 +1,10 @@
 <mat-card>
+  <div mat-dialog-title><h4>Submit Comparative Statement</h4></div>
+  <mat-divider></mat-divider>
+  <form [formGroup]="statementform" (ngSubmit)="SubmitStatement()">
+  <mat-dialog-content style="max-height: 400px;">
   <div class="row">
     <div class="col-md-12">
-      <div mat-dialog-title><h4>Submit Comparative Statement</h4></div>
-      <mat-divider></mat-divider>
       <mat-form-field class="example-full-width">
         <textarea matInput type="text" rows="2" formControlName="Description" placeholder="Description"></textarea>
       </mat-form-field>
@@ -67,8 +69,12 @@
       </table>
     </div>
   </div>
-  <div class="text-center margin_top_10">
-    <hum-button [type]="'save'" [text]="'Submit'"></hum-button>
-    <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="cancelSubmission()"></hum-button>
-  </div>
+  </mat-dialog-content>
+  <mat-dialog-actions  class="items-float-right">
+    <div class="margin_top_10">
+      <hum-button [type]="'save'" [text]="'Submit'" [isSubmit]="true"></hum-button>
+      <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="cancelSubmission()"></hum-button>
+    </div>
+  </mat-dialog-actions>
+  </form>
 </mat-card>

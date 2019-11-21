@@ -201,6 +201,24 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.ModifiedDate = DateTime.UtcNow;
             return await _mediator.Send(model);
         }
+
+        [HttpPost]
+        public async Task<ApiResponse> SubmitComparativeStatement([FromBody]SubmitComparativeStatementCommand model)
+        {   
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> GetComparativeStatement([FromBody]long requestId)
+        {   
+           GetComparativeStatementQuery model = new GetComparativeStatementQuery();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.requestId = requestId; 
+            return await _mediator.Send(model);
+        }
     }
 
 }

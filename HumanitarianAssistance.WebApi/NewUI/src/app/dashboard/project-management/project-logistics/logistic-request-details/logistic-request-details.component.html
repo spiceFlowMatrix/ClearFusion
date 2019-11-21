@@ -246,7 +246,7 @@
       </div>
       <!-- <mat-divider [vertical]="true" style="height:300px"></mat-divider> -->
       <div class="col-md-5">
-        <app-request-status [requestStatus]="this.requestDetail.Status" [comparativeStatus]="this.requestDetail.ComparativeStatus" [totalCost]="this.totalCost" [requestedItems]="this.requestItemList" (selectedItemChange)='selectedItemChange($event)'></app-request-status>
+        <app-request-status [requestStatus]="this.requestDetail.Status" [comparativeStatus]="this.requestDetail.ComparativeStatus" [totalCost]="this.totalCost" [requestedItems]="this.requestItemList" (selectedItemChange)='selectedItemChange($event)' (comparativeStatusChange)="comparativeStatusChange($event)"></app-request-status>
       </div>
     </div>
   </div>

@@ -23,6 +23,7 @@ export class RequestStatusComponent implements OnInit, OnChanges {
   @Input() totalCost = 0;
   @Input() requestedItems: any[];
   @Output() selectedItemChange = new EventEmitter();
+  @Output() comparativeStatusChange = new EventEmitter();
 
   constructor(private dialog: MatDialog,
     private routeActive: ActivatedRoute,
@@ -40,5 +41,9 @@ export class RequestStatusComponent implements OnInit, OnChanges {
 
   selectedPurchaseItemChange(value) {
     this.selectedItemChange.emit(value);
+  }
+
+  comparativeStatusEmit(value) {
+    this.comparativeStatusChange.emit(value);
   }
 }

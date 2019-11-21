@@ -3,7 +3,7 @@
 </div>
 
 <div *ngIf="(this.totalCost>=200 && this.totalCost<=9999)">
-  <app-comparative-statement [requestStatus]="requestStatus" [totalCost]="this.totalCost" [comparativeStatus]="comparativeStatus"></app-comparative-statement>
+  <app-comparative-statement [requestStatus]="requestStatus" [totalCost]="this.totalCost" [comparativeStatus]="comparativeStatus" (comparativeStatusChange)="comparativeStatusEmit($event)"></app-comparative-statement>
 </div>
 
 <div [ngSwitch]="requestStatus" *ngIf="(this.totalCost>=10000 && this.totalCost<=59999)">

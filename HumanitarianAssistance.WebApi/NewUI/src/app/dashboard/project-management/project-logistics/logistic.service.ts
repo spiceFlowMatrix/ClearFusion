@@ -195,4 +195,20 @@ export class LogisticService {
         model
     );
   }
+
+  SubmitComparativeStatement(model) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_SubmitComparativeStatement,
+        model
+    );
+  }
+
+  getComparativeStatement(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_GetComparativeStatement,
+        requestId
+    );
+  }
 }

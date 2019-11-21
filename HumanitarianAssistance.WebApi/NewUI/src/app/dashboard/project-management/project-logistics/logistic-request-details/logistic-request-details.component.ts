@@ -93,7 +93,6 @@ Currency: '', BudgetLine: '', Office: ''};
   getRequestDetails() {
     this.logisticservice.getLogisticRequestDetail(this.requestId).subscribe(res => {
       if (res.StatusCode === 200 && res.data.logisticRequest != null) {
-        debugger;
         this.requestDetail.RequestId = res.data.logisticRequest.RequestId;
         this.requestDetail.ProjectId = res.data.logisticRequest.ProjectId;
         this.requestDetail.RequestName = res.data.logisticRequest.RequestName;
@@ -302,6 +301,10 @@ Currency: '', BudgetLine: '', Office: ''};
         this.toastr.error('Something went wrong!');
       }
     });
+  }
+
+  comparativeStatusChange(value) {
+    this.requestDetail.ComparativeStatus = value;
   }
 
 }
