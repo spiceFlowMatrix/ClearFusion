@@ -1,0 +1,80 @@
+<mat-card>
+  <div mat-dialog-title><h4>Submit Comparative Statement</h4></div>
+  <mat-divider></mat-divider>
+  <form [formGroup]="statementform" (ngSubmit)="SubmitStatement()">
+  <mat-dialog-content style="max-height: 400px;">
+  <div class="row">
+    <div class="col-md-12">
+      <mat-form-field class="example-full-width">
+        <textarea matInput type="text" rows="2" formControlName="Description" placeholder="Description"></textarea>
+      </mat-form-field>
+      <mat-divider></mat-divider>
+      <h5><i class="fa fa-paperclip fa-1" aria-hidden="true"></i> Attachments (Optional)
+      <hum-button [type]="'add'" [text]="'add'" (click)="openInput()"></hum-button>
+      <input id="fileInput" style="display:none" hidden type="file" (change)="fileChange($event.target.files)" name="file">
+      </h5>
+      <ul>
+        <li *ngFor="let uploadedItem of this.attachments">{{uploadedItem[0].name}}</li>
+      </ul>
+      <mat-divider></mat-divider>
+      <h5 style="padding-top: 10px;">Select Suppliers</h5>
+      <table mat-table [dataSource]="dataSource" style="width: 100%;">
+
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()"
+                          [aria-label]="checkboxLabel()">
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)"
+                          [aria-label]="checkboxLabel(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="Id">
+          <th mat-header-cell *matHeaderCellDef [style.display]="'none'"> Id </th>
+          <td mat-cell *matCellDef="let element" [style.display]="'none'"> {{element.Id}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="Supplier">
+          <th mat-header-cell *matHeaderCellDef> Supplier </th>
+          <td mat-cell *matCellDef="let element"> {{element.Supplier}} </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="Quantity">
+          <th mat-header-cell *matHeaderCellDef> Quantity </th>
+          <td mat-cell *matCellDef="let element"> {{element.Quantity}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="FinalPrice">
+          <th mat-header-cell *matHeaderCellDef> Final Price </th>
+          <td mat-cell *matCellDef="let element"> {{element.FinalPrice}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            >
+        </tr>
+      </table>
+    </div>
+  </div>
+  </mat-dialog-content>
+  <mat-dialog-actions  class="items-float-right">
+    <div class="margin_top_10">
+      <hum-button [type]="'save'" [text]="'Submit'" [isSubmit]="true"></hum-button>
+      <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="cancelSubmission()"></hum-button>
+    </div>
+  </mat-dialog-actions>
+  </form>
+</mat-card>

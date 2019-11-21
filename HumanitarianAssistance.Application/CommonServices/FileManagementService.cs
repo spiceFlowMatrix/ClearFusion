@@ -114,6 +114,7 @@ namespace HumanitarianAssistance.Application.CommonServices
 
                         documentModel.SignedURL = responses.data.SignedUrl;
                         documentModel.DocumentFileId = fileModel.DocumentFileId ?? 0;
+                        documentModel.DocumentName = fileModel.FileName;
                     }
                 }
             }
