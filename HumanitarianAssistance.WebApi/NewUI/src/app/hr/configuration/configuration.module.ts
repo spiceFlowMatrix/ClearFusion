@@ -17,6 +17,9 @@ import { MatInputModule } from '@angular/material/input';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { GeneralComponent } from './components/general/general.component';
+import { EducationDegreeComponent } from './components/education-degree/education-degree.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -24,6 +27,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     DesignationListingComponent,
     EntryComponentComponent,
     ConfigurationComponent,
+    GeneralComponent,
+    EducationDegreeComponent,
   ],
   imports: [
     CommonModule,
@@ -32,6 +37,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatCardModule,
     MatTabsModule,
     MatDialogModule,
+    MatExpansionModule,
     MatPaginatorModule,
     ReactiveFormsModule,
     MatInputModule,

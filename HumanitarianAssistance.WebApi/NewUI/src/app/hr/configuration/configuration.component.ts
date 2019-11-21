@@ -13,17 +13,22 @@ import { GlobalSharedService } from 'src/app/shared/services/global-shared.servi
 export class ConfigurationComponent implements OnInit {
 
   navLinks: any[] = [];
-  activeLinkIndex = -1;
+  activeLinkIndex = 0;
   setConfigurationHeader = 'HR';
 
   constructor(private router: Router, private globalService: GlobalSharedService) {
 
     this.navLinks = [
       {
-        label: 'Designation',
-        link: './designation',
+        label: 'GENERAL',
+        link: './general',
         index: 0
-      }
+      },
+      {
+        label: 'DESIGNATION',
+        link: './designation',
+        index: 1
+      },
     ];
   }
 
