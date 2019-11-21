@@ -73,7 +73,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<EmployeeAppraisalDetails> EmployeeAppraisalDetails { get; set; }
         public DbSet<EmployeeAppraisalQuestions> EmployeeAppraisalQuestions { get; set; }
         public DbSet<EmployeeEvaluation> EmployeeEvaluation { get; set; }
-        public DbSet<InterviewTechnicalQuestions> InterviewTechnicalQuestions { get; set; }    
+        public DbSet<InterviewTechnicalQuestions> InterviewTechnicalQuestions { get; set; }
         public DbSet<Advances> Advances { get; set; }
 
         public DbSet<InterviewDetails> InterviewDetails { get; set; }
@@ -145,6 +145,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<ExchangeRateVerification> ExchangeRateVerifications { get; set; }
         public DbSet<DocumentFileDetail> DocumentFileDetail { get; set; }
         public DbSet<AttendanceGroupMaster> AttendanceGroupMaster { get; set; }
+        public DbSet<EducationDegreeMaster> EducationDegreeMaster { get; set; }
 
         //created by arjun singh
         public DbSet<ChatDetail> ChatDetail { get; set; }
@@ -222,14 +223,14 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<RatingBasedCriteriaQuestions> RatingBasedCriteriaQuestions { get; set; }
 
         public DbSet<ProjectJobHiringDetail> ProjectJobHiringDetail { get; set; }
-        public DbSet<ProjectLogisticRequests> ProjectLogisticRequests { get; set; } 
-        public DbSet<ProjectLogisticItems> ProjectLogisticItems { get; set; }   
+        public DbSet<ProjectLogisticRequests> ProjectLogisticRequests { get; set; }
+        public DbSet<ProjectLogisticItems> ProjectLogisticItems { get; set; }
         public DbSet<ProjectLogisticSuppliers> ProjectLogisticSuppliers { get; set; }
-        public DbSet<ComparativeStatementSubmission> ComparativeStatementSubmission { get; set; }         
-        public DbSet<CandidateDetails> CandidateDetails { get; set; }  
-        public DbSet<EducationDegreeDetail> EducationDegreeDetails { get; set; }  
-        public DbSet<HiringRequestCandidateStatus> HiringRequestCandidateStatus { get; set; } 
-        #endregion  
+        public DbSet<ComparativeStatementSubmission> ComparativeStatementSubmission { get; set; }
+        public DbSet<CandidateDetails> CandidateDetails { get; set; }
+        public DbSet<EducationDegreeDetail> EducationDegreeDetails { get; set; }
+        public DbSet<HiringRequestCandidateStatus> HiringRequestCandidateStatus { get; set; }
+        #endregion
 
         #region Marketing 
         public DbSet<InvoiceGeneration> InvoiceGeneration { get; set; }
