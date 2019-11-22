@@ -37,5 +37,27 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             command.ModifiedDate = DateTime.UtcNow;
             return Ok(await _mediator.Send(command));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetEducationDegreeList([FromBody] GetAllEducationDegreeQuery request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddEducationDegree([FromBody] AddEducationDegreeCommand request)
+        {
+            request.CreatedById = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            request.CreatedDate = DateTime.UtcNow;
+            return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditEducationDegree([FromBody] EditEducationDegreeCommand request)
+        {
+            request.ModifiedById = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            request.ModifiedDate = DateTime.UtcNow;
+            return Ok(await _mediator.Send(request));
+        }
     }
 }

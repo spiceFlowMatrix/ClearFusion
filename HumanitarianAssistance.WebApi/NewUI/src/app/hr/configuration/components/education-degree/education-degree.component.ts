@@ -6,6 +6,7 @@ import { HrService } from 'src/app/hr/services/hr.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { AddEducationDegreeComponent } from './add-education-degree/add-education-degree.component';
 
 @Component({
   selector: 'app-education-degree',
@@ -14,8 +15,8 @@ import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.
 })
 export class EducationDegreeComponent implements OnInit {
 
-  designationList$: Observable<any[]>;
-  designationListHeaders$ = of(['Id', 'Name']);
+  educationDegreeList$: Observable<any[]>;
+  educationDegreeListHeaders$ = of(['Id', 'Name']);
 
   actions: TableActionsModel;
   pageModel = {
@@ -43,52 +44,54 @@ export class EducationDegreeComponent implements OnInit {
     }
 
   ngOnInit() {
+    this.getEducationDegreeList();
   }
 
   getEducationDegreeList() {
     this.commonLoader.showLoader();
-    this.hrService.getDesignationList(this.pageModel).subscribe(x => {
+    this.hrService.getEducationDegreeList(this.pageModel).subscribe(x => {
       this.commonLoader.hideLoader();
-      this.designationList$ = of(x.DesignationList.map(element => {
+      this.educationDegreeList$ = of(x.EducationDegreeList.map(element => {
         return {
-          Id: element.DesignationId,
-          Designation: element.Designation,
-          Description: element.Description,
-          subItems: element.TechnicalQuestionList ? (element.TechnicalQuestionList.map((r) => {
-            return {
-              QuestionId: r.QuestionId,
-              Question: r.Question
-            };
-          })) : null
+          Id: element.EducationDegreeId,
+          Name: element.EducationDegreeName,
         };
       }));
-      this.RecordCount = x.RecordCount;
+      this.RecordCount = x.TotalCount;
     }, error => {
       this.commonLoader.hideLoader();
     });
   }
 
-//   addDesignation() {
-//     const dialogRef = this.dialog.open(AddDesignationComponent, {
-//       width: '650px',
-//     });
+  addDegree() {
+    const dialogRef = this.dialog.open(AddEducationDegreeComponent, {
+      width: '450px',
+    });
 
-//     dialogRef.afterClosed().subscribe(x => {
-//       this.getDesignationList();
-//     });
-// }
+    dialogRef.afterClosed().subscribe(x => {
+      this.getEducationDegreeList();
+    });
+}
 
-  // actionEvents(event: any) {
-  //   if (event.type === 'edit') {
-  //     const dialogRef = this.dialog.open(AddDesignationComponent, {
-  //       width: '650px',
-  //       data: event.item
-  //     });
+  actionEvents(event: any) {
+    if (event.type === 'edit') {
+      const dialogRef = this.dialog.open(AddEducationDegreeComponent, {
+        width: '450px',
+        data: event.item
+      });
 
-  //     dialogRef.afterClosed().subscribe(x => {
-  //       this.getDesignationList();
-  //     });
-  //   }
-  // }
+      dialogRef.afterClosed().subscribe(x => {
+        this.getEducationDegreeList();
+      });
+    }
+  }
+
+  //#region "pageEvent"
+  pageEvent(e) {
+    this.pageModel.PageIndex = e.pageIndex;
+    this.pageModel.PageSize = e.pageSize;
+    this.getEducationDegreeList();
+  }
+  //#endregion
 
 }

@@ -20,6 +20,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { GeneralComponent } from './components/general/general.component';
 import { EducationDegreeComponent } from './components/education-degree/education-degree.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { AddEducationDegreeComponent } from './components/education-degree/add-education-degree/add-education-degree.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     ConfigurationComponent,
     GeneralComponent,
     EducationDegreeComponent,
+    AddEducationDegreeComponent,
   ],
   imports: [
     CommonModule,
@@ -48,6 +50,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
     SubHeaderTemplateModule,
     LibraryModule
   ],
-  entryComponents: [AddDesignationComponent]
+  entryComponents: [AddDesignationComponent, AddEducationDegreeComponent]
 })
 export class ConfigurationModule { }

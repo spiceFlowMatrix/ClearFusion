@@ -63,7 +63,6 @@ export class AddMilageComponent implements OnInit {
 
   //#endregion
   addMilage() {
-    debugger;
     if (this.mileageForm.valid) {
       this.mileageForm.value.Month = StaticUtilities.setLocalDate(this.mileageForm.value.Month);
       this.isAddMileageFormSubmitted = true;
