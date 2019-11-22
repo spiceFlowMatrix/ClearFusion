@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-//this table was used in old Ui
-namespace HumanitarianAssistance.Domain.Entities.HR {
-    public class InterviewDetails : BaseEntity {
+
+namespace HumanitarianAssistance.Domain.Entities.HR
+{ //this table was used in old ui
+    public class InterviewDetails : BaseEntity
+    {
         [Key]
-        [DatabaseGenerated (DatabaseGeneratedOption.Identity)]
-        [Column (Order = 1)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column(Order = 1)]
         public int InterviewDetailsId { get; set; }
 
         public int EmployeeID { get; set; }
@@ -53,16 +55,14 @@ namespace HumanitarianAssistance.Domain.Entities.HR {
         public string Interviewer4 { get; set; }
         List<HRJobInterviewers> HRJobInterviewers { get; set; }
         public string InterviewStatus { get; set; }
-
-        [ForeignKey ("EmployeeID")]
+        [ForeignKey("EmployeeID")]
         public EmployeeDetail EmployeeDetail { get; set; }
         public List<RatingBasedCriteria> RatingBasedCriteriaList { get; set; }
         public List<InterviewLanguages> InterviewLanguagesList { get; set; }
         public List<InterviewTrainings> InterviewTrainingsList { get; set; }
         public List<InterviewTechnicalQuestion> InterviewTechnicalQuestionList { get; set; }
         public List<HRJobInterviewers> HRJobInterviewersList { get; set; }
-
-        [ForeignKey ("JobId")]
+        [ForeignKey("JobId")]
         public JobHiringDetails JobHiringDetail { get; set; }
     }
 }

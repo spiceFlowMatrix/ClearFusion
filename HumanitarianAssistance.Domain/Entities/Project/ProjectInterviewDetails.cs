@@ -1,9 +1,14 @@
-namespace HumanitarianAssistance.Domain.Entities.Project
-{
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using HumanitarianAssistance.Domain.Entities.HR;
+
+namespace HumanitarianAssistance.Domain.Entities.Project {
     public class ProjectInterviewDetails : BaseEntity {
-       [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column(Order = 1)]
+        [Key]
+        [DatabaseGenerated (DatabaseGeneratedOption.Identity)]
+        [Column (Order = 1)]
         public int InterviewId { get; set; }
         public string Description { get; set; }
         public int NoticePeriod { get; set; }
@@ -24,10 +29,10 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public double ProfessionalCriteriaMarks { get; set; }
         public int MarksObtained { get; set; }
         public string TotalMarksObtained { get; set; }
-        public List<RatingBasedCriteria> RatingBasedCriteriaList { get; set; }
-        public List<InterviewLanguages> InterviewLanguagesList { get; set; }
-        public List<InterviewTrainings> InterviewTrainingsList { get; set; }
-        public List<InterviewTechnicalQuestion> InterviewTechnicalQuestionList { get; set; }
-        public List<HRJobInterviewers> HRJobInterviewersList { get; set; }
+        public virtual List<RatingBasedCriteria> RatingBasedCriteriaList { get; set; }
+        public virtual List<InterviewLanguages> InterviewLanguagesList { get; set; }
+        public virtual List<InterviewTrainings> InterviewTrainingsList { get; set; }
+        public virtual List<InterviewTechnicalQuestion> InterviewTechnicalQuestionList { get; set; }
+        public virtual List<HRJobInterviewers> HRJobInterviewersList { get; set; }
     }
 }
