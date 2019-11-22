@@ -1,0 +1,25 @@
+<lib-sub-header-template>
+  <span class="action_header">General
+    <!-- <hum-button [type]="'add'" [text]="'ADD NEW DESIGNATION'" (click)="addDesignation()"></hum-button> -->
+  </span>
+</lib-sub-header-template>
+
+<mat-card humAddScroll>
+  <div class="row">
+    <div class="col-sm-12">
+        <mat-accordion>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <h4>Education Degree</h4>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <ng-template matExpansionPanelContent>
+                  <app-education-degree></app-education-degree>
+                </ng-template>
+            </mat-expansion-panel>
+          </mat-accordion>
+    </div>
+  </div>
+
+</mat-card>

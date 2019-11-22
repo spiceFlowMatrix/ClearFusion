@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Store.Models;
 using HumanitarianAssistance.Common.Enums;
+using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -73,10 +74,15 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                     foreach (UsageType val in UsageTypeValues)
                     {
-                        UsageAnalysisBreakDown Usagedata;
-                        CostAnalysisBreakDown Costdata;
-                        SwitchCaseStatement(vehicle, request.SelectedYear, (int)val, out Usagedata, out Costdata);
-                        model.UsageAnalysisBreakDownList.Add(Usagedata);
+                        // Skip Current Usage
+                        if (val != UsageType.CurrentUsage)
+                        {
+                            UsageAnalysisBreakDown Usagedata;
+                            CostAnalysisBreakDown Costdata;
+                            SwitchCaseStatement(vehicle, request.SelectedYear, (int)val, out Usagedata, out Costdata);
+                            model.UsageAnalysisBreakDownList.Add(Usagedata);
+                        }
+
                     }
 
                     Array costAnalysisValues = Enum.GetValues(typeof(CostAnalysis));
@@ -143,7 +149,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                             .Where(x => x.CreatedDate.Value.Year == selectedYear && x.MileageMonth.Month < month)
                                                             .Select(x => x.Mileage).DefaultIfEmpty(0).Sum() + vehicle.VehicleMileageDetail.First(x => x.MileageMonth.Month == month
                                                                                                                  && x.CreatedDate.Value.Year == selectedYear).Mileage +
-                                                                                                                 ((vehicle.CreatedDate.Date.Month == month && vehicle.CreatedDate.Year <= selectedYear) ? (vehicle.StartingMileage+ vehicle.IncurredMileage) : 0);
+                                                                                                                 ((vehicle.CreatedDate.Date.Month == month && vehicle.CreatedDate.Year <= selectedYear) ? (vehicle.StartingMileage + vehicle.IncurredMileage) : 0);
                         }
                         else // if mileage is not present for the month then sum previous months mileages
                         {
@@ -151,7 +157,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             monthData = vehicle.VehicleMileageDetail
                                                             .Where(x => x.CreatedDate.Value.Year == selectedYear && x.MileageMonth.Month < month)
                                                             .Select(x => x.Mileage).DefaultIfEmpty(0).Sum() +
-                                                            ((vehicle.CreatedDate.Date.Month <= month && vehicle.CreatedDate.Year == selectedYear) ? (vehicle.StartingMileage+ vehicle.IncurredMileage) : 0);
+                                                            ((vehicle.CreatedDate.Date.Month <= month && vehicle.CreatedDate.Year == selectedYear) ? (vehicle.StartingMileage + vehicle.IncurredMileage) : 0);
                         }
                     }
                     else if (usageType == (int)CostAnalysis.FuelTotalCost)
@@ -541,8 +547,11 @@ namespace HumanitarianAssistance.Application.Store.Queries
             {
                 double monthData = GetMonthlyVehicleDetail(vehicle, selectedYear, j, usageType);
 
-                usageBreakDown.Header = Enum.GetName(typeof(UsageType), usageType);
-                costBreakDown.Header = Enum.GetName(typeof(CostAnalysis), usageType);
+                UsageType usage = (UsageType)usageType;
+                CostAnalysis cost = (CostAnalysis)usageType;
+
+                usageBreakDown.Header = usage.GetDescription();
+                costBreakDown.Header = cost.GetDescription();
 
                 switch (j)
                 {

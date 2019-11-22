@@ -94,6 +94,9 @@ export class GLOBAL {
   public static API_HRConfiguration_AddDesignationDetail = 'HRConfiguration/AddDesignationDetail';
   public static API_HRConfiguration_EditDesignationDetail = 'HRConfiguration/EditDesignationDetail';
   public static API_HRConfiguration_GetAllDesignationDetail = 'HRConfiguration/GetAllDesignationDetail';
+  public static API_HRConfiguration_GetEducationDegreeList = 'HRConfiguration/GetEducationDegreeList';
+  public static API_HRConfiguration_AddEducationDegree = 'HRConfiguration/AddEducationDegree';
+  public static API_HRConfiguration_EditEducationDegree = 'HRConfiguration/EditEducationDegree';
   public static API_Policy_AddNewPolicy = 'Policy/AddEditPolicy';
   public static API_Policy_AddPolicyRepeatDays = 'Policy/AddPolicyRepeatDays';
   public static API_Policy_AddNewPolicyTimeSchedule = 'Policy/AddEditPolicyTimeSchedule';
@@ -217,6 +220,9 @@ export class GLOBAL {
   public static API_ProjectLogistics_EditLogisticSupplier = 'ProjectLogistic/EditLogisticSupplier';
   public static API_ProjectLogistics_SubmitComparativeStatement = 'ProjectLogistic/SubmitComparativeStatement';
   public static API_ProjectLogistics_GetComparativeStatement = 'ProjectLogistic/GetComparativeStatement';
+  public static API_ProjectLogistics_RejectComparativeStatement = 'ProjectLogistic/RejectComparativeStatement';
+  public static API_ProjectLogistics_ApproveComparativeStatement = 'ProjectLogistic/ApproveComparativeStatement';
+
   // Chart Of Account
   public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';
   public static API_ChartOfAccount_GetAllAccountsByParentId = 'ChartOfAccount/GetAllAccountsByParentId';
