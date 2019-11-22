@@ -28,8 +28,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project {
         public bool InterviewQuestionThree { get; set; }
         public double ProfessionalCriteriaMarks { get; set; }
         public int MarksObtained { get; set; }
-        // public string TotalMarksObtained { get; set; }
-        public int TotalMarksObtain { get; set; }
+        public double TotalMarksObtain { get; set; }
         public virtual List<RatingBasedCriteria> RatingBasedCriteriaList { get; set; }
         public virtual List<InterviewLanguages> InterviewLanguagesList { get; set; }
         public virtual List<InterviewTrainings> InterviewTrainingsList { get; set; }
