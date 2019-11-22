@@ -14,6 +14,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
     public class ComparativeStatementModel {
         public string Description { get; set; }
         public string SubmittedBy { get; set; }
+        public string RejectedBy { get; set; }
         public List<SupplierDetailModel> selectedSupplier { get; set; }
         public List<StatementAttachmentModel> attachments { get; set; }
     }
