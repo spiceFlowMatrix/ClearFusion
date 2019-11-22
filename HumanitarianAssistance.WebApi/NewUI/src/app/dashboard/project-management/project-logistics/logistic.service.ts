@@ -211,4 +211,20 @@ export class LogisticService {
         requestId
     );
   }
+
+  rejectComparativeStatement(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_RejectComparativeStatement,
+        requestId
+    );
+  }
+
+  approveComparativeStatement(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_ApproveComparativeStatement,
+        requestId
+    );
+  }
 }

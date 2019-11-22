@@ -9,7 +9,8 @@ import { TableActionsModel } from 'projects/library/src/public_api';
 import { ToastrService } from 'ngx-toastr';
 import { SubmitPurchaseListComponent } from '../submit-purchase-list/submit-purchase-list.component';
 import { SubmitComparativeStatementComponent } from '../submit-comparative-statement/submit-comparative-statement.component';
-import { LogisticComparativeStatus } from 'src/app/shared/enum';
+import { LogisticComparativeStatus, LogisticRequestStatus } from 'src/app/shared/enum';
+import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 
 @Component({
   selector: 'app-comparative-statement',
@@ -21,6 +22,8 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
   @Input() requestStatus = 0;
   @Input() comparativeStatus = 1;
   @Input() totalCost = 0;
+  @Input() requestedItems: any[];
+  @Output() selectedItemChange = new EventEmitter();
 
   supplierHeaders$ = of(['Id', 'Supplier', 'Quantity', 'Final Price']);
   supplierSubHeaders$ = of(['']);
@@ -29,13 +32,21 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
   requestId;
   supplierList: any;
   actions: TableActionsModel;
-  statementModel;
+  statementModel = {
+    SubmittedBy: '',
+    Description: '',
+    selectedSupplier: [],
+    attachments: [],
+    RejectedBy: ''
+  };
   @Output() comparativeStatusChange = new EventEmitter();
+  @Output() StatusChange = new EventEmitter();
 
   constructor(private dialog: MatDialog,
     private routeActive: ActivatedRoute,
     private logisticservice: LogisticService,
-    public toastr: ToastrService) { }
+    public toastr: ToastrService,
+    private commonLoader: CommonLoaderService) { }
 
   ngOnInit() {
     this.hideSupplierColums = of({
@@ -63,7 +74,8 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
     this.routeActive.params.subscribe(params => {
       this.requestId = +params['id'];
     });
-    if (this.comparativeStatus === LogisticComparativeStatus['Statement Submitted']) {
+    if (this.comparativeStatus === LogisticComparativeStatus['Statement Submitted'] ||
+    this.comparativeStatus === LogisticComparativeStatus['Reject Statement']) {
       this.getComparativeStatement();
     }
   }
@@ -177,21 +189,63 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
     this.logisticservice.getComparativeStatement(this.requestId).subscribe(res => {
       if (res.StatusCode === 200 && res.data.ComparativeStatement != null) {
         this.statementModel = res.data.ComparativeStatement;
-        this.actions = {
-          items: {
-            button: { status: false, text: '' },
-            edit: false,
-            delete: false,
-            download: false,
-          },
-          subitems: {
-          }
-
-        };
+        if (this.comparativeStatus === LogisticComparativeStatus['Statement Submitted']) {
+          this.actions = {
+            items: {
+              button: { status: false, text: '' },
+              edit: false,
+              delete: false,
+              download: false,
+            },
+            subitems: {
+            }
+          };
+        } else {
+          this.actions = {
+            items: {
+              button: { status: false, text: '' },
+              edit: true,
+              delete: true,
+              download: false,
+            },
+            subitems: {
+            }
+          };
+        }
       } else {
         this.toastr.error('Something went wrong!');
       }
     });
   }
 
+  rejectComparativeStatement() {
+    this.commonLoader.showLoader();
+    this.logisticservice.rejectComparativeStatement(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.comparativeStatusChange.emit(LogisticComparativeStatus['Reject Statement']);
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  approveComparativeStatement() {
+    this.commonLoader.showLoader();
+    this.logisticservice.approveComparativeStatement(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.comparativeStatusChange.emit(LogisticComparativeStatus['Approve Statement']);
+        this.StatusChange.emit(LogisticRequestStatus['Issue Purchase Order']);
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  selectedPurchaseItemChange(value) {
+    this.selectedItemChange.emit(value);
+  }
 }

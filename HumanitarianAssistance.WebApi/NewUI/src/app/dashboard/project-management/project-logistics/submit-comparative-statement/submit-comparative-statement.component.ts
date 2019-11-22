@@ -81,6 +81,9 @@ export class SubmitComparativeStatementComponent implements OnInit {
   }
 
   SubmitStatement() {
+    if (!this.statementform.valid) {
+      return;
+    }
     if (this.selection.selected.length === 0) {
       this.toastr.warning('Please Select Suppliers!');
       return;

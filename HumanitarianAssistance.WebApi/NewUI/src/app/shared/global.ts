@@ -216,6 +216,9 @@ export class GLOBAL {
   public static API_ProjectLogistics_EditLogisticSupplier = 'ProjectLogistic/EditLogisticSupplier';
   public static API_ProjectLogistics_SubmitComparativeStatement = 'ProjectLogistic/SubmitComparativeStatement';
   public static API_ProjectLogistics_GetComparativeStatement = 'ProjectLogistic/GetComparativeStatement';
+  public static API_ProjectLogistics_RejectComparativeStatement = 'ProjectLogistic/RejectComparativeStatement';
+  public static API_ProjectLogistics_ApproveComparativeStatement = 'ProjectLogistic/ApproveComparativeStatement';
+
   // Chart Of Account
   public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';
   public static API_ChartOfAccount_GetAllAccountsByParentId = 'ChartOfAccount/GetAllAccountsByParentId';
