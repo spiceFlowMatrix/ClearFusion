@@ -105,7 +105,7 @@ export class AddHiringRequestComponent implements OnInit {
       this.hiringRequestId
     );
     if (this.data.hiringRequestId !== 0) {
-      // this.getAllHiringRequestDetail();
+       this.getAllHiringRequestDetail();
     }
     forkJoin([this.getAllOfficeList(), this.getAllCountryList()])
       .pipe(takeUntil(this.destroyed$))
@@ -140,40 +140,69 @@ export class AddHiringRequestComponent implements OnInit {
         (response: IResponseData) => {
           this.loader.showLoader();
           if (response.statusCode === 200 && response.data !== null) {
-            this.hiringRequestDetail = {
-              HiringRequestId: response.data.HiringRequestId,
-              ProjectId: response.data.ProjectId,
-              JobCategory: response.data.JobCategory,
-              MinEducationLevel: response.data.MinEducationLevel,
-              TotalVacancy: response.data.TotalVacancy,
-              Position: response.data.Position,
-              Organization: response.data.Organization,
-              Office: response.data.Office,
-              ContractType: response.data.ContractType,
-              ContractDuration: response.data.ContractDuration,
-              Gender: response.data.Gender,
-              SalaryRange: response.data.SalaryRange,
-              AnouncingDate: response.data.AnouncingDate,
-              ClosingDate: response.data.ClosingDate,
-              Country: response.data.Country,
-              Province: response.data.Province,
-              Nationality: response.data.Nationality,
-              JobType: response.data.JobType,
-              JobShift: response.data.JobShift,
-              JobStatus: response.data.JobStatus,
-              Experience: response.data.Experience,
-              Background: response.data.Background,
-              SpecificDutiesAndResponsibilities:
-                response.data.SpecificDutiesAndResponsibilities,
-              KnowledgeAndSkillsRequired:
-                response.data.KnowledgeAndSkillsRequired,
-              SubmissionGuidelines: response.data.SubmissionGuidelines
-            };
-            this.OfficeId = this.hiringRequestDetail.Office;
-            //this.getAllProfessionList(this.hiringRequestDetail.Office);
-            this.getAllJobList(this.hiringRequestDetail.Position);
-            this.getAllProvinceList(this.hiringRequestDetail.Country);
-            this.getRemainingVacancy(this.hiringRequestDetail.JobCategory);
+            // this.hiringRequestDetail = {
+            //   HiringRequestId: response.data.HiringRequestId,
+            //   ProjectId: response.data.ProjectId,
+            //   JobCategory: response.data.JobCategory,
+            //   MinEducationLevel: response.data.MinEducationLevel,
+            //   TotalVacancy: response.data.TotalVacancy,
+            //   Position: response.data.Position,
+            //   Organization: response.data.Organization,
+            //   Office: response.data.Office,
+            //   ContractType: response.data.ContractType,
+            //   ContractDuration: response.data.ContractDuration,
+            //   Gender: response.data.Gender,
+            //   SalaryRange: response.data.SalaryRange,
+            //   AnouncingDate: response.data.AnouncingDate,
+            //   ClosingDate: response.data.ClosingDate,
+            //   Country: response.data.Country,
+            //   Province: response.data.Province,
+            //   Nationality: response.data.Nationality,
+            //   JobType: response.data.JobType,
+            //   JobShift: response.data.JobShift,
+            //   JobStatus: response.data.JobStatus,
+            //   Experience: response.data.Experience,
+            //   Background: response.data.Background,
+            //   SpecificDutiesAndResponsibilities:
+            //     response.data.SpecificDutiesAndResponsibilities,
+            //   KnowledgeAndSkillsRequired:
+            //     response.data.KnowledgeAndSkillsRequired,
+            //   SubmissionGuidelines: response.data.SubmissionGuidelines
+            // };
+
+            this.addHiringRequestForm.setValue({
+              HiringRequestId: [response.data.HiringRequestId],
+              ProjectId: [response.data.ProjectId],
+              TotalVacancy: [response.data.TotalVacancy],
+              Position: [response.data.Position],
+              Office: [response.data.Office],
+              ContractType: [response.data.ContractType],
+              ContractDuration: [response.data.ContractDuration],
+              AnouncingDate: [response.data.AnouncingDate],
+              ClosingDate: [response.data.ClosingDate],
+              JobType: [response.data.JobType],
+              JobShift: [response.data.JobShift],
+              Experience: [response.data.Experience],
+              BudgetLine:[response.data.BudgetLine],
+              EducationDegree: [response.data.EducationDegree],
+              JobGrade: [response.data.JobGrade],
+              PayCurrency: [response.data.PayCurrency],
+              PayHourlyRate: [response.data.PayHourlyRate],
+              Profession: [response.data.Profession],
+
+              SpecificDutiesAndResponsibilities: [
+                response.data.SpecificDutiesAndResponsibilities
+              ],
+              KnowledgeAndSkillsRequired: [response.data.KnowledgeAndSkillsRequired],
+              SubmissionGuidelines: [response.data.SubmissionGuidelines]
+            });
+
+            debugger;
+            // this.OfficeId = this.hiringRequestDetail.Office;
+            // this.getAllProfessionList(this.hiringRequestDetail.Office);
+            // this.getAllJobList(this.hiringRequestDetail.Position);
+            // this.getAllProvinceList(this.hiringRequestDetail.Country);
+            // this.getRemainingVacancy(this.hiringRequestDetail.JobCategory);
             this.setHiringRequestDetails(this.hiringRequestDetail);
           }
           this.loader.hideLoader();
@@ -185,35 +214,7 @@ export class AddHiringRequestComponent implements OnInit {
   }
   setHiringRequestDetails(data: IHiringRequestModel) {
     this.loader.showLoader();
-    this.addHiringRequestForm = this.fb.group({
-      HiringRequestId: [data.HiringRequestId],
-      ProjectId: [data.ProjectId],
-      JobCategory: [data.JobCategory],
-      MinEducationLevel: [data.MinEducationLevel],
-      TotalVacancy: [data.TotalVacancy],
-      Position: [data.Position],
-      Organization: [data.Organization],
-      Office: [data.Office],
-      ContractType: [data.ContractType],
-      ContractDuration: [data.ContractDuration],
-      Gender: [data.Gender],
-      Nationality: [data.Nationality],
-      SalaryRange: [data.SalaryRange],
-      AnouncingDate: [data.AnouncingDate],
-      ClosingDate: [data.ClosingDate],
-      Country: [data.Country],
-      Province: [data.Province],
-      JobType: [data.JobType],
-      JobShift: [data.JobShift],
-      JobStatus: [data.JobStatus],
-      Experience: [data.Experience],
-      Background: [data.Background],
-      SpecificDutiesAndResponsibilities: [
-        data.SpecificDutiesAndResponsibilities
-      ],
-      KnowledgeAndSkillsRequired: [data.KnowledgeAndSkillsRequired],
-      SubmissionGuidelines: [data.SubmissionGuidelines]
-    });
+
     this.loader.hideLoader();
   }
   subscribeOfficeList(response: any) {
