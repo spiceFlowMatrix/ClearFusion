@@ -43,7 +43,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                     ExpectationMeal = request.ExpectationMeal,
                     ProfessionalCriteriaMarks = request.ProfessionalCriteriaMark,
                     MarksObtained = request.MarksObtain,
-                    // TotalMarksObtained =request.TotalMarksObtain,
+                    TotalMarksObtain = (int) request.TotalMarksObtain,
                     CreatedById = request.CreatedById,
                     CreatedDate = request.CreatedDate,
                     IsDeleted = false
@@ -84,10 +84,10 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                 foreach (var item in request.LanguageList) {
                     InterviewLanguages details = new InterviewLanguages () {
                         LanguageName = item.LanguageName,
-                        Reading = 1,
-                        Writing = 1,
-                        Listening = 1,
-                        Speaking = 1,
+                        Reading = item.LanguageReading == "Poor" ? 1 : item.LanguageReading == "Good" ? 2 : item.LanguageReading == "VeryGood" ? 3 : 4,
+                        Writing = item.LanguageWriting == "Poor" ? 1 : item.LanguageWriting == "Good" ? 2 : item.LanguageWriting == "VeryGood" ? 3 : 4,
+                        Listening = item.LanguageListining== "Poor" ? 1 : item.LanguageListining == "Good" ? 2 : item.LanguageListining == "VeryGood" ? 3 : 4,
+                        Speaking = item.LanguageSpeaking== "Poor" ? 1 : item.LanguageSpeaking == "Good" ? 2 : item.LanguageSpeaking == "VeryGood" ? 3 : 4,
                         CreatedById = request.CreatedById,
                         CreatedDate = request.CreatedDate,
                         IsDeleted = false

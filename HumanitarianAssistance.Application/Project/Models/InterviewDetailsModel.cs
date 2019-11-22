@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using HumanitarianAssistance.Application.Infrastructure;
-using HumanitarianAssistance.Application.Project.Models;
-using MediatR;
 
-namespace HumanitarianAssistance.Application.Project.Commands.Create 
+namespace HumanitarianAssistance.Application.Project.Models
 {
-    public class AddInterviewDetailsCommand : BaseModel, IRequest<ApiResponse> 
+    public class InterviewDetailsModel
     {
         public List<InterviewQuestionDetailsModel> RatingBasedCriteriaList { get; set; }
         public List<InterviewQuestionDetailsModel> TechnicalQuestionList { get; set; }

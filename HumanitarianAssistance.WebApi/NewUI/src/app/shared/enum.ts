@@ -616,8 +616,8 @@ export enum TransportItemCategory {
 }
 
 export enum RatingAction {
-  '1-Poor' = 1,
-  '2-Good' = 2,
-  '3-Very Good' = 3,
-  '4-Excellent' = 4
+  Poor = 1,
+  Good = 2,
+  VeryGood = 3,
+  Excellent = 4
 }

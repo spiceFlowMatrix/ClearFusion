@@ -61,6 +61,7 @@ export class InterviewDetailComponent implements OnInit {
   noticePeriodList$: Observable<IDropDownModel[]>;
   statusList$: Observable<IDropDownModel[]>;
   languagesList$: Observable<ILanguageDetailModel[]>;
+  tempLanguagesList: ILanguageDetailModel[] = [];
   traningList$: Observable<ITraningDetailModel[]>;
   interviewerList$: Observable<IInterviewerDetailModel[]>;
   ratingBasedCriteriaQuestionList: any[] = [];
@@ -97,6 +98,8 @@ export class InterviewDetailComponent implements OnInit {
       }
     ];
     this.interviewDetailForm = this.fb.group({
+      CandidateId: [null],
+      HiringRequestId: [null],
       RatingBasedCriteriaList: [[], [Validators.required]],
       TechnicalQuestionList: [],
       LanguageList: [[], [Validators.required]],
@@ -363,14 +366,14 @@ export class InterviewDetailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
-        result.TraningStartDate = this.datePipe.transform(
-          result.TraningStartDate,
-          'dd-MM-yyyy'
-        );
-        result.TraningEndDate = this.datePipe.transform(
-          result.TraningEndDate,
-          'dd-MM-yyyy'
-        );
+        // result.TraningStartDate = this.datePipe.transform(
+        //   result.TraningStartDate,
+        //   'dd-MM-yyyy'
+        // );
+        // result.TraningEndDate = this.datePipe.transform(
+        //   result.TraningEndDate,
+        //   'dd-MM-yyyy'
+        // );
         if (this.traningList$ === undefined) {
           this.traningList$ = of([
             {
@@ -451,8 +454,7 @@ export class InterviewDetailComponent implements OnInit {
         (sum, item) => sum + item.Score,
         0
       ) / this.ratingBasedCriteriaAnswerList.length;
-      this.totalMarksObtain =
-      this.marksObtain + this.professionalCriteriaMarks;
+    this.totalMarksObtain = this.marksObtain + this.professionalCriteriaMarks;
     this.interviewDetailForm.controls['ProfessionalCriteriaMark'].setValue(
       this.professionalCriteriaMarks
     );
@@ -476,8 +478,7 @@ export class InterviewDetailComponent implements OnInit {
       (sum, item) => sum + item.Score,
       0
     );
-    this.totalMarksObtain =
-      this.marksObtain + this.professionalCriteriaMarks;
+    this.totalMarksObtain = this.marksObtain + this.professionalCriteriaMarks;
     this.interviewDetailForm.controls['MarksObtain'].setValue(this.marksObtain);
     this.interviewDetailForm.controls['TotalMarksObtain'].setValue(
       this.totalMarksObtain
@@ -496,6 +497,10 @@ export class InterviewDetailComponent implements OnInit {
 
   //#region "AddInterviewDetails"
   AddInterviewDetails(data: InterviewDetailModel) {
+    this.interviewDetailForm.controls['CandidateId'].setValue(this.candidateId);
+    this.interviewDetailForm.controls['HiringRequestId'].setValue(
+      this.hiringRequestId
+    );
     this.hiringRequestService.AddInterviewDetails(data).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {

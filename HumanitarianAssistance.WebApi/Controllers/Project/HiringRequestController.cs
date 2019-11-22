@@ -219,6 +219,13 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             command.CreatedById = userId;
             command.CreatedDate = DateTime.UtcNow;
             return await _mediator.Send(command);
-        }               
+        }
+
+
+        [HttpPost]
+        public async Task<ApiResponse> GetInterviewDetailsByInterviewId([FromBody]int InterviewId)
+        {
+            return await _mediator.Send(new GetInterviewDetailsByInterviewIdQuery{ InterviewId=InterviewId});
+        }                 
     }  
 }
