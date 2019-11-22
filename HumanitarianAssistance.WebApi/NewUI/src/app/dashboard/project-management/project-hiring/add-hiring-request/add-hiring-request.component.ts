@@ -20,6 +20,7 @@ import {
   OfficeDetailModel,
   IHiringRequestModel
 } from '../models/hiring-requests-models';
+import { HrService } from 'src/app/hr/services/hr.service';
 
 @Component({
   selector: 'app-add-hiring-request',
@@ -38,8 +39,13 @@ export class AddHiringRequestComponent implements OnInit {
   genderList$: Observable<IDropDownModel[]>;
   jobShiftList$: Observable<IDropDownModel[]>;
   jobList$: Observable<IDropDownModel[]>;
+  jobGradeList$: Observable<IDropDownModel[]>;
   countryList$: Observable<IDropDownModel[]>;
   provinceList$: Observable<IDropDownModel[]>;
+  designationList$: Observable<IDropDownModel[]>;
+  budgetLineList$: Observable<IDropDownModel[]>;
+  departmentList$: Observable<IDropDownModel[]>;
+  currencyList$: Observable<IDropDownModel[]>;
   onAddHiringRequestListRefresh = new EventEmitter();
   onUpdateHiringRequestListRefresh = new EventEmitter();
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
@@ -52,32 +58,28 @@ export class AddHiringRequestComponent implements OnInit {
     private hiringRequestService: HiringRequestsService,
     private toastr: ToastrService,
     private fb: FormBuilder,
-    private loader: CommonLoaderService
+    private loader: CommonLoaderService,
   ) {
     this.addHiringRequestForm = this.fb.group({
       ProjectId: [null],
       HiringRequestId: [null],
-      JobCategory: [null, [Validators.required]],
-      MinEducationLevel: [null, [Validators.required]],
-      TotalVacancy: [null, [Validators.required,  Validators.min(1),
-        (control: AbstractControl) => Validators.max(this.AvailableVacancies)(control)]],
+      TotalVacancy: [null, [Validators.required, Validators.min(1),
+      (control: AbstractControl) => Validators.max(this.AvailableVacancies)(control)]],
       Position: [null, [Validators.required]],
-      Organization: [null, [Validators.required]],
       Office: [null, [Validators.required]],
+      BudgetLine: [null, [Validators.required]],
       ContractType: [null, [Validators.required]],
       ContractDuration: [null, [Validators.required]],
-      Gender: [null, [Validators.required]],
-      Nationality: [null, [Validators.required]],
-      SalaryRange: [null, [Validators.required]],
+      JobGrade: [null, [Validators.required]],
       AnouncingDate: [null, [Validators.required]],
       ClosingDate: [null, [Validators.required]],
-      Country: [null, [Validators.required]],
-      Province: [null, [Validators.required]],
       JobType: [null, [Validators.required]],
+      PayCurrency: [null, [Validators.required]],
+      PayHourlyRate: [null, [Validators.required]],
       JobShift: [null, [Validators.required]],
-      JobStatus: [null, [Validators.required]],
       Experience: [null, [Validators.required]],
-      Background: [null, [Validators.required]],
+      EducationDegree: [null, [Validators.required]],
+      Profession: [null, [Validators.required]],
       SpecificDutiesAndResponsibilities: [null, [Validators.required]],
       KnowledgeAndSkillsRequired: [null, [Validators.required]],
       SubmissionGuidelines: [null, [Validators.required]]
@@ -102,7 +104,7 @@ export class AddHiringRequestComponent implements OnInit {
       this.hiringRequestId
     );
     if (this.data.hiringRequestId !== 0) {
-      this.getAllHiringRequestDetail();
+      // this.getAllHiringRequestDetail();
     }
     forkJoin([this.getAllOfficeList(), this.getAllCountryList()])
       .pipe(takeUntil(this.destroyed$))
@@ -110,6 +112,11 @@ export class AddHiringRequestComponent implements OnInit {
         this.subscribeOfficeList(result[0]);
         this.subscribeCountryList(result[1]);
       });
+
+    this.getDesignationList();
+    this.getBudgetLineList();
+    this.getJobGradeList();
+    this.getCurrencyList();
   }
 
   getAllOfficeList() {
@@ -360,6 +367,7 @@ export class AddHiringRequestComponent implements OnInit {
     this.jobList$ = null;
     this.OfficeId = e;
     this.getAllProfessionList(e);
+    this.getDepartmentList(e);
   }
 
   onChangePosition(e) {
@@ -394,6 +402,86 @@ export class AddHiringRequestComponent implements OnInit {
   }
   UpdateHiringRequestListRefresh() {
     this.onUpdateHiringRequestListRefresh.emit();
+  }
+  //#endregion
+
+  //#region "getDesignationList"
+  getDesignationList() {
+    this.hiringRequestService.getDesignationList().subscribe(x => {
+      this.designationList$ = of(x.map(element => {
+        return {
+          value: element.DesignationId,
+          name: element.Designation,
+        };
+      }));
+    });
+  }
+  //#endregion
+
+  //#region "getBudgetLineList"
+  getBudgetLineList() {
+    this.hiringRequestService.GetBudgetLineList(this.projectId).subscribe(x => {
+      this.budgetLineList$ = of(x.data.map(element => {
+        return {
+          value: element.BudgetLineId,
+          name: element.BudgetCodeName,
+        };
+      }));
+    });
+  }
+  //#endregion
+
+  //#region "getJobGradeList"
+  getJobGradeList() {
+    this.hiringRequestService.GetJobGradeList().subscribe(x => {
+      this.jobGradeList$ = of(x.data.map(element => {
+        return {
+          value: element.GradeId,
+          name: element.GradeName,
+        };
+      }));
+    });
+  }
+  //#endregion
+
+  //#region "getJobGradeList"
+  getDepartmentList(officeId) {
+    this.hiringRequestService.getDepartmentList(officeId).subscribe(x => {
+      debugger;
+      this.departmentList$ = of(x.data.Departments.map(element => {
+        return {
+          value: element.DepartmentId,
+          name: element.DepartmentName,
+        };
+      }));
+    });
+  }
+  //#endregion
+
+   //#region "getCurrencyList"
+  getCurrencyList() {
+    this.hiringRequestService.GetCurrencyList().subscribe(x => {
+      debugger;
+      this.currencyList$ = of(x.data.map(element => {
+        return {
+          value: element.CurrencyId,
+          name: element.CurrencyName,
+        };
+      }));
+    });
+  }
+  //#endregion
+
+  //#region "getEducationDegreeList"
+  getEducationDegreeList() {
+    this.hiringRequestService.getDesignationList().subscribe(x => {
+      this.designationList$ = of(x.map(element => {
+        return {
+          value: element.DesignationId,
+          name: element.Designation,
+        };
+      }));
+    });
   }
   //#endregion
 }

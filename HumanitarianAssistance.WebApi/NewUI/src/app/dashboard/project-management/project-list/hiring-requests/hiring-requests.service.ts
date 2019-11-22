@@ -801,7 +801,7 @@ export class HiringRequestsService {
 GetRatingBasedCriteriaQuestion(OfficeId: number): any {
   return this.globalService
     .getDataById(
-      this.appurl.getApiUrl() + GLOBAL.API_Code_GetRatingBasedCriteriaQuestions +
+      this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllDesignationList +
       '?OfficeId=' +
       OfficeId
     )
@@ -814,6 +814,24 @@ GetRatingBasedCriteriaQuestion(OfficeId: number): any {
         };
         return responseData;
       })
+    );
+}
+//#endregion
+
+//#region "getDesignationList"
+getDesignationList(): any {
+  return this.globalService
+    .getDataById(
+      this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllDesignationList
+    );
+}
+//#endregion
+
+//#region "getDepartmentList"
+getDepartmentList(officeId): any {
+  return this.globalService
+    .getDataById(
+      this.appurl.getApiUrl() + GLOBAL.API_Code_GetDepartmentsByOfficeId + '?officeId=' + officeId
     );
 }
 //#endregion

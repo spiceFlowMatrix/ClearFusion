@@ -967,5 +967,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
             }
         }
 
+        [HttpGet]
+        public async Task<object> GetAllDesignationList()
+        {
+            return await _mediator.Send(new GetAllDesignationListQuery{ });
+        }
+
     }
 }

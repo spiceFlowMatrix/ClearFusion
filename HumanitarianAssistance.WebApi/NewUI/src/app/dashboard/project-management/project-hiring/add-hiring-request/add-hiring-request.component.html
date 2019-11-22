@@ -35,13 +35,19 @@
             <div class="col-lg-6 col-sm-6">
               <lib-hum-dropdown formControlName="Position" [validation]="
                     addHiringRequestForm.controls['Position'].hasError('required')
-                  " [options]="professionList$" [placeHolder]="'Position'" (change)="onChangePosition($event)">
+                  " [options]="designationList$" [placeHolder]="'Position'">
               </lib-hum-dropdown>
             </div>
             <div class="col-lg-6 col-sm-6">
+                <lib-hum-dropdown formControlName="BudgetLine" [validation]="
+                    addHiringRequestForm.controls['BudgetLine'].hasError('required')
+                  " [options]="budgetLineList$" [placeHolder]="'Budget Line'">
+                </lib-hum-dropdown>
+              </div>
+            <div class="col-lg-6 col-sm-6">
               <mat-form-field class="example-full-width">
                 <input matInput type="number" min="1" max="AvailableVacancies" formControlName="TotalVacancy"
-                  placeholder="Vacancies (Jobs Availability {{AvailableVacancies}})" />
+                  placeholder="Total Vacancy" />
                 <mat-error *ngIf="addHiringRequestForm.controls['TotalVacancy'].hasError(max)">
                 </mat-error>
               </mat-form-field>
@@ -69,9 +75,9 @@
           <h4> Contract Details </h4>
           <div class="row">
             <div class="col-lg-6 col-sm-6">
-              <mat-form-field class="example-full-width">
-                <input matInput formControlName="ContractType" placeholder="Contract Type" />
-              </mat-form-field>
+          <mat-form-field class="example-full-width">
+              <input matInput formControlName="ContractType" placeholder="Contract Type"/>
+            </mat-form-field>
             </div>
             <div class="col-lg-6 col-sm-6">
               <mat-form-field class="example-full-width">
@@ -80,15 +86,34 @@
               </mat-form-field>
             </div>
             <div class="col-lg-6 col-sm-6">
-              <mat-form-field class="example-full-width">
-                <input matInput formControlName="JobType" placeholder="Job Type" />
-              </mat-form-field>
+                <lib-hum-dropdown formControlName="JobGrade" [validation]="
+                  addHiringRequestForm.controls['JobGrade'].hasError('required')
+                " [options]="jobGradeList$" [placeHolder]="'Job Grade'">
+            </lib-hum-dropdown>
+              </div>
+              <div class="col-lg-6 col-sm-6">
+                  <lib-hum-dropdown formControlName="JobShift" [validation]="
+                        addHiringRequestForm.controls['JobShift'].hasError('required')
+                      " [options]="jobShiftList$" [placeHolder]="'Shift'"></lib-hum-dropdown>
+                </div>
+            <div class="col-lg-6 col-sm-6">
+              <lib-hum-dropdown formControlName="JobType" [validation]="
+                addHiringRequestForm.controls['JobType'].hasError('required')
+              " [options]="departmentList$" [placeHolder]="'Job Type'">
+          </lib-hum-dropdown>
             </div>
             <div class="col-lg-6 col-sm-6">
-              <lib-hum-dropdown formControlName="JobShift" [validation]="
-                    addHiringRequestForm.controls['JobShift'].hasError('required')
-                  " [options]="jobShiftList$" [placeHolder]="'Shift'"></lib-hum-dropdown>
-            </div>
+                <lib-hum-dropdown formControlName="PayCurrency" [validation]="
+                  addHiringRequestForm.controls['PayCurrency'].hasError('required')
+                " [options]="currencyList$" [placeHolder]="'Pay Currency'">
+            </lib-hum-dropdown>
+              </div>
+              <div class="col-lg-6 col-sm-6">
+                  <mat-form-field class="example-full-width">
+                    <input matInput formControlName="PayHourlyRate" placeholder="Pay Hourly Rate"
+                      type="number" />
+                  </mat-form-field>
+                </div>
           </div>
           <br>
           <mat-divider></mat-divider>
@@ -103,6 +128,18 @@
               </mat-form-field>
             </div>
             <div class="col-lg-6 col-sm-6">
+                <lib-hum-dropdown formControlName="EducationDegree"
+                [validation]="addHiringRequestForm.controls['EducationDegree'].hasError('required')
+                " [options]="educationDegreeList$" [placeHolder]="'Education Degree'">
+            </lib-hum-dropdown>
+              </div>
+              <div class="col-lg-6 col-sm-6">
+                  <lib-hum-dropdown formControlName="Profession" [validation]="
+                    addHiringRequestForm.controls['Profession'].hasError('required')
+                  " [options]="professionList$" [placeHolder]="'Profession'">
+              </lib-hum-dropdown>
+                </div>
+            <div class="col-lg-6 col-sm-6">
               <mat-form-field class="example-full-width">
                 <input matInput formControlName="Experience" placeholder="Experience" />
               </mat-form-field>
@@ -111,7 +148,7 @@
 
 
           <!--others-->
-          <h4> Others </h4>
+          <!-- <h4> Others </h4>
           <div class="row">
             <div class="col-lg-6 col-sm-6">
               <lib-hum-dropdown formControlName="JobCategory" [validation]="
@@ -176,7 +213,7 @@
               </mat-form-field>
             </div>
 
-          </div>
+          </div> -->
 
         </div>
       </div>

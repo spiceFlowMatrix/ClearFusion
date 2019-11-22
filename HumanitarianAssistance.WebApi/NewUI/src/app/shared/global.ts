@@ -189,6 +189,7 @@ export class GLOBAL {
   public static API_Project_AddEditTargetBeneficiary = 'Project/AddEditTargetBeneficiary';
 
   public static API_Code_GetAllAccountByAccountHeadTypeId = 'Code/GetAllAccountByAccountHeadTypeId';
+  public static API_Code_GetAllDesignationList = 'Code/GetAllDesignationList';
   public static API_Code_GetAllJournalDetail = 'Code/GetAllJournalDetail';
   public static API_AccountReports_GetJournalVoucherDetails = 'AccountReports/GetJournalVoucherDetails';
   public static API_Accounting_GetAccountDetails = 'Account/GetAllAccountCode';
@@ -463,6 +464,7 @@ export class GLOBAL {
   public static API_HREmployee_EditEmployeeProfessionalDetail = 'EmployeeDetail/EditEmployeeProfessionalDetail';
   public static API_HiringRequest_DeleteCandidatDetail = 'HiringRequest/DeleteCandidatDetail';
   public static API_Chat_AddMessage = 'Chat/AddMessage';
+  public static API_Code_GetDepartmentsByOfficeId = 'Code/GetDepartmentsByOfficeId';
 
   // pdf
   public static API_Pdf_GetAllChartOfAccountHierarchyPdf = 'Pdf/GetAllChartOfAccountHierarchyPdf';
