@@ -4,7 +4,6 @@ SELECT
     MIN(pa."ActualStartDate")
 FROM
     "ProjectActivityDetail" AS pa
-    INNER JOIN "ProjectBudgetLineDetail" AS pbl ON pa."BudgetLineId" = pbl."BudgetLineId"
 WHERE
     pa."ParentId" = parentid;
 
