@@ -69,7 +69,7 @@
           </h5>
 
           <hum-table [headers]="newCandidatesHeaders$" [isDefaultAction]="false" [items]="newCandidatesList$"  [subHeaders]="subListHeaders$"
-          [subTitle]="'Other Details'" [actions]="actions" (actionClick)="actionEvents($event)"
+          [subTitle]="'Other Details'" [actions]="actions" (actionClick)="newCandActionEvents($event)"
           ></hum-table>
         </mat-tab>
         <mat-tab label="Existing Candidates">
@@ -97,7 +97,7 @@
         </mat-form-field>
             </h5>
             <hum-table [headers]="existingCandidatesHeaders$" [isDefaultAction]="false" [items]="existingCandidatesList$"
-            [actions]="actions" (actionClick)="actionEvents($event)"
+            [actions]="actions" (actionClick)="empActionEvents($event)"
             ></hum-table>
           </mat-tab>
       </mat-tab-group>
