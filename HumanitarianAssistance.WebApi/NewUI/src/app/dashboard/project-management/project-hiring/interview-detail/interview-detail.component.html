@@ -253,7 +253,7 @@
               ><mat-slide-toggle
                 class="pull-right"
                 name="QuestionOne"
-                (change)="onQuestionsChange($event)"
+                formControlName="InterviewQuestionOne"
               ></mat-slide-toggle>
             </div>
             <div class="row shift-left">
@@ -261,7 +261,7 @@
               ><mat-slide-toggle
                 class="pull-right"
                 name="QuestionTwo"
-                (change)="onQuestionsChange($event)"
+                formControlName="InterviewQuestionTwo"
               ></mat-slide-toggle>
             </div>
             <div class="row shift-left">
@@ -271,7 +271,7 @@
               ><mat-slide-toggle
                 class="pull-right"
                 name="QuestionThree"
-                (change)="onQuestionsChange($event)"
+                formControlName="InterviewQuestionThree"
               ></mat-slide-toggle>
             </div>
             <div class="row shift-left">
@@ -368,7 +368,7 @@
                   ><mat-checkbox
                     class="pull-right"
                     name="CurrentTransport"
-                    (change)="onCheckBoxChange($event)"
+                    formControlName="CurrentTransport"
                   ></mat-checkbox>
                 </div>
                 <div class="col-lg-4">
@@ -376,7 +376,7 @@
                   ><mat-checkbox
                     class="pull-right"
                     name="CurrentMeal"
-                    (change)="onCheckBoxChange($event)"
+                    formControlName="CurrentMeal"
                   ></mat-checkbox>
                 </div>
               </div>
@@ -409,7 +409,7 @@
                   ><mat-checkbox
                     class="pull-right"
                     name="ExpectationTransport"
-                    (change)="onCheckBoxChange($event)"
+                    formControlName="ExpectationTransport"
                   ></mat-checkbox>
                 </div>
                 <div class="col-lg-4">
@@ -417,7 +417,7 @@
                   ><mat-checkbox
                     class="pull-right"
                     name="ExpectationMeal"
-                    (change)="onCheckBoxChange($event)"
+                    formControlName="ExpectationMeal"
                   ></mat-checkbox>
                 </div>
               </div>

@@ -206,10 +206,19 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(query);
         }
 
-       [HttpPost]
-         public async Task<ApiResponse> GetTechnicalQuestionsByDesignationId([FromBody]int DesignationId)
+        [HttpPost]
+        public async Task<ApiResponse> GetTechnicalQuestionsByDesignationId([FromBody]int DesignationId)
         {
             return await _mediator.Send(new GetTechnicalQuestionsByDesignationIdQuery{ DesignationId=DesignationId});
-        }                 
+        }   
+
+        [HttpPost]
+        public async Task<ApiResponse> AddInterviewDetails([FromBody]AddInterviewDetailsCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+        }               
     }  
 }

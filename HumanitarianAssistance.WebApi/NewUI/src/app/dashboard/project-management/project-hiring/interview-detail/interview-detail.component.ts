@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, Inject } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { ActivatedRoute } from '@angular/router';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
@@ -22,6 +22,7 @@ import { AddNewLanguageComponent } from './add-new-language/add-new-language.com
 import { AddNewTraningComponent } from './add-new-traning/add-new-traning.component';
 import { RatingAction } from 'src/app/shared/enum';
 import { AddNewInterviewerComponent } from './add-new-interviewer/add-new-interviewer.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-interview-detail',
@@ -51,6 +52,9 @@ export class InterviewDetailComponent implements OnInit {
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
+  candidateId: number;
+  hiringRequestId: number;
+  projectId: number;
   interviewDetailForm: FormGroup;
   hiringRequestDetail: IHiringRequestDetailModel;
   candidateDetails: ICandidateDetail;
@@ -67,6 +71,7 @@ export class InterviewDetailComponent implements OnInit {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     public dialog: MatDialog,
+    private datePipe: DatePipe,
     private fb: FormBuilder,
     private commonLoader: CommonLoaderService,
     private routeActive: ActivatedRoute,
@@ -92,30 +97,30 @@ export class InterviewDetailComponent implements OnInit {
       }
     ];
     this.interviewDetailForm = this.fb.group({
-      RatingBasedCriteriaList: this.fb.array([]),
-      TechnicalQuestionList: this.fb.array([]),
-      LanguageList: this.fb.array([]),
-      TraningList: this.fb.array([]),
-      InterviewerList: this.fb.array([]),
-      Description: '',
-      NoticePeriod: '',
-      AvailableDate: '',
-      WrittenTestMarks: '',
-      CurrentBase: '',
-      CurrentOther: '',
-      ExpectationBase: '',
-      ExpectationOther: '',
-      Status: '',
-      InterviewQuestionOne: false,
-      InterviewQuestionTwo: false,
-      InterviewQuestionThree: false,
-      CurrentTransport: false,
-      CurrentMeal: false,
-      ExpectationTransport: false,
-      ExpectationMeal: false,
-      ProfessionalCriteriaMark: '',
-      MarksObtain: '',
-      TotalMarksObtain: ''
+      RatingBasedCriteriaList: [[], [Validators.required]],
+      TechnicalQuestionList: [],
+      LanguageList: [[], [Validators.required]],
+      TraningList: [[], [Validators.required]],
+      InterviewerList: [[], [Validators.required]],
+      Description: [null, [Validators.required]],
+      NoticePeriod: [null, [Validators.required]],
+      AvailableDate: [null, [Validators.required]],
+      WrittenTestMarks: [null, [Validators.required]],
+      CurrentBase: [null, [Validators.required]],
+      CurrentOther: [null, [Validators.required]],
+      ExpectationBase: [null, [Validators.required]],
+      ExpectationOther: [null, [Validators.required]],
+      Status: [null, [Validators.required]],
+      InterviewQuestionOne: [false, [Validators.required]],
+      InterviewQuestionTwo: [false, [Validators.required]],
+      InterviewQuestionThree: [false, [Validators.required]],
+      CurrentTransport: [false, [Validators.required]],
+      CurrentMeal: [false, [Validators.required]],
+      ExpectationTransport: [false, [Validators.required]],
+      ExpectationMeal: [false, [Validators.required]],
+      ProfessionalCriteriaMark: [null, [Validators.required]],
+      MarksObtain: [null, [Validators.required]],
+      TotalMarksObtain: [null, [Validators.required]]
     });
 
     this.noticePeriodList$ = of([
@@ -138,6 +143,13 @@ export class InterviewDetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.routeActive.queryParams.subscribe(params => {
+      this.candidateId = +params['candId'];
+      this.hiringRequestId = +params['hiringId'];
+    });
+    this.routeActive.parent.parent.parent.params.subscribe(params => {
+      this.projectId = +params['id'];
+    });
     this.candidateDetails = {
       FullName: '',
       DutyStation: '',
@@ -190,7 +202,6 @@ export class InterviewDetailComponent implements OnInit {
   // #region "getRatingBasedCriteriaQuestion"
   getRatingBasedCriteriaQuestion() {
     const OfficeId = 1;
-
     this.hiringRequestService
       .GetRatingBasedCriteriaQuestion(OfficeId)
       .subscribe(
@@ -229,7 +240,6 @@ export class InterviewDetailComponent implements OnInit {
                 value: element.Question
               });
             });
-            console.log(this.technicalQuestionList);
           }
           this.commonLoader.hideLoader();
         },
@@ -242,10 +252,9 @@ export class InterviewDetailComponent implements OnInit {
 
   // #region "getCandidateDetails"
   getCandidateDetails() {
-    const CandidateId = 1;
     // this.candidateDetails = null;
     this.hiringRequestService
-      .GetCandidateDetailsByCandidateId(CandidateId)
+      .GetCandidateDetailsByCandidateId(this.candidateId)
       .subscribe(
         (response: IResponseData) => {
           this.commonLoader.showLoader();
@@ -270,8 +279,8 @@ export class InterviewDetailComponent implements OnInit {
   // #region "getAllHiringRequestDetails"
   getAllHiringRequestDetails() {
     const model: any = {
-      HiringRequestId: 2,
-      ProjectId: 2
+      HiringRequestId: this.hiringRequestId,
+      ProjectId: this.projectId
     };
     // this.candidateDetails = null;
     this.hiringRequestService
@@ -341,6 +350,9 @@ export class InterviewDetailComponent implements OnInit {
           });
         }
         this.toastr.success('Language Added Successfully');
+        this.languagesList$.subscribe(res => {
+          this.interviewDetailForm.controls['LanguageList'].setValue(res);
+        });
       }
     });
   }
@@ -351,6 +363,14 @@ export class InterviewDetailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
+        result.TraningStartDate = this.datePipe.transform(
+          result.TraningStartDate,
+          'dd-MM-yyyy'
+        );
+        result.TraningEndDate = this.datePipe.transform(
+          result.TraningEndDate,
+          'dd-MM-yyyy'
+        );
         if (this.traningList$ === undefined) {
           this.traningList$ = of([
             {
@@ -368,6 +388,9 @@ export class InterviewDetailComponent implements OnInit {
           });
         }
         this.toastr.success('Traning Added Successfully');
+        this.traningList$.subscribe(res => {
+          this.interviewDetailForm.controls['TraningList'].setValue(res);
+        });
       }
     });
   }
@@ -402,41 +425,11 @@ export class InterviewDetailComponent implements OnInit {
             });
           }
         });
+        this.interviewerList$.subscribe(res => {
+          this.interviewDetailForm.controls['InterviewerList'].setValue(res);
+        });
       }
     });
-  }
-
-  onQuestionsChange(value) {
-    if (value.source.name === 'QuestionOne') {
-      this.interviewDetailForm.controls['InterviewQuestionOne'].setValue(
-        value.checked
-      );
-    } else if (value.source.name === 'QuestionTwo') {
-      this.interviewDetailForm.controls['InterviewQuestionTwo'].setValue(
-        value.checked
-      );
-    } else if (value.source.name === 'QuestionThree') {
-      this.interviewDetailForm.controls['InterviewQuestionThree'].setValue(
-        value.checked
-      );
-    }
-  }
-  onCheckBoxChange(value) {
-    if (value.source.name === 'CurrentTransport') {
-      this.interviewDetailForm.controls['CurrentTransport'].setValue(
-        value.checked
-      );
-    } else if (value.source.name === 'CurrentMeal') {
-      this.interviewDetailForm.controls['CurrentMeal'].setValue(value.checked);
-    } else if (value.source.name === 'ExpectationTransport') {
-      this.interviewDetailForm.controls['ExpectationTransport'].setValue(
-        value.checked
-      );
-    } else if (value.source.name === 'ExpectationMeal') {
-      this.interviewDetailForm.controls['ExpectationMeal'].setValue(
-        value.checked
-      );
-    }
   }
   onChangeRatingBasedCriteria(questionId: any, score: MatSelectChange) {
     if (
@@ -453,12 +446,18 @@ export class InterviewDetailComponent implements OnInit {
         x => x.QuestionId === questionId
       ).Score = score.value;
     }
-    this.professionalCriteriaMarks = this.ratingBasedCriteriaAnswerList.reduce(
-      (sum, item) => sum + item.Score,
-      0
-    );
-    this.interviewDetailForm.controls['ProfessionalCriteriaMarks'].setValue(
+    this.professionalCriteriaMarks =
+      this.ratingBasedCriteriaAnswerList.reduce(
+        (sum, item) => sum + item.Score,
+        0
+      ) / this.ratingBasedCriteriaAnswerList.length;
+      this.totalMarksObtain =
+      this.marksObtain + this.professionalCriteriaMarks;
+    this.interviewDetailForm.controls['ProfessionalCriteriaMark'].setValue(
       this.professionalCriteriaMarks
+    );
+    this.interviewDetailForm.controls['RatingBasedCriteriaList'].setValue(
+      this.ratingBasedCriteriaAnswerList
     );
   }
   onChangeTechnicalQuestion(questionId: any, score: MatSelectChange) {
@@ -477,16 +476,22 @@ export class InterviewDetailComponent implements OnInit {
       (sum, item) => sum + item.Score,
       0
     );
-    this.totalMarksObtain = 0;
     this.totalMarksObtain =
-      this.totalMarksObtain + this.professionalCriteriaMarks;
+      this.marksObtain + this.professionalCriteriaMarks;
     this.interviewDetailForm.controls['MarksObtain'].setValue(this.marksObtain);
     this.interviewDetailForm.controls['TotalMarksObtain'].setValue(
       this.totalMarksObtain
     );
+    this.interviewDetailForm.controls['TechnicalQuestionList'].setValue(
+      this.technicalAnswerList
+    );
   }
   onFormSubmit(data: any) {
-    this.AddInterviewDetails(data);
+    if (this.interviewDetailForm.valid) {
+      this.AddInterviewDetails(data);
+    } else {
+      this.toastr.warning('Please Insert Data For All Fileds and Lists');
+    }
   }
 
   //#region "AddInterviewDetails"
