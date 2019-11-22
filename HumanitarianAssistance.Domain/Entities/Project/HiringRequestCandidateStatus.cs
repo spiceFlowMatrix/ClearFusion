@@ -18,7 +18,10 @@ namespace HumanitarianAssistance.Domain.Entities.Project {
         public int? EmployeeID { get; set; }
         public EmployeeDetail EmployeeDetails { get; set; }
         public int CandidateStatus { get; set; }
-        public int InterviewId { get; set; }
+
+        [ForeignKey ("InterviewId")]
+        public int? InterviewId { get; set; }
+        public ProjectInterviewDetails ProjectInterviewDetails { get; set; }
 
         [ForeignKey ("ProjectId")]
         public long? ProjectId { get; set; }
