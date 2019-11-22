@@ -94,6 +94,9 @@ export class GLOBAL {
   public static API_HRConfiguration_AddDesignationDetail = 'HRConfiguration/AddDesignationDetail';
   public static API_HRConfiguration_EditDesignationDetail = 'HRConfiguration/EditDesignationDetail';
   public static API_HRConfiguration_GetAllDesignationDetail = 'HRConfiguration/GetAllDesignationDetail';
+  public static API_HRConfiguration_GetEducationDegreeList = 'HRConfiguration/GetEducationDegreeList';
+  public static API_HRConfiguration_AddEducationDegree = 'HRConfiguration/AddEducationDegree';
+  public static API_HRConfiguration_EditEducationDegree = 'HRConfiguration/EditEducationDegree';
   public static API_Policy_AddNewPolicy = 'Policy/AddEditPolicy';
   public static API_Policy_AddPolicyRepeatDays = 'Policy/AddPolicyRepeatDays';
   public static API_Policy_AddNewPolicyTimeSchedule = 'Policy/AddEditPolicyTimeSchedule';

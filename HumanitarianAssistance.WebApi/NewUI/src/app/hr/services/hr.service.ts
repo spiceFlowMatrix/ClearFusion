@@ -39,6 +39,33 @@ export class HrService {
       );
   }
   //#endregion
+
+  //#region "getEducationDegreeList"
+  getEducationDegreeList(pageModel: any): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_GetEducationDegreeList, pageModel
+      );
+  }
+  //#endregion
+
+  //#region "addDegree"
+  addDegree(model: any): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_AddEducationDegree, model
+      );
+  }
+  //#endregion
+
+  //#region "editDegree"
+  editDegree(model: any): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_EditEducationDegree, model
+      );
+  }
+  //#endregion
 }
 
 
