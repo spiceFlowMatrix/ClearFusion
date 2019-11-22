@@ -13,11 +13,16 @@ namespace HumanitarianAssistance.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1)]
         public int RatingBasedCriteriaId { get; set; }
-
-        public int InterviewDetailsId { get; set; }
+        public int? InterviewDetailsId { get; set; }
         public string CriteriaQuestion { get; set; }
         public int? Rating { get; set; }
         [ForeignKey("InterviewDetailsId")]
         public InterviewDetails InterviewDetails { get; set; }
+        
+        //new UI changes
+        public int? QuestionId { get; set; }
+        [ForeignKey("QuestionId")]
+        public RatingBasedCriteriaQuestions RatingBasedCriteriaQuestions { get; set; }
+        public int? Score { get; set; }
     }
 }
