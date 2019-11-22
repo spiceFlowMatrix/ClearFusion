@@ -272,6 +272,7 @@ export class GLOBAL {
   public static API_Project_GetProjectJobDetail = 'Project/GetProjectJobDetail';
   public static API_Code_GetAllProfession = 'Code/GetAllProfession';
   public static API_Code_GetAllEducationDegree = 'Code/GetAllEducationDegree';
+  public static API_Code_GetAllEducationDegreeList = 'Code/GetAllEducationDegreeList';
 
   //#region criteria evaluation form
 

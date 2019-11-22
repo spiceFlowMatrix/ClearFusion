@@ -46,6 +46,7 @@ export class AddHiringRequestComponent implements OnInit {
   budgetLineList$: Observable<IDropDownModel[]>;
   departmentList$: Observable<IDropDownModel[]>;
   currencyList$: Observable<IDropDownModel[]>;
+  educationDegreeList$: Observable<IDropDownModel[]>;
   onAddHiringRequestListRefresh = new EventEmitter();
   onUpdateHiringRequestListRefresh = new EventEmitter();
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
@@ -117,6 +118,8 @@ export class AddHiringRequestComponent implements OnInit {
     this.getBudgetLineList();
     this.getJobGradeList();
     this.getCurrencyList();
+    this.getEducationDegreeList();
+    this.getAllProfessionList();
   }
 
   getAllOfficeList() {
@@ -167,7 +170,7 @@ export class AddHiringRequestComponent implements OnInit {
               SubmissionGuidelines: response.data.SubmissionGuidelines
             };
             this.OfficeId = this.hiringRequestDetail.Office;
-            this.getAllProfessionList(this.hiringRequestDetail.Office);
+            //this.getAllProfessionList(this.hiringRequestDetail.Office);
             this.getAllJobList(this.hiringRequestDetail.Position);
             this.getAllProvinceList(this.hiringRequestDetail.Country);
             this.getRemainingVacancy(this.hiringRequestDetail.JobCategory);
@@ -235,31 +238,31 @@ export class AddHiringRequestComponent implements OnInit {
       })
     );
   }
-  getAllProfessionList(OfficeId: number) {
-    const model: OfficeDetailModel = {
-      ProjectId: this.projectId,
-      ProfessionId: OfficeId
-    };
-    this.hiringRequestService.GetProfessionListByOfficeId(model).subscribe(
-      (response: IResponseData) => {
-        this.commonLoader.showLoader();
-        if (response.statusCode === 200 && response.data !== null) {
-          this.professionList$ = of(
-            response.data.map(element => {
-              return {
-                value: element.ProfessionId,
-                name: element.ProfessionName
-              } as IDropDownModel;
-            })
-          );
-        }
-        this.commonLoader.hideLoader();
-      },
-      error => {
-        this.commonLoader.hideLoader();
-      }
-    );
-  }
+  // getAllProfessionList(OfficeId: number) {
+  //   const model: OfficeDetailModel = {
+  //     ProjectId: this.projectId,
+  //     ProfessionId: OfficeId
+  //   };
+  //   this.hiringRequestService.GetProfessionListByOfficeId(model).subscribe(
+  //     (response: IResponseData) => {
+  //       this.commonLoader.showLoader();
+  //       if (response.statusCode === 200 && response.data !== null) {
+  //         this.professionList$ = of(
+  //           response.data.map(element => {
+  //             return {
+  //               value: element.ProfessionId,
+  //               name: element.ProfessionName
+  //             } as IDropDownModel;
+  //           })
+  //         );
+  //       }
+  //       this.commonLoader.hideLoader();
+  //     },
+  //     error => {
+  //       this.commonLoader.hideLoader();
+  //     }
+  //   );
+  // }
   getAllJobList(PositionId: number) {
     const model: OfficeDetailModel = {
       ProjectId: this.projectId,
@@ -363,10 +366,10 @@ export class AddHiringRequestComponent implements OnInit {
   }
   //#endregion
   onChangeDutyStation(e) {
-    this.professionList$ = null;
+   // this.professionList$ = null;
     this.jobList$ = null;
     this.OfficeId = e;
-    this.getAllProfessionList(e);
+    // this.getAllProfessionList(e);
     this.getDepartmentList(e);
   }
 
@@ -447,7 +450,6 @@ export class AddHiringRequestComponent implements OnInit {
   //#region "getJobGradeList"
   getDepartmentList(officeId) {
     this.hiringRequestService.getDepartmentList(officeId).subscribe(x => {
-      debugger;
       this.departmentList$ = of(x.data.Departments.map(element => {
         return {
           value: element.DepartmentId,
@@ -461,7 +463,6 @@ export class AddHiringRequestComponent implements OnInit {
    //#region "getCurrencyList"
   getCurrencyList() {
     this.hiringRequestService.GetCurrencyList().subscribe(x => {
-      debugger;
       this.currencyList$ = of(x.data.map(element => {
         return {
           value: element.CurrencyId,
@@ -474,11 +475,24 @@ export class AddHiringRequestComponent implements OnInit {
 
   //#region "getEducationDegreeList"
   getEducationDegreeList() {
-    this.hiringRequestService.getDesignationList().subscribe(x => {
-      this.designationList$ = of(x.map(element => {
+    this.hiringRequestService.GetEducationDegreeList().subscribe(x => {
+      this.educationDegreeList$ = of(x.map(element => {
         return {
-          value: element.DesignationId,
-          name: element.Designation,
+          value: element.Id,
+          name: element.Name,
+        };
+      }));
+    });
+  }
+  //#endregion
+
+  //#region "getAllProfessionList"
+  getAllProfessionList() {
+    this.hiringRequestService.GetProfessionList().subscribe(x => {
+      this.professionList$ = of(x.data.map(element => {
+        return {
+          value: element.ProfessionId,
+          name: element.ProfessionName,
         };
       }));
     });

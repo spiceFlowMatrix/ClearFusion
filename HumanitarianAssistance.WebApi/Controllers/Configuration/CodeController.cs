@@ -973,5 +973,12 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
             return await _mediator.Send(new GetAllDesignationListQuery{ });
         }
 
+        [HttpGet]
+        public async Task<object> GetAllEducationDegreeList()
+        {
+            return await _mediator.Send(new GetAllEducationDegreeListQuery{ });
+        }
+
+
     }
 }
