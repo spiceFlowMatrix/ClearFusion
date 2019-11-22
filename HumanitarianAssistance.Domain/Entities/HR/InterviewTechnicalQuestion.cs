@@ -14,7 +14,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
 		public int InterviewTechnicalQuestionId { get; set; }
         [ForeignKey("InterviewDetailsId")]
 		public InterviewDetails InterviewDetails { get; set; }
-		public int InterviewDetailsId { get; set; }
+		public int? InterviewDetailsId { get; set; }
 		public string Question { get; set; }
 		//public TechnicalQuestion TechnicalQuestion { get; set; }
 		//public int Poor { get; set; }
@@ -23,5 +23,10 @@ namespace HumanitarianAssistance.Domain.Entities.HR
 		//public int Excellent { get; set; }
 		//public int Perfect { get; set; }
 		public string Answer { get; set; }
+ 		
+		[ForeignKey("QuestionId")]
+		public TechnicalQuestion TechnicalQuestion { get; set; }
+		public int? QuestionId { get; set; }
+        public int? Score { get; set; }
 	}
 }
