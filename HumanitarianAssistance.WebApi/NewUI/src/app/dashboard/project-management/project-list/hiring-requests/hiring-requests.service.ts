@@ -111,17 +111,7 @@ export class HiringRequestsService {
     //#region "GetEducationDegreeList"
     GetEducationDegreeList(): any {
       return this.globalService
-        .getList(this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllEducationDegree)
-        .pipe(
-          map(x => {
-            const responseData: IResponseData = {
-              data: x.data.EducationDegreeList,
-              statusCode: x.StatusCode,
-              message: x.Message
-            };
-            return responseData;
-          })
-        );
+        .getList(this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllEducationDegreeList);
     }
     //#endregion
   //#region "GetJobGradeList"
@@ -801,7 +791,7 @@ export class HiringRequestsService {
 GetRatingBasedCriteriaQuestion(OfficeId: number): any {
   return this.globalService
     .getDataById(
-      this.appurl.getApiUrl() + GLOBAL.API_Code_GetRatingBasedCriteriaQuestions +
+      this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllDesignationList +
       '?OfficeId=' +
       OfficeId
     )
@@ -814,6 +804,24 @@ GetRatingBasedCriteriaQuestion(OfficeId: number): any {
         };
         return responseData;
       })
+    );
+}
+//#endregion
+
+//#region "getDesignationList"
+getDesignationList(): any {
+  return this.globalService
+    .getDataById(
+      this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllDesignationList
+    );
+}
+//#endregion
+
+//#region "getDepartmentList"
+getDepartmentList(officeId): any {
+  return this.globalService
+    .getDataById(
+      this.appurl.getApiUrl() + GLOBAL.API_Code_GetDepartmentsByOfficeId + '?officeId=' + officeId
     );
 }
 //#endregion

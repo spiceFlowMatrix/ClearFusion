@@ -39,7 +39,6 @@ export class HiringRequestsComponent implements OnInit {
   displayHeaderColumns: string[] = [
     'select',
     'HiringRequestId',
-    'JobCode',
     'JobGrade',
     'Position',
     'TotalVacancies',
