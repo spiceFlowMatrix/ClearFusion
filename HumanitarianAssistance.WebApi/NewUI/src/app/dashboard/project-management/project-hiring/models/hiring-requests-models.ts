@@ -203,6 +203,8 @@ export interface InterviewQuestionDetailModel {
 }
 
 export interface InterviewDetailModel {
+  CandidateId?: number;
+  HiringRequestId?: number;
   RatingBasedCriteriaList?: InterviewQuestionDetailModel[];
   TechnicalQuestionList?: InterviewQuestionDetailModel[];
   LanguageList?: ILanguageDetailModel[];

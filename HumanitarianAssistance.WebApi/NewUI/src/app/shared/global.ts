@@ -460,6 +460,9 @@ export class GLOBAL {
      'HiringRequest/GetTechnicalQuestionsByDesignationId';
      public static API_HiringRequest_AddInterviewDetails =
      'HiringRequest/AddInterviewDetails';
+     public static API_HiringRequest_GetInterviewDetailsByInterviewId =
+     'HiringRequest/GetInterviewDetailsByInterviewId';
+
 
 
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';

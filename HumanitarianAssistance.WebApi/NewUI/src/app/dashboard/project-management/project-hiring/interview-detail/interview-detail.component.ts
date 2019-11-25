@@ -69,6 +69,7 @@ export class InterviewDetailComponent implements OnInit {
   ratingBasedCriteriaAnswerList: InterviewQuestionDetailModel[] = [];
   technicalAnswerList: InterviewQuestionDetailModel[] = [];
   ratingBasedDropDown: any[];
+  interviewDetails: IInterviewerDetailModel;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     public dialog: MatDialog,
@@ -497,10 +498,8 @@ export class InterviewDetailComponent implements OnInit {
 
   //#region "AddInterviewDetails"
   AddInterviewDetails(data: InterviewDetailModel) {
-    this.interviewDetailForm.controls['CandidateId'].setValue(this.candidateId);
-    this.interviewDetailForm.controls['HiringRequestId'].setValue(
-      this.hiringRequestId
-    );
+    data.CandidateId = this.candidateId;
+    data.HiringRequestId = this.hiringRequestId;
     this.hiringRequestService.AddInterviewDetails(data).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
@@ -515,4 +514,29 @@ export class InterviewDetailComponent implements OnInit {
     );
   }
   //#endregion
+
+
+ // #region "getTechnicalQuestionsByDesignationId"
+ getInterviewDetailsByInterviewId() {
+  const InterviewId = 1;
+
+  this.hiringRequestService
+    .GetInterviewDetailsByInterviewId(InterviewId)
+    .subscribe(
+      (response: IResponseData) => {
+        this.commonLoader.showLoader();
+        if (response.statusCode === 200 && response.data !== null) {}
+        this.commonLoader.hideLoader();
+      },
+      error => {
+        this.commonLoader.hideLoader();
+      }
+    );
+}
+//#endregion
+
+
+
+
+
 }
