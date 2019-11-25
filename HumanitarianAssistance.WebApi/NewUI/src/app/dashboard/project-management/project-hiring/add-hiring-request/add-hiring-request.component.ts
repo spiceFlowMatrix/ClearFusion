@@ -21,6 +21,7 @@ import {
   IHiringRequestModel
 } from '../models/hiring-requests-models';
 import { HrService } from 'src/app/hr/services/hr.service';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
 
 @Component({
   selector: 'app-add-hiring-request',
@@ -30,6 +31,7 @@ import { HrService } from 'src/app/hr/services/hr.service';
 export class AddHiringRequestComponent implements OnInit {
   projectId: number;
   OfficeId: number;
+  isFormSubmitted = false;
   hiringRequestId: number;
   AvailableVacancies: number;
   hiringRequestDetail: IHiringRequestModel;
@@ -55,7 +57,6 @@ export class AddHiringRequestComponent implements OnInit {
     public dialogRef: MatDialogRef<AddHiringRequestComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private commonLoader: CommonLoaderService,
-    private routeActive: ActivatedRoute,
     private hiringRequestService: HiringRequestsService,
     private toastr: ToastrService,
     private fb: FormBuilder,
@@ -83,7 +84,7 @@ export class AddHiringRequestComponent implements OnInit {
       Profession: [null, [Validators.required]],
       SpecificDutiesAndResponsibilities: [null, [Validators.required]],
       KnowledgeAndSkillsRequired: [null, [Validators.required]],
-      SubmissionGuidelines: [null, [Validators.required]]
+      SubmissionGuidelines: [null, [Validators.required]],
     });
     this.genderList$ = of([
       { name: 'Male', value: 1 },
@@ -291,18 +292,24 @@ export class AddHiringRequestComponent implements OnInit {
 
   //#region "AddHiringRequest"
   AddHiringRequest(data: IHiringRequestModel) {
+    data.AnouncingDate = StaticUtilities.getLocalDate(data.AnouncingDate);
+    data.ClosingDate = StaticUtilities.getLocalDate(data.ClosingDate);
+    this.isFormSubmitted = true;
     this.hiringRequestService.AddHiringRequestDetail(data).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
           this.toastr.success('New request is created successfully');
           this.AddHiringRequestListRefresh();
+          this.isFormSubmitted = false;
         } else {
           this.toastr.error(response.message);
+          this.isFormSubmitted = false;
         }
         this.onCancelPopup();
       },
       error => {
         this.toastr.error('Someting went wrong. Please try again');
+        this.isFormSubmitted = false;
       }
     );
   }
@@ -310,18 +317,24 @@ export class AddHiringRequestComponent implements OnInit {
 
   //#region "EditHirinRequest"
   EditHiringRequest() {
+    this.addHiringRequestForm.value.ClosingDate = StaticUtilities.getLocalDate(this.addHiringRequestForm.value.ClosingDate);
+    this.addHiringRequestForm.value.AnouncingDate = StaticUtilities.getLocalDate(this.addHiringRequestForm.value.AnouncingDate);
+    this.isFormSubmitted = true;
     this.hiringRequestService.EditHiringRequestDetail(this.addHiringRequestForm.value).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
           this.toastr.success('Hiring request updated successfully');
           this.UpdateHiringRequestListRefresh();
+          this.isFormSubmitted = false;
         } else {
           this.toastr.error(response.message);
+          this.isFormSubmitted = false;
         }
         this.onCancelPopup();
       },
       error => {
         this.toastr.error('Someting went wrong. Please try again');
+        this.isFormSubmitted = false;
       }
     );
   }
