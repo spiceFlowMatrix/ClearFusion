@@ -21,6 +21,7 @@ import {
   IHiringRequestModel
 } from '../models/hiring-requests-models';
 import { HrService } from 'src/app/hr/services/hr.service';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
 
 @Component({
   selector: 'app-add-hiring-request',
@@ -291,6 +292,8 @@ export class AddHiringRequestComponent implements OnInit {
 
   //#region "AddHiringRequest"
   AddHiringRequest(data: IHiringRequestModel) {
+    data.AnouncingDate = StaticUtilities.getLocalDate(data.AnouncingDate);
+    data.ClosingDate = StaticUtilities.getLocalDate(data.ClosingDate);
     this.hiringRequestService.AddHiringRequestDetail(data).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
@@ -310,6 +313,9 @@ export class AddHiringRequestComponent implements OnInit {
 
   //#region "EditHirinRequest"
   EditHiringRequest() {
+    this.addHiringRequestForm.value.ClosingDate = StaticUtilities.getLocalDate(this.addHiringRequestForm.value.ClosingDate);
+    this.addHiringRequestForm.value.AnouncingDate = StaticUtilities.getLocalDate(this.addHiringRequestForm.value.AnouncingDate);
+
     this.hiringRequestService.EditHiringRequestDetail(this.addHiringRequestForm.value).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
