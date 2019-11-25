@@ -25,9 +25,9 @@ namespace HumanitarianAssistance.Application.Project.Queries
             ApiResponse response = new ApiResponse();
             try
             {
-                int totalCount = await _dbContext.ProjectHiringRequestDetail.CountAsync(x => x.IsDeleted == false && x.ProjectId == request.ProjectId && (x.HiringRequestStatus == request.IsInProgress || x.HiringRequestStatus == request.IsOpenFlagId));            
+               // int totalCount = await _dbContext.ProjectHiringRequestDetail.CountAsync(x => x.IsDeleted == false && x.ProjectId == request.ProjectId && (x.HiringRequestStatus == request.IsInProgress || x.HiringRequestStatus == request.IsOpenFlagId));            
 
-                var requestDetail = (from hr in _dbContext.ProjectHiringRequestDetail.Where(x => x.IsDeleted == false &&
+                var requestDetail = await (from hr in _dbContext.ProjectHiringRequestDetail.Where(x => x.IsDeleted == false &&
                                                                                                         x.ProjectId == request.ProjectId && (x.HiringRequestStatus == request.IsInProgress || x.HiringRequestStatus == request.IsOpenFlagId))  
                                      join j in _dbContext.ProjectJobHiringDetail on hr.JobId equals j.JobId into jd
                                      from j in jd.DefaultIfEmpty()
@@ -48,12 +48,12 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                          PayCurrency = c.CurrencyName,
                                          PayRate = j.PayRate,
                                          HiringRequestStatus = hr.HiringRequestStatus 
-                                     })
+                                     }).AsQueryable()
                                     .Skip(request.pageSize.Value * request.pageIndex.Value)
                                     .Take(request.pageSize.Value)
-                                    .ToList();
+                                    .ToListAsync();
 
-                response.data.TotalCount = totalCount;
+                response.data.TotalCount = requestDetail.Count;
                 response.data.ProjectHiringRequestModel = requestDetail.OrderByDescending(x => x.HiringRequestId).ToList();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

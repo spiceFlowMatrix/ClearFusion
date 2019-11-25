@@ -15,7 +15,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public long HiringRequestId { get; set; }
         public string Description { get; set; }
         public int NoticePeriod { get; set; }
-        public DateTime AvailableDate { get; set; }
+        public DateTime? AvailableDate { get; set; }
         public int WrittenTestMarks { get; set; }
         public int CurrentBase { get; set; }
         public int CurrentOther { get; set; }

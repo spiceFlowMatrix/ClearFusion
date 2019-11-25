@@ -309,4 +309,11 @@ namespace HumanitarianAssistance.Common.Enums {
         Selected = 3,
         Rejected = 4
     }
+
+    public enum RatingAction {
+        Poor = 1,
+        Good = 2,
+        VeryGood = 3,
+        Excellent = 4
+    }
 }

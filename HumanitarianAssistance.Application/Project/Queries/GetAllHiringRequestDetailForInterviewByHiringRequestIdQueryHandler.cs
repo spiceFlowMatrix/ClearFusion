@@ -47,7 +47,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                                 PayCurrency = c.CurrencyName,
                                 PayHourlyRate = p.PayRate,
                                 BudgetLine = b.BudgetName,
-                                JobType = hrd.JobType,
+                                // JobType = hrd.JobType,
                                 AnouncingDate = hrd.AnouncingDate,
                                 ClosingDate = hrd.ClosingDate,
                                 ContractType = hrd.ContractType,

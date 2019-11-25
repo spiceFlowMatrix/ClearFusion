@@ -53,6 +53,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                 List<RatingBasedCriteria> ratingObj = new List<RatingBasedCriteria> ();
                 foreach (var item in request.RatingBasedCriteriaList) {
                     RatingBasedCriteria question = new RatingBasedCriteria () {
+                        InterviewId = interviewDetails.InterviewId,
                         QuestionId = item.QuestionId,
                         Score = item.Score,
                         CreatedById = request.CreatedById,
@@ -68,13 +69,13 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                 List<InterviewTechnicalQuestion> technicalObj = new List<InterviewTechnicalQuestion> ();
                 foreach (var item in request.TechnicalQuestionList) {
                     InterviewTechnicalQuestion question = new InterviewTechnicalQuestion () {
+                        InterviewId = interviewDetails.InterviewId,
                         QuestionId = item.QuestionId,
                         Score = item.Score,
                         CreatedById = request.CreatedById,
                         CreatedDate = request.CreatedDate,
                         IsDeleted = false
                     };
-
                     technicalObj.Add (question);
                 }
                 await _dbContext.InterviewTechnicalQuestion.AddRangeAsync (technicalObj);
@@ -83,6 +84,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                 List<InterviewLanguages> languageObj = new List<InterviewLanguages> ();
                 foreach (var item in request.LanguageList) {
                     InterviewLanguages details = new InterviewLanguages () {
+                        InterviewId = interviewDetails.InterviewId,
                         LanguageName = item.LanguageName,
                         Reading = item.LanguageReading == "Poor" ? 1 : item.LanguageReading == "Good" ? 2 : item.LanguageReading == "VeryGood" ? 3 : 4,
                         Writing = item.LanguageWriting == "Poor" ? 1 : item.LanguageWriting == "Good" ? 2 : item.LanguageWriting == "VeryGood" ? 3 : 4,
@@ -92,7 +94,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                         CreatedDate = request.CreatedDate,
                         IsDeleted = false
                     };
-
                     languageObj.Add (details);
                 }
                 await _dbContext.InterviewLanguages.AddRangeAsync (languageObj);
@@ -101,6 +102,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                 List<InterviewTrainings> traningObj = new List<InterviewTrainings> ();
                 foreach (var item in request.TraningList) {
                     InterviewTrainings details = new InterviewTrainings () {
+                        InterviewId = interviewDetails.InterviewId,
                         NewTraininigType = item.TraningType,
                         TrainingName = item.TraningName,
                         StudyingCountry = item.TraningCountryAndCity,
@@ -118,6 +120,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                 List<HRJobInterviewers> interviewerObj = new List<HRJobInterviewers> ();
                 foreach (var item in request.InterviewerList) {
                     HRJobInterviewers details = new HRJobInterviewers () {
+                        InterviewId = interviewDetails.InterviewId,
                         EmployeeId = item.EmployeeId,
                         CreatedById = request.CreatedById,
                         CreatedDate = request.CreatedDate,
@@ -139,7 +142,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = ex.Message;
             }
-
             return response;
         }
     }
