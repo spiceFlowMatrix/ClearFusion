@@ -49,7 +49,7 @@ export class RequestDetailComponent implements OnInit {
     'Phone Number',
     'Profession',
     'Email Address',
-    'Total Experience',
+    // 'Total Experience',
     'Relevant Experience',
     'Irrelevant Experience'
   ]);
@@ -205,7 +205,7 @@ export class RequestDetailComponent implements OnInit {
   addNewCandidate(): void {
     // NOTE: It open AddHiringRequest dialog and passed the data into the AddHiringRequestsComponent Model
     const dialogRef = this.dialog.open(AddNewCandidateComponent, {
-      width: '1000px',
+      width: '700px',
       autoFocus: false,
       data: {
         hiringRequestId: this.hiringRequestDetails.HiringRequestId,
@@ -272,7 +272,7 @@ export class RequestDetailComponent implements OnInit {
                     PhoneNumber: element.PhoneNumber,
                     Profession: element.Profession,
                     Email: element.Email,
-                    TotalExperienceInYear: element.TotalExperienceInYear,
+                    // TotalExperienceInYear: element.TotalExperienceInYear,
                     RelevantExperienceInYear: element.RelevantExperienceInYear,
                     IrrelevantExperienceInYear:
                       element.IrrelevantExperienceInYear

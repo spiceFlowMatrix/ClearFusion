@@ -17,6 +17,9 @@ import { FileSourceEntityTypes } from '../enum';
       case FileSourceEntityTypes.ComparativeStatement:
       objectName = 'comparativeStatement/' + entityId + '/';
       break;
+      case FileSourceEntityTypes.HiringRequestCandidateCV:
+      objectName = 'HiringRequestCandidateCV/' + entityId + '/';
+      break;
     }
 
     return objectName;

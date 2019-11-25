@@ -509,7 +509,8 @@ export enum FileSourceEntityTypes {
   DonorDetail = 9,
   StorePurchase = 10,
   Employee = 11,
-  ComparativeStatement = 12
+  ComparativeStatement = 12,
+  HiringRequestCandidateCV = 13
 }
 //#endregion
 //#region "EmployeeType"
@@ -620,4 +621,19 @@ export enum RatingAction {
   Good = 2,
   VeryGood = 3,
   Excellent = 4
+}
+
+export enum Month {
+  January = 1,
+  February = 2,
+  March = 3,
+  April = 4,
+  May = 5,
+  June = 6,
+  July = 7,
+  August = 8,
+  September = 9,
+  October = 10,
+  November = 11,
+  December = 12
 }
