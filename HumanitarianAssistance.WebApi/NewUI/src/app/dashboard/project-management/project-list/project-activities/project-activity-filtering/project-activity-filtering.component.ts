@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { IProjectAdvanceFilterModel } from '../models/project-activities.model';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { ProjectActivitiesService } from '../service/project-activities.service';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
 
 @Component({
   selector: 'app-project-activity-filtering',
@@ -73,10 +74,10 @@ export class ProjectActivityFilteringComponent implements OnInit {
 
     const filterData: any = {
       ProjectId: this.advanceFilter.ProjectId,
-      PlannedStartDate: this.advanceFilter.PlannedStartDate,
-      PlannedEndDate: this.advanceFilter.PlannedEndDate,
-      ActualStartDate: this.advanceFilter.ActualStartDate,
-      ActualEndDate: this.advanceFilter.ActualEndDate,
+      PlannedStartDate: StaticUtilities.setLocalDate(this.advanceFilter.PlannedStartDate),
+      PlannedEndDate: StaticUtilities.setLocalDate(this.advanceFilter.PlannedEndDate),
+      ActualStartDate: StaticUtilities.setLocalDate(this.advanceFilter.ActualStartDate),
+      ActualEndDate: StaticUtilities.setLocalDate(this.advanceFilter.ActualEndDate),
       BudgetLineId: this.advanceFilter.BudgetLineId,
       AssigneeId: this.advanceFilter.AssigneeId,
 
