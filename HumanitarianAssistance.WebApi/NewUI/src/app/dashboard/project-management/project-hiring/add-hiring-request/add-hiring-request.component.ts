@@ -83,7 +83,7 @@ export class AddHiringRequestComponent implements OnInit {
       Profession: [null, [Validators.required]],
       SpecificDutiesAndResponsibilities: [null, [Validators.required]],
       KnowledgeAndSkillsRequired: [null, [Validators.required]],
-      SubmissionGuidelines: [null, [Validators.required]]
+      SubmissionGuidelines: [null, [Validators.required]],
     });
     this.genderList$ = of([
       { name: 'Male', value: 1 },
