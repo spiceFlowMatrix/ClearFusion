@@ -9,7 +9,7 @@ import { RequestDetailComponent } from '../../project-hiring/request-detail/requ
 import { map } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
-import { LogisticRequestStatus } from 'src/app/shared/enum';
+import { LogisticRequestStatus, LogisticComparativeStatus } from 'src/app/shared/enum';
 
 
 @Component({
@@ -37,6 +37,7 @@ Currency: '', BudgetLine: '', Office: ''};
   unavailableItemCost = 0;
   availabilityPercentage = 0;
   submitPurchaseItems: any[] = [];
+  hideItemColums;
 
   constructor(private dialog: MatDialog, private routeActive: ActivatedRoute,
     private logisticservice: LogisticService,
@@ -56,6 +57,10 @@ Currency: '', BudgetLine: '', Office: ''};
       }
 
     };
+    this.hideItemColums = of({
+      headers: ['Item', 'Quantity', 'Estimated Cost', 'Availability'],
+      items: ['Item', 'Quantity', 'EstimatedCost', 'Availability']
+    });
     this.routeActive.params.subscribe(params => {
       this.requestId = +params['id'];
     });
@@ -93,7 +98,6 @@ Currency: '', BudgetLine: '', Office: ''};
   getRequestDetails() {
     this.logisticservice.getLogisticRequestDetail(this.requestId).subscribe(res => {
       if (res.StatusCode === 200 && res.data.logisticRequest != null) {
-        debugger;
         this.requestDetail.RequestId = res.data.logisticRequest.RequestId;
         this.requestDetail.ProjectId = res.data.logisticRequest.ProjectId;
         this.requestDetail.RequestName = res.data.logisticRequest.RequestName;
@@ -103,6 +107,19 @@ Currency: '', BudgetLine: '', Office: ''};
         this.requestDetail.BudgetLine = res.data.logisticRequest.BudgetLine;
         this.requestDetail.Office = res.data.logisticRequest.Office;
         this.requestDetail.ComparativeStatus = res.data.logisticRequest.ComparativeStatus;
+      }
+
+      if (!(this.requestDetail.Status === 1) || !(this.requestDetail.ComparativeStatus === 1)) {
+        this.actions = {
+          items: {
+            button: { status: false, text: '' },
+            edit: false,
+            delete: false,
+            download: false,
+          },
+          subitems: {
+          }
+        };
       }
     });
   }
@@ -219,6 +236,10 @@ Currency: '', BudgetLine: '', Office: ''};
   }
 
   issuePurchaseOrder() {
+    if (this.requestItemList.length === 0) {
+      this.toastr.warning('Please add items to purchase!');
+      return;
+    }
     this.commonLoader.showLoader();
     this.logisticservice.issuePurchaseOrder(this.requestId).subscribe(res => {
       if (res.StatusCode === 200 ) {
@@ -284,6 +305,41 @@ Currency: '', BudgetLine: '', Office: ''};
       if (res.StatusCode === 200) {
         this.commonLoader.hideLoader();
         this.getRequestDetails();
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  comparativeStatusChange(value) {
+    this.requestDetail.ComparativeStatus = value;
+  }
+
+  StatusChange(value) {
+    this.requestDetail.Status = value;
+  }
+
+  rejectComparativeStatement() {
+    this.commonLoader.showLoader();
+    this.logisticservice.rejectComparativeStatement(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.requestDetail.ComparativeStatus = LogisticComparativeStatus['Reject Statement'];
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  approveComparativeStatement() {
+    this.commonLoader.showLoader();
+    this.logisticservice.approveComparativeStatement(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.requestDetail.ComparativeStatus = LogisticComparativeStatus['Approve Statement'];
+        this.requestDetail.Status = LogisticRequestStatus['Issue Purchase Order'];
       } else {
         this.commonLoader.hideLoader();
         this.toastr.error('Something went wrong!');

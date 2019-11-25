@@ -10,5 +10,6 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string ProjectJobCode { get; set; }
         public string ProjectJobName { get; set; }
         public long? ProjectId { get; set; }
+        public bool? CanDelete { get; set; }
     }
 }

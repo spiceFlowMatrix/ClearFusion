@@ -32,7 +32,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                     ProjectId = request.ProjectId,
                     TotalVacancies = request.TotalVacancy,
                     AnouncingDate = request.AnouncingDate,
-                    JobType = request.JobType,
+                    // JobType = request.JobType,
                     Background = request.Background,
                     JobStatus = request.JobStatus,
                     JobId = request.JobCategory,

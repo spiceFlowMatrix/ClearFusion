@@ -27,6 +27,7 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
 
   mainItems: Observable<Array<Object>>;
   subItems: Array<Object> = [];
+  itemAction: Array<Object> = [];
   itemHeaders: Observable<string[]>;
   itemActions: TableActionsModel;
 
@@ -56,12 +57,25 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
                 this.subItemHeaders = of(Object.keys(element['subItems'][0]));
               }
             }
+            // only if default action is false
+            if (element['itemAction']) {
+              this.itemAction.push(element['itemAction']);
+            }
 
           });
+
           if (this.subItems.length > 0) {
 
             this.itemHeaders.subscribe(r => {
               const index = r.findIndex(v => v === 'subItems');
+              r.splice(index);
+            });
+          }
+          // only if default action is false
+
+          if (this.itemAction.length > 0) {
+            this.itemHeaders.subscribe(r => {
+              const index = r.findIndex(v => v === 'itemAction');
               r.splice(index);
             });
           }
@@ -114,7 +128,7 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
       })
     }
 
-     }
+  }
 
   switchSubList(i, event) {
     if (this.subItems.length > 0) this.isShowSubList[i] = !this.isShowSubList[i];

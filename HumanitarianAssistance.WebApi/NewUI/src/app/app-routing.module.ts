@@ -6,17 +6,21 @@ import { DbstyleGuideComponent } from './shared/dbstyle-guide/dbstyle-guide.comp
 
 
 const appRoutes: Routes = [
-    // { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-    { path: '', loadChildren: './dashboard/dashboard.module#DashboardModule', canActivate: [AuthGuard] },
-    { path: 'store', loadChildren: './store/store.module#StoreModule', canActivate: [AuthGuard] },
-    // { path: '', loadChildren: './dashboard/dashboard.module#DashboardModule' },
-    { path: 'login', component: LoginComponent },
-    { path: 'style-guide', component: DbstyleGuideComponent }
+  // { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '', loadChildren: './dashboard/dashboard.module#DashboardModule', canActivate: [AuthGuard] },
+  { path: 'store', loadChildren: './store/store.module#StoreModule', canActivate: [AuthGuard] },
+  // { path: '', loadChildren: './dashboard/dashboard.module#DashboardModule' },
+  { path: 'login', component: LoginComponent },
+  { path: 'style-guide', component: DbstyleGuideComponent },
+  {
+    path: 'hr',
+    loadChildren: './hr/hr.module#HrModule'
+  }
 ];
 
 
 @NgModule({
-    imports: [RouterModule.forRoot(appRoutes)],
-    exports: [RouterModule]   // important to export
+  imports: [RouterModule.forRoot(appRoutes)],
+  exports: [RouterModule]   // important to export
 })
 export class AppRoutingModule { }
