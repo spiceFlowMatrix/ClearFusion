@@ -15,7 +15,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public int EmployeeId { get; set; }
         [ForeignKey("EmployeeId")]
         public EmployeeDetail EmployeeDetail { get; set; }
-        public int InterviewDetailsId { get; set; }
+        public int? InterviewDetailsId { get; set; }
         [ForeignKey("InterviewDetailsId")]
         public InterviewDetails InterviewDetails { get; set; }
     }

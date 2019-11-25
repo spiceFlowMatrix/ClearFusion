@@ -14,7 +14,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
 		public int InterviewLanguagesId { get; set; }
         [ForeignKey("InterviewDetailsId")]
 		public InterviewDetails InterviewDetails { get; set; }
-		public int InterviewDetailsId { get; set; }
+		public int? InterviewDetailsId { get; set; }
 		public string LanguageName { get; set; }
 		public int? LanguageId { get; set; }
 		public int? Reading { get; set; }

@@ -230,6 +230,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<CandidateDetails> CandidateDetails { get; set; }
         public DbSet<EducationDegreeDetail> EducationDegreeDetails { get; set; }
         public DbSet<HiringRequestCandidateStatus> HiringRequestCandidateStatus { get; set; }
+        public DbSet<ProjectInterviewDetails> ProjectInterviewDetails { get; set; }
         #endregion
 
         #region Marketing 

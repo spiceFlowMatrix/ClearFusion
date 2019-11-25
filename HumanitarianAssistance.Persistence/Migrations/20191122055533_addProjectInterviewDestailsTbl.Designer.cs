@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191122055533_addProjectInterviewDestailsTbl")]
+    partial class addProjectInterviewDestailsTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -6702,8 +6704,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<int?>("EducationDegreeId");
-
                     b.Property<int?>("EmployeeID");
 
                     b.Property<string>("Experience");
@@ -6718,8 +6718,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int>("HiringRequestStatus");
 
-                    b.Property<double?>("HourlyRate");
-
                     b.Property<bool>("IsCompleted");
 
                     b.Property<bool>("IsDeleted");
@@ -6728,7 +6726,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<string>("JobStatus");
 
-                    b.Property<int>("JobTypeId");
+                    b.Property<string>("JobType");
 
                     b.Property<string>("KnowladgeAndSkillRequired");
 
@@ -6742,7 +6740,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<string>("Organization");
 
-                    b.Property<int?>("PositionId");
+                    b.Property<string>("Position");
 
                     b.Property<string>("Profession");
 
@@ -6770,8 +6768,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasIndex("CurrencyId");
 
-                    b.HasIndex("EducationDegreeId");
-
                     b.HasIndex("EmployeeID");
 
                     b.HasIndex("GradeId");
@@ -6779,8 +6775,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("JobId");
 
                     b.HasIndex("OfficeId");
-
-                    b.HasIndex("PositionId");
 
                     b.HasIndex("ProfessionId");
 
@@ -6898,7 +6892,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int>("Status");
 
-                    b.Property<double>("TotalMarksObtain");
+                    b.Property<string>("TotalMarksObtained");
 
                     b.Property<int>("WrittenTestMarks");
 
@@ -10395,10 +10389,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("CurrencyId");
 
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EducationDegreeMaster", "EducationDegreeMaster")
-                        .WithMany()
-                        .HasForeignKey("EducationDegreeId");
-
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
                         .WithMany()
                         .HasForeignKey("EmployeeID");
@@ -10414,10 +10404,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.OfficeDetail", "OfficeDetails")
                         .WithMany()
                         .HasForeignKey("OfficeId");
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.DesignationDetail", "DesignationDetail")
-                        .WithMany()
-                        .HasForeignKey("PositionId");
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.ProfessionDetails", "ProfessionDetails")
                         .WithMany()

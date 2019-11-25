@@ -40,7 +40,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                         ClosingDate = s.ClosingDate,
                         Country = s.CountryId,
                         Province = s.ProvinceId,
-                        JobType = s.JobType,
+                        // JobType = s.JobType,
                         JobShift = s.Shift,
                         JobStatus = s.JobStatus,
                         Experience = s.Experience,

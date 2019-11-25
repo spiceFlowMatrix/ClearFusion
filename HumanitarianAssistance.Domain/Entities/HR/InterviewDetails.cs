@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace HumanitarianAssistance.Domain.Entities.HR
-{
+{ //this table was used in old ui
     public class InterviewDetails : BaseEntity
     {
         [Key]
