@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
 import { ToastrService } from 'ngx-toastr';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
@@ -55,6 +55,7 @@ export class InterviewDetailComponent implements OnInit {
   candidateId: number;
   hiringRequestId: number;
   projectId: number;
+  interviewId: any;
   interviewDetailForm: FormGroup;
   hiringRequestDetail: IHiringRequestDetailModel;
   candidateDetails: ICandidateDetail;
@@ -77,6 +78,7 @@ export class InterviewDetailComponent implements OnInit {
     private fb: FormBuilder,
     private commonLoader: CommonLoaderService,
     private routeActive: ActivatedRoute,
+    private router: Router,
     private hiringRequestService: HiringRequestsService,
     private toastr: ToastrService
   ) {
@@ -150,6 +152,7 @@ export class InterviewDetailComponent implements OnInit {
     this.routeActive.queryParams.subscribe(params => {
       this.candidateId = +params['candId'];
       this.hiringRequestId = +params['hiringId'];
+      this.interviewId = +params['interviewId'];
     });
     this.routeActive.parent.parent.parent.params.subscribe(params => {
       this.projectId = +params['id'];
@@ -186,7 +189,8 @@ export class InterviewDetailComponent implements OnInit {
     this.getTechnicalQuestionsByDesignationId();
     this.getCandidateDetails();
     this.getAllHiringRequestDetails();
-    this.setInterviewDetails();
+    this.getInterviewDetailsByInterviewId();
+    // this.setInterviewDetails();
   }
 
   //#region "Dynamic Scroll"
@@ -504,7 +508,8 @@ export class InterviewDetailComponent implements OnInit {
     this.hiringRequestService.AddInterviewDetails(data).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
-          this.toastr.success('New request is created successfully');
+          this.toastr.success('Interview Details successfully Added');
+          this.router.navigate(['../hiring-request']);
         } else {
           this.toastr.error(response.message);
         }
@@ -516,16 +521,16 @@ export class InterviewDetailComponent implements OnInit {
   }
   //#endregion
 
-  // #region "getTechnicalQuestionsByDesignationId"
+  // #region "getInterviewDetailsByInterviewId"
   getInterviewDetailsByInterviewId() {
     const InterviewId = 1;
-
     this.hiringRequestService
       .GetInterviewDetailsByInterviewId(InterviewId)
       .subscribe(
         (response: IResponseData) => {
           this.commonLoader.showLoader();
           if (response.statusCode === 200 && response.data !== null) {
+             this.setInterviewDetails(response.data);
           }
           this.commonLoader.hideLoader();
         },
@@ -537,38 +542,49 @@ export class InterviewDetailComponent implements OnInit {
   //#endregion
 
   //#region "setInterviewDetails"
-  setInterviewDetails() {
+  setInterviewDetails(data: any) {
     this.interviewDetailForm = this.fb.group({
-      CandidateId: [1],
-      HiringRequestId: [2],
-      RatingBasedCriteriaList: [],
-      TechnicalQuestionList: [],
-      LanguageList: [],
-      TraningList: [],
-      InterviewerList: [],
-      Description: ['rfdgd'],
-      NoticePeriod: [1],
-      AvailableDate: [],
-      WrittenTestMarks: [35],
-      CurrentBase: [44],
-      CurrentOther: [45],
-      ExpectationBase: [76],
-      ExpectationOther: [45],
-      Status: [5],
-      InterviewQuestionOne: [true],
-      InterviewQuestionTwo: [true],
-      InterviewQuestionThree:  [true],
-      CurrentTransport:  [true],
-      CurrentMeal:  [true],
-      ExpectationTransport:  [true],
-      ExpectationMeal:  [true],
-    //  ProfessionalCriteriaMark: [45],
-   //   MarksObtain: [45],
-     // TotalMarksObtain: [45]
+      CandidateId: data.CandidateId,
+      HiringRequestId: data.HiringRequestId,
+      //  RatingBasedCriteriaList: data.RatingBasedCriteriaList,
+      // TechnicalQuestionList: data.TechnicalQuestionList,
+      // LanguageList: data.LanguageList,
+      // TraningList: data.TraningList,
+      // InterviewerList: data.InterviewerList,
+      Description: data.Description,
+      NoticePeriod: data.NoticePeriod,
+      AvailableDate: data.AvailableDate,
+      WrittenTestMarks: data.WrittenTestMarks,
+      CurrentBase: data.CurrentBase,
+      CurrentOther: data.CurrentOther,
+      ExpectationBase: data.ExpectationBase,
+      ExpectationOther: data.ExpectationOther,
+      Status: data.Status,
+      InterviewQuestionOne: data.InterviewQuestionOne,
+      InterviewQuestionTwo: data.InterviewQuestionTwo,
+      InterviewQuestionThree: data.InterviewQuestionThree,
+      CurrentTransport: data.CurrentTransport,
+      CurrentMeal: data.CurrentMeal,
+      ExpectationTransport: data.ExpectationTransport,
+      ExpectationMeal: data.ExpectationMeal
     });
-    this.totalMarksObtain = 345;
-    this.marksObtain = 44;
-    this.professionalCriteriaMarks = 45.5;
+    this.totalMarksObtain = data.TotalMarksObtain;
+    this.marksObtain = data.MarksObtain;
+    this.professionalCriteriaMarks = data.ProfessionalCriteriaMarks;
+    this.ratingBasedCriteriaAnswerList.push(data.RatingBasedCriteriaList);
+    this.technicalAnswerList.push(data.RatingBasedCriteriaList);
+    // this.languagesList$.subscribe(resl => {
+    //   resl.push(data.LanguageList);
+    //   this.languagesList$ = of(resl);
+    // });
+    // this.traningList$.subscribe(rest => {
+    //   rest.push(data.TraningList);
+    //   this.traningList$ = of(rest);
+    // });
+    // this.interviewerList$.subscribe(resi => {
+    //   resi.push(data.InterviewerList);
+    //   this.interviewerList$ = of(resi);
+    // });
   }
   //#endregion
 }

@@ -17,14 +17,6 @@ namespace HumanitarianAssistance.Application.Project.Queries {
         public GetInterviewDetailsByInterviewIdQueryHandler (HumanitarianAssistanceDbContext dbContext) {
             _dbContext = dbContext;
         }
-
-        // await _dbContext.ProjectIndicatorQuestions
-        //                                                                        .Where(x => x.IsDeleted == false && x.ProjectIndicatorId == request.indicatorId)
-        //                                                                        .Select(x => new IndicatorQuestions
-        //                                                                        {
-        //                                                                            QuestionId = x.IndicatorQuestionId,
-        //                                                                            QuestionText = x.IndicatorQuestion
-        //                                                                        })
         public async Task<ApiResponse> Handle (GetInterviewDetailsByInterviewIdQuery request, CancellationToken cancellationToken) {
             ApiResponse response = new ApiResponse ();
             try {
@@ -35,44 +27,64 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                     .Include (x => x.InterviewLanguagesList)
                     .Include (x => x.InterviewTrainingsList)
                     .Include (y => y.HRJobInterviewersList)
+                    // .ThenInclude (z => z.EmployeeDetail)
                     .FirstOrDefaultAsync (x => x.IsDeleted == false && x.InterviewId == request.InterviewId);
+ if(interviewDetails!=null)
+ {
+                InterviewDetailsModel obj = new InterviewDetailsModel () {
 
-                //                 var interviewDetails = await (from pid in _dbContext.ProjectInterviewDetails
-                //                     .Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false) 
-                //                     join rbc in _dbContext.RatingBasedCriteria 
-                //                     on pid.InterviewId equals rbc.InterviewId into pidr from rbc in pidr.DefaultIfEmpty ()
-
-                // //join o in _dbContext.OfficeDetail on cd.OfficeId equals o.OfficeId into od from o in od.DefaultIfEmpty ()
-
-                //                     select new InterviewDetailsModel {
-                //                         Description = pid.Description,
-                //                             NoticePeriod = pid.NoticePeriod,
-                //                             AvailableDate = pid.AvailableDate,
-                //                             WrittenTestMarks = pid.WrittenTestMarks,
-                //                             CurrentBase = pid.CurrentBase,
-                //                             CurrentOther = pid.CurrentOther,
-                //                             ExpectationBase = pid.ExpectationBase,
-                //                             ExpectationOther = pid.ExpectationOther,
-                //                             Status = pid.Status,
-                //                             InterviewQuestionOne = pid.InterviewQuestionOne,
-                //                             InterviewQuestionTwo = pid.InterviewQuestionTwo,
-                //                             InterviewQuestionThree = pid.InterviewQuestionThree,
-                //                             CurrentTransport = pid.CurrentTransport,
-                //                             CurrentMeal = pid.CurrentMeal,
-                //                             ExpectationTransport = pid.ExpectationTransport,
-                //                             ExpectationMeal = pid.ExpectationMeal,
-                //                             ProfessionalCriteriaMark = pid.ProfessionalCriteriaMarks,
-                //                             MarksObtain = pid.MarksObtained,
-                //                             TotalMarksObtain = pid.TotalMarksObtain,
-                //                             RatingBasedCriteriaList = pid. .Where(z => z.IsDeleted == false).Select(c => new TechnicalQuestionModel
-                //                                            {
-                //                                                QuestionId = c.TechnicalQuestionId,
-                //                                                Question = c.Question
-
-                //                                            })
-
-                //                     }).FirstOrDefaultAsync ();
-                response.ResponseData = interviewDetails;
+                    Description = interviewDetails.Description,
+                    NoticePeriod = interviewDetails.NoticePeriod,
+                    AvailableDate = interviewDetails.AvailableDate,
+                    WrittenTestMarks = interviewDetails.WrittenTestMarks,
+                    CurrentBase = interviewDetails.CurrentBase,
+                    CurrentOther = interviewDetails.CurrentOther,
+                    ExpectationBase = interviewDetails.ExpectationBase,
+                    ExpectationOther = interviewDetails.ExpectationOther,
+                    Status = interviewDetails.Status,
+                    InterviewQuestionOne = interviewDetails.InterviewQuestionOne,
+                    InterviewQuestionTwo = interviewDetails.InterviewQuestionTwo,
+                    InterviewQuestionThree = interviewDetails.InterviewQuestionThree,
+                    CurrentTransport = interviewDetails.CurrentTransport,
+                    CurrentMeal = interviewDetails.CurrentMeal,
+                    ExpectationTransport = interviewDetails.ExpectationTransport,
+                    ExpectationMeal = interviewDetails.ExpectationMeal,
+                    ProfessionalCriteriaMark = interviewDetails.ProfessionalCriteriaMarks,
+                    MarksObtain = interviewDetails.MarksObtained,
+                    TotalMarksObtain = interviewDetails.TotalMarksObtain,
+                    RatingBasedCriteriaList = interviewDetails.RatingBasedCriteriaList.Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false)
+                    .Select (y => new InterviewQuestionDetailsModel {
+                    QuestionId = y.QuestionId,
+                    Score = y.Score
+                    }).ToList (),
+                    TechnicalQuestionList = interviewDetails.InterviewTechnicalQuestionList.Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false)
+                    .Select (y => new InterviewQuestionDetailsModel {
+                    QuestionId = y.QuestionId,
+                    Score = y.Score
+                    }).ToList (),
+                    LanguageList = interviewDetails.InterviewLanguagesList.Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false)
+                    .Select (y => new LanguageDetailsModel {
+                    LanguageName = y.LanguageName,
+                    LanguageReading = ((RatingAction) y.Reading).ToString (),
+                    LanguageWriting = ((RatingAction) y.Writing).ToString (),
+                    LanguageListining = ((RatingAction) y.Listening).ToString (),
+                    LanguageSpeaking = ((RatingAction) y.Speaking).ToString ()
+                    }).ToList (),
+                    TraningList = interviewDetails.InterviewTrainingsList.Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false)
+                    .Select (y => new TraningDetailsModel {
+                    TraningType = y.NewTraininigType,
+                    TraningName = y.TrainingName,
+                    TraningCountryAndCity = y.StudyingCountry,
+                    TraningStartDate = y.StartDate,
+                    TraningEndDate = y.EndDate
+                    }).ToList (),
+                    InterviewerList = interviewDetails.HRJobInterviewersList.Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false)
+                    .Select (y => new InterviewerDetailsModel {
+                    EmployeeId = y.EmployeeId
+                    }).ToList (),
+                };
+                response.data.InterviewDetails = obj;
+ }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
             } catch (Exception ex) {

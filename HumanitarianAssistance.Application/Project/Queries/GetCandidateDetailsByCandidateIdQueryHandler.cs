@@ -25,11 +25,13 @@ namespace HumanitarianAssistance.Application.Project.Queries {
             try {
                 var candidateDetails = await (from cd in _dbContext.CandidateDetails
                         .Where (x => x.CandidateId == request.CandidateId &&
-                            x.IsDeleted == false) join o in _dbContext.OfficeDetail on cd.OfficeId equals o.OfficeId into od from o in od.DefaultIfEmpty () join e in _dbContext.EducationDegreeDetails on cd.EducationDegreeId equals e.EducationDegreeId into ed from e in ed.DefaultIfEmpty () select new CandidateAllDetailsModel {
-                            FullName = cd.FirstName + ' ' + cd.LastName,
-                                DutyStation = o.OfficeName,
+                            x.IsDeleted == false)
+                              join e in _dbContext.EducationDegreeMaster 
+                              on cd.EducationDegreeId equals e.Id into ed from e in ed.DefaultIfEmpty () 
+                              select new CandidateAllDetailsModel {
+                                FullName = cd.FirstName + ' ' + cd.LastName,
                                 Gender = cd.GenderId == 1 ? "Male" : cd.GenderId == 2 ? "Female" : "Other",
-                                Qualification = e.EducationDegreeName,
+                                Qualification = e.Name,
                                 DateOfBirth = cd.DateOfBirth
                         })
                     .FirstOrDefaultAsync ();

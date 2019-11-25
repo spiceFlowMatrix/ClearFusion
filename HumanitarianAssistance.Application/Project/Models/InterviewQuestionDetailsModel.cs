@@ -20,7 +20,7 @@ namespace HumanitarianAssistance.Application.Project.Models {
         public string EmployeeName { get; set; }
     }
     public class InterviewQuestionDetailsModel {
-        public int QuestionId { get; set; }
-        public int Score { get; set; }
+        public int? QuestionId { get; set; }
+        public int? Score { get; set; }
     }
 }

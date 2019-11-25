@@ -70,6 +70,7 @@ export class RequestDetailComponent implements OnInit {
   filterValueModel: ICandidateFilterModel;
   hiringRequestId: any;
   projectId: any;
+  candidateId: any;
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
@@ -236,9 +237,13 @@ export class RequestDetailComponent implements OnInit {
                 LastName: element.LastName,
                 Gender: element.Gender,
                 Interview:
-                  element.CandidateStatus == 0 || element.CandidateStatus == 1
+                  element.InterviewId == 0
                     ? 'Not Interviewed'
-                    : '<a href="/interview-detail">Interview Id</a>',
+                    : '<a href="/project/my-project/' +
+                      this.projectId +
+                      '/hiring-request/interview-detail?candId=' +
+                      element.CandidateId +
+                      '&hiringId=' + this.hiringRequestId + '">Interview Id</a>',
                 CandidateStatus: CandidateStatus[element.CandidateStatus],
                 itemAction:
                   element.CandidateStatus != CandidateStatus.Rejected &&
@@ -473,7 +478,10 @@ export class RequestDetailComponent implements OnInit {
       case 'Interview':
         this.router.navigate(['interview-detail'], {
           relativeTo: this.routeActive.parent,
-          queryParams: { candId: 1, hiringId: 1 }
+          queryParams: {
+            candId: data.item.CandidateId,
+            hiringId: this.hiringRequestId,
+          }
         });
         break;
       default:

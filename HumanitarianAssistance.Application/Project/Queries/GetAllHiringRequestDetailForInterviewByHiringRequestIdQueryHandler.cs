@@ -26,8 +26,6 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                         .Where (x => x.HiringRequestId == request.HiringRequestId &&
                             x.ProjectId == request.ProjectId &&
                             x.IsDeleted == false) 
-                            // join p in _dbContext.ProjectJobHiringDetail 
-                            // on hrd.JobId equals p.JobId into pd from p in pd.DefaultIfEmpty () 
                             join o in _dbContext.OfficeDetail 
                             on hrd.OfficeId equals o.OfficeId into od from o in od.DefaultIfEmpty () 
                             join j in _dbContext.JobGrade 
@@ -38,6 +36,10 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                             on hrd.ProfessionId equals pr.ProfessionId into prd from pr in prd.DefaultIfEmpty () 
                             join b in _dbContext.ProjectBudgetLineDetail 
                             on hrd.BudgetLineId equals b.BudgetLineId into bd from b in bd.DefaultIfEmpty () 
+                            join dd in _dbContext.DesignationDetail 
+                            on hrd.PositionId equals dd.DesignationId into ddl from dd in ddl.DefaultIfEmpty () 
+                            join ed in _dbContext.EducationDegreeMaster 
+                            on hrd.EducationDegreeId equals ed.Id into edm from ed in edm.DefaultIfEmpty () 
                             select new HiringRequestDetailsModel {
                             Office = o.OfficeName,
                                 Position = pr.ProfessionName,
@@ -55,7 +57,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                                 JobShift = hrd.Shift == 1 ? "Day" : hrd.Shift == 2 ? "Night" : "Others",                               
                                 Profession = pr.ProfessionName,
                                 KnowledgeAndSkillsRequired = hrd.KnowladgeAndSkillRequired,
-                                EducationDegree = hrd.MinimumEducationLevel,
+                                EducationDegree = ed.Name,
                                 TotalExperienceInYear = hrd.Experience
                         })
                     .FirstOrDefaultAsync ();

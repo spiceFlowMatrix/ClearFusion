@@ -135,6 +135,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                 statusDetails.ModifiedById = request.CreatedById;
                 statusDetails.ModifiedDate = request.CreatedDate;
                 statusDetails.InterviewId = interviewDetails.InterviewId;
+                statusDetails.CandidateStatus = 2;
                 await _dbContext.SaveChangesAsync ();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;

@@ -920,7 +920,7 @@ AddInterviewDetails(data: InterviewDetailModel) {
     .pipe(
       map(x => {
         const responseData: IResponseData = {
-          data: x,
+          data: x.data.InterviewDetails,
           statusCode: x.StatusCode,
           message: x.Message
         };
