@@ -19,7 +19,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string Country { get; set; }
         public string Province { get; set; }
         public string District { get; set; }
-        public long InterviewId { get; set; }  
+        // public int InterviewId { get; set; }  
         public int CandidateStatus { get; set; }       
         public double TotalExperienceInYear { get; set; }
         public double RelevantExperienceInYear { get; set; }
