@@ -11,7 +11,8 @@ import { takeUntil } from 'rxjs/operators';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { ICandidateDetailModel } from '../models/hiring-requests-models';
 import { PurchaseService } from 'src/app/store/services/purchase.service';
-import { Month } from 'src/app/shared/enum';
+import { Month, FileSourceEntityTypes } from 'src/app/shared/enum';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 
 @Component({
   selector: 'app-add-new-candidate',
@@ -46,7 +47,8 @@ export class AddNewCandidateComponent implements OnInit {
     private toastr: ToastrService,
     private fb: FormBuilder,
     private loader: CommonLoaderService,
-    private purchaseService: PurchaseService
+    private purchaseService: PurchaseService,
+    private globalSharedService: GlobalSharedService
   ) {
     this.addNewCandidateForm = this.fb.group({
       ProjectId: [null],
@@ -200,10 +202,10 @@ export class AddNewCandidateComponent implements OnInit {
   subscribeEducationDegreeList(response: any) {
     this.commonLoader.hideLoader();
     this.educationDegreeList$ = of(
-      response.data.map(y => {
+      response.map(y => {
         return {
-          value: y.EducationDegreeId,
-          name: y.EducationDegreeName
+          value: y.Id,
+          name: y.Name
         };
       })
     );
@@ -256,13 +258,21 @@ export class AddNewCandidateComponent implements OnInit {
   }
 
   //#region "AddNewCandidate"
-  AddNewCandidate(data: ICandidateDetailModel) {
+  AddNewCandidate(data: ICandidateDetailModel, attachmentCV) {
+    this.commonLoader.showLoader();
     this.hiringRequestService.AddNewCandidateDetail(data).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
-          this.toastr.success('New request is created successfully');
-          this.AddCandidateListRefresh();
+          this.globalSharedService
+              .uploadFile(FileSourceEntityTypes.HiringRequestCandidateCV, this.hiringRequestId, attachmentCV)
+              .pipe(takeUntil(this.destroyed$))
+              .subscribe(y => {
+                this.commonLoader.hideLoader();
+                this.toastr.success('New Candidate added successfully');
+                this.AddCandidateListRefresh();
+              });
         } else {
+          this.commonLoader.hideLoader();
           this.toastr.error(response.message);
         }
         this.onCancelPopup();
@@ -295,9 +305,8 @@ export class AddNewCandidateComponent implements OnInit {
       return;
     }
     if (this.addNewCandidateForm.valid) {
-      this.AddNewCandidate(data);
+      this.AddNewCandidate(data, this.attachmentCV[0][0]);
     }
-    console.log(data);
   }
       //#region "hiringRequestListRefresh"
       AddCandidateListRefresh() {

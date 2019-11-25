@@ -30,7 +30,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                 from p in pd.DefaultIfEmpty () 
                 // join o in _dbContext.OfficeDetail on cd.OfficeId equals o.OfficeId into od 
                 // from o in od.DefaultIfEmpty () 
-                join e in _dbContext.EducationDegreeDetails on cd.EducationDegreeId equals e.EducationDegreeId into ed 
+                join e in _dbContext.EducationDegreeMaster on cd.EducationDegreeId equals e.Id into ed 
                 from e in ed.DefaultIfEmpty () 
                 join c in _dbContext.CountryDetails on cd.CountryId equals c.CountryId into cod 
                 from c in cod.DefaultIfEmpty () 
@@ -47,7 +47,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                             // AccountStatus = cd.AccountStatus == 1 ? "Active" : "NonActive",
                             Gender = cd.GenderId == 1 ? "Male" : cd.GenderId == 2 ? "Female" : "Other",
                             DateOfBirth = cd.DateOfBirth,
-                            EducationDegree = e.EducationDegreeName,
+                            EducationDegree = e.Name,
                             // Grade = g.GradeName,
                             Profession = p.ProfessionName,
                             // Office = o.OfficeName,

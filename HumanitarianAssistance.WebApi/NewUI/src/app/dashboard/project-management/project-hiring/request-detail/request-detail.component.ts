@@ -49,7 +49,7 @@ export class RequestDetailComponent implements OnInit {
     'Phone Number',
     'Profession',
     'Email Address',
-    'Total Experience',
+    // 'Total Experience',
     'Relevant Experience',
     'Irrelevant Experience'
   ]);
@@ -254,7 +254,7 @@ export class RequestDetailComponent implements OnInit {
                     PhoneNumber: element.PhoneNumber,
                     Profession: element.Profession,
                     Email: element.Email,
-                    TotalExperienceInYear: element.TotalExperienceInYear,
+                    // TotalExperienceInYear: element.TotalExperienceInYear,
                     RelevantExperienceInYear: element.RelevantExperienceInYear,
                     IrrelevantExperienceInYear:
                       element.IrrelevantExperienceInYear

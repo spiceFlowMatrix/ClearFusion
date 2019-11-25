@@ -25,14 +25,14 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                 // model logic here
                 var candidateDetail = (from s in _dbContext.HiringRequestCandidateStatus
                     .Where (x => x.IsDeleted == false && x.HiringRequestId == request.HiringRequestId && x.CandidateId != null && x.ProjectId == request.ProjectId) join cd in _dbContext.CandidateDetails on s.CandidateId equals cd.CandidateId into cdl from cd in cdl.DefaultIfEmpty () 
-                    join p in _dbContext.ProfessionDetails on cd.ProfessionId equals p.ProfessionId into pd from p in pd.DefaultIfEmpty ()  join e in _dbContext.EducationDegreeDetails on cd.EducationDegreeId equals e.EducationDegreeId into ed from e in ed.DefaultIfEmpty () join c in _dbContext.CountryDetails on cd.CountryId equals c.CountryId into cod from c in cod.DefaultIfEmpty () join pr in _dbContext.ProvinceDetails on cd.ProvinceId equals pr.ProvinceId into prd from pr in prd.DefaultIfEmpty () join d in _dbContext.DistrictDetail on cd.DistrictID equals d.DistrictID into dd from d in dd.DefaultIfEmpty () select new CandidateDetailsModel {
+                    join p in _dbContext.ProfessionDetails on cd.ProfessionId equals p.ProfessionId into pd from p in pd.DefaultIfEmpty ()  join e in _dbContext.EducationDegreeMaster on cd.EducationDegreeId equals e.Id into ed from e in ed.DefaultIfEmpty () join c in _dbContext.CountryDetails on cd.CountryId equals c.CountryId into cod from c in cod.DefaultIfEmpty () join pr in _dbContext.ProvinceDetails on cd.ProvinceId equals pr.ProvinceId into prd from pr in prd.DefaultIfEmpty () join d in _dbContext.DistrictDetail on cd.DistrictID equals d.DistrictID into dd from d in dd.DefaultIfEmpty () select new CandidateDetailsModel {
                         CandidateId = cd.CandidateId,
                             FirstName = cd.FirstName,
                             LastName = cd.LastName,
                             Email = cd.Email,
                             PhoneNumber = cd.PhoneNumber,
                             Gender = cd.GenderId == 1 ? "Male" : cd.GenderId == 2 ? "Female" : "Other",
-                            EducationDegree = e.EducationDegreeName,
+                            EducationDegree = e.Name,
                             Profession = p.ProfessionName,
                             CandidateStatus = s.CandidateStatus,
                             // TotalExperienceInYear = cd.TotalExperienceInYear,
@@ -53,7 +53,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                             Profession = item.Profession,
                             Status = ((CandidateStatus) item.CandidateStatus).ToString (),
                             // Status = item.CandidateStatus == 0 ? "Shortlist Panding" : item.CandidateStatus == 1 ? "Interview Panding" : "Selection Panding",
-                            TotalExperienceInYear = item.TotalExperienceInYear,
+                            // TotalExperienceInYear = item.TotalExperienceInYear,
                             RelevantExperienceInYear = item.RelevantExperienceInYear,
                             IrrelevantExperienceInYear = item.IrrelevantExperienceInYear,
                     });
