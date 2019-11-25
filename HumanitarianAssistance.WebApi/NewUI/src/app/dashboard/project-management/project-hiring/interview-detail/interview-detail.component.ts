@@ -186,6 +186,7 @@ export class InterviewDetailComponent implements OnInit {
     this.getTechnicalQuestionsByDesignationId();
     this.getCandidateDetails();
     this.getAllHiringRequestDetails();
+   // this.setInterviewDetails();
   }
 
   //#region "Dynamic Scroll"
@@ -515,28 +516,56 @@ export class InterviewDetailComponent implements OnInit {
   }
   //#endregion
 
+  // #region "getTechnicalQuestionsByDesignationId"
+  getInterviewDetailsByInterviewId() {
+    const InterviewId = 1;
 
- // #region "getTechnicalQuestionsByDesignationId"
- getInterviewDetailsByInterviewId() {
-  const InterviewId = 1;
+    this.hiringRequestService
+      .GetInterviewDetailsByInterviewId(InterviewId)
+      .subscribe(
+        (response: IResponseData) => {
+          this.commonLoader.showLoader();
+          if (response.statusCode === 200 && response.data !== null) {
+          }
+          this.commonLoader.hideLoader();
+        },
+        error => {
+          this.commonLoader.hideLoader();
+        }
+      );
+  }
+  //#endregion
 
-  this.hiringRequestService
-    .GetInterviewDetailsByInterviewId(InterviewId)
-    .subscribe(
-      (response: IResponseData) => {
-        this.commonLoader.showLoader();
-        if (response.statusCode === 200 && response.data !== null) {}
-        this.commonLoader.hideLoader();
-      },
-      error => {
-        this.commonLoader.hideLoader();
-      }
-    );
-}
-//#endregion
-
-
-
-
-
+  //#region "setInterviewDetails"
+  setInterviewDetails() {
+    this.interviewDetailForm = this.fb.group({
+      CandidateId: [1],
+      HiringRequestId: [2],
+      RatingBasedCriteriaList: [],
+      TechnicalQuestionList: [],
+      LanguageList: [],
+      TraningList: [],
+      InterviewerList: [],
+      Description: ['rfdgd'],
+      NoticePeriod: [1],
+      AvailableDate: [],
+      WrittenTestMarks: [35],
+      CurrentBase: [44],
+      CurrentOther: [45],
+      ExpectationBase: [76],
+      ExpectationOther: [45],
+      Status: [2],
+      InterviewQuestionOne: [true],
+      InterviewQuestionTwo: [true],
+      InterviewQuestionThree:  [true],
+      CurrentTransport:  [true],
+      CurrentMeal:  [true],
+      ExpectationTransport:  [true],
+      ExpectationMeal:  [true],
+      ProfessionalCriteriaMark: [45],
+      MarksObtain: [45],
+      TotalMarksObtain: [45]
+    });
+  }
+  //#endregion
 }

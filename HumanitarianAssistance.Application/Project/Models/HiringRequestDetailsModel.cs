@@ -10,7 +10,7 @@ namespace HumanitarianAssistance.Application.Project.Models {
         public string PayCurrency { get; set; }
         public double? PayHourlyRate { get; set; }
         public string BudgetLine { get; set; }
-        public string JobType { get; set; }
+        public int? JobType { get; set; }
         public DateTime? AnouncingDate { get; set; }
         public DateTime? ClosingDate { get; set; }
         public string ContractType { get; set; }

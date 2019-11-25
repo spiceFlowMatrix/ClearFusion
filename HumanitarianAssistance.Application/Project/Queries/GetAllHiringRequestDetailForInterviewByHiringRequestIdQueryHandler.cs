@@ -26,14 +26,14 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                         .Where (x => x.HiringRequestId == request.HiringRequestId &&
                             x.ProjectId == request.ProjectId &&
                             x.IsDeleted == false) 
-                            join p in _dbContext.ProjectJobHiringDetail 
-                            on hrd.JobId equals p.JobId into pd from p in pd.DefaultIfEmpty () 
+                            // join p in _dbContext.ProjectJobHiringDetail 
+                            // on hrd.JobId equals p.JobId into pd from p in pd.DefaultIfEmpty () 
                             join o in _dbContext.OfficeDetail 
                             on hrd.OfficeId equals o.OfficeId into od from o in od.DefaultIfEmpty () 
                             join j in _dbContext.JobGrade 
-                            on p.GradeId equals j.GradeId into gd from j in gd.DefaultIfEmpty () 
+                            on hrd.GradeId equals j.GradeId into gd from j in gd.DefaultIfEmpty () 
                             join c in _dbContext.CurrencyDetails 
-                            on p.CurrencyId equals c.CurrencyId into cd from c in cd.DefaultIfEmpty () 
+                            on hrd.CurrencyId equals c.CurrencyId into cd from c in cd.DefaultIfEmpty () 
                             join pr in _dbContext.ProfessionDetails 
                             on hrd.ProfessionId equals pr.ProfessionId into prd from pr in prd.DefaultIfEmpty () 
                             join b in _dbContext.ProjectBudgetLineDetail 
@@ -45,9 +45,9 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                                 TotalVacancy = hrd.TotalVacancies,
                                 FilledVacancy = hrd.FilledVacancies,
                                 PayCurrency = c.CurrencyName,
-                                PayHourlyRate = p.PayRate,
+                                PayHourlyRate = hrd.HourlyRate,
                                 BudgetLine = b.BudgetName,
-                                // JobType = hrd.JobType,
+                                JobType = hrd.JobTypeId,
                                 AnouncingDate = hrd.AnouncingDate,
                                 ClosingDate = hrd.ClosingDate,
                                 ContractType = hrd.ContractType,
