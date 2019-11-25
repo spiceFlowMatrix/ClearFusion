@@ -24,7 +24,8 @@ namespace HumanitarianAssistance.Application.Project.Queries {
             try {
                 // model logic here
                 var candidateDetail = (from s in _dbContext.HiringRequestCandidateStatus
-                    .Where (x => x.IsDeleted == false && x.HiringRequestId == request.HiringRequestId && x.CandidateId != null && x.ProjectId == request.ProjectId) join cd in _dbContext.CandidateDetails on s.CandidateId equals cd.CandidateId into cdl from cd in cdl.DefaultIfEmpty () join g in _dbContext.JobGrade on cd.GradeId equals g.GradeId into gd from g in gd.DefaultIfEmpty () join p in _dbContext.ProfessionDetails on cd.ProfessionId equals p.ProfessionId into pd from p in pd.DefaultIfEmpty () join o in _dbContext.OfficeDetail on cd.OfficeId equals o.OfficeId into od from o in od.DefaultIfEmpty () join e in _dbContext.EducationDegreeDetails on cd.EducationDegreeId equals e.EducationDegreeId into ed from e in ed.DefaultIfEmpty () join c in _dbContext.CountryDetails on cd.CountryId equals c.CountryId into cod from c in cod.DefaultIfEmpty () join pr in _dbContext.ProvinceDetails on cd.ProvinceId equals pr.ProvinceId into prd from pr in prd.DefaultIfEmpty () join d in _dbContext.DistrictDetail on cd.DistrictID equals d.DistrictID into dd from d in dd.DefaultIfEmpty () select new CandidateDetailsModel {
+                    .Where (x => x.IsDeleted == false && x.HiringRequestId == request.HiringRequestId && x.CandidateId != null && x.ProjectId == request.ProjectId) join cd in _dbContext.CandidateDetails on s.CandidateId equals cd.CandidateId into cdl from cd in cdl.DefaultIfEmpty () 
+                    join p in _dbContext.ProfessionDetails on cd.ProfessionId equals p.ProfessionId into pd from p in pd.DefaultIfEmpty ()  join e in _dbContext.EducationDegreeDetails on cd.EducationDegreeId equals e.EducationDegreeId into ed from e in ed.DefaultIfEmpty () join c in _dbContext.CountryDetails on cd.CountryId equals c.CountryId into cod from c in cod.DefaultIfEmpty () join pr in _dbContext.ProvinceDetails on cd.ProvinceId equals pr.ProvinceId into prd from pr in prd.DefaultIfEmpty () join d in _dbContext.DistrictDetail on cd.DistrictID equals d.DistrictID into dd from d in dd.DefaultIfEmpty () select new CandidateDetailsModel {
                         CandidateId = cd.CandidateId,
                             FirstName = cd.FirstName,
                             LastName = cd.LastName,
@@ -34,7 +35,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                             EducationDegree = e.EducationDegreeName,
                             Profession = p.ProfessionName,
                             CandidateStatus = s.CandidateStatus,
-                            TotalExperienceInYear = cd.TotalExperienceInYear,
+                            // TotalExperienceInYear = cd.TotalExperienceInYear,
                             RelevantExperienceInYear = cd.RelevantExperienceInYear,
                             IrrelevantExperienceInYear = cd.IrrelevantExperienceInYear,
                     }).ToList ();
