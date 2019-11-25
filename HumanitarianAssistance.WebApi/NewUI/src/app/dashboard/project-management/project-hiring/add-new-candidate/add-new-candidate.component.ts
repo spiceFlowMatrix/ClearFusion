@@ -35,6 +35,7 @@ export class AddNewCandidateComponent implements OnInit {
   MonthsList$: Observable<IDropDownModel[]>;
   educationDegreeList$: Observable<IDropDownModel[]>;
   onAddCandidateListRefresh = new EventEmitter();
+  attachmentCV: any[] = [];
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     public dialogRef: MatDialogRef<AddNewCandidateComponent>,
@@ -121,6 +122,15 @@ export class AddNewCandidateComponent implements OnInit {
         value: i});
     }
     this.MonthsList$ = of(monthDropDown);
+  }
+
+  openInput() {
+    document.getElementById('fileInput').click();
+  }
+
+  fileChange(file: any) {
+    this.attachmentCV = [];
+    this.attachmentCV.push(file);
   }
   getAllOfficeList() {
     this.commonLoader.showLoader();
@@ -280,6 +290,10 @@ export class AddNewCandidateComponent implements OnInit {
     this.getAllDistrictList(e);
   }
   onFormSubmit(data: any) {
+    if (this.attachmentCV.length === 0) {
+      this.toastr.warning('Please attach CV!');
+      return;
+    }
     if (this.addNewCandidateForm.valid) {
       this.AddNewCandidate(data);
     }
