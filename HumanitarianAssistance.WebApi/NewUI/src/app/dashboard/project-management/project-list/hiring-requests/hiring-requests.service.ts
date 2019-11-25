@@ -109,22 +109,28 @@ export class HiringRequestsService {
       );
   }
   //#endregion
-    //#region "GetEducationDegreeList"
-    GetEducationDegreeList(): any {
+    // //#region "GetEducationDegreeList"
+    // GetEducationDegreeList(): any {
+    //   return this.globalService
+    //     .getList(this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllEducationDegree)
+    //     .pipe(
+    //       map(x => {
+    //         const responseData: IResponseData = {
+    //           data: x.data.EducationDegreeList,
+    //           statusCode: x.StatusCode,
+    //           message: x.Message
+    //         };
+    //         return responseData;
+    //       })
+    //     );
+    // }
+    // //#endregion
+
+     //#region "GetEducationDegreeList"
+     GetEducationDegreeList(): any {
       return this.globalService
-        .getList(this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllEducationDegree)
-        .pipe(
-          map(x => {
-            const responseData: IResponseData = {
-              data: x.data.EducationDegreeList,
-              statusCode: x.StatusCode,
-              message: x.Message
-            };
-            return responseData;
-          })
-        );
+        .getList(this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllEducationDegreeList);
     }
-    //#endregion
   //#region "GetJobGradeList"
   GetJobGradeList(): any {
     return this.globalService

@@ -186,7 +186,7 @@ export class InterviewDetailComponent implements OnInit {
     this.getTechnicalQuestionsByDesignationId();
     this.getCandidateDetails();
     this.getAllHiringRequestDetails();
-   // this.setInterviewDetails();
+    this.setInterviewDetails();
   }
 
   //#region "Dynamic Scroll"
@@ -554,7 +554,7 @@ export class InterviewDetailComponent implements OnInit {
       CurrentOther: [45],
       ExpectationBase: [76],
       ExpectationOther: [45],
-      Status: [2],
+      Status: [5],
       InterviewQuestionOne: [true],
       InterviewQuestionTwo: [true],
       InterviewQuestionThree:  [true],
@@ -562,10 +562,13 @@ export class InterviewDetailComponent implements OnInit {
       CurrentMeal:  [true],
       ExpectationTransport:  [true],
       ExpectationMeal:  [true],
-      ProfessionalCriteriaMark: [45],
-      MarksObtain: [45],
-      TotalMarksObtain: [45]
+    //  ProfessionalCriteriaMark: [45],
+   //   MarksObtain: [45],
+     // TotalMarksObtain: [45]
     });
+    this.totalMarksObtain = 345;
+    this.marksObtain = 44;
+    this.professionalCriteriaMarks = 45.5;
   }
   //#endregion
 }
