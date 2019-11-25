@@ -140,70 +140,33 @@ export class AddHiringRequestComponent implements OnInit {
         (response: IResponseData) => {
           this.loader.showLoader();
           if (response.statusCode === 200 && response.data !== null) {
-            // this.hiringRequestDetail = {
-            //   HiringRequestId: response.data.HiringRequestId,
-            //   ProjectId: response.data.ProjectId,
-            //   JobCategory: response.data.JobCategory,
-            //   MinEducationLevel: response.data.MinEducationLevel,
-            //   TotalVacancy: response.data.TotalVacancy,
-            //   Position: response.data.Position,
-            //   Organization: response.data.Organization,
-            //   Office: response.data.Office,
-            //   ContractType: response.data.ContractType,
-            //   ContractDuration: response.data.ContractDuration,
-            //   Gender: response.data.Gender,
-            //   SalaryRange: response.data.SalaryRange,
-            //   AnouncingDate: response.data.AnouncingDate,
-            //   ClosingDate: response.data.ClosingDate,
-            //   Country: response.data.Country,
-            //   Province: response.data.Province,
-            //   Nationality: response.data.Nationality,
-            //   JobType: response.data.JobType,
-            //   JobShift: response.data.JobShift,
-            //   JobStatus: response.data.JobStatus,
-            //   Experience: response.data.Experience,
-            //   Background: response.data.Background,
-            //   SpecificDutiesAndResponsibilities:
-            //     response.data.SpecificDutiesAndResponsibilities,
-            //   KnowledgeAndSkillsRequired:
-            //     response.data.KnowledgeAndSkillsRequired,
-            //   SubmissionGuidelines: response.data.SubmissionGuidelines
-            // };
-
             this.addHiringRequestForm.setValue({
-              HiringRequestId: [response.data.HiringRequestId],
-              ProjectId: [response.data.ProjectId],
-              TotalVacancy: [response.data.TotalVacancy],
-              Position: [response.data.Position],
-              Office: [response.data.Office],
-              ContractType: [response.data.ContractType],
-              ContractDuration: [response.data.ContractDuration],
-              AnouncingDate: [response.data.AnouncingDate],
-              ClosingDate: [response.data.ClosingDate],
-              JobType: [response.data.JobType],
-              JobShift: [response.data.JobShift],
-              Experience: [response.data.Experience],
-              BudgetLine:[response.data.BudgetLine],
-              EducationDegree: [response.data.EducationDegree],
-              JobGrade: [response.data.JobGrade],
-              PayCurrency: [response.data.PayCurrency],
-              PayHourlyRate: [response.data.PayHourlyRate],
-              Profession: [response.data.Profession],
+              HiringRequestId: response.data.HiringRequestId,
+              ProjectId: response.data.ProjectId,
+              TotalVacancy: response.data.TotalVacancy,
+              Position: response.data.Position,
+              Office: response.data.Office,
+              ContractType: response.data.ContractType,
+              ContractDuration: response.data.ContractDuration,
+              AnouncingDate: response.data.AnouncingDate,
+              ClosingDate: response.data.ClosingDate,
+              JobType: response.data.JobType,
+              JobShift: response.data.JobShift,
+              Experience: response.data.Experience,
+              BudgetLine: response.data.BudgetLine,
+              EducationDegree: response.data.EducationDegree,
+              JobGrade: response.data.JobGrade,
+              PayCurrency: response.data.PayCurrency,
+              PayHourlyRate: response.data.PayHourlyRate,
+              Profession: response.data.Profession,
 
-              SpecificDutiesAndResponsibilities: [
-                response.data.SpecificDutiesAndResponsibilities
-              ],
-              KnowledgeAndSkillsRequired: [response.data.KnowledgeAndSkillsRequired],
-              SubmissionGuidelines: [response.data.SubmissionGuidelines]
+              SpecificDutiesAndResponsibilities:
+                response.data.SpecificDutiesAndResponsibilities,
+              KnowledgeAndSkillsRequired: response.data.KnowledgeAndSkillsRequired,
+              SubmissionGuidelines: response.data.SubmissionGuidelines
             });
 
-            debugger;
-            // this.OfficeId = this.hiringRequestDetail.Office;
-            // this.getAllProfessionList(this.hiringRequestDetail.Office);
-            // this.getAllJobList(this.hiringRequestDetail.Position);
-            // this.getAllProvinceList(this.hiringRequestDetail.Country);
-            // this.getRemainingVacancy(this.hiringRequestDetail.JobCategory);
-            this.setHiringRequestDetails(this.hiringRequestDetail);
+            this.getDepartmentList(response.data.Office);
           }
           this.loader.hideLoader();
         },
@@ -212,11 +175,7 @@ export class AddHiringRequestComponent implements OnInit {
         }
       );
   }
-  setHiringRequestDetails(data: IHiringRequestModel) {
-    this.loader.showLoader();
 
-    this.loader.hideLoader();
-  }
   subscribeOfficeList(response: any) {
     this.commonLoader.hideLoader();
     this.officeList$ = of(
@@ -228,6 +187,7 @@ export class AddHiringRequestComponent implements OnInit {
       })
     );
   }
+
   subscribeCountryList(response: any) {
     this.commonLoader.hideLoader();
     this.countryList$ = of(
@@ -349,11 +309,11 @@ export class AddHiringRequestComponent implements OnInit {
   //#endregion
 
   //#region "EditHirinRequest"
-  EditHiringRequest(data: IHiringRequestModel) {
-    this.hiringRequestService.EditHiringRequestDetail(data).subscribe(
+  EditHiringRequest() {
+    this.hiringRequestService.EditHiringRequestDetail(this.addHiringRequestForm.value).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
-          this.toastr.success('New request is created successfully');
+          this.toastr.success('Hiring request updated successfully');
           this.UpdateHiringRequestListRefresh();
         } else {
           this.toastr.error(response.message);
@@ -383,14 +343,14 @@ export class AddHiringRequestComponent implements OnInit {
     this.getAllProvinceList(e);
   }
   onChangeJobCategory(e) {
-    this.getRemainingVacancy(e);
+   // this.getRemainingVacancy(e);
   }
   onFormSubmit(data: any) {
     if (this.addHiringRequestForm.valid) {
       if (this.hiringRequestId === 0) {
         this.AddHiringRequest(data);
       } else {
-        this.EditHiringRequest(data);
+        this.EditHiringRequest();
       }
     }
   }
