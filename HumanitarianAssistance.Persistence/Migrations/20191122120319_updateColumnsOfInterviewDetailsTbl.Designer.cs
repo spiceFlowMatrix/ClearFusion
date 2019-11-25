@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191122120319_updateColumnsOfInterviewDetailsTbl")]
+    partial class updateColumnsOfInterviewDetailsTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5641,29 +5643,27 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<long>("CandidateId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("AccountStatus");
+
                     b.Property<int>("CountryId");
 
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<string>("CurrentAddress");
-
                     b.Property<DateTime>("DateOfBirth");
 
                     b.Property<long>("DistrictID");
 
-                    b.Property<int>("EducationDegreeId");
+                    b.Property<long>("EducationDegreeId");
 
                     b.Property<string>("Email");
-
-                    b.Property<int>("ExperienceMonth");
-
-                    b.Property<int>("ExperienceYear");
 
                     b.Property<string>("FirstName");
 
                     b.Property<int>("GenderId");
+
+                    b.Property<int>("GradeId");
 
                     b.Property<double>("IrrelevantExperienceInYear");
 
@@ -5675,17 +5675,17 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<string>("PermanentAddress");
+                    b.Property<int>("OfficeId");
 
                     b.Property<string>("PhoneNumber");
-
-                    b.Property<string>("PreviousWork");
 
                     b.Property<int>("ProfessionId");
 
                     b.Property<int>("ProvinceId");
 
                     b.Property<double>("RelevantExperienceInYear");
+
+                    b.Property<double>("TotalExperienceInYear");
 
                     b.HasKey("CandidateId");
 
@@ -5694,6 +5694,10 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("DistrictID");
 
                     b.HasIndex("EducationDegreeId");
+
+                    b.HasIndex("GradeId");
+
+                    b.HasIndex("OfficeId");
 
                     b.HasIndex("ProfessionId");
 
@@ -10060,9 +10064,19 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .HasForeignKey("DistrictID")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EducationDegreeMaster", "EducationDegreeMaster")
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.EducationDegreeDetail", "EducationDegreeDetails")
                         .WithMany()
                         .HasForeignKey("EducationDegreeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.JobGrade", "JobGrade")
+                        .WithMany()
+                        .HasForeignKey("GradeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.OfficeDetail", "OfficeDetail")
+                        .WithMany()
+                        .HasForeignKey("OfficeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.ProfessionDetails", "ProfessionDetails")

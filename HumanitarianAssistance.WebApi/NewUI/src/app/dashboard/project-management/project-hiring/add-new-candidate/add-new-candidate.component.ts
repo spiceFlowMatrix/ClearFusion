@@ -10,6 +10,9 @@ import { IDropDownModel } from 'src/app/store/models/purchase';
 import { takeUntil } from 'rxjs/operators';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { ICandidateDetailModel } from '../models/hiring-requests-models';
+import { PurchaseService } from 'src/app/store/services/purchase.service';
+import { Month, FileSourceEntityTypes } from 'src/app/shared/enum';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 
 @Component({
   selector: 'app-add-new-candidate',
@@ -29,8 +32,11 @@ export class AddNewCandidateComponent implements OnInit {
   accountStatusList$: Observable<IDropDownModel[]>;
   genderList$: Observable<IDropDownModel[]>;
   gradeList$: Observable<IDropDownModel[]>;
+  PreviousYearsList$: Observable<IDropDownModel[]>;
+  MonthsList$: Observable<IDropDownModel[]>;
   educationDegreeList$: Observable<IDropDownModel[]>;
   onAddCandidateListRefresh = new EventEmitter();
+  attachmentCV: any[] = [];
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     public dialogRef: MatDialogRef<AddNewCandidateComponent>,
@@ -40,7 +46,9 @@ export class AddNewCandidateComponent implements OnInit {
     private hiringRequestService: HiringRequestsService,
     private toastr: ToastrService,
     private fb: FormBuilder,
-    private loader: CommonLoaderService
+    private loader: CommonLoaderService,
+    private purchaseService: PurchaseService,
+    private globalSharedService: GlobalSharedService
   ) {
     this.addNewCandidateForm = this.fb.group({
       ProjectId: [null],
@@ -49,17 +57,22 @@ export class AddNewCandidateComponent implements OnInit {
       LastName: [null, [Validators.required]],
       Email: [null, [Validators.required, Validators.email]],
       PhoneNumber: [null, [Validators.required, Validators.maxLength(14)]],
-      AccountStatus: [null, [Validators.required]],
+      // AccountStatus: [null, [Validators.required]],
       EducationDegree: [null, [Validators.required]],
       Gender: [null, [Validators.required]],
+      DateOfBirth: [null, [Validators.required]],
       Country: [null, [Validators.required]],
       Province: [null, [Validators.required]],
       District: [null, [Validators.required]],
+      ExperienceYear: [null, [Validators.required]],
+      ExperienceMonth: [null, [Validators.required]],
+      PreviousWork: [null, [Validators.required]],
+      CurrentAddress: [null, [Validators.required]],
+      PermanentAddress: [null, [Validators.required]],
       Profession: [, [Validators.required]],
-      Grade: [null, [Validators.required]],
-      Office: [null, [Validators.required]],
-      DateOfBirth: [null, [Validators.required]],
-      TotalExperienceInYear: [null, [Validators.required]],
+      // Grade: [null, [Validators.required]],
+      // Office: [null, [Validators.required]],
+      // TotalExperienceInYear: [null, [Validators.required]],
       RelevantExperienceInYear: [null, [Validators.required]],
       IrrelevantExperienceInYear: [null, [Validators.required]]
     });
@@ -97,6 +110,29 @@ export class AddNewCandidateComponent implements OnInit {
       this.addNewCandidateForm.controls['HiringRequestId'].setValue(
         this.hiringRequestId
       );
+      this.getPreviousYearsList();
+      this.getAllMonthList();
+  }
+
+  getPreviousYearsList() {
+    this.PreviousYearsList$ = this.purchaseService.getPreviousYearsList(40);
+  }
+  getAllMonthList() {
+    const monthDropDown: IDropDownModel[] = [];
+    for (let i = Month['January']; i <= Month['December']; i++) {
+      monthDropDown.push({name: Month[i],
+        value: i});
+    }
+    this.MonthsList$ = of(monthDropDown);
+  }
+
+  openInput() {
+    document.getElementById('fileInput').click();
+  }
+
+  fileChange(file: any) {
+    this.attachmentCV = [];
+    this.attachmentCV.push(file);
   }
   getAllOfficeList() {
     this.commonLoader.showLoader();
@@ -166,10 +202,10 @@ export class AddNewCandidateComponent implements OnInit {
   subscribeEducationDegreeList(response: any) {
     this.commonLoader.hideLoader();
     this.educationDegreeList$ = of(
-      response.data.map(y => {
+      response.map(y => {
         return {
-          value: y.EducationDegreeId,
-          name: y.EducationDegreeName
+          value: y.Id,
+          name: y.Name
         };
       })
     );
@@ -222,13 +258,21 @@ export class AddNewCandidateComponent implements OnInit {
   }
 
   //#region "AddNewCandidate"
-  AddNewCandidate(data: ICandidateDetailModel) {
+  AddNewCandidate(data: ICandidateDetailModel, attachmentCV) {
+    this.commonLoader.showLoader();
     this.hiringRequestService.AddNewCandidateDetail(data).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
-          this.toastr.success('New request is created successfully');
-          this.AddCandidateListRefresh();
+          this.globalSharedService
+              .uploadFile(FileSourceEntityTypes.HiringRequestCandidateCV, this.hiringRequestId, attachmentCV)
+              .pipe(takeUntil(this.destroyed$))
+              .subscribe(y => {
+                this.commonLoader.hideLoader();
+                this.toastr.success('New Candidate added successfully');
+                this.AddCandidateListRefresh();
+              });
         } else {
+          this.commonLoader.hideLoader();
           this.toastr.error(response.message);
         }
         this.onCancelPopup();
@@ -256,10 +300,13 @@ export class AddNewCandidateComponent implements OnInit {
     this.getAllDistrictList(e);
   }
   onFormSubmit(data: any) {
-    if (this.addNewCandidateForm.valid) {
-      this.AddNewCandidate(data);
+    if (this.attachmentCV.length === 0) {
+      this.toastr.warning('Please attach CV!');
+      return;
     }
-    console.log(data);
+    if (this.addNewCandidateForm.valid) {
+      this.AddNewCandidate(data, this.attachmentCV[0][0]);
+    }
   }
       //#region "hiringRequestListRefresh"
       AddCandidateListRefresh() {
