@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using HumanitarianAssistance.Domain.Entities.HR;
+using HumanitarianAssistance.Domain.Entities.Project;
 
 namespace HumanitarianAssistance.Domain.Entities
 {
@@ -20,6 +21,10 @@ namespace HumanitarianAssistance.Domain.Entities
         public InterviewDetails InterviewDetails { get; set; }
         
         //new UI changes
+        
+        [ForeignKey ("InterviewId")]
+		public ProjectInterviewDetails ProjectInterviewDetails { get; set; }
+		public int? InterviewId { get; set; }
         public int? QuestionId { get; set; }
         [ForeignKey("QuestionId")]
         public RatingBasedCriteriaQuestions RatingBasedCriteriaQuestions { get; set; }
