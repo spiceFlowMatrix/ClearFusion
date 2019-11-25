@@ -205,7 +205,7 @@ export class RequestDetailComponent implements OnInit {
   addNewCandidate(): void {
     // NOTE: It open AddHiringRequest dialog and passed the data into the AddHiringRequestsComponent Model
     const dialogRef = this.dialog.open(AddNewCandidateComponent, {
-      width: '1000px',
+      width: '700px',
       autoFocus: false,
       data: {
         hiringRequestId: this.hiringRequestDetails.HiringRequestId,

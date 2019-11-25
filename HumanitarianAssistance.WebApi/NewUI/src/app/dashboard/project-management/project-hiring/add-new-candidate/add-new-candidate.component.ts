@@ -10,6 +10,8 @@ import { IDropDownModel } from 'src/app/store/models/purchase';
 import { takeUntil } from 'rxjs/operators';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { ICandidateDetailModel } from '../models/hiring-requests-models';
+import { PurchaseService } from 'src/app/store/services/purchase.service';
+import { Month } from 'src/app/shared/enum';
 
 @Component({
   selector: 'app-add-new-candidate',
@@ -29,6 +31,8 @@ export class AddNewCandidateComponent implements OnInit {
   accountStatusList$: Observable<IDropDownModel[]>;
   genderList$: Observable<IDropDownModel[]>;
   gradeList$: Observable<IDropDownModel[]>;
+  PreviousYearsList$: Observable<IDropDownModel[]>;
+  MonthsList$: Observable<IDropDownModel[]>;
   educationDegreeList$: Observable<IDropDownModel[]>;
   onAddCandidateListRefresh = new EventEmitter();
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
@@ -40,7 +44,8 @@ export class AddNewCandidateComponent implements OnInit {
     private hiringRequestService: HiringRequestsService,
     private toastr: ToastrService,
     private fb: FormBuilder,
-    private loader: CommonLoaderService
+    private loader: CommonLoaderService,
+    private purchaseService: PurchaseService
   ) {
     this.addNewCandidateForm = this.fb.group({
       ProjectId: [null],
@@ -49,17 +54,22 @@ export class AddNewCandidateComponent implements OnInit {
       LastName: [null, [Validators.required]],
       Email: [null, [Validators.required, Validators.email]],
       PhoneNumber: [null, [Validators.required, Validators.maxLength(14)]],
-      AccountStatus: [null, [Validators.required]],
+      // AccountStatus: [null, [Validators.required]],
       EducationDegree: [null, [Validators.required]],
       Gender: [null, [Validators.required]],
+      DateOfBirth: [null, [Validators.required]],
       Country: [null, [Validators.required]],
       Province: [null, [Validators.required]],
       District: [null, [Validators.required]],
+      ExperienceYear: [null, [Validators.required]],
+      ExperienceMonth: [null, [Validators.required]],
+      PreviousWork: [null, [Validators.required]],
+      CurrentAddress: [null, [Validators.required]],
+      PermanentAddress: [null, [Validators.required]],
       Profession: [, [Validators.required]],
-      Grade: [null, [Validators.required]],
-      Office: [null, [Validators.required]],
-      DateOfBirth: [null, [Validators.required]],
-      TotalExperienceInYear: [null, [Validators.required]],
+      // Grade: [null, [Validators.required]],
+      // Office: [null, [Validators.required]],
+      // TotalExperienceInYear: [null, [Validators.required]],
       RelevantExperienceInYear: [null, [Validators.required]],
       IrrelevantExperienceInYear: [null, [Validators.required]]
     });
@@ -97,6 +107,20 @@ export class AddNewCandidateComponent implements OnInit {
       this.addNewCandidateForm.controls['HiringRequestId'].setValue(
         this.hiringRequestId
       );
+      this.getPreviousYearsList();
+      this.getAllMonthList();
+  }
+
+  getPreviousYearsList() {
+    this.PreviousYearsList$ = this.purchaseService.getPreviousYearsList(40);
+  }
+  getAllMonthList() {
+    const monthDropDown: IDropDownModel[] = [];
+    for (let i = Month['January']; i <= Month['December']; i++) {
+      monthDropDown.push({name: Month[i],
+        value: i});
+    }
+    this.MonthsList$ = of(monthDropDown);
   }
   getAllOfficeList() {
     this.commonLoader.showLoader();
