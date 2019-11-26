@@ -16,7 +16,7 @@ import { takeUntil } from 'rxjs/operators';
 import { AddHiringRequestComponent } from '../add-hiring-request/add-hiring-request.component';
 import { MatDialog, MatSelectChange } from '@angular/material';
 import { AddNewCandidateComponent } from '../add-new-candidate/add-new-candidate.component';
-import { CandidateStatus, CandidateAction } from 'src/app/shared/enum';
+import { CandidateStatus, CandidateAction, Shift } from 'src/app/shared/enum';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
@@ -152,35 +152,47 @@ export class RequestDetailComponent implements OnInit {
   //#endregion
   //#region "getAllProjectActivityList"
   getHiringRequestDetailsByHiringRequestId() {
-    this.hiringRequestService
-      .GetProjectHiringRequestDetailsByHiringRequestId(this.hiringRequestId)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(
-        (response: IResponseData) => {
-          this.loader.showLoader();
-          if (response.statusCode === 200 && response.data !== null) {
-            this.hiringRequestDetails = {
-              Description: response.data.Description,
-              HiringRequestId: response.data.HiringRequestId,
-              JobCode: response.data.JobCode,
-              JobGrade: response.data.JobGrade,
-              Position: response.data.Position,
-              TotalVacancies: response.data.TotalVacancies,
-              FilledVacancies: response.data.FilledVacancies,
-              PayCurrency: response.data.PayCurrency,
-              PayRate: response.data.PayRate,
-              Status: response.data.Status,
-              Office: response.data.Office
-            };
+    if (this.hiringRequestId != null && this.hiringRequestId !== undefined) {
+      this.hiringRequestService
+        .GetProjectHiringRequestDetailsByHiringRequestId(this.hiringRequestId)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(
+          (response: IResponseData) => {
+            this.loader.showLoader();
+            if (response.statusCode === 200 && response.data !== null) {
+              this.hiringRequestDetails = {
+                Description: response.data.Description,
+                HiringRequestId: response.data.HiringRequestId,
+                JobCode: response.data.JobCode,
+                JobGrade: response.data.JobGrade,
+                Position: response.data.Position,
+                TotalVacancies: response.data.TotalVacancies,
+                FilledVacancies: response.data.FilledVacancies,
+                PayCurrency: response.data.PayCurrency,
+                PayRate: response.data.PayRate,
+                Status: response.data.Status,
+                Office: response.data.Office,
+                DepartmentName: response.data.DepartmentName,
+                BudgetName: response.data.BudgetName,
+                AnouncingDate: response.data.AnouncingDate,
+                ClosingDate: response.data.ClosingDate,
+                ContractType: response.data.ContractType,
+                ContractDuration: response.data.ContractDuration,
+                Shift: Shift[response.data.Shift],
+                EducationDegree: response.data.EducationDegree,
+                Profession: response.data.Profession,
+                Experience: response.data.Experience,
+                KnowledgeAndSkills: response.data.KnowledgeAndSkills
+              };
+            }
+            this.loader.hideLoader();
+          },
+          () => {
+            this.loader.hideLoader();
           }
-          this.loader.hideLoader();
-        },
-        () => {
-          this.loader.hideLoader();
-        }
-      );
+        );
+    }
   }
-
   // #region edit hiring request
   editHiringRequest(): void {
     // NOTE: It open AddHiringRequest (AddHiringRequestsComponent)
@@ -487,7 +499,7 @@ export class RequestDetailComponent implements OnInit {
           relativeTo: this.routeActive.parent,
           queryParams: {
             candId: data.item.CandidateId,
-            hiringId: this.hiringRequestId,
+            hiringId: this.hiringRequestId
           }
         });
         break;
