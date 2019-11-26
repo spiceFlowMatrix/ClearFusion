@@ -63,6 +63,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                     await _dbContext.HiringRequestCandidateStatus.AddAsync (obj);
                     await _dbContext.SaveChangesAsync ();
                 }
+                response.CommonId.Id = (int)candidateDetail.CandidateId;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             } catch (Exception ex) {

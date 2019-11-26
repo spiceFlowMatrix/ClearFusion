@@ -43,10 +43,8 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         }
 
         [HttpPost]
-        public async Task<ApiResponse> GetAllLogisticRequest([FromBody]long ProjectId)
+        public async Task<ApiResponse> GetAllLogisticRequest([FromBody]GetAllLogisticRequestQuery model)
         {
-            GetAllLogisticRequestQuery model = new GetAllLogisticRequestQuery();
-            model.ProjectId = ProjectId;
             return await _mediator.Send(model);
         }
         
