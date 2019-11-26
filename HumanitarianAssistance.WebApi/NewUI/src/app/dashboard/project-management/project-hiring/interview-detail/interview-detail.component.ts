@@ -543,6 +543,7 @@ export class InterviewDetailComponent implements OnInit {
 
   //#region "setInterviewDetails"
   setInterviewDetails(data: any) {
+    console.log();
     this.interviewDetailForm = this.fb.group({
       CandidateId: data.CandidateId,
       HiringRequestId: data.HiringRequestId,
@@ -573,18 +574,9 @@ export class InterviewDetailComponent implements OnInit {
     this.professionalCriteriaMarks = data.ProfessionalCriteriaMarks;
     this.ratingBasedCriteriaAnswerList.push(data.RatingBasedCriteriaList);
     this.technicalAnswerList.push(data.RatingBasedCriteriaList);
-    // this.languagesList$.subscribe(resl => {
-    //   resl.push(data.LanguageList);
-    //   this.languagesList$ = of(resl);
-    // });
-    // this.traningList$.subscribe(rest => {
-    //   rest.push(data.TraningList);
-    //   this.traningList$ = of(rest);
-    // });
-    // this.interviewerList$.subscribe(resi => {
-    //   resi.push(data.InterviewerList);
-    //   this.interviewerList$ = of(resi);
-    // });
+    this.languagesList$ = of(data.LanguageList);
+    this.traningList$ = of(data.TraningList);
+    this.interviewerList$ = of(data.InterviewerList);
   }
   //#endregion
 }

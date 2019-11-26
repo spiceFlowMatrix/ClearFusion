@@ -464,6 +464,7 @@ export class RequestDetailComponent implements OnInit {
   }
 
   newCandActionEvents(data: any) {
+    console.log(data);
     switch (data.type) {
       case 'Reject':
         this.rejectCandidate(data);
@@ -489,7 +490,6 @@ export class RequestDetailComponent implements OnInit {
     }
   }
   empActionEvents(data: any) {
-    // console.log(data);
     switch (data.type) {
       case 'Reject':
         this.rejectEmployee(data);
