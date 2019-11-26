@@ -7,6 +7,7 @@ using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using HumanitarianAssistance.Common.Helpers;
 
 namespace HumanitarianAssistance.Application.Store.Queries
 {
@@ -31,28 +32,28 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                            .Include(x => x.GeneratorItemDetail)
                                            .ThenInclude(x => x.StoreItemPurchase)
                                            .ThenInclude(x => x.StoreInventoryItem)
-                                           .ThenInclude(x=> x.StoreItemGroup)
+                                           .ThenInclude(x => x.StoreItemGroup)
                                            .Where(x => x.IsDeleted == false && x.Id == request.GeneratorId && x.CreatedDate.Value.Year == request.SelectedYear)
                                            .ToListAsync();
 
                 var generator = generatorData.Select(x => new MonthlyBreakDownModel
-                                                 {
-                                                     CreatedDate = x.CreatedDate.Value,
-                                                     GeneratorId = x.Id,
-                                                     Voltage = x.Voltage,
-                                                     StandardFuelConsumptionRate = x.FuelConsumptionRate,
-                                                     StandardMobilOilConsumptionRate = x.MobilOilConsumptionRate,
-                                                     StartingUsage = x.StartingUsage,
-                                                     IncurredUsage = x.IncurredUsage,
-                                                     ModelYear = x.ModelYear,
-                                                     OfficeId = x.OfficeId,
-                                                     OriginalCost = x.StoreItemPurchase.UnitCost,
-                                                     PurchaseName = $"{x.StoreItemPurchase.PurchaseName} - {x.StoreItemPurchase.PurchaseDate.ToShortDateString()}-{x.StoreItemPurchase.PurchaseId}",
-                                                     PurchaseId = x.StoreItemPurchase.PurchaseId,
-                                                     OfficeName = x.OfficeId != 0 ? _dbContext.OfficeDetail.FirstOrDefault(y => y.IsDeleted == false && y.OfficeId == x.OfficeId).OfficeName : null,
-                                                     GeneratorItemDetail = x.GeneratorItemDetail.Where(y => y.IsDeleted == false && y.CreatedDate.Value.Date.Year == request.SelectedYear).ToList(),
-                                                     GeneratorUsageHourDetail = x.GeneratorUsageHourList.Where(y => y.IsDeleted == false && y.CreatedDate.Value.Date.Year >= (request.SelectedYear - 1)).ToList()
-                                                 }).FirstOrDefault();
+                {
+                    CreatedDate = x.CreatedDate.Value,
+                    GeneratorId = x.Id,
+                    Voltage = x.Voltage,
+                    StandardFuelConsumptionRate = x.FuelConsumptionRate,
+                    StandardMobilOilConsumptionRate = x.MobilOilConsumptionRate,
+                    StartingUsage = x.StartingUsage,
+                    IncurredUsage = x.IncurredUsage,
+                    ModelYear = x.ModelYear,
+                    OfficeId = x.OfficeId,
+                    OriginalCost = x.StoreItemPurchase.UnitCost,
+                    PurchaseName = $"{x.StoreItemPurchase.PurchaseName} - {x.StoreItemPurchase.PurchaseDate.ToShortDateString()}-{x.StoreItemPurchase.PurchaseId}",
+                    PurchaseId = x.StoreItemPurchase.PurchaseId,
+                    OfficeName = x.OfficeId != 0 ? _dbContext.OfficeDetail.FirstOrDefault(y => y.IsDeleted == false && y.OfficeId == x.OfficeId).OfficeName : null,
+                    GeneratorItemDetail = x.GeneratorItemDetail.Where(y => y.IsDeleted == false && y.CreatedDate.Value.Date.Year == request.SelectedYear).ToList(),
+                    GeneratorUsageHourDetail = x.GeneratorUsageHourList.Where(y => y.IsDeleted == false && y.CreatedDate.Value.Date.Year >= (request.SelectedYear - 1)).ToList()
+                }).FirstOrDefault();
 
                 if (generator != null)
                 {
@@ -66,10 +67,14 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                     foreach (UsageType val in UsageTypeValues)
                     {
-                        UsageAnalysisBreakDown Usagedata;
-                        CostAnalysisBreakDown Costdata;
-                        SwitchCaseStatement(generator, request.SelectedYear, (int)val, out Usagedata, out Costdata);
-                        model.UsageAnalysisBreakDownList.Add(Usagedata);
+                        // Skip Current mileage for generator
+                        if (val != UsageType.CurrentMileage)
+                        {
+                            UsageAnalysisBreakDown Usagedata;
+                            CostAnalysisBreakDown Costdata;
+                            SwitchCaseStatement(generator, request.SelectedYear, (int)val, out Usagedata, out Costdata);
+                            model.UsageAnalysisBreakDownList.Add(Usagedata);
+                        }
                     }
 
                     Array costAnalysisValues = Enum.GetValues(typeof(CostAnalysis));
@@ -86,18 +91,18 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     CostAnalysisBreakDown totalCost = new CostAnalysisBreakDown();
 
                     totalCost.Header = "Total Cost";
-                    totalCost.January = model.CostAnalysisBreakDownList.Sum(x=> x.January) + (generator.CreatedDate.Month <= (int)Month.January? generator.OriginalCost : 0);
-                    totalCost.February = model.CostAnalysisBreakDownList.Sum(x=> x.February)+ (generator.CreatedDate.Month <= (int)Month.February? generator.OriginalCost : 0);
-                    totalCost.March = model.CostAnalysisBreakDownList.Sum(x=> x.March)+ (generator.CreatedDate.Month <= (int)Month.March? generator.OriginalCost : 0);
-                    totalCost.April = model.CostAnalysisBreakDownList.Sum(x=> x.April)+ (generator.CreatedDate.Month <= (int)Month.April? generator.OriginalCost : 0);
-                    totalCost.May = model.CostAnalysisBreakDownList.Sum(x=> x.May)+ (generator.CreatedDate.Month <= (int)Month.May? generator.OriginalCost : 0);
-                    totalCost.June = model.CostAnalysisBreakDownList.Sum(x=> x.June)+ (generator.CreatedDate.Month <= (int)Month.June? generator.OriginalCost : 0);
-                    totalCost.July = model.CostAnalysisBreakDownList.Sum(x=> x.July)+ (generator.CreatedDate.Month <= (int)Month.July? generator.OriginalCost : 0);
-                    totalCost.August = model.CostAnalysisBreakDownList.Sum(x=> x.August)+ (generator.CreatedDate.Month <= (int)Month.August? generator.OriginalCost : 0);
-                    totalCost.September = model.CostAnalysisBreakDownList.Sum(x=> x.September)+ (generator.CreatedDate.Month <= (int)Month.September? generator.OriginalCost : 0);
-                    totalCost.October = model.CostAnalysisBreakDownList.Sum(x=> x.October)+ (generator.CreatedDate.Month <= (int)Month.October? generator.OriginalCost : 0);
-                    totalCost.November = model.CostAnalysisBreakDownList.Sum(x=> x.November)+ (generator.CreatedDate.Month <= (int)Month.November? generator.OriginalCost : 0);
-                    totalCost.December = model.CostAnalysisBreakDownList.Sum(x=> x.December)+ (generator.CreatedDate.Month <= (int)Month.December? generator.OriginalCost : 0);
+                    totalCost.January = model.CostAnalysisBreakDownList.Sum(x => x.January) + (generator.CreatedDate.Month <= (int)Month.January ? generator.OriginalCost : 0);
+                    totalCost.February = model.CostAnalysisBreakDownList.Sum(x => x.February) + (generator.CreatedDate.Month <= (int)Month.February ? generator.OriginalCost : 0);
+                    totalCost.March = model.CostAnalysisBreakDownList.Sum(x => x.March) + (generator.CreatedDate.Month <= (int)Month.March ? generator.OriginalCost : 0);
+                    totalCost.April = model.CostAnalysisBreakDownList.Sum(x => x.April) + (generator.CreatedDate.Month <= (int)Month.April ? generator.OriginalCost : 0);
+                    totalCost.May = model.CostAnalysisBreakDownList.Sum(x => x.May) + (generator.CreatedDate.Month <= (int)Month.May ? generator.OriginalCost : 0);
+                    totalCost.June = model.CostAnalysisBreakDownList.Sum(x => x.June) + (generator.CreatedDate.Month <= (int)Month.June ? generator.OriginalCost : 0);
+                    totalCost.July = model.CostAnalysisBreakDownList.Sum(x => x.July) + (generator.CreatedDate.Month <= (int)Month.July ? generator.OriginalCost : 0);
+                    totalCost.August = model.CostAnalysisBreakDownList.Sum(x => x.August) + (generator.CreatedDate.Month <= (int)Month.August ? generator.OriginalCost : 0);
+                    totalCost.September = model.CostAnalysisBreakDownList.Sum(x => x.September) + (generator.CreatedDate.Month <= (int)Month.September ? generator.OriginalCost : 0);
+                    totalCost.October = model.CostAnalysisBreakDownList.Sum(x => x.October) + (generator.CreatedDate.Month <= (int)Month.October ? generator.OriginalCost : 0);
+                    totalCost.November = model.CostAnalysisBreakDownList.Sum(x => x.November) + (generator.CreatedDate.Month <= (int)Month.November ? generator.OriginalCost : 0);
+                    totalCost.December = model.CostAnalysisBreakDownList.Sum(x => x.December) + (generator.CreatedDate.Month <= (int)Month.December ? generator.OriginalCost : 0);
 
                     model.CostAnalysisBreakDownList.Add(totalCost);
                 }
@@ -356,7 +361,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                             if (purchaseFuelInMonth != null && usageInaMonth != null && usageInaMonth.Hours > 0)
                             {
                                 actualMobilOilRate = (purchaseFuelInMonth.Value / usageInaMonth.Hours) * 100;
-                                monthData = Math.Round(generator.StandardMobilOilConsumptionRate - actualMobilOilRate,4);
+                                monthData = Math.Round(generator.StandardMobilOilConsumptionRate - actualMobilOilRate, 4);
                             }
                         }
                     }
@@ -451,9 +456,9 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                .Select(x => x.StoreItemPurchase.Quantity)
                                                .DefaultIfEmpty(0).Sum();
-                            if(quantity != 0)
+                            if (quantity != 0)
                             {
-                                monthData = (100/generator.StandardMobilOilConsumptionRate) * quantity; // (100Km/stdmobiloilconsumptionrate(per hour))* total quantity of purchased mobil oil
+                                monthData = (100 / generator.StandardMobilOilConsumptionRate) * quantity; // (100Km/stdmobiloilconsumptionrate(per hour))* total quantity of purchased mobil oil
                             }
                         }
                         else
@@ -463,13 +468,13 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                             double totalHoursUsed = generator.GeneratorUsageHourDetail
                                                             .Where(x => x.CreatedDate.Value.Year == selectedYear && x.CreatedDate.Value.Year == data.Year && x.Month.Month > data.Month
-                                                            && x.Month.Month<= month)
+                                                            && x.Month.Month <= month)
                                                             .Select(x => x.Hours).DefaultIfEmpty(0).Sum();
 
 
-                            double totalHoursGeneratorCanBeUsed= Math.Round(generator.StandardMobilOilConsumptionRate* data.TotalMobilOil, 4);
+                            double totalHoursGeneratorCanBeUsed = Math.Round(generator.StandardMobilOilConsumptionRate * data.TotalMobilOil, 4);
 
-                            monthData= totalHoursGeneratorCanBeUsed- totalHoursUsed;
+                            monthData = totalHoursGeneratorCanBeUsed - totalHoursUsed;
 
                         }
                     }
@@ -486,19 +491,19 @@ namespace HumanitarianAssistance.Application.Store.Queries
         private TotalMobilOilAndMonth GetTotalUsageTillMobilOilChange(int month, int year, MonthlyBreakDownModel generator)
         {
             TotalMobilOilAndMonth mobilOilAndMonth = new TotalMobilOilAndMonth();
-            mobilOilAndMonth.Year= year;
-            mobilOilAndMonth.Month= month;
-            mobilOilAndMonth.TotalMobilOil=0;
+            mobilOilAndMonth.Year = year;
+            mobilOilAndMonth.Month = month;
+            mobilOilAndMonth.TotalMobilOil = 0;
 
             var item = generator.GeneratorItemDetail.FirstOrDefault(x => x.CreatedDate.Value.Month == month && x.CreatedDate.Value.Year == year &&
                              x.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
                                                x.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil);
 
-            if (item == null && month == (int)Month.January && generator.CreatedDate.Date.Year< year)
+            if (item == null && month == (int)Month.January && generator.CreatedDate.Date.Year < year)
             {
                 mobilOilAndMonth = GetTotalUsageTillMobilOilChange((int)Month.December, year - 1, generator);
             }
-            else if (item == null && generator.CreatedDate.Date.Year== year && month != (int)Month.January)
+            else if (item == null && generator.CreatedDate.Date.Year == year && month != (int)Month.January)
             {
                 mobilOilAndMonth = GetTotalUsageTillMobilOilChange(month - 1, year, generator);
             }
@@ -522,8 +527,11 @@ namespace HumanitarianAssistance.Application.Store.Queries
             {
                 double monthData = GetMonthlyGeneratorDetail(generator, selectedYear, j, usageType);
 
-                usageBreakDown.Header = Enum.GetName(typeof(UsageType), usageType);
-                costBreakDown.Header = Enum.GetName(typeof(CostAnalysis), usageType);
+                UsageType usage = (UsageType)usageType;
+                CostAnalysis cost = (CostAnalysis)usageType;
+
+                usageBreakDown.Header = usage.GetDescription();
+                costBreakDown.Header = cost.GetDescription();
 
                 switch (j)
                 {

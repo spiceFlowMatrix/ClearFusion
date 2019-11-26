@@ -178,7 +178,7 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   }
 
   getMonthlyBreakDownYears() {
-    this.monthlyBreakdownYearList$ = this.purchaseService.getMonthlyBreakDownYears();
+    this.monthlyBreakdownYearList$ = this.purchaseService.getPreviousYearsList(10);
     this.monthlyBreakdownYearList$.subscribe(x => {
       this.monthlyBreakdownYear = x[0].value;
     });

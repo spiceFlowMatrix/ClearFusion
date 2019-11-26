@@ -94,6 +94,9 @@ export class GLOBAL {
   public static API_HRConfiguration_AddDesignationDetail = 'HRConfiguration/AddDesignationDetail';
   public static API_HRConfiguration_EditDesignationDetail = 'HRConfiguration/EditDesignationDetail';
   public static API_HRConfiguration_GetAllDesignationDetail = 'HRConfiguration/GetAllDesignationDetail';
+  public static API_HRConfiguration_GetEducationDegreeList = 'HRConfiguration/GetEducationDegreeList';
+  public static API_HRConfiguration_AddEducationDegree = 'HRConfiguration/AddEducationDegree';
+  public static API_HRConfiguration_EditEducationDegree = 'HRConfiguration/EditEducationDegree';
   public static API_Policy_AddNewPolicy = 'Policy/AddEditPolicy';
   public static API_Policy_AddPolicyRepeatDays = 'Policy/AddPolicyRepeatDays';
   public static API_Policy_AddNewPolicyTimeSchedule = 'Policy/AddEditPolicyTimeSchedule';
@@ -189,6 +192,7 @@ export class GLOBAL {
   public static API_Project_AddEditTargetBeneficiary = 'Project/AddEditTargetBeneficiary';
 
   public static API_Code_GetAllAccountByAccountHeadTypeId = 'Code/GetAllAccountByAccountHeadTypeId';
+  public static API_Code_GetAllDesignationList = 'Code/GetAllDesignationList';
   public static API_Code_GetAllJournalDetail = 'Code/GetAllJournalDetail';
   public static API_AccountReports_GetJournalVoucherDetails = 'AccountReports/GetJournalVoucherDetails';
   public static API_Accounting_GetAccountDetails = 'Account/GetAllAccountCode';
@@ -268,6 +272,7 @@ export class GLOBAL {
   public static API_Project_GetProjectJobDetail = 'Project/GetProjectJobDetail';
   public static API_Code_GetAllProfession = 'Code/GetAllProfession';
   public static API_Code_GetAllEducationDegree = 'Code/GetAllEducationDegree';
+  public static API_Code_GetAllEducationDegreeList = 'Code/GetAllEducationDegreeList';
 
   //#region criteria evaluation form
 
@@ -466,6 +471,7 @@ export class GLOBAL {
   public static API_HREmployee_EditEmployeeProfessionalDetail = 'EmployeeDetail/EditEmployeeProfessionalDetail';
   public static API_HiringRequest_DeleteCandidatDetail = 'HiringRequest/DeleteCandidatDetail';
   public static API_Chat_AddMessage = 'Chat/AddMessage';
+  public static API_Code_GetDepartmentsByOfficeId = 'Code/GetDepartmentsByOfficeId';
 
   // pdf
   public static API_Pdf_GetAllChartOfAccountHierarchyPdf = 'Pdf/GetAllChartOfAccountHierarchyPdf';

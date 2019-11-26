@@ -6,6 +6,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { AddDesignationComponent } from '../add-designation/add-designation.component';
 import { TableActionsModel } from 'projects/library/src/public_api';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 
 @Component({
   selector: 'app-designation-listing',
@@ -27,7 +29,8 @@ export class DesignationListingComponent implements OnInit {
   };
   RecordCount: number;
 
-  constructor(private hrService: HrService, private dialog: MatDialog, private toastr: ToastrService) {
+  constructor(private hrService: HrService, private dialog: MatDialog, private toastr: ToastrService,
+    private commonLoader: CommonLoaderService) {
 
   }
 
@@ -50,7 +53,9 @@ export class DesignationListingComponent implements OnInit {
   }
 
   getDesignationList() {
+    this.commonLoader.showLoader();
     this.hrService.getDesignationList(this.pageModel).subscribe(x => {
+      this.commonLoader.hideLoader();
       this.designationList$ = of(x.DesignationList.map(element => {
         return {
           Id: element.DesignationId,
@@ -65,6 +70,8 @@ export class DesignationListingComponent implements OnInit {
         };
       }));
       this.RecordCount = x.RecordCount;
+    }, error => {
+      this.commonLoader.hideLoader();
     });
   }
 

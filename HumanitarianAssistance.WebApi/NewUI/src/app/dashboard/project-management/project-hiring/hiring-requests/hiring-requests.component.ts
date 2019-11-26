@@ -39,7 +39,6 @@ export class HiringRequestsComponent implements OnInit {
   displayHeaderColumns: string[] = [
     'select',
     'HiringRequestId',
-    'JobCode',
     'JobGrade',
     'Position',
     'TotalVacancies',
@@ -130,7 +129,7 @@ export class HiringRequestsComponent implements OnInit {
             response.data.forEach(element => {
               this.hiringRequestList.push({
                 HiringRequestId: element.HiringRequestId,
-                JobCode: element.JobCode,
+                // JobCode: element.JobCode,
                 JobGrade: element.JobGrade,
                 Position: element.Position,
                 TotalVacancies: element.TotalVacancies,

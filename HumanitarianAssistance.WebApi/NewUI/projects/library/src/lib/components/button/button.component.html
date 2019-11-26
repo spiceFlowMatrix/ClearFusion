@@ -67,4 +67,8 @@
       {{text | uppercase}}
     </h5>
   </button>
+  <button *ngSwitchCase="'attachment'" mat-flat-button class="blue" (click)="btnClick()" type="button">
+      <i class="fa fa-paperclip fa-1"></i>
+      {{text| uppercase}}
+    </button>
 </ng-container>

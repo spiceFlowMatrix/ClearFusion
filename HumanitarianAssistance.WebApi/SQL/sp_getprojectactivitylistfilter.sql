@@ -176,7 +176,7 @@ BEGIN
 		  	  (_late_end = false OR pa."PlannedEndDate":: DATE < (SELECT get_project_activityactualenddate_max_byparentid(pa."ActivityId")):: DATE) AND
 			  -- On Schedule Filter (PlannedStartDate >= ActualStartDate &&  PlannedEndDate >= ActualEndDate)
 		  	  (_on_schedule = false OR 
-			   (pa."PlannedStartDate":: DATE >= (SELECT get_project_activityactualstartdate_min_byparentid(pa."ActivityId")):: DATE) AND
+			   (pa."PlannedStartDate":: DATE <= (SELECT get_project_activityactualstartdate_min_byparentid(pa."ActivityId")):: DATE) AND
 			   (pa."PlannedEndDate":: DATE >= (SELECT get_project_activityactualenddate_max_byparentid(pa."ActivityId")):: DATE)
 			  ) AND
 			  -- Activity Description
