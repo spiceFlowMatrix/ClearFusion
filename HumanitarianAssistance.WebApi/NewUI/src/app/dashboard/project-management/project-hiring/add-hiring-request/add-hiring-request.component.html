@@ -219,9 +219,8 @@
       </div>
     </div>
     <div mat-dialog-actions class="pull-right">
-      <!-- <button mat-raised-button [mat-dialog-close]>Cancel</button>
-      <button mat-raised-button color="primary" type="submit">Save</button> -->
-      <hum-button [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
+      <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+      <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
       <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
     </div>
   </form>

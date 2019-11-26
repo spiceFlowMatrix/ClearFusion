@@ -565,11 +565,11 @@ getStoreLogs(id: number, entityId: number) {
           GLOBAL.API_StorePurchase_GetVehicleGeneratorTrackerLogs + '?id=' + id + '&entityId=' + entityId);
 }
 
-getMonthlyBreakDownYears(): Observable<IDropDownModel[]> {
+getPreviousYearsList(years: number): Observable<IDropDownModel[]> {
 
   const yearDropDown: IDropDownModel[] = [];
   const year = new Date().getFullYear();
-  for (let i = 0; i <= 10; i++) {
+  for (let i = 0; i <= years; i++) {
     yearDropDown.push({name: (year - i).toString(),
     value: year - i});
   }
