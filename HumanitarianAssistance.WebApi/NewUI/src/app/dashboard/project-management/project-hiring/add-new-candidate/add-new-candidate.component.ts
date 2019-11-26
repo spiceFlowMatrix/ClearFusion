@@ -261,10 +261,10 @@ export class AddNewCandidateComponent implements OnInit {
   AddNewCandidate(data: ICandidateDetailModel, attachmentCV) {
     this.commonLoader.showLoader();
     this.hiringRequestService.AddNewCandidateDetail(data).subscribe(
-      (response: IResponseData) => {
-        if (response.statusCode === 200) {
+      (response) => { // response.CommonId.Id is CandidateId
+        if (response.StatusCode === 200 && response.CommonId.Id != null) {
           this.globalSharedService
-              .uploadFile(FileSourceEntityTypes.HiringRequestCandidateCV, this.hiringRequestId, attachmentCV)
+              .uploadFile(FileSourceEntityTypes.HiringRequestCandidateCV, response.CommonId.Id , attachmentCV)
               .pipe(takeUntil(this.destroyed$))
               .subscribe(y => {
                 this.commonLoader.hideLoader();

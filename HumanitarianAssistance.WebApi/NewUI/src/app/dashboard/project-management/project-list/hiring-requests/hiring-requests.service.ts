@@ -320,16 +320,6 @@ export class HiringRequestsService {
       this.appurl.getApiUrl() +
         GLOBAL.API_HiringRequest_AddNewCandidateDetail,
       data
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
     );
 }
 //#endregion

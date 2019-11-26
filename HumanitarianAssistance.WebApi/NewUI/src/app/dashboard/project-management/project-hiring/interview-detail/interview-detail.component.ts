@@ -1,11 +1,12 @@
 import { Component, OnInit, HostListener, Inject } from "@angular/core";
 import { FormGroup, FormBuilder, FormArray, Validators } from "@angular/forms";
 import { CommonLoaderService } from "src/app/shared/common-loader/common-loader.service";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, NavigationEnd } from "@angular/router";
 import { HiringRequestsService } from "../../project-list/hiring-requests/hiring-requests.service";
 import { ToastrService } from "ngx-toastr";
 import { IResponseData } from "src/app/dashboard/accounting/vouchers/models/status-code.model";
 import { of, Observable, ReplaySubject, forkJoin } from "rxjs";
+import 'rxjs/add/operator/pairwise';
 import { IDropDownModel } from "src/app/store/models/purchase";
 import {
   ICandidateDetail,
@@ -491,6 +492,8 @@ export class InterviewDetailComponent implements OnInit {
     );
   }
   onFormSubmit(data: any) {
+
+    
     if (this.interviewDetailForm.valid) {
       this.AddInterviewDetails(data);
     } else {
@@ -500,13 +503,14 @@ export class InterviewDetailComponent implements OnInit {
 
   //#region "AddInterviewDetails"
   AddInterviewDetails(data: InterviewDetailModel) {
+    this.commonLoader.showLoader();
     data.CandidateId = this.candidateId;
     data.HiringRequestId = this.hiringRequestId;
     this.hiringRequestService.AddInterviewDetails(data).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
           this.toastr.success("Interview Details successfully Added");
-          this.router.navigate(["../hiring-request"]);
+          window.history.back();
         } else {
           this.toastr.error(response.message);
         }
@@ -514,7 +518,9 @@ export class InterviewDetailComponent implements OnInit {
       error => {
         this.toastr.error("Someting went wrong. Please try again");
       }
+
     );
+    this.commonLoader.showLoader();
   }
   //#endregion
 

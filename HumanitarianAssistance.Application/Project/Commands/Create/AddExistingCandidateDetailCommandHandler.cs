@@ -35,7 +35,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     HiringRequestId = request.HiringRequestId,
                     EmployeeID = employeeDetail.EmployeeID,
                     CandidateStatus = 2,
-                    InterviewId = 1,
+                    // InterviewId = 1,
                     CreatedById = request.CreatedById,
                     CreatedDate = request.CreatedDate
                     };
