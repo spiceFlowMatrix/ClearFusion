@@ -1,7 +1,7 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
   <span class="action_header">
     Interview Details
-    <hum-button
+    <hum-button *ngIf="isDisplay"
       [type]="'save'"
       [text]="'Save '"
       [isSubmit]="true"
