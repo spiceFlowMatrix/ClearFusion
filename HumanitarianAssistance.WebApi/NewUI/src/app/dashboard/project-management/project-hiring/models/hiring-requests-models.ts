@@ -39,9 +39,6 @@ export interface HiringRequestDetailList {
   PayRate?: string;
   Status?: string;
   Office?: string;
-  // BudgetLine?: string;
-  // JobType?: string;
-  // Announ
 }
 
 export interface OfficeDetailModel {
