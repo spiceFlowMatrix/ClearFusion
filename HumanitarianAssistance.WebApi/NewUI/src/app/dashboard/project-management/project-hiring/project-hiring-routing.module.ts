@@ -12,9 +12,10 @@ const routes: Routes = [
     children: [
       { path: 'job-detail', component: JobDetailComponent },
       { path: 'interview-detail', component: InterviewDetailComponent },
+      // { path: 'interview-detail/:id', component: InterviewDetailComponent },
       { path: 'requests', component: HiringRequestsComponent },
       { path: ':id', component: RequestDetailComponent },
-     
+
     ]
   }
 

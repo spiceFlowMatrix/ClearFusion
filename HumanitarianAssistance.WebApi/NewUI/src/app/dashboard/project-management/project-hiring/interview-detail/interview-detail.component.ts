@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
 import { ToastrService } from 'ngx-toastr';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
-import { of, Observable, ReplaySubject } from 'rxjs';
+import { of, Observable, ReplaySubject, forkJoin } from 'rxjs';
 import { IDropDownModel } from 'src/app/store/models/purchase';
 import {
   ICandidateDetail,
@@ -14,7 +14,8 @@ import {
   ITraningDetailModel,
   IInterviewerDetailModel,
   InterviewQuestionDetailModel,
-  InterviewDetailModel
+  InterviewDetailModel,
+  ISelectBoxModel
 } from '../models/hiring-requests-models';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog, MatSelectChange } from '@angular/material';
@@ -30,10 +31,6 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./interview-detail.component.scss']
 })
 export class InterviewDetailComponent implements OnInit {
-  temp = 0;
-  professionalCriteriaMarks = 0;
-  marksObtain = 0;
-  totalMarksObtain = 0;
   languagesHeaders$ = of([
     'Language',
     'Reading',
@@ -49,6 +46,10 @@ export class InterviewDetailComponent implements OnInit {
     'End Date'
   ]);
   interviewerHeaders$ = of(['Employee Id', 'Employee Code', 'Full Name']);
+  temp = 0;
+  professionalCriteriaMarks = 0;
+  marksObtain = 0;
+  totalMarksObtain = 0;
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
@@ -69,7 +70,7 @@ export class InterviewDetailComponent implements OnInit {
   technicalQuestionList: any[] = [];
   ratingBasedCriteriaAnswerList: InterviewQuestionDetailModel[] = [];
   technicalAnswerList: InterviewQuestionDetailModel[] = [];
-  ratingBasedDropDown: any[];
+  ratingBasedDropDown: ISelectBoxModel[];
   interviewDetails: IInterviewerDetailModel;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
@@ -100,6 +101,24 @@ export class InterviewDetailComponent implements OnInit {
         value: '4-Excellent'
       }
     ];
+
+    this.noticePeriodList$ = of([
+      { name: '5 Days', value: 5 },
+      { name: '10 Days', value: 10 },
+      { name: '15 Days', value: 15 },
+      { name: '20 Days', value: 20 },
+      { name: '25 Days', value: 25 },
+      { name: '30 Days', value: 30 },
+      { name: '35 Days', value: 35 },
+      { name: '40 Days', value: 40 },
+      { name: '45 Days', value: 45 }
+    ] as IDropDownModel[]);
+
+    this.statusList$ = of([
+      { name: 'Recommend', value: 1 },
+      { name: 'Reject', value: 2 }
+    ] as IDropDownModel[]);
+
     this.interviewDetailForm = this.fb.group({
       CandidateId: [null],
       HiringRequestId: [null],
@@ -128,24 +147,6 @@ export class InterviewDetailComponent implements OnInit {
       MarksObtain: [null, [Validators.required]],
       TotalMarksObtain: [null, [Validators.required]]
     });
-
-    this.noticePeriodList$ = of([
-      { name: '5 Days', value: 5 },
-      { name: '10 Days', value: 10 },
-      { name: '15 Days', value: 15 },
-      { name: '20 Days', value: 20 },
-      { name: '25 Days', value: 25 },
-      { name: '30 Days', value: 30 },
-      { name: '35 Days', value: 35 },
-      { name: '40 Days', value: 40 },
-      { name: '45 Days', value: 45 }
-    ] as IDropDownModel[]);
-
-    this.statusList$ = of([
-      { name: 'Hire', value: 1 },
-      { name: 'Not Hire', value: 2 },
-      { name: 'Other', value: 3 }
-    ] as IDropDownModel[]);
   }
 
   ngOnInit() {
@@ -185,12 +186,9 @@ export class InterviewDetailComponent implements OnInit {
       TotalExperienceInYear: ''
     };
     this.getScreenSize();
-    this.getRatingBasedCriteriaQuestion();
-    this.getTechnicalQuestionsByDesignationId();
-    this.getCandidateDetails();
+
     this.getAllHiringRequestDetails();
-    this.getInterviewDetailsByInterviewId();
-    // this.setInterviewDetails();
+    this.getCandidateDetails();
   }
 
   //#region "Dynamic Scroll"
@@ -209,53 +207,16 @@ export class InterviewDetailComponent implements OnInit {
   //#endregion
 
   // #region "getRatingBasedCriteriaQuestion"
-  getRatingBasedCriteriaQuestion() {
-    const OfficeId = 1;
-    this.hiringRequestService
-      .GetRatingBasedCriteriaQuestion(OfficeId)
-      .subscribe(
-        (response: IResponseData) => {
-          this.commonLoader.showLoader();
-          if (response.statusCode === 200 && response.data !== null) {
-            response.data.forEach(element => {
-              this.ratingBasedCriteriaQuestionList.push({
-                Id: element.QuestionsId,
-                value: element.Question
-              });
-            });
-          }
-          this.commonLoader.hideLoader();
-        },
-        error => {
-          this.commonLoader.hideLoader();
-        }
-      );
+  getRatingBasedCriteriaQuestion(OfficeId: number) {
+    return this.hiringRequestService.GetRatingBasedCriteriaQuestion(OfficeId);
   }
   //#endregion
 
   // #region "getTechnicalQuestionsByDesignationId"
-  getTechnicalQuestionsByDesignationId() {
-    const DesignationId = 1;
-
-    this.hiringRequestService
-      .GetTechnicalQuestionsByDesignationId(DesignationId)
-      .subscribe(
-        (response: IResponseData) => {
-          this.commonLoader.showLoader();
-          if (response.statusCode === 200 && response.data !== null) {
-            response.data.forEach(element => {
-              this.technicalQuestionList.push({
-                Id: element.QuestionId,
-                value: element.Question
-              });
-            });
-          }
-          this.commonLoader.hideLoader();
-        },
-        error => {
-          this.commonLoader.hideLoader();
-        }
-      );
+  getTechnicalQuestionsByDesignationId(DesignationId: number) {
+    return this.hiringRequestService.GetTechnicalQuestionsByDesignationId(
+      DesignationId
+    );
   }
   //#endregion
 
@@ -300,6 +261,8 @@ export class InterviewDetailComponent implements OnInit {
           this.commonLoader.showLoader();
           if (response.statusCode === 200 && response.data !== null) {
             this.hiringRequestDetail = {
+              OfficeId: response.data.OfficeId,
+              DesignationId: response.data.DesignationId,
               Office: response.data.Office,
               Position: response.data.Position,
               JobGrade: response.data.JobGrade,
@@ -320,6 +283,34 @@ export class InterviewDetailComponent implements OnInit {
               EducationDegree: response.data.EducationDegree,
               TotalExperienceInYear: response.data.TotalExperienceInYear
             };
+            forkJoin(
+              [this.getRatingBasedCriteriaQuestion(response.data.OfficeId),
+              this.getTechnicalQuestionsByDesignationId(
+                response.data.DesignationId)]
+              ).subscribe(res => {
+                this.commonLoader.showLoader();
+                if (res[0].statusCode === 200 && res[0].data !== null) {
+                  res[0].data.forEach(element => {
+                    this.ratingBasedCriteriaQuestionList.push({
+                      Id: element.QuestionsId,
+                      value: element.Question,
+                      selected: null
+                    });
+                  });
+                }
+                if (res[1].statusCode === 200 && res[1].data !== null) {
+                  res[1].data.forEach(element => {
+                    this.technicalQuestionList.push({
+                      Id: element.QuestionId,
+                      value: element.Question
+                    });
+                  });
+                }
+                this.commonLoader.hideLoader();
+                if (this.interviewId > 0) {
+                  this.getInterviewDetailsByInterviewId();
+                }
+              });
           }
           this.commonLoader.hideLoader();
         },
@@ -523,14 +514,14 @@ export class InterviewDetailComponent implements OnInit {
 
   // #region "getInterviewDetailsByInterviewId"
   getInterviewDetailsByInterviewId() {
-    const InterviewId = 1;
+    const InterviewId = this.interviewId;
     this.hiringRequestService
       .GetInterviewDetailsByInterviewId(InterviewId)
       .subscribe(
         (response: IResponseData) => {
           this.commonLoader.showLoader();
           if (response.statusCode === 200 && response.data !== null) {
-             this.setInterviewDetails(response.data);
+            this.setInterviewDetails(response.data);
           }
           this.commonLoader.hideLoader();
         },
@@ -543,15 +534,9 @@ export class InterviewDetailComponent implements OnInit {
 
   //#region "setInterviewDetails"
   setInterviewDetails(data: any) {
-    console.log();
     this.interviewDetailForm = this.fb.group({
       CandidateId: data.CandidateId,
       HiringRequestId: data.HiringRequestId,
-      //  RatingBasedCriteriaList: data.RatingBasedCriteriaList,
-      // TechnicalQuestionList: data.TechnicalQuestionList,
-      // LanguageList: data.LanguageList,
-      // TraningList: data.TraningList,
-      // InterviewerList: data.InterviewerList,
       Description: data.Description,
       NoticePeriod: data.NoticePeriod,
       AvailableDate: data.AvailableDate,
@@ -571,9 +556,21 @@ export class InterviewDetailComponent implements OnInit {
     });
     this.totalMarksObtain = data.TotalMarksObtain;
     this.marksObtain = data.MarksObtain;
-    this.professionalCriteriaMarks = data.ProfessionalCriteriaMarks;
-    this.ratingBasedCriteriaAnswerList.push(data.RatingBasedCriteriaList);
-    this.technicalAnswerList.push(data.RatingBasedCriteriaList);
+    this.professionalCriteriaMarks = data.ProfessionalCriteriaMark;
+    data.RatingBasedCriteriaList.forEach((element, i) => {
+      // this.ratingBasedCriteriaAnswerList.push({
+      //   QuestionId: element.QuestionId,
+      //   Score: element.Score
+      // });
+      this.ratingBasedCriteriaQuestionList[i].selected = element.Score;
+    });
+    data.TechnicalQuestionList.forEach((element, i) => {
+      // this.technicalQuestionList.push({
+      //   QuestionId: element.QuestionId,
+      //   Score: element.Score
+      // });
+      this.technicalQuestionList[i].selected = element.Score;
+    });
     this.languagesList$ = of(data.LanguageList);
     this.traningList$ = of(data.TraningList);
     this.interviewerList$ = of(data.InterviewerList);

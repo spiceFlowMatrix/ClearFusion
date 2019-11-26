@@ -2,6 +2,8 @@ using System;
 
 namespace HumanitarianAssistance.Application.Project.Models {
     public class HiringRequestDetailsModel {
+        public int? OfficeId { get; set; }
+        public int? DesignationId { get; set; }
         public string Office { get; set; }
         public string Position { get; set; }
         public string JobGrade { get; set; }

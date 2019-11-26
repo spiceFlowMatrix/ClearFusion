@@ -41,8 +41,10 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                             join ed in _dbContext.EducationDegreeMaster 
                             on hrd.EducationDegreeId equals ed.Id into edm from ed in edm.DefaultIfEmpty () 
                             select new HiringRequestDetailsModel {
+                                OfficeId = o.OfficeId,
+                                DesignationId = dd.DesignationId,
                             Office = o.OfficeName,
-                                Position = pr.ProfessionName,
+                                Position = dd.Designation,
                                 JobGrade = j.GradeName,
                                 TotalVacancy = hrd.TotalVacancies,
                                 FilledVacancy = hrd.FilledVacancies,

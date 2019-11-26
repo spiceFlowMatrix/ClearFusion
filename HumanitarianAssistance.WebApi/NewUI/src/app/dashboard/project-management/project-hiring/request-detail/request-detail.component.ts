@@ -243,7 +243,13 @@ export class RequestDetailComponent implements OnInit {
                       this.projectId +
                       '/hiring-request/interview-detail?candId=' +
                       element.CandidateId +
-                      '&hiringId=' + this.hiringRequestId + '">Interview Id</a>',
+                      '&hiringId=' +
+                      this.hiringRequestId +
+                      '&interviewId=' +
+                      element.InterviewId +
+                      '">Interview ' +
+                      element.InterviewId +
+                      '</a>',
                 CandidateStatus: CandidateStatus[element.CandidateStatus],
                 itemAction:
                   element.CandidateStatus != CandidateStatus.Rejected &&

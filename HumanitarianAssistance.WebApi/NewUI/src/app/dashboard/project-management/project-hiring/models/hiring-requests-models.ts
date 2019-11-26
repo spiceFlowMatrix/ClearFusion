@@ -159,6 +159,8 @@ export interface ICandidateDetail {
 }
 
 export interface IHiringRequestDetailModel {
+  OfficeId?: number;
+  DesignationId?: number;
   Office?: string;
   Position?: string;
   JobGrade?: string;
@@ -229,4 +231,9 @@ export interface InterviewDetailModel {
   ProfessionalCriteriaMark?: number;
   MarksObtain?: number;
   TotalMarksObtain?: number;
+}
+
+export interface ISelectBoxModel {
+  Id: number;
+  value: string;
 }

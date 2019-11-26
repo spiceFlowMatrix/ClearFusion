@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,11 +28,25 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                     .Include (x => x.InterviewLanguagesList)
                     .Include (x => x.InterviewTrainingsList)
                     .Include (y => y.HRJobInterviewersList)
-                    // .ThenInclude (z => z.EmployeeDetail)
                     .FirstOrDefaultAsync (x => x.IsDeleted == false && x.InterviewId == request.InterviewId);
- if(interviewDetails!=null)
- {
-                InterviewDetailsModel obj = new InterviewDetailsModel () {
+
+                List<InterviewerDetailsModel> iobj = new List<InterviewerDetailsModel> ();
+                foreach (var item in interviewDetails.HRJobInterviewersList) {
+                    var employeeDetails = _dbContext.EmployeeDetail.Where (e => e.EmployeeID == item.EmployeeId)
+                        .Select (y => new InterviewerDetailsModel {
+                            EmployeeId = y.EmployeeID,
+                                EmployeeCode = y.EmployeeCode,
+                                EmployeeName = y.EmployeeName,
+                        }).FirstOrDefault ();
+                    // InterviewerDetailsModel details = new InterviewerDetailsModel () {
+                    //     EmployeeId = employeeDetails.EmployeeId,
+                    //     EmployeeCode = employeeDetails.EmployeeCode,
+                    //     EmployeeName = employeeDetails.EmployeeName,
+                    // };
+                    iobj.Add (employeeDetails);
+                }
+                if (interviewDetails != null) {
+                    InterviewDetailsModel obj = new InterviewDetailsModel () {
 
                     Description = interviewDetails.Description,
                     NoticePeriod = interviewDetails.NoticePeriod,
@@ -78,13 +93,10 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                     TraningStartDate = y.StartDate,
                     TraningEndDate = y.EndDate
                     }).ToList (),
-                    InterviewerList = interviewDetails.HRJobInterviewersList.Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false)
-                    .Select (y => new InterviewerDetailsModel {
-                    EmployeeId = y.EmployeeId
-                    }).ToList (),
-                };
-                response.data.InterviewDetails = obj;
- }
+                    InterviewerList = iobj
+                    };
+                    response.data.InterviewDetails = obj;
+                }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
             } catch (Exception ex) {

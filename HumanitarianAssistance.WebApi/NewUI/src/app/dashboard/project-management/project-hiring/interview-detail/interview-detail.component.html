@@ -2,7 +2,7 @@
   <span class="action_header">
     Interview Details
     <hum-button
-      [type]="'add'"
+      [type]="'save'"
       [text]="'Save '"
       [isSubmit]="true"
       (click)="onFormSubmit(interviewDetailForm.value)"
@@ -97,7 +97,7 @@
             </tr>
             <tr>
               <td>Budget Line</td>
-              <td>{{hiringRequestDetail.BudgetLine}}</td>
+              <td>{{ hiringRequestDetail.BudgetLine }}</td>
             </tr>
             <tr>
               <td>Job Type</td>
@@ -126,7 +126,8 @@
           </tbody>
         </table>
         <br />
-        <h5>Required Qualification</h5><br>
+        <h5>Required Qualification</h5>
+        <br />
         <span>{{ hiringRequestDetail.KnowledgeAndSkillsRequired }}</span>
         <table class="table table-striped">
           <tbody>
@@ -156,7 +157,8 @@
             <mat-panel-title>
               <h5><b>Rating Base Criteria</b></h5>
               <h5 style="margin-left: auto;">
-                <b> Professional Criteria Marks: </b>{{professionalCriteriaMarks}}
+                <b> Professional Criteria Marks: </b
+                >{{ professionalCriteriaMarks }}
               </h5>
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -170,6 +172,7 @@
                 placeholder="Score"
                 name="Score"
                 (selectionChange)="onChangeRatingBasedCriteria(data.Id, $event)"
+                [(value)]="data.selected"
               >
                 <mat-option
                   *ngFor="let item of ratingBasedDropDown"
@@ -185,7 +188,9 @@
           <mat-expansion-panel-header>
             <mat-panel-title>
               <h5><b>Tecnical Questions</b></h5>
-              <h5 style="margin-left: auto;"><b>Marks Obtain: </b>{{marksObtain}}</h5>
+              <h5 style="margin-left: auto;">
+                <b>Marks Obtain: </b>{{ marksObtain }}
+              </h5>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <div
@@ -197,6 +202,7 @@
               <mat-select
                 placeholder="Score"
                 name="Score"
+                [(value)]="temp.selected"
                 (selectionChange)="onChangeTechnicalQuestion(temp.Id, $event)"
               >
                 <mat-option
@@ -334,7 +340,9 @@
             </div>
             <br />
             <div class="row shift-left">
-              <h5><b>Total Marks Obtain: </b><span>{{totalMarksObtain}}</span></h5>
+              <h5>
+                <b>Total Marks Obtain: </b><span>{{ totalMarksObtain }}</span>
+              </h5>
             </div>
             <br />
             <div class="row shift-left">
