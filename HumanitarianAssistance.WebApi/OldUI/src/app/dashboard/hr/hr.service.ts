@@ -1370,7 +1370,7 @@ export class HrService {
   }
   //#endregion
 
- //#region "Add Leave Info"
+ //#region "DownloadPDF"
  DownloadPDF(url: string, data: any) {
   const Myheaders = new Headers();
   Myheaders.append(

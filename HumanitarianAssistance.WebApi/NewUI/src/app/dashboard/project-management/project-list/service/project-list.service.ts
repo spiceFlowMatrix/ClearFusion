@@ -172,7 +172,7 @@ export class ProjectListService {
       Id: 8,
       PageId: projectPagesMaster.HiringRequests,
       Text: 'Hiring Requests',
-      Link: 'hiring-request'
+      Link: 'hiring-request/requests'
     },
     {
       Id: 9,

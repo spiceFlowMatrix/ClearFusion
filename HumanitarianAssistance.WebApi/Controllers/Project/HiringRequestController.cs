@@ -155,6 +155,43 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         {
             return await _mediator.Send(new GetRemainingVacancyByJobIdQuery{ JobId=JobId});
         }
+
+       [HttpPost]
+        public async Task<ApiResponse> AddNewCandidateDetail([FromBody]AddNewCandidateDetailCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+        } 
+       [HttpPost]
+        public async Task<ApiResponse> GetAllCandidateList([FromBody]GetAllCandidateListQuery query)
+        {
+            return await _mediator.Send(query);
+        }  
+        
+       [HttpPost]
+         public async Task<ApiResponse> UpdateCandidateStatusByStatusId([FromBody]UpdateCandidateStatusByStatusIdCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.ModifiedById = userId;
+            command.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+        } 
+       
+        [HttpPost]
+        public async Task<ApiResponse> AddExistingCandidateDetail([FromBody]AddExistingCandidateDetailCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+        } 
+
+        [HttpPost]
+        public async Task<ApiResponse> GetAllExistingCandidateList([FromBody]GetAllExistingCandidateListQuery query)
+        {
+            return await _mediator.Send(query);
+        }              
     }  
-    
 }

@@ -33,7 +33,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                 int codeNumber = 0;
 
                 //Getting latest created record of StoreSourceCodeDetail based on source code type selected
-                StoreSourceCodeDetail storeSourceCodeDetail = await _dbContext.StoreSourceCodeDetail.OrderByDescending(x => x.SourceCodeId).FirstOrDefaultAsync(x => x.IsDeleted == false && x.CodeTypeId == request.CodeTypeId);
+                StoreSourceCodeDetail storeSourceCodeDetail = await _dbContext.StoreSourceCodeDetail.OrderByDescending(x => x.Code).FirstOrDefaultAsync(x => x.IsDeleted == false && x.CodeTypeId == request.CodeTypeId);
 
                 if (storeSourceCodeDetail != null)
                 {

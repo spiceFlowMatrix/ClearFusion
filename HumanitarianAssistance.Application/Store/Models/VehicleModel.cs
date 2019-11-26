@@ -26,5 +26,6 @@ namespace HumanitarianAssistance.Application.Store.Models
         public long PurchaseId {get; set;}
         public string OfficeName {get; set;}
         public double VehicleStartingCost { get; set; }
+        public double CurrentMileageInAMonth { get; set; }
     }
 }

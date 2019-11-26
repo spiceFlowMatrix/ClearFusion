@@ -9,6 +9,14 @@ export interface HiringList {
   PayRate?: string;
   Status?: string;
 }
+export interface ICandidateFilterModel {
+  HiringRequestId?: number;
+  FilterValue: string;
+  pageIndex?: number;
+  pageSize?: number;
+  ProjectId?: number;
+  TotalCount?: number;
+}
 
 export interface IFilterModel {
   FilterValue: string;
@@ -40,21 +48,23 @@ export interface OfficeDetailModel {
 }
 
 export interface ICandidateDetailModel {
-FirstName?: string;
-LastName?: string;
-Email?: string;
-PhoneNumber?: string;
-AccountStatus?: number;
-Gender?: number;
-DateOfBirth?: Date;
-Grade?: number;
-Profession?: number;
-Office?: number;
-Country?: number;
-Province?: number;
-District?: number;
-ExperienceInMonth?: number;
-ExperienceInYear?: number;
+  FirstName?: string;
+  LastName?: string;
+  Email?: string;
+  PhoneNumber?: string;
+  AccountStatus?: number;
+  Gender?: number;
+  DateOfBirth?: Date;
+  EducationDegree?: number;
+  Grade?: number;
+  Profession?: number;
+  Office?: number;
+  Country?: number;
+  Province?: number;
+  District?: number;
+  TotalExperienceInYear?: number;
+  RelevantExperienceInYear?: number;
+  IrrelevantExperienceInYear?: number;
 }
 
 export interface IHiringRequestModel {
@@ -87,4 +97,56 @@ export interface IHiringRequestModel {
 export interface CompleteHiringRequestModel {
   HiringRequestId: number[];
   ProjectId: number;
+}
+
+export interface ICandidateDetailList {
+  CandidateId?: number;
+  FirstName?: string;
+  LastName?: string;
+  Gender?: string;
+  Interview?: string;
+  CandidateStatus?: string;
+  firstText?: string;
+  subItems?: ISubCandidateList[];
+}
+
+export interface IExistingCandidateList {
+  EmployeeId?: number;
+  EmployeeCode?: string;
+  FullName?: string;
+  Gender?: string;
+  CandidateStatus?: string;
+  itemAction?: any[];
+}
+
+export interface ISubCandidateList {
+  PhoneNumber?: string;
+  Email?: string;
+  DateOfBirth?: Date;
+  EducationDegree?: string;
+  Grade?: string;
+  Profession?: string;
+  Office?: string;
+  Country?: string;
+  Province?: string;
+  District?: string;
+  TotalExperienceInYear?: string;
+  RelevantExperienceInYear?: string;
+  IrrelevantExperienceInYear?: string;
+  AccountStatus?: string;
+}
+
+export interface TableActionsModel {
+  items: {
+    button?: { status?: boolean; text?: string };
+    delete?: boolean;
+    edit?: boolean;
+    download?: boolean;
+  };
+  subitems: {
+    button?: { status?: boolean; text?: string };
+    delete?: boolean;
+    edit?: boolean;
+    download?: boolean;
+  };
 }

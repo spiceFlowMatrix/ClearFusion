@@ -4,8 +4,12 @@ SELECT
     MIN(pa."ActualStartDate")
 FROM
     "ProjectActivityDetail" AS pa
-    INNER JOIN "ProjectBudgetLineDetail" AS pbl ON pa."BudgetLineId" = pbl."BudgetLineId"
 WHERE
-    pa."ParentId" = parentid;
+   CASE WHEN pa."ParentId" is not null
+        THEN 
+        pa."ParentId" = parentid 
+        ELSE
+		pa."ActivityId" = parentid
+		END;
 
 $Body$;

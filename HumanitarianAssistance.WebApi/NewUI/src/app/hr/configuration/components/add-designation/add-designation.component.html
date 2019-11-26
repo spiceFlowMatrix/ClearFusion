@@ -1,0 +1,60 @@
+<div>
+  <h1 mat-dialog-title>{{title}}</h1>
+  <hr>
+</div>
+<form [formGroup]='addDesignationForm' (ngSubmit)="saveDesignation()">
+  <mat-dialog-content>
+    <div class="row">
+      <div class="col-sm-12">
+        <h4>What is the name of this designation</h4>
+      </div>
+      <div class="col-sm-3">
+        <mat-form-field class="example-full-width">
+          <input matInput formControlName="DesignationName" placeholder="Designation">
+        </mat-form-field>
+      </div>
+      <div class="col-sm-9"></div>
+      <div class="col-sm-12">
+        <h4>Please describe this designation</h4>
+      </div>
+      <div class="col-sm-6">
+        <mat-form-field class="example-full-width">
+          <textarea matInput formControlName="Description" placeholder="Designation Description"></textarea>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6"></div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="col-sm-4">
+          <h4>Technical Questions</h4>
+        </div>
+        <div class="col-sm-4">
+          <hum-button [type]="'add'" [text]="'ADD NEW TECHNICAL QUESTION'" (click)="addQuestion()"></hum-button>
+        </div>
+        <div class="col-sm-12" formArrayName="Questions">
+          <div class="row">
+            <div *ngFor="let item of addDesignationForm.controls['Questions'].controls; let i=index">
+              <div class="col-sm-10" [formGroupName]="i">
+                <mat-form-field class="example-full-width">
+                  <textarea matInput formControlName="Question" placeholder="Technical Question {{i+1}}"></textarea>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-2">
+                <span class="action-span" *ngIf="addDesignationForm.get('Questions').length >1">
+                  <i class="fas fa-trash" (click)='deleteQuestion(i)'></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions class="items-float-right">
+    <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
+    <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+    <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+  </mat-dialog-actions>
+</form>

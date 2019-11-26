@@ -13,9 +13,16 @@
         <!-- {{(item[header] != null) ? item[header] : "N/A"}} -->
       </td>
       <td *ngIf="itemActions && (itemActions.items)">
-        <span class="action-span">
+        <span class="action-span" *ngIf="isDefaultAction">
           <hum-button *ngIf="itemActions.items?.button?.status" [type]="'add'" [text]="itemActions.items.button.text"
             (click)='action(item,"button",$event)'></hum-button>
+        </span>
+        <span class="action-span" *ngIf="!isDefaultAction">
+          <span *ngFor="let actionType of item.itemAction">
+              <hum-button *ngIf="actionType.button?.status" [type]="actionType.button?.type" [text]="actionType.button?.text"
+              (click)='action(item,actionType.button?.text,$event)'></hum-button>
+          </span>
+        
         </span>
         <span class="action-span">
           <i *ngIf="itemActions.items?.download" class="fas fa-download" (click)='action(item,"download",$event)'></i>

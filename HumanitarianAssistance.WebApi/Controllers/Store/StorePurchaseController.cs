@@ -188,12 +188,12 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetTransportItemDataSource([FromBody] GetTransportItemDataSourceQuery request)
+        public async Task<IActionResult> GetTransportItemDataSource([FromQuery] int id)
         {
-            var result = await Task.FromResult(_mediator.Send(request));
+            var result = await Task.FromResult(_mediator.Send(new GetTransportItemDataSourceQuery {ItemGroupTransportType = id }));
 
             if (result.Exception == null)
             {
@@ -228,9 +228,26 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetVehicleGeneratorTrackerLogs()
+        public async Task<IActionResult> GetVehicleGeneratorTrackerLogs(int id, long entityId)
         {
-            var result = await Task.FromResult(_mediator.Send(new GetVehicleGeneratorTrackerLogsQuery { }));
+            var result = await Task.FromResult(_mediator.Send(new GetVehicleGeneratorTrackerLogsQuery { TransportType = id, EntityId= entityId }));
+
+            if (result.Exception == null)
+            {
+                return Ok(await result);
+            }
+            else
+            {
+                return BadRequest(result.Exception.InnerException.Message);
+            }
+        }
+
+        [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetTransportItemCategoryType(long Id)
+        {
+            var result = await Task.FromResult(_mediator.Send(new GetTransportItemCategoryTypeQuery { ItemId = Id}));
 
             if (result.Exception == null)
             {

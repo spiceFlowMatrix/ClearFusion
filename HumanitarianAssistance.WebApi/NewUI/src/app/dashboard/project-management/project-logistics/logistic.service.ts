@@ -147,4 +147,84 @@ export class LogisticService {
         ProjectId
     );
   }
+
+  cancelComparativeRequest(RequestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_CancelComparativeRequest,
+        RequestId
+    );
+  }
+
+  IssueComparativeStatement(RequestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_IssueComparativeStatement,
+        RequestId
+    );
+  }
+
+  addSuppliers(model) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_AddLogisticSupplier,
+        model
+    );
+  }
+
+  getSuppliersList(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_GetLogisticSupplierList,
+        requestId
+    );
+  }
+
+  deleteSupplierById(supplierId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_DeleteLogisticSupplier,
+        supplierId
+    );
+  }
+
+  editSuppliers(model) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_EditLogisticSupplier,
+        model
+    );
+  }
+
+  SubmitComparativeStatement(model) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_SubmitComparativeStatement,
+        model
+    );
+  }
+
+  getComparativeStatement(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_GetComparativeStatement,
+        requestId
+    );
+  }
+
+  rejectComparativeStatement(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_RejectComparativeStatement,
+        requestId
+    );
+  }
+
+  approveComparativeStatement(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_ApproveComparativeStatement,
+        requestId
+    );
+  }
 }

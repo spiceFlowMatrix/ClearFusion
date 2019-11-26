@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using HumanitarianAssistance.Domain.Entities.Project;
 
-namespace HumanitarianAssistance.Domain.Entities.HR
-{
-    public class InterviewLanguages: BaseEntity
-    {
+namespace HumanitarianAssistance.Domain.Entities.HR {
+	public class InterviewLanguages : BaseEntity {
 		[Key]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		[Column(Order = 1)]
+		[DatabaseGenerated (DatabaseGeneratedOption.Identity)]
+		[Column (Order = 1)]
 		public int InterviewLanguagesId { get; set; }
-        [ForeignKey("InterviewDetailsId")]
+
+		[ForeignKey ("InterviewDetailsId")]
 		public InterviewDetails InterviewDetails { get; set; }
-		public int InterviewDetailsId { get; set; }
+		public int? InterviewDetailsId { get; set; }
+
+		[ForeignKey ("InterviewId")]
+		public ProjectInterviewDetails ProjectInterviewDetails { get; set; }
+		public int? InterviewId { get; set; }
 		public string LanguageName { get; set; }
 		public int? LanguageId { get; set; }
 		public int? Reading { get; set; }

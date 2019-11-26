@@ -37,6 +37,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                           .Include(x => x.VehicleItemDetail)
                                           .ThenInclude(x => x.StoreItemPurchase)
                                           .ThenInclude(x => x.StoreInventoryItem)
+                                          .ThenInclude(x=> x.StoreItemGroup)
                                           .Where(x => x.IsDeleted == false && x.Id == request.VehicleId)
                                           .Select(x => new VehicleModel
                                           {
@@ -54,27 +55,37 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                               PurchaseId = x.StoreItemPurchase.PurchaseId,
                                               OfficeName = x.OfficeId != 0 ? _dbContext.OfficeDetail.FirstOrDefault(y => y.IsDeleted == false && y.OfficeId == x.OfficeId).OfficeName : null,
                                               TotalFuelUsage = x.VehicleItemDetail.Where(y => y.IsDeleted == false &&
-                                                                                  y.VehiclePurchaseId == request.VehicleId && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleFuel)
+                                                                                  y.VehiclePurchaseId == request.VehicleId &&
+                                                                                  y.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                                  y.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                                                .Select(z => z.StoreItemPurchase.Quantity).DefaultIfEmpty(0).Sum(),
                                               TotalMobilOilUsage = x.VehicleItemDetail.Where(y => y.IsDeleted == false &&
-                                                                                   y.VehiclePurchaseId == request.VehicleId && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil)
+                                                                                   y.VehiclePurchaseId == request.VehicleId && 
+                                                                                   y.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                                   y.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                                                .Select(z => z.StoreItemPurchase.Quantity).DefaultIfEmpty(0).Sum(),
                                               FuelTotalCost = x.VehicleItemDetail.Where(y => y.IsDeleted == false &&
-                                                                                     y.VehiclePurchaseId == request.VehicleId && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleFuel)
+                                                                                     y.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                                     y.VehiclePurchaseId == request.VehicleId && y.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                                                .Select(z => z.StoreItemPurchase.Quantity * z.StoreItemPurchase.UnitCost).DefaultIfEmpty(0).Sum(),
                                               MobilOilTotalCost = x.VehicleItemDetail.Where(y => y.IsDeleted == false &&
-                                                                                     y.VehiclePurchaseId == request.VehicleId && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMobilOil)
+                                                                                     y.VehiclePurchaseId == request.VehicleId &&
+                                                                                     y.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                                     y.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                                                .Select(z => z.StoreItemPurchase.Quantity * z.StoreItemPurchase.UnitCost).DefaultIfEmpty(0).Sum(),
                                               SparePartsTotalCost = x.VehicleItemDetail.Where(y => y.IsDeleted == false &&
-                                                                                     y.VehiclePurchaseId == request.VehicleId && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleSpareParts)
+                                                                                     y.VehiclePurchaseId == request.VehicleId && 
+                                                                                      y.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle && 
+                                                                                      y.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.SpareParts)
                                                                                .Select(z => z.StoreItemPurchase.Quantity * z.StoreItemPurchase.UnitCost).DefaultIfEmpty(0).Sum(),
                                               ServiceAndMaintenanceTotalCost = x.VehicleItemDetail.Where(y => y.IsDeleted == false &&
-                                                                                     y.VehiclePurchaseId == request.VehicleId && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.VehicleMaintenanceService)
+                                                                                     y.VehiclePurchaseId == request.VehicleId &&
+                                                                                     y.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Vehicle &&
+                                                                                     y.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MaintenanceService)
                                                                                .Select(z => z.StoreItemPurchase.Quantity * z.StoreItemPurchase.UnitCost).DefaultIfEmpty(0).Sum(),
                                               CurrentMileage = x.StartingMileage + x.IncurredMileage + x.VehicleMileageDetail.Where(z => z.IsDeleted == false).Select(z => z.Mileage).DefaultIfEmpty(0).Sum(),
                                               VehicleStartingCost = x.StoreItemPurchase.UnitCost,
-                                          })
-                                          .FirstOrDefaultAsync();
+                                          }).FirstOrDefaultAsync();
 
                 if (vehicle == null)
                 {

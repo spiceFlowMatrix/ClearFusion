@@ -28,11 +28,15 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                     CreatedDate = request.CreatedDate,
                     IsDeleted = false,
                     OfficeId = request.Office,
-                    ProfessionId = request.Position,
+                   // ProfessionId = request.Position,
                     ProjectId = request.ProjectId,
                     TotalVacancies = request.TotalVacancy,
                     AnouncingDate = request.AnouncingDate,
-                    JobType = request.JobType,
+                    PositionId= request.Position,
+                    HourlyRate= request.PayHourlyRate,
+                    //JobType = request.JobType,
+                    BudgetLineId= request.BudgetLine,
+                    JobTypeId= request.JobType,
                     Background = request.Background,
                     JobStatus = request.JobStatus,
                     JobId = request.JobCategory,
@@ -50,6 +54,10 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                     MinimumEducationLevel = request.MinEducationLevel,
                     Experience = request.Experience,
                     Organization = request.Organization,
+                    GradeId= request.JobGrade,
+                    CurrencyId= request.PayCurrency, 
+                    EducationDegreeId= request.EducationDegree,
+                    ProfessionId= request.Profession,
                     HiringRequestStatus = (int)HiringRequestStatus.Open
                 };
                 await _dbContext.ProjectHiringRequestDetail.AddAsync (hiringRequestDeatil);

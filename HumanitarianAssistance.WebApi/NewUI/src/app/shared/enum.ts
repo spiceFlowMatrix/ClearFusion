@@ -508,7 +508,9 @@ export enum FileSourceEntityTypes {
   ProjectActivityPlanning = 8,
   DonorDetail = 9,
   StorePurchase = 10,
-  Employee = 11
+  Employee = 11,
+  ComparativeStatement = 12,
+  HiringRequestCandidateCV = 13
 }
 //#endregion
 //#region "EmployeeType"
@@ -591,4 +593,41 @@ export enum LogisticComparativeStatus {
   'Statement Submitted' = 4,
   'Reject Statement' = 5,
   'Approve Statement' = 6,
+}
+export enum CandidateStatus {
+  'Pending Shortlist' = 0,
+  'Pending Interview' = 1,
+  'Pending Selection' = 2,
+  'Selected' = 3,
+  'Rejected' = 4
+}
+export enum CandidateAction {
+  'Shortlist' = 0,
+  'Interview' = 1,
+  'Select' = 2,
+}
+
+export enum TransportItemCategory
+{
+    Vehicle= 1,
+    Generator= 2,
+    MobilOil= 3,
+    MaintenanceService= 4,
+    SpareParts= 5,
+    Fuel= 6
+}
+
+export enum Month {
+  January = 1,
+  February = 2,
+  March = 3,
+  April = 4,
+  May = 5,
+  June = 6,
+  July = 7,
+  August = 8,
+  September = 9,
+  October = 10,
+  November = 11,
+  December = 12
 }

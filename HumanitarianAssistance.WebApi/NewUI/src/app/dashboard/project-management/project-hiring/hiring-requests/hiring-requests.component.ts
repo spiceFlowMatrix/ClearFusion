@@ -39,7 +39,6 @@ export class HiringRequestsComponent implements OnInit {
   displayHeaderColumns: string[] = [
     'select',
     'HiringRequestId',
-    'JobCode',
     'JobGrade',
     'Position',
     'TotalVacancies',
@@ -51,20 +50,6 @@ export class HiringRequestsComponent implements OnInit {
 
   hiringRequestList: HiringList[] = [];
   dataSource: any;
-  // **
-
-  hiringListHeaders$ = of([
-    'Hiring Request Id',
-    'Job Code',
-    'Job Grade',
-    'Position',
-    'Total Vacancies',
-    'Filled Vacancies',
-    'Pay Currency',
-    'Pay Rate',
-    'Status'
-  ]);
-  hiringList$: Observable<HiringList[]>;
 
   selection = new SelectionModel<HiringList>(true, []);
   /** Whether the number of selected elements matches the total number of rows. */
@@ -102,8 +87,7 @@ export class HiringRequestsComponent implements OnInit {
       IsInProgress: HiringRequestStatus['In-Progress'],
       IsOpenFlagId: HiringRequestStatus.Open
     };
-
-    this.routeActive.parent.params.subscribe(params => {
+    this.routeActive.parent.parent.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
     this.getAllHiringRequestFilterList(this.filterModel);
@@ -145,7 +129,7 @@ export class HiringRequestsComponent implements OnInit {
             response.data.forEach(element => {
               this.hiringRequestList.push({
                 HiringRequestId: element.HiringRequestId,
-                JobCode: element.JobCode,
+                // JobCode: element.JobCode,
                 JobGrade: element.JobGrade,
                 Position: element.Position,
                 TotalVacancies: element.TotalVacancies,
@@ -193,8 +177,8 @@ export class HiringRequestsComponent implements OnInit {
 
   requestDetail(e) {
     // console.log(e.HiringRequestId);
-    //this.route.navigate([e.HiringRequestId], { relativeTo: this.routeActive });
-     //this.router.navigate(['../hiring-request/' + e.HiringRequestId]);
+     this.route.navigate([e.HiringRequestId], { relativeTo: this.routeActive.parent });
+    // this.router.navigate(['../hiring-request/' + e.HiringRequestId]);
   }
 
   // 07-09-2019
@@ -230,7 +214,6 @@ export class HiringRequestsComponent implements OnInit {
       HiringRequestId: [],
       ProjectId: this.projectId
     };
-    console.log('id', this.selection.selected);
     if (
       this.selection.selected.length > 0 &&
       this.selection.selected.length !== undefined
@@ -239,10 +222,10 @@ export class HiringRequestsComponent implements OnInit {
         this.completeRequestModel.HiringRequestId.push(element.HiringRequestId);
       });
       this.hiringRequestService
-        .IsCompltedeHrDEtail(this.completeRequestModel)
+        .IsCompltedeHrDetail(this.completeRequestModel)
         .subscribe(
           (responseData: IResponseData) => {
-            if (responseData.statusCode === 200 && responseData.data !== null) {
+            if (responseData.statusCode === 200 ) {
               this.getAllHiringRequestFilterList(this.filterModel);
             } else if (responseData.statusCode === 400) {
               this.toastr.error('Something went wrong .Please try again.');
@@ -267,9 +250,9 @@ export class HiringRequestsComponent implements OnInit {
         this.completeRequestModel.HiringRequestId.push(element.HiringRequestId);
       });
       this.hiringRequestService
-        .IsCloasedHrDEtail(this.completeRequestModel)
+        .IsCloasedHrDetail(this.completeRequestModel)
         .subscribe((responseData: IResponseData) => {
-          if (responseData.statusCode === 200 && responseData.data !== null) {
+          if (responseData.statusCode === 200) {
             this.getAllHiringRequestFilterList(this.filterModel);
           } else if (responseData.statusCode === 400) {
             this.toastr.error('Something went wrong .Please try again.');
