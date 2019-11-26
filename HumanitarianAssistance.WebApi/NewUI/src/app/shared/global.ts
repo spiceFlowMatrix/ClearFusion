@@ -271,7 +271,7 @@ export class GLOBAL {
   public static API_Project_GetProjectBudgetLineDetail = 'Project/GetProjectBudgetLineDetail';
   public static API_Project_GetProjectJobDetail = 'Project/GetProjectJobDetail';
   public static API_Code_GetAllProfession = 'Code/GetAllProfession';
-  public static API_Code_GetAllEducationDegree = 'Code/GetAllEducationDegree';
+  // public static API_Code_GetAllEducationDegree = 'Code/GetAllEducationDegree';
   public static API_Code_GetAllEducationDegreeList = 'Code/GetAllEducationDegreeList';
 
   //#region criteria evaluation form
@@ -450,7 +450,20 @@ export class GLOBAL {
     'HiringRequest/AddExistingCandidateDetail';
     public static API_HiringRequest_GetAllExistingCandidateList =
     'HiringRequest/GetAllExistingCandidateList';
+
+    // interview pages
     public static API_Code_GetRatingBasedCriteriaQuestions = 'Code/GetAllRatingBasedCriteriaQuestionsByOfficeId';
+    public static API_HiringRequest_GetCandidateDetailsByCandidateId = 'HiringRequest/GetCandidateDetailsByCandidateId';
+    public static API_HiringRequest_GetAllHiringRequestDetailForInterviewByHiringRequestId =
+     'HiringRequest/GetAllHiringRequestDetailForInterviewByHiringRequestId';
+     public static API_HiringRequest_GetTechnicalQuestionsByDesignationId =
+     'HiringRequest/GetTechnicalQuestionsByDesignationId';
+     public static API_HiringRequest_AddInterviewDetails =
+     'HiringRequest/AddInterviewDetails';
+     public static API_HiringRequest_GetInterviewDetailsByInterviewId =
+     'HiringRequest/GetInterviewDetailsByInterviewId';
+
+
 
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
   public static API_Code_GetAllDesignation = 'Code/GetAllDesignation';

@@ -150,3 +150,90 @@ export interface TableActionsModel {
     download?: boolean;
   };
 }
+export interface ICandidateDetail {
+  FullName?: string;
+  DutyStation?: string;
+  Gender?: string;
+  Qualification?: string;
+  DateOfBirth?: Date;
+}
+
+export interface IHiringRequestDetailModel {
+  OfficeId?: number;
+  DesignationId?: number;
+  Office?: string;
+  Position?: string;
+  JobGrade?: string;
+  TotalVacancy?: number;
+  FilledVacancy?: number;
+  PayCurrency?: string;
+  PayHourlyRate?: number;
+  BudgetLine?: string;
+  JobType?: string;
+  AnouncingDate?: Date;
+  ClosingDate?: Date;
+  ContractType?: string;
+  ContractDuration?: number;
+  JobShift?: string;
+  KnowledgeAndSkillsRequired?: string;
+  Profession?: string;
+  EducationDegree?: string;
+  TotalExperienceInYear?: string;
+}
+export interface ILanguageDetailModel {
+  LanguageName?: string;
+  LanguageReading?: string;
+  LanguageWriting?: string;
+  LanguageListining?: string;
+  LanguageSpeaking?: string;
+}
+export interface ITraningDetailModel {
+  TraningType?: string;
+  TraningName?: string;
+  TraningCountryAndCity?: string;
+  TraningStartDate?: Date;
+  TraningEndDate?: Date;
+}
+export interface IInterviewerDetailModel {
+  EmployeeId?: number;
+  EmployeeCode?: string;
+  EmployeeName?: string;
+}
+export interface InterviewQuestionDetailModel {
+  QuestionId?: number;
+  Score?: number;
+}
+
+export interface InterviewDetailModel {
+  CandidateId?: number;
+  HiringRequestId?: number;
+  RatingBasedCriteriaList?: InterviewQuestionDetailModel[];
+  TechnicalQuestionList?: InterviewQuestionDetailModel[];
+  LanguageList?: ILanguageDetailModel[];
+  TraningList?: ITraningDetailModel[];
+  InterviewerList?: IInterviewerDetailModel[];
+  Description?: string;
+  NoticePeriod?: number;
+  AvailableDate?: Date;
+  WrittenTestMarks?: number;
+  CurrentBase?: number;
+  CurrentOther?: number;
+  ExpectationBase?: number;
+  ExpectationOther?: number;
+  Status?: number;
+  InterviewQuestionOne?: boolean;
+  InterviewQuestionTwo?: boolean;
+  InterviewQuestionThree?: boolean;
+  CurrentTransport?: boolean;
+  CurrentMeal?: boolean;
+  ExpectationTransport?: boolean;
+  ExpectationMeal?: boolean;
+  ProfessionalCriteriaMark?: number;
+  MarksObtain?: number;
+  TotalMarksObtain?: number;
+}
+
+export interface ISelectBoxModel {
+  Id: number;
+  value: string;
+}

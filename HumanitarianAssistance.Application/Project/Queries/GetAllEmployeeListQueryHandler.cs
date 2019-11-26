@@ -30,7 +30,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                                                                             x.EmployeeProfessionalDetail.OfficeId != null).Select(x => new EmployeeDetailListModel
                                                                                                            {
                                                                                                                EmployeeId = x.EmployeeID,
-                                                                                                               EmployeeName = x.EmployeeName
+                                                                                                               EmployeeName = x.EmployeeName,
+                                                                                                               EmployeeCode = x.EmployeeCode
                                                                                                            }
                                                                                                       ).OrderByDescending(x => x.EmployeeId).ToListAsync();
 

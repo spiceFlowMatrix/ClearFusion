@@ -592,7 +592,7 @@ export enum LogisticComparativeStatus {
   'Issued' = 3,
   'Statement Submitted' = 4,
   'Reject Statement' = 5,
-  'Approve Statement' = 6,
+  'Approve Statement' = 6
 }
 export enum CandidateStatus {
   'Pending Shortlist' = 0,
@@ -604,17 +604,23 @@ export enum CandidateStatus {
 export enum CandidateAction {
   'Shortlist' = 0,
   'Interview' = 1,
-  'Select' = 2,
+  'Select' = 2
 }
 
-export enum TransportItemCategory
-{
-    Vehicle= 1,
-    Generator= 2,
-    MobilOil= 3,
-    MaintenanceService= 4,
-    SpareParts= 5,
-    Fuel= 6
+export enum TransportItemCategory {
+  Vehicle = 1,
+  Generator = 2,
+  MobilOil = 3,
+  MaintenanceService = 4,
+  SpareParts = 5,
+  Fuel = 6
+}
+
+export enum RatingAction {
+  Poor = 1,
+  Good = 2,
+  VeryGood = 3,
+  Excellent = 4
 }
 
 export enum Month {

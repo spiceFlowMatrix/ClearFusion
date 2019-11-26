@@ -39,10 +39,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                            from p in pd.DefaultIfEmpty()                                                                                    
                                            select new ProjectHiringRequestModel
                                            {
-                                               // Description = j.JobDescription,
                                                HiringRequestId = hr.HiringRequestId,
                                                Office = o.OfficeName,
-                                               // JobCode = j.JobCode,
                                                JobGrade = g.GradeName,
                                                Position = p.ProfessionName,
                                                TotalVacancies = hr.TotalVacancies,
