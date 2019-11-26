@@ -34,15 +34,14 @@ export class AddItemCategoryComponent implements OnInit {
     })
   }
   submit() {
-
-    debugger;
     if (this.masterForm.valid) {
       this.isSaving = true;
       this.masterInventoryCategory.Description = this.masterForm.controls.description.value;
       this.masterInventoryCategory.InventoryId = this.data.InventoryId;
       this.masterInventoryCategory.ItemGroupCode = this.data.ItemGroupCode;
       this.masterInventoryCategory.ItemGroupName = this.masterForm.controls.name.value;
-      this.masterInventoryCategory.ItemTypeCategory = Number(this.masterForm.controls.inventorytype.value);
+      this.masterInventoryCategory.ItemTypeCategory = this.data.IsTransportCategory ?
+                                                      Number(this.masterForm.controls.inventorytype.value) : null;
       if (this.data.ItemGroupId) {
         this.masterInventoryCategory.ItemGroupId = this.data.ItemGroupId;
         this.configService.EditItemGroup(this.masterInventoryCategory).subscribe(() => {

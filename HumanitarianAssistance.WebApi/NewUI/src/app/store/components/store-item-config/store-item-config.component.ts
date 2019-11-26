@@ -74,6 +74,7 @@ export class StoreItemConfigComponent implements OnInit {
   }
   // master inventory region
   addMasterInventory() {
+    this.masterInventory = {};
     this.configService.getInventoryCode(this.assetType).subscribe(res => {
       this.masterInventory.InventoryCode = res.data.InventoryCode;
       this.masterInventory.AssetType = this.assetType;
@@ -94,9 +95,9 @@ export class StoreItemConfigComponent implements OnInit {
 
 
   openItem(level, inventoryId, invId, isTransportCategory) {
-    debugger;
     switch (level) {
       case 0:
+          this.masterInventoryGroup = {};
         this.configService.getGroupItemCode(inventoryId, this.assetType).subscribe(res => {
           this.masterInventoryGroup.InventoryId = inventoryId;
           this.masterInventoryGroup.ItemGroupCode = res.data.ItemGroupCode;
@@ -112,10 +113,11 @@ export class StoreItemConfigComponent implements OnInit {
         })
         break;
       case 1:
+          this.masterInventoryItem = {};
 
         this.configService.getItemCode(inventoryId, this.assetType).subscribe(res => {
           this.masterInventoryItem.ItemTypeCategory = Number(this.inventories.find(x => x.Id == invId).children.find(x => x.Id == inventoryId).ItemTypeCategory);
-          if (this.masterInventoryItem.ItemTypeCategory && isTransportCategory) {
+          if (this.masterInventoryItem.ItemTypeCategory) {
             this.masterInventoryItem.isGenerator = this.masterInventoryItem.ItemTypeCategory == 2 ? true : false;
           } else {
             this.masterInventoryItem.isGenerator = null
@@ -142,7 +144,6 @@ export class StoreItemConfigComponent implements OnInit {
 
   }
   openEditItem(level, level2ID, level1ID, level0ID, isTransport, itemcattype) {
-    debugger;
     switch (level) {
       case 0:
         const inventory = this.inventories.find(x => x.Id == level2ID);
@@ -186,7 +187,7 @@ export class StoreItemConfigComponent implements OnInit {
         break;
       case 2:
         const item = this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level0ID).children.find(x => x.Id == level2ID);
-        if (this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level0ID).ItemTypeCategory != null && isTransport) {
+        if (this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level0ID).ItemTypeCategory != null) {
           this.masterInventoryItem.isGenerator = this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level0ID).ItemTypeCategory == 2 ? true : false;
         } else {
           this.masterInventoryItem.isGenerator = null;
