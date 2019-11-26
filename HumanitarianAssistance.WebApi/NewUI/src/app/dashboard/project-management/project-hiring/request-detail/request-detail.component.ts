@@ -64,6 +64,7 @@ export class RequestDetailComponent implements OnInit {
   // existingEmployeesList$: Observable<IDropDownModel[]>;
   existingEmployeesList: any[] = [];
   newCandidatesList$: Observable<ICandidateDetailList[]>;
+  newCandidatesList2$: Observable<ICandidateDetailList[]>;
   hiringRequestDetails: HiringRequestDetailList;
   existingCandidatesList$: Observable<IExistingCandidateList[]>;
   existingCandidatesList2$: Observable<IExistingCandidateList[]>;
@@ -311,6 +312,7 @@ export class RequestDetailComponent implements OnInit {
               } as ICandidateDetailList;
             })
           );
+          this.newCandidatesList2$ = this.newCandidatesList$;
         }
         this.loader.hideLoader();
       },
@@ -563,6 +565,21 @@ export class RequestDetailComponent implements OnInit {
     } else {
       this.existingCandidatesList2$.subscribe(res => {
         this.existingCandidatesList$ = of(
+          res.filter(x =>
+            data.value.includes(CandidateStatus[x.CandidateStatus])
+          )
+        );
+      });
+    }
+  }
+
+  onStatusFilterCandidate(data: MatSelectChange) {
+    debugger;
+    if (data.value == '') {
+      this.getAllCandidateList(this.filterValueModel);
+    } else {
+      this.newCandidatesList$.subscribe(res => {
+        this.newCandidatesList2$ = of(
           res.filter(x =>
             data.value.includes(CandidateStatus[x.CandidateStatus])
           )
