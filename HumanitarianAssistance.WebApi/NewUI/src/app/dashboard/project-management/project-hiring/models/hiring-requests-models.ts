@@ -39,9 +39,17 @@ export interface HiringRequestDetailList {
   PayRate?: string;
   Status?: string;
   Office?: string;
-  // BudgetLine?: string;
-  // JobType?: string;
-  // Announ
+  DepartmentName?: string;
+  BudgetName?: string;
+  AnouncingDate?: any;
+  ClosingDate?: any;
+  ContractType?: string;
+  ContractDuration?: number;
+  Shift?: string;
+  EducationDegree?: string;
+  Profession?: string;
+  Experience?: string;
+  KnowledgeAndSkills?: string;
 }
 
 export interface OfficeDetailModel {

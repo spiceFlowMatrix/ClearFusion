@@ -759,7 +759,7 @@ export class HiringRequestsService {
       .pipe(
         map(x => {
           const responseData: IResponseData = {
-            data: x.data.ProjectHiringRequestDetails,
+            data: x.ResponseData,
             statusCode: x.StatusCode,
             message: x.Message
           };
