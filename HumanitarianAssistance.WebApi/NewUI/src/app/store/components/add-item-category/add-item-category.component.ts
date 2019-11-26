@@ -34,6 +34,8 @@ export class AddItemCategoryComponent implements OnInit {
     })
   }
   submit() {
+
+    debugger;
     if (this.masterForm.valid) {
       this.isSaving = true;
       this.masterInventoryCategory.Description = this.masterForm.controls.description.value;
