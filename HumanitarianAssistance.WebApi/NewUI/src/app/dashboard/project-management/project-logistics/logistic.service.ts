@@ -25,10 +25,10 @@ export class LogisticService {
     );
   }
 
-  getAllLogisticRequests(projectId) {
+  getAllLogisticRequests(model) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetAllLogisticRequest,
-      projectId
+      model
     );
   }
 
