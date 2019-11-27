@@ -171,9 +171,7 @@ export class RequestDetailComponent implements OnInit {
             this.loader.showLoader();
             if (response.statusCode === 200 && response.data !== null) {
               this.hiringRequestDetails = {
-                // Description: response.data.Description,
                 HiringRequestId: response.data.HiringRequestId,
-               // JobCode: response.data.JobCode,
                 JobGrade: response.data.JobGrade,
                 Position: response.data.Position,
                 TotalVacancies: response.data.TotalVacancies,
@@ -559,6 +557,24 @@ export class RequestDetailComponent implements OnInit {
     this.globalSharedService
       .getFile(
         this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetCandidateDetailReportPdf,
+        data
+      )
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe();
+    this.loader.hideLoader();
+  }
+  //#endregion
+
+  //#region "onExportHiringRequestPdf"
+  onExportHiringRequestPdf() {
+    this.loader.showLoader();
+    const data: any = {
+      HiringRequestId: this.hiringRequestId,
+      ProjectId: this.projectId
+    };
+    this.globalSharedService
+      .getFile(
+        this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetHiringRequestFormPdf,
         data
       )
       .pipe(takeUntil(this.destroyed$))

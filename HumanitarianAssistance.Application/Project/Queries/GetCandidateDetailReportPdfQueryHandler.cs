@@ -62,7 +62,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                         RequiredExperience = phd.Experience,
                         CurrentEducation = e.Name,
                         CurrentProfession = p.ProfessionName,
-                        CurrentExperience = cd.ExperienceYear + cd.ExperienceMonth,                      
+                        CurrentExperience = (cd.RelevantExperienceInYear + cd.IrrelevantExperienceInYear) + " Years ",                      
                     }).ToList ();
 
                 List<CandidateDetailsPdfModel> summary = new List<CandidateDetailsPdfModel> ();
