@@ -38,7 +38,7 @@ export class AddItemComponent implements OnInit {
         this.itemsTypes$ = of(this.items.filter(x => ids1.includes(x.value)));
         break;
       case 2:
-        const ids2 = [5]
+        const ids2 = [5, 1, 2]
         this.itemsTypes$ = of(this.items.filter(x => ids2.includes(x.value)));
         break;
       case 3:
@@ -52,7 +52,7 @@ export class AddItemComponent implements OnInit {
     if (this.data.ItemId) {
       this.masterForm.controls.name.setValue(this.data.ItemName);
       this.masterForm.controls.description.setValue(this.data.Description);
-      this.masterForm.controls.itemtypecategory.setValue(this.data.ItemTypeCategory?this.data.ItemTypeCategory:null);
+      this.masterForm.controls.itemtypecategory.setValue(this.data.ItemTypeCategory ? this.data.ItemTypeCategory : null);
 
     }
   }
@@ -73,7 +73,7 @@ export class AddItemComponent implements OnInit {
       this.inventoryItem.ItemType = null;
       this.inventoryItem.ItemInventory = this.data.ItemInventory;
       this.inventoryItem.ItemTypeCategory = this.masterForm.controls.itemtypecategory.value;
-      
+
 
       if (this.data.ItemId) {
         this.inventoryItem.ItemId = this.data.ItemId;

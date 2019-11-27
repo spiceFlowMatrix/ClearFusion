@@ -28,6 +28,9 @@ export class LogisticRequestsComponent implements OnInit {
   logisticListData$: Observable<any>;
   actions: TableActionsModel;
   projectId;
+  requestCount = 0;
+  PageIndex = 0;
+  PageSize = 10;
   logisticRequestList;
   officeDropdown: any[];
   currencyDropdown: any[];
@@ -63,6 +66,12 @@ export class LogisticRequestsComponent implements OnInit {
     this.getBudgetLineList();
   }
 
+  pageEvent(e) {
+    this.PageIndex = e.pageIndex;
+    this.PageSize = e.pageSize;
+    this.getAllRequest();
+  }
+
   openAddRequestDialog(): void {
     const dialogRef = this.dialog.open(AddLogisticRequestComponent, {
       width: '450px',
@@ -85,15 +94,23 @@ export class LogisticRequestsComponent implements OnInit {
         Status: LogisticRequestStatus[v.Status],
         TotalCost: v.TotalCost
        }) as IRequestList)));
+    this.requestCount++;
   }
   requestRowClicked(event) {
     this.router.navigate([event.Id], { relativeTo: this.routeActive });
   }
 
   getAllRequest() {
-    this.logisticservice.getAllLogisticRequests(this.projectId).subscribe(res => {
+    this.commonLoader.showLoader();
+    const model = {
+      projectId: this.projectId,
+      PageIndex: this.PageIndex,
+      PageSize: this.PageSize
+    };
+    this.logisticservice.getAllLogisticRequests(model).subscribe(res => {
       this.logisticRequestList = [];
       if (res.StatusCode === 200 && res.data.logisticRequestList != null) {
+        this.requestCount = res.data.TotalCount;
         res.data.logisticRequestList.forEach(element => {
           this.logisticRequestList.push(element);
         });
@@ -105,6 +122,7 @@ export class LogisticRequestsComponent implements OnInit {
             TotalCost: v.TotalCost
            }) as IRequestList)));
       }
+      this.commonLoader.hideLoader();
     });
   }
 

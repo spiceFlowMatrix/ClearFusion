@@ -3,6 +3,7 @@ export interface IProjectJobModel {
   ProjectJobCode: string;
   ProjectJobName: string;
   ProjectId: number;
+  CanDelete?: boolean;
 }
 
 export interface ProjectJobsFilterModel {

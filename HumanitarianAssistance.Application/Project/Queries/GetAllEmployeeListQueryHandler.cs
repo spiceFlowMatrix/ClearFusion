@@ -25,12 +25,13 @@ namespace HumanitarianAssistance.Application.Project.Queries
             ApiResponse response = new ApiResponse();
             try
             {
-                response.data.EmployeeDetailListData = await _dbContext.EmployeeDetail.Where(x => x.EmployeeTypeId != (int)EmployeeTypeStatus.Terminated &&
+                response.data.EmployeeDetailListData = await _dbContext.EmployeeDetail.Where(x => x.EmployeeTypeId == (int)EmployeeTypeStatus.Active &&
                                                                                                            x.IsDeleted == false &&
-                                                                                                           x.EmployeeProfessionalDetail.OfficeId != null).Select(x => new EmployeeDetailListModel
+                                                                                                            x.EmployeeProfessionalDetail.OfficeId != null).Select(x => new EmployeeDetailListModel
                                                                                                            {
                                                                                                                EmployeeId = x.EmployeeID,
-                                                                                                               EmployeeName = x.EmployeeName
+                                                                                                               EmployeeName = x.EmployeeName,
+                                                                                                               EmployeeCode = x.EmployeeCode
                                                                                                            }
                                                                                                       ).OrderByDescending(x => x.EmployeeId).ToListAsync();
 

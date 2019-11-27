@@ -3,7 +3,8 @@ import {
   OnInit,
   Input,
   EventEmitter,
-  Output
+  Output,
+  OnChanges
 } from '@angular/core';
 import { IProjectJobModel } from '../project-jobsmodel';
 import { ProjectJobsService } from '../project-jobs.service';
@@ -20,16 +21,14 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './project-jobs-details.component.html',
   styleUrls: ['./project-jobs-details.component.scss']
 })
-export class ProjectJobsDetailsComponent implements OnInit {
-  [x: string]: any;
-
+export class ProjectJobsDetailsComponent implements OnInit, OnChanges {
   //#region "variables"
   @Input() projectJobId: number;
   @Input() projectJobList: IProjectJobModel;
   @Input() projectJobDetailList: IProjectJobModel;
   @Input() projectId: any;
 
-
+  @Input() selectedProjectJobDetail: any;
   @Output() deleteProjectJob = new EventEmitter<any>();
 
   @Output() projectJobsDetailChanged = new EventEmitter<IProjectJobModel>();
@@ -51,11 +50,9 @@ export class ProjectJobsDetailsComponent implements OnInit {
     private projectService: ProjectJobsService
   ) {}
 
-  ngOnInit() {
-     // this.projectId = +this.routeActive.snapshot.paramMap.get('id');
-  }
+  ngOnInit() {}
 
-  ngOnChanges(): void {
+  ngOnChanges() {
     this.initForm();
     if (
       this.projectJobId !== 0 &&
@@ -63,7 +60,7 @@ export class ProjectJobsDetailsComponent implements OnInit {
       this.projectJobId !== undefined
     ) {
       this.archiveButton = true;
-      this.getProjectJobDetailsById(this.projectJobId);
+      // this.getProjectJobDetailsById(this.projectJobId);
     } else {
       this.archiveButton = false;
     }
@@ -71,12 +68,26 @@ export class ProjectJobsDetailsComponent implements OnInit {
 
   //#region "initForm"
   initForm() {
-    this.projectJobsDetail = {
-      ProjectJobId: null,
-      ProjectJobCode: null,
-      ProjectJobName: null,
-      ProjectId: null
-    };
+    if (
+      this.selectedProjectJobDetail != null &&
+      this.selectedProjectJobDetail != undefined
+    ) {
+      const projectJobDetail = this.selectedProjectJobDetail;
+      this.projectJobsDetail = {
+        ProjectJobId: projectJobDetail.ProjectJobId,
+        ProjectJobCode: projectJobDetail.ProjectJobCode,
+        ProjectJobName: projectJobDetail.ProjectJobName,
+        ProjectId: projectJobDetail.ProjectId,
+        CanDelete: projectJobDetail.CanDelete
+      };
+    } else {
+      this.projectJobsDetail = {
+        ProjectJobId: null,
+        ProjectJobCode: null,
+        ProjectJobName: null,
+        ProjectId: null
+      };
+    }
   }
 
   //#region "getProjectDetailByProjectId"
@@ -139,61 +150,64 @@ export class ProjectJobsDetailsComponent implements OnInit {
   }
   //#endregion
 
-  DeleteProjectJob(id) {
-    const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
-      width: '300px',
-      height: '250px',
-      data: 'delete',
-      disableClose: false
-    });
+  DeleteProjectJob(id: number) {
+    if (id != null ) {
+      const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
+        width: '300px',
+        height: '250px',
+        data: 'delete',
+        disableClose: false
+      });
 
-    dialogRef.componentInstance.confirmMessage =
-      Delete_Confirmation_Texts.deleteText1;
+      dialogRef.componentInstance.confirmMessage =
+        Delete_Confirmation_Texts.deleteText1;
 
-    dialogRef.componentInstance.confirmText = Delete_Confirmation_Texts.yesText;
+      dialogRef.componentInstance.confirmText =
+        Delete_Confirmation_Texts.yesText;
 
-    dialogRef.componentInstance.cancelText = Delete_Confirmation_Texts.noText;
+      dialogRef.componentInstance.cancelText = Delete_Confirmation_Texts.noText;
 
-    dialogRef.afterClosed().subscribe(result => {
-      // console.log('The dialog was closed');
-    });
+      dialogRef.afterClosed().subscribe(result => {
+        // console.log('The dialog was closed');
+      });
 
-    dialogRef.componentInstance.confirmDelete.subscribe(res => {
-      // console.log(res);
-      dialogRef.componentInstance.isLoading = true;
-      // this.phaseDetailsForm.disable();
+      dialogRef.componentInstance.confirmDelete.subscribe(res => {
+        // console.log(res);
+        dialogRef.componentInstance.isLoading = true;
+        // this.phaseDetailsForm.disable();
 
-      this.projectService
-        .Delete(
-          this.appurl.getApiUrl() + GLOBAL.API_Project_DeleteProjectJob,
-          id
-        )
-        .subscribe(
-          result => {
-            if (result.StatusCode === 200) {
-              //  this.phaseDetailsForm.enable();
-              this.toastr.success(result.Message);
-              dialogRef.componentInstance.onCancelPopup();
-              this.deleteProjectJob.emit({ id: id });
-              this.projectJobsDetail = {
-                ProjectJobId: null,
-                ProjectJobCode: null,
-                ProjectJobName: null,
-                ProjectId: null
-              };
-              this.projectJobId = 0;
-            } else {
+        this.projectService
+          .Delete(
+            this.appurl.getApiUrl() + GLOBAL.API_Project_DeleteProjectJob,
+            id
+          )
+          .subscribe(
+            result => {
+              if (result.StatusCode === 200) {
+                //  this.phaseDetailsForm.enable();
+                this.toastr.success(result.Message);
+                this.deleteProjectJob.emit(id);
+                dialogRef.componentInstance.onCancelPopup();
+                this.projectJobsDetail = {
+                  ProjectJobId: null,
+                  ProjectJobCode: null,
+                  ProjectJobName: null,
+                  ProjectId: null
+                };
+                this.projectJobId = 0;
+              } else {
+                // this.phaseDetailsForm.enable();
+                this.toastr.error(result.Message);
+              }
+              dialogRef.componentInstance.isLoading = false;
+            },
+            error => {
               // this.phaseDetailsForm.enable();
-              this.toastr.error(result.Message);
+              dialogRef.componentInstance.isLoading = false;
+              this.toastr.error('Some error occured. Please try again later');
             }
-            dialogRef.componentInstance.isLoading = false;
-          },
-          error => {
-            // this.phaseDetailsForm.enable();
-            dialogRef.componentInstance.isLoading = false;
-            this.toastr.error('Some error occured. Please try again later');
-          }
-        );
-    });
+          );
+      });
+    }
   }
 }

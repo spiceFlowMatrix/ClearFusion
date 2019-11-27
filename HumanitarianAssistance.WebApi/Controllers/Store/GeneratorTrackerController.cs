@@ -1,3 +1,5 @@
+using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Store.Commands.Create;
 using HumanitarianAssistance.Application.Store.Commands.Delete;
@@ -15,9 +17,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
     [Route("api/GeneratorTracker/[Action]")]
     [ApiExplorerSettings(GroupName = nameof(SwaggerGrouping.GeneratorTracker))]
     [Authorize]
-    public class GeneratorTrackerController: BaseController
+    public class GeneratorTrackerController : BaseController
     {
-        
+
 
         [HttpPost]
         [ProducesResponseType(200)]
@@ -41,16 +43,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetGeneratorById(long id)
         {
-            var result = await Task.FromResult(_mediator.Send(new GetGeneratorByIdQuery { GeneratorId = id}));
+            var result = await Task.FromResult(_mediator.Send(new GetGeneratorByIdQuery { GeneratorId = id }));
 
-            if (result.Exception == null)
-            {
-                return Ok(await result);
-            }
-            else
-            {
-                return BadRequest(result.Exception.InnerException.Message);
-            }
+            return Ok(await result);
         }
 
         [HttpPost]
@@ -58,16 +53,13 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [ProducesResponseType(400)]
         public async Task<IActionResult> AddGeneratorUsageHours(AddGeneratorUsageHoursCommand request)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            request.CreatedById = userId;
+            request.CreatedDate = DateTime.UtcNow;
+
             var result = await Task.FromResult(_mediator.Send(request));
 
-            if (result.Exception == null)
-            {
-                return Ok(await result);
-            }
-            else
-            {
-                return BadRequest(result.Exception.InnerException.Message);
-            }
+            return Ok(await result);
         }
 
         [HttpPost]
@@ -75,16 +67,12 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [ProducesResponseType(400)]
         public async Task<IActionResult> EditGeneratorDetail(EditGeneratorDetailCommand command)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.ModifiedById = userId;
+            command.ModifiedDate = DateTime.UtcNow;
             var result = await Task.FromResult(_mediator.Send(command));
 
-            if (result.Exception == null)
-            {
-                return Ok(await result);
-            }
-            else
-            {
-                return BadRequest(result.Exception.InnerException.Message);
-            }
+            return Ok(await result);
         }
 
         [HttpDelete]
@@ -92,16 +80,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [ProducesResponseType(400)]
         public async Task<IActionResult> DeletePurchasedGenerator(long id)
         {
-            var result = await Task.FromResult(_mediator.Send(new DeletePurchasedGeneratorCommand { PurchasedGeneratorId = id}));
+            var result = await Task.FromResult(_mediator.Send(new DeletePurchasedGeneratorCommand { PurchasedGeneratorId = id }));
 
-            if (result.Exception == null)
-            {
-                return Ok(await result);
-            }
-            else
-            {
-                return BadRequest(result.Exception.InnerException.Message);
-            }
+            return Ok(await result);
         }
 
         [ProducesResponseType(200)]
@@ -110,14 +91,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         {
             var result = await Task.FromResult(_mediator.Send(request));
 
-            if (result.Exception == null)
-            {
-                return Ok(await result);
-            }
-            else
-            {
-                return BadRequest(result.Exception.InnerException.Message);
-            }
+            return Ok(await result);
         }
     }
 }

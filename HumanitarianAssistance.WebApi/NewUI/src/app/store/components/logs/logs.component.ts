@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Observable, of, ReplaySubject } from 'rxjs';
 import { ILogs } from '../../models/vehicles';
 import { PurchaseService } from '../../services/purchase.service';
@@ -10,45 +10,35 @@ import { takeUntil } from 'rxjs/internal/operators/takeUntil';
   styleUrls: ['./logs.component.scss']
 })
 export class LogsComponent implements OnInit, OnDestroy {
-  logListHeaders$ = of(['Event Type', 'By', 'Event On', 'Detail']);
-  logList$: Observable<ILogs[]>;
+   logListHeaders$ = of(['Event Type', 'By', 'Event On', 'Detail']);
+   logList$: Observable<ILogs[]>;
   // subject
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+  @Input() transportType: number; // TransportType vehicle or generator
+  @Input() entityId: number; // VehicleId or GeneratorId
 
   constructor(private purchaseService: PurchaseService) { }
 
   ngOnInit() {
-
     this.getLogs();
-
-    this.logList$ = of([
-      {
-        EventType: 'Fuel Purchased',
-        EventBy: 'User Name',
-        EventOn: '25 Apr, 2019',
-        Detail: '2 Liter Diesel Super Fuel Purchased In kjh43-a3f4rh54h-345h3-34'
-      },
-      {
-        EventType: 'Fuel Purchased',
-        EventBy: 'User Name',
-        EventOn: '25 Apr, 2019',
-        Detail: '2 Liter Diesel Super Fuel Purchased In kjh43-a3f4rh54h-345h3-34'
-      },
-      {
-        EventType: 'Fuel Purchased',
-        EventBy: 'User Name',
-        EventOn: '25 Apr, 2019',
-        Detail: '2 Liter Diesel Super Fuel Purchased In kjh43-a3f4rh54h-345h3-34'
-      }
-    ] as ILogs[]);
   }
 
   getLogs() {
-    this.purchaseService.getStoreLogs()
+    this.purchaseService.getStoreLogs(this.transportType, this.entityId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
-        debugger;
-
+        if (x !== undefined && x.length > 0) {
+          this.logList$ = of(x.map(y => {
+            return {
+              EventType: y.EventType,
+              EventBy: y.EventBy,
+              EventOn: y.EventOn,
+              Detail: y.LogText + (y.PurchaseId ? '<a href=store/purchase/edit/' + y.PurchaseId
+                                                  + '>' + y.PurchaseName + '</a>' : ''),
+            } as ILogs;
+          }));
+        }
       });
   }
 

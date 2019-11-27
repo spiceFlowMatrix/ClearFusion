@@ -1,0 +1,475 @@
+<lib-sub-header-template [headerClass]="'sub_header_template_main1'">
+  <span class="action_header">
+    Interview Details
+    <hum-button *ngIf="isDisplay"
+      [type]="'save'"
+      [text]="'Save '"
+      [isSubmit]="true"
+      (click)="onFormSubmit(interviewDetailForm.value)"
+    ></hum-button>
+    <hum-button [type]="'cancel'" [text]="'close'"></hum-button>
+    <hum-button [type]="'download'" [text]="'PDF Export'"></hum-button>
+  </span>
+  <div class="action_section"></div>
+</lib-sub-header-template>
+<mat-divider></mat-divider>
+
+<mat-card [ngStyle]="scrollStyles">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="col-md-6">
+        <h5>Candidate Summary</h5>
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <td>Full Name</td>
+              <td>{{ candidateDetails.FullName }}</td>
+            </tr>
+            <tr>
+              <td>Duty Station</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td>Gender</td>
+              <td>{{ candidateDetails.Gender }}</td>
+            </tr>
+            <tr>
+              <td>Tazkira/Passwort No</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td>Qualification</td>
+              <td>{{ candidateDetails.Qualification }}</td>
+            </tr>
+            <tr>
+              <td>Institute/University</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td>Date of Birth</td>
+              <td>{{ candidateDetails.DateOfBirth }}</td>
+            </tr>
+            <tr>
+              <td>Place of Birth</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td>Tazkira Issued Place</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td>Marital Status</td>
+              <td>-</td>
+            </tr>
+          </tbody>
+        </table>
+        <br />
+        <h5>Hiring Request Details</h5>
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <td>Office</td>
+              <td>{{ hiringRequestDetail.Office }}</td>
+            </tr>
+            <tr>
+              <td>Position/Designation</td>
+              <td>{{ hiringRequestDetail.Position }}</td>
+            </tr>
+            <tr>
+              <td>Job Grade</td>
+              <td>{{ hiringRequestDetail.JobGrade }}</td>
+            </tr>
+            <tr>
+              <td>Total Vacancies</td>
+              <td>{{ hiringRequestDetail.TotalVacancy }}</td>
+            </tr>
+            <tr>
+              <td>Filled Vacancies</td>
+              <td>{{ hiringRequestDetail.FilledVacancy }}</td>
+            </tr>
+            <tr>
+              <td>Pay Currency</td>
+              <td>{{ hiringRequestDetail.PayCurrency }}</td>
+            </tr>
+            <tr>
+              <td>Pay Hourly Rate</td>
+              <td>{{ hiringRequestDetail.PayHourlyRate }}</td>
+            </tr>
+            <tr>
+              <td>Budget Line</td>
+              <td>{{ hiringRequestDetail.BudgetLine }}</td>
+            </tr>
+            <tr>
+              <td>Job Type</td>
+              <td>{{ hiringRequestDetail.JobType }}</td>
+            </tr>
+            <tr>
+              <td>Announcing Date</td>
+              <td>{{ hiringRequestDetail.AnouncingDate }}</td>
+            </tr>
+            <tr>
+              <td>Closing Date</td>
+              <td>{{ hiringRequestDetail.ClosingDate }}</td>
+            </tr>
+            <tr>
+              <td>Contract Type</td>
+              <td>{{ hiringRequestDetail.ContractType }}</td>
+            </tr>
+            <tr>
+              <td>Contract Duration</td>
+              <td>{{ hiringRequestDetail.ContractDuration }}</td>
+            </tr>
+            <tr>
+              <td>Job Shift</td>
+              <td>{{ hiringRequestDetail.JobShift }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <br />
+        <h5>Required Qualification</h5>
+        <br />
+        <span>{{ hiringRequestDetail.KnowledgeAndSkillsRequired }}</span>
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <td>Education Degree</td>
+              <td>{{ hiringRequestDetail.EducationDegree }}</td>
+            </tr>
+            <tr>
+              <td>Profession</td>
+              <td>{{ hiringRequestDetail.Profession }}</td>
+            </tr>
+            <tr>
+              <td>Experience (In Years)</td>
+              <td>{{ hiringRequestDetail.TotalExperienceInYear }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <!-- <div class="col-md-12"> -->
+    <form class="example-form" [formGroup]="interviewDetailForm">
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <h5><b>Rating Base Criteria</b></h5>
+              <h5 style="margin-left: auto;">
+                <b> Professional Criteria Marks: </b
+                >{{ professionalCriteriaMarks }}
+              </h5>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div
+            class="col-lg-3 col-sm-3"
+            *ngFor="let data of ratingBasedCriteriaQuestionList"
+          >
+            <h5>{{ data.value }}</h5>
+            <mat-form-field>
+              <mat-select
+                placeholder="Score"
+                name="Score"
+                (selectionChange)="onChangeRatingBasedCriteria(data.Id, $event)"
+                [(value)]="data.selected"
+              >
+                <mat-option
+                  *ngFor="let item of ratingBasedDropDown"
+                  [value]="item.Id"
+                  >{{ item.value }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel style="margin-top: 2px;">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <h5><b>Tecnical Questions</b></h5>
+              <h5 style="margin-left: auto;">
+                <b>Marks Obtain: </b>{{ marksObtain }}
+              </h5>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div
+            class="col-lg-3 col-sm-3"
+            *ngFor="let temp of technicalQuestionList"
+          >
+            <h5>{{ temp.value }}</h5>
+            <mat-form-field>
+              <mat-select
+                placeholder="Score"
+                name="Score"
+                [(value)]="temp.selected"
+                (selectionChange)="onChangeTechnicalQuestion(temp.Id, $event)"
+              >
+                <mat-option
+                  *ngFor="let item of ratingBasedDropDown"
+                  [value]="item.Id"
+                  >{{ item.value }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <mat-card style="margin-top: 2px;">
+        <h5>
+          Languages
+          <hum-button
+            [type]="'add'"
+            [text]="'ADD'"
+            (click)="addNewLanguage()"
+          ></hum-button>
+        </h5>
+        <hum-table
+          [headers]="languagesHeaders$"
+          [isDefaultAction]="false"
+          [items]="languagesList$"
+        ></hum-table>
+      </mat-card>
+      <mat-card style="margin-top: 2px;">
+        <h5>
+          Traning
+          <hum-button
+            [type]="'add'"
+            [text]="'ADD'"
+            (click)="addNewTraning()"
+          ></hum-button>
+        </h5>
+        <hum-table
+          [headers]="traningHeaders$"
+          [isDefaultAction]="false"
+          [items]="traningList$"
+        ></hum-table>
+      </mat-card>
+      <mat-card style="margin-top: 2px;">
+        <h5>
+          <b>
+            Interview Form
+          </b>
+        </h5>
+        <div class="row">
+          <div class="col-md-5">
+            <div class="row shift-left">
+              <span
+                >Are you willing to travel to other provinces if required?</span
+              ><mat-slide-toggle
+                class="pull-right"
+                name="QuestionOne"
+                formControlName="InterviewQuestionOne"
+              ></mat-slide-toggle>
+            </div>
+            <div class="row shift-left">
+              <span>Do you have any health related issues?</span
+              ><mat-slide-toggle
+                class="pull-right"
+                name="QuestionTwo"
+                formControlName="InterviewQuestionTwo"
+              ></mat-slide-toggle>
+            </div>
+            <div class="row shift-left">
+              <span
+                >Are yoy willing to consider opportunity if it's based in the
+                provinces?</span
+              ><mat-slide-toggle
+                class="pull-right"
+                name="QuestionThree"
+                formControlName="InterviewQuestionThree"
+              ></mat-slide-toggle>
+            </div>
+            <div class="row shift-left">
+              <span
+                >What province would you prefer, if you consider an opportunity
+                given to you?</span
+              >
+            </div>
+            <br />
+            <div class="row shift-left">
+              <div class="col-lg-12">
+                <mat-form-field class="example-full-width">
+                  <textarea
+                    matInput
+                    formControlName="Description"
+                    placeholder="Description"
+                    matTextareaAutosize
+                    matAutosizeMinRows="5"
+                    matAutosizeMaxRows="7"
+                  ></textarea>
+                </mat-form-field>
+              </div>
+              <div class="col-lg-6">
+                <lib-hum-dropdown
+                  formControlName="NoticePeriod"
+                  [validation]="
+                    interviewDetailForm.controls['NoticePeriod'].hasError(
+                      'required'
+                    )
+                  "
+                  [options]="noticePeriodList$"
+                  [placeHolder]="'Notice Period'"
+                ></lib-hum-dropdown>
+              </div>
+              <div class="col-lg-6">
+                <mat-form-field class="example-full-width">
+                  <input
+                    matInput
+                    [matDatepicker]="AvailableDatePicker"
+                    placeholder="Date Available To Join"
+                    formControlName="AvailableDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="AvailableDatePicker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #AvailableDatePicker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-lg-6">
+                <mat-form-field class="example-full-width">
+                  <input
+                    matInput
+                    formControlName="WrittenTestMarks"
+                    placeholder="Written Test Marks Obtain"
+                    type="number"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <br />
+            <div class="row shift-left">
+              <h5>
+                <b>Total Marks Obtain: </b><span>{{ totalMarksObtain }}</span>
+              </h5>
+            </div>
+            <br />
+            <div class="row shift-left">
+              <h5><b>Compensation and Benifits Requirement</b></h5>
+              <div class="row shift-left">
+                <h5>Current</h5>
+                <div class="col-lg-4">
+                  <mat-form-field class="example-full-width">
+                    <input
+                      matInput
+                      formControlName="CurrentBase"
+                      placeholder="Base Salary"
+                      type="number"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col-lg-4">
+                  <mat-form-field class="example-full-width">
+                    <input
+                      matInput
+                      formControlName="CurrentOther"
+                      placeholder="Other"
+                      type="number"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row shift-left">
+                <div class="col-lg-4">
+                  <span>Transport</span
+                  ><mat-checkbox
+                    class="pull-right"
+                    name="CurrentTransport"
+                    formControlName="CurrentTransport"
+                  ></mat-checkbox>
+                </div>
+                <div class="col-lg-4">
+                  <span>Meal</span
+                  ><mat-checkbox
+                    class="pull-right"
+                    name="CurrentMeal"
+                    formControlName="CurrentMeal"
+                  ></mat-checkbox>
+                </div>
+              </div>
+              <div class="row shift-left">
+                <h5>Expectation</h5>
+                <div class="col-lg-4">
+                  <mat-form-field class="example-full-width">
+                    <input
+                      matInput
+                      formControlName="ExpectationBase"
+                      placeholder="Base"
+                      type="number"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col-lg-4">
+                  <mat-form-field class="example-full-width">
+                    <input
+                      matInput
+                      formControlName="ExpectationOther"
+                      placeholder="Other"
+                      type="number"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row shift-left">
+                <div class="col-lg-4">
+                  <span>Transport</span
+                  ><mat-checkbox
+                    class="pull-right"
+                    name="ExpectationTransport"
+                    formControlName="ExpectationTransport"
+                  ></mat-checkbox>
+                </div>
+                <div class="col-lg-4">
+                  <span>Meal</span
+                  ><mat-checkbox
+                    class="pull-right"
+                    name="ExpectationMeal"
+                    formControlName="ExpectationMeal"
+                  ></mat-checkbox>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div class="row shift-left">
+              <h5><b>Reccomendations</b></h5>
+              <div class="row shift-left">
+                <h5>Status</h5>
+                <div class="col-lg-6">
+                  <lib-hum-dropdown
+                    formControlName="Status"
+                    [validation]="
+                      interviewDetailForm.controls['Status'].hasError(
+                        'required'
+                      )
+                    "
+                    [options]="statusList$"
+                    [placeHolder]="'Select'"
+                  ></lib-hum-dropdown>
+                </div>
+              </div>
+            </div>
+
+            <div class="row shift-left">
+              <h5>
+                Interviewers
+                <hum-button
+                  [type]="'add'"
+                  [text]="'ADD'"
+                  (click)="addInterviewers()"
+                ></hum-button>
+              </h5>
+              <hum-table
+                [headers]="interviewerHeaders$"
+                [isDefaultAction]="false"
+                [items]="interviewerList$"
+              ></hum-table>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </form>
+  </div>
+  <!-- </div> -->
+  <br /><br />
+</mat-card>

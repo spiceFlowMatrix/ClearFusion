@@ -26,19 +26,19 @@ export class PurchaseService {
     private http: HttpClient
   ) {}
 
-  //#region "GetPurchaseFilterList"
-  getPurchaseFilterList(): any {
-    return this.globalService
-      .getList(
-        this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetAllPurchaseFilters
-      )
-      .pipe(
-        map(x => {
-          return x;
-        })
-      );
-  }
-  //#endregion
+//#region "GetPurchaseFilterList"
+getPurchaseFilterList(): any {
+  return this.globalService
+    .getList(
+      this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetAllPurchaseFilters
+    )
+    .pipe(
+      map(x => {
+        return x;
+      })
+    );
+}
+//#endregion
 
   //#region "GetInventoriesByInventoryTypeId"
   getInventoriesByInventoryTypeId(Id: number): any {
@@ -79,6 +79,16 @@ export class PurchaseService {
           };
           return responseData;
         })
+      );
+  }
+  //#endregion
+
+  //#region "getTransportItemCategoryType"
+  getTransportItemCategoryType(Id: number): any {
+    return this.globalService
+      .getItemById(
+        this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetTransportItemCategoryType,
+        Id
       );
   }
   //#endregion
@@ -252,7 +262,7 @@ export class PurchaseService {
       );
   }
 
-  addPurchase(purchase: any) {
+  addPurchase(purchase: any, itemGroupTransportCategory: number, itemTransportCategory: number) {
     const purchaseModel: IAddEditPurchaseModel = {
       ApplyDepreciation: purchase.ApplyDepreciation,
       AssetTypeId: purchase.AssetTypeId,
@@ -279,7 +289,9 @@ export class PurchaseService {
       TimezoneOffset: new Date().getTimezoneOffset(),
       PurchasedVehicleList: purchase.TransportVehicles,
       PurchasedGeneratorList: purchase.TransportGenerators,
-      TransportItemId: purchase.TransportItemId
+      TransportItemId: purchase.TransportItemId,
+      ItemGroupTransportCategory: itemGroupTransportCategory,
+      ItemTransportCategory: itemTransportCategory
     };
 
     return this.globalService
@@ -406,9 +418,9 @@ getStorePurchaseById(id: number) {
 }
 
 // getTransportItemDataSource
-getTransportItemDataSource(model: any) {
-  return this.globalService
-  .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetTransportItemDataSource, model);
+getTransportItemDataSource(id: number) {
+  return this.http
+  .get<any>(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetTransportItemDataSource + '?id=' + id);
 }
 
  //#region "getItemDetailByItemId"
@@ -546,18 +558,18 @@ getAllCurrencies() {
           GLOBAL.API_code_GetAllCurrency);
 }
 
-getStoreLogs() {
+getStoreLogs(id: number, entityId: number) {
   return this.http
       .get<any>(
         this.appurl.getApiUrl() +
-          GLOBAL.API_StorePurchase_GetVehicleGeneratorTrackerLogs);
+          GLOBAL.API_StorePurchase_GetVehicleGeneratorTrackerLogs + '?id=' + id + '&entityId=' + entityId);
 }
 
-getMonthlyBreakDownYears(): Observable<IDropDownModel[]> {
+getPreviousYearsList(years: number): Observable<IDropDownModel[]> {
 
-  let yearDropDown: IDropDownModel[] = [];
+  const yearDropDown: IDropDownModel[] = [];
   const year = new Date().getFullYear();
-  for (let i = 0; i <= 10; i++) {
+  for (let i = 0; i <= years; i++) {
     yearDropDown.push({name: (year - i).toString(),
     value: year - i});
   }

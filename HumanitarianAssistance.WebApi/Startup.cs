@@ -20,6 +20,7 @@ using System;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using HumanitarianAssistance.WebApi.SignalRHub;
+using Northwind.WebUI.Common;
 
 namespace HumanitarianAssistance.WebApi
 {
@@ -130,6 +131,7 @@ namespace HumanitarianAssistance.WebApi
 
 
             app.UseHttpsRedirection();
+            app.UseCustomExceptionHandler();
             // app.UseStaticFiles(new StaticFileOptions()
             // {
             //     FileProvider = new PhysicalFileProvider(

@@ -1,11 +1,14 @@
-<mat-card>
+<mat-card class="mat-scroll">
 <div class="row">
   <div class="col-md-8">
       <h4 style="padding-left: 0px !important;letter-spacing: 2px;">Requests
         <hum-button [type]="'add'" [text]="'add'" (click)="openAddRequestDialog()"></hum-button>
       </h4>
     <hum-table [headers]="logisticListHeaders$" (rowClick)="requestRowClicked($event)" (actionClick)="onDeleteRequest($event)"
-    [actions]="actions" [items]="logisticListData$"></hum-table>
+    [actions]="actions" [items]="logisticListData$" ></hum-table>
+    <mat-paginator [length]="requestCount" [pageSize]="PageSize"
+      [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
+    </mat-paginator>
   </div>
   <div class="col-md-4">
     <mat-card>

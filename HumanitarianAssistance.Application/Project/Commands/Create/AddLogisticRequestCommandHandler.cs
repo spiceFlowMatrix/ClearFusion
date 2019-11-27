@@ -30,6 +30,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     BudgetLineId = request.BudgetLineId,
                     OfficeId = request.OfficeId,
                     Status = (int)LogisticRequestStatus.NewRequest,
+                    ComparativeStatus = (int)LogisticComparativeStatus.Pending,  
                     TotalCost = 0,
                     CreatedDate = request.CreatedDate,
                     CreatedById = request.CreatedById,

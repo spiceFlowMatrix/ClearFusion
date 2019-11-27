@@ -1,0 +1,87 @@
+@model List<HumanitarianAssistance.Application.Project.Models.CandidateDetailsPdfModel>
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .container {
+            max-width: 1300px;
+        }
+    </style>
+</head>
+<body>
+   <p>&nbsp;</p>
+<div class="container">
+<table style="width: 100%;">
+<tbody>
+<tr>
+<td>
+<table style="width: 100%;" cellpadding="5">
+<tbody>
+<tr>
+<td style="font-size: 20px; font-weight: 500; text-align: center; background-color: #ffe1d9;">Short List</td>
+</tr>
+<tr>
+<td style="font-size: 20px; font-weight: 500; text-align: center; background-color: #ffe1d9;">Duty Station : @Model.First().Office</td>
+</tr>
+<tr>
+<td style="font-size: 15px; font-weight: 500; text-align: center; background-color: #ffe1d9;">Position : @Model.First().Position</td>
+</tr>
+</tbody>
+</table>
+<table style="width: 100%; font-size: 14px; text-align: center;" border="1" cellspacing="0" cellpadding="5">
+<tbody>
+<tr>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; border-color: #789d4f; border-left-color: #608637;">S#</th>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; border-color: #789d4f; border-left-color: #608637;">First Name</th>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; border-color: #789d4f; border-left-color: #608637;">Last Name</th>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; border-color: #789d4f; border-left-color: #608637;">Sex</th>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; border-color: #789d4f; border-left-color: #608637;">Education</th>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; border-color: #789d4f; border-left-color: #608637;">Profession</th>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; border-color: #789d4f; border-left-color: #608637;">Experience</th>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; border-color: #789d4f; border-left-color: #608637;">Education</th>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; border-color: #789d4f; border-left-color: #608637;">Profession</th>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; border-color: #789d4f; border-left-color: #608637;">Experience</th>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; border-color: #789d4f; border-left-color: #608637;">Relevant Experience</th>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; border-color: #789d4f; border-left-color: #608637;">Irrelevant Experience</th>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; border-color: #789d4f; border-left-color: #608637;">Phone Number</th>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; border-color: #789d4f; border-left-color: #608637;">Email</th>
+</tr>
+@foreach (var Item in Model) {
+<tr> 
+<td>@Item.SerialNumber</td>
+<td>@Item.FirstName</td>
+<td>@Item.LastName</td>
+<td>@Item.Sex</td>
+<td>@Item.RequiredEducation</td>
+<td>@Item.RequiredProfession</td>
+<td>@Item.RequiredExperience</td>
+<td>@Item.CurrentEducation</td>
+<td>@Item.CurrentProfession</td>
+<td>@Item.CurrentExperience</td>
+<td>@Item.RelevantExperienceInYear</td>
+<td>@Item.IrrelevantExperienceInYear</td>
+<td>@Item.PhoneNumber</td>
+<td>@Item.Email</td>
+</tr>
+}
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</body>
+</html>

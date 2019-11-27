@@ -1,4 +1,10 @@
-import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  SimpleChanges,
+  OnChanges
+} from '@angular/core';
 import { HrService } from '../../hr.service';
 import { CodeService } from '../../../code/code.service';
 import { Router } from '@angular/router';
@@ -6,7 +12,10 @@ import { ToastrService } from 'ngx-toastr';
 import { GLOBAL } from '../../../../shared/global';
 import { AppSettingsService } from '../../../../service/app-settings.service';
 import { CommonService } from '../../../../service/common.service';
-import { IEmpExitInterviewFormModel, IEmployeeListModel } from '../interview-form.models';
+import {
+  IEmpExitInterviewFormModel,
+  IEmployeeListModel
+} from '../interview-form.models';
 
 @Component({
   selector: 'app-employee-exit-interview-form',
@@ -45,6 +54,8 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
 
   // Loader
   empInterviewExitFormLoader = false;
+
+  fileName: any;
 
   //#endregion
 
@@ -165,7 +176,6 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-
     if (changes !== undefined && changes.officeId !== undefined) {
       this.officeId = changes.officeId.currentValue;
 
@@ -304,7 +314,6 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
             if (data.data.EmployeeDetailListData == null) {
               // this.toastr.warning('No record found!');
             } else if (data.StatusCode === 400) {
-
               this.toastr.error('Something went wrong!');
             }
           }
@@ -672,7 +681,6 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
   }
   //#endregion
 
-
   //#region "onDeleteEmpExitInterviewShowPopup"
   onDeleteEmpExitInterviewShowPopup(data: any) {
     if (data != null) {
@@ -746,5 +754,112 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
     this.deleteConfVisiblePopup = false;
   }
   //#endregion
-}
+  //#region "exportPdf"
+  exportPdf(modelData: any) {
+    if (modelData.data != null && modelData.data !== undefined) {
+      this.empExitInterviewFormMainForm = {
+        ExistInterviewDetailsId: modelData.data.ExistInterviewDetailsId,
+        EmployeeId: modelData.data.EmployeeId,
 
+        EmployeeCode: modelData.data.EmployeeCode,
+        EmployeeName: modelData.data.EmployeeName,
+        Position: null,
+        Department: modelData.data.Department,
+        TenureWithCHA: modelData.data.TenureWithCHA,
+        Gender: modelData.data.Gender,
+
+        // FeelingAboutEmployee
+        DutiesOfJob: modelData.data.DutiesOfJob,
+        TrainingAndDevelopmentPrograms:
+          modelData.data.TrainingAndDevelopmentPrograms,
+        OpportunityAdvancement: modelData.data.OpportunityAdvancement,
+        SalaryTreatment: modelData.data.SalaryTreatment,
+        BenefitProgram: modelData.data.BenefitProgram,
+        WorkingConditions: modelData.data.WorkingConditions,
+        WorkingHours: modelData.data.WorkingHours,
+        CoWorkers: modelData.data.CoWorkers,
+        Supervisors: modelData.data.Supervisors,
+        GenderFriendlyEnvironment: modelData.data.GenderFriendlyEnvironment,
+        OverallJobSatisfaction: modelData.data.OverallJobSatisfaction,
+
+        // ReasonOfLeaving
+        Benefits: modelData.data.Benefits,
+        BetterJobOpportunity: modelData.data.BetterJobOpportunity,
+        FamilyReasons: modelData.data.FamilyReasons,
+        NotChallenged: modelData.data.NotChallenged,
+        Pay: modelData.data.Pay,
+        PersonalReasons: modelData.data.PersonalReasons,
+        Relocation: modelData.data.Relocation,
+        ReturnToSchool: modelData.data.ReturnToSchool,
+        ConflictWithSuoervisors: modelData.data.ConflictWithSuoervisors,
+        ConflictWithOther: modelData.data.ConflictWithOther,
+        WorkRelationship: modelData.data.WorkRelationship,
+        CompanyInstability: modelData.data.CompanyInstability,
+        CareerChange: modelData.data.CareerChange,
+        HealthIssue: modelData.data.HealthIssue,
+
+        // TheDepartment
+        HadGoodSynergy: modelData.data.HadGoodSynergy,
+        HadAdequateEquipment: modelData.data.HadAdequateEquipment,
+        WasAdequatelyStaffed: modelData.data.WasAdequatelyStaffed,
+        WasEfficient: modelData.data.WasEfficient,
+
+        // TheJobItself
+        JobWasChallenging: modelData.data.JobWasChallenging,
+        SkillsEffectivelyUsed: modelData.data.SkillsEffectivelyUsed,
+        JobOrientation: modelData.data.JobOrientation,
+        WorkLoadReasonable: modelData.data.WorkLoadReasonable,
+        SufficientResources: modelData.data.SufficientResources === undefined ? null : modelData.data.SufficientResources,
+        WorkEnvironment: modelData.data.WorkEnvironment,
+        ComfortableAppropriately: modelData.data.ComfortableAppropriately,
+        Equipped: modelData.data.Equipped,
+
+        // MySupervisor
+        HadKnowledgeOfJob: modelData.data.HadKnowledgeOfJob,
+        HadKnowledgeSupervision: modelData.data.HadKnowledgeSupervision,
+        WasOpenSuggestions: modelData.data.WasOpenSuggestions,
+        RecognizedEmployeesContribution:
+          modelData.data.RecognizedEmployeesContribution,
+
+        // TheManagement
+        GaveFairTreatment: modelData.data.GaveFairTreatment,
+        WasAvailableToDiscuss: modelData.data.WasAvailableToDiscuss,
+        WelcomedSuggestions: modelData.data.WelcomedSuggestions === undefined ? null : modelData.data.WelcomedSuggestions,
+        MaintainedConsistent: modelData.data.MaintainedConsistent === undefined ? null : modelData.data.MaintainedConsistent,
+        ProvidedRecognition: modelData.data.ProvidedRecognition,
+        EncouragedCooperation: modelData.data.EncouragedCooperation,
+        ProvidedDevelopment: modelData.data.ProvidedDevelopment,
+
+        Question: modelData.data.Question,
+        Explain: modelData.data.Explain === undefined ? null : modelData.data.Explain,
+        OfficeId: modelData.data.OfficeId
+      };
+
+
+      this.hrService
+        .DownloadPDF(
+          this.setting.getBaseUrl() + GLOBAL.API_Pdf_GetEmployeeExitInteviewPdf,
+          this.empExitInterviewFormMainForm
+        )
+        .subscribe(
+          x => {
+            this.fileName = 'EmployeeExitInterviewReport' + '.pdf';
+            if (window.navigator.msSaveOrOpenBlob) {
+              window.navigator.msSaveOrOpenBlob(x, this.fileName);
+            } else {
+              const link = document.createElement('a');
+              link.setAttribute('type', 'hidden');
+              link.download = this.fileName;
+              link.href = window.URL.createObjectURL(x);
+              document.body.appendChild(link);
+              link.click();
+            }
+          },
+          error => {
+            this.toastr.warning(error);
+          }
+        );
+    }
+    //#endregion
+  }
+}
