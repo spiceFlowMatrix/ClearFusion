@@ -98,26 +98,26 @@ export class RequestDetailComponent implements OnInit {
 
   ngOnInit() {
     this.hiringRequestDetails = {
-      HiringRequestId : null,
-      JobGrade : '',
-      Position : '',
-      TotalVacancies : '',
-      FilledVacancies : '',
-      PayCurrency : '',
-      PayRate : '',
-      Status : '',
-      Office : '',
-      DepartmentName : '',
-      BudgetName : '',
-      AnouncingDate : null,
-      ClosingDate : null,
-      ContractType : '',
-      ContractDuration : null,
-      Shift : '',
-      EducationDegree : '',
-      Profession : '',
-      Experience : '',
-      KnowledgeAndSkills : '',
+      HiringRequestId: null,
+      JobGrade: '',
+      Position: '',
+      TotalVacancies: '',
+      FilledVacancies: '',
+      PayCurrency: '',
+      PayRate: '',
+      Status: '',
+      Office: '',
+      DepartmentName: '',
+      BudgetName: '',
+      AnouncingDate: null,
+      ClosingDate: null,
+      ContractType: '',
+      ContractDuration: null,
+      Shift: '',
+      EducationDegree: '',
+      Profession: '',
+      Experience: '',
+      KnowledgeAndSkills: '',
     };
     this.routeActive.params.subscribe(params => {
       this.hiringRequestId = +params['id'];
@@ -173,7 +173,7 @@ export class RequestDetailComponent implements OnInit {
               this.hiringRequestDetails = {
                 // Description: response.data.Description,
                 HiringRequestId: response.data.HiringRequestId,
-               // JobCode: response.data.JobCode,
+                // JobCode: response.data.JobCode,
                 JobGrade: response.data.JobGrade,
                 Position: response.data.Position,
                 TotalVacancies: response.data.TotalVacancies,
@@ -221,7 +221,7 @@ export class RequestDetailComponent implements OnInit {
         this.getHiringRequestDetailsByHiringRequestId();
       }
     );
-    dialogRef.afterClosed().subscribe(() => {});
+    dialogRef.afterClosed().subscribe(() => { });
   }
 
   // #region adding new hiring request
@@ -240,7 +240,7 @@ export class RequestDetailComponent implements OnInit {
       // do something
       this.getAllCandidateList(this.filterValueModel);
     });
-    dialogRef.afterClosed().subscribe(() => {});
+    dialogRef.afterClosed().subscribe(() => { });
   }
   //#endregion
 
@@ -262,42 +262,42 @@ export class RequestDetailComponent implements OnInit {
                   element.InterviewId == 0
                     ? 'Not Interviewed'
                     : '<a href="/project/my-project/' +
-                      this.projectId +
-                      '/hiring-request/interview-detail?candId=' +
-                      element.CandidateId +
-                      '&hiringId=' +
-                      this.hiringRequestId +
-                      '&interviewId=' +
-                      element.InterviewId +
-                      '">Interview ' +
-                      element.InterviewId +
-                      '</a>',
+                    this.projectId +
+                    '/hiring-request/interview-detail?candId=' +
+                    element.CandidateId +
+                    '&hiringId=' +
+                    this.hiringRequestId +
+                    '&interviewId=' +
+                    element.InterviewId +
+                    '">Interview ' +
+                    element.InterviewId +
+                    '</a>',
                 CandidateStatus: CandidateStatus[element.CandidateStatus],
                 itemAction:
                   element.CandidateStatus != CandidateStatus.Rejected &&
-                  element.CandidateStatus != CandidateStatus.Selected
+                    element.CandidateStatus != CandidateStatus.Selected
                     ? [
-                        {
-                          button: {
-                            status: true,
-                            text: 'Reject',
-                            type: 'cancel'
-                          },
-                          delete: false,
-                          download: false,
-                          edit: false
+                      {
+                        button: {
+                          status: true,
+                          text: 'Reject',
+                          type: 'cancel'
                         },
-                        {
-                          button: {
-                            status: true,
-                            text: CandidateAction[element.CandidateStatus],
-                            type: 'save'
-                          },
-                          delete: false,
-                          download: false,
-                          edit: false
-                        }
-                      ]
+                        delete: false,
+                        download: false,
+                        edit: false
+                      },
+                      {
+                        button: {
+                          status: true,
+                          text: CandidateAction[element.CandidateStatus],
+                          type: 'save'
+                        },
+                        delete: false,
+                        download: false,
+                        edit: false
+                      }
+                    ]
                     : [],
                 subItems: [
                   {
@@ -375,29 +375,29 @@ export class RequestDetailComponent implements OnInit {
                 CandidateStatus: CandidateStatus[element.CandidateStatus],
                 itemAction:
                   element.CandidateStatus != CandidateStatus.Rejected &&
-                  element.CandidateStatus != CandidateStatus.Selected
+                    element.CandidateStatus != CandidateStatus.Selected
                     ? [
-                        {
-                          button: {
-                            status: true,
-                            text: 'Reject',
-                            type: 'cancel'
-                          },
-                          delete: false,
-                          download: false,
-                          edit: false
+                      {
+                        button: {
+                          status: true,
+                          text: 'Reject',
+                          type: 'cancel'
                         },
-                        {
-                          button: {
-                            status: true,
-                            text: CandidateAction[element.CandidateStatus],
-                            type: 'save'
-                          },
-                          delete: false,
-                          download: false,
-                          edit: false
-                        }
-                      ]
+                        delete: false,
+                        download: false,
+                        edit: false
+                      },
+                      {
+                        button: {
+                          status: true,
+                          text: CandidateAction[element.CandidateStatus],
+                          type: 'save'
+                        },
+                        delete: false,
+                        download: false,
+                        edit: false
+                      }
+                    ]
                     : []
               } as IExistingCandidateList;
             })
@@ -594,5 +594,8 @@ export class RequestDetailComponent implements OnInit {
         );
       });
     }
+  }
+  backToList() {
+    window.history.back();
   }
 }

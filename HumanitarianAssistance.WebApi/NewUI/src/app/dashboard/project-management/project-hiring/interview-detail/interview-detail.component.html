@@ -7,7 +7,7 @@
       [isSubmit]="true"
       (click)="onFormSubmit(interviewDetailForm.value)"
     ></hum-button>
-    <hum-button [type]="'cancel'" [text]="'close'"></hum-button>
+    <hum-button [type]="'cancel'"  (click)="backToList()" [text]="'close'"></hum-button>
     <hum-button [type]="'download'" [text]="'PDF Export'"></hum-button>
   </span>
   <div class="action_section"></div>

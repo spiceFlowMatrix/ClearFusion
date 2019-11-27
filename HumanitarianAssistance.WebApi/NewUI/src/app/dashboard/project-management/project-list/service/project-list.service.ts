@@ -40,6 +40,9 @@ import { ProjectIndicatorFilterModel, IndicatorDetailModel } from '../project-in
 })
 export class ProjectListService {
   showHideHeader = false;
+  get selectedProject(): number {
+    return Number(localStorage.getItem('selectedProject'));
+  }
 
   opportunityControlRoles: IProjectRoles[] = [
     {
@@ -130,69 +133,70 @@ export class ProjectListService {
       Id: 1,
       PageId: projectPagesMaster.ProjectDetails,
       Text: 'Details',
-      Link: 'detail'
+      Link: '/project/my-project/' + this.selectedProject + '/detail'
     },
     {
       Id: 2,
       PageId: projectPagesMaster.CriteriaEvaluation,
       Text: 'Criteria Evaluation',
-      Link: 'criteria-evaluation'
+      Link: '/project/my-project/' + this.selectedProject + '/criteria-evaluation'
     },
     {
       Id: 3,
       PageId: projectPagesMaster.Proposal,
       Text: 'Proposal',
-      Link: 'proposal'
+      Link: '/project/my-project/' + this.selectedProject + '/proposal'
     },
     {
       Id: 4,
       PageId: projectPagesMaster.ProjectJobs,
       Text: 'Project Jobs',
-      Link: 'project-jobs'
+      Link: '/project/my-project/' + this.selectedProject + '/project-jobs'
     },
     {
       Id: 5,
       PageId: projectPagesMaster.ProjectBudgetLine,
       Text: 'Budget Lines',
-      Link: 'budget-lines'
+      Link: '/project/my-project/' + this.selectedProject + '/budget-lines'
     },
     {
       Id: 6,
       PageId: projectPagesMaster.ProjectActivities,
       Text: 'Project Activities',
-      Link: 'project-activities'
+      Link: '/project/my-project/' + this.selectedProject + '/project-activities'
     },
     {
       Id: 7,
       PageId: projectPagesMaster.ProjectPeople,
       Text: 'People',
-      Link: 'people'
+      Link: '/project/my-project/' + this.selectedProject + '/people'
     },
     {
       Id: 8,
       PageId: projectPagesMaster.HiringRequests,
       Text: 'Hiring Requests',
-      Link: 'hiring-request/requests'
+      Link: '/project/my-project/' + this.selectedProject + '/hiring-request/requests'
     },
     {
       Id: 9,
       PageId: projectPagesMaster.ProjectIndicators,
       Text: 'Project Indicators',
-      Link: 'project-indicators'
+      Link: '/project/my-project/' + this.selectedProject + '/project-indicators'
     },
     {
       Id: 10,
       PageId: projectPagesMaster.ProjectBudgetLine,
       Text: 'Logistics',
-      Link: 'logistic-requests'
+      Link: '/project/my-project/' + this.selectedProject + '/logistic-requests'
     }
   ];
 
   constructor(
     private globalService: GlobalService,
     private appurl: AppUrlService
-  ) {}
+  ) {
 
+  }
   //#region "AddProjectDetail"
   getAllProjectMenu(): IMenuList[] {
     return this.menuList;
@@ -416,11 +420,11 @@ export class ProjectListService {
     return this.globalService.getListById(url, Id);
   }
   //#endregion
-    //#region "GetProjectproposalDocumentById"
+  //#region "GetProjectproposalDocumentById"
   GetProjectproposalDocumentById(url: string, Id: any) {
     return this.globalService.getListById(url, Id);
   }
- //#endregion
+  //#endregion
   //#region "uploadEDIFile"
   uploadEDIFile(url: string, Id: number, Formdata: any): any {
     return this.globalService.post(url, Formdata);
@@ -431,11 +435,11 @@ export class ProjectListService {
     return this.globalService.post(url, data);
   }
   //#endregion
-    //#region "AddEditProjectCurrencyDetail"
-    AddEditProjectCurrencyDetail(url: string, data: ProposalDocModel) {
-      return this.globalService.post(url, data);
-    }
-    //#endregion
+  //#region "AddEditProjectCurrencyDetail"
+  AddEditProjectCurrencyDetail(url: string, data: ProposalDocModel) {
+    return this.globalService.post(url, data);
+  }
+  //#endregion
   //#region "GetAllUserList"
   GetAllUserList() {
     return this.globalService
@@ -560,25 +564,25 @@ export class ProjectListService {
     return this.globalService.post(url, data);
   }
   //#endregion
-//#region "GetSignedUrl"
-GetProjectSignedUrl(objectName: any): any {
-  return this.globalService
-    .post(
-      this.appurl.getApiUrl() + GLOBAL.API_Project_DownloadFileFromBucket,
-      objectName
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.data.SignedUrl,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
-}
-//#endregion
+  //#region "GetSignedUrl"
+  GetProjectSignedUrl(objectName: any): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_Project_DownloadFileFromBucket,
+        objectName
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.SignedUrl,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
   //#region "GetOpportunityControlRole"
   GetOpportunityControlRole() {
     return this.opportunityControlRoles;
@@ -608,7 +612,7 @@ GetProjectSignedUrl(objectName: any): any {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
-          GLOBAL.API_ProjectPeople_GetOpportunityControlList,
+        GLOBAL.API_ProjectPeople_GetOpportunityControlList,
         data
       )
       .pipe(
@@ -629,7 +633,7 @@ GetProjectSignedUrl(objectName: any): any {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
-          GLOBAL.API_ProjectPeople_AddOpportunityControl,
+        GLOBAL.API_ProjectPeople_AddOpportunityControl,
         data
       )
       .pipe(
@@ -650,7 +654,7 @@ GetProjectSignedUrl(objectName: any): any {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
-          GLOBAL.API_ProjectPeople_EditOpportunityControl,
+        GLOBAL.API_ProjectPeople_EditOpportunityControl,
         data
       )
       .pipe(
@@ -671,7 +675,7 @@ GetProjectSignedUrl(objectName: any): any {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
-          GLOBAL.API_ProjectPeople_DeleteOpportunityControl,
+        GLOBAL.API_ProjectPeople_DeleteOpportunityControl,
         data
       )
       .pipe(
@@ -692,7 +696,7 @@ GetProjectSignedUrl(objectName: any): any {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
-          GLOBAL.API_ProjectPeople_GetLogisticsControlList,
+        GLOBAL.API_ProjectPeople_GetLogisticsControlList,
         data
       )
       .pipe(
@@ -753,7 +757,7 @@ GetProjectSignedUrl(objectName: any): any {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
-          GLOBAL.API_ProjectPeople_DeleteLogisticsControl,
+        GLOBAL.API_ProjectPeople_DeleteLogisticsControl,
         data
       )
       .pipe(
@@ -814,7 +818,7 @@ GetProjectSignedUrl(objectName: any): any {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
-          GLOBAL.API_ProjectPeople_EditActivitiesControl,
+        GLOBAL.API_ProjectPeople_EditActivitiesControl,
         data
       )
       .pipe(
@@ -835,7 +839,7 @@ GetProjectSignedUrl(objectName: any): any {
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
-          GLOBAL.API_ProjectPeople_DeleteActivitiesControl,
+        GLOBAL.API_ProjectPeople_DeleteActivitiesControl,
         data
       )
       .pipe(
