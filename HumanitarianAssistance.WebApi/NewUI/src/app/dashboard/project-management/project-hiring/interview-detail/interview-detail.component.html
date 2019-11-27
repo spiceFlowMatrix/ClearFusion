@@ -1,18 +1,9 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
     <span class="action_header">
     Interview Details
-    <hum-button
-      *ngIf="isDisplay"
-      [type]="'save'"
-      [text]="'Save '"
-      [isSubmit]="true"
-      (click)="onFormSubmit(interviewDetailForm.value)"
-    ></hum-button>
-    <hum-button
-      [type]="'cancel'"
-      (click)="backToList()"
-      [text]="'close'"
-    ></hum-button>
+    <hum-button *ngIf="isDisplay" [type]="'save'" [text]="'Save '" [isSubmit]="true"
+      (click)="onFormSubmit(interviewDetailForm.value)"></hum-button>
+    <hum-button [type]="'cancel'" [text]="'close'"></hum-button>
     <hum-button [type]="'download'" [text]="'PDF Export'"></hum-button>
   </span>
     <div class="action_section"></div>
@@ -153,6 +144,7 @@
             </div>
         </div>
     </div>
+
     <div class="row">
         <!-- <div class="col-md-12"> -->
         <form class="example-form" [formGroup]="interviewDetailForm">
@@ -160,39 +152,30 @@
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            <h5><b>Rating Base Criteria</b></h5>
+                            <h5><b>Rating Based Criteria</b></h5>
                             <h5 style="margin-left: auto;">
-                                <b> Professional Criteria Marks: </b
-                >{{ professionalCriteriaMarks }}
-              </h5>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div
-            class="col-lg-3 col-sm-3"
-            *ngFor="let data of ratingBasedCriteriaQuestionList"
-          >
-            <h5>{{ data.value }}</h5>
-            <mat-form-field>
-              <mat-select
-                placeholder="Score"
-                name="Score"
-                (selectionChange)="onChangeRatingBasedCriteria(data.Id, $event)"
-                [(value)]="data.selected"
-              >
-                <mat-option
-                  *ngFor="let item of ratingBasedDropDown"
-                  [value]="item.Id"
-                  >{{ item.value }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </mat-expansion-panel>
+                                <b> Professional Criteria Marks: </b>{{ professionalCriteriaMarks }}
+                            </h5>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="col-lg-3 col-sm-3" *ngFor="let data of ratingBasedCriteriaQuestionList">
+                        <h5>{{ data.value }}</h5>
+                        <mat-form-field>
+                            <mat-select placeholder="Score" name="Score" (selectionChange)="onChangeRatingBasedCriteria(data.Id, $event)" [(value)]="data.selected">
+                                <mat-option *ngFor="let item of ratingBasedDropDown" [value]="item.Id">{{ item.value }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <span *ngIf="ratingBasedCriteriaQuestionList.length <= 0">
+            <p>Please add rating based questions first then submit the form </p>
+          </span>
+                </mat-expansion-panel>
 
-        <mat-expansion-panel style="margin-top: 2px;">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <h5><b>Tecnical Questions</b></h5>
+                <mat-expansion-panel style="margin-top: 2px;">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <h5><b>Technical Questions</b></h5>
                             <h5 style="margin-left: auto;">
                                 <b>Marks Obtain: </b>{{ marksObtain }}
                             </h5>
@@ -207,6 +190,9 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
+                    <span *ngIf="technicalQuestionList.length <= 0">
+              <p>Please add Technical questions first then submit the form </p>
+            </span>
                 </mat-expansion-panel>
             </mat-accordion>
             <mat-card style="margin-top: 2px;">
@@ -232,93 +218,56 @@
                 <div class="row">
                     <div class="col-md-5">
                         <div class="row shift-left">
-                            <span>Are you willing to travel to other provinces if required?</span
-              ><mat-slide-toggle
-                class="pull-right"
-                name="QuestionOne"
-                formControlName="InterviewQuestionOne"
-              ></mat-slide-toggle>
-            </div>
-            <div class="row shift-left">
-              <span>Do you have any health related issues?</span
-              ><mat-slide-toggle
-                class="pull-right"
-                name="QuestionTwo"
-                formControlName="InterviewQuestionTwo"
-              ></mat-slide-toggle>
-            </div>
-            <div class="row shift-left">
-              <span
-                >Are yoy willing to consider opportunity if it's based in the
-                provinces?</span
-              ><mat-slide-toggle
-                class="pull-right"
-                name="QuestionThree"
-                formControlName="InterviewQuestionThree"
-              ></mat-slide-toggle>
-            </div>
-            <div class="row shift-left">
-              <span
-                >What province would you prefer, if you consider an opportunity
-                given to you?</span
-              >
-            </div>
-            <br />
-            <div class="row shift-left">
-              <div class="col-lg-12">
-                <mat-form-field class="example-full-width">
-                  <textarea
-                    matInput
-                    formControlName="Description"
-                    placeholder="Description"
-                    matTextareaAutosize
-                    matAutosizeMinRows="5"
-                    matAutosizeMaxRows="7"
-                  ></textarea>
-                </mat-form-field>
-              </div>
-              <div class="col-lg-6">
-                <lib-hum-dropdown
-                  formControlName="NoticePeriod"
-                  [validation]="
+                            <span>Are you willing to travel to other provinces if required?</span>
+                            <mat-slide-toggle class="pull-right" name="QuestionOne" formControlName="InterviewQuestionOne">
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="row shift-left">
+                            <span>Do you have any health related issues?</span>
+                            <mat-slide-toggle class="pull-right" name="QuestionTwo" formControlName="InterviewQuestionTwo">
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="row shift-left">
+                            <span>Are yoy willing to consider opportunity if it's based in the
+                provinces?</span>
+                            <mat-slide-toggle class="pull-right" name="QuestionThree" formControlName="InterviewQuestionThree">
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="row shift-left">
+                            <span>What province would you prefer, if you consider an opportunity
+                given to you?</span>
+                        </div>
+                        <br />
+                        <div class="row shift-left">
+                            <div class="col-lg-12">
+                                <mat-form-field class="example-full-width">
+                                    <textarea matInput formControlName="Description" placeholder="Description" matTextareaAutosize matAutosizeMinRows="5" matAutosizeMaxRows="7"></textarea>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-lg-6">
+                                <lib-hum-dropdown formControlName="NoticePeriod" [validation]="
                     interviewDetailForm.controls['NoticePeriod'].hasError(
                       'required'
                     )
-                  "
-                  [options]="noticePeriodList$"
-                  [placeHolder]="'Notice Period'"
-                ></lib-hum-dropdown>
-              </div>
-              <div class="col-lg-6">
-                <mat-form-field class="example-full-width">
-                  <input
-                    matInput
-                    [matDatepicker]="AvailableDatePicker"
-                    placeholder="Date Available To Join"
-                    formControlName="AvailableDate"
-                  />
-                  <mat-datepicker-toggle
-                    matSuffix
-                    [for]="AvailableDatePicker"
-                  ></mat-datepicker-toggle>
-                  <mat-datepicker #AvailableDatePicker></mat-datepicker>
-                </mat-form-field>
-              </div>
-              <div class="col-lg-6">
-                <mat-form-field class="example-full-width">
-                  <input
-                    matInput
-                    formControlName="WrittenTestMarks"
-                    placeholder="Written Test Marks Obtain"
-                    type="number"
-                  />
-                </mat-form-field>
-              </div>
-            </div>
-            <br />
-            <div class="row shift-left">
-              <h5>
-                <b>Total Marks Obtain: </b><span>{{ totalMarksObtain }}</span>
+                  " [options]="noticePeriodList$" [placeHolder]="'Notice Period'"></lib-hum-dropdown>
+                            </div>
+                            <div class="col-lg-6">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput [matDatepicker]="AvailableDatePicker" placeholder="Date Available To Join" formControlName="AvailableDate" />
+                                    <mat-datepicker-toggle matSuffix [for]="AvailableDatePicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #AvailableDatePicker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-lg-6">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="WrittenTestMarks" placeholder="Written Test Marks Obtain" type="number" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row shift-left">
+                            <h5>
+                                <b>Total Marks Obtain: </b><span>{{ totalMarksObtain }}</span>
                             </h5>
                         </div>
                         <br />
@@ -339,104 +288,69 @@
                             </div>
                             <div class="row shift-left">
                                 <div class="col-lg-4">
-                                    <span>Transport</span
-                  ><mat-checkbox
-                    class="pull-right"
-                    name="CurrentTransport"
-                    formControlName="CurrentTransport"
-                  ></mat-checkbox>
-                </div>
-                <div class="col-lg-4">
-                  <span>Meal</span
-                  ><mat-checkbox
-                    class="pull-right"
-                    name="CurrentMeal"
-                    formControlName="CurrentMeal"
-                  ></mat-checkbox>
-                </div>
-              </div>
-              <div class="row shift-left">
-                <h5>Expectation</h5>
-                <div class="col-lg-4">
-                  <mat-form-field class="example-full-width">
-                    <input
-                      matInput
-                      formControlName="ExpectationBase"
-                      placeholder="Base"
-                      type="number"
-                    />
-                  </mat-form-field>
-                </div>
-                <div class="col-lg-4">
-                  <mat-form-field class="example-full-width">
-                    <input
-                      matInput
-                      formControlName="ExpectationOther"
-                      placeholder="Other"
-                      type="number"
-                    />
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="row shift-left">
-                <div class="col-lg-4">                  
-                  <span>Transport</span
-                  ><mat-checkbox
-                    class="pull-right"
-                    name="ExpectationTransport"
-                    formControlName="ExpectationTransport"
-                  ></mat-checkbox>
-                </div>
-                <div class="col-lg-4">
-                  <span>Meal</span
-                  ><mat-checkbox
-                    class="pull-right"
-                    name="ExpectationMeal"
-                    formControlName="ExpectationMeal"
-                  ></mat-checkbox>
-                </div>
-              </div>
-            </div>
-            <br />
-            <div class="row shift-left">
-              <h5><b>Reccomendations</b></h5>
-              <div class="row shift-left">
-                <h5>Status</h5>
-                <div class="col-lg-6">
-                  <lib-hum-dropdown
-                    formControlName="Status"
-                    [validation]="
+                                    <span>Transport</span>
+                                    <mat-checkbox class="pull-right" name="CurrentTransport" formControlName="CurrentTransport">
+                                    </mat-checkbox>
+                                </div>
+                                <div class="col-lg-4">
+                                    <span>Meal</span>
+                                    <mat-checkbox class="pull-right" name="CurrentMeal" formControlName="CurrentMeal"></mat-checkbox>
+                                </div>
+                            </div>
+                            <div class="row shift-left">
+                                <h5>Expectation</h5>
+                                <div class="col-lg-4">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput formControlName="ExpectationBase" placeholder="Base" type="number" />
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-lg-4">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput formControlName="ExpectationOther" placeholder="Other" type="number" />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row shift-left">
+                                <div class="col-lg-4">
+                                    <span>Transport</span>
+                                    <mat-checkbox class="pull-right" name="ExpectationTransport" formControlName="ExpectationTransport">
+                                    </mat-checkbox>
+                                </div>
+                                <div class="col-lg-4">
+                                    <span>Meal</span>
+                                    <mat-checkbox class="pull-right" name="ExpectationMeal" formControlName="ExpectationMeal">
+                                    </mat-checkbox>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row shift-left">
+                            <h5><b>Reccomendations</b></h5>
+                            <div class="row shift-left">
+                                <h5>Status</h5>
+                                <div class="col-lg-6">
+                                    <lib-hum-dropdown formControlName="Status" [validation]="
                       interviewDetailForm.controls['Status'].hasError(
                         'required'
                       )
-                    "
-                    [options]="statusList$"
-                    [placeHolder]="'Select'"
-                  ></lib-hum-dropdown>
-                </div>
-              </div>
-            </div>
+                    " [options]="statusList$" [placeHolder]="'Select'"></lib-hum-dropdown>
+                                </div>
+                            </div>
+                        </div>
 
-            <div class="row shift-left">
-              <h5>
-                Interviewers
-                <hum-button
-                  [type]="'add'"
-                  [text]="'ADD'"
-                  (click)="addInterviewers()"
-                ></hum-button>
-              </h5>
-              <hum-table
-                [headers]="interviewerHeaders$"
-                [isDefaultAction]="false"
-                [items]="interviewerList$"
-              ></hum-table>
-            </div>
-          </div>
-        </div>
-      </mat-card>
-    </form>
-  </div>
-  <!-- </div> -->
-  <br /><br />
+                        <div class="row shift-left">
+                            <h5>
+                                Interviewers
+                                <hum-button [type]="'add'" [text]="'ADD'" (click)="addInterviewers()"></hum-button>
+                            </h5>
+                            <hum-table [headers]="interviewerHeaders$" [isDefaultAction]="false" [items]="interviewerList$">
+                            </hum-table>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </form>
+    </div>
+    <!-- </div> -->
+    <br /><br />
 </mat-card>

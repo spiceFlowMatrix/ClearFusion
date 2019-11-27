@@ -201,8 +201,8 @@ export interface ITraningDetailModel {
   TraningType?: string;
   TraningName?: string;
   TraningCountryAndCity?: string;
-  TraningStartDate?: Date;
-  TraningEndDate?: Date;
+  TraningStartDate?: any;
+  TraningEndDate?: any;
 }
 export interface IInterviewerDetailModel {
   EmployeeId?: number;
