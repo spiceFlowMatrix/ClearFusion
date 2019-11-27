@@ -1,13 +1,18 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
     <span class="action_header">
     Interview Details
-    <hum-button *ngIf="isDisplay"
+    <hum-button
+      *ngIf="isDisplay"
       [type]="'save'"
       [text]="'Save '"
       [isSubmit]="true"
       (click)="onFormSubmit(interviewDetailForm.value)"
     ></hum-button>
-    <hum-button [type]="'cancel'"  (click)="backToList()" [text]="'close'"></hum-button>
+    <hum-button
+      [type]="'cancel'"
+      (click)="backToList()"
+      [text]="'close'"
+    ></hum-button>
     <hum-button [type]="'download'" [text]="'PDF Export'"></hum-button>
   </span>
     <div class="action_section"></div>
@@ -374,7 +379,7 @@
                 </div>
               </div>
               <div class="row shift-left">
-                <div class="col-lg-4">
+                <div class="col-lg-4">                  
                   <span>Transport</span
                   ><mat-checkbox
                     class="pull-right"
