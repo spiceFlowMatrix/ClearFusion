@@ -6,7 +6,7 @@
       (click)="editHiringRequest()"
     ></hum-button>
     <hum-button [type]="'add'" [text]="'complete '"></hum-button>
-    <hum-button [type]="'cancel'" [text]="'close'"></hum-button>
+    <hum-button [type]="'cancel'" (click)="backToList()" [text]="'close'"></hum-button>
   </span>
     <div class="action_section"></div>
 </lib-sub-header-template>

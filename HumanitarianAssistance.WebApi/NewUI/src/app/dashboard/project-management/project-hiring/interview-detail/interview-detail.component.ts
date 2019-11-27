@@ -521,6 +521,9 @@ export class InterviewDetailComponent implements OnInit {
     );
     this.commonLoader.showLoader();
   }
+  backToList() {
+    window.history.back();
+  }
   //#endregion
 
   // #region "getInterviewDetailsByInterviewId"

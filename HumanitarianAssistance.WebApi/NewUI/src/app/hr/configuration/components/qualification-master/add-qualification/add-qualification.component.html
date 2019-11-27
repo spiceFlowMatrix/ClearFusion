@@ -1,0 +1,20 @@
+<div>
+  <h1 mat-dialog-title>{{title}}</h1>
+  <hr>
+</div>
+<form [formGroup]='addQualificationForm' (ngSubmit)="saveQualification()">
+  <mat-dialog-content>
+    <div class="row">
+      <div class="col-sm-6">
+        <mat-form-field class="example-full-width">
+          <input matInput formControlName="QualificationName" placeholder="Qualification Name">
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions class="items-float-right">
+    <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true" [disabled]="!addQualificationForm.valid || !addQualificationForm.dirty"></hum-button>
+    <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+    <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+  </mat-dialog-actions>
+</form>

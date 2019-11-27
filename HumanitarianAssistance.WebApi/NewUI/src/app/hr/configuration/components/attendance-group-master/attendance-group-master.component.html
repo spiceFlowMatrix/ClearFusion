@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12" class="items-float-right">
+        <hum-button [type]="'add'" [text]="'ADD ATTENDANCE GROUP'" (click)="addAttendanceGroup()"></hum-button>
+    </div>
+    <div class="col-md-12">
+      <div class="departmentTable">
+      <hum-table [headers]="attendanceGroupHeaders$" [items]="attendanceGroupList$"
+         (actionClick)="actionEvents($event)" [actions]="actions"></hum-table>
+      </div>
+      <mat-paginator [length]="RecordCount" [pageSize]="pageModel.PageSize"
+        [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
+      </mat-paginator>
+    </div>
+  </div>
+</div>
