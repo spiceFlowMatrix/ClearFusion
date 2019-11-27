@@ -1,0 +1,41 @@
+.icon_align{
+  font-size: 13em;
+  margin-left: 27%;
+}
+.icon_color_pending{
+  color: gray;
+}
+.icon_color_cancel{
+  color: #9c4141;
+}
+.letter_spacing_2{
+  letter-spacing: 2px;
+}
+.icon_color_yellow{
+  color: darkgoldenrod;
+}
+.icon_color_red{
+  color: #8b0000;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  padding-right: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: grey;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #362f2f;
+}
