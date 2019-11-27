@@ -42,6 +42,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public string Experience { get; set; }
         public string Background { get; set; }
         public string Description { get; set; }
+        // Profession Not used please remove when update migrations
         public string Profession { get; set; }
 
         [ForeignKey("ProfessionId")]

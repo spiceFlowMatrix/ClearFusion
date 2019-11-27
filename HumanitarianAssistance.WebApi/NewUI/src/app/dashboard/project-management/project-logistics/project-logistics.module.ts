@@ -16,10 +16,11 @@ import { ComparativeStatementComponent } from './comparative-statement/comparati
 import { AddSupplierComponent } from './add-supplier/add-supplier.component';
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
 import { SubmitComparativeStatementComponent } from './submit-comparative-statement/submit-comparative-statement.component';
+import { TenderStatementComponent } from './tender-statement/tender-statement.component';
 
 @NgModule({
   declarations: [LogisticRequestsComponent, AddLogisticRequestComponent,
-    LogisticRequestDetailsComponent, AddLogisticItemsComponent, RequestStatusComponent, SubmitPurchaseListComponent, ComparativeStatementComponent, AddSupplierComponent, PurchaseOrderComponent, SubmitComparativeStatementComponent],
+    LogisticRequestDetailsComponent, AddLogisticItemsComponent, RequestStatusComponent, SubmitPurchaseListComponent, ComparativeStatementComponent, AddSupplierComponent, PurchaseOrderComponent, SubmitComparativeStatementComponent, TenderStatementComponent],
   imports: [
     CommonModule,
     MatTableModule,

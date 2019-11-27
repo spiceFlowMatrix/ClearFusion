@@ -637,3 +637,9 @@ export enum Month {
   November = 11,
   December = 12
 }
+
+export enum Shift {
+Day = 1,
+Night = 2,
+Other = 3,
+}

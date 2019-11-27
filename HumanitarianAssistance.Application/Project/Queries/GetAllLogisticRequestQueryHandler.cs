@@ -34,7 +34,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                 }).AsQueryable();
                 
                 var count = reqlist.Count();
-                var list = await reqlist.Skip(request.PageIndex * request.PageSize).Take(request.PageSize).ToListAsync();
+                var list = await reqlist.OrderByDescending(x => x.RequestId).Skip(request.PageIndex * request.PageSize).Take(request.PageSize).ToListAsync();
                 foreach(var item in list) {
                     item.TotalCost =   _dbContext.ProjectLogisticItems.Where(x=>x.IsDeleted==false && x.LogisticRequestsId==item.RequestId).Sum(y=>y.EstimatedCost);
                 }
