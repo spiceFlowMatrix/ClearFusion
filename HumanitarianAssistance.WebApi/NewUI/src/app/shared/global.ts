@@ -148,6 +148,8 @@ export class GLOBAL {
   public static API_Project_WinApprovalProjectDetail = 'Project/WinApprovalProjectDetail';
 
   public static API_Project_GetAllCountryDetails = 'Code/GetAllCountry';
+  public static API_OfficeCode_AddOfficeDetail = 'Code/AddOfficeDetail';
+  public static API_OfficeCode_EditOfficeDetails = 'Code/EditOfficeDetails';
   public static API_Project_GetAllProvinceDetails = 'Project/GetAllProvinceDetails';
   public static API_Project_GetAllStrengthConsiderationDetails = 'Project/GetAllStrengthConsiderationDetails';
   public static API_Project_GetAllGenderConsiderationDetails = 'Project/GetAllGenderConsiderationDetails';
@@ -156,6 +158,20 @@ export class GLOBAL {
   public static API_code_GetAllCurrency = 'code/GetAllCurrency';
   public static API_Project_GetAllDistrictvalueByProvinceId = 'Project/GetAllDistrictvalueByProvinceId';
   public static API_code_GetAllOffice = 'code/GetAllOfficeDetails';
+  public static API_HRConfiguration_GetOfficeList = 'HRConfiguration/GetOfficeList';
+  public static API_HRConfiguration_GetDepartmentList = 'HRConfiguration/GetDepartmentList';
+  public static API_HRConfiguration_GetJobGradeList = 'HRConfiguration/GetJobGradeList';
+  public static API_HRConfiguration_GetAttendanceGroupList = 'HRConfiguration/GetAttendanceGroupList';
+  public static API_HRConfiguration_GetProfessionList = 'HRConfiguration/GetProfessionList';
+  public static API_HRConfiguration_GetQualificationList = 'HRConfiguration/GetQualificationList';
+  public static API_Department_AddDepartment = 'Code/AddDepartment';
+  public static API_Department_EditDepartment = 'Code/EditDepartment';
+  public static API_Code_AddAttendanceGroups = 'Code/AddAttendanceGroups';
+  public static API_Code_EditAttendanceGroups = 'Code/EditAttendanceGroups';
+  public static API_Profession_AddProfession = 'Code/AddProfession';
+  public static API_Profession_EditProfession = 'Code/EditProfession';
+  public static API_Code_AddQualificationDetails = 'Code/AddQualificationDetails';
+  public static API_Code_EditQualifactionDetails = 'Code/EditQualifactionDetails';
   public static API_Project_AddEditProjectotherDetail = 'Project/AddEditProjectotherDetail';
   public static API_GetProjectOtherDetailById = 'Project/GetProjectOtherDetailById';
   public static API_Project_AddProjectJobsDetail = 'Project/AddProjectJobDetail';
@@ -179,10 +195,8 @@ export class GLOBAL {
   public static API_Project_UploadFinalizeFile = 'Project/UploadFinalizeFile';
   public static API_Project_GetApprovalProjectDetailById = 'Project/GetApprovalProjectDetailById';
   public static API_Project_GetProjectWinLossStatusById = 'Project/GetProjectWinLossStatusById';
-
-
-
-
+  public static API_HR_AddJobGradeDetail = 'Code/AddJobGradeDetail';
+  public static API_HR_EditJobGradeDetail = 'Code/EditJobGradeDetail';
 
   public static API_Project_AddEditProjectProposalDetail = 'Project/AddEditProjectProposalDetail';
   public static API_Project_AddEditProjectCurrencyDetail = 'Project/AddEditProjectCurrencyDetail';

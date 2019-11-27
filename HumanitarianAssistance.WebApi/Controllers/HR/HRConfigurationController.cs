@@ -59,5 +59,41 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             request.ModifiedDate = DateTime.UtcNow;
             return Ok(await _mediator.Send(request));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetOfficeList([FromBody] GetOfficeListQuery request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetDepartmentList([FromBody] GetDepartmentListQuery request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetJobGradeList([FromBody] GetJobGradeListQuery request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetAttendanceGroupList([FromBody] GetAttendanceGroupListQuery request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetProfessionList([FromBody] GetProfessionListQuery request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetQualificationList([FromBody] GetQualificationListQuery request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
     }
 }
