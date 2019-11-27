@@ -28,9 +28,7 @@ export interface IFilterModel {
   IsInProgress?: number;
 }
 export interface HiringRequestDetailList {
-  HiringRequestId?: string;
-  Description?: string;
-  JobCode?: string;
+  HiringRequestId?: number;
   JobGrade?: string;
   Position?: string;
   TotalVacancies?: string;
@@ -39,6 +37,17 @@ export interface HiringRequestDetailList {
   PayRate?: string;
   Status?: string;
   Office?: string;
+  DepartmentName?: string;
+  BudgetName?: string;
+  AnouncingDate?: any;
+  ClosingDate?: any;
+  ContractType?: string;
+  ContractDuration?: number;
+  Shift?: string;
+  EducationDegree?: string;
+  Profession?: string;
+  Experience?: string;
+  KnowledgeAndSkills?: string;
 }
 
 export interface OfficeDetailModel {
