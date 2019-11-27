@@ -90,8 +90,8 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                     TraningType = y.NewTraininigType,
                     TraningName = y.TrainingName,
                     TraningCountryAndCity = y.StudyingCountry,
-                    TraningStartDate = y.StartDate,
-                    TraningEndDate = y.EndDate
+                    TraningStartDate = y.StartDate.ToString("dd/MM/yyyy"),
+                    TraningEndDate = y.EndDate.ToString("dd/MM/yyyy")
                     }).ToList (),
                     InterviewerList = iobj
                     };
