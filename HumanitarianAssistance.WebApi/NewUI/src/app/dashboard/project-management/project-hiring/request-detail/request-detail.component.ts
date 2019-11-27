@@ -98,17 +98,26 @@ export class RequestDetailComponent implements OnInit {
 
   ngOnInit() {
     this.hiringRequestDetails = {
-      HiringRequestId: '',
-      Description: '',
-      JobCode: '',
-      JobGrade: '',
-      Position: '',
-      TotalVacancies: '',
-      FilledVacancies: '',
-      PayCurrency: '',
-      PayRate: '',
-      Status: '',
-      Office: ''
+      HiringRequestId : null,
+      JobGrade : '',
+      Position : '',
+      TotalVacancies : '',
+      FilledVacancies : '',
+      PayCurrency : '',
+      PayRate : '',
+      Status : '',
+      Office : '',
+      DepartmentName : '',
+      BudgetName : '',
+      AnouncingDate : null,
+      ClosingDate : null,
+      ContractType : '',
+      ContractDuration : null,
+      Shift : '',
+      EducationDegree : '',
+      Profession : '',
+      Experience : '',
+      KnowledgeAndSkills : '',
     };
     this.routeActive.params.subscribe(params => {
       this.hiringRequestId = +params['id'];
@@ -162,9 +171,9 @@ export class RequestDetailComponent implements OnInit {
             this.loader.showLoader();
             if (response.statusCode === 200 && response.data !== null) {
               this.hiringRequestDetails = {
-                Description: response.data.Description,
+                // Description: response.data.Description,
                 HiringRequestId: response.data.HiringRequestId,
-                JobCode: response.data.JobCode,
+               // JobCode: response.data.JobCode,
                 JobGrade: response.data.JobGrade,
                 Position: response.data.Position,
                 TotalVacancies: response.data.TotalVacancies,

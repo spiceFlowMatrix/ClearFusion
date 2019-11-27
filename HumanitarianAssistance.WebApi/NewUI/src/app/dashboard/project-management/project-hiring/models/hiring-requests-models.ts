@@ -28,9 +28,7 @@ export interface IFilterModel {
   IsInProgress?: number;
 }
 export interface HiringRequestDetailList {
-  HiringRequestId?: string;
-  Description?: string;
-  JobCode?: string;
+  HiringRequestId?: number;
   JobGrade?: string;
   Position?: string;
   TotalVacancies?: string;
