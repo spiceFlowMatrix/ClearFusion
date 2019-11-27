@@ -50,7 +50,7 @@ export class ProjectDetailsComponent implements OnInit {
         Id: x.Id,
         PageId: x.PageId,
         Text: x.Text,
-        Link: x.Link
+        Link: '/project/my-project/' + this.projectListService.selectedProject() + x.Link
       });
     });
 
@@ -58,8 +58,8 @@ export class ProjectDetailsComponent implements OnInit {
 
     // this.menuList.map(
     //   x => (x.Link = this.router.url.substr(0, this.router.url.lastIndexOf('/') + 1) + x.Link)
-    // ); 
-    
+    // );
+
     // important for routing
 
     // Set Menu Header Name
@@ -108,7 +108,7 @@ export class ProjectDetailsComponent implements OnInit {
         this.isCEApproved
           ? this.menuList.filter((i, index) => index < 3)
           : this.menuList.filter((i, index) => index < 2)
-      
+
       );
 
       // this.authorizedMenuList =
