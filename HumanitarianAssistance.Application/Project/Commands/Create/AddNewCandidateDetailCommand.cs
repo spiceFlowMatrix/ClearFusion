@@ -24,5 +24,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
         public string PreviousWork { get; set; }
         public string CurrentAddress { get; set; }
         public string PermanentAddress { get; set; }
+        public string Remarks { get; set; }
     }
 }

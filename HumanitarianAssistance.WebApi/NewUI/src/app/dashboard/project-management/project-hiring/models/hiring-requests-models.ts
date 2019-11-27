@@ -74,6 +74,7 @@ export interface ICandidateDetailModel {
   TotalExperienceInYear?: number;
   RelevantExperienceInYear?: number;
   IrrelevantExperienceInYear?: number;
+  Remarks?: string;
 }
 
 export interface IHiringRequestModel {

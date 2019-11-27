@@ -433,7 +433,6 @@ export class RequestDetailComponent implements OnInit {
                 employee.itemAction = [];
 
                 res[index] = employee;
-                console.log(res);
                 this.existingCandidatesList$ = of(res);
               });
             } else {
@@ -583,7 +582,6 @@ export class RequestDetailComponent implements OnInit {
   }
 
   onStatusFilterCandidate(data: MatSelectChange) {
-    debugger;
     if (data.value == '') {
       this.getAllCandidateList(this.filterValueModel);
     } else {

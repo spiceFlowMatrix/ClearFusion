@@ -46,6 +46,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                     IrrelevantExperienceInYear = request.IrrelevantExperienceInYear,
                     CreatedById = request.CreatedById,
                     CreatedDate = request.CreatedDate,
+                    Remarks = request.Remarks,
                     IsDeleted = false,
                 };
                 await _dbContext.CandidateDetails.AddAsync (candidateDetail);

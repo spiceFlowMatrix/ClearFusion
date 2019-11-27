@@ -69,12 +69,13 @@ export class AddNewCandidateComponent implements OnInit {
       PreviousWork: [null, [Validators.required]],
       CurrentAddress: [null, [Validators.required]],
       PermanentAddress: [null, [Validators.required]],
-      Profession: [, [Validators.required]],
+      Profession: [null, [Validators.required]],
       // Grade: [null, [Validators.required]],
       // Office: [null, [Validators.required]],
       // TotalExperienceInYear: [null, [Validators.required]],
       RelevantExperienceInYear: [null, [Validators.required]],
-      IrrelevantExperienceInYear: [null, [Validators.required]]
+      IrrelevantExperienceInYear: [null, [Validators.required]],
+      Remarks: [null, [Validators.required]]
     });
 
     this.accountStatusList$ = of([
