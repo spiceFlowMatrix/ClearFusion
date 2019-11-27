@@ -18,14 +18,13 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
 
         public async Task<object> Handle(GetAllEducationDegreeListQuery request, CancellationToken cancellationToken)
         {
-            var result = await _dbContext.EducationDegreeMaster
+            return await _dbContext.EducationDegreeMaster
                                          .Where(x=> x.IsDeleted == false)
                                          .Select(x=> new {
                                             x.Id,
                                             x.Name
                                          })
                                          .ToListAsync();
-            return result;
         }
     }
 }

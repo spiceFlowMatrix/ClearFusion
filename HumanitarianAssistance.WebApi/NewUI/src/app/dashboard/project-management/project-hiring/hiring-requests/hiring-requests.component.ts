@@ -81,7 +81,7 @@ export class HiringRequestsComponent implements OnInit {
     this.filterModel = {
       FilterValue: '',
       pageIndex: 0,
-      pageSize: 10,
+      pageSize: 50,
       ProjectId: null,
       TotalCount: 0,
       IsInProgress: HiringRequestStatus['In-Progress'],
@@ -187,7 +187,7 @@ export class HiringRequestsComponent implements OnInit {
       this.selectCheckBoxFlag = false;
       this.filterModel = {
         pageIndex: 0,
-        pageSize: 10,
+        pageSize: 50,
         IsOpenFlagId: HiringRequestStatus.Open,
         IsInProgress: HiringRequestStatus['In-Progress'],
         FilterValue: ''
@@ -197,7 +197,7 @@ export class HiringRequestsComponent implements OnInit {
       this.selectCheckBoxFlag = true;
       this.filterModel = {
         pageIndex: 0,
-        pageSize: 10,
+        pageSize: 50,
         IsOpenFlagId: HiringRequestStatus.Closed,
         IsInProgress: HiringRequestStatus.Completed,
         FilterValue: ''

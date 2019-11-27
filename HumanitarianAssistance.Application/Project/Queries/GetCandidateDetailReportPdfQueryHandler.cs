@@ -24,7 +24,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
             try {
                 // model logic here OfficeDetail
                 var candidateDetail = (from s in _dbContext.HiringRequestCandidateStatus
-                    .Where (x => x.IsDeleted == false && x.HiringRequestId == request.HiringRequestId && x.CandidateId != null && x.ProjectId == request.ProjectId) 
+                    .Where (x => x.IsDeleted == false && x.CandidateStatus == 1 && x.HiringRequestId == request.HiringRequestId && x.CandidateId != null && x.ProjectId == request.ProjectId) 
                     join cd in _dbContext.CandidateDetails 
                     on s.CandidateId equals cd.CandidateId into cdl from cd in cdl.DefaultIfEmpty ()                     
                     join phd in _dbContext.ProjectHiringRequestDetail 

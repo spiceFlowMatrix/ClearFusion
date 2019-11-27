@@ -56,9 +56,11 @@ export class ProjectDetailsComponent implements OnInit {
 
     // this.menuList = this.projectListService.getAllProjectMenu();
 
-    this.menuList.map(
-      x => (x.Link = this.router.url.substr(0, this.router.url.lastIndexOf('/') + 1) + x.Link)
-    ); // important for routing
+    // this.menuList.map(
+    //   x => (x.Link = this.router.url.substr(0, this.router.url.lastIndexOf('/') + 1) + x.Link)
+    // ); 
+    
+    // important for routing
 
     // Set Menu Header Name
     this.globalService.setMenuHeaderName(this.setProjectHeader);

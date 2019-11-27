@@ -21,6 +21,18 @@ import { GeneralComponent } from './components/general/general.component';
 import { EducationDegreeComponent } from './components/education-degree/education-degree.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { AddEducationDegreeComponent } from './components/education-degree/add-education-degree/add-education-degree.component';
+import { OfficeMasterComponent } from './components/office-master/office-master.component';
+import { AddOfficeMasterComponent } from './components/office-master/add-office-master/add-office-master.component';
+import { DepartmentMasterComponent } from './components/department-master/department-master.component';
+import { AddDepartmentMasterComponent } from './components/department-master/add-department-master/add-department-master.component';
+import { JobGradeMasterComponent } from './components/job-grade-master/job-grade-master.component';
+import { AddJobGradeComponent } from './components/job-grade-master/add-job-grade/add-job-grade.component';
+import { AttendanceGroupMasterComponent } from './components/attendance-group-master/attendance-group-master.component';
+import { AddAttendanceGroupComponent } from './components/attendance-group-master/add-attendance-group/add-attendance-group.component';
+import { ProfessionMasterComponent } from './components/profession-master/profession-master.component';
+import { AddProfessionComponent } from './components/profession-master/add-profession/add-profession.component';
+import { QualificationMasterComponent } from './components/qualification-master/qualification-master.component';
+import { AddQualificationComponent } from './components/qualification-master/add-qualification/add-qualification.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +43,18 @@ import { AddEducationDegreeComponent } from './components/education-degree/add-e
     GeneralComponent,
     EducationDegreeComponent,
     AddEducationDegreeComponent,
+    OfficeMasterComponent,
+    AddOfficeMasterComponent,
+    DepartmentMasterComponent,
+    AddDepartmentMasterComponent,
+    JobGradeMasterComponent,
+    AddJobGradeComponent,
+    AttendanceGroupMasterComponent,
+    AddAttendanceGroupComponent,
+    ProfessionMasterComponent,
+    AddProfessionComponent,
+    QualificationMasterComponent,
+    AddQualificationComponent,
   ],
   imports: [
     CommonModule,
@@ -50,6 +74,8 @@ import { AddEducationDegreeComponent } from './components/education-degree/add-e
     SubHeaderTemplateModule,
     LibraryModule
   ],
-  entryComponents: [AddDesignationComponent, AddEducationDegreeComponent]
+  entryComponents: [AddDesignationComponent, AddEducationDegreeComponent, AddOfficeMasterComponent,
+                   AddDepartmentMasterComponent, AddJobGradeComponent, AddAttendanceGroupComponent,
+                   AddProfessionComponent, AddQualificationComponent ]
 })
 export class ConfigurationModule { }
