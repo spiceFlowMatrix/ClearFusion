@@ -385,11 +385,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
         {
             return await _mediator.Send(new GetAllProfessionQuery());
         }
-        [HttpGet]
-        public async Task<ApiResponse> GetAllEducationDegree()
-        {
-            return await _mediator.Send(new GetAllEducationDegreeQuery());
-        }
+        // [HttpGet]
+        // public async Task<ApiResponse> GetAllEducationDegree()
+        // {
+        //     return await _mediator.Send(new GetAllEducationDegreeQuery());
+        // }
         #endregion
 
         #region "Country detail"

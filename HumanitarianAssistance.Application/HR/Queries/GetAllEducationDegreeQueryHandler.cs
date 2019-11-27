@@ -25,7 +25,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
            try
            {
-               var query = _dbContext.EducationDegreeMaster.Where(x=> x.IsDeleted == false).AsQueryable();
+               var query = _dbContext.EducationDegreeMaster.OrderByDescending(x=> x.Id).Where(x=> x.IsDeleted == false).AsQueryable();
                response.TotalCount = await query.CountAsync();
                response.EducationDegreeList = await query.Skip(request.PageIndex * request.PageSize)
                                                          .Take(request.PageSize)
