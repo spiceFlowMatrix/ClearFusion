@@ -54,5 +54,6 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public string PermanentAddress { get; set; }
         public int ExperienceYear { get; set; }
         public int ExperienceMonth { get; set; }
+        public string Remarks { get; set; }
     }
 }
