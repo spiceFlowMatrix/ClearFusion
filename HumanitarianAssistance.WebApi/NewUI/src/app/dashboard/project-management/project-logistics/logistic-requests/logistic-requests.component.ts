@@ -94,6 +94,7 @@ export class LogisticRequestsComponent implements OnInit {
         Status: LogisticRequestStatus[v.Status],
         TotalCost: v.TotalCost
        }) as IRequestList)));
+    this.requestCount++;
   }
   requestRowClicked(event) {
     this.router.navigate([event.Id], { relativeTo: this.routeActive });
