@@ -11,8 +11,8 @@ namespace HumanitarianAssistance.Application.Project.Models {
         public string TraningType { get; set; }
         public string TraningName { get; set; }
         public string TraningCountryAndCity { get; set; }
-        public DateTime TraningStartDate { get; set; }
-        public DateTime TraningEndDate { get; set; }
+        public string TraningStartDate { get; set; }
+        public string TraningEndDate { get; set; }
     }
     public class InterviewerDetailsModel {
         public int EmployeeId { get; set; }

@@ -29,10 +29,10 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                               join e in _dbContext.EducationDegreeMaster 
                               on cd.EducationDegreeId equals e.Id into ed from e in ed.DefaultIfEmpty () 
                               select new CandidateAllDetailsModel {
-                                FullName = cd.FirstName + ' ' + cd.LastName,
+                                FullName = $"{cd.FirstName } {cd.LastName}" ,
                                 Gender = cd.GenderId == 1 ? "Male" : cd.GenderId == 2 ? "Female" : "Other",
                                 Qualification = e.Name,
-                                DateOfBirth = cd.DateOfBirth
+                                DateOfBirth = cd.DateOfBirth.ToString("dd/MM/yyyy")
                         })
                     .FirstOrDefaultAsync ();
 

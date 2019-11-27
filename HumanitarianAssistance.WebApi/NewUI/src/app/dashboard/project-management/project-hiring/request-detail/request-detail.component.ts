@@ -49,9 +49,9 @@ export class RequestDetailComponent implements OnInit {
     'Phone Number',
     'Profession',
     'Email Address',
-    // 'Total Experience',
     'Relevant Experience',
-    'Irrelevant Experience'
+    'Irrelevant Experience',
+    'Total Experience',
   ]);
   existingCandidatesHeaders$ = of([
     'Employee Id',
@@ -305,11 +305,11 @@ export class RequestDetailComponent implements OnInit {
                     PhoneNumber: element.PhoneNumber,
                     Profession: element.Profession,
                     Email: element.Email,
-                    // TotalExperienceInYear: element.TotalExperienceInYear,
                     RelevantExperienceInYear: element.RelevantExperienceInYear,
                     IrrelevantExperienceInYear:
-                      element.IrrelevantExperienceInYear
-                    // DateOfBirth: element.DateOfBirth,
+                      element.IrrelevantExperienceInYear,
+                      TotalExperienceInYear: element.RelevantExperienceInYear + element.IrrelevantExperienceInYear,
+                      // DateOfBirth: element.DateOfBirth,
                     // Grade: element.Grade,
                     // Office: element.Office,
                     // Country: element.Country,
