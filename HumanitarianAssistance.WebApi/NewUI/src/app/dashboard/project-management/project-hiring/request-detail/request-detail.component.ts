@@ -16,7 +16,7 @@ import { takeUntil } from 'rxjs/operators';
 import { AddHiringRequestComponent } from '../add-hiring-request/add-hiring-request.component';
 import { MatDialog, MatSelectChange } from '@angular/material';
 import { AddNewCandidateComponent } from '../add-new-candidate/add-new-candidate.component';
-import { CandidateStatus, CandidateAction } from 'src/app/shared/enum';
+import { CandidateStatus, CandidateAction, Shift } from 'src/app/shared/enum';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
@@ -64,12 +64,14 @@ export class RequestDetailComponent implements OnInit {
   // existingEmployeesList$: Observable<IDropDownModel[]>;
   existingEmployeesList: any[] = [];
   newCandidatesList$: Observable<ICandidateDetailList[]>;
+  newCandidatesList2$: Observable<ICandidateDetailList[]>;
   hiringRequestDetails: HiringRequestDetailList;
   existingCandidatesList$: Observable<IExistingCandidateList[]>;
   existingCandidatesList2$: Observable<IExistingCandidateList[]>;
   filterValueModel: ICandidateFilterModel;
   hiringRequestId: any;
   projectId: any;
+  candidateId: any;
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
@@ -151,35 +153,47 @@ export class RequestDetailComponent implements OnInit {
   //#endregion
   //#region "getAllProjectActivityList"
   getHiringRequestDetailsByHiringRequestId() {
-    this.hiringRequestService
-      .GetProjectHiringRequestDetailsByHiringRequestId(this.hiringRequestId)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(
-        (response: IResponseData) => {
-          this.loader.showLoader();
-          if (response.statusCode === 200 && response.data !== null) {
-            this.hiringRequestDetails = {
-              Description: response.data.Description,
-              HiringRequestId: response.data.HiringRequestId,
-              JobCode: response.data.JobCode,
-              JobGrade: response.data.JobGrade,
-              Position: response.data.Position,
-              TotalVacancies: response.data.TotalVacancies,
-              FilledVacancies: response.data.FilledVacancies,
-              PayCurrency: response.data.PayCurrency,
-              PayRate: response.data.PayRate,
-              Status: response.data.Status,
-              Office: response.data.Office
-            };
+    if (this.hiringRequestId != null && this.hiringRequestId !== undefined) {
+      this.hiringRequestService
+        .GetProjectHiringRequestDetailsByHiringRequestId(this.hiringRequestId)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(
+          (response: IResponseData) => {
+            this.loader.showLoader();
+            if (response.statusCode === 200 && response.data !== null) {
+              this.hiringRequestDetails = {
+                Description: response.data.Description,
+                HiringRequestId: response.data.HiringRequestId,
+                JobCode: response.data.JobCode,
+                JobGrade: response.data.JobGrade,
+                Position: response.data.Position,
+                TotalVacancies: response.data.TotalVacancies,
+                FilledVacancies: response.data.FilledVacancies,
+                PayCurrency: response.data.PayCurrency,
+                PayRate: response.data.PayRate,
+                Status: response.data.Status,
+                Office: response.data.Office,
+                DepartmentName: response.data.DepartmentName,
+                BudgetName: response.data.BudgetName,
+                AnouncingDate: response.data.AnouncingDate,
+                ClosingDate: response.data.ClosingDate,
+                ContractType: response.data.ContractType,
+                ContractDuration: response.data.ContractDuration,
+                Shift: Shift[response.data.Shift],
+                EducationDegree: response.data.EducationDegree,
+                Profession: response.data.Profession,
+                Experience: response.data.Experience,
+                KnowledgeAndSkills: response.data.KnowledgeAndSkills
+              };
+            }
+            this.loader.hideLoader();
+          },
+          () => {
+            this.loader.hideLoader();
           }
-          this.loader.hideLoader();
-        },
-        () => {
-          this.loader.hideLoader();
-        }
-      );
+        );
+    }
   }
-
   // #region edit hiring request
   editHiringRequest(): void {
     // NOTE: It open AddHiringRequest (AddHiringRequestsComponent)
@@ -198,7 +212,7 @@ export class RequestDetailComponent implements OnInit {
         this.getHiringRequestDetailsByHiringRequestId();
       }
     );
-    dialogRef.afterClosed().subscribe(() => { });
+    dialogRef.afterClosed().subscribe(() => {});
   }
 
   // #region adding new hiring request
@@ -217,7 +231,7 @@ export class RequestDetailComponent implements OnInit {
       // do something
       this.getAllCandidateList(this.filterValueModel);
     });
-    dialogRef.afterClosed().subscribe(() => { });
+    dialogRef.afterClosed().subscribe(() => {});
   }
   //#endregion
 
@@ -235,19 +249,47 @@ export class RequestDetailComponent implements OnInit {
                 FirstName: element.FirstName,
                 LastName: element.LastName,
                 Gender: element.Gender,
-                Interview: (element.CandidateStatus == 0) || (element.CandidateStatus == 1) ? 'Not Interviewed' : '<a href="/interview-detail">Interview Id</a>',
+                Interview:
+                  element.InterviewId == 0
+                    ? 'Not Interviewed'
+                    : '<a href="/project/my-project/' +
+                      this.projectId +
+                      '/hiring-request/interview-detail?candId=' +
+                      element.CandidateId +
+                      '&hiringId=' +
+                      this.hiringRequestId +
+                      '&interviewId=' +
+                      element.InterviewId +
+                      '">Interview ' +
+                      element.InterviewId +
+                      '</a>',
                 CandidateStatus: CandidateStatus[element.CandidateStatus],
-                itemAction: (element.CandidateStatus != CandidateStatus.Rejected) && (element.CandidateStatus != CandidateStatus.Selected) ? [{
-                  button: { status: true, text: 'Reject', type: 'cancel' },
-                  delete: false,
-                  download: false,
-                  edit: false
-                }, {
-                  button: { status: true, text: CandidateAction[element.CandidateStatus], type: 'save' },
-                  delete: false,
-                  download: false,
-                  edit: false
-                }] : [],
+                itemAction:
+                  element.CandidateStatus != CandidateStatus.Rejected &&
+                  element.CandidateStatus != CandidateStatus.Selected
+                    ? [
+                        {
+                          button: {
+                            status: true,
+                            text: 'Reject',
+                            type: 'cancel'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false
+                        },
+                        {
+                          button: {
+                            status: true,
+                            text: CandidateAction[element.CandidateStatus],
+                            type: 'save'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false
+                        }
+                      ]
+                    : [],
                 subItems: [
                   {
                     EducationDegree: element.EducationDegree,
@@ -270,6 +312,7 @@ export class RequestDetailComponent implements OnInit {
               } as ICandidateDetailList;
             })
           );
+          this.newCandidatesList2$ = this.newCandidatesList$;
         }
         this.loader.hideLoader();
       },
@@ -286,7 +329,7 @@ export class RequestDetailComponent implements OnInit {
           response.data.forEach(element => {
             this.existingEmployeesList.push({
               Id: element.EmployeeId,
-              value: element.EmployeeName,
+              value: element.EmployeeName
             });
           });
           // this.existingEmployeesList$ = of(
@@ -321,17 +364,32 @@ export class RequestDetailComponent implements OnInit {
                 FullName: element.FullName,
                 Gender: element.Gender,
                 CandidateStatus: CandidateStatus[element.CandidateStatus],
-                itemAction: (element.CandidateStatus != CandidateStatus.Rejected) && (element.CandidateStatus != CandidateStatus.Selected) ? [{
-                  button: { status: true, text: 'Reject', type: 'cancel' },
-                  delete: false,
-                  download: false,
-                  edit: false
-                }, {
-                  button: { status: true, text: CandidateAction[element.CandidateStatus], type: 'save' },
-                  delete: false,
-                  download: false,
-                  edit: false
-                }] : [],
+                itemAction:
+                  element.CandidateStatus != CandidateStatus.Rejected &&
+                  element.CandidateStatus != CandidateStatus.Selected
+                    ? [
+                        {
+                          button: {
+                            status: true,
+                            text: 'Reject',
+                            type: 'cancel'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false
+                        },
+                        {
+                          button: {
+                            status: true,
+                            text: CandidateAction[element.CandidateStatus],
+                            type: 'save'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false
+                        }
+                      ]
+                    : []
               } as IExistingCandidateList;
             })
           );
@@ -354,18 +412,21 @@ export class RequestDetailComponent implements OnInit {
         (response: IResponseData) => {
           this.loader.showLoader();
           if (response.statusCode === 200 && response.data !== null) {
-            const data = response.data
+            const data = response.data;
             if (data.EmployeeID) {
               this.existingCandidatesList$.subscribe(res => {
-                const index = res.findIndex(x => x.EmployeeId == data.EmployeeID);
+                const index = res.findIndex(
+                  x => x.EmployeeId == data.EmployeeID
+                );
                 const employee = res.find(x => x.EmployeeId == data.EmployeeID);
-                employee.CandidateStatus = CandidateStatus[data.CandidateStatus];
+                employee.CandidateStatus =
+                  CandidateStatus[data.CandidateStatus];
                 employee.itemAction = [];
 
                 res[index] = employee;
                 console.log(res);
                 this.existingCandidatesList$ = of(res);
-              })
+              });
             } else {
               // this.newCandidatesList$.subscribe(res => {
               //   const index = res.findIndex(x => x.CandidateId == data.CandidateID);
@@ -389,12 +450,10 @@ export class RequestDetailComponent implements OnInit {
   }
 
   OnExistingEmployeeSelection(data: MatSelectChange) {
-
     this.existingCandidatesList2$.subscribe(res => {
       if (res.findIndex(x => x.EmployeeId == data.value) > -1) {
-        this.toastr.warning("Employee already selected");
-      }
-      else {
+        this.toastr.warning('Employee already selected');
+      } else {
         this.loader.showLoader();
         const candidateDetails: any = {
           HiringRequestId: this.hiringRequestId,
@@ -420,38 +479,42 @@ export class RequestDetailComponent implements OnInit {
               this.loader.hideLoader();
             }
           );
-
       }
-    })
-
+    });
   }
 
   newCandActionEvents(data: any) {
+    console.log(data);
     switch (data.type) {
-      case "Reject":
+      case 'Reject':
         this.rejectCandidate(data);
         break;
-      case "Shortlist":
+      case 'Shortlist':
         const candidateDetails: any = {
           statusId: +CandidateStatus[data.item.CandidateStatus],
           candidateId: data.item.CandidateId
         };
         this.updateCandidateStatus(candidateDetails);
         break;
-      case "Interview":
-        this.router.navigate(['interview-detail'], { relativeTo: this.routeActive.parent, queryParams: { candId: 1, hiringId: 1 } });
+      case 'Interview':
+        this.router.navigate(['interview-detail'], {
+          relativeTo: this.routeActive.parent,
+          queryParams: {
+            candId: data.item.CandidateId,
+            hiringId: this.hiringRequestId
+          }
+        });
         break;
       default:
         break;
     }
   }
   empActionEvents(data: any) {
-    // console.log(data);
     switch (data.type) {
-      case "Reject":
+      case 'Reject':
         this.rejectEmployee(data);
         break;
-      case "Select":
+      case 'Select':
         const candidateDetails: any = {
           statusId: +CandidateStatus[data.item.CandidateStatus],
           employeeId: data.item.EmployeeId
@@ -502,6 +565,21 @@ export class RequestDetailComponent implements OnInit {
     } else {
       this.existingCandidatesList2$.subscribe(res => {
         this.existingCandidatesList$ = of(
+          res.filter(x =>
+            data.value.includes(CandidateStatus[x.CandidateStatus])
+          )
+        );
+      });
+    }
+  }
+
+  onStatusFilterCandidate(data: MatSelectChange) {
+    debugger;
+    if (data.value == '') {
+      this.getAllCandidateList(this.filterValueModel);
+    } else {
+      this.newCandidatesList$.subscribe(res => {
+        this.newCandidatesList2$ = of(
           res.filter(x =>
             data.value.includes(CandidateStatus[x.CandidateStatus])
           )

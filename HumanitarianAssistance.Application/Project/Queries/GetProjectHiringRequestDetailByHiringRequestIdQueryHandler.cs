@@ -27,7 +27,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
             ApiResponse response = new ApiResponse();
             try
             {
-                var requestDetail = await (from hr in _dbContext.ProjectHiringRequestDetail.Where(x => x.IsDeleted == false &&
+                var requestDetail = await (from hr in _dbContext.ProjectHiringRequestDetail
+                .Where(x => x.IsDeleted == false &&
                                                                                                       x.HiringRequestId == request.HiringRequestId)
                                            join c in _dbContext.CurrencyDetails on hr.CurrencyId equals c.CurrencyId into h
                                            from c in h.DefaultIfEmpty()
@@ -36,22 +37,36 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                            join g in _dbContext.JobGrade on hr.GradeId equals g.GradeId into gd
                                            from g in gd.DefaultIfEmpty()
                                            join p in _dbContext.ProfessionDetails on hr.ProfessionId equals p.ProfessionId into pd
-                                           from p in pd.DefaultIfEmpty()                                                                                    
+                                           from p in pd.DefaultIfEmpty()
+                                           join b in _dbContext.ProjectBudgetLineDetail on hr.BudgetLineId equals b.BudgetLineId into bl
+                                           from b in bl.DefaultIfEmpty()
+                                           join d in _dbContext.Department on hr.JobTypeId equals d.DepartmentId into dp
+                                           from d in dp.DefaultIfEmpty()
                                            select new ProjectHiringRequestModel
                                            {
-                                               // Description = j.JobDescription,
                                                HiringRequestId = hr.HiringRequestId,
                                                Office = o.OfficeName,
-                                               // JobCode = j.JobCode,
                                                JobGrade = g.GradeName,
                                                Position = p.ProfessionName,
                                                TotalVacancies = hr.TotalVacancies,
                                                FilledVacancies = hr.FilledVacancies != null ? hr.FilledVacancies : 0,
                                                PayCurrency = c.CurrencyName,
                                                PayRate = hr.HourlyRate,
-                                               Status = hr.IsCompleted == true ? "Completed" : "InProgress"
+                                               Status = hr.IsCompleted == true ? "Completed" : "InProgress",
+                                               BudgetName = b.BudgetName,
+                                               DepartmentName = d.DepartmentName,
+                                               AnouncingDate = hr.AnouncingDate != null ? hr.AnouncingDate.Value.ToShortDateString() : "",
+                                               ClosingDate = hr.ClosingDate != null ? hr.ClosingDate.Value.ToShortDateString() : "",
+                                               ContractType = hr.ContractType,
+                                               ContractDuration = hr.ContractDuration,
+                                               Shift = hr.Shift,
+                                               EducationDegree = hr.EducationDegreeMaster.Name,
+                                               Experience = hr.Experience,
+                                               Profession = hr.ProfessionDetails.ProfessionName,
+                                               KnowledgeAndSkills = hr.KnowladgeAndSkillRequired
+
                                            }).FirstOrDefaultAsync();
-                response.data.ProjectHiringRequestDetails = requestDetail;
+                response.ResponseData = requestDetail;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

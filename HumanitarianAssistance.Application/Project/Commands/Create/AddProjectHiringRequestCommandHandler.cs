@@ -63,11 +63,11 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                 await _dbContext.ProjectHiringRequestDetail.AddAsync (hiringRequestDeatil);
                 await _dbContext.SaveChangesAsync ();
 
-                if (request.JobCategory != null) {
-                    var jobdetail = await _dbContext.ProjectJobHiringDetail.Where (x => x.JobId == request.JobCategory).FirstOrDefaultAsync ();
-                    jobdetail.FilledVacancies = jobdetail.FilledVacancies - request.TotalVacancy;
-                    await _dbContext.SaveChangesAsync ();
-                }
+                // if (request.JobCategory != null) {
+                //     var jobdetail = await _dbContext.ProjectJobHiringDetail.Where (x => x.JobId == request.JobCategory).FirstOrDefaultAsync ();
+                //     jobdetail.FilledVacancies = jobdetail.FilledVacancies - request.TotalVacancy;
+                //     await _dbContext.SaveChangesAsync ();
+                // }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             } catch (Exception ex) {

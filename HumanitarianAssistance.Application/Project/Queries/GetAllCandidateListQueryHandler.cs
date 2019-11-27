@@ -18,9 +18,9 @@ namespace HumanitarianAssistance.Application.Project.Queries {
         public async Task<ApiResponse> Handle (GetAllCandidateListQuery request, CancellationToken cancellationToken) {
             ApiResponse response = new ApiResponse ();
             try {
-                int totalCount = await _dbContext.CandidateDetails.CountAsync (x => x.IsDeleted == false);
+                //int totalCount = await _dbContext.CandidateDetails.CountAsync (x => x.IsDeleted == false);
 
-                var candidateDetail = (from s in _dbContext.HiringRequestCandidateStatus
+                var candidateDetail = await (from s in _dbContext.HiringRequestCandidateStatus
                 .Where (x => x.IsDeleted == false && x.CandidateId !=null && x.HiringRequestId == request.HiringRequestId && x.ProjectId == request.ProjectId) 
                 join cd in _dbContext.CandidateDetails on s.CandidateId equals cd.CandidateId into cdl 
                 from cd in cdl.DefaultIfEmpty () 
@@ -54,17 +54,17 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                             Country = c.CountryName,
                             Province = pr.ProvinceName,
                             District = d.District,
-                            // InterviewId = s.InterviewId,
+                            InterviewId = s.InterviewId!=null?s.InterviewId:0,
                             CandidateStatus = s.CandidateStatus,
                             // TotalExperienceInYear = cd.TotalExperienceInYear,
                             RelevantExperienceInYear = cd.RelevantExperienceInYear,
                             IrrelevantExperienceInYear = cd.IrrelevantExperienceInYear,
-                    })
+                    }).AsQueryable()
                     .Skip (request.pageSize.Value * request.pageIndex.Value)
                     .Take (request.pageSize.Value)
-                    .ToList ();
+                    .ToListAsync();
 
-                response.data.TotalCount = totalCount;
+                response.data.TotalCount = candidateDetail.Count;
                 response.data.CandidateList = candidateDetail.OrderByDescending (x => x.CandidateId).ToList ();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
