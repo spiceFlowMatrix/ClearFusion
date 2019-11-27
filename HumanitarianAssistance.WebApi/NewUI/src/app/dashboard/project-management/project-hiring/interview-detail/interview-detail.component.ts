@@ -492,8 +492,6 @@ export class InterviewDetailComponent implements OnInit {
     );
   }
   onFormSubmit(data: any) {
-
-    
     if (this.interviewDetailForm.valid) {
       this.AddInterviewDetails(data);
     } else {
@@ -521,6 +519,9 @@ export class InterviewDetailComponent implements OnInit {
 
     );
     this.commonLoader.showLoader();
+  }
+  backToList() {
+    window.history.back();
   }
   //#endregion
 
