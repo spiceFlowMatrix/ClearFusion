@@ -583,7 +583,6 @@ export class RequestDetailComponent implements OnInit {
   }
 
   onStatusFilterCandidate(data: MatSelectChange) {
-    debugger;
     if (data.value == '') {
       this.getAllCandidateList(this.filterValueModel);
     } else {
