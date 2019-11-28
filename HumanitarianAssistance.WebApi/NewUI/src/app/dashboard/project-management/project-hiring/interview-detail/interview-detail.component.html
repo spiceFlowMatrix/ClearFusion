@@ -14,9 +14,10 @@
       (click)="backToRequestDetail()"
     ></hum-button>
     <hum-button
-      *ngIf="isDisplay"
+      *ngIf="!isDisplay"
       [type]="'download'"
       [text]="'PDF Export'"
+      (click)="onExportInterviewDetailsPdf()"
     ></hum-button>
   </span>
     <div class="action_section"></div>

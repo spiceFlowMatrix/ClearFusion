@@ -77,7 +77,7 @@ export class InterviewDetailComponent implements OnInit {
   ratingBasedCriteriaAnswerList: InterviewQuestionDetailModel[] = [];
   technicalAnswerList: InterviewQuestionDetailModel[] = [];
   ratingBasedDropDown: ISelectBoxModel[];
-  interviewDetails: IInterviewerDetailModel;
+  interviewDetails: InterviewDetailModel;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     public dialog: MatDialog,
@@ -549,6 +549,7 @@ export class InterviewDetailComponent implements OnInit {
 
   //#region "setInterviewDetails"
   setInterviewDetails(data: any) {
+    this.interviewDetails = data;
     this.interviewDetailForm = this.fb.group({
       CandidateId: data.CandidateId,
       HiringRequestId: data.HiringRequestId,
@@ -584,17 +585,13 @@ export class InterviewDetailComponent implements OnInit {
   }
   //#endregion
 
-//#region "onExportHiringRequestPdf"
-onExportHiringRequestPdf() {
+//#region "onExportInterviewDetailsPdf"
+onExportInterviewDetailsPdf() {
   this.commonLoader.showLoader();
-  const data: any = {
-    HiringRequestId: this.hiringRequestId,
-    ProjectId: this.projectId
-  };
   this.globalSharedService
     .getFile(
-      this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetHiringRequestFormPdf,
-      data
+      this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetInterviewDetailReportPdf,
+      this.interviewDetails
     )
     .pipe(takeUntil(this.destroyed$))
     .subscribe();

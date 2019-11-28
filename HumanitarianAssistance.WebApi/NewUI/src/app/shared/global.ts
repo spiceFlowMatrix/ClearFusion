@@ -517,6 +517,7 @@ export class GLOBAL {
   public static API_Pdf_GetJournalReportPdf = 'Pdf/GetJournalReportPdf';
 
   public static API_Pdf_GetCandidateDetailReportPdf = 'Pdf/GetCandidateDetailReportPdf';
+  public static API_Pdf_GetInterviewDetailReportPdf = 'Pdf/GetInterviewDetailReportPdf';
   //#endregion
 
   // Store
