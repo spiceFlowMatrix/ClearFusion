@@ -32,7 +32,6 @@ export class AddDepartmentMasterComponent implements OnInit {
     });
 
     if (this.data) {
-      debugger;
       this.title = 'Edit Department';
       this.addDepartmentForm.get('DepartmentId').patchValue(this.data.DepartmentId);
       this.addDepartmentForm.get('DepartmentName').patchValue(this.data.DepartmentName);
