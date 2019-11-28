@@ -26,6 +26,9 @@ import { RatingAction } from 'src/app/shared/enum';
 import { AddNewInterviewerComponent } from './add-new-interviewer/add-new-interviewer.component';
 import { DatePipe } from '@angular/common';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { GLOBAL } from 'src/app/shared/global';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
 
 @Component({
   selector: 'app-interview-detail',
@@ -84,6 +87,8 @@ export class InterviewDetailComponent implements OnInit {
     private routeActive: ActivatedRoute,
     private router: Router,
     private hiringRequestService: HiringRequestsService,
+    private globalSharedService: GlobalSharedService,
+    private appurl: AppUrlService,
     private toastr: ToastrService
   ) {
     this.ratingBasedDropDown = [
@@ -568,17 +573,9 @@ export class InterviewDetailComponent implements OnInit {
     this.marksObtain = data.MarksObtain;
     this.professionalCriteriaMarks = data.ProfessionalCriteriaMark;
     data.RatingBasedCriteriaList.forEach((element, i) => {
-      // this.ratingBasedCriteriaAnswerList.push({
-      //   QuestionId: element.QuestionId,
-      //   Score: element.Score
-      // });
       this.ratingBasedCriteriaQuestionList[i].selected = element.Score;
     });
     data.TechnicalQuestionList.forEach((element, i) => {
-      // this.technicalQuestionList.push({
-      //   QuestionId: element.QuestionId,
-      //   Score: element.Score
-      // });
       this.technicalQuestionList[i].selected = element.Score;
     });
     this.languagesList$ = of(data.LanguageList);
@@ -587,7 +584,27 @@ export class InterviewDetailComponent implements OnInit {
   }
   //#endregion
 
+//#region "onExportHiringRequestPdf"
+onExportHiringRequestPdf() {
+  this.commonLoader.showLoader();
+  const data: any = {
+    HiringRequestId: this.hiringRequestId,
+    ProjectId: this.projectId
+  };
+  this.globalSharedService
+    .getFile(
+      this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetHiringRequestFormPdf,
+      data
+    )
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe();
+  this.commonLoader.hideLoader();
+}
+//#endregion
+
+//#region "RouteBackToRequestDetailPage"
   backToRequestDetail() {
     window.history.back();
   }
+  //#endregion
 }
