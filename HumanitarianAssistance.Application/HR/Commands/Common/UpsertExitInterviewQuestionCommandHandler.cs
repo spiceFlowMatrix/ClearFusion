@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Application.HR.Commands.Common
 {
-    public class UpsertExitInterviewQuestionCommandHandler: IRequestHandler<UpsertExitInterviewQuestionCommand, object>
+    public class UpsertExitInterviewQuestionCommandHandler : IRequestHandler<UpsertExitInterviewQuestionCommand, object>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         public UpsertExitInterviewQuestionCommandHandler(HumanitarianAssistanceDbContext dbContext)
@@ -25,30 +25,14 @@ namespace HumanitarianAssistance.Application.HR.Commands.Common
             {
                 ExitInterviewQuestionsMaster exitQuestions;
 
-                if(request.Id.HasValue)
+                if (request.Id.HasValue)
                 {
-                   exitQuestions = await _dbContext.ExitInterviewQuestionsMaster
-                                                   .FirstOrDefaultAsync(x=> x.IsDeleted == false &&
-                                                                        x.Id == request.Id);
+                    exitQuestions = await _dbContext.ExitInterviewQuestionsMaster
+                                                    .FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                                                                         x.Id == request.Id);
 
                     exitQuestions.ModifiedById = request.ModifiedById;
                     exitQuestions.ModifiedDate = request.ModifiedDate;
-
-                    // check if result exist on request sequenceno
-                     var result = await _dbContext.ExitInterviewQuestionsMaster
-                                       .FirstOrDefaultAsync(x=> x.IsDeleted == false &&
-                                       x.QuestionType == request.QuestionType && x.SequencePosition == request.SequencePosition);
-                    
-                    if(result != null)
-                    {
-                        //get largest sequence no present on question type
-                       var largestSequence = await _dbContext.ExitInterviewQuestionsMaster
-                                                             .Where(x=> x.IsDeleted == false &&
-                                                            x.QuestionType == request.QuestionType).OrderByDescending(x=> x.SequencePosition)
-                                                            .FirstOrDefaultAsync(); 
-
-                        result.SequencePosition= ++largestSequence.SequencePosition;
-                    }
                 }
                 else
                 {
@@ -58,14 +42,30 @@ namespace HumanitarianAssistance.Application.HR.Commands.Common
                     _dbContext.ExitInterviewQuestionsMaster.Add(exitQuestions);
                 }
 
+                // check if result exist on request sequenceno
+                var result = await _dbContext.ExitInterviewQuestionsMaster
+                                  .FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                                  x.QuestionType == request.QuestionType && x.SequencePosition == request.SequencePosition);
+
+                if (result != null)
+                {
+                    //get largest sequence no present on question type
+                    var largestSequence = await _dbContext.ExitInterviewQuestionsMaster
+                                                          .Where(x => x.IsDeleted == false &&
+                                                         x.QuestionType == request.QuestionType).OrderByDescending(x => x.SequencePosition)
+                                                         .FirstOrDefaultAsync();
+
+                    result.SequencePosition = ++largestSequence.SequencePosition;
+                }
+
                 exitQuestions.QuestionText = request.QuestionText;
                 exitQuestions.QuestionType = request.QuestionType;
-                exitQuestions.SequencePosition =  request.SequencePosition;
+                exitQuestions.SequencePosition = request.SequencePosition;
 
-                await _dbContext.SaveChangesAsync(); 
+                await _dbContext.SaveChangesAsync();
                 success = true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }

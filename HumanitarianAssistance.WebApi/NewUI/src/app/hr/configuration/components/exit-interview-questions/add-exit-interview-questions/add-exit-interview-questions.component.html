@@ -23,7 +23,7 @@
     </div>
   </mat-dialog-content>
   <mat-dialog-actions class="items-float-right">
-    <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
+    <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true" [disabled]= "!addExitInterviewQuestion.valid || !addExitInterviewQuestion.dirty"></hum-button>
     <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
     <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
   </mat-dialog-actions>
