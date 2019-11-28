@@ -371,22 +371,22 @@ export class InterviewDetailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
-        result.TraningStartDate = this.datePipe.transform(
+        (result.TraningStartDate = this.datePipe.transform(
           StaticUtilities.getLocalDate(result.TraningStartDate),
           'dd-MM-yyyy'
-        ),
-        result.TraningEndDate = this.datePipe.transform(
-          StaticUtilities.getLocalDate(result.TraningEndDate),
-          'dd-MM-yyyy'
-        );
+        )),
+          (result.TraningEndDate = this.datePipe.transform(
+            StaticUtilities.getLocalDate(result.TraningEndDate),
+            'dd-MM-yyyy'
+          ));
         if (this.traningList$ === undefined) {
           this.traningList$ = of([
             {
               TraningType: result.TraningType,
               TraningName: result.TraningName,
               TraningCountryAndCity: result.TraningCountryAndCity,
-              TraningStartDate:  result.TraningStartDate,
-              TraningEndDate: result.TraningEndDate,
+              TraningStartDate: result.TraningStartDate,
+              TraningEndDate: result.TraningEndDate
             }
           ] as ITraningDetailModel[]);
         } else {
@@ -509,7 +509,7 @@ export class InterviewDetailComponent implements OnInit {
       (response: IResponseData) => {
         if (response.statusCode === 200) {
           this.toastr.success('Interview details added successfully');
-          window.history.back();
+          this.backToRequestDetail();
         } else {
           this.toastr.error(response.message);
         }
@@ -517,12 +517,8 @@ export class InterviewDetailComponent implements OnInit {
       error => {
         this.toastr.error('Someting went wrong. Please try again');
       }
-
     );
     this.commonLoader.showLoader();
-  }
-  backToList() {
-    window.history.back();
   }
   //#endregion
 
@@ -590,4 +586,8 @@ export class InterviewDetailComponent implements OnInit {
     this.interviewerList$ = of(data.InterviewerList);
   }
   //#endregion
+
+  backToRequestDetail() {
+    window.history.back();
+  }
 }
