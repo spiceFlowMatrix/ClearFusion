@@ -1,9 +1,23 @@
-.defaulf-link { font-size:18px;font-weight:500;text-transform:upparcase;padding:5px 10px;display:inline-block;}
-.blue { 
-    color:#0390D1;
-   
+.defaulf-link {
+    font-size: 18px;
+    font-weight: 500;
+    text-transform: upparcase;
+    padding: 5px 10px;
+    display: inline-block;
 }
-.red{
-    color:red;
+
+.blue {
+    color: #0390D1;
 }
-.defaulf-link i { vertical-align:middle;}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
+}
+
+.defaulf-link i {
+    vertical-align: middle;
+}
