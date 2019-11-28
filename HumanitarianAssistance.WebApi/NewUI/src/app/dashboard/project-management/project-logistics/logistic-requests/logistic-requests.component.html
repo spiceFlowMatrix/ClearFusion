@@ -1,4 +1,36 @@
-<mat-card class="mat-scroll">
+<lib-sub-header-template>
+  <span class="action_header">Purchase & Procurement Requests
+      <hum-button (click)="addNewRequest()" [type]="'add'" [text]="'ADD NEW REQUEST'"></hum-button>
+  </span>
+  <div class="action_section">
+  </div>
+</lib-sub-header-template>
+<mat-divider></mat-divider>
+<mat-tab-group >
+  <mat-tab label="Active">
+    <ng-template matTabContent >
+      <ng-container *ngTemplateOutlet="active"></ng-container>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Archived">
+    <ng-template matTabContent>
+      <ng-container *ngTemplateOutlet="archieve"></ng-container>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
+
+<ng-template #active>
+  <mat-card humAddScroll>
+
+  </mat-card>
+</ng-template>
+
+<ng-template #archieve>
+  <mat-card humAddScroll>
+
+  </mat-card>
+</ng-template>
+<!-- <mat-card class="mat-scroll">
 <div class="row">
   <div class="col-md-8">
       <h4 style="padding-left: 0px !important;letter-spacing: 2px;">Requests
@@ -29,4 +61,4 @@
     </mat-card>
   </div>
 </div>
-</mat-card>
+</mat-card> -->

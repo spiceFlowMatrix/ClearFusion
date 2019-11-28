@@ -23,12 +23,12 @@ export class AddLogisticItemsComponent implements OnInit {
     public toastr: ToastrService) { }
 
   ngOnInit() {
-    this.getStoreItems();
     this.addLogisticItemsForm = this.fb.group({
       Item: ['', Validators.required],
-      Quantity: [this.data.Quantity, Validators.required],
-      EstimatedCost: [this.data.EstimatedCost, Validators.required]
+      RequestedUnits: ['', Validators.required],
+      EstimatedUnitCost: ['', Validators.required]
     });
+    this.storeItemsList = this.data.Storeitems;
   }
 
   addItem(value) {
@@ -36,47 +36,12 @@ export class AddLogisticItemsComponent implements OnInit {
       this.toastr.warning('Please fill all required fields');
       return false;
     }
-    this.commonLoader.showLoader();
-    if (this.data.Id !== undefined && this.data.Id != null ) {
-      const model = {
-        Id: this.data.Id,
-        ItemId : value.Item,
-        RequestId : this.data.RequestId,
-        Quantity : value.Quantity,
-        EstimatedCost : value.EstimatedCost
-      };
-      this.logisticservice.editRequestItems(model).subscribe(res => {
-        if (res.StatusCode === 200 && res.data.logisticItem != null) {
-          this.dialogRef.close({data: res.data.logisticItem});
-          this.commonLoader.hideLoader();
-          this.toastr.success('Updated successfully!');
-          // code goes here
-        } else {
-          this.dialogRef.close({data: null});
-          this.commonLoader.hideLoader();
-          this.toastr.warning(res.Message);
-        }
-      });
-    } else {
-      const model = {
-        ItemId : value.Item,
-        RequestId : this.data.RequestId,
-        Quantity : value.Quantity,
-        EstimatedCost : value.EstimatedCost
-      };
-      this.logisticservice.addRequestItems(model).subscribe(res => {
-        if (res.StatusCode === 200 && res.data.logisticItem != null) {
-          this.dialogRef.close({data: res.data.logisticItem});
-          this.commonLoader.hideLoader();
-          this.toastr.success('Item added successfully!');
-          // code goes here
-        } else {
-          this.dialogRef.close({data: null});
-          this.commonLoader.hideLoader();
-          this.toastr.warning(res.Message);
-        }
-      });
-    }
+    const model = {
+      ItemId : value.Item,
+      RequestedUnits : value.RequestedUnits,
+      EstimatedUnitCost : value.EstimatedUnitCost
+    };
+    this.dialogRef.close({data: model});
   }
   cancelItem() {
     this.dialogRef.close({data: null});
@@ -86,21 +51,21 @@ export class AddLogisticItemsComponent implements OnInit {
     return this.addLogisticItemsForm.get('Item').value;
   }
 
-  getStoreItems() {
-    this.logisticservice.getAllStoreItems().subscribe(res => {
-      this.storeItemsList = [];
-      if (res.StatusCode === 200 && res.data.InventoryItemList != null) {
-        res.data.InventoryItemList.forEach(element => {
-          // this.storeItemsList.push(element);
-          this.storeItemsList.push({
-            Id: element.ItemId,
-            Name: element.ItemCode + '-' + element.ItemName
-          });
-        });
-        this.addLogisticItemsForm.controls['Item'].setValue(this.data.ItemId);
-      }
-    });
-  }
+  // getStoreItems() {
+  //   this.logisticservice.getAllStoreItems().subscribe(res => {
+  //     this.storeItemsList = [];
+  //     if (res.StatusCode === 200 && res.data.InventoryItemList != null) {
+  //       res.data.InventoryItemList.forEach(element => {
+  //         // this.storeItemsList.push(element);
+  //         this.storeItemsList.push({
+  //           Id: element.ItemId,
+  //           Name: element.ItemCode + '-' + element.ItemName
+  //         });
+  //       });
+  //       // this.addLogisticItemsForm.controls['Item'].setValue(this.data.ItemId);
+  //     }
+  //   });
+  // }
 
   onOpenedItemSelectChange(event: IOpenedChange) {
     this.addLogisticItemsForm.controls['Item'].setValue(event);

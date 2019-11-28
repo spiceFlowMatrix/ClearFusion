@@ -25,6 +25,7 @@ export class LogisticRequestsComponent implements OnInit {
     'Status',
     'Total Cost',
   ]);
+  navLinks: any[] = [];
   logisticListData$: Observable<any>;
   actions: TableActionsModel;
   projectId;
@@ -32,11 +33,7 @@ export class LogisticRequestsComponent implements OnInit {
   PageIndex = 0;
   PageSize = 10;
   logisticRequestList;
-  officeDropdown: any[];
-  currencyDropdown: any[];
-  currencyId$: Observable<IDropDownModel[]>;
-  budgetLineId$: Observable<IDropDownModel[]>;
-  officeId$: Observable<IDropDownModel[]>;
+
   constructor(
     private dialog: MatDialog,
     private router: Router,
@@ -44,7 +41,20 @@ export class LogisticRequestsComponent implements OnInit {
     private logisticservice: LogisticService,
     private commonLoader: CommonLoaderService,
     public toastr: ToastrService
-    ) { }
+    ) {
+      this.navLinks = [
+        {
+          label: 'Active',
+          link: './general',
+          index: 0
+        },
+        {
+          label: 'Archieved',
+          link: './designation',
+          index: 1
+        },
+      ];
+    }
 
   ngOnInit() {
     this.actions = {
@@ -60,30 +70,33 @@ export class LogisticRequestsComponent implements OnInit {
     this.routeActive.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
-    this.getAllRequest();
-    this.getCurrencyCodeList();
-    this.getOfficeCodeList();
-    this.getBudgetLineList();
+    // this.getAllRequest();
+    // this.getCurrencyCodeList();
+    // this.getOfficeCodeList();
+    // this.getBudgetLineList();
   }
 
+  addNewRequest() {
+    this.router.navigate(['../logistic-requests/new-request'], { relativeTo: this.routeActive });
+  }
   pageEvent(e) {
     this.PageIndex = e.pageIndex;
     this.PageSize = e.pageSize;
     this.getAllRequest();
   }
 
-  openAddRequestDialog(): void {
-    const dialogRef = this.dialog.open(AddLogisticRequestComponent, {
-      width: '450px',
-      data: {ProjectId: this.projectId, Currency: this.currencyId$, Office: this.officeId$, BudgetLine: this.budgetLineId$}
-    });
+  // openAddRequestDialog(): void {
+  //   const dialogRef = this.dialog.open(AddLogisticRequestComponent, {
+  //     width: '450px',
+  //     data: {ProjectId: this.projectId, Currency: this.currencyId$, Office: this.officeId$, BudgetLine: this.budgetLineId$}
+  //   });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined && result.data != null ) {
-        this.refreshRequestList(result.data);
-      }
-    });
-  }
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result !== undefined && result.data != null ) {
+  //       this.refreshRequestList(result.data);
+  //     }
+  //   });
+  // }
 
   refreshRequestList(value) {
     this.logisticRequestList.push(value);
@@ -155,99 +168,6 @@ export class LogisticRequestsComponent implements OnInit {
         Status: ((LogisticRequestStatus[v.Status] === 'NewRequest') ? 'New Request' : LogisticRequestStatus[v.Status]),
         TotalCost: v.TotalCost
        }) as IRequestList)));
-  }
-
-  getCurrencyCodeList() {
-    this.logisticservice
-      .GetAllCurrencyCodeList()
-      .subscribe(
-        data => {
-          this.currencyDropdown = [];
-          if (data.data.CurrencyList != null) {
-            data.data.CurrencyList.forEach(element => {
-              this.currencyDropdown.push(element);
-            });
-
-            // this.selectedCurrency = this.currencyDropdown[0].CurrencyId;
-            // this.addLogisticRequestForm.controls['CurrencyId'].setValue(this.selectedCurrency);
-            this.currencyId$ = of(this.currencyDropdown.map(y => {
-              return {
-                value: y.CurrencyId,
-                name: y.CurrencyCode + '-' + y.CurrencyName
-              };
-            }));
-          }
-        },
-        error => {
-          if (error.StatusCode === 500) {
-            this.toastr.error('Internal Server Error....');
-          } else if (error.StatusCode === 401) {
-            this.toastr.error('Unauthorized Access Error....');
-          } else if (error.StatusCode === 403) {
-            this.toastr.error('Forbidden Error....');
-          }
-        }
-      );
-  }
-
-  getOfficeCodeList() {
-    this.logisticservice
-      .GetAllOfficeCodeList()
-      .subscribe(
-        data => {
-          if (data.data.OfficeDetailsList != null) {
-            this.officeDropdown = [];
-            data.data.OfficeDetailsList.forEach(element => {
-              this.officeDropdown.push({
-                Id: element.OfficeId,
-                Name: element.OfficeName
-              });
-            });
-            this.officeId$ = of(this.officeDropdown.map(y => {
-              return {
-                value: y.Id,
-                name: y.Name
-              };
-            }));
-          }
-        },
-        error => {
-          if (error.StatusCode === 500) {
-            this.toastr.error('Internal Server Error....');
-          } else if (error.StatusCode === 401) {
-            this.toastr.error('Unauthorized Access Error....');
-          } else if (error.StatusCode === 403) {
-            this.toastr.error('Forbidden Error....');
-          }
-        }
-      );
-  }
-
-  getBudgetLineList() {
-    this.logisticservice
-      .GetBudgetLineListByProjectId(this.projectId)
-      .subscribe(
-        data => {
-          this.currencyDropdown = [];
-          if (data.data.ProjectBudgetLineDetailList != null) {
-            this.budgetLineId$ = of(data.data.ProjectBudgetLineDetailList.map(y => {
-              return {
-                value: y.BudgetLineId,
-                name: y.BudgetName
-              };
-            }));
-          }
-        },
-        error => {
-          if (error.StatusCode === 500) {
-            this.toastr.error('Internal Server Error....');
-          } else if (error.StatusCode === 401) {
-            this.toastr.error('Unauthorized Access Error....');
-          } else if (error.StatusCode === 403) {
-            this.toastr.error('Forbidden Error....');
-          }
-        }
-      );
   }
 }
 
