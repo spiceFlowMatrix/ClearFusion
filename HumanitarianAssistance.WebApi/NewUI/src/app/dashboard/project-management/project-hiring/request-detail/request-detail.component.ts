@@ -639,6 +639,7 @@ export class RequestDetailComponent implements OnInit {
         (responseData: IResponseData) => {
           if (responseData.statusCode === 200) {
             this.toastr.success('Hiring Request Successfully Completed');
+            this.IsHiringRequestCompleted = true;
           } else if (responseData.statusCode === 400) {
             this.toastr.error('Something went wrong .Please try again.');
           }
