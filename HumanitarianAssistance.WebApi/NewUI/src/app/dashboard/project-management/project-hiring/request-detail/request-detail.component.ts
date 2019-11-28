@@ -6,7 +6,8 @@ import {
   ISubCandidateList,
   TableActionsModel,
   ICandidateFilterModel,
-  IExistingCandidateList
+  IExistingCandidateList,
+  CompleteHiringRequestModel
 } from '../models/hiring-requests-models';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
@@ -51,7 +52,7 @@ export class RequestDetailComponent implements OnInit {
     'Email Address',
     'Relevant Experience',
     'Irrelevant Experience',
-    'Total Experience',
+    'Total Experience'
   ]);
   existingCandidatesHeaders$ = of([
     'Employee Id',
@@ -69,7 +70,9 @@ export class RequestDetailComponent implements OnInit {
   existingCandidatesList$: Observable<IExistingCandidateList[]>;
   existingCandidatesList2$: Observable<IExistingCandidateList[]>;
   filterValueModel: ICandidateFilterModel;
+  completeRequestModel: CompleteHiringRequestModel;
   hiringRequestId: any;
+  IsHiringRequestCompleted: boolean;
   projectId: any;
   candidateId: any;
   screenHeight: any;
@@ -97,6 +100,7 @@ export class RequestDetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.IsHiringRequestCompleted = false;
     this.hiringRequestDetails = {
       HiringRequestId: null,
       JobGrade: '',
@@ -118,6 +122,7 @@ export class RequestDetailComponent implements OnInit {
       Profession: '',
       Experience: '',
       KnowledgeAndSkills: '',
+      HiringRequestStatus: null
     };
     this.routeActive.params.subscribe(params => {
       this.hiringRequestId = +params['id'];
@@ -139,7 +144,10 @@ export class RequestDetailComponent implements OnInit {
         download: false
       }
     };
-
+    this.completeRequestModel = {
+      HiringRequestId: [],
+      ProjectId: this.projectId
+    };
     this.getHiringRequestDetailsByHiringRequestId();
     this.getAllCandidateList(this.filterValueModel);
     this.getAllExistingCandidateList(this.filterValueModel);
@@ -179,7 +187,7 @@ export class RequestDetailComponent implements OnInit {
                 FilledVacancies: response.data.FilledVacancies,
                 PayCurrency: response.data.PayCurrency,
                 PayRate: response.data.PayRate,
-                Status: response.data.Status,
+                // Status: response.data.Status,
                 Office: response.data.Office,
                 DepartmentName: response.data.DepartmentName,
                 BudgetName: response.data.BudgetName,
@@ -191,8 +199,12 @@ export class RequestDetailComponent implements OnInit {
                 EducationDegree: response.data.EducationDegree,
                 Profession: response.data.Profession,
                 Experience: response.data.Experience,
-                KnowledgeAndSkills: response.data.KnowledgeAndSkills
+                KnowledgeAndSkills: response.data.KnowledgeAndSkills,
+                HiringRequestStatus: response.data.HiringRequestStatus
               };
+              if (this.hiringRequestDetails.HiringRequestStatus === 3) {
+                this.IsHiringRequestCompleted = true;
+              }
             }
             this.loader.hideLoader();
           },
@@ -220,7 +232,7 @@ export class RequestDetailComponent implements OnInit {
         this.getHiringRequestDetailsByHiringRequestId();
       }
     );
-    dialogRef.afterClosed().subscribe(() => { });
+    dialogRef.afterClosed().subscribe(() => {});
   }
 
   // #region adding new hiring request
@@ -239,7 +251,7 @@ export class RequestDetailComponent implements OnInit {
       // do something
       this.getAllCandidateList(this.filterValueModel);
     });
-    dialogRef.afterClosed().subscribe(() => { });
+    dialogRef.afterClosed().subscribe(() => {});
   }
   //#endregion
 
@@ -261,42 +273,42 @@ export class RequestDetailComponent implements OnInit {
                   element.InterviewId == 0
                     ? 'Not Interviewed'
                     : '<a href="/project/my-project/' +
-                    this.projectId +
-                    '/hiring-request/interview-detail?candId=' +
-                    element.CandidateId +
-                    '&hiringId=' +
-                    this.hiringRequestId +
-                    '&interviewId=' +
-                    element.InterviewId +
-                    '">Interview ' +
-                    element.InterviewId +
-                    '</a>',
+                      this.projectId +
+                      '/hiring-request/interview-detail?candId=' +
+                      element.CandidateId +
+                      '&hiringId=' +
+                      this.hiringRequestId +
+                      '&interviewId=' +
+                      element.InterviewId +
+                      '">Interview ' +
+                      element.InterviewId +
+                      '</a>',
                 CandidateStatus: CandidateStatus[element.CandidateStatus],
                 itemAction:
                   element.CandidateStatus != CandidateStatus.Rejected &&
-                    element.CandidateStatus != CandidateStatus.Selected
+                  element.CandidateStatus != CandidateStatus.Selected
                     ? [
-                      {
-                        button: {
-                          status: true,
-                          text: 'Reject',
-                          type: 'cancel'
+                        {
+                          button: {
+                            status: true,
+                            text: 'Reject',
+                            type: 'cancel'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false
                         },
-                        delete: false,
-                        download: false,
-                        edit: false
-                      },
-                      {
-                        button: {
-                          status: true,
-                          text: CandidateAction[element.CandidateStatus],
-                          type: 'save'
-                        },
-                        delete: false,
-                        download: false,
-                        edit: false
-                      }
-                    ]
+                        {
+                          button: {
+                            status: true,
+                            text: CandidateAction[element.CandidateStatus],
+                            type: 'save'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false
+                        }
+                      ]
                     : [],
                 subItems: [
                   {
@@ -307,8 +319,10 @@ export class RequestDetailComponent implements OnInit {
                     RelevantExperienceInYear: element.RelevantExperienceInYear,
                     IrrelevantExperienceInYear:
                       element.IrrelevantExperienceInYear,
-                      TotalExperienceInYear: element.RelevantExperienceInYear + element.IrrelevantExperienceInYear,
-                      // DateOfBirth: element.DateOfBirth,
+                    TotalExperienceInYear:
+                      element.RelevantExperienceInYear +
+                      element.IrrelevantExperienceInYear
+                    // DateOfBirth: element.DateOfBirth,
                     // Grade: element.Grade,
                     // Office: element.Office,
                     // Country: element.Country,
@@ -374,29 +388,29 @@ export class RequestDetailComponent implements OnInit {
                 CandidateStatus: CandidateStatus[element.CandidateStatus],
                 itemAction:
                   element.CandidateStatus != CandidateStatus.Rejected &&
-                    element.CandidateStatus != CandidateStatus.Selected
+                  element.CandidateStatus != CandidateStatus.Selected
                     ? [
-                      {
-                        button: {
-                          status: true,
-                          text: 'Reject',
-                          type: 'cancel'
+                        {
+                          button: {
+                            status: true,
+                            text: 'Reject',
+                            type: 'cancel'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false
                         },
-                        delete: false,
-                        download: false,
-                        edit: false
-                      },
-                      {
-                        button: {
-                          status: true,
-                          text: CandidateAction[element.CandidateStatus],
-                          type: 'save'
-                        },
-                        delete: false,
-                        download: false,
-                        edit: false
-                      }
-                    ]
+                        {
+                          button: {
+                            status: true,
+                            text: CandidateAction[element.CandidateStatus],
+                            type: 'save'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false
+                        }
+                      ]
                     : []
               } as IExistingCandidateList;
             })
@@ -611,6 +625,30 @@ export class RequestDetailComponent implements OnInit {
       });
     }
   }
+
+  //#region onComplteRequest
+  onCompleteRequest() {
+    this.completeRequestModel = {
+      HiringRequestId: [],
+      ProjectId: this.projectId
+    };
+    this.completeRequestModel.HiringRequestId.push(this.hiringRequestId);
+    this.hiringRequestService
+      .IsCompltedeHrDetail(this.completeRequestModel)
+      .subscribe(
+        (responseData: IResponseData) => {
+          if (responseData.statusCode === 200) {
+            this.toastr.success('Hiring Request Successfully Completed');
+            this.IsHiringRequestCompleted = true;
+          } else if (responseData.statusCode === 400) {
+            this.toastr.error('Something went wrong .Please try again.');
+          }
+        },
+        error => {}
+      );
+  }
+  //#endregion
+
   backToList() {
     window.history.back();
   }

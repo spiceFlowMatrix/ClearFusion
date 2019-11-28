@@ -48,6 +48,7 @@ export interface HiringRequestDetailList {
   Profession?: string;
   Experience?: string;
   KnowledgeAndSkills?: string;
+  HiringRequestStatus?: number;
 }
 
 export interface OfficeDetailModel {

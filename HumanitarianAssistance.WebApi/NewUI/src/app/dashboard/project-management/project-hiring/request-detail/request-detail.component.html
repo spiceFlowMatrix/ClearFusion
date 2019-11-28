@@ -5,7 +5,8 @@
       [text]="'Edit'"
       (click)="editHiringRequest()"
     ></hum-button>
-    <hum-button [type]="'add'" [text]="'complete '"></hum-button>
+    <hum-button *ngIf="!IsHiringRequestCompleted"  [type]="'save'" [text]="'complete '" (click)="onCompleteRequest()"></hum-button>
+    <hum-button *ngIf="IsHiringRequestCompleted"  [type]="'completed'" [text]="'completed '"></hum-button>
     <!-- <hum-button [type]="'cancel'" [text]="'close'"></hum-button> -->
     <hum-button [type]="'cancel'" (click)="backToList()" [text]="'close'"></hum-button>
     <hum-button [type]="'download'" [text]="'PDF Export'" (click)="onExportHiringRequestPdf()"></hum-button>
