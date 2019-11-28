@@ -49,7 +49,6 @@ export class OfficeMasterComponent implements OnInit {
   getOfficeList() {
     this.commonLoader.showLoader();
     this.hrService.getOfficeList(this.pageModel).subscribe(x => {
-      debugger;
       this.commonLoader.hideLoader();
       this.officeList$ = of(x.Result.map(element => {
         return {

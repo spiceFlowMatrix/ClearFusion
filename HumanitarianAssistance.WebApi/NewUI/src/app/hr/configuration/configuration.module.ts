@@ -33,6 +33,8 @@ import { ProfessionMasterComponent } from './components/profession-master/profes
 import { AddProfessionComponent } from './components/profession-master/add-profession/add-profession.component';
 import { QualificationMasterComponent } from './components/qualification-master/qualification-master.component';
 import { AddQualificationComponent } from './components/qualification-master/add-qualification/add-qualification.component';
+import { ExitInterviewQuestionsComponent } from './components/exit-interview-questions/exit-interview-questions.component';
+import { AddExitInterviewQuestionsComponent } from './components/exit-interview-questions/add-exit-interview-questions/add-exit-interview-questions.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +57,8 @@ import { AddQualificationComponent } from './components/qualification-master/add
     AddProfessionComponent,
     QualificationMasterComponent,
     AddQualificationComponent,
+    ExitInterviewQuestionsComponent,
+    AddExitInterviewQuestionsComponent,
   ],
   imports: [
     CommonModule,
@@ -76,6 +80,6 @@ import { AddQualificationComponent } from './components/qualification-master/add
   ],
   entryComponents: [AddDesignationComponent, AddEducationDegreeComponent, AddOfficeMasterComponent,
                    AddDepartmentMasterComponent, AddJobGradeComponent, AddAttendanceGroupComponent,
-                   AddProfessionComponent, AddQualificationComponent ]
+                   AddProfessionComponent, AddQualificationComponent, AddExitInterviewQuestionsComponent ]
 })
 export class ConfigurationModule { }

@@ -48,7 +48,6 @@ export class DepartmentMasterComponent implements OnInit {
 getDepartmentList() {
   this.commonLoader.showLoader();
   this.hrService.getDepartmentList(this.pageModel).subscribe(x => {
-    debugger;
     this.commonLoader.hideLoader();
     this.departmentList$ = of(x.Result.map(element => {
       return {

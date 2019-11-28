@@ -29,6 +29,11 @@ export class ConfigurationComponent implements OnInit {
         link: './designation',
         index: 1
       },
+      {
+        label: 'EXIT INTERVIEW',
+        link: './exit-interview-questions',
+        index: 2
+      },
     ];
   }
 

@@ -146,6 +146,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<DocumentFileDetail> DocumentFileDetail { get; set; }
         public DbSet<AttendanceGroupMaster> AttendanceGroupMaster { get; set; }
         public DbSet<EducationDegreeMaster> EducationDegreeMaster { get; set; }
+        public DbSet<ExitInterviewQuestionsMaster> ExitInterviewQuestionsMaster { get; set; }
 
         //created by arjun singh
         public DbSet<ChatDetail> ChatDetail { get; set; }

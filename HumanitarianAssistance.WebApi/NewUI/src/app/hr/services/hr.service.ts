@@ -230,6 +230,32 @@ export class HrService {
   }
   //#endregion
 
+  //#region "getExitInterviewQuestionsList"
+  getExitInterviewQuestionsList(model: any): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_GetAllExitInterviewQuestions, model
+      );
+  }
+  //#endregion
+
+  //#region "UpsertExitInterviewQuestion"
+  UpsertExitInterviewQuestion(model: any): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_UpsertExitInterviewQuestion, model
+      );
+  }
+  //#endregion
+
+  //#region "getSequenceNumber"
+  getSequenceNumber(questionType: any): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_GetSequenceNumber, questionType
+      );
+  }
+  //#endregion
 }
 
 
