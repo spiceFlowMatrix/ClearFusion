@@ -566,6 +566,8 @@ export class InterviewDetailComponent implements OnInit {
 
   //#region "setInterviewDetails"
   setInterviewDetails(data: any) {
+    data.CandidateId = this.candidateId;
+    data.HiringRequestId = this.hiringRequestId;
     this.interviewDetailForm = this.fb.group({
       CandidateId: data.CandidateId,
       HiringRequestId: data.HiringRequestId,
