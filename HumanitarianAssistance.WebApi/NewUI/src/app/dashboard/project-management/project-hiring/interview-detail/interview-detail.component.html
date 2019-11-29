@@ -6,7 +6,7 @@
       [type]="'save'"
       [text]="'Save '"
       [isSubmit]="true"
-      (click)="onFormSubmit(interviewDetailForm.value)"
+      (click)="interviewFormButton.click()"
     ></hum-button>
     <hum-button
       [type]="'cancel'"
@@ -161,7 +161,8 @@
 
     <div class="row">
         <!-- <div class="col-md-12"> -->
-        <form class="example-form" [formGroup]="interviewDetailForm">
+        <form class="example-form" [formGroup]="interviewDetailForm" (ngSubmit)="onFormSubmit(interviewDetailForm.value)">
+          <button #interviewFormButton type="submit" style="display: none;"></button>
             <mat-accordion>
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
@@ -226,14 +227,16 @@
                     Languages
                     <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewLanguage()"></hum-button>
                 </h5>
-                <hum-table [headers]="languagesHeaders$" [isDefaultAction]="false" [items]="languagesList$"></hum-table>
+                <hum-table [headers]="languagesHeaders$" [isDefaultAction]="false" [items]="languagesList$"
+                [actions]='actions' (actionClick)="actionEventsLanguage($event)"></hum-table>
             </mat-card>
             <mat-card style="margin-top: 2px;">
                 <h5>
-                    Traning
+                    Training
                     <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewTraning()"></hum-button>
                 </h5>
-                <hum-table [headers]="traningHeaders$" [isDefaultAction]="false" [items]="traningList$"></hum-table>
+                <hum-table [headers]="traningHeaders$" [isDefaultAction]="false" [items]="traningList$"
+                [actions]='actions' (actionClick)="actionEventsTraining($event)"></hum-table>
             </mat-card>
             <mat-card style="margin-top: 2px;">
                 <h5>
@@ -406,7 +409,8 @@
                                 Interviewers
                                 <hum-button [type]="'add'" [text]="'ADD'" (click)="addInterviewers()"></hum-button>
                             </h5>
-                            <hum-table [headers]="interviewerHeaders$" [isDefaultAction]="false" [items]="interviewerList$">
+                            <hum-table [headers]="interviewerHeaders$" [isDefaultAction]="false" [items]="interviewerList$"
+                            [actions]='actions' (actionClick)="actionEventsInterviewers($event)">
                             </hum-table>
                         </div>
                     </div>

@@ -1,0 +1,21 @@
+<lib-sub-header-template>
+  <span class="action_header">
+    <hum-button [type]="'add'" [text]="'ADD NEW QUESTION'" (click)="addQuestion()"></hum-button>
+  </span>
+</lib-sub-header-template>
+
+<mat-card humAddScroll>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div>
+        <hum-table [headers]="exitInterviewQuestionsHeaders$" [items]="exitInterviewQuestionsList$"
+          (actionClick)="actionEvents($event)" [hideColums$]="hideColums$" [actions]="actions"></hum-table>
+        </div>
+        <mat-paginator [length]="RecordCount" [pageSize]="pageModel.PageSize"
+          [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
+</mat-card>

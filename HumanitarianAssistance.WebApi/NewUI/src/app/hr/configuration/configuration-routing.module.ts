@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ConfigurationComponent } from './configuration.component';
 import { DesignationListingComponent } from './components/designation-listing/designation-listing.component';
 import { GeneralComponent } from './components/general/general.component';
+import { ExitInterviewQuestionsComponent } from './components/exit-interview-questions/exit-interview-questions.component';
 
 const routes: Routes = [
   {
@@ -13,6 +14,9 @@ const routes: Routes = [
       },
       {
         path: 'designation', component: DesignationListingComponent
+      },
+      {
+        path: 'exit-interview-questions', component: ExitInterviewQuestionsComponent
       },
       {
         path: '', redirectTo: 'general', pathMatch: 'full'

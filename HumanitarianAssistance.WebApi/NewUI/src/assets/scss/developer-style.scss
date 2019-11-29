@@ -211,6 +211,10 @@ button {
   width: 28px;
 }
 
+.width_100 {
+  width: 100%;
+}
+
 // stepper
 ::ng-deep .mat-step-header .mat-step-icon-selected {
   background-color: #00d4b1;

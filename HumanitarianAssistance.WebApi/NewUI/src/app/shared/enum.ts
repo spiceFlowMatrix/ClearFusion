@@ -643,3 +643,21 @@ Day = 1,
 Night = 2,
 Other = 3,
 }
+
+export enum QuestionType {
+  FeelingAboutEmployeeAspects= 1,
+  ReasonOfLeaving,
+  TheDepartment,
+  TheJobItself,
+  MySupervisor,
+  TheManagement
+  }
+
+  export const QuestionTypeName = new Map<number, string>([
+    [QuestionType.FeelingAboutEmployeeAspects, 'Feeling About Employee Aspects'],
+    [QuestionType.ReasonOfLeaving, 'Reason Of Leaving'],
+    [QuestionType.TheDepartment, 'The Department'],
+    [QuestionType.TheJobItself, 'The Job Itself'],
+    [QuestionType.MySupervisor, 'My Supervisor'],
+    [QuestionType.TheManagement, 'The Management'],
+  ]);

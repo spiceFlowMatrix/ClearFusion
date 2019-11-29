@@ -70,7 +70,6 @@ editAttendanceGroup() {
 }
 
 saveAttendanceGroup() {
-  debugger;
   if (this.addAttendanceGroupForm.valid) {
     if (this.addAttendanceGroupForm.value.Id == null) {
       this.addAttendanceGroup();
