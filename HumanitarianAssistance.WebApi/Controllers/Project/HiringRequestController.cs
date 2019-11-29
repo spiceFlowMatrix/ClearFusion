@@ -213,7 +213,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         }   
 
         [HttpPost]
-        public async Task<ApiResponse> AddInterviewDetails([FromBody]AddInterviewDetailsCommand command)
+    public async Task<ApiResponse> AddInterviewDetails([FromBody]AddInterviewDetailsCommand command)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             command.CreatedById = userId;

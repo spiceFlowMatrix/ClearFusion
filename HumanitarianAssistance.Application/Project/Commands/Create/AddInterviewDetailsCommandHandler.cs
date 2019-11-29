@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -120,8 +121,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                         NewTraininigType = item.TraningType,
                         TrainingName = item.TraningName,
                         StudyingCountry = item.TraningCountryAndCity,
-                        StartDate = Convert.ToDateTime(item.TraningStartDate),
-                        EndDate = Convert.ToDateTime(item.TraningEndDate),
+                        StartDate = DateTime.ParseExact(item.TraningStartDate, "dd-MM-yyyy", CultureInfo.InvariantCulture),
+                        EndDate = DateTime.ParseExact(item.TraningEndDate, "dd-MM-yyyy", CultureInfo.InvariantCulture),
                         CreatedById = request.CreatedById,
                         CreatedDate = request.CreatedDate,
                         IsDeleted = false
