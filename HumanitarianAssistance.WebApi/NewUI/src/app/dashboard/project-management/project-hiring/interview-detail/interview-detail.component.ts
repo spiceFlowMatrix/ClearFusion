@@ -16,9 +16,10 @@ import {
   IInterviewerDetailModel,
   InterviewQuestionDetailModel,
   InterviewDetailModel,
-  ISelectBoxModel
+  ISelectBoxModel,
+  TableActionsModel
 } from '../models/hiring-requests-models';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, findIndex } from 'rxjs/operators';
 import { MatDialog, MatSelectChange } from '@angular/material';
 import { AddNewLanguageComponent } from './add-new-language/add-new-language.component';
 import { AddNewTraningComponent } from './add-new-traning/add-new-traning.component';
@@ -41,7 +42,7 @@ export class InterviewDetailComponent implements OnInit {
     'Speaking'
   ]);
   traningHeaders$ = of([
-    'Traning Type',
+    'Training Type',
     'Name',
     'Country/City',
     'Start Date',
@@ -76,6 +77,7 @@ export class InterviewDetailComponent implements OnInit {
   ratingBasedDropDown: ISelectBoxModel[];
   interviewDetails: IInterviewerDetailModel;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  actions: TableActionsModel;
   constructor(
     public dialog: MatDialog,
     private datePipe: DatePipe,
@@ -153,6 +155,20 @@ export class InterviewDetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.actions = {
+      items: {
+        button: { status: false, text: '' },
+        delete: true,
+        download: false,
+        edit: false
+      },
+      subitems: {
+        button: { status: false, text: '' },
+        delete: false,
+        download: false,
+      }
+
+    };
     this.routeActive.queryParams.subscribe(params => {
       this.candidateId = +params['candId'];
       this.hiringRequestId = +params['hiringId'];
@@ -331,7 +347,7 @@ export class InterviewDetailComponent implements OnInit {
 
   addNewLanguage(): void {
     const dialogRef = this.dialog.open(AddNewLanguageComponent, {
-      width: '850px'
+      width: '950px'
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -358,7 +374,9 @@ export class InterviewDetailComponent implements OnInit {
           });
         }
         this.toastr.success('Language Added Successfully');
+        debugger;
         this.languagesList$.subscribe(res => {
+          debugger;
           this.interviewDetailForm.controls['LanguageList'].setValue(res);
         });
       }
@@ -395,7 +413,7 @@ export class InterviewDetailComponent implements OnInit {
             this.traningList$ = of(res);
           });
         }
-        this.toastr.success('Traning Added Successfully');
+        this.toastr.success('Training Added Successfully');
         this.traningList$.subscribe(res => {
           this.interviewDetailForm.controls['TraningList'].setValue(res);
         });
@@ -562,7 +580,9 @@ export class InterviewDetailComponent implements OnInit {
       CurrentTransport: data.CurrentTransport,
       CurrentMeal: data.CurrentMeal,
       ExpectationTransport: data.ExpectationTransport,
-      ExpectationMeal: data.ExpectationMeal
+      ExpectationMeal: data.ExpectationMeal,
+      LanguageList: data.LanguageList,
+      TraningList: data.TraningList
     });
     this.totalMarksObtain = data.TotalMarksObtain;
     this.marksObtain = data.MarksObtain;
@@ -589,5 +609,29 @@ export class InterviewDetailComponent implements OnInit {
 
   backToRequestDetail() {
     window.history.back();
+  }
+
+  actionEventsLanguage(event: any) {
+    if (event.type === 'delete') {
+      const index = (this.interviewDetailForm.controls['LanguageList'].value as Array<any>)
+                                .findIndex(x => x.LanguageName === event.item.LanguageName);
+                    (this.interviewDetailForm.controls['LanguageList'].value as Array<any>).splice(index, 1);
+    }
+  }
+
+  actionEventsTraining(event: any) {
+    if (event.type === 'delete') {
+      const index = (this.interviewDetailForm.controls['TraningList'].value as Array<any>)
+                                .findIndex(x => x.LanguageName === event.item.LanguageName);
+                    (this.interviewDetailForm.controls['TraningList'].value as Array<any>).splice(index, 1);
+    }
+  }
+
+  actionEventsInterviewers(event: any) {
+    if (event.type === 'delete') {
+      const index = (this.interviewDetailForm.controls['InterviewerList'].value as Array<any>)
+                                .findIndex(x => x.EmployeeId === event.item.EmployeeId);
+                    (this.interviewDetailForm.controls['InterviewerList'].value as Array<any>).splice(index, 1);
+    }
   }
 }
