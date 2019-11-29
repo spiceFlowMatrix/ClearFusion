@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191128060329_addExitInterviewQuestionsMasterTb")]
+    partial class addExitInterviewQuestionsMasterTb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -7021,7 +7023,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<double>("EstimatedUnitCost");
+                    b.Property<double>("EstimatedCost");
 
                     b.Property<double?>("FinalCost");
 
@@ -7063,8 +7065,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int>("CurrencyId");
 
-                    b.Property<string>("Description");
-
                     b.Property<bool>("IsDeleted");
 
                     b.Property<string>("ModifiedById");
@@ -7075,7 +7075,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<long>("ProjectId");
 
-                    b.Property<string>("RequestCode");
+                    b.Property<string>("RequestName");
 
                     b.Property<int>("Status");
 
