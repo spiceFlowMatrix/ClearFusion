@@ -27,6 +27,9 @@ import { RatingAction } from 'src/app/shared/enum';
 import { AddNewInterviewerComponent } from './add-new-interviewer/add-new-interviewer.component';
 import { DatePipe } from '@angular/common';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { GLOBAL } from 'src/app/shared/global';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
 
 @Component({
   selector: 'app-interview-detail',
@@ -75,7 +78,7 @@ export class InterviewDetailComponent implements OnInit {
   ratingBasedCriteriaAnswerList: InterviewQuestionDetailModel[] = [];
   technicalAnswerList: InterviewQuestionDetailModel[] = [];
   ratingBasedDropDown: ISelectBoxModel[];
-  interviewDetails: IInterviewerDetailModel;
+  interviewDetails: InterviewDetailModel;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   actions: TableActionsModel;
   constructor(
@@ -86,6 +89,8 @@ export class InterviewDetailComponent implements OnInit {
     private routeActive: ActivatedRoute,
     private router: Router,
     private hiringRequestService: HiringRequestsService,
+    private globalSharedService: GlobalSharedService,
+    private appurl: AppUrlService,
     private toastr: ToastrService
   ) {
     this.ratingBasedDropDown = [
@@ -108,20 +113,19 @@ export class InterviewDetailComponent implements OnInit {
     ];
 
     this.noticePeriodList$ = of([
-      { name: '5 Days', value: 5 },
-      { name: '10 Days', value: 10 },
-      { name: '15 Days', value: 15 },
-      { name: '20 Days', value: 20 },
-      { name: '25 Days', value: 25 },
-      { name: '30 Days', value: 30 },
-      { name: '35 Days', value: 35 },
-      { name: '40 Days', value: 40 },
-      { name: '45 Days', value: 45 }
+      { name: '15 Days', value: 1 },
+      { name: '30 Days', value: 2 },
+      { name: 'Others', value: 3 },
+
     ] as IDropDownModel[]);
 
     this.statusList$ = of([
-      { name: 'Recommend', value: 1 },
-      { name: 'Reject', value: 2 }
+      { name: 'Hire', value: 1 },
+      { name: '2nd Choice', value: 2 },
+      { name: 'Test Day', value: 3 },
+      { name: 'Recommended for Other Position', value: 4 },
+      { name: 'Reject', value: 5 },
+      { name: 'Over Qualified', value: 6 }
     ] as IDropDownModel[]);
 
     this.interviewDetailForm = this.fb.group({
@@ -588,25 +592,42 @@ export class InterviewDetailComponent implements OnInit {
     this.marksObtain = data.MarksObtain;
     this.professionalCriteriaMarks = data.ProfessionalCriteriaMark;
     data.RatingBasedCriteriaList.forEach((element, i) => {
-      // this.ratingBasedCriteriaAnswerList.push({
-      //   QuestionId: element.QuestionId,
-      //   Score: element.Score
-      // });
       this.ratingBasedCriteriaQuestionList[i].selected = element.Score;
     });
     data.TechnicalQuestionList.forEach((element, i) => {
-      // this.technicalQuestionList.push({
-      //   QuestionId: element.QuestionId,
-      //   Score: element.Score
-      // });
       this.technicalQuestionList[i].selected = element.Score;
     });
     this.languagesList$ = of(data.LanguageList);
     this.traningList$ = of(data.TraningList);
     this.interviewerList$ = of(data.InterviewerList);
+
+    data.CandidateName = this.candidateDetails.FullName;
+    data.Qualification = this.candidateDetails.Qualification;
+    data.Position = this.hiringRequestDetail.Position;
+    data.DutyStation = this.hiringRequestDetail.Office;
+    data.MaritalStatus = '-';
+    data.PassportNumber = '-';
+    data.NameOfInstitute = '-';
+    data.DateOfBirth = this.candidateDetails.DateOfBirth;
+    this.interviewDetails = data;
   }
   //#endregion
 
+  //#region "onExportInterviewDetailsPdf"
+  onExportInterviewDetailsPdf() {
+    this.commonLoader.showLoader();
+    this.globalSharedService
+      .getFile(
+        this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetInterviewDetailReportPdf,
+        this.interviewDetails
+      )
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe();
+    this.commonLoader.hideLoader();
+  }
+  //#endregion
+
+  //#region "RouteBackToRequestDetailPage"
   backToRequestDetail() {
     window.history.back();
   }

@@ -8,8 +8,17 @@
       [isSubmit]="true"
       (click)="interviewFormButton.click()"
     ></hum-button>
-    <hum-button [type]="'cancel'" [text]="'close'" (click)="backToRequestDetail()"></hum-button>
-    <hum-button [type]="'download'" [text]="'PDF Export'"></hum-button>
+    <hum-button
+      [type]="'cancel'"
+      [text]="'close'"
+      (click)="backToRequestDetail()"
+    ></hum-button>
+    <hum-button
+      *ngIf="!isDisplay"
+      [type]="'download'"
+      [text]="'PDF Export'"
+      (click)="onExportInterviewDetailsPdf()"
+    ></hum-button>
   </span>
     <div class="action_section"></div>
 </lib-sub-header-template>
