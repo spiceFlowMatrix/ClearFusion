@@ -1,7 +1,8 @@
 <lib-sub-header-template>
-  <span class="action_header main-heading"><i class="fas fa-arrow-left"></i> Logistic Request Form
-      <hum-button (click)="hiddenSubmitBtn.click()" [type]="'save'" [text]="buttonText"></hum-button>
-      <hum-button [type]="'cancel'" [text]="'CANCEL'"></hum-button>
+  <span class="action_header main-heading"><i (click)="goBack()" class="fas fa-arrow-left"></i> Logistic Request Form
+      <hum-button *ngIf="!isRequestFormSubmitted" (click)="hiddenSubmitBtn.click()" [type]="'save'" [text]="buttonText"></hum-button>
+      <hum-button *ngIf="isRequestFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+      <hum-button (click)="goBack()" [type]="'cancel'" [text]="'CANCEL'"></hum-button>
   </span>
   <div class="action_section">
   </div>

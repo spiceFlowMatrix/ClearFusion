@@ -21,9 +21,13 @@ export class LogisticRequestsComponent implements OnInit {
 
   logisticListHeaders$ = of([
     'Id',
-    'Name',
-    'Status',
-    'Total Cost',
+    'Code',
+    'Office',
+    'Budget Line',
+    'Currency',
+    'Total Estimated Cost',
+    'Processing Type',
+    'Status'
   ]);
   navLinks: any[] = [];
   logisticListData$: Observable<any>;
@@ -33,6 +37,7 @@ export class LogisticRequestsComponent implements OnInit {
   PageIndex = 0;
   PageSize = 10;
   logisticRequestList;
+  hideRequestColums;
 
   constructor(
     private dialog: MatDialog,
@@ -60,7 +65,7 @@ export class LogisticRequestsComponent implements OnInit {
     this.actions = {
       items: {
         button: { status: false, text: '' },
-        delete: true,
+        delete: false,
         download: false,
       },
       subitems: {
@@ -70,10 +75,13 @@ export class LogisticRequestsComponent implements OnInit {
     this.routeActive.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
-    // this.getAllRequest();
-    // this.getCurrencyCodeList();
-    // this.getOfficeCodeList();
-    // this.getBudgetLineList();
+    this.getAllRequest();
+    this.hideRequestColums = of({
+      headers: ['Code', 'Office', 'Budget Line', 'Currency', 'Total Estimated Cost', 'Processing Type',
+      'Status'],
+      items: ['Code', 'Office', 'BudgetLine', 'Currency', 'TotalEstimatedCost', 'ProcessingType',
+      'Status']
+    });
   }
 
   addNewRequest() {
@@ -98,17 +106,17 @@ export class LogisticRequestsComponent implements OnInit {
   //   });
   // }
 
-  refreshRequestList(value) {
-    this.logisticRequestList.push(value);
-    this.logisticListData$ = of(this.logisticRequestList).pipe(
-      map(r => r.map(v => ({
-        Id: v.RequestId,
-        Name: v.RequestName,
-        Status: LogisticRequestStatus[v.Status],
-        TotalCost: v.TotalCost
-       }) as IRequestList)));
-    this.requestCount++;
-  }
+  // refreshRequestList(value) {
+  //   this.logisticRequestList.push(value);
+  //   this.logisticListData$ = of(this.logisticRequestList).pipe(
+  //     map(r => r.map(v => ({
+  //       Id: v.RequestId,
+  //       Name: v.RequestName,
+  //       Status: LogisticRequestStatus[v.Status],
+  //       TotalCost: v.TotalCost
+  //      }) as IRequestList)));
+  //   this.requestCount++;
+  // }
   requestRowClicked(event) {
     this.router.navigate([event.Id], { relativeTo: this.routeActive });
   }
@@ -130,49 +138,57 @@ export class LogisticRequestsComponent implements OnInit {
         this.logisticListData$ = of(this.logisticRequestList).pipe(
           map(r => r.map(v => ({
             Id: v.RequestId,
-            Name: v.RequestName,
-            Status: ((LogisticRequestStatus[v.Status] === 'NewRequest') ? 'New Request' : LogisticRequestStatus[v.Status]),
-            TotalCost: v.TotalCost
+            Code: v.RequestCode,
+            Office: v.Office,
+            BudgetLine: v.TotalCost,
+            Currency: v.Currency,
+            TotalEstimatedCost: v.TotalCost,
+            ProcessingType: v.ProcessingType,
+            Status: v.Status
            }) as IRequestList)));
       }
       this.commonLoader.hideLoader();
     });
   }
 
-  onDeleteRequest(event) {
-    if (event.type === 'delete') {
-      this.logisticservice.openDeleteDialog().subscribe(v => {
-        if (v) {
-          this.logisticservice.deleteLogisticRequestById(event.item.Id).subscribe(res => {
-            if (res.StatusCode === 200) {
-              this.refreshRequestListAfterDelete(event.item.Id);
-              this.toastr.success('Deleted Sucessfully!');
-            } else {
-              this.toastr.error('Something went wrong!');
-            }
-          });
-        }
-      });
-    }
-  }
+  // onDeleteRequest(event) {
+  //   if (event.type === 'delete') {
+  //     this.logisticservice.openDeleteDialog().subscribe(v => {
+  //       if (v) {
+  //         this.logisticservice.deleteLogisticRequestById(event.item.Id).subscribe(res => {
+  //           if (res.StatusCode === 200) {
+  //             this.refreshRequestListAfterDelete(event.item.Id);
+  //             this.toastr.success('Deleted Sucessfully!');
+  //           } else {
+  //             this.toastr.error('Something went wrong!');
+  //           }
+  //         });
+  //       }
+  //     });
+  //   }
+  // }
 
-  refreshRequestListAfterDelete(value) {
-    const index = this.logisticRequestList.findIndex(v => v.RequestId === value);
-    if (index !== -1) {
-      this.logisticRequestList.splice(index, 1);
-    }
-    this.logisticListData$ = of(this.logisticRequestList).pipe(
-      map(r => r.map(v => ({
-        Id: v.RequestId,
-        Name: v.RequestName,
-        Status: ((LogisticRequestStatus[v.Status] === 'NewRequest') ? 'New Request' : LogisticRequestStatus[v.Status]),
-        TotalCost: v.TotalCost
-       }) as IRequestList)));
-  }
+  // refreshRequestListAfterDelete(value) {
+  //   const index = this.logisticRequestList.findIndex(v => v.RequestId === value);
+  //   if (index !== -1) {
+  //     this.logisticRequestList.splice(index, 1);
+  //   }
+  //   this.logisticListData$ = of(this.logisticRequestList).pipe(
+  //     map(r => r.map(v => ({
+  //       Id: v.RequestId,
+  //       Name: v.RequestName,
+  //       Status: ((LogisticRequestStatus[v.Status] === 'NewRequest') ? 'New Request' : LogisticRequestStatus[v.Status]),
+  //       TotalCost: v.TotalCost
+  //      }) as IRequestList)));
+  // }
 }
 
 interface IRequestList {
-  Name;
+  Code;
+  Office;
+  BudgetLine;
+  Currency;
+  TotalEstimatedCost;
+  ProcessingType;
   Status;
-  TotalCost;
 }

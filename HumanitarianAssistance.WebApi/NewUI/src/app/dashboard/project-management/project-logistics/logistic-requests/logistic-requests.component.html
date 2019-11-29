@@ -21,7 +21,11 @@
 
 <ng-template #active>
   <mat-card humAddScroll>
-
+    <hum-table [headers]="logisticListHeaders$" (rowClick)="requestRowClicked($event)"
+    [actions]="actions" [items]="logisticListData$" [hideColums$]="hideRequestColums"></hum-table>
+    <mat-paginator [length]="requestCount" [pageSize]="PageSize"
+      [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
+    </mat-paginator>
   </mat-card>
 </ng-template>
 

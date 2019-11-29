@@ -29,7 +29,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     Id = y.LogisticItemId,
                     Item = y.StoreInventoryItem.ItemName,
                     Quantity = y.Quantity,
-                    EstimatedCost = y.EstimatedCost,
+                    EstimatedCost = y.EstimatedUnitCost,
                     //Availability = (_dbContext.StoreItemPurchases.Where(a=>a.IsDeleted==false && a.InventoryItem==y.ItemId).Sum(v=>v.Quantity)),
                     ItemId = y.ItemId
                 })

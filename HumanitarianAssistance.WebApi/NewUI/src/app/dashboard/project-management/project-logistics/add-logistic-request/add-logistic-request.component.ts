@@ -7,9 +7,10 @@ import { ToastrService } from 'ngx-toastr';
 import { of, Observable } from 'rxjs';
 import { IDropDownModel } from 'src/app/store/models/purchase';
 import { TableActionsModel } from 'projects/library/src/public_api';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AddLogisticItemsComponent } from '../add-logistic-items/add-logistic-items.component';
 import { map } from 'rxjs/operators';
+import { LogisticRequestStatus, LogisticComparativeStatus } from 'src/app/shared/enum';
 
 @Component({
   selector: 'app-add-logistic-request',
@@ -43,6 +44,7 @@ export class AddLogisticRequestComponent implements OnInit {
   requestedItems$;
   totalcost = 0;
   buttonText = 'SAVE REQUEST AND ISSUE DIRECT PURCHASE ORDER';
+  isRequestFormSubmitted = false;
 
   constructor(
     private fb: FormBuilder,
@@ -50,7 +52,8 @@ export class AddLogisticRequestComponent implements OnInit {
     private commonLoader: CommonLoaderService,
     public toastr: ToastrService,
     private routeActive: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
     ) { }
 
   ngOnInit() {
@@ -114,6 +117,10 @@ export class AddLogisticRequestComponent implements OnInit {
     //     }
     //   });
     // }
+  }
+
+  goBack() {
+    this.router.navigate(['../../logistic-requests'], { relativeTo: this.routeActive });
   }
 
   getStoreItems() {
@@ -312,28 +319,40 @@ export class AddLogisticRequestComponent implements OnInit {
       this.toastr.warning('Please add request items!');
       return;
     }
+    this.isRequestFormSubmitted = true;
+    model = {
+      ProjectId: this.projectId,
+      Description: this.addLogisticRequestForm.get('Description').value,
+      CurrencyId: this.addLogisticRequestForm.get('CurrencyId').value,
+      OfficeId: this.addLogisticRequestForm.get('OfficeId').value,
+      BudgetLineId: this.addLogisticRequestForm.get('BudgetLineId').value,
+      TotalCost: this.totalcost,
+      RequestedItems: this.requestedItems,
+      Status: LogisticRequestStatus['New Request'],
+      ComparativeStatus: LogisticComparativeStatus['Not Valid']
+    };
     if (this.totalcost < 200) {
-      model = {
-        projectId: this.projectId,
-        Description: this.addLogisticRequestForm.get('Description').value,
-        CurrencyId: this.addLogisticRequestForm.get('CurrencyId').value,
-        OfficeId: this.addLogisticRequestForm.get('OfficeId').value,
-        BudgetLineId: this.addLogisticRequestForm.get('BudgetLineId').value,
-        totalCost: this.totalcost
-      };
+      model.Status = LogisticRequestStatus['New Request'];
+      model.ComparativeStatus = LogisticComparativeStatus.NotValid;
     } else if ((this.totalcost >= 200) && (this.totalcost < 10000)) {
-      model = {
-
-      };
+      model.Status = LogisticRequestStatus['New Request'];
+      model.ComparativeStatus = LogisticComparativeStatus['Pending'];
     } else if ((this.totalcost >= 10000) && (this.totalcost < 60000)) {
-      model = {
-
-      };
+      model.Status = LogisticRequestStatus['New Request'];
+      model.ComparativeStatus = LogisticComparativeStatus.NotValid;
     } else if (this.totalcost >= 60000) {
-      model = {
-
-      };
+      model.Status = LogisticRequestStatus['New Request'];
+      model.ComparativeStatus = LogisticComparativeStatus.NotValid;
     }
+
+    this.logisticservice.addLogisticRequest(model).subscribe(res => {
+      if (res.StatusCode === 200 && res.data.logisticRequestId != null) {
+        this.router.navigate(['../../logistic-requests/' + res.data.logisticRequestId], { relativeTo: this.routeActive });
+      } else {
+        this.isRequestFormSubmitted = false;
+        this.toastr.error(res.Message);
+      }
+    });
   }
 
   cancelRequest() {

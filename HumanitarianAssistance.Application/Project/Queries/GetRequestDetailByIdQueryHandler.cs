@@ -26,11 +26,11 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
             try
             {
-                var req = await _dbContext.ProjectLogisticRequests.Where(x=>x.IsDeleted==false && x.LogisticRequestsId==request.RequestId).Select(y=>new LogisticsRequestsModel{
+                var req = await _dbContext.ProjectLogisticRequests.Where(x=>x.IsDeleted==false && x.LogisticRequestsId==request.RequestId).Select(y=>new LogisticsRequestsDetailModel{
                     RequestId = y.LogisticRequestsId,
                     ProjectId = y.ProjectId,
-                    RequestName = y.RequestName,
-                    Status = y.Status,
+                    Description = y.Description,
+                    Status = y.ComparativeStatus,
                     TotalCost = y.TotalCost,
                     BudgetLine = y.ProjectBudgetLineDetail.BudgetCode,
                     Currency = y.CurrencyDetails.CurrencyCode,
