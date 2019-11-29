@@ -1,0 +1,25 @@
+<div>
+  <h1 mat-dialog-title>{{title}}</h1>
+  <hr>
+</div>
+<form [formGroup]='addDepartmentForm' (ngSubmit)="saveDepartment()">
+  <mat-dialog-content>
+    <div class="row">
+      <div class="col-sm-6">
+        <mat-form-field class="example-full-width">
+          <input matInput formControlName="DepartmentName" placeholder="Department Name">
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6">
+        <lib-hum-dropdown [validation]="addDepartmentForm.controls['OfficeId'].hasError('required')"
+            [options]="offices$" formControlName="OfficeId" [placeHolder]="'Office'">
+          </lib-hum-dropdown>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions class="items-float-right">
+    <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true" [disabled]="!addDepartmentForm.valid || !addDepartmentForm.dirty"></hum-button>
+    <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+    <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+  </mat-dialog-actions>
+</form>

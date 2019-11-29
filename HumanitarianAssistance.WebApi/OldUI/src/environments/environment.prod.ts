@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: '/api/',
-  docUrl: '/Docs/',
-  hubUrl: '/chathub/'
+    apiUrl: '/api/',
+    docUrl: '/Docs/',
+    hubUrl: '/chathub/'
 };

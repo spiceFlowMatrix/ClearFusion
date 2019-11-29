@@ -28,9 +28,7 @@ export interface IFilterModel {
   IsInProgress?: number;
 }
 export interface HiringRequestDetailList {
-  HiringRequestId?: string;
-  Description?: string;
-  JobCode?: string;
+  HiringRequestId?: number;
   JobGrade?: string;
   Position?: string;
   TotalVacancies?: string;
@@ -50,6 +48,7 @@ export interface HiringRequestDetailList {
   Profession?: string;
   Experience?: string;
   KnowledgeAndSkills?: string;
+  HiringRequestStatus?: number;
 }
 
 export interface OfficeDetailModel {
@@ -76,6 +75,7 @@ export interface ICandidateDetailModel {
   TotalExperienceInYear?: number;
   RelevantExperienceInYear?: number;
   IrrelevantExperienceInYear?: number;
+  Remarks?: string;
 }
 
 export interface IHiringRequestModel {
@@ -202,8 +202,8 @@ export interface ITraningDetailModel {
   TraningType?: string;
   TraningName?: string;
   TraningCountryAndCity?: string;
-  TraningStartDate?: Date;
-  TraningEndDate?: Date;
+  TraningStartDate?: any;
+  TraningEndDate?: any;
 }
 export interface IInterviewerDetailModel {
   EmployeeId?: number;

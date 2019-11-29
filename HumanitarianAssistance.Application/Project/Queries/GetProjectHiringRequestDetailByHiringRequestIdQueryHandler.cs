@@ -52,18 +52,19 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                FilledVacancies = hr.FilledVacancies != null ? hr.FilledVacancies : 0,
                                                PayCurrency = c.CurrencyName,
                                                PayRate = hr.HourlyRate,
-                                               Status = hr.IsCompleted == true ? "Completed" : "InProgress",
+                                               //Status = hr.IsCompleted == true ? "Completed" : "InProgress",
                                                BudgetName = b.BudgetName,
                                                DepartmentName = d.DepartmentName,
-                                               AnouncingDate = hr.AnouncingDate != null ? hr.AnouncingDate.Value.ToShortDateString() : "",
-                                               ClosingDate = hr.ClosingDate != null ? hr.ClosingDate.Value.ToShortDateString() : "",
+                                               AnouncingDate = hr.AnouncingDate != null ? hr.AnouncingDate.Value.ToString("dd-MM-yyyy") : "",
+                                               ClosingDate = hr.ClosingDate != null ? hr.ClosingDate.Value.ToString("dd-MM-yyyy") : "",
                                                ContractType = hr.ContractType,
                                                ContractDuration = hr.ContractDuration,
                                                Shift = hr.Shift,
                                                EducationDegree = hr.EducationDegreeMaster.Name,
                                                Experience = hr.Experience,
                                                Profession = hr.ProfessionDetails.ProfessionName,
-                                               KnowledgeAndSkills = hr.KnowladgeAndSkillRequired
+                                               KnowledgeAndSkills = hr.KnowladgeAndSkillRequired,
+                                               HiringRequestStatus = hr.HiringRequestStatus
 
                                            }).FirstOrDefaultAsync();
                 response.ResponseData = requestDetail;

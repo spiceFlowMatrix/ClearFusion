@@ -750,7 +750,7 @@ export class HiringRequestsService {
 
   //#region "GetProjectHiringRequestDetailsByHiringRequestId"
   GetProjectHiringRequestDetailsByHiringRequestId(HiringRequestId: any) {
-    return this.globalService
+  return this.globalService
       .post(
         this.appurl.getApiUrl() +
           GLOBAL.API_HiringRequest_GetProjectHiringRequestDetailsByHiringRequestId,

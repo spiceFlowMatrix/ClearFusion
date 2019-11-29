@@ -1,6 +1,7 @@
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using HumanitarianAssistance.Application.HR.Commands.Common;
 using HumanitarianAssistance.Application.HR.Commands.Create;
 using HumanitarianAssistance.Application.HR.Commands.Update;
 using HumanitarianAssistance.Application.HR.Queries;
@@ -58,6 +59,67 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             request.ModifiedById = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             request.ModifiedDate = DateTime.UtcNow;
             return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetOfficeList([FromBody] GetOfficeListQuery request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetDepartmentList([FromBody] GetDepartmentListQuery request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetJobGradeList([FromBody] GetJobGradeListQuery request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetAttendanceGroupList([FromBody] GetAttendanceGroupListQuery request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetProfessionList([FromBody] GetProfessionListQuery request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetQualificationList([FromBody] GetQualificationListQuery request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetAllExitInterviewQuestions([FromBody] GetAllExitInterviewQuestionsQuery request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpsertExitInterviewQuestion([FromBody] UpsertExitInterviewQuestionCommand request)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            request.CreatedById = userId;
+            request.CreatedDate = DateTime.UtcNow;
+            request.ModifiedById = userId;
+            request.ModifiedDate = DateTime.UtcNow;
+            return Ok(await _mediator.Send(request));
+        }
+
+        
+        [HttpPost]
+        public async Task<IActionResult> GetSequenceNumber([FromBody] int questionType)
+        {
+            return Ok(await _mediator.Send(new GetSequenceNumberQuery { QuestionType = questionType}));
         }
     }
 }

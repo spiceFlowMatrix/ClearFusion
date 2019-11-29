@@ -6,7 +6,8 @@ import {
   ISubCandidateList,
   TableActionsModel,
   ICandidateFilterModel,
-  IExistingCandidateList
+  IExistingCandidateList,
+  CompleteHiringRequestModel
 } from '../models/hiring-requests-models';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
@@ -49,9 +50,9 @@ export class RequestDetailComponent implements OnInit {
     'Phone Number',
     'Profession',
     'Email Address',
-    // 'Total Experience',
     'Relevant Experience',
-    'Irrelevant Experience'
+    'Irrelevant Experience',
+    'Total Experience'
   ]);
   existingCandidatesHeaders$ = of([
     'Employee Id',
@@ -69,7 +70,9 @@ export class RequestDetailComponent implements OnInit {
   existingCandidatesList$: Observable<IExistingCandidateList[]>;
   existingCandidatesList2$: Observable<IExistingCandidateList[]>;
   filterValueModel: ICandidateFilterModel;
+  completeRequestModel: CompleteHiringRequestModel;
   hiringRequestId: any;
+  IsHiringRequestCompleted: boolean;
   projectId: any;
   candidateId: any;
   screenHeight: any;
@@ -97,10 +100,9 @@ export class RequestDetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.IsHiringRequestCompleted = false;
     this.hiringRequestDetails = {
-      HiringRequestId: '',
-      Description: '',
-      JobCode: '',
+      HiringRequestId: null,
       JobGrade: '',
       Position: '',
       TotalVacancies: '',
@@ -108,7 +110,19 @@ export class RequestDetailComponent implements OnInit {
       PayCurrency: '',
       PayRate: '',
       Status: '',
-      Office: ''
+      Office: '',
+      DepartmentName: '',
+      BudgetName: '',
+      AnouncingDate: null,
+      ClosingDate: null,
+      ContractType: '',
+      ContractDuration: null,
+      Shift: '',
+      EducationDegree: '',
+      Profession: '',
+      Experience: '',
+      KnowledgeAndSkills: '',
+      HiringRequestStatus: null
     };
     this.routeActive.params.subscribe(params => {
       this.hiringRequestId = +params['id'];
@@ -130,7 +144,10 @@ export class RequestDetailComponent implements OnInit {
         download: false
       }
     };
-
+    this.completeRequestModel = {
+      HiringRequestId: [],
+      ProjectId: this.projectId
+    };
     this.getHiringRequestDetailsByHiringRequestId();
     this.getAllCandidateList(this.filterValueModel);
     this.getAllExistingCandidateList(this.filterValueModel);
@@ -162,16 +179,15 @@ export class RequestDetailComponent implements OnInit {
             this.loader.showLoader();
             if (response.statusCode === 200 && response.data !== null) {
               this.hiringRequestDetails = {
-                Description: response.data.Description,
                 HiringRequestId: response.data.HiringRequestId,
-                JobCode: response.data.JobCode,
+                // JobCode: response.data.JobCode,
                 JobGrade: response.data.JobGrade,
                 Position: response.data.Position,
                 TotalVacancies: response.data.TotalVacancies,
                 FilledVacancies: response.data.FilledVacancies,
                 PayCurrency: response.data.PayCurrency,
                 PayRate: response.data.PayRate,
-                Status: response.data.Status,
+                // Status: response.data.Status,
                 Office: response.data.Office,
                 DepartmentName: response.data.DepartmentName,
                 BudgetName: response.data.BudgetName,
@@ -183,8 +199,12 @@ export class RequestDetailComponent implements OnInit {
                 EducationDegree: response.data.EducationDegree,
                 Profession: response.data.Profession,
                 Experience: response.data.Experience,
-                KnowledgeAndSkills: response.data.KnowledgeAndSkills
+                KnowledgeAndSkills: response.data.KnowledgeAndSkills,
+                HiringRequestStatus: response.data.HiringRequestStatus
               };
+              if (this.hiringRequestDetails.HiringRequestStatus === 3) {
+                this.IsHiringRequestCompleted = true;
+              }
             }
             this.loader.hideLoader();
           },
@@ -296,9 +316,11 @@ export class RequestDetailComponent implements OnInit {
                     PhoneNumber: element.PhoneNumber,
                     Profession: element.Profession,
                     Email: element.Email,
-                    // TotalExperienceInYear: element.TotalExperienceInYear,
                     RelevantExperienceInYear: element.RelevantExperienceInYear,
                     IrrelevantExperienceInYear:
+                      element.IrrelevantExperienceInYear,
+                    TotalExperienceInYear:
+                      element.RelevantExperienceInYear +
                       element.IrrelevantExperienceInYear
                     // DateOfBirth: element.DateOfBirth,
                     // Grade: element.Grade,
@@ -424,7 +446,6 @@ export class RequestDetailComponent implements OnInit {
                 employee.itemAction = [];
 
                 res[index] = employee;
-                console.log(res);
                 this.existingCandidatesList$ = of(res);
               });
             } else {
@@ -559,6 +580,24 @@ export class RequestDetailComponent implements OnInit {
   }
   //#endregion
 
+  //#region "onExportHiringRequestPdf"
+  onExportHiringRequestPdf() {
+    this.loader.showLoader();
+    const data: any = {
+      HiringRequestId: this.hiringRequestId,
+      ProjectId: this.projectId
+    };
+    this.globalSharedService
+      .getFile(
+        this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetHiringRequestFormPdf,
+        data
+      )
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe();
+    this.loader.hideLoader();
+  }
+  //#endregion
+
   onStatusFilter(data: MatSelectChange) {
     if (data.value == '') {
       this.getAllExistingCandidateList(this.filterValueModel);
@@ -574,7 +613,6 @@ export class RequestDetailComponent implements OnInit {
   }
 
   onStatusFilterCandidate(data: MatSelectChange) {
-    debugger;
     if (data.value == '') {
       this.getAllCandidateList(this.filterValueModel);
     } else {
@@ -586,5 +624,32 @@ export class RequestDetailComponent implements OnInit {
         );
       });
     }
+  }
+
+  //#region onComplteRequest
+  onCompleteRequest() {
+    this.completeRequestModel = {
+      HiringRequestId: [],
+      ProjectId: this.projectId
+    };
+    this.completeRequestModel.HiringRequestId.push(this.hiringRequestId);
+    this.hiringRequestService
+      .IsCompltedeHrDetail(this.completeRequestModel)
+      .subscribe(
+        (responseData: IResponseData) => {
+          if (responseData.statusCode === 200) {
+            this.toastr.success('Hiring Request Successfully Completed');
+            this.IsHiringRequestCompleted = true;
+          } else if (responseData.statusCode === 400) {
+            this.toastr.error('Something went wrong .Please try again.');
+          }
+        },
+        error => {}
+      );
+  }
+  //#endregion
+
+  backToList() {
+    window.history.back();
   }
 }
