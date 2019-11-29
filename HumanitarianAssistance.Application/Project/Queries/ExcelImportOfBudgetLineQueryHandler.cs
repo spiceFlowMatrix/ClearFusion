@@ -197,7 +197,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                 //var ifJobExist = await IfExistProjectJob(item.ProjectJobName);
                                                 var ifjobExist = await _dbContext.ProjectJobDetail
                                                                                 .FirstOrDefaultAsync(x => x.ProjectJobCode == item.ProjectJobCode &&
-                                                                                                                    x.IsDeleted == false);
+                                                                                                                    x.IsDeleted == false && x.ProjectId == request.ProjectId);
                                                 if (ifjobExist == null)
                                                 {
                                                     var projectJobObj = await AddProjectJob(item.ProjectId.Value, item.ProjectJobName, request.UserId);
@@ -250,6 +250,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                         //  response.data.TransactionBudgetModelList = budgetLineDetailExist;
 
                                     }
+                               
+                               
                                 }
                                 //Note : if budget code and job code are empty check for new budget line on the bases of name
                                 else
@@ -452,8 +454,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
         {
             ProjectDetail projectDetail = await _dbContext.ProjectDetail.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId &&
                                                                                                            x.IsDeleted == false);
-            long projectjobCount = await _dbContext.ProjectJobDetail.LongCountAsync(x => x.ProjectId == model.ProjectId &&
-                                                                                                  x.IsDeleted == false);
+            long projectjobCount = await _dbContext.ProjectJobDetail.LongCountAsync(x => x.ProjectId == model.ProjectId );
 
             return ProjectUtility.GenerateProjectJobCode(projectDetail.ProjectCode, projectjobCount++);
         }

@@ -28,9 +28,7 @@ export interface IFilterModel {
   IsInProgress?: number;
 }
 export interface HiringRequestDetailList {
-  HiringRequestId?: string;
-  Description?: string;
-  JobCode?: string;
+  HiringRequestId?: number;
   JobGrade?: string;
   Position?: string;
   TotalVacancies?: string;
@@ -39,6 +37,18 @@ export interface HiringRequestDetailList {
   PayRate?: string;
   Status?: string;
   Office?: string;
+  DepartmentName?: string;
+  BudgetName?: string;
+  AnouncingDate?: any;
+  ClosingDate?: any;
+  ContractType?: string;
+  ContractDuration?: number;
+  Shift?: string;
+  EducationDegree?: string;
+  Profession?: string;
+  Experience?: string;
+  KnowledgeAndSkills?: string;
+  HiringRequestStatus?: number;
 }
 
 export interface OfficeDetailModel {
@@ -65,6 +75,7 @@ export interface ICandidateDetailModel {
   TotalExperienceInYear?: number;
   RelevantExperienceInYear?: number;
   IrrelevantExperienceInYear?: number;
+  Remarks?: string;
 }
 
 export interface IHiringRequestModel {
@@ -116,7 +127,7 @@ export interface IExistingCandidateList {
   FullName?: string;
   Gender?: string;
   CandidateStatus?: string;
-  firstText?: string;
+  itemAction?: any[];
 }
 
 export interface ISubCandidateList {
@@ -149,4 +160,100 @@ export interface TableActionsModel {
     edit?: boolean;
     download?: boolean;
   };
+}
+export interface ICandidateDetail {
+  FullName?: string;
+  DutyStation?: string;
+  Gender?: string;
+  Qualification?: string;
+  DateOfBirth?: Date;
+}
+
+export interface IHiringRequestDetailModel {
+  OfficeId?: number;
+  DesignationId?: number;
+  Office?: string;
+  Position?: string;
+  JobGrade?: string;
+  TotalVacancy?: number;
+  FilledVacancy?: number;
+  PayCurrency?: string;
+  PayHourlyRate?: number;
+  BudgetLine?: string;
+  JobType?: string;
+  AnouncingDate?: Date;
+  ClosingDate?: Date;
+  ContractType?: string;
+  ContractDuration?: number;
+  JobShift?: string;
+  KnowledgeAndSkillsRequired?: string;
+  Profession?: string;
+  EducationDegree?: string;
+  TotalExperienceInYear?: string;
+}
+export interface ILanguageDetailModel {
+  LanguageName?: string;
+  LanguageReading?: string;
+  LanguageWriting?: string;
+  LanguageListining?: string;
+  LanguageSpeaking?: string;
+}
+export interface ITraningDetailModel {
+  TraningType?: string;
+  TraningName?: string;
+  TraningCountryAndCity?: string;
+  TraningStartDate?: any;
+  TraningEndDate?: any;
+}
+export interface IInterviewerDetailModel {
+  EmployeeId?: number;
+  EmployeeCode?: string;
+  EmployeeName?: string;
+}
+export interface InterviewQuestionDetailModel {
+  QuestionId?: number;
+  Score?: number;
+}
+
+export interface InterviewDetailModel {
+  CandidateId?: number;
+  HiringRequestId?: number;
+  RatingBasedCriteriaList?: InterviewQuestionDetailModel[];
+  TechnicalQuestionList?: InterviewQuestionDetailModel[];
+  LanguageList?: ILanguageDetailModel[];
+  TraningList?: ITraningDetailModel[];
+  InterviewerList?: IInterviewerDetailModel[];
+  Description?: string;
+  NoticePeriod?: number;
+  AvailableDate?: Date;
+  WrittenTestMarks?: number;
+  CurrentBase?: number;
+  CurrentOther?: number;
+  ExpectationBase?: number;
+  ExpectationOther?: number;
+  Status?: number;
+  InterviewQuestionOne?: boolean;
+  InterviewQuestionTwo?: boolean;
+  InterviewQuestionThree?: boolean;
+  CurrentTransport?: boolean;
+  CurrentMeal?: boolean;
+  ExpectationTransport?: boolean;
+  ExpectationMeal?: boolean;
+  ProfessionalCriteriaMark?: number;
+  MarksObtain?: number;
+  TotalMarksObtain?: number;
+// Extra fields added for pdf
+  CandidateName?: string;
+  Qualification?: string;
+  Position?: string;
+  DutyStation?: string;
+  MaritalStatus?: string;
+  PassportNumber?: string;
+  NameOfInstitute?: string;
+  DateOfBirth?: any;
+}
+
+export interface ISelectBoxModel {
+  Id: number;
+  value: string;
 }

@@ -18,19 +18,19 @@ namespace HumanitarianAssistance.Application.Project.Queries {
         public async Task<ApiResponse> Handle (GetAllCandidateListQuery request, CancellationToken cancellationToken) {
             ApiResponse response = new ApiResponse ();
             try {
-                int totalCount = await _dbContext.CandidateDetails.CountAsync (x => x.IsDeleted == false);
+                //int totalCount = await _dbContext.CandidateDetails.CountAsync (x => x.IsDeleted == false);
 
-                var candidateDetail = (from s in _dbContext.HiringRequestCandidateStatus
+                var candidateDetail = await (from s in _dbContext.HiringRequestCandidateStatus
                 .Where (x => x.IsDeleted == false && x.CandidateId !=null && x.HiringRequestId == request.HiringRequestId && x.ProjectId == request.ProjectId) 
                 join cd in _dbContext.CandidateDetails on s.CandidateId equals cd.CandidateId into cdl 
                 from cd in cdl.DefaultIfEmpty () 
-                join g in _dbContext.JobGrade on cd.GradeId equals g.GradeId into gd 
-                from g in gd.DefaultIfEmpty () 
+                // join g in _dbContext.JobGrade on cd.GradeId equals g.GradeId into gd 
+                // from g in gd.DefaultIfEmpty () 
                 join p in _dbContext.ProfessionDetails on cd.ProfessionId equals p.ProfessionId into pd 
                 from p in pd.DefaultIfEmpty () 
-                join o in _dbContext.OfficeDetail on cd.OfficeId equals o.OfficeId into od 
-                from o in od.DefaultIfEmpty () 
-                join e in _dbContext.EducationDegreeDetails on cd.EducationDegreeId equals e.EducationDegreeId into ed 
+                // join o in _dbContext.OfficeDetail on cd.OfficeId equals o.OfficeId into od 
+                // from o in od.DefaultIfEmpty () 
+                join e in _dbContext.EducationDegreeMaster on cd.EducationDegreeId equals e.Id into ed 
                 from e in ed.DefaultIfEmpty () 
                 join c in _dbContext.CountryDetails on cd.CountryId equals c.CountryId into cod 
                 from c in cod.DefaultIfEmpty () 
@@ -44,27 +44,27 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                             LastName = cd.LastName,
                             Email = cd.Email,
                             PhoneNumber = cd.PhoneNumber,
-                            AccountStatus = cd.AccountStatus == 1 ? "Active" : "NonActive",
+                            // AccountStatus = cd.AccountStatus == 1 ? "Active" : "NonActive",
                             Gender = cd.GenderId == 1 ? "Male" : cd.GenderId == 2 ? "Female" : "Other",
                             DateOfBirth = cd.DateOfBirth,
-                            EducationDegree = e.EducationDegreeName,
-                            Grade = g.GradeName,
+                            EducationDegree = e.Name,
+                            // Grade = g.GradeName,
                             Profession = p.ProfessionName,
-                            Office = o.OfficeName,
+                            // Office = o.OfficeName,
                             Country = c.CountryName,
                             Province = pr.ProvinceName,
                             District = d.District,
-                            InterviewId = s.InterviewId,
+                            InterviewId = s.InterviewId!=null?s.InterviewId:0,
                             CandidateStatus = s.CandidateStatus,
-                            TotalExperienceInYear = cd.TotalExperienceInYear,
+                            // TotalExperienceInYear = cd.TotalExperienceInYear,
                             RelevantExperienceInYear = cd.RelevantExperienceInYear,
                             IrrelevantExperienceInYear = cd.IrrelevantExperienceInYear,
-                    })
+                    }).AsQueryable()
                     .Skip (request.pageSize.Value * request.pageIndex.Value)
                     .Take (request.pageSize.Value)
-                    .ToList ();
+                    .ToListAsync();
 
-                response.data.TotalCount = totalCount;
+                response.data.TotalCount = candidateDetail.Count;
                 response.data.CandidateList = candidateDetail.OrderByDescending (x => x.CandidateId).ToList ();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

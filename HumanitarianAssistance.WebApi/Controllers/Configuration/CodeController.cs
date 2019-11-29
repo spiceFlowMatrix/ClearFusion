@@ -385,11 +385,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
         {
             return await _mediator.Send(new GetAllProfessionQuery());
         }
-        [HttpGet]
-        public async Task<ApiResponse> GetAllEducationDegree()
-        {
-            return await _mediator.Send(new GetAllEducationDegreeQuery());
-        }
+        // [HttpGet]
+        // public async Task<ApiResponse> GetAllEducationDegree()
+        // {
+        //     return await _mediator.Send(new GetAllEducationDegreeQuery());
+        // }
         #endregion
 
         #region "Country detail"
@@ -966,6 +966,19 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
                 return BadRequest(result.Exception.InnerException.Message);
             }
         }
+
+        [HttpGet]
+        public async Task<object> GetAllDesignationList()
+        {
+            return await _mediator.Send(new GetAllDesignationListQuery{ });
+        }
+
+        [HttpGet]
+        public async Task<object> GetAllEducationDegreeList()
+        {
+            return await _mediator.Send(new GetAllEducationDegreeListQuery{ });
+        }
+
 
     }
 }

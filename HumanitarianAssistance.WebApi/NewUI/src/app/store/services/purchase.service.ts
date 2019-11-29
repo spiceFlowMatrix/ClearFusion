@@ -26,19 +26,19 @@ export class PurchaseService {
     private http: HttpClient
   ) {}
 
-  //#region "GetPurchaseFilterList"
-  getPurchaseFilterList(): any {
-    return this.globalService
-      .getList(
-        this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetAllPurchaseFilters
-      )
-      .pipe(
-        map(x => {
-          return x;
-        })
-      );
-  }
-  //#endregion
+//#region "GetPurchaseFilterList"
+getPurchaseFilterList(): any {
+  return this.globalService
+    .getList(
+      this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetAllPurchaseFilters
+    )
+    .pipe(
+      map(x => {
+        return x;
+      })
+    );
+}
+//#endregion
 
   //#region "GetInventoriesByInventoryTypeId"
   getInventoriesByInventoryTypeId(Id: number): any {
@@ -565,11 +565,11 @@ getStoreLogs(id: number, entityId: number) {
           GLOBAL.API_StorePurchase_GetVehicleGeneratorTrackerLogs + '?id=' + id + '&entityId=' + entityId);
 }
 
-getMonthlyBreakDownYears(): Observable<IDropDownModel[]> {
+getPreviousYearsList(years: number): Observable<IDropDownModel[]> {
 
   const yearDropDown: IDropDownModel[] = [];
   const year = new Date().getFullYear();
-  for (let i = 0; i <= 10; i++) {
+  for (let i = 0; i <= years; i++) {
     yearDropDown.push({name: (year - i).toString(),
     value: year - i});
   }

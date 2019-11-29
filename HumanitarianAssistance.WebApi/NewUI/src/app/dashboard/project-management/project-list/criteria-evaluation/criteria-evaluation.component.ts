@@ -240,7 +240,7 @@ export class CriteriaEvaluationComponent
         Id: x.Id,
         PageId: x.PageId,
         Text: x.Text,
-        Link: x.Link
+        Link: '/project/my-project/' + this.projectListService.selectedProject() + x.Link
       });
     });
 

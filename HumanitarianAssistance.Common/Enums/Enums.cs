@@ -181,7 +181,8 @@ namespace HumanitarianAssistance.Common.Enums {
         ProjectActivityPlanning = 8,
         DonorDetail = 9,
         StorePurchase = 10,
-        EmployeeProfile = 11
+        EmployeeProfile = 11,
+        ComparativeStatement = 12
     }
 
     public enum DocumentFileTypes {
@@ -271,49 +272,35 @@ namespace HumanitarianAssistance.Common.Enums {
         Completed = 3,
         Closed = 4
     }
-    public enum TransportItemCategory
-    {
-        Vehicle=1,
-        Generator=2,
-        MobilOil=3,
-        MaintenanceService=4,
-        SpareParts=5,
-        Fuel= 6
+    public enum TransportItemCategory {
+        Vehicle = 1,
+        Generator = 2,
+        MobilOil = 3,
+        MaintenanceService = 4,
+        SpareParts = 5,
+        Fuel = 6
     }
 
-    public enum UsageType
-    {
-        [Description("Total Fuel Usage")]
-        TotalFuelUsage=1,
-        [Description("Current Mileage")]
-        CurrentMileage=2,
-        [Description("Actual Fuel Consumption Rate")]
-        ActualFuelConsumptionRate=3,
-        [Description("Fuel Consumption Difference")]
-        FuelConsumptionDifference=4,
-        [Description("Total Mobil Oil Usage")]
-        TotalMobilOilUsage=5,
-        [Description("Remaining Km For Mobil Oil Change")]
-        RemainingKmForMobilOilChange=6,
-        [Description("Mobil Oil Change Rotation")]
-        MobilOilChangeRotation=7,
-        [Description("Current Usage")]
-        CurrentUsage=8,
-        [Description("Actual Mobil Oil Consumption Rate")]
-        ActualMobilConsumptionRate=9,
-        [Description("Mobil Oil Consumption Difference")]
-        MobilOilConsumptionDifference=10,
+    public enum UsageType {
+        [Description ("Total Fuel Usage")]
+        TotalFuelUsage = 1, [Description ("Current Mileage")]
+        CurrentMileage = 2, [Description ("Actual Fuel Consumption Rate")]
+        ActualFuelConsumptionRate = 3, [Description ("Fuel Consumption Difference")]
+        FuelConsumptionDifference = 4, [Description ("Total Mobil Oil Usage")]
+        TotalMobilOilUsage = 5, [Description ("Remaining Km For Mobil Oil Change")]
+        RemainingKmForMobilOilChange = 6, [Description ("Mobil Oil Change Rotation")]
+        MobilOilChangeRotation = 7, [Description ("Current Usage")]
+        CurrentUsage = 8, [Description ("Actual Mobil Oil Consumption Rate")]
+        ActualMobilConsumptionRate = 9, [Description ("Mobil Oil Consumption Difference")]
+        MobilOilConsumptionDifference = 10,
     }
 
-    public enum CostAnalysis{
-        [Description("Fuel Total Cost")]
-        FuelTotalCost=100,
-         [Description("Mobil Oil Total Cost")]
-        MobilOilTotalCost=101,
-        [Description("Spare Parts Total Cost")]
-        SparePartsTotalCost=102,
-        [Description("Service And Maintenance Total Cost")]
-        ServiceAndMaintenanceTotalCost=103,
+    public enum CostAnalysis {
+        [Description ("Fuel Total Cost")]
+        FuelTotalCost = 100, [Description ("Mobil Oil Total Cost")]
+        MobilOilTotalCost = 101, [Description ("Spare Parts Total Cost")]
+        SparePartsTotalCost = 102, [Description ("Service And Maintenance Total Cost")]
+        ServiceAndMaintenanceTotalCost = 103,
     }
     public enum CandidateStatus {
         PendingShortlist = 0,
@@ -321,5 +308,12 @@ namespace HumanitarianAssistance.Common.Enums {
         PendingSelection = 2,
         Selected = 3,
         Rejected = 4
+    }
+
+    public enum RatingAction {
+        Poor = 1,
+        Good = 2,
+        VeryGood = 3,
+        Excellent = 4
     }
 }

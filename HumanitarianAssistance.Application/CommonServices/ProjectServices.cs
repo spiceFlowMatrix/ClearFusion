@@ -152,8 +152,8 @@ namespace HumanitarianAssistance.Application.CommonServices
         {
             ProjectDetail projectDetail = await _dbContext.ProjectDetail.FirstOrDefaultAsync(x => x.ProjectId == model.ProjectId &&
                                                                                                            x.IsDeleted == false);
-            long projectjobCount = await _dbContext.ProjectJobDetail.LongCountAsync(x => x.ProjectId == model.ProjectId &&
-                                                                                                  x.IsDeleted == false);
+            long projectjobCount = await _dbContext.ProjectJobDetail.LongCountAsync(x => x.ProjectId == model.ProjectId 
+                                                                                                );
 
             return ProjectUtility.GenerateProjectJobCode(projectDetail.ProjectCode, projectjobCount++);
         }

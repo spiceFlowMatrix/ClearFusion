@@ -39,7 +39,6 @@ export class HiringRequestsComponent implements OnInit {
   displayHeaderColumns: string[] = [
     'select',
     'HiringRequestId',
-    'JobCode',
     'JobGrade',
     'Position',
     'TotalVacancies',
@@ -82,14 +81,13 @@ export class HiringRequestsComponent implements OnInit {
     this.filterModel = {
       FilterValue: '',
       pageIndex: 0,
-      pageSize: 10,
+      pageSize: 50,
       ProjectId: null,
       TotalCount: 0,
       IsInProgress: HiringRequestStatus['In-Progress'],
       IsOpenFlagId: HiringRequestStatus.Open
     };
-
-    this.routeActive.parent.params.subscribe(params => {
+    this.routeActive.parent.parent.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
     this.getAllHiringRequestFilterList(this.filterModel);
@@ -131,7 +129,6 @@ export class HiringRequestsComponent implements OnInit {
             response.data.forEach(element => {
               this.hiringRequestList.push({
                 HiringRequestId: element.HiringRequestId,
-                JobCode: element.JobCode,
                 JobGrade: element.JobGrade,
                 Position: element.Position,
                 TotalVacancies: element.TotalVacancies,
@@ -179,7 +176,7 @@ export class HiringRequestsComponent implements OnInit {
 
   requestDetail(e) {
     // console.log(e.HiringRequestId);
-     this.route.navigate([e.HiringRequestId], { relativeTo: this.routeActive });
+     this.route.navigate([e.HiringRequestId], { relativeTo: this.routeActive.parent });
     // this.router.navigate(['../hiring-request/' + e.HiringRequestId]);
   }
 
@@ -190,7 +187,7 @@ export class HiringRequestsComponent implements OnInit {
       this.selectCheckBoxFlag = false;
       this.filterModel = {
         pageIndex: 0,
-        pageSize: 10,
+        pageSize: 50,
         IsOpenFlagId: HiringRequestStatus.Open,
         IsInProgress: HiringRequestStatus['In-Progress'],
         FilterValue: ''
@@ -200,7 +197,7 @@ export class HiringRequestsComponent implements OnInit {
       this.selectCheckBoxFlag = true;
       this.filterModel = {
         pageIndex: 0,
-        pageSize: 10,
+        pageSize: 50,
         IsOpenFlagId: HiringRequestStatus.Closed,
         IsInProgress: HiringRequestStatus.Completed,
         FilterValue: ''

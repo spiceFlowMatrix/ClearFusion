@@ -25,10 +25,10 @@ export class LogisticService {
     );
   }
 
-  getAllLogisticRequests(projectId) {
+  getAllLogisticRequests(model) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetAllLogisticRequest,
-      projectId
+      model
     );
   }
 
@@ -193,6 +193,38 @@ export class LogisticService {
       this.appurl.getApiUrl() +
         GLOBAL.API_ProjectLogistics_EditLogisticSupplier,
         model
+    );
+  }
+
+  SubmitComparativeStatement(model) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_SubmitComparativeStatement,
+        model
+    );
+  }
+
+  getComparativeStatement(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_GetComparativeStatement,
+        requestId
+    );
+  }
+
+  rejectComparativeStatement(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_RejectComparativeStatement,
+        requestId
+    );
+  }
+
+  approveComparativeStatement(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_ApproveComparativeStatement,
+        requestId
     );
   }
 }

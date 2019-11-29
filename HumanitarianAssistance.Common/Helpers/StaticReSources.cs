@@ -97,6 +97,9 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string AccountAlreadyExists = "Account Code already exists";
         public const string AccountCantAddToSameAccount = "Credit and Debit account are same !";
         public const string RecordNotFound = "Record not found";
+        public const string RecordAlreadyExists = "Record Already Exists";
+        public const string DesignationNameAlreadyExists = "Designation Name Already Exists";
+        public const string DegreeNameAlreadyExists = "Degree Name Already Exists";
 
         public const string unitRateExists = "Unit Rate already exists. Please select different combinations.";
         public const string TaskTypeAdded = "Task Type has added";

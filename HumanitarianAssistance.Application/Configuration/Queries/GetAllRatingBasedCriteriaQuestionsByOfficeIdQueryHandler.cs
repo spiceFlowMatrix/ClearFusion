@@ -29,7 +29,7 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
             {
 
                 response.data.RatingBasedCriteriaQuestionList = await (from r in _dbContext.RatingBasedCriteriaQuestions.AsNoTracking()
-                                                                       where r.OfficeId == request.OfficeId && r.IsDeleted==false
+                                                                       where r.IsDeleted==false
                                                                        select new RatingBasedCriteriaQuestionsModel
                                                                        {
                                                                            OfficeId = r.OfficeId,

@@ -43,10 +43,8 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         }
 
         [HttpPost]
-        public async Task<ApiResponse> GetAllLogisticRequest([FromBody]long ProjectId)
+        public async Task<ApiResponse> GetAllLogisticRequest([FromBody]GetAllLogisticRequestQuery model)
         {
-            GetAllLogisticRequestQuery model = new GetAllLogisticRequestQuery();
-            model.ProjectId = ProjectId;
             return await _mediator.Send(model);
         }
         
@@ -199,6 +197,46 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             model.ModifiedById = userId;
             model.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> SubmitComparativeStatement([FromBody]SubmitComparativeStatementCommand model)
+        {   
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> GetComparativeStatement([FromBody]long requestId)
+        {   
+           GetComparativeStatementQuery model = new GetComparativeStatementQuery();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.requestId = requestId; 
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> RejectComparativeStatement([FromBody]long requestId)
+        {   
+           RejectComparativeStatementCommand model = new RejectComparativeStatementCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.requestId = requestId;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow; 
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> ApproveComparativeStatement([FromBody]long requestId)
+        {   
+           ApproveComparativeStatementCommand model = new ApproveComparativeStatementCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.requestId = requestId;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow; 
             return await _mediator.Send(model);
         }
     }

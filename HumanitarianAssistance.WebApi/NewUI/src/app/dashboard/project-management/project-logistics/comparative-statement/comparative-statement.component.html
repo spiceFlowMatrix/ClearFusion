@@ -1,13 +1,13 @@
 <div [ngSwitch]="comparativeStatus">
-  <div *ngSwitchCase="1" style="margin-top: 25%;">
+  <div *ngSwitchCase="1" style="margin-top: 25%;" humAddScroll style="width: 105%;">
     <i class="fas fa-info-circle icon_align icon_color_pending"></i>
     <h3 class="text-center">STATEMENT REQUEST PENDING</h3>
   </div>
-  <div *ngSwitchCase="2" style="margin-top: 25%;">
+  <div *ngSwitchCase="2" style="margin-top: 25%;" humAddScroll style="width: 105%;">
       <i class="fas fa-exclamation-circle icon_align icon_color_cancel"></i>
       <h3 class="text-center">CANCELLED REQUEST</h3>
   </div>
-  <div *ngSwitchCase="3" >
+  <div *ngSwitchCase="3" humAddScroll style="width: 105%;">
     <h4 class="letter_spacing_2">Comparative Statement Details</h4>
     <p>Once <b>Logistics Officer</b> has listed out <b>Suppliers</b> and Submitted the <b>Comparative Statement</b>, it needs to be <b>Approved</b> by <b>Control Officer</b>. Once <b>Control Officer</b> has approved the <b>Comparative Statement</b>. <b>Purchase Order</b> can be issued.</p>
     <p>Due to technology limitations in previous systems, only 3 suppliers could be listed for evaluation. Now we can easily add as many as needed.</p>
@@ -20,10 +20,64 @@
     <mat-divider></mat-divider>
     <div style="padding-top: 1px;">
       <h4>Statement
-        <hum-button [type]="'add'" [text]="'SUBMIT A STATEMENT'"></hum-button>
+        <hum-button (click)="submitStatement()" [type]="'add'" [text]="'SUBMIT A STATEMENT'"></hum-button>
       </h4>
       <span><i class="fas fa-info-circle icon_color_yellow"></i> Pending statement submission by <b>Logistics Officer</b></span>
     </div>
+  </div>
+  <div *ngSwitchCase="4" humAddScroll style="width: 105%;">
+    <h4 class="letter_spacing_2">Comparative Statement Details</h4>
+    <p>Once <b>Logistics Officer</b> has listed out <b>Suppliers</b> and Submitted the <b>Comparative Statement</b>, it needs to be <b>Approved</b> by <b>Control Officer</b>. Once <b>Control Officer</b> has approved the <b>Comparative Statement</b>. <b>Purchase Order</b> can be issued.</p>
+    <p>Due to technology limitations in previous systems, only 3 suppliers could be listed for evaluation. Now we can easily add as many as needed.</p>
+    <div>
+      <h4>Suppliers
+        <!-- <hum-button (click)="openAddSupplierDialog()" [type]="'add'" [text]="'ADD SUPPLIER'"></hum-button> -->
+      </h4>
+      <hum-table [actions]="actions" (actionClick)="onActionClick($event)" [headers]="supplierHeaders$" [items]="supplierData$" [subHeaders]="supplierSubHeaders$" [hideColums$]="hideSupplierColums"></hum-table>
+    </div>
+    <mat-divider></mat-divider>
+    <div style="padding-top: 1px;">
+      <h4>Statement
+        <hum-button (click)="approveComparativeStatement()" [type]="'save'" [text]="'APPROVE'"></hum-button>
+        <hum-button (click)="rejectComparativeStatement()" [type]="'cancel'" [text]="'REJECT'"></hum-button>
+      </h4>
+      <div>
+        <span><i class="fas fa-info-circle icon_color_yellow"></i> Statement submitted by {{statementModel.SubmittedBy}}. <b>Awaiting Control Officer Approval</b>.</span>
+        <p>{{statementModel.Description}}</p>
+        <h5><i class="fa fa-list fa-1" aria-hidden="true"></i> Selected Suppliers</h5>
+        <ul>
+          <li *ngFor="let item of statementModel.selectedSupplier">{{item.Id}} - {{item.SupplierName}}</li>
+        </ul>
+        <h5><i class="fa fa-paperclip fa-1" aria-hidden="true"></i> Attachments</h5>
+        <p *ngIf="(statementModel.attachments) && (statementModel.attachments.length == 0)">No attachment submitted!</p>
+        <ul>
+          <li *ngFor="let item of statementModel.attachments"><a target="_blank" href="{{item.AttachmentUrl}}">{{item.AttachmentName}}</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div *ngSwitchCase="5" humAddScroll style="width: 105%;">
+    <h4 class="letter_spacing_2">Comparative Statement Details</h4>
+    <p>Once <b>Logistics Officer</b> has listed out <b>Suppliers</b> and Submitted the <b>Comparative Statement</b>, it needs to be <b>Approved</b> by <b>Control Officer</b>. Once <b>Control Officer</b> has approved the <b>Comparative Statement</b>. <b>Purchase Order</b> can be issued.</p>
+    <p>Due to technology limitations in previous systems, only 3 suppliers could be listed for evaluation. Now we can easily add as many as needed.</p>
+    <div>
+      <h4>Suppliers
+        <hum-button (click)="openAddSupplierDialog()" [type]="'add'" [text]="'ADD SUPPLIER'"></hum-button>
+      </h4>
+      <hum-table [actions]="actions" (actionClick)="onActionClick($event)" [headers]="supplierHeaders$" [items]="supplierData$" [subHeaders]="supplierSubHeaders$" [hideColums$]="hideSupplierColums"></hum-table>
+    </div>
+    <mat-divider></mat-divider>
+    <div style="padding-top: 1px;">
+      <h4>Statement
+        <hum-button (click)="submitStatement()" [type]="'add'" [text]="'SUBMIT A STATEMENT'"></hum-button>
+      </h4>
+      <div>
+        <span><i class="fas fa-info-circle icon_color_red"></i> Rejected by {{statementModel.RejectedBy}}. Awaiting Resubmission.</span>
+      </div>
+    </div>
+  </div>
+  <div *ngSwitchCase="6" humAddScroll style="width: 105%;">
+    <app-purchase-order [requestId]="requestId" [requestStatus]="requestStatus" [totalCost]="this.totalCost" [comparativeStatus]="comparativeStatus" [requestedItems]="requestedItems" (selectedItemChange)='selectedPurchaseItemChange($event)'></app-purchase-order>
   </div>
   <div *ngSwitchDefault>
 

@@ -8,8 +8,8 @@ import { GlobalSharedService } from 'src/app/shared/services/global-shared.servi
 })
 export class EntryComponentComponent implements OnInit {
 
-  constructor(private globalservice : GlobalSharedService) { 
-   
+  constructor(private globalservice : GlobalSharedService) {
+
   }
 
   ngOnInit() {

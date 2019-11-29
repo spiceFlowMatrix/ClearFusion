@@ -1,0 +1,103 @@
+<div>
+    <h1 mat-dialog-title>
+      Add Language
+      <button mat-icon-button [mat-dialog-close] class="pull-right">
+        <mat-icon aria-label="clear">clear</mat-icon>
+      </button>
+    </h1>
+    <form
+      class="example-form"
+      [formGroup]="languageDetailForm"
+      (ngSubmit)="onFormSubmit(languageDetailForm.value)"
+    >
+      <div mat-dialog-content>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-lg-3 col-sm-3">
+                <mat-form-field class="example-full-width">
+                  <input
+                    matInput
+                    formControlName="LanguageName"
+                    placeholder="Language Name"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-lg-3 col-sm-3">
+                <mat-form-field class="example-full-width">
+                  <mat-select
+                    placeholder="Reading"
+                    formControlName="LanguageReading"
+                  >
+                    <mat-option
+                      *ngFor="let item of ratingBasedDropDown"
+                      [value]="item.Id"
+                    >
+                      {{ item.value }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-lg-3 col-sm-3">
+                <mat-form-field class="example-full-width">
+                  <mat-select
+                    placeholder="Writing"
+                    formControlName="LanguageWriting"
+                  >
+                    <mat-option
+                      *ngFor="let item of ratingBasedDropDown"
+                      [value]="item.Id"
+                    >
+                      {{ item.value }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-lg-3 col-sm-3">
+                <mat-form-field class="example-full-width">
+                  <mat-select
+                    placeholder="Listining"
+                    formControlName="LanguageListining"
+                  >
+                    <mat-option
+                      *ngFor="let item of ratingBasedDropDown"
+                      [value]="item.Id"
+                    >
+                      {{ item.value }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-lg-3 col-sm-3">
+                <mat-form-field class="example-full-width">
+                  <mat-select
+                    placeholder="Speaking"
+                    formControlName="LanguageSpeaking"
+                  >
+                    <mat-option
+                      *ngFor="let item of ratingBasedDropDown"
+                      [value]="item.Id"
+                    >
+                      {{ item.value }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div mat-dialog-actions class="pull-right">
+          <hum-button
+            [type]="'save'"
+            [text]="'save'"
+            [isSubmit]="true"
+          ></hum-button>
+          <hum-button
+            (click)="onCancelPopup()"
+            [type]="'cancel'"
+            [text]="'cancel'"
+          ></hum-button>
+        </div>
+      </div>
+    </form>
+  </div>
