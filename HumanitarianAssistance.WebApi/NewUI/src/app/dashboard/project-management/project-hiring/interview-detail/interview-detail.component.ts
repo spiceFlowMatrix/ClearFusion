@@ -111,20 +111,19 @@ export class InterviewDetailComponent implements OnInit {
     ];
 
     this.noticePeriodList$ = of([
-      { name: '5 Days', value: 5 },
-      { name: '10 Days', value: 10 },
-      { name: '15 Days', value: 15 },
-      { name: '20 Days', value: 20 },
-      { name: '25 Days', value: 25 },
-      { name: '30 Days', value: 30 },
-      { name: '35 Days', value: 35 },
-      { name: '40 Days', value: 40 },
-      { name: '45 Days', value: 45 }
+      { name: '15 Days', value: 1 },
+      { name: '30 Days', value: 2 },
+      { name: 'Others', value: 3 },
+
     ] as IDropDownModel[]);
 
     this.statusList$ = of([
-      { name: 'Recommend', value: 1 },
-      { name: 'Reject', value: 2 }
+      { name: 'Hire', value: 1 },
+      { name: '2nd Choice', value: 2 },
+      { name: 'Test Day', value: 3 },
+      { name: 'Recommended for Other Position', value: 4 },
+      { name: 'Reject', value: 5 },
+      { name: 'Over Qualified', value: 6 }
     ] as IDropDownModel[]);
 
     this.interviewDetailForm = this.fb.group({
@@ -549,27 +548,28 @@ export class InterviewDetailComponent implements OnInit {
 
   //#region "setInterviewDetails"
   setInterviewDetails(data: any) {
-    this.interviewDetails = data;
-    this.interviewDetailForm = this.fb.group({
-      CandidateId: data.CandidateId,
-      HiringRequestId: data.HiringRequestId,
-      Description: data.Description,
-      NoticePeriod: data.NoticePeriod,
-      AvailableDate: data.AvailableDate,
-      WrittenTestMarks: data.WrittenTestMarks,
-      CurrentBase: data.CurrentBase,
-      CurrentOther: data.CurrentOther,
-      ExpectationBase: data.ExpectationBase,
-      ExpectationOther: data.ExpectationOther,
-      Status: data.Status,
-      InterviewQuestionOne: data.InterviewQuestionOne,
-      InterviewQuestionTwo: data.InterviewQuestionTwo,
-      InterviewQuestionThree: data.InterviewQuestionThree,
-      CurrentTransport: data.CurrentTransport,
-      CurrentMeal: data.CurrentMeal,
-      ExpectationTransport: data.ExpectationTransport,
-      ExpectationMeal: data.ExpectationMeal
-    });
+    data.CandidateId = this.candidateId;
+    data.hiringRequestId = this.hiringRequestId;
+      (this.interviewDetailForm = this.fb.group({
+        CandidateId: data.CandidateId,
+        HiringRequestId: data.HiringRequestId,
+        Description: data.Description,
+        NoticePeriod: data.NoticePeriod,
+        AvailableDate: data.AvailableDate,
+        WrittenTestMarks: data.WrittenTestMarks,
+        CurrentBase: data.CurrentBase,
+        CurrentOther: data.CurrentOther,
+        ExpectationBase: data.ExpectationBase,
+        ExpectationOther: data.ExpectationOther,
+        Status: data.Status,
+        InterviewQuestionOne: data.InterviewQuestionOne,
+        InterviewQuestionTwo: data.InterviewQuestionTwo,
+        InterviewQuestionThree: data.InterviewQuestionThree,
+        CurrentTransport: data.CurrentTransport,
+        CurrentMeal: data.CurrentMeal,
+        ExpectationTransport: data.ExpectationTransport,
+        ExpectationMeal: data.ExpectationMeal
+      }));
     this.totalMarksObtain = data.TotalMarksObtain;
     this.marksObtain = data.MarksObtain;
     this.professionalCriteriaMarks = data.ProfessionalCriteriaMark;
@@ -582,24 +582,34 @@ export class InterviewDetailComponent implements OnInit {
     this.languagesList$ = of(data.LanguageList);
     this.traningList$ = of(data.TraningList);
     this.interviewerList$ = of(data.InterviewerList);
+
+    data.CandidateName = this.candidateDetails.FullName;
+    data.Qualification = this.candidateDetails.Qualification;
+    data.Position = this.hiringRequestDetail.Position;
+    data.DutyStation = this.hiringRequestDetail.Office;
+    data.MaritalStatus = '-';
+    data.PassportNumber = '-';
+    data.NameOfInstitute = '-';
+    data.DateOfBirth = this.candidateDetails.DateOfBirth;
+    this.interviewDetails = data;
   }
   //#endregion
 
-//#region "onExportInterviewDetailsPdf"
-onExportInterviewDetailsPdf() {
-  this.commonLoader.showLoader();
-  this.globalSharedService
-    .getFile(
-      this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetInterviewDetailReportPdf,
-      this.interviewDetails
-    )
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe();
-  this.commonLoader.hideLoader();
-}
-//#endregion
+  //#region "onExportInterviewDetailsPdf"
+  onExportInterviewDetailsPdf() {
+    this.commonLoader.showLoader();
+    this.globalSharedService
+      .getFile(
+        this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetInterviewDetailReportPdf,
+        this.interviewDetails
+      )
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe();
+    this.commonLoader.hideLoader();
+  }
+  //#endregion
 
-//#region "RouteBackToRequestDetailPage"
+  //#region "RouteBackToRequestDetailPage"
   backToRequestDetail() {
     window.history.back();
   }

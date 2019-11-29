@@ -242,6 +242,15 @@ export interface InterviewDetailModel {
   ProfessionalCriteriaMark?: number;
   MarksObtain?: number;
   TotalMarksObtain?: number;
+// Extra fields added for pdf
+  CandidateName?: string;
+  Qualification?: string;
+  Position?: string;
+  DutyStation?: string;
+  MaritalStatus?: string;
+  PassportNumber?: string;
+  NameOfInstitute?: string;
+  DateOfBirth?: any;
 }
 
 export interface ISelectBoxModel {

@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
 
-namespace HumanitarianAssistance.Application.Project.Models
-{
-    public class InterviewDetailsPdfModel
-    {
-         public List<InterviewQuestionDetailsModel> RatingBasedCriteriaList { get; set; }
-        public List<InterviewQuestionDetailsModel> TechnicalQuestionList { get; set; }
+namespace HumanitarianAssistance.Application.Project.Models {
+    public class InterviewDetailsPdfModel {
+        public List<AnswerList> RatingBasedCriteriaAnswerList { get; set; }
+        public List<AnswerList> TechnicalAnswerList { get; set; }
         public List<LanguageDetailsModel> LanguageList { get; set; }
         public List<TraningDetailsModel> TraningList { get; set; }
-        public List<InterviewerDetailsModel> InterviewerList { get; set; }
-
+        public List<InterviewerList> InterviewerList { get; set; }
+        
+         public List<EducationList> EducationList { get; set; }
         public long CandidateId { get; set; }
         public long HiringRequestId { get; set; }
         public string Description { get; set; }
@@ -38,5 +37,30 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string CheckedIconPath { get; set; }
         public string UnCheckedIconPath { get; set; }
         public string PersianChaName { get; set; }
+        public string CandidateName { get; set; }
+        public string Qualification { get; set; }
+        public string Position { get; set; }
+        public string DutyStation { get; set; }
+        public string MaritalStatus { get; set; }
+        public string PassportNumber { get; set; }
+        public string NameOfInstitute { get; set; }
+        public string DateOfBirth { get; set; }
+        public string Province { get; set; }
     }
+
+    public class AnswerList {
+        public string Question { get; set; }
+        public int? Score { get; set; }
+    }
+    public class InterviewerList {
+        public string Name { get; set; }
+        public string Position { get; set; }
+        public DateTime Date { get; set; }
+        public string Signature { get; set; }
+    }
+    public class EducationList
+    {
+        public string EducationName { get; set; }
+    }
+
 }

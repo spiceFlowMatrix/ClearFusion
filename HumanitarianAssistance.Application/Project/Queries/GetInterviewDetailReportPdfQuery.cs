@@ -34,5 +34,13 @@ namespace HumanitarianAssistance.Application.Project.Queries
         public double ProfessionalCriteriaMark { get; set; }
         public int MarksObtain { get; set; }
         public double TotalMarksObtain { get; set; }
+        public string CandidateName { get; set; }
+        public string Qualification { get; set; }
+        public string Position { get; set; }
+        public string DutyStation { get; set; }
+        public string MaritalStatus { get; set; }
+         public string PassportNumber { get; set; }
+         public string NameOfInstitute { get; set; }
+         public string DateOfBirth { get; set; }
     }
 }
