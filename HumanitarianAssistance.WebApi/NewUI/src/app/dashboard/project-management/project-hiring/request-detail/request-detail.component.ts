@@ -125,7 +125,10 @@ export class RequestDetailComponent implements OnInit {
       Profession: '',
       Experience: '',
       KnowledgeAndSkills: '',
-      HiringRequestStatus: null
+      HiringRequestStatus: null,
+      SpecificDutiesAndResponsibilities: '',
+      SubmissionGuidelines: '',
+      HiringRequestCode: ''
     };
     this.routeActive.params.subscribe(params => {
       this.hiringRequestId = +params['id'];
@@ -203,7 +206,11 @@ export class RequestDetailComponent implements OnInit {
                 Profession: response.data.Profession,
                 Experience: response.data.Experience,
                 KnowledgeAndSkills: response.data.KnowledgeAndSkills,
-                HiringRequestStatus: response.data.HiringRequestStatus
+                HiringRequestStatus: response.data.HiringRequestStatus,
+                SpecificDutiesAndResponsibilities:
+                  response.data.SpecificDutiesAndResponsibilities,
+                SubmissionGuidelines: response.data.SubmissionGuidelines,
+                HiringRequestCode: response.data.HiringRequestId
               };
               if (this.hiringRequestDetails.HiringRequestStatus === HiringRequestStatus.Completed) {
                 this.IsHiringRequestCompleted = true;
@@ -632,7 +639,6 @@ export class RequestDetailComponent implements OnInit {
   }
 
   onStatusFilterCandidate(data: MatSelectChange) {
-    debugger;
     if (data.value == '') {
       this.getAllCandidateList(this.filterValueModel);
     } else {
