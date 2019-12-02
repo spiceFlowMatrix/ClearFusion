@@ -1,5 +1,5 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { of, Observable, ReplaySubject } from 'rxjs';
+import { Component, OnInit, HostListener } from "@angular/core";
+import { of, Observable, ReplaySubject } from "rxjs";
 import {
   HiringRequestDetailList,
   ICandidateDetailList,
@@ -8,58 +8,58 @@ import {
   ICandidateFilterModel,
   IExistingCandidateList,
   CompleteHiringRequestModel
-} from '../models/hiring-requests-models';
-import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
-import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
-import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
-import { ActivatedRoute, Router } from '@angular/router';
-import { takeUntil } from 'rxjs/operators';
-import { AddHiringRequestComponent } from '../add-hiring-request/add-hiring-request.component';
-import { MatDialog, MatSelectChange } from '@angular/material';
-import { AddNewCandidateComponent } from '../add-new-candidate/add-new-candidate.component';
-import { CandidateStatus, CandidateAction, Shift } from 'src/app/shared/enum';
-import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
-import { AppUrlService } from 'src/app/shared/services/app-url.service';
-import { GLOBAL } from 'src/app/shared/global';
-import { IDropDownModel } from 'src/app/store/models/purchase';
-import { ToastrService } from 'ngx-toastr';
+} from "../models/hiring-requests-models";
+import { CommonLoaderService } from "src/app/shared/common-loader/common-loader.service";
+import { HiringRequestsService } from "../../project-list/hiring-requests/hiring-requests.service";
+import { IResponseData } from "src/app/dashboard/accounting/vouchers/models/status-code.model";
+import { ActivatedRoute, Router } from "@angular/router";
+import { takeUntil } from "rxjs/operators";
+import { AddHiringRequestComponent } from "../add-hiring-request/add-hiring-request.component";
+import { MatDialog, MatSelectChange } from "@angular/material";
+import { AddNewCandidateComponent } from "../add-new-candidate/add-new-candidate.component";
+import { CandidateStatus, CandidateAction, Shift } from "src/app/shared/enum";
+import { GlobalSharedService } from "src/app/shared/services/global-shared.service";
+import { AppUrlService } from "src/app/shared/services/app-url.service";
+import { GLOBAL } from "src/app/shared/global";
+import { IDropDownModel } from "src/app/store/models/purchase";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
-  selector: 'app-request-detail',
-  templateUrl: './request-detail.component.html',
-  styleUrls: ['./request-detail.component.scss']
+  selector: "app-request-detail",
+  templateUrl: "./request-detail.component.html",
+  styleUrls: ["./request-detail.component.scss"]
 })
 export class RequestDetailComponent implements OnInit {
   statusFilter: any[] = [
-    { Id: 0, value: 'Pending Shortlist' },
-    { Id: 1, value: 'Pending Interview' },
-    { Id: 2, value: 'Pending Selection' },
-    { Id: 3, value: 'Selected' },
-    { Id: 4, value: 'Rejected' }
+    { Id: 0, value: "Pending Shortlist" },
+    { Id: 1, value: "Pending Interview" },
+    { Id: 2, value: "Pending Selection" },
+    { Id: 3, value: "Selected" },
+    { Id: 4, value: "Rejected" }
   ];
   newCandidatesHeaders$ = of([
-    'Candidate Id',
-    'First Name',
-    'Last Name',
-    'Gender',
-    'Interview',
-    'Candidate Status'
+    "Candidate Id",
+    "First Name",
+    "Last Name",
+    "Gender",
+    "Interview",
+    "Candidate Status"
   ]);
   subListHeaders$ = of([
-    'Education',
-    'Phone Number',
-    'Profession',
-    'Email Address',
-    'Relevant Experience',
-    'Irrelevant Experience',
-    'Total Experience'
+    "Education",
+    "Phone Number",
+    "Profession",
+    "Email Address",
+    "Relevant Experience",
+    "Irrelevant Experience",
+    "Total Experience"
   ]);
   existingCandidatesHeaders$ = of([
-    'Employee Id',
-    'Employee Code',
-    'Full Name',
-    'Gender',
-    'Employee Status'
+    "Employee Id",
+    "Employee Code",
+    "Full Name",
+    "Gender",
+    "Employee Status"
   ]);
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   // existingEmployeesList$: Observable<IDropDownModel[]>;
@@ -93,7 +93,7 @@ export class RequestDetailComponent implements OnInit {
       pageIndex: 0,
       pageSize: 10,
       TotalCount: null,
-      FilterValue: '',
+      FilterValue: "",
       ProjectId: null,
       HiringRequestId: null
     };
@@ -103,43 +103,46 @@ export class RequestDetailComponent implements OnInit {
     this.IsHiringRequestCompleted = false;
     this.hiringRequestDetails = {
       HiringRequestId: null,
-      JobGrade: '',
-      Position: '',
-      TotalVacancies: '',
-      FilledVacancies: '',
-      PayCurrency: '',
-      PayRate: '',
-      Status: '',
-      Office: '',
-      DepartmentName: '',
-      BudgetName: '',
+      JobGrade: "",
+      Position: "",
+      TotalVacancies: "",
+      FilledVacancies: "",
+      PayCurrency: "",
+      PayRate: "",
+      Status: "",
+      Office: "",
+      DepartmentName: "",
+      BudgetName: "",
       AnouncingDate: null,
       ClosingDate: null,
-      ContractType: '',
+      ContractType: "",
       ContractDuration: null,
-      Shift: '',
-      EducationDegree: '',
-      Profession: '',
-      Experience: '',
-      KnowledgeAndSkills: '',
-      HiringRequestStatus: null
+      Shift: "",
+      EducationDegree: "",
+      Profession: "",
+      Experience: "",
+      KnowledgeAndSkills: "",
+      HiringRequestStatus: null,
+      SpecificDutiesAndResponsibilities: "",
+      SubmissionGuidelines: "",
+      HiringRequestCode: ""
     };
     this.routeActive.params.subscribe(params => {
-      this.hiringRequestId = +params['id'];
+      this.hiringRequestId = +params["id"];
     });
     this.routeActive.parent.parent.parent.params.subscribe(params => {
-      this.projectId = +params['id'];
+      this.projectId = +params["id"];
     });
 
     this.actions = {
       items: {
-        button: { status: true, text: '' },
+        button: { status: true, text: "" },
         delete: false,
         download: false,
         edit: false
       },
       subitems: {
-        button: { status: false, text: '' },
+        button: { status: false, text: "" },
         delete: false,
         download: false
       }
@@ -156,15 +159,15 @@ export class RequestDetailComponent implements OnInit {
   }
 
   //#region "Dynamic Scroll"
-  @HostListener('window:resize', ['$event'])
+  @HostListener("window:resize", ["$event"])
   getScreenSize() {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
 
     this.scrollStyles = {
-      'overflow-y': 'auto',
-      height: this.screenHeight - 130 + 'px',
-      'overflow-x': 'hidden'
+      "overflow-y": "auto",
+      height: this.screenHeight - 130 + "px",
+      "overflow-x": "hidden"
     };
   }
   //#endregion
@@ -200,7 +203,11 @@ export class RequestDetailComponent implements OnInit {
                 Profession: response.data.Profession,
                 Experience: response.data.Experience,
                 KnowledgeAndSkills: response.data.KnowledgeAndSkills,
-                HiringRequestStatus: response.data.HiringRequestStatus
+                HiringRequestStatus: response.data.HiringRequestStatus,
+                SpecificDutiesAndResponsibilities:
+                  response.data.SpecificDutiesAndResponsibilities,
+                SubmissionGuidelines: response.data.SubmissionGuidelines,
+                HiringRequestCode: response.data.HiringRequestId
               };
               if (this.hiringRequestDetails.HiringRequestStatus === 3) {
                 this.IsHiringRequestCompleted = true;
@@ -218,7 +225,7 @@ export class RequestDetailComponent implements OnInit {
   editHiringRequest(): void {
     // NOTE: It open AddHiringRequest (AddHiringRequestsComponent)
     const dialogRef = this.dialog.open(AddHiringRequestComponent, {
-      width: '700px',
+      width: "700px",
       autoFocus: false,
       data: {
         hiringRequestId: this.hiringRequestDetails.HiringRequestId,
@@ -239,7 +246,7 @@ export class RequestDetailComponent implements OnInit {
   addNewCandidate(): void {
     // NOTE: It open AddHiringRequest dialog and passed the data into the AddHiringRequestsComponent Model
     const dialogRef = this.dialog.open(AddNewCandidateComponent, {
-      width: '700px',
+      width: "700px",
       autoFocus: false,
       data: {
         hiringRequestId: this.hiringRequestDetails.HiringRequestId,
@@ -271,18 +278,18 @@ export class RequestDetailComponent implements OnInit {
                 Gender: element.Gender,
                 Interview:
                   element.InterviewId == 0
-                    ? 'Not Interviewed'
+                    ? "Not Interviewed"
                     : '<a href="/project/my-project/' +
                       this.projectId +
-                      '/hiring-request/interview-detail?candId=' +
+                      "/hiring-request/interview-detail?candId=" +
                       element.CandidateId +
-                      '&hiringId=' +
+                      "&hiringId=" +
                       this.hiringRequestId +
-                      '&interviewId=' +
+                      "&interviewId=" +
                       element.InterviewId +
                       '">Interview ' +
                       element.InterviewId +
-                      '</a>',
+                      "</a>",
                 CandidateStatus: CandidateStatus[element.CandidateStatus],
                 itemAction:
                   element.CandidateStatus != CandidateStatus.Rejected &&
@@ -291,8 +298,8 @@ export class RequestDetailComponent implements OnInit {
                         {
                           button: {
                             status: true,
-                            text: 'Reject',
-                            type: 'cancel'
+                            text: "Reject",
+                            type: "cancel"
                           },
                           delete: false,
                           download: false,
@@ -302,7 +309,7 @@ export class RequestDetailComponent implements OnInit {
                           button: {
                             status: true,
                             text: CandidateAction[element.CandidateStatus],
-                            type: 'save'
+                            type: "save"
                           },
                           delete: false,
                           download: false,
@@ -393,8 +400,8 @@ export class RequestDetailComponent implements OnInit {
                         {
                           button: {
                             status: true,
-                            text: 'Reject',
-                            type: 'cancel'
+                            text: "Reject",
+                            type: "cancel"
                           },
                           delete: false,
                           download: false,
@@ -404,7 +411,7 @@ export class RequestDetailComponent implements OnInit {
                           button: {
                             status: true,
                             text: CandidateAction[element.CandidateStatus],
-                            type: 'save'
+                            type: "save"
                           },
                           delete: false,
                           download: false,
@@ -473,7 +480,7 @@ export class RequestDetailComponent implements OnInit {
   OnExistingEmployeeSelection(data: MatSelectChange) {
     this.existingCandidatesList2$.subscribe(res => {
       if (res.findIndex(x => x.EmployeeId == data.value) > -1) {
-        this.toastr.warning('Employee already selected');
+        this.toastr.warning("Employee already selected");
       } else {
         this.loader.showLoader();
         const candidateDetails: any = {
@@ -488,7 +495,7 @@ export class RequestDetailComponent implements OnInit {
             (response: IResponseData) => {
               if (response.statusCode === 200) {
                 this.getAllExistingCandidateList(this.filterValueModel);
-                this.toastr.success('Employee successfully added');
+                this.toastr.success("Employee successfully added");
                 this.loader.hideLoader();
               } else {
                 this.toastr.error(response.message);
@@ -496,7 +503,7 @@ export class RequestDetailComponent implements OnInit {
               }
             },
             error => {
-              this.toastr.error('Someting went wrong. Please try again');
+              this.toastr.error("Someting went wrong. Please try again");
               this.loader.hideLoader();
             }
           );
@@ -507,18 +514,18 @@ export class RequestDetailComponent implements OnInit {
   newCandActionEvents(data: any) {
     console.log(data);
     switch (data.type) {
-      case 'Reject':
+      case "Reject":
         this.rejectCandidate(data);
         break;
-      case 'Shortlist':
+      case "Shortlist":
         const candidateDetails: any = {
           statusId: +CandidateStatus[data.item.CandidateStatus],
           candidateId: data.item.CandidateId
         };
         this.updateCandidateStatus(candidateDetails);
         break;
-      case 'Interview':
-        this.router.navigate(['interview-detail'], {
+      case "Interview":
+        this.router.navigate(["interview-detail"], {
           relativeTo: this.routeActive.parent,
           queryParams: {
             candId: data.item.CandidateId,
@@ -532,10 +539,10 @@ export class RequestDetailComponent implements OnInit {
   }
   empActionEvents(data: any) {
     switch (data.type) {
-      case 'Reject':
+      case "Reject":
         this.rejectEmployee(data);
         break;
-      case 'Select':
+      case "Select":
         const candidateDetails: any = {
           statusId: +CandidateStatus[data.item.CandidateStatus],
           employeeId: data.item.EmployeeId
@@ -599,7 +606,7 @@ export class RequestDetailComponent implements OnInit {
   //#endregion
 
   onStatusFilter(data: MatSelectChange) {
-    if (data.value == '') {
+    if (data.value == "") {
       this.getAllExistingCandidateList(this.filterValueModel);
     } else {
       this.existingCandidatesList2$.subscribe(res => {
@@ -613,7 +620,7 @@ export class RequestDetailComponent implements OnInit {
   }
 
   onStatusFilterCandidate(data: MatSelectChange) {
-    if (data.value == '') {
+    if (data.value == "") {
       this.getAllCandidateList(this.filterValueModel);
     } else {
       this.newCandidatesList$.subscribe(res => {
@@ -638,10 +645,10 @@ export class RequestDetailComponent implements OnInit {
       .subscribe(
         (responseData: IResponseData) => {
           if (responseData.statusCode === 200) {
-            this.toastr.success('Hiring Request Successfully Completed');
+            this.toastr.success("Hiring Request Successfully Completed");
             this.IsHiringRequestCompleted = true;
           } else if (responseData.statusCode === 400) {
-            this.toastr.error('Something went wrong .Please try again.');
+            this.toastr.error("Something went wrong .Please try again.");
           }
         },
         error => {}
