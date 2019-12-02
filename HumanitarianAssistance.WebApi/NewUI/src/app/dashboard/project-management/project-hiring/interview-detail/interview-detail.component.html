@@ -212,7 +212,7 @@
                         <h5>{{ temp.value }}</h5>
                         <mat-form-field>
                             <mat-select placeholder="Score" name="Score" [(value)]="temp.selected" (selectionChange)="onChangeTechnicalQuestion(temp.Id, $event)">
-                                <mat-option *ngFor="let item of ratingBasedDropDown" [value]="item.Id">{{ item.value }}
+                                <mat-option *ngFor="let item of technicalQuestionDropdown" [value]="item.Id">{{ item.value }}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
