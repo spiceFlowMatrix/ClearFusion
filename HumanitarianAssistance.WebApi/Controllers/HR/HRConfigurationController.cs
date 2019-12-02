@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.HR.Commands.Common;
 using HumanitarianAssistance.Application.HR.Commands.Create;
+using HumanitarianAssistance.Application.HR.Commands.Delete;
 using HumanitarianAssistance.Application.HR.Commands.Update;
 using HumanitarianAssistance.Application.HR.Queries;
 using Microsoft.AspNetCore.Authorization;
@@ -120,6 +121,12 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         public async Task<IActionResult> GetSequenceNumber([FromBody] int questionType)
         {
             return Ok(await _mediator.Send(new GetSequenceNumberQuery { QuestionType = questionType}));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteExitInterviewQuestion([FromBody] int Id)
+        {
+            return Ok(await _mediator.Send(new DeleteExitInterviewQuestionCommand { Id = Id } ));
         }
     }
 }
