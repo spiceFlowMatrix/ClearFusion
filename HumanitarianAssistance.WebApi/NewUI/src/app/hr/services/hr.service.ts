@@ -249,10 +249,10 @@ export class HrService {
   //#endregion
 
   //#region "getSequenceNumber"
-  getSequenceNumber(questionType: any): any {
+  getSequenceNumber(model: any): any {
     return this.globalService
       .post(
-        this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_GetSequenceNumber, questionType
+        this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_GetSequenceNumber, model
       );
   }
   //#endregion
