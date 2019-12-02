@@ -78,6 +78,7 @@ export class InterviewDetailComponent implements OnInit {
   ratingBasedCriteriaAnswerList: InterviewQuestionDetailModel[] = [];
   technicalAnswerList: InterviewQuestionDetailModel[] = [];
   ratingBasedDropDown: ISelectBoxModel[];
+  technicalQuestionDropdown: ISelectBoxModel[];
   interviewDetails: InterviewDetailModel;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   actions: TableActionsModel;
@@ -95,20 +96,47 @@ export class InterviewDetailComponent implements OnInit {
   ) {
     this.ratingBasedDropDown = [
       {
-        Id: 1,
-        value: '1-Poor'
-      },
-      {
-        Id: 2,
-        value: '2-Good'
+        Id: 0,
+        value: '0-Poor'
       },
       {
         Id: 3,
-        value: '3-Very Good'
+        value: '3-Below Average'
       },
       {
-        Id: 4,
-        value: '4-Excellent'
+        Id: 5,
+        value: '5-Average'
+      },
+      {
+        Id: 7,
+        value: '7-Above Average'
+      },
+      {
+        Id: 10,
+        value: '10-Outstanding'
+      }
+    ];
+
+    this.technicalQuestionDropdown = [
+      {
+        Id: 0,
+        value: '0-Poor'
+      },
+      {
+        Id: 10,
+        value: '10-Fair'
+      },
+      {
+        Id: 15,
+        value: '15-Good'
+      },
+      {
+        Id: 20,
+        value: '20-Excellent'
+      },
+      {
+        Id: 30,
+        value: '30-Perfect'
       }
     ];
 
@@ -462,6 +490,7 @@ export class InterviewDetailComponent implements OnInit {
     });
   }
   onChangeRatingBasedCriteria(questionId: any, score: MatSelectChange) {
+    debugger;
     if (
       this.ratingBasedCriteriaAnswerList.find(
         x => x.QuestionId === questionId

@@ -1,11 +1,17 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
-  <span class="action_header">Request Details
-    <hum-button [type]="'edit'" [text]="'Edit'" (click)="editHiringRequest()"></hum-button>
-    <hum-button *ngIf="!IsHiringRequestCompleted" [type]="'save'" [text]="'complete '" (click)="onCompleteRequest()">
-    </hum-button>
-    <hum-button *ngIf="IsHiringRequestCompleted" [type]="'completed'" [text]="'completed '"></hum-button>
-    <!-- <hum-button [type]="'cancel'" [text]="'close'"></hum-button> -->
-    <hum-button [type]="'cancel'" (click)="backToList()" [text]="'close'"></hum-button>
+    <span class="action_header">
+    <i class="fa fa-arrow-left bckicon" (click)="backToList()"></i>
+      Request Details
+    <hum-button
+      [type]="'edit'"
+      [text]="'Edit'"
+      (click)="editHiringRequest()"
+    ></hum-button>
+    <hum-button *ngIf="!IsHiringRequestCompleted && !IsHiringRequestClosed"  [type]="'save'" [text]="'complete '" (click)="onCompleteRequest()"></hum-button>
+    <hum-button *ngIf="!IsHiringRequestClosed && !IsHiringRequestCompleted" [type]="'cancel'" (click)="onCloseRequest()" [text]="'close request'"></hum-button>
+
+    <hum-button *ngIf="IsHiringRequestCompleted"  [type]="'completed'" [text]="'completed '"></hum-button>
+    <hum-button *ngIf="IsHiringRequestClosed"  [type]="'cancel'" [text]="'Closed '" [disabled]="true"></hum-button>
     <hum-button [type]="'download'" [text]="'PDF Export'" (click)="onExportHiringRequestPdf()"></hum-button>
   </span>
   <div class="action_section"></div>
@@ -129,7 +135,7 @@
 
             <mat-form-field>
               <mat-select placeholder="Status Filter" (selectionChange)="onStatusFilterCandidate($event)"
-                name="statusFilter" multiple>
+                name="statusFilter" multiple [(ngModel)]="statusSelection">
                 <mat-option *ngFor="let item of statusFilter" [value]="item.Id">{{ item.value }}
                 </mat-option>
               </mat-select>
@@ -152,7 +158,7 @@
             &nbsp;&nbsp;&nbsp;&nbsp;
             <mat-form-field>
               <mat-select placeholder="Status Filter" (selectionChange)="onStatusFilter($event)" name="statusFilter"
-                multiple>
+                multiple [(ngModel)]="statusSelection">
                 <mat-option *ngFor="let item of statusFilter" [value]="item.Id">{{ item.value }}
                 </mat-option>
               </mat-select>
