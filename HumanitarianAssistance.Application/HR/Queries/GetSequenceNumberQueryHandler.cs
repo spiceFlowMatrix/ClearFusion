@@ -30,7 +30,15 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                 if(result != null)
                 {
-                    sequenceNo= ++result.SequencePosition;
+                    if(result.Id != request.Id)
+                    {
+                        sequenceNo= ++result.SequencePosition;
+                    }
+                    else 
+                    {
+                        sequenceNo= result.SequencePosition;
+                    }
+                    
                 }
             }
             catch(Exception ex)

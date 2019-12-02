@@ -117,9 +117,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
 
         
         [HttpPost]
-        public async Task<IActionResult> GetSequenceNumber([FromBody] int questionType)
+        public async Task<IActionResult> GetSequenceNumber([FromBody] GetSequenceNumberQuery model)
         {
-            return Ok(await _mediator.Send(new GetSequenceNumberQuery { QuestionType = questionType}));
+            return Ok(await _mediator.Send(model));
         }
     }
 }
