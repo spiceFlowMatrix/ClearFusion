@@ -76,35 +76,35 @@
     @foreach (var Item in Model.RatingBasedCriteriaAnswerList) {
     <tr>
       <td style="font-weight:bold;" colspan="2" >@Item.Question</td>
-      @if(Item.Score == 1)
+      @if(Item.Score == 0)
       {
       <td style="font-weight:bold;" align=center><img src="@Model.CheckedIconPath" alt=""></td>
       <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
-      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
-      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
-      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
-      } else if(Item.Score == 2) 
-      {
-      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
-      <td style="font-weight:bold;" align=center><img src="@Model.CheckedIconPath" alt=""></td>
       <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
       <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
       <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
       } else if(Item.Score == 3) 
       {
       <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.CheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      } else if(Item.Score == 5) 
+      {
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
       <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
       <td style="font-weight:bold;" align=center><img src="@Model.CheckedIconPath" alt=""></td>
       <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
       <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
-      } else if(Item.Score == 4) 
+      } else if(Item.Score == 7) 
       {
       <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
       <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
       <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
       <td style="font-weight:bold;" align=center><img src="@Model.CheckedIconPath" alt=""></td>
       <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
-      } else if(Item.Score == 5) 
+      } else if(Item.Score == 10) 
       {
       <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
       <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
@@ -184,35 +184,35 @@
     <tr>
     <td>@Item.Question</td>
 
-@if(Item.Score == 1)
+@if(Item.Score == 0)
       {
       <td style="font-weight:bold;" align=center>@Item.Score</td>
       <td style="font-weight:bold;" align=center>-</td>
       <td style="font-weight:bold;" align=center>-</td>
       <td style="font-weight:bold;" align=center>-</td>
       <td style="font-weight:bold;" align=center>-</td>
-      } else if(Item.Score == 2) 
+      } else if(Item.Score == 10) 
       {
       <td style="font-weight:bold;" align=center>-</td>
       <td style="font-weight:bold;" align=center>@Item.Score</td>
       <td style="font-weight:bold;" align=center>-</td>
       <td style="font-weight:bold;" align=center>-</td>
       <td style="font-weight:bold;" align=center>-</td>
-      } else if(Item.Score == 3) 
+      } else if(Item.Score == 15) 
       {
       <td style="font-weight:bold;" align=center>-</td>
       <td style="font-weight:bold;" align=center>-</td>
       <td style="font-weight:bold;" align=center>@Item.Score</td>
       <td style="font-weight:bold;" align=center>-</td>
       <td style="font-weight:bold;" align=center>-</td>
-      } else if(Item.Score == 4) 
+      } else if(Item.Score == 20) 
       {
       <td style="font-weight:bold;" align=center>-</td>
       <td style="font-weight:bold;" align=center>-</td>
       <td style="font-weight:bold;" align=center>-</td>
       <td style="font-weight:bold;" align=center>@Item.Score</td>
       <td style="font-weight:bold;" align=center>-</td>
-      } else if(Item.Score == 5) 
+      } else if(Item.Score == 30) 
       {
       <td style="font-weight:bold;" align=center>-</td>
       <td style="font-weight:bold;" align=center>-</td>
