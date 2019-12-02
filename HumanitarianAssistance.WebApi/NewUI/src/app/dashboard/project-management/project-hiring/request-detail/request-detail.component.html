@@ -22,15 +22,16 @@
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-6">
-                <!-- <mat-card-title>
-                    {{ hiringRequestDetails.JobCode }}
-                </mat-card-title> -->
-                <!-- <mat-card-subtitle>
-          Description
-        </mat-card-subtitle> -->
-                <!-- <mat-card-content>
-          {{hiringRequestDetails.Description}}
-        </mat-card-content> -->
+                <h4> <span> Code: </span> {{ hiringRequestDetails.HiringRequestId }}</h4>
+                <h5> Specific Duties & Responsibilities</h5>
+                <mat-card-subtitle>
+                    {{hiringRequestDetails.SpecificDutiesAndResponsibilities}}
+                </mat-card-subtitle>
+                <h5>Submission Guildelines</h5>
+                <mat-card-subtitle>
+                    {{hiringRequestDetails.SubmissionGuidelines}}
+                </mat-card-subtitle>
+                <br>
                 <h5>Hiring Request Details</h5>
                 <table class="table table-striped">
                     <tbody>
@@ -95,30 +96,33 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-12">
-        <div class="col-md-6">
-            <h5>Required Qualifications</h5>
-            <mat-card-subtitle>
-                {{ hiringRequestDetails.KnowledgeAndSkills }}
-            </mat-card-subtitle>
-            <table class="table table-striped">
-                <tbody>
-                    <tr>
-                        <td>Education Degree</td>
-                        <td>{{ hiringRequestDetails.EducationDegree }}</td>
-                    </tr>
-                    <tr>
-                        <td>Profession</td>
-                        <td>{{ hiringRequestDetails.Profession }}</td>
-                    </tr>
-                    <tr>
-                        <td>Experience(In Years)</td>
-                        <td>{{ hiringRequestDetails.Experience }}</td>
-                    </tr>
-                </tbody>
-            </table>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="col-md-6">
+                <h5>Required Qualifications</h5>
+                <mat-card-subtitle>
+                    {{ hiringRequestDetails.KnowledgeAndSkills }}
+                </mat-card-subtitle>
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <td>Education Degree</td>
+                            <td>{{ hiringRequestDetails.EducationDegree }}</td>
+                        </tr>
+                        <tr>
+                            <td>Profession</td>
+                            <td>{{ hiringRequestDetails.Profession }}</td>
+                        </tr>
+                        <tr>
+                            <td>Experience(In Years)</td>
+                            <td>{{ hiringRequestDetails.Experience }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-12">
             <mat-tab-group>

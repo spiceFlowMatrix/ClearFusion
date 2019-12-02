@@ -16,7 +16,7 @@ export class AddExitInterviewQuestionsComponent implements OnInit {
 
   addExitInterviewQuestion: FormGroup;
   isFormSubmitted = false;
-  title = 'Add Question';
+  title = 'Add New Exit Interview Question';
 
   questionTypes$ = of([
     {value: 1, name: 'Feeling About Employee Aspects'},
@@ -40,7 +40,7 @@ export class AddExitInterviewQuestionsComponent implements OnInit {
     });
 
     if (this.data) {
-      this.title = 'Edit Question';
+      this.title = 'Edit Exit Interview Question';
       this.addExitInterviewQuestion.get('Id').patchValue(this.data.Id);
       this.addExitInterviewQuestion.get('QuestionText').patchValue(this.data.QuestionText);
       this.addExitInterviewQuestion.get('QuestionType').patchValue(this.data.QuestionType);
@@ -81,7 +81,12 @@ saveQuestion() {
 
   getSequenceNumber(questionType) {
     this.commonLoader.showLoader();
-    this.hrService.getSequenceNumber(questionType).subscribe(x => {
+
+    const model = {
+      QuestionType: questionType,
+      Id: this.data.Id
+    };
+    this.hrService.getSequenceNumber(model).subscribe(x => {
       this.commonLoader.hideLoader();
       if (x) {
         this.addExitInterviewQuestion.get('SequencePosition').patchValue(x);
