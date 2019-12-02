@@ -16,7 +16,7 @@ namespace HumanitarianAssistance.Application.Project.Models {
         public string CurrentEducation { get; set; }
         public string CurrentProfession { get; set; }
         public string CurrentExperience { get; set; }
-        public double RelevantExperienceInYear { get; set; }
-        public double IrrelevantExperienceInYear { get; set; }
+        public double? RelevantExperienceInYear { get; set; }
+        public double? IrrelevantExperienceInYear { get; set; }
     }
 }

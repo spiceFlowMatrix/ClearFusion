@@ -346,7 +346,8 @@ export class RequestDetailComponent implements OnInit {
               } as ICandidateDetailList;
             })
           );
-         // this.newCandidatesList2$ = this.newCandidatesList$;
+         this.newCandidatesList2$ = this.newCandidatesList$;
+
          this.newCandidatesList$.subscribe(res => {
           this.newCandidatesList2$ = of(
             res.filter(x =>
@@ -354,6 +355,14 @@ export class RequestDetailComponent implements OnInit {
             )
           );
         });
+
+        //  this.newCandidatesList$.subscribe(res => {
+        //   this.newCandidatesList2$ = of(
+        //     res.filter(x =>
+        //       this.statusSelection.includes(CandidateStatus[x.CandidateStatus])
+        //     )
+        //   );
+        // });
         }
         this.loader.hideLoader();
       },
@@ -434,14 +443,23 @@ export class RequestDetailComponent implements OnInit {
               } as IExistingCandidateList;
             })
           );
-          // this.existingCandidatesList$ = this.existingCandidatesList2$;
-          this.existingCandidatesList$.subscribe(res => {
-            this.existingCandidatesList2$ = of(
+           this.existingCandidatesList$ = this.existingCandidatesList2$;
+
+           this.existingCandidatesList2$.subscribe(res => {
+            this.existingCandidatesList$ = of(
               res.filter(x =>
                 this.statusSelection.includes(CandidateStatus[x.CandidateStatus])
               )
             );
           });
+         // console.log(this.existingCandidatesList$);
+          // this.existingCandidatesList$.subscribe(res => {
+          //   this.existingCandidatesList2$ = of(
+          //     res.filter(x =>
+          //       this.statusSelection.includes(CandidateStatus[x.CandidateStatus])
+          //     )
+          //   );
+          // });
         }
         this.loader.hideLoader();
       },
@@ -539,7 +557,9 @@ export class RequestDetailComponent implements OnInit {
       case 'Shortlist':
         const candidateDetails: any = {
           statusId: +CandidateStatus[data.item.CandidateStatus],
-          candidateId: data.item.CandidateId
+          candidateId: data.item.CandidateId,
+          projectId: this.projectId,
+          hiringRequestId: this.hiringRequestId
         };
         this.updateCandidateStatus(candidateDetails);
         break;
@@ -548,7 +568,9 @@ export class RequestDetailComponent implements OnInit {
           relativeTo: this.routeActive.parent,
           queryParams: {
             candId: data.item.CandidateId,
-            hiringId: this.hiringRequestId
+            hiringId: this.hiringRequestId,
+            projectId: this.projectId,
+            hiringRequestId: this.hiringRequestId
           }
         });
         break;
@@ -564,7 +586,9 @@ export class RequestDetailComponent implements OnInit {
       case 'Select':
         const candidateDetails: any = {
           statusId: +CandidateStatus[data.item.CandidateStatus],
-          employeeId: data.item.EmployeeId
+          employeeId: data.item.EmployeeId,
+          projectId: this.projectId,
+          hiringRequestId: this.hiringRequestId
         };
         this.updateCandidateStatus(candidateDetails);
         break;
@@ -576,14 +600,18 @@ export class RequestDetailComponent implements OnInit {
   rejectCandidate(data: any) {
     const candidateDetails: any = {
       statusId: 4,
-      candidateId: data.item.CandidateId
+      candidateId: data.item.CandidateId,
+      projectId: this.projectId,
+      hiringRequestId: this.hiringRequestId
     };
     this.updateCandidateStatus(candidateDetails);
   }
   rejectEmployee(data: any) {
     const candidateDetails: any = {
       statusId: 4,
-      employeeId: data.item.EmployeeId
+      employeeId: data.item.EmployeeId,
+      projectId: this.projectId,
+      hiringRequestId: this.hiringRequestId
     };
     this.updateCandidateStatus(candidateDetails);
   }

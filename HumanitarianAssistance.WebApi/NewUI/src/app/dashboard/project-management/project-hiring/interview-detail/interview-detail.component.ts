@@ -406,9 +406,7 @@ export class InterviewDetailComponent implements OnInit {
           });
         }
         this.toastr.success('Language Added Successfully');
-        debugger;
         this.languagesList$.subscribe(res => {
-          debugger;
           this.interviewDetailForm.controls['LanguageList'].setValue(res);
         });
       }
@@ -490,7 +488,6 @@ export class InterviewDetailComponent implements OnInit {
     });
   }
   onChangeRatingBasedCriteria(questionId: any, score: MatSelectChange) {
-    debugger;
     if (
       this.ratingBasedCriteriaAnswerList.find(
         x => x.QuestionId === questionId
