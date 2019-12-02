@@ -64,7 +64,10 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                Experience = hr.Experience,
                                                Profession = hr.ProfessionDetails.ProfessionName,
                                                KnowledgeAndSkills = hr.KnowladgeAndSkillRequired,
-                                               HiringRequestStatus = hr.HiringRequestStatus
+                                               HiringRequestStatus = hr.HiringRequestStatus,
+                                               SpecificDutiesAndResponsibilities=hr.SpecificDutiesAndResponsblities,
+                                               SubmissionGuidelines = hr.SubmissionGuidlines,
+                                               HiringRequestCode = hr.HiringRequestCode
 
                                            }).FirstOrDefaultAsync();
                 response.ResponseData = requestDetail;

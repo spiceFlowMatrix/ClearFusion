@@ -16,9 +16,10 @@ import {
   IInterviewerDetailModel,
   InterviewQuestionDetailModel,
   InterviewDetailModel,
-  ISelectBoxModel
+  ISelectBoxModel,
+  TableActionsModel
 } from '../models/hiring-requests-models';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, findIndex } from 'rxjs/operators';
 import { MatDialog, MatSelectChange } from '@angular/material';
 import { AddNewLanguageComponent } from './add-new-language/add-new-language.component';
 import { AddNewTraningComponent } from './add-new-traning/add-new-traning.component';
@@ -26,6 +27,9 @@ import { RatingAction } from 'src/app/shared/enum';
 import { AddNewInterviewerComponent } from './add-new-interviewer/add-new-interviewer.component';
 import { DatePipe } from '@angular/common';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { GLOBAL } from 'src/app/shared/global';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
 
 @Component({
   selector: 'app-interview-detail',
@@ -41,7 +45,7 @@ export class InterviewDetailComponent implements OnInit {
     'Speaking'
   ]);
   traningHeaders$ = of([
-    'Traning Type',
+    'Training Type',
     'Name',
     'Country/City',
     'Start Date',
@@ -74,8 +78,10 @@ export class InterviewDetailComponent implements OnInit {
   ratingBasedCriteriaAnswerList: InterviewQuestionDetailModel[] = [];
   technicalAnswerList: InterviewQuestionDetailModel[] = [];
   ratingBasedDropDown: ISelectBoxModel[];
-  interviewDetails: IInterviewerDetailModel;
+  technicalQuestionDropdown: ISelectBoxModel[];
+  interviewDetails: InterviewDetailModel;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  actions: TableActionsModel;
   constructor(
     public dialog: MatDialog,
     private datePipe: DatePipe,
@@ -84,42 +90,70 @@ export class InterviewDetailComponent implements OnInit {
     private routeActive: ActivatedRoute,
     private router: Router,
     private hiringRequestService: HiringRequestsService,
+    private globalSharedService: GlobalSharedService,
+    private appurl: AppUrlService,
     private toastr: ToastrService
   ) {
     this.ratingBasedDropDown = [
       {
-        Id: 1,
-        value: '1-Poor'
-      },
-      {
-        Id: 2,
-        value: '2-Good'
+        Id: 0,
+        value: '0-Poor'
       },
       {
         Id: 3,
-        value: '3-Very Good'
+        value: '3-Below Average'
       },
       {
-        Id: 4,
-        value: '4-Excellent'
+        Id: 5,
+        value: '5-Average'
+      },
+      {
+        Id: 7,
+        value: '7-Above Average'
+      },
+      {
+        Id: 10,
+        value: '10-Outstanding'
+      }
+    ];
+
+    this.technicalQuestionDropdown = [
+      {
+        Id: 0,
+        value: '0-Poor'
+      },
+      {
+        Id: 10,
+        value: '10-Fair'
+      },
+      {
+        Id: 15,
+        value: '15-Good'
+      },
+      {
+        Id: 20,
+        value: '20-Excellent'
+      },
+      {
+        Id: 30,
+        value: '30-Perfect'
       }
     ];
 
     this.noticePeriodList$ = of([
-      { name: '5 Days', value: 5 },
-      { name: '10 Days', value: 10 },
-      { name: '15 Days', value: 15 },
-      { name: '20 Days', value: 20 },
-      { name: '25 Days', value: 25 },
-      { name: '30 Days', value: 30 },
-      { name: '35 Days', value: 35 },
-      { name: '40 Days', value: 40 },
-      { name: '45 Days', value: 45 }
+      { name: '15 Days', value: 1 },
+      { name: '30 Days', value: 2 },
+      { name: 'Others', value: 3 },
+
     ] as IDropDownModel[]);
 
     this.statusList$ = of([
-      { name: 'Recommend', value: 1 },
-      { name: 'Reject', value: 2 }
+      { name: 'Hire', value: 1 },
+      { name: '2nd Choice', value: 2 },
+      { name: 'Test Day', value: 3 },
+      { name: 'Recommended for Other Position', value: 4 },
+      { name: 'Reject', value: 5 },
+      { name: 'Over Qualified', value: 6 }
     ] as IDropDownModel[]);
 
     this.interviewDetailForm = this.fb.group({
@@ -153,6 +187,20 @@ export class InterviewDetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.actions = {
+      items: {
+        button: { status: false, text: '' },
+        delete: true,
+        download: false,
+        edit: false
+      },
+      subitems: {
+        button: { status: false, text: '' },
+        delete: false,
+        download: false,
+      }
+
+    };
     this.routeActive.queryParams.subscribe(params => {
       this.candidateId = +params['candId'];
       this.hiringRequestId = +params['hiringId'];
@@ -331,7 +379,7 @@ export class InterviewDetailComponent implements OnInit {
 
   addNewLanguage(): void {
     const dialogRef = this.dialog.open(AddNewLanguageComponent, {
-      width: '850px'
+      width: '950px'
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -395,7 +443,7 @@ export class InterviewDetailComponent implements OnInit {
             this.traningList$ = of(res);
           });
         }
-        this.toastr.success('Traning Added Successfully');
+        this.toastr.success('Training Added Successfully');
         this.traningList$.subscribe(res => {
           this.interviewDetailForm.controls['TraningList'].setValue(res);
         });
@@ -544,6 +592,8 @@ export class InterviewDetailComponent implements OnInit {
 
   //#region "setInterviewDetails"
   setInterviewDetails(data: any) {
+    data.CandidateId = this.candidateId;
+    data.HiringRequestId = this.hiringRequestId;
     this.interviewDetailForm = this.fb.group({
       CandidateId: data.CandidateId,
       HiringRequestId: data.HiringRequestId,
@@ -562,32 +612,75 @@ export class InterviewDetailComponent implements OnInit {
       CurrentTransport: data.CurrentTransport,
       CurrentMeal: data.CurrentMeal,
       ExpectationTransport: data.ExpectationTransport,
-      ExpectationMeal: data.ExpectationMeal
+      ExpectationMeal: data.ExpectationMeal,
+      LanguageList: data.LanguageList,
+      TraningList: data.TraningList
     });
     this.totalMarksObtain = data.TotalMarksObtain;
     this.marksObtain = data.MarksObtain;
     this.professionalCriteriaMarks = data.ProfessionalCriteriaMark;
     data.RatingBasedCriteriaList.forEach((element, i) => {
-      // this.ratingBasedCriteriaAnswerList.push({
-      //   QuestionId: element.QuestionId,
-      //   Score: element.Score
-      // });
       this.ratingBasedCriteriaQuestionList[i].selected = element.Score;
     });
     data.TechnicalQuestionList.forEach((element, i) => {
-      // this.technicalQuestionList.push({
-      //   QuestionId: element.QuestionId,
-      //   Score: element.Score
-      // });
       this.technicalQuestionList[i].selected = element.Score;
     });
     this.languagesList$ = of(data.LanguageList);
     this.traningList$ = of(data.TraningList);
     this.interviewerList$ = of(data.InterviewerList);
+
+    data.CandidateName = this.candidateDetails.FullName;
+    data.Qualification = this.candidateDetails.Qualification;
+    data.Position = this.hiringRequestDetail.Position;
+    data.DutyStation = this.hiringRequestDetail.Office;
+    data.MaritalStatus = '-';
+    data.PassportNumber = '-';
+    data.NameOfInstitute = '-';
+    data.DateOfBirth = this.candidateDetails.DateOfBirth;
+    this.interviewDetails = data;
   }
   //#endregion
 
+  //#region "onExportInterviewDetailsPdf"
+  onExportInterviewDetailsPdf() {
+    this.commonLoader.showLoader();
+    this.globalSharedService
+      .getFile(
+        this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetInterviewDetailReportPdf,
+        this.interviewDetails
+      )
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe();
+    this.commonLoader.hideLoader();
+  }
+  //#endregion
+
+  //#region "RouteBackToRequestDetailPage"
   backToRequestDetail() {
     window.history.back();
+  }
+
+  actionEventsLanguage(event: any) {
+    if (event.type === 'delete') {
+      const index = (this.interviewDetailForm.controls['LanguageList'].value as Array<any>)
+                                .findIndex(x => x.LanguageName === event.item.LanguageName);
+                    (this.interviewDetailForm.controls['LanguageList'].value as Array<any>).splice(index, 1);
+    }
+  }
+
+  actionEventsTraining(event: any) {
+    if (event.type === 'delete') {
+      const index = (this.interviewDetailForm.controls['TraningList'].value as Array<any>)
+                                .findIndex(x => x.LanguageName === event.item.LanguageName);
+                    (this.interviewDetailForm.controls['TraningList'].value as Array<any>).splice(index, 1);
+    }
+  }
+
+  actionEventsInterviewers(event: any) {
+    if (event.type === 'delete') {
+      const index = (this.interviewDetailForm.controls['InterviewerList'].value as Array<any>)
+                                .findIndex(x => x.EmployeeId === event.item.EmployeeId);
+                    (this.interviewDetailForm.controls['InterviewerList'].value as Array<any>).splice(index, 1);
+    }
   }
 }

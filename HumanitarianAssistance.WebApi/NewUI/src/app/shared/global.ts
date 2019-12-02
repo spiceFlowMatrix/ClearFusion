@@ -100,6 +100,7 @@ export class GLOBAL {
   public static API_HRConfiguration_GetAllExitInterviewQuestions = 'HRConfiguration/GetAllExitInterviewQuestions';
   public static API_HRConfiguration_UpsertExitInterviewQuestion = 'HRConfiguration/UpsertExitInterviewQuestion';
   public static API_HRConfiguration_GetSequenceNumber = 'HRConfiguration/GetSequenceNumber';
+  public static API_HRConfiguration_DeleteExitInterviewQuestion = 'HRConfiguration/DeleteExitInterviewQuestion';
   public static API_Policy_AddNewPolicy = 'Policy/AddEditPolicy';
   public static API_Policy_AddPolicyRepeatDays = 'Policy/AddPolicyRepeatDays';
   public static API_Policy_AddNewPolicyTimeSchedule = 'Policy/AddEditPolicyTimeSchedule';
@@ -520,6 +521,7 @@ export class GLOBAL {
   public static API_Pdf_GetJournalReportPdf = 'Pdf/GetJournalReportPdf';
 
   public static API_Pdf_GetCandidateDetailReportPdf = 'Pdf/GetCandidateDetailReportPdf';
+  public static API_Pdf_GetInterviewDetailReportPdf = 'Pdf/GetInterviewDetailReportPdf';
   //#endregion
 
   // Store

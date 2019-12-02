@@ -62,10 +62,12 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                         RequiredExperience = phd.Experience,
                         CurrentEducation = e.Name,
                         CurrentProfession = p.ProfessionName,
-                        CurrentExperience = (cd.RelevantExperienceInYear + cd.IrrelevantExperienceInYear) + " Years ",                      
+                        CurrentExperience = cd.RelevantExperienceInYear + cd.IrrelevantExperienceInYear + " Years",                     
                     }).ToList ();
 
                 List<CandidateDetailsPdfModel> summary = new List<CandidateDetailsPdfModel> ();
+                if(candidateDetail.Count>0)
+                {
                 var serial = 1;
                 foreach (var item in candidateDetail) {
                     summary.Add (new CandidateDetailsPdfModel {
@@ -87,8 +89,8 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                             IrrelevantExperienceInYear = item.IrrelevantExperienceInYear
                     });
                     serial = serial + 1;
+                  }
                 }
-
                 return await _pdfExportService.ExportToPdf (summary, "Pages/PdfTemplates/CandidateDetailReport.cshtml", true);
             } catch (Exception ex) {
                 throw new Exception (ex.Message);

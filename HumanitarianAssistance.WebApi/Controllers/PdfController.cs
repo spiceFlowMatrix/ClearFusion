@@ -169,6 +169,14 @@ namespace HumanitarianAssistance.WebApi.Controllers
             var file = await _mediator.Send(model);
             return File(file, "application/pdf", "CandidateDetailReport.pdf");
         }
+
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetInterviewDetailReportPdf([FromBody]GetInterviewDetailReportPdfQuery model)
+        {
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "InterviewDetailReport.pdf");
+        }
     }
 }
 

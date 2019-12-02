@@ -1,14 +1,17 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
-    <span class="action_header">Request Details
+    <span class="action_header">
+    <i class="fa fa-arrow-left bckicon" (click)="backToList()"></i>
+      Request Details
     <hum-button
       [type]="'edit'"
       [text]="'Edit'"
       (click)="editHiringRequest()"
     ></hum-button>
-    <hum-button *ngIf="!IsHiringRequestCompleted"  [type]="'save'" [text]="'complete '" (click)="onCompleteRequest()"></hum-button>
+    <hum-button *ngIf="!IsHiringRequestCompleted && !IsHiringRequestClosed"  [type]="'save'" [text]="'complete '" (click)="onCompleteRequest()"></hum-button>
+    <hum-button *ngIf="!IsHiringRequestClosed && !IsHiringRequestCompleted" [type]="'cancel'" (click)="onCloseRequest()" [text]="'close request'"></hum-button>
+
     <hum-button *ngIf="IsHiringRequestCompleted"  [type]="'completed'" [text]="'completed '"></hum-button>
-    <!-- <hum-button [type]="'cancel'" [text]="'close'"></hum-button> -->
-    <hum-button [type]="'cancel'" (click)="backToList()" [text]="'close'"></hum-button>
+    <hum-button *ngIf="IsHiringRequestClosed"  [type]="'cancel'" [text]="'Closed '" [disabled]="true"></hum-button>
     <hum-button [type]="'download'" [text]="'PDF Export'" (click)="onExportHiringRequestPdf()"></hum-button>
   </span>
     <div class="action_section"></div>
@@ -19,15 +22,16 @@
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-6">
-                <!-- <mat-card-title>
-                    {{ hiringRequestDetails.JobCode }}
-                </mat-card-title> -->
-                <!-- <mat-card-subtitle>
-          Description
-        </mat-card-subtitle> -->
-                <!-- <mat-card-content>
-          {{hiringRequestDetails.Description}}
-        </mat-card-content> -->
+                <h4> <span> Code: </span> {{ hiringRequestDetails.HiringRequestId }}</h4>
+                <h5> Specific Duties & Responsibilities</h5>
+                <mat-card-subtitle>
+                    {{hiringRequestDetails.SpecificDutiesAndResponsibilities}}
+                </mat-card-subtitle>
+                <h5>Submission Guildelines</h5>
+                <mat-card-subtitle>
+                    {{hiringRequestDetails.SubmissionGuidelines}}
+                </mat-card-subtitle>
+                <br>
                 <h5>Hiring Request Details</h5>
                 <table class="table table-striped">
                     <tbody>
@@ -92,30 +96,33 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-12">
-        <div class="col-md-6">
-            <h5>Required Qualifications</h5>
-            <mat-card-subtitle>
-                {{ hiringRequestDetails.KnowledgeAndSkills }}
-            </mat-card-subtitle>
-            <table class="table table-striped">
-                <tbody>
-                    <tr>
-                        <td>Education Degree</td>
-                        <td>{{ hiringRequestDetails.EducationDegree }}</td>
-                    </tr>
-                    <tr>
-                        <td>Profession</td>
-                        <td>{{ hiringRequestDetails.Profession }}</td>
-                    </tr>
-                    <tr>
-                        <td>Experience(In Years)</td>
-                        <td>{{ hiringRequestDetails.Experience }}</td>
-                    </tr>
-                </tbody>
-            </table>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="col-md-6">
+                <h5>Required Qualifications</h5>
+                <mat-card-subtitle>
+                    {{ hiringRequestDetails.KnowledgeAndSkills }}
+                </mat-card-subtitle>
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <td>Education Degree</td>
+                            <td>{{ hiringRequestDetails.EducationDegree }}</td>
+                        </tr>
+                        <tr>
+                            <td>Profession</td>
+                            <td>{{ hiringRequestDetails.Profession }}</td>
+                        </tr>
+                        <tr>
+                            <td>Experience(In Years)</td>
+                            <td>{{ hiringRequestDetails.Experience }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-12">
             <mat-tab-group>
@@ -127,7 +134,7 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
                         <mat-form-field>
-                            <mat-select placeholder="Status Filter" (selectionChange)="onStatusFilterCandidate($event)" name="statusFilter" multiple>
+                            <mat-select placeholder="Status Filter" (selectionChange)="onStatusFilterCandidate($event)" name="statusFilter" multiple [(ngModel)]="statusSelection">
                                 <mat-option *ngFor="let item of statusFilter" [value]="item.Id">{{ item.value }}
                                 </mat-option>
                             </mat-select>
@@ -146,7 +153,7 @@
                         </mat-form-field>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <mat-form-field>
-                            <mat-select placeholder="Status Filter" (selectionChange)="onStatusFilter($event)" name="statusFilter" multiple>
+                            <mat-select placeholder="Status Filter" (selectionChange)="onStatusFilter($event)" name="statusFilter" multiple [(ngModel)]="statusSelection">
                                 <mat-option *ngFor="let item of statusFilter" [value]="item.Id">{{ item.value }}
                                 </mat-option>
                             </mat-select>
