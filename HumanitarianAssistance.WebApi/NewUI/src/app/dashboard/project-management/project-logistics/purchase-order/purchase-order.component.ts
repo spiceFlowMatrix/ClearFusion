@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output, OnChanges } from '@angular/core';
 import { SubmitPurchaseListComponent } from '../submit-purchase-list/submit-purchase-list.component';
 import { MatDialog } from '@angular/material';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LogisticService } from '../logistic.service';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -26,7 +26,8 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
 
   constructor(private dialog: MatDialog,
     private routeActive: ActivatedRoute,
-    private logisticservice: LogisticService) { }
+    private logisticservice: LogisticService,
+    private router: Router) { }
 
   ngOnInit() {
   }
@@ -37,23 +38,24 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
     }
   }
   submitPurchase() {
-    const dialogRef = this.dialog.open(SubmitPurchaseListComponent, {
-      width: '600px',
-      data: {requestedItems: this.requestedItems}
-    });
+    this.router.navigate(['submit-purchase'], { relativeTo: this.routeActive });
+    // const dialogRef = this.dialog.open(SubmitPurchaseListComponent, {
+    //   width: '600px',
+    //   data: {requestedItems: this.requestedItems}
+    // });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined && result.data != null ) {
-        this.selectedItems = result.data;
-        this.purchasedItemsData$ = of(this.selectedItems).pipe(
-          map(r => r.map(v => ({
-            Item: v.Items,
-            Quantity: v.Quantity,
-            FinalCost: v.EstimatedCost,
-           }) )));
-        this.selectedItemChange.emit(this.selectedItems);
-      }
-    });
+    // dialogRef.afterClosed().subscribe(result => {
+    //   if (result !== undefined && result.data != null ) {
+    //     this.selectedItems = result.data;
+    //     this.purchasedItemsData$ = of(this.selectedItems).pipe(
+    //       map(r => r.map(v => ({
+    //         Item: v.Items,
+    //         Quantity: v.Quantity,
+    //         FinalCost: v.EstimatedCost,
+    //        }) )));
+    //     this.selectedItemChange.emit(this.selectedItems);
+    //   }
+    // });
   }
 
   getPurchasedItemsList() {

@@ -28,17 +28,17 @@ namespace HumanitarianAssistance.Application.Project.Queries
                 .Select(y=> new LogisticItemModel{
                     Id = y.LogisticItemId,
                     Item = y.StoreInventoryItem.ItemName,
+                    ItemCode= y.StoreInventoryItem.ItemCode,
                     Quantity = y.Quantity,
                     EstimatedCost = y.EstimatedUnitCost,
-                    //Availability = (_dbContext.StoreItemPurchases.Where(a=>a.IsDeleted==false && a.InventoryItem==y.ItemId).Sum(v=>v.Quantity)),
                     ItemId = y.ItemId
                 })
                 .ToListAsync();
 
                 
                 foreach(var item in itemlist){
-                    var purchaseitems = _dbContext.StoreItemPurchases.Where(a=>a.IsDeleted==false && a.InventoryItem== item.ItemId).Sum(v=>v.Quantity);
-                    var issueditems = _dbContext.StorePurchaseOrders.Where(a=>a.IsDeleted==false && a.InventoryItem== item.ItemId).Sum(v=>v.IssuedQuantity);
+                    var purchaseitems = _dbContext.StoreItemPurchases.Where(a=>a.IsDeleted==false && a.InventoryItem== item.ItemId).Select(v=>v.Quantity).DefaultIfEmpty(0).Sum();
+                    var issueditems = _dbContext.StorePurchaseOrders.Where(a=>a.IsDeleted==false && a.InventoryItem== item.ItemId).Select(v=>v.IssuedQuantity).DefaultIfEmpty(0).Sum();
                     item.Availability = purchaseitems - issueditems;
                 }
                 response.data.LogisticsItemList = itemlist;

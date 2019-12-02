@@ -30,6 +30,7 @@ import { RequestDetailComponent } from './project-hiring/request-detail/request-
 import { HiringRequestsComponent } from './project-hiring/hiring-requests/hiring-requests.component';
 import { InterviewDetailComponent } from './project-hiring/interview-detail/interview-detail.component';
 import { AddLogisticRequestComponent } from './project-logistics/add-logistic-request/add-logistic-request.component';
+import { SubmitPurchaseListComponent } from './project-logistics/submit-purchase-list/submit-purchase-list.component';
 
 const moduleId: number = ApplicationModule.Projects;
 
@@ -218,8 +219,27 @@ const routes: Routes = [
             data: {
               module: moduleId,
               page: projectPagesMaster.ProjectIndicators
-            }
+            },
+          //   children: [
+          //     {
+          //       path: '',
+          //       component: LogisticRequestDetailsComponent
+          //     },
+          //     {
+          //     path: 'submit-purchase',
+          //     component: SubmitPurchaseListComponent
+          //   }
+          // ]
           },
+          {
+            path: 'logistic-requests/:id/submit-purchase',
+            component: SubmitPurchaseListComponent,
+            canActivate: [RoleGuardService],
+            data: {
+              module: moduleId,
+              page: projectPagesMaster.ProjectIndicators
+            },
+          }
         ]
       }
 

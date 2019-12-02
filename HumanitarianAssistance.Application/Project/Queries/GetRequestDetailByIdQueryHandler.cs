@@ -30,7 +30,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     RequestId = y.LogisticRequestsId,
                     ProjectId = y.ProjectId,
                     Description = y.Description,
-                    Status = y.ComparativeStatus,
+                    Status = y.Status,
                     TotalCost = y.TotalCost,
                     BudgetLine = y.ProjectBudgetLineDetail.BudgetCode,
                     Currency = y.CurrencyDetails.CurrencyCode,

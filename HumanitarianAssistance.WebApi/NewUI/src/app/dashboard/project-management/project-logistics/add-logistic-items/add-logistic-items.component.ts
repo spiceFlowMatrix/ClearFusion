@@ -24,9 +24,9 @@ export class AddLogisticItemsComponent implements OnInit {
 
   ngOnInit() {
     this.addLogisticItemsForm = this.fb.group({
-      Item: ['', Validators.required],
-      RequestedUnits: ['', Validators.required],
-      EstimatedUnitCost: ['', Validators.required]
+      Item: [this.data.ItemId, Validators.required],
+      RequestedUnits: [this.data.Quantity, Validators.required],
+      EstimatedUnitCost: [this.data.EstimatedCost, Validators.required]
     });
     this.storeItemsList = this.data.Storeitems;
   }
@@ -36,12 +36,33 @@ export class AddLogisticItemsComponent implements OnInit {
       this.toastr.warning('Please fill all required fields');
       return false;
     }
-    const model = {
-      ItemId : value.Item,
-      RequestedUnits : value.RequestedUnits,
-      EstimatedUnitCost : value.EstimatedUnitCost
-    };
-    this.dialogRef.close({data: model});
+    if (this.data.Id == null) {
+      const model = {
+        ItemId : value.Item,
+        RequestedUnits : value.RequestedUnits,
+        EstimatedUnitCost : value.EstimatedUnitCost
+      };
+      this.dialogRef.close({data: model});
+    } else {
+      this.commonLoader.showLoader();
+      const model = {
+        Id: this.data.Id,
+        ItemId : value.Item,
+        RequestedUnits : value.RequestedUnits,
+        EstimatedUnitCost : value.EstimatedUnitCost,
+        RequestId: this.data.RequestId
+      };
+      this.logisticservice.editRequestItems(model).subscribe(res => {
+        if (res.StatusCode === 200) {
+          this.commonLoader.hideLoader();
+          this.dialogRef.close({data: res.Message});
+        } else {
+          this.commonLoader.hideLoader();
+          this.dialogRef.close({data: res.Message});
+        }
+      });
+    }
+
   }
   cancelItem() {
     this.dialogRef.close({data: null});
