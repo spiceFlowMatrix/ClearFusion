@@ -1,4 +1,52 @@
-<div class="row">
+<lib-sub-header-template>
+  <span class="action_header main-heading"><i (click)="goBack()" class="fas fa-arrow-left"></i> Logistic Request Form
+      <hum-button *ngIf="!isRequestFormSubmitted" (click)="hiddenSubmitBtn.click()" [type]="'save'" [text]="buttonText"></hum-button>
+      <hum-button *ngIf="isRequestFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+      <hum-button (click)="goBack()" [type]="'cancel'" [text]="'CANCEL'"></hum-button>
+  </span>
+  <div class="action_section">
+  </div>
+</lib-sub-header-template>
+<mat-card class="margin_top_10" humAddScroll>
+  <div class="row">
+    <div class="col-md-12">
+      <form (ngSubmit)="saveRequest()" [formGroup]="addLogisticRequestForm">
+      <button #hiddenSubmitBtn type="submit" style="display: none;"></button>
+      <h4>Request Details</h4>
+      <p><span class="font_weight_600">Note:</span> <span class="color_gray">The Currency is locked to USD, Please see documentation in the link provided below for clarification.</span></p>
+      <p><a href="https://gitlab.com/edgsolutions-engineering/clear-fusion/wikis/Projects/logistics-management-panel#adding-requests">https://gitlab.com/edgsolutions-engineering/clear-fusion/wikis/Projects/logistics-management-panel#adding-requests</a></p>
+      <mat-form-field style="width: 50%;">
+        <textarea rows="3" matInput placeholder="Description" formControlName="Description"></textarea>
+      </mat-form-field>
+      <div class="row">
+        <div class="col-md-3">
+          <lib-hum-dropdown id="dropdown" [validation]="addLogisticRequestForm.controls['OfficeId'].hasError('required')" [options]="officeId$" formControlName="OfficeId" [placeHolder]="'Office'"
+          ></lib-hum-dropdown>
+          <lib-hum-dropdown [validation]="addLogisticRequestForm.controls['BudgetLineId'].hasError('required')" [options]="budgetLineId$" formControlName="BudgetLineId" [placeHolder]="'BudgetLine'"
+          ></lib-hum-dropdown>
+        </div>
+        <div class="col-md-3">
+          <lib-hum-dropdown [disabled]="true" id="dropdown" [validation]="addLogisticRequestForm.controls['CurrencyId'].hasError('required')" [options]="currencyId$" formControlName="CurrencyId" [placeHolder]="'Currency'"
+          ></lib-hum-dropdown>
+        </div>
+      </div>
+      <h4 class="main-heading" style="padding-left: 0px !important">Requested Items
+          <hum-button (click)="addNewItem()" [type]="'add'" [text]="'REQUEST NEW ITEM'" ></hum-button>
+      </h4>
+      <p class="color_gray">All estimated costs are considered to be in the selected currency above.</p>
+      <table class="table table-striped" style="width:50%;">
+        <tr>
+          <td class="font_weight_600">Total Estimated Cost</td>
+          <td>{{totalcost}}</td>
+        </tr>
+      </table>
+      <p><span class="font_weight_600">Note:</span> <span class="color_gray">When saving this Request, the process type depends directly on the total estimated cost.</span></p>
+      <hum-table [headers]="requestedItemsHeaders$" [actions]="actions" [items]="requestedItems$" (actionClick)="onActionClick($event)" [hideColums$]="hideItemColums"></hum-table>
+    </form>
+    </div>
+  </div>
+</mat-card>
+<!-- <div class="row">
   <div class="col-md-12">
     <div mat-dialog-title><h4>Add New Request</h4></div>
     <form [formGroup]="addLogisticRequestForm" (ngSubmit)="addRequest(addLogisticRequestForm.value)">
@@ -28,4 +76,4 @@
       <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="cancelRequest()" class="pull-right"></hum-button>
     </form>
   </div>
-</div>
+</div> -->

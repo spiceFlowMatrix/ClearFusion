@@ -229,19 +229,31 @@ namespace HumanitarianAssistance.Common.Enums {
     }
 
     public enum LogisticRequestStatus {
+        [Description ("New Request")]
         NewRequest = 1,
+        [Description ("Cancelled")]
         Cancelled = 2,
+        [Description ("Issue Purchase Order")]
         IssuePurchaseOrder = 3,
+        [Description ("Complete Purchase")]
         CompletePurchase = 4,
+        [Description ("Control Approved")]
         ControlApproved = 5,
+        [Description ("Control Rejected")]
         ControlRejected = 6
     }
     public enum LogisticComparativeStatus {
+        [Description ("Pending")]
         Pending = 1,
+        [Description ("Cancelled")]
         Cancelled = 2,
+        [Description ("Issued")]
         Issued = 3,
+        [Description ("Statement Submitted")]
         StatementSubmitted = 4,
+        [Description ("Reject Statement")]
         RejectStatement = 5,
+        [Description ("Approve Statement")]
         ApproveStatement = 6,
     }
     //#region "StoreItemGroups"
