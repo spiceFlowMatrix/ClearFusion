@@ -17,7 +17,7 @@ import { takeUntil } from 'rxjs/operators';
 import { AddHiringRequestComponent } from '../add-hiring-request/add-hiring-request.component';
 import { MatDialog, MatSelectChange } from '@angular/material';
 import { AddNewCandidateComponent } from '../add-new-candidate/add-new-candidate.component';
-import { CandidateStatus, CandidateAction, Shift } from 'src/app/shared/enum';
+import { CandidateStatus, CandidateAction, Shift, HiringRequestStatus } from 'src/app/shared/enum';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
@@ -73,6 +73,7 @@ export class RequestDetailComponent implements OnInit {
   completeRequestModel: CompleteHiringRequestModel;
   hiringRequestId: any;
   IsHiringRequestCompleted: boolean;
+  IsHiringRequestClosed: boolean;
   projectId: any;
   candidateId: any;
   screenHeight: any;
@@ -101,6 +102,7 @@ export class RequestDetailComponent implements OnInit {
 
   ngOnInit() {
     this.IsHiringRequestCompleted = false;
+    this.IsHiringRequestClosed = false;
     this.hiringRequestDetails = {
       HiringRequestId: null,
       JobGrade: '',
@@ -202,8 +204,10 @@ export class RequestDetailComponent implements OnInit {
                 KnowledgeAndSkills: response.data.KnowledgeAndSkills,
                 HiringRequestStatus: response.data.HiringRequestStatus
               };
-              if (this.hiringRequestDetails.HiringRequestStatus === 3) {
+              if (this.hiringRequestDetails.HiringRequestStatus === HiringRequestStatus.Completed) {
                 this.IsHiringRequestCompleted = true;
+              } else if (this.hiringRequestDetails.HiringRequestStatus === HiringRequestStatus.Closed) {
+                this.IsHiringRequestClosed = true;
               }
             }
             this.loader.hideLoader();
@@ -648,6 +652,26 @@ export class RequestDetailComponent implements OnInit {
       );
   }
   //#endregion
+  onCloseRequest() {
+    this.completeRequestModel = {
+      HiringRequestId: [],
+      ProjectId: this.projectId
+    };
+
+    this.completeRequestModel.HiringRequestId.push(this.hiringRequestId);
+    this.hiringRequestService
+      .IsCloasedHrDetail(this.completeRequestModel)
+      .subscribe(
+        (responseData: IResponseData) => {
+          if (responseData.statusCode === 200) {
+            this.IsHiringRequestClosed = true;
+          } else if (responseData.statusCode === 400) {
+            this.toastr.error('Something went wrong .Please try again.');
+          }
+        },
+        error => {}
+      );
+  }
 
   backToList() {
     window.history.back();
