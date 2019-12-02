@@ -79,6 +79,7 @@ export class RequestDetailComponent implements OnInit {
   screenWidth: any;
   scrollStyles: any;
   actions: TableActionsModel;
+  statusSelection = [0, 1, 2];
   constructor(
     public dialog: MatDialog,
     private globalSharedService: GlobalSharedService,
@@ -334,7 +335,14 @@ export class RequestDetailComponent implements OnInit {
               } as ICandidateDetailList;
             })
           );
-          this.newCandidatesList2$ = this.newCandidatesList$;
+         // this.newCandidatesList2$ = this.newCandidatesList$;
+         this.newCandidatesList$.subscribe(res => {
+          this.newCandidatesList2$ = of(
+            res.filter(x =>
+              this.statusSelection.includes(CandidateStatus[x.CandidateStatus])
+            )
+          );
+        });
         }
         this.loader.hideLoader();
       },
@@ -415,7 +423,14 @@ export class RequestDetailComponent implements OnInit {
               } as IExistingCandidateList;
             })
           );
-          this.existingCandidatesList$ = this.existingCandidatesList2$;
+          // this.existingCandidatesList$ = this.existingCandidatesList2$;
+          this.existingCandidatesList$.subscribe(res => {
+            this.existingCandidatesList2$ = of(
+              res.filter(x =>
+                this.statusSelection.includes(CandidateStatus[x.CandidateStatus])
+              )
+            );
+          });
         }
         this.loader.hideLoader();
       },
@@ -613,6 +628,7 @@ export class RequestDetailComponent implements OnInit {
   }
 
   onStatusFilterCandidate(data: MatSelectChange) {
+    debugger;
     if (data.value == '') {
       this.getAllCandidateList(this.filterValueModel);
     } else {

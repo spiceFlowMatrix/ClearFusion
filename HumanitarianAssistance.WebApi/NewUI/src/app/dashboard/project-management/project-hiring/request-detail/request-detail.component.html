@@ -127,7 +127,7 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
                         <mat-form-field>
-                            <mat-select placeholder="Status Filter" (selectionChange)="onStatusFilterCandidate($event)" name="statusFilter" multiple>
+                            <mat-select placeholder="Status Filter" (selectionChange)="onStatusFilterCandidate($event)" name="statusFilter" multiple [(ngModel)]="statusSelection">
                                 <mat-option *ngFor="let item of statusFilter" [value]="item.Id">{{ item.value }}
                                 </mat-option>
                             </mat-select>
@@ -146,7 +146,7 @@
                         </mat-form-field>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <mat-form-field>
-                            <mat-select placeholder="Status Filter" (selectionChange)="onStatusFilter($event)" name="statusFilter" multiple>
+                            <mat-select placeholder="Status Filter" (selectionChange)="onStatusFilter($event)" name="statusFilter" multiple [(ngModel)]="statusSelection">
                                 <mat-option *ngFor="let item of statusFilter" [value]="item.Id">{{ item.value }}
                                 </mat-option>
                             </mat-select>
