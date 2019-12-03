@@ -5,6 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LogisticService } from '../logistic.service';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { LogisticRequestStatus } from 'src/app/shared/enum';
+import { ToastrService } from 'ngx-toastr';
+import { GoodsRecievedUploadComponent } from '../goods-recieved-upload/goods-recieved-upload.component';
 
 @Component({
   selector: 'app-purchase-order',
@@ -19,15 +22,18 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
   @Input() requestedItems: any[];
   @Input() requestId;
   @Output() selectedItemChange = new EventEmitter();
+  @Output() StatusChange = new EventEmitter();
 
   purchasedItemsHeaders$ = of(['Item', 'Quantity', 'Final Cost']);
   purchasedItemsData$ = of([]);
   selectedItems: any[];
+  goodsNoteSubmitted = false;
 
   constructor(private dialog: MatDialog,
     private routeActive: ActivatedRoute,
     private logisticservice: LogisticService,
-    private router: Router) { }
+    private router: Router,
+    public toastr: ToastrService) { }
 
   ngOnInit() {
   }
@@ -39,23 +45,6 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
   }
   submitPurchase() {
     this.router.navigate(['submit-purchase'], { relativeTo: this.routeActive });
-    // const dialogRef = this.dialog.open(SubmitPurchaseListComponent, {
-    //   width: '600px',
-    //   data: {requestedItems: this.requestedItems}
-    // });
-
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result !== undefined && result.data != null ) {
-    //     this.selectedItems = result.data;
-    //     this.purchasedItemsData$ = of(this.selectedItems).pipe(
-    //       map(r => r.map(v => ({
-    //         Item: v.Items,
-    //         Quantity: v.Quantity,
-    //         FinalCost: v.EstimatedCost,
-    //        }) )));
-    //     this.selectedItemChange.emit(this.selectedItems);
-    //   }
-    // });
   }
 
   getPurchasedItemsList() {
@@ -73,4 +62,31 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
     });
   }
 
+  rejectPurchaseOrder() {
+    this.logisticservice.rejectPurchaseOrder(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.StatusChange.emit(LogisticRequestStatus['Issue Purchase Order']);
+      } else {
+         this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  approvePurchaseOrder() {
+    if (!this.goodsNoteSubmitted) {
+      const dialogRef = this.dialog.open(GoodsRecievedUploadComponent, {
+        width: '450px',
+        data: {RequestId: this.requestId}
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result !== undefined && result.data != null ) {
+          const dialogdata = result.data;
+          } else {
+            this.toastr.warning('Item already exists!');
+          }
+      });
+    } else {
+
+    }
+  }
 }

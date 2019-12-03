@@ -14,6 +14,7 @@ namespace HumanitarianAssistance.Domain.Entities
         public int LeaveReasonId { get; set; }
         [StringLength(50)]
         public string ReasonName { get; set; }
+        public string Description { get; set; }
         public int Unit { get; set; }
     }
 }

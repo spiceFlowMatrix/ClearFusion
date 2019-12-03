@@ -114,9 +114,9 @@ export class LogisticService {
     );
   }
 
-  completePurchaseOrder(value) {
+  submitPurchaseOrder(value) {
     return this.globalService.post(
-      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_CompletePurchaseOrder,
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_SubmitPurchaseOrder,
       value
     );
   }
@@ -224,6 +224,14 @@ export class LogisticService {
     return this.globalService.post(
       this.appurl.getApiUrl() +
         GLOBAL.API_ProjectLogistics_ApproveComparativeStatement,
+        requestId
+    );
+  }
+
+  rejectPurchaseOrder(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_RejectPurchaseOrder,
         requestId
     );
   }

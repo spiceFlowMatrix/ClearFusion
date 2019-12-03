@@ -182,7 +182,9 @@ namespace HumanitarianAssistance.Common.Enums {
         DonorDetail = 9,
         StorePurchase = 10,
         EmployeeProfile = 11,
-        ComparativeStatement = 12
+        ComparativeStatement = 12,
+        HiringRequestCandidateCV = 13,
+        ProjectLogisticPurchase = 14
     }
 
     public enum DocumentFileTypes {
@@ -235,7 +237,7 @@ namespace HumanitarianAssistance.Common.Enums {
         Cancelled = 2,
         [Description ("Issue Purchase Order")]
         IssuePurchaseOrder = 3,
-        [Description ("Complete Purchase")]
+        [Description ("Purchase Submitted")]
         CompletePurchase = 4,
         [Description ("Control Approved")]
         ControlApproved = 5,

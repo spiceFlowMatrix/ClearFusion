@@ -382,6 +382,16 @@ Currency: '', BudgetLine: '', Office: ''};
     });
   }
 
+  rejectPurchaseOrder() {
+    this.logisticservice.rejectPurchaseOrder(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.requestDetail.Status = LogisticRequestStatus['Issue Purchase Order'];
+      } else {
+         this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
 }
 interface RequestDetail {
   RequestId;
