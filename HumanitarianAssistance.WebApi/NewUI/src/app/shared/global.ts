@@ -164,6 +164,7 @@ export class GLOBAL {
   public static API_code_GetAllOffice = 'code/GetAllOfficeDetails';
   public static API_HRConfiguration_GetOfficeList = 'HRConfiguration/GetOfficeList';
   public static API_HRConfiguration_GetDepartmentList = 'HRConfiguration/GetDepartmentList';
+  public static API_HRConfiguration_GetLeaveTypeList = 'HRConfiguration/GetLeaveTypeList';
   public static API_HRConfiguration_GetJobGradeList = 'HRConfiguration/GetJobGradeList';
   public static API_HRConfiguration_GetAttendanceGroupList = 'HRConfiguration/GetAttendanceGroupList';
   public static API_HRConfiguration_GetProfessionList = 'HRConfiguration/GetProfessionList';

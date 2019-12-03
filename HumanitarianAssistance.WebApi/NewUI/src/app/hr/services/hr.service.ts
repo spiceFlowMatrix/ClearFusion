@@ -265,6 +265,15 @@ export class HrService {
       );
   }
   //#endregion
+
+  //#region "getLeaveTypeList"
+  getLeaveTypeList(pageModel: any): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_GetLeaveTypeList, pageModel
+      );
+  }
+  //#endregion
 }
 
 
