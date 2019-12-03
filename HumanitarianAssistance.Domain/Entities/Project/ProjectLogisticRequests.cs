@@ -29,5 +29,6 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public virtual ProjectBudgetLineDetail ProjectBudgetLineDetail { get; set; }
         [ForeignKey("CurrencyId")]
         public virtual CurrencyDetails CurrencyDetails { get; set; }
+        public DateTime? PurchaseDate { get; set; }
     }
 }
