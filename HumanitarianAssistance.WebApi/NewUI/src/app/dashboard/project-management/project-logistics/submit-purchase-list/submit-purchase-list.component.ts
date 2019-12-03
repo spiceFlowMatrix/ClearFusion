@@ -9,6 +9,7 @@ import { TableActionsModel } from 'projects/library/src/public_api';
 import { LogisticService } from '../logistic.service';
 import { map } from 'rxjs/operators';
 import { PurchaseFinalCostComponent } from '../purchase-final-cost/purchase-final-cost.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-submit-purchase-list',
@@ -41,11 +42,13 @@ export class SubmitPurchaseListComponent implements OnInit {
   hideItemColums: any;
   hideDocColums: any;
   docData$: Observable<any>;
+  isFormSubmitted = false;
   constructor(private router: Router,
     private routeActive: ActivatedRoute,
     private fb: FormBuilder,
     private logisticservice: LogisticService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    public toastr: ToastrService) { }
 
   ngOnInit() {
     // this.itemdata = this.data.requestedItems.map(function(val) {
@@ -207,6 +210,25 @@ export class SubmitPurchaseListComponent implements OnInit {
         Id: i,
         FileName: v[0].name,
        }) )));
+  }
+
+  submitPurchaseOrder() {
+    if (!this.purchaseSubmitForm.valid) {
+      return;
+    }
+    if (this.attachments.length === 0) {
+      this.toastr.warning('Please upload attachment!');
+      return;
+    }
+    const item = this.requestItemList.map(v => ({
+        Id: v.Id,
+        FinalCost: v.EstimatedCost
+       }) );
+    const model = {
+      PurchaseDate: this.purchaseSubmitForm.get('PurchaseDate').value,
+      ItemModel: item,
+      RequestId: this.requestId
+    };
   }
 
   cancelSubmission() {

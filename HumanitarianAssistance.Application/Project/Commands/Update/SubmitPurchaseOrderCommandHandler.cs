@@ -13,16 +13,16 @@ using HumanitarianAssistance.Common.Enums;
 
 namespace HumanitarianAssistance.Application.Project.Commands.Update
 {
-    public class CompletePurchaseOrderCommandHandler : IRequestHandler<CompletePurchaseOrderCommand, ApiResponse>
+    public class SubmitPurchaseOrderCommandCommandHandler : IRequestHandler<SubmitPurchaseOrderCommandCommand, ApiResponse>
     {
         private HumanitarianAssistanceDbContext _dbContext;
         private IMapper _mapper;
-        public CompletePurchaseOrderCommandHandler(HumanitarianAssistanceDbContext dbContext, IMapper mapper)
+        public SubmitPurchaseOrderCommandCommandHandler(HumanitarianAssistanceDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
         }
-        public async Task<ApiResponse> Handle(CompletePurchaseOrderCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Handle(SubmitPurchaseOrderCommandCommand request, CancellationToken cancellationToken)
         {
             ApiResponse response = new ApiResponse();
             try

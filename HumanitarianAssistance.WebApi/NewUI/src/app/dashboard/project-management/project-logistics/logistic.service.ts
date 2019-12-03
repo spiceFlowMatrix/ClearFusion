@@ -114,7 +114,7 @@ export class LogisticService {
     );
   }
 
-  completePurchaseOrder(value) {
+  submitPurchaseOrder(value) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_CompletePurchaseOrder,
       value

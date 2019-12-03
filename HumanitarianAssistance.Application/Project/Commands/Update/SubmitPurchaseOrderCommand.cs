@@ -4,13 +4,13 @@ using MediatR;
 
 namespace HumanitarianAssistance.Application.Project.Commands.Update
 {
-    public class CompletePurchaseOrderCommand : BaseModel, IRequest<ApiResponse>
+    public class SubmitPurchaseOrderCommandCommand : BaseModel, IRequest<ApiResponse>
     {
-        public List<CompletePurchaseOrderModel> submittedList { get; set; }
+        public List<SubmitPurchaseOrderCommandModel> submittedList { get; set; }
         public long Status { get; set; }
     }
 
-    public class CompletePurchaseOrderModel
+    public class SubmitPurchaseOrderCommandModel
     {
         public long Id { get; set; }
         public double FinalCost { get; set; }

@@ -228,7 +228,7 @@ export class GLOBAL {
   public static API_ProjectLogistics_EditLogisticRequestItems = 'ProjectLogistic/EditLogisticRequestItems';
   public static API_ProjectLogistics_CancelLogisticRequest = 'ProjectLogistic/CancelLogisticRequest';
   public static API_ProjectLogistics_IssuePurchaseOrder = 'ProjectLogistic/IssuePurchaseOrder';
-  public static API_ProjectLogistics_CompletePurchaseOrder = 'ProjectLogistic/CompletePurchaseOrder';
+  public static API_ProjectLogistics_SubmitPurchaseOrder = 'ProjectLogistic/SubmitPurchaseOrder';
   public static API_ProjectLogistics_GetPurchasedItemsList = 'ProjectLogistic/GetPurchasedItemsList';
   public static API_ProjectLogistics_CancelComparativeRequest = 'ProjectLogistic/CancelComparativeRequest';
   public static API_ProjectLogistics_IssueComparativeStatement = 'ProjectLogistic/IssueComparativeStatement';

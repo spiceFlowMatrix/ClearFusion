@@ -125,7 +125,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         }
 
         [HttpPost]
-        public async Task<ApiResponse> CompletePurchaseOrder([FromBody]CompletePurchaseOrderCommand model)
+        public async Task<ApiResponse> SubmitPurchaseOrder([FromBody]CompletePurchaseOrderCommand model)
         {   
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             model.ModifiedById = userId;
