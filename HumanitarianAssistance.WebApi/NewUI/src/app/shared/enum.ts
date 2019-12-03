@@ -587,6 +587,7 @@ export enum HiringRequestStatus {
 }
 
 export enum LogisticComparativeStatus {
+  NotValid = 0,
   'Pending' = 1,
   'Cancelled' = 2,
   'Issued' = 3,

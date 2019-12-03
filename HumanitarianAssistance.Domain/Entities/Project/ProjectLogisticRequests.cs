@@ -12,7 +12,8 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1)]
         public long LogisticRequestsId { get; set; }
-        public string RequestName { get; set; }
+        public string RequestCode { get; set; }
+        public string Description { get; set; }
         public int Status { get; set; }
         public double TotalCost { get; set; }
         public long ProjectId { get; set; }

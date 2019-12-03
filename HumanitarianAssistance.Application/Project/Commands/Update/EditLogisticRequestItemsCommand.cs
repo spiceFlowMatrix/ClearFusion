@@ -9,7 +9,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
         public long Id { get; set; }
         public long RequestId { get; set; }
         public long ItemId { get; set; }
-        public long Quantity { get; set; }
-        public double EstimatedCost { get; set; }
+        public long RequestedUnits { get; set; }
+        public double EstimatedUnitCost { get; set; }
     }
 }

@@ -22,7 +22,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update {
             try {
 
                 if (request.candidateId != 0) {
-                    var candidateDetails = await _dbContext.HiringRequestCandidateStatus.Where (x => x.CandidateId == request.candidateId && x.IsDeleted == false).FirstOrDefaultAsync ();
+                    var candidateDetails = await _dbContext.HiringRequestCandidateStatus
+                        .Where (x => x.CandidateId == request.candidateId && x.IsDeleted == false && x.HiringRequestId == request.hiringRequestId && x.ProjectId == request.projectId).FirstOrDefaultAsync ();
                     if (request.statusId == 4) {
                         candidateDetails.CandidateStatus = 4;
                     } else if (candidateDetails.CandidateStatus != 3 || candidateDetails.CandidateStatus != 4) {
@@ -33,7 +34,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update {
                     await _dbContext.SaveChangesAsync ();
                     response.data.CandidateStatus = candidateDetails;
                 } else if (request.employeeId != 0) {
-                    var candidateDetails = await _dbContext.HiringRequestCandidateStatus.Where (x => x.EmployeeID == request.employeeId && x.IsDeleted == false).FirstOrDefaultAsync ();
+                    var candidateDetails = await _dbContext.HiringRequestCandidateStatus.Where (x => x.EmployeeID == request.employeeId && x.IsDeleted == false && x.HiringRequestId == request.hiringRequestId && x.ProjectId == request.projectId).FirstOrDefaultAsync ();
                     if (request.statusId == 4) {
                         candidateDetails.CandidateStatus = 4;
                     } else if (candidateDetails.CandidateStatus != 3 || candidateDetails.CandidateStatus != 4) {

@@ -14,7 +14,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         [Column(Order = 1)]
         public long LogisticItemId { get; set; }
         public long Quantity { get; set; }
-        public double EstimatedCost { get; set; }
+        public double EstimatedUnitCost { get; set; }
         public long ItemId { get; set; }
         public bool PurchaseSubmitted { get; set; }
         public long LogisticRequestsId { get; set; }

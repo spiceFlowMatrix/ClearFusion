@@ -6,6 +6,7 @@ using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,6 +40,14 @@ namespace HumanitarianAssistance.Application.Project.Commands.Delete
                     listitem.IsDeleted = true;
 
                     await _dbContext.SaveChangesAsync();
+
+                    var totalCost = await _dbContext.ProjectLogisticItems.Where(x=>x.IsDeleted == false && x.LogisticRequestsId == request.RequestId)
+                    .SumAsync(x=>x.EstimatedUnitCost * x.Quantity);
+                    var logisticRequest = await _dbContext.ProjectLogisticRequests.FirstOrDefaultAsync(x=>x.IsDeleted == false && x.LogisticRequestsId == request.RequestId);
+                    if (logisticRequest!=null) {
+                        logisticRequest.TotalCost = totalCost;
+                        await _dbContext.SaveChangesAsync();
+                    }
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = StaticResource.SuccessText;

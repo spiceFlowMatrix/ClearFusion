@@ -85,13 +85,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         }
 
         [HttpPost]
-        public async Task<ApiResponse> DeleteLogisticRequestItem([FromBody]long ItemId)
+        public async Task<ApiResponse> DeleteLogisticRequestItem([FromBody]DeleteLogisticRequestItemCommand model)
         {   
-            DeleteLogisticRequestItemCommand model = new DeleteLogisticRequestItemCommand();
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             model.ModifiedById = userId;
-            model.ModifiedDate = DateTime.UtcNow;
-            model.ItemId = ItemId; 
+            model.ModifiedDate = DateTime.UtcNow; 
             return await _mediator.Send(model);
         }
 

@@ -17,7 +17,7 @@ import { takeUntil } from 'rxjs/operators';
 import { AddHiringRequestComponent } from '../add-hiring-request/add-hiring-request.component';
 import { MatDialog, MatSelectChange } from '@angular/material';
 import { AddNewCandidateComponent } from '../add-new-candidate/add-new-candidate.component';
-import { CandidateStatus, CandidateAction, Shift } from 'src/app/shared/enum';
+import { CandidateStatus, CandidateAction, Shift, HiringRequestStatus } from 'src/app/shared/enum';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
@@ -73,12 +73,14 @@ export class RequestDetailComponent implements OnInit {
   completeRequestModel: CompleteHiringRequestModel;
   hiringRequestId: any;
   IsHiringRequestCompleted: boolean;
+  IsHiringRequestClosed: boolean;
   projectId: any;
   candidateId: any;
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
   actions: TableActionsModel;
+  statusSelection = [0, 1, 2];
   constructor(
     public dialog: MatDialog,
     private globalSharedService: GlobalSharedService,
@@ -101,6 +103,7 @@ export class RequestDetailComponent implements OnInit {
 
   ngOnInit() {
     this.IsHiringRequestCompleted = false;
+    this.IsHiringRequestClosed = false;
     this.hiringRequestDetails = {
       HiringRequestId: null,
       JobGrade: '',
@@ -122,7 +125,10 @@ export class RequestDetailComponent implements OnInit {
       Profession: '',
       Experience: '',
       KnowledgeAndSkills: '',
-      HiringRequestStatus: null
+      HiringRequestStatus: null,
+      SpecificDutiesAndResponsibilities: '',
+      SubmissionGuidelines: '',
+      HiringRequestCode: ''
     };
     this.routeActive.params.subscribe(params => {
       this.hiringRequestId = +params['id'];
@@ -200,10 +206,16 @@ export class RequestDetailComponent implements OnInit {
                 Profession: response.data.Profession,
                 Experience: response.data.Experience,
                 KnowledgeAndSkills: response.data.KnowledgeAndSkills,
-                HiringRequestStatus: response.data.HiringRequestStatus
+                HiringRequestStatus: response.data.HiringRequestStatus,
+                SpecificDutiesAndResponsibilities:
+                  response.data.SpecificDutiesAndResponsibilities,
+                SubmissionGuidelines: response.data.SubmissionGuidelines,
+                HiringRequestCode: response.data.HiringRequestId
               };
-              if (this.hiringRequestDetails.HiringRequestStatus === 3) {
+              if (this.hiringRequestDetails.HiringRequestStatus === HiringRequestStatus.Completed) {
                 this.IsHiringRequestCompleted = true;
+              } else if (this.hiringRequestDetails.HiringRequestStatus === HiringRequestStatus.Closed) {
+                this.IsHiringRequestClosed = true;
               }
             }
             this.loader.hideLoader();
@@ -334,7 +346,23 @@ export class RequestDetailComponent implements OnInit {
               } as ICandidateDetailList;
             })
           );
-          this.newCandidatesList2$ = this.newCandidatesList$;
+         this.newCandidatesList2$ = this.newCandidatesList$;
+
+         this.newCandidatesList$.subscribe(res => {
+          this.newCandidatesList2$ = of(
+            res.filter(x =>
+              this.statusSelection.includes(CandidateStatus[x.CandidateStatus])
+            )
+          );
+        });
+
+        //  this.newCandidatesList$.subscribe(res => {
+        //   this.newCandidatesList2$ = of(
+        //     res.filter(x =>
+        //       this.statusSelection.includes(CandidateStatus[x.CandidateStatus])
+        //     )
+        //   );
+        // });
         }
         this.loader.hideLoader();
       },
@@ -415,7 +443,23 @@ export class RequestDetailComponent implements OnInit {
               } as IExistingCandidateList;
             })
           );
-          this.existingCandidatesList$ = this.existingCandidatesList2$;
+           this.existingCandidatesList$ = this.existingCandidatesList2$;
+
+           this.existingCandidatesList2$.subscribe(res => {
+            this.existingCandidatesList$ = of(
+              res.filter(x =>
+                this.statusSelection.includes(CandidateStatus[x.CandidateStatus])
+              )
+            );
+          });
+         // console.log(this.existingCandidatesList$);
+          // this.existingCandidatesList$.subscribe(res => {
+          //   this.existingCandidatesList2$ = of(
+          //     res.filter(x =>
+          //       this.statusSelection.includes(CandidateStatus[x.CandidateStatus])
+          //     )
+          //   );
+          // });
         }
         this.loader.hideLoader();
       },
@@ -513,7 +557,9 @@ export class RequestDetailComponent implements OnInit {
       case 'Shortlist':
         const candidateDetails: any = {
           statusId: +CandidateStatus[data.item.CandidateStatus],
-          candidateId: data.item.CandidateId
+          candidateId: data.item.CandidateId,
+          projectId: this.projectId,
+          hiringRequestId: this.hiringRequestId
         };
         this.updateCandidateStatus(candidateDetails);
         break;
@@ -522,7 +568,9 @@ export class RequestDetailComponent implements OnInit {
           relativeTo: this.routeActive.parent,
           queryParams: {
             candId: data.item.CandidateId,
-            hiringId: this.hiringRequestId
+            hiringId: this.hiringRequestId,
+            projectId: this.projectId,
+            hiringRequestId: this.hiringRequestId
           }
         });
         break;
@@ -538,7 +586,9 @@ export class RequestDetailComponent implements OnInit {
       case 'Select':
         const candidateDetails: any = {
           statusId: +CandidateStatus[data.item.CandidateStatus],
-          employeeId: data.item.EmployeeId
+          employeeId: data.item.EmployeeId,
+          projectId: this.projectId,
+          hiringRequestId: this.hiringRequestId
         };
         this.updateCandidateStatus(candidateDetails);
         break;
@@ -550,14 +600,18 @@ export class RequestDetailComponent implements OnInit {
   rejectCandidate(data: any) {
     const candidateDetails: any = {
       statusId: 4,
-      candidateId: data.item.CandidateId
+      candidateId: data.item.CandidateId,
+      projectId: this.projectId,
+      hiringRequestId: this.hiringRequestId
     };
     this.updateCandidateStatus(candidateDetails);
   }
   rejectEmployee(data: any) {
     const candidateDetails: any = {
       statusId: 4,
-      employeeId: data.item.EmployeeId
+      employeeId: data.item.EmployeeId,
+      projectId: this.projectId,
+      hiringRequestId: this.hiringRequestId
     };
     this.updateCandidateStatus(candidateDetails);
   }
@@ -648,6 +702,26 @@ export class RequestDetailComponent implements OnInit {
       );
   }
   //#endregion
+  onCloseRequest() {
+    this.completeRequestModel = {
+      HiringRequestId: [],
+      ProjectId: this.projectId
+    };
+
+    this.completeRequestModel.HiringRequestId.push(this.hiringRequestId);
+    this.hiringRequestService
+      .IsCloasedHrDetail(this.completeRequestModel)
+      .subscribe(
+        (responseData: IResponseData) => {
+          if (responseData.statusCode === 200) {
+            this.IsHiringRequestClosed = true;
+          } else if (responseData.statusCode === 400) {
+            this.toastr.error('Something went wrong .Please try again.');
+          }
+        },
+        error => {}
+      );
+  }
 
   backToList() {
     window.history.back();

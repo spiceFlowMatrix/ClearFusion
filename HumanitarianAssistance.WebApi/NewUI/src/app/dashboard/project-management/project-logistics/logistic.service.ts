@@ -39,10 +39,10 @@ export class LogisticService {
     );
   }
 
-  deleteLogisticRequestItemsById(ItemId) {
+  deleteLogisticRequestItemsById(model) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_DeleteLogisticRequestItem,
-      ItemId
+      model
     );
   }
 

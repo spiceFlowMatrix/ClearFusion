@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { AddExitInterviewQuestionsComponent } from './add-exit-interview-questions/add-exit-interview-questions.component';
 import { QuestionType, QuestionTypeName } from 'src/app/shared/enum';
+import { ConfigService } from 'src/app/store/services/config.service';
 
 @Component({
   selector: 'app-exit-interview-questions',
@@ -29,7 +30,7 @@ export class ExitInterviewQuestionsComponent implements OnInit {
   RecordCount: number;
 
   constructor(private hrService: HrService, private dialog: MatDialog, private toastr: ToastrService,
-    private commonLoader: CommonLoaderService) {
+    private commonLoader: CommonLoaderService, private configservice: ConfigService,) {
       this.hideColums$ = of({headers: ['Id', 'Question Text', 'Question Type', 'Sequence Position'],
       items: ['Id', 'QuestionText', 'QuestionTypeText', 'SequencePosition']});
   }
@@ -40,7 +41,7 @@ export class ExitInterviewQuestionsComponent implements OnInit {
     this.actions = {
       items: {
         button: { status: false, text: '' },
-        delete: false,
+        delete: true,
         download: false,
         edit: true
       },
@@ -94,6 +95,24 @@ export class ExitInterviewQuestionsComponent implements OnInit {
       dialogRef.afterClosed().subscribe(x => {
         this.getExitInterviewQuestionsList();
       });
+    } else if (event.type === 'delete') {
+      this.configservice.openDeleteDialog().subscribe(res => {
+        if (res) {
+          this.commonLoader.showLoader();
+          this.hrService.deleteExitinterviewQuestion(event.item.Id).subscribe(x => {
+            this.commonLoader.hideLoader();
+            if (x) {
+              this.toastr.success('Deleted');
+              this.getExitInterviewQuestionsList();
+            }
+
+            this.RecordCount = x.RecordCount;
+          }, error => {
+            this.commonLoader.hideLoader();
+          });
+        }
+      });
+
     }
   }
 

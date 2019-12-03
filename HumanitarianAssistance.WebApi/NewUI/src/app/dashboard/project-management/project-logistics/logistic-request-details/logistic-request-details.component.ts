@@ -38,6 +38,8 @@ Currency: '', BudgetLine: '', Office: ''};
   availabilityPercentage = 0;
   submitPurchaseItems: any[] = [];
   hideItemColums;
+  storeItemsList = [];
+  storedropdownItemsList = [];
 
   constructor(private dialog: MatDialog, private routeActive: ActivatedRoute,
     private logisticservice: LogisticService,
@@ -66,6 +68,7 @@ Currency: '', BudgetLine: '', Office: ''};
     });
     this.getRequestDetails();
     this.getAllRequestItems();
+    this.getStoreItems();
   }
   addItemDialog() {
     const dialogRef = this.dialog.open(AddLogisticItemsComponent, {
@@ -91,7 +94,7 @@ Currency: '', BudgetLine: '', Office: ''};
         EstimatedCost: v.EstimatedCost,
         Availability: v.Availability
        }) as IItemList)));
-    this.getTotalRequestCost();
+    // this.getTotalRequestCost();
     this.getUnavailableItemsCost();
     this.getAvailabilityPercentage();
   }
@@ -109,7 +112,7 @@ Currency: '', BudgetLine: '', Office: ''};
         this.requestDetail.ComparativeStatus = res.data.logisticRequest.ComparativeStatus;
       }
 
-      if (!(this.requestDetail.Status === 1) || !(this.requestDetail.ComparativeStatus === 1)) {
+      if (!(this.requestDetail.Status === 1) ) { // || !(this.requestDetail.ComparativeStatus === 1)
         this.actions = {
           items: {
             button: { status: false, text: '' },
@@ -141,24 +144,24 @@ Currency: '', BudgetLine: '', Office: ''};
             Availability: v.Availability
            }) as IItemList)));
       }
-      this.getTotalRequestCost();
+      // this.getTotalRequestCost();
       this.getUnavailableItemsCost();
       this.getAvailabilityPercentage();
     });
   }
 
-  getTotalRequestCost() {
-    this.totalCost = 0;
-    this.requestItemList.forEach(element => {
-      this.totalCost += element.EstimatedCost;
-    });
-  }
+  // getTotalRequestCost() {
+  //   this.totalCost = 0;
+  //   this.requestItemList.forEach(element => {
+  //     this.totalCost += element.EstimatedCost;
+  //   });
+  // }
 
   getUnavailableItemsCost() {
     this.unavailableItemCost = 0;
     this.requestItemList.forEach(element => {
       if (element.Availability < element.Quantity) {
-        this.unavailableItemCost += ((element.EstimatedCost / element.Quantity) * (element.Quantity - element.Availability));
+        this.unavailableItemCost += ((element.EstimatedCost) * (element.Quantity - element.Availability));
       }
     });
   }
@@ -178,7 +181,11 @@ Currency: '', BudgetLine: '', Office: ''};
     if (event.type === 'delete') {
       this.logisticservice.openDeleteDialog().subscribe(v => {
         if (v) {
-          this.logisticservice.deleteLogisticRequestItemsById(event.item.Id).subscribe(res => {
+          const model = {
+            ItemId: event.item.Id,
+            RequestId: this.requestId
+          };
+          this.logisticservice.deleteLogisticRequestItemsById(model).subscribe(res => {
             if (res.StatusCode === 200) {
               this.refreshRequestListAfterDelete(event.item.Id);
               this.toastr.success('Deleted Sucessfully!');
@@ -193,12 +200,19 @@ Currency: '', BudgetLine: '', Office: ''};
       const dialogRef = this.dialog.open(AddLogisticItemsComponent, {
         width: '400px',
         data: {Id: event.item.Id, ItemId: event.item.ItemId, Quantity: event.item.Quantity,
-          EstimatedCost: event.item.EstimatedCost, RequestId: this.requestId}
+          EstimatedCost: event.item.EstimatedCost, RequestId: this.requestId, 'Storeitems': this.storedropdownItemsList,
+          }
       });
 
       dialogRef.afterClosed().subscribe(result => {
         if (result !== undefined && result.data != null ) {
-          this.getAllRequestItems();
+          if (result.data === 'Success') {
+            this.toastr.success('Updated Successfully!');
+            this.getAllRequestItems();
+            this.getRequestDetails();
+          } else {
+            this.toastr.warning(result.data);
+          }
         }
       });
     }
@@ -218,7 +232,7 @@ Currency: '', BudgetLine: '', Office: ''};
         EstimatedCost: v.EstimatedCost,
         Availability: v.Availability
        }) as IItemList)));
-    this.getTotalRequestCost();
+    this.getRequestDetails();
     this.getUnavailableItemsCost();
     this.getAvailabilityPercentage();
   }
@@ -259,31 +273,35 @@ Currency: '', BudgetLine: '', Office: ''};
     this.submitPurchaseItems = value;
   }
 
-  completePurchaseOrder() {
-    if (this.submitPurchaseItems.length === 0) {
-      this.toastr.warning('Submit Purchase items first!');
-    } else {
-      this.commonLoader.showLoader();
-      const requestItems = this.submitPurchaseItems.map(function(val) {
-        return {
-          Id: val.Id,
-          FinalCost: val.EstimatedCost
-        };
-      });
-      const model = {
-        submittedList: requestItems,
-        Status : LogisticRequestStatus['Complete Purchase']
-      };
-      this.logisticservice.completePurchaseOrder(model).subscribe(res => {
-        if (res.StatusCode === 200) {
-          this.commonLoader.hideLoader();
-          this.getRequestDetails();
-        } else {
-          this.commonLoader.hideLoader();
-          this.toastr.error('Something went wrong!');
-        }
-      });
-    }
+  // completePurchaseOrder() {
+  //   if (this.submitPurchaseItems.length === 0) {
+  //     this.toastr.warning('Submit Purchase items first!');
+  //   } else {
+  //     this.commonLoader.showLoader();
+  //     const requestItems = this.submitPurchaseItems.map(function(val) {
+  //       return {
+  //         Id: val.Id,
+  //         FinalCost: val.EstimatedCost
+  //       };
+  //     });
+  //     const model = {
+  //       submittedList: requestItems,
+  //       Status : LogisticRequestStatus['Complete Purchase']
+  //     };
+  //     this.logisticservice.completePurchaseOrder(model).subscribe(res => {
+  //       if (res.StatusCode === 200) {
+  //         this.commonLoader.hideLoader();
+  //         this.getRequestDetails();
+  //       } else {
+  //         this.commonLoader.hideLoader();
+  //         this.toastr.error('Something went wrong!');
+  //       }
+  //     });
+  //   }
+  // }
+
+  submitPurchase() {
+    this.router.navigate(['submit-purchase'], { relativeTo: this.routeActive });
   }
 
   cancelComparativeRequest() {
@@ -343,6 +361,23 @@ Currency: '', BudgetLine: '', Office: ''};
       } else {
         this.commonLoader.hideLoader();
         this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  getStoreItems() {
+    this.logisticservice.getAllStoreItems().subscribe(res => {
+      this.storeItemsList = [];
+      this.storedropdownItemsList = [];
+      if (res.StatusCode === 200 && res.data.InventoryItemList != null) {
+        res.data.InventoryItemList.forEach(element => {
+          this.storeItemsList.push(element);
+          this.storedropdownItemsList.push({
+            Id: element.ItemId,
+            Name: element.ItemCode + '-' + element.ItemName
+          });
+        });
+        // this.addLogisticItemsForm.controls['Item'].setValue(this.data.ItemId);
       }
     });
   }

@@ -29,6 +29,9 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string Profession { get; set; }
         public string Experience { get; set; }
         public string KnowledgeAndSkills { get; set; }
+        public string SpecificDutiesAndResponsibilities { get; set; }
+        public string SubmissionGuidelines { get; set; }
+        public string HiringRequestCode { get; set; }
 
     }
 }

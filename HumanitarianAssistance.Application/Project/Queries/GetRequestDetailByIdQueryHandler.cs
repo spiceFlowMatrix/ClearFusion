@@ -26,10 +26,10 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
             try
             {
-                var req = await _dbContext.ProjectLogisticRequests.Where(x=>x.IsDeleted==false && x.LogisticRequestsId==request.RequestId).Select(y=>new LogisticsRequestsModel{
+                var req = await _dbContext.ProjectLogisticRequests.Where(x=>x.IsDeleted==false && x.LogisticRequestsId==request.RequestId).Select(y=>new LogisticsRequestsDetailModel{
                     RequestId = y.LogisticRequestsId,
                     ProjectId = y.ProjectId,
-                    RequestName = y.RequestName,
+                    Description = y.Description,
                     Status = y.Status,
                     TotalCost = y.TotalCost,
                     BudgetLine = y.ProjectBudgetLineDetail.BudgetCode,
