@@ -125,7 +125,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         }
 
         [HttpPost]
-        public async Task<ApiResponse> CompletePurchaseOrder([FromBody]CompletePurchaseOrderCommand model)
+        public async Task<ApiResponse> SubmitPurchaseOrder([FromBody]SubmitPurchaseOrderCommand model)
         {   
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             model.ModifiedById = userId;
@@ -237,6 +237,18 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.ModifiedDate = DateTime.UtcNow; 
             return await _mediator.Send(model);
         }
+
+        [HttpPost]
+        public async Task<ApiResponse> RejectPurchaseOrder([FromBody]long requestId)
+        {   
+           RejectPurchaseOrderCommand model = new RejectPurchaseOrderCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.requestId = requestId;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow; 
+            return await _mediator.Send(model);
+        }
+        
     }
 
 }

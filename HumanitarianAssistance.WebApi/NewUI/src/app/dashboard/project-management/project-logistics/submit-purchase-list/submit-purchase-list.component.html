@@ -1,8 +1,8 @@
 
 <lib-sub-header-template>
   <span class="action_header main-heading"><i (click)="goBack()" class="fas fa-arrow-left"></i> Purchase Submission Form
-      <hum-button [type]="'save'" [text]="'SUBMIT'"></hum-button>
-      <!-- <hum-button [type]="'loading'" [text]="'Saving....'"></hum-button> -->
+      <hum-button *ngIf="!isFormSubmitted" (click)="hiddenSubmitBtn.click()" [type]="'save'" [text]="'SUBMIT'"></hum-button>
+      <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
       <hum-button (click)="goBack()" [type]="'cancel'" [text]="'CANCEL'"></hum-button>
   </span>
   <div class="action_section">
@@ -14,20 +14,21 @@
       <p>Please specify exact date that these purchases were done.</p>
       <p>This date is sensitive and will be used for the voucher and purchases that will be generated for this Request.</p>
       <p>Any currency conversion for the voucher & generated purchases will use this date for exchange rate.</p>
-      <form [formGroup]="purchaseSubmitForm">
+      <form [formGroup]="purchaseSubmitForm" (ngSubmit)="submitPurchaseOrder()">
         <mat-form-field>
           <input #startDate class="fixedWidth"
             formControlName="PurchaseDate" matInput [matDatepicker]="picker" placeholder="Purchase Date" >
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
+        <button #hiddenSubmitBtn type="submit" style="display: none;"></button>
       </form>
       <h4 class="letter_spacing_1">Purchased Items</h4>
       <p class="color_gray">You must provide the final cost for all the purchased items based on the list of requested items for the Request.</p>
       <table class="table table-striped" style="width:50%;">
         <tr>
           <td class="font_weight_600">Total Final Cost</td>
-          <td>0</td>
+          <td>{{totalFinalCost}}</td>
         </tr>
       </table>
       <hum-table [headers]="purchasedItemsHeaders$" [actions]="actions" [items]="purchasedItems$" (actionClick)="onActionClick($event)" [hideColums$]="hideItemColums"></hum-table>

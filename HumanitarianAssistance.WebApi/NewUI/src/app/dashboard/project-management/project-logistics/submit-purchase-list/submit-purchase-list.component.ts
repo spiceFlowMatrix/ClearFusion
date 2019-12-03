@@ -4,11 +4,14 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { element } from '@angular/core/src/render3';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { of, Observable } from 'rxjs';
+import { of, Observable, ReplaySubject } from 'rxjs';
 import { TableActionsModel } from 'projects/library/src/public_api';
 import { LogisticService } from '../logistic.service';
-import { map } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { PurchaseFinalCostComponent } from '../purchase-final-cost/purchase-final-cost.component';
+import { ToastrService } from 'ngx-toastr';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { FileSourceEntityTypes } from 'src/app/shared/enum';
 
 @Component({
   selector: 'app-submit-purchase-list',
@@ -41,11 +44,16 @@ export class SubmitPurchaseListComponent implements OnInit {
   hideItemColums: any;
   hideDocColums: any;
   docData$: Observable<any>;
+  isFormSubmitted = false;
+  totalFinalCost = 0;
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(private router: Router,
     private routeActive: ActivatedRoute,
     private fb: FormBuilder,
     private logisticservice: LogisticService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    public toastr: ToastrService,
+    private globalSharedService: GlobalSharedService) { }
 
   ngOnInit() {
     // this.itemdata = this.data.requestedItems.map(function(val) {
@@ -144,6 +152,7 @@ export class SubmitPurchaseListComponent implements OnInit {
             FinalUnitCost: v.EstimatedCost,
             RequestedUnits: v.Quantity
            }) )));
+        this.calculateTotalFinalCost();
       }
     });
   }
@@ -169,6 +178,7 @@ export class SubmitPurchaseListComponent implements OnInit {
                   FinalUnitCost: v.EstimatedCost,
                   RequestedUnits: v.Quantity
                  }) )));
+                 this.calculateTotalFinalCost();
             }
           } else {
 
@@ -209,7 +219,48 @@ export class SubmitPurchaseListComponent implements OnInit {
        }) )));
   }
 
-  cancelSubmission() {
-   // this.dialogRef.close({data: null});
+  submitPurchaseOrder() {
+    if (!this.purchaseSubmitForm.valid) {
+      return;
+    }
+    if (this.attachments.length === 0) {
+      this.toastr.warning('Please upload attachment!');
+      return;
+    }
+    this.isFormSubmitted = true;
+    const item = this.requestItemList.map(v => ({
+        Id: v.Id,
+        FinalCost: v.EstimatedCost
+       }) );
+    const model = {
+      PurchaseDate: this.purchaseSubmitForm.get('PurchaseDate').value,
+      ItemModel: item,
+      RequestId: this.requestId
+    };
+    this.logisticservice.submitPurchaseOrder(model).subscribe(res => {
+      if (res.StatusCode === 200) {
+        let count = 1;
+        this.attachments.forEach(e => {
+          this.globalSharedService
+                  .uploadFile(FileSourceEntityTypes.ProjectLogisticPurchase, this.requestId, e[0])
+                  .pipe(takeUntil(this.destroyed$))
+                  .subscribe(y => {
+                    if (count === this.attachments.length) {
+                      this.isFormSubmitted = false;
+                      this.router.navigate(['../../' + this.requestId], { relativeTo: this.routeActive });
+                    } else {
+                      count++ ;
+                    }
+                  });
+        });
+      }
+    });
+  }
+
+  calculateTotalFinalCost() {
+    this.totalFinalCost = 0;
+    this.requestItemList.forEach(e => {
+      this.totalFinalCost += (e.EstimatedCost * e.Quantity);
+    });
   }
 }

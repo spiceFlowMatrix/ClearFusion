@@ -37,10 +37,15 @@
     </p>
     <div>
       <h4>Purchased Items
-        <hum-button [type]="'cancel'" [text]="'REJECT'"></hum-button>
-        <hum-button [type]="'save'" [text]="'APPROVE'"></hum-button>
+        <hum-button (click)="rejectPurchaseOrder()" [type]="'cancel'" [text]="'REJECT'"></hum-button>
+        <hum-button (click)="approvePurchaseOrder()" [type]="'save'" [text]="'APPROVE'"></hum-button>
+        <hum-button [type]="'pdf'" [text]="'GOODS RECIEVED NOTE'"></hum-button>
       </h4>
-      <span><i class="fas fa-info-circle icon_color_yellow"></i> Submitted. Awaiting <b>Control Officer</b> to <b>Approve</b> purchased items list.</span>
+      <div *ngIf="false">
+        <span><i class="fas fa-info-circle icon_color_yellow"></i> Signed version of goods recieved note. <i class="fa fa-download fa-2" aria-hidden="true"></i></span><br>
+        <span><i class="fas fa-info-circle icon_color_yellow"></i> Inventory approved by .Awaiting <b>Finance Officer</b> to <b>Approve</b> voucher.</span>
+      </div>
+      <span *ngIf="true"><i class="fas fa-info-circle icon_color_yellow"></i> Submitted. Awaiting <b>Control Officer</b> to <b>Approve</b> purchased items list.</span>
       <hum-table [headers]="purchasedItemsHeaders$" [items]="purchasedItemsData$"></hum-table>
     </div>
   </div>
