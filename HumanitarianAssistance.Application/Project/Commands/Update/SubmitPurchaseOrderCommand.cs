@@ -1,16 +1,18 @@
 using System.Collections.Generic;
 using HumanitarianAssistance.Application.Infrastructure;
 using MediatR;
+using System;
 
 namespace HumanitarianAssistance.Application.Project.Commands.Update
 {
-    public class SubmitPurchaseOrderCommandCommand : BaseModel, IRequest<ApiResponse>
+    public class SubmitPurchaseOrderCommand : BaseModel, IRequest<ApiResponse>
     {
-        public List<SubmitPurchaseOrderCommandModel> submittedList { get; set; }
-        public long Status { get; set; }
+        public List<SubmitPurchaseOrderModel> ItemModel { get; set; }
+        public long RequestId { get; set; }
+        public DateTime PurchaseDate { get; set; }
     }
 
-    public class SubmitPurchaseOrderCommandModel
+    public class SubmitPurchaseOrderModel
     {
         public long Id { get; set; }
         public double FinalCost { get; set; }

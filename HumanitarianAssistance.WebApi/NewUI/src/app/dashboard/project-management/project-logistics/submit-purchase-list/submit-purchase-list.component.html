@@ -28,7 +28,7 @@
       <table class="table table-striped" style="width:50%;">
         <tr>
           <td class="font_weight_600">Total Final Cost</td>
-          <td>0</td>
+          <td>{{totalFinalCost}}</td>
         </tr>
       </table>
       <hum-table [headers]="purchasedItemsHeaders$" [actions]="actions" [items]="purchasedItems$" (actionClick)="onActionClick($event)" [hideColums$]="hideItemColums"></hum-table>

@@ -510,7 +510,9 @@ export enum FileSourceEntityTypes {
   StorePurchase = 10,
   Employee = 11,
   ComparativeStatement = 12,
-  HiringRequestCandidateCV = 13
+  HiringRequestCandidateCV = 13,
+  ProjectLogisticPurchase = 14,
+  GoodsRecievedDocument = 15
 }
 //#endregion
 //#region "EmployeeType"

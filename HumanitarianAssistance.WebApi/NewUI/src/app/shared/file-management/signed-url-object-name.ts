@@ -20,6 +20,12 @@ import { FileSourceEntityTypes } from '../enum';
       case FileSourceEntityTypes.HiringRequestCandidateCV:
       objectName = 'HiringRequestCandidateCV/' + entityId + '/';
       break;
+      case FileSourceEntityTypes.ProjectLogisticPurchase:
+      objectName = 'ProjectLogisticPurchase/' + entityId + '/';
+      break;
+      case FileSourceEntityTypes.GoodsRecievedDocument:
+      objectName = 'GoodsRecievedDocument/' + entityId + '/';
+      break;
     }
 
     return objectName;

@@ -240,6 +240,7 @@ export class GLOBAL {
   public static API_ProjectLogistics_GetComparativeStatement = 'ProjectLogistic/GetComparativeStatement';
   public static API_ProjectLogistics_RejectComparativeStatement = 'ProjectLogistic/RejectComparativeStatement';
   public static API_ProjectLogistics_ApproveComparativeStatement = 'ProjectLogistic/ApproveComparativeStatement';
+  public static API_ProjectLogistics_RejectPurchaseOrder = 'ProjectLogistic/RejectPurchaseOrder';
 
   // Chart Of Account
   public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';

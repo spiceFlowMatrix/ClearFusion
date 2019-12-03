@@ -18,12 +18,14 @@ import { PurchaseOrderComponent } from './purchase-order/purchase-order.componen
 import { SubmitComparativeStatementComponent } from './submit-comparative-statement/submit-comparative-statement.component';
 import { TenderStatementComponent } from './tender-statement/tender-statement.component';
 import { PurchaseFinalCostComponent } from './purchase-final-cost/purchase-final-cost.component';
+import { GoodsRecievedUploadComponent } from './goods-recieved-upload/goods-recieved-upload.component';
 
 @NgModule({
   declarations: [LogisticRequestsComponent, AddLogisticRequestComponent,
     LogisticRequestDetailsComponent, AddLogisticItemsComponent, RequestStatusComponent,
     SubmitPurchaseListComponent, ComparativeStatementComponent, AddSupplierComponent,
-    PurchaseOrderComponent, SubmitComparativeStatementComponent, TenderStatementComponent, PurchaseFinalCostComponent],
+    PurchaseOrderComponent, SubmitComparativeStatementComponent, TenderStatementComponent, PurchaseFinalCostComponent,
+    GoodsRecievedUploadComponent],
   imports: [
     CommonModule,
     MatTableModule,
@@ -46,7 +48,8 @@ import { PurchaseFinalCostComponent } from './purchase-final-cost/purchase-final
     AddLogisticItemsComponent,
     // SubmitPurchaseListComponent,
     AddSupplierComponent,
-    SubmitComparativeStatementComponent
+    SubmitComparativeStatementComponent,
+    GoodsRecievedUploadComponent
   ],
 })
 export class ProjectLogisticsModule { }
