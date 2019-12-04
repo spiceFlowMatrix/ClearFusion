@@ -3,9 +3,10 @@
     <div class="row">
       <div class="col-md-7 mycontent-right">
           <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
-              <span class="action_header main-heading" style="margin-left: -25px;" (click)="onBackClick()"><i class="fas fa-arrow-left"></i>  Request Details
+              <span class="action_header main-heading" style="margin-left: -25px;"><i class="fas fa-arrow-left" (click)="onBackClick()"></i>  Request Details
+                <hum-button (click)="editRequest()" [type]="'edit'" [text]="'EDIT'" [disabled]="this.requestDetail.Status!=1" ></hum-button>
               </span>
-            </lib-sub-header-template>
+          </lib-sub-header-template>
         <!-- <h4 class="main-heading" style="padding-left: 0px !important"><i class="fas fa-arrow-left"></i>   Request Details
         </h4> -->
         <h4 class="sub-heading">Workflow Details</h4>
@@ -47,7 +48,7 @@
                 </div>
                 <div class="col-sm-5 margin_top_1">
                   <hum-button  (click)="rejectPurchaseOrder()" [type]="'cancel'" [text]="'Reject'"></hum-button>
-                  <hum-button  [type]="'save'" [text]="'Approve'"></hum-button>
+                  <hum-button  (click)="approvePurchaseOrder()" [type]="'save'" [text]="'Approve'"></hum-button>
                 </div>
             </div>
           <mat-divider style="position: unset;"></mat-divider>
@@ -253,7 +254,7 @@
       </div>
       <!-- <mat-divider [vertical]="true" style="height:300px"></mat-divider> -->
       <div class="col-md-5">
-        <app-request-status [requestStatus]="this.requestDetail.Status" [comparativeStatus]="this.requestDetail.ComparativeStatus" [totalCost]="this.totalCost" [requestedItems]="this.requestItemList" (selectedItemChange)='selectedItemChange($event)' (comparativeStatusChange)="comparativeStatusChange($event)" (StatusChange)="StatusChange($event)"></app-request-status>
+        <app-request-status [requestStatus]="this.requestDetail.Status" [comparativeStatus]="this.requestDetail.ComparativeStatus" [totalCost]="this.totalCost" [requestedItems]="this.requestItemList" (selectedItemChange)='selectedItemChange($event)' (comparativeStatusChange)="comparativeStatusChange($event)" (StatusChange)="StatusChange($event)" [goodsNoteSubmitted]="goodsNoteSubmitted"></app-request-status>
       </div>
     </div>
   </div>

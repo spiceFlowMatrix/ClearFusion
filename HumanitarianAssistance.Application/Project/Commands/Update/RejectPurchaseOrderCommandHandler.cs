@@ -48,6 +48,14 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                         doc.DocumentFileDetail.IsDeleted = true;
                     }
 
+                    var goodsDocuments = await _dbContext.EntitySourceDocumentDetails
+                    .Include(x=>x.DocumentFileDetail)
+                    .Where(x=>x.IsDeleted == false && x.EntityId == request.requestId && x.DocumentFileDetail.PageId == (int)FileSourceEntityTypes.GoodsRecievedDocument).ToListAsync();
+                    foreach(var doc in goodsDocuments) {
+                        doc.IsDeleted = true;
+                        doc.DocumentFileDetail.IsDeleted = true;
+                    }
+
                     await _dbContext.SaveChangesAsync();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";

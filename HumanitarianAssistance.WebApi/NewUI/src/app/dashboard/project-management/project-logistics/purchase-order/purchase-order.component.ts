@@ -27,7 +27,8 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
   purchasedItemsHeaders$ = of(['Item', 'Quantity', 'Final Cost']);
   purchasedItemsData$ = of([]);
   selectedItems: any[];
-  goodsNoteSubmitted = false;
+  @Input() goodsNoteSubmitted = false;
+  goodsRecievedModel: GoodsRecievedNote;
 
   constructor(private dialog: MatDialog,
     private routeActive: ActivatedRoute,
@@ -41,6 +42,11 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
   ngOnChanges() {
     if (this.requestStatus === 4) {
       this.getPurchasedItemsList();
+      this.getGoodsRecievedNote();
+    }
+
+    if (this.goodsNoteSubmitted) {
+      this.getGoodsRecievedNote();
     }
   }
   submitPurchase() {
@@ -80,13 +86,33 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
       });
       dialogRef.afterClosed().subscribe(result => {
         if (result !== undefined && result.data != null ) {
-          const dialogdata = result.data;
+          this.getGoodsRecievedNote();
           } else {
-            this.toastr.warning('Item already exists!');
           }
       });
     } else {
 
     }
   }
+
+  getGoodsRecievedNote() {
+    this.logisticservice.getGoodsRecievedNote(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        if (res.data.GoodsRecievedNote == null) {
+          this.goodsNoteSubmitted = false;
+        } else {
+          this.goodsNoteSubmitted = true;
+          this.goodsRecievedModel = res.data.GoodsRecievedNote;
+        }
+      } else {
+         this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+}
+
+interface GoodsRecievedNote {
+  AttachmentName;
+  AttachmentUrl;
+  UploadedBy;
 }

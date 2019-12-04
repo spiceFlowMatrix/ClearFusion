@@ -38,6 +38,7 @@ export class AddLogisticItemsComponent implements OnInit {
     }
     if (this.data.Id == null) {
       const model = {
+        Id: 0,
         ItemId : value.Item,
         RequestedUnits : value.RequestedUnits,
         EstimatedUnitCost : value.EstimatedUnitCost

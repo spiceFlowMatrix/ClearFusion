@@ -35,7 +35,10 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     BudgetLine = y.ProjectBudgetLineDetail.BudgetCode,
                     Currency = y.CurrencyDetails.CurrencyCode,
                     Office = y.OfficeDetail.OfficeName,
-                    ComparativeStatus = y.ComparativeStatus
+                    ComparativeStatus = y.ComparativeStatus,
+                    BudgetLineId = y.ProjectBudgetLineDetail.BudgetLineId,
+                    CurrencyId = y.CurrencyDetails.CurrencyId,
+                    OfficeId = y.OfficeDetail.OfficeId
                 }).FirstOrDefaultAsync();
                 
                 if(req == null) {

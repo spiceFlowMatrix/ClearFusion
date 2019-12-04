@@ -184,7 +184,8 @@ namespace HumanitarianAssistance.Common.Enums {
         EmployeeProfile = 11,
         ComparativeStatement = 12,
         HiringRequestCandidateCV = 13,
-        ProjectLogisticPurchase = 14
+        ProjectLogisticPurchase = 14,
+        GoodsRecievedDocument = 15
     }
 
     public enum DocumentFileTypes {

@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AddLogisticItemsComponent } from '../add-logistic-items/add-logistic-items.component';
 import { map } from 'rxjs/operators';
 import { LogisticRequestStatus, LogisticComparativeStatus } from 'src/app/shared/enum';
+import { RequestDetail } from '../logistic-request-details/logistic-request-details.component';
 
 @Component({
   selector: 'app-add-logistic-request',
@@ -38,13 +39,16 @@ export class AddLogisticRequestComponent implements OnInit {
   budgetLineId$: Observable<IDropDownModel[]>;
   officeId$: Observable<IDropDownModel[]>;
   projectId;
-  storeItemsList: any[];
+  storeItemsList: any[] = [];
   storedropdownItemsList: any[];
   requestedItems: any[] = [];
   requestedItems$;
   totalcost = 0;
   buttonText = 'SAVE REQUEST AND ISSUE DIRECT PURCHASE ORDER';
   isRequestFormSubmitted = false;
+  requestId = 0;
+  requestDetail;
+  requestItemList = [];
 
   constructor(
     private fb: FormBuilder,
@@ -54,15 +58,23 @@ export class AddLogisticRequestComponent implements OnInit {
     private routeActive: ActivatedRoute,
     private dialog: MatDialog,
     private router: Router
-    ) { }
+    ) {
+      this.routeActive.queryParams.subscribe(params => {
+        this.requestId = +params['requestId'];
+    });
+    }
 
   ngOnInit() {
     this.routeActive.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
+    this.getStoreItems();
     this.getCurrencyCodeList();
     this.getBudgetLineList();
     this.getOfficeCodeList();
+    if (this.requestId && this.requestId !== 0) {
+      this.getRequestDetails();
+    }
     this.addLogisticRequestForm = this.fb.group({
       Description: ['', Validators.required],
       CurrencyId : ['', Validators.required],
@@ -84,7 +96,6 @@ export class AddLogisticRequestComponent implements OnInit {
       }
 
     };
-    this.getStoreItems();
   }
 
   onActionClick(event) {
@@ -245,6 +256,7 @@ export class AddLogisticRequestComponent implements OnInit {
         const dialogdata = result.data;
         if (this.requestedItems.findIndex(x => x.ItemId === dialogdata.ItemId) === -1) {
           this.requestedItems.push(dialogdata);
+          console.log(this.requestedItems);
           this.requestedItems$ = of(this.requestedItems).pipe(
             map(r => r.map(v => ({
               Id: 0,
@@ -327,9 +339,7 @@ export class AddLogisticRequestComponent implements OnInit {
       OfficeId: this.addLogisticRequestForm.get('OfficeId').value,
       BudgetLineId: this.addLogisticRequestForm.get('BudgetLineId').value,
       TotalCost: this.totalcost,
-      RequestedItems: this.requestedItems,
-      Status: LogisticRequestStatus['New Request'],
-      ComparativeStatus: LogisticComparativeStatus['Not Valid']
+      RequestedItems: this.requestedItems
     };
     if (this.totalcost < 200) {
       model.Status = LogisticRequestStatus['New Request'];
@@ -345,18 +355,78 @@ export class AddLogisticRequestComponent implements OnInit {
       model.ComparativeStatus = LogisticComparativeStatus.NotValid;
     }
 
-    this.logisticservice.addLogisticRequest(model).subscribe(res => {
-      if (res.StatusCode === 200 && res.data.logisticRequestId != null) {
-        this.router.navigate(['../../logistic-requests/' + res.data.logisticRequestId], { relativeTo: this.routeActive });
-      } else {
-        this.isRequestFormSubmitted = false;
-        this.toastr.error(res.Message);
-      }
-    });
+    if (this.requestId && this.requestId !== 0) {
+      model.RequestId = this.requestId;
+      this.logisticservice.editLogisticRequest(model).subscribe(res => {
+        if (res.StatusCode === 200) {
+          this.router.navigate(['../../logistic-requests/' + this.requestId], { relativeTo: this.routeActive });
+        } else {
+          this.isRequestFormSubmitted = false;
+          this.toastr.error(res.Message);
+        }
+      });
+    } else {
+      this.logisticservice.addLogisticRequest(model).subscribe(res => {
+        if (res.StatusCode === 200 && res.data.logisticRequestId != null) {
+          this.router.navigate(['../../logistic-requests/' + res.data.logisticRequestId], { relativeTo: this.routeActive });
+        } else {
+          this.isRequestFormSubmitted = false;
+          this.toastr.error(res.Message);
+        }
+      });
+    }
   }
 
   cancelRequest() {
     // this.dialogRef.close({data: null});
+  }
+
+  getRequestDetails() {
+    this.commonLoader.showLoader();
+    this.logisticservice.getLogisticRequestDetail(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200 && res.data.logisticRequest != null) {
+        this.requestDetail = res.data.logisticRequest;
+        console.log(this.requestDetail);
+        this.addLogisticRequestForm.setValue({
+          Description: this.requestDetail.Description,
+          CurrencyId : this.requestDetail.CurrencyId,
+          OfficeId : this.requestDetail.OfficeId,
+          BudgetLineId : this.requestDetail.BudgetLineId
+        });
+        this.getAllRequestItems();
+      } else {
+        this.commonLoader.hideLoader();
+      }
+    });
+  }
+
+  getAllRequestItems() {
+    this.logisticservice.getAllRequestItems(this.requestId).subscribe(res => {
+      this.requestItemList = [];
+      if (res.StatusCode === 200 && res.data.LogisticsItemList != null) {
+        res.data.LogisticsItemList.forEach(element => {
+          this.requestedItems.push({
+            Id: element.Id,
+            ItemId : element.ItemId,
+            RequestedUnits : element.Quantity,
+            EstimatedUnitCost : element.EstimatedCost
+          });
+        });
+        this.requestedItems$ = of(this.requestedItems).pipe(
+          map(r => r.map(v => ({
+            Id: v.Id,
+            ItemId: v.ItemId,
+            ItemCode: this.storeItemsList.filter(f => f.ItemId === v.ItemId)[0].ItemCode,
+            ItemName: this.storeItemsList.filter(f => f.ItemId === v.ItemId)[0].ItemName,
+            EstimatedUnitCost: v.EstimatedUnitCost,
+            RequestedUnits: v.RequestedUnits
+          }) )));
+          this.getTotalCost();
+          this.commonLoader.hideLoader();
+      } else {
+        this.commonLoader.hideLoader();
+      }
+    });
   }
 }
 
