@@ -35,7 +35,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     Description = request.Description,
                     NoticePeriod = request.NoticePeriod,
                     AvailableDate = request.AvailableDate,
-                    WrittenTestMarks = request.WrittenTestMarks,
+                    WrittenTestMarks = (int)request.WrittenTestMarks,
                     CurrentBase = request.CurrentBase,
                     CurrentOther = request.CurrentOther,
                     ExpectationBase = request.ExpectationBase,

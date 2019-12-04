@@ -19,7 +19,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
         public string Description { get; set; }
         public int NoticePeriod { get; set; }
         public DateTime AvailableDate { get; set; }
-        public int WrittenTestMarks { get; set; }
+        public double WrittenTestMarks { get; set; }
         public int CurrentBase { get; set; }
         public int CurrentOther { get; set; }
         public int ExpectationBase { get; set; }
