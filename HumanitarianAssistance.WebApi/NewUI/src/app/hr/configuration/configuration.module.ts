@@ -84,6 +84,7 @@ import { AddLeaveTypeComponent } from './components/leave-type/add-leave-type/ad
   ],
   entryComponents: [AddDesignationComponent, AddEducationDegreeComponent, AddOfficeMasterComponent,
                    AddDepartmentMasterComponent, AddJobGradeComponent, AddAttendanceGroupComponent,
-                   AddProfessionComponent, AddQualificationComponent, AddExitInterviewQuestionsComponent ]
+                   AddProfessionComponent, AddQualificationComponent, AddExitInterviewQuestionsComponent,
+                  AddLeaveTypeComponent]
 })
 export class ConfigurationModule { }

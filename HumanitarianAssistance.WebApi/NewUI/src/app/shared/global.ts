@@ -101,6 +101,7 @@ export class GLOBAL {
   public static API_HRConfiguration_UpsertExitInterviewQuestion = 'HRConfiguration/UpsertExitInterviewQuestion';
   public static API_HRConfiguration_GetSequenceNumber = 'HRConfiguration/GetSequenceNumber';
   public static API_HRConfiguration_DeleteExitInterviewQuestion = 'HRConfiguration/DeleteExitInterviewQuestion';
+  public static API_HRConfiguration_DeleteLeaveType = 'HRConfiguration/DeleteLeaveType';
   public static API_Policy_AddNewPolicy = 'Policy/AddEditPolicy';
   public static API_Policy_AddPolicyRepeatDays = 'Policy/AddPolicyRepeatDays';
   public static API_Policy_AddNewPolicyTimeSchedule = 'Policy/AddEditPolicyTimeSchedule';
@@ -164,7 +165,7 @@ export class GLOBAL {
   public static API_code_GetAllOffice = 'code/GetAllOfficeDetails';
   public static API_HRConfiguration_GetOfficeList = 'HRConfiguration/GetOfficeList';
   public static API_HRConfiguration_GetDepartmentList = 'HRConfiguration/GetDepartmentList';
-  public static API_HRConfiguration_GetLeaveTypeList = 'HRConfiguration/GetLeaveTypeList';
+  public static API_HRConfiguration_GetAllLeaveReasonType = 'HRConfiguration/GetAllLeaveReasonType';
   public static API_HRConfiguration_GetJobGradeList = 'HRConfiguration/GetJobGradeList';
   public static API_HRConfiguration_GetAttendanceGroupList = 'HRConfiguration/GetAttendanceGroupList';
   public static API_HRConfiguration_GetProfessionList = 'HRConfiguration/GetProfessionList';
@@ -292,6 +293,8 @@ export class GLOBAL {
   public static API_Code_GetAllProfession = 'Code/GetAllProfession';
   // public static API_Code_GetAllEducationDegree = 'Code/GetAllEducationDegree';
   public static API_Code_GetAllEducationDegreeList = 'Code/GetAllEducationDegreeList';
+  public static API_Code_AddLeaveReasonDetail = 'Code/AddLeaveReasonDetail';
+  public static API_Code_EditLeaveReasonDetail = 'Code/EditLeaveReasonDetail';
 
   //#region criteria evaluation form
 

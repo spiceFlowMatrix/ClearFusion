@@ -128,5 +128,17 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         {
             return Ok(await _mediator.Send(new DeleteExitInterviewQuestionCommand { Id = Id } ));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetAllLeaveReasonType([FromBody] GetAllLeaveReasonTypeQuery request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteLeaveType([FromBody] int Id)
+        {
+            return Ok(await _mediator.Send(new DeleteLeaveTypeCommand { Id = Id } ));
+        }
     }
 }

@@ -270,7 +270,34 @@ export class HrService {
   getLeaveTypeList(pageModel: any): any {
     return this.globalService
       .post(
-        this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_GetLeaveTypeList, pageModel
+        this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_GetAllLeaveReasonType, pageModel
+      );
+  }
+  //#endregion
+
+  //#region "updateLeaveType"
+  updateLeaveType(model: any): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_Code_EditLeaveReasonDetail, model
+      );
+  }
+  //#endregion
+
+   //#region "addLeaveType"
+   addLeaveType(model: any): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_Code_AddLeaveReasonDetail, model
+      );
+  }
+  //#endregion
+
+   //#region "deleteLeaveType"
+   deleteLeaveType(Id: any): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_DeleteLeaveType, Id
       );
   }
   //#endregion

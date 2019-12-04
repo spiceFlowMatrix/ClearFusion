@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { AddLeaveTypeComponent } from './add-leave-type/add-leave-type.component';
+import { ConfigService } from 'src/app/store/services/config.service';
 
 @Component({
   selector: 'app-leave-type',
@@ -27,7 +28,7 @@ export class LeaveTypeComponent implements OnInit {
   RecordCount: number;
 
   constructor(private hrService: HrService, private dialog: MatDialog, private toastr: ToastrService,
-    private commonLoader: CommonLoaderService) { }
+    private commonLoader: CommonLoaderService, private configservice: ConfigService) { }
 
   ngOnInit() {
     this.actions = {
@@ -53,8 +54,8 @@ getLeaveTypeList() {
       return {
         LeaveReasonId: element.LeaveReasonId,
         ReasonName: element.ReasonName,
+        Description: element.Description,
         Unit: element.Unit,
-        Description: element.Description
       };
     }));
     // this.hideColums$ = of({headers: ['Id', 'Department Name', 'Office Name'], items: ['DepartmentId', 'DepartmentName', 'OfficeName']});
@@ -84,6 +85,24 @@ actionEvents(event: any) {
     dialogRef.afterClosed().subscribe(x => {
       this.getLeaveTypeList();
     });
+  } else if (event.type === 'delete') {
+    this.configservice.openDeleteDialog().subscribe(res => {
+      if (res) {
+        this.commonLoader.showLoader();
+        this.hrService.deleteLeaveType(event.item.LeaveReasonId).subscribe(x => {
+          this.commonLoader.hideLoader();
+          if (x) {
+            this.toastr.success('Deleted');
+            this.getLeaveTypeList();
+          }
+
+          this.RecordCount = x.RecordCount;
+        }, error => {
+          this.commonLoader.hideLoader();
+        });
+      }
+    });
+
   }
 }
 
