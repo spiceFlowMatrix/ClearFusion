@@ -253,7 +253,7 @@
                                  <img src="@Model.UnCheckedIconPath" alt=""> 
                                 }</td>
   <td style="border-color:white">No &nbsp
-                                @if (Model.InterviewQuestionTwo == false)
+                                @if (Model.InterviewQuestionOne == false)
                                 {
                                    <img src="@Model.CheckedIconPath" alt=""> 
                                 }
@@ -266,7 +266,7 @@
 <tr>
 <td style="border-color:white">2. Do you have any health-related issue? If yes, please elaborate in detail.</td>
   <td style="border-color:white">Yes &nbsp
-                                @if (Model.InterviewQuestionThree == true)
+                                @if (Model.InterviewQuestionTwo == true)
                                 {
                                    <img src="@Model.CheckedIconPath" alt=""> 
                                 }
@@ -275,7 +275,7 @@
                                  <img src="@Model.UnCheckedIconPath" alt=""> 
                                 }</td>
   <td style="border-color:white">No &nbsp
-                                @if (Model.InterviewQuestionThree == false)
+                                @if (Model.InterviewQuestionTwo == false)
                                 {
                                    <img src="@Model.CheckedIconPath" alt=""> 
                                 }

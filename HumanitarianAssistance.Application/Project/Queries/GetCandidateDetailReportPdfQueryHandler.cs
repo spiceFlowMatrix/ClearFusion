@@ -59,7 +59,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                         Position = ddd.Designation,
                         RequiredEducation = et.Name,
                         RequiredProfession =  phr.ProfessionName,
-                        RequiredExperience = phd.Experience,
+                        RequiredExperience = phd.Experience + " Years",
                         CurrentEducation = e.Name,
                         CurrentProfession = p.ProfessionName,
                         CurrentExperience = cd.RelevantExperienceInYear + cd.IrrelevantExperienceInYear + " Years",                     
