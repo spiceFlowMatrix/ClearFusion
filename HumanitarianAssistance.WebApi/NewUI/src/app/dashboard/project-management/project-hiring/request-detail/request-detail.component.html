@@ -145,7 +145,7 @@
                 <mat-tab label="Existing Candidates">
                     <h5>
                         Candidates &nbsp;&nbsp;&nbsp;&nbsp;
-                        <mat-form-field>
+                        <mat-form-field *ngIf="!IsHiringRequestCompleted && !IsHiringRequestClosed">
                             <mat-select placeholder="Select Existing Employee'" (selectionChange)="OnExistingEmployeeSelection($event)" name="Employee">
                                 <mat-option *ngFor="let item of existingEmployeesList" [value]="item.Id">{{ item.value }}
                                 </mat-option>
