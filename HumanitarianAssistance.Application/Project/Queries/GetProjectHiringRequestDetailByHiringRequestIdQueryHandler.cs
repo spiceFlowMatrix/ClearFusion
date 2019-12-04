@@ -45,6 +45,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                            select new ProjectHiringRequestModel
                                            {
                                                HiringRequestId = hr.HiringRequestId,
+                                               HiringRequestCode = hr.HiringRequestCode,
                                                Office = o.OfficeName,
                                                JobGrade = g.GradeName,
                                                Position = p.ProfessionName,
@@ -67,7 +68,6 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                HiringRequestStatus = hr.HiringRequestStatus,
                                                SpecificDutiesAndResponsibilities=hr.SpecificDutiesAndResponsblities,
                                                SubmissionGuidelines = hr.SubmissionGuidlines,
-                                               HiringRequestCode = hr.HiringRequestCode
 
                                            }).FirstOrDefaultAsync();
                 response.ResponseData = requestDetail;

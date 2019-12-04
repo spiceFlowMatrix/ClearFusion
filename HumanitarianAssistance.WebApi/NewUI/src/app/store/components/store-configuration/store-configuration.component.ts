@@ -16,7 +16,7 @@ import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.
 })
 export class StoreConfigurationComponent implements OnInit {
   unitListHeaders$ = of(['Name']);
-  sourceCodeHeaders$ = of(['Id', 'SourceCode Id', 'Code', 'Description', 'Address', 'Phone', 'Fax', 'Email Address', 'Guarantor'])
+  sourceCodeHeaders$ = of(['Id', 'SourceCode Id', 'Code', 'Description', 'Address', 'Phone', 'Fax', 'Email Address', 'Guarantor']);
 
   hideUnitColums: Observable<{ headers?: string[], items?: string[] }>;
   hideSourceCodeColums: Observable<{ headers?: string[], items?: string[] }>;
@@ -31,8 +31,8 @@ export class StoreConfigurationComponent implements OnInit {
   sourCodeForm: FormGroup;
   unitType: UnitType = {};
 
-  sourceCodeTypes: SourceCodeType[] = []
-  sourceCode: SourceCode = {}
+  sourceCodeTypes: SourceCodeType[] = [];
+  sourceCode: SourceCode = {};
 
   isEditCode = false;
   // screen
@@ -41,14 +41,14 @@ export class StoreConfigurationComponent implements OnInit {
   scrollStyles: any;
 
 
-  @ViewChild("unittype") dialogRef: TemplateRef<any>;
-  @ViewChild("sourceCode") codeDialogRef: TemplateRef<any>;
+  @ViewChild('unittype') dialogRef: TemplateRef<any>;
+  @ViewChild('sourceCode') codeDialogRef: TemplateRef<any>;
 
   constructor(private dialog: MatDialog,
     private configservice: ConfigService,
     private fb: FormBuilder, private loader: CommonLoaderService) { }
   //#region "Dynamic Scroll"
-  
+
   ngOnInit() {
     this.typeName = new FormControl('', Validators.required);
     this.unitActions = {
@@ -59,15 +59,15 @@ export class StoreConfigurationComponent implements OnInit {
       subitems: {
 
       }
-    }
+    };
     this.loader.showLoader();
     forkJoin([this.configservice.getUnitType(),
     this.configservice.getAllSourceCodeTypes(), this.configservice.getAllStoreSource()]).subscribe(res => {
       this.getAllUnitTypes(res[0]);
       this.getAllSourCodeTypes(res[1]);
       this.getAllsourceCodes(res[2]);
-      this.loader.hideLoader()
-    })
+      this.loader.hideLoader();
+    });
 
     this.createSourceCodeForm();
   }
@@ -101,18 +101,18 @@ export class StoreConfigurationComponent implements OnInit {
         this.configservice.editUnit(this.unitType).subscribe(res => {
           this.configservice.getUnitType().subscribe(res1 => {
             this.getAllUnitTypes(res1);
-          })
+          });
           this.unitType = {};
           this.dialog.closeAll();
-        })
+        });
       } else {
         this.unitType.UnitTypeName = this.typeName.value;
         this.configservice.saveUnit(this.unitType).subscribe(res => {
           this.configservice.getUnitType().subscribe(res1 => {
             this.getAllUnitTypes(res1);
-          })
+          });
           this.dialog.closeAll();
-        })
+        });
       }
       this.typeName.reset();
     }
@@ -125,10 +125,10 @@ export class StoreConfigurationComponent implements OnInit {
           this.configservice.deleteUnit(this.unitType).subscribe(res => {
             this.configservice.getUnitType().subscribe(res1 => {
               this.getAllUnitTypes(res1);
-            })
-          })
+            });
+          });
         }
-      })
+      });
 
     }
     if (data.type == 'edit') {
@@ -154,7 +154,7 @@ export class StoreConfigurationComponent implements OnInit {
       emailAddress: ['', Validators.email],
       guarantor: [''],
       codeTypeId: ['']
-    })
+    });
   }
   getAllSourCodeTypes(res) {
     this.sourceCodeTypes = res.data.SourceCodeTypelist;
@@ -174,13 +174,13 @@ export class StoreConfigurationComponent implements OnInit {
       this.dialog.open(this.codeDialogRef, {
         width: '500px'
       });
-    })
+    });
 
   }
   openCodeType(e: SourceCodeType) {
     this.sourceCodeItems$.subscribe(res => {
       this.sourceCodeByType$ = of(res.filter(r => r.CodeTypeId == e.CodeTypeId));
-    })
+    });
   }
   saveCode() {
     this.sourceCode = {};
@@ -196,27 +196,27 @@ export class StoreConfigurationComponent implements OnInit {
       this.sourceCode.SourceCodeId = this.sourCodeForm.controls.sourceCodeId.value;
       this.configservice.editCode(this.sourceCode).pipe(
         concatMap(val => {
-          return this.configservice.getSourceCodeById(this.sourceCode.CodeTypeId)
+          return this.configservice.getSourceCodeById(this.sourceCode.CodeTypeId);
         })
       ).subscribe(res => {
         this.sourceCodeByType$ = of(res);
         this.dialog.closeAll();
         this.isEditCode = false;
-        this.sourceCode = {}
+        this.sourceCode = {};
         this.sourCodeForm.reset();
-      })
+      });
     } else {
       this.sourceCode.SourceCodeId = 0;
       this.configservice.saveCode(this.sourceCode).pipe(
         concatMap(val => {
-          return this.configservice.getSourceCodeById(this.sourceCode.CodeTypeId)
+          return this.configservice.getSourceCodeById(this.sourceCode.CodeTypeId);
         })
       ).subscribe(res => {
         this.sourceCodeByType$ = of(res);
         this.dialog.closeAll();
-        this.sourceCode = {}
+        this.sourceCode = {};
         this.sourCodeForm.reset();
-      })
+      });
     }
 
 
@@ -229,7 +229,7 @@ export class StoreConfigurationComponent implements OnInit {
         if (res) {
           this.configservice.deleteCode(data.item.SourceCodeId).pipe(
             concatMap(val => {
-              return this.configservice.getSourceCodeById(data.item.CodeTypeId)
+              return this.configservice.getSourceCodeById(data.item.CodeTypeId);
             })).subscribe(res => {
               this.sourceCodeByType$ = of(res);
             });

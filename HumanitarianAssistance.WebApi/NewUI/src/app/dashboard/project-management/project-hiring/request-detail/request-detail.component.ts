@@ -213,7 +213,7 @@ export class RequestDetailComponent implements OnInit {
                 SpecificDutiesAndResponsibilities:
                   response.data.SpecificDutiesAndResponsibilities,
                 SubmissionGuidelines: response.data.SubmissionGuidelines,
-                HiringRequestCode: response.data.HiringRequestId
+                HiringRequestCode: response.data.HiringRequestCode
               };
               if (
                 this.hiringRequestDetails.HiringRequestStatus ===

@@ -17,6 +17,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public double? PayRate { get; set; }
        // public string Status { get; set; }
         public long? HiringRequestId { get; set; }
+        public string HiringRequestCode { get; set; }
         public int? HiringRequestStatus { get; set; }
         public string DepartmentName { get; set; }
         public string BudgetName { get; set; }
@@ -31,7 +32,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string KnowledgeAndSkills { get; set; }
         public string SpecificDutiesAndResponsibilities { get; set; }
         public string SubmissionGuidelines { get; set; }
-        public string HiringRequestCode { get; set; }
+
 
     }
 }

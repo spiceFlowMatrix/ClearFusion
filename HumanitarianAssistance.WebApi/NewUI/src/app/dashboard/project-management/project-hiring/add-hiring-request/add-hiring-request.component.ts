@@ -34,6 +34,7 @@ export class AddHiringRequestComponent implements OnInit {
   isFormSubmitted = false;
   hiringRequestId: number;
   AvailableVacancies: number;
+  hiringRequestCode: string;
   hiringRequestDetail: IHiringRequestModel;
   addHiringRequestForm: FormGroup;
   professionList$: Observable<IDropDownModel[]>;
@@ -60,13 +61,21 @@ export class AddHiringRequestComponent implements OnInit {
     private hiringRequestService: HiringRequestsService,
     private toastr: ToastrService,
     private fb: FormBuilder,
-    private loader: CommonLoaderService,
+    private loader: CommonLoaderService
   ) {
     this.addHiringRequestForm = this.fb.group({
       ProjectId: [null],
       HiringRequestId: [null],
-      TotalVacancy: [null, [Validators.required, Validators.min(1),
-      (control: AbstractControl) => Validators.max(this.AvailableVacancies)(control)]],
+      HiringRequestCode: [null],
+      TotalVacancy: [
+        null,
+        [
+          Validators.required,
+          Validators.min(1),
+          (control: AbstractControl) =>
+            Validators.max(this.AvailableVacancies)(control)
+        ]
+      ],
       Position: [null, [Validators.required]],
       Office: [null, [Validators.required]],
       BudgetLine: [null, [Validators.required]],
@@ -84,7 +93,7 @@ export class AddHiringRequestComponent implements OnInit {
       Profession: [null, [Validators.required]],
       SpecificDutiesAndResponsibilities: [null, [Validators.required]],
       KnowledgeAndSkillsRequired: [null, [Validators.required]],
-      SubmissionGuidelines: [null, [Validators.required]],
+      SubmissionGuidelines: [null, [Validators.required]]
     });
     this.genderList$ = of([
       { name: 'Male', value: 1 },
@@ -106,7 +115,9 @@ export class AddHiringRequestComponent implements OnInit {
       this.hiringRequestId
     );
     if (this.data.hiringRequestId !== 0) {
-       this.getAllHiringRequestDetail();
+      this.getAllHiringRequestDetail();
+    } else {
+      this.getHiringRequestCode();
     }
     forkJoin([this.getAllOfficeList(), this.getAllCountryList()])
       .pipe(takeUntil(this.destroyed$))
@@ -122,7 +133,6 @@ export class AddHiringRequestComponent implements OnInit {
     this.getEducationDegreeList();
     this.getAllProfessionList();
   }
-
   getAllOfficeList() {
     this.commonLoader.showLoader();
     return this.hiringRequestService.GetOfficeList();
@@ -141,8 +151,10 @@ export class AddHiringRequestComponent implements OnInit {
         (response: IResponseData) => {
           this.loader.showLoader();
           if (response.statusCode === 200 && response.data !== null) {
+            this.hiringRequestCode = response.data.HiringRequestCode;
             this.addHiringRequestForm.setValue({
               HiringRequestId: response.data.HiringRequestId,
+              HiringRequestCode: response.data.HiringRequestCode,
               ProjectId: response.data.ProjectId,
               TotalVacancy: response.data.TotalVacancy,
               Position: response.data.Position,
@@ -160,10 +172,10 @@ export class AddHiringRequestComponent implements OnInit {
               PayCurrency: response.data.PayCurrency,
               PayHourlyRate: response.data.PayHourlyRate,
               Profession: response.data.Profession,
-
               SpecificDutiesAndResponsibilities:
                 response.data.SpecificDutiesAndResponsibilities,
-              KnowledgeAndSkillsRequired: response.data.KnowledgeAndSkillsRequired,
+              KnowledgeAndSkillsRequired:
+                response.data.KnowledgeAndSkillsRequired,
               SubmissionGuidelines: response.data.SubmissionGuidelines
             });
 
@@ -175,6 +187,18 @@ export class AddHiringRequestComponent implements OnInit {
           this.loader.hideLoader();
         }
       );
+  }
+  getHiringRequestCode() {
+    this.commonLoader.hideLoader();
+    this.hiringRequestService
+      .GetHiringRequestCode(this.projectId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((response: IResponseData) => {
+        if (response.statusCode === 200 && response.data !== null) {
+          this.hiringRequestCode = response.data;
+          this.addHiringRequestForm.controls['HiringRequestCode'].setValue(this.hiringRequestCode);
+        }
+      });
   }
 
   subscribeOfficeList(response: any) {
@@ -275,20 +299,21 @@ export class AddHiringRequestComponent implements OnInit {
         }
       );
   }
-  getRemainingVacancy(JobId: number) {
-    this.hiringRequestService.getRemainingVacancyByJobId(JobId).subscribe(
-      (response: IResponseData) => {
-        this.commonLoader.showLoader();
-        if (response.statusCode === 200 && response.data !== null) {
-          this.AvailableVacancies = response.data;
-        }
-        this.commonLoader.hideLoader();
-      },
-      error => {
-        this.commonLoader.hideLoader();
-      }
-    );
-  }
+
+  // getRemainingVacancy(JobId: number) {
+  //   this.hiringRequestService.getRemainingVacancyByJobId(JobId).subscribe(
+  //     (response: IResponseData) => {
+  //       this.commonLoader.showLoader();
+  //       if (response.statusCode === 200 && response.data !== null) {
+  //         this.AvailableVacancies = response.data;
+  //       }
+  //       this.commonLoader.hideLoader();
+  //     },
+  //     error => {
+  //       this.commonLoader.hideLoader();
+  //     }
+  //   );
+  // }
 
   //#region "AddHiringRequest"
   AddHiringRequest(data: IHiringRequestModel) {
@@ -317,30 +342,36 @@ export class AddHiringRequestComponent implements OnInit {
 
   //#region "EditHirinRequest"
   EditHiringRequest() {
-    this.addHiringRequestForm.value.ClosingDate = StaticUtilities.getLocalDate(this.addHiringRequestForm.value.ClosingDate);
-    this.addHiringRequestForm.value.AnouncingDate = StaticUtilities.getLocalDate(this.addHiringRequestForm.value.AnouncingDate);
+    this.addHiringRequestForm.value.ClosingDate = StaticUtilities.getLocalDate(
+      this.addHiringRequestForm.value.ClosingDate
+    );
+    this.addHiringRequestForm.value.AnouncingDate = StaticUtilities.getLocalDate(
+      this.addHiringRequestForm.value.AnouncingDate
+    );
     this.isFormSubmitted = true;
-    this.hiringRequestService.EditHiringRequestDetail(this.addHiringRequestForm.value).subscribe(
-      (response: IResponseData) => {
-        if (response.statusCode === 200) {
-          this.toastr.success('Hiring request updated successfully');
-          this.UpdateHiringRequestListRefresh();
-          this.isFormSubmitted = false;
-        } else {
-          this.toastr.error(response.message);
+    this.hiringRequestService
+      .EditHiringRequestDetail(this.addHiringRequestForm.value)
+      .subscribe(
+        (response: IResponseData) => {
+          if (response.statusCode === 200) {
+            this.toastr.success('Hiring request updated successfully');
+            this.UpdateHiringRequestListRefresh();
+            this.isFormSubmitted = false;
+          } else {
+            this.toastr.error(response.message);
+            this.isFormSubmitted = false;
+          }
+          this.onCancelPopup();
+        },
+        error => {
+          this.toastr.error('Someting went wrong. Please try again');
           this.isFormSubmitted = false;
         }
-        this.onCancelPopup();
-      },
-      error => {
-        this.toastr.error('Someting went wrong. Please try again');
-        this.isFormSubmitted = false;
-      }
-    );
+      );
   }
   //#endregion
   onChangeDutyStation(e) {
-   // this.professionList$ = null;
+    // this.professionList$ = null;
     this.jobList$ = null;
     this.OfficeId = e;
     // this.getAllProfessionList(e);
@@ -356,7 +387,7 @@ export class AddHiringRequestComponent implements OnInit {
     this.getAllProvinceList(e);
   }
   onChangeJobCategory(e) {
-   // this.getRemainingVacancy(e);
+    // this.getRemainingVacancy(e);
   }
   onFormSubmit(data: any) {
     if (this.addHiringRequestForm.valid) {
@@ -385,12 +416,14 @@ export class AddHiringRequestComponent implements OnInit {
   //#region "getDesignationList"
   getDesignationList() {
     this.hiringRequestService.getDesignationList().subscribe(x => {
-      this.designationList$ = of(x.map(element => {
-        return {
-          value: element.DesignationId,
-          name: element.Designation,
-        };
-      }));
+      this.designationList$ = of(
+        x.map(element => {
+          return {
+            value: element.DesignationId,
+            name: element.Designation
+          };
+        })
+      );
     });
   }
   //#endregion
@@ -398,12 +431,14 @@ export class AddHiringRequestComponent implements OnInit {
   //#region "getBudgetLineList"
   getBudgetLineList() {
     this.hiringRequestService.GetBudgetLineList(this.projectId).subscribe(x => {
-      this.budgetLineList$ = of(x.data.map(element => {
-        return {
-          value: element.BudgetLineId,
-          name: element.BudgetCodeName,
-        };
-      }));
+      this.budgetLineList$ = of(
+        x.data.map(element => {
+          return {
+            value: element.BudgetLineId,
+            name: element.BudgetCodeName
+          };
+        })
+      );
     });
   }
   //#endregion
@@ -411,12 +446,14 @@ export class AddHiringRequestComponent implements OnInit {
   //#region "getJobGradeList"
   getJobGradeList() {
     this.hiringRequestService.GetJobGradeList().subscribe(x => {
-      this.jobGradeList$ = of(x.data.map(element => {
-        return {
-          value: element.GradeId,
-          name: element.GradeName,
-        };
-      }));
+      this.jobGradeList$ = of(
+        x.data.map(element => {
+          return {
+            value: element.GradeId,
+            name: element.GradeName
+          };
+        })
+      );
     });
   }
   //#endregion
@@ -424,25 +461,29 @@ export class AddHiringRequestComponent implements OnInit {
   //#region "getJobGradeList"
   getDepartmentList(officeId) {
     this.hiringRequestService.getDepartmentList(officeId).subscribe(x => {
-      this.departmentList$ = of(x.data.Departments.map(element => {
-        return {
-          value: element.DepartmentId,
-          name: element.DepartmentName,
-        };
-      }));
+      this.departmentList$ = of(
+        x.data.Departments.map(element => {
+          return {
+            value: element.DepartmentId,
+            name: element.DepartmentName
+          };
+        })
+      );
     });
   }
   //#endregion
 
-   //#region "getCurrencyList"
+  //#region "getCurrencyList"
   getCurrencyList() {
     this.hiringRequestService.GetCurrencyList().subscribe(x => {
-      this.currencyList$ = of(x.data.map(element => {
-        return {
-          value: element.CurrencyId,
-          name: element.CurrencyName,
-        };
-      }));
+      this.currencyList$ = of(
+        x.data.map(element => {
+          return {
+            value: element.CurrencyId,
+            name: element.CurrencyName
+          };
+        })
+      );
     });
   }
   //#endregion
@@ -450,12 +491,14 @@ export class AddHiringRequestComponent implements OnInit {
   //#region "getEducationDegreeList"
   getEducationDegreeList() {
     this.hiringRequestService.GetEducationDegreeList().subscribe(x => {
-      this.educationDegreeList$ = of(x.map(element => {
-        return {
-          value: element.Id,
-          name: element.Name,
-        };
-      }));
+      this.educationDegreeList$ = of(
+        x.map(element => {
+          return {
+            value: element.Id,
+            name: element.Name
+          };
+        })
+      );
     });
   }
   //#endregion
@@ -463,12 +506,14 @@ export class AddHiringRequestComponent implements OnInit {
   //#region "getAllProfessionList"
   getAllProfessionList() {
     this.hiringRequestService.GetProfessionList().subscribe(x => {
-      this.professionList$ = of(x.data.map(element => {
-        return {
-          value: element.ProfessionId,
-          name: element.ProfessionName,
-        };
-      }));
+      this.professionList$ = of(
+        x.data.map(element => {
+          return {
+            value: element.ProfessionId,
+            name: element.ProfessionName
+          };
+        })
+      );
     });
   }
   //#endregion
