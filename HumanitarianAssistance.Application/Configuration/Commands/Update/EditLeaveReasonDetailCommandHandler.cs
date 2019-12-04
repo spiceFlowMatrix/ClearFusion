@@ -30,6 +30,7 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Update
                 {
                     leavereasoninfo.ReasonName = request.ReasonName;
                     leavereasoninfo.Unit = request.Unit;
+                    leavereasoninfo.Description = request.Description;
                     leavereasoninfo.ModifiedById = request.ModifiedById;
                     leavereasoninfo.ModifiedDate = request.ModifiedDate;
                     leavereasoninfo.IsDeleted = request.IsDeleted;

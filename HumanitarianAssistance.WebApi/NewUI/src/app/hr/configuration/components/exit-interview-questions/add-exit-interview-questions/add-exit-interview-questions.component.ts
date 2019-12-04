@@ -84,7 +84,7 @@ saveQuestion() {
 
     const model = {
       QuestionType: questionType,
-      Id: this.data.Id
+      Id: this.data ? this.data.Id : 0
     };
     this.hrService.getSequenceNumber(model).subscribe(x => {
       this.commonLoader.hideLoader();
