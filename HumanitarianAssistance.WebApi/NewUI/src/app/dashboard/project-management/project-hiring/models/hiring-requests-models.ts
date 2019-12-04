@@ -83,6 +83,7 @@ export interface ICandidateDetailModel {
 
 export interface IHiringRequestModel {
   HiringRequestId?: number;
+  HiringRequestCode?: string;
   ProjectId?: any;
   JobCategory?: number;
   MinEducationLevel?: string;

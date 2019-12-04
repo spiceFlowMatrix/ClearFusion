@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Application.Project.Models;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Persistence;
 using HumanitarianAssistance.Persistence.Extensions;
 using MediatR;
@@ -59,14 +60,16 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                             ContractType = hr.ContractType,
                             ContractDuration = hr.ContractDuration,
                             Gender = hr.GenderId == 1 ? "Male" : hr.GenderId == 2 ? "Female" : "Other",
-                            //SalaryRange = hr.SalaryRange,
+                            HourlyPayRate = hr.HourlyRate,
+                            PayCurrency = c.CurrencyName,
+                            HiringRequestCode =  hr.HiringRequestCode, 
                             AnnouncingDate = hr.AnouncingDate != null ? hr.AnouncingDate.Value.ToShortDateString () : "",
                             ClosingDate = hr.ClosingDate != null ? hr.ClosingDate.Value.ToShortDateString () : "",
                            // Country = cdl.CountryName,
                             FilledVacancies = hr.FilledVacancies,
                             JobType = dpl.DepartmentName,
                             Shift = hr.Shift == 1 ? "Day" : "Night",
-                           // JobStatus = hr.JobStatus,
+                            JobStatus = ((HiringRequestStatus)(hr.HiringRequestStatus)).ToString(),
                             Experience = hr.Experience,
                             // Background = hr.Background,
                             SpecificDutiesAndResponsiblities = hr.SpecificDutiesAndResponsblities,
@@ -93,12 +96,15 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                         FilledVacancies = requestDetail.FilledVacancies,
                         JobType = requestDetail.JobType,
                         Shift = requestDetail.Shift,
-                        // JobStatus = requestDetail.JobStatus,
+                        JobStatus = requestDetail.JobStatus,
                         Experience = requestDetail.Experience,
                         // Background = requestDetail.Background,
                         SpecificDutiesAndResponsiblities = requestDetail.SpecificDutiesAndResponsiblities,
                         KnowladgeAndSkillRequired = requestDetail.KnowladgeAndSkillRequired,
                         SubmissionGuidline = requestDetail.SubmissionGuidline,
+                        HourlyPayRate = requestDetail.HourlyPayRate,
+                        PayCurrency = requestDetail.PayCurrency,
+                        HiringRequestCode =  requestDetail.HiringRequestCode
                 });
 
                 return await _pdfExportService.ExportToPdf (summary, "Pages/PdfTemplates/HiringRequestForm.cshtml");

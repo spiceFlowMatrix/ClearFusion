@@ -485,6 +485,9 @@ export class GLOBAL {
      'HiringRequest/AddInterviewDetails';
      public static API_HiringRequest_GetInterviewDetailsByInterviewId =
      'HiringRequest/GetInterviewDetailsByInterviewId';
+     public static API_HiringRequest_GetHiringRequestCode =
+     'HiringRequest/GetHiringRequestCode';
+
 
 
 
