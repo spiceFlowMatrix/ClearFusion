@@ -1,6 +1,6 @@
 <div>
     <h1 mat-dialog-title>
-        Hiring Request
+        Hiring Request : {{hiringRequestCode}}
         <button mat-icon-button [mat-dialog-close] class="pull-right">
       <mat-icon aria-label="clear">clear</mat-icon>
     </button>
@@ -130,7 +130,7 @@
                         </div>
                         <div class="col-lg-6 col-sm-6">
                             <mat-form-field class="example-full-width">
-                                <input matInput formControlName="Experience(In Years)" placeholder="Experience" />
+                                <input matInput formControlName="Experience" placeholder="Experience" type="number" />
                             </mat-form-field>
                         </div>
                     </div>

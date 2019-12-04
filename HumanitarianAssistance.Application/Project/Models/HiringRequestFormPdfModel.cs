@@ -7,7 +7,7 @@ namespace HumanitarianAssistance.Application.Project.Models {
         //public string Description { get; set; }
         public string Position { get; set; }
         //public string Profession { get; set; }
-        //public string BudgetLine { get; set; }
+        public string HiringRequestCode { get; set; }
         public int? TotalVacancies { get; set; }
         public string Office { get; set; }
         public int? FilledVacancies { get; set; }
@@ -20,7 +20,8 @@ namespace HumanitarianAssistance.Application.Project.Models {
         public string JobStatus { get; set; }
         public string Experience { get; set; }
         public string Background { get; set; }
-        public string SalaryRange { get; set; }
+        public double? HourlyPayRate { get; set; }
+        public string PayCurrency { get; set; }
         public string Province { get; set; }
         public string Country { get; set; }
         public int? ContractDuration { get; set; }

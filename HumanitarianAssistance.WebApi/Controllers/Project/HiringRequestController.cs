@@ -226,6 +226,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         public async Task<ApiResponse> GetInterviewDetailsByInterviewId([FromBody]int InterviewId)
         {
             return await _mediator.Send(new GetInterviewDetailsByInterviewIdQuery{ InterviewId=InterviewId});
-        }                 
+        }     
+           
+        [HttpPost]
+        public async Task<ApiResponse> GetHiringRequestCode([FromBody]long ProjectId)
+        {
+            return await _mediator.Send(new GetHiringRequestCodeQuery{
+                ProjectId = ProjectId
+            });
+        }         
     }  
 }

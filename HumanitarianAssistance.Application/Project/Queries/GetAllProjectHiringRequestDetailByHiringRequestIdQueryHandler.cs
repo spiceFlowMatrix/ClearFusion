@@ -22,8 +22,10 @@ namespace HumanitarianAssistance.Application.Project.Queries {
         public async Task<ApiResponse> Handle (GetAllProjectHiringRequestDetailByHiringRequestIdQuery request, CancellationToken cancellationToken) {
             ApiResponse response = new ApiResponse ();
             try {
-                var requestDetail = await _dbContext.ProjectHiringRequestDetail.Where (x => x.HiringRequestId == request.HiringRequestId && x.IsDeleted == false).Select (s => new ProjectHiringRequestDetailModel {
+                var requestDetail = await _dbContext.ProjectHiringRequestDetail.Where (x => x.HiringRequestId == request.HiringRequestId && x.IsDeleted == false)
+                .Select (s => new ProjectHiringRequestDetailModel {
                         HiringRequestId = s.HiringRequestId,
+                        HiringRequestCode = s.HiringRequestCode,
                         ProjectId = s.ProjectId,
                         JobCategory = s.JobId,
                         MinEducationLevel = s.MinimumEducationLevel,

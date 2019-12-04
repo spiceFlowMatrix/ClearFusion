@@ -44,7 +44,7 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
   ngOnInit() {
   }
   ngOnChanges(): void {
-    this.itemActions = this.actions
+    this.itemActions = this.actions;
     if (this.items) {
       this.items.subscribe(res => {
         this.subItems = [];

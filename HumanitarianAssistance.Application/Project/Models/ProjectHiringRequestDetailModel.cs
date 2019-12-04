@@ -3,6 +3,7 @@ using System;
 namespace HumanitarianAssistance.Application.Project.Models {
     public class ProjectHiringRequestDetailModel {
         public long? HiringRequestId { get; set; }
+         public string HiringRequestCode { get; set; }
         public long? ProjectId { get; set; }
         public long? JobCategory { get; set; }
         public string MinEducationLevel { get; set; }

@@ -507,7 +507,8 @@ export class InterviewDetailComponent implements OnInit {
         (sum, item) => sum + item.Score,
         0
       ) / this.ratingBasedCriteriaAnswerList.length;
-    this.totalMarksObtain = this.marksObtain + this.professionalCriteriaMarks;
+    // this.totalMarksObtain = this.marksObtain + this.professionalCriteriaMarks;
+    this.TotalMarks( this.interviewDetailForm.get('WrittenTestMarks').value);
     this.interviewDetailForm.controls['ProfessionalCriteriaMark'].setValue(
       this.professionalCriteriaMarks
     );
@@ -531,11 +532,11 @@ export class InterviewDetailComponent implements OnInit {
       (sum, item) => sum + item.Score,
       0
     );
-    this.totalMarksObtain = this.marksObtain + this.professionalCriteriaMarks;
+    //this.totalMarksObtain = this.marksObtain + this.professionalCriteriaMarks;
+    this.TotalMarks( this.interviewDetailForm.get('WrittenTestMarks').value);
+
     this.interviewDetailForm.controls['MarksObtain'].setValue(this.marksObtain);
-    this.interviewDetailForm.controls['TotalMarksObtain'].setValue(
-      this.totalMarksObtain
-    );
+
     this.interviewDetailForm.controls['TechnicalQuestionList'].setValue(
       this.technicalAnswerList
     );
@@ -683,4 +684,22 @@ export class InterviewDetailComponent implements OnInit {
                     (this.interviewDetailForm.controls['InterviewerList'].value as Array<any>).splice(index, 1);
     }
   }
+  //#endregion
+
+  //#region "TotalMarks"
+  TotalMarks(data: any) {
+    if (data != null && data !== undefined) {
+      this.totalMarksObtain = this.professionalCriteriaMarks + this.marksObtain + +(data);
+    } else {
+      this.totalMarksObtain = this.professionalCriteriaMarks + this.marksObtain;
+    }
+    this.interviewDetailForm.controls['TotalMarksObtain'].setValue(
+      this.totalMarksObtain);
+  }
+  WritenTextMarks(data: any) {
+    if (data.srcElement.value != null && data.srcElement.value !== undefined) {
+      this.TotalMarks(data.srcElement.value);
+    }
+  }
+  //#endregion
 }

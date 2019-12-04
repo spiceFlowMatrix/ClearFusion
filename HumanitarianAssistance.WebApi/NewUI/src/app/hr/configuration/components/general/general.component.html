@@ -3,7 +3,7 @@
   </span>
 </lib-sub-header-template>
 
-<mat-card humAddScroll>
+<mat-card humAddScroll [height]="250">
   <div class="row">
     <div class="col-sm-12">
       <mat-accordion>
@@ -123,5 +123,22 @@
       </mat-accordion>
     </div>
   </div>
+  <br>
+  <!-- <div class="row">
+    <div class="col-sm-12">
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <h4>Leave Type</h4>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <ng-template matExpansionPanelContent>
+            <app-leave-type></app-leave-type>
+          </ng-template>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div> -->
 
 </mat-card>

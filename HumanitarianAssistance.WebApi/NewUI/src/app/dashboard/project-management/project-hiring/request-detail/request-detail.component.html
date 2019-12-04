@@ -2,7 +2,7 @@
     <span class="action_header">
     <i class="fa fa-arrow-left bckicon" (click)="backToList()"></i>
       Request Details
-    <hum-button
+    <hum-button *ngIf="!IsHiringRequestCompleted && !IsHiringRequestClosed"
       [type]="'edit'"
       [text]="'Edit'"
       (click)="editHiringRequest()"
@@ -10,7 +10,7 @@
     <hum-button *ngIf="!IsHiringRequestCompleted && !IsHiringRequestClosed"  [type]="'save'" [text]="'complete '" (click)="onCompleteRequest()"></hum-button>
     <hum-button *ngIf="!IsHiringRequestClosed && !IsHiringRequestCompleted" [type]="'cancel'" (click)="onCloseRequest()" [text]="'close request'"></hum-button>
 
-    <hum-button *ngIf="IsHiringRequestCompleted"  [type]="'completed'" [text]="'completed '"></hum-button>
+    <hum-button *ngIf="IsHiringRequestCompleted"  [type]="'completed'" [text]="'Completed '"></hum-button>
     <hum-button *ngIf="IsHiringRequestClosed"  [type]="'cancel'" [text]="'Closed '" [disabled]="true"></hum-button>
     <hum-button [type]="'download'" [text]="'PDF Export'" (click)="onExportHiringRequestPdf()"></hum-button>
   </span>
@@ -22,7 +22,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-6">
-                <h4> <span> Code: </span> {{ hiringRequestDetails.HiringRequestId }}</h4>
+                <h4> <span> Code: </span> {{ hiringRequestDetails.HiringRequestCode }}</h4>
                 <h5> Specific Duties & Responsibilities</h5>
                 <mat-card-subtitle>
                     {{hiringRequestDetails.SpecificDutiesAndResponsibilities}}
@@ -129,7 +129,7 @@
                 <mat-tab label="New Candidates">
                     <h5>
                         Candidates
-                        <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewCandidate()"></hum-button>
+                        <hum-button *ngIf="!IsHiringRequestCompleted && !IsHiringRequestClosed" [type]="'add'" [text]="'ADD'" (click)="addNewCandidate()"></hum-button>
                         <hum-button [type]="'download'" [text]="'PDF Export'" (click)="onExportPdf()"></hum-button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -145,7 +145,7 @@
                 <mat-tab label="Existing Candidates">
                     <h5>
                         Candidates &nbsp;&nbsp;&nbsp;&nbsp;
-                        <mat-form-field>
+                        <mat-form-field *ngIf="!IsHiringRequestCompleted && !IsHiringRequestClosed">
                             <mat-select placeholder="Select Existing Employee'" (selectionChange)="OnExistingEmployeeSelection($event)" name="Employee">
                                 <mat-option *ngFor="let item of existingEmployeesList" [value]="item.Id">{{ item.value }}
                                 </mat-option>
