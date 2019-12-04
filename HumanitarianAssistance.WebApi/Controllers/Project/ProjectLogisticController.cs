@@ -248,7 +248,24 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.ModifiedDate = DateTime.UtcNow; 
             return await _mediator.Send(model);
         }
-        
+
+        [HttpPost]
+        public async Task<ApiResponse> GetGoodsRecievedNote([FromBody]long requestId)
+        {   
+           GetGoodsRecievedNoteQuery model = new GetGoodsRecievedNoteQuery();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.requestId = requestId;
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> EditLogisticRequest([FromBody]EditLogisticRequestCommand model)
+        {   
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow; 
+            return await _mediator.Send(model);
+        }
     }
 
 }

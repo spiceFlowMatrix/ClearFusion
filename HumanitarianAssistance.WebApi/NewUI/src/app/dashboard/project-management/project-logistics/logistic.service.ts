@@ -235,4 +235,19 @@ export class LogisticService {
         requestId
     );
   }
+
+  getGoodsRecievedNote(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ProjectLogistics_GetGoodsRecievedNote,
+        requestId
+    );
+  }
+
+  editLogisticRequest(value) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_EditLogisticRequest,
+      value
+    );
+  }
 }

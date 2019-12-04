@@ -223,6 +223,7 @@ namespace HumanitarianAssistance.Application.Infrastructure {
         public LogisticItemModel logisticItem { get; set; }
         public LogisticsRequestsDetailModel logisticRequest { get; set; }
         public ComparativeStatementModel ComparativeStatement { get; set; }
+        public GoodsRecievedNoteModel GoodsRecievedNote { get; set; }
         public long logisticRequestId { get; set; }
         public List<JobHiringDetailModel> JobDetailList { get; set; }
         public List<OfficeDetailListModel> OfficeList { get; set; }

@@ -10,6 +10,7 @@ import { map } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { LogisticRequestStatus, LogisticComparativeStatus } from 'src/app/shared/enum';
+import { GoodsRecievedUploadComponent } from '../goods-recieved-upload/goods-recieved-upload.component';
 
 
 @Component({
@@ -30,8 +31,8 @@ export class LogisticRequestDetailsComponent implements OnInit {
   requestedItemsData$: Observable<IItemList[]>;
   requestId;
   requestItemList: any[];
-  requestDetail: RequestDetail = {RequestName: '', ProjectId: '', Status: 0, TotalCost: '', RequestId: '' , ComparativeStatus: 0,
-Currency: '', BudgetLine: '', Office: ''};
+  requestDetail: RequestDetail = {ProjectId: '', Status: 0, TotalCost: '', RequestId: '' , ComparativeStatus: 0,
+Currency: '', BudgetLine: '', Office: '', Description: ''};
   actions: TableActionsModel;
   totalCost = 0;
   unavailableItemCost = 0;
@@ -40,6 +41,8 @@ Currency: '', BudgetLine: '', Office: ''};
   hideItemColums;
   storeItemsList = [];
   storedropdownItemsList = [];
+  goodsNoteSubmitted = false;
+  goodsRecievedModel: GoodsRecievedNote;
 
   constructor(private dialog: MatDialog, private routeActive: ActivatedRoute,
     private logisticservice: LogisticService,
@@ -101,15 +104,15 @@ Currency: '', BudgetLine: '', Office: ''};
   getRequestDetails() {
     this.logisticservice.getLogisticRequestDetail(this.requestId).subscribe(res => {
       if (res.StatusCode === 200 && res.data.logisticRequest != null) {
-        this.requestDetail.RequestId = res.data.logisticRequest.RequestId;
-        this.requestDetail.ProjectId = res.data.logisticRequest.ProjectId;
-        this.requestDetail.RequestName = res.data.logisticRequest.RequestName;
-        this.requestDetail.Status = res.data.logisticRequest.Status;
-        this.requestDetail.TotalCost = res.data.logisticRequest.TotalCost;
-        this.requestDetail.Currency = res.data.logisticRequest.Currency;
-        this.requestDetail.BudgetLine = res.data.logisticRequest.BudgetLine;
-        this.requestDetail.Office = res.data.logisticRequest.Office;
-        this.requestDetail.ComparativeStatus = res.data.logisticRequest.ComparativeStatus;
+        this.requestDetail = res.data.logisticRequest;
+        // this.requestDetail.ProjectId = res.data.logisticRequest.ProjectId;
+        // this.requestDetail.RequestName = res.data.logisticRequest.RequestName;
+        // this.requestDetail.Status = res.data.logisticRequest.Status;
+        // this.requestDetail.TotalCost = res.data.logisticRequest.TotalCost;
+        // this.requestDetail.Currency = res.data.logisticRequest.Currency;
+        // this.requestDetail.BudgetLine = res.data.logisticRequest.BudgetLine;
+        // this.requestDetail.Office = res.data.logisticRequest.Office;
+        // this.requestDetail.ComparativeStatus = res.data.logisticRequest.ComparativeStatus;
       }
 
       if (!(this.requestDetail.Status === 1) ) { // || !(this.requestDetail.ComparativeStatus === 1)
@@ -123,6 +126,10 @@ Currency: '', BudgetLine: '', Office: ''};
           subitems: {
           }
         };
+      }
+
+      if (this.requestDetail.Status === LogisticRequestStatus['Complete Purchase'] ) {
+        this.getGoodsRecievedNote();
       }
     });
   }
@@ -336,6 +343,9 @@ Currency: '', BudgetLine: '', Office: ''};
 
   StatusChange(value) {
     this.requestDetail.Status = value;
+    if (this.requestDetail.Status === LogisticRequestStatus['Complete Purchase'] ) {
+      this.getGoodsRecievedNote();
+    }
   }
 
   rejectComparativeStatement() {
@@ -392,17 +402,59 @@ Currency: '', BudgetLine: '', Office: ''};
     });
   }
 
+  approvePurchaseOrder() {
+    if (!this.goodsNoteSubmitted) {
+      const dialogRef = this.dialog.open(GoodsRecievedUploadComponent, {
+        width: '450px',
+        data: {RequestId: this.requestId}
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result !== undefined && result.data != null ) {
+            this.goodsNoteSubmitted = true;
+          } else {
+            this.goodsNoteSubmitted = false;
+          }
+      });
+    } else {
+
+    }
+  }
+
+  getGoodsRecievedNote() {
+    this.logisticservice.getGoodsRecievedNote(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        if (res.data.GoodsRecievedNote == null) {
+          this.goodsNoteSubmitted = false;
+        } else {
+          this.goodsNoteSubmitted = true;
+          this.goodsRecievedModel = res.data.GoodsRecievedNote;
+        }
+      } else {
+         this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  editRequest() {
+    if (this.requestDetail.Status !== LogisticRequestStatus['New Request']) {
+      return;
+    } else {
+      this.router.navigate(['../../logistic-requests/new-request/'] ,
+       { relativeTo: this.routeActive , queryParams: {requestId: this.requestId} });
+    }
+  }
+
 }
-interface RequestDetail {
+export interface RequestDetail {
   RequestId;
   ProjectId;
-  RequestName;
   Status;
   TotalCost;
   ComparativeStatus;
   Currency;
   BudgetLine;
   Office;
+  Description;
 }
 
 interface IItemList {
@@ -412,4 +464,10 @@ interface IItemList {
   Quantity;
   EstimatedCost;
   Availability;
+}
+
+interface GoodsRecievedNote {
+  AttachmentName;
+  AttachmentUrl;
+  UploadedBy;
 }

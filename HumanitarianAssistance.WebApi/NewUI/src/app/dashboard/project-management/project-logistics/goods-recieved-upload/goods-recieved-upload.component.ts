@@ -42,10 +42,12 @@ export class GoodsRecievedUploadComponent implements OnInit {
     if (this.attachment.length === 0) {
       this.toastr.warning('Please upload attachment!');
     }
+    this.commonLoader.showLoader();
     this.globalSharedService
             .uploadFile(FileSourceEntityTypes.GoodsRecievedDocument, this.data.RequestId, this.attachment[0][0])
             .pipe(takeUntil(this.destroyed$))
             .subscribe(y => {
+                this.commonLoader.hideLoader();
                 this.toastr.success('Upload Successful');
                 this.dialogRef.close({data: 'Success'});
             });
