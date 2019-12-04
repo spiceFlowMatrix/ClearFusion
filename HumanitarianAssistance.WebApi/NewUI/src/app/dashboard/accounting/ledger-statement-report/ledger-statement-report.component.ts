@@ -288,7 +288,6 @@ export class LedgerStatementReportComponent implements OnInit {
 
   //#region "onApplyingFilter"
   onApplyingFilter(value: any) {
-    // debugger;
     if (this.ledgerDateRange == null) {
       this.toastr.error('Please Select Date Range');
     } else {

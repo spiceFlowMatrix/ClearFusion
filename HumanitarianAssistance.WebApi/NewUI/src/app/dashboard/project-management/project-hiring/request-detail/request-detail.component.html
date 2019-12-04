@@ -2,7 +2,7 @@
     <span class="action_header">
     <i class="fa fa-arrow-left bckicon" (click)="backToList()"></i>
       Request Details
-    <hum-button
+    <hum-button *ngIf="!IsHiringRequestCompleted && !IsHiringRequestClosed"
       [type]="'edit'"
       [text]="'Edit'"
       (click)="editHiringRequest()"
@@ -10,7 +10,7 @@
     <hum-button *ngIf="!IsHiringRequestCompleted && !IsHiringRequestClosed"  [type]="'save'" [text]="'complete '" (click)="onCompleteRequest()"></hum-button>
     <hum-button *ngIf="!IsHiringRequestClosed && !IsHiringRequestCompleted" [type]="'cancel'" (click)="onCloseRequest()" [text]="'close request'"></hum-button>
 
-    <hum-button *ngIf="IsHiringRequestCompleted"  [type]="'completed'" [text]="'completed '"></hum-button>
+    <hum-button *ngIf="IsHiringRequestCompleted"  [type]="'completed'" [text]="'Completed '"></hum-button>
     <hum-button *ngIf="IsHiringRequestClosed"  [type]="'cancel'" [text]="'Closed '" [disabled]="true"></hum-button>
     <hum-button [type]="'download'" [text]="'PDF Export'" (click)="onExportHiringRequestPdf()"></hum-button>
   </span>
@@ -129,7 +129,7 @@
                 <mat-tab label="New Candidates">
                     <h5>
                         Candidates
-                        <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewCandidate()"></hum-button>
+                        <hum-button *ngIf="!IsHiringRequestCompleted && !IsHiringRequestClosed" [type]="'add'" [text]="'ADD'" (click)="addNewCandidate()"></hum-button>
                         <hum-button [type]="'download'" [text]="'PDF Export'" (click)="onExportPdf()"></hum-button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 

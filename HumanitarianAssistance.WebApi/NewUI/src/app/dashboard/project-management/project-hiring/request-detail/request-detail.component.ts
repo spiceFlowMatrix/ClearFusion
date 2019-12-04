@@ -76,11 +76,11 @@ export class RequestDetailComponent implements OnInit {
   existingCandidatesList2$: Observable<IExistingCandidateList[]>;
   filterValueModel: ICandidateFilterModel;
   completeRequestModel: CompleteHiringRequestModel;
-  hiringRequestId: any;
-  IsHiringRequestCompleted: boolean;
-  IsHiringRequestClosed: boolean;
-  projectId: any;
-  candidateId: any;
+  hiringRequestId: number;
+  IsHiringRequestCompleted = false;
+  IsHiringRequestClosed = false;
+  projectId: number;
+  candidateId: number;
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
@@ -107,8 +107,8 @@ export class RequestDetailComponent implements OnInit {
     };
   }
   ngOnInit() {
-    this.IsHiringRequestCompleted = false;
-    this.IsHiringRequestClosed = false;
+    // this.IsHiringRequestCompleted = false;
+    // this.IsHiringRequestClosed = false;
     this.hiringRequestDetails = {
       HiringRequestId: null,
       JobGrade: '',
@@ -141,7 +141,7 @@ export class RequestDetailComponent implements OnInit {
     this.routeActive.parent.parent.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
-
+    this.getHiringRequestDetailsByHiringRequestId();
     this.actions = {
       items: {
         button: { status: true, text: '' },
@@ -159,9 +159,7 @@ export class RequestDetailComponent implements OnInit {
       HiringRequestId: [],
       ProjectId: this.projectId
     };
-    this.getHiringRequestDetailsByHiringRequestId();
-    this.getAllCandidateList(this.filterValueModel);
-    this.getAllExistingCandidateList(this.filterValueModel);
+
     this.getExistingEmployeeDropDownList();
     this.getScreenSize();
   }
@@ -182,12 +180,12 @@ export class RequestDetailComponent implements OnInit {
   //#region "get Hiring Request Details By HiringRequestId"
   getHiringRequestDetailsByHiringRequestId() {
     if (this.hiringRequestId != null && this.hiringRequestId !== undefined) {
+      this.loader.showLoader();
       this.hiringRequestService
         .GetProjectHiringRequestDetailsByHiringRequestId(this.hiringRequestId)
         .pipe(takeUntil(this.destroyed$))
         .subscribe(
           (response: IResponseData) => {
-            this.loader.showLoader();
             if (response.statusCode === 200 && response.data !== null) {
               this.hiringRequestDetails = {
                 HiringRequestId: response.data.HiringRequestId,
@@ -227,6 +225,9 @@ export class RequestDetailComponent implements OnInit {
                 this.IsHiringRequestClosed = true;
               }
             }
+            this.getAllCandidateList(this.filterValueModel);
+            this.getAllExistingCandidateList(this.filterValueModel);
+
             this.loader.hideLoader();
           },
           () => {
@@ -347,8 +348,9 @@ export class RequestDetailComponent implements OnInit {
                       '</a>',
                 CandidateStatus: CandidateStatus[element.CandidateStatus],
                 itemAction:
-                  element.CandidateStatus != CandidateStatus.Rejected &&
-                  element.CandidateStatus != CandidateStatus.Selected
+                  element.CandidateStatus !== CandidateStatus.Rejected &&
+                  element.CandidateStatus !== CandidateStatus.Selected &&
+                  !this.IsHiringRequestCompleted && !this.IsHiringRequestClosed
                     ? [
                         {
                           button: {
@@ -535,7 +537,8 @@ export class RequestDetailComponent implements OnInit {
                 CandidateStatus: CandidateStatus[element.CandidateStatus],
                 itemAction:
                   element.CandidateStatus != CandidateStatus.Rejected &&
-                  element.CandidateStatus != CandidateStatus.Selected
+                  element.CandidateStatus != CandidateStatus.Selected &&
+                  !this.IsHiringRequestCompleted && !this.IsHiringRequestClosed
                     ? [
                         {
                           button: {

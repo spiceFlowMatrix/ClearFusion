@@ -20,7 +20,6 @@ import { GlobalSharedService } from 'src/app/shared/services/global-shared.servi
   styleUrls: ['./add-new-candidate.component.scss']
 })
 export class AddNewCandidateComponent implements OnInit {
-
   projectId: number;
   hiringRequestId: number;
   addNewCandidateForm: FormGroup;
@@ -42,21 +41,60 @@ export class AddNewCandidateComponent implements OnInit {
     public dialogRef: MatDialogRef<AddNewCandidateComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private commonLoader: CommonLoaderService,
-    private routeActive: ActivatedRoute,
     private hiringRequestService: HiringRequestsService,
     private toastr: ToastrService,
     private fb: FormBuilder,
-    private loader: CommonLoaderService,
     private purchaseService: PurchaseService,
     private globalSharedService: GlobalSharedService
   ) {
+    this.accountStatusList$ = of([
+      { name: 'Prospective', value: 1 },
+      { name: 'Active', value: 2 }
+    ] as IDropDownModel[]);
+
+    this.genderList$ = of([
+      { name: 'Male', value: 1 },
+      { name: 'Female', value: 2 },
+      { name: 'Other', value: 3 }
+    ] as IDropDownModel[]);
+  }
+  ngOnInit() {
+    this.initCadidateForm();
+    forkJoin([
+      this.getAllOfficeList(),
+      this.getAllCountryList(),
+      this.getAllJobGradeList(),
+      this.getAllProfessionList(),
+      this.getAllEducationDegreeList()
+    ]).pipe(takeUntil(this.destroyed$))
+      .subscribe(result => {
+        this.subscribeOfficeList(result[0]);
+        this.subscribeCountryList(result[1]);
+        this.subscribeGradeList(result[2]);
+        this.subscribeProfessionList(result[3]);
+        this.subscribeEducationDegreeList(result[4]);
+      });
+    this.projectId = this.data.projectId;
+    this.hiringRequestId = this.data.hiringRequestId;
+    this.addNewCandidateForm.controls['ProjectId'].setValue(this.projectId);
+    this.addNewCandidateForm.controls['HiringRequestId'].setValue(
+      this.hiringRequestId
+    );
+    this.getPreviousYearsList();
+    this.getAllMonthList();
+  }
+  initCadidateForm() {
     this.addNewCandidateForm = this.fb.group({
       ProjectId: [null],
       HiringRequestId: [null],
       FirstName: [null, [Validators.required]],
       LastName: [null, [Validators.required]],
       Email: [null, [Validators.required, Validators.email]],
-      PhoneNumber: [null, [Validators.required, Validators.maxLength(14)]],
+      PhoneNumber: [
+        null,
+        [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/),
+        Validators.minLength(10), Validators.maxLength(14)]
+      ],
       // AccountStatus: [null, [Validators.required]],
       EducationDegree: [null, [Validators.required]],
       Gender: [null, [Validators.required]],
@@ -77,42 +115,6 @@ export class AddNewCandidateComponent implements OnInit {
       IrrelevantExperienceInYear: [null, [Validators.required]],
       Remarks: [null, [Validators.required]]
     });
-
-    this.accountStatusList$ = of([
-      { name: 'Prospective', value: 1 },
-      { name: 'Active', value: 2 }
-    ] as IDropDownModel[]);
-
-    this.genderList$ = of([
-      { name: 'Male', value: 1 },
-      { name: 'Female', value: 2 },
-      { name: 'Other', value: 3 }
-    ] as IDropDownModel[]);
-  }
-  ngOnInit() {
-    forkJoin([
-      this.getAllOfficeList(),
-      this.getAllCountryList(),
-      this.getAllJobGradeList(),
-      this.getAllProfessionList(),
-      this.getAllEducationDegreeList()
-    ])
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(result => {
-        this.subscribeOfficeList(result[0]);
-        this.subscribeCountryList(result[1]);
-        this.subscribeGradeList(result[2]);
-        this.subscribeProfessionList(result[3]);
-        this.subscribeEducationDegreeList(result[4]);
-      });
-      this.projectId = this.data.projectId;
-      this.hiringRequestId = this.data.hiringRequestId;
-      this.addNewCandidateForm.controls['ProjectId'].setValue(this.projectId);
-      this.addNewCandidateForm.controls['HiringRequestId'].setValue(
-        this.hiringRequestId
-      );
-      this.getPreviousYearsList();
-      this.getAllMonthList();
   }
 
   getPreviousYearsList() {
@@ -121,8 +123,7 @@ export class AddNewCandidateComponent implements OnInit {
   getAllMonthList() {
     const monthDropDown: IDropDownModel[] = [];
     for (let i = Month['January']; i <= Month['December']; i++) {
-      monthDropDown.push({name: Month[i],
-        value: i});
+      monthDropDown.push({ name: Month[i], value: i });
     }
     this.MonthsList$ = of(monthDropDown);
   }
@@ -262,16 +263,20 @@ export class AddNewCandidateComponent implements OnInit {
   AddNewCandidate(data: ICandidateDetailModel, attachmentCV) {
     this.commonLoader.showLoader();
     this.hiringRequestService.AddNewCandidateDetail(data).subscribe(
-      (response) => { // response.CommonId.Id is CandidateId
+      response => {
+        // response.CommonId.Id is CandidateId
         if (response.StatusCode === 200 && response.CommonId.Id != null) {
           this.globalSharedService
-              .uploadFile(FileSourceEntityTypes.HiringRequestCandidateCV, response.CommonId.Id , attachmentCV)
-              .pipe(takeUntil(this.destroyed$))
-              .subscribe(y => {
-                this.commonLoader.hideLoader();
-                this.toastr.success('New Candidate added successfully');
-                this.AddCandidateListRefresh();
-              });
+            .uploadFile(
+              FileSourceEntityTypes.HiringRequestCandidateCV,
+              response.CommonId.Id,
+              attachmentCV
+            ).pipe(takeUntil(this.destroyed$))
+            .subscribe(y => {
+              this.commonLoader.hideLoader();
+              this.toastr.success('New Candidate added successfully');
+              this.AddCandidateListRefresh();
+            });
         } else {
           this.commonLoader.hideLoader();
           this.toastr.error(response.message);
@@ -309,9 +314,9 @@ export class AddNewCandidateComponent implements OnInit {
       this.AddNewCandidate(data, this.attachmentCV[0][0]);
     }
   }
-      //#region "hiringRequestListRefresh"
-      AddCandidateListRefresh() {
-        this.onAddCandidateListRefresh.emit();
-      }
-      // #endregion
+  //#region "hiringRequestListRefresh"
+  AddCandidateListRefresh() {
+    this.onAddCandidateListRefresh.emit();
+  }
+  // #endregion
 }
