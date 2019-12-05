@@ -8,7 +8,6 @@ using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Persistence;
 using HumanitarianAssistance.Persistence.Extensions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 
 namespace HumanitarianAssistance.Application.Project.Queries
@@ -48,11 +47,9 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
                 budgetLineIdNoValue = request.BudgetLineIdFlag ? request.FilterValue.ToLower().Trim() : null;
 
-
-
                 if (Int64.TryParse(budgetLineIdNoValue, out formatBudgetId))
                 {
-                    budgetLineIdNoValue = budgetLineIdNoValue;
+                    budgetLineIdNoValue = formatBudgetId.ToString();
                 }
                 else
                 {
@@ -64,7 +61,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                 projectJobIdValue = request.ProjectJobIdFlag ? request.FilterValue.ToLower().Trim() : null;
                 if (Int64.TryParse(projectJobIdValue, out formatBudgetId))
                 {
-                    projectJobIdValue = projectJobIdValue;
+                    projectJobIdValue = formatBudgetId.ToString();
                 }
                 else
                 {
@@ -73,7 +70,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                 initialbudgetNovalue = request.InitialBudgetFlag ? request.FilterValue.ToLower().Trim() : null;
                 if (double.TryParse(initialbudgetNovalue, out formatvalue))
                 {
-                    initialbudgetNovalue = initialbudgetNovalue;
+                    initialbudgetNovalue = formatvalue.ToString();
                 }
                 else
                 {
