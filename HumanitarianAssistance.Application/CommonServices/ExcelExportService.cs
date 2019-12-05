@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Dynamic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using HumanitarianAssistance.Application.CommonServicesInterface;
 using Microsoft.AspNetCore.Hosting;
 using OfficeOpenXml;
@@ -90,7 +87,7 @@ namespace HumanitarianAssistance.Application.CommonServices
                         }
                     }
 
-                    worksheet.Cells.AutoFitColumns();
+                   // worksheet.Cells.AutoFitColumns();
                     result = package.GetAsByteArray();
                     package.Dispose();
                 }
