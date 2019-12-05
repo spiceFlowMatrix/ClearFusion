@@ -1,0 +1,52 @@
+<div mat-dialog-title><h3>Purchase Order Voucher Verification</h3></div>
+<div class="row">
+  <div class="col-md-12">
+    <p>Upon verification, a voucher with following details will be produced. All purchases in the store
+      for this purchase order will automatically be linked to this voucher.
+    </p>
+    <table class="table table-striped" style="width:100%;">
+      <tr>
+        <td class="font_weight_600">Date</td>
+        <td>{{purchaseDetail.PurchasedDate}}</td>
+      </tr>
+      <tr>
+        <td class="font_weight_600">Currency</td>
+        <td>{{purchaseDetail.Currency}}</td>
+      </tr>
+      <tr>
+        <td class="font_weight_600">Type</td>
+        <td>Journal</td>
+      </tr>
+      <tr>
+        <td class="font_weight_600">Office</td>
+        <td>{{purchaseDetail.Office}}</td>
+      </tr>
+    </table>
+    <form [formGroup]="purchaseVerificationForm">
+      <lib-hum-dropdown [options]="journalDropdown$" formControlName="Journal" [placeHolder]="'Journal'"
+      ></lib-hum-dropdown>
+      <mat-form-field style="width: 100%;">
+        <textarea rows="3" matInput placeholder="Voucher Description" formControlName="VoucherDescription"></textarea>
+      </mat-form-field>
+      <h4>Credit Transaction</h4>
+      <table class="table table-striped" style="width:100%;">
+        <tr>
+          <td class="font_weight_600">Amount</td>
+          <td>{{purchaseDetail.TotalAmount}}</td>
+        </tr>
+        <tr>
+          <td class="font_weight_600">Project</td>
+          <td>{{purchaseDetail.Project}}</td>
+        </tr>
+        <tr>
+          <td class="font_weight_600">BudgetLine</td>
+          <td>{{purchaseDetail.BudgetLine}}</td>
+        </tr>
+        <tr>
+          <td class="font_weight_600">Project Job</td>
+          <td>{{purchaseDetail.ProjectJob}}</td>
+        </tr>
+      </table>
+    </form>
+  </div>
+</div>

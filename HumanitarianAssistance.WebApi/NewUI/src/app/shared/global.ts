@@ -245,6 +245,7 @@ export class GLOBAL {
   public static API_ProjectLogistics_RejectPurchaseOrder = 'ProjectLogistic/RejectPurchaseOrder';
   public static API_ProjectLogistics_GetGoodsRecievedNote = 'ProjectLogistic/GetGoodsRecievedNote';
   public static API_ProjectLogistics_EditLogisticRequest  = 'ProjectLogistic/EditLogisticRequest';
+  public static API_ProjectLogistics_GetPurchaseOrderDetail = 'ProjectLogistic/GetPurchaseOrderDetail';
 
   // Chart Of Account
   public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';

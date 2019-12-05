@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { LogisticRequestStatus } from 'src/app/shared/enum';
 import { ToastrService } from 'ngx-toastr';
 import { GoodsRecievedUploadComponent } from '../goods-recieved-upload/goods-recieved-upload.component';
+import { PurchaseVoucherVerificationComponent } from '../purchase-voucher-verification/purchase-voucher-verification.component';
 
 @Component({
   selector: 'app-purchase-order',
@@ -95,7 +96,16 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
           }
       });
     } else {
-
+      const dialogRef = this.dialog.open(PurchaseVoucherVerificationComponent, {
+        width: '500px',
+        height: '550px',
+        data: {RequestId: this.requestId}
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result !== undefined && result.data != null ) {
+          } else {
+          }
+      });
     }
   }
 

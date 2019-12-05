@@ -253,4 +253,23 @@ export class LogisticService {
       value
     );
   }
+
+  getJournalList() {
+    return this.globalService.getList(
+      this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllJournalDetail
+    );
+  }
+
+  GetAccountDetails() {
+    return this.globalService.getList(
+      this.appurl.getApiUrl() + GLOBAL.API_Accounting_GetAccountDetails
+    );
+  }
+
+  getPurchaseOrderDetail(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetPurchaseOrderDetail,
+      requestId
+    );
+  }
 }

@@ -266,6 +266,16 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.ModifiedDate = DateTime.UtcNow; 
             return await _mediator.Send(model);
         }
+
+        [HttpPost]
+        public async Task<ApiResponse> GetPurchaseOrderDetail([FromBody]long requestId)
+        {   
+            GetPurchaseOrderDetailQuery model = new GetPurchaseOrderDetailQuery();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.requestId = requestId;
+            return await _mediator.Send(model);
+        }
+        
     }
 
 }
