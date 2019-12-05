@@ -281,9 +281,12 @@ export class ProjectActivityAddComponent implements OnInit, OnDestroy {
   onRecurringChange(event: any) {
     // console.log(event);
     if (event.checked === true) {
+      this.projectActivityForm.controls['RecurringCount'].setValue(1);
       this.diasbleEndDate = true;
     } else {
       this.diasbleEndDate = false;
+      this.projectActivityForm.controls['RecurringCount'].setValue(null);
+
     }
   }
 }
