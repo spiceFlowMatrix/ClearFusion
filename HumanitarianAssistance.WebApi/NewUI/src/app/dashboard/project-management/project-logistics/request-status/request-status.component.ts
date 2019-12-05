@@ -22,7 +22,6 @@ export class RequestStatusComponent implements OnInit, OnChanges {
   @Input() comparativeStatus = 1;
   @Input() totalCost = 0;
   @Input() requestedItems: any[];
-  @Input() goodsNoteSubmitted = false;
   @Output() selectedItemChange = new EventEmitter();
   @Output() comparativeStatusChange = new EventEmitter();
   @Output() StatusChange = new EventEmitter();
@@ -52,4 +51,5 @@ export class RequestStatusComponent implements OnInit, OnChanges {
   StatusEmit(value) {
     this.StatusChange.emit(value);
   }
+
 }

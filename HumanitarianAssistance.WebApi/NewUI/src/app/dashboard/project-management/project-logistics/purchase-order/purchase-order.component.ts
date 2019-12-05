@@ -23,11 +23,12 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
   @Input() requestId;
   @Output() selectedItemChange = new EventEmitter();
   @Output() StatusChange = new EventEmitter();
+  @Output() goodsRecievedChange = new EventEmitter();
 
   purchasedItemsHeaders$ = of(['Item', 'Quantity', 'Final Cost']);
   purchasedItemsData$ = of([]);
   selectedItems: any[];
-  @Input() goodsNoteSubmitted = false;
+  goodsNoteSubmitted = false;
   goodsRecievedModel: GoodsRecievedNote;
 
   constructor(private dialog: MatDialog,
@@ -37,15 +38,17 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
     public toastr: ToastrService) { }
 
   ngOnInit() {
+    this.logisticservice.goodsRecievedChange$.subscribe(val => {
+      this.goodsNoteSubmitted = val;
+      if (this.goodsNoteSubmitted) {
+        this.getGoodsRecievedNote();
+      }
+    });
   }
 
   ngOnChanges() {
     if (this.requestStatus === 4) {
       this.getPurchasedItemsList();
-      this.getGoodsRecievedNote();
-    }
-
-    if (this.goodsNoteSubmitted) {
       this.getGoodsRecievedNote();
     }
   }
@@ -86,6 +89,7 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
       });
       dialogRef.afterClosed().subscribe(result => {
         if (result !== undefined && result.data != null ) {
+          this.logisticservice.goodsRecievedChange$.next(true);
           this.getGoodsRecievedNote();
           } else {
           }
@@ -99,9 +103,11 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
     this.logisticservice.getGoodsRecievedNote(this.requestId).subscribe(res => {
       if (res.StatusCode === 200) {
         if (res.data.GoodsRecievedNote == null) {
-          this.goodsNoteSubmitted = false;
+          this.logisticservice.goodsRecievedChange$.next(false);
         } else {
-          this.goodsNoteSubmitted = true;
+          if ( !this.logisticservice.goodsRecievedChange$.getValue()) {
+            this.logisticservice.goodsRecievedChange$.next(true);
+          }
           this.goodsRecievedModel = res.data.GoodsRecievedNote;
         }
       } else {

@@ -6,6 +6,7 @@ import { GLOBAL } from 'src/app/shared/global';
 import { DeleteConfirmationComponent } from 'projects/library/src/lib/components/delete-confirmation/delete-confirmation.component';
 import { Delete_Confirmation_Texts } from 'src/app/shared/enum';
 import { MatDialog } from '@angular/material';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,8 @@ export class LogisticService {
     private appurl: AppUrlService,
     private dialog: MatDialog,
   ) { }
+
+  goodsRecievedChange$ = new BehaviorSubject(false);
 
   addLogisticRequest(value) {
     return this.globalService.post(
