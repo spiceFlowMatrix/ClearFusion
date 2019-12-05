@@ -90,7 +90,7 @@ namespace HumanitarianAssistance.Application.CommonServices
                         }
                     }
 
-                    worksheet.Cells.AutoFitColumns();
+                   // worksheet.Cells.AutoFitColumns();
                     result = package.GetAsByteArray();
                     package.Dispose();
                 }
