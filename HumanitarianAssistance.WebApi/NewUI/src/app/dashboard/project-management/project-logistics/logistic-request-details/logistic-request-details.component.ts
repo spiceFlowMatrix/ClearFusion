@@ -51,6 +51,10 @@ Currency: '', BudgetLine: '', Office: '', Description: ''};
     private router: Router) { }
 
   ngOnInit() {
+    this.logisticservice.goodsRecievedChange$.subscribe(val => {
+      this.goodsNoteSubmitted = val;
+    });
+
     this.actions = {
       items: {
         button: { status: false, text: '' },
@@ -128,9 +132,9 @@ Currency: '', BudgetLine: '', Office: '', Description: ''};
         };
       }
 
-      if (this.requestDetail.Status === LogisticRequestStatus['Complete Purchase'] ) {
-        this.getGoodsRecievedNote();
-      }
+      // if (this.requestDetail.Status === LogisticRequestStatus['Complete Purchase'] ) {
+      //   this.getGoodsRecievedNote();
+      // }
     });
   }
 
@@ -343,9 +347,9 @@ Currency: '', BudgetLine: '', Office: '', Description: ''};
 
   StatusChange(value) {
     this.requestDetail.Status = value;
-    if (this.requestDetail.Status === LogisticRequestStatus['Complete Purchase'] ) {
-      this.getGoodsRecievedNote();
-    }
+    // if (this.requestDetail.Status === LogisticRequestStatus['Complete Purchase'] ) {
+    //   this.getGoodsRecievedNote();
+    // }
   }
 
   rejectComparativeStatement() {
@@ -410,9 +414,10 @@ Currency: '', BudgetLine: '', Office: '', Description: ''};
       });
       dialogRef.afterClosed().subscribe(result => {
         if (result !== undefined && result.data != null ) {
-            this.goodsNoteSubmitted = true;
+            this.logisticservice.goodsRecievedChange$.next(true);
+            // this.goodsNoteSubmitted = true;
           } else {
-            this.goodsNoteSubmitted = false;
+            this.logisticservice.goodsRecievedChange$.next(false);
           }
       });
     } else {
