@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+//using System.Drawing;
 using System.Dynamic;
 using System.IO;
 using HumanitarianAssistance.Application.CommonServicesInterface;
 using Microsoft.AspNetCore.Hosting;
 using OfficeOpenXml;
 using OfficeOpenXml.Drawing;
-using OfficeOpenXml.Style;
+//using OfficeOpenXml.Style;
 
 namespace HumanitarianAssistance.Application.CommonServices
 {
@@ -32,12 +32,12 @@ namespace HumanitarianAssistance.Application.CommonServices
                     // var worksheet = package.Workbook.Worksheets.FirstOrDefault(x => x.Name == "Attempts");
                    var worksheet = package.Workbook.Worksheets.Add(worksheetName);
 
-                    int Height = 135;
-                    int Width = 55;
-                    Image img = Image.FromFile(_env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath);
-                    ExcelPicture pic = worksheet.Drawings.AddPicture("logo", img);
-                    pic.SetPosition(0, 0, 0, 0);
-                    pic.SetSize(Height, Width);
+                    //int Height = 135;
+                    //int Width = 55;
+                    //Image img = Image.FromFile(_env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath);
+                    //ExcelPicture pic = worksheet.Drawings.AddPicture("logo", img);
+                    //pic.SetPosition(0, 0, 0, 0);
+                    //pic.SetSize(Height, Width);
 
                     //Column Header Names
                     IDictionary<string, object> headerValues = model[0];
@@ -54,16 +54,16 @@ namespace HumanitarianAssistance.Application.CommonServices
                     using (ExcelRange Rng = worksheet.Cells[2, 1, 2, headerValues.Keys.Count])
                     {
                         Rng.Value = "Coordination of Humanitarian Assistance (CHA)";
-                        Rng.Style.Font.Size = 16;
-                        Rng.Style.Font.Bold = true;
-                        Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        //Rng.Style.Font.Size = 16;
+                        //Rng.Style.Font.Bold = true;
+                        //Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     }
 
                     using (ExcelRange Rng = worksheet.Cells[3, 1, 3, headerValues.Keys.Count])
                     {
                         Rng.Value = excelHeaderString;
                         Rng.Style.Font.Size = 12;
-                        Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        //Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     }
 
                     foreach (var property in headerValues.Keys)
