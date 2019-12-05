@@ -1,9 +1,11 @@
 FROM microsoft/dotnet:sdk
-RUN apt-get update && apt-get install -y apt-utils && apt-get install -y libgdiplus
-# libgdiplus used for excel export styling and autofit columns
-#RUN apt-get install -y libgdiplus
-RUN ln -s /usr/lib/libgdiplus.so/usr/lib/gdiplus.dll
 # Expecting the release publish folder to be in Training24Api/release the same directory as the Dockerfile
 COPY ./HumanitarianAssistance.WebApi/release /app
 WORKDIR /app
+RUN apt-get update \
+    && apt-get install -y --allow-unauthenticated \
+        libc6-dev \
+        libgdiplus \
+        libx11-dev \
+     && rm -rf /var/lib/apt/lists/*
 ENTRYPOINT ["dotnet", "HumanitarianAssistance.WebApi.dll"]
