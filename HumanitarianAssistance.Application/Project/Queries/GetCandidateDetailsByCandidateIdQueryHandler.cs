@@ -30,7 +30,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                               on cd.EducationDegreeId equals e.Id into ed from e in ed.DefaultIfEmpty () 
                               select new CandidateAllDetailsModel {
                                 FullName = $"{cd.FirstName } {cd.LastName}" ,
-                                Gender = cd.GenderId == 1 ? "Male" : cd.GenderId == 2 ? "Female" : "Other",
+                                Gender = cd.GenderId,
                                 Qualification = e.Name,
                                 DateOfBirth = cd.DateOfBirth.ToString("dd/MM/yyyy")
                         })

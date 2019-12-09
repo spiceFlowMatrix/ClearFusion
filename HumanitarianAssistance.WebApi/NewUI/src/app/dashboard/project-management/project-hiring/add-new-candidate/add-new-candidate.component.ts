@@ -22,6 +22,7 @@ import { GlobalSharedService } from 'src/app/shared/services/global-shared.servi
 export class AddNewCandidateComponent implements OnInit {
   projectId: number;
   hiringRequestId: number;
+  isFormSubmitted = false;
   addNewCandidateForm: FormGroup;
   professionList$: Observable<IDropDownModel[]>;
   officeList$: Observable<IDropDownModel[]>;
@@ -95,7 +96,6 @@ export class AddNewCandidateComponent implements OnInit {
         [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/),
         Validators.minLength(10), Validators.maxLength(14)]
       ],
-      // AccountStatus: [null, [Validators.required]],
       EducationDegree: [null, [Validators.required]],
       Gender: [null, [Validators.required]],
       DateOfBirth: [null, [Validators.required]],
@@ -108,9 +108,6 @@ export class AddNewCandidateComponent implements OnInit {
       CurrentAddress: [null, [Validators.required]],
       PermanentAddress: [null, [Validators.required]],
       Profession: [null, [Validators.required]],
-      // Grade: [null, [Validators.required]],
-      // Office: [null, [Validators.required]],
-      // TotalExperienceInYear: [null, [Validators.required]],
       RelevantExperienceInYear: [null, [Validators.required]],
       IrrelevantExperienceInYear: [null, [Validators.required]],
       Remarks: [null, [Validators.required]]
@@ -261,7 +258,7 @@ export class AddNewCandidateComponent implements OnInit {
 
   //#region "AddNewCandidate"
   AddNewCandidate(data: ICandidateDetailModel, attachmentCV) {
-    this.commonLoader.showLoader();
+    this.isFormSubmitted = true;
     this.hiringRequestService.AddNewCandidateDetail(data).subscribe(
       response => {
         // response.CommonId.Id is CandidateId
@@ -273,18 +270,19 @@ export class AddNewCandidateComponent implements OnInit {
               attachmentCV
             ).pipe(takeUntil(this.destroyed$))
             .subscribe(y => {
-              this.commonLoader.hideLoader();
               this.toastr.success('New Candidate added successfully');
+              this.isFormSubmitted = false;
               this.AddCandidateListRefresh();
             });
         } else {
-          this.commonLoader.hideLoader();
           this.toastr.error(response.message);
+          this.isFormSubmitted = false;
         }
         this.onCancelPopup();
       },
       error => {
         this.toastr.error('Someting went wrong. Please try again');
+        this.isFormSubmitted = false;
       }
     );
   }

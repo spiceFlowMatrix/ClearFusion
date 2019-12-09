@@ -10,7 +10,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string AccountStatus { get; set; }
-        public string Gender { get; set; }
+        public int? Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string EducationDegree { get; set; }
         public string Grade { get; set; }

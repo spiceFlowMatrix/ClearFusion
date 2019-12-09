@@ -45,7 +45,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                             Email = cd.Email,
                             PhoneNumber = cd.PhoneNumber,
                             // AccountStatus = cd.AccountStatus == 1 ? "Active" : "NonActive",
-                            Gender = cd.GenderId == 1 ? "Male" : cd.GenderId == 2 ? "Female" : "Other",
+                            Gender = cd.GenderId,
                             DateOfBirth = cd.DateOfBirth,
                             EducationDegree = e.Name,
                             // Grade = g.GradeName,
