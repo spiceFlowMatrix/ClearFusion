@@ -1,3 +1,4 @@
+using System;
 using HumanitarianAssistance.Application.Infrastructure;
 using MediatR;
 
@@ -9,12 +10,13 @@ namespace HumanitarianAssistance.Application.Project.Queries
     }
 
     public class PurchaseOrderDetailModel{
-        public string PurchasedDate { get; set; }
+        public DateTime? PurchasedDate { get; set; }
         public string Currency { get; set; }
         public string Office { get; set; }
         public string BudgetLine { get; set; }
         public string ProjectJob { get; set; }
         public string Project { get; set; }
         public double TotalCost { get; set; }
+        public double OfficeId { get; set; }
     }
 }

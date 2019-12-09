@@ -28,16 +28,17 @@ namespace HumanitarianAssistance.Application.Project.Queries
                 var _logisticReq = await _dbContext.ProjectLogisticRequests
                                 .Where(x => x.IsDeleted == false && x.LogisticRequestsId == request.requestId)
                                 .Select(x=>new PurchaseOrderDetailModel{
-                                    PurchasedDate = x.PurchaseDate.HasValue ? (x.PurchaseDate.Value.ToString("dd/MM/yyyy")): "",
+                                    PurchasedDate = x.PurchaseDate,
                                     Currency = x.CurrencyDetails.CurrencyCode,
                                     Office = x.OfficeDetail.OfficeName,
+                                    OfficeId = x.OfficeId,
                                     BudgetLine = x.ProjectBudgetLineDetail.BudgetCode,
                                     ProjectJob = x.ProjectBudgetLineDetail.ProjectJobDetail.ProjectJobCode,
                                     Project = x.ProjectDetail.ProjectCode,
-                                    TotalAmount = await _dbContext.ProjectLogisticItems.Where(x=>x.IsDeleted == false && x.LogisticRequestsId == request.requestId)
-                                    .Select(x=>(x.Quantity * x.FinalCost)
+                                    TotalCost = _dbContext.ProjectLogisticItems.Where(y=>y.IsDeleted == false && y.LogisticRequestsId == request.requestId)
+                                    .Select(y=>Convert.ToDouble(y.Quantity * y.FinalCost))
                                     .DefaultIfEmpty(0)
-                                    .SumAsync()
+                                    .Sum()
                                 })
                                 .FirstOrDefaultAsync();
                     

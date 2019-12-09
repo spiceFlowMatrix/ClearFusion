@@ -7,6 +7,7 @@ import { DeleteConfirmationComponent } from 'projects/library/src/lib/components
 import { Delete_Confirmation_Texts } from 'src/app/shared/enum';
 import { MatDialog } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -270,6 +271,27 @@ export class LogisticService {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetPurchaseOrderDetail,
       requestId
+    );
+  }
+
+  checkExchangeRateExists(model: any) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_ExchangeRates_CheckExchangeRatesExist,
+        model
+      )
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+
+  verifyPurchaseOrder(model) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_VerifyPurchaseOrder,
+      model
     );
   }
 }

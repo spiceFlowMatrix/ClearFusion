@@ -98,7 +98,7 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
     } else {
       const dialogRef = this.dialog.open(PurchaseVoucherVerificationComponent, {
         width: '500px',
-        height: '550px',
+        height: '630px',
         data: {RequestId: this.requestId}
       });
       dialogRef.afterClosed().subscribe(result => {

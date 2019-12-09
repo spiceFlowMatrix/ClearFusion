@@ -1,11 +1,14 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { forkJoin, Observable, of } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { LogisticService } from '../logistic.service';
 import { IDropDownModel } from 'src/app/store/models/purchase';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { IOpenedChange } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
+import { DatePipe } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-purchase-voucher-verification',
@@ -21,23 +24,34 @@ export class PurchaseVoucherVerificationComponent implements OnInit {
     Project: '',
     BudgetLine: '',
     ProjectJob: '',
-    TotalAmount: 0,
+    TotalCost: 0,
+    OfficeId: ''
   };
   accountDropdown: any[];
   journalDropdown: any[];
   journalDropdown$: Observable<IDropDownModel[]>;
   purchaseVerificationForm: FormGroup;
+  exchangeRateMessage = '';
+
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
   public toastr: ToastrService,
   private commonLoader: CommonLoaderService,
   private logisticservice: LogisticService,
-  private fb: FormBuilder) {
+  private fb: FormBuilder,
+  private dialogRef: MatDialogRef<PurchaseVoucherVerificationComponent>,
+  private datePipe: DatePipe,
+  private routeActive: ActivatedRoute,
+  private router: Router) {
    }
 
   ngOnInit() {
     this.purchaseVerificationForm = this.fb.group({
       Journal: ['', Validators.required],
-      VoucherDescription: ['', Validators.required]
+      VoucherDescription: ['', Validators.required],
+      CreditAccount: ['', Validators.required],
+      DebitAccount: ['', Validators.required],
+      DebitDescription: ['', Validators.required],
+      CreditDescription: ['', Validators.required]
     });
     const purchaseResponse = this.getPurchaseDetailResponse();
     const journalResponse = this.getJournalListResponse();
@@ -77,6 +91,26 @@ export class PurchaseVoucherVerificationComponent implements OnInit {
   getPurchaseDetailList(result) {
     if (result.StatusCode === 200 && result.data.purchaseOrderDetail != null) {
       this.purchaseDetail = result.data.purchaseOrderDetail;
+      const checkExchangeRateModel = {
+        ExchangeRateDate: this.purchaseDetail.PurchasedDate,
+        OfficeId: this.purchaseDetail.OfficeId
+      };
+      this.logisticservice.checkExchangeRateExists(checkExchangeRateModel).subscribe(data => {
+        if (data.StatusCode === 200) {
+
+          if (!data.ResponseData) {
+            this.exchangeRateMessage = 'No Exchange Rate Defined for ' +
+              this.datePipe.transform(checkExchangeRateModel.ExchangeRateDate, 'dd-MM-yyyy');
+          } else {
+            this.exchangeRateMessage = '';
+          }
+        } else {
+          this.toastr.error(data.Message);
+        }
+      },
+      error => {
+      }
+    );
     }
   }
 
@@ -112,14 +146,49 @@ export class PurchaseVoucherVerificationComponent implements OnInit {
     }
   }
 
+  get CreditAccountId() {
+    return this.purchaseVerificationForm.get('CreditAccount').value;
+  }
+  get DebitAccountId() {
+    return this.purchaseVerificationForm.get('DebitAccount').value;
+  }
 
+  onOpenedCreditAccountChange(event: IOpenedChange) {
+    this.purchaseVerificationForm.controls['CreditAccount'].setValue(event.Value);
+  }
+
+  onOpenedDebitAccountChange(event: IOpenedChange) {
+    this.purchaseVerificationForm.controls['DebitAccount'].setValue(event.Value);
+  }
+
+  closeDialog() {
+    this.dialogRef.close();
+  }
+
+  navigateToExchangeRate() {
+    this.dialogRef.close();
+    this.router.navigate(['/accounting/exchange-rate']);
+  }
+
+  submitPurchaseVerification() {
+    if (!this.purchaseVerificationForm.valid) {
+      this.toastr.warning('Please fill required fields!');
+      return;
+    }
+    if (this.exchangeRateMessage !== '' && this.exchangeRateMessage !== null) {
+      this.toastr.warning('Exchange Rate not defined!');
+      return;
+    }
+
+  }
 }
 
 export interface PurchaseDetailModel {
   PurchasedDate;
   Currency;
   Office;
-  TotalAmount;
+  OfficeId;
+  TotalCost;
   Project;
   BudgetLine;
   ProjectJob;

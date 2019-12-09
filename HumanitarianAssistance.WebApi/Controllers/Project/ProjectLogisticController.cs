@@ -275,6 +275,16 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.requestId = requestId;
             return await _mediator.Send(model);
         }
+
+        [HttpPost]
+        public async Task<ApiResponse> VerifyPurchaseOrder([FromBody]VerifyPurchaseOrderCommand model)
+        {   
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+        
         
     }
 
