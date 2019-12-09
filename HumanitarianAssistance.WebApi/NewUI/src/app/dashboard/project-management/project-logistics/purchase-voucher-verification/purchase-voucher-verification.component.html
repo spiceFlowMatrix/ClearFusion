@@ -26,7 +26,7 @@
           <td>{{purchaseDetail.Office}}</td>
         </tr>
       </table>
-      <form [formGroup]="purchaseVerificationForm" (ngSubmit)="submitPurchaseVerification()">
+      <form [formGroup]="purchaseVerificationForm" (ngSubmit)="submitPurchaseVerification(purchaseVerificationForm.value)">
         <lib-hum-dropdown [options]="journalDropdown$" formControlName="Journal" [placeHolder]="'Journal'"
         ></lib-hum-dropdown>
         <mat-form-field style="width: 100%;">

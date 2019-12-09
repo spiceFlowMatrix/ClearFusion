@@ -13,5 +13,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
         public string CreditDescription { get; set; }
         public long DebitAccount { get; set; }
         public string DebitDescription { get; set; }
+        public double TotalCost { get; set; }
     }
 }

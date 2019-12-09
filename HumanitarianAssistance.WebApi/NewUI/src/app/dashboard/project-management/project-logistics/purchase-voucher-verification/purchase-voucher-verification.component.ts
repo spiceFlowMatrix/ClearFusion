@@ -170,7 +170,7 @@ export class PurchaseVoucherVerificationComponent implements OnInit {
     this.router.navigate(['/accounting/exchange-rate']);
   }
 
-  submitPurchaseVerification() {
+  submitPurchaseVerification(value) {
     if (!this.purchaseVerificationForm.valid) {
       this.toastr.warning('Please fill required fields!');
       return;
@@ -179,7 +179,28 @@ export class PurchaseVoucherVerificationComponent implements OnInit {
       this.toastr.warning('Exchange Rate not defined!');
       return;
     }
-
+    this.commonLoader.showLoader();
+    const model = {
+      RequestId: this.data.RequestId,
+      Journal: value.Journal,
+      VoucherDescription: value.VoucherDescription,
+      CreditAccount: value.CreditAccount,
+      CreditDescription: value.CreditDescription,
+      DebitAccount: value.DebitAccount,
+      DebitDescription: value.DebitDescription,
+      TotalCost: this.purchaseDetail.TotalCost
+    };
+    this.logisticservice.verifyPurchaseOrder(model).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.dialogRef.close({data: 'Success'});
+        this.toastr.success('Updated successfully!');
+      } else {
+        this.commonLoader.hideLoader();
+        this.dialogRef.close({data: null});
+        this.toastr.warning(res.Message);
+      }
+    });
   }
 }
 

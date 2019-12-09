@@ -103,6 +103,7 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
       });
       dialogRef.afterClosed().subscribe(result => {
         if (result !== undefined && result.data != null ) {
+            this.requestStatus = LogisticRequestStatus['Purchase Completed'];
           } else {
           }
       });

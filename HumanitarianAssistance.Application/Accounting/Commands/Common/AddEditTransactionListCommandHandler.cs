@@ -6,6 +6,7 @@ using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Persistence;
 using MediatR;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace HumanitarianAssistance.Application.Accounting.Commands.Common
 {
@@ -24,28 +25,31 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Common
         public async Task<ApiResponse> Handle(AddEditTransactionListCommand request, CancellationToken cancellationToken)
         {
             ApiResponse response = new ApiResponse();
-
-            try
+            using (IDbContextTransaction tran = _dbContext.Database.BeginTransaction())
             {
-                await Task.Run(() =>
+                try
                 {
-                    // Common Function to Add/Update Transaction
-                    bool transactionAddedFlag = _iAccountingServices.AddEditTransactionList(request);
-
-                    if (!transactionAddedFlag)
+                    await Task.Run(() =>
                     {
-                        throw new Exception(StaticResource.SomethingWentWrong);
-                    }
-                });
+                        // Common Function to Add/Update Transaction
+                        bool transactionAddedFlag = _iAccountingServices.AddEditTransactionList(request);
 
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = StaticResource.SuccessText;
+                        if (!transactionAddedFlag)
+                        {
+                            throw new Exception(StaticResource.SomethingWentWrong);
+                        }
+                    });
+                    tran.Commit();
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
 
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = ex.Message;
+                }
             }
             return response;
         }

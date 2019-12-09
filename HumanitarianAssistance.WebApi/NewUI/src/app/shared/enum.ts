@@ -579,7 +579,8 @@ export enum LogisticRequestStatus {
   'Issue Purchase Order' = 3,
   'Complete Purchase' = 4,
   'Control Approved' = 5,
-  'Control Rejected' = 6
+  'Control Rejected' = 6,
+  'Purchase Completed' = 7
 }
 export enum HiringRequestStatus {
   'Open' = 1,
