@@ -140,7 +140,7 @@
                             </mat-select>
                         </mat-form-field>
                     </h5>
-                    <hum-table [headers]="newCandidatesHeaders$" [isDefaultAction]="false" [items]="newCandidatesList2$" [subHeaders]="subListHeaders$" [subTitle]="'Other Details'" [actions]="actions" (actionClick)="newCandActionEvents($event)"></hum-table>
+                    <app-candidate-table [headers]="newCandidatesHeaders$" [isDefaultAction]="false" [items]="newCandidatesList2$" [subHeaders]="subListHeaders$" [subTitle]="'Other Details'" [actions]="actions" (actionClick)="newCandActionEvents($event)"></app-candidate-table>
                 </mat-tab>
                 <mat-tab label="Existing Candidates">
                     <h5>
