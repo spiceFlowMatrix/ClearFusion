@@ -21,7 +21,8 @@ import {
   CandidateStatus,
   CandidateAction,
   Shift,
-  HiringRequestStatus
+  HiringRequestStatus,
+  Gender
 } from 'src/app/shared/enum';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
@@ -107,8 +108,6 @@ export class RequestDetailComponent implements OnInit {
     };
   }
   ngOnInit() {
-    // this.IsHiringRequestCompleted = false;
-    // this.IsHiringRequestClosed = false;
     this.hiringRequestDetails = {
       HiringRequestId: null,
       JobGrade: '',
@@ -331,7 +330,7 @@ export class RequestDetailComponent implements OnInit {
                 CandidateId: element.CandidateId,
                 FirstName: element.FirstName,
                 LastName: element.LastName,
-                Gender: element.Gender,
+                Gender: Gender[element.Gender],
                 Interview:
                   element.InterviewId == 0
                     ? 'Not Interviewed'
@@ -533,7 +532,7 @@ export class RequestDetailComponent implements OnInit {
                 EmployeeId: element.EmployeeId,
                 EmployeeCode: element.EmployeeCode,
                 FullName: element.FullName,
-                Gender: element.Gender,
+                Gender: Gender[element.Gender],
                 CandidateStatus: CandidateStatus[element.CandidateStatus],
                 itemAction:
                   element.CandidateStatus != CandidateStatus.Rejected &&

@@ -30,7 +30,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                         EmployeeId = cd.EmployeeID,
                             EmployeeCode = cd.EmployeeCode,
                             FullName = cd.EmployeeName,
-                            Gender = cd.SexId == 1 ? "Male" : cd.SexId == 2 ? "Female" : "Other",
+                            Gender = cd.SexId,
                             CandidateStatus = s.CandidateStatus
                     })
                     .Skip (request.pageSize.Value * request.pageIndex.Value)

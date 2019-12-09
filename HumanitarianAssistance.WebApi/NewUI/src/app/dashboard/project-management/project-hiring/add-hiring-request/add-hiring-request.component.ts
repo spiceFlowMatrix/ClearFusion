@@ -39,7 +39,7 @@ export class AddHiringRequestComponent implements OnInit {
   addHiringRequestForm: FormGroup;
   professionList$: Observable<IDropDownModel[]>;
   officeList$: Observable<IDropDownModel[]>;
-  genderList$: Observable<IDropDownModel[]>;
+ // genderList$: Observable<IDropDownModel[]>;
   jobShiftList$: Observable<IDropDownModel[]>;
   jobList$: Observable<IDropDownModel[]>;
   jobGradeList$: Observable<IDropDownModel[]>;
@@ -95,11 +95,11 @@ export class AddHiringRequestComponent implements OnInit {
       KnowledgeAndSkillsRequired: [null, [Validators.required]],
       SubmissionGuidelines: [null, [Validators.required]]
     });
-    this.genderList$ = of([
-      { name: 'Male', value: 1 },
-      { name: 'Female', value: 2 },
-      { name: 'Other', value: 3 }
-    ] as IDropDownModel[]);
+    // this.genderList$ = of([
+    //   { name: 'Male', value: 1 },
+    //   { name: 'Female', value: 2 },
+    //   { name: 'Other', value: 3 }
+    // ] as IDropDownModel[]);
 
     this.jobShiftList$ = of([
       { name: 'Day', value: 1 },
