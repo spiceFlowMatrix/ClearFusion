@@ -7,5 +7,6 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         [Key]
         public int UnitTypeId { get; set; }
         public string UnitTypeName { get; set; }
+        public bool IsDefault { get; set; }
     }
 }

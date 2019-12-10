@@ -64,6 +64,7 @@ export interface ICandidateDetailModel {
   FirstName?: string;
   LastName?: string;
   Email?: string;
+  Password?: string;
   PhoneNumber?: string;
   AccountStatus?: number;
   Gender?: number;

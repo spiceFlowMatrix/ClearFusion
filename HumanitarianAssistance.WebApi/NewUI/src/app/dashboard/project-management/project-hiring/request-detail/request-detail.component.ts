@@ -69,7 +69,6 @@ export class RequestDetailComponent implements OnInit {
     'Employee Status'
   ]);
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-  // existingEmployeesList$: Observable<IDropDownModel[]>;
   existingEmployeesList: any[] = [];
   newCandidatesList$: Observable<ICandidateDetailList[]>;
   newCandidatesList2$: Observable<ICandidateDetailList[]>;
@@ -760,7 +759,6 @@ export class RequestDetailComponent implements OnInit {
             } else {
               this.getAllCandidateList(this.filterValueModel);
             }
-            console.log(response.data);
           }
           this.loader.hideLoader();
         },

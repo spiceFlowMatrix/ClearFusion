@@ -20,6 +20,11 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public int OfficeId { get; set; }
         public int ModelYear { get; set; }
         public long PurchaseId { get; set; }
+        public string ManufacturerCountry { get; set; }
+        public string PersonRemarks { get; set; }
+        public string EngineNo { get; set; } 
+        public string RegistrationNo { get; set; }
+        public string ChasisNo { get; set; }
 
         [ForeignKey("EmployeeId")]
         public EmployeeDetail EmployeeDetail { get; set; }

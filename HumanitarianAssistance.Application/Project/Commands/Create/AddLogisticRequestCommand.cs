@@ -19,7 +19,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
 
     public class RequestedLogisticItems {
         public long ItemId { get; set; }
-        public long RequestedUnits { get; set; }
+        public int RequestedUnits { get; set; }
         public double EstimatedUnitCost { get; set; }
     }
 }
