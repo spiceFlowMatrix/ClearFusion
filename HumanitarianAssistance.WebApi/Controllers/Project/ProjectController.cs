@@ -1758,18 +1758,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
                 worksheet.Cells[1, 7].Value = "CurrencyId";
                 worksheet.Cells[1, 8].Value = "CurrencyName";
 
-                var cells = worksheet.Cells["A1:J1"];
-
-                //worksheet.Column(1).AutoFit();
-                //worksheet.Column(2).AutoFit();
-                //worksheet.Column(3).AutoFit();
-                //worksheet.Column(4).AutoFit();
-                //worksheet.Column(5).AutoFit();
-                //worksheet.Column(6).AutoFit();
-                //worksheet.Column(7).AutoFit();
-                //worksheet.Column(8).AutoFit();
-
-
                 package.Workbook.Properties.Title = "Attempts";
                 var FileBytesArray = package.GetAsByteArray();
                 return File(

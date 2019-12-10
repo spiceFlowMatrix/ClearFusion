@@ -39,6 +39,10 @@ export class HiringRequestsService {
     private appurl: AppUrlService
   ) {}
 
+  setHiringPermissions(permissionList: IProjectPermissionMode[]) {
+    this.hiringPermissionSubject.next(permissionList);
+  }
+
   //#region "GetCurrencyList"
   GetCurrencyList(): any {
     return this.globalService
@@ -786,10 +790,6 @@ export class HiringRequestsService {
       );
   }
   //#endregion
-
-  setHiringPermissions(permissionList: IProjectPermissionMode[]) {
-    this.hiringPermissionSubject.next(permissionList);
-  }
 
   //#region "GetRatingBasedCriteriaQuestion"
   GetRatingBasedCriteriaQuestion(OfficeId: number): any {

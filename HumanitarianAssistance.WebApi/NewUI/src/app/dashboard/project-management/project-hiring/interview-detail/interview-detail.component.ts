@@ -23,7 +23,7 @@ import { takeUntil, findIndex } from 'rxjs/operators';
 import { MatDialog, MatSelectChange } from '@angular/material';
 import { AddNewLanguageComponent } from './add-new-language/add-new-language.component';
 import { AddNewTraningComponent } from './add-new-traning/add-new-traning.component';
-import { RatingAction } from 'src/app/shared/enum';
+import { RatingAction, Gender } from 'src/app/shared/enum';
 import { AddNewInterviewerComponent } from './add-new-interviewer/add-new-interviewer.component';
 import { DatePipe } from '@angular/common';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
@@ -286,7 +286,7 @@ export class InterviewDetailComponent implements OnInit {
             this.candidateDetails = {
               FullName: response.data.FullName,
               DutyStation: response.data.DutyStation,
-              Gender: response.data.Gender,
+              Gender: Gender[response.data.Gender],
               Qualification: response.data.Qualification,
               DateOfBirth: response.data.DateOfBirth
             };

@@ -665,3 +665,9 @@ export enum QuestionType {
     [QuestionType.MySupervisor, 'My Supervisor'],
     [QuestionType.TheManagement, 'The Management'],
   ]);
+
+  export enum Gender {
+    Male = 1,
+    Female = 2,
+    Other = 3,
+    }

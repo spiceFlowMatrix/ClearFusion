@@ -33,6 +33,7 @@ import { AddNewLanguageComponent } from './interview-detail/add-new-language/add
 import { AddNewTraningComponent } from './interview-detail/add-new-traning/add-new-traning.component';
 import { AddNewInterviewerComponent } from './interview-detail/add-new-interviewer/add-new-interviewer.component';
 import { EntryComponentComponent } from './entry-component/entry-component.component';
+import { CandidateTableComponent } from './candidate-table/candidate-table.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { EntryComponentComponent } from './entry-component/entry-component.compo
     AddNewTraningComponent,
     AddNewInterviewerComponent,
     InterviewDetailComponent,
-    EntryComponentComponent
+    EntryComponentComponent,
+    CandidateTableComponent
   ],
   imports: [
     ReactiveFormsModule,

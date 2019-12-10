@@ -185,4 +185,14 @@ export class ReportService {
       .subscribe();
   }
 
+  onExportJournalExcel(value){
+    this.globalSharedService
+      .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetJournalReportExcel,
+      value
+      )
+      .pipe()
+      .subscribe();
+  }
+
+
 }
