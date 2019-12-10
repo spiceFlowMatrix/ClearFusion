@@ -37,6 +37,7 @@ export class AddNewCandidateComponent implements OnInit {
   educationDegreeList$: Observable<IDropDownModel[]>;
   onAddCandidateListRefresh = new EventEmitter();
   attachmentCV: any[] = [];
+  autoGenratedPassword: string;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     public dialogRef: MatDialogRef<AddNewCandidateComponent>,
@@ -67,7 +68,8 @@ export class AddNewCandidateComponent implements OnInit {
       this.getAllJobGradeList(),
       this.getAllProfessionList(),
       this.getAllEducationDegreeList()
-    ]).pipe(takeUntil(this.destroyed$))
+    ])
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(result => {
         this.subscribeOfficeList(result[0]);
         this.subscribeCountryList(result[1]);
@@ -85,16 +87,22 @@ export class AddNewCandidateComponent implements OnInit {
     this.getAllMonthList();
   }
   initCadidateForm() {
+    this.PasswordAutoGenrate();
     this.addNewCandidateForm = this.fb.group({
       ProjectId: [null],
       HiringRequestId: [null],
       FirstName: [null, [Validators.required]],
       LastName: [null, [Validators.required]],
       Email: [null, [Validators.required, Validators.email]],
+      Password: [null, [Validators.required]],
       PhoneNumber: [
         null,
-        [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/),
-        Validators.minLength(10), Validators.maxLength(14)]
+        [
+          Validators.required,
+          Validators.pattern(/^-?(0|[1-9]\d*)?$/),
+          Validators.minLength(10),
+          Validators.maxLength(14)
+        ]
       ],
       EducationDegree: [null, [Validators.required]],
       Gender: [null, [Validators.required]],
@@ -268,7 +276,8 @@ export class AddNewCandidateComponent implements OnInit {
               FileSourceEntityTypes.HiringRequestCandidateCV,
               response.CommonId.Id,
               attachmentCV
-            ).pipe(takeUntil(this.destroyed$))
+            )
+            .pipe(takeUntil(this.destroyed$))
             .subscribe(y => {
               this.toastr.success('New Candidate added successfully');
               this.isFormSubmitted = false;
@@ -317,4 +326,10 @@ export class AddNewCandidateComponent implements OnInit {
     this.onAddCandidateListRefresh.emit();
   }
   // #endregion
+
+  PasswordAutoGenrate() {
+    this.autoGenratedPassword = Math.random()
+      .toString(36)
+      .slice(-8);
+  }
 }
