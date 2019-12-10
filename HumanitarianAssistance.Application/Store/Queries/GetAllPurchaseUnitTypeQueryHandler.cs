@@ -36,7 +36,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                 var invModelList = purchaseUnitTypeList.Select(v => new PurchaseUnitType
                 {
                     UnitTypeName = v.UnitTypeName,
-                    UnitTypeId = v.UnitTypeId
+                    UnitTypeId = v.UnitTypeId,
+                    IsDefault= v.IsDefault
                 }).ToList();
                 response.data.PurchaseUnitTypeList = invModelList;
                 response.StatusCode = StaticResource.successStatusCode;

@@ -1,6 +1,8 @@
 export interface UnitType {
     UnitTypeId?: number;
     UnitTypeName?: string;
+    IsDefault?: boolean;
+    IsDefaultText?: string;
 }
 export interface SourceCodeType {
     CodeTypeId?: number;
