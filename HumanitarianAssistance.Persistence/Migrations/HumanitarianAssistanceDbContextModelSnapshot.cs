@@ -5703,6 +5703,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
+                    b.Property<string>("Password");
+
                     b.Property<string>("PermanentAddress");
 
                     b.Property<string>("PhoneNumber");
@@ -8368,7 +8370,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int>("EmployeeID");
+                    b.Property<int?>("EmployeeID");
 
                     b.Property<string>("EngineNo");
 
@@ -10835,8 +10837,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
                         .WithMany()
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EmployeeID");
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreItemPurchase", "StoreItemPurchase")
                         .WithMany("PurchasedGeneratorDetailList")

@@ -23,26 +23,19 @@
                         </div>
                         <div class="col-lg-4 col-sm-4">
                             <mat-form-field class="example-full-width">
-                                <input matInput formControlName="Email" placeholder="Email" />
+                                <input matInput formControlName="PhoneNumber" placeholder="Phone Number" minlength="10" maxlength="14" />
                             </mat-form-field>
                         </div>
-                        <!-- <div class="col-lg-3 col-sm-3">
-              <lib-hum-dropdown
-                formControlName="AccountStatus"
-                [validation]="
-                  addNewCandidateForm.controls['AccountStatus'].hasError(
-                    'required'
-                  )
-                "
-                [options]="accountStatusList$"
-                [placeHolder]="'Account Status'"
-              ></lib-hum-dropdown>
-            </div> -->
                     </div>
                     <div class="row">
                         <div class="col-lg-4 col-sm-4">
                             <mat-form-field class="example-full-width">
-                                <input matInput formControlName="PhoneNumber" placeholder="Phone Number" minlength="10" maxlength="14" />
+                                <input matInput formControlName="Email" placeholder="Email" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="Password" placeholder="Password (Auto Generated)" [(ngModel)]="autoGenratedPassword" readonly/>
                             </mat-form-field>
                         </div>
                     </div>
@@ -64,40 +57,6 @@
                                         <mat-datepicker #DateOfBirthPicker></mat-datepicker>
                                     </mat-form-field>
                                 </div>
-                                <!-- <div class="col-lg-3 col-sm-3">
-                  <lib-hum-dropdown
-                    formControlName="Grade"
-                    [validation]="
-                      addNewCandidateForm.controls['Grade'].hasError('required')
-                    "
-                    [options]="gradeList$"
-                    [placeHolder]="'Grade'"
-                  ></lib-hum-dropdown>
-                </div> -->
-                                <!-- <div class="col-lg-3 col-sm-3">
-                  <lib-hum-dropdown
-                    formControlName="Profession"
-                    [validation]="
-                      addNewCandidateForm.controls['Profession'].hasError(
-                        'required'
-                      )
-                    "
-                    [options]="professionList$"
-                    [placeHolder]="'Profession'"
-                  ></lib-hum-dropdown>
-                </div> -->
-                                <!-- <div class="col-lg-3 col-sm-3">
-                  <lib-hum-dropdown
-                    formControlName="Office"
-                    [validation]="
-                      addNewCandidateForm.controls['Office'].hasError(
-                        'required'
-                      )
-                    "
-                    [options]="officeList$"
-                    [placeHolder]="'Office'"
-                  ></lib-hum-dropdown>
-                </div> -->
                                 <div class="col-lg-4 col-sm-4">
                                     <lib-hum-dropdown formControlName="Country" [validation]="
                       addNewCandidateForm.controls['Country'].hasError(
@@ -167,50 +126,6 @@
                                     </mat-form-field>
                                 </div>
                             </div>
-                            <!-- <div class="row">
-                <div class="col-lg-3 col-sm-3">
-                  <mat-form-field class="example-full-width">
-                    <input
-                      matInput
-                      formControlName="TotalExperienceInYear"
-                      placeholder="Total Experience (Year)"
-                      type="number"
-                    />
-                  </mat-form-field>
-                </div>
-                <div class="col-lg-3 col-sm-3">
-                  <mat-form-field class="example-full-width">
-                    <input
-                      matInput
-                      formControlName="RelevantExperienceInYear"
-                      placeholder="Relevant Experience (Year)"
-                      type="number"
-                    />
-                  </mat-form-field>
-                </div>
-                <div class="col-lg-3 col-sm-3">
-                  <mat-form-field class="example-full-width">
-                    <input
-                      matInput
-                      formControlName="IrrelevantExperienceInYear"
-                      placeholder="Irrelevant Experience (Year)"
-                      type="number"
-                    />
-                  </mat-form-field>
-                </div>
-                <div class="col-lg-3 col-sm-3">
-                  <lib-hum-dropdown
-                    formControlName="EducationDegree"
-                    [validation]="
-                      addNewCandidateForm.controls['EducationDegree'].hasError(
-                        'required'
-                      )
-                    "
-                    [options]="educationDegreeList$"
-                    [placeHolder]="'Education Degree'"
-                  ></lib-hum-dropdown>
-                </div>
-              </div> -->
                         </div>
                     </div>
                     <div class="row">
@@ -258,9 +173,6 @@
             <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
             <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
             <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
-
-            <!-- <button mat-raised-button [mat-dialog-close]>Cancel</button>
-      <button mat-raised-button color="primary" type="submit">Save</button> -->
         </div>
     </form>
 </div>
