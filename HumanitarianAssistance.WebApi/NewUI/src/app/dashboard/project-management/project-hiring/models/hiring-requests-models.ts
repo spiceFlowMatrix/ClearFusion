@@ -119,6 +119,7 @@ export interface ICandidateDetailList {
   FirstName?: string;
   LastName?: string;
   Gender?: string;
+  CvDocument?: string;
   Interview?: string;
   CandidateStatus?: string;
   firstText?: string;
@@ -246,7 +247,7 @@ export interface InterviewDetailModel {
   ProfessionalCriteriaMark?: number;
   MarksObtain?: number;
   TotalMarksObtain?: number;
-// Extra fields added for pdf
+  // Extra fields added for pdf
   CandidateName?: string;
   Qualification?: string;
   Position?: string;
@@ -260,4 +261,10 @@ export interface InterviewDetailModel {
 export interface ISelectBoxModel {
   Id: number;
   value: string;
+}
+
+export interface CvDownloadModel {
+  AttachmentName: string;
+  AttachmentUrl: string;
+  UploadedBy: string;
 }
