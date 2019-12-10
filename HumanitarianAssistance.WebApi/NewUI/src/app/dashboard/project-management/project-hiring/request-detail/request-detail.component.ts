@@ -7,7 +7,8 @@ import {
   TableActionsModel,
   ICandidateFilterModel,
   IExistingCandidateList,
-  CompleteHiringRequestModel
+  CompleteHiringRequestModel,
+  CvDownloadModel
 } from '../models/hiring-requests-models';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
@@ -68,7 +69,6 @@ export class RequestDetailComponent implements OnInit {
     'Employee Status'
   ]);
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-  // existingEmployeesList$: Observable<IDropDownModel[]>;
   existingEmployeesList: any[] = [];
   newCandidatesList$: Observable<ICandidateDetailList[]>;
   newCandidatesList2$: Observable<ICandidateDetailList[]>;
@@ -81,7 +81,7 @@ export class RequestDetailComponent implements OnInit {
   IsHiringRequestCompleted = false;
   IsHiringRequestClosed = false;
   projectId: number;
-  candidateId: number;
+  candidateCv: CvDownloadModel;
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
@@ -349,8 +349,19 @@ export class RequestDetailComponent implements OnInit {
                 itemAction:
                   element.CandidateStatus !== CandidateStatus.Rejected &&
                   element.CandidateStatus !== CandidateStatus.Selected &&
-                  !this.IsHiringRequestCompleted && !this.IsHiringRequestClosed
+                  !this.IsHiringRequestCompleted &&
+                  !this.IsHiringRequestClosed
                     ? [
+                        {
+                          button: {
+                            status: true,
+                            text: 'Candidate Cv',
+                            type: 'download'
+                          },
+                          delete: false,
+                          download: true,
+                          edit: false
+                        },
                         {
                           button: {
                             status: true,
@@ -432,6 +443,9 @@ export class RequestDetailComponent implements OnInit {
   // #region Changes Status of New candidate
   newCandActionEvents(data: any) {
     switch (data.type) {
+      case 'Candidate Cv':
+        this.getCandidateCvByCandidateId(data);
+        break;
       case 'Select':
         this.selectCandidate(data);
         break;
@@ -482,6 +496,34 @@ export class RequestDetailComponent implements OnInit {
       hiringRequestId: this.hiringRequestId
     };
     this.updateCandidateStatus(candidateDetails);
+  }
+  getCandidateCvByCandidateId(data: any) {
+    const candidateId = data.item.CandidateId;
+    if (candidateId != null && candidateId !== undefined) {
+      this.loader.showLoader();
+      this.hiringRequestService
+        .DownloadCandidateCvByRequestId(candidateId)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(
+          (response: IResponseData) => {
+            if (response.statusCode === 200 && response.data !== null) {
+              this.candidateCv = {
+                AttachmentName: response.data.AttachmentName,
+                AttachmentUrl: response.data.AttachmentUrl,
+                UploadedBy: response.data.UploadedBy
+              };
+              const anchor = document.createElement('a');
+              anchor.href = this.candidateCv.AttachmentUrl;
+              anchor.target = '_blank';
+              anchor.click();
+            }
+            this.loader.hideLoader();
+          },
+          () => {
+            this.loader.hideLoader();
+          }
+        );
+    }
   }
   //#endregion
 
@@ -537,7 +579,8 @@ export class RequestDetailComponent implements OnInit {
                 itemAction:
                   element.CandidateStatus != CandidateStatus.Rejected &&
                   element.CandidateStatus != CandidateStatus.Selected &&
-                  !this.IsHiringRequestCompleted && !this.IsHiringRequestClosed
+                  !this.IsHiringRequestCompleted &&
+                  !this.IsHiringRequestClosed
                     ? [
                         {
                           button: {
@@ -716,7 +759,6 @@ export class RequestDetailComponent implements OnInit {
             } else {
               this.getAllCandidateList(this.filterValueModel);
             }
-            console.log(response.data);
           }
           this.loader.hideLoader();
         },

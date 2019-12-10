@@ -239,6 +239,7 @@ namespace HumanitarianAssistance.Application.Infrastructure {
         public InterviewDetailsModel InterviewDetails { get; set; }
         public int? FilledVacancies { get; set; }
         public string HiringRequestCode { get; set; }
+         public CandidateCvModel CandidateCvDownload { get; set; }
 
         //Web Link Url 05082019   
         public string SignedUrl { get; set; }

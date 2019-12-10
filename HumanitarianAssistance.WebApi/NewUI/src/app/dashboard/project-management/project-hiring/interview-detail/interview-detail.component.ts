@@ -17,7 +17,8 @@ import {
   InterviewQuestionDetailModel,
   InterviewDetailModel,
   ISelectBoxModel,
-  TableActionsModel
+  TableActionsModel,
+  CvDownloadModel
 } from '../models/hiring-requests-models';
 import { takeUntil, findIndex } from 'rxjs/operators';
 import { MatDialog, MatSelectChange } from '@angular/material';
@@ -80,6 +81,7 @@ export class InterviewDetailComponent implements OnInit {
   ratingBasedDropDown: ISelectBoxModel[];
   technicalQuestionDropdown: ISelectBoxModel[];
   interviewDetails: InterviewDetailModel;
+  candidateCv: CvDownloadModel;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   actions: TableActionsModel;
   constructor(
@@ -699,6 +701,37 @@ export class InterviewDetailComponent implements OnInit {
   WritenTextMarks(data: any) {
     if (data.srcElement.value != null && data.srcElement.value !== undefined) {
       this.TotalMarks(data.srcElement.value);
+    }
+  }
+  //#endregion
+
+ //#region "Download Candidate Cv"
+  getCandidateCvByCandidateId() {
+    const candidateId = this.candidateId;
+    if (candidateId != null && candidateId !== undefined) {
+      this.commonLoader.showLoader();
+      this.hiringRequestService
+        .DownloadCandidateCvByRequestId(candidateId)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(
+          (response: IResponseData) => {
+            if (response.statusCode === 200 && response.data !== null) {
+              this.candidateCv = {
+                AttachmentName: response.data.AttachmentName,
+                AttachmentUrl: response.data.AttachmentUrl,
+                UploadedBy: response.data.UploadedBy
+              };
+               const anchor = document.createElement('a');
+              anchor.href = this.candidateCv.AttachmentUrl;
+              anchor.target = '_blank';
+              anchor.click();
+            }
+            this.commonLoader.hideLoader();
+          },
+          () => {
+            this.commonLoader.hideLoader();
+          }
+        );
     }
   }
   //#endregion

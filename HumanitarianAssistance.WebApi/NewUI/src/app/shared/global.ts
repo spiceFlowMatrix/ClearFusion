@@ -475,6 +475,8 @@ export class GLOBAL {
     'HiringRequest/AddExistingCandidateDetail';
     public static API_HiringRequest_GetAllExistingCandidateList =
     'HiringRequest/GetAllExistingCandidateList';
+    public static API_HiringRequest_DownloadCandidateCvByRequestId =
+    'HiringRequest/DownloadCandidateCvByRequestId';
 
     // interview pages
     public static API_Code_GetRatingBasedCriteriaQuestions = 'Code/GetAllRatingBasedCriteriaQuestionsByOfficeId';
