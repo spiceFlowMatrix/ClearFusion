@@ -21,7 +21,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
     public class EditRequestedLogisticItems {
         public long Id { get; set; }
         public long ItemId { get; set; }
-        public long RequestedUnits { get; set; }
+        public int RequestedUnits { get; set; }
         public double EstimatedUnitCost { get; set; }
     }
 }
