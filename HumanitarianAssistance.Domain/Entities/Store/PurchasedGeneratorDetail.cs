@@ -20,7 +20,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public int ModelYear { get; set; }
         public long PurchaseId { get; set; }
         public string ManufacturerCountry { get; set; }
-        public int EmployeeID { get; set; } 
+        public int? EmployeeID { get; set; } 
         public string PersonRemarks { get; set; }
         public string EngineNo { get; set; } 
         public string RegistrationNo { get; set; }
