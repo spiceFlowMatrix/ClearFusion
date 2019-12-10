@@ -13,7 +13,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1)]
         public long LogisticItemId { get; set; }
-        public long Quantity { get; set; }
+        public int Quantity { get; set; }
         public double EstimatedUnitCost { get; set; }
         public long ItemId { get; set; }
         public bool PurchaseSubmitted { get; set; }
