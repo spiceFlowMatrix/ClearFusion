@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using HumanitarianAssistance.Application.CommonServicesInterface;
+using HumanitarianAssistance.Common.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using OfficeOpenXml;
 using OfficeOpenXml.Drawing;
-//using OfficeOpenXml.Style;
+using OfficeOpenXml.Style;
 
 namespace HumanitarianAssistance.Application.CommonServices
 {
@@ -18,19 +19,19 @@ namespace HumanitarianAssistance.Application.CommonServices
         {
             _env = env;
         }
-        public byte[] ExportToExcel(List<ExpandoObject> model, string worksheetName, string excelHeaderString)
+        public byte[] ExportToExcel(List<ExpandoObject> model, string worksheetName, string excelHeaderString, bool calculateSum, List<int> calculateSumOnKeyIndex)
         {
             byte[] result;
             int rowCount = 4;
 
             try
             {
-               // string fileName = "ExcellData.xlsx";
+                // string fileName = "ExcellData.xlsx";
                 //var file = new FileInfo(fileName);
                 using (var package = new OfficeOpenXml.ExcelPackage(new MemoryStream()))
                 {
                     // var worksheet = package.Workbook.Worksheets.FirstOrDefault(x => x.Name == "Attempts");
-                   var worksheet = package.Workbook.Worksheets.Add(worksheetName);
+                    var worksheet = package.Workbook.Worksheets.Add(worksheetName);
 
                     //int Height = 135;
                     //int Width = 55;
@@ -54,22 +55,22 @@ namespace HumanitarianAssistance.Application.CommonServices
                     using (ExcelRange Rng = worksheet.Cells[2, 1, 2, headerValues.Keys.Count])
                     {
                         Rng.Value = "Coordination of Humanitarian Assistance (CHA)";
-                        //Rng.Style.Font.Size = 16;
-                        //Rng.Style.Font.Bold = true;
-                        //Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        Rng.Style.Font.Size = 16;
+                        Rng.Style.Font.Bold = true;
+                        Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     }
 
                     using (ExcelRange Rng = worksheet.Cells[3, 1, 3, headerValues.Keys.Count])
                     {
                         Rng.Value = excelHeaderString;
                         Rng.Style.Font.Size = 12;
-                        //Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     }
 
                     foreach (var property in headerValues.Keys)
                     {
                         worksheet.Cells[rowCount, cell].Value = property;
-                        worksheet.Cells[rowCount, cell].Style.Font.Bold= true; 
+                        worksheet.Cells[rowCount, cell].Style.Font.Bold = true;
                         cell++;
                     }
 
@@ -87,9 +88,20 @@ namespace HumanitarianAssistance.Application.CommonServices
                         }
                     }
 
-                   // worksheet.Cells.AutoFitColumns();
+                    if (calculateSum)
+                    {
+                        foreach (int index in calculateSumOnKeyIndex)
+                        {
+                            string text = StaticFunctions.GetCharacterFromACIICode(index); //get Alphabet character
+                            string col= text + (model.Count+5); // +5 to skip first 4 rows and last row where sum will be displayed
+                            string formula= $"SUM({text}1:{text}{model.Count.ToString()})";
+                            worksheet.Cells[text + (model.Count+5).ToString()].Formula = $"SUM({text}5:{text}{(model.Count +4).ToString()})";
+                        }
+                    }
+
+                    // worksheet.Cells.AutoFitColumns();
+                    worksheet.Calculate();
                     result = package.GetAsByteArray();
-                    package.Dispose();
                 }
             }
             catch (Exception ex)

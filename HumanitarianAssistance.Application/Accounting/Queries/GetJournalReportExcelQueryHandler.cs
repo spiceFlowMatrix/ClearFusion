@@ -63,7 +63,13 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
                string headerString = "Journal Report";
 
-               result = _excelExportService.ExportToExcel(reportModel, "JournalReport", headerString);
+               List<int> calculateSumOnKeyIndex= new List<int>
+               {
+                   8,
+                   9
+               };
+
+               result = _excelExportService.ExportToExcel(reportModel, "JournalReport", headerString, true, calculateSumOnKeyIndex);
             }
             catch (Exception ex)
             {
