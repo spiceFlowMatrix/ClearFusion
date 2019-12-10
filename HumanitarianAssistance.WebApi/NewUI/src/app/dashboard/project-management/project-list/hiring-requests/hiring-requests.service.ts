@@ -951,4 +951,25 @@ export class HiringRequestsService {
     );
   }
   //#endregion
+
+  //#region "DownloadCandidateCvByRequestId"
+  DownloadCandidateCvByRequestId(CandidateId: number) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_HiringRequest_DownloadCandidateCvByRequestId,
+          CandidateId
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.CandidateCvDownload,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
 }

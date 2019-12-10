@@ -233,7 +233,16 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         {
             return await _mediator.Send(new GetHiringRequestCodeQuery{
                 ProjectId = ProjectId
-            });
-        }         
+           });
+        }  
+
+        [HttpPost]
+        public async Task<ApiResponse> DownloadCandidateCvByRequestId([FromBody]long requestId)
+        {   
+           DownloadCandidateCvByRequestIdQuery model = new DownloadCandidateCvByRequestIdQuery();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.requestId = requestId;
+            return await _mediator.Send(model);
+        }       
     }  
 }

@@ -7,7 +7,8 @@ import {
   TableActionsModel,
   ICandidateFilterModel,
   IExistingCandidateList,
-  CompleteHiringRequestModel
+  CompleteHiringRequestModel,
+  CvDownloadModel
 } from '../models/hiring-requests-models';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
@@ -81,7 +82,7 @@ export class RequestDetailComponent implements OnInit {
   IsHiringRequestCompleted = false;
   IsHiringRequestClosed = false;
   projectId: number;
-  candidateId: number;
+  candidateCv: CvDownloadModel;
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
@@ -732,4 +733,39 @@ export class RequestDetailComponent implements OnInit {
     window.history.back();
   }
   //#endregion
+
+
+   //#region "Download Candidate Cv"   <a href="{{goodsRecievedModel.AttachmentUrl}}" target="_blank">
+   getCandidateCvByCandidateId() {
+     const candidateId = 6;
+    if (candidateId != null && candidateId !== undefined) {
+      this.loader.showLoader();
+      this.hiringRequestService
+        .DownloadCandidateCvByRequestId(candidateId)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(
+          (response: IResponseData) => {
+            if (response.statusCode === 200 && response.data !== null) {
+              this.candidateCv = {
+                AttachmentName: response.data.AttachmentName,
+                AttachmentUrl: response.data.AttachmentUrl,
+                UploadedBy : response.data.UploadedBy
+              };
+              console.log(this.candidateCv);
+            }
+            this.loader.hideLoader();
+          },
+          () => {
+            this.loader.hideLoader();
+          }
+        );
+    }
+  }
+  //#endregion
+
+
+
+
+
+
 }

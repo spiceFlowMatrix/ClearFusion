@@ -261,3 +261,10 @@ export interface ISelectBoxModel {
   Id: number;
   value: string;
 }
+
+export interface CvDownloadModel {
+  AttachmentName;
+  AttachmentUrl;
+  UploadedBy;
+}
+
