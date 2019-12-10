@@ -31,6 +31,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         // public double TotalExperienceInYear { get; set; }
         public double RelevantExperienceInYear { get; set; }
         public double IrrelevantExperienceInYear { get; set; }
+        public string Password {get; set;}
 
         public int EducationDegreeId { get; set; }
         [ForeignKey ("EducationDegreeId")]

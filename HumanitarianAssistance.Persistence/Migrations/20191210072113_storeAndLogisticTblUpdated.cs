@@ -2,7 +2,7 @@
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
-    public partial class UpdatedLogisticAndStoreTbl : Migration
+    public partial class storeAndLogisticTblUpdated : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -45,8 +45,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
             migrationBuilder.AddColumn<int>(
                 name: "EmployeeID",
                 table: "PurchasedGeneratorDetail",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.AddColumn<string>(
                 name: "EngineNo",
@@ -74,6 +73,11 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 nullable: false,
                 oldClrType: typeof(long));
 
+            migrationBuilder.AddColumn<string>(
+                name: "Password",
+                table: "CandidateDetails",
+                nullable: true);
+
             migrationBuilder.CreateIndex(
                 name: "IX_PurchasedGeneratorDetail_EmployeeID",
                 table: "PurchasedGeneratorDetail",
@@ -85,7 +89,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 column: "EmployeeID",
                 principalTable: "EmployeeDetail",
                 principalColumn: "EmployeeID",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -145,6 +149,10 @@ namespace HumanitarianAssistance.Persistence.Migrations
             migrationBuilder.DropColumn(
                 name: "RegistrationNo",
                 table: "PurchasedGeneratorDetail");
+
+            migrationBuilder.DropColumn(
+                name: "Password",
+                table: "CandidateDetails");
 
             migrationBuilder.AlterColumn<long>(
                 name: "Quantity",
