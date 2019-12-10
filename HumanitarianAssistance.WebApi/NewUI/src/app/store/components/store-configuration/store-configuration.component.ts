@@ -27,7 +27,8 @@ export class StoreConfigurationComponent implements OnInit {
 
   unitActions: TableActionsModel;
 
-  typeName: FormControl;
+  // typeName: FormControl;
+  unitTypeGroup: FormGroup;
   sourCodeForm: FormGroup;
   unitType: UnitType = {};
 
@@ -50,7 +51,13 @@ export class StoreConfigurationComponent implements OnInit {
   //#region "Dynamic Scroll"
 
   ngOnInit() {
-    this.typeName = new FormControl('', Validators.required);
+    // this.typeName = new FormControl('', Validators.required);
+    this.unitTypeGroup = this.fb.group({
+      unitTypeId: [null],
+      unitTypeName: ['', [Validators.required]],
+      isDefault: [false]
+    });
+
     this.unitActions = {
       items: {
         edit: true,
@@ -91,14 +98,15 @@ export class StoreConfigurationComponent implements OnInit {
   }
   openUnitType() {
     this.dialog.open(this.dialogRef, {
-      width: '300px'
+      width: '400px'
     });
   }
   saveUnit() {
-    if (this.typeName.valid) {
-      if (this.unitType.UnitTypeId) {
-        this.unitType.UnitTypeName = this.typeName.value;
-        this.configservice.editUnit(this.unitType).subscribe(res => {
+    debugger;
+    if (this.unitTypeGroup.valid) {
+      if (this.unitTypeGroup.value.UnitTypeId) {
+        // this.unitType.UnitTypeName = this.unitTypeGroup.value.typeName;
+        this.configservice.editUnit(this.unitTypeGroup.value).subscribe(res => {
           this.configservice.getUnitType().subscribe(res1 => {
             this.getAllUnitTypes(res1);
           });
@@ -106,15 +114,16 @@ export class StoreConfigurationComponent implements OnInit {
           this.dialog.closeAll();
         });
       } else {
-        this.unitType.UnitTypeName = this.typeName.value;
-        this.configservice.saveUnit(this.unitType).subscribe(res => {
+       // this.unitType.UnitTypeName = this.typeName.value;
+       this.unitTypeGroup.value.unitTypeId = 0;
+        this.configservice.saveUnit(this.unitTypeGroup.value).subscribe(res => {
           this.configservice.getUnitType().subscribe(res1 => {
             this.getAllUnitTypes(res1);
           });
           this.dialog.closeAll();
         });
       }
-      this.typeName.reset();
+      this.unitTypeGroup.reset();
     }
   }
   unitAction(data) {
@@ -132,8 +141,9 @@ export class StoreConfigurationComponent implements OnInit {
 
     }
     if (data.type == 'edit') {
-      this.unitType = data.item;
-      this.typeName.setValue(this.unitType.UnitTypeName);
+      debugger;
+      // this.unitType = data.item;
+      // this.typeName.setValue(this.unitType.UnitTypeName);
       this.openUnitType();
     }
 

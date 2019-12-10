@@ -10,5 +10,6 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
     {
         public int UnitTypeId { get; set; }
         public string UnitTypeName { get; set; }
+        public bool IsDefault { get; set; }
     }
 }

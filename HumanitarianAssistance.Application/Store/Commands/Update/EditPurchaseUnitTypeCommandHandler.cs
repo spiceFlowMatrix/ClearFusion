@@ -1,5 +1,6 @@
 ﻿using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Domain.Entities.Store;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -24,10 +25,20 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
             var response = new ApiResponse();
             try
             {
+                if (request.IsDefault)
+                {
+                    PurchaseUnitType unitType = await _dbContext.PurchaseUnitType.FirstOrDefaultAsync(x => x.IsDeleted == false && x.IsDefault == true);
+
+                    if (unitType != null)
+                    {
+                        unitType.IsDefault = false;
+                        await _dbContext.SaveChangesAsync();
+                    }
+                }
+
                 var editUnitType = await _dbContext.PurchaseUnitType.FirstOrDefaultAsync(x => x.UnitTypeId == request.UnitTypeId);
                 if (editUnitType != null)
                 {
-                    //_mapper.Map(model, editUnitType);
                     editUnitType.UnitTypeName = request.UnitTypeName;
                     editUnitType.IsDeleted = false;
 

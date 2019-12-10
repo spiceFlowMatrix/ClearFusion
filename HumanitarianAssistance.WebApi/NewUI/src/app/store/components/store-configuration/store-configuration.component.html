@@ -5,9 +5,9 @@
   </div>
 </lib-sub-header-template>
 <mat-divider></mat-divider>
-<mat-tab-group >
+<mat-tab-group>
   <mat-tab label="GENERAL">
-    <ng-template matTabContent >
+    <ng-template matTabContent>
       <ng-container *ngTemplateOutlet="general"></ng-container>
     </ng-template>
   </mat-tab>
@@ -18,12 +18,12 @@
   </mat-tab>
   <mat-tab label="EXPENDABLES">
     <ng-template matTabContent>
-        <app-store-item-config [assetType]="'2'"></app-store-item-config>
+      <app-store-item-config [assetType]="'2'"></app-store-item-config>
     </ng-template>
   </mat-tab>
   <mat-tab label="NON EXPENDABLES">
     <ng-template matTabContent>
-        <app-store-item-config [assetType]="'3'"></app-store-item-config>
+      <app-store-item-config [assetType]="'3'"></app-store-item-config>
     </ng-template>
   </mat-tab>
 </mat-tab-group>
@@ -63,13 +63,23 @@
 </ng-template>
 <ng-template #unittype>
   <div mat-dialog-content>
-    <mat-form-field>
-      <input matInput placeholder="Unit Type" [formControl]="typeName">
-      <mat-error *ngIf="typeName.invalid">Required</mat-error>
-    </mat-form-field>
+    <div [formGroup]="unitTypeGroup">
+      <div class="row">
+        <div class="col-sm-6">
+          <mat-form-field>
+            <input matInput placeholder="Unit Type" formControlName="unitTypeName">
+            <mat-error *ngIf="unitTypeGroup.get('unitTypeName').required">Required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-6" style="padding-top: 21px;">
+          <mat-checkbox formControlName="isDefault">Set As Default</mat-checkbox>
+        </div>
+      </div>
+    </div>
+
   </div>
   <div mat-dialog-actions>
-    <hum-button [disabled]="typeName.invalid" [type]="'save'" [text]="'Save'" (click)="saveUnit()"></hum-button>
+    <hum-button [disabled]="unitTypeGroup.invalid" [type]="'save'" [text]="'Save'" (click)="saveUnit()"></hum-button>
   </div>
 </ng-template>
 <ng-template #sourceCode>
@@ -105,7 +115,8 @@
         </mat-form-field>
         <mat-form-field>
           <input matInput placeholder="Phone" formControlName="phone">
-          <mat-error *ngIf="sourCodeForm.controls['phone'].errors">Phone no should be between 10 - 14 characters</mat-error>
+          <mat-error *ngIf="sourCodeForm.controls['phone'].errors">Phone no should be between 10 - 14 characters
+          </mat-error>
         </mat-form-field>
       </div>
     </div>
