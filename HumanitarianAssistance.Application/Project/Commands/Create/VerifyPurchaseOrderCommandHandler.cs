@@ -102,7 +102,9 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                         }
                     });
 
-                    var _logisticItems = await _dbContext.ProjectLogisticItems.Where(x=>x.IsDeleted== false && x.LogisticRequestsId == request.RequestId).ToListAsync();
+                    var _logisticItems = await _dbContext.ProjectLogisticItems
+                    .Include(x=>x.StoreInventoryItem)
+                    .Where(x=>x.IsDeleted== false && x.LogisticRequestsId == request.RequestId).ToListAsync();
                     foreach (var item in _logisticItems)
                     {
                         StoreItemPurchase obj = new StoreItemPurchase{
@@ -113,7 +115,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                             PurchaseDate = _logisticReq.PurchaseDate ?? throw new Exception("Purchase not submitted!"),
                             Currency = _logisticReq.CurrencyId,
                             UnitCost = Convert.ToDouble(item.FinalCost),
-                            // Quantity = (Convert.ToInt32(item.Quantity)) ?? 0,
+                            Quantity = (Convert.ToInt32(item.Quantity)),
                             VoucherId = voucherDetail.VoucherNo,
                             VoucherDate = voucherDetail.VoucherDate,
                             ProjectId = _logisticReq.ProjectId,
