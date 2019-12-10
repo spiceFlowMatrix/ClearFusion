@@ -350,8 +350,19 @@ export class RequestDetailComponent implements OnInit {
                 itemAction:
                   element.CandidateStatus !== CandidateStatus.Rejected &&
                   element.CandidateStatus !== CandidateStatus.Selected &&
-                  !this.IsHiringRequestCompleted && !this.IsHiringRequestClosed
+                  !this.IsHiringRequestCompleted &&
+                  !this.IsHiringRequestClosed
                     ? [
+                        {
+                          button: {
+                            status: true,
+                            text: 'Candidate Cv',
+                            type: 'download'
+                          },
+                          delete: false,
+                          download: true,
+                          edit: false
+                        },
                         {
                           button: {
                             status: true,
@@ -433,6 +444,9 @@ export class RequestDetailComponent implements OnInit {
   // #region Changes Status of New candidate
   newCandActionEvents(data: any) {
     switch (data.type) {
+      case 'Candidate Cv':
+        this.getCandidateCvByCandidateId(data);
+        break;
       case 'Select':
         this.selectCandidate(data);
         break;
@@ -483,6 +497,34 @@ export class RequestDetailComponent implements OnInit {
       hiringRequestId: this.hiringRequestId
     };
     this.updateCandidateStatus(candidateDetails);
+  }
+  getCandidateCvByCandidateId(data: any) {
+    const candidateId = data.item.CandidateId;
+    if (candidateId != null && candidateId !== undefined) {
+      this.loader.showLoader();
+      this.hiringRequestService
+        .DownloadCandidateCvByRequestId(candidateId)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(
+          (response: IResponseData) => {
+            if (response.statusCode === 200 && response.data !== null) {
+              this.candidateCv = {
+                AttachmentName: response.data.AttachmentName,
+                AttachmentUrl: response.data.AttachmentUrl,
+                UploadedBy: response.data.UploadedBy
+              };
+              const anchor = document.createElement('a');
+              anchor.href = this.candidateCv.AttachmentUrl;
+              anchor.target = '_blank';
+              anchor.click();
+            }
+            this.loader.hideLoader();
+          },
+          () => {
+            this.loader.hideLoader();
+          }
+        );
+    }
   }
   //#endregion
 
@@ -538,7 +580,8 @@ export class RequestDetailComponent implements OnInit {
                 itemAction:
                   element.CandidateStatus != CandidateStatus.Rejected &&
                   element.CandidateStatus != CandidateStatus.Selected &&
-                  !this.IsHiringRequestCompleted && !this.IsHiringRequestClosed
+                  !this.IsHiringRequestCompleted &&
+                  !this.IsHiringRequestClosed
                     ? [
                         {
                           button: {
@@ -733,39 +776,4 @@ export class RequestDetailComponent implements OnInit {
     window.history.back();
   }
   //#endregion
-
-
-   //#region "Download Candidate Cv"   <a href="{{goodsRecievedModel.AttachmentUrl}}" target="_blank">
-   getCandidateCvByCandidateId() {
-     const candidateId = 6;
-    if (candidateId != null && candidateId !== undefined) {
-      this.loader.showLoader();
-      this.hiringRequestService
-        .DownloadCandidateCvByRequestId(candidateId)
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe(
-          (response: IResponseData) => {
-            if (response.statusCode === 200 && response.data !== null) {
-              this.candidateCv = {
-                AttachmentName: response.data.AttachmentName,
-                AttachmentUrl: response.data.AttachmentUrl,
-                UploadedBy : response.data.UploadedBy
-              };
-              console.log(this.candidateCv);
-            }
-            this.loader.hideLoader();
-          },
-          () => {
-            this.loader.hideLoader();
-          }
-        );
-    }
-  }
-  //#endregion
-
-
-
-
-
-
 }
