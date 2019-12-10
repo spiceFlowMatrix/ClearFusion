@@ -27,7 +27,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
             {
                 if (request.IsDefault)
                 {
-                    PurchaseUnitType unitType = await _dbContext.PurchaseUnitType.FirstOrDefaultAsync(x => x.IsDeleted == false && x.IsDefault == true);
+                    PurchaseUnitType unitType = await _dbContext.PurchaseUnitType.FirstOrDefaultAsync(x => x.IsDeleted == false && x.IsDefault == true && x.UnitTypeId != request.UnitTypeId);
 
                     if (unitType != null)
                     {
@@ -40,6 +40,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                 if (editUnitType != null)
                 {
                     editUnitType.UnitTypeName = request.UnitTypeName;
+                    editUnitType.IsDefault= request.IsDefault;
                     editUnitType.IsDeleted = false;
 
                     await _dbContext.SaveChangesAsync();
