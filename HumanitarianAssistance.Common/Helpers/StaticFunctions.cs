@@ -135,7 +135,16 @@ namespace HumanitarianAssistance.Common.Helpers
             }
             return null;
         }
+
+        public static string GetCharacterFromACIICode(int aciiCode)
+        {
+            int unicode = 65 + aciiCode;
+            char character = (char)unicode;
+            return character.ToString();
+        }
     }
+
+
 
     public static class DefaultValues
     {

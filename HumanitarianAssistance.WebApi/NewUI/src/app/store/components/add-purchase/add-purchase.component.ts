@@ -639,7 +639,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
             if (!data.ResponseData) {
               this.exchangeRateMessage = 'No Exchange Rate Defined for ' +
-                this.datePipe.transform(checkExchangeRateModel.ExchangeRateDate, 'dd-MM-yyyy');
+                this.datePipe.transform(checkExchangeRateModel.ExchangeRateDate, 'dd-MM-yyyy') +
+                '. Please ensure that the exchange rate has been added and verified for the selected Purchase Order Date.';
             } else {
               this.exchangeRateMessage = '';
             }
