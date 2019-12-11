@@ -41,7 +41,7 @@
 
                 </div>
             </div>
-            <div class="row" *ngIf="(this.requestDetail.Status==7)">
+            <div class="row" *ngIf="(this.requestDetail.Status==4)">
               <div class="col-sm-7 margin_top_8">
                 <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
                 <span class="margin_left_25" style="font-size: 13px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Completed. Awaiting control approval</span>
@@ -51,7 +51,7 @@
                 <hum-button  (click)="approvePurchaseOrder()" [type]="'save'" [text]="'Approve'"></hum-button>
               </div>
             </div>
-            <div class="row" *ngIf="(this.requestDetail.Status==4)">
+            <div class="row" *ngIf="(this.requestDetail.Status==7)">
               <div class="col-sm-4 margin_top_8">
                 <span class="display_inline_block margin_left_10" style="font-size: 14px;color: gray;">Purchase Order</span>
               </div>

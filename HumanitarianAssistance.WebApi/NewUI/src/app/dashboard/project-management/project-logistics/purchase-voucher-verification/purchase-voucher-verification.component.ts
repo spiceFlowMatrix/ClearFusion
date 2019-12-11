@@ -32,6 +32,7 @@ export class PurchaseVoucherVerificationComponent implements OnInit {
   journalDropdown$: Observable<IDropDownModel[]>;
   purchaseVerificationForm: FormGroup;
   exchangeRateMessage = '';
+  unitTypeMessage = '';
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
   public toastr: ToastrService,
@@ -111,6 +112,14 @@ export class PurchaseVoucherVerificationComponent implements OnInit {
       error => {
       }
     );
+
+    this.logisticservice.checkDefaultUnitType().subscribe(data => {
+      if (data.StatusCode === 200 && !data.ResponseData) {
+        this.unitTypeMessage = 'Default Unit Type not set!';
+      } else {
+        this.unitTypeMessage = '';
+      }
+    });
     }
   }
 
@@ -177,6 +186,10 @@ export class PurchaseVoucherVerificationComponent implements OnInit {
     }
     if (this.exchangeRateMessage !== '' && this.exchangeRateMessage !== null) {
       this.toastr.warning('Exchange Rate not defined!');
+      return;
+    }
+    if (this.unitTypeMessage !== '' && this.unitTypeMessage !== null) {
+      this.toastr.warning('Default UnitType not defined!');
       return;
     }
     this.commonLoader.showLoader();

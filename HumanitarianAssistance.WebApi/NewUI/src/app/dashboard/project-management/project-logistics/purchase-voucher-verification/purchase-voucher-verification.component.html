@@ -4,6 +4,10 @@
     <div class="col-md-12">
       <div class="alert alert-warning" *ngIf="exchangeRateMessage != '' && exchangeRateMessage != null" role="alert">
         <p class="txt-center-align">{{exchangeRateMessage}}<a (click)="navigateToExchangeRate()"> Set Exchange Rate</a></p>
+        <p class="txt-center-align">{{unitTypeMessage}}</p>
+      </div>
+      <div class="alert alert-warning" *ngIf="unitTypeMessage != '' && unitTypeMessage != null" role="alert">
+        <p class="txt-center-align">{{unitTypeMessage}}</p>
       </div>
       <p>Upon verification, a voucher with following details will be produced. All purchases in the store
         for this purchase order will automatically be linked to this voucher.

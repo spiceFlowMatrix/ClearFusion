@@ -284,6 +284,13 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.CreatedDate = DateTime.UtcNow;
             return await _mediator.Send(model);
         }
+
+        [HttpGet]
+        public async Task<ApiResponse> CheckDefaultUnitType()
+        {   
+            return await _mediator.Send(new CheckDefaultUnitTypeQuery());
+        }
+        
         
     }
 

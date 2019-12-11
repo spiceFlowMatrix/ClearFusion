@@ -294,4 +294,10 @@ export class LogisticService {
       model
     );
   }
+
+  checkDefaultUnitType() {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_CheckDefaultUnitType,
+    );
+  }
 }
