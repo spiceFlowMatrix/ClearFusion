@@ -84,6 +84,7 @@ export interface IProcurementList {
   ProcuredAmount?: string;
   Returned: string;
   ReturnedOn?: any;
+  EmployeeId?: any;
 }
 
 export interface IAddEditPurchaseModel {
