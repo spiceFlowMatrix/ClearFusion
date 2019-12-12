@@ -50,7 +50,25 @@
     </div>
   </div>
   <div *ngSwitchCase="7">
-
+    <h4 class="letter_spacing_2">Purchase Order Details</h4>
+    <p>These are all the items that have been purchased for this logistics procurement request.
+      You will find these purchases in the store pages as well.
+    </p>
+    <p>
+      <strong>Note</strong>: Users can only select items that have been specified in the logistics procurement
+      request as items that can be added into the purchased items list below. If an item is not specified in the procurement
+      request specification to the left, you will not be able to select here.
+    </p>
+    <div>
+      <h4>Purchased Items
+        <hum-button [type]="'pdf'" [text]="'GOODS RECIEVED NOTE'"></hum-button>
+      </h4>
+      <span><i class="fas fa-info-circle icon_color_green"></i> New Purchase with Code was generated for Item .</span><br>
+      <span><i class="fas fa-info-circle icon_color_green"></i> Voucher with <b>Reference Number</b> has been generated.</span><br>
+      <span><i class="fas fa-info-circle icon_color_green"></i> Signed version of goods recieved note. <a href="{{goodsRecievedModel.AttachmentUrl}}" target="_blank"><i class="fa fa-download fa-2" aria-hidden="true"></i></a></span><br>
+      <span><i class="fas fa-info-circle icon_color_green"></i> Voucher approved by <b></b>.</span>
+      <hum-table [headers]="purchasedItemsHeaders$" [items]="purchasedItemsData$"></hum-table>
+    </div>
   </div>
   <div *ngSwitchDefault>
 
