@@ -248,6 +248,7 @@ export class GLOBAL {
   public static API_ProjectLogistics_GetPurchaseOrderDetail = 'ProjectLogistic/GetPurchaseOrderDetail';
   public static API_ProjectLogistics_VerifyPurchaseOrder = 'ProjectLogistic/VerifyPurchaseOrder';
   public static API_ProjectLogistics_CheckDefaultUnitType = 'ProjectLogistic/CheckDefaultUnitType';
+  public static API_ProjectLogistics_GetCompletedPurchaseOrderDetail = 'ProjectLogistic/GetCompletedPurchaseOrderDetail';
 
   // Chart Of Account
   public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';

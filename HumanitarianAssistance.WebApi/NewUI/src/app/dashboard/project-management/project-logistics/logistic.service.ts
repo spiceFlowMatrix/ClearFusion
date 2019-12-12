@@ -21,6 +21,7 @@ export class LogisticService {
   ) { }
 
   goodsRecievedChange$ = new BehaviorSubject(false);
+  VoucherReference$ = new BehaviorSubject('');
 
   addLogisticRequest(value) {
     return this.globalService.post(
@@ -300,4 +301,12 @@ export class LogisticService {
       this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_CheckDefaultUnitType,
     );
   }
+
+  getCompletedPurchaseOrderDetail(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetCompletedPurchaseOrderDetail,
+      requestId
+    );
+  }
+
 }

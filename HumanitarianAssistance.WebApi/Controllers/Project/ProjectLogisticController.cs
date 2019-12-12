@@ -291,6 +291,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(new CheckDefaultUnitTypeQuery());
         }
         
+        [HttpPost]
+        public async Task<ApiResponse> GetCompletedPurchaseOrderDetail([FromBody]long requestId)
+        {   
+            GetCompletedPurchaseOrderDetailQuery model = new GetCompletedPurchaseOrderDetailQuery();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.requestId = requestId;
+            return await _mediator.Send(model);
+        }
         
     }
 

@@ -15,26 +15,52 @@ using HumanitarianAssistance.Application.CommonServicesInterface;
 
 namespace HumanitarianAssistance.Application.Project.Queries
 {
-    public class GetComparativeStatementQueryHandler: IRequestHandler<GetComparativeStatementQuery, ApiResponse>
+    public class GetCompletedPurchaseOrderDetailQueryHandler: IRequestHandler<GetCompletedPurchaseOrderDetailQuery, ApiResponse>
     {
 
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IFileManagementService _fileManagement;
 
-        public GetComparativeStatementQueryHandler(HumanitarianAssistanceDbContext dbContext, IFileManagementService fileManagement)
+        public GetCompletedPurchaseOrderDetailQueryHandler(HumanitarianAssistanceDbContext dbContext, IFileManagementService fileManagement)
         {
             _dbContext= dbContext;
             _fileManagement = fileManagement;
         }
 
-        public async Task<ApiResponse> Handle(GetComparativeStatementQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Handle(GetCompletedPurchaseOrderDetailQuery request, CancellationToken cancellationToken)
         {
             ApiResponse response = new ApiResponse();
+            CompletedPurchaseOrderDetailModel model = new CompletedPurchaseOrderDetailModel();
+            List<PurchasedItemModel> purchasedItem = new List<PurchasedItemModel>();
+            var createdById = "";
             try
             {
-                
-                
-                response.data.ComparativeStatement = model;
+                var _logisticReq =await _dbContext.ProjectLogisticRequests.FirstOrDefaultAsync(x=>x.IsDeleted == false && x.LogisticRequestsId == request.requestId);
+                if(_logisticReq == null) {
+                    throw new Exception("Request doesnot exists!");
+                }
+                var voucherDetail = await _dbContext.VoucherDetail.FirstOrDefaultAsync(x=>x.IsDeleted == false && x.VoucherNo == _logisticReq.VoucherNo);
+                if(voucherDetail == null) {
+                    throw new Exception("Voucher doesnot exists!");
+                }
+                var purchaseItems = await _dbContext.StoreItemPurchases
+                .Include(x=>x.StoreInventoryItem)
+                .Where(x=>x.IsDeleted==false && _logisticReq.PurchaseId.ToList().Contains(x.PurchaseId)).ToListAsync();
+                foreach (var item in purchaseItems)
+                {
+                    PurchasedItemModel obj = new PurchasedItemModel{
+                        PurchaseId = item.PurchaseId,
+                        ItemId = item.InventoryItem,
+                        ItemName = item.StoreInventoryItem.ItemName
+                    };
+                    purchasedItem.Add(obj);
+                    createdById = item.CreatedById;
+                }
+                model.VoucherReferenceNo = voucherDetail.ReferenceNo;
+                model.ApprovedBy = await _dbContext.UserDetails.Where(x=>x.IsDeleted==false && x.AspNetUserId == createdById).Select(x=>x.FirstName).FirstOrDefaultAsync();
+                model.purchasedItems = purchasedItem;
+
+                response.data.PurchaseOrderDetail = model;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

@@ -39,6 +39,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
         {
             ApiResponse response = new ApiResponse();
             List<VoucherTransactionsModel> transactions = new List<VoucherTransactionsModel>();
+            List<long> purchaseItemIds =new List<long>();
             using (IDbContextTransaction tran = _dbContext.Database.BeginTransaction())
             {
                 try
@@ -127,9 +128,13 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                             UnitType = await _dbContext.PurchaseUnitType.Where(x=>x.IsDeleted == false && x.IsDefault == true).Select(x=>x.UnitTypeId).FirstOrDefaultAsync()
                         };
                         await _dbContext.StoreItemPurchases.AddAsync(obj);
+                        await _dbContext.SaveChangesAsync();
+                        purchaseItemIds.Add(obj.PurchaseId);
                     }
 
                     _logisticReq.Status = (int)LogisticRequestStatus.PurchaseCompleted;
+                    _logisticReq.VoucherNo = voucherDetail.VoucherNo;
+                    _logisticReq.PurchaseId = purchaseItemIds.ToArray();
                     await _dbContext.SaveChangesAsync();
                     tran.Commit();     
                     response.StatusCode = StaticResource.successStatusCode;

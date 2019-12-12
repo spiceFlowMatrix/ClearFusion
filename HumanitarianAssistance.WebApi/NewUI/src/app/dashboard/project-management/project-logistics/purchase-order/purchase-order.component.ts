@@ -31,6 +31,7 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
   selectedItems: any[];
   goodsNoteSubmitted = false;
   goodsRecievedModel: GoodsRecievedNote;
+  purchaseOrderDetail;
 
   constructor(private dialog: MatDialog,
     private routeActive: ActivatedRoute,
@@ -51,6 +52,11 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
     if (this.requestStatus === 4) {
       this.getPurchasedItemsList();
       this.getGoodsRecievedNote();
+    }
+    if (this.requestStatus === 7) {
+      this.getPurchasedItemsList();
+      this.getGoodsRecievedNote();
+      this.getCompletedPurchaseOrderDetail();
     }
   }
   submitPurchase() {
@@ -104,6 +110,8 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
       dialogRef.afterClosed().subscribe(result => {
         if (result !== undefined && result.data != null ) {
             this.requestStatus = LogisticRequestStatus['Purchase Completed'];
+            this.StatusChange.emit(this.requestStatus);
+            this.getCompletedPurchaseOrderDetail();
           } else {
           }
       });
@@ -121,6 +129,17 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
           }
           this.goodsRecievedModel = res.data.GoodsRecievedNote;
         }
+      } else {
+         this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  getCompletedPurchaseOrderDetail() {
+    this.logisticservice.getCompletedPurchaseOrderDetail(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200 && res.data.PurchaseOrderDetail !== null) {
+        this.purchaseOrderDetail = res.data.PurchaseOrderDetail;
+        this.logisticservice.VoucherReference$.next(this.purchaseOrderDetail.VoucherReferenceNo);
       } else {
          this.toastr.error('Something went wrong!');
       }
