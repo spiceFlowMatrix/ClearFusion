@@ -662,28 +662,6 @@ export class InterviewDetailComponent implements OnInit {
         (response: IResponseData) => {
           this.commonLoader.showLoader();
           if (response.statusCode === 200 && response.data !== null) {
-            this.interviewDetailForm.setValue({
-              CandidateId: response.data.CandidateId,
-              HiringRequestId: response.data.HiringRequestId,
-              Description: response.data.Description,
-              NoticePeriod: response.data.NoticePeriod,
-              AvailableDate: response.data.AvailableDate,
-              WrittenTestMarks: response.data.WrittenTestMarks,
-              CurrentBase: response.data.CurrentBase,
-              CurrentOther: response.data.CurrentOther,
-              ExpectationBase: response.data.ExpectationBase,
-              ExpectationOther: response.data.ExpectationOther,
-              Status: response.data.Status,
-              InterviewQuestionOne: response.data.InterviewQuestionOne,
-              InterviewQuestionTwo: response.data.InterviewQuestionTwo,
-              InterviewQuestionThree: response.data.InterviewQuestionThree,
-              CurrentTransport: response.data.CurrentTransport,
-              CurrentMeal: response.data.CurrentMeal,
-              ExpectationTransport: response.data.ExpectationTransport,
-              ExpectationMeal: response.data.ExpectationMeal,
-              LanguageList: response.data.LanguageList,
-              TraningList: response.data.TraningList
-            });
             this.setRemainingInterviewDetails(response.data);
           }
           this.commonLoader.hideLoader();
@@ -718,6 +696,26 @@ export class InterviewDetailComponent implements OnInit {
     this.languagesList$ = of(data.LanguageList);
     this.traningList$ = of(data.TraningList);
     this.interviewerList$ = of(data.InterviewerList);
+    this.interviewDetailForm = this.fb.group({
+      CandidateId: data.CandidateId,
+      HiringRequestId: data.HiringRequestId,
+      Description: data.Description,
+      NoticePeriod: data.NoticePeriod,
+      AvailableDate: data.AvailableDate,
+      WrittenTestMarks: data.WrittenTestMarks,
+      CurrentBase: data.CurrentBase,
+      CurrentOther: data.CurrentOther,
+      ExpectationBase: data.ExpectationBase,
+      ExpectationOther: data.ExpectationOther,
+      Status: data.Status,
+      InterviewQuestionOne: data.InterviewQuestionOne,
+      InterviewQuestionTwo: data.InterviewQuestionTwo,
+      InterviewQuestionThree: data.InterviewQuestionThree,
+      CurrentTransport: data.CurrentTransport,
+      CurrentMeal: data.CurrentMeal,
+      ExpectationTransport: data.ExpectationTransport,
+      ExpectationMeal: data.ExpectationMeal
+    });
     this.interviewDetails = data;
   }
   //#endregion
