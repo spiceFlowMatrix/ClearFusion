@@ -10,7 +10,7 @@
         <!-- <h4 class="main-heading" style="padding-left: 0px !important"><i class="fas fa-arrow-left"></i>   Request Details
         </h4> -->
         <h4 class="sub-heading">Workflow Details</h4>
-        <div *ngIf="(this.totalCost<=199)">
+        <div *ngIf="(this.requestDetail.TotalCost<=199)">
           <p>This request is viable for Direct Purchase. Please process the <b>Purchase Order</b> below.</p>
           <mat-divider style="position: unset;"></mat-divider>
             <div class="row" *ngIf="(this.requestDetail.Status==1)">
@@ -62,7 +62,7 @@
             </div>
           <mat-divider style="position: unset;"></mat-divider>
         </div>
-        <div *ngIf="(this.totalCost>=200 && this.totalCost<=9999)">
+        <div *ngIf="(this.requestDetail.TotalCost>=200 && this.requestDetail.TotalCost<=9999)">
           <p>This request is viable for <b>Comparative Statement</b>. Please process the <b>Comparative Statement & Purchase Order</b> below.</p>
           <mat-divider style="position: unset;"></mat-divider>
             <div *ngIf="this.requestDetail.ComparativeStatus==1">
@@ -175,7 +175,7 @@
             </div>
           <mat-divider style="position: unset;"></mat-divider>
         </div>
-        <div *ngIf="(this.totalCost>=10000 && this.totalCost<=59999)">
+        <div *ngIf="(this.requestDetail.TotalCost>=10000 && this.requestDetail.TotalCost<=59999)">
           <p>This request is viable for <b>Tender</b>. Please process the <b>Tender & Purchase Order</b> below.</p>
           <mat-divider style="position: unset;"></mat-divider>
             <div *ngIf="(this.requestDetail.Status==1)">
@@ -263,7 +263,7 @@
       </div>
       <!-- <mat-divider [vertical]="true" style="height:300px"></mat-divider> -->
       <div class="col-md-5">
-        <app-request-status [requestStatus]="this.requestDetail.Status" [comparativeStatus]="this.requestDetail.ComparativeStatus" [totalCost]="this.totalCost" [requestedItems]="this.requestItemList" (selectedItemChange)='selectedItemChange($event)' (comparativeStatusChange)="comparativeStatusChange($event)" (StatusChange)="StatusChange($event)" ></app-request-status>
+        <app-request-status [requestStatus]="this.requestDetail.Status" [comparativeStatus]="this.requestDetail.ComparativeStatus" [totalCost]="this.requestDetail.TotalCost" [requestedItems]="this.requestItemList" (selectedItemChange)='selectedItemChange($event)' (comparativeStatusChange)="comparativeStatusChange($event)" (StatusChange)="StatusChange($event)" ></app-request-status>
       </div>
     </div>
   </div>
