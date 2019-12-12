@@ -919,9 +919,20 @@ export class HiringRequestsService {
 
   //#region "getDesignationList"
   getDesignationList(): any {
-    return this.globalService.getDataById(
-      this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllDesignationList
-    );
+    return this.globalService
+      .getDataById(
+        this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllDesignationList
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.ResponseData,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
   }
   //#endregion
 
@@ -936,19 +947,21 @@ export class HiringRequestsService {
   }
 
   GetHiringRequestCode(ProjectId: number) {
-    return this.globalService.getListByListId(
-      this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetHiringRequestCode,
-      ProjectId
-    ).pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.data.HiringRequestCode,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
-    );
+    return this.globalService
+      .getListByListId(
+        this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetHiringRequestCode,
+        ProjectId
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.HiringRequestCode,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
   }
   //#endregion
 
@@ -958,7 +971,7 @@ export class HiringRequestsService {
       .post(
         this.appurl.getApiUrl() +
           GLOBAL.API_HiringRequest_DownloadCandidateCvByRequestId,
-          CandidateId
+        CandidateId
       )
       .pipe(
         map(x => {
