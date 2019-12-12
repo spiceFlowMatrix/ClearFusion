@@ -78,6 +78,12 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                              ModelYear = x.ModelYear,
                                              PurchaseId = x.PurchaseId,
                                              PurchasedBy = x.StoreItemPurchase.EmployeeDetail.EmployeeName,
+                                             ChasisNo= x.ChasisNo,
+                                             EmployeeId= x.EmployeeID,
+                                             EngineNo= x.EngineNo,
+                                             ManufacturerCountry= x.ManufacturerCountry,
+                                             RegistrationNo= x.RegistrationNo,
+                                             Remarks= x.PersonRemarks
                                          })
                                          .FirstOrDefaultAsync();
 

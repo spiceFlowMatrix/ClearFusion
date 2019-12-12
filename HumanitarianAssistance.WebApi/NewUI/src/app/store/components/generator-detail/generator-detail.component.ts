@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, OnChanges } from '@angular/core';
 import { IDropDownModel } from '../../models/purchase';
 import { Observable } from 'rxjs/internal/Observable';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
@@ -12,9 +12,10 @@ import { of } from 'rxjs/internal/observable/of';
   templateUrl: './generator-detail.component.html',
   styleUrls: ['./generator-detail.component.scss']
 })
-export class GeneratorDetailComponent implements OnInit, OnDestroy {
+export class GeneratorDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   offices$: Observable<IDropDownModel[]>;
+  employeeList$: Observable<IDropDownModel[]>;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   @Input() officeId: number;
@@ -26,6 +27,10 @@ export class GeneratorDetailComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getAllOffice();
     // console.log(this.generatorDetailForm);
+    this.generatorDetailForm.controls['OfficeId'].valueChanges.subscribe(x => {
+      this.getEmployeesByOfficeId(x);
+    });
+    this.markFormGroupTouched(this.generatorDetailForm);
     this.markFormGroupTouched(this.generatorDetailForm);
   }
 
@@ -50,6 +55,25 @@ export class GeneratorDetailComponent implements OnInit, OnDestroy {
         this.markFormGroupTouched(control);
       }
     });
+  }
+
+  getEmployeesByOfficeId(officeId: any) {
+    this.purchaseService.getEmployeesByOfficeId(officeId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(x => {
+        this.employeeList$ = of(x.data.map(y => {
+          return {
+            name: y.CodeEmployeeName,
+            value: y.EmployeeId
+          };
+        }));
+      });
+  }
+
+  ngOnChanges() {
+    if (this.officeId !== undefined && this.officeId != null) {
+      this.getEmployeesByOfficeId(this.officeId);
+    }
   }
 
   ngOnDestroy() {
