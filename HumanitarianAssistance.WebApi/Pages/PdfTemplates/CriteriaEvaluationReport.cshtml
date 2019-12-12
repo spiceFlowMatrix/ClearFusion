@@ -45,11 +45,14 @@
         </tr>
         <tr>
         	<td>
-            	<table style="width:100%;border-top:1px solid #dfdfdf;" cellpadding="25" cellspacing="0">
+            	<table style="width:100%;border-top:1px solid #dfdfdf;"  cellspacing="0">
                 	<tr>
-                    	<td style="width:50%;">Project allowed by law: <span>@Model.ProjectAllowedBylaw</span></td>
+                    	<td style="font-size:14px;padding-top:20px;padding-left:25px;">Project allowed by law: <span>@Model.ProjectAllowedBylaw</span></td>
+                        <td> Currency:<span>@Model.CurrencyName</span></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:14px;padding-left:25px;">Project allowed by Organization leadership:  <span>@Model.ProjectByLeadership</span></td>
                         <td></td>
-                        <td align="right; width:50%;"> Currency: @Model.CurrencyName</td>
                     </tr>
                 </table>
             </td>
@@ -180,12 +183,7 @@
                                                 <td>@Model.EnoughTimeForProject</td>
                                                 <td>&nbsp;</td>
                                             </tr>
-                                            <tr>
-                                            	<td>&nbsp;</td>
-                                            	<td>Project allowed by Organization leadership</td>
-                                                <td>@Model.ProjectByLeadership</td>
-                                                <td>&nbsp;</td>
-                                            </tr>
+                                            
                                             <tr>
                                             	<td>&nbsp;</td>
                                             	<td>Presence/Coverage in project location</td>
@@ -224,7 +222,7 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>COST GREATER THAN BUDGET</td>
+                                            	<td>COST GREATER THAN BUDGET(Cost affordablity</td>
                                                 <td>@Model.IsCostGreaterthenBudget</td>
                                                 <td>&nbsp;</td>
                                             </tr>
@@ -236,7 +234,7 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>FINANCIAL CONTRIBUTION FULFILLABLE</td>
+                                            	<td>FINANCIAL CONTRIBUTION FULFILLABLE(Secured)</td>
                                                 <td>@Model.IsFinancialContribution</td>
                                                 <td>&nbsp;</td>
                                             </tr>
@@ -1311,7 +1309,7 @@
                        
                     </tr>
                     <tr>
-                        <td style="text-align:center;">
+                        <td style="text-align:center; color: rgba(9, 9, 9, 0.67);font-size: 14px;">
                             @if(Model.DonorCriteriaMet == "No")
                             {
                         <label>"Warning: This is a critical criteria. Project may be unsuitable"</label>
@@ -1327,6 +1325,13 @@
                                 <tr>
                                     <td>&nbsp;</td>
                                     <td style="text-align:center;">Can eligibility be posssible until the deadline ? <span>@Model.EligibilityDealine</span></td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td style="text-align:center;color: rgba(9, 9, 9, 0.67);font-size: 14px;">
+                                      <label >NOTE: CHA eligibility against donor criteria(e.g. PADOR, DUNS number, sam# etc)</label>
+                                    </td>
                                     <td>&nbsp;</td>
                                 </tr>
                                 <tr>
@@ -1626,31 +1631,31 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Staff</td>
+                                            	<td>Is staff secured?</td>
                                                 <td>@Model.Staff</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
 	                                            <td>&nbsp;</td>
-                                            	<td>Project Assets</td>
+                                            	<td>Is project assets secured?</td>
                                                 <td>@Model.ProjectAssets</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Suppliers</td>
+                                            	<td>Are suppliers secured?</td>
                                                 <td>@Model.Suppliers</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Beneficiaries</td>
+                                            	<td>Are beneficiaries secured?</td>
                                                 <td>@Model.Beneficiaries</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Overall Organization</td>
+                                            	<td>Overall Organization secured?</td>
                                                 <td>@Model.OverallOrganization</td>
                                                 <td>&nbsp;</td>
                                             </tr>
