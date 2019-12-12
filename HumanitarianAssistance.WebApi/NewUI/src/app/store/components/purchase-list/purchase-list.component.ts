@@ -147,9 +147,9 @@ export class PurchaseListComponent implements OnInit {
             DepreciationRate: element.DepreciationRate,
             MasterInventoryCode: element.MasterInventoryCode,
             OfficeCode: element.OfficeCode,
-            ReceiptDate:  (element.ReceiptDate != null && element.ReceiptDate !== undefined) ?
+            ReceiptDate:  (element.ReceiptDate) ?
                           this.datePipe.transform(new Date(element.ReceiptDate), 'dd/MM/yyyy') : null,
-            InvoiceDate:  (element.InvoiceDate != null && element.InvoiceDate !== undefined) ?
+            InvoiceDate:  (element.InvoiceDate) ?
                           this.datePipe.transform(new Date(element.InvoiceDate), 'dd/MM/yyyy') : null,
             ReceivedFromLocationName: element.ReceivedFromLocationName,
             Status: element.Status,

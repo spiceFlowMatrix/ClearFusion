@@ -4,8 +4,6 @@ import {
   FormGroup,
   FormBuilder,
   Validators,
-  FormControl,
-  ValidatorFn,
   AbstractControl
 } from '@angular/forms';
 import { Observable, forkJoin, ReplaySubject, of } from 'rxjs';
@@ -15,12 +13,10 @@ import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.
 import { ToastrService } from 'ngx-toastr';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
-import { ActivatedRoute } from '@angular/router';
 import {
   OfficeDetailModel,
   IHiringRequestModel
 } from '../models/hiring-requests-models';
-import { HrService } from 'src/app/hr/services/hr.service';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
 
 @Component({
@@ -33,18 +29,13 @@ export class AddHiringRequestComponent implements OnInit {
   OfficeId: number;
   isFormSubmitted = false;
   hiringRequestId: number;
-  AvailableVacancies: number;
   hiringRequestCode: string;
-  hiringRequestDetail: IHiringRequestModel;
   addHiringRequestForm: FormGroup;
   professionList$: Observable<IDropDownModel[]>;
   officeList$: Observable<IDropDownModel[]>;
- // genderList$: Observable<IDropDownModel[]>;
   jobShiftList$: Observable<IDropDownModel[]>;
-  jobList$: Observable<IDropDownModel[]>;
   jobGradeList$: Observable<IDropDownModel[]>;
   countryList$: Observable<IDropDownModel[]>;
-  provinceList$: Observable<IDropDownModel[]>;
   designationList$: Observable<IDropDownModel[]>;
   budgetLineList$: Observable<IDropDownModel[]>;
   departmentList$: Observable<IDropDownModel[]>;
@@ -67,15 +58,7 @@ export class AddHiringRequestComponent implements OnInit {
       ProjectId: [null],
       HiringRequestId: [null],
       HiringRequestCode: [null],
-      TotalVacancy: [
-        null,
-        [
-          Validators.required,
-          Validators.min(1),
-          (control: AbstractControl) =>
-            Validators.max(this.AvailableVacancies)(control)
-        ]
-      ],
+      TotalVacancy: [null, [Validators.required]],
       Position: [null, [Validators.required]],
       Office: [null, [Validators.required]],
       BudgetLine: [null, [Validators.required]],
@@ -95,12 +78,6 @@ export class AddHiringRequestComponent implements OnInit {
       KnowledgeAndSkillsRequired: [null, [Validators.required]],
       SubmissionGuidelines: [null, [Validators.required]]
     });
-    // this.genderList$ = of([
-    //   { name: 'Male', value: 1 },
-    //   { name: 'Female', value: 2 },
-    //   { name: 'Other', value: 3 }
-    // ] as IDropDownModel[]);
-
     this.jobShiftList$ = of([
       { name: 'Day', value: 1 },
       { name: 'Night', value: 2 }
@@ -119,28 +96,196 @@ export class AddHiringRequestComponent implements OnInit {
     } else {
       this.getHiringRequestCode();
     }
-    forkJoin([this.getAllOfficeList(), this.getAllCountryList()])
+    forkJoin([
+      this.getAllOfficeList(),
+      this.getAllCountryList(),
+      this.getDesignationList(),
+      this.getBudgetLineList(),
+      this.getJobGradeList(),
+      this.getCurrencyList(),
+      this.getEducationDegreeList(),
+      this.getAllProfessionList()
+    ])
       .pipe(takeUntil(this.destroyed$))
       .subscribe(result => {
         this.subscribeOfficeList(result[0]);
         this.subscribeCountryList(result[1]);
+        this.subscribeDesignationList(result[2]);
+        this.subscribeBudgetLineList(result[3]);
+        this.subscribeJobGradeList(result[4]);
+        this.subscribeCurrencyList(result[5]);
+        this.subscribeEducationDegreeList(result[6]);
+        this.subscribeProfessionList(result[7]);
       });
-
-    this.getDesignationList();
-    this.getBudgetLineList();
-    this.getJobGradeList();
-    this.getCurrencyList();
-    this.getEducationDegreeList();
-    this.getAllProfessionList();
   }
+  //#region "Get all office List"
   getAllOfficeList() {
     this.commonLoader.showLoader();
     return this.hiringRequestService.GetOfficeList();
   }
+  subscribeOfficeList(response: any) {
+    this.commonLoader.hideLoader();
+    this.officeList$ = of(
+      response.data.map(y => {
+        return {
+          value: y.OfficeId,
+          name: y.OfficeName
+        };
+      })
+    );
+  }
+  //#endregion
+  //#region "Get all country List"
   getAllCountryList() {
     this.commonLoader.showLoader();
     return this.hiringRequestService.GetCountryList();
   }
+  subscribeCountryList(response: any) {
+    this.commonLoader.hideLoader();
+    this.countryList$ = of(
+      response.data.map(y => {
+        return {
+          value: y.CountryId,
+          name: y.CountryName
+        };
+      })
+    );
+  }
+  //#endregion
+  //#region "Get all designation List"
+  getDesignationList() {
+    this.commonLoader.showLoader();
+    return this.hiringRequestService.getDesignationList();
+  }
+  subscribeDesignationList(response: any) {
+    this.commonLoader.hideLoader();
+    this.designationList$ = of(
+      response.data.map(y => {
+        return {
+          value: y.DesignationId,
+          name: y.Designation
+        };
+      })
+    );
+  }
+  //#endregion
+  //#region "Get all budget line list"
+  getBudgetLineList() {
+    this.commonLoader.showLoader();
+    return this.hiringRequestService.GetBudgetLineList(this.projectId);
+  }
+  subscribeBudgetLineList(response: any) {
+    this.commonLoader.hideLoader();
+    this.budgetLineList$ = of(
+      response.data.map(y => {
+        return {
+          value: y.BudgetLineId,
+          name: y.BudgetCodeName
+        };
+      })
+    );
+  }
+  //#endregion
+  //#region "Get all job grade list"
+  getJobGradeList() {
+    this.commonLoader.showLoader();
+    return this.hiringRequestService.GetJobGradeList();
+  }
+  subscribeJobGradeList(response: any) {
+    this.commonLoader.hideLoader();
+    this.jobGradeList$ = of(
+      response.data.map(y => {
+        return {
+          value: y.GradeId,
+          name: y.GradeName
+        };
+      })
+    );
+  }
+  //#endregion
+  //#region "Get all currency list"
+  getCurrencyList() {
+    this.commonLoader.showLoader();
+    return this.hiringRequestService.GetCurrencyList();
+  }
+  subscribeCurrencyList(response: any) {
+    this.commonLoader.hideLoader();
+    this.currencyList$ = of(
+      response.data.map(y => {
+        return {
+          value: y.CurrencyId,
+          name: y.CurrencyName
+        };
+      })
+    );
+  }
+  //#endregion
+  //#region "Get all education degree list"
+  getEducationDegreeList() {
+    this.commonLoader.showLoader();
+    return this.hiringRequestService.GetEducationDegreeList();
+  }
+  subscribeEducationDegreeList(response: any) {
+    this.commonLoader.hideLoader();
+    this.educationDegreeList$ = of(
+      response.data.map(y => {
+        return {
+          value: y.Id,
+          name: y.Name
+        };
+      })
+    );
+  }
+  //#endregion
+  //#region "Get all profession list"
+  getAllProfessionList() {
+    this.commonLoader.showLoader();
+    return this.hiringRequestService.GetProfessionList();
+  }
+  subscribeProfessionList(response: any) {
+    this.commonLoader.hideLoader();
+    this.professionList$ = of(
+      response.data.map(y => {
+        return {
+          value: y.ProfessionId,
+          name: y.ProfessionName
+        };
+      })
+    );
+  }
+  //#endregion
+
+  //#region "Get Department List"
+  getDepartmentList(officeId) {
+    this.hiringRequestService.getDepartmentList(officeId).subscribe(x => {
+      this.departmentList$ = of(
+        x.data.Departments.map(element => {
+          return {
+            value: element.DepartmentId,
+            name: element.DepartmentName
+          };
+        })
+      );
+    });
+  }
+  //#endregion
+  //#region "Get hiring request code"
+  getHiringRequestCode() {
+    this.commonLoader.hideLoader();
+    this.hiringRequestService
+      .GetHiringRequestCode(this.projectId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((response: IResponseData) => {
+        if (response.statusCode === 200 && response.data !== null) {
+          this.hiringRequestCode = response.data;
+          this.addHiringRequestForm.controls['HiringRequestCode'].setValue(
+            this.hiringRequestCode
+          );
+        }
+      });
+  }
+  //#endregion
+  //#region "Get Hiring request details for edit"
   getAllHiringRequestDetail() {
     this.hiringRequestService
       .GetAllProjectHiringRequestDetailByHiringRequestId(
@@ -178,144 +323,17 @@ export class AddHiringRequestComponent implements OnInit {
                 response.data.KnowledgeAndSkillsRequired,
               SubmissionGuidelines: response.data.SubmissionGuidelines
             });
-
             this.getDepartmentList(response.data.Office);
           }
           this.loader.hideLoader();
         },
-        error => {
+        () => {
           this.loader.hideLoader();
         }
       );
   }
-  getHiringRequestCode() {
-    this.commonLoader.hideLoader();
-    this.hiringRequestService
-      .GetHiringRequestCode(this.projectId)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((response: IResponseData) => {
-        if (response.statusCode === 200 && response.data !== null) {
-          this.hiringRequestCode = response.data;
-          this.addHiringRequestForm.controls['HiringRequestCode'].setValue(this.hiringRequestCode);
-        }
-      });
-  }
-
-  subscribeOfficeList(response: any) {
-    this.commonLoader.hideLoader();
-    this.officeList$ = of(
-      response.data.map(y => {
-        return {
-          value: y.OfficeId,
-          name: y.OfficeName
-        };
-      })
-    );
-  }
-
-  subscribeCountryList(response: any) {
-    this.commonLoader.hideLoader();
-    this.countryList$ = of(
-      response.data.map(y => {
-        return {
-          value: y.CountryId,
-          name: y.CountryName
-        };
-      })
-    );
-  }
-  // getAllProfessionList(OfficeId: number) {
-  //   const model: OfficeDetailModel = {
-  //     ProjectId: this.projectId,
-  //     ProfessionId: OfficeId
-  //   };
-  //   this.hiringRequestService.GetProfessionListByOfficeId(model).subscribe(
-  //     (response: IResponseData) => {
-  //       this.commonLoader.showLoader();
-  //       if (response.statusCode === 200 && response.data !== null) {
-  //         this.professionList$ = of(
-  //           response.data.map(element => {
-  //             return {
-  //               value: element.ProfessionId,
-  //               name: element.ProfessionName
-  //             } as IDropDownModel;
-  //           })
-  //         );
-  //       }
-  //       this.commonLoader.hideLoader();
-  //     },
-  //     error => {
-  //       this.commonLoader.hideLoader();
-  //     }
-  //   );
-  // }
-  getAllJobList(PositionId: number) {
-    const model: OfficeDetailModel = {
-      ProjectId: this.projectId,
-      ProfessionId: PositionId,
-      OfficeId: this.OfficeId
-    };
-    this.hiringRequestService.GetJobList(model).subscribe(
-      (response: IResponseData) => {
-        this.commonLoader.showLoader();
-        if (response.statusCode === 200 && response.data !== null) {
-          this.jobList$ = of(
-            response.data.map(element => {
-              return {
-                value: element.JobId,
-                name: element.JobCode
-              } as IDropDownModel;
-            })
-          );
-        }
-        this.commonLoader.hideLoader();
-      },
-      error => {
-        this.commonLoader.hideLoader();
-      }
-    );
-  }
-
-  getAllProvinceList(CountryId: number) {
-    this.hiringRequestService
-      .getAllProvinceListByCountryId([CountryId])
-      .subscribe(
-        (response: IResponseData) => {
-          this.commonLoader.showLoader();
-          if (response.statusCode === 200 && response.data !== null) {
-            this.provinceList$ = of(
-              response.data.map(element => {
-                return {
-                  value: element.ProvinceId,
-                  name: element.ProvinceName
-                } as IDropDownModel;
-              })
-            );
-          }
-          this.commonLoader.hideLoader();
-        },
-        error => {
-          this.commonLoader.hideLoader();
-        }
-      );
-  }
-
-  // getRemainingVacancy(JobId: number) {
-  //   this.hiringRequestService.getRemainingVacancyByJobId(JobId).subscribe(
-  //     (response: IResponseData) => {
-  //       this.commonLoader.showLoader();
-  //       if (response.statusCode === 200 && response.data !== null) {
-  //         this.AvailableVacancies = response.data;
-  //       }
-  //       this.commonLoader.hideLoader();
-  //     },
-  //     error => {
-  //       this.commonLoader.hideLoader();
-  //     }
-  //   );
-  // }
-
-  //#region "AddHiringRequest"
+  //#endregion
+  //#region "Add hiring request"
   AddHiringRequest(data: IHiringRequestModel) {
     data.AnouncingDate = StaticUtilities.getLocalDate(data.AnouncingDate);
     data.ClosingDate = StaticUtilities.getLocalDate(data.ClosingDate);
@@ -332,15 +350,14 @@ export class AddHiringRequestComponent implements OnInit {
         }
         this.onCancelPopup();
       },
-      error => {
+      () => {
         this.toastr.error('Someting went wrong. Please try again');
         this.isFormSubmitted = false;
       }
     );
   }
   //#endregion
-
-  //#region "EditHirinRequest"
+  //#region "Edit hiring request"
   EditHiringRequest() {
     this.addHiringRequestForm.value.ClosingDate = StaticUtilities.getLocalDate(
       this.addHiringRequestForm.value.ClosingDate
@@ -363,32 +380,28 @@ export class AddHiringRequestComponent implements OnInit {
           }
           this.onCancelPopup();
         },
-        error => {
+        () => {
           this.toastr.error('Someting went wrong. Please try again');
           this.isFormSubmitted = false;
         }
       );
   }
   //#endregion
+  //#region "On hiring request list refresh"
+  AddHiringRequestListRefresh() {
+    this.onAddHiringRequestListRefresh.emit();
+  }
+  UpdateHiringRequestListRefresh() {
+    this.onUpdateHiringRequestListRefresh.emit();
+  }
+  //#endregion
+  //#region "On change duty station"
   onChangeDutyStation(e) {
-    // this.professionList$ = null;
-    this.jobList$ = null;
     this.OfficeId = e;
-    // this.getAllProfessionList(e);
     this.getDepartmentList(e);
   }
-
-  onChangePosition(e) {
-    this.jobList$ = null;
-    this.getAllJobList(e);
-  }
-  onChangeCountry(e) {
-    this.provinceList$ = null;
-    this.getAllProvinceList(e);
-  }
-  onChangeJobCategory(e) {
-    // this.getRemainingVacancy(e);
-  }
+  //#endregion
+  //#region "On form submission"
   onFormSubmit(data: any) {
     if (this.addHiringRequestForm.valid) {
       if (this.hiringRequestId === 0) {
@@ -398,123 +411,10 @@ export class AddHiringRequestComponent implements OnInit {
       }
     }
   }
+  //#endregion
   //#region "onCancelPopup"
   onCancelPopup(): void {
     this.dialogRef.close();
-  }
-  //#endregion
-
-  //#region "hiringRequestListRefresh"
-  AddHiringRequestListRefresh() {
-    this.onAddHiringRequestListRefresh.emit();
-  }
-  UpdateHiringRequestListRefresh() {
-    this.onUpdateHiringRequestListRefresh.emit();
-  }
-  //#endregion
-
-  //#region "getDesignationList"
-  getDesignationList() {
-    this.hiringRequestService.getDesignationList().subscribe(x => {
-      this.designationList$ = of(
-        x.map(element => {
-          return {
-            value: element.DesignationId,
-            name: element.Designation
-          };
-        })
-      );
-    });
-  }
-  //#endregion
-
-  //#region "getBudgetLineList"
-  getBudgetLineList() {
-    this.hiringRequestService.GetBudgetLineList(this.projectId).subscribe(x => {
-      this.budgetLineList$ = of(
-        x.data.map(element => {
-          return {
-            value: element.BudgetLineId,
-            name: element.BudgetCodeName
-          };
-        })
-      );
-    });
-  }
-  //#endregion
-
-  //#region "getJobGradeList"
-  getJobGradeList() {
-    this.hiringRequestService.GetJobGradeList().subscribe(x => {
-      this.jobGradeList$ = of(
-        x.data.map(element => {
-          return {
-            value: element.GradeId,
-            name: element.GradeName
-          };
-        })
-      );
-    });
-  }
-  //#endregion
-
-  //#region "getJobGradeList"
-  getDepartmentList(officeId) {
-    this.hiringRequestService.getDepartmentList(officeId).subscribe(x => {
-      this.departmentList$ = of(
-        x.data.Departments.map(element => {
-          return {
-            value: element.DepartmentId,
-            name: element.DepartmentName
-          };
-        })
-      );
-    });
-  }
-  //#endregion
-
-  //#region "getCurrencyList"
-  getCurrencyList() {
-    this.hiringRequestService.GetCurrencyList().subscribe(x => {
-      this.currencyList$ = of(
-        x.data.map(element => {
-          return {
-            value: element.CurrencyId,
-            name: element.CurrencyName
-          };
-        })
-      );
-    });
-  }
-  //#endregion
-
-  //#region "getEducationDegreeList"
-  getEducationDegreeList() {
-    this.hiringRequestService.GetEducationDegreeList().subscribe(x => {
-      this.educationDegreeList$ = of(
-        x.map(element => {
-          return {
-            value: element.Id,
-            name: element.Name
-          };
-        })
-      );
-    });
-  }
-  //#endregion
-
-  //#region "getAllProfessionList"
-  getAllProfessionList() {
-    this.hiringRequestService.GetProfessionList().subscribe(x => {
-      this.professionList$ = of(
-        x.data.map(element => {
-          return {
-            value: element.ProfessionId,
-            name: element.ProfessionName
-          };
-        })
-      );
-    });
   }
   //#endregion
 }

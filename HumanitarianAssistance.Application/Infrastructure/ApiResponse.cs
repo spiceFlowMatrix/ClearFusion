@@ -222,9 +222,11 @@ namespace HumanitarianAssistance.Application.Infrastructure {
         public List<LogisticItemModel> LogisticsItemList { get; set; }
         public LogisticItemModel logisticItem { get; set; }
         public LogisticsRequestsDetailModel logisticRequest { get; set; }
+        public CompletedPurchaseOrderDetailModel PurchaseOrderDetail { get; set; }
         public ComparativeStatementModel ComparativeStatement { get; set; }
         public GoodsRecievedNoteModel GoodsRecievedNote { get; set; }
         public long logisticRequestId { get; set; }
+        public PurchaseOrderDetailModel purchaseOrderDetail { get; set; }
         public List<JobHiringDetailModel> JobDetailList { get; set; }
         public List<OfficeDetailListModel> OfficeList { get; set; }
         public List<ProfessionListModel> ProfessionDetailList { get; set; }

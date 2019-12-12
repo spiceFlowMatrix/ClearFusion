@@ -7,6 +7,7 @@ import { DeleteConfirmationComponent } from 'projects/library/src/lib/components
 import { Delete_Confirmation_Texts } from 'src/app/shared/enum';
 import { MatDialog } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class LogisticService {
   ) { }
 
   goodsRecievedChange$ = new BehaviorSubject(false);
+  VoucherReference$ = new BehaviorSubject('');
 
   addLogisticRequest(value) {
     return this.globalService.post(
@@ -253,4 +255,58 @@ export class LogisticService {
       value
     );
   }
+
+  getJournalList() {
+    return this.globalService.getList(
+      this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllJournalDetail
+    );
+  }
+
+  GetAccountDetails() {
+    return this.globalService.getList(
+      this.appurl.getApiUrl() + GLOBAL.API_Accounting_GetAccountDetails
+    );
+  }
+
+  getPurchaseOrderDetail(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetPurchaseOrderDetail,
+      requestId
+    );
+  }
+
+  checkExchangeRateExists(model: any) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_ExchangeRates_CheckExchangeRatesExist,
+        model
+      )
+      .pipe(
+        map(x => {
+          return x;
+        })
+      );
+  }
+
+  verifyPurchaseOrder(model) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_VerifyPurchaseOrder,
+      model
+    );
+  }
+
+  checkDefaultUnitType() {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_CheckDefaultUnitType,
+    );
+  }
+
+  getCompletedPurchaseOrderDetail(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetCompletedPurchaseOrderDetail,
+      requestId
+    );
+  }
+
 }

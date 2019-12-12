@@ -266,6 +266,40 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.ModifiedDate = DateTime.UtcNow; 
             return await _mediator.Send(model);
         }
+
+        [HttpPost]
+        public async Task<ApiResponse> GetPurchaseOrderDetail([FromBody]long requestId)
+        {   
+            GetPurchaseOrderDetailQuery model = new GetPurchaseOrderDetailQuery();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.requestId = requestId;
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> VerifyPurchaseOrder([FromBody]VerifyPurchaseOrderCommand model)
+        {   
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+
+        [HttpGet]
+        public async Task<ApiResponse> CheckDefaultUnitType()
+        {   
+            return await _mediator.Send(new CheckDefaultUnitTypeQuery());
+        }
+        
+        [HttpPost]
+        public async Task<ApiResponse> GetCompletedPurchaseOrderDetail([FromBody]long requestId)
+        {   
+            GetCompletedPurchaseOrderDetailQuery model = new GetCompletedPurchaseOrderDetailQuery();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.requestId = requestId;
+            return await _mediator.Send(model);
+        }
+        
     }
 
 }
