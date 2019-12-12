@@ -140,7 +140,7 @@ export class LogisticRequestsComponent implements OnInit {
             Id: v.RequestId,
             Code: v.RequestCode,
             Office: v.Office,
-            BudgetLine: v.TotalCost,
+            BudgetLine: v.BudgetLine,
             Currency: v.Currency,
             TotalEstimatedCost: v.TotalCost,
             ProcessingType: v.ProcessingType,

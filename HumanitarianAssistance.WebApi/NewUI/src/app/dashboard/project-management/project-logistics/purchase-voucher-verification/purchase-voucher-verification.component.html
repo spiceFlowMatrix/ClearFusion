@@ -1,0 +1,115 @@
+<div mat-dialog-title><h3>Purchase Order Voucher Verification</h3></div>
+<mat-dialog-content>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="alert alert-warning" *ngIf="exchangeRateMessage != '' && exchangeRateMessage != null" role="alert">
+        <p class="txt-center-align">{{exchangeRateMessage}}<a (click)="navigateToExchangeRate()"> Set Exchange Rate</a></p>
+        <p class="txt-center-align">{{unitTypeMessage}}</p>
+      </div>
+      <div class="alert alert-warning" *ngIf="unitTypeMessage != '' && unitTypeMessage != null" role="alert">
+        <p class="txt-center-align">{{unitTypeMessage}}</p>
+      </div>
+      <p>Upon verification, a voucher with following details will be produced. All purchases in the store
+        for this purchase order will automatically be linked to this voucher.
+      </p>
+      <table class="table table-striped" style="width:100%;">
+        <tr>
+          <td class="font_weight_600">Date</td>
+          <td>{{purchaseDetail.PurchasedDate | date: "dd/MM/yyyy"}}</td>
+        </tr>
+        <tr>
+          <td class="font_weight_600">Currency</td>
+          <td>{{purchaseDetail.Currency}}</td>
+        </tr>
+        <tr>
+          <td class="font_weight_600">Type</td>
+          <td>Journal</td>
+        </tr>
+        <tr>
+          <td class="font_weight_600">Office</td>
+          <td>{{purchaseDetail.Office}}</td>
+        </tr>
+      </table>
+      <form [formGroup]="purchaseVerificationForm" (ngSubmit)="submitPurchaseVerification(purchaseVerificationForm.value)">
+        <lib-hum-dropdown [options]="journalDropdown$" formControlName="Journal" [placeHolder]="'Journal'"
+        ></lib-hum-dropdown>
+        <mat-form-field style="width: 100%;">
+          <textarea rows="3" matInput placeholder="Voucher Description" formControlName="VoucherDescription"></textarea>
+        </mat-form-field>
+        <h4>Credit Transaction</h4>
+        <table class="table table-striped" style="width:100%;">
+          <tr>
+            <td class="font_weight_600">Amount</td>
+            <td>{{purchaseDetail.TotalCost}}</td>
+          </tr>
+          <tr>
+            <td class="font_weight_600">Project</td>
+            <td>{{purchaseDetail.Project}}</td>
+          </tr>
+          <tr>
+            <td class="font_weight_600">BudgetLine</td>
+            <td>{{purchaseDetail.BudgetLine}}</td>
+          </tr>
+          <tr>
+            <td class="font_weight_600">Project Job</td>
+            <td>{{purchaseDetail.ProjectJob}}</td>
+          </tr>
+        </table>
+        <lib-search-dropdown
+          placeholder="Account"
+          [multiSelect]="false"
+          placeholderSearchLabel="Find Accounts..."
+          noEntriesFoundLabel="No matching Accounts found"
+          [dataSource]="accountDropdown"
+          [selectedValue]="CreditAccountId"
+          (openedChange)="
+                  onOpenedCreditAccountChange($event)
+                "
+        >
+        </lib-search-dropdown>
+        <mat-form-field style="width: 100%;">
+          <textarea rows="3" matInput placeholder="Transaction Description" formControlName="CreditDescription"></textarea>
+        </mat-form-field>
+        <h4>Debit Transaction</h4>
+        <table class="table table-striped" style="width:100%;">
+          <tr>
+            <td class="font_weight_600">Amount</td>
+            <td>{{purchaseDetail.TotalCost}}</td>
+          </tr>
+          <tr>
+            <td class="font_weight_600">Project</td>
+            <td>{{purchaseDetail.Project}}</td>
+          </tr>
+          <tr>
+            <td class="font_weight_600">BudgetLine</td>
+            <td>{{purchaseDetail.BudgetLine}}</td>
+          </tr>
+          <tr>
+            <td class="font_weight_600">Project Job</td>
+            <td>{{purchaseDetail.ProjectJob}}</td>
+          </tr>
+        </table>
+        <lib-search-dropdown
+          placeholder="Account"
+          [multiSelect]="false"
+          placeholderSearchLabel="Find Accounts..."
+          noEntriesFoundLabel="No matching Accounts found"
+          [dataSource]="accountDropdown"
+          [selectedValue]="DebitAccountId"
+          (openedChange)="
+                  onOpenedDebitAccountChange($event)
+                "
+        >
+        </lib-search-dropdown>
+        <mat-form-field style="width: 100%;">
+          <textarea rows="3" matInput placeholder="Transaction Description" formControlName="DebitDescription"></textarea>
+        </mat-form-field>
+        <button type="submit" style="display: none;" #submitBtn></button>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <hum-button [type]="'save'" [text]="'VERIFY'" (click)="submitBtn.click()"></hum-button>
+  <hum-button (click)="closeDialog()" [type]="'cancel'" [text]="'CANCEL'"></hum-button>
+</mat-dialog-actions>

@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { LogisticRequestStatus, LogisticComparativeStatus } from 'src/app/shared/enum';
 import { GoodsRecievedUploadComponent } from '../goods-recieved-upload/goods-recieved-upload.component';
+import { PurchaseVoucherVerificationComponent } from '../purchase-voucher-verification/purchase-voucher-verification.component';
 
 
 @Component({
@@ -43,6 +44,7 @@ Currency: '', BudgetLine: '', Office: '', Description: ''};
   storedropdownItemsList = [];
   goodsNoteSubmitted = false;
   goodsRecievedModel: GoodsRecievedNote;
+  voucherReference = '';
 
   constructor(private dialog: MatDialog, private routeActive: ActivatedRoute,
     private logisticservice: LogisticService,
@@ -51,6 +53,11 @@ Currency: '', BudgetLine: '', Office: '', Description: ''};
     private router: Router) { }
 
   ngOnInit() {
+
+    this.logisticservice.VoucherReference$.subscribe(val => {
+      this.voucherReference = val;
+    });
+
     this.logisticservice.goodsRecievedChange$.subscribe(val => {
       this.goodsNoteSubmitted = val;
     });
@@ -421,7 +428,18 @@ Currency: '', BudgetLine: '', Office: '', Description: ''};
           }
       });
     } else {
-
+      const dialogRef = this.dialog.open(PurchaseVoucherVerificationComponent, {
+        width: '500px',
+        height: '630px',
+        data: {RequestId: this.requestId}
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result !== undefined && result.data != null ) {
+            this.requestDetail.Status = LogisticRequestStatus['Purchase Completed'];
+            // this.getCompletedPurchaseOrderDetail();
+          } else {
+          }
+      });
     }
   }
 
