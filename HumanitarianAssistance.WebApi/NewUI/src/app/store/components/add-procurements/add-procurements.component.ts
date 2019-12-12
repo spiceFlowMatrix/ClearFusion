@@ -34,7 +34,12 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
   purchaseId: number;
   officeId: number;
   itemsToBeProcuredCount: number;
+  originalQuantityOfPurchase = 0;
+  procuredQuantityOfPurchase = 0;
+  originalProcuredQuantity = 0;
+  currentQuantityOfPurchase = 0;
   showMaxProcurementMessage = false;
+  originalIssuedQuantity = 0;
   maxProcurementMessage =
   'Issued quantity exceeds purchased quantity. Either decrease the quantity, return the issued item or create a new Purchase for the item';
 
@@ -203,15 +208,15 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
   subscribePurchaseListByItemId(response: any) {
     this.commonLoader.hideLoader();
     if (response.statusCode === 200) {
-
       const index = response.data.findIndex(x => x.PurchaseId === this.purchaseId);
 
       if (index !== -1) {
-        this.itemsToBeProcuredCount = response.data[index].Quantity - response.data[index].ItemsIssuedCount;
-        this.addProcurementForm.get('IssuedQuantity').setValidators(Validators.max(this.itemsToBeProcuredCount));
-
-        this.showMaxProcurementMessage = this.itemsToBeProcuredCount <= this.addProcurementForm.get('IssuedQuantity').value ? false : true;
-      }
+        this.originalQuantityOfPurchase = response.data[index].Quantity;
+        this.procuredQuantityOfPurchase = this.originalProcuredQuantity = response.data[index].ItemsIssuedCount;
+        this.itemsToBeProcuredCount = this.currentQuantityOfPurchase  = this.originalQuantityOfPurchase  - this.procuredQuantityOfPurchase;
+        this.originalIssuedQuantity = this.addProcurementForm.get('IssuedQuantity').value;
+         this.addProcurementForm.get('IssuedQuantity').setValidators(Validators.max(this.itemsToBeProcuredCount));
+       }
 
       this.purchases$ = of(response.data.map(y => {
         return {
@@ -223,6 +228,16 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
     } else {
       this.toastr.warning(response.message);
     }
+  }
+
+  validateMaxProcurement() {
+    const currentQuantity = this.addProcurementForm.get('IssuedQuantity').value;
+    const itemsAvailable =  (this.originalIssuedQuantity - currentQuantity + this.itemsToBeProcuredCount);
+    this.showMaxProcurementMessage = (itemsAvailable >= 0) ? false : true;
+    this.addProcurementForm.get('IssuedQuantity').setValidators(Validators.max(currentQuantity + itemsAvailable));
+
+    this.currentQuantityOfPurchase = itemsAvailable;
+    this.procuredQuantityOfPurchase = (this.originalProcuredQuantity + (currentQuantity - this.originalIssuedQuantity));
   }
 
   getInventoriesByInventoryTypeId(inventoryTypeId: number) {
