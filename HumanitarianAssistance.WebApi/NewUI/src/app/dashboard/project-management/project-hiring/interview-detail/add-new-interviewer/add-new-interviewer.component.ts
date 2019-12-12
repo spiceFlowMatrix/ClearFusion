@@ -19,11 +19,9 @@ export class AddNewInterviewerComponent implements OnInit {
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<AddNewInterviewerComponent>
   ) {}
-
   ngOnInit() {
     this.getEmployeeDropDownList();
   }
-
   getEmployeeDropDownList() {
     this.hiringRequestService.GetAllEmployeeList().subscribe(
       (response: IResponseData) => {
@@ -36,15 +34,6 @@ export class AddNewInterviewerComponent implements OnInit {
               EmployeeCode: element.EmployeeCode
             });
           });
-
-          // this.existingCandidatesList2$.subscribe(res => {
-          //   this.existingCandidatesList$ = of(
-          //     res.filter(x =>
-          //       data.value.includes(CandidateStatus[x.CandidateStatus])
-          //     )
-          //   );
-          // });
-
         }
         this.commonLoader.hideLoader();
       },
@@ -53,7 +42,6 @@ export class AddNewInterviewerComponent implements OnInit {
       }
     );
   }
-
   OnInterviewersSelection(data: MatSelectChange) {
     this.employeesListTwo = [];
     data.value.forEach(element => {
