@@ -5,7 +5,7 @@ import { TableActionsModel } from 'projects/library/src/public_api';
 import { ConfigService } from '../../services/config.service';
 import { UnitType, SourceCodeType, SourceCode } from '../../models/store-configuration';
 import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { concatMap } from 'rxjs/operators';
+import { concatMap, map } from 'rxjs/operators';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 
 
@@ -27,7 +27,8 @@ export class StoreConfigurationComponent implements OnInit {
 
   unitActions: TableActionsModel;
 
-  typeName: FormControl;
+  // typeName: FormControl;
+  unitTypeGroup: FormGroup;
   sourCodeForm: FormGroup;
   unitType: UnitType = {};
 
@@ -50,7 +51,13 @@ export class StoreConfigurationComponent implements OnInit {
   //#region "Dynamic Scroll"
 
   ngOnInit() {
-    this.typeName = new FormControl('', Validators.required);
+    // this.typeName = new FormControl('', Validators.required);
+    this.unitTypeGroup = this.fb.group({
+      unitTypeId: [null],
+      unitTypeName: ['', [Validators.required]],
+      isDefault: [false]
+    });
+
     this.unitActions = {
       items: {
         edit: true,
@@ -62,7 +69,8 @@ export class StoreConfigurationComponent implements OnInit {
     };
     this.loader.showLoader();
     forkJoin([this.configservice.getUnitType(),
-    this.configservice.getAllSourceCodeTypes(), this.configservice.getAllStoreSource()]).subscribe(res => {
+    this.configservice.getAllSourceCodeTypes(),
+    this.configservice.getAllStoreSource()]).subscribe(res => {
       this.getAllUnitTypes(res[0]);
       this.getAllSourCodeTypes(res[1]);
       this.getAllsourceCodes(res[2]);
@@ -85,36 +93,52 @@ export class StoreConfigurationComponent implements OnInit {
 
   // Unit type configurations start
   getAllUnitTypes(res) {
-    this.unitItems$ = of(res.data.PurchaseUnitTypeList);
-    this.hideUnitColums = of({ headers: ['Name'], items: ['UnitTypeName'] });
+    this.unitItems$ = of(res.data.PurchaseUnitTypeList).pipe(map(x => x.map(y => ({
+      UnitTypeId: y.UnitTypeId,
+      UnitTypeName: y.UnitTypeName,
+      IsDefaultText: y.IsDefault ? 'Yes' : 'No',
+      IsDefault: y.IsDefault
+
+    }))));
+    this.hideUnitColums = of({ headers: ['Name', 'Default Type'], items: ['UnitTypeName', 'IsDefaultText'] });
 
   }
+  addUnitType() {
+    this.unitTypeGroup.reset();
+    this.openUnitType();
+  }
+
   openUnitType() {
     this.dialog.open(this.dialogRef, {
-      width: '300px'
+      width: '400px'
     });
   }
+
   saveUnit() {
-    if (this.typeName.valid) {
-      if (this.unitType.UnitTypeId) {
-        this.unitType.UnitTypeName = this.typeName.value;
-        this.configservice.editUnit(this.unitType).subscribe(res => {
+    if (this.unitTypeGroup.valid) {
+      this.loader.showLoader();
+      if (this.unitTypeGroup.value.unitTypeId) {
+        // this.unitType.UnitTypeName = this.unitTypeGroup.value.typeName;
+        this.configservice.editUnit(this.unitTypeGroup.value).subscribe(res => {
           this.configservice.getUnitType().subscribe(res1 => {
             this.getAllUnitTypes(res1);
+            this.loader.hideLoader();
           });
           this.unitType = {};
           this.dialog.closeAll();
         });
       } else {
-        this.unitType.UnitTypeName = this.typeName.value;
-        this.configservice.saveUnit(this.unitType).subscribe(res => {
+       // this.unitType.UnitTypeName = this.typeName.value;
+       this.unitTypeGroup.value.unitTypeId = 0;
+        this.configservice.saveUnit(this.unitTypeGroup.value).subscribe(res => {
           this.configservice.getUnitType().subscribe(res1 => {
             this.getAllUnitTypes(res1);
           });
           this.dialog.closeAll();
+          this.loader.hideLoader();
         });
       }
-      this.typeName.reset();
+      this.unitTypeGroup.reset();
     }
   }
   unitAction(data) {
@@ -131,9 +155,15 @@ export class StoreConfigurationComponent implements OnInit {
       });
 
     }
-    if (data.type == 'edit') {
-      this.unitType = data.item;
-      this.typeName.setValue(this.unitType.UnitTypeName);
+    if (data.type === 'edit') {
+      this.unitTypeGroup.reset();
+      // this.unitType = data.item;
+      // this.typeName.setValue(this.unitType.UnitTypeName);
+      this.unitTypeGroup.patchValue({
+        unitTypeId: data.item.UnitTypeId,
+        unitTypeName: data.item.UnitTypeName,
+        isDefault: data.item.IsDefault
+      });
       this.openUnitType();
     }
 
