@@ -459,10 +459,6 @@ export class GLOBAL {
   public static API_HREmployee_AddJobHiringDetail = 'HRJobs/AddJobHiringDetails';
   public static API_HiringRequest_GetProjectHiringRequestDetailsByHiringRequestId =
     'HiringRequest/GetProjectHiringRequestDetailByHiringRequestId';
-  // public static API_HiringRequest_GetAllJobs = 'HiringRequest/GetAllJobList';
-  // public static API_HiringRequest_GetOfficeListByJobId = 'HiringRequest/GetOfficeListByJobId';
-  // public static API_HiringRequest_GetProfessionListByOfficeId = 'HiringRequest/GetProfessionListByOfficeId';
-  // public static API_HiringRequest_GetRemainingVacancyByJobId = 'HiringRequest/GetRemainingVacancyByJobId';
   public static API_HiringRequest_GetAllProjectHiringRequestDetailByHiringRequestId =
     'HiringRequest/GetAllProjectHiringRequestDetailByHiringRequestId';
     public static API_HiringRequest_AddNewCandidateDetail =

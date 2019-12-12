@@ -22,10 +22,10 @@ namespace HumanitarianAssistance.Application.Project.Queries {
         public async Task<ApiResponse> Handle (GetHiringRequestCodeQuery request, CancellationToken cancellationToken) {
             ApiResponse response = new ApiResponse ();
             try {
-                var hiringRequestLastId = await _dbContext.ProjectHiringRequestDetail
+                var totalHiringRequests = await _dbContext.ProjectHiringRequestDetail
                     .Where (x => x.ProjectId == request.ProjectId && x.IsDeleted == false)
                     .Select (x => x.HiringRequestId).CountAsync();
-                    string hiringRequestCode = "HR-" + (hiringRequestLastId+1);
+                    string hiringRequestCode = "HR-" + (totalHiringRequests+1);
                 response.data.HiringRequestCode = hiringRequestCode;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

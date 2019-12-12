@@ -5,20 +5,15 @@ import { GLOBAL } from 'src/app/shared/global';
 import { map } from 'rxjs/operators';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import {
-  IHiringRequestDetailModel,
-  ProjectHiringRequestFilterModel,
   IHiringReuestCandidateModel,
   IReuestedCandidateDetailModel,
   IitervireCandidateModel,
   ISelectedCandidateModel,
   CandidateDetailModel,
-  IFilterModel,
-  ICountryList
-} from './models/hiring-requests-model';
+  IFilterModel} from './models/hiring-requests-model';
 import { BehaviorSubject } from 'rxjs';
 import { IProjectPermissionMode } from '../project-activities/models/project-activities.model';
 import {
-  OfficeDetailModel,
   IHiringRequestModel,
   CompleteHiringRequestModel,
   ICandidateDetailModel,
@@ -136,26 +131,6 @@ export class HiringRequestsService {
   }
   //#endregion
 
-  // GetProfessionListByOfficeId(model: OfficeDetailModel): any {
-  //   return this.globalService
-  //     .post(
-  //       this.appurl.getApiUrl() +
-  //         GLOBAL.API_HiringRequest_GetProfessionListByOfficeId,
-  //       model
-  //     )
-  //     .pipe(
-  //       map(x => {
-  //         const responseData: IResponseData = {
-  //           data: x.data.ProfessionDetailList,
-  //           statusCode: x.StatusCode,
-  //           message: x.Message
-  //         };
-  //         return responseData;
-  //       })
-  //     );
-  // }
-  // //#endregion
-
   //#region "getAllProvinceListByCountryId"
   getAllProvinceListByCountryId(Id: any) {
     return this.globalService
@@ -196,25 +171,6 @@ export class HiringRequestsService {
       );
   }
   //#endregion
-  // //#region "GetJobList"
-  // GetJobList(model: OfficeDetailModel): any {
-  //   return this.globalService
-  //     .post(
-  //       this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetAllJobs,
-  //       model
-  //     )
-  //     .pipe(
-  //       map(x => {
-  //         const responseData: IResponseData = {
-  //           data: x.data.JobDetailList,
-  //           statusCode: x.StatusCode,
-  //           message: x.Message
-  //         };
-  //         return responseData;
-  //       })
-  //     );
-  // }
-  // //#endregion
 
   //#region "AddHiringRequestDetail"
   AddHiringRequestDetail(data: IHiringRequestModel) {
@@ -236,27 +192,6 @@ export class HiringRequestsService {
       );
   }
   //#endregion
-
-  // //#region "GetItemGroupByInventoryId"
-  // getRemainingVacancyByJobId(JobId: number): any {
-  //   return this.globalService
-  //     .getListByListId(
-  //       this.appurl.getApiUrl() +
-  //         GLOBAL.API_HiringRequest_GetRemainingVacancyByJobId,
-  //       JobId
-  //     )
-  //     .pipe(
-  //       map(x => {
-  //         const responseData: IResponseData = {
-  //           data: x.data.FilledVacancies,
-  //           statusCode: x.StatusCode,
-  //           message: x.Message
-  //         };
-  //         return responseData;
-  //       })
-  //     );
-  // }
-  // //#endregion
 
   //#region "EditHiringRequestDetail"
   EditHiringRequestDetail(data: IHiringRequestModel) {
