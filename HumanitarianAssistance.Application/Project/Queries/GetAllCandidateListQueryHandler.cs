@@ -18,50 +18,41 @@ namespace HumanitarianAssistance.Application.Project.Queries {
         public async Task<ApiResponse> Handle (GetAllCandidateListQuery request, CancellationToken cancellationToken) {
             ApiResponse response = new ApiResponse ();
             try {
-                //int totalCount = await _dbContext.CandidateDetails.CountAsync (x => x.IsDeleted == false);
-
                 var candidateDetail = await (from s in _dbContext.HiringRequestCandidateStatus
-                .Where (x => x.IsDeleted == false && x.CandidateId !=null && x.HiringRequestId == request.HiringRequestId && x.ProjectId == request.ProjectId) 
-                join cd in _dbContext.CandidateDetails on s.CandidateId equals cd.CandidateId into cdl 
-                from cd in cdl.DefaultIfEmpty () 
-                // join g in _dbContext.JobGrade on cd.GradeId equals g.GradeId into gd 
-                // from g in gd.DefaultIfEmpty () 
-                join p in _dbContext.ProfessionDetails on cd.ProfessionId equals p.ProfessionId into pd 
-                from p in pd.DefaultIfEmpty () 
-                // join o in _dbContext.OfficeDetail on cd.OfficeId equals o.OfficeId into od 
-                // from o in od.DefaultIfEmpty () 
-                join e in _dbContext.EducationDegreeMaster on cd.EducationDegreeId equals e.Id into ed 
-                from e in ed.DefaultIfEmpty () 
-                join c in _dbContext.CountryDetails on cd.CountryId equals c.CountryId into cod 
-                from c in cod.DefaultIfEmpty () 
-                join pr in _dbContext.ProvinceDetails on cd.ProvinceId equals pr.ProvinceId into prd 
-                from pr in prd.DefaultIfEmpty () 
-                join d in _dbContext.DistrictDetail on cd.DistrictID equals d.DistrictID into dd 
-                from d in dd.DefaultIfEmpty () 
-                select new CandidateDetailsModel {
-                        CandidateId = cd.CandidateId,
-                            FirstName = cd.FirstName,
-                            LastName = cd.LastName,
-                            Email = cd.Email,
-                            PhoneNumber = cd.PhoneNumber,
-                            // AccountStatus = cd.AccountStatus == 1 ? "Active" : "NonActive",
-                            Gender = cd.GenderId,
-                            DateOfBirth = cd.DateOfBirth,
-                            EducationDegree = e.Name,
-                            // Grade = g.GradeName,
-                            Profession = p.ProfessionName,
-                            // Office = o.OfficeName,
-                            Country = c.CountryName,
-                            Province = pr.ProvinceName,
-                            District = d.District,
-                            InterviewId = s.InterviewId!=null?s.InterviewId:0,
-                            CandidateStatus = s.CandidateStatus,
-                            // TotalExperienceInYear = cd.TotalExperienceInYear,
-                            RelevantExperienceInYear = cd.RelevantExperienceInYear,
-                            IrrelevantExperienceInYear = cd.IrrelevantExperienceInYear,
-                    }).AsQueryable()
-                    .Skip (request.pageSize.Value * request.pageIndex.Value)
-                    .Take (request.pageSize.Value)
+                .Where(x => x.IsDeleted == false && x.CandidateId != null && x.HiringRequestId == request.HiringRequestId && x.ProjectId == request.ProjectId)
+                                             join cd in _dbContext.CandidateDetails on s.CandidateId equals cd.CandidateId into cdl
+                                             from cd in cdl.DefaultIfEmpty()
+                                             join p in _dbContext.ProfessionDetails on cd.ProfessionId equals p.ProfessionId into pd
+                                             from p in pd.DefaultIfEmpty()
+                                             join e in _dbContext.EducationDegreeMaster on cd.EducationDegreeId equals e.Id into ed
+                                             from e in ed.DefaultIfEmpty()
+                                             join c in _dbContext.CountryDetails on cd.CountryId equals c.CountryId into cod
+                                             from c in cod.DefaultIfEmpty()
+                                             join pr in _dbContext.ProvinceDetails on cd.ProvinceId equals pr.ProvinceId into prd
+                                             from pr in prd.DefaultIfEmpty()
+                                             join d in _dbContext.DistrictDetail on cd.DistrictID equals d.DistrictID into dd
+                                             from d in dd.DefaultIfEmpty()
+                                             select new CandidateDetailsModel
+                                             {
+                                                 CandidateId = cd.CandidateId,
+                                                 FirstName = cd.FirstName,
+                                                 LastName = cd.LastName,
+                                                 Email = cd.Email,
+                                                 PhoneNumber = cd.PhoneNumber,
+                                                 Gender = cd.GenderId,
+                                                 DateOfBirth = cd.DateOfBirth,
+                                                 EducationDegree = e.Name,
+                                                 Profession = p.ProfessionName,
+                                                 Country = c.CountryName,
+                                                 Province = pr.ProvinceName,
+                                                 District = d.District,
+                                                 InterviewId = s.InterviewId != null ? s.InterviewId : 0,
+                                                 CandidateStatus = s.CandidateStatus,
+                                                 RelevantExperienceInYear = cd.RelevantExperienceInYear,
+                                                 IrrelevantExperienceInYear = cd.IrrelevantExperienceInYear,
+                                             }).AsQueryable()
+                    .Skip(request.pageSize.Value * request.pageIndex.Value)
+                    .Take(request.pageSize.Value)
                     .ToListAsync();
 
                 response.data.TotalCount = candidateDetail.Count;

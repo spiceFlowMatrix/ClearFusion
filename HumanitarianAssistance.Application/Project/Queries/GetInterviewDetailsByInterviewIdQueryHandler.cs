@@ -22,81 +22,58 @@ namespace HumanitarianAssistance.Application.Project.Queries {
             ApiResponse response = new ApiResponse ();
             try {
 
-                var interviewDetails = await _dbContext.ProjectInterviewDetails
-                    .Include (y => y.RatingBasedCriteriaList)
-                    .Include (x => x.InterviewTechnicalQuestionList)
-                    .Include (x => x.InterviewLanguagesList)
-                    .Include (x => x.InterviewTrainingsList)
-                    .Include (y => y.HRJobInterviewersList)
-                    .FirstOrDefaultAsync (x => x.IsDeleted == false && x.InterviewId == request.InterviewId);
-
-                List<InterviewerDetailsModel> iobj = new List<InterviewerDetailsModel> ();
-                foreach (var item in interviewDetails.HRJobInterviewersList) {
-                    var employeeDetails = _dbContext.EmployeeDetail.Where (e => e.EmployeeID == item.EmployeeId)
-                        .Select (y => new InterviewerDetailsModel {
-                            EmployeeId = y.EmployeeID,
-                                EmployeeCode = y.EmployeeCode,
-                                EmployeeName = y.EmployeeName,
-                        }).FirstOrDefault ();
-                    // InterviewerDetailsModel details = new InterviewerDetailsModel () {
-                    //     EmployeeId = employeeDetails.EmployeeId,
-                    //     EmployeeCode = employeeDetails.EmployeeCode,
-                    //     EmployeeName = employeeDetails.EmployeeName,
-                    // };
-                    iobj.Add (employeeDetails);
-                }
-                if (interviewDetails != null) {
-                    InterviewDetailsModel obj = new InterviewDetailsModel () {
-
-                    Description = interviewDetails.Description,
-                    NoticePeriod = interviewDetails.NoticePeriod,
-                    AvailableDate = interviewDetails.AvailableDate,
-                    WrittenTestMarks = interviewDetails.WrittenTestMarks,
-                    CurrentBase = interviewDetails.CurrentBase,
-                    CurrentOther = interviewDetails.CurrentOther,
-                    ExpectationBase = interviewDetails.ExpectationBase,
-                    ExpectationOther = interviewDetails.ExpectationOther,
-                    Status = interviewDetails.Status,
-                    InterviewQuestionOne = interviewDetails.InterviewQuestionOne,
-                    InterviewQuestionTwo = interviewDetails.InterviewQuestionTwo,
-                    InterviewQuestionThree = interviewDetails.InterviewQuestionThree,
-                    CurrentTransport = interviewDetails.CurrentTransport,
-                    CurrentMeal = interviewDetails.CurrentMeal,
-                    ExpectationTransport = interviewDetails.ExpectationTransport,
-                    ExpectationMeal = interviewDetails.ExpectationMeal,
-                    ProfessionalCriteriaMark = interviewDetails.ProfessionalCriteriaMarks,
-                    MarksObtain = interviewDetails.MarksObtained,
-                    TotalMarksObtain = interviewDetails.TotalMarksObtain,
-                    RatingBasedCriteriaList = interviewDetails.RatingBasedCriteriaList.Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false)
-                    .Select (y => new InterviewQuestionDetailsModel {
-                    QuestionId = y.QuestionId,
-                    Score = y.Score
-                    }).ToList (),
-                    TechnicalQuestionList = interviewDetails.InterviewTechnicalQuestionList.Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false)
-                    .Select (y => new InterviewQuestionDetailsModel {
-                    QuestionId = y.QuestionId,
-                    Score = y.Score
-                    }).ToList (),
-                    LanguageList = interviewDetails.InterviewLanguagesList.Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false)
-                    .Select (y => new LanguageDetailsModel {
-                    LanguageName = y.LanguageName,
-                    LanguageReading = ((RatingAction) y.Reading).ToString (),
-                    LanguageWriting = ((RatingAction) y.Writing).ToString (),
-                    LanguageListining = ((RatingAction) y.Listening).ToString (),
-                    LanguageSpeaking = ((RatingAction) y.Speaking).ToString ()
-                    }).ToList (),
-                    TraningList = interviewDetails.InterviewTrainingsList.Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false)
-                    .Select (y => new TraningDetailsModel {
-                    TraningType = y.NewTraininigType,
-                    TraningName = y.TrainingName,
-                    TraningCountryAndCity = y.StudyingCountry,
-                    TraningStartDate = y.StartDate.ToString("dd/MM/yyyy"),
-                    TraningEndDate = y.EndDate.ToString("dd/MM/yyyy")
-                    }).ToList (),
-                    InterviewerList = iobj
-                    };
-                    response.data.InterviewDetails = obj;
-                }
+                var interviewDetails = await (from pid in _dbContext.ProjectInterviewDetails
+                    .Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false) select new InterviewDetailsModel {
+                        Description = pid.Description,
+                            NoticePeriod = pid.NoticePeriod,
+                            AvailableDate = pid.AvailableDate,
+                            WrittenTestMarks = pid.WrittenTestMarks,
+                            CurrentBase = pid.CurrentBase,
+                            CurrentOther = pid.CurrentOther,
+                            ExpectationBase = pid.ExpectationBase,
+                            ExpectationOther = pid.ExpectationOther,
+                            Status = pid.Status,
+                            InterviewQuestionOne = pid.InterviewQuestionOne,
+                            InterviewQuestionTwo = pid.InterviewQuestionTwo,
+                            InterviewQuestionThree = pid.InterviewQuestionThree,
+                            CurrentTransport = pid.CurrentTransport,
+                            CurrentMeal = pid.CurrentMeal,
+                            ExpectationTransport = pid.ExpectationTransport,
+                            ExpectationMeal = pid.ExpectationMeal,
+                            ProfessionalCriteriaMark = pid.ProfessionalCriteriaMarks,
+                            MarksObtain = pid.MarksObtained,
+                            TotalMarksObtain = pid.TotalMarksObtain,
+                            RatingBasedCriteriaList = (from rb in _dbContext.RatingBasedCriteria.Where (x => x.InterviewId == pid.InterviewId) select new InterviewQuestionDetailsModel {
+                                QuestionId = rb.QuestionId,
+                                    Score = rb.Score
+                            }).ToList (),
+                            TechnicalQuestionList = (from it in _dbContext.InterviewTechnicalQuestion.Where (x => x.InterviewId == pid.InterviewId) select new InterviewQuestionDetailsModel {
+                                QuestionId = it.QuestionId,
+                                    Score = it.Score
+                            }).ToList (),
+                            LanguageList = (from ill in _dbContext.InterviewLanguages.Where (x => x.InterviewId == pid.InterviewId) select new LanguageDetailsModel {
+                                LanguageName = ill.LanguageName,
+                                    LanguageReading = ((RatingAction) ill.Reading).ToString (),
+                                    LanguageWriting = ((RatingAction) ill.Writing).ToString (),
+                                    LanguageListining = ((RatingAction) ill.Listening).ToString (),
+                                    LanguageSpeaking = ((RatingAction) ill.Speaking).ToString ()
+                            }).ToList (),
+                            TraningList = (from it in _dbContext.InterviewTrainings.Where (x => x.InterviewId == pid.InterviewId) select new TraningDetailsModel {
+                                TraningType = it.NewTraininigType,
+                                    TraningName = it.TrainingName,
+                                    TraningCountryAndCity = it.StudyingCountry,
+                                    TraningStartDate = it.StartDate.ToString ("dd/MM/yyyy"),
+                                    TraningEndDate = it.EndDate.ToString ("dd/MM/yyyy")
+                            }).ToList (),
+                            InterviewerList = (from hji in _dbContext.HRJobInterviewers.Where (x => x.InterviewId == pid.InterviewId) 
+                            join ed in _dbContext.EmployeeDetail on hji.EmployeeId equals ed.EmployeeID into edl from ed in edl.DefaultIfEmpty () 
+                            select new InterviewerDetailsModel {
+                                EmployeeId = ed.EmployeeID,
+                                    EmployeeCode = ed.EmployeeCode,
+                                    EmployeeName = ed.EmployeeName
+                            }).ToList (),
+                    }).FirstOrDefaultAsync ();
+                response.data.InterviewDetails = interviewDetails;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
             } catch (Exception ex) {
