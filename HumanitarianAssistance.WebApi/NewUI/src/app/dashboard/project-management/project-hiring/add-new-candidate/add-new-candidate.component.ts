@@ -25,7 +25,6 @@ export class AddNewCandidateComponent implements OnInit {
   isFormSubmitted = false;
   addNewCandidateForm: FormGroup;
   professionList$: Observable<IDropDownModel[]>;
-  officeList$: Observable<IDropDownModel[]>;
   countryList$: Observable<IDropDownModel[]>;
   provinceList$: Observable<IDropDownModel[]>;
   districtList$: Observable<IDropDownModel[]>;
@@ -62,8 +61,15 @@ export class AddNewCandidateComponent implements OnInit {
   }
   ngOnInit() {
     this.initCadidateForm();
+    this.getAllMonthList();
+    this.getPreviousYearsList();
+    this.projectId = this.data.projectId;
+    this.hiringRequestId = this.data.hiringRequestId;
+    this.addNewCandidateForm.controls['ProjectId'].setValue(this.projectId);
+    this.addNewCandidateForm.controls['HiringRequestId'].setValue(
+      this.hiringRequestId
+    );
     forkJoin([
-      this.getAllOfficeList(),
       this.getAllCountryList(),
       this.getAllJobGradeList(),
       this.getAllProfessionList(),
@@ -71,21 +77,13 @@ export class AddNewCandidateComponent implements OnInit {
     ])
       .pipe(takeUntil(this.destroyed$))
       .subscribe(result => {
-        this.subscribeOfficeList(result[0]);
-        this.subscribeCountryList(result[1]);
-        this.subscribeGradeList(result[2]);
-        this.subscribeProfessionList(result[3]);
-        this.subscribeEducationDegreeList(result[4]);
+        this.subscribeCountryList(result[0]);
+        this.subscribeGradeList(result[1]);
+        this.subscribeProfessionList(result[2]);
+        this.subscribeEducationDegreeList(result[3]);
       });
-    this.projectId = this.data.projectId;
-    this.hiringRequestId = this.data.hiringRequestId;
-    this.addNewCandidateForm.controls['ProjectId'].setValue(this.projectId);
-    this.addNewCandidateForm.controls['HiringRequestId'].setValue(
-      this.hiringRequestId
-    );
-    this.getPreviousYearsList();
-    this.getAllMonthList();
   }
+  //#region "Initialize candidate form"
   initCadidateForm() {
     this.PasswordAutoGenrate();
     this.addNewCandidateForm = this.fb.group({
@@ -121,10 +119,15 @@ export class AddNewCandidateComponent implements OnInit {
       Remarks: [null, [Validators.required]]
     });
   }
-
-  getPreviousYearsList() {
-    this.PreviousYearsList$ = this.purchaseService.getPreviousYearsList(40);
+  //#endregion
+  //#region "Auto genrate password for new candidate"
+  PasswordAutoGenrate() {
+    this.autoGenratedPassword = Math.random()
+      .toString(36)
+      .slice(-8);
   }
+  //#endregion
+  //#region "Get all month list for ExperienceInMonth dropdown"
   getAllMonthList() {
     const monthDropDown: IDropDownModel[] = [];
     for (let i = Month['January']; i <= Month['December']; i++) {
@@ -132,46 +135,17 @@ export class AddNewCandidateComponent implements OnInit {
     }
     this.MonthsList$ = of(monthDropDown);
   }
+  //#endregion
+  //#region "Get all previous years list for ExperienceInYears dropdown"
+  getPreviousYearsList() {
+    this.PreviousYearsList$ = this.purchaseService.getPreviousYearsList(40);
+  }
+  //#endregion
 
-  openInput() {
-    document.getElementById('fileInput').click();
-  }
-
-  fileChange(file: any) {
-    this.attachmentCV = [];
-    this.attachmentCV.push(file);
-  }
-  getAllOfficeList() {
-    this.commonLoader.showLoader();
-    return this.hiringRequestService.GetOfficeList();
-  }
+  //#region "Get all countries list for country dropdown"
   getAllCountryList() {
     this.commonLoader.showLoader();
     return this.hiringRequestService.GetCountryList();
-  }
-  getAllJobGradeList() {
-    this.commonLoader.showLoader();
-    return this.hiringRequestService.GetJobGradeList();
-  }
-
-  getAllProfessionList() {
-    this.commonLoader.showLoader();
-    return this.hiringRequestService.GetProfessionList();
-  }
-  getAllEducationDegreeList() {
-    this.commonLoader.showLoader();
-    return this.hiringRequestService.GetEducationDegreeList();
-  }
-  subscribeOfficeList(response: any) {
-    this.commonLoader.hideLoader();
-    this.officeList$ = of(
-      response.data.map(y => {
-        return {
-          value: y.OfficeId,
-          name: y.OfficeName
-        };
-      })
-    );
   }
   subscribeCountryList(response: any) {
     this.commonLoader.hideLoader();
@@ -184,6 +158,12 @@ export class AddNewCandidateComponent implements OnInit {
       })
     );
   }
+  //#endregion
+  //#region "Get all job grades list for job grade dropdown"
+  getAllJobGradeList() {
+    this.commonLoader.showLoader();
+    return this.hiringRequestService.GetJobGradeList();
+  }
   subscribeGradeList(response: any) {
     this.commonLoader.hideLoader();
     this.gradeList$ = of(
@@ -194,6 +174,12 @@ export class AddNewCandidateComponent implements OnInit {
         };
       })
     );
+  }
+  //#endregion
+  //#region "Get all profession list for profession dropdown"
+  getAllProfessionList() {
+    this.commonLoader.showLoader();
+    return this.hiringRequestService.GetProfessionList();
   }
   subscribeProfessionList(response: any) {
     this.commonLoader.hideLoader();
@@ -206,6 +192,12 @@ export class AddNewCandidateComponent implements OnInit {
       })
     );
   }
+  //#endregion
+  //#region "Get all education degree list for education dropdown"
+  getAllEducationDegreeList() {
+    this.commonLoader.showLoader();
+    return this.hiringRequestService.GetEducationDegreeList();
+  }
   subscribeEducationDegreeList(response: any) {
     this.commonLoader.hideLoader();
     this.educationDegreeList$ = of(
@@ -217,6 +209,8 @@ export class AddNewCandidateComponent implements OnInit {
       })
     );
   }
+  //#endregion
+  //#region "Get all province list on selection of country dropdown"
   getAllProvinceList(CountryId: number) {
     this.hiringRequestService
       .getAllProvinceListByCountryId([CountryId])
@@ -240,6 +234,8 @@ export class AddNewCandidateComponent implements OnInit {
         }
       );
   }
+  //#endregion
+  //#region "Get all district list on selection of province dropdown"
   getAllDistrictList(ProvinceId: any) {
     this.hiringRequestService
       .GetAllDistrictvalueByProvinceId([ProvinceId])
@@ -263,8 +259,8 @@ export class AddNewCandidateComponent implements OnInit {
         }
       );
   }
-
-  //#region "AddNewCandidate"
+  //#endregion
+  //#region "Adding new candidate"
   AddNewCandidate(data: ICandidateDetailModel, attachmentCV) {
     this.isFormSubmitted = true;
     this.hiringRequestService.AddNewCandidateDetail(data).subscribe(
@@ -296,22 +292,34 @@ export class AddNewCandidateComponent implements OnInit {
     );
   }
   //#endregion
-
-  //#region "onCancelPopup"
-  onCancelPopup(): void {
-    this.dialogRef.close();
+  //#region "Cv upload fucntionality"
+  openInput() {
+    document.getElementById('fileInput').click();
+  }
+  fileChange(file: any) {
+    this.attachmentCV = [];
+    this.attachmentCV.push(file);
   }
   //#endregion
-
+  //#region "Refresh candidate list after adding new candidate"
+  AddCandidateListRefresh() {
+    this.onAddCandidateListRefresh.emit();
+  }
+  // #endregion
+  //#region "On change country selection"
   onChangeCountry(e) {
     this.provinceList$ = null;
     this.districtList$ = null;
     this.getAllProvinceList(e);
   }
+  //#endregion
+  //#region "On change province selection"
   onChangeProvince(e) {
     this.districtList$ = null;
     this.getAllDistrictList(e);
   }
+  //#endregion
+  //#region "On form submission"
   onFormSubmit(data: any) {
     if (this.attachmentCV.length === 0) {
       this.toastr.warning('Please attach CV!');
@@ -321,15 +329,10 @@ export class AddNewCandidateComponent implements OnInit {
       this.AddNewCandidate(data, this.attachmentCV[0][0]);
     }
   }
-  //#region "hiringRequestListRefresh"
-  AddCandidateListRefresh() {
-    this.onAddCandidateListRefresh.emit();
+  //#endregion
+  //#region "on cancel popup"
+  onCancelPopup(): void {
+    this.dialogRef.close();
   }
-  // #endregion
-
-  PasswordAutoGenrate() {
-    this.autoGenratedPassword = Math.random()
-      .toString(36)
-      .slice(-8);
-  }
+  //#endregion
 }

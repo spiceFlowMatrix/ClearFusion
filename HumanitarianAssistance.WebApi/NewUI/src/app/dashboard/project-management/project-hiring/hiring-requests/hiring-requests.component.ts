@@ -22,20 +22,14 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./hiring-requests.component.scss']
 })
 export class HiringRequestsComponent implements OnInit {
-  constructor(
-    public dialog: MatDialog,
-    private routeActive: ActivatedRoute,
-    private route: Router,
-    public hiringRequestService: HiringRequestsService,
-    private loader: CommonLoaderService,
-    public toastr: ToastrService
-  ) {}
+  dataSource: any;
   projectId: number;
   filterModel: IFilterModel;
+  hiringRequestList: HiringList[] = [];
+  selection = new SelectionModel<HiringList>(true, []);
   completeRequestModel: CompleteHiringRequestModel;
   hiringRequestListLoader = false;
   selectCheckBoxFlag = false;
-  // 07-11-19
   displayHeaderColumns: string[] = [
     'select',
     'HiringRequestId',
@@ -47,36 +41,14 @@ export class HiringRequestsComponent implements OnInit {
     'PayRate',
     'Status'
   ];
-
-  hiringRequestList: HiringList[] = [];
-  dataSource: any;
-
-  selection = new SelectionModel<HiringList>(true, []);
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    // console.log('this.selection.selected', this.selection.selected);
-    const numSelected = this.selection.selected.length;
-    const numRows = this.hiringRequestList.length;
-    return numSelected === numRows;
-  }
-
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected()
-      ? this.selection.clear()
-      : this.hiringRequestList.forEach(row => this.selection.select(row));
-  }
-
-  /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: any): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-    }
-    return `${
-      this.selection.isSelected(row) ? 'deselect' : 'select'
-    } row ${row.HiringRequestId + 1}`;
-  }
-
+  constructor(
+    public dialog: MatDialog,
+    private routeActive: ActivatedRoute,
+    private route: Router,
+    public hiringRequestService: HiringRequestsService,
+    private loader: CommonLoaderService,
+    public toastr: ToastrService
+  ) {}
   ngOnInit() {
     this.filterModel = {
       FilterValue: '',
@@ -87,37 +59,21 @@ export class HiringRequestsComponent implements OnInit {
       IsInProgress: HiringRequestStatus['In-Progress'],
       IsOpenFlagId: HiringRequestStatus.Open
     };
-    this.routeActive.parent.parent.parent.params.subscribe(params => {
-      this.projectId = +params['id'];
-    });
-    this.getAllHiringRequestFilterList(this.filterModel);
     this.completeRequestModel = {
       HiringRequestId: [],
       ProjectId: this.projectId
     };
+    this.routeActive.parent.parent.parent.params.subscribe(params => {
+      this.projectId = +params['id'];
+    });
+    this.getAllHiringRequestFilterList(this.filterModel);
   }
-
-  //#region  paginatorEvent
-  pageEvent(e) {
-    this.filterModel.pageIndex = e.pageIndex;
-    this.filterModel.pageSize = e.pageSize;
-    this.onFilterApplied(this.filterModel);
-  }
-  //#endregion
-
-  //#region "onFilterApplied"
-  onFilterApplied(filterModel: IFilterModel) {
-    this.getAllHiringRequestFilterList(filterModel);
-  }
-  //#endregion
-
-  //#region "getAllProjectActivityList"
+  //#region "Get all hiring request filter list"
   getAllHiringRequestFilterList(filterModel: IFilterModel) {
     filterModel.ProjectId = this.projectId;
     filterModel.TotalCount = 0;
     this.hiringRequestList = [];
-     this.loader.showLoader();
-    //  this.hiringRequestListLoader = true;
+    this.loader.showLoader();
     this.hiringRequestService
       .GetProjectHiringRequestFilterList(this.filterModel)
       .subscribe(
@@ -151,37 +107,7 @@ export class HiringRequestsComponent implements OnInit {
       );
   }
   //#endregion
-
-  // #region adding new hiring request
-  addNewHiringRequest(): void {
-    // NOTE: It open AddHiringRequest dialog and passed the data into the AddHiringRequestsComponent Model
-    const dialogRef = this.dialog.open(AddHiringRequestComponent, {
-      width: '700px',
-      autoFocus: false,
-      data: {
-        hiringRequestId: 0,
-        projectId: this.projectId
-      }
-    });
-
-    // refresh the list after new request created
-    dialogRef.componentInstance.onAddHiringRequestListRefresh.subscribe(() => {
-      // do something
-      this.getAllHiringRequestFilterList(this.filterModel);
-    });
-
-    dialogRef.afterClosed().subscribe(result => {});
-  }
-  //#endregion
-
-  requestDetail(e) {
-    // console.log(e.HiringRequestId);
-     this.route.navigate([e.HiringRequestId], { relativeTo: this.routeActive.parent });
-    // this.router.navigate(['../hiring-request/' + e.HiringRequestId]);
-  }
-
-  // 07-09-2019
-  //#region "onTabClick"
+  //#region "Get completed and closed hiring request on tab click"
   onTabClick(event: any) {
     if (event.index === 0) {
       this.selectCheckBoxFlag = false;
@@ -206,8 +132,25 @@ export class HiringRequestsComponent implements OnInit {
     }
   }
   //#endregion
+  // #region Add new hiring reqeust"
+  addNewHiringRequest(): void {
+    // NOTE: It open AddHiringRequest dialog and passed the data into the AddHiringRequestsComponent Model
+    const dialogRef = this.dialog.open(AddHiringRequestComponent, {
+      width: '700px',
+      autoFocus: false,
+      data: {
+        hiringRequestId: 0,
+        projectId: this.projectId
+      }
+    });
+    dialogRef.componentInstance.onAddHiringRequestListRefresh.subscribe(() => {
+      this.getAllHiringRequestFilterList(this.filterModel);
+    });
 
-  //#region onComplteRequest
+    dialogRef.afterClosed().subscribe(result => {});
+  }
+  //#endregion
+  //#region On complete hiring request"
   onComplteRequest() {
     this.completeRequestModel = {
       HiringRequestId: [],
@@ -224,7 +167,7 @@ export class HiringRequestsComponent implements OnInit {
         .IsCompltedeHrDetail(this.completeRequestModel)
         .subscribe(
           (responseData: IResponseData) => {
-            if (responseData.statusCode === 200 ) {
+            if (responseData.statusCode === 200) {
               this.getAllHiringRequestFilterList(this.filterModel);
             } else if (responseData.statusCode === 400) {
               this.toastr.error('Something went wrong .Please try again.');
@@ -235,7 +178,7 @@ export class HiringRequestsComponent implements OnInit {
     }
   }
   //#endregion
-  //#region "onCloseRequest"
+  //#region "On close hiring request"
   onCloseRequest() {
     this.completeRequestModel = {
       HiringRequestId: [],
@@ -250,16 +193,57 @@ export class HiringRequestsComponent implements OnInit {
       });
       this.hiringRequestService
         .IsCloasedHrDetail(this.completeRequestModel)
-        .subscribe((responseData: IResponseData) => {
-          if (responseData.statusCode === 200) {
-            this.getAllHiringRequestFilterList(this.filterModel);
-          } else if (responseData.statusCode === 400) {
-            this.toastr.error('Something went wrong .Please try again.');
-          }
-        },
-        error => { }
+        .subscribe(
+          (responseData: IResponseData) => {
+            if (responseData.statusCode === 200) {
+              this.getAllHiringRequestFilterList(this.filterModel);
+            } else if (responseData.statusCode === 400) {
+              this.toastr.error('Something went wrong .Please try again.');
+            }
+          },
+          error => {}
         );
     }
+  }
+  //#endregion
+  //#region "On filter applied"
+  onFilterApplied(filterModel: IFilterModel) {
+    this.getAllHiringRequestFilterList(filterModel);
+  }
+  //#endregion
+  //#region  Paginator event
+  pageEvent(e) {
+    this.filterModel.pageIndex = e.pageIndex;
+    this.filterModel.pageSize = e.pageSize;
+    this.onFilterApplied(this.filterModel);
+  }
+  //#endregion
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.hiringRequestList.length;
+    return numSelected === numRows;
+  }
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.hiringRequestList.forEach(row => this.selection.select(row));
+  }
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: any): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${
+      this.selection.isSelected(row) ? 'deselect' : 'select'
+    } row ${row.HiringRequestId + 1}`;
+  }
+  //#region  Navigate to request details page
+  requestDetail(e) {
+    this.route.navigate([e.HiringRequestId], {
+      relativeTo: this.routeActive.parent
+    });
   }
   //#endregion
 }

@@ -1,6 +1,9 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +20,9 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
 
         public async Task<object> Handle(GetAllDesignationListQuery request, CancellationToken cancellationToken)
         {
+            ApiResponse response = new ApiResponse();
+            try
+            {
             var result = await _dbContext.DesignationDetail
                                          .Where(x=> x.IsDeleted == false)
                                          .Select(x=> new {
@@ -24,7 +30,16 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                                             x.Designation
                                          })
                                          .ToListAsync();
-            return result;
+                 response.ResponseData = result;
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+            return response;
         }
     }
 }
