@@ -1,5 +1,5 @@
 <div>
-  <h1 mat-dialog-title>Add Procurement</h1>
+  <h1 mat-dialog-title>{{procurementPageTitle}}</h1>
   <hr>
 </div>
 <form [formGroup]='addProcurementForm' (ngSubmit)="saveProcurement()">
@@ -52,8 +52,8 @@
             <input (change)="validateMaxProcurement()" matInput min="0" type="number"
               oninput="validity.valid||(value='');" id="IssuedQuantity" formControlName='IssuedQuantity'
               placeholder="Issued Quantity">
-            <mat-error *ngIf="addProcurementForm.controls['IssuedQuantity'].hasError('max')">Issued quantity exceeds
-              purchased quantity.</mat-error>
+            <!-- <mat-error *ngIf="addProcurementForm.controls['IssuedQuantity'].hasError('max')">Issued quantity exceeds
+              purchased quantity.</mat-error> -->
             <mat-error *ngIf="addProcurementForm.controls['IssuedQuantity'].hasError('required')">required</mat-error>
           </mat-form-field>
         </div>

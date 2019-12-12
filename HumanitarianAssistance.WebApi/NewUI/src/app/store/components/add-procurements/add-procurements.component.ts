@@ -40,6 +40,7 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
   currentQuantityOfPurchase = 0;
   showMaxProcurementMessage = false;
   originalIssuedQuantity = 0;
+  procurementPageTitle = 'Add Procurement';
   maxProcurementMessage =
   'Issued quantity exceeds purchased quantity. Either decrease the quantity, return the issued item or create a new Purchase for the item';
 
@@ -64,6 +65,7 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
         'StoreSourceId': +this.data.procurement.LocationId,
         'Returned': this.data.procurement.Returned
       });
+      this.procurementPageTitle = 'Edit Procurement';
     }
 
     this.purchaseId = this.data.value;
