@@ -337,6 +337,28 @@ getPurchaseFilterList(): any {
       );
   }
 
+  editProcurement(procurement: any) {
+    const procurementModel: IAddEditProcurementModel = {
+      OrderId: procurement.ProcurementId,
+      Purchase: procurement.PurchaseId,
+      InventoryItem: procurement.ItemId,
+      IssuedQuantity: procurement.IssuedQuantity,
+      MustReturn: procurement.MustReturn,
+      IssuedToEmployeeId: procurement.IssuedToEmployeeId,
+      IssueDate: StaticUtilities.getLocalDate(procurement.IssueDate),
+      IssedToLocation: procurement.StoreSourceId,
+      StatusAtTimeOfIssue: procurement.StatusId,
+      Project: procurement.ProjectId,
+      Returned: procurement.Returned
+    };
+
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_Store_EditItemOrder,
+        procurementModel
+      );
+  }
+
   deleteProcurement(orderId: number) {
     const procurementModel: IDeleteProcurementModel = {
       OrderId: orderId
