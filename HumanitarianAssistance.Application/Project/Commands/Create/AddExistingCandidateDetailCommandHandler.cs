@@ -34,8 +34,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     ProjectId = request.ProjectId,
                     HiringRequestId = request.HiringRequestId,
                     EmployeeID = employeeDetail.EmployeeID,
-                    CandidateStatus = 2,
-                    // InterviewId = 1,
+                    CandidateStatus = (int)CandidateStatus.PendingSelection,
                     CreatedById = request.CreatedById,
                     CreatedDate = request.CreatedDate
                     };
