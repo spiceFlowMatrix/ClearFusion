@@ -12,5 +12,10 @@ namespace HumanitarianAssistance.Application.Store.Models
         public int OfficeId { get; set; }
         public int ModelYear { get; set; }
         public long? PurchaseId { get; set; }
+        public string ChasisNo { get; set; }
+        public string RegistrationNo { get; set; }
+        public string Remarks { get; set; }
+        public string EngineNo { get; set; }
+        public string ManufacturerCountry { get; set; }
     }
 }

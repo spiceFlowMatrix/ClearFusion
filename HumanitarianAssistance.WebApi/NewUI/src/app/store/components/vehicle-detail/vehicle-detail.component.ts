@@ -33,8 +33,6 @@ export class VehicleDetailComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     this.getAllOffice();
 
-
-
     this.vehicleDetailForm.controls['OfficeId'].valueChanges.subscribe(x => {
       this.getEmployeesByOfficeId(x);
     });

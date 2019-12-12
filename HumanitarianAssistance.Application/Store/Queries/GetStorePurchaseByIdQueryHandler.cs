@@ -125,8 +125,12 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                                    MobilOilConsumptionRate= y.MobilOilConsumptionRate,
                                                                    OfficeId= y.OfficeId,
                                                                    ModelYear= y.ModelYear,
-                                                                   PurchaseId= y.PurchaseId
-
+                                                                   PurchaseId= y.PurchaseId,
+                                                                   ChasisNo= y.ChasisNo,
+                                                                   EngineNo= y.EngineNo,
+                                                                   ManufacturerCountry= y.ManufacturerCountry,
+                                                                   RegistrationNo= y.RegistrationNo,
+                                                                   Remarks= y.PersonRemarks
                                                                }).ToList(),
                                     PurchasedGeneratorList = z.PurchasedGeneratorDetailList.Where(x=> x.IsDeleted== false)
                                                               .Select(y=> new PurchasedGeneratorModel 
@@ -139,7 +143,13 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                                    MobilOilConsumptionRate= y.MobilOilConsumptionRate,
                                                                    OfficeId= y.OfficeId,
                                                                    ModelYear= y.ModelYear,
-                                                                   PurchaseId= y.PurchaseId
+                                                                   PurchaseId= y.PurchaseId,
+                                                                   ChasisNo= y.ChasisNo,
+                                                                   EngineNo= y.EngineNo,
+                                                                   ManufacturerCountry= y.ManufacturerCountry,
+                                                                   RegistrationNo= y.RegistrationNo,
+                                                                   Remarks= y.PersonRemarks,
+                                                                   EmployeeId= y.EmployeeID
                                                                }).ToList()
                                    }).FirstOrDefaultAsync();
 
