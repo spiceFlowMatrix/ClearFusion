@@ -24,9 +24,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
         {
             ApiResponse response = new ApiResponse();
             try
-            {
-               // int totalCount = await _dbContext.ProjectHiringRequestDetail.CountAsync(x => x.IsDeleted == false && x.ProjectId == request.ProjectId && (x.HiringRequestStatus == request.IsInProgress || x.HiringRequestStatus == request.IsOpenFlagId));            
-
+            {            
                 var requestDetail = await (from hr in _dbContext.ProjectHiringRequestDetail.Where(x => x.IsDeleted == false &&
                                                                                                         x.ProjectId == request.ProjectId && (x.HiringRequestStatus == request.IsInProgress || x.HiringRequestStatus == request.IsOpenFlagId))  
                                      

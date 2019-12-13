@@ -92,6 +92,7 @@ export class PurchaseListComponent implements OnInit {
         button: { status: false, text: '' },
         delete: true,
         download: false,
+        edit: true
       }
 
     }
@@ -152,6 +153,7 @@ export class PurchaseListComponent implements OnInit {
                           this.datePipe.transform(new Date(element.InvoiceDate), 'dd/MM/yyyy') : null,
             ReceivedFromLocationName: element.ReceivedFromLocationName,
             Status: element.Status,
+            ProcurementList: element.ProcurementList,
             subItems: element.ProcurementList.map((r) => {
               return {
                 Id: r.OrderId,
@@ -161,7 +163,7 @@ export class PurchaseListComponent implements OnInit {
                 ProcuredAmount: r.ProcuredAmount,
                 MustReturn: r.MustReturn ? 'Yes' : 'No',
                 Returned: r.Returned ? 'Yes' : 'No',
-                ReturnedOn: r.ReturnedOn ? this.datePipe.transform(new Date(r.ReturnedOn), 'dd/MM/yyyy') : null
+                ReturnedOn: r.ReturnedOn ? this.datePipe.transform(new Date(r.ReturnedOn), 'dd/MM/yyyy') : null,
               };
             })
           } as IPurchaseList;
@@ -208,44 +210,53 @@ export class PurchaseListComponent implements OnInit {
     this.router.navigate(['/store/purchase/add']);
   }
   actionEvents(event: any) {
-    if (event.type == "button") {
-      const dialogRef = this.dialog.open(AddProcurementsComponent, {
-        width: '850px',
-        data: {
-          value: event.item.Id,
-          officeId: this.filterValueModel.OfficeId
-        }
-      });
+    if (event.type === 'button') {
 
-      dialogRef.afterClosed().subscribe(x => {
-        // console.log(x);
+      const data = {
+        value: event.item.Id,
+        officeId: this.filterValueModel.OfficeId
+      };
 
-        this.purchaseList$.subscribe((purchase) => {
-          // console.log(purchase);
-
-          const index = purchase.findIndex(i => i.Id === x.PurchaseId);
-          if (index !== -1) {
-            purchase[index].subItems.unshift({
-              Id: x.ProcurementId,
-              IssueDate: this.datePipe.transform(x.IssueDate, 'dd-MM-yyyy'),
-              Employee: x.EmployeeName,
-              ProcuredAmount: x.IssuedQuantity,
-              MustReturn: (x.MustReturn === 'Yes' || x.MustReturn)  ? 'Yes' : 'No',
-              Returned: 'No',
-              ReturnedOn: null
-            } as IProcurementList);
-          }
-          this.purchaseList$ = of(purchase);
-        });
-      });
+      this.openProcurementDialog(data);
     } else if (event.type === 'edit') {
       this.router.navigate(['/store/purchase/edit/' + event.item.Id]);
     }
 
   }
 
-  deleteProcurement(event: any) {
-    this.purchaseService.deleteProcurement(event.subItem.Id)
+  openProcurementDialog(item) {
+    const dialogRef = this.dialog.open(AddProcurementsComponent, {
+      width: '850px',
+      data: item
+    });
+
+    dialogRef.afterClosed().subscribe(x => {
+      // console.log(x);
+
+      // this.purchaseList$.subscribe((purchase) => {
+      //   // console.log(purchase);
+
+      //   const index = purchase.findIndex(i => i.Id === x.PurchaseId);
+      //   if (index !== -1) {
+      //     purchase[index].subItems.unshift({
+      //       Id: x.ProcurementId,
+      //       IssueDate: this.datePipe.transform(x.IssueDate, 'dd-MM-yyyy'),
+      //       Employee: x.EmployeeName,
+      //       ProcuredAmount: x.IssuedQuantity,
+      //       MustReturn: (x.MustReturn === 'Yes' || x.MustReturn)  ? 'Yes' : 'No',
+      //       Returned: 'No',
+      //       ReturnedOn: null
+      //     } as IProcurementList);
+      //   }
+      //   this.purchaseList$ = of(purchase);
+      // });
+      this.getPurchasesByFilter(this.filterValueModel);
+    });
+  }
+
+  procurementAction(event: any) {
+    if (event.type === 'delete') {
+      this.purchaseService.deleteProcurement(event.subItem.Id)
       .subscribe(x => {
         if (x.StatusCode === 200) {
           this.purchaseList$.subscribe((purchase) => {
@@ -264,6 +275,17 @@ export class PurchaseListComponent implements OnInit {
         (error) => {
           this.toastr.error(error);
         });
+    } else if (event.type === 'edit') {
+      const index = event.item.ProcurementList.findIndex(x => x.OrderId ===  event.subItem.Id);
+      const orderData = event.item.ProcurementList[index];
+      const data = {
+        value: event.item.Id,
+        officeId: this.filterValueModel.OfficeId,
+        procurement: orderData
+      };
+
+      this.openProcurementDialog(data);
+    }
   }
 
   getAllCurrencies() {

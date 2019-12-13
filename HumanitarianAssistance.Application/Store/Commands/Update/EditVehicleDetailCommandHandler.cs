@@ -45,6 +45,11 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                 vehicle.MobilOilConsumptionRate= request.MobilOilConsumptionRate;
                 vehicle.ModelYear= request.ModelYear;
                 vehicle.OfficeId = request.OfficeId;
+                vehicle.EngineNo= request.EngineNo;
+                vehicle.ManufacturerCountry= request.ManufacturerCountry;
+                vehicle.RegistrationNo= request.RegistrationNo;
+                vehicle.ChasisNo= request.ChasisNo;
+                vehicle.PersonRemarks = request.Remarks;
                 vehicle.ModifiedById = request.ModifiedById;
                 vehicle.ModifiedDate= DateTime.UtcNow;
 

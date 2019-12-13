@@ -51,7 +51,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                    obj.BudgetLineDescription= item.BudgetLineDescription;
                    obj.JobCode = item.JobCode;
                    obj.ReferenceNo = item.ReferenceNo;
-                   obj.TransactionDate = item.TransactionDate;
+                   obj.TransactionDate = item.TransactionDate.Value.ToShortDateString();
                    obj.TransactionDescription= item.TransactionDescription;
                    obj.Currency = currencyList.FirstOrDefault(y=> y.CurrencyId == item.CurrencyId).CurrencyName;
                    obj.DebitAmount= item.DebitAmount;

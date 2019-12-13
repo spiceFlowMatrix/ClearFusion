@@ -81,6 +81,11 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                                     OfficeId = vehicle.OfficeId,
                                     PlateNo = vehicle.PlateNo,
                                     StartingMileage = vehicle.StartingMileage,
+                                    ChasisNo= vehicle.ChasisNo,
+                                    EngineNo= vehicle.EngineNo,
+                                    ManufacturerCountry= vehicle.ManufacturerCountry,
+                                    PersonRemarks= vehicle.Remarks,
+                                    RegistrationNo= vehicle.RegistrationNo,
                                 };
 
                                 await _dbContext.PurchasedVehicleDetail.AddAsync(vehicleDetail);
@@ -118,6 +123,12 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                                     OfficeId = generator.OfficeId,
                                     StartingUsage = generator.StartingUsage,
                                     Voltage = generator.Voltage,
+                                    ChasisNo= generator.ChasisNo,
+                                    EngineNo= generator.EngineNo,
+                                    PersonRemarks= generator.Remarks,
+                                    RegistrationNo= generator.RegistrationNo,
+                                    ManufacturerCountry= generator.ManufacturerCountry,
+                                    EmployeeID= generator.EmployeeId
                                 };
 
                                 await _dbContext.PurchasedGeneratorDetail.AddRangeAsync(generatorDetail);

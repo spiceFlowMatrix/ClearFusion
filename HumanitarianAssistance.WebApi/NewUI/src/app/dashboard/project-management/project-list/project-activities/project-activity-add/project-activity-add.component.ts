@@ -21,7 +21,6 @@ import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/stat
 import { ProjectActivityStatus } from 'src/app/shared/enum';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
-import { min } from 'date-fns';
 
 @Component({
   selector: 'app-project-activity-add',

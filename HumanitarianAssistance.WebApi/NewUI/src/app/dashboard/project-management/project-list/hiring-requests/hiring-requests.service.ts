@@ -5,20 +5,15 @@ import { GLOBAL } from 'src/app/shared/global';
 import { map } from 'rxjs/operators';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import {
-  IHiringRequestDetailModel,
-  ProjectHiringRequestFilterModel,
   IHiringReuestCandidateModel,
   IReuestedCandidateDetailModel,
   IitervireCandidateModel,
   ISelectedCandidateModel,
   CandidateDetailModel,
-  IFilterModel,
-  ICountryList
-} from './models/hiring-requests-model';
+  IFilterModel} from './models/hiring-requests-model';
 import { BehaviorSubject } from 'rxjs';
 import { IProjectPermissionMode } from '../project-activities/models/project-activities.model';
 import {
-  OfficeDetailModel,
   IHiringRequestModel,
   CompleteHiringRequestModel,
   ICandidateDetailModel,
@@ -112,23 +107,6 @@ export class HiringRequestsService {
         })
       );
   }
-  //#endregion
-  // //#region "GetEducationDegreeList"
-  // GetEducationDegreeList(): any {
-  //   return this.globalService
-  //     .getList(this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllEducationDegree)
-  //     .pipe(
-  //       map(x => {
-  //         const responseData: IResponseData = {
-  //           data: x.data.EducationDegreeList,
-  //           statusCode: x.StatusCode,
-  //           message: x.Message
-  //         };
-  //         return responseData;
-  //       })
-  //     );
-  // }
-  // //#endregion
 
   //#region "GetEducationDegreeList"
   GetEducationDegreeList(): any {
@@ -144,48 +122,6 @@ export class HiringRequestsService {
         map(x => {
           const responseData: IResponseData = {
             data: x.data.JobGradeList,
-            statusCode: x.StatusCode,
-            message: x.Message
-          };
-          return responseData;
-        })
-      );
-  }
-  //#endregion
-
-  // //#region "GetOfficeListByJobId"
-  // GetOfficeListByJobId(model: OfficeDetailModel): any {
-  //   return this.globalService
-  //   .post(
-  //     this.appurl.getApiUrl() +
-  //       GLOBAL.API_HiringRequest_GetOfficeListByJobId,
-  //       model
-  //   )
-  //   .pipe(
-  //     map(x => {
-  //       const responseData: IResponseData = {
-  //         data: x.data.OfficeList,
-  //         statusCode: x.StatusCode,
-  //         message: x.Message
-  //       };
-  //       return responseData;
-  //     })
-  //   );
-  // }
-  // //#endregion
-  //#region "GetProfessionListByOfficeId"
-
-  GetProfessionListByOfficeId(model: OfficeDetailModel): any {
-    return this.globalService
-      .post(
-        this.appurl.getApiUrl() +
-          GLOBAL.API_HiringRequest_GetProfessionListByOfficeId,
-        model
-      )
-      .pipe(
-        map(x => {
-          const responseData: IResponseData = {
-            data: x.data.ProfessionDetailList,
             statusCode: x.StatusCode,
             message: x.Message
           };
@@ -235,25 +171,6 @@ export class HiringRequestsService {
       );
   }
   //#endregion
-  //#region "GetJobList"
-  GetJobList(model: OfficeDetailModel): any {
-    return this.globalService
-      .post(
-        this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetAllJobs,
-        model
-      )
-      .pipe(
-        map(x => {
-          const responseData: IResponseData = {
-            data: x.data.JobDetailList,
-            statusCode: x.StatusCode,
-            message: x.Message
-          };
-          return responseData;
-        })
-      );
-  }
-  //#endregion
 
   //#region "AddHiringRequestDetail"
   AddHiringRequestDetail(data: IHiringRequestModel) {
@@ -267,27 +184,6 @@ export class HiringRequestsService {
         map(x => {
           const responseData: IResponseData = {
             data: x,
-            statusCode: x.StatusCode,
-            message: x.Message
-          };
-          return responseData;
-        })
-      );
-  }
-  //#endregion
-
-  //#region "GetItemGroupByInventoryId"
-  getRemainingVacancyByJobId(JobId: number): any {
-    return this.globalService
-      .getListByListId(
-        this.appurl.getApiUrl() +
-          GLOBAL.API_HiringRequest_GetRemainingVacancyByJobId,
-        JobId
-      )
-      .pipe(
-        map(x => {
-          const responseData: IResponseData = {
-            data: x.data.FilledVacancies,
             statusCode: x.StatusCode,
             message: x.Message
           };

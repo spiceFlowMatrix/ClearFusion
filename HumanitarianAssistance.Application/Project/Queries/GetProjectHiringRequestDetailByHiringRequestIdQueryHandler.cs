@@ -28,8 +28,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
             try
             {
                 var requestDetail = await (from hr in _dbContext.ProjectHiringRequestDetail
-                .Where(x => x.IsDeleted == false &&
-                                                                                                      x.HiringRequestId == request.HiringRequestId)
+                .Where(x => x.IsDeleted == false && x.HiringRequestId == request.HiringRequestId)
                                            join c in _dbContext.CurrencyDetails on hr.CurrencyId equals c.CurrencyId into h
                                            from c in h.DefaultIfEmpty()
                                            join o in _dbContext.OfficeDetail on hr.OfficeId equals o.OfficeId into od
@@ -53,7 +52,6 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                FilledVacancies = hr.FilledVacancies != null ? hr.FilledVacancies : 0,
                                                PayCurrency = c.CurrencyName,
                                                PayRate = hr.HourlyRate,
-                                               //Status = hr.IsCompleted == true ? "Completed" : "InProgress",
                                                BudgetName = b.BudgetName,
                                                DepartmentName = d.DepartmentName,
                                                AnouncingDate = hr.AnouncingDate != null ? hr.AnouncingDate.Value.ToString("dd-MM-yyyy") : "",
@@ -76,7 +74,6 @@ namespace HumanitarianAssistance.Application.Project.Queries
             }
             catch (Exception ex)
             {
-
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }
