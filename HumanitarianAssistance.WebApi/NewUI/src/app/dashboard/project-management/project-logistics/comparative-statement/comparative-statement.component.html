@@ -1,19 +1,19 @@
 <div [ngSwitch]="comparativeStatus">
-  <div *ngSwitchCase="1" style="margin-top: 25%;" humAddScroll style="width: 105%;">
+  <div *ngSwitchCase="1" humAddScroll style="margin-top: 25%;">
     <i class="fas fa-info-circle icon_align icon_color_pending"></i>
     <h3 class="text-center">STATEMENT REQUEST PENDING</h3>
   </div>
-  <div *ngSwitchCase="2" style="margin-top: 25%;" humAddScroll style="width: 105%;">
+  <div *ngSwitchCase="2" humAddScroll style="margin-top: 25%;">
       <i class="fas fa-exclamation-circle icon_align icon_color_cancel"></i>
       <h3 class="text-center">CANCELLED REQUEST</h3>
   </div>
   <div *ngSwitchCase="3" humAddScroll style="width: 105%;">
     <h4 class="letter_spacing_2">Comparative Statement Details</h4>
-    <p>Once <b>Logistics Officer</b> has listed out <b>Suppliers</b> and Submitted the <b>Comparative Statement</b>, it needs to be <b>Approved</b> by <b>Control Officer</b>. Once <b>Control Officer</b> has approved the <b>Comparative Statement</b>. <b>Purchase Order</b> can be issued.</p>
-    <p>Due to technology limitations in previous systems, only 3 suppliers could be listed for evaluation. Now we can easily add as many as needed.</p>
-    <div>
+    <!-- <p>Once <b>Logistics Officer</b> has listed out <b>Suppliers</b> and Submitted the <b>Comparative Statement</b>, it needs to be <b>Approved</b> by <b>Control Officer</b>. Once <b>Control Officer</b> has approved the <b>Comparative Statement</b>. <b>Purchase Order</b> can be issued.</p>
+    <p>Due to technology limitations in previous systems, only 3 suppliers could be listed for evaluation. Now we can easily add as many as needed.</p> -->
+    <div class="margin_top_20">
       <h4>Suppliers
-        <hum-button (click)="openAddSupplierDialog()" [type]="'add'" [text]="'ADD SUPPLIER'"></hum-button>
+        <hum-button (click)="openAddSupplierDialog()" [type]="'add'" [text]="'ADD SUPPLIER OFFER'"></hum-button>
       </h4>
       <hum-table [actions]="actions" (actionClick)="onActionClick($event)" [headers]="supplierHeaders$" [items]="supplierData$" [subHeaders]="supplierSubHeaders$" [hideColums$]="hideSupplierColums"></hum-table>
     </div>

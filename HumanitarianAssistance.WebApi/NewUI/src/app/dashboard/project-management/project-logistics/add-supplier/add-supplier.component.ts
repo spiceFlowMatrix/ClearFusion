@@ -4,6 +4,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { LogisticService } from '../logistic.service';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { ToastrService } from 'ngx-toastr';
+import { ConfigService } from 'src/app/store/services/config.service';
+import { elementClassProp } from '@angular/core/src/render3';
+import { IOpenedChange } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
 
 @Component({
   selector: 'app-add-supplier',
@@ -13,21 +16,48 @@ import { ToastrService } from 'ngx-toastr';
 export class AddSupplierComponent implements OnInit {
 
   addSupplierForm: FormGroup;
+  sourceCodeList: any[] = [];
+  storedropdownItemsList: any[];
+  invoiceAttachment;
+  warrantyAttachment;
+
   constructor(private fb: FormBuilder,
     private dialogRef: MatDialogRef<AddSupplierComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private logisticservice: LogisticService,
     private commonLoader: CommonLoaderService,
-    public toastr: ToastrService) { }
+    public toastr: ToastrService,
+    private configService: ConfigService) { }
 
   ngOnInit() {
+    this.getAllStoreSuppliers();
+    this.getStoreItems();
     this.addSupplierForm = this.fb.group({
-      Supplier: [this.data.Supplier, Validators.required],
+      StoreSourceCode: ['', Validators.required],
+      ItemId: ['', Validators.required],
       Quantity: [this.data.Quantity, Validators.required],
-      FinalCost: [this.data.FinalPrice, Validators.required]
+      FinalUnitPrice: [this.data.FinalPrice, Validators.required]
     });
+
   }
 
+  openInvoiceInput() {
+    document.getElementById('invoicefileInput').click();
+  }
+
+  invoiceFileChange(file: any) {
+    this.invoiceAttachment = [];
+    this.invoiceAttachment.push(file);
+  }
+
+  openWarrantyInput() {
+    document.getElementById('warrantyfileInput').click();
+  }
+
+  warrantyFileChange(file: any) {
+    this.warrantyAttachment = [];
+    this.warrantyAttachment.push(file);
+  }
   addSupplier(value) {
     if (!this.addSupplierForm.valid) {
       return;
@@ -77,6 +107,51 @@ export class AddSupplierComponent implements OnInit {
         }
       });
     }
+  }
+
+  getAllStoreSuppliers() {
+    this.configService.getSourceCodeById(2).subscribe(res => {
+      this.sourceCodeList = [];
+        res.forEach(element => {
+          this.sourceCodeList.push({
+            Id : element.SourceCodeId,
+            Name: element.Code + '-' + element.Description
+          });
+        });
+    });
+  }
+
+  getStoreItems() {
+    this.logisticservice.getAllStoreItems().subscribe(res => {
+      // this.storeItemsList = [];
+      this.storedropdownItemsList = [];
+      if (res.StatusCode === 200 && res.data.InventoryItemList != null) {
+        res.data.InventoryItemList.forEach(element => {
+          // this.storeItemsList.push(element);
+          this.storedropdownItemsList.push({
+            Id: element.ItemId,
+            Name: element.ItemCode + '-' + element.ItemName
+          });
+        });
+        // this.addLogisticItemsForm.controls['Item'].setValue(this.data.ItemId);
+      }
+    });
+  }
+
+  get StoreSuppliers() {
+    return this.addSupplierForm.get('StoreSourceCode').value;
+  }
+
+  get ItemId() {
+    return this.addSupplierForm.get('ItemId').value;
+  }
+
+  onOpenedItemSuppliersChange(event: IOpenedChange) {
+    this.addSupplierForm.controls['StoreSourceCode'].setValue(event.Value);
+  }
+
+  onOpenedItemChange(event: IOpenedChange) {
+    this.addSupplierForm.controls['ItemId'].setValue(event.Value);
   }
 
   cancel() {
