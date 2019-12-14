@@ -62,15 +62,13 @@ publish-container:
     image: docker:stable
     services:
         - docker:18.09.7-dind
-        - google/cloud-sdk
     stage: integration
     script:
         - cp -r HumanitarianAssistance.WebApi/NewUI/dist/ HumanitarianAssistance.WebApi/release/NewUI/dist
         - cp -r HumanitarianAssistance.WebApi/OldUI/dist/ HumanitarianAssistance.WebApi/release/OldUI/dist
-        - init_gcp_docker
-        - docker pull ${CF_APP_GCP_IMAGE} || true
-        - docker build --cache-from ${CF_APP_GCP_IMAGE} -t ${CF_APP_GCP_IMAGE} -f ./Dockerfile .
-        - docker push ${CF_APP_GCP_IMAGE}
+        - docker pull ${CF_APP_GITLAB_IMAGE} || true
+        - docker build --cache-from ${CF_APP_GITLAB_IMAGE} -t ${CF_APP_GITLAB_IMAGE} -f ./Dockerfile .
+        - docker push ${CF_APP_GITLAB_IMAGE}
 
 deploy-cleanarch:
     stage: deploy
@@ -84,7 +82,7 @@ deploy-cleanarch:
           --tiller-namespace ${KUBE_NAMESPACE}
           --install
           --set web.name="${CF_APP_NAME}"
-          --set web.image="${CF_APP_GCP_IMAGE}"
+          --set web.image="${CF_APP_GITLAB_IMAGE}"
           --set web.host="${CF_CLEAN_URL}"
           --set app.env=${ENVIRONMENT}
           --set deployment.namespace="${KUBE_NAMESPACE}"
