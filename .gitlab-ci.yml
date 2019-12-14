@@ -9,7 +9,9 @@ variables:
     CF_REVIEW_URL: review.cha-net.org
     CF_CHAPROD_URL: manage.cha-net.org
     CF_APP_NAME: clearfusion-${CI_COMMIT_REF_SLUG}
-    CF_APP_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}
+    CF_APP_IMAGE_TAG: ${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}
+    CF_APP_GITLAB_IMAGE: ${CI_REGISTRY_IMAGE}:${CF_APP_IMAGE_TAG}
+    CF_APP_GCP_IMAGE: eu.gcr.io/${GKE_PROJECT}/clear-fusion-cloud:${CF_APP_IMAGE_TAG}
     ENVIRONMENT: "Production"
     DOCKER_TLS_CERTDIR: ""
     KUBE_NAMESPACE: gitlab-managed-apps
@@ -57,21 +59,17 @@ build-backend:
             - HumanitarianAssistance.WebApi/release/
 
 publish-container:
-    image: docker:stable
+    image: google/cloud-sdk
     services:
         - docker:18.09.7-dind
     stage: integration
     script:
-        # - rm -r HumanitarianAssistance.WebApi/release/NewUI
-        # - rm -r HumanitarianAssistance.WebApi/release/OldUI
-        # - mkdir HumanitarianAssistance.WebApi/release/NewUI
-        # - mkdir HumanitarianAssistance.WebApi/release/OldUI
         - cp -r HumanitarianAssistance.WebApi/NewUI/dist/ HumanitarianAssistance.WebApi/release/NewUI/dist
         - cp -r HumanitarianAssistance.WebApi/OldUI/dist/ HumanitarianAssistance.WebApi/release/OldUI/dist
-        - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
-        - docker pull ${CF_APP_IMAGE} || true
-        - docker build --cache-from ${CF_APP_IMAGE} -t ${CF_APP_IMAGE} -f ./Dockerfile .
-        - docker push ${CF_APP_IMAGE}
+        - init_gcp_docker
+        - docker pull ${CF_APP_GCP_IMAGE} || true
+        - docker build --cache-from ${CF_APP_GCP_IMAGE} -t ${CF_APP_GCP_IMAGE} -f ./Dockerfile .
+        - docker push ${CF_APP_GCP_IMAGE}
 
 deploy-cleanarch:
     stage: deploy
@@ -80,12 +78,12 @@ deploy-cleanarch:
         name: cleanarch
         url: https://${CF_CLEAN_URL}
     script:
-        - init_helm
+        - init_gke
         - helm upgrade
           --tiller-namespace ${KUBE_NAMESPACE}
           --install
           --set web.name="${CF_APP_NAME}"
-          --set web.image="${CF_APP_IMAGE}"
+          --set web.image="${CF_APP_GCP_IMAGE}"
           --set web.host="${CF_CLEAN_URL}"
           --set app.env=${ENVIRONMENT}
           --set deployment.namespace="${KUBE_NAMESPACE}"
@@ -109,11 +107,11 @@ deploy-review:
         name: review
         url: https://${CF_REVIEW_URL}
     script:
-        - init_helm
+        - init_gke
         - helm upgrade
           --install
           --set web.name="${CF_APP_NAME}"
-          --set web.image="${CF_APP_IMAGE}"
+          --set web.image="${CF_APP_GITLAB_IMAGE}"
           --set web.host="${CF_REVIEW_URL}"
           --set app.env=${ENVIRONMENT}
           --set deployment.namespace="${KUBE_NAMESPACE}"
@@ -140,11 +138,11 @@ deploy-chaprod:
         name: chaprod
         url: https://manage.cha-net.org
     script:
-        - init_helm
+        - init_gke
         - helm upgrade
           --install
           --set web.name="${CF_APP_NAME}"
-          --set web.image="${CF_APP_IMAGE}"
+          --set web.image="${CF_APP_GITLAB_IMAGE}"
           --set web.host="${CF_CHAPROD_URL}"
           --set app.env="Production"
           --set deployment.namespace="${KUBE_NAMESPACE}"
@@ -166,7 +164,13 @@ deploy-chaprod:
             
 .functions: &functions |
     # Functions
-    function init_helm() {
+    function init_gcp_docker() {
+        mkdir -p /etc/deploy
+        echo ${GKE_SERVICE_ACCOUNT} | base64 -d > /etc/deploy/sa.json
+        gcloud auth activate-service-account --key-file /etc/deploy/sa.json --project=${GKE_PROJECT}
+        gcloud auth configure-docker --project=${GKE_PROJECT}
+    }
+    function init_gke() {
         mkdir -p /etc/deploy
         echo ${GKE_SERVICE_ACCOUNT} | base64 -d > /etc/deploy/sa.json
         gcloud auth activate-service-account --key-file /etc/deploy/sa.json --project=${GKE_PROJECT}
