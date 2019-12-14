@@ -55,7 +55,7 @@ build-backend:
             - HumanitarianAssistance.WebApi/release/
 
 publish-container:
-    image: docker:stable
+    image: docker:git
     services:
         - docker:18.09.7-dind
     stage: integration
