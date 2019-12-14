@@ -5,10 +5,6 @@ stages:
 
 variables:
     GKE_SERVICE_ACCOUNT: ${GKE_SERVICE_ACCOUNT}
-    GKE_CLUSTER_NAME: clearfusion-primary
-    GKE_CLUSTER_ZONE: europe-west4-b
-    GKE_PROJECT: clear-fusion-193608
-    GKE_ZONE: europe-west4-b
     CF_CLEAN_URL: cleantestedg.cha-net.org
     CF_REVIEW_URL: review.cha-net.org
     CF_CHAPROD_URL: manage.cha-net.org
@@ -122,9 +118,6 @@ deploy-cleanarch:
           --force
           clearfusion-${CI_COMMIT_REF_SLUG}
           ./k8s-chart
-    only:
-        refs:
-            - cleanarch
 
 
 deploy-review:
