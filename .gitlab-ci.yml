@@ -82,6 +82,7 @@ deploy-cleanarch:
     script:
         - init_helm
         - helm upgrade
+          --tiller-namespace ${KUBE_NAMESPACE}
           --install
           --set web.name="${CF_APP_NAME}"
           --set web.image="${CF_APP_IMAGE}"
@@ -141,7 +142,6 @@ deploy-chaprod:
     script:
         - init_helm
         - helm upgrade
-          --tiller-namespace ${KUBE_NAMESPACE}
           --install
           --set web.name="${CF_APP_NAME}"
           --set web.image="${CF_APP_IMAGE}"
