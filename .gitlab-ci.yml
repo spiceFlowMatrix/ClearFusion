@@ -59,9 +59,10 @@ build-backend:
             - HumanitarianAssistance.WebApi/release/
 
 publish-container:
-    image: google/cloud-sdk
+    image: docker:stable
     services:
         - docker:18.09.7-dind
+        - google/cloud-sdk
     stage: integration
     script:
         - cp -r HumanitarianAssistance.WebApi/NewUI/dist/ HumanitarianAssistance.WebApi/release/NewUI/dist
@@ -107,6 +108,7 @@ deploy-review:
         name: review
         url: https://${CF_REVIEW_URL}
     script:
+
         - init_gke
         - helm upgrade
           --install
