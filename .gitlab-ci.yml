@@ -54,11 +54,11 @@ build-backend:
             - HumanitarianAssistance.WebApi/release/
 
 publish-container:
-    image: docker:19.03.1
+    image: docker:19.03.0
     variables:
         DOCKER_TLS_CERTDIR: ""
     services:
-        - docker:19.03.1-dind
+        - docker:19.03.0-dind
     stage: integration
     script:
         - cp -r HumanitarianAssistance.WebApi/NewUI/dist/ HumanitarianAssistance.WebApi/release/NewUI/dist
