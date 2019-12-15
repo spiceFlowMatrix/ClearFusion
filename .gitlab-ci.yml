@@ -56,8 +56,7 @@ build-backend:
 publish-container:
     image: docker:19.03.1
     variables:
-        DOCKER_TLS_CERTDIR: "/certs"
-        DOCKER_HOST: tcp://localhost:2376
+        DOCKER_TLS_CERTDIR: ""
     services:
         - docker:19.03.1-dind
     stage: integration
