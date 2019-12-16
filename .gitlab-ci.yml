@@ -10,6 +10,8 @@ variables:
     CF_CHAPROD_URL: manage.cha-net.org
     CF_APP_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}
     ENVIRONMENT: "Production"
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: tcp://localhost:2375/
 
 build-newui:
     image: node:latest
@@ -20,8 +22,6 @@ build-newui:
         - npm install
     script:
          - npm run build --prod
-        
-        # - ./node_modules/@angular/cli/bin/ng build --prod 
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/NewUI/dist/
@@ -36,7 +36,6 @@ build-oldui:
         - npm install
     script:
        - npm run build --prod
-       # - ./node_modules/@angular/cli/bin/ng build --prod 
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/OldUI/dist/
@@ -54,9 +53,7 @@ build-backend:
             - HumanitarianAssistance.WebApi/release/
 
 publish-container:
-    image: docker:stable
-    variables:
-        DOCKER_TLS_CERTDIR: ""
+    image: docker:git
     services:
         - docker:18.09.7-dind
     stage: integration
