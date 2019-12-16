@@ -13,7 +13,6 @@ variables:
     ENVIRONMENT: "Production"
     DOCKER_TLS_CERTDIR: "" # required since we use dind with no tls
     DOCKER_HOST: tcp://localhost:2375/ # required since we use dind
-    KUBE_NAMESPACE: gitlab-managed-apps
 
 build-newui:
     image: node:latest
