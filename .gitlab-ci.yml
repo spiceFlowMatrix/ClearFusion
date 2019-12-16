@@ -8,10 +8,12 @@ variables:
     CF_CLEAN_URL: cleantestedg.cha-net.org
     CF_REVIEW_URL: review.cha-net.org
     CF_CHAPROD_URL: manage.cha-net.org
+    CF_APP_NAME: clearfusion-${CI_COMMIT_REF_SLUG}
     CF_APP_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}
     ENVIRONMENT: "Production"
     DOCKER_TLS_CERTDIR: "" # required since we use dind with no tls
     DOCKER_HOST: tcp://localhost:2375/ # required since we use dind
+    KUBE_NAMESPACE: gitlab-managed-apps
 
 build-newui:
     image: node:latest
