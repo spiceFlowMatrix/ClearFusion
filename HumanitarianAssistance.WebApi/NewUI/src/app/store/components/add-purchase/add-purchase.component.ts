@@ -244,6 +244,12 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
           value: y.UnitTypeId
         };
       }));
+
+      const index = response.data.PurchaseUnitTypeList.findIndex(x => x.IsDefault === true);
+
+      if (index !== -1) {
+        this.addPurchaseForm.controls['Unit'].patchValue(response.data.PurchaseUnitTypeList[index].UnitTypeId);
+      }
   }
 
   subscribeAllReceiptType(response: any) {

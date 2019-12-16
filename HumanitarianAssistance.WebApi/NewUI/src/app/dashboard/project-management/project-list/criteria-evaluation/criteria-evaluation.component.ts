@@ -71,6 +71,12 @@ export class CriteriaEvaluationComponent
   AllowedByLaw = false; // add one more property
   isSuperadmin = false;
 
+  developmenmtValue = 0;
+  educationValue = 0;
+  healthNutritionValue = 0;
+  disasterRiskValue = 0;
+  aggricultureLiveStockValue = 0;
+
   //#region "Variables"
   methodOfFundingList = [
     { Id: 1, Name: 'Sole' },
@@ -1886,109 +1892,283 @@ export class CriteriaEvaluationComponent
                 // profuct and service
                 this.productAndServiceForm.Awareness =
                   data.data.CriteriaEveluationModel.Awareness;
+                if (this.productAndServiceForm.Awareness === true) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
+
                 this.productAndServiceForm.Infrastructure =
                   data.data.CriteriaEveluationModel.Infrastructure;
+                if (this.productAndServiceForm.Infrastructure === true) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
                 this.productAndServiceForm.CapacityBuilding =
                   data.data.CriteriaEveluationModel.CapacityBuilding;
+                if (this.productAndServiceForm.CapacityBuilding === true) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
+
                 this.productAndServiceForm.IncomeGeneration =
                   data.data.CriteriaEveluationModel.IncomeGeneration;
+                if (this.productAndServiceForm.IncomeGeneration === true) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
                 this.productAndServiceForm.Mobilization =
                   data.data.CriteriaEveluationModel.Mobilization;
+                if (this.productAndServiceForm.Mobilization == true) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
                 this.productAndServiceForm.PeaceBuilding =
                   data.data.CriteriaEveluationModel.PeaceBuilding;
+                if (this.productAndServiceForm.PeaceBuilding === true) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
                 this.productAndServiceForm.SocialProtection =
                   data.data.CriteriaEveluationModel.SocialProtection;
+                if (this.productAndServiceForm.SocialProtection) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
+
                 this.productAndServiceForm.SustainableLivelihood =
                   data.data.CriteriaEveluationModel.SustainableLivelihood;
+                if (this.productAndServiceForm.SustainableLivelihood === true) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
                 this.productAndServiceForm.Advocacy =
                   data.data.CriteriaEveluationModel.Advocacy;
+                if (this.productAndServiceForm.Advocacy === true) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
+
                 this.productAndServiceForm.Literacy =
                   data.data.CriteriaEveluationModel.Literacy;
+                if (this.productAndServiceForm.Literacy === true) {
+                  this.educationValue = this.educationValue + 1;
+                }
                 this.productAndServiceForm.EducationCapacityBuilding =
                   data.data.CriteriaEveluationModel.EducationCapacityBuilding;
+                if (
+                  this.productAndServiceForm.EducationCapacityBuilding == true
+                ) {
+                  this.educationValue = this.educationValue + 1;
+                }
                 this.productAndServiceForm.SchoolUpgrading =
                   data.data.CriteriaEveluationModel.SchoolUpgrading;
+                if (this.productAndServiceForm.SchoolUpgrading == true) {
+                  this.educationValue = this.educationValue + 1;
+                }
                 this.productAndServiceForm.EducationInEmergency =
                   data.data.CriteriaEveluationModel.EducationInEmergency;
+                if (this.productAndServiceForm.EducationInEmergency == true) {
+                  this.educationValue = this.educationValue + 1;
+                }
                 this.productAndServiceForm.OnlineEducation =
                   data.data.CriteriaEveluationModel.OnlineEducation;
+                if (this.productAndServiceForm.OnlineEducation == true) {
+                  this.educationValue = this.educationValue + 1;
+                }
                 this.productAndServiceForm.CommunityBasedEducation =
                   data.data.CriteriaEveluationModel.CommunityBasedEducation;
+                if (
+                  this.productAndServiceForm.CommunityBasedEducation == true
+                ) {
+                  this.educationValue = this.educationValue + 1;
+                }
                 this.productAndServiceForm.AcceleratedLearningProgram =
                   data.data.CriteriaEveluationModel.AcceleratedLearningProgram;
+                if (
+                  this.productAndServiceForm.AcceleratedLearningProgram == true
+                ) {
+                  this.educationValue = this.educationValue + 1;
+                }
                 this.productAndServiceForm.PrimaryHealthServices =
                   data.data.CriteriaEveluationModel.PrimaryHealthServices;
+                if (this.productAndServiceForm.PrimaryHealthServices == true) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.ReproductiveHealth =
                   data.data.CriteriaEveluationModel.ReproductiveHealth;
+                if (this.productAndServiceForm.ReproductiveHealth === true) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.Immunization =
                   data.data.CriteriaEveluationModel.Immunization;
+                if (this.productAndServiceForm.Immunization == true) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.InfantandYoungChildFeeding =
                   data.data.CriteriaEveluationModel.InfantandYoungChildFeeding;
+                if (
+                  this.productAndServiceForm.InfantandYoungChildFeeding === true
+                ) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.Nutrition =
                   data.data.CriteriaEveluationModel.Nutrition;
+                if (this.productAndServiceForm.Nutrition === true) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.CommunicableDisease =
                   data.data.CriteriaEveluationModel.CommunicableDisease;
+                if (this.productAndServiceForm.CommunicableDisease === true) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.Hygiene =
                   data.data.CriteriaEveluationModel.Hygiene;
+                if (this.productAndServiceForm.Hygiene === true) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.EnvironmentalHealth =
                   data.data.CriteriaEveluationModel.EnvironmentalHealth;
+                if (this.productAndServiceForm.EnvironmentalHealth === true) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.MentalHealthandDisabilityService =
                   data.data.CriteriaEveluationModel.MentalHealthandDisabilityService;
+                if (
+                  this.productAndServiceForm
+                    .MentalHealthandDisabilityService === true
+                ) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.HealthCapacityBuilding =
                   data.data.CriteriaEveluationModel.HealthCapacityBuilding;
+                if (
+                  this.productAndServiceForm.HealthCapacityBuilding === true
+                ) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.Telemedicine =
                   data.data.CriteriaEveluationModel.Telemedicine;
+                if (this.productAndServiceForm.Telemedicine === true) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.MitigationProjects =
                   data.data.CriteriaEveluationModel.MitigationProjects;
+                if (this.productAndServiceForm.MitigationProjects === true) {
+                  this.disasterRiskValue = this.disasterRiskValue + 1;
+                }
                 this.productAndServiceForm.WaterSupply =
                   data.data.CriteriaEveluationModel.WaterSupply;
+                if (this.productAndServiceForm.WaterSupply === true) {
+                  this.disasterRiskValue = this.disasterRiskValue + 1;
+                }
                 this.productAndServiceForm.Sanitation =
                   data.data.CriteriaEveluationModel.Sanitation;
+                if (this.productAndServiceForm.Sanitation == true) {
+                  this.disasterRiskValue = this.disasterRiskValue + 1;
+                }
 
                 this.productAndServiceForm.DisasterRiskHygiene =
                   data.data.CriteriaEveluationModel.DisasterRiskHygiene;
+                if (this.productAndServiceForm.DisasterRiskHygiene === true) {
+                  this.disasterRiskValue = this.disasterRiskValue + 1;
+                }
                 this.productAndServiceForm.DisasterCapacityBuilding =
                   data.data.CriteriaEveluationModel.DisasterCapacityBuilding;
+                if (
+                  this.productAndServiceForm.DisasterCapacityBuilding === true
+                ) {
+                  this.disasterRiskValue = this.disasterRiskValue + 1;
+                }
                 this.productAndServiceForm.EmergencyResponse =
                   data.data.CriteriaEveluationModel.EmergencyResponse;
+                if (this.productAndServiceForm.EmergencyResponse === true) {
+                  this.disasterRiskValue = this.disasterRiskValue + 1;
+                }
                 this.productAndServiceForm.RenewableEnergy =
                   data.data.CriteriaEveluationModel.RenewableEnergy;
+                if (this.productAndServiceForm.RenewableEnergy === true) {
+                  this.disasterRiskValue = this.disasterRiskValue + 1;
+                }
                 this.productAndServiceForm.Shelter =
                   data.data.CriteriaEveluationModel.Shelter;
+                if (this.productAndServiceForm.Shelter === true) {
+                  this.disasterRiskValue = this.disasterRiskValue + 1;
+                }
                 this.productAndServiceForm.NaturalResourceManagement =
                   data.data.CriteriaEveluationModel.NaturalResourceManagement;
+                if (
+                  this.productAndServiceForm.NaturalResourceManagement === true
+                ) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.AggriculutreCapacityBuilding =
                   data.data.CriteriaEveluationModel.AggriculutreCapacityBuilding;
+                if (
+                  this.productAndServiceForm.AggriculutreCapacityBuilding ===
+                  true
+                ) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.LivestockManagement =
                   data.data.CriteriaEveluationModel.LivestockManagement;
+                if (this.productAndServiceForm.LivestockManagement === true) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.FoodSecurity =
                   data.data.CriteriaEveluationModel.FoodSecurity;
+                if (this.productAndServiceForm.FoodSecurity === true) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.ResearchandPublication =
                   data.data.CriteriaEveluationModel.ResearchandPublication;
+                if (
+                  this.productAndServiceForm.ResearchandPublication === true
+                ) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.Horticulture =
                   data.data.CriteriaEveluationModel.Horticulture;
+                if (this.productAndServiceForm.Horticulture === true) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.Irrigation =
                   data.data.CriteriaEveluationModel.Irrigation;
+                if (this.productAndServiceForm.Irrigation === true) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.Livelihood =
                   data.data.CriteriaEveluationModel.Livelihood;
+                if (this.productAndServiceForm.Livelihood === true) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.ValueChain =
                   data.data.CriteriaEveluationModel.ValueChain;
+                if (this.productAndServiceForm.ValueChain === true) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.Children =
                   data.data.CriteriaEveluationModel.Children;
+
                 this.productAndServiceForm.Disabled =
                   data.data.CriteriaEveluationModel.Disabled;
+
                 this.productAndServiceForm.IDPs =
                   data.data.CriteriaEveluationModel.IDPs;
                 this.productAndServiceForm.Returnees =
                   data.data.CriteriaEveluationModel.Returnees;
+
                 this.productAndServiceForm.Kuchis =
                   data.data.CriteriaEveluationModel.Kuchis;
+
                 this.productAndServiceForm.Widows =
                   data.data.CriteriaEveluationModel.Widows;
+
                 this.productAndServiceForm.Women =
                   data.data.CriteriaEveluationModel.Women;
+
                 this.productAndServiceForm.Men =
                   data.data.CriteriaEveluationModel.Men;
+
                 this.productAndServiceForm.Youth =
                   data.data.CriteriaEveluationModel.Youth;
 
@@ -4562,7 +4742,8 @@ export class CriteriaEvaluationComponent
 
   onTabchangeScore($event) {
     if ($event.any) {
-    this.getPurposeOfInitialtiveScore(); }
+      this.getPurposeOfInitialtiveScore();
+    }
   }
 
   // common to get purpose of initiaitve scores
@@ -4644,39 +4825,60 @@ export class CriteriaEvaluationComponent
     }
   }
   ruralDevelopmentScore(value) {
-    if (value.checked == true) {
+    // Note :  check if all the rural development value is unchecked then only the score value will decreased.
+    if (value.checked === true) {
       this.productAndServiceForm.RuralDevelopmentSocialProtection = true;
+      this.developmenmtValue = this.developmenmtValue + 1;
     } else {
-      this.productAndServiceForm.RuralDevelopmentSocialProtection = false;
+      this.developmenmtValue = this.developmenmtValue - 1;
+      if (this.developmenmtValue <= 0) {
+        this.productAndServiceForm.RuralDevelopmentSocialProtection = false;
+      }
     }
   }
   educationScore(value) {
-    if (value.checked) {
+    if (value.checked === true) {
       this.productAndServiceForm.Education = true;
+      this.educationValue = this.educationValue + 1;
     } else {
-      this.productAndServiceForm.Education = false;
+      this.educationValue = this.educationValue - 1;
+      if (this.educationValue <= 0) {
+        this.productAndServiceForm.Education = false;
+      }
     }
   }
   healthNutritionScore(value) {
-    if (value.checked) {
+    if (value.checked == true) {
+      this.healthNutritionValue = this.healthNutritionValue + 1;
       this.productAndServiceForm.HealthAndNutrition = true;
     } else {
-      this.productAndServiceForm.HealthAndNutrition = false;
+      this.healthNutritionValue = this.healthNutritionValue - 1;
+      if (this.healthNutritionValue <= 0) {
+        this.productAndServiceForm.HealthAndNutrition = false;
+      }
     }
   }
   aggricultureScore(value) {
-     if (value.checked) {
+    if (value.checked == true) {
       this.productAndServiceForm.AgricultureAndLivestock = true;
-     } else {
-      this.productAndServiceForm.AgricultureAndLivestock = false;
-     }
+      this.aggricultureLiveStockValue = this.aggricultureLiveStockValue + 1;
+    } else {
+      this.aggricultureLiveStockValue = this.aggricultureLiveStockValue - 1;
+      if (this.aggricultureLiveStockValue <= 0) {
+        this.productAndServiceForm.AgricultureAndLivestock = false;
+      }
+    }
   }
 
   disasterRiskScore(value) {
-    if (value.checked) {
+    if (value.checked === true) {
       this.productAndServiceForm.DisasterRiskReduction = true;
+      this.disasterRiskValue = this.disasterRiskValue + 1;
     } else {
-      this.productAndServiceForm.DisasterRiskReduction = false;
+      this.disasterRiskValue = this.disasterRiskValue - 1;
+      if (this.disasterRiskValue <= 0) {
+        this.productAndServiceForm.DisasterRiskReduction = false;
+      }
     }
   }
   ngOnDestroy() {
