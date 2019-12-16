@@ -54,7 +54,7 @@ build-backend:
             - HumanitarianAssistance.WebApi/release/
 
 publish-container:
-    image: docker:18.09.7
+    image: docker:stable
     variables:
         DOCKER_TLS_CERTDIR: ""
     services:
