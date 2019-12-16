@@ -70,12 +70,12 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     var user = await _dbContext.UserDetails.FirstOrDefaultAsync(x=> x.AspNetUserId == statement.CreatedById);
                     model.SubmittedBy = user.FirstName + ' ' + user.LastName;
                     model.Description = statement.Description;
-                    model.selectedSupplier = await _dbContext.ProjectLogisticSuppliers.Where(x=>x.IsDeleted == false && statement.SupplierIds.Contains(x.SupplierId))
-                                                            .Select(x=> new SupplierDetailModel{
-                                                                Id = x.SupplierId,
-                                                                SupplierName = x.SupplierName
-                                                            })
-                                                            .ToListAsync();
+                    // model.selectedSupplier = await _dbContext.ProjectLogisticSuppliers.Where(x=>x.IsDeleted == false && statement.SupplierIds.Contains(x.SupplierId))
+                    //                                         .Select(x=> new SupplierDetailModel{
+                    //                                             Id = x.SupplierId,
+                    //                                             SupplierName = x.SupplierName
+                    //                                         })
+                    //                                         .ToListAsync();
 
                     var documentList = await documentsAsync;
                     foreach(var item in documentList)

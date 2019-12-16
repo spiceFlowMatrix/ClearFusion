@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
+using HumanitarianAssistance.Common.Enums;
 
 
 namespace HumanitarianAssistance.Application.Project.Commands.Update
@@ -33,14 +35,40 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                 {
                     throw new Exception("Supplier doesnot exists!");
                 }
-                supplier.SupplierName = request.SupplierName;
+                supplier.StoreSourceCodeId = request.SourceId;
+                supplier.ItemId = request.ItemId;
                 supplier.Quantity = request.Quantity;
-                supplier.FinalPrice = request.FinalPrice;
+                supplier.FinalUnitPrice = request.FinalUnitPrice;
 
                 supplier.ModifiedDate = request.ModifiedDate;
                 supplier.ModifiedById = request.ModifiedById;
 
                 await _dbContext.SaveChangesAsync();
+
+                if(request.isInvoiceUpdated) 
+                {
+                    var invoiceDocuments = await _dbContext.EntitySourceDocumentDetails
+                    .Include(x=>x.DocumentFileDetail)
+                    .Where(x=>x.IsDeleted == false && x.EntityId == supplier.SupplierId && x.DocumentFileDetail.PageId == (int)FileSourceEntityTypes.LogisticSupplierInvoice).ToListAsync();
+                    foreach (var doc in invoiceDocuments) {
+                        doc.IsDeleted = true;
+                        doc.DocumentFileDetail.IsDeleted = true;
+                    }
+                    await _dbContext.SaveChangesAsync();
+                }
+                
+                if(request.isWarrantyUpdated) 
+                {
+                    var warrantyDocuments = await _dbContext.EntitySourceDocumentDetails
+                    .Include(x=>x.DocumentFileDetail)
+                    .Where(x=>x.IsDeleted == false && x.EntityId == supplier.SupplierId && x.DocumentFileDetail.PageId == (int)FileSourceEntityTypes.LogisticSupplierWarranty).ToListAsync();
+                    foreach (var doc in warrantyDocuments) {
+                        doc.IsDeleted = true;
+                        doc.DocumentFileDetail.IsDeleted = true;
+                    }
+                    await _dbContext.SaveChangesAsync();
+                }
+
 
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;

@@ -31,7 +31,11 @@
           <input matInput type="number" formControlName="Quantity" placeholder="Quantity">
         </mat-form-field>
         <p>Please Upload associated Invoice document <hum-button (click)="openInvoiceInput()" [type]="'attachment'" [text]="'Upload'" ></hum-button></p>
+        <span class="font_weight_600" *ngIf="this.data && this.data.InvoiceName && this.invoiceAttachment.length == 0">{{this.data.InvoiceName}}</span>
+        <span class="font_weight_600" *ngIf="this.invoiceAttachment.length != 0">{{invoiceAttachment[0][0].name}}</span>
         <p>Please Upload associated Warranty document <hum-button (click)="openWarrantyInput()"[type]="'attachment'" [text]="'Upload'" ></hum-button></p>
+        <span class="font_weight_600" *ngIf="this.data && this.data.WarrantyName && this.warrantyAttachment.length == 0">{{this.data.WarrantyName}}</span>
+        <span class="font_weight_600" *ngIf="this.warrantyAttachment.length != 0">{{warrantyAttachment[0][0].name}}</span>
         <input id="invoicefileInput" style="display:none" hidden type="file" (change)="invoiceFileChange($event.target.files)" name="file">
         <input id="warrantyfileInput" style="display:none" hidden type="file" (change)="warrantyFileChange($event.target.files)" name="file">
         <div mat-dialog-actions>

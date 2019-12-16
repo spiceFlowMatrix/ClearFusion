@@ -7,6 +7,10 @@ import { ToastrService } from 'ngx-toastr';
 import { ConfigService } from 'src/app/store/services/config.service';
 import { elementClassProp } from '@angular/core/src/render3';
 import { IOpenedChange } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { FileSourceEntityTypes } from 'src/app/shared/enum';
+import { takeUntil } from 'rxjs/operators';
+import { ReplaySubject } from 'rxjs';
 
 @Component({
   selector: 'app-add-supplier',
@@ -18,25 +22,27 @@ export class AddSupplierComponent implements OnInit {
   addSupplierForm: FormGroup;
   sourceCodeList: any[] = [];
   storedropdownItemsList: any[];
-  invoiceAttachment;
-  warrantyAttachment;
+  invoiceAttachment = [];
+  warrantyAttachment = [];
 
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(private fb: FormBuilder,
     private dialogRef: MatDialogRef<AddSupplierComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private logisticservice: LogisticService,
     private commonLoader: CommonLoaderService,
     public toastr: ToastrService,
-    private configService: ConfigService) { }
+    private configService: ConfigService,
+    private globalSharedService: GlobalSharedService) { }
 
   ngOnInit() {
     this.getAllStoreSuppliers();
     this.getStoreItems();
     this.addSupplierForm = this.fb.group({
-      StoreSourceCode: ['', Validators.required],
-      ItemId: ['', Validators.required],
+      StoreSourceCode: [this.data.SourceId, Validators.required],
+      ItemId: [this.data.Item, Validators.required],
       Quantity: [this.data.Quantity, Validators.required],
-      FinalUnitPrice: [this.data.FinalPrice, Validators.required]
+      FinalUnitPrice: [this.data.FinalUnitPrice, Validators.required]
     });
 
   }
@@ -60,21 +66,54 @@ export class AddSupplierComponent implements OnInit {
   }
   addSupplier(value) {
     if (!this.addSupplierForm.valid) {
+      this.toastr.warning('Please fill all required fields!');
       return;
     }
-    this.commonLoader.showLoader();
     if (this.data.Id !== undefined && this.data.Id != null ) {
+      this.commonLoader.showLoader();
       const model = {
         SupplierId: this.data.Id,
-        SupplierName: value.Supplier,
+        SourceId: value.StoreSourceCode,
         Quantity: value.Quantity,
-        FinalPrice: value.FinalCost
+        FinalUnitPrice: value.FinalUnitPrice,
+        ItemId: value.ItemId,
+        isInvoiceUpdated: (this.invoiceAttachment.length === 0) ? false : true,
+        isWarrantyUpdated: (this.warrantyAttachment.length === 0) ? false : true
       };
       this.logisticservice.editSuppliers(model).subscribe(res => {
         if (res.StatusCode === 200) {
-          this.dialogRef.close({data: 'Updated'});
-          this.commonLoader.hideLoader();
-          this.toastr.success('Updated successfully!');
+          let uploadModel: any[] = [];
+          if (this.invoiceAttachment.length !== 0) {
+            uploadModel.push({
+              fileType: FileSourceEntityTypes.LogisticSupplierInvoice,
+              SupplierId: this.data.Id,
+              file: this.invoiceAttachment[0][0]
+            });
+          }
+          if (this.warrantyAttachment.length !== 0) {
+            uploadModel.push({
+              fileType: FileSourceEntityTypes.LogisticSupplierWarranty,
+              SupplierId: this.data.Id,
+              file: this.warrantyAttachment[0][0]
+            });
+          }
+          for (let i = 0; i < uploadModel.length; i++) {
+            this.globalSharedService
+            .uploadFile(uploadModel[i].fileType, uploadModel[i].SupplierId, uploadModel[i].file)
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe(y => {
+              if (i === (uploadModel.length - 1)) {
+                this.dialogRef.close({data: 'Success'});
+                this.commonLoader.hideLoader();
+                this.toastr.success('Updated successfully!');
+              }
+            });
+          }
+          if (uploadModel.length === 0) {
+            this.dialogRef.close({data: 'Success'});
+            this.commonLoader.hideLoader();
+            this.toastr.success('Updated successfully!');
+          }
         } else {
           this.dialogRef.close({data: null});
           this.commonLoader.hideLoader();
@@ -82,23 +121,48 @@ export class AddSupplierComponent implements OnInit {
         }
       });
     } else {
+      if (this.invoiceAttachment.length === 0) {
+        this.toastr.warning('Please Upload Invoice Attachment!');
+        return;
+      }
+      if (this.warrantyAttachment.length === 0) {
+        this.toastr.warning('Please Upload Warranty Attachment!');
+        return;
+      }
+      this.commonLoader.showLoader();
       const model = {
         RequestId: this.data.RequestId,
-        SupplierName: value.Supplier,
+        StoreSourceCode: value.StoreSourceCode,
         Quantity: value.Quantity,
-        FinalCost: value.FinalCost
+        ItemId: value.ItemId,
+        FinalUnitPrice: value.FinalUnitPrice
       };
       this.logisticservice.addSuppliers(model).subscribe(res => {
         if (res.StatusCode === 200 && res.CommonId.LongId != null) {
-          const retmodel = {
-            SupplierId: res.CommonId.LongId,
-            SupplierName: value.Supplier,
-            Quantity: value.Quantity,
-            FinalPrice: value.FinalCost
-          };
-          this.dialogRef.close({data: retmodel});
-          this.commonLoader.hideLoader();
-          this.toastr.success('Supplier added successfully!');
+          const uploadModel = [
+            {
+              fileType: FileSourceEntityTypes.LogisticSupplierInvoice,
+              SupplierId: res.CommonId.LongId,
+              file: this.invoiceAttachment[0][0]
+            },
+            {
+              fileType: FileSourceEntityTypes.LogisticSupplierWarranty,
+              SupplierId: res.CommonId.LongId,
+              file: this.warrantyAttachment[0][0]
+            },
+          ];
+          for (let i = 0; i < uploadModel.length; i++) {
+            this.globalSharedService
+            .uploadFile(uploadModel[i].fileType, uploadModel[i].SupplierId, uploadModel[i].file)
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe(y => {
+              if (i === (uploadModel.length - 1)) {
+                this.dialogRef.close({data: 'Success'});
+                this.commonLoader.hideLoader();
+                this.toastr.success('Supplier added successfully!');
+              }
+            });
+          }
           // code goes here
         } else {
           this.dialogRef.close({data: null});
@@ -147,11 +211,11 @@ export class AddSupplierComponent implements OnInit {
   }
 
   onOpenedItemSuppliersChange(event: IOpenedChange) {
-    this.addSupplierForm.controls['StoreSourceCode'].setValue(event.Value);
+    this.addSupplierForm.controls['StoreSourceCode'].setValue(event);
   }
 
   onOpenedItemChange(event: IOpenedChange) {
-    this.addSupplierForm.controls['ItemId'].setValue(event.Value);
+    this.addSupplierForm.controls['ItemId'].setValue(event);
   }
 
   cancel() {
