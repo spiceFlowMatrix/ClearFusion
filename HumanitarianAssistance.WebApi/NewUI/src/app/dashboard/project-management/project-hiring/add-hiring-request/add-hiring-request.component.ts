@@ -228,7 +228,7 @@ export class AddHiringRequestComponent implements OnInit {
   subscribeEducationDegreeList(response: any) {
     this.commonLoader.hideLoader();
     this.educationDegreeList$ = of(
-      response.data.map(y => {
+      response.map(y => {
         return {
           value: y.Id,
           name: y.Name
