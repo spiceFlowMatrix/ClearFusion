@@ -66,6 +66,7 @@ publish-container:
         - docker push ${CF_APP_IMAGE}
 
 deploy-cleanarch:
+    image: alpine:latest
     stage: deploy
     environment:
         name: cleanarch
