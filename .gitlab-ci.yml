@@ -26,6 +26,7 @@ build-newui:
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/NewUI/dist/
+    retry: 2
 
 
 build-oldui:
@@ -40,6 +41,7 @@ build-oldui:
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/OldUI/dist/
+    retry: 2
 
 build-backend:
     image: microsoft/dotnet:latest
@@ -52,6 +54,7 @@ build-backend:
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/release/
+    retry: 2
 
 publish-container:
     image: docker:git
@@ -65,6 +68,7 @@ publish-container:
         - docker pull ${CF_APP_IMAGE} || true
         - docker build --cache-from ${CF_APP_IMAGE} -t ${CF_APP_IMAGE} -f ./Dockerfile .
         - docker push ${CF_APP_IMAGE}
+    retry: 2
 
 deploy-cleanarch:
     image: devth/helm
@@ -76,6 +80,7 @@ deploy-cleanarch:
         - init_gke
         - helm upgrade
           --install
+          --tiller-namespace ${KUBE_NAMESPACE}
           --set web.name="${CF_APP_NAME}"
           --set web.image="${CF_APP_IMAGE}"
           --set web.host="${CF_CLEAN_URL}"
@@ -101,10 +106,10 @@ deploy-review:
         name: review
         url: https://${CF_REVIEW_URL}
     script:
-
         - init_gke
         - helm upgrade
           --install
+          --tiller-namespace ${KUBE_NAMESPACE}
           --set web.name="${CF_APP_NAME}"
           --set web.image="${CF_APP_IMAGE}"
           --set web.host="${CF_REVIEW_URL}"

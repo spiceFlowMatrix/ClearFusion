@@ -1,7 +1,11 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
+  annotations:
+    app.gitlab.com/app: {{.Values.ci.project.path}}
+    app.gitlab.com/env: {{.Values.ci.project.environment}}
   name: {{ .Values.web.name }}-ingress
+  namespace: {{.Values.deployment.namespace}}
   annotations:
     kubernetes.io/ingress.class: nginx-ingress
 spec:
