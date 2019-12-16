@@ -10,8 +10,8 @@ variables:
     CF_CHAPROD_URL: manage.cha-net.org
     CF_APP_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}
     ENVIRONMENT: "Production"
-    DOCKER_TLS_CERTDIR: ""
-    DOCKER_HOST: tcp://localhost:2375/
+    DOCKER_TLS_CERTDIR: "" # required since we use dind with no tls
+    DOCKER_HOST: tcp://localhost:2375/ # required since we use dind
 
 build-newui:
     image: node:latest
@@ -75,7 +75,6 @@ deploy-cleanarch:
         - init_gke
         - helm upgrade
           --install
-          --namespace ${KUBE_NAMESPACE}
           --set web.name="${CF_APP_NAME}"
           --set web.image="${CF_APP_IMAGE}"
           --set web.host="${CF_CLEAN_URL}"
