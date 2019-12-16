@@ -110,6 +110,7 @@ export class GLOBAL {
   public static API_HR_GetEmployeeProfessionalDetail = 'EmployeeDetail/GetEmployeeProfessionalDetail';
   public static API_HR_GetAnnualAppraisalReportPdf = 'Pdf/GetAnnualAppraisalReportPdf';
   public static API_Pdf_GetEmployeeExitInteviewPdf = 'Pdf/GetEmployeeExitInteviewPdf';
+  public static API_Pdf_EmployeeAnnualTunoverReport = 'Pdf/EmployeeAnnualTunoverReport';
 
 
   public static API_PMU_AddBudgetLine = 'ProjectPipeLining/AddBudgetLine';
