@@ -66,13 +66,13 @@ publish-container:
         - docker push ${CF_APP_IMAGE}
 
 deploy-cleanarch:
-    image: alpine:latest
+    image: devth/helm
     stage: deploy
     environment:
         name: cleanarch
         url: https://${CF_CLEAN_URL}
     script:
-        - helm init --wait --upgrade
+        - init_gke
         - helm upgrade
           --install
           --namespace ${KUBE_NAMESPACE}
