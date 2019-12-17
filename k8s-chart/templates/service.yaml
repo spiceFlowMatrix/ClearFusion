@@ -4,17 +4,16 @@ metadata:
     annotations:
         app.gitlab.com/app: {{.Values.ci.project.path}}
         app.gitlab.com/env: {{.Values.ci.project.environment}}
-    name: {{ .Values.web.name }}-service
+    name: {{ .Release.Name }}{{ .Release.Revision }}-service
     namespace: {{.Values.deployment.namespace}}
     labels:
-        app: {{ .Values.web.name }}
-    
+        app: {{ .Release.Name }}{{ .Release.Revision }}
 spec:
     ports:
-        - name: {{.Values.web.name}}-service-http-port
+        - name: {{ .Release.Name }}{{ .Release.Revision }}-service-http-port
           port: 80
           protocol: TCP
           targetPort: 80
     selector:
-        app: {{ .Values.web.name }}
+        app: {{ .Release.Name }}{{ .Release.Revision }}
     type: NodePort

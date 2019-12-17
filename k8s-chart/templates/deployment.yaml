@@ -4,24 +4,24 @@ metadata:
   annotations:
     app.gitlab.com/app: {{.Values.ci.project.path}}
     app.gitlab.com/env: {{.Values.ci.project.environment}}
-  name: {{ .Values.web.name }}
+  name: {{ .Release.Name }}{{ .Release.Revision }}
   namespace: {{.Values.deployment.namespace}}
   labels:
-    app: {{ .Values.web.name }}
+    app: {{ .Release.Name }}{{ .Release.Revision }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      app: {{.Values.web.name}}
+      app: {{ .Release.Name }}{{ .Release.Revision }}
   template:
     metadata:
       labels:
-        app: {{.Values.web.name}}
+        app: {{ .Release.Name }}{{ .Release.Revision }}
     spec:
       imagePullSecrets:
         - name: gitlab-registry
       containers:
-        - name: {{ .Values.web.name }}
+        - name: {{ .Release.Name }}{{ .Release.Revision }}
           image: {{ .Values.web.image }}
           imagePullPolicy: Always
           ports:
@@ -32,19 +32,19 @@ spec:
           - name: LINUX_DBCONNECTION_STRING
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.web.name }}-secrets
+                name: {{ .Release.Name }}{{ .Release.Revision }}-secrets
                 key: appdbconnectionstring
           - name: POSTGRES_DB_HOST
             value: 127.0.0.1:5432
           - name: POSTGRES_DB_USER
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.web.name }}-secrets
+                name: {{ .Release.Name }}{{ .Release.Revision }}-secrets
                 key: postgresuser
           - name: POSTGRES_DB_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.web.name }}-secrets
+                name: {{ .Release.Name }}{{ .Release.Revision }}-secrets
                 key: postgrespassword
           - name: DEFAULT_CORS_POLICY_NAME
             value: localhost
@@ -55,7 +55,7 @@ spec:
           - name: GOOGLE_BUCKET_NAME
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.web.name }}-secrets
+                name: {{ .Release.Name }}{{ .Release.Revision }}-secrets
                 key: googlebucketname
           - name: DOCS_URL
             value: {{ .Values.app.docsurl }}
@@ -78,7 +78,7 @@ spec:
       volumes:
       - name: application-gcp-serviceaccount
         secret:
-          secretName: {{ .Values.web.name }}-secrets
+          secretName: {{ .Release.Name }}{{ .Release.Revision }}-secrets
           items:
           - key: appserviceaccount
             path: gcp/credentials.json
