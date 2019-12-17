@@ -125,7 +125,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                             PurchaseName = "Purchased for Purchase Order",
                             PurchasedById = await _dbContext.UserDetails.Where(x=>x.IsDeleted == false && x.AspNetUserId == _logisticReq.ModifiedById).Select(x=>x.EmployeeId).FirstOrDefaultAsync() ?? 0,
                             ReceiptTypeId = 1,
-                            UnitType = await _dbContext.PurchaseUnitType.Where(x=>x.IsDeleted == false && x.IsDefault == true).Select(x=>x.UnitTypeId).FirstOrDefaultAsync()
+                            UnitType = await _dbContext.PurchaseUnitType.Where(x=>x.IsDeleted == false && x.IsDefault == true).Select(x=>x.UnitTypeId).FirstOrDefaultAsync(),
+                            LogisticRequestId = request.RequestId
                         };
                         await _dbContext.StoreItemPurchases.AddAsync(obj);
                         await _dbContext.SaveChangesAsync();

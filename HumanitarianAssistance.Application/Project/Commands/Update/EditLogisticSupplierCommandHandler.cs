@@ -33,9 +33,9 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                 {
                     throw new Exception("Supplier doesnot exists!");
                 }
-                supplier.SupplierName = request.SupplierName;
+                //supplier.SupplierName = request.SupplierName;
                 supplier.Quantity = request.Quantity;
-                supplier.FinalPrice = request.FinalPrice;
+                //supplier.FinalPrice = request.FinalPrice;
 
                 supplier.ModifiedDate = request.ModifiedDate;
                 supplier.ModifiedById = request.ModifiedById;

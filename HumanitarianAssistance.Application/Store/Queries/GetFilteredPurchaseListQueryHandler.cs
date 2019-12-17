@@ -138,6 +138,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     DepreciatedCost = x.UnitCost * x.Quantity,
                     UnitCost = x.UnitCost,
                     Quantity = x.Quantity,
+                    LogisticRequestId = x.LogisticRequestId,
 
                     ProcurementList = x.PurchaseOrders.Where(p => !p.IsDeleted).Select(z => new ProcurementListModel
                     {
