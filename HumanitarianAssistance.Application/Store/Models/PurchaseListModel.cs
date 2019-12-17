@@ -50,6 +50,7 @@ namespace HumanitarianAssistance.Application.Store.Models
         public bool ApplyDepreciation { get; set; }
         public int Quantity {get; set;}
         public double UnitCost {get; set;}
+        public long? LogisticRequestId { get; set; }
         public List<ProcurementListModel> ProcurementList { get; set; }
     }
 }

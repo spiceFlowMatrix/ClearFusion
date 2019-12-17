@@ -80,7 +80,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     var documentList = await documentsAsync;
                     foreach(var item in documentList)
                     {
-                        FileModel fileModel = new FileModel()
+                        FileModel fileModel =new FileModel()
                         {
                             PageId = (int)FileSourceEntityTypes.ComparativeStatement,
                             RecordId = request.requestId,

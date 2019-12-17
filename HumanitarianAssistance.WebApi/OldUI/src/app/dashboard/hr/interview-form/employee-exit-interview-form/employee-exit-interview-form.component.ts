@@ -69,6 +69,7 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
   ) {}
   ngOnInit() {
     this.initializeForm();
+    // this.exportAnualReportPdf();
   }
 
   initializeForm() {
@@ -809,7 +810,10 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
         SkillsEffectivelyUsed: modelData.data.SkillsEffectivelyUsed,
         JobOrientation: modelData.data.JobOrientation,
         WorkLoadReasonable: modelData.data.WorkLoadReasonable,
-        SufficientResources: modelData.data.SufficientResources === undefined ? null : modelData.data.SufficientResources,
+        SufficientResources:
+          modelData.data.SufficientResources === undefined
+            ? null
+            : modelData.data.SufficientResources,
         WorkEnvironment: modelData.data.WorkEnvironment,
         ComfortableAppropriately: modelData.data.ComfortableAppropriately,
         Equipped: modelData.data.Equipped,
@@ -824,17 +828,23 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
         // TheManagement
         GaveFairTreatment: modelData.data.GaveFairTreatment,
         WasAvailableToDiscuss: modelData.data.WasAvailableToDiscuss,
-        WelcomedSuggestions: modelData.data.WelcomedSuggestions === undefined ? null : modelData.data.WelcomedSuggestions,
-        MaintainedConsistent: modelData.data.MaintainedConsistent === undefined ? null : modelData.data.MaintainedConsistent,
+        WelcomedSuggestions:
+          modelData.data.WelcomedSuggestions === undefined
+            ? null
+            : modelData.data.WelcomedSuggestions,
+        MaintainedConsistent:
+          modelData.data.MaintainedConsistent === undefined
+            ? null
+            : modelData.data.MaintainedConsistent,
         ProvidedRecognition: modelData.data.ProvidedRecognition,
         EncouragedCooperation: modelData.data.EncouragedCooperation,
         ProvidedDevelopment: modelData.data.ProvidedDevelopment,
 
         Question: modelData.data.Question,
-        Explain: modelData.data.Explain === undefined ? null : modelData.data.Explain,
+        Explain:
+          modelData.data.Explain === undefined ? null : modelData.data.Explain,
         OfficeId: modelData.data.OfficeId
       };
-
 
       this.hrService
         .DownloadPDF(
@@ -860,6 +870,37 @@ export class EmployeeExitInterviewFormComponent implements OnInit, OnChanges {
           }
         );
     }
-    //#endregion
   }
+  //#endregion
+
+  //#region "exportPdf"
+  exportAnualReportPdf() {
+    const data = {
+      OfficeId : this.officeId
+    };
+    this.hrService
+      .DownloadPDF(
+        this.setting.getBaseUrl() + GLOBAL.API_Pdf_EmployeeAnnualTunoverReport,
+        data
+      )
+      .subscribe(
+        x => {
+          this.fileName = 'EmployeeAnnualTunoverReport' + '.pdf';
+          if (window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveOrOpenBlob(x, this.fileName);
+          } else {
+            const link = document.createElement('a');
+            link.setAttribute('type', 'hidden');
+            link.download = this.fileName;
+            link.href = window.URL.createObjectURL(x);
+            document.body.appendChild(link);
+            link.click();
+          }
+        },
+        error => {
+          this.toastr.warning(error);
+        }
+      );
+  }
+  //#endregion
 }
