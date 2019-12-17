@@ -24,6 +24,8 @@ build-newui:
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/NewUI/dist/
+        expire_in: 1 week
+        untracked: true
     retry: 2
 
 
@@ -39,6 +41,8 @@ build-oldui:
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/OldUI/dist/
+        expire_in: 1 week
+        untracked: true
     retry: 2
 
 build-backend:
@@ -52,6 +56,10 @@ build-backend:
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/release/
+            - HumanitarianAssistance.WebApi/bin/
+            - HumanitarianAssistance.WebApi/obj/
+        expire_in: 1 week
+        untracked: true
     retry: 2
 
 publish-container:
