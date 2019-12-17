@@ -24,6 +24,8 @@ build-newui:
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/NewUI/dist/
+            - HumanitarianAssistance.WebApi/NewUI/node_modules/
+            - HumanitarianAssistance.WebApi/NewUI/package-lock.json
         expire_in: 1 week
         untracked: true
     retry: 2
@@ -41,6 +43,8 @@ build-oldui:
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/OldUI/dist/
+            - HumanitarianAssistance.WebApi/OldUI/node_modules/
+            - HumanitarianAssistance.WebApi/OldUI/package-lock.json
         expire_in: 1 week
         untracked: true
     retry: 2
@@ -50,8 +54,8 @@ build-backend:
     stage: build-apps
     before_script:
         - cd HumanitarianAssistance.WebApi
-        - dotnet restore
     script:
+        - dotnet restore
         - dotnet publish -c Release -o release
     artifacts:
         paths:
