@@ -10,7 +10,7 @@ metadata:
         app: {{ .Release.Name }}{{ .Release.Revision }}
 spec:
     ports:
-        - name: {{ .Release.Name }}{{ .Release.Revision }}-service-http-port
+        - name: {{ .Release.Name }}{{ .Release.Revision }}-http-port
           port: 80
           protocol: TCP
           targetPort: 80

@@ -76,7 +76,6 @@ deploy-cleanarch:
         name: cleanarch
         url: https://${CF_CLEAN_URL}
     variables:
-        CF_DEPLOYED_APP_NAME: ${CI_PROJECT_PATH_SLUG}-${CI_ENVIRONMENT_SLUG}
         HOSTING_ENV: Development
     script:
         - init_gke
@@ -96,7 +95,7 @@ deploy-cleanarch:
           --set app.secret.googlebucketname="${APP_GOOGLE_BUCKET_NAME}"
           --wait
           --force
-          ${CI_PROJECT_PATH_SLUG}
+          clearfusion
           ./k8s-chart
 
 
