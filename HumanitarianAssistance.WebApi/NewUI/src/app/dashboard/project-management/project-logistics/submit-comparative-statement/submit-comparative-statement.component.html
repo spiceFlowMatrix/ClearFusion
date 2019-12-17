@@ -1,4 +1,28 @@
-<mat-card>
+<div mat-dialog-title><h3>Comparative Statement</h3></div>
+<mat-dialog-content>
+  <div class="row">
+    <div class="col-md-12">
+        <mat-form-field style="width: 100%;">
+          <textarea rows="3" matInput placeholder="Statement Description" formControlName="Description"></textarea>
+        </mat-form-field>
+        <p>Which Supplier Offers are to be reviewed?</p>
+        <!-- <lib-search-dropdown
+          placeholder="Supplier Offers (Select at least one)"
+          [multiSelect]="true"
+          placeholderSearchLabel="Find Supplier..."
+          noEntriesFoundLabel="No matching Accounts found"
+          [dataSource]="accountDropdown"
+          [selectedValue]="CreditAccountId"
+          (openedChange)="
+                  onOpenedCreditAccountChange($event)
+                "
+        >
+        </lib-search-dropdown> -->
+        <p>Please upload </p>
+    </div>
+  </div>
+</mat-dialog-content>
+<!-- <mat-card>
   <div mat-dialog-title><h4>Submit Comparative Statement</h4></div>
   <mat-divider></mat-divider>
   <form [formGroup]="statementform" (ngSubmit)="SubmitStatement()">
@@ -20,7 +44,6 @@
       <h5 style="padding-top: 10px;">Select Suppliers</h5>
       <table mat-table [dataSource]="dataSource" style="width: 100%;">
 
-        <!-- Checkbox Column -->
         <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef>
             <mat-checkbox (change)="$event ? masterToggle() : null"
@@ -38,25 +61,21 @@
           </td>
         </ng-container>
 
-        <!-- Position Column -->
         <ng-container matColumnDef="Id">
           <th mat-header-cell *matHeaderCellDef [style.display]="'none'"> Id </th>
           <td mat-cell *matCellDef="let element" [style.display]="'none'"> {{element.Id}} </td>
         </ng-container>
 
-        <!-- Name Column -->
         <ng-container matColumnDef="Supplier">
           <th mat-header-cell *matHeaderCellDef> Supplier </th>
           <td mat-cell *matCellDef="let element"> {{element.Supplier}} </td>
         </ng-container>
 
-        <!-- Weight Column -->
         <ng-container matColumnDef="Quantity">
           <th mat-header-cell *matHeaderCellDef> Quantity </th>
           <td mat-cell *matCellDef="let element"> {{element.Quantity}} </td>
         </ng-container>
 
-        <!-- Symbol Column -->
         <ng-container matColumnDef="FinalPrice">
           <th mat-header-cell *matHeaderCellDef> Final Price </th>
           <td mat-cell *matCellDef="let element"> {{element.FinalPrice}} </td>
@@ -77,4 +96,4 @@
     </div>
   </mat-dialog-actions>
   </form>
-</mat-card>
+</mat-card> -->
