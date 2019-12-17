@@ -18,4 +18,4 @@ spec:
       paths:
       - backend:
           serviceName: {{ .Values.web.name }}-service
-          servicePort: 80
+          servicePort: {{ .Values.web.name }}-service-http-port

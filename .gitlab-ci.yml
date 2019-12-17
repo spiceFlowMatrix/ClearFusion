@@ -76,13 +76,13 @@ deploy-cleanarch:
         name: cleanarch
         url: https://${CF_CLEAN_URL}
     variables:
-        CF_APP_NAME: clearfusion-${CI_ENVIRONMENT_SLUG}
+        CF_DEPLOYED_APP_NAME: ${CI_PROJECT_PATH_SLUG}-${CI_ENVIRONMENT_SLUG}
     script:
         - init_gke
         - helm upgrade
           --install
           --tiller-namespace ${KUBE_NAMESPACE}
-          --set web.name="${CF_APP_NAME}"
+          --set web.name="${CF_DEPLOYED_APP_NAME}"
           --set web.image="${CF_APP_IMAGE}"
           --set web.host="${CF_CLEAN_URL}"
           --set app.env=${ENVIRONMENT}
@@ -96,7 +96,7 @@ deploy-cleanarch:
           --set secret.googlebucketname="${APP_GOOGLE_BUCKET_NAME}"
           --wait
           --force
-          clearfusion-${CI_COMMIT_REF_SLUG}
+          ${CI_PROJECT_PATH_SLUG}
           ./k8s-chart
 
 

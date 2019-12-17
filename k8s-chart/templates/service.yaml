@@ -11,8 +11,10 @@ metadata:
     
 spec:
     ports:
-        - name: http
+        - name: {{.Values.web.name}}-service-http-port
           port: 80
+          protocol: TCP
           targetPort: 80
     selector:
         app: {{ .Values.web.name }}
+    type: NodePort
