@@ -18,4 +18,4 @@ spec:
       paths:
       - backend:
           serviceName: {{ .Release.Name }}{{ .Release.Revision }}-service
-          servicePort: {{ .Release.Name }}{{ .Release.Revision }}-http-port
+          servicePort: clientapp-port
