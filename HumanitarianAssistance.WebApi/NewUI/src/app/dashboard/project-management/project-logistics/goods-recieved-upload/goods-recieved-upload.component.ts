@@ -41,6 +41,7 @@ export class GoodsRecievedUploadComponent implements OnInit {
   uploadGoodsRecieved() {
     if (this.attachment.length === 0) {
       this.toastr.warning('Please upload attachment!');
+      return;
     }
     this.commonLoader.showLoader();
     this.globalSharedService

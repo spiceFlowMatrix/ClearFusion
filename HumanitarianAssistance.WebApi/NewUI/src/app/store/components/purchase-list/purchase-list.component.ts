@@ -56,24 +56,24 @@ export class PurchaseListComponent implements OnInit {
     private globalSharedService: GlobalSharedService, private appurl: AppUrlService) {
 
     this.filterValueModel = {
-      CurrencyId: null,
-      InventoryId: null,
-      InventoryTypeId: null,
+      CurrencyId: 0,
+      InventoryId: 0,
+      InventoryTypeId: 0,
       IssueEndDate: null,
       IssueStartDate: null,
-      ItemGroupId: null,
-      ItemId: null,
-      OfficeId: null,
-      JobId: null,
-      ProjectId: null,
+      ItemGroupId: 0,
+      ItemId: 0,
+      OfficeId: 0,
+      JobId: 0,
+      ProjectId: 0,
       PurchaseEndDate: null,
       PurchaseStartDate: null,
-      ReceiptTypeId: null,
-      DisplayCurrency: null,
+      ReceiptTypeId: 0,
+      DisplayCurrency: 0,
       DepreciationComparisionDate: null,
       PageIndex: 0,
       PageSize: 10,
-      TotalCount: null
+      TotalCount: 0
     };
   }
 
