@@ -29,9 +29,9 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                                .Select(x => new LogisticSupplierViewModel
                                                                 {
                                                                    SupplierId = x.SupplierId,
-                                                                   SupplierName = x.SupplierName,
+                                                                   // SupplierName = x.SupplierName,
                                                                    Quantity = x.Quantity,
-                                                                   FinalPrice = x.FinalPrice
+                                                                   // FinalPrice = x.FinalPrice
                                                                 })
                                                                 .ToListAsync();
 

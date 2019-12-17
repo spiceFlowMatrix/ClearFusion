@@ -73,7 +73,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     model.selectedSupplier = await _dbContext.ProjectLogisticSuppliers.Where(x=>x.IsDeleted == false && statement.SupplierIds.Contains(x.SupplierId))
                                                             .Select(x=> new SupplierDetailModel{
                                                                 Id = x.SupplierId,
-                                                                SupplierName = x.SupplierName
+                                                               // SupplierName = x.SupplierName
                                                             })
                                                             .ToListAsync();
 

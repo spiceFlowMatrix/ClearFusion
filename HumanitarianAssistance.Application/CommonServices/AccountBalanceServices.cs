@@ -303,8 +303,8 @@ namespace HumanitarianAssistance.Application.CommonServices
             DateTime endDate, List<int?> journalList, List<int?> officeList, List<long?> projectIdList)
         {
             var data = await _dbContext.VoucherTransactions
-                .Where(x => x.TransactionDate <= endDate
-                            && x.TransactionDate >= startDate
+                .Where(x => x.TransactionDate.Value.Date <= endDate.Date
+                            && x.TransactionDate.Value.Date >= startDate.Date
                             && inputLevelAccounts.Select(y => y.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId)
                             && x.IsDeleted == false
                             && x.ChartOfAccountNewId != null

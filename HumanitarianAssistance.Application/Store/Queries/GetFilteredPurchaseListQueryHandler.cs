@@ -138,7 +138,6 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     DepreciatedCost = x.UnitCost * x.Quantity,
                     UnitCost = x.UnitCost,
                     Quantity = x.Quantity,
-
                     ProcurementList = x.PurchaseOrders.Where(p => !p.IsDeleted).Select(z => new ProcurementListModel
                     {
                         OrderId = z.OrderId,
@@ -151,7 +150,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                         EmployeeId = z.EmployeeDetail.EmployeeID,
                         LocationId= z.IssedToLocation,
                         ProjectId = z.Project,
-                        StatusId= z.StatusAtTimeOfIssue
+                        StatusId= z.StatusAtTimeOfIssue,
                     }).Where(y => request.IssueStartDate == null ? true : y.IssueDate >= request.IssueStartDate &&
                      request.IssueEndDate == null ? true : y.IssueDate <= request.IssueEndDate).ToList()
                 }).AsQueryable();

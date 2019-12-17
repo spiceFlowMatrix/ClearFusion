@@ -167,7 +167,7 @@ export class GainLossReportComponent
       }
     );
 
-    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.afterClosed().subscribe(result => { });
   }
   //#endregion
 
@@ -190,7 +190,7 @@ export class GainLossReportComponent
       }
     );
 
-    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.afterClosed().subscribe(result => { });
   }
   //#endregion
 
@@ -213,7 +213,7 @@ export class GainLossReportComponent
       }
     );
 
-    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.afterClosed().subscribe(result => { });
   }
   //#endregion
 
@@ -260,7 +260,7 @@ export class GainLossReportComponent
           });
         }
       },
-      error => {}
+      error => { }
     );
   }
   //#endregion
@@ -298,7 +298,7 @@ export class GainLossReportComponent
             });
         }
       },
-      error => {}
+      error => { }
     );
   }
   //#endregion
@@ -318,7 +318,7 @@ export class GainLossReportComponent
           });
         }
       },
-      error => {}
+      error => { }
     );
   }
   //#endregion
@@ -338,7 +338,7 @@ export class GainLossReportComponent
           });
         }
       },
-      error => {}
+      error => { }
     );
   }
   //#endregion
@@ -359,7 +359,7 @@ export class GainLossReportComponent
           });
         }
       },
-      error => {}
+      error => { }
     );
   }
   //#endregion
@@ -380,7 +380,7 @@ export class GainLossReportComponent
           });
         }
       },
-      error => {}
+      error => { }
     );
   }
   //#endregion
@@ -538,8 +538,24 @@ export class GainLossReportComponent
   // #region "gainLossAccountSelectionChanged"
   openedChange(event: IOpenedChange) {
     this.gainLossReportfilter.AccountIdList = event.Value;
+
+    if (!event.Flag) {
+      this.saveExchangeGainLossFilterAccountList(event.Value);
+    }
   }
   // #endregion
+
+  //#region "getExchangeGainLossFilterAccountList"
+  saveExchangeGainLossFilterAccountList(accountList: any[]) {
+    this.gainLossReportService.SaveExchangeGainLossFilterAccountList(accountList).subscribe(
+      (response: IResponseData) => {
+        if (response.statusCode === 200) {
+        }
+      },
+      error => { }
+    );
+  }
+  //#endregion
 
   //#region "getExchangeGainLossFilterAccountList"
   getExchangeGainLossFilterAccountList() {
@@ -547,15 +563,17 @@ export class GainLossReportComponent
       (response: IResponseData) => {
         this.gainLossReportfilter.AccountIdList = [];
         if (response.statusCode === 200 && response.data !== null) {
-          response.data.forEach(element => {
-            this.gainLossReportfilter.AccountIdList.push(
-              element.ChartOfAccountNewId
-            );
-          });
+          // response.data.forEach(element => {
+          //   this.gainLossReportfilter.AccountIdList.push(
+          //     element.ChartOfAccountNewId
+          //   );
+          // });
+
+          this.gainLossReportfilter.AccountIdList = response.data;
 
         }
       },
-      error => {}
+      error => { }
     );
   }
   //#endregion
@@ -671,8 +689,15 @@ export class GainLossReportComponent
 
   //#region "onGainLossVoucher"
   onGainLossVoucher() {
-    this.gainLossAddVoucherForm.CurrencyId = this.selectedCurrency;
-    this.addGainLossVoucher(this.gainLossAddVoucherForm);
+
+    if (this.gainLossAddVoucherForm.Amount !== 0) {
+      this.gainLossAddVoucherForm.CurrencyId = this.selectedCurrency;
+      this.gainLossAddVoucherForm.TimeZoneOffset = new Date().getTimezoneOffset();
+      this.addGainLossVoucher(this.gainLossAddVoucherForm);
+    } else {
+      this.toastr.warning('Amount should be greater than 0');
+    }
+
   }
   //#endregion
 
