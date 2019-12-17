@@ -15,6 +15,11 @@ variables:
 build-newui:
     image: node:latest
     stage: build-apps
+    cache:
+        key: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
+        paths:
+            - HumanitarianAssistance.WebApi/NewUI/node_modules/
+            - HumanitarianAssistance.WebApi/NewUI/package-lock.json/
     before_script:
         - apt-get update && apt-get install -y unzip fontconfig locales gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
         - cd HumanitarianAssistance.WebApi/NewUI/
@@ -24,8 +29,6 @@ build-newui:
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/NewUI/dist/
-            - HumanitarianAssistance.WebApi/NewUI/node_modules/
-            - HumanitarianAssistance.WebApi/NewUI/package-lock.json
         expire_in: 1 week
         untracked: true
     retry: 2
@@ -34,6 +37,11 @@ build-newui:
 build-oldui:
     image: node:latest
     stage: build-apps
+    cache:
+        key: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
+        paths:
+            - HumanitarianAssistance.WebApi/OldUI/node_modules/
+            - HumanitarianAssistance.WebApi/OldUI/package-lock.json/
     before_script:
         - apt-get update && apt-get install -y unzip fontconfig locales gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
         - cd HumanitarianAssistance.WebApi/OldUI/
@@ -43,25 +51,25 @@ build-oldui:
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/OldUI/dist/
-            - HumanitarianAssistance.WebApi/OldUI/node_modules/
-            - HumanitarianAssistance.WebApi/OldUI/package-lock.json
         expire_in: 1 week
         untracked: true
     retry: 2
 
 build-backend:
-    image: microsoft/dotnet:latest
+    image: microsoft/dotnet:2.2-sdk-alpine
     stage: build-apps
+    cache:
+        key: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
+        paths:
+            - HumanitarianAssistance.WebApi/.nuget/
     before_script:
         - cd HumanitarianAssistance.WebApi
     script:
-        - dotnet restore
+        - dotnet restore -s https://api.nuget.org/v3/index.json --packages ./.nuget/
         - dotnet publish -c Release -o release
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/release/
-            - HumanitarianAssistance.WebApi/bin/
-            - HumanitarianAssistance.WebApi/obj/
         expire_in: 1 week
         untracked: true
     retry: 2
