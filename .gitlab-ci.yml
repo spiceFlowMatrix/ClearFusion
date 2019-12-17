@@ -47,7 +47,6 @@ build-backend:
     stage: build-apps
     before_script:
         - cd HumanitarianAssistance.WebApi
-        - dotnet restore
     script:
         - dotnet publish -c Release -o release
     artifacts:
