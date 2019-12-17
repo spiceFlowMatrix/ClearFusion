@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191213064545_UpdatedLogisticsSupplierTbl")]
+    partial class UpdatedLogisticsSupplierTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1742,11 +1744,11 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<int>("GainLossSelectedAccountId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<long>("ChartOfAccountNewId");
+
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<int?>("EmployeeId");
 
                     b.Property<bool>("IsDeleted");
 
@@ -1754,13 +1756,9 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<long[]>("SelectedAccounts");
-
-                    b.Property<string>("UserId");
-
                     b.HasKey("GainLossSelectedAccountId");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("ChartOfAccountNewId");
 
                     b.ToTable("GainLossSelectedAccounts");
                 });
@@ -8674,8 +8672,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("JournalCode");
 
-                    b.Property<long?>("LogisticRequestId");
-
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
@@ -8719,8 +8715,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("Currency");
 
                     b.HasIndex("InventoryItem");
-
-                    b.HasIndex("LogisticRequestId");
 
                     b.HasIndex("OfficeId");
 
@@ -9292,9 +9286,10 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.GainLossSelectedAccounts", b =>
                 {
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Accounting.ChartOfAccountNew", "ChartOfAccountNew")
                         .WithMany()
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("ChartOfAccountNewId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.Advances", b =>
@@ -10935,10 +10930,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .WithMany("StoreItemPurchases")
                         .HasForeignKey("InventoryItem")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectLogisticRequests", "ProjectLogisticRequests")
-                        .WithMany()
-                        .HasForeignKey("LogisticRequestId");
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.OfficeDetail", "OfficeDetail")
                         .WithMany()
