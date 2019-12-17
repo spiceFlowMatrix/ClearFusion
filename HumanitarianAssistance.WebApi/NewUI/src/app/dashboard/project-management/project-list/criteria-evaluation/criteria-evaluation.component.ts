@@ -1914,7 +1914,7 @@ export class CriteriaEvaluationComponent
                 }
                 this.productAndServiceForm.Mobilization =
                   data.data.CriteriaEveluationModel.Mobilization;
-                if (this.productAndServiceForm.Mobilization == true) {
+                if (this.productAndServiceForm.Mobilization === true) {
                   this.developmenmtValue = this.developmenmtValue + 1;
                 }
                 this.productAndServiceForm.PeaceBuilding =
@@ -1947,29 +1947,29 @@ export class CriteriaEvaluationComponent
                 this.productAndServiceForm.EducationCapacityBuilding =
                   data.data.CriteriaEveluationModel.EducationCapacityBuilding;
                 if (
-                  this.productAndServiceForm.EducationCapacityBuilding == true
+                  this.productAndServiceForm.EducationCapacityBuilding === true
                 ) {
                   this.educationValue = this.educationValue + 1;
                 }
                 this.productAndServiceForm.SchoolUpgrading =
                   data.data.CriteriaEveluationModel.SchoolUpgrading;
-                if (this.productAndServiceForm.SchoolUpgrading == true) {
+                if (this.productAndServiceForm.SchoolUpgrading === true) {
                   this.educationValue = this.educationValue + 1;
                 }
                 this.productAndServiceForm.EducationInEmergency =
                   data.data.CriteriaEveluationModel.EducationInEmergency;
-                if (this.productAndServiceForm.EducationInEmergency == true) {
+                if (this.productAndServiceForm.EducationInEmergency === true) {
                   this.educationValue = this.educationValue + 1;
                 }
                 this.productAndServiceForm.OnlineEducation =
                   data.data.CriteriaEveluationModel.OnlineEducation;
-                if (this.productAndServiceForm.OnlineEducation == true) {
+                if (this.productAndServiceForm.OnlineEducation === true) {
                   this.educationValue = this.educationValue + 1;
                 }
                 this.productAndServiceForm.CommunityBasedEducation =
                   data.data.CriteriaEveluationModel.CommunityBasedEducation;
                 if (
-                  this.productAndServiceForm.CommunityBasedEducation == true
+                  this.productAndServiceForm.CommunityBasedEducation === true
                 ) {
                   this.educationValue = this.educationValue + 1;
                 }
@@ -1982,7 +1982,7 @@ export class CriteriaEvaluationComponent
                 }
                 this.productAndServiceForm.PrimaryHealthServices =
                   data.data.CriteriaEveluationModel.PrimaryHealthServices;
-                if (this.productAndServiceForm.PrimaryHealthServices == true) {
+                if (this.productAndServiceForm.PrimaryHealthServices === true) {
                   this.healthNutritionValue = this.healthNutritionValue + 1;
                 }
                 this.productAndServiceForm.ReproductiveHealth =
@@ -1992,7 +1992,7 @@ export class CriteriaEvaluationComponent
                 }
                 this.productAndServiceForm.Immunization =
                   data.data.CriteriaEveluationModel.Immunization;
-                if (this.productAndServiceForm.Immunization == true) {
+                if (this.productAndServiceForm.Immunization === true) {
                   this.healthNutritionValue = this.healthNutritionValue + 1;
                 }
                 this.productAndServiceForm.InfantandYoungChildFeeding =
@@ -2054,7 +2054,7 @@ export class CriteriaEvaluationComponent
                 }
                 this.productAndServiceForm.Sanitation =
                   data.data.CriteriaEveluationModel.Sanitation;
-                if (this.productAndServiceForm.Sanitation == true) {
+                if (this.productAndServiceForm.Sanitation === true) {
                   this.disasterRiskValue = this.disasterRiskValue + 1;
                 }
 
@@ -2204,7 +2204,7 @@ export class CriteriaEvaluationComponent
                 if (
                   data.data.CriteriaEveluationModel.CostOfCompensationMonth ==
                     null ||
-                  data.data.CriteriaEveluationModel.CostOfCompensationMonth ==
+                  data.data.CriteriaEveluationModel.CostOfCompensationMonth ===
                     undefined
                 ) {
                   this.feasibilityForm.CostOfCompensationMonth = null;
@@ -2324,7 +2324,7 @@ export class CriteriaEvaluationComponent
 
                 if (
                   data.data.CriteriaEveluationModel.ProjectActivities == null ||
-                  data.data.CriteriaEveluationModel.ProjectActivities ==
+                  data.data.CriteriaEveluationModel.ProjectActivities ===
                     undefined
                 ) {
                   this.financialForm.ProjectActivities = 0;
@@ -2335,7 +2335,7 @@ export class CriteriaEvaluationComponent
                 //  if (this.financialForm.ProjectActivities == null ? 0 : data.data.CriteriaEveluationModel.ProjectActivities)
                 if (
                   data.data.CriteriaEveluationModel.Operational == null ||
-                  data.data.CriteriaEveluationModel.Operational == undefined
+                  data.data.CriteriaEveluationModel.Operational === undefined
                 ) {
                   this.financialForm.Operational = 0;
                 } else {
@@ -2343,8 +2343,8 @@ export class CriteriaEvaluationComponent
                     data.data.CriteriaEveluationModel.Operational;
                 }
                 if (
-                  data.data.CriteriaEveluationModel.Overhead_Admin == 0 ||
-                  data.data.CriteriaEveluationModel.Overhead_Admin == undefined
+                  data.data.CriteriaEveluationModel.Overhead_Admin === 0 ||
+                  data.data.CriteriaEveluationModel.Overhead_Admin === undefined
                 ) {
                   this.financialForm.Overhead_Admin = 0;
                 } else {
@@ -2352,8 +2352,8 @@ export class CriteriaEvaluationComponent
                     data.data.CriteriaEveluationModel.Overhead_Admin;
                 }
                 if (
-                  data.data.CriteriaEveluationModel.Lump_Sum == 0 ||
-                  data.data.CriteriaEveluationModel.Lump_Sum == undefined
+                  data.data.CriteriaEveluationModel.Lump_Sum === 0 ||
+                  data.data.CriteriaEveluationModel.Lump_Sum === undefined
                 ) {
                   this.financialForm.Lump_Sum = 0;
                 } else {
@@ -2369,7 +2369,7 @@ export class CriteriaEvaluationComponent
                 // add/edit riskSecurity
                 this.riskForm.Security =
                   data.data.CriteriaEveluationModel.Security;
-                if (this.riskForm.Security == true) {
+                if (this.riskForm.Security === true) {
                   this.isDisabledRisk = false;
                 } else {
                   this.isDisabledRisk = true;
@@ -3386,7 +3386,7 @@ export class CriteriaEvaluationComponent
 
   getPriorityListByProjectId(ProjectId: number) {
     this.priorityOtherList = [];
-    if (ProjectId != null && ProjectId !== undefined && ProjectId != 0) {
+    if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.criteriaEvalService
         .GetPriorityOtherDetailByProjectId(
           this.appurl.getApiUrl() +
@@ -3434,7 +3434,7 @@ export class CriteriaEvaluationComponent
             // add to list
             if (
               response.CommonId.LongId != null &&
-              response.CommonId.LongId != 0
+              response.CommonId.LongId !== 0
             ) {
               obj.PriorityOtherDetailId = response.CommonId.LongId;
             }
@@ -3600,7 +3600,7 @@ export class CriteriaEvaluationComponent
 
   getFeasibilityExpertByProjectId(ProjectId: number) {
     this.feasivilityList = [];
-    if (ProjectId != null && ProjectId !== undefined && ProjectId != 0) {
+    if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.criteriaEvalService
         .GetPriorityOtherDetailByProjectId(
           this.appurl.getApiUrl() +
@@ -3660,7 +3660,7 @@ export class CriteriaEvaluationComponent
             // add to list
             if (
               response.CommonId.LongId != null &&
-              response.CommonId.LongId != 0
+              response.CommonId.LongId !== 0
             ) {
               obj.ExpertOtherDetailId = response.CommonId.LongId;
             }
@@ -3811,7 +3811,7 @@ export class CriteriaEvaluationComponent
   //#region getassumptionByprojectId
   getAssumptionByprojectId(ProjectId: number) {
     this.assumptionList = [];
-    if (ProjectId != null && ProjectId !== undefined && ProjectId != 0) {
+    if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.criteriaEvalService
         .GetPriorityOtherDetailByProjectId(
           this.appurl.getApiUrl() +
@@ -3868,7 +3868,7 @@ export class CriteriaEvaluationComponent
             // add to list
             if (
               response.CommonId.LongId != null &&
-              response.CommonId.LongId != 0
+              response.CommonId.LongId !== 0
             ) {
               obj.AssumptionDetailId = response.CommonId.LongId;
             }
@@ -4022,7 +4022,7 @@ export class CriteriaEvaluationComponent
   //#region GetAgegroupByProjectId
   GetAgegroupByProjectId(ProjectId: number) {
     this.ageGroupList = [];
-    if (ProjectId != null && ProjectId !== undefined && ProjectId != 0) {
+    if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.criteriaEvalService
         .GetPriorityOtherDetailByProjectId(
           this.appurl.getApiUrl() + GLOBAL.API_GetAllAgeDetailDetailByProjectId,
@@ -4232,7 +4232,7 @@ export class CriteriaEvaluationComponent
   //#region getoccupationByProjectId
   GetOccupationByProjectId(ProjectId: number) {
     this.occupatonList = [];
-    if (ProjectId != null && ProjectId !== undefined && ProjectId != 0) {
+    if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.criteriaEvalService
         .GetPriorityOtherDetailByProjectId(
           this.appurl.getApiUrl() +
@@ -4442,7 +4442,7 @@ export class CriteriaEvaluationComponent
   //#region getCriteriaEvaluationByProjectId
   GetDonorEligibilityCriteriaByProjectId(ProjectId: number) {
     this.donorEligibilityList = [];
-    if (ProjectId != null && ProjectId !== undefined && ProjectId != 0) {
+    if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.criteriaEvalService
         .GetPriorityOtherDetailByProjectId(
           this.appurl.getApiUrl() +
@@ -4848,7 +4848,7 @@ export class CriteriaEvaluationComponent
     }
   }
   healthNutritionScore(value) {
-    if (value.checked == true) {
+    if (value.checked === true) {
       this.healthNutritionValue = this.healthNutritionValue + 1;
       this.productAndServiceForm.HealthAndNutrition = true;
     } else {
@@ -4859,7 +4859,7 @@ export class CriteriaEvaluationComponent
     }
   }
   aggricultureScore(value) {
-    if (value.checked == true) {
+    if (value.checked === true) {
       this.productAndServiceForm.AgricultureAndLivestock = true;
       this.aggricultureLiveStockValue = this.aggricultureLiveStockValue + 1;
     } else {

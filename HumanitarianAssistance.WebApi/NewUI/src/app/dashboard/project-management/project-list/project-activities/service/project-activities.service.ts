@@ -501,6 +501,26 @@ export class ProjectActivitiesService {
   }
   //#endregion
 
+    //#region "DeleteProjectActivity"
+    DeleteSubProjectActivity(activityId: number): any {
+      return this.globalService
+        .post(
+          this.appurl.getApiUrl() + GLOBAL.API_Project_DeleteProjectSubActivityDetail,
+          activityId
+        )
+        .pipe(
+          map(x => {
+            const responseData: IResponseData = {
+              data: null,
+              statusCode: x.StatusCode,
+              message: x.Message
+            };
+            return responseData;
+          })
+        );
+    }
+    //#endregion
+
   //#region "UploadProjectActivityDocument"
   UploadProjectActivityDocument(data: any) {
     return this.globalService

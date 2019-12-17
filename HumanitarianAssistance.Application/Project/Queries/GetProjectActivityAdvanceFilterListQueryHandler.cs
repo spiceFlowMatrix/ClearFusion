@@ -76,7 +76,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     CountryId = x.CountryId,
                     Progress = Math.Round(x.Progress, 2),
                     Slippage = x.Sleepage
-                }).OrderBy(y => y.PlannedStartDate)
+                }).OrderByDescending(y => y.CreatedDate)
                 .ToList();
 
                 response.data.ProjectActivityList = activityList;
