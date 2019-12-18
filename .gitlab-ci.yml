@@ -58,7 +58,7 @@ build_backend:
     variables:
         OBJECTS_DIRECTORY: 'obj'
         BINARIES_DIRECTORY: 'bin'
-        RELEASE_OBJECTS_DIRECTORY: './release'
+        RELEASE_OBJECTS_DIRECTORY: 'release'
         NUGET_PACKAGES_DIRECTORY: '.nuget'
         API_SOURCE_CODE_PATH: './HumanitarianAssistance.WebApi/'
         APPLICATION_SOURCE_CODE_PATH: './HumanitarianAssistance.Application/'
@@ -91,6 +91,7 @@ build_backend:
     script:
         - 'dotnet build --no-restore'
         - 'dotnet publish -c Release -o $RELEASE_OBJECTS_DIRECTORY --no-restore'
+        - ls
         - 'cp -r $API_SOURCE_CODE_PATH/NewUI/dist/ $RELEASE_OBJECTS_DIRECTORY/NewUI/dist'
         - 'cp -r $API_SOURCE_CODE_PATH/OldUI/dist/ $RELEASE_OBJECTS_DIRECTORY/OldUI/dist'
     artifacts:
