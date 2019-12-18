@@ -64,7 +64,7 @@ build_backend:
         - cd HumanitarianAssistance.WebApi
     script:
         - dotnet restore -s https://api.nuget.org/v3/index.json --packages ./.nuget/
-        - dotnet publish --no-restore  -c Release -o release --verbosity d
+        - dotnet publish --no-restore  -c Release -o release
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/release/
