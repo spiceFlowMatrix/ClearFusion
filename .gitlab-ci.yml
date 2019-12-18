@@ -53,7 +53,7 @@ build_oldui:
     retry: 2
 
 build_backend:
-    image: microsoft/dotnet:2.2-sdk-alpine
+    image: microsoft/dotnet:latest
     stage: integration
     variables:
         OBJECTS_DIRECTORY: obj
@@ -72,8 +72,8 @@ build_backend:
     script:
         - dotnet build --no-restore
         - dotnet publish -c Release -o ${RELEASE_OBJECTS_DIRECTORY} --no-restore
-        - cp -r ${SOURCE_CODE_PATH}NewUI/dist/ ${RELEASE_OBJECTS_DIRECTORY}/NewUI/dist
-        - cp -r ${SOURCE_CODE_PATH}OldUI/dist/ ${RELEASE_OBJECTS_DIRECTORY}/OldUI/dist
+        - cp -r ${SOURCE_CODE_PATH}NewUI/dist/ ${RELEASE_OBJECTS_DIRECTORY}${RELEASE_OBJECTS_DIRECTORY}/NewUI/dist
+        - cp -r ${SOURCE_CODE_PATH}OldUI/dist/ ${RELEASE_OBJECTS_DIRECTORY}${RELEASE_OBJECTS_DIRECTORY}/OldUI/dist
     after_script:
         - find . -type d
     artifacts:
