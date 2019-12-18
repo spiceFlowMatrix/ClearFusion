@@ -101,7 +101,7 @@ deploy_cleanarch:
         name: cleanarch
         url: https://${CF_CLEAN_URL}
     variables:
-        HOSTING_ENV: Development
+        HOSTING_ENV: Production
     script:
         - init_gke
         - helm upgrade
