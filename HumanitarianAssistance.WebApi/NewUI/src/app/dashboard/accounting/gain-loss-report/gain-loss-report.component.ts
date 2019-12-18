@@ -479,9 +479,8 @@ export class GainLossReportComponent
       .GetGainLossReportList(this.gainLossReportfilter)
       .subscribe(
         (response: IResponseData) => {
+          this.gainLossReportList = [];
           if (response.statusCode === 200 && response.data !== null) {
-            this.gainLossReportList = [];
-
             response.data.forEach(element => {
               this.gainLossReportList.push({
                 AccountId: element.AccountId,
