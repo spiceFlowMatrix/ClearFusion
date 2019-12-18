@@ -59,6 +59,7 @@ export class ProjectActivityPhaseComponent
   @Output() selectedCountryDetailId = new EventEmitter<any>();
 
   @Output() parentActivityListRefresh = new EventEmitter<any>();
+  // @Output() summaryUpdateflag = new EventEmitter<any>();
 
   activityId: any;
 
@@ -275,7 +276,11 @@ export class ProjectActivityPhaseComponent
   refreshProjectSummaryEvent() {
     this.refreshProjectSummary.emit();
   }
-
+// note : if activity deleted then refresh the sub activity list
+  subActivityListRefreshed(event: any) {
+    this.refreshProjectSummary.emit();
+    this.getAllProjectSubActivityDetails(this.activityId);
+  }
   //#region "ngOnDestroy"
   ngOnDestroy() {
     this.destroyed$.next(true);

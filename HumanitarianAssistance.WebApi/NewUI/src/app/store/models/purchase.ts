@@ -46,6 +46,7 @@ export interface IPurchaseList {
   Project: string;
   OriginalCost: number;
   DepreciatedCost: number;
+  subItemSubtitle?: string;
   subItems: IProcurementList[];
 }
 

@@ -40,6 +40,7 @@
     <tr *ngIf="isShowSubList[i]" class="sub-table">
       <td [attr.colspan]="(headers | async).length + 1">
         <div class="sub-table">
+          <span [innerHTML]="item.subItemSubtitle"></span> 
           <span>{{subTitle}}</span>
           <table class="table table-striped sub-table">
             <thead>
