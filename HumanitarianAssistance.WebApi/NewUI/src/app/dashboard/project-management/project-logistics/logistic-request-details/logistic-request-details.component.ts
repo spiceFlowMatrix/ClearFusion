@@ -467,6 +467,10 @@ Currency: '', BudgetLine: '', Office: '', Description: ''};
     }
   }
 
+  submitComparativePurchase() {
+    this.router.navigate(['submit-purchase'], { relativeTo: this.routeActive });
+  }
+
 }
 export interface RequestDetail {
   RequestId;

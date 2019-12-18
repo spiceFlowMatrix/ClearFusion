@@ -34,7 +34,9 @@ namespace HumanitarianAssistance.Application.Project.Queries
             List<StatementAttachmentModel> attachments = new List<StatementAttachmentModel>();
             try
             {
-                var compStatus = await _dbContext.ProjectLogisticRequests.FirstOrDefaultAsync(x=>x.IsDeleted == false && x.LogisticRequestsId == request.requestId);
+                var compStatus = await _dbContext.ProjectLogisticRequests
+                .Include(x=>x.CurrencyDetails)
+                .FirstOrDefaultAsync(x=>x.IsDeleted == false && x.LogisticRequestsId == request.requestId);
                 if(compStatus == null) {
                     throw new Exception("Request doesn't exists!");
                 }
@@ -70,12 +72,19 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     var user = await _dbContext.UserDetails.FirstOrDefaultAsync(x=> x.AspNetUserId == statement.CreatedById);
                     model.SubmittedBy = user.FirstName + ' ' + user.LastName;
                     model.Description = statement.Description;
-                    // model.selectedSupplier = await _dbContext.ProjectLogisticSuppliers.Where(x=>x.IsDeleted == false && statement.SupplierIds.Contains(x.SupplierId))
-                    //                                         .Select(x=> new SupplierDetailModel{
-                    //                                             Id = x.SupplierId,
-                    //                                             SupplierName = x.SupplierName
-                    //                                         })
-                    //                                         .ToListAsync();
+                    model.selectedSupplier = await _dbContext.ProjectLogisticSuppliers.Where(x=>x.IsDeleted == false && statement.SupplierIds.Contains(x.SupplierId))
+                                                            .Include(x=>x.StoreSourceCodeDetail)
+                                                            .Include(x=>x.InventoryItems)
+                                                            .Select(x=> new SupplierDetailModel{
+                                                                Id = x.SupplierId,
+                                                                SourceCode = x.StoreSourceCodeDetail.Code,
+                                                                SourceDescription = x.StoreSourceCodeDetail.Description,
+                                                                CurrencyCode = compStatus.CurrencyDetails.CurrencyCode,
+                                                                ItemCode = x.InventoryItems.ItemCode,
+                                                                ItemName = x.InventoryItems.ItemName,
+                                                                FinalUnitPrice = x.FinalUnitPrice
+                                                            })
+                                                            .ToListAsync();
 
                     var documentList = await documentsAsync;
                     foreach(var item in documentList)

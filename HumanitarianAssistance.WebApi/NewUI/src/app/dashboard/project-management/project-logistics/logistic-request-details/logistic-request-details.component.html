@@ -153,9 +153,9 @@
             </div>
             <div *ngIf="this.requestDetail.ComparativeStatus==6">
               <div class="row">
-                <div class="col-sm-12 margin_top_8">
+                <div class="col-sm-12 margin_top_8 margin_left_16">
                   <span class="display_inline_block" style="font-size: 13px;color: gray;">Comparative Statement</span>
-                  <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_green"></i> Approved</span>
+                  <span class="margin_left_25" style="font-size: 14px;color: gray;"> <i class="fas fa-info-circle icon_color_green"></i> Approved</span>
                 </div>
               </div>
               <mat-divider style="position: unset;"></mat-divider>
@@ -163,13 +163,22 @@
                 <div class="col-sm-12 margin_top_8" *ngIf="this.requestDetail.Status==3">
                   <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
                   <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Awaiting <b>Logistics Officer</b> to enter <b>Purchases</b></span>
-                  <hum-button  [type]="'add'" [text]="'SUBMIT PURCHASES'"></hum-button>
+                  <hum-button (click)="submitComparativePurchase()" [type]="'add'" [text]="'SUBMIT PURCHASES'"></hum-button>
                 </div>
                 <div class="col-sm-12 margin_top_8" *ngIf="this.requestDetail.Status==4">
                   <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
                   <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Completed. Awaiting control approval</span>
-                  <hum-button  [type]="'cancel'" [text]="'Reject'"></hum-button>
-                  <hum-button  [type]="'save'" [text]="'Approve'"></hum-button>
+                  <hum-button  (click)="rejectPurchaseOrder()" [type]="'cancel'" [text]="'Reject'"></hum-button>
+                  <hum-button  (click)="approvePurchaseOrder()" [type]="'save'" [text]="'Approve'"></hum-button>
+                </div>
+                <div class="col-sm-12 margin_top_8" *ngIf="(this.requestDetail.Status==7)">
+                  <div class="col-sm-3 margin_top_8">
+                    <span class="display_inline_block margin_left_10" style="font-size: 14px;color: gray;">Purchase Order</span>
+                  </div>
+                  <div class="col-sm-9 margin_top_1">
+                    <span style="font-size: 13px;color: gray;"><i class="fas fa-info-circle icon_color_green"></i> <b> Purchase Order</b> verified. You will find <b>Issues</b> in the store.
+                    <br><b>Voucher</b> with <b>Reference No {{voucherReference}}</b> has been generated.</span>
+                  </div>
                 </div>
               </div>
             </div>

@@ -18,5 +18,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string InvoiceName { get; set; }
         public string WarrantyUrl { get; set; }
         public string WarrantyName { get; set; }
+        public string ItemCode { get; set; }
+        public string CurrencyCode { get; set; }
     }
 }

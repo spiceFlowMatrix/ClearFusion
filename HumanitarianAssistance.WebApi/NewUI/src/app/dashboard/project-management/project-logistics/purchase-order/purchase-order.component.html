@@ -59,7 +59,7 @@
       request as items that can be added into the purchased items list below. If an item is not specified in the procurement
       request specification to the left, you will not be able to select here.
     </p>
-    <div>
+    <div *ngIf="purchaseOrderDetail">
       <h4>Purchased Items
         <hum-button [type]="'pdf'" [text]="'GOODS RECIEVED NOTE'"></hum-button>
       </h4>

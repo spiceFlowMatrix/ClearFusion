@@ -179,7 +179,7 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
 
   submitStatement() {
     const dialogRef = this.dialog.open(SubmitComparativeStatementComponent, {
-      width: '650px',
+      width: '500px',
       data: {SupplierList: this.supplierList, RequestId: this.requestId}
     });
 

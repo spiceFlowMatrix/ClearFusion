@@ -33,7 +33,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
                 var supplierList = await _dbContext.ProjectLogisticSuppliers
                                                                .Where(x => x.IsDeleted == false && x.LogisticRequestsId == request.requestId)
                                                                .Include(x=>x.InventoryItems)
-                                                               .Include(x=>x.StoreSourceCodeDetail)     
+                                                               .Include(x=>x.StoreSourceCodeDetail)
+                                                               .Include(x=>x.ProjectLogisticRequests)     
                                                                .Select(x => new LogisticSupplierViewModel
                                                                 {
                                                                    SupplierId = x.SupplierId,
@@ -43,7 +44,9 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                                    Quantity = x.Quantity,
                                                                    FinalUnitPrice = x.FinalUnitPrice,
                                                                    ItemId = x.ItemId,
-                                                                   ItemName = x.InventoryItems.ItemName
+                                                                   ItemName = x.InventoryItems.ItemName,
+                                                                   ItemCode = x.InventoryItems.ItemCode,
+                                                                   CurrencyCode = x.ProjectLogisticRequests.CurrencyDetails.CurrencyCode
                                                                 })
                                                                 .ToListAsync();
 

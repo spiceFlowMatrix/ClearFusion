@@ -27,15 +27,12 @@
   </div>
   <div *ngSwitchCase="4" humAddScroll style="width: 105%;">
     <h4 class="letter_spacing_2">Comparative Statement Details</h4>
-    <p>Once <b>Logistics Officer</b> has listed out <b>Suppliers</b> and Submitted the <b>Comparative Statement</b>, it needs to be <b>Approved</b> by <b>Control Officer</b>. Once <b>Control Officer</b> has approved the <b>Comparative Statement</b>. <b>Purchase Order</b> can be issued.</p>
-    <p>Due to technology limitations in previous systems, only 3 suppliers could be listed for evaluation. Now we can easily add as many as needed.</p>
-    <div>
+    <div class="margin_top_20">
       <h4>Suppliers
-        <!-- <hum-button (click)="openAddSupplierDialog()" [type]="'add'" [text]="'ADD SUPPLIER'"></hum-button> -->
       </h4>
       <hum-table [actions]="actions" (actionClick)="onActionClick($event)" [headers]="supplierHeaders$" [items]="supplierData$" [subHeaders]="supplierSubHeaders$" [hideColums$]="hideSupplierColums"></hum-table>
     </div>
-    <mat-divider></mat-divider>
+    <!-- <mat-divider></mat-divider> -->
     <div style="padding-top: 1px;">
       <h4>Statement
         <hum-button (click)="approveComparativeStatement()" [type]="'save'" [text]="'APPROVE'"></hum-button>
@@ -43,10 +40,11 @@
       </h4>
       <div>
         <span><i class="fas fa-info-circle icon_color_yellow"></i> Statement submitted by {{statementModel.SubmittedBy}}. <b>Awaiting Control Officer Approval</b>.</span>
+        <h5><i class="fa fa-list fa-1" aria-hidden="true"></i> Description</h5>
         <p>{{statementModel.Description}}</p>
-        <h5><i class="fa fa-list fa-1" aria-hidden="true"></i> Selected Suppliers</h5>
+        <h5><i class="fa fa-list fa-1" aria-hidden="true"></i> Selected Supplier Offers</h5>
         <ul>
-          <li *ngFor="let item of statementModel.selectedSupplier">{{item.Id}} - {{item.SupplierName}}</li>
+          <li *ngFor="let item of statementModel.selectedSupplier">{{item.SourceCode}} - {{item.SourceDescription}} Item: {{item.ItemCode}}-{{item.ItemName}} {{item.CurrencyCode}} {{item.FinalUnitPrice}}</li>
         </ul>
         <h5><i class="fa fa-paperclip fa-1" aria-hidden="true"></i> Attachments</h5>
         <p *ngIf="(statementModel.attachments) && (statementModel.attachments.length == 0)">No attachment submitted!</p>
@@ -58,9 +56,7 @@
   </div>
   <div *ngSwitchCase="5" humAddScroll style="width: 105%;">
     <h4 class="letter_spacing_2">Comparative Statement Details</h4>
-    <p>Once <b>Logistics Officer</b> has listed out <b>Suppliers</b> and Submitted the <b>Comparative Statement</b>, it needs to be <b>Approved</b> by <b>Control Officer</b>. Once <b>Control Officer</b> has approved the <b>Comparative Statement</b>. <b>Purchase Order</b> can be issued.</p>
-    <p>Due to technology limitations in previous systems, only 3 suppliers could be listed for evaluation. Now we can easily add as many as needed.</p>
-    <div>
+    <div class="margin_top_20">
       <h4>Suppliers
         <hum-button (click)="openAddSupplierDialog()" [type]="'add'" [text]="'ADD SUPPLIER'"></hum-button>
       </h4>
