@@ -56,6 +56,7 @@ build_backend:
     stage: build_apps
     variables:
         OBJECTS_DIRECTORY: 'obj'
+        RELEASE_OBJECTS_DIRECTORY: 'release'
         NUGET_PACKAGES_DIRECTORY: '.nuget'
         API_SOURCE_CODE_PATH: './HumanitarianAssistance.WebApi/'
         APPLICATION_SOURCE_CODE_PATH: './HumanitarianAssistance.Application/'
@@ -86,10 +87,10 @@ build_backend:
     before_script:
         - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
     script:
-        - 'dotnet build --no-restore'
+        - 'dotnet publish -c Release -o $RELEASE_OBJECTS_DIRECTORY --no-restore'
     artifacts:
         paths:
-            - HumanitarianAssistance.WebApi/release/
+            - '$RELEASE_OBJECTS_DIRECTORY'
         expire_in: 1 week
         untracked: true
     retry: 2
