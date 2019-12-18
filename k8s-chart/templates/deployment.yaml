@@ -1,9 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    app.gitlab.com/app: {{.Values.ci.project.path}}
-    app.gitlab.com/env: {{.Values.ci.project.environment}}
   name: {{ .Release.Name }}{{ .Release.Revision }}
   namespace: {{.Values.deployment.namespace}}
   labels:
@@ -15,6 +12,9 @@ spec:
       app: {{ .Release.Name }}{{ .Release.Revision }}
   template:
     metadata:
+      annotations:
+        app.gitlab.com/app: {{.Values.ci.project.path}}
+        app.gitlab.com/env: {{.Values.ci.project.environment}}
       labels:
         app: {{ .Release.Name }}{{ .Release.Revision }}
     spec:
