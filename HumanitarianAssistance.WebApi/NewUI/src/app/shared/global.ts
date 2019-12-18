@@ -401,6 +401,7 @@ export class GLOBAL {
   public static API_Project_GetActivityDocumentDetails = 'Project/GetActivityDocumentDetails ';
   public static API_Project_GetProjectMonitoringList = 'Project/GetProjectMonitoringList';
   public static API_Project_GetProjectMonitoringByMonitoringId = 'Project/GetProjectMonitoringByMonitoringId';
+  public static API_Project_DeleteProjectSubActivityDetail = 'Project/DeleteProjectSubActivityDetail';
 
 
   public static API_Project_GetProjectActivityExtension = 'Project/GetProjectActivityExtension';

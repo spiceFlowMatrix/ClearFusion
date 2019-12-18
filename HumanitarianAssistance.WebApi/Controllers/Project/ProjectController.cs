@@ -1065,9 +1065,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
 
         #region "Project sub activity"
         [HttpPost]
-        public async Task<ApiResponse> GetProjectSubActivityDetail([FromBody]int projectId)
+        public async Task<ApiResponse> GetProjectSubActivityDetail([FromBody]int ActivityId)
         {
-            return await _mediator.Send(new GetProjectSubActivityDetailsQuery { projectId = projectId });
+            return await _mediator.Send(new GetProjectSubActivityDetailsQuery { ActivityId = ActivityId });
         }
 
         [HttpPost]
@@ -1624,6 +1624,23 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
                 ModifiedDate = DateTime.UtcNow,
             });
         }
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> DeleteProjectSubActivityDetail([FromBody] long activityId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+          
+            var result = await Task.FromResult(_mediator.Send(new DeleteProjectSubActivityCommand
+            {
+                ActivityId = activityId,
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow,
+            }));
+            return Ok(await result);
+        }
+
         [HttpPost]
         public async Task<ApiResponse> AllActivityStatus([FromBody]long projectId)
         {
