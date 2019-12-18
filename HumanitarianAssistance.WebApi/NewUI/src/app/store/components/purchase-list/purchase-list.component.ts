@@ -41,9 +41,9 @@ export class PurchaseListComponent implements OnInit {
   @ViewChild(PurchaseFiledConfigComponent) fieldConfig: PurchaseFiledConfigComponent;
 
   purchaseListHeaders$ = of(['Id', 'Item', 'Purchased By', 'Project', 'Original Cost', 'Depreciated Cost', 'Purchase Date', 'Currency',
-                            'Purchased Quantity', 'Item Code', 'Project Id', 'Item Code Description', 'Description', 'BudgetLine Name',
-                          'Depreciation Rate', 'Master Inventory Code', 'Office Code', 'Receipt Date', 'Invoice Date',
-                          'Received From Location', 'Status']);
+    'Purchased Quantity', 'Item Code', 'Project Id', 'Item Code Description', 'Description', 'BudgetLine Name',
+    'Depreciation Rate', 'Master Inventory Code', 'Office Code', 'Receipt Date', 'Invoice Date',
+    'Received From Location', 'Status']);
   subListHeaders$ = of(['Id', 'Date', 'Employee', 'Procured Amount', 'Must Return', 'Returned', 'Returned On']);
   procurementList$: Observable<IProcurementList[]>;
   hideColums: Observable<{ headers?: string[], items?: string[] }>;
@@ -100,7 +100,7 @@ export class PurchaseListComponent implements OnInit {
       if (res.length > 0) {
         const headers = res.map(r => r.headerName);
         const items = res.map(r => r.modelName);
-        this.hideColums = of({headers: headers, items: items});
+        this.hideColums = of({ headers: headers, items: items });
         this.columnsToShownInPdf = res;
       }
     });
@@ -147,18 +147,19 @@ export class PurchaseListComponent implements OnInit {
             DepreciationRate: element.DepreciationRate,
             MasterInventoryCode: element.MasterInventoryCode,
             OfficeCode: element.OfficeCode,
-            ReceiptDate:  (element.ReceiptDate) ?
-                          this.datePipe.transform(new Date(element.ReceiptDate), 'dd/MM/yyyy') : null,
-            InvoiceDate:  (element.InvoiceDate) ?
-                          this.datePipe.transform(new Date(element.InvoiceDate), 'dd/MM/yyyy') : null,
+            ReceiptDate: (element.ReceiptDate),
+            // this.datePipe.transform(new Date(element.ReceiptDate), 'dd/MM/yyyy') : null,
+            InvoiceDate: (element.InvoiceDate),
+            // this.datePipe.transform(new Date(element.InvoiceDate), 'dd/MM/yyyy') : null,
             ReceivedFromLocationName: element.ReceivedFromLocationName,
             Status: element.Status,
             ProcurementList: element.ProcurementList,
+            subItemSubtitle: element.LogisticRequestId ? '<b>Note:</b> The purchase was created as a result of <a href="/project/my-project/' + element.ProjectId + '/logistic-requests/' + element.LogisticRequestId + '" target="_blank">purchase-order-id-' + element.LogisticRequestId + ' </a></br>' : '',
             subItems: element.ProcurementList.map((r) => {
               return {
                 Id: r.OrderId,
                 IssueDate: (r.IssueDate != null && r.IssueDate !== undefined) ?
-                          this.datePipe.transform(new Date(r.IssueDate), 'dd/MM/yyyy') : null,
+                  this.datePipe.transform(new Date(r.IssueDate), 'dd/MM/yyyy') : null,
                 Employee: r.EmployeeName,
                 ProcuredAmount: r.ProcuredAmount,
                 MustReturn: r.MustReturn ? 'Yes' : 'No',
@@ -262,24 +263,24 @@ export class PurchaseListComponent implements OnInit {
   procurementAction(event: any) {
     if (event.type === 'delete') {
       this.purchaseService.deleteProcurement(event.subItem.Id)
-      .subscribe(x => {
-        if (x.StatusCode === 200) {
-          this.purchaseList$.subscribe((purchase) => {
-            const index = purchase.findIndex(i => i.Id === event.item.Id);
-            if (index >= 0) {
-              const subItemIndex = purchase[index].subItems.findIndex(i => i.OrderId === event.subItem.Id);
-              purchase[index].subItems.splice(subItemIndex, 1);
-            }
-            this.purchaseList$ = of(purchase);
+        .subscribe(x => {
+          if (x.StatusCode === 200) {
+            this.purchaseList$.subscribe((purchase) => {
+              const index = purchase.findIndex(i => i.Id === event.item.Id);
+              if (index >= 0) {
+                const subItemIndex = purchase[index].subItems.findIndex(i => i.OrderId === event.subItem.Id);
+                purchase[index].subItems.splice(subItemIndex, 1);
+              }
+              this.purchaseList$ = of(purchase);
+            });
+            this.toastr.success(x.Message);
+          } else {
+            this.toastr.warning(x.Message);
+          }
+        },
+          (error) => {
+            this.toastr.error(error);
           });
-          this.toastr.success(x.Message);
-        } else {
-          this.toastr.warning(x.Message);
-        }
-      },
-        (error) => {
-          this.toastr.error(error);
-        });
     } else if (event.type === 'edit') {
       if (!this.filterValueModel.OfficeId) {
         this.toastr.warning('Select office before editing procurement');
@@ -301,7 +302,7 @@ export class PurchaseListComponent implements OnInit {
     this.purchaseService.getAllCurrencies()
       .subscribe(x => {
         if (x.StatusCode === 200) {
-           this.currencyList$ = of(x.data.CurrencyList.map(y => {
+          this.currencyList$ = of(x.data.CurrencyList.map(y => {
             return {
               name: y.CurrencyCode + '-' + y.CurrencyName,
               value: y.CurrencyId
@@ -331,10 +332,10 @@ export class PurchaseListComponent implements OnInit {
     StorePurchaseFilter.SelectedColumns = pdfColumns;
 
     this.globalSharedService
-    .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetStorePurchasePdf, StorePurchaseFilter
-    )
-    .pipe()
-    .subscribe();
+      .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetStorePurchasePdf, StorePurchaseFilter
+      )
+      .pipe()
+      .subscribe();
   }
 
   showConfiguration() {

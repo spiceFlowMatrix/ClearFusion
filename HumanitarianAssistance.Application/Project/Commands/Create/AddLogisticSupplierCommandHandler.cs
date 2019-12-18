@@ -30,7 +30,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     LogisticRequestsId = request.RequestId,
                     // SupplierName = request.SupplierName,
                     Quantity = request.Quantity,
-                   // FinalPrice = request.FinalCost,
+                    // FinalPrice = request.FinalCost,
                     CreatedById = request.CreatedById,
                     CreatedDate = request.CreatedDate
                 };

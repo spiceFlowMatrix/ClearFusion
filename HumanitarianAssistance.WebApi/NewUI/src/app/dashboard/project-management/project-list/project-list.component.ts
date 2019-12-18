@@ -227,6 +227,7 @@ export class ProjectListComponent implements OnInit {
                 return b.ProjectId - a.ProjectId;
               });
 
+              localStorage.setItem('selectedProject', projectData.ProjectId);
               this.router.navigate(['/project/my-project', projectData.ProjectId]);
             }
           }
