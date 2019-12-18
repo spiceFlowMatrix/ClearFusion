@@ -243,7 +243,9 @@ namespace HumanitarianAssistance.Common.Enums {
         [Description ("Control Approved")]
         ControlApproved = 5,
         [Description ("Control Rejected")]
-        ControlRejected = 6
+        ControlRejected = 6,
+        [Description ("Purchase Completed")]
+        PurchaseCompleted = 7
     }
     public enum LogisticComparativeStatus {
         [Description ("Pending")]

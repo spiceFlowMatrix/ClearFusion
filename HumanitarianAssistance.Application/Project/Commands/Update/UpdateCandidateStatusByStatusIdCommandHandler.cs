@@ -24,9 +24,9 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update {
                 if (request.candidateId != 0) {
                     var candidateDetails = await _dbContext.HiringRequestCandidateStatus
                         .Where (x => x.CandidateId == request.candidateId && x.IsDeleted == false && x.HiringRequestId == request.hiringRequestId && x.ProjectId == request.projectId).FirstOrDefaultAsync ();
-                    if (request.statusId == 4) {
-                        candidateDetails.CandidateStatus = 4;
-                    } else if (candidateDetails.CandidateStatus != 3 || candidateDetails.CandidateStatus != 4) {
+                    if (request.statusId == (int)CandidateStatus.Rejected) {
+                        candidateDetails.CandidateStatus = (int)CandidateStatus.Rejected;
+                    } else if (candidateDetails.CandidateStatus != (int)CandidateStatus.Selected || candidateDetails.CandidateStatus != (int)CandidateStatus.Rejected) {
                         candidateDetails.CandidateStatus = candidateDetails.CandidateStatus + 1;
                         candidateDetails.ModifiedById = request.ModifiedById;
                         candidateDetails.ModifiedDate = request.ModifiedDate;
@@ -35,9 +35,9 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update {
                     response.data.CandidateStatus = candidateDetails;
                 } else if (request.employeeId != 0) {
                     var candidateDetails = await _dbContext.HiringRequestCandidateStatus.Where (x => x.EmployeeID == request.employeeId && x.IsDeleted == false && x.HiringRequestId == request.hiringRequestId && x.ProjectId == request.projectId).FirstOrDefaultAsync ();
-                    if (request.statusId == 4) {
-                        candidateDetails.CandidateStatus = 4;
-                    } else if (candidateDetails.CandidateStatus != 3 || candidateDetails.CandidateStatus != 4) {
+                    if (request.statusId == (int)CandidateStatus.Rejected) {
+                        candidateDetails.CandidateStatus = (int)CandidateStatus.Rejected;
+                    } else if (candidateDetails.CandidateStatus != (int)CandidateStatus.Selected || candidateDetails.CandidateStatus != (int)CandidateStatus.Rejected) {
                         candidateDetails.CandidateStatus = candidateDetails.CandidateStatus + 1;
                         candidateDetails.ModifiedById = request.ModifiedById;
                         candidateDetails.ModifiedDate = request.ModifiedDate;

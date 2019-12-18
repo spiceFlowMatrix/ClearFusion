@@ -43,11 +43,27 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                   .Include(x => x.ProjectBudgetLineDetail)
                                   .Include(x => x.StoreSourceCodeDetail)
                                   .Include(x => x.OfficeDetail)
-                                  .Where(x => x.IsDeleted == false &&
-                                        x.StoreInventoryItem.Inventory.AssetType == request.InventoryTypeId &&
-                                        x.ReceiptTypeId == request.ReceiptTypeId &&
-                                        x.OfficeId == request.OfficeId &&
-                                        x.Currency == request.CurrencyId);
+                                  .Where(x => x.IsDeleted == false);
+
+                if(request.InventoryTypeId != 0)
+                {
+                    query = query.Where(x=> x.StoreInventoryItem.Inventory.AssetType == request.InventoryTypeId);
+                }
+
+                if(request.ReceiptTypeId != 0)
+                {
+                    query = query.Where(x=> x.ReceiptTypeId == request.ReceiptTypeId);
+                }
+
+                if(request.OfficeId != 0)
+                {
+                    query = query.Where(x=> x.OfficeId == request.OfficeId);
+                }
+
+                if(request.CurrencyId != 0)
+                {
+                    query = query.Where(x=> x.Currency == request.CurrencyId);
+                }
 
                 if (request.InventoryId != 0)
                 {
@@ -122,6 +138,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     DepreciatedCost = x.UnitCost * x.Quantity,
                     UnitCost = x.UnitCost,
                     Quantity = x.Quantity,
+                    LogisticRequestId = x.LogisticRequestId,
 
                     ProcurementList = x.PurchaseOrders.Where(p => !p.IsDeleted).Select(z => new ProcurementListModel
                     {
@@ -131,7 +148,11 @@ namespace HumanitarianAssistance.Application.Store.Queries
                         MustReturn = z.MustReturn,
                         ProcuredAmount = z.IssuedQuantity,
                         Returned = z.Returned,
-                        ReturnedOn = z.ReturnedDate
+                        ReturnedOn = z.ReturnedDate,
+                        EmployeeId = z.EmployeeDetail.EmployeeID,
+                        LocationId= z.IssedToLocation,
+                        ProjectId = z.Project,
+                        StatusId= z.StatusAtTimeOfIssue
                     }).Where(y => request.IssueStartDate == null ? true : y.IssueDate >= request.IssueStartDate &&
                      request.IssueEndDate == null ? true : y.IssueDate <= request.IssueEndDate).ToList()
                 }).AsQueryable();

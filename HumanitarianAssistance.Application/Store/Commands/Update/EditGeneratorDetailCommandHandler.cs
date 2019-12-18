@@ -40,6 +40,12 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                 generator.MobilOilConsumptionRate = command.MobilOilConsumptionRate;
                 generator.ModelYear = command.ModelYear;
                 generator.OfficeId = command.OfficeId;
+                generator.PersonRemarks = command.Remarks;
+                generator.RegistrationNo= command.RegistrationNo;
+                generator.PersonRemarks = command.Remarks;
+                generator.ChasisNo = command.ChasisNo;
+                generator.EngineNo = command.EngineNo;
+                generator.EmployeeID= command.EmployeeId;
 
                 _dbContext.PurchasedGeneratorDetail.Update(generator);
 

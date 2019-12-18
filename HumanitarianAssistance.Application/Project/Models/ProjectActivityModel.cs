@@ -44,5 +44,6 @@ namespace HumanitarianAssistance.Application.Project.Models
         public long? ProjectId { get; set; }
         public int? CountryId { get; set; }
         public Guid? ReoccuredReferenceId { get; set; }
+        public DateTime? CreatedDate { get; set; }
     }
 }

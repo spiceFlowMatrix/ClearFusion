@@ -28,12 +28,12 @@ namespace HumanitarianAssistance.Application.Project.Queries
                 var projectActivityDetails = await _dbContext.ProjectActivityDetail
                                           .Include(p => p.ProjectSubActivityList)
                                           .FirstOrDefaultAsync(v => v.IsDeleted == false &&
-                                                      v.ActivityId == request.projectId
+                                                      v.ActivityId == request.ActivityId
                                           );
 
                 List<ProjectSubActivityListModel> activityDetaillist = new List<ProjectSubActivityListModel>();
 
-                activityDetaillist = projectActivityDetails.ProjectSubActivityList.Select(b => new ProjectSubActivityListModel
+                activityDetaillist = projectActivityDetails.ProjectSubActivityList.Where(p=>p.IsDeleted == false).Select(b => new ProjectSubActivityListModel
                 {
                     ActivityId = b.ActivityId,
                     BudgetLineId = b.BudgetLineId,

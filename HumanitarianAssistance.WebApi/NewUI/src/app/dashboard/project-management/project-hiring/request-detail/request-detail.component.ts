@@ -542,6 +542,7 @@ export class RequestDetailComponent implements OnInit {
     }
   }
   //#endregion
+
   //#region "Download pdf of shortlist candidate"
   onExportPdf() {
     this.loader.showLoader();
@@ -627,6 +628,7 @@ export class RequestDetailComponent implements OnInit {
     );
   }
   //#endregion
+
   //#region "get Existing Employee DropDown List"
   getExistingEmployeeDropDownList() {
     this.hiringRequestService.GetAllEmployeeList().subscribe(
@@ -648,6 +650,7 @@ export class RequestDetailComponent implements OnInit {
     );
   }
   //#endregion
+
   // #region adding Existing Employee for hiring request
   OnExistingEmployeeSelection(data: MatSelectChange) {
     this.existingCandidatesList2$.subscribe(res => {
@@ -732,6 +735,7 @@ export class RequestDetailComponent implements OnInit {
     }
   }
   //#endregion
+
   //#region "Update Status of new and Existing candidates"
   updateCandidateStatus(candidateDetails: any) {
     this.loader.showLoader();

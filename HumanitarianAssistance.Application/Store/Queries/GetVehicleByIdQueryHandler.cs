@@ -85,6 +85,11 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                                                .Select(z => z.StoreItemPurchase.Quantity * z.StoreItemPurchase.UnitCost).DefaultIfEmpty(0).Sum(),
                                               CurrentMileage = x.StartingMileage + x.IncurredMileage + x.VehicleMileageDetail.Where(z => z.IsDeleted == false).Select(z => z.Mileage).DefaultIfEmpty(0).Sum(),
                                               VehicleStartingCost = x.StoreItemPurchase.UnitCost,
+                                              ChasisNo= x.ChasisNo,
+                                              EngineNo= x.EngineNo,
+                                              RegistrationNo= x.RegistrationNo,
+                                              ManufacturerCountry= x.ManufacturerCountry,
+                                              Remarks= x.PersonRemarks
                                           }).FirstOrDefaultAsync();
 
                 if (vehicle == null)

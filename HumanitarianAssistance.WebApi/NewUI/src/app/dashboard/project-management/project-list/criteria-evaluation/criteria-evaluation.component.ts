@@ -6,7 +6,8 @@ import {
   Output,
   ChangeDetectorRef,
   AfterViewChecked,
-  OnDestroy
+  OnDestroy,
+  OnChanges
 } from '@angular/core';
 import {
   DonorCEModel,
@@ -70,6 +71,12 @@ export class CriteriaEvaluationComponent
   AllowedByLaw = false; // add one more property
   isSuperadmin = false;
 
+  developmenmtValue = 0;
+  educationValue = 0;
+  healthNutritionValue = 0;
+  disasterRiskValue = 0;
+  aggricultureLiveStockValue = 0;
+
   //#region "Variables"
   methodOfFundingList = [
     { Id: 1, Name: 'Sole' },
@@ -77,9 +84,9 @@ export class CriteriaEvaluationComponent
   ];
 
   financialHistory = [
-    { Id: 1, Name: 'Good' },
-    { Id: 2, Name: 'Neutral' },
-    { Id: 3, Name: 'Bad' }
+    { Id: 1, Name: 'Good/Bad' }
+    // { Id: 2, Name: 'Neutral' },
+    // { Id: 3, Name: 'Bad' }
   ];
 
   sectorAndThemes = [
@@ -240,7 +247,10 @@ export class CriteriaEvaluationComponent
         Id: x.Id,
         PageId: x.PageId,
         Text: x.Text,
-        Link: '/project/my-project/' + this.projectListService.selectedProject() + x.Link
+        Link:
+          '/project/my-project/' +
+          this.projectListService.selectedProject() +
+          x.Link
       });
     });
 
@@ -261,7 +271,6 @@ export class CriteriaEvaluationComponent
       this.ProjectId = +params['id'];
     });
     // this.getData();
-
     this.getScreenSize();
     this.GetCriteraiEvaluationDetailById(this.ProjectId);
     this.initializeList();
@@ -289,7 +298,9 @@ export class CriteriaEvaluationComponent
     // this.GetOccupationByProjectId(this.ProjectId);
     this.GetDonorEligibilityCriteriaByProjectId(this.ProjectId);
     //  this.onProjectallowedByLawChange(this.feasibilityForm.ProjectAllowedBylaw);
+    this.onTabchangeScore(0);
   }
+
   // to show warning message if the total score is less than 30 -->
   ngAfterViewChecked() {
     const isAllowedByLaw = this.feasibilityForm.ProjectAllowedBylaw;
@@ -345,6 +356,11 @@ export class CriteriaEvaluationComponent
     this.productAndServiceForm = {
       ProjectId: null,
       ProductServiceId: null,
+      RuralDevelopmentSocialProtection: null,
+      HealthAndNutrition: null,
+      DisasterRiskReduction: null,
+      AgricultureAndLivestock: null,
+      Education: null,
       Awareness: null,
       Infrastructure: null,
       CapacityBuilding: null,
@@ -695,19 +711,39 @@ export class CriteriaEvaluationComponent
   }
 
   onFinancialHistoryChange(data) {
-    this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
+    // this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
     this.donorCEForm.DonorFinancingHistory = data;
+    if (data.checked === false) {
+      this.donorCEForm.DonorFinancingHistory = 0;
+    } else if (data.checked === true) {
+      this.donorCEForm.DonorFinancingHistory = 1;
+    }
     this.AddEditDonorCEForm(this.donorCEForm);
   }
+  // old 11-12-2019
+  // onReligiousStandingChange(data) {
+  //   this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
+  //   this.donorCEForm.ReligiousStanding = data;
+  //   this.AddEditDonorCEForm(this.donorCEForm);
+  // }
 
+  // new 11-12-2019
   onReligiousStandingChange(data) {
     this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
-    this.donorCEForm.ReligiousStanding = data;
+    if (data.checked === false) {
+      this.donorCEForm.ReligiousStanding = 0;
+    } else if (data.checked === true) {
+      this.donorCEForm.ReligiousStanding = 1;
+    }
     this.AddEditDonorCEForm(this.donorCEForm);
   }
   onPoliticalStandingChange(data) {
     this.donorCEForm.DonorCEId = this.donorCEForm.DonorCEId;
-    this.donorCEForm.PoliticalStanding = data;
+    if (data.checked === false) {
+      this.donorCEForm.PoliticalStanding = 0;
+    } else if (data.checked === true) {
+      this.donorCEForm.PoliticalStanding = 1;
+    }
     this.AddEditDonorCEForm(this.donorCEForm);
   }
   //#endregion
@@ -716,202 +752,246 @@ export class CriteriaEvaluationComponent
   //  ----------------------- Rural development and Social Production ----------------------------------
   onProdAwarenessChange(value) {
     this.productAndServiceForm.Awareness = value.checked;
+    this.ruralDevelopmentScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   onProdNewonInfrastructureChangesChange(value) {
     this.productAndServiceForm.Infrastructure = value.checked;
+    this.ruralDevelopmentScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   onCapacityBuildingChange(value) {
     this.productAndServiceForm.CapacityBuilding = value.checked;
+    this.ruralDevelopmentScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   onIncomeGenerationChange(value) {
+    this.ruralDevelopmentScore(value);
     this.productAndServiceForm.IncomeGeneration = value.checked;
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   onMobilizationChange(value) {
+    this.ruralDevelopmentScore(value);
     this.productAndServiceForm.Mobilization = value.checked;
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   onPeaceBuildingChange(value) {
     this.productAndServiceForm.PeaceBuilding = value.checked;
+    this.ruralDevelopmentScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onSocialProtectionChange(value) {
     this.productAndServiceForm.SocialProtection = value.checked;
+    this.ruralDevelopmentScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onSustainableChange(value) {
     this.productAndServiceForm.SustainableLivelihood = value.checked;
+    this.ruralDevelopmentScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onAdvocacyChange(value) {
     this.productAndServiceForm.Advocacy = value.checked;
+    this.ruralDevelopmentScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   // -------------------------------  Education -------------------------------------------------
 
   onLiteracyChange(value) {
     this.productAndServiceForm.Literacy = value.checked;
+    this.educationScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onEducationCapacityChange(value) {
     this.productAndServiceForm.EducationCapacityBuilding = value.checked;
+    this.educationScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   onSchoolUpgardingChange(value) {
     this.productAndServiceForm.SchoolUpgrading = value.checked;
+    this.educationScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   onEducationInEmergencyChange(value) {
     this.productAndServiceForm.EducationInEmergency = value.checked;
+    this.educationScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   onOnlineEducationChange(value) {
     this.productAndServiceForm.OnlineEducation = value.checked;
+    this.educationScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   onCommunityBasedEducationChange(value) {
     this.productAndServiceForm.CommunityBasedEducation = value.checked;
+    this.educationScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   onAcceleratedChange(value) {
     this.productAndServiceForm.AcceleratedLearningProgram = value.checked;
+    this.educationScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   // ---------------------------------------Health and Nutrition --------------------------------------------
   onPrimaryHealthChange(value) {
     this.productAndServiceForm.PrimaryHealthServices = value.checked;
+    this.healthNutritionScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   onReproductiveChange(value) {
+    this.healthNutritionScore(value);
     this.productAndServiceForm.ReproductiveHealth = value.checked;
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   onImmunizationChange(value) {
     this.productAndServiceForm.Immunization = value.checked;
+    this.healthNutritionScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   onNutritionChange(value) {
     this.productAndServiceForm.Nutrition = value.checked;
+    this.healthNutritionScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   onCommunicableDiseaseChange(value) {
     this.productAndServiceForm.CommunicableDisease = value.checked;
+    this.healthNutritionScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   onHygieneChange(value) {
     this.productAndServiceForm.Hygiene = value.checked;
+    this.healthNutritionScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onEnvironmentalChange(value) {
     this.productAndServiceForm.EnvironmentalHealth = value.checked;
+    this.healthNutritionScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   onHealthCapacityBuildingChange(value) {
     this.productAndServiceForm.HealthCapacityBuilding = value.checked;
+    this.healthNutritionScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onTelemedicineChange(value) {
     this.productAndServiceForm.Telemedicine = value.checked;
+    this.healthNutritionScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onInfantAndChildFeedingChange(value) {
     this.productAndServiceForm.InfantandYoungChildFeeding = value.checked;
+    this.healthNutritionScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onMentalHealthChange(value) {
     this.productAndServiceForm.MentalHealthandDisabilityService = value.checked;
+    this.healthNutritionScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   // -------------------------------------Disaster Risk Reduction --------------------------------------
   onMitigationChange(value) {
     this.productAndServiceForm.MitigationProjects = value.checked;
+    this.disasterRiskScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onWaterSupplyChange(value) {
     this.productAndServiceForm.WaterSupply = value.checked;
+    this.disasterRiskScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onSanitationChange(value) {
     this.productAndServiceForm.Sanitation = value.checked;
+    this.disasterRiskScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onDisasterHygieneChange(value) {
     this.productAndServiceForm.DisasterRiskHygiene = value.checked;
+    this.disasterRiskScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onDisasterCapacityBindingChange(value) {
     this.productAndServiceForm.DisasterCapacityBuilding = value.checked;
+    this.disasterRiskScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onEmergencyChange(value) {
     this.productAndServiceForm.EmergencyResponse = value.checked;
+    this.disasterRiskScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onRenewableChange(value) {
     this.productAndServiceForm.RenewableEnergy = value.checked;
+    this.disasterRiskScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onShelterChange(value) {
     this.productAndServiceForm.Shelter = value.checked;
+    this.disasterRiskScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   // ------------------------------------------ Agriculture and Livestock -------------------------------
   onNaturalResourceChange(value) {
     this.productAndServiceForm.NaturalResourceManagement = value.checked;
+    this.aggricultureScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
   onAggriculutreCapacityBuildingChange(value) {
     this.productAndServiceForm.AggriculutreCapacityBuilding = value.checked;
+    this.aggricultureScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onLivestockChange(value) {
     this.productAndServiceForm.LivestockManagement = value.checked;
+    this.aggricultureScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onFoodSrcurityChange(value) {
     this.productAndServiceForm.FoodSecurity = value.checked;
+    this.aggricultureScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onResearchAndPublicationChange(value) {
     this.productAndServiceForm.ResearchandPublication = value.checked;
+    this.aggricultureScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onHorticultureChange(value) {
     this.productAndServiceForm.Horticulture = value.checked;
+    this.aggricultureScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onIrrigationChange(value) {
     this.productAndServiceForm.Irrigation = value.checked;
+    this.aggricultureScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onLivelihoodChange(value) {
     this.productAndServiceForm.Livelihood = value.checked;
+    this.aggricultureScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
   onValueChainChange(value) {
     this.productAndServiceForm.ValueChain = value.checked;
+    this.aggricultureScore(value);
     this.AddEditPurposeOfInitiatingForm(this.productAndServiceForm);
   }
 
@@ -1015,12 +1095,12 @@ export class CriteriaEvaluationComponent
       this.compensationByEquipment = 0;
       this.compensationExpandScope = 0;
       this.compensationGeographical = 0;
-      this.capacityAvailabilityProject =
-        criteriaEvaluationScores.pastFundingExperience_Yes;
+      // this.capacityAvailabilityProject =
+      //   criteriaEvaluationScores.pastFundingExperience_Yes;
     } else {
       this.isDisabledCompensation = false;
-      this.capacityAvailabilityProject =
-        criteriaEvaluationScores.pastFundingExperience_No;
+      // this.capacityAvailabilityProject =
+      //   criteriaEvaluationScores.pastFundingExperience_No;
     }
     this.feasibilityForm.CapacityAvailableForProject = value.checked;
     this.feasibilityForm.FeasibilityId = this.feasibilityForm.FeasibilityId;
@@ -1114,7 +1194,7 @@ export class CriteriaEvaluationComponent
   onAnyInKindComponentChange(value) {
     if (value.checked === true) {
       this.isDisabledAnyInKindComponent = false;
-      this.anyInKindComponent = criteriaEvaluationScores.anyInKindComponent_Yes;
+      // this.anyInKindComponent = criteriaEvaluationScores.anyInKindComponent_Yes;
     } else {
       // Note: to disable the expert record
       this.isFeasibilityExpert = false;
@@ -1123,7 +1203,7 @@ export class CriteriaEvaluationComponent
       this.feasibilityForm.FeasibleExpertDeploy = false;
       this.useableByOrganisation = 0;
       this.fesibilityExpertDeployed = 0;
-      this.anyInKindComponent = criteriaEvaluationScores.anyInKindComponent_No;
+      // this.anyInKindComponent = criteriaEvaluationScores.anyInKindComponent_No;
     }
     this.feasibilityForm.AnyInKindComponent = value.checked;
     this.AddEditFeasibilityCEForm(this.feasibilityForm);
@@ -1178,25 +1258,35 @@ export class CriteriaEvaluationComponent
     if (value.checked === false) {
       this.isExpanded = false;
       this.disableCriteriaEvaluationForm = true;
-    } else if (value.checked === true) {
-      this.projectallowedByLaw =
-        criteriaEvaluationScores.projectAllowedByLaw_Yes;
+    } else if (
+      value.checked === true &&
+      this.feasibilityForm.ProjectByLeadership === true
+    ) {
+      // this.projectallowedByLaw =
+      //   criteriaEvaluationScores.projectAllowedByLaw_Yes;
       this.isExpanded = true;
       this.disableCriteriaEvaluationForm = false;
-    } else {
-      this.projectallowedByLaw =
-        criteriaEvaluationScores.projectAllowedByLaw_No;
+      // } else {
+      //   this.projectallowedByLaw =
+      //     criteriaEvaluationScores.projectAllowedByLaw_No;
     }
     this.feasibilityForm.ProjectAllowedBylaw = value.checked;
     this.AddEditFeasibilityCEForm(this.feasibilityForm);
   }
+
   onProjectAllowedByOrganisationChange(value) {
     if (value.checked === true) {
-      this.projectAllowedByOrganisation =
-        criteriaEvaluationScores.projectAllowByOrganisation_Yes;
-    } else {
-      this.projectAllowedByOrganisation =
-        criteriaEvaluationScores.projectAllowByOrganisation_No;
+      // this.projectAllowedByOrganisation =
+      //   criteriaEvaluationScores.projectAllowByOrganisation_Yes;
+      if (this.feasibilityForm.ProjectAllowedBylaw === true) {
+        this.isExpanded = true;
+        this.disableCriteriaEvaluationForm = false;
+      }
+    } else if (value.checked === false) {
+      // this.projectAllowedByOrganisation =
+      //   criteriaEvaluationScores.projectAllowByOrganisation_No;
+      this.isExpanded = false;
+      this.disableCriteriaEvaluationForm = true;
     }
     this.feasibilityForm.ProjectByLeadership = value.checked;
     this.AddEditFeasibilityCEForm(this.feasibilityForm);
@@ -1802,109 +1892,283 @@ export class CriteriaEvaluationComponent
                 // profuct and service
                 this.productAndServiceForm.Awareness =
                   data.data.CriteriaEveluationModel.Awareness;
+                if (this.productAndServiceForm.Awareness === true) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
+
                 this.productAndServiceForm.Infrastructure =
                   data.data.CriteriaEveluationModel.Infrastructure;
+                if (this.productAndServiceForm.Infrastructure === true) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
                 this.productAndServiceForm.CapacityBuilding =
                   data.data.CriteriaEveluationModel.CapacityBuilding;
+                if (this.productAndServiceForm.CapacityBuilding === true) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
+
                 this.productAndServiceForm.IncomeGeneration =
                   data.data.CriteriaEveluationModel.IncomeGeneration;
+                if (this.productAndServiceForm.IncomeGeneration === true) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
                 this.productAndServiceForm.Mobilization =
                   data.data.CriteriaEveluationModel.Mobilization;
+                if (this.productAndServiceForm.Mobilization === true) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
                 this.productAndServiceForm.PeaceBuilding =
                   data.data.CriteriaEveluationModel.PeaceBuilding;
+                if (this.productAndServiceForm.PeaceBuilding === true) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
                 this.productAndServiceForm.SocialProtection =
                   data.data.CriteriaEveluationModel.SocialProtection;
+                if (this.productAndServiceForm.SocialProtection) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
+
                 this.productAndServiceForm.SustainableLivelihood =
                   data.data.CriteriaEveluationModel.SustainableLivelihood;
+                if (this.productAndServiceForm.SustainableLivelihood === true) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
                 this.productAndServiceForm.Advocacy =
                   data.data.CriteriaEveluationModel.Advocacy;
+                if (this.productAndServiceForm.Advocacy === true) {
+                  this.developmenmtValue = this.developmenmtValue + 1;
+                }
+
                 this.productAndServiceForm.Literacy =
                   data.data.CriteriaEveluationModel.Literacy;
+                if (this.productAndServiceForm.Literacy === true) {
+                  this.educationValue = this.educationValue + 1;
+                }
                 this.productAndServiceForm.EducationCapacityBuilding =
                   data.data.CriteriaEveluationModel.EducationCapacityBuilding;
+                if (
+                  this.productAndServiceForm.EducationCapacityBuilding === true
+                ) {
+                  this.educationValue = this.educationValue + 1;
+                }
                 this.productAndServiceForm.SchoolUpgrading =
                   data.data.CriteriaEveluationModel.SchoolUpgrading;
+                if (this.productAndServiceForm.SchoolUpgrading === true) {
+                  this.educationValue = this.educationValue + 1;
+                }
                 this.productAndServiceForm.EducationInEmergency =
                   data.data.CriteriaEveluationModel.EducationInEmergency;
+                if (this.productAndServiceForm.EducationInEmergency === true) {
+                  this.educationValue = this.educationValue + 1;
+                }
                 this.productAndServiceForm.OnlineEducation =
                   data.data.CriteriaEveluationModel.OnlineEducation;
+                if (this.productAndServiceForm.OnlineEducation === true) {
+                  this.educationValue = this.educationValue + 1;
+                }
                 this.productAndServiceForm.CommunityBasedEducation =
                   data.data.CriteriaEveluationModel.CommunityBasedEducation;
+                if (
+                  this.productAndServiceForm.CommunityBasedEducation === true
+                ) {
+                  this.educationValue = this.educationValue + 1;
+                }
                 this.productAndServiceForm.AcceleratedLearningProgram =
                   data.data.CriteriaEveluationModel.AcceleratedLearningProgram;
+                if (
+                  this.productAndServiceForm.AcceleratedLearningProgram == true
+                ) {
+                  this.educationValue = this.educationValue + 1;
+                }
                 this.productAndServiceForm.PrimaryHealthServices =
                   data.data.CriteriaEveluationModel.PrimaryHealthServices;
+                if (this.productAndServiceForm.PrimaryHealthServices === true) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.ReproductiveHealth =
                   data.data.CriteriaEveluationModel.ReproductiveHealth;
+                if (this.productAndServiceForm.ReproductiveHealth === true) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.Immunization =
                   data.data.CriteriaEveluationModel.Immunization;
+                if (this.productAndServiceForm.Immunization === true) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.InfantandYoungChildFeeding =
                   data.data.CriteriaEveluationModel.InfantandYoungChildFeeding;
+                if (
+                  this.productAndServiceForm.InfantandYoungChildFeeding === true
+                ) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.Nutrition =
                   data.data.CriteriaEveluationModel.Nutrition;
+                if (this.productAndServiceForm.Nutrition === true) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.CommunicableDisease =
                   data.data.CriteriaEveluationModel.CommunicableDisease;
+                if (this.productAndServiceForm.CommunicableDisease === true) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.Hygiene =
                   data.data.CriteriaEveluationModel.Hygiene;
+                if (this.productAndServiceForm.Hygiene === true) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.EnvironmentalHealth =
                   data.data.CriteriaEveluationModel.EnvironmentalHealth;
+                if (this.productAndServiceForm.EnvironmentalHealth === true) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.MentalHealthandDisabilityService =
                   data.data.CriteriaEveluationModel.MentalHealthandDisabilityService;
+                if (
+                  this.productAndServiceForm
+                    .MentalHealthandDisabilityService === true
+                ) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.HealthCapacityBuilding =
                   data.data.CriteriaEveluationModel.HealthCapacityBuilding;
+                if (
+                  this.productAndServiceForm.HealthCapacityBuilding === true
+                ) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.Telemedicine =
                   data.data.CriteriaEveluationModel.Telemedicine;
+                if (this.productAndServiceForm.Telemedicine === true) {
+                  this.healthNutritionValue = this.healthNutritionValue + 1;
+                }
                 this.productAndServiceForm.MitigationProjects =
                   data.data.CriteriaEveluationModel.MitigationProjects;
+                if (this.productAndServiceForm.MitigationProjects === true) {
+                  this.disasterRiskValue = this.disasterRiskValue + 1;
+                }
                 this.productAndServiceForm.WaterSupply =
                   data.data.CriteriaEveluationModel.WaterSupply;
+                if (this.productAndServiceForm.WaterSupply === true) {
+                  this.disasterRiskValue = this.disasterRiskValue + 1;
+                }
                 this.productAndServiceForm.Sanitation =
                   data.data.CriteriaEveluationModel.Sanitation;
+                if (this.productAndServiceForm.Sanitation === true) {
+                  this.disasterRiskValue = this.disasterRiskValue + 1;
+                }
 
                 this.productAndServiceForm.DisasterRiskHygiene =
                   data.data.CriteriaEveluationModel.DisasterRiskHygiene;
+                if (this.productAndServiceForm.DisasterRiskHygiene === true) {
+                  this.disasterRiskValue = this.disasterRiskValue + 1;
+                }
                 this.productAndServiceForm.DisasterCapacityBuilding =
                   data.data.CriteriaEveluationModel.DisasterCapacityBuilding;
+                if (
+                  this.productAndServiceForm.DisasterCapacityBuilding === true
+                ) {
+                  this.disasterRiskValue = this.disasterRiskValue + 1;
+                }
                 this.productAndServiceForm.EmergencyResponse =
                   data.data.CriteriaEveluationModel.EmergencyResponse;
+                if (this.productAndServiceForm.EmergencyResponse === true) {
+                  this.disasterRiskValue = this.disasterRiskValue + 1;
+                }
                 this.productAndServiceForm.RenewableEnergy =
                   data.data.CriteriaEveluationModel.RenewableEnergy;
+                if (this.productAndServiceForm.RenewableEnergy === true) {
+                  this.disasterRiskValue = this.disasterRiskValue + 1;
+                }
                 this.productAndServiceForm.Shelter =
                   data.data.CriteriaEveluationModel.Shelter;
+                if (this.productAndServiceForm.Shelter === true) {
+                  this.disasterRiskValue = this.disasterRiskValue + 1;
+                }
                 this.productAndServiceForm.NaturalResourceManagement =
                   data.data.CriteriaEveluationModel.NaturalResourceManagement;
+                if (
+                  this.productAndServiceForm.NaturalResourceManagement === true
+                ) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.AggriculutreCapacityBuilding =
                   data.data.CriteriaEveluationModel.AggriculutreCapacityBuilding;
+                if (
+                  this.productAndServiceForm.AggriculutreCapacityBuilding ===
+                  true
+                ) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.LivestockManagement =
                   data.data.CriteriaEveluationModel.LivestockManagement;
+                if (this.productAndServiceForm.LivestockManagement === true) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.FoodSecurity =
                   data.data.CriteriaEveluationModel.FoodSecurity;
+                if (this.productAndServiceForm.FoodSecurity === true) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.ResearchandPublication =
                   data.data.CriteriaEveluationModel.ResearchandPublication;
+                if (
+                  this.productAndServiceForm.ResearchandPublication === true
+                ) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.Horticulture =
                   data.data.CriteriaEveluationModel.Horticulture;
+                if (this.productAndServiceForm.Horticulture === true) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.Irrigation =
                   data.data.CriteriaEveluationModel.Irrigation;
+                if (this.productAndServiceForm.Irrigation === true) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.Livelihood =
                   data.data.CriteriaEveluationModel.Livelihood;
+                if (this.productAndServiceForm.Livelihood === true) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.ValueChain =
                   data.data.CriteriaEveluationModel.ValueChain;
+                if (this.productAndServiceForm.ValueChain === true) {
+                  this.aggricultureLiveStockValue =
+                    this.aggricultureLiveStockValue + 1;
+                }
                 this.productAndServiceForm.Children =
                   data.data.CriteriaEveluationModel.Children;
+
                 this.productAndServiceForm.Disabled =
                   data.data.CriteriaEveluationModel.Disabled;
+
                 this.productAndServiceForm.IDPs =
                   data.data.CriteriaEveluationModel.IDPs;
                 this.productAndServiceForm.Returnees =
                   data.data.CriteriaEveluationModel.Returnees;
+
                 this.productAndServiceForm.Kuchis =
                   data.data.CriteriaEveluationModel.Kuchis;
+
                 this.productAndServiceForm.Widows =
                   data.data.CriteriaEveluationModel.Widows;
+
                 this.productAndServiceForm.Women =
                   data.data.CriteriaEveluationModel.Women;
+
                 this.productAndServiceForm.Men =
                   data.data.CriteriaEveluationModel.Men;
+
                 this.productAndServiceForm.Youth =
                   data.data.CriteriaEveluationModel.Youth;
 
@@ -1940,7 +2204,7 @@ export class CriteriaEvaluationComponent
                 if (
                   data.data.CriteriaEveluationModel.CostOfCompensationMonth ==
                     null ||
-                  data.data.CriteriaEveluationModel.CostOfCompensationMonth ==
+                  data.data.CriteriaEveluationModel.CostOfCompensationMonth ===
                     undefined
                 ) {
                   this.feasibilityForm.CostOfCompensationMonth = null;
@@ -1977,7 +2241,11 @@ export class CriteriaEvaluationComponent
                   .CriteriaEveluationModel.ProjectAllowedBylaw
                   ? data.data.CriteriaEveluationModel.ProjectAllowedBylaw
                   : false;
-                if (this.feasibilityForm.ProjectAllowedBylaw === false) {
+                if (
+                  this.feasibilityForm.ProjectAllowedBylaw === false ||
+                  data.data.CriteriaEveluationModel.ProjectByLeadership ===
+                    false
+                ) {
                   this.disableCriteriaEvaluationForm = true;
                   this.isExpanded = false;
                 } else {
@@ -2025,7 +2293,8 @@ export class CriteriaEvaluationComponent
                   data.data.CriteriaEveluationModel.ImproveDonorRelationship;
                 this.priorityForm.GoodCause =
                   data.data.CriteriaEveluationModel.GoodCause;
-                  this.priorityForm.Others = data.data.CriteriaEveluationModel.Others;
+                this.priorityForm.Others =
+                  data.data.CriteriaEveluationModel.Others;
                 this.priorityForm.ImprovePerformancecapacity =
                   data.data.CriteriaEveluationModel.ImprovePerformancecapacity;
                 this.priorityForm.SkillImprove =
@@ -2055,7 +2324,7 @@ export class CriteriaEvaluationComponent
 
                 if (
                   data.data.CriteriaEveluationModel.ProjectActivities == null ||
-                  data.data.CriteriaEveluationModel.ProjectActivities ==
+                  data.data.CriteriaEveluationModel.ProjectActivities ===
                     undefined
                 ) {
                   this.financialForm.ProjectActivities = 0;
@@ -2066,7 +2335,7 @@ export class CriteriaEvaluationComponent
                 //  if (this.financialForm.ProjectActivities == null ? 0 : data.data.CriteriaEveluationModel.ProjectActivities)
                 if (
                   data.data.CriteriaEveluationModel.Operational == null ||
-                  data.data.CriteriaEveluationModel.Operational == undefined
+                  data.data.CriteriaEveluationModel.Operational === undefined
                 ) {
                   this.financialForm.Operational = 0;
                 } else {
@@ -2074,8 +2343,8 @@ export class CriteriaEvaluationComponent
                     data.data.CriteriaEveluationModel.Operational;
                 }
                 if (
-                  data.data.CriteriaEveluationModel.Overhead_Admin == 0 ||
-                  data.data.CriteriaEveluationModel.Overhead_Admin == undefined
+                  data.data.CriteriaEveluationModel.Overhead_Admin === 0 ||
+                  data.data.CriteriaEveluationModel.Overhead_Admin === undefined
                 ) {
                   this.financialForm.Overhead_Admin = 0;
                 } else {
@@ -2083,8 +2352,8 @@ export class CriteriaEvaluationComponent
                     data.data.CriteriaEveluationModel.Overhead_Admin;
                 }
                 if (
-                  data.data.CriteriaEveluationModel.Lump_Sum == 0 ||
-                  data.data.CriteriaEveluationModel.Lump_Sum == undefined
+                  data.data.CriteriaEveluationModel.Lump_Sum === 0 ||
+                  data.data.CriteriaEveluationModel.Lump_Sum === undefined
                 ) {
                   this.financialForm.Lump_Sum = 0;
                 } else {
@@ -2100,7 +2369,7 @@ export class CriteriaEvaluationComponent
                 // add/edit riskSecurity
                 this.riskForm.Security =
                   data.data.CriteriaEveluationModel.Security;
-                if (this.riskForm.Security == true) {
+                if (this.riskForm.Security === true) {
                   this.isDisabledRisk = false;
                 } else {
                   this.isDisabledRisk = true;
@@ -2185,6 +2454,7 @@ export class CriteriaEvaluationComponent
               }
             }
             this.criteriaEvaluationLoader = false;
+            this.getPurposeOfInitialtiveScore();
           },
           error => {
             this.criteriaEvaluationLoader = false;
@@ -2555,9 +2825,9 @@ export class CriteriaEvaluationComponent
   //#region to calculate total value
   get totalValue() {
     this.totalScore =
-      (this.donorCEForm.PastFundingExperience === true
-        ? criteriaEvaluationScores.pastFundingExperience_Yes
-        : criteriaEvaluationScores.pastFundingExperience_No) +
+      // (this.donorCEForm.PastFundingExperience === true
+      //   ? criteriaEvaluationScores.pastFundingExperience_Yes
+      //   : criteriaEvaluationScores.pastFundingExperience_No) +
       (this.donorCEForm.MethodOfFunding === 1
         ? criteriaEvaluationScores.methodOfFunding_Sole
         : this.donorCEForm.MethodOfFunding === 2
@@ -2581,9 +2851,9 @@ export class CriteriaEvaluationComponent
       (this.donorCEForm.OtherDeliverable === true
         ? criteriaEvaluationScores.proposalExp_OtherDeliverable_Yes
         : criteriaEvaluationScores.proposalExp_OtherDeliverable_No) +
-      (this.donorCEForm.PastWorkingExperience === true
-        ? criteriaEvaluationScores.pastWorkExperoence_Yes
-        : criteriaEvaluationScores.pastWorkExperoence_No) +
+      // (this.donorCEForm.PastWorkingExperience === true
+      //   ? criteriaEvaluationScores.pastWorkExperoence_Yes
+      //   : criteriaEvaluationScores.pastWorkExperoence_No) +
       (this.donorCEForm.CriticismPerformance === true
         ? criteriaEvaluationScores.pastCriticismPerfomance_Yes
         : criteriaEvaluationScores.pastCriticismPerfomance_No) +
@@ -2601,157 +2871,168 @@ export class CriteriaEvaluationComponent
         : criteriaEvaluationScores.pastCriticismQualityDeliverable_No) +
       (this.donorCEForm.DonorFinancingHistory === 1
         ? criteriaEvaluationScores.finanacingHistory_Good
-        : this.donorCEForm.DonorFinancingHistory === 2
-        ? criteriaEvaluationScores.finanacingHistory_Neutral
-        : this.donorCEForm.DonorFinancingHistory === 3
-        ? criteriaEvaluationScores.finanacingHistory_Bad
         : criteriaEvaluationScores.finanacingHistory_Neutral) +
       (this.donorCEForm.ReligiousStanding === 1
         ? criteriaEvaluationScores.religiousStanding_Good
-        : this.donorCEForm.ReligiousStanding === 2
-        ? criteriaEvaluationScores.religiousStanding_Neutral
-        : this.donorCEForm.ReligiousStanding === 3
-        ? criteriaEvaluationScores.religiousStanding_Bad
-        : criteriaEvaluationScores.religiousStanding_Neutral) +
+        : // : this.donorCEForm.ReligiousStanding === 2
+          // ? criteriaEvaluationScores.religiousStanding_Neutral
+          // : this.donorCEForm.ReligiousStanding === 3
+          // ? criteriaEvaluationScores.religiousStanding_Bad
+          criteriaEvaluationScores.religiousStanding_Neutral) +
       (this.donorCEForm.PoliticalStanding === 1
         ? criteriaEvaluationScores.politicalStanding_Good
-        : this.donorCEForm.PoliticalStanding === 2
-        ? criteriaEvaluationScores.politicalStanding_Neutral
-        : this.donorCEForm.PoliticalStanding === 3
-        ? criteriaEvaluationScores.politicalStanding_Bad
-        : criteriaEvaluationScores.politicalStanding_Neutral) +
-      (this.productAndServiceForm.Awareness === true
-        ? criteriaEvaluationScores.prodAwareness_Yes
-        : criteriaEvaluationScores.prodAwareness_No) +
-      (this.productAndServiceForm.Infrastructure === true
-        ? criteriaEvaluationScores.prodInfrastructure_Yes
-        : criteriaEvaluationScores.prodInfrastructure_No) +
-      (this.productAndServiceForm.CapacityBuilding === true
-        ? criteriaEvaluationScores.prodCapacityBuilding_Yes
-        : criteriaEvaluationScores.prodCapacityBuilding_No) +
-      (this.productAndServiceForm.IncomeGeneration === true
-        ? criteriaEvaluationScores.prodIncomeGeneration_Yes
-        : criteriaEvaluationScores.prodIncomeGeneration_No) +
-      (this.productAndServiceForm.Mobilization === true
-        ? criteriaEvaluationScores.prodMobilization_Yes
-        : criteriaEvaluationScores.prodMobilization_No) +
-      (this.productAndServiceForm.PeaceBuilding === true
-        ? criteriaEvaluationScores.prodPeaceBuilding_Yes
-        : criteriaEvaluationScores.prodPeaceBuilding_No) +
-      (this.productAndServiceForm.SocialProtection === true
-        ? criteriaEvaluationScores.prodSocialProtection_Yes
-        : criteriaEvaluationScores.prodSocialProtection_No) +
-      (this.productAndServiceForm.SustainableLivelihood === true
-        ? criteriaEvaluationScores.prodSustainableLivelihood_Yes
-        : criteriaEvaluationScores.prodSustainableLivelihood_No) +
-      (this.productAndServiceForm.Advocacy === true
-        ? criteriaEvaluationScores.prodAdvocacy_Yes
-        : criteriaEvaluationScores.prodAdvocacy_No) +
-      (this.productAndServiceForm.Literacy === true
-        ? criteriaEvaluationScores.prodLiteracy_Yes
-        : criteriaEvaluationScores.prodLiteracy_No) +
-      (this.productAndServiceForm.EducationCapacityBuilding === true
-        ? criteriaEvaluationScores.prodEducationCapacityBuilding_Yes
-        : criteriaEvaluationScores.prodEducationCapacityBuilding_No) +
-      (this.productAndServiceForm.SchoolUpgrading === true
-        ? criteriaEvaluationScores.prodSchoolUpgrading_Yes
-        : criteriaEvaluationScores.prodSchoolUpgrading_No) +
-      (this.productAndServiceForm.EducationInEmergency === true
-        ? criteriaEvaluationScores.prodEducationInEmergency_Yes
-        : criteriaEvaluationScores.prodEducationInEmergency_No) +
-      (this.productAndServiceForm.OnlineEducation === true
-        ? criteriaEvaluationScores.prodOnlineEducation_Yes
-        : criteriaEvaluationScores.prodOnlineEducation_No) +
-      (this.productAndServiceForm.CommunityBasedEducation === true
-        ? criteriaEvaluationScores.prodCommunityBasedEducation_Yes
-        : criteriaEvaluationScores.prodCommunityBasedEducation_No) +
-      (this.productAndServiceForm.AcceleratedLearningProgram === true
-        ? criteriaEvaluationScores.AcceleratedLearningProgram_Yes
-        : criteriaEvaluationScores.AcceleratedLearningProgram_No) +
-      (this.productAndServiceForm.PrimaryHealthServices === true
-        ? criteriaEvaluationScores.PrimaryHealthServices_Yes
-        : criteriaEvaluationScores.PrimaryHealthServices_No) +
-      (this.productAndServiceForm.ReproductiveHealth === true
-        ? criteriaEvaluationScores.ReproductiveHealth_Yes
-        : criteriaEvaluationScores.ReproductiveHealth_No) +
-      (this.productAndServiceForm.Immunization === true
-        ? criteriaEvaluationScores.Immunization_Yes
-        : criteriaEvaluationScores.Immunization_No) +
-      (this.productAndServiceForm.InfantandYoungChildFeeding === true
-        ? criteriaEvaluationScores.InfantandYoungChildFeeding_Yes
-        : criteriaEvaluationScores.InfantandYoungChildFeeding_No) +
-      (this.productAndServiceForm.Nutrition === true
-        ? criteriaEvaluationScores.Nutrition_Yes
-        : criteriaEvaluationScores.Nutrition_No) +
-      (this.productAndServiceForm.CommunicableDisease === true
-        ? criteriaEvaluationScores.CommunicableDisease_Yes
-        : criteriaEvaluationScores.CommunicableDisease_No) +
-      (this.productAndServiceForm.Hygiene === true
-        ? criteriaEvaluationScores.Hygiene_Yes
-        : criteriaEvaluationScores.Hygiene_No) +
-      (this.productAndServiceForm.EnvironmentalHealth === true
-        ? criteriaEvaluationScores.EnvironmentalHealth_Yes
-        : criteriaEvaluationScores.EnvironmentalHealth_No) +
-      (this.productAndServiceForm.MentalHealthandDisabilityService === true
-        ? criteriaEvaluationScores.MentalHealthandDisabilityService_Yes
-        : criteriaEvaluationScores.MentalHealthandDisabilityService_No) +
-      (this.productAndServiceForm.HealthCapacityBuilding === true
-        ? criteriaEvaluationScores.HealthCapacityBuilding_Yes
-        : criteriaEvaluationScores.HealthCapacityBuilding_No) +
-      (this.productAndServiceForm.Telemedicine === true
-        ? criteriaEvaluationScores.Telemedicine_Yes
-        : criteriaEvaluationScores.Telemedicine_No) +
-      (this.productAndServiceForm.MitigationProjects === true
-        ? criteriaEvaluationScores.MitigationProjects_Yes
-        : criteriaEvaluationScores.MitigationProjects_No) +
-      (this.productAndServiceForm.WaterSupply === true
-        ? criteriaEvaluationScores.WaterSupply_Yes
-        : criteriaEvaluationScores.WaterSupply_No) +
-      (this.productAndServiceForm.Sanitation === true
-        ? criteriaEvaluationScores.Sanitation_Yes
-        : criteriaEvaluationScores.Sanitation_No) +
-      (this.productAndServiceForm.DisasterRiskHygiene === true
-        ? criteriaEvaluationScores.DisasterRiskHygiene_Yes
-        : criteriaEvaluationScores.DisasterRiskHygiene_No) +
-      (this.productAndServiceForm.DisasterCapacityBuilding === true
-        ? criteriaEvaluationScores.DisasterCapacityBuilding_Yes
-        : criteriaEvaluationScores.DisasterCapacityBuilding_No) +
-      (this.productAndServiceForm.EmergencyResponse === true
-        ? criteriaEvaluationScores.EmergencyResponse_Yes
-        : criteriaEvaluationScores.EmergencyResponse_No) +
-      (this.productAndServiceForm.RenewableEnergy === true
-        ? criteriaEvaluationScores.RenewableEnergy_Yes
-        : criteriaEvaluationScores.RenewableEnergy_No) +
-      (this.productAndServiceForm.Shelter === true
-        ? criteriaEvaluationScores.Shelter_Yes
-        : criteriaEvaluationScores.Shelter_No) +
-      (this.productAndServiceForm.NaturalResourceManagement === true
-        ? criteriaEvaluationScores.NaturalResourceManagement_Yes
-        : criteriaEvaluationScores.NaturalResourceManagement_No) +
-      (this.productAndServiceForm.AggriculutreCapacityBuilding === true
-        ? criteriaEvaluationScores.AggriculutreCapacityBuilding_Yes
-        : criteriaEvaluationScores.AggriculutreCapacityBuilding_No) +
-      (this.productAndServiceForm.LivestockManagement === true
-        ? criteriaEvaluationScores.LivestockManagement_Yes
-        : criteriaEvaluationScores.LivestockManagement_No) +
-      (this.productAndServiceForm.FoodSecurity === true
-        ? criteriaEvaluationScores.FoodSecurity_Yes
-        : criteriaEvaluationScores.FoodSecurity_No) +
-      (this.productAndServiceForm.ResearchandPublication === true
-        ? criteriaEvaluationScores.ResearchandPublication_Yes
-        : criteriaEvaluationScores.ResearchandPublication_No) +
-      (this.productAndServiceForm.Horticulture === true
-        ? criteriaEvaluationScores.Horticulture_Yes
-        : criteriaEvaluationScores.Horticulture_No) +
-      (this.productAndServiceForm.Irrigation === true
-        ? criteriaEvaluationScores.Irrigation_Yes
-        : criteriaEvaluationScores.Irrigation_No) +
-      (this.productAndServiceForm.Livelihood === true
-        ? criteriaEvaluationScores.Livelihood_Yes
-        : criteriaEvaluationScores.Livelihood_No) +
-      (this.productAndServiceForm.ValueChain === true
-        ? criteriaEvaluationScores.ValueChain_Yes
-        : criteriaEvaluationScores.ValueChain_No) +
+        : // : this.donorCEForm.PoliticalStanding === 2
+          // ? criteriaEvaluationScores.politicalStanding_Neutral
+          // : this.donorCEForm.PoliticalStanding === 3
+          // ? criteriaEvaluationScores.politicalStanding_Bad
+          criteriaEvaluationScores.politicalStanding_Neutral) +
+      (this.productAndServiceForm.RuralDevelopmentSocialProtection === true
+        ? criteriaEvaluationScores.ruralDevelopmentProtection_Yes
+        : criteriaEvaluationScores.ruralDevelopmentProtection_No) +
+      (this.productAndServiceForm.Education === true
+        ? criteriaEvaluationScores.education_Yes
+        : criteriaEvaluationScores.education_No) +
+      (this.productAndServiceForm.HealthAndNutrition === true
+        ? criteriaEvaluationScores.healthAndNutrition_Yes
+        : criteriaEvaluationScores.healthAndNutrition_No) +
+      (this.productAndServiceForm.DisasterRiskReduction === true
+        ? criteriaEvaluationScores.disasterAndRisk_Yes
+        : criteriaEvaluationScores.disasterAndRisk_No) +
+      (this.productAndServiceForm.AgricultureAndLivestock === true
+        ? criteriaEvaluationScores.agricultureaAndLivestock_Yes
+        : criteriaEvaluationScores.agricultureaAndLivestock_No) +
+      // (this.productAndServiceForm.Awareness === true
+      //   ? criteriaEvaluationScores.prodAwareness_Yes
+      //   : criteriaEvaluationScores.prodAwareness_No) +
+      // (this.productAndServiceForm.Infrastructure === true
+      //   ? criteriaEvaluationScores.prodInfrastructure_Yes
+      //   : criteriaEvaluationScores.prodInfrastructure_No) +
+      // (this.productAndServiceForm.CapacityBuilding === true
+      //   ? criteriaEvaluationScores.prodCapacityBuilding_Yes
+      //   : criteriaEvaluationScores.prodCapacityBuilding_No) +
+      // (this.productAndServiceForm.IncomeGeneration === true
+      //   ? criteriaEvaluationScores.prodIncomeGeneration_Yes
+      //   : criteriaEvaluationScores.prodIncomeGeneration_No) +
+      // (this.productAndServiceForm.Mobilization === true
+      //   ? criteriaEvaluationScores.prodMobilization_Yes
+      //   : criteriaEvaluationScores.prodMobilization_No) +
+      // (this.productAndServiceForm.PeaceBuilding === true
+      //   ? criteriaEvaluationScores.prodPeaceBuilding_Yes
+      //   : criteriaEvaluationScores.prodPeaceBuilding_No) +
+      // (this.productAndServiceForm.SocialProtection === true
+      //   ? criteriaEvaluationScores.prodSocialProtection_Yes
+      //   : criteriaEvaluationScores.prodSocialProtection_No) +
+      // (this.productAndServiceForm.SustainableLivelihood === true
+      //   ? criteriaEvaluationScores.prodSustainableLivelihood_Yes
+      //   : criteriaEvaluationScores.prodSustainableLivelihood_No) +
+      // (this.productAndServiceForm.Advocacy === true
+      //   ? criteriaEvaluationScores.prodAdvocacy_Yes
+      //   : criteriaEvaluationScores.prodAdvocacy_No) +
+      // (this.productAndServiceForm.Literacy === true
+      //   ? criteriaEvaluationScores.prodLiteracy_Yes
+      //   : criteriaEvaluationScores.prodLiteracy_No) +
+      // (this.productAndServiceForm.EducationCapacityBuilding === true
+      //   ? criteriaEvaluationScores.prodEducationCapacityBuilding_Yes
+      //   : criteriaEvaluationScores.prodEducationCapacityBuilding_No) +
+      // (this.productAndServiceForm.SchoolUpgrading === true
+      //   ? criteriaEvaluationScores.prodSchoolUpgrading_Yes
+      //   : criteriaEvaluationScores.prodSchoolUpgrading_No) +
+      // (this.productAndServiceForm.EducationInEmergency === true
+      //   ? criteriaEvaluationScores.prodEducationInEmergency_Yes
+      //   : criteriaEvaluationScores.prodEducationInEmergency_No) +
+      // (this.productAndServiceForm.OnlineEducation === true
+      //   ? criteriaEvaluationScores.prodOnlineEducation_Yes
+      //   : criteriaEvaluationScores.prodOnlineEducation_No) +
+      // (this.productAndServiceForm.CommunityBasedEducation === true
+      //   ? criteriaEvaluationScores.prodCommunityBasedEducation_Yes
+      //   : criteriaEvaluationScores.prodCommunityBasedEducation_No) +
+      // (this.productAndServiceForm.AcceleratedLearningProgram === true
+      //   ? criteriaEvaluationScores.AcceleratedLearningProgram_Yes
+      //   : criteriaEvaluationScores.AcceleratedLearningProgram_No) +
+      // (this.productAndServiceForm.PrimaryHealthServices === true
+      //   ? criteriaEvaluationScores.PrimaryHealthServices_Yes
+      //   : criteriaEvaluationScores.PrimaryHealthServices_No) +
+      // (this.productAndServiceForm.ReproductiveHealth === true
+      //   ? criteriaEvaluationScores.ReproductiveHealth_Yes
+      //   : criteriaEvaluationScores.ReproductiveHealth_No) +
+      // (this.productAndServiceForm.Immunization === true
+      //   ? criteriaEvaluationScores.Immunization_Yes
+      //   : criteriaEvaluationScores.Immunization_No) +
+      // (this.productAndServiceForm.InfantandYoungChildFeeding === true
+      //   ? criteriaEvaluationScores.InfantandYoungChildFeeding_Yes
+      //   : criteriaEvaluationScores.InfantandYoungChildFeeding_No) +
+      // (this.productAndServiceForm.Nutrition === true
+      //   ? criteriaEvaluationScores.Nutrition_Yes
+      //   : criteriaEvaluationScores.Nutrition_No) +
+      // (this.productAndServiceForm.CommunicableDisease === true
+      //   ? criteriaEvaluationScores.CommunicableDisease_Yes
+      //   : criteriaEvaluationScores.CommunicableDisease_No) +
+      // (this.productAndServiceForm.Hygiene === true
+      //   ? criteriaEvaluationScores.Hygiene_Yes
+      //   : criteriaEvaluationScores.Hygiene_No) +
+      // (this.productAndServiceForm.EnvironmentalHealth === true
+      //   ? criteriaEvaluationScores.EnvironmentalHealth_Yes
+      //   : criteriaEvaluationScores.EnvironmentalHealth_No) +
+      // (this.productAndServiceForm.MentalHealthandDisabilityService === true
+      //   ? criteriaEvaluationScores.MentalHealthandDisabilityService_Yes
+      //   : criteriaEvaluationScores.MentalHealthandDisabilityService_No) +
+      // (this.productAndServiceForm.HealthCapacityBuilding === true
+      //   ? criteriaEvaluationScores.HealthCapacityBuilding_Yes
+      //   : criteriaEvaluationScores.HealthCapacityBuilding_No) +
+      // (this.productAndServiceForm.Telemedicine === true
+      //   ? criteriaEvaluationScores.Telemedicine_Yes
+      //   : criteriaEvaluationScores.Telemedicine_No) +
+      // (this.productAndServiceForm.MitigationProjects === true
+      //   ? criteriaEvaluationScores.MitigationProjects_Yes
+      //   : criteriaEvaluationScores.MitigationProjects_No) +
+      // (this.productAndServiceForm.WaterSupply === true
+      //   ? criteriaEvaluationScores.WaterSupply_Yes
+      //   : criteriaEvaluationScores.WaterSupply_No) +
+      // (this.productAndServiceForm.Sanitation === true
+      //   ? criteriaEvaluationScores.Sanitation_Yes
+      //   : criteriaEvaluationScores.Sanitation_No) +
+      // (this.productAndServiceForm.DisasterRiskHygiene === true
+      //   ? criteriaEvaluationScores.DisasterRiskHygiene_Yes
+      //   : criteriaEvaluationScores.DisasterRiskHygiene_No) +
+      // (this.productAndServiceForm.DisasterCapacityBuilding === true
+      //   ? criteriaEvaluationScores.DisasterCapacityBuilding_Yes
+      //   : criteriaEvaluationScores.DisasterCapacityBuilding_No) +
+      // (this.productAndServiceForm.EmergencyResponse === true
+      //   ? criteriaEvaluationScores.EmergencyResponse_Yes
+      //   : criteriaEvaluationScores.EmergencyResponse_No) +
+      // (this.productAndServiceForm.RenewableEnergy === true
+      //   ? criteriaEvaluationScores.RenewableEnergy_Yes
+      //   : criteriaEvaluationScores.RenewableEnergy_No) +
+      // (this.productAndServiceForm.Shelter === true
+      //   ? criteriaEvaluationScores.Shelter_Yes
+      //   : criteriaEvaluationScores.Shelter_No) +
+      // (this.productAndServiceForm.NaturalResourceManagement === true
+      //   ? criteriaEvaluationScores.NaturalResourceManagement_Yes
+      //   : criteriaEvaluationScores.NaturalResourceManagement_No) +
+      // (this.productAndServiceForm.AggriculutreCapacityBuilding === true
+      //   ? criteriaEvaluationScores.AggriculutreCapacityBuilding_Yes
+      //   : criteriaEvaluationScores.AggriculutreCapacityBuilding_No) +
+      // (this.productAndServiceForm.LivestockManagement === true
+      //   ? criteriaEvaluationScores.LivestockManagement_Yes
+      //   : criteriaEvaluationScores.LivestockManagement_No) +
+      // (this.productAndServiceForm.FoodSecurity === true
+      //   ? criteriaEvaluationScores.FoodSecurity_Yes
+      //   : criteriaEvaluationScores.FoodSecurity_No) +
+      // (this.productAndServiceForm.ResearchandPublication === true
+      //   ? criteriaEvaluationScores.ResearchandPublication_Yes
+      //   : criteriaEvaluationScores.ResearchandPublication_No) +
+      // (this.productAndServiceForm.Horticulture === true
+      //   ? criteriaEvaluationScores.Horticulture_Yes
+      //   : criteriaEvaluationScores.Horticulture_No) +
+      // (this.productAndServiceForm.Irrigation === true
+      //   ? criteriaEvaluationScores.Irrigation_Yes
+      //   : criteriaEvaluationScores.Irrigation_No) +
+      // (this.productAndServiceForm.Livelihood === true
+      //   ? criteriaEvaluationScores.Livelihood_Yes
+      //   : criteriaEvaluationScores.Livelihood_No) +
+      // (this.productAndServiceForm.ValueChain === true
+      //   ? criteriaEvaluationScores.ValueChain_Yes
+      //   : criteriaEvaluationScores.ValueChain_No) +
       (this.productAndServiceForm.Children === true
         ? criteriaEvaluationScores.Children_Yes
         : criteriaEvaluationScores.Children_No) +
@@ -2788,9 +3069,9 @@ export class CriteriaEvaluationComponent
       (this.eligibilityForm.CoPartnership === true
         ? criteriaEvaluationScores.donorELigibilityPartnership_Yes
         : criteriaEvaluationScores.donorELigibilityPartnership_No) +
-      (this.feasibilityForm.CapacityAvailableForProject === true
-        ? criteriaEvaluationScores.feasibilityCapacityForProject_Yes
-        : criteriaEvaluationScores.feasibilityCapacityForProject_No) +
+      // (this.feasibilityForm.CapacityAvailableForProject === true
+      //   ? criteriaEvaluationScores.feasibilityCapacityForProject_Yes
+      //   : criteriaEvaluationScores.feasibilityCapacityForProject_No) +
       (this.feasibilityForm.TrainedStaff === true
         ? criteriaEvaluationScores.compensationTrainedStaff_Yes
         : criteriaEvaluationScores.compensationTrainedStaff_No) +
@@ -2807,13 +3088,13 @@ export class CriteriaEvaluationComponent
       (this.feasibilityForm.ThirdPartyContract === true
         ? criteriaEvaluationScores.allowedThirdPartyContract_Yes
         : criteriaEvaluationScores.allowedThirdPartyContract_No) +
-      this.feasibilityForm.CostOfCompensationMonth * -1 +
-      (this.feasibilityForm.CostOfCompensationMoney >= 5000
-        ? (-1 * this.feasibilityForm.CostOfCompensationMoney) / 5000
-        : 0) +
-      (this.feasibilityForm.AnyInKindComponent === true
-        ? criteriaEvaluationScores.anyInKindComponent_Yes
-        : criteriaEvaluationScores.anyInKindComponent_No) +
+      // this.feasibilityForm.CostOfCompensationMonth * -1 +
+      // (this.feasibilityForm.CostOfCompensationMoney >= 5000
+      //   ? (-1 * this.feasibilityForm.CostOfCompensationMoney) / 5000
+      //   : 0) +
+      // (this.feasibilityForm.AnyInKindComponent === true
+      //   ? criteriaEvaluationScores.anyInKindComponent_Yes
+      //   : criteriaEvaluationScores.anyInKindComponent_No) +
       (this.feasibilityForm.UseableByOrganisation === true
         ? criteriaEvaluationScores.useableByOrganisation_Yes
         : criteriaEvaluationScores.useableByOrganisation_No) +
@@ -2826,12 +3107,12 @@ export class CriteriaEvaluationComponent
       (this.feasibilityForm.EnoughTimeForProject === true
         ? criteriaEvaluationScores.enoughTimeForQualityWork_Yes
         : criteriaEvaluationScores.enoughTimeForQualityWork_No) +
-      (this.feasibilityForm.ProjectAllowedBylaw === true
-        ? criteriaEvaluationScores.projectAllowedByLaw_Yes
-        : criteriaEvaluationScores.projectAllowedByLaw_No) +
-      (this.feasibilityForm.ProjectByLeadership === true
-        ? criteriaEvaluationScores.projectAllowByOrganisation_Yes
-        : criteriaEvaluationScores.projectAllowByOrganisation_No) +
+      // (this.feasibilityForm.ProjectAllowedBylaw === true
+      //   ? criteriaEvaluationScores.projectAllowedByLaw_Yes
+      //   : criteriaEvaluationScores.projectAllowedByLaw_No) +
+      // (this.feasibilityForm.ProjectByLeadership === true
+      //   ? criteriaEvaluationScores.projectAllowByOrganisation_Yes
+      //   : criteriaEvaluationScores.projectAllowByOrganisation_No) +
       (this.feasibilityForm.IsProjectPractical === true
         ? criteriaEvaluationScores.isProjectPractical_Yes
         : criteriaEvaluationScores.isProjectPractical_No) +
@@ -2845,10 +3126,9 @@ export class CriteriaEvaluationComponent
         ? criteriaEvaluationScores.enoughTimeToPrepareproposal_Yes
         : criteriaEvaluationScores.enoughTimeToPrepareproposal_No) +
       // Note: **don't delete:condition for if the costGreaterThanBudget_Yes value is set to be 0
-      (this.feasibilityForm.IsCostGreaterthenBudget === false &&
-      this.feasibilityForm.IsCostGreaterthenBudget != null
-        ? criteriaEvaluationScores.costGreaterThanBudget_No
-        : criteriaEvaluationScores.costGreaterThanBudget_Yes) +
+      (this.feasibilityForm.IsCostGreaterthenBudget === true
+        ? criteriaEvaluationScores.costGreaterThanBudget_Yes
+        : criteriaEvaluationScores.costGreaterThanBudget_No) +
       // Note: **don't delete :condition for if the costGreaterThanBudget_Yes value is set to be -1
       // (this.feasibilityForm.IsCostGreaterthenBudget === false
       // ? criteriaEvaluationScores.costGreaterThanBudget_No :
@@ -2903,37 +3183,77 @@ export class CriteriaEvaluationComponent
       // (this.riskForm.Security === false && this.riskForm.Security != null
       //   ? criteriaEvaluationScores.riskSecurity_No
       //   : criteriaEvaluationScores.riskSecurity_Yes) +
-      (this.riskForm.Security === true || this.riskForm.Security == null
-        ? criteriaEvaluationScores.riskSecurity_Yes
-        : criteriaEvaluationScores.riskSecurity_No) +
+      // (this.riskForm.Security === true || this.riskForm.Security == null
+      //   ? criteriaEvaluationScores.riskSecurity_Yes
+      //   : criteriaEvaluationScores.riskSecurity_No) +
       // (this.riskForm.DeliveryFaiLure === false && this.riskForm.DeliveryFaiLure != null
       //   ? criteriaEvaluationScores.deliveryFailure_No
       //   : criteriaEvaluationScores.deliveryFailure_Yes) +
-      (this.riskForm.DeliveryFaiLure === true ||
-      this.riskForm.DeliveryFaiLure == null
-        ? criteriaEvaluationScores.deliveryFailure_Yes
-        : criteriaEvaluationScores.deliveryFailure_No) +
-      (this.riskForm.Reputation === true || this.riskForm.Reputation == null
-        ? criteriaEvaluationScores.riskReputation_Yes
-        : criteriaEvaluationScores.riskReputation_No) +
+
+      (this.riskForm.Staff === true
+        ? criteriaEvaluationScores.staffSecured_Yes
+        : criteriaEvaluationScores.staffSecured_No) +
+      (this.riskForm.ProjectAssets === true
+        ? criteriaEvaluationScores.staffSecured_Yes
+        : criteriaEvaluationScores.staffSecured_No) +
+      (this.riskForm.Suppliers === true
+        ? criteriaEvaluationScores.projectAssetSecured_Yes
+        : criteriaEvaluationScores.projectAssetSecured_No) +
+      (this.riskForm.Beneficiaries === true
+        ? criteriaEvaluationScores.beneficiarieSecured_Yes
+        : criteriaEvaluationScores.beneficiarieSecured_No) +
+      (this.riskForm.OverallOrganization === true
+        ? criteriaEvaluationScores.organizationSecured_Yes
+        : criteriaEvaluationScores.organizationSecured_No) +
+      // (this.riskForm.DeliveryFaiLure === true ||
+      // this.riskForm.DeliveryFaiLure == null
+      //   ? criteriaEvaluationScores.deliveryFailure_Yes
+      //   : criteriaEvaluationScores.deliveryFailure_No) +
+      (this.riskForm.PrematureSeizure === true
+        ? criteriaEvaluationScores.prematureSeizure_Yes
+        : criteriaEvaluationScores.prematureSeizure_No) +
+      (this.riskForm.GovernmentConfiscation === true
+        ? criteriaEvaluationScores.governmentConfiscation_Yes
+        : criteriaEvaluationScores.governmentConfiscation_No) +
+      (this.riskForm.DesctructionByTerroristActivity === true
+        ? criteriaEvaluationScores.terroristActivity_Yes
+        : criteriaEvaluationScores.terroristActivity_No) +
+      // (this.riskForm.Reputation === true || this.riskForm.Reputation == null
+      //   ? criteriaEvaluationScores.riskReputation_Yes
+      //   : criteriaEvaluationScores.riskReputation_No) +
+      (this.riskForm.Religious === true
+        ? criteriaEvaluationScores.religious_Yes
+        : criteriaEvaluationScores.religious_No) +
+      (this.riskForm.Sectarian === true
+        ? criteriaEvaluationScores.sectarian_Yes
+        : criteriaEvaluationScores.sectarian_No) +
+      (this.riskForm.Ethinc === true
+        ? criteriaEvaluationScores.ethnic_Yes
+        : criteriaEvaluationScores.ethnic_No) +
+      (this.riskForm.Social === true
+        ? criteriaEvaluationScores.social_Yes
+        : criteriaEvaluationScores.social_No) +
+      (this.riskForm.Traditional === true
+        ? criteriaEvaluationScores.traditional_Yes
+        : criteriaEvaluationScores.traditional_No) +
       (this.riskForm.Geographical === true
-        ? criteriaEvaluationScores.Geographical_Yes
-        : criteriaEvaluationScores.Geographical_No) +
+        ? criteriaEvaluationScores.geographical_Yes
+        : criteriaEvaluationScores.geographical_No) +
       (this.riskForm.Insecurity === true
-        ? criteriaEvaluationScores.Insecurity_Yes
-        : criteriaEvaluationScores.Insecurity_No) +
+        ? criteriaEvaluationScores.insecurity_Yes
+        : criteriaEvaluationScores.insecurity_No) +
       (this.riskForm.Season === true
-        ? criteriaEvaluationScores.Season_Yes
-        : criteriaEvaluationScores.Season_No) +
+        ? criteriaEvaluationScores.season_Yes
+        : criteriaEvaluationScores.season_No) +
       (this.riskForm.Ethnicity === true
-        ? criteriaEvaluationScores.Ethnicity_Yes
-        : criteriaEvaluationScores.Ethnicity_No) +
+        ? criteriaEvaluationScores.ethnicity_Yes
+        : criteriaEvaluationScores.ethnicity_No) +
       (this.riskForm.Culture === true
-        ? criteriaEvaluationScores.Culture_Yes
-        : criteriaEvaluationScores.Culture_No) +
+        ? criteriaEvaluationScores.culture_Yes
+        : criteriaEvaluationScores.culture_No) +
       (this.riskForm.ReligiousBeliefs === true
-        ? criteriaEvaluationScores.ReligiousBeliefs_Yes
-        : criteriaEvaluationScores.ReligiousBeliefs_No) +
+        ? criteriaEvaluationScores.religiousBeliefs_Yes
+        : criteriaEvaluationScores.religiousBeliefs_No) +
       (this.riskForm.FocusDivertingrisk === true
         ? criteriaEvaluationScores.focusDeliveryRisk_Yes
         : criteriaEvaluationScores.focusDeliveryRisk_No) +
@@ -3066,7 +3386,7 @@ export class CriteriaEvaluationComponent
 
   getPriorityListByProjectId(ProjectId: number) {
     this.priorityOtherList = [];
-    if (ProjectId != null && ProjectId !== undefined && ProjectId != 0) {
+    if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.criteriaEvalService
         .GetPriorityOtherDetailByProjectId(
           this.appurl.getApiUrl() +
@@ -3114,7 +3434,7 @@ export class CriteriaEvaluationComponent
             // add to list
             if (
               response.CommonId.LongId != null &&
-              response.CommonId.LongId != 0
+              response.CommonId.LongId !== 0
             ) {
               obj.PriorityOtherDetailId = response.CommonId.LongId;
             }
@@ -3280,7 +3600,7 @@ export class CriteriaEvaluationComponent
 
   getFeasibilityExpertByProjectId(ProjectId: number) {
     this.feasivilityList = [];
-    if (ProjectId != null && ProjectId !== undefined && ProjectId != 0) {
+    if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.criteriaEvalService
         .GetPriorityOtherDetailByProjectId(
           this.appurl.getApiUrl() +
@@ -3340,7 +3660,7 @@ export class CriteriaEvaluationComponent
             // add to list
             if (
               response.CommonId.LongId != null &&
-              response.CommonId.LongId != 0
+              response.CommonId.LongId !== 0
             ) {
               obj.ExpertOtherDetailId = response.CommonId.LongId;
             }
@@ -3491,7 +3811,7 @@ export class CriteriaEvaluationComponent
   //#region getassumptionByprojectId
   getAssumptionByprojectId(ProjectId: number) {
     this.assumptionList = [];
-    if (ProjectId != null && ProjectId !== undefined && ProjectId != 0) {
+    if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.criteriaEvalService
         .GetPriorityOtherDetailByProjectId(
           this.appurl.getApiUrl() +
@@ -3548,7 +3868,7 @@ export class CriteriaEvaluationComponent
             // add to list
             if (
               response.CommonId.LongId != null &&
-              response.CommonId.LongId != 0
+              response.CommonId.LongId !== 0
             ) {
               obj.AssumptionDetailId = response.CommonId.LongId;
             }
@@ -3702,7 +4022,7 @@ export class CriteriaEvaluationComponent
   //#region GetAgegroupByProjectId
   GetAgegroupByProjectId(ProjectId: number) {
     this.ageGroupList = [];
-    if (ProjectId != null && ProjectId !== undefined && ProjectId != 0) {
+    if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.criteriaEvalService
         .GetPriorityOtherDetailByProjectId(
           this.appurl.getApiUrl() + GLOBAL.API_GetAllAgeDetailDetailByProjectId,
@@ -3912,7 +4232,7 @@ export class CriteriaEvaluationComponent
   //#region getoccupationByProjectId
   GetOccupationByProjectId(ProjectId: number) {
     this.occupatonList = [];
-    if (ProjectId != null && ProjectId !== undefined && ProjectId != 0) {
+    if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.criteriaEvalService
         .GetPriorityOtherDetailByProjectId(
           this.appurl.getApiUrl() +
@@ -4122,7 +4442,7 @@ export class CriteriaEvaluationComponent
   //#region getCriteriaEvaluationByProjectId
   GetDonorEligibilityCriteriaByProjectId(ProjectId: number) {
     this.donorEligibilityList = [];
-    if (ProjectId != null && ProjectId !== undefined && ProjectId != 0) {
+    if (ProjectId != null && ProjectId !== undefined && ProjectId !== 0) {
       this.criteriaEvalService
         .GetPriorityOtherDetailByProjectId(
           this.appurl.getApiUrl() +
@@ -4403,7 +4723,6 @@ export class CriteriaEvaluationComponent
   }
   //#endregion
 
-
   downloadPdf() {
     const pdfmodel: ICriteriaEvaluationPdfModel = {
       ProjectId: this.ProjectId,
@@ -4414,14 +4733,154 @@ export class CriteriaEvaluationComponent
         .getFile(
           this.appurl.getApiUrl() +
             GLOBAL.API_Pdf_GetCriteriaEvaluationReportPdf,
-            pdfmodel
+          pdfmodel
         )
         .pipe()
         .subscribe();
     }
-
   }
 
+  onTabchangeScore($event) {
+    if ($event.any) {
+      this.getPurposeOfInitialtiveScore();
+    }
+  }
+
+  // common to get purpose of initiaitve scores
+
+  getPurposeOfInitialtiveScore() {
+    if (
+      this.productAndServiceForm.Awareness === true ||
+      this.productAndServiceForm.Infrastructure === true ||
+      this.productAndServiceForm.CapacityBuilding === true ||
+      this.productAndServiceForm.IncomeGeneration === true ||
+      this.productAndServiceForm.Mobilization === true ||
+      this.productAndServiceForm.PeaceBuilding === true ||
+      this.productAndServiceForm.SocialProtection === true ||
+      this.productAndServiceForm.SustainableLivelihood === true ||
+      this.productAndServiceForm.Advocacy === true
+    ) {
+      this.productAndServiceForm.RuralDevelopmentSocialProtection = true;
+    } else {
+      this.productAndServiceForm.RuralDevelopmentSocialProtection = false;
+    }
+    if (
+      this.productAndServiceForm.Literacy === true ||
+      this.productAndServiceForm.EducationCapacityBuilding === true ||
+      this.productAndServiceForm.SchoolUpgrading === true ||
+      this.productAndServiceForm.EducationInEmergency === true ||
+      this.productAndServiceForm.OnlineEducation === true ||
+      this.productAndServiceForm.CommunityBasedEducation === true ||
+      this.productAndServiceForm.AcceleratedLearningProgram === true
+    ) {
+      this.productAndServiceForm.Education = true;
+    } else {
+      this.productAndServiceForm.Education = false;
+    }
+    if (
+      this.productAndServiceForm.PrimaryHealthServices === true ||
+      this.productAndServiceForm.ReproductiveHealth === true ||
+      this.productAndServiceForm.Immunization === true ||
+      this.productAndServiceForm.Nutrition === true ||
+      this.productAndServiceForm.CommunicableDisease === true ||
+      this.productAndServiceForm.Hygiene === true ||
+      this.productAndServiceForm.EnvironmentalHealth === true ||
+      this.productAndServiceForm.HealthCapacityBuilding === true ||
+      this.productAndServiceForm.Telemedicine === true ||
+      this.productAndServiceForm.InfantandYoungChildFeeding === true ||
+      this.productAndServiceForm.MentalHealthandDisabilityService === true
+    ) {
+      this.productAndServiceForm.HealthAndNutrition = true;
+    } else {
+      this.productAndServiceForm.HealthAndNutrition = false;
+    }
+    if (
+      this.productAndServiceForm.MitigationProjects === true ||
+      this.productAndServiceForm.WaterSupply === true ||
+      this.productAndServiceForm.Sanitation === true ||
+      this.productAndServiceForm.DisasterRiskHygiene === true ||
+      this.productAndServiceForm.DisasterCapacityBuilding === true ||
+      this.productAndServiceForm.EmergencyResponse === true ||
+      this.productAndServiceForm.RenewableEnergy === true ||
+      this.productAndServiceForm.Shelter === true
+    ) {
+      this.productAndServiceForm.DisasterRiskReduction = true;
+    } else {
+      this.productAndServiceForm.DisasterRiskReduction = false;
+    }
+    if (
+      this.productAndServiceForm.NaturalResourceManagement === true ||
+      this.productAndServiceForm.AggriculutreCapacityBuilding === true ||
+      this.productAndServiceForm.LivestockManagement === true ||
+      this.productAndServiceForm.FoodSecurity === true ||
+      this.productAndServiceForm.ResearchandPublication === true ||
+      this.productAndServiceForm.Horticulture === true ||
+      this.productAndServiceForm.Irrigation === true ||
+      this.productAndServiceForm.Livelihood === true ||
+      this.productAndServiceForm.ValueChain === true
+    ) {
+      this.productAndServiceForm.AgricultureAndLivestock = true;
+    } else {
+      this.productAndServiceForm.AgricultureAndLivestock = false;
+    }
+  }
+  ruralDevelopmentScore(value) {
+    // Note :  check if all the rural development value is unchecked then only the score value will decreased.
+    if (value.checked === true) {
+      this.productAndServiceForm.RuralDevelopmentSocialProtection = true;
+      this.developmenmtValue = this.developmenmtValue + 1;
+    } else {
+      this.developmenmtValue = this.developmenmtValue - 1;
+      if (this.developmenmtValue <= 0) {
+        this.productAndServiceForm.RuralDevelopmentSocialProtection = false;
+      }
+    }
+  }
+  educationScore(value) {
+    if (value.checked === true) {
+      this.productAndServiceForm.Education = true;
+      this.educationValue = this.educationValue + 1;
+    } else {
+      this.educationValue = this.educationValue - 1;
+      if (this.educationValue <= 0) {
+        this.productAndServiceForm.Education = false;
+      }
+    }
+  }
+  healthNutritionScore(value) {
+    if (value.checked === true) {
+      this.healthNutritionValue = this.healthNutritionValue + 1;
+      this.productAndServiceForm.HealthAndNutrition = true;
+    } else {
+      this.healthNutritionValue = this.healthNutritionValue - 1;
+      if (this.healthNutritionValue <= 0) {
+        this.productAndServiceForm.HealthAndNutrition = false;
+      }
+    }
+  }
+  aggricultureScore(value) {
+    if (value.checked === true) {
+      this.productAndServiceForm.AgricultureAndLivestock = true;
+      this.aggricultureLiveStockValue = this.aggricultureLiveStockValue + 1;
+    } else {
+      this.aggricultureLiveStockValue = this.aggricultureLiveStockValue - 1;
+      if (this.aggricultureLiveStockValue <= 0) {
+        this.productAndServiceForm.AgricultureAndLivestock = false;
+      }
+    }
+  }
+
+  disasterRiskScore(value) {
+    if (value.checked === true) {
+      this.productAndServiceForm.DisasterRiskReduction = true;
+      this.disasterRiskValue = this.disasterRiskValue + 1;
+    } else {
+      this.disasterRiskValue = this.disasterRiskValue - 1;
+      if (this.disasterRiskValue <= 0) {
+        this.productAndServiceForm.DisasterRiskReduction = false;
+      }
+    }
+  }
   ngOnDestroy() {
     this.cdRef.detach();
   }

@@ -1742,11 +1742,11 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<int>("GainLossSelectedAccountId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<long>("ChartOfAccountNewId");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int?>("EmployeeId");
 
                     b.Property<bool>("IsDeleted");
 
@@ -1754,9 +1754,13 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
+                    b.Property<long[]>("SelectedAccounts");
+
+                    b.Property<string>("UserId");
+
                     b.HasKey("GainLossSelectedAccountId");
 
-                    b.HasIndex("ChartOfAccountNewId");
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("GainLossSelectedAccounts");
                 });
@@ -7081,11 +7085,15 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("PurchaseDate");
 
+                    b.Property<long[]>("PurchaseId");
+
                     b.Property<string>("RequestCode");
 
                     b.Property<int>("Status");
 
                     b.Property<double>("TotalCost");
+
+                    b.Property<long?>("VoucherNo");
 
                     b.HasKey("LogisticRequestsId");
 
@@ -7109,9 +7117,11 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<double>("FinalPrice");
+                    b.Property<double>("FinalUnitPrice");
 
                     b.Property<bool>("IsDeleted");
+
+                    b.Property<long>("ItemId");
 
                     b.Property<long>("LogisticRequestsId");
 
@@ -7121,11 +7131,15 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<long>("Quantity");
 
-                    b.Property<string>("SupplierName");
+                    b.Property<long>("StoreSourceCodeId");
 
                     b.HasKey("SupplierId");
 
+                    b.HasIndex("ItemId");
+
                     b.HasIndex("LogisticRequestsId");
+
+                    b.HasIndex("StoreSourceCodeId");
 
                     b.ToTable("ProjectLogisticSuppliers");
                 });
@@ -8660,6 +8674,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("JournalCode");
 
+                    b.Property<long?>("LogisticRequestId");
+
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
@@ -8703,6 +8719,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("Currency");
 
                     b.HasIndex("InventoryItem");
+
+                    b.HasIndex("LogisticRequestId");
 
                     b.HasIndex("OfficeId");
 
@@ -9274,10 +9292,9 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.GainLossSelectedAccounts", b =>
                 {
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Accounting.ChartOfAccountNew", "ChartOfAccountNew")
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
                         .WithMany()
-                        .HasForeignKey("ChartOfAccountNewId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EmployeeId");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.Advances", b =>
@@ -10569,9 +10586,19 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectLogisticSuppliers", b =>
                 {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreInventoryItem", "InventoryItems")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectLogisticRequests", "ProjectLogisticRequests")
                         .WithMany()
                         .HasForeignKey("LogisticRequestsId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Store.StoreSourceCodeDetail", "StoreSourceCodeDetail")
+                        .WithMany()
+                        .HasForeignKey("StoreSourceCodeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -10908,6 +10935,10 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .WithMany("StoreItemPurchases")
                         .HasForeignKey("InventoryItem")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectLogisticRequests", "ProjectLogisticRequests")
+                        .WithMany()
+                        .HasForeignKey("LogisticRequestId");
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.OfficeDetail", "OfficeDetail")
                         .WithMany()

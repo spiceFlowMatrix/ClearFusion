@@ -46,6 +46,7 @@ export interface IPurchaseList {
   Project: string;
   OriginalCost: number;
   DepreciatedCost: number;
+  subItemSubtitle?: string;
   subItems: IProcurementList[];
 }
 
@@ -84,6 +85,7 @@ export interface IProcurementList {
   ProcuredAmount?: string;
   Returned: string;
   ReturnedOn?: any;
+  EmployeeId?: any;
 }
 
 export interface IAddEditPurchaseModel {

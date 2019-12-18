@@ -10,7 +10,7 @@
         <!-- <h4 class="main-heading" style="padding-left: 0px !important"><i class="fas fa-arrow-left"></i>   Request Details
         </h4> -->
         <h4 class="sub-heading">Workflow Details</h4>
-        <div *ngIf="(this.totalCost<=199)">
+        <div *ngIf="(this.requestDetail.TotalCost<=199)">
           <p>This request is viable for Direct Purchase. Please process the <b>Purchase Order</b> below.</p>
           <mat-divider style="position: unset;"></mat-divider>
             <div class="row" *ngIf="(this.requestDetail.Status==1)">
@@ -42,18 +42,27 @@
                 </div>
             </div>
             <div class="row" *ngIf="(this.requestDetail.Status==4)">
-                <div class="col-sm-7 margin_top_8">
-                  <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
-                  <span class="margin_left_25" style="font-size: 13px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Completed. Awaiting control approval</span>
-                </div>
-                <div class="col-sm-5 margin_top_1">
-                  <hum-button  (click)="rejectPurchaseOrder()" [type]="'cancel'" [text]="'Reject'"></hum-button>
-                  <hum-button  (click)="approvePurchaseOrder()" [type]="'save'" [text]="'Approve'"></hum-button>
-                </div>
+              <div class="col-sm-7 margin_top_8">
+                <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
+                <span class="margin_left_25" style="font-size: 13px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Completed. Awaiting control approval</span>
+              </div>
+              <div class="col-sm-5 margin_top_1">
+                <hum-button  (click)="rejectPurchaseOrder()" [type]="'cancel'" [text]="'Reject'"></hum-button>
+                <hum-button  (click)="approvePurchaseOrder()" [type]="'save'" [text]="'Approve'"></hum-button>
+              </div>
+            </div>
+            <div class="row" *ngIf="(this.requestDetail.Status==7)">
+              <div class="col-sm-4 margin_top_8">
+                <span class="display_inline_block margin_left_10" style="font-size: 14px;color: gray;">Purchase Order</span>
+              </div>
+              <div class="col-sm-8 margin_top_1">
+                <span style="font-size: 13px;color: gray;"><i class="fas fa-info-circle icon_color_green"></i> <b> Purchase Order</b> verified. You will find <b>Issues</b> in the store.
+                <br><b>Voucher</b> with <b>Reference No {{voucherReference}}</b> has been generated.</span>
+              </div>
             </div>
           <mat-divider style="position: unset;"></mat-divider>
         </div>
-        <div *ngIf="(this.totalCost>=200 && this.totalCost<=9999)">
+        <div *ngIf="(this.requestDetail.TotalCost>=200 && this.requestDetail.TotalCost<=9999)">
           <p>This request is viable for <b>Comparative Statement</b>. Please process the <b>Comparative Statement & Purchase Order</b> below.</p>
           <mat-divider style="position: unset;"></mat-divider>
             <div *ngIf="this.requestDetail.ComparativeStatus==1">
@@ -166,7 +175,7 @@
             </div>
           <mat-divider style="position: unset;"></mat-divider>
         </div>
-        <div *ngIf="(this.totalCost>=10000 && this.totalCost<=59999)">
+        <div *ngIf="(this.requestDetail.TotalCost>=10000 && this.requestDetail.TotalCost<=59999)">
           <p>This request is viable for <b>Tender</b>. Please process the <b>Tender & Purchase Order</b> below.</p>
           <mat-divider style="position: unset;"></mat-divider>
             <div *ngIf="(this.requestDetail.Status==1)">
@@ -254,7 +263,7 @@
       </div>
       <!-- <mat-divider [vertical]="true" style="height:300px"></mat-divider> -->
       <div class="col-md-5">
-        <app-request-status [requestStatus]="this.requestDetail.Status" [comparativeStatus]="this.requestDetail.ComparativeStatus" [totalCost]="this.totalCost" [requestedItems]="this.requestItemList" (selectedItemChange)='selectedItemChange($event)' (comparativeStatusChange)="comparativeStatusChange($event)" (StatusChange)="StatusChange($event)" ></app-request-status>
+        <app-request-status [requestStatus]="this.requestDetail.Status" [comparativeStatus]="this.requestDetail.ComparativeStatus" [totalCost]="this.requestDetail.TotalCost" [requestedItems]="this.requestItemList" (selectedItemChange)='selectedItemChange($event)' (comparativeStatusChange)="comparativeStatusChange($event)" (StatusChange)="StatusChange($event)" ></app-request-status>
       </div>
     </div>
   </div>

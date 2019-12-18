@@ -145,8 +145,7 @@ export class InterviewDetailComponent implements OnInit {
     this.noticePeriodList$ = of([
       { name: '15 Days', value: 1 },
       { name: '30 Days', value: 2 },
-      { name: 'Others', value: 3 },
-
+      { name: 'Others', value: 3 }
     ] as IDropDownModel[]);
 
     this.statusList$ = of([
@@ -187,8 +186,10 @@ export class InterviewDetailComponent implements OnInit {
       TotalMarksObtain: [null, [Validators.required]]
     });
   }
-
   ngOnInit() {
+    if (this.interviewId > 0) {
+      this.isDisplay = false;
+    }
     this.actions = {
       items: {
         button: { status: false, text: '' },
@@ -199,9 +200,8 @@ export class InterviewDetailComponent implements OnInit {
       subitems: {
         button: { status: false, text: '' },
         delete: false,
-        download: false,
+        download: false
       }
-
     };
     this.routeActive.queryParams.subscribe(params => {
       this.candidateId = +params['candId'];
@@ -239,14 +239,9 @@ export class InterviewDetailComponent implements OnInit {
       TotalExperienceInYear: ''
     };
     this.getScreenSize();
-
     this.getAllHiringRequestDetails();
     this.getCandidateDetails();
-    if (this.interviewId > 0) {
-      this.isDisplay = false;
-    }
   }
-
   //#region "Dynamic Scroll"
   @HostListener('window:resize', ['$event'])
   getScreenSize() {
@@ -259,56 +254,13 @@ export class InterviewDetailComponent implements OnInit {
       'overflow-x': 'hidden'
     };
   }
-
   //#endregion
-
-  // #region "getRatingBasedCriteriaQuestion"
-  getRatingBasedCriteriaQuestion(OfficeId: number) {
-    return this.hiringRequestService.GetRatingBasedCriteriaQuestion(OfficeId);
-  }
-  //#endregion
-
-  // #region "getTechnicalQuestionsByDesignationId"
-  getTechnicalQuestionsByDesignationId(DesignationId: number) {
-    return this.hiringRequestService.GetTechnicalQuestionsByDesignationId(
-      DesignationId
-    );
-  }
-  //#endregion
-
-  // #region "getCandidateDetails"
-  getCandidateDetails() {
-    // this.candidateDetails = null;
-    this.hiringRequestService
-      .GetCandidateDetailsByCandidateId(this.candidateId)
-      .subscribe(
-        (response: IResponseData) => {
-          this.commonLoader.showLoader();
-          if (response.statusCode === 200 && response.data !== null) {
-            this.candidateDetails = {
-              FullName: response.data.FullName,
-              DutyStation: response.data.DutyStation,
-              Gender: Gender[response.data.Gender],
-              Qualification: response.data.Qualification,
-              DateOfBirth: response.data.DateOfBirth
-            };
-          }
-          this.commonLoader.hideLoader();
-        },
-        error => {
-          this.commonLoader.hideLoader();
-        }
-      );
-  }
-  //#endregion
-
-  // #region "getAllHiringRequestDetails"
+  // #region "Get hiring reuquest details"
   getAllHiringRequestDetails() {
     const model: any = {
       HiringRequestId: this.hiringRequestId,
       ProjectId: this.projectId
     };
-    // this.candidateDetails = null;
     this.hiringRequestService
       .GetAllHiringRequestDetailForInterviewByHiringRequestId(model)
       .pipe(takeUntil(this.destroyed$))
@@ -378,15 +330,156 @@ export class InterviewDetailComponent implements OnInit {
       );
   }
   //#endregion
+  // #region "Get candidate details"
+  getCandidateDetails() {
+    this.hiringRequestService
+      .GetCandidateDetailsByCandidateId(this.candidateId)
+      .subscribe(
+        (response: IResponseData) => {
+          this.commonLoader.showLoader();
+          if (response.statusCode === 200 && response.data !== null) {
+            this.candidateDetails = {
+              FullName: response.data.FullName,
+              DutyStation: response.data.DutyStation,
+              Gender: Gender[response.data.Gender],
+              Qualification: response.data.Qualification,
+              DateOfBirth: response.data.DateOfBirth
+            };
+          }
+          this.commonLoader.hideLoader();
+        },
+        error => {
+          this.commonLoader.hideLoader();
+        }
+      );
+  }
+  //#endregion
+  //#region "Download Candidate Cv"
+  getCandidateCvByCandidateId() {
+    const candidateId = this.candidateId;
+    if (candidateId != null && candidateId !== undefined) {
+      this.commonLoader.showLoader();
+      this.hiringRequestService
+        .DownloadCandidateCvByRequestId(candidateId)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(
+          (response: IResponseData) => {
+            if (response.statusCode === 200 && response.data !== null) {
+              this.candidateCv = {
+                AttachmentName: response.data.AttachmentName,
+                AttachmentUrl: response.data.AttachmentUrl,
+                UploadedBy: response.data.UploadedBy
+              };
+              const anchor = document.createElement('a');
+              anchor.href = this.candidateCv.AttachmentUrl;
+              anchor.target = '_blank';
+              anchor.click();
+            }
+            this.commonLoader.hideLoader();
+          },
+          () => {
+            this.commonLoader.hideLoader();
+          }
+        );
+    }
+  }
+  //#endregion
+  //#region "Calculate total marks"
+  WritenTextMarks(data: any) {
+    if (data.srcElement.value != null && data.srcElement.value !== undefined) {
+      this.TotalMarks(data.srcElement.value);
+    }
+  }
+  TotalMarks(data: any) {
+    if (data != null && data !== undefined) {
+      this.totalMarksObtain =
+        this.professionalCriteriaMarks + this.marksObtain + +data;
+    } else {
+      this.totalMarksObtain = this.professionalCriteriaMarks + this.marksObtain;
+    }
+    this.interviewDetailForm.controls['TotalMarksObtain'].setValue(
+      this.totalMarksObtain
+    );
+  }
+  //#endregion
+  // #region "Get rating based criteria questions"
+  getRatingBasedCriteriaQuestion(OfficeId: number) {
+    return this.hiringRequestService.GetRatingBasedCriteriaQuestion(OfficeId);
+  }
+  //#endregion
+  // #region "Get technical questions by designationId"
+  getTechnicalQuestionsByDesignationId(DesignationId: number) {
+    return this.hiringRequestService.GetTechnicalQuestionsByDesignationId(
+      DesignationId
+    );
+  }
+  //#endregion
+  // #region "On change rating based criteria question score"
+  onChangeRatingBasedCriteria(questionId: any, score: MatSelectChange) {
+    if (
+      this.ratingBasedCriteriaAnswerList.find(
+        x => x.QuestionId === questionId
+      ) == null
+    ) {
+      this.ratingBasedCriteriaAnswerList.push({
+        QuestionId: questionId,
+        Score: score.value
+      });
+    } else {
+      this.ratingBasedCriteriaAnswerList.find(
+        x => x.QuestionId === questionId
+      ).Score = score.value;
+    }
+    this.professionalCriteriaMarks =
+      this.ratingBasedCriteriaAnswerList.reduce(
+        (sum, item) => sum + item.Score,
+        0
+      ) / this.ratingBasedCriteriaAnswerList.length;
+    this.TotalMarks(this.interviewDetailForm.get('WrittenTestMarks').value);
+    this.interviewDetailForm.controls['ProfessionalCriteriaMark'].setValue(
+      this.professionalCriteriaMarks
+    );
+    this.interviewDetailForm.controls['RatingBasedCriteriaList'].setValue(
+      this.ratingBasedCriteriaAnswerList
+    );
+  }
+  //#endregion
+  // #region "On change technical question score"
+  onChangeTechnicalQuestion(questionId: any, score: MatSelectChange) {
+    if (
+      this.technicalAnswerList.find(x => x.QuestionId === questionId) == null
+    ) {
+      this.technicalAnswerList.push({
+        QuestionId: questionId,
+        Score: score.value
+      });
+    } else {
+      this.technicalAnswerList.find(x => x.QuestionId === questionId).Score =
+        score.value;
+    }
+    this.marksObtain = this.technicalAnswerList.reduce(
+      (sum, item) => sum + item.Score,
+      0
+    );
+    this.TotalMarks(this.interviewDetailForm.get('WrittenTestMarks').value);
 
+    this.interviewDetailForm.controls['MarksObtain'].setValue(this.marksObtain);
+
+    this.interviewDetailForm.controls['TechnicalQuestionList'].setValue(
+      this.technicalAnswerList
+    );
+  }
+  //#endregion
+  // #region "Add new language"
   addNewLanguage(): void {
+    /** Open AddNewLaguage dialog box*/
     const dialogRef = this.dialog.open(AddNewLanguageComponent, {
       width: '950px'
     });
-
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
         if (this.languagesList$ === undefined) {
+          /** binding result data(language details) to laguages list*/
           this.languagesList$ = of([
             {
               LanguageName: result.LanguageName,
@@ -414,11 +507,13 @@ export class InterviewDetailComponent implements OnInit {
       }
     });
   }
+  //#endregion
+  // #region "Add new traning"
   addNewTraning(): void {
+    /** Open AddNewTraning dialog box*/
     const dialogRef = this.dialog.open(AddNewTraningComponent, {
       width: '850px'
     });
-
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
         (result.TraningStartDate = this.datePipe.transform(
@@ -430,6 +525,7 @@ export class InterviewDetailComponent implements OnInit {
             'dd-MM-yyyy'
           ));
         if (this.traningList$ === undefined) {
+          /** binding result data(traning details) to traning list*/
           this.traningList$ = of([
             {
               TraningType: result.TraningType,
@@ -452,14 +548,16 @@ export class InterviewDetailComponent implements OnInit {
       }
     });
   }
-
+  //#endregion
+  // #region "Add inerviewers(multiple or single)"
   addInterviewers(): void {
+    /** Open AddInterviewers dialog box*/
     const dialogRef = this.dialog.open(AddNewInterviewerComponent, {
       width: '500px'
     });
-
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
+        /** binding result data(interviewers details) to interviewer list*/
         result.forEach(element => {
           if (this.temp === 0) {
             this.interviewerList$ = of([
@@ -489,69 +587,43 @@ export class InterviewDetailComponent implements OnInit {
       }
     });
   }
-  onChangeRatingBasedCriteria(questionId: any, score: MatSelectChange) {
-    if (
-      this.ratingBasedCriteriaAnswerList.find(
-        x => x.QuestionId === questionId
-      ) == null
-    ) {
-      this.ratingBasedCriteriaAnswerList.push({
-        QuestionId: questionId,
-        Score: score.value
-      });
-    } else {
-      this.ratingBasedCriteriaAnswerList.find(
-        x => x.QuestionId === questionId
-      ).Score = score.value;
-    }
-    this.professionalCriteriaMarks =
-      this.ratingBasedCriteriaAnswerList.reduce(
-        (sum, item) => sum + item.Score,
-        0
-      ) / this.ratingBasedCriteriaAnswerList.length;
-    // this.totalMarksObtain = this.marksObtain + this.professionalCriteriaMarks;
-    this.TotalMarks( this.interviewDetailForm.get('WrittenTestMarks').value);
-    this.interviewDetailForm.controls['ProfessionalCriteriaMark'].setValue(
-      this.professionalCriteriaMarks
-    );
-    this.interviewDetailForm.controls['RatingBasedCriteriaList'].setValue(
-      this.ratingBasedCriteriaAnswerList
-    );
-  }
-  onChangeTechnicalQuestion(questionId: any, score: MatSelectChange) {
-    if (
-      this.technicalAnswerList.find(x => x.QuestionId === questionId) == null
-    ) {
-      this.technicalAnswerList.push({
-        QuestionId: questionId,
-        Score: score.value
-      });
-    } else {
-      this.technicalAnswerList.find(x => x.QuestionId === questionId).Score =
-        score.value;
-    }
-    this.marksObtain = this.technicalAnswerList.reduce(
-      (sum, item) => sum + item.Score,
-      0
-    );
-    //this.totalMarksObtain = this.marksObtain + this.professionalCriteriaMarks;
-    this.TotalMarks( this.interviewDetailForm.get('WrittenTestMarks').value);
-
-    this.interviewDetailForm.controls['MarksObtain'].setValue(this.marksObtain);
-
-    this.interviewDetailForm.controls['TechnicalQuestionList'].setValue(
-      this.technicalAnswerList
-    );
-  }
-  onFormSubmit(data: any) {
-    if (this.interviewDetailForm.valid) {
-      this.AddInterviewDetails(data);
-    } else {
-      this.toastr.warning('Please fill all required fields');
+  //#endregion
+  // #region "Delete perticular data from list"
+  actionEventsLanguage(event: any) {
+    if (event.type === 'delete') {
+      const index = (this.interviewDetailForm.controls['LanguageList']
+        .value as Array<any>).findIndex(
+        x => x.LanguageName === event.item.LanguageName
+      );
+      (this.interviewDetailForm.controls['LanguageList'].value as Array<
+        any
+      >).splice(index, 1);
     }
   }
-
-  //#region "AddInterviewDetails"
+  actionEventsTraining(event: any) {
+    if (event.type === 'delete') {
+      const index = (this.interviewDetailForm.controls['TraningList']
+        .value as Array<any>).findIndex(
+        x => x.LanguageName === event.item.LanguageName
+      );
+      (this.interviewDetailForm.controls['TraningList'].value as Array<
+        any
+      >).splice(index, 1);
+    }
+  }
+  actionEventsInterviewers(event: any) {
+    if (event.type === 'delete') {
+      const index = (this.interviewDetailForm.controls['InterviewerList']
+        .value as Array<any>).findIndex(
+        x => x.EmployeeId === event.item.EmployeeId
+      );
+      (this.interviewDetailForm.controls['InterviewerList'].value as Array<
+        any
+      >).splice(index, 1);
+    }
+  }
+  //#endregion
+  //#region "Add interview details"
   AddInterviewDetails(data: InterviewDetailModel) {
     this.commonLoader.showLoader();
     data.CandidateId = this.candidateId;
@@ -572,8 +644,16 @@ export class InterviewDetailComponent implements OnInit {
     this.commonLoader.showLoader();
   }
   //#endregion
-
-  // #region "getInterviewDetailsByInterviewId"
+  //#region "On submission of interview form"
+  onFormSubmit(data: any) {
+    if (this.interviewDetailForm.valid) {
+      this.AddInterviewDetails(data);
+    } else {
+      this.toastr.warning('Please fill all required fields');
+    }
+  }
+  //#endregion
+  // #region "gGet interview details by InterviewId"
   getInterviewDetailsByInterviewId() {
     const InterviewId = this.interviewId;
     this.hiringRequestService
@@ -582,7 +662,7 @@ export class InterviewDetailComponent implements OnInit {
         (response: IResponseData) => {
           this.commonLoader.showLoader();
           if (response.statusCode === 200 && response.data !== null) {
-            this.setInterviewDetails(response.data);
+            this.setRemainingInterviewDetails(response.data);
           }
           this.commonLoader.hideLoader();
         },
@@ -592,11 +672,30 @@ export class InterviewDetailComponent implements OnInit {
       );
   }
   //#endregion
-
-  //#region "setInterviewDetails"
-  setInterviewDetails(data: any) {
+  //#region "Set remaining interview details"
+  setRemainingInterviewDetails(data: any) {
     data.CandidateId = this.candidateId;
     data.HiringRequestId = this.hiringRequestId;
+    data.CandidateName = this.candidateDetails.FullName;
+    data.Qualification = this.candidateDetails.Qualification;
+    data.Position = this.hiringRequestDetail.Position;
+    data.DutyStation = this.hiringRequestDetail.Office;
+    data.MaritalStatus = '-';
+    data.PassportNumber = '-';
+    data.NameOfInstitute = '-';
+    data.DateOfBirth = this.candidateDetails.DateOfBirth;
+    data.TechnicalQuestionList.forEach((element, i) => {
+      this.technicalQuestionList[i].selected = element.Score;
+    });
+    data.RatingBasedCriteriaList.forEach((element, i) => {
+      this.ratingBasedCriteriaQuestionList[i].selected = element.Score;
+    });
+    this.totalMarksObtain = data.TotalMarksObtain;
+    this.marksObtain = data.MarksObtain;
+    this.professionalCriteriaMarks = data.ProfessionalCriteriaMark;
+    this.languagesList$ = of(data.LanguageList);
+    this.traningList$ = of(data.TraningList);
+    this.interviewerList$ = of(data.InterviewerList);
     this.interviewDetailForm = this.fb.group({
       CandidateId: data.CandidateId,
       HiringRequestId: data.HiringRequestId,
@@ -615,36 +714,12 @@ export class InterviewDetailComponent implements OnInit {
       CurrentTransport: data.CurrentTransport,
       CurrentMeal: data.CurrentMeal,
       ExpectationTransport: data.ExpectationTransport,
-      ExpectationMeal: data.ExpectationMeal,
-      LanguageList: data.LanguageList,
-      TraningList: data.TraningList
+      ExpectationMeal: data.ExpectationMeal
     });
-    this.totalMarksObtain = data.TotalMarksObtain;
-    this.marksObtain = data.MarksObtain;
-    this.professionalCriteriaMarks = data.ProfessionalCriteriaMark;
-    data.RatingBasedCriteriaList.forEach((element, i) => {
-      this.ratingBasedCriteriaQuestionList[i].selected = element.Score;
-    });
-    data.TechnicalQuestionList.forEach((element, i) => {
-      this.technicalQuestionList[i].selected = element.Score;
-    });
-    this.languagesList$ = of(data.LanguageList);
-    this.traningList$ = of(data.TraningList);
-    this.interviewerList$ = of(data.InterviewerList);
-
-    data.CandidateName = this.candidateDetails.FullName;
-    data.Qualification = this.candidateDetails.Qualification;
-    data.Position = this.hiringRequestDetail.Position;
-    data.DutyStation = this.hiringRequestDetail.Office;
-    data.MaritalStatus = '-';
-    data.PassportNumber = '-';
-    data.NameOfInstitute = '-';
-    data.DateOfBirth = this.candidateDetails.DateOfBirth;
     this.interviewDetails = data;
   }
   //#endregion
-
-  //#region "onExportInterviewDetailsPdf"
+  //#region "On export of interview details pdf"
   onExportInterviewDetailsPdf() {
     this.commonLoader.showLoader();
     this.globalSharedService
@@ -657,82 +732,9 @@ export class InterviewDetailComponent implements OnInit {
     this.commonLoader.hideLoader();
   }
   //#endregion
-
-  //#region "RouteBackToRequestDetailPage"
+  //#region "Route back to request detail page"
   backToRequestDetail() {
     window.history.back();
-  }
-
-  actionEventsLanguage(event: any) {
-    if (event.type === 'delete') {
-      const index = (this.interviewDetailForm.controls['LanguageList'].value as Array<any>)
-                                .findIndex(x => x.LanguageName === event.item.LanguageName);
-                    (this.interviewDetailForm.controls['LanguageList'].value as Array<any>).splice(index, 1);
-    }
-  }
-
-  actionEventsTraining(event: any) {
-    if (event.type === 'delete') {
-      const index = (this.interviewDetailForm.controls['TraningList'].value as Array<any>)
-                                .findIndex(x => x.LanguageName === event.item.LanguageName);
-                    (this.interviewDetailForm.controls['TraningList'].value as Array<any>).splice(index, 1);
-    }
-  }
-
-  actionEventsInterviewers(event: any) {
-    if (event.type === 'delete') {
-      const index = (this.interviewDetailForm.controls['InterviewerList'].value as Array<any>)
-                                .findIndex(x => x.EmployeeId === event.item.EmployeeId);
-                    (this.interviewDetailForm.controls['InterviewerList'].value as Array<any>).splice(index, 1);
-    }
-  }
-  //#endregion
-
-  //#region "TotalMarks"
-  TotalMarks(data: any) {
-    if (data != null && data !== undefined) {
-      this.totalMarksObtain = this.professionalCriteriaMarks + this.marksObtain + +(data);
-    } else {
-      this.totalMarksObtain = this.professionalCriteriaMarks + this.marksObtain;
-    }
-    this.interviewDetailForm.controls['TotalMarksObtain'].setValue(
-      this.totalMarksObtain);
-  }
-  WritenTextMarks(data: any) {
-    if (data.srcElement.value != null && data.srcElement.value !== undefined) {
-      this.TotalMarks(data.srcElement.value);
-    }
-  }
-  //#endregion
-
- //#region "Download Candidate Cv"
-  getCandidateCvByCandidateId() {
-    const candidateId = this.candidateId;
-    if (candidateId != null && candidateId !== undefined) {
-      this.commonLoader.showLoader();
-      this.hiringRequestService
-        .DownloadCandidateCvByRequestId(candidateId)
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe(
-          (response: IResponseData) => {
-            if (response.statusCode === 200 && response.data !== null) {
-              this.candidateCv = {
-                AttachmentName: response.data.AttachmentName,
-                AttachmentUrl: response.data.AttachmentUrl,
-                UploadedBy: response.data.UploadedBy
-              };
-               const anchor = document.createElement('a');
-              anchor.href = this.candidateCv.AttachmentUrl;
-              anchor.target = '_blank';
-              anchor.click();
-            }
-            this.commonLoader.hideLoader();
-          },
-          () => {
-            this.commonLoader.hideLoader();
-          }
-        );
-    }
   }
   //#endregion
 }

@@ -3,8 +3,8 @@ using MediatR;
 
 namespace HumanitarianAssistance.Application.Project.Queries
 {
-    public class GetRemainingVacancyByJobIdQuery: IRequest<ApiResponse>
+    public class CheckDefaultUnitTypeQuery : IRequest<ApiResponse>
     {
-        public long? JobId { get; set; }
+        
     }
 }

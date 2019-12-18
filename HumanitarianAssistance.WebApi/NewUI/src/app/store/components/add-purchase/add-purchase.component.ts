@@ -244,6 +244,12 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
           value: y.UnitTypeId
         };
       }));
+
+      const index = response.data.PurchaseUnitTypeList.findIndex(x => x.IsDefault === true);
+
+      if (index !== -1) {
+        this.addPurchaseForm.controls['Unit'].patchValue(response.data.PurchaseUnitTypeList[index].UnitTypeId);
+      }
   }
 
   subscribeAllReceiptType(response: any) {
@@ -680,6 +686,11 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       'MobilOilConsumptionRate': ['', [Validators.required, Validators.min(0)]],
       'OfficeId': ['', Validators.required],
       'ModelYear': ['', [Validators.required, Validators.maxLength(4)]],
+      'ManufacturerCountry': ['', [Validators.required]],
+      'EngineNo': ['', [Validators.required]],
+      'RegistrationNo': ['', [Validators.required]],
+      'ChasisNo': ['', [Validators.required]],
+      'Remarks': [''],
     }));
   }
 
@@ -692,7 +703,13 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       'ModelYear': ['', [Validators.required, Validators.min(0)]],
       'FuelConsumptionRate': ['', [Validators.required, Validators.min(0)]],
       'MobilOilConsumptionRate': ['', [Validators.required, Validators.min(0)]],
-      'OfficeId': ['', Validators.required]
+      'OfficeId': ['', Validators.required],
+      'ManufacturerCountry': ['', [Validators.required]],
+      'EngineNo': ['', [Validators.required]],
+      'RegistrationNo': ['', [Validators.required]],
+      'ChasisNo': ['', [Validators.required]],
+      'EmployeeId': ['', Validators.required],
+      'Remarks': [''],
     }));
   }
 
@@ -865,7 +882,12 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         FuelConsumptionRate: [{ value: x.FuelConsumptionRate, disabled: true }],
         MobilOilConsumptionRate: [{ value: x.MobilOilConsumptionRate, disabled: true }],
         OfficeId: [{ value: x.OfficeId, disabled: true }],
-        ModelYear: [{ value: x.ModelYear, disabled: true }]
+        ModelYear: [{ value: x.ModelYear, disabled: true }],
+        ManufacturerCountry: [{ value: x.ManufacturerCountry, disabled: true }],
+        EngineNo: [{ value: x.EngineNo, disabled: true }],
+        RegistrationNo: [{ value: x.RegistrationNo, disabled: true }],
+        ChasisNo: [{ value: x.ChasisNo, disabled: true }],
+        Remarks: [{ value: x.Remarks, disabled: true }],
       }));
     }
     this.addPurchaseForm.setControl('TransportVehicles', formArray);
@@ -882,7 +904,13 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         FuelConsumptionRate: [{ value: x.FuelConsumptionRate, disabled: true }],
         MobilOilConsumptionRate: [{ value: x.MobilOilConsumptionRate, disabled: true }],
         OfficeId: [{ value: x.OfficeId, disabled: true }],
-        ModelYear: [{ value: x.ModelYear, disabled: true }]
+        ModelYear: [{ value: x.ModelYear, disabled: true }],
+        ManufacturerCountry: [{ value: x.ManufacturerCountry, disabled: true }],
+        EngineNo: [{ value: x.EngineNo, disabled: true }],
+        RegistrationNo: [{ value: x.RegistrationNo, disabled: true }],
+        ChasisNo: [{ value: x.ChasisNo, disabled: true }],
+        EmployeeId: [{ value: x.EmployeeId, disabled: true }],
+        Remarks: [{ value: x.Remarks, disabled: true }],
       }));
     }
     this.addPurchaseForm.setControl('TransportGenerators', formArray);

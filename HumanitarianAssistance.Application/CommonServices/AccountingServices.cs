@@ -298,24 +298,24 @@ namespace HumanitarianAssistance.Application.CommonServices
                     }
                 }
 
-                using (IDbContextTransaction tran = _dbContext.Database.BeginTransaction())
+                // using (IDbContextTransaction tran = _dbContext.Database.BeginTransaction())
+                // {
+                try
                 {
-                    try
-                    {
-                        _dbContext.VoucherTransactions.AddRange(transactionsListAdd);
-                        _dbContext.VoucherTransactions.UpdateRange(transactionsListEdit);
+                    _dbContext.VoucherTransactions.AddRange(transactionsListAdd);
+                    _dbContext.VoucherTransactions.UpdateRange(transactionsListEdit);
 
-                        _dbContext.SaveChanges();
-                        tran.Commit();
-                    }
-
-                    catch (Exception ex)
-                    {
-                        tran.Rollback();
-
-                        throw new Exception(ex.Message);
-                    }
+                    _dbContext.SaveChanges();
+                    // tran.Commit();
                 }
+
+                catch (Exception ex)
+                {
+                    // tran.Rollback();
+
+                    throw new Exception(ex.Message);
+                }
+                // }
 
                 return true;
             }
