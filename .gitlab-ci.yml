@@ -57,6 +57,7 @@ build_backend:
     stage: integration
     variables:
         OBJECTS_DIRECTORY: 'obj'
+        BINARIES_DIRECTORY: 'bin'
         RELEASE_OBJECTS_DIRECTORY: 'release'
         NUGET_PACKAGES_DIRECTORY: '.nuget'
         API_SOURCE_CODE_PATH: './HumanitarianAssistance.WebApi/'
@@ -70,25 +71,26 @@ build_backend:
     cache:
         key: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
         paths:
-            - '$API_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/project.assets.json'
-            - '$API_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/*.csproj.nuget.*'
-            - '$APPLICATION_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/project.assets.json'
-            - '$APPLICATION_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/*.csproj.nuget.*'
-            - '$COMMON_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/project.assets.json'
-            - '$COMMON_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/*.csproj.nuget.*'
-            - '$DOMAIN_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/project.assets.json'
-            - '$DOMAIN_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/*.csproj.nuget.*'
-            - '$ENTITIES_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/project.assets.json'
-            - '$ENTITIES_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/*.csproj.nuget.*'
-            - '$PERSIST_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/project.assets.json'
-            - '$PERSIST_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/*.csproj.nuget.*'
-            - '$SERVICE_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/project.assets.json'
-            - '$SERVICE_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/*.csproj.nuget.*'
+            - '$API_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/'
+            - '$API_SOURCE_CODE_PATH$BINARIES_DIRECTORY/'
+            - '$APPLICATION_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/'
+            - '$APPLICATION_SOURCE_CODE_PATH$BINARIES_DIRECTORY/'
+            - '$COMMON_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/'
+            - '$COMMON_SOURCE_CODE_PATH$BINARIES_DIRECTORY/'
+            - '$DOMAIN_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/'
+            - '$DOMAIN_SOURCE_CODE_PATH$BINARIES_DIRECTORY/'
+            - '$ENTITIES_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/'
+            - '$ENTITIES_SOURCE_CODE_PATH$BINARIES_DIRECTORY/'
+            - '$PERSIST_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/'
+            - '$PERSIST_SOURCE_CODE_PATH$BINARIES_DIRECTORY/'
+            - '$SERVICE_SOURCE_CODE_PATH$OBJECTS_DIRECTORY/'
+            - '$SERVICE_SOURCE_CODE_PATH$BINARIES_DIRECTORY/'
             - '$NUGET_PACKAGES_DIRECTORY'
     before_script:
-        - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY --runtime linux-musl-x64'
+        - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
     script:
-        - 'dotnet publish -c Release -o $RELEASE_OBJECTS_DIRECTORY --no-restore --runtime linux-musl-x64'
+        - 'dotnet build --no-restore'
+        - 'dotnet publish -c Release -o $RELEASE_OBJECTS_DIRECTORY --no-restore'
         - 'cp -r $API_SOURCE_CODE_PATH/NewUI/dist/ $RELEASE_OBJECTS_DIRECTORY/NewUI/dist'
         - 'cp -r $API_SOURCE_CODE_PATH/OldUI/dist/ $RELEASE_OBJECTS_DIRECTORY/OldUI/dist'
     artifacts:
