@@ -7,7 +7,7 @@ metadata:
     name: {{ .Release.Name }}{{ .Release.Revision }}-service
     namespace: {{.Values.deployment.namespace}}
     labels:
-        app: {{ .Release.Name }}{{ .Release.Revision }}
+        app: {{ .Release.Name }}
 spec:
     ports:
         - name: clientapp-port
@@ -15,5 +15,5 @@ spec:
           protocol: TCP
           targetPort: 80
     selector:
-        app: {{ .Release.Name }}{{ .Release.Revision }}
+        app: {{ .Release.Name }}
     type: NodePort

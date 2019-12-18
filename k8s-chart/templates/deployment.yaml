@@ -7,19 +7,19 @@ metadata:
   name: {{ .Release.Name }}{{ .Release.Revision }}
   namespace: {{.Values.deployment.namespace}}
   labels:
-    app: {{ .Release.Name }}{{ .Release.Revision }}
+    app: {{ .Release.Name }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}{{ .Release.Revision }}
+      app: {{ .Release.Name }}
   template:
     metadata:
       annotations:
         app.gitlab.com/app: {{.Values.ci.project.path}}
         app.gitlab.com/env: {{.Values.ci.project.environment}}
       labels:
-        app: {{ .Release.Name }}{{ .Release.Revision }}
+        app: {{ .Release.Name }}
     spec:
       imagePullSecrets:
         - name: gitlab-registry
