@@ -198,7 +198,6 @@ export class ProjectListComponent implements OnInit {
 
   //#endregion "addNewProject"
   addNewProject() {
-    debugger;
     const projectDetail = {
       ProjectId: 0,
       ProjectName: ''
