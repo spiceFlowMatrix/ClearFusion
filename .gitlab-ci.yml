@@ -122,6 +122,9 @@ deploy_cleanarch:
           --force
           clearfusion
           ./k8s-chart
+    only:
+        refs:
+            - cleanarch
 
 
 deploy_review:
@@ -131,14 +134,12 @@ deploy_review:
         name: review
         url: https://${CF_REVIEW_URL}
     variables:
-        CF_APP_NAME: clearfusion-${CI_ENVIRONMENT_SLUG}
         HOSTING_ENV: Production
     script:
         - init_gke
         - helm upgrade
           --install
           --tiller-namespace ${KUBE_NAMESPACE}
-          --set web.name="${CF_APP_NAME}"
           --set web.image="${CF_APP_IMAGE}"
           --set web.host="${CF_REVIEW_URL}"
           --set app.env="${HOSTING_ENV}"
@@ -152,7 +153,7 @@ deploy_review:
           --set app.secret.googlebucketname="${APP_GOOGLE_BUCKET_NAME}"
           --wait
           --force
-          clearfusion-${CI_COMMIT_REF_SLUG}
+          clearfusion
           ./k8s-chart
     only:
         refs:
@@ -164,16 +165,14 @@ deploy_chaprod:
     image: devth/helm
     environment:
         name: chaprod
-        url: https://manage.cha-net.org
+        url: https://${CF_CHAPROD_URL}
     variables:
-        CF_APP_NAME: clearfusion-${CI_ENVIRONMENT_SLUG}
         HOSTING_ENV: Production
     script:
         - init_gke
         - helm upgrade
           --install
           --tiller-namespace ${KUBE_NAMESPACE}
-          --set web.name="${CF_APP_NAME}"
           --set web.image="${CF_APP_IMAGE}"
           --set web.host="${CF_CHAPROD_URL}"
           --set app.env="${HOSTING_ENV}"
@@ -187,21 +186,15 @@ deploy_chaprod:
           --set app.secret.googlebucketname="${APP_GOOGLE_BUCKET_NAME}"
           --wait
           --force
-          clearfusion-${CI_COMMIT_REF_SLUG}
+          clearfusion
           ./k8s-chart
     only:
         refs:
-            - master
+            - review
 
             
 .functions: &functions |
     # Functions
-    function init_gcp_docker() {
-        mkdir -p /etc/deploy
-        echo ${GKE_SERVICE_ACCOUNT} | base64 -d > /etc/deploy/sa.json
-        gcloud auth activate-service-account --key-file /etc/deploy/sa.json --project=${GKE_PROJECT}
-        gcloud auth configure-docker --project=${GKE_PROJECT}
-    }
     function init_gke() {
         mkdir -p /etc/deploy
         echo ${GKE_SERVICE_ACCOUNT} | base64 -d > /etc/deploy/sa.json
