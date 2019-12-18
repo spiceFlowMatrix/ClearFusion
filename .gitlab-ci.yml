@@ -4,17 +4,6 @@ stages:
     - publish_docker
     - deploy
 
-.build_apps: &build_apps_template
-    stage: build_apps
-    image: node:latest
-    cache:
-        key: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
-        paths:
-            - HumanitarianAssistance.WebApi/NewUI/node_modules/
-            - HumanitarianAssistance.WebApi/OldUI/node_modules/
-    before_script:
-        - apt-get update && apt-get install -y unzip fontconfig locales gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
-
 variables:
     GKE_SERVICE_ACCOUNT: ${GKE_SERVICE_ACCOUNT}
     CF_CLEAN_URL: cleantestedg.cha-net.org
@@ -25,31 +14,45 @@ variables:
     DOCKER_HOST: tcp://localhost:2375/ # required since we use dind
 
 build_newui:
-    <<: *build_apps_template
+    stage: build_apps
+    image: node:latest
+    cache:
+        key: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
+        paths:
+            - HumanitarianAssistance.WebApi/NewUI/node_modules/
+    before_script:
+        - apt-get update && apt-get install -y unzip fontconfig locales gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
+        - cd HumanitarianAssistance.WebApi/NewUI/
     script:
-         - cd HumanitarianAssistance.WebApi/NewUI/
          - npm install --quiet
          - npm run build --prod
-         - ls
+    after_script:
+        - find HumanitarianAssistance.WebApi/NewUI/dist/
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/NewUI/dist/
         expire_in: 1 week
-        untracked: true
     retry: 2
 
 build_oldui:
-    <<: *build_apps_template
+    stage: build_apps
+    image: node:latest
+    cache:
+        key: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
+        paths:
+            - HumanitarianAssistance.WebApi/OldUI/node_modules/
+    before_script:
+        - apt-get update && apt-get install -y unzip fontconfig locales gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
+        - cd HumanitarianAssistance.WebApi/OldUI/
     script:
-         - cd HumanitarianAssistance.WebApi/OldUI/
          - npm install --quiet
          - npm run build --prod
-         - ls
+    after_script:
+        - find HumanitarianAssistance.WebApi/OldUI/dist/
     artifacts:
         paths:
             - HumanitarianAssistance.WebApi/OldUI/dist/
         expire_in: 1 week
-        untracked: true
     retry: 2
 
 build_backend:
@@ -79,7 +82,6 @@ build_backend:
         paths:
             - ${SOURCE_CODE_PATH}${RELEASE_OBJECTS_DIRECTORY}
         expire_in: 1 week
-        untracked: true
     retry: 2
 
 publish_production:
