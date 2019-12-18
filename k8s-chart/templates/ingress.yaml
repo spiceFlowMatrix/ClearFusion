@@ -5,9 +5,14 @@ metadata:
     app.gitlab.com/app: {{.Values.ci.project.path}}
     app.gitlab.com/env: {{.Values.ci.project.environment}}
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
   name: {{ .Release.Name }}{{ .Release.Revision }}-ingress
   namespace: {{.Values.deployment.namespace}}
 spec:
+  tls:
+  - hosts:
+    - {{.Values.web.host}}
+    secretName: {{ .Release.Name }}{{ .Release.Revision }}-host-tls-secret
   rules:
   - host: {{ .Values.web.host }}
     http:
