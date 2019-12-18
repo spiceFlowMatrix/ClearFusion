@@ -58,7 +58,7 @@ build_backend:
     variables:
         OBJECTS_DIRECTORY: 'obj'
         BINARIES_DIRECTORY: 'bin'
-        RELEASE_OBJECTS_DIRECTORY: 'release'
+        RELEASE_OBJECTS_DIRECTORY: './release'
         NUGET_PACKAGES_DIRECTORY: '.nuget'
         API_SOURCE_CODE_PATH: './HumanitarianAssistance.WebApi/'
         APPLICATION_SOURCE_CODE_PATH: './HumanitarianAssistance.Application/'
