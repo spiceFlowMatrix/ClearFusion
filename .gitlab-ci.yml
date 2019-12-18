@@ -56,29 +56,28 @@ build_backend:
     image: microsoft/dotnet:latest
     stage: integration
     variables:
-        OBJECTS_DIRECTORY: obj
-        BINARIES_DIRECTORY: bin
-        RELEASE_OBJECTS_DIRECTORY: release
-        NUGET_PACKAGES_DIRECTORY: .nuget
+        OBJECTS_DIRECTORY: obj/
+        BINARIES_DIRECTORY: bin/
+        RELEASE_OBJECTS_DIRECTORY: release/
+        NUGET_PACKAGES_DIRECTORY: .nuget/
         SOURCE_CODE_PATH: HumanitarianAssistance.WebApi/
     cache:
         key: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
         paths:
-            - ${SOURCE_CODE_PATH}${OBJECTS_DIRECTORY}/project.assets.json
-            - ${SOURCE_CODE_PATH}${OBJECTS_DIRECTORY}/*.csproj.nuget.*
+            - ${SOURCE_CODE_PATH}${OBJECTS_DIRECTORY}project.assets.json
+            - ${SOURCE_CODE_PATH}${OBJECTS_DIRECTORY}*.csproj.nuget.*
             - ${NUGET_PACKAGES_DIRECTORY}
     before_script:
         - dotnet restore --packages ${NUGET_PACKAGES_DIRECTORY}
     script:
-        - dotnet build --no-restore
         - dotnet publish -c Release -o ${RELEASE_OBJECTS_DIRECTORY} --no-restore
-        - cp -r ${SOURCE_CODE_PATH}NewUI/dist/ ${RELEASE_OBJECTS_DIRECTORY}${RELEASE_OBJECTS_DIRECTORY}/NewUI/dist
-        - cp -r ${SOURCE_CODE_PATH}OldUI/dist/ ${RELEASE_OBJECTS_DIRECTORY}${RELEASE_OBJECTS_DIRECTORY}/OldUI/dist
+        - cp -r ${SOURCE_CODE_PATH}NewUI/dist/ ${SOURCE_CODE_PATH}${RELEASE_OBJECTS_DIRECTORY}/NewUI/dist
+        - cp -r ${SOURCE_CODE_PATH}OldUI/dist/ ${SOURCE_CODE_PATH}${RELEASE_OBJECTS_DIRECTORY}/OldUI/dist
     after_script:
-        - find . -type d
+        - find ${SOURCE_CODE_PATH}${RELEASE_OBJECTS_DIRECTORY}
     artifacts:
         paths:
-            - ${RELEASE_OBJECTS_DIRECTORY}
+            - ${SOURCE_CODE_PATH}${RELEASE_OBJECTS_DIRECTORY}
         expire_in: 1 week
         untracked: true
     retry: 2
