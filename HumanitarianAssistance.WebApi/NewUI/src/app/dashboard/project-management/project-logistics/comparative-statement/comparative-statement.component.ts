@@ -252,6 +252,10 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
     });
   }
 
+  StatusEmit(value) {
+    this.StatusChange.emit(value);
+  }
+
   selectedPurchaseItemChange(value) {
     this.selectedItemChange.emit(value);
   }

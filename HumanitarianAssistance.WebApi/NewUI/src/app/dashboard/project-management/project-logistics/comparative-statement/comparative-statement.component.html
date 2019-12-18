@@ -73,7 +73,7 @@
     </div>
   </div>
   <div *ngSwitchCase="6" humAddScroll style="width: 105%;">
-    <app-purchase-order [requestId]="requestId" [requestStatus]="requestStatus" [totalCost]="this.totalCost" [comparativeStatus]="comparativeStatus" [requestedItems]="requestedItems" (selectedItemChange)='selectedPurchaseItemChange($event)'></app-purchase-order>
+    <app-purchase-order [requestId]="requestId" [requestStatus]="requestStatus" [totalCost]="this.totalCost" [comparativeStatus]="comparativeStatus" [requestedItems]="requestedItems" (selectedItemChange)='selectedPurchaseItemChange($event)' (StatusChange)="StatusEmit($event)"></app-purchase-order>
   </div>
   <div *ngSwitchDefault>
 

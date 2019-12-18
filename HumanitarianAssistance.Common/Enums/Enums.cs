@@ -258,9 +258,9 @@ namespace HumanitarianAssistance.Common.Enums {
         Issued = 3,
         [Description ("Statement Submitted")]
         StatementSubmitted = 4,
-        [Description ("Reject Statement")]
+        [Description ("Statement Rejected")]
         RejectStatement = 5,
-        [Description ("Approve Statement")]
+        [Description ("Statement Approved")]
         ApproveStatement = 6,
     }
     //#region "StoreItemGroups"
