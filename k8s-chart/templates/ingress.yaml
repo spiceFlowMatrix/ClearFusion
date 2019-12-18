@@ -8,10 +8,6 @@ metadata:
   name: {{ .Release.Name }}{{ .Release.Revision }}-ingress
   namespace: {{.Values.deployment.namespace}}
 spec:
-  tls:
-  - hosts:
-    - {{.Values.web.host}}
-    secretName: {{ .Release.Name }}{{ .Release.Revision }}-host-tls-secret
   rules:
   - host: {{ .Values.web.host }}
     http:
