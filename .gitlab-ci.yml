@@ -75,7 +75,7 @@ build_backend:
     script:
         - dotnet publish -c Release -o ${RELEASE_OBJECTS_DIRECTORY} --no-restore
         - cp -r ${SOURCE_CODE_PATH}NewUI/dist/ ${SOURCE_CODE_PATH}${RELEASE_OBJECTS_DIRECTORY}NewUI/dist
-        - cp -r ${SOURCE_CODE_PATH}OldUI/dist/ ${SOURCE_CODE_PATH}${RELEASE_OBJECTS_DIRECTORY}OldUI/dist
+        - cp -r ${SOURCE_CODE_PATH}OldUI/dist/ ${SOURCE_CODE_PATH}${RELEASE_OBJECTS_DIRECTORY}OldUI
     after_script:
         - find ${SOURCE_CODE_PATH}${RELEASE_OBJECTS_DIRECTORY}
     artifacts:
