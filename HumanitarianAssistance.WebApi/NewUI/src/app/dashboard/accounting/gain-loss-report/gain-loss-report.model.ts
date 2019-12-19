@@ -28,6 +28,7 @@ export interface IGainLossAddVoucherForm {
   Amount: number;
   VoucherType: number;
   OfficeId: number;
+  TimeZoneOffset?: number;
 }
 
 export interface IAccountList {

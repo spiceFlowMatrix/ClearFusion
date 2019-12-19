@@ -571,7 +571,9 @@ export enum FileSourceEntityTypes {
   ComparativeStatement = 12,
   HiringRequestCandidateCV = 13,
   ProjectLogisticPurchase = 14,
-  GoodsRecievedDocument = 15
+  GoodsRecievedDocument = 15,
+  LogisticSupplierInvoice = 16,
+  LogisticSupplierWarranty = 17
 }
 //#endregion
 //#region "EmployeeType"
@@ -654,8 +656,8 @@ export enum LogisticComparativeStatus {
   'Cancelled' = 2,
   'Issued' = 3,
   'Statement Submitted' = 4,
-  'Reject Statement' = 5,
-  'Approve Statement' = 6
+  'Statement Rejected' = 5,
+  'Statement Approved' = 6
 }
 export enum CandidateStatus {
   'Pending Shortlist' = 0,

@@ -11,5 +11,6 @@ namespace HumanitarianAssistance.Application.Store.Models
         public DateTime? UploadedOn {get; set;}
         public string UploadedBy {get; set;}
         public string DocumentTypeName {get; set;}
+        public long? EntityId {get; set;}
     }
 }

@@ -167,6 +167,23 @@ export class GainLossReportService {
   }
   //#endregion
 
+  //#region "SaveExchangeGainLossFilterAccountList"
+  SaveExchangeGainLossFilterAccountList(accountlist: any[]): any {
+    return this.globalService
+      .post(this.appurl.getApiUrl() + GLOBAL.API_FinancialReport_SaveGainLossAccountList, accountlist)
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: null,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
   //#region "GetVoucherTypeList"
   GetVoucherTypeList(): any {
     return this.globalService

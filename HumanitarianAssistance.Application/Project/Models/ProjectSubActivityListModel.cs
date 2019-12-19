@@ -25,6 +25,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public float? Target { get; set; }
         public string SubActivityTitle { get; set; }
         public float? AggregateProgress { get; set; }
+        public DateTime? CreatedDate{get;set;}
 
     }
 }
