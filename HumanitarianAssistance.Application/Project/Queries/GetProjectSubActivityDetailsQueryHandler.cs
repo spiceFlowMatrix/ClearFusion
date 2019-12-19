@@ -51,8 +51,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     ActualEndDate = b.ActualEndDate,
                     StatusId = b.StatusId,
                     SubActivityTitle = b.SubActivityTitle,
-
-                }).OrderByDescending(x => x.ActivityId)
+                    CreatedDate = b.CreatedDate
+                }).OrderBy(x => x.CreatedDate)
                   .ToList();
                 // calculate aggregate of all list value
                 var count = activityDetaillist.Count();
