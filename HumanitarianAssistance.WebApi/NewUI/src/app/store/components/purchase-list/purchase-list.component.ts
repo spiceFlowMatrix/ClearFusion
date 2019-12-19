@@ -213,6 +213,11 @@ export class PurchaseListComponent implements OnInit {
   actionEvents(event: any) {
     if (event.type === 'button') {
 
+
+      if (!this.filterValueModel.OfficeId) {
+         this.toastr.warning('Select office before adding procurement');
+         return;
+      }
       const data = {
         value: event.item.Id,
         officeId: this.filterValueModel.OfficeId
@@ -277,7 +282,11 @@ export class PurchaseListComponent implements OnInit {
             this.toastr.error(error);
           });
     } else if (event.type === 'edit') {
-      const index = event.item.ProcurementList.findIndex(x => x.OrderId === event.subItem.Id);
+      if (!this.filterValueModel.OfficeId) {
+        this.toastr.warning('Select office before editing procurement');
+        return;
+     }
+      const index = event.item.ProcurementList.findIndex(x => x.OrderId ===  event.subItem.Id);
       const orderData = event.item.ProcurementList[index];
       const data = {
         value: event.item.Id,

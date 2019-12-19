@@ -206,7 +206,7 @@ namespace HumanitarianAssistance.Application.CommonServices
                 if (transaction.CurrencyId == null)
                     throw new Exception("Transaction currency is not set");
                 var interxExchangeRate = rates.OrderByDescending(x => x.Date)
-                    .FirstOrDefault(x => x.Date <= onDate
+                    .FirstOrDefault(x => x.Date.Date <= onDate.Date
                                          && x.FromCurrency == transaction.CurrencyId
                                          && x.ToCurrency == toCurrencyId);
                 if (interxExchangeRate == null)
@@ -223,7 +223,7 @@ namespace HumanitarianAssistance.Application.CommonServices
         {
             var ratesQuery = _dbContext.ExchangeRateDetail.Where(x => x.ToCurrency == toCurrencyId
                                                                                && transactions.Select(y => y.CurrencyId).Contains(x.FromCurrency)
-                                                                               && transactions.Select(y => y.TransactionDate).Any(z => z >= x.Date));
+                                                                               && transactions.Select(y => y.TransactionDate).Any(z => z.Value.Date >= x.Date.Date));
             var ratesList = await ratesQuery.ToListAsync();
 
             List<VoucherTransactions> outputTransactions = new List<VoucherTransactions>();
@@ -303,8 +303,8 @@ namespace HumanitarianAssistance.Application.CommonServices
             DateTime endDate, List<int?> journalList, List<int?> officeList, List<long?> projectIdList)
         {
             var data = await _dbContext.VoucherTransactions
-                .Where(x => x.TransactionDate <= endDate
-                            && x.TransactionDate >= startDate
+                .Where(x => x.TransactionDate.Value.Date <= endDate.Date
+                            && x.TransactionDate.Value.Date >= startDate.Date
                             && inputLevelAccounts.Select(y => y.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId)
                             && x.IsDeleted == false
                             && x.ChartOfAccountNewId != null
