@@ -81,7 +81,7 @@ spec:
       volumes:
       - name: application-gcp-serviceaccount
         secret:
-          secretname: {{ .Release.Name }}-secrets
+          secretName: {{ .Release.Name }}-secrets
           items:
           - key: appserviceaccount
             path: gcp/credentials.json
