@@ -25,7 +25,7 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
   @Input() requestedItems: any[];
   @Output() selectedItemChange = new EventEmitter();
 
-  supplierHeaders$ = of(['Id', 'Supplier', 'Quantity', 'Final Price']);
+  supplierHeaders$ = of(['Id', 'ItemId', 'Supplier', 'Item']);
   supplierSubHeaders$ = of(['']);
   supplierData$;
   hideSupplierColums;
@@ -50,8 +50,8 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.hideSupplierColums = of({
-      headers: ['Supplier', 'Quantity', 'Final Price'],
-      items: ['Supplier', 'Quantity', 'FinalPrice']
+      headers: ['Supplier', 'Item'],
+      items: ['Supplier', 'Item']
     });
     this.routeActive.params.subscribe(params => {
       this.requestId = +params['id'];
@@ -88,14 +88,7 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined && result.data != null ) {
-        this.supplierList.push(result.data);
-        this.supplierData$ = of(this.supplierList).pipe(
-          map(r => r.map(v => ({
-            Id: v.SupplierId,
-            Supplier: v.SupplierName,
-            Quantity: v.Quantity,
-            FinalPrice: v.FinalPrice,
-           }) )));
+        this.getSupplierList();
       }
     });
   }
@@ -110,9 +103,16 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
         this.supplierData$ = of(this.supplierList).pipe(
           map(r => r.map(v => ({
             Id: v.SupplierId,
-            Supplier: v.SupplierName,
-            Quantity: v.Quantity,
-            FinalPrice: v.FinalPrice,
+            Supplier: v.SourceCode,
+            ItemId: v.ItemId,
+            Item: v.ItemName,
+            subItems: [{'Heading': '<b>Warranty Document</b>', 'Name': '<a href=' + v.WarrantyUrl + ' target="_blank">'
+            + v.WarrantyName + '</a>'},
+            {'Heading': '<b>Invoice Document</b>', 'Name': '<a href=' + v.InvoiceUrl + ' target="_blank">'
+            + v.InvoiceName + '</a>'},
+            {'Heading': '<b>Quantity</b>', 'Name': v.Quantity },
+            {'Heading': '<b>Final Unit Cost</b>', 'Name': v.FinalUnitPrice },
+            {'Heading': '<b>Total Cost</b>', 'Name': (v.FinalUnitPrice * v.Quantity) }]
            }) )));
       } else {
 
@@ -126,7 +126,7 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
         if (v) {
           this.logisticservice.deleteSupplierById(event.item.Id).subscribe(res => {
             if (res.StatusCode === 200) {
-              this.refreshSupplierListAfterDelete(event.item.Id);
+              this.getSupplierList();
               this.toastr.success('Deleted Sucessfully!');
             } else {
               this.toastr.error('Something went wrong!');
@@ -136,13 +136,20 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
       });
     }
     if (event.type === 'edit') {
+      const supplier = this.supplierList.filter(function(v) {
+        return v.SupplierId === event.item.Id;
+      })[0];
       const editmodel = {
         Id: event.item.Id,
-        Supplier: event.item.Supplier,
-        Quantity: event.item.Quantity,
-        FinalPrice: event.item.FinalPrice,
-        RequestId: this.requestId
+        SourceId: supplier.SourceCodeId,
+        Item: supplier.ItemId,
+        Quantity: supplier.Quantity,
+        FinalUnitPrice: supplier.FinalUnitPrice,
+        RequestId: this.requestId,
+        InvoiceName: supplier.InvoiceName,
+        WarrantyName: supplier.WarrantyName
       };
+      // console.log(editmodel);
       const dialogRef = this.dialog.open(AddSupplierComponent, {
         width: '450px',
         data: editmodel
@@ -172,7 +179,7 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
 
   submitStatement() {
     const dialogRef = this.dialog.open(SubmitComparativeStatementComponent, {
-      width: '650px',
+      width: '500px',
       data: {SupplierList: this.supplierList, RequestId: this.requestId}
     });
 
@@ -243,6 +250,10 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
         this.toastr.error('Something went wrong!');
       }
     });
+  }
+
+  StatusEmit(value) {
+    this.StatusChange.emit(value);
   }
 
   selectedPurchaseItemChange(value) {

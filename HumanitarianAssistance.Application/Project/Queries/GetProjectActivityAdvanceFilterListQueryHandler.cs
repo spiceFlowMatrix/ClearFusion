@@ -54,7 +54,6 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                           .WithSqlParam("late_end", request.LateEnd)
                                           .WithSqlParam("on_schedule", request.OnSchedule)
                                           .WithSqlParam("country_id", request.CountryId)
-
                                           .ExecuteStoredProc<SPProjectActivityDetail>();
 
                 var activityList = spActivityList.Select(x => new ProjectActivityModel
@@ -76,7 +75,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     CountryId = x.CountryId,
                     Progress = Math.Round(x.Progress, 2),
                     Slippage = x.Sleepage
-                }).OrderBy(y => y.PlannedStartDate)
+                }).OrderBy(y => y.CreatedDate)
                 .ToList();
 
                 response.data.ProjectActivityList = activityList;

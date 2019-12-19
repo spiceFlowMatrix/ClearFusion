@@ -1607,6 +1607,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         public async Task<ApiResponse> EditProjectActivityDetail([FromBody]EditProjectActivityDetailCommand command)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedDate = DateTime.UtcNow;
             command.ModifiedById = userId;
             command.ModifiedDate = DateTime.UtcNow;
             return await _mediator.Send(command);

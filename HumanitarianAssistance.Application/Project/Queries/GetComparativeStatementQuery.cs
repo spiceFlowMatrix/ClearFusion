@@ -21,7 +21,12 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
     public class SupplierDetailModel {
         public long Id { get; set; }
-        public string SupplierName { get; set; }
+        public string SourceCode { get; set; }
+        public string SourceDescription { get; set; }
+        public string CurrencyCode { get; set; }
+        public string ItemCode { get; set; }
+        public string ItemName { get; set; }
+        public double FinalUnitPrice { get; set; }
     }
 
     public class StatementAttachmentModel {

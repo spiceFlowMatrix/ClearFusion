@@ -1,18 +1,47 @@
+<div mat-dialog-title><h3>Supplier Offer</h3></div>
 <div class="row">
   <div class="col-md-12">
-      <div mat-dialog-title><h4>Add New Supplier</h4></div>
       <form [formGroup]="addSupplierForm" (ngSubmit)="addSupplier(addSupplierForm.value)">
+        <p>Which Supplier has made this offer?</p>
+        <lib-search-dropdown
+          placeholder="Store Source Code"
+          [multiSelect]="false"
+          placeholderSearchLabel="Find Source Code..."
+          noEntriesFoundLabel="No matching Source Code found"
+          [dataSource]="sourceCodeList"
+          [selectedValue]="StoreSuppliers"
+          (selectionChanged)="onOpenedItemSuppliersChange($event)"
+        ></lib-search-dropdown>
+        <p>Which of the Requested Items has the Supplier offered?</p>
+          <lib-search-dropdown
+            placeholder="Requested Inventory Item"
+            [multiSelect]="false"
+            placeholderSearchLabel="Find Inventory Item..."
+            noEntriesFoundLabel="No matching Inventory Items found"
+            [dataSource]="storedropdownItemsList"
+            [selectedValue]="ItemId"
+            (selectionChanged)="onOpenedItemChange($event)"
+          ></lib-search-dropdown>
+        <p>What Unit Price has the Supplier offered for this item?</p>
         <mat-form-field class="example-full-width">
-          <input matInput type="text" formControlName="Supplier" placeholder="Supplier Name">
+          <input matInput type="number" formControlName="FinalUnitPrice" placeholder="Final Unit Price">
         </mat-form-field>
+        <p>How many units has the Supplier offered?</p>
         <mat-form-field class="example-full-width">
           <input matInput type="number" formControlName="Quantity" placeholder="Quantity">
         </mat-form-field>
-        <mat-form-field class="example-full-width">
-          <input matInput type="number" formControlName="FinalCost" placeholder="Final Cost">
-        </mat-form-field>
-        <hum-button [type]="'save'" [text]="'Save'" [isSubmit]="true"></hum-button>
-        <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="cancel()" class="pull-right"></hum-button>
+        <p>Please Upload associated Invoice document <hum-button (click)="openInvoiceInput()" [type]="'attachment'" [text]="'Upload'" ></hum-button></p>
+        <span class="font_weight_600" *ngIf="this.data && this.data.InvoiceName && this.invoiceAttachment.length == 0">{{this.data.InvoiceName}}</span>
+        <span class="font_weight_600" *ngIf="this.invoiceAttachment.length != 0">{{invoiceAttachment[0][0].name}}</span>
+        <p>Please Upload associated Warranty document <hum-button (click)="openWarrantyInput()"[type]="'attachment'" [text]="'Upload'" ></hum-button></p>
+        <span class="font_weight_600" *ngIf="this.data && this.data.WarrantyName && this.warrantyAttachment.length == 0">{{this.data.WarrantyName}}</span>
+        <span class="font_weight_600" *ngIf="this.warrantyAttachment.length != 0">{{warrantyAttachment[0][0].name}}</span>
+        <input id="invoicefileInput" style="display:none" hidden type="file" (change)="invoiceFileChange($event.target.files)" name="file">
+        <input id="warrantyfileInput" style="display:none" hidden type="file" (change)="warrantyFileChange($event.target.files)" name="file">
+        <div mat-dialog-actions>
+          <hum-button [type]="'save'" [text]="'Save'" [isSubmit]="true"></hum-button>
+          <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="cancel()" ></hum-button>
+        </div>
       </form>
   </div>
 </div>

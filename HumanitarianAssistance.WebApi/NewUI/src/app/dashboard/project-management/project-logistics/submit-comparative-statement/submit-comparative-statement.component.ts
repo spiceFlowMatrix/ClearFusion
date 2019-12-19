@@ -7,8 +7,10 @@ import { ToastrService } from 'ngx-toastr';
 import { LogisticService } from '../logistic.service';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { FileSourceEntityTypes } from 'src/app/shared/enum';
-import { takeUntil } from 'rxjs/operators';
-import { ReplaySubject } from 'rxjs';
+import { takeUntil, map } from 'rxjs/operators';
+import { ReplaySubject, of, Observable } from 'rxjs';
+import { IOpenedChange } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
+import { TableActionsModel } from 'projects/library/src/public_api';
 
 @Component({
   selector: 'app-submit-comparative-statement',
@@ -19,10 +21,17 @@ export class SubmitComparativeStatementComponent implements OnInit {
 
   displayedColumns: string[] = ['select', 'Id', 'Supplier', 'Quantity', 'FinalPrice'];
   dataSource;
-  itemdata;
+  storeSource;
   attachments: any[] = [];
-  selection = new SelectionModel<any>(true, []);
+  // selection = new SelectionModel<any>(true, []);
   statementform: FormGroup;
+  docHeaders$ = of([
+    'Id',
+    'File Name'
+  ]);
+  docActions: TableActionsModel;
+  docData$: Observable<any>;
+  hideDocColums;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
   private dialogRef: MatDialogRef<SubmitComparativeStatementComponent>,
@@ -33,40 +42,56 @@ export class SubmitComparativeStatementComponent implements OnInit {
   private globalSharedService: GlobalSharedService) { }
 
   ngOnInit() {
-    this.itemdata = this.data.SupplierList.map(function(val) {
+    this.storeSource = this.data.SupplierList.map(function(val) {
       return {
           Id: val.SupplierId,
-          Supplier: val.SupplierName,
-          Quantity: val.Quantity,
-          FinalPrice: val.FinalPrice
+          Name: val.SourceCode + '-' + val.StoreSourceDescription + ' Item:' + val.ItemCode + '-' +
+          val.ItemName + ' ' + val.CurrencyCode + ' ' + val.FinalUnitPrice
       };
     });
-    this.dataSource = new MatTableDataSource<any>(this.itemdata);
+    this.hideDocColums = of({
+      headers: ['File Name'],
+      items: ['FileName']
+    });
+    this.docActions = {
+      items: {
+        button: { status: false, text: '' },
+        edit: false,
+        delete: true,
+        download: false,
+      },
+      subitems: {
+      }
+
+    };
+    // console.log(this.data.SupplierList);
+    // this.dataSource = new MatTableDataSource<any>(this.itemdata);
     this.statementform = this.fb.group({
-      Description: ['', Validators.required]
+      Description: ['', Validators.required],
+      StoreSourceCode: [[], Validators.required]
     });
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
+  // /** Whether the number of selected elements matches the total number of rows. */
+  // isAllSelected() {
+  //   const numSelected = this.selection.selected.length;
+  //   const numRows = this.dataSource.data.length;
+  //   return numSelected === numRows;
+  // }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.data.forEach(row => this.selection.select(row));
-  }
+  // masterToggle() {
+  //   this.isAllSelected() ?
+  //       this.selection.clear() :
+  //       this.dataSource.data.forEach(row => this.selection.select(row));
+  // }
 
-  checkboxLabel(row?: any): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-    }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
-  }
+  // checkboxLabel(row?: any): string {
+  //   if (!row) {
+  //     return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+  //   }
+  //   return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  // }
 
   cancelSubmission() {
     this.dialogRef.close({data: null});
@@ -78,26 +103,51 @@ export class SubmitComparativeStatementComponent implements OnInit {
 
   fileChange(file: any) {
     this.attachments.push(file);
+    this.docData$ = of(this.attachments).pipe(
+      map(r => r.map((v, i) => ({
+        Id: i,
+        FileName: v[0].name,
+       }) )));
   }
 
-  SubmitStatement() {
-    if (!this.statementform.valid) {
-      return;
+  onDocActionClick(event) {
+    if (event.type === 'delete') {
+      this.logisticservice.openDeleteDialog().subscribe(v => {
+        if (v) {
+          const index = event.item.Id;
+          if (index !== -1) {
+            this.attachments.splice(index, 1);
+            this.docData$ = of(this.attachments).pipe(
+              map(r => r.map((x, i) => ({
+                Id: i,
+                FileName: x[0].name,
+               }) )));
+          }
+        }
+      });
     }
-    if (this.selection.selected.length === 0) {
-      this.toastr.warning('Please Select Suppliers!');
+  }
+
+  get storeSourceCodes() {
+    return this.statementform.get('StoreSourceCode').value;
+  }
+
+  onOpenedStoreSourceChange(event: IOpenedChange) {
+    this.statementform.controls['StoreSourceCode'].setValue(event.Value);
+  }
+
+  SubmitStatement(value) {
+    if (!this.statementform.valid) {
+      this.toastr.warning('Please fill all required fields!');
       return;
     }
     this.commonLoader.showLoader();
-    const supplierIds: any[] = [];
-    this.selection.selected.forEach(element => {
-      supplierIds.push(element.Id);
-    });
     const model = {
       RequestId: this.data.RequestId,
-      SupplierIds: supplierIds,
-      Description: this.statementform.controls['Description'].value
+      SupplierIds: value.StoreSourceCode,
+      Description: value.Description
     };
+    console.log(model);
     this.logisticservice.SubmitComparativeStatement(model).subscribe(res => {
       if (res.StatusCode === 200) {
         let count = 1;
