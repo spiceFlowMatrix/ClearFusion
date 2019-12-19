@@ -28,9 +28,10 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                 ProjectLogisticSuppliers obj = new ProjectLogisticSuppliers
                 {
                     LogisticRequestsId = request.RequestId,
-                    // SupplierName = request.SupplierName,
+                    StoreSourceCodeId = request.StoreSourceCode,
                     Quantity = request.Quantity,
-                    // FinalPrice = request.FinalCost,
+                    FinalUnitPrice = request.FinalUnitPrice,
+                    ItemId = request.ItemId,
                     CreatedById = request.CreatedById,
                     CreatedDate = request.CreatedDate
                 };

@@ -10,6 +10,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using HumanitarianAssistance.Common.Enums;
 
 namespace HumanitarianAssistance.Application.Project.Commands.Create
 {
@@ -50,6 +51,10 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                 var logisticRequest = await _dbContext.ProjectLogisticRequests.FirstOrDefaultAsync(x=>x.IsDeleted == false && x.LogisticRequestsId == request.RequestId);
                 if (logisticRequest!=null) {
                     logisticRequest.TotalCost = totalCost;
+                    if(totalCost>=200 && totalCost<=9999)
+                    {
+                        logisticRequest.ComparativeStatus = (int)LogisticComparativeStatus.Pending;
+                    }
                     await _dbContext.SaveChangesAsync();
                 }
                 // var returnobj = await _dbContext.ProjectLogisticItems.Where(x=>x.IsDeleted==false && x.LogisticItemId==request.Id)
