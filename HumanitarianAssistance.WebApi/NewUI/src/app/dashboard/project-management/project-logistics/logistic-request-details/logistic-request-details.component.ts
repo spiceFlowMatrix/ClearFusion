@@ -364,7 +364,7 @@ Currency: '', BudgetLine: '', Office: '', Description: ''};
     this.logisticservice.rejectComparativeStatement(this.requestId).subscribe(res => {
       if (res.StatusCode === 200) {
         this.commonLoader.hideLoader();
-        this.requestDetail.ComparativeStatus = LogisticComparativeStatus['Reject Statement'];
+        this.requestDetail.ComparativeStatus = LogisticComparativeStatus['Statement Rejected'];
       } else {
         this.commonLoader.hideLoader();
         this.toastr.error('Something went wrong!');
@@ -377,7 +377,7 @@ Currency: '', BudgetLine: '', Office: '', Description: ''};
     this.logisticservice.approveComparativeStatement(this.requestId).subscribe(res => {
       if (res.StatusCode === 200) {
         this.commonLoader.hideLoader();
-        this.requestDetail.ComparativeStatus = LogisticComparativeStatus['Approve Statement'];
+        this.requestDetail.ComparativeStatus = LogisticComparativeStatus['Statement Approved'];
         this.requestDetail.Status = LogisticRequestStatus['Issue Purchase Order'];
       } else {
         this.commonLoader.hideLoader();
