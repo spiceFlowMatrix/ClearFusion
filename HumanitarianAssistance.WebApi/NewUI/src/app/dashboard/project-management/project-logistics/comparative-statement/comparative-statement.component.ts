@@ -230,7 +230,7 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
     this.logisticservice.rejectComparativeStatement(this.requestId).subscribe(res => {
       if (res.StatusCode === 200) {
         this.commonLoader.hideLoader();
-        this.comparativeStatusChange.emit(LogisticComparativeStatus['Reject Statement']);
+        this.comparativeStatusChange.emit(LogisticComparativeStatus['Statement Rejected']);
       } else {
         this.commonLoader.hideLoader();
         this.toastr.error('Something went wrong!');
@@ -243,7 +243,7 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
     this.logisticservice.approveComparativeStatement(this.requestId).subscribe(res => {
       if (res.StatusCode === 200) {
         this.commonLoader.hideLoader();
-        this.comparativeStatusChange.emit(LogisticComparativeStatus['Approve Statement']);
+        this.comparativeStatusChange.emit(LogisticComparativeStatus['Statement Approved']);
         this.StatusChange.emit(LogisticRequestStatus['Issue Purchase Order']);
       } else {
         this.commonLoader.hideLoader();

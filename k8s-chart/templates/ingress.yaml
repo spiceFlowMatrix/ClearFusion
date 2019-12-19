@@ -6,17 +6,17 @@ metadata:
     app.gitlab.com/env: {{.Values.ci.project.environment}}
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/tls-acme: "true"
-  name: {{ .Release.Name }}{{ .Release.Revision }}-ingress
+  name: {{ .Release.Name }}-ingress
   namespace: {{.Values.deployment.namespace}}
 spec:
   tls:
   - hosts:
     - {{.Values.web.host}}
-    secretName: {{ .Release.Name }}{{ .Release.Revision }}-host-tls-secret
+    secretName: {{ .Release.Name }}-host-tls-secret
   rules:
   - host: {{ .Values.web.host }}
     http:
       paths:
       - backend:
-          serviceName: {{ .Release.Name }}{{ .Release.Revision }}-service
+          serviceName: {{ .Release.Name }}-service
           servicePort: clientapp-port
