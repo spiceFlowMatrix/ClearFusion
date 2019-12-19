@@ -24,7 +24,8 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         [HttpGet]
         public async Task<ApiResponse> GetExchangeGainLossFilterAccountList()
         {
-            return await _mediator.Send(new GetExchangeGainLossFilterAccountListQuery());
+            string UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return await _mediator.Send(new GetExchangeGainLossFilterAccountListQuery {UserId = UserId});
         }
 
         [HttpGet]

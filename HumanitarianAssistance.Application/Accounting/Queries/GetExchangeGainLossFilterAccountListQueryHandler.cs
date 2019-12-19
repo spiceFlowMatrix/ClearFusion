@@ -27,8 +27,8 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
             try
             {
-                List<GainLossSelectedAccounts> gainLossSelectedAccountsList = await _dbContext.GainLossSelectedAccounts.Where(x => x.IsDeleted == false).ToListAsync();
-                response.data.GainLossSelectedAccounts = gainLossSelectedAccountsList;
+                GainLossSelectedAccounts gainLossSelectedAccounts = await _dbContext.GainLossSelectedAccounts.FirstOrDefaultAsync(x => x.IsDeleted == false && x.UserId == request.UserId);
+                response.data.GainLossSelectedAccounts = gainLossSelectedAccounts.SelectedAccounts;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "success";
             }
