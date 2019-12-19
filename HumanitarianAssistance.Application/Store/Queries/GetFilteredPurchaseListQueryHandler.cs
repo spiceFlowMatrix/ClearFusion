@@ -152,7 +152,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                         EmployeeId = z.EmployeeDetail.EmployeeID,
                         LocationId= z.IssedToLocation,
                         ProjectId = z.Project,
-                        StatusId= z.StatusAtTimeOfIssue
+                        StatusId= z.StatusAtTimeOfIssue,
                     }).Where(y => request.IssueStartDate == null ? true : y.IssueDate >= request.IssueStartDate &&
                      request.IssueEndDate == null ? true : y.IssueDate <= request.IssueEndDate).ToList()
                 }).AsQueryable();
