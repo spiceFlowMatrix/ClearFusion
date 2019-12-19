@@ -192,7 +192,7 @@ deploy_chaprod:
           ./k8s-chart
     only:
         refs:
-            - review
+            - master
 
             
 .functions: &functions |
