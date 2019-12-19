@@ -4,7 +4,7 @@ metadata:
   annotations:
     app.gitlab.com/app: {{.Values.ci.project.path}}
     app.gitlab.com/env: {{.Values.ci.project.environment}}
-  name: {{ .Release.Name }}{{ .Release.Revision }}
+  name: {{ .Release.Name }}
   namespace: {{.Values.deployment.namespace}}
   labels:
     app: {{ .Release.Name }}
@@ -24,7 +24,7 @@ spec:
       imagePullSecrets:
         - name: gitlab-registry
       containers:
-        - name: {{ .Release.Name }}{{ .Release.Revision }}
+        - name: {{ .Release.Name }}
           image: {{ .Values.web.image }}
           imagePullPolicy: Always
           ports:
@@ -35,19 +35,19 @@ spec:
           - name: LINUX_DBCONNECTION_STRING
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}{{ .Release.Revision }}-secrets
+                name: {{ .Release.Name }}-secrets
                 key: appdbconnectionstring
           - name: POSTGRES_DB_HOST
             value: 127.0.0.1:5432
           - name: POSTGRES_DB_USER
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}{{ .Release.Revision }}-secrets
+                name: {{ .Release.Name }}-secrets
                 key: postgresuser
           - name: POSTGRES_DB_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}{{ .Release.Revision }}-secrets
+                name: {{ .Release.Name }}-secrets
                 key: postgrespassword
           - name: DEFAULT_CORS_POLICY_NAME
             value: localhost
@@ -58,7 +58,7 @@ spec:
           - name: GOOGLE_BUCKET_NAME
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}{{ .Release.Revision }}-secrets
+                name: {{ .Release.Name }}-secrets
                 key: googlebucketname
           - name: DOCS_URL
             value: {{ .Values.app.docsurl }}
@@ -81,7 +81,7 @@ spec:
       volumes:
       - name: application-gcp-serviceaccount
         secret:
-          secretName: {{ .Release.Name }}{{ .Release.Revision }}-secrets
+          secretname: {{ .Release.Name }}-secrets
           items:
           - key: appserviceaccount
             path: gcp/credentials.json

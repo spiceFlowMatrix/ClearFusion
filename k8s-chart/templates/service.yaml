@@ -4,7 +4,7 @@ metadata:
     annotations:
         app.gitlab.com/app: {{.Values.ci.project.path}}
         app.gitlab.com/env: {{.Values.ci.project.environment}}
-    name: {{ .Release.Name }}{{ .Release.Revision }}-service
+    name: {{ .Release.Name }}-service
     namespace: {{.Values.deployment.namespace}}
     labels:
         app: {{ .Release.Name }}
