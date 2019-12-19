@@ -26,7 +26,8 @@
   <ItemGroup>
     <Content Include="SQL\*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>  
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

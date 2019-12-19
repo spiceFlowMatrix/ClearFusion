@@ -1,5 +1,4 @@
 replicas: 3
-web.name: clearfusion-dev
 web.host: apitestedg.cha-net.org
 web.image: registry.gitlab.com/edgsolutions-engineering/clear-fusion:new
 app.env: Development
@@ -7,8 +6,8 @@ app.docsurl: https://drive.google.com/open?id=1ecimKSFwY_RhnZZ9y34Lfdl7sKa102u6
 deployment.namespace: review
 ci.project.path: edgsolutions-engineering-clear-fusion
 ci.project.environment: review
-secret.appdbconnectionstring: Host=localhost;Database=postgres;Username=postgres;Password=mypassword
-secret.postgresuser: proxyuser
-secret.postgrespassword: mypassword
-secret.appserviceaccount: empty
-secret.googlebucketname: cf-staging-edg
+app.secret.appdbconnectionstring: Host=localhost;Database=postgres;Username=postgres;Password=mypassword
+app.secret.postgresuser: proxyuser
+app.secret.postgrespassword: mypassword
+app.secret.appserviceaccount: empty
+app.secret.googlebucketname: cf-staging-edg
