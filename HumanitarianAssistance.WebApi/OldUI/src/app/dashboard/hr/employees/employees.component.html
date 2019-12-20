@@ -455,8 +455,9 @@
                         <dxi-validation-rule type="email"></dxi-validation-rule>
                     </dxi-item>
 
-                    <dxi-item dataField="TinNumber" [editorOptions]="{ inputAttr: {'style': 'text-transform: uppercase !important'} }">
-                        <dxi-validation-rule type="required">
+                    <dxi-item dataField="TinNumber" caption ="TIN Number" [editorOptions]="{ inputAttr: {'style': 'text-transform: uppercase !important'} }">
+                       
+                        <dxo-label text="TIN Number"></dxo-label> <dxi-validation-rule type="required">
                         </dxi-validation-rule>
                     </dxi-item>
 
@@ -675,6 +676,7 @@
                     </dxi-item>
 
                     <dxi-item dataField="TinNumber" [editorOptions]="{ inputAttr: {'style': 'text-transform: uppercase !important'} }">
+                        <dxo-label text="TIN Number"></dxo-label>
                         <dxi-validation-rule type="required">
                         </dxi-validation-rule>
                     </dxi-item>
