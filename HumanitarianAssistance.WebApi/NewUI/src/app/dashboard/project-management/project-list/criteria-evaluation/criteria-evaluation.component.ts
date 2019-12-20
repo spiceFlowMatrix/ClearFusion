@@ -79,8 +79,8 @@ export class CriteriaEvaluationComponent
 
   //#region "Variables"
   methodOfFundingList = [
-    { Id: 1, Name: 'Sole' },
-    { Id: 2, Name: 'Source/Co-finance' }
+    { Id: 1, Name: 'Sole (Score: 2)' },
+    { Id: 2, Name: 'Source/Co-finance (Score: 1)' }
   ];
 
   financialHistory = [
@@ -102,7 +102,7 @@ export class CriteriaEvaluationComponent
   isDisabledCriticism = true;
   isDisabledEligibilityCriteria: boolean;
   // isDisabledEligibilityCriteria = false;
-  isDisabledCompensation = false;
+  isDisabledCompensation = true;
   isDisabledAnyInKindComponent = true;
   isCostGreaterThanBudget = true;
   isDisabledTotal = true;
@@ -1085,7 +1085,7 @@ export class CriteriaEvaluationComponent
 
   //#region  Feasibility
   onCapacityAvailabilityChange(value) {
-    if (value.checked === true) {
+    if (value.checked === false) {
       this.isDisabledCompensation = true;
       this.feasibilityForm.TrainedStaff = false;
       this.feasibilityForm.ByEquipment = false;
@@ -1095,12 +1095,8 @@ export class CriteriaEvaluationComponent
       this.compensationByEquipment = 0;
       this.compensationExpandScope = 0;
       this.compensationGeographical = 0;
-      // this.capacityAvailabilityProject =
-      //   criteriaEvaluationScores.pastFundingExperience_Yes;
     } else {
       this.isDisabledCompensation = false;
-      // this.capacityAvailabilityProject =
-      //   criteriaEvaluationScores.pastFundingExperience_No;
     }
     this.feasibilityForm.CapacityAvailableForProject = value.checked;
     this.feasibilityForm.FeasibilityId = this.feasibilityForm.FeasibilityId;
@@ -2187,8 +2183,6 @@ export class CriteriaEvaluationComponent
                 this.feasibilityForm.CapacityAvailableForProject =
                   data.data.CriteriaEveluationModel.CapacityAvailableForProject;
                 if (this.feasibilityForm.CapacityAvailableForProject === true) {
-                  this.isDisabledCompensation = true;
-                } else {
                   this.isDisabledCompensation = false;
                   this.feasibilityForm.TrainedStaff =
                     data.data.CriteriaEveluationModel.TrainedStaff;
@@ -2198,6 +2192,8 @@ export class CriteriaEvaluationComponent
                     data.data.CriteriaEveluationModel.ExpandScope;
                   this.feasibilityForm.GeoGraphicalPresence =
                     data.data.CriteriaEveluationModel.GeoGraphicalPresence;
+                } else {
+                  this.isDisabledCompensation = true;
                 }
                 this.feasibilityForm.ThirdPartyContract =
                   data.data.CriteriaEveluationModel.ThirdPartyContract;
