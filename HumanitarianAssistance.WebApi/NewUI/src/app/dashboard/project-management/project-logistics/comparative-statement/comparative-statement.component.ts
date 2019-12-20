@@ -75,7 +75,7 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
       this.requestId = +params['id'];
     });
     if (this.comparativeStatus === LogisticComparativeStatus['Statement Submitted'] ||
-    this.comparativeStatus === LogisticComparativeStatus['Reject Statement']) {
+    this.comparativeStatus === LogisticComparativeStatus['Statement Rejected']) {
       this.getComparativeStatement();
     }
   }
