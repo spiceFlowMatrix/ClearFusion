@@ -50,6 +50,11 @@ namespace HumanitarianAssistance.Persistence
                 await CreateDefaultUserAndRoleForApplication(context, userManager, roleManager, logger);
             }
 
+            if(!context.EmployeeDetail.Any(x=>x.Email=="hamza@yopmail.com")) 
+            {
+                await MakeExistingDefaultUserEmployeeForApplication(context);
+            }
+
             if (!context.EmployeeContractType.Any())
             {
                 await AddEmployeeContractType(context);
@@ -228,6 +233,30 @@ namespace HumanitarianAssistance.Persistence
             await AddDefaultRoleToDefaultUser(userManager, email, administratorRole, user, logger);
             await AddDefaultRoles(context, roleManager);
             await AddDefaultPermission(context);
+        }
+
+        private static async Task MakeExistingDefaultUserEmployeeForApplication(
+             HumanitarianAssistanceDbContext context) 
+        {
+            var userDetail = await context.UserDetails.FirstOrDefaultAsync(x=>x.IsDeleted==false && x.Username=="hamza@yopmail.com");
+            if(userDetail != null)
+            {
+                EmployeeDetail obj = new EmployeeDetail 
+                {
+                    IsDeleted = false,
+                    EmployeeName = userDetail.FirstName + ' ' + userDetail.LastName,
+                    FatherName = "test",
+                    Phone = "1234567890",
+                    Email = userDetail.Username,
+                    SexId = (int)Sex.Male,
+                    EmployeeTypeId = 2,
+                    MaritalStatusId = 1
+                };
+                await context.EmployeeDetail.AddAsync(obj);
+                await context.SaveChangesAsync();
+                userDetail.EmployeeId = obj.EmployeeID;
+                await context.SaveChangesAsync();
+            }
         }
 
         private static async Task CreateDefaultAdministratorRole(RoleManager<IdentityRole> rm, string administratorRole, ILogger<HumanitarianAssistanceInitializer> logger)

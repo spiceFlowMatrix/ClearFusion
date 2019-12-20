@@ -646,5 +646,15 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
                 return BadRequest();
             }
         }
+
+        [HttpPost]
+        public async Task<ApiResponse> AddCandidateAsEmployee([FromBody]AddCandidateAsEmployeeCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+
     }
 }

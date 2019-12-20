@@ -881,4 +881,12 @@ export class HiringRequestsService {
       );
   }
   //#endregion
+
+  //#region "AddCandidateAsEmployee"
+  AddCandidateAsEmployee(model): any {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_EmployeeDetail_AddCandidateAsEmployee, model
+    );
+  }
 }
