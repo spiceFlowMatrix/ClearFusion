@@ -56,8 +56,10 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     purchasedItem.Add(obj);
                     createdById = item.CreatedById;
                 }
+                var approvedUser = await _dbContext.UserDetails.FirstOrDefaultAsync(x=>x.IsDeleted==false && x.AspNetUserId == createdById);
+
                 model.VoucherReferenceNo = voucherDetail.ReferenceNo;
-                model.ApprovedBy = await _dbContext.UserDetails.Where(x=>x.IsDeleted==false && x.AspNetUserId == createdById).Select(x=>x.FirstName).FirstOrDefaultAsync();
+                model.ApprovedBy = approvedUser.FirstName + ' ' + approvedUser.LastName;
                 model.purchasedItems = purchasedItem;
 
                 response.data.PurchaseOrderDetail = model;
