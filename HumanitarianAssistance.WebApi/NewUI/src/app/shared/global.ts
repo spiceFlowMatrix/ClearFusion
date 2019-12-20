@@ -500,6 +500,7 @@ export class GLOBAL {
   public static API_Code_GetAllDesignation = 'Code/GetAllDesignation';
   public static API_HiringRequest_AddHiringRequestDetail = 'HiringRequest/AddHiringRequestDetail';
   public static API_HiringRequest_GetProjectHiringRequestDetail = 'HiringRequest/GetProjectHiringRequestDetail';
+  public static API_EmployeeDetail_AddCandidateAsEmployee = 'EmployeeDetail/AddCandidateAsEmployee';
   public static API_HiringRequest_EditHiringRequestDetail = 'HiringRequest/EditHiringRequestDetail';
   public static API_HiringRequest_GetAllEmployeeList = 'HiringRequest/GetAllEmployeeList';
   public static API_HiringRequest_GetEmployeeListByOfficeId = 'HiringRequest/GetHiringCandidatesByOfficeId';

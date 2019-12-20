@@ -4,7 +4,7 @@ using MediatR;
 
 namespace HumanitarianAssistance.Application.HR.Queries
 {
-    public class GetEmployeeTaxCalculationQuery: IRequest<ApiResponse>
+    public class GetEmployeeTaxCalculationQuery: BaseModel, IRequest<ApiResponse>
     {
         public int OfficeId { get; set; }
         public int EmployeeId { get; set; }

@@ -447,7 +447,7 @@ export class RequestDetailComponent implements OnInit {
         this.getCandidateCvByCandidateId(data);
         break;
       case 'Select':
-        this.selectCandidate(data);
+        this.selectCandidate(data, 3);
         break;
       case 'Reject':
         this.rejectCandidate(data);
@@ -479,14 +479,15 @@ export class RequestDetailComponent implements OnInit {
     };
     this.updateCandidateStatus(candidateDetails);
   }
-  selectCandidate(data: any) {
+  selectCandidate(data: any, statusId: number) {
     const candidateDetails: any = {
-      statusId: +CandidateStatus[data.item.CandidateStatus],
+      statusId: statusId,
       candidateId: data.item.CandidateId,
       projectId: this.projectId,
       hiringRequestId: this.hiringRequestId
     };
     this.updateCandidateStatus(candidateDetails);
+    this.AddCandidateAsEmployee(candidateDetails);
   }
   rejectCandidate(data: any) {
     const candidateDetails: any = {
@@ -709,6 +710,7 @@ export class RequestDetailComponent implements OnInit {
     };
     this.updateCandidateStatus(candidateDetails);
   }
+
   rejectEmployee(data: any) {
     const candidateDetails: any = {
       statusId: 4,
@@ -719,6 +721,18 @@ export class RequestDetailComponent implements OnInit {
     this.updateCandidateStatus(candidateDetails);
   }
   //#endregion
+
+  AddCandidateAsEmployee(model: any) {
+    this.hiringRequestService
+      .AddCandidateAsEmployee(model)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        response => {
+          if (response.statusCode === 200) {
+          }
+        },
+      );
+  }
 
   // #region Filter Existing Candidate list by their status
   onStatusFilterCandidate(data: MatSelectChange) {
