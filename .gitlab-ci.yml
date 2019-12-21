@@ -106,9 +106,9 @@ deploy_cleanarch:
         HOSTING_ENV: Production
     script:
         - init_gke
-        - helm init
         - helm upgrade
           --install
+          --namespace ${KUBE_NAMESPACE}
           --set web.image="${CF_APP_IMAGE}"
           --set web.host="${CF_CLEAN_URL}"
           --set app.env="${HOSTING_ENV}"
