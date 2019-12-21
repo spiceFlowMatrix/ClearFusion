@@ -123,6 +123,9 @@ deploy_cleanarch:
           --wait
           clearfusion
           ./k8s-chart
+    only:
+        refs:
+            - cleanarch
 
 
 deploy_review:
