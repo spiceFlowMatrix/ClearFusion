@@ -107,7 +107,7 @@ deploy_cleanarch:
     script:
         - init_gke
         - helm init
-        - helm upgrade
+        - helm install
           --set web.image="${CF_APP_IMAGE}"
           --set web.host="${CF_CLEAN_URL}"
           --set app.env="${HOSTING_ENV}"
