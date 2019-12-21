@@ -106,6 +106,7 @@ deploy_cleanarch:
         HOSTING_ENV: Production
     script:
         - init_gke
+        - helm init --tiller-namespace=${KUBE_NAMESPACE} --wait --upgrade
         - helm upgrade
           --install
           --tiller-namespace ${KUBE_NAMESPACE}
@@ -197,9 +198,8 @@ deploy_chaprod:
     function init_gke() {
         mkdir -p /etc/deploy
         echo ${GKE_SERVICE_ACCOUNT} | base64 -d > /etc/deploy/sa.json
-        gcloud auth activate-service-account --key-file /etc/deploy/sa.json --project=${GKE_PROJECT}
-        gcloud container clusters get-credentials ${GKE_CLUSTER_NAME} --zone ${GKE_ZONE} --project ${GKE_PROJECT}
-        helm init --tiller-namespace ${KUBE_NAMESPACE} --wait --upgrade 
+        gcloud auth activate-service-account --key-file=/etc/deploy/sa.json --project=${GKE_PROJECT}
+        gcloud container clusters get-credentials ${GKE_CLUSTER_NAME} --zone=${GKE_ZONE} --project=${GKE_PROJECT}
     }
 
 before_script:
