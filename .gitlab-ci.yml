@@ -191,7 +191,7 @@ deploy_chaprod:
         refs:
             - master
 
-            
+
 .functions: &functions |
     # Functions
     function init_gke() {
