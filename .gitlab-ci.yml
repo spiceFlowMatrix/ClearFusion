@@ -140,7 +140,7 @@ deploy_review:
         - init_gke
         - helm upgrade
           --install
-          --tiller-namespace ${KUBE_NAMESPACE}
+          --namespace ${KUBE_NAMESPACE}
           --set web.image="${CF_APP_IMAGE}"
           --set web.host="${CF_REVIEW_URL}"
           --set app.env="${HOSTING_ENV}"
@@ -153,7 +153,6 @@ deploy_review:
           --set app.secret.appserviceaccount="${APPLICATION_GCP_SERVICEACCOUNT}"
           --set app.secret.googlebucketname="${APP_GOOGLE_BUCKET_NAME}"
           --wait
-          --force
           clearfusion
           ./k8s-chart
     only:
@@ -173,7 +172,7 @@ deploy_chaprod:
         - init_gke
         - helm upgrade
           --install
-          --tiller-namespace ${KUBE_NAMESPACE}
+          --namespace ${KUBE_NAMESPACE}
           --set web.image="${CF_APP_IMAGE}"
           --set web.host="${CF_CHAPROD_URL}"
           --set app.env="${HOSTING_ENV}"
@@ -186,7 +185,6 @@ deploy_chaprod:
           --set app.secret.appserviceaccount="${APPLICATION_GCP_SERVICEACCOUNT}"
           --set app.secret.googlebucketname="${APP_GOOGLE_BUCKET_NAME}"
           --wait
-          --force
           clearfusion
           ./k8s-chart
     only:
