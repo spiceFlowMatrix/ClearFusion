@@ -100,7 +100,7 @@ export interface IHiringRequestModel {
   AnouncingDate?: Date;
   ClosingDate?: Date;
   Country?: number;
-  Province?: number;
+  ProvinceId?: number;
   JobType?: string;
   JobShift?: number;
   JobStatus?: string;

@@ -43,10 +43,10 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                     on hr.PositionId equals dd.DesignationId into ddp from dd in ddp.DefaultIfEmpty () 
                     join ed in _dbContext.EducationDegreeMaster 
                     on hr.EducationDegreeId equals ed.Id into edm from ed in edm.DefaultIfEmpty () 
-                    // join pdl in _dbContext.ProvinceDetails 
-                    // on hr.ProvinceId equals pdl.ProvinceId into pdd from pdl in pdd.DefaultIfEmpty () 
-                    // join cdl in _dbContext.CountryDetails 
-                    // on hr.CountryId equals cdl.CountryId into cdd from cdl in cdd.DefaultIfEmpty () 
+                    join pdl in _dbContext.ProvinceDetails 
+                    on hr.ProvinceId equals pdl.ProvinceId into pdd from pdl in pdd.DefaultIfEmpty () 
+                    join cdl in _dbContext.CountryDetails 
+                    on hr.CountryId equals cdl.CountryId into cdd from cdl in cdd.DefaultIfEmpty () 
                     join dpl in _dbContext.Department 
                     on hr.JobTypeId equals dpl.DepartmentId into dpld from dpl in dpld.DefaultIfEmpty () 
                     select new HiringRequestFormPdfModel {
@@ -56,7 +56,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                             Position = dd.Designation,
                            // Organization = hr.Organization,
                             Office = o.OfficeName,
-                           // Province = pdl.ProvinceName,
+                            Province = pdl.ProvinceName,
                             ContractType = hr.ContractType,
                             ContractDuration = hr.ContractDuration,
                             Gender = hr.GenderId == 1 ? "Male" : hr.GenderId == 2 ? "Female" : "Other",
@@ -65,13 +65,13 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                             HiringRequestCode =  hr.HiringRequestCode, 
                             AnnouncingDate = hr.AnouncingDate != null ? hr.AnouncingDate.Value.ToShortDateString () : "",
                             ClosingDate = hr.ClosingDate != null ? hr.ClosingDate.Value.ToShortDateString () : "",
-                           // Country = cdl.CountryName,
+                            Country = cdl.CountryName,
                             FilledVacancies = hr.FilledVacancies,
                             JobType = dpl.DepartmentName,
                             Shift = hr.Shift == 1 ? "Day" : "Night",
                             JobStatus = ((HiringRequestStatus)(hr.HiringRequestStatus)).ToString(),
                             Experience = hr.Experience,
-                            // Background = hr.Background,
+                            Background = hr.Background,
                             SpecificDutiesAndResponsiblities = hr.SpecificDutiesAndResponsblities,
                             KnowladgeAndSkillRequired = hr.KnowladgeAndSkillRequired,
                             SubmissionGuidline = hr.SubmissionGuidlines
@@ -85,20 +85,20 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                         Position = requestDetail.Position,
                         // Organization = requestDetail.Organization,
                         Office = requestDetail.Office,
-                        // Province = requestDetail.Province,
+                        Province = requestDetail.Province,
                         ContractType = requestDetail.ContractType,
                         ContractDuration = requestDetail.ContractDuration,
                         Gender = requestDetail.Gender,
                         // SalaryRange = requestDetail.SalaryRange,
                         AnnouncingDate = requestDetail.AnnouncingDate,
                         ClosingDate = requestDetail.ClosingDate,
-                        // Country = requestDetail.Country,
+                        Country = requestDetail.Country,
                         FilledVacancies = requestDetail.FilledVacancies,
                         JobType = requestDetail.JobType,
                         Shift = requestDetail.Shift,
                         JobStatus = requestDetail.JobStatus,
                         Experience = requestDetail.Experience,
-                        // Background = requestDetail.Background,
+                        Background = requestDetail.Background,
                         SpecificDutiesAndResponsiblities = requestDetail.SpecificDutiesAndResponsiblities,
                         KnowladgeAndSkillRequired = requestDetail.KnowladgeAndSkillRequired,
                         SubmissionGuidline = requestDetail.SubmissionGuidline,
