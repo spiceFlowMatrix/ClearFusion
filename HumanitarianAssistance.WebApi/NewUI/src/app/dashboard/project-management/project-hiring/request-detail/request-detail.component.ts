@@ -383,6 +383,19 @@ export class RequestDetailComponent implements OnInit {
                           edit: false
                         }
                       ]
+                    : element.CandidateStatus === CandidateStatus.Selected ?
+                    [
+                      {
+                        anchor: {
+                          status: true,
+                          text: 'Candidate Cv',
+                          type: 'link'
+                        },
+                        delete: false,
+                        download: false,
+                        edit: false,
+                        link: true
+                      }]
                     : [],
                 subItems: [
                   {

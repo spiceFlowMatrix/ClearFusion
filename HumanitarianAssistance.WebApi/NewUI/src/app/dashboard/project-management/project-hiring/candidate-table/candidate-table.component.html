@@ -1,101 +1,107 @@
 <table class="table table-striped">
-  <thead>
-    <tr>
-      <th *ngFor="let header of headers | async">
-        {{header}}
-      </th>
-    </tr>
-  </thead>
-  <tbody *ngFor="let item of items | async; let i=index;">
-    <tr (click)="switchSubList(i,item)" class="main-table">
-      <td *ngFor="let header of itemHeaders | async; let j=index ">
-        <span [innerHtml]="((item[header] != null) ? item[header] : 'N/A')"></span>
-        <!-- {{(item[header] != null) ? item[header] : "N/A"}} -->
-      </td>
-      <td *ngIf="itemActions && (itemActions.items)">
-        <span class="action-span" *ngIf="isDefaultAction">
+    <thead>
+        <tr>
+            <th *ngFor="let header of headers | async">
+                {{header}}
+            </th>
+        </tr>
+    </thead>
+    <tbody *ngFor="let item of items | async; let i=index;">
+        <tr (click)="switchSubList(i,item)" class="main-table">
+            <td *ngFor="let header of itemHeaders | async; let j=index ">
+                <span [innerHtml]="((item[header] != null) ? item[header] : 'N/A')"></span>
+                <!-- {{(item[header] != null) ? item[header] : "N/A"}} -->
+            </td>
+            <td *ngIf="itemActions && (itemActions.items)">
+                <span class="action-span" *ngIf="isDefaultAction">
           <hum-button *ngIf="itemActions.items?.button?.status" [type]="'add'" [text]="itemActions.items.button.text"
             (click)='action(item,"button",$event)'></hum-button>
         </span>
-        <span class="action-span" *ngIf="!isDefaultAction">
+                <span class="action-span" *ngIf="!isDefaultAction">
           <span *ngFor="let actionType of item.itemAction">
             <hum-button *ngIf="actionType.button?.status" [type]="actionType.button?.type"
               [text]="actionType.button?.text" (click)='action(item,actionType.button?.text,$event)'></hum-button>
+
+              <a *ngIf="actionType.anchor?.status" [type]="actionType.anchor?.type"
+              [text]="actionType.anchor?.text" (click)='action(item,actionType.anchor?.text,$event)'></a>
           </span>
 
-        </span>
-        <span class="action-span">
+                </span>
+                <span class="action-span">
           <i *ngIf="itemActions.items?.download" class="fas fa-download" (click)='action(item,"download",$event)'></i>
         </span>
-        <span class="action-span">
+                <span class="action-span">
           <i *ngIf="itemActions.items?.edit" class="fa fa-pencil" (click)='action(item,"edit",$event)'></i>
         </span>
-        <span class="action-span">
+                <span class="action-span">
           <i *ngIf="itemActions.items?.delete" class="fas fa-trash" (click)='action(item,"delete",$event)'></i>
         </span>
-      </td>
+                <span class="action-span">
+          <p *ngIf="itemActions.items?.link" (click)='action(item,"delete",$event)'>Employee Id</p>
+        </span>
+            </td>
 
-    </tr>
+        </tr>
 
-    <tr *ngIf="isShowSubList[i]" class="sub-table">
-      <td [attr.colspan]="(headers | async).length + 1">
-        <div class="sub-table">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="col-md-6">
-                <div class="col-md-12">
-                  <div class="col-md-6">
-                    Current Qualification
-                  </div>
+        <tr *ngIf="isShowSubList[i]" class="sub-table">
+            <td [attr.colspan]="(headers | async).length + 1">
+                <div class="sub-table">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-6">
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        Current Qualification
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+
+                                    <div class="col-md-6">
+                                        <b>Education</b>
+                                    </div>
+                                    <div class="col-md-6"> <span [innerHtml]="((subItems[i][0].EducationDegree!= null) ? subItems[i][0].EducationDegree : 'N/A')"></span></div>
+                                    <div class="col-md-6">
+                                        <b>Profession</b>
+                                    </div>
+                                    <div class="col-md-6"><span [innerHtml]="((subItems[i][0].Profession!= null) ? subItems[i][0].Profession : 'N/A')"></span></div>
+                                    <div class="col-md-6">
+                                        <b>Relevant Experience</b>
+                                    </div>
+                                    <div class="col-md-6"><span [innerHtml]="((subItems[i][0].RelevantExperienceInYear!= null) ? subItems[i][0].RelevantExperienceInYear : 'N/A')"></span></div>
+                                    <div class="col-md-6">
+                                        <b>Irrelevant Experience</b>
+                                    </div>
+                                    <div class="col-md-6"><span [innerHtml]="((subItems[i][0].IrrelevantExperienceInYear!= null) ? subItems[i][0].IrrelevantExperienceInYear : 'N/A')"></span></div>
+                                    <div class="col-md-6">
+                                        <b>Total Experience</b>
+                                    </div>
+                                    <div class="col-md-6"><span [innerHtml]="((subItems[i][0].TotalExperienceInYear!= null) ? subItems[i][0].TotalExperienceInYear : 'N/A')"></span></div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        Contact Details
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+
+                                    <div class="col-md-6"><b>Phone Number</b></div>
+                                    <div class="col-md-6"><span [innerHtml]="((subItems[i][0].PhoneNumber!= null) ? subItems[i][0].PhoneNumber : 'N/A')"></span></div>
+                                    <div class="col-md-6"><b>Email Address</b></div>
+                                    <div class="col-md-6"><span [innerHtml]="((subItems[i][0].Email!= null) ? subItems[i][0].Email : 'N/A')"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-12">
 
-                  <div class="col-md-6">
-                    <b>Education</b>
-                  </div>
-                  <div class="col-md-6"> <span [innerHtml]="((subItems[i][0].EducationDegree!= null) ? subItems[i][0].EducationDegree : 'N/A')"></span></div>
-                  <div class="col-md-6">
-                    <b>Profession</b>
-                  </div>
-                  <div class="col-md-6"><span [innerHtml]="((subItems[i][0].Profession!= null) ? subItems[i][0].Profession : 'N/A')"></span></div>
-                  <div class="col-md-6">
-                    <b>Relevant Experience</b>
-                  </div>
-                  <div class="col-md-6"><span [innerHtml]="((subItems[i][0].RelevantExperienceInYear!= null) ? subItems[i][0].RelevantExperienceInYear : 'N/A')"></span></div>
-                  <div class="col-md-6">
-                    <b>Irrelevant Experience</b>
-                  </div>
-                  <div class="col-md-6"><span [innerHtml]="((subItems[i][0].IrrelevantExperienceInYear!= null) ? subItems[i][0].IrrelevantExperienceInYear : 'N/A')"></span></div>
-                  <div class="col-md-6">
-                    <b>Total Experience</b>
-                  </div>
-                  <div class="col-md-6"><span [innerHtml]="((subItems[i][0].TotalExperienceInYear!= null) ? subItems[i][0].TotalExperienceInYear : 'N/A')"></span></div>
-                </div>
-
-
-              </div>
-              <div class="col-md-6">
-                <div class="col-md-12">
-                  <div class="col-md-6">
-                     Contact Details
-                  </div>
-                </div>
-                <div class="col-md-12">
-
-                  <div class="col-md-6"><b>Phone Number</b></div>
-                  <div class="col-md-6"><span [innerHtml]="((subItems[i][0].PhoneNumber!= null) ? subItems[i][0].PhoneNumber : 'N/A')"></span></div>
-                  <div class="col-md-6"><b>Email Address</b></div>
-                  <div class="col-md-6"><span [innerHtml]="((subItems[i][0].Email!= null) ? subItems[i][0].Email : 'N/A')"></span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </td>
-    </tr>
+            </td>
+        </tr>
 
 
 
-  </tbody>
+    </tbody>
 </table>
