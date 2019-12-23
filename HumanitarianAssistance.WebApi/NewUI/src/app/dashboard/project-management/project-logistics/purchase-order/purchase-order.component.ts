@@ -145,6 +145,10 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
       }
     });
   }
+
+  navigateToPurchase(id) {
+    this.router.navigate(['/store/purchase/edit/' + id]);
+  }
 }
 
 interface GoodsRecievedNote {
