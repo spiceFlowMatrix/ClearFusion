@@ -37,6 +37,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
 
         public string MasterInventoryCode { get; set; }
         public int? ItemTypeCategory { get; set; } //vehicle or generator
+        public int? DefaultUnitType { get; set; }
 
         [ForeignKey("ItemInventory")]
         public StoreInventory Inventory { get; set; }
