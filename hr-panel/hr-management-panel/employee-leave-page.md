@@ -1,36 +1,18 @@
 # Employee Leave Page
 
-## Add Leave Balances
-
-### Toolbar
-
 1. Add New Leave Type Form Policy
 2. PDF Export
+3. Add Leave Application
+4. Approve
+5. Reject
 
-![](../../.gitbook/assets/leave-balances.png)
+## Add New Leave Type Form Policy
 
-### Leave Balances Management panel
+## Add Leave Application
 
-1. Add Leave Application
+## Approve
 
-![](../../.gitbook/assets/add-leave-application.png)
+## Reject
 
-
-
-## Leave Application Management Panel
-
-1. See Days
-2. Approve
-3. Reject
-
-![](../../.gitbook/assets/add-leave-applications-see-aprove-reject.png)
-
-## Approve Leave
-
-### Toolbar
-
-1. Reject
-2. Approve
-
-
+## PDF Export
 
