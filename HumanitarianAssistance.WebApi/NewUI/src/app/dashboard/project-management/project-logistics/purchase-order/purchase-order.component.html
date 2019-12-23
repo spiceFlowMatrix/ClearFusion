@@ -64,7 +64,7 @@
         <hum-button [type]="'pdf'" [text]="'GOODS RECEIVED NOTE'"></hum-button>
       </h4>
       <div *ngFor="let item of purchaseOrderDetail.purchasedItems">
-        <span><i class="fas fa-info-circle icon_color_green"></i> New Purchase with Code {{item.ItemId}} was generated for Item {{item.ItemName}}/{{item.ItemId}}.</span><br>
+        <span><i class="fas fa-info-circle icon_color_green"></i> New Purchase with <b><a (click)="navigateToPurchase(item.PurchaseId)">Code {{item.PurchaseId}}</a></b> was generated for <b>Item {{item.ItemName}}/{{item.ItemId}}</b>.</span><br>
       </div>
       <span><i class="fas fa-info-circle icon_color_green"></i> Voucher with <b>Reference Number {{purchaseOrderDetail.VoucherReferenceNo}}</b> has been generated.</span><br>
       <span><i class="fas fa-info-circle icon_color_green"></i> Signed version of goods received note. <a href="{{goodsRecievedModel.AttachmentUrl}}" target="_blank"><i class="fa fa-download fa-2" aria-hidden="true"></i></a></span><br>

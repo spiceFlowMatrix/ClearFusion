@@ -199,7 +199,7 @@ namespace HumanitarianAssistance.Application.CommonServices
 
                     model.EmployeeID = obj.EmployeeID;
 
-                    OfficeDetail OfficeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.OfficeId == request.OfficeId && x.IsDeleted == false);
+                   // OfficeDetail OfficeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.OfficeId == request.OfficeId && x.IsDeleted == false);
                     obj.EmployeeCode = "E" + obj.EmployeeID;
 
                     _dbContext.EmployeeDetail.Update(obj);
