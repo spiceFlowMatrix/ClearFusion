@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { FileSourceEntityTypes } from 'src/app/shared/enum';
 import { MomentService } from 'src/app/shared/services/moment/moment.service';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
 
 @Component({
   selector: 'app-submit-purchase-list',
@@ -235,7 +236,7 @@ export class SubmitPurchaseListComponent implements OnInit {
         FinalCost: v.EstimatedCost
        }) );
     const model = {
-      PurchaseDate: this.momentService.utcFormatDate(this.purchaseSubmitForm.get('PurchaseDate').value),
+      PurchaseDate: StaticUtilities.getLocalDate(this.purchaseSubmitForm.get('PurchaseDate').value),
       ItemModel: item,
       RequestId: this.requestId
     };
