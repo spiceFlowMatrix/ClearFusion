@@ -113,13 +113,13 @@ export class PurchaseVoucherVerificationComponent implements OnInit {
       }
     );
 
-    this.logisticservice.checkDefaultUnitType().subscribe(data => {
-      if (data.StatusCode === 200 && !data.ResponseData) {
-        this.unitTypeMessage = 'Default Unit Type not set!';
-      } else {
-        this.unitTypeMessage = '';
-      }
-    });
+    // this.logisticservice.checkDefaultUnitType().subscribe(data => {
+    //   if (data.StatusCode === 200 && !data.ResponseData) {
+    //     this.unitTypeMessage = 'Default Unit Type not set!';
+    //   } else {
+    //     this.unitTypeMessage = '';
+    //   }
+    // });
     }
   }
 
