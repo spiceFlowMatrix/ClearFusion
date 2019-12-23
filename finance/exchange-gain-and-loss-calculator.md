@@ -40,10 +40,12 @@ Changing the Account Configuration can be a heavy process because the applicatio
 
 ### Accounting Period
 
-The Calculator selects transactions against [selected accounts](exchange-gain-and-loss-calculator.md#account-configuration) with voucher dates between the Start and End date \(inclusive\) of the Active Accounting Period. All transactions that took place between the Start and End date must be factored in for the Calculator to calculate the balances for their respective Accounts \(in both the original date balance and comparison date balance\).
+The Calculator selects transactions against [selected accounts](exchange-gain-and-loss-calculator.md#account-configuration) with voucher dates between the Start and End date \(inclusive\) of the selected [Accounting Period](accounting-operation/accounting-periods.md). 
+
+All transactions that took place between the Start and End date of the selected [Accounting Period](accounting-operation/accounting-periods.md) must be factored in for the Calculator to calculate the balances for their respective Accounts \(in both the original date balance and comparison date balance\).
 
 {% hint style="info" %}
-By default, this will use the values provided for the Start Date and End Date configurations of the Active Accounting Period. You can change the Accounting Period for the Calculator by clicking 
+By default, the [Active Accounting Period](accounting-operation/accounting-periods.md#active-accounting-period) is selected but you can change this by clicking **SET ACCOUNTING PERIOD** and submitting a new [Accounting Period](accounting-operation/accounting-periods.md) selection.
 {% endhint %}
 
 ### Comparison Date
@@ -82,6 +84,7 @@ The Calculator runs calculations for all the Accounts selected in [Account Confi
 
 1. The Account's [Balance on Original Date](exchange-gain-and-loss-calculator.md#balance-on-original-date)
 2. The Account's [Balance on Comparison Date](exchange-gain-and-loss-calculator.md#balance-on-comparison-date)
+3. The GAIN or LOSS amount for the account based on the [Balance Calculation](exchange-gain-and-loss-calculator.md#balance-calculation)
 
 ### Balance on Original Date
 
