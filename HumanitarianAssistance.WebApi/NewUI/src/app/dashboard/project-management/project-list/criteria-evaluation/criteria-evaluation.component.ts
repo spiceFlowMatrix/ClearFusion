@@ -141,7 +141,6 @@ export class CriteriaEvaluationComponent
   //#endregion
 
   //#region  feasibilty variable
-  capacityAvailabilityProject = 0;
   compensationTrainStaff = 0;
   compensationByEquipment = 0;
   compensationExpandScope = 0;
@@ -2897,138 +2896,6 @@ export class CriteriaEvaluationComponent
       (this.productAndServiceForm.AgricultureAndLivestock === true
         ? criteriaEvaluationScores.agricultureaAndLivestock_Yes
         : criteriaEvaluationScores.agricultureaAndLivestock_No) +
-      // (this.productAndServiceForm.Awareness === true
-      //   ? criteriaEvaluationScores.prodAwareness_Yes
-      //   : criteriaEvaluationScores.prodAwareness_No) +
-      // (this.productAndServiceForm.Infrastructure === true
-      //   ? criteriaEvaluationScores.prodInfrastructure_Yes
-      //   : criteriaEvaluationScores.prodInfrastructure_No) +
-      // (this.productAndServiceForm.CapacityBuilding === true
-      //   ? criteriaEvaluationScores.prodCapacityBuilding_Yes
-      //   : criteriaEvaluationScores.prodCapacityBuilding_No) +
-      // (this.productAndServiceForm.IncomeGeneration === true
-      //   ? criteriaEvaluationScores.prodIncomeGeneration_Yes
-      //   : criteriaEvaluationScores.prodIncomeGeneration_No) +
-      // (this.productAndServiceForm.Mobilization === true
-      //   ? criteriaEvaluationScores.prodMobilization_Yes
-      //   : criteriaEvaluationScores.prodMobilization_No) +
-      // (this.productAndServiceForm.PeaceBuilding === true
-      //   ? criteriaEvaluationScores.prodPeaceBuilding_Yes
-      //   : criteriaEvaluationScores.prodPeaceBuilding_No) +
-      // (this.productAndServiceForm.SocialProtection === true
-      //   ? criteriaEvaluationScores.prodSocialProtection_Yes
-      //   : criteriaEvaluationScores.prodSocialProtection_No) +
-      // (this.productAndServiceForm.SustainableLivelihood === true
-      //   ? criteriaEvaluationScores.prodSustainableLivelihood_Yes
-      //   : criteriaEvaluationScores.prodSustainableLivelihood_No) +
-      // (this.productAndServiceForm.Advocacy === true
-      //   ? criteriaEvaluationScores.prodAdvocacy_Yes
-      //   : criteriaEvaluationScores.prodAdvocacy_No) +
-      // (this.productAndServiceForm.Literacy === true
-      //   ? criteriaEvaluationScores.prodLiteracy_Yes
-      //   : criteriaEvaluationScores.prodLiteracy_No) +
-      // (this.productAndServiceForm.EducationCapacityBuilding === true
-      //   ? criteriaEvaluationScores.prodEducationCapacityBuilding_Yes
-      //   : criteriaEvaluationScores.prodEducationCapacityBuilding_No) +
-      // (this.productAndServiceForm.SchoolUpgrading === true
-      //   ? criteriaEvaluationScores.prodSchoolUpgrading_Yes
-      //   : criteriaEvaluationScores.prodSchoolUpgrading_No) +
-      // (this.productAndServiceForm.EducationInEmergency === true
-      //   ? criteriaEvaluationScores.prodEducationInEmergency_Yes
-      //   : criteriaEvaluationScores.prodEducationInEmergency_No) +
-      // (this.productAndServiceForm.OnlineEducation === true
-      //   ? criteriaEvaluationScores.prodOnlineEducation_Yes
-      //   : criteriaEvaluationScores.prodOnlineEducation_No) +
-      // (this.productAndServiceForm.CommunityBasedEducation === true
-      //   ? criteriaEvaluationScores.prodCommunityBasedEducation_Yes
-      //   : criteriaEvaluationScores.prodCommunityBasedEducation_No) +
-      // (this.productAndServiceForm.AcceleratedLearningProgram === true
-      //   ? criteriaEvaluationScores.AcceleratedLearningProgram_Yes
-      //   : criteriaEvaluationScores.AcceleratedLearningProgram_No) +
-      // (this.productAndServiceForm.PrimaryHealthServices === true
-      //   ? criteriaEvaluationScores.PrimaryHealthServices_Yes
-      //   : criteriaEvaluationScores.PrimaryHealthServices_No) +
-      // (this.productAndServiceForm.ReproductiveHealth === true
-      //   ? criteriaEvaluationScores.ReproductiveHealth_Yes
-      //   : criteriaEvaluationScores.ReproductiveHealth_No) +
-      // (this.productAndServiceForm.Immunization === true
-      //   ? criteriaEvaluationScores.Immunization_Yes
-      //   : criteriaEvaluationScores.Immunization_No) +
-      // (this.productAndServiceForm.InfantandYoungChildFeeding === true
-      //   ? criteriaEvaluationScores.InfantandYoungChildFeeding_Yes
-      //   : criteriaEvaluationScores.InfantandYoungChildFeeding_No) +
-      // (this.productAndServiceForm.Nutrition === true
-      //   ? criteriaEvaluationScores.Nutrition_Yes
-      //   : criteriaEvaluationScores.Nutrition_No) +
-      // (this.productAndServiceForm.CommunicableDisease === true
-      //   ? criteriaEvaluationScores.CommunicableDisease_Yes
-      //   : criteriaEvaluationScores.CommunicableDisease_No) +
-      // (this.productAndServiceForm.Hygiene === true
-      //   ? criteriaEvaluationScores.Hygiene_Yes
-      //   : criteriaEvaluationScores.Hygiene_No) +
-      // (this.productAndServiceForm.EnvironmentalHealth === true
-      //   ? criteriaEvaluationScores.EnvironmentalHealth_Yes
-      //   : criteriaEvaluationScores.EnvironmentalHealth_No) +
-      // (this.productAndServiceForm.MentalHealthandDisabilityService === true
-      //   ? criteriaEvaluationScores.MentalHealthandDisabilityService_Yes
-      //   : criteriaEvaluationScores.MentalHealthandDisabilityService_No) +
-      // (this.productAndServiceForm.HealthCapacityBuilding === true
-      //   ? criteriaEvaluationScores.HealthCapacityBuilding_Yes
-      //   : criteriaEvaluationScores.HealthCapacityBuilding_No) +
-      // (this.productAndServiceForm.Telemedicine === true
-      //   ? criteriaEvaluationScores.Telemedicine_Yes
-      //   : criteriaEvaluationScores.Telemedicine_No) +
-      // (this.productAndServiceForm.MitigationProjects === true
-      //   ? criteriaEvaluationScores.MitigationProjects_Yes
-      //   : criteriaEvaluationScores.MitigationProjects_No) +
-      // (this.productAndServiceForm.WaterSupply === true
-      //   ? criteriaEvaluationScores.WaterSupply_Yes
-      //   : criteriaEvaluationScores.WaterSupply_No) +
-      // (this.productAndServiceForm.Sanitation === true
-      //   ? criteriaEvaluationScores.Sanitation_Yes
-      //   : criteriaEvaluationScores.Sanitation_No) +
-      // (this.productAndServiceForm.DisasterRiskHygiene === true
-      //   ? criteriaEvaluationScores.DisasterRiskHygiene_Yes
-      //   : criteriaEvaluationScores.DisasterRiskHygiene_No) +
-      // (this.productAndServiceForm.DisasterCapacityBuilding === true
-      //   ? criteriaEvaluationScores.DisasterCapacityBuilding_Yes
-      //   : criteriaEvaluationScores.DisasterCapacityBuilding_No) +
-      // (this.productAndServiceForm.EmergencyResponse === true
-      //   ? criteriaEvaluationScores.EmergencyResponse_Yes
-      //   : criteriaEvaluationScores.EmergencyResponse_No) +
-      // (this.productAndServiceForm.RenewableEnergy === true
-      //   ? criteriaEvaluationScores.RenewableEnergy_Yes
-      //   : criteriaEvaluationScores.RenewableEnergy_No) +
-      // (this.productAndServiceForm.Shelter === true
-      //   ? criteriaEvaluationScores.Shelter_Yes
-      //   : criteriaEvaluationScores.Shelter_No) +
-      // (this.productAndServiceForm.NaturalResourceManagement === true
-      //   ? criteriaEvaluationScores.NaturalResourceManagement_Yes
-      //   : criteriaEvaluationScores.NaturalResourceManagement_No) +
-      // (this.productAndServiceForm.AggriculutreCapacityBuilding === true
-      //   ? criteriaEvaluationScores.AggriculutreCapacityBuilding_Yes
-      //   : criteriaEvaluationScores.AggriculutreCapacityBuilding_No) +
-      // (this.productAndServiceForm.LivestockManagement === true
-      //   ? criteriaEvaluationScores.LivestockManagement_Yes
-      //   : criteriaEvaluationScores.LivestockManagement_No) +
-      // (this.productAndServiceForm.FoodSecurity === true
-      //   ? criteriaEvaluationScores.FoodSecurity_Yes
-      //   : criteriaEvaluationScores.FoodSecurity_No) +
-      // (this.productAndServiceForm.ResearchandPublication === true
-      //   ? criteriaEvaluationScores.ResearchandPublication_Yes
-      //   : criteriaEvaluationScores.ResearchandPublication_No) +
-      // (this.productAndServiceForm.Horticulture === true
-      //   ? criteriaEvaluationScores.Horticulture_Yes
-      //   : criteriaEvaluationScores.Horticulture_No) +
-      // (this.productAndServiceForm.Irrigation === true
-      //   ? criteriaEvaluationScores.Irrigation_Yes
-      //   : criteriaEvaluationScores.Irrigation_No) +
-      // (this.productAndServiceForm.Livelihood === true
-      //   ? criteriaEvaluationScores.Livelihood_Yes
-      //   : criteriaEvaluationScores.Livelihood_No) +
-      // (this.productAndServiceForm.ValueChain === true
-      //   ? criteriaEvaluationScores.ValueChain_Yes
-      //   : criteriaEvaluationScores.ValueChain_No) +
       (this.productAndServiceForm.Children === true
         ? criteriaEvaluationScores.Children_Yes
         : criteriaEvaluationScores.Children_No) +
@@ -3103,12 +2970,6 @@ export class CriteriaEvaluationComponent
       (this.feasibilityForm.EnoughTimeForProject === true
         ? criteriaEvaluationScores.enoughTimeForQualityWork_Yes
         : criteriaEvaluationScores.enoughTimeForQualityWork_No) +
-      // (this.feasibilityForm.ProjectAllowedBylaw === true
-      //   ? criteriaEvaluationScores.projectAllowedByLaw_Yes
-      //   : criteriaEvaluationScores.projectAllowedByLaw_No) +
-      // (this.feasibilityForm.ProjectByLeadership === true
-      //   ? criteriaEvaluationScores.projectAllowByOrganisation_Yes
-      //   : criteriaEvaluationScores.projectAllowByOrganisation_No) +
       (this.feasibilityForm.IsProjectPractical === true
         ? criteriaEvaluationScores.isProjectPractical_Yes
         : criteriaEvaluationScores.isProjectPractical_No) +
@@ -3176,16 +3037,6 @@ export class CriteriaEvaluationComponent
       (this.priorityForm.ExpansionGoal === true
         ? criteriaEvaluationScores.projectInlineWithOrganisalGoal_Yes
         : criteriaEvaluationScores.projectInlineWithOrganisalGoal_No) +
-      // (this.riskForm.Security === false && this.riskForm.Security != null
-      //   ? criteriaEvaluationScores.riskSecurity_No
-      //   : criteriaEvaluationScores.riskSecurity_Yes) +
-      // (this.riskForm.Security === true || this.riskForm.Security == null
-      //   ? criteriaEvaluationScores.riskSecurity_Yes
-      //   : criteriaEvaluationScores.riskSecurity_No) +
-      // (this.riskForm.DeliveryFaiLure === false && this.riskForm.DeliveryFaiLure != null
-      //   ? criteriaEvaluationScores.deliveryFailure_No
-      //   : criteriaEvaluationScores.deliveryFailure_Yes) +
-
       (this.riskForm.Staff === true
         ? criteriaEvaluationScores.staffSecured_Yes
         : criteriaEvaluationScores.staffSecured_No) +
@@ -3201,10 +3052,6 @@ export class CriteriaEvaluationComponent
       (this.riskForm.OverallOrganization === true
         ? criteriaEvaluationScores.organizationSecured_Yes
         : criteriaEvaluationScores.organizationSecured_No) +
-      // (this.riskForm.DeliveryFaiLure === true ||
-      // this.riskForm.DeliveryFaiLure == null
-      //   ? criteriaEvaluationScores.deliveryFailure_Yes
-      //   : criteriaEvaluationScores.deliveryFailure_No) +
       (this.riskForm.PrematureSeizure === true
         ? criteriaEvaluationScores.prematureSeizure_Yes
         : criteriaEvaluationScores.prematureSeizure_No) +
@@ -3214,9 +3061,6 @@ export class CriteriaEvaluationComponent
       (this.riskForm.DesctructionByTerroristActivity === true
         ? criteriaEvaluationScores.terroristActivity_Yes
         : criteriaEvaluationScores.terroristActivity_No) +
-      // (this.riskForm.Reputation === true || this.riskForm.Reputation == null
-      //   ? criteriaEvaluationScores.riskReputation_Yes
-      //   : criteriaEvaluationScores.riskReputation_No) +
       (this.riskForm.Religious === true
         ? criteriaEvaluationScores.religious_Yes
         : criteriaEvaluationScores.religious_No) +

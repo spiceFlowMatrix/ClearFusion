@@ -270,13 +270,13 @@ export enum criteriaEvaluationScores {
   Widows_No = 0,
 
   // donor Eligibility criteria
-  onDonorELegibilityCrteria_Yes = 1,
+  onDonorELegibilityCrteria_Yes = 8,
   onDonorELegibilityCrteria_No = 0,
 
   donorEligibilityDeadline_Yes = 6,
   donorEligibilityDeadline_No = 0,
 
-  donorELigibilityPartnership_Yes = 1,
+  donorELigibilityPartnership_Yes = 2,
   donorELigibilityPartnership_No = 0,
 
   // feasibility
