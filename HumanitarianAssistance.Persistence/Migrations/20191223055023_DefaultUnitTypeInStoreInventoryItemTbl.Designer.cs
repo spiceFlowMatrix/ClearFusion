@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191223055023_DefaultUnitTypeInStoreInventoryItemTbl")]
+    partial class DefaultUnitTypeInStoreInventoryItemTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5689,8 +5691,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<string>("Email");
 
-                    b.Property<int?>("EmployeeID");
-
                     b.Property<int>("ExperienceMonth");
 
                     b.Property<int>("ExperienceYear");
@@ -5732,8 +5732,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("DistrictID");
 
                     b.HasIndex("EducationDegreeId");
-
-                    b.HasIndex("EmployeeID");
 
                     b.HasIndex("ProfessionId");
 
@@ -10149,10 +10147,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("EducationDegreeId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
-                        .WithMany()
-                        .HasForeignKey("EmployeeID");
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.ProfessionDetails", "ProfessionDetails")
                         .WithMany()
