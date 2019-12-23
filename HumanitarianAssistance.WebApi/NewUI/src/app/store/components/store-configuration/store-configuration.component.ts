@@ -104,7 +104,6 @@ export class StoreConfigurationComponent implements OnInit {
 
   }
   addUnitType() {
-    debugger;
     this.unitTypeGroup.reset();
     this.openUnitType();
   }
