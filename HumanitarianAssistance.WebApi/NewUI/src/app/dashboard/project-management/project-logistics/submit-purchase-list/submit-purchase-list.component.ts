@@ -12,6 +12,7 @@ import { PurchaseFinalCostComponent } from '../purchase-final-cost/purchase-fina
 import { ToastrService } from 'ngx-toastr';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { FileSourceEntityTypes } from 'src/app/shared/enum';
+import { MomentService } from 'src/app/shared/services/moment/moment.service';
 
 @Component({
   selector: 'app-submit-purchase-list',
@@ -53,7 +54,8 @@ export class SubmitPurchaseListComponent implements OnInit {
     private logisticservice: LogisticService,
     private dialog: MatDialog,
     public toastr: ToastrService,
-    private globalSharedService: GlobalSharedService) { }
+    private globalSharedService: GlobalSharedService,
+    private momentService: MomentService) { }
 
   ngOnInit() {
     // this.itemdata = this.data.requestedItems.map(function(val) {
@@ -233,7 +235,7 @@ export class SubmitPurchaseListComponent implements OnInit {
         FinalCost: v.EstimatedCost
        }) );
     const model = {
-      PurchaseDate: this.purchaseSubmitForm.get('PurchaseDate').value,
+      PurchaseDate: this.momentService.utcFormatDate(this.purchaseSubmitForm.get('PurchaseDate').value),
       ItemModel: item,
       RequestId: this.requestId
     };
