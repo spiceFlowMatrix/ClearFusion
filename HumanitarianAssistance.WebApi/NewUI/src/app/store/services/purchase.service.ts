@@ -587,6 +587,12 @@ getStoreLogs(id: number, entityId: number) {
           GLOBAL.API_StorePurchase_GetVehicleGeneratorTrackerLogs + '?id=' + id + '&entityId=' + entityId);
 }
 
+ // getDefaultUnitTypeByItemId
+ getDefaultUnitTypeByItemId(ItemId: number) {
+  return this.globalService
+    .getDataById(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetDefaultUnitTypeByItemId + '?id=' + ItemId);
+}
+
 getPreviousYearsList(years: number): Observable<IDropDownModel[]> {
 
   const yearDropDown: IDropDownModel[] = [];

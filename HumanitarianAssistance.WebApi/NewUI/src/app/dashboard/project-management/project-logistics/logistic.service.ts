@@ -296,11 +296,11 @@ export class LogisticService {
     );
   }
 
-  checkDefaultUnitType() {
-    return this.globalService.getDataById(
-      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_CheckDefaultUnitType,
-    );
-  }
+  // checkDefaultUnitType() {
+  //   return this.globalService.getDataById(
+  //     this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetDefaultUnitTypeByItemId,
+  //   );
+  // }
 
   getCompletedPurchaseOrderDetail(requestId) {
     return this.globalService.post(

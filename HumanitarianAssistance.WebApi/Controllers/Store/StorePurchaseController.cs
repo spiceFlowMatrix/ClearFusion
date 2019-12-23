@@ -259,5 +259,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
             }
         }
 
+        [HttpGet]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> GetDefaultUnitTypeByItemId(int id)
+        {
+            var result = await Task.FromResult(_mediator.Send(new GetDefaultUnitTypeByItemIdQuery { Id = id }));
+            return Ok(await result);
+           
+        }
+
     }
 }

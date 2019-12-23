@@ -55,7 +55,7 @@ export class StoreConfigurationComponent implements OnInit {
     this.unitTypeGroup = this.fb.group({
       unitTypeId: [null],
       unitTypeName: ['', [Validators.required]],
-      isDefault: [false]
+      // isDefault: [false]
     });
 
     this.unitActions = {
@@ -96,11 +96,11 @@ export class StoreConfigurationComponent implements OnInit {
     this.unitItems$ = of(res.data.PurchaseUnitTypeList).pipe(map(x => x.map(y => ({
       UnitTypeId: y.UnitTypeId,
       UnitTypeName: y.UnitTypeName,
-      IsDefaultText: y.IsDefault ? 'Yes' : 'No',
-      IsDefault: y.IsDefault
+      // IsDefaultText: y.IsDefault ? 'Yes' : 'No',
+      // IsDefault: y.IsDefault
 
     }))));
-    this.hideUnitColums = of({ headers: ['Name', 'Default Type'], items: ['UnitTypeName', 'IsDefaultText'] });
+    this.hideUnitColums = of({ headers: ['Name'], items: ['UnitTypeName'] });
 
   }
   addUnitType() {
@@ -162,7 +162,7 @@ export class StoreConfigurationComponent implements OnInit {
       this.unitTypeGroup.patchValue({
         unitTypeId: data.item.UnitTypeId,
         unitTypeName: data.item.UnitTypeName,
-        isDefault: data.item.IsDefault
+        // isDefault: data.item.IsDefault
       });
       this.openUnitType();
     }
