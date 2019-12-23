@@ -4,8 +4,8 @@
 
 ## Project
 
-* [Project Advanced Detials Management Control Panel](project/project-advanced-detials-management-control-panel.md)
-* [Criteria Eveluation Management Operation Form](project/criteria-eveluation-management-operation-form.md)
+* [Project Advanced Details Management Control Panel](project/project-advanced-detials-management-control-panel.md)
+* [Project Criteria Evaluation](project/criteria-eveluation-management-operation-form.md)
 * [Project Proposal Management Panel](project/project-proposal-management-panel.md)
 * [Project Job Management Panel](project/project-job-management-panel.md)
 * [Project Budget Line Management Cantrol Panel](project/project-budget-line-management-cantrol-panel.md)
@@ -33,6 +33,7 @@
 ## Finance & Accounting <a id="finance"></a>
 
 * [Accounting Operation Management](finance/accounting-operation/README.md)
+  * [Accounting Periods](finance/accounting-operation/accounting-periods.md)
   * [Interview Questions Page](finance/accounting-operation/interview-questions-page.md)
   * [Voucher Management Control Panel](finance/accounting-operation/voucher-management-control-panel.md)
   * [Exit Interview Questions Page](finance/accounting-operation/exit-interview-questions-page.md)
@@ -60,13 +61,23 @@
 ## HR PANEL
 
 * [Hr Management panel](hr-panel/hr-management-panel/README.md)
-  * [Employee Appraisals](hr-panel/hr-management-panel/appraisal-page.md)
-  * [Exit Interviews](hr-panel/hr-management-panel/exit-interviews.md)
+  * [Exit interview Form](hr-panel/hr-management-panel/exit-interview-form.md)
+  * [Employee Appraisals & Evaluation](hr-panel/hr-management-panel/employee-appraisals-and-evaluation.md)
   * [Employee Details Page](hr-panel/hr-management-panel/employee-details-page.md)
   * [Employee History Page](hr-panel/hr-management-panel/employee-history-page.md)
   * [Employee Leave Page](hr-panel/hr-management-panel/employee-leave-page.md)
   * [Employee Attendance Page](hr-panel/hr-management-panel/employee-attendance-page.md)
+  * [Contracts Page](hr-panel/hr-management-panel/contracts-page.md)
+  * [Payroll Page](hr-panel/hr-management-panel/payroll-page.md)
 * [Administration & Configuration](hr-panel/hr-configuration-operation/README.md)
+  * [Payroll Daily Hours](hr-panel/hr-configuration-operation/payroll-daily-hours.md)
+  * [Holidays](hr-panel/hr-configuration-operation/holidays.md)
   * [Office Configuration](hr-panel/hr-configuration-operation/office-configuration.md)
+  * [Department Configuration](hr-panel/hr-configuration-operation/department-configuration.md)
   * [Designation Configuration](hr-panel/hr-configuration-operation/designation-configuration.md)
+* [Employees Management Control Panel](hr-panel/employees-management-control-panel/README.md)
+  * [Attendance](hr-panel/employees-management-control-panel/attendance.md)
+  * [Monthly Payroll Register](hr-panel/employees-management-control-panel/monthly-payroll-register.md)
+  * [Employee Appraisal](hr-panel/employees-management-control-panel/employee-appraisal.md)
+  * [Employee Advances](hr-panel/employees-management-control-panel/advances-clear-fusion.md)
 

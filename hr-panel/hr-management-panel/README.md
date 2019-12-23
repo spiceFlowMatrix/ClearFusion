@@ -26,11 +26,11 @@ The Toolbar for the Employees currently allows the following actions:
 
 ![](../../.gitbook/assets/emplyee-control-panel.png)
 
-The Toolbar for the Hr Managemant Employee Control Panel currently allows the following actions:
+The Toolbar for the Hr Management Employee Control Panel currently allows the following actions:
 
 1. Edit Details
 2. Delete Employee
-3. Tremination
+3. Termination
 4. Resignation
 
 
