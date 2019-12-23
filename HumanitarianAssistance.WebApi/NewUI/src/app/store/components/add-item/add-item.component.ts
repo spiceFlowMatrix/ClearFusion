@@ -7,6 +7,7 @@ import { MasterInventoryItemModel } from '../../models/store-configuration';
 import { Observable, of } from 'rxjs';
 import { IDropDownModel } from '../../models/purchase';
 import { map, reduce } from 'rxjs/operators';
+import { PurchaseService } from '../../services/purchase.service';
 
 @Component({
   selector: 'app-add-item',
@@ -17,6 +18,7 @@ export class AddItemComponent implements OnInit {
 
   masterForm: FormGroup
   itemsTypes$: Observable<IDropDownModel[]>;
+  unitTypes$: Observable<IDropDownModel[]>;
   inventoryItem: MasterInventoryItemModel = {};
 
   items: IDropDownModel[] = [
@@ -28,7 +30,9 @@ export class AddItemComponent implements OnInit {
     { value: 6, name: 'Fuel' }
   ]
   constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<AddItemComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: MasterInventoryItemModel, private configService: ConfigService, private toastr: ToastrService) { }
+    @Inject(MAT_DIALOG_DATA) private data: MasterInventoryItemModel,
+    private configService: ConfigService, private toastr: ToastrService,
+    private purchaseService: PurchaseService) { }
   isSaving = false;
   ngOnInit() {
     this.createForm();
@@ -53,15 +57,18 @@ export class AddItemComponent implements OnInit {
       this.masterForm.controls.name.setValue(this.data.ItemName);
       this.masterForm.controls.description.setValue(this.data.Description);
       this.masterForm.controls.itemtypecategory.setValue(this.data.ItemTypeCategory ? this.data.ItemTypeCategory : null);
-
+      this.masterForm.controls.defaultunittype.setValue(this.data.DefaultUnitType);
     }
+
+    this.getAllUnitTypeDetails();
   }
   createForm() {
     this.masterForm = this.fb.group({
       name: ['', Validators.required],
       description: [''],
-      itemtypecategory: ['']
-    })
+      itemtypecategory: [''],
+      defaultunittype: [null, Validators.required]
+    });
   }
   submit() {
     if (this.masterForm.valid) {
@@ -73,6 +80,7 @@ export class AddItemComponent implements OnInit {
       this.inventoryItem.ItemType = null;
       this.inventoryItem.ItemInventory = this.data.ItemInventory;
       this.inventoryItem.ItemTypeCategory = this.masterForm.controls.itemtypecategory.value;
+      this.inventoryItem.DefaultUnitType = this.masterForm.controls.defaultunittype.value;
 
 
       if (this.data.ItemId) {
@@ -81,19 +89,29 @@ export class AddItemComponent implements OnInit {
           this.isSaving = false;
           this.toastr.success('Item updated successfully');
           this.dialogRef.close(1);
-        })
+        });
       } else {
         this.configService.AddItem(this.inventoryItem).subscribe(() => {
           this.isSaving = false;
           this.toastr.success('Item added successfully');
           this.dialogRef.close(1);
-        })
+        });
       }
-
-
     }
   }
   cancel() {
     this.dialogRef.close();
+  }
+
+  getAllUnitTypeDetails() {
+    this.purchaseService.getAllUnitTypeDetails().subscribe(response => {
+      this.unitTypes$ = of(
+        response.data.PurchaseUnitTypeList.map(y => {
+          return {
+            name: y.UnitTypeName,
+            value: y.UnitTypeId
+          };
+        }));
+    })
   }
 }

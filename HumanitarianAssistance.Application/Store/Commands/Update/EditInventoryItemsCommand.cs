@@ -13,5 +13,6 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
         public long ItemGroupId { get; set; }
         public int? ItemType { get; set; }
         public int? ItemTypeCategory { get; set; }
+        public int? DefaultUnitType { get; set; }
     }
 }

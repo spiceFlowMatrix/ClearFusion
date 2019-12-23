@@ -132,6 +132,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       items: ['Filename', 'DocumentTypeName', 'Date', 'UploadedBy']
     });
 
+
+
   }
 
   initForm() {
@@ -245,11 +247,11 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         };
       }));
 
-      const index = response.data.PurchaseUnitTypeList.findIndex(x => x.IsDefault === true);
+      // const index = response.data.PurchaseUnitTypeList.findIndex(x => x.IsDefault === true);
 
-      if (index !== -1) {
-        this.addPurchaseForm.controls['Unit'].patchValue(response.data.PurchaseUnitTypeList[index].UnitTypeId);
-      }
+      // if (index !== -1) {
+      //   this.addPurchaseForm.controls['Unit'].patchValue(response.data.PurchaseUnitTypeList[index].UnitTypeId);
+      // }
   }
 
   subscribeAllReceiptType(response: any) {
@@ -329,6 +331,10 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   getItemSelectedValue(event: any) {
 
     this.getTransportItemCategoryType(event);
+
+    if (!this.purchaseId) {
+      this.getDefaultUnitType(event);
+    }
 
     this.storeItems$.subscribe(x => {
       const index = x.findIndex(y => y.value === event);
@@ -757,13 +763,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   getTransportItemDataSource(transportItemTypeId: number) {
-    // const model = {
-    //   InventoryId: this.addPurchaseForm.get('InventoryId').value,
-    //   InventoryTypeId: this.addPurchaseForm.get('InventoryTypeId').value,
-    //   ItemGroupId: this.addPurchaseForm.get('ItemGroupId').value,
-    //   ItemId: this.addPurchaseForm.get('ItemId').value,
-    //   TransportItemTypeId: transportItemTypeId
-    // };
 
     if (this.ItemGroupTransportCategory) {
       this.commonLoader.showLoader();
@@ -1011,6 +1010,20 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         isEnable = true;
       }
       return isEnable;
+  }
+
+  getDefaultUnitType(itemId) {
+    this.purchaseService
+    .getDefaultUnitTypeByItemId(itemId)
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(x => {
+
+      if (x) {
+        this.addPurchaseForm.controls['Unit'].patchValue(x);
+      }
+
+    });
+
   }
 
   ngOnDestroy() {

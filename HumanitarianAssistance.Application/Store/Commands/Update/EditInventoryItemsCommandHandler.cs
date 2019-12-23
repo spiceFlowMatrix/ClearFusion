@@ -36,6 +36,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                     editItem.ItemName = request.ItemName;
                     editItem.ItemType = request.ItemType;
                     editItem.IsDeleted = false;
+                    editItem.DefaultUnitType = request.DefaultUnitType;
                     editItem.ItemInventory = request.ItemInventory;
                     editItem.ItemTypeCategory = request.ItemTypeCategory;
 

@@ -566,6 +566,7 @@ export class GLOBAL {
   public static API_VehicleTracker_GetVehicleMonthlyBreakdownDataById = 'VehicleTracker/GetVehicleMonthlyBreakdownDataById';
   public static API_GeneratorTracker_GetGeneratorMonthlyBreakdownDataById = 'GeneratorTracker/GetGeneratorMonthlyBreakdownDataById';
   public static API_StorePurchase_GetVehicleGeneratorTrackerLogs = 'StorePurchase/GetVehicleGeneratorTrackerLogs';
+  public static API_StorePurchase_GetDefaultUnitTypeByItemId = 'StorePurchase/GetDefaultUnitTypeByItemId';
 
   public static API_GeneratorTracker_GetGeneratorList = 'GeneratorTracker/GetGeneratorList';
   public static API_GeneratorTracker_GetGeneratorById = 'GeneratorTracker/GetGeneratorById';

@@ -23,6 +23,12 @@
         [options]="itemsTypes$" formControlName="itemtypecategory" [placeHolder]="'Item Type'">
       </lib-hum-dropdown>
     </div>
+    <div>
+      <mat-card-subtitle><b>This is Default Unit Type for purchase of this item.</b></mat-card-subtitle>
+      <lib-hum-dropdown [validation]="masterForm.controls['defaultunittype'].hasError('required')"
+      [options]="unitTypes$" formControlName="defaultunittype" [placeHolder]="'Default Unit Type'">
+    </lib-hum-dropdown>
+    </div>
   </mat-card-content>
   <mat-card-actions>
     <hum-button *ngIf="!isSaving" [disabled]="masterForm.invalid" [isSubmit]="true" [type]="'save'" [text]="'save'"
