@@ -447,7 +447,7 @@ export class RequestDetailComponent implements OnInit {
         this.getCandidateCvByCandidateId(data);
         break;
       case 'Select':
-        this.selectCandidate(data, 3);
+        this.selectCandidate(data);
         break;
       case 'Reject':
         this.rejectCandidate(data);
@@ -472,16 +472,16 @@ export class RequestDetailComponent implements OnInit {
   }
   shortListCandidate(data: any) {
     const candidateDetails: any = {
-      statusId: +CandidateStatus[data.item.CandidateStatus],
+      statusId : CandidateStatus['Pending Interview'],
       candidateId: data.item.CandidateId,
       projectId: this.projectId,
       hiringRequestId: this.hiringRequestId
     };
     this.updateCandidateStatus(candidateDetails);
   }
-  selectCandidate(data: any, statusId: number) {
+  selectCandidate(data: any) {
     const candidateDetails: any = {
-      statusId: statusId,
+      statusId : CandidateStatus.Selected,
       candidateId: data.item.CandidateId,
       projectId: this.projectId,
       hiringRequestId: this.hiringRequestId
@@ -491,7 +491,7 @@ export class RequestDetailComponent implements OnInit {
   }
   rejectCandidate(data: any) {
     const candidateDetails: any = {
-      statusId: 4,
+      statusId: CandidateStatus.Rejected,
       candidateId: data.item.CandidateId,
       projectId: this.projectId,
       hiringRequestId: this.hiringRequestId
@@ -703,7 +703,8 @@ export class RequestDetailComponent implements OnInit {
   }
   selectEmployee(data: any) {
     const candidateDetails: any = {
-      statusId: +CandidateStatus[data.item.CandidateStatus],
+      statusId : CandidateStatus.Selected,
+      // statusId: +CandidateStatus[data.item.CandidateStatus],
       employeeId: data.item.EmployeeId,
       projectId: this.projectId,
       hiringRequestId: this.hiringRequestId
@@ -713,7 +714,7 @@ export class RequestDetailComponent implements OnInit {
 
   rejectEmployee(data: any) {
     const candidateDetails: any = {
-      statusId: 4,
+      statusId : CandidateStatus.Rejected,
       employeeId: data.item.EmployeeId,
       projectId: this.projectId,
       hiringRequestId: this.hiringRequestId
@@ -723,14 +724,24 @@ export class RequestDetailComponent implements OnInit {
   //#endregion
 
   AddCandidateAsEmployee(model: any) {
+    this.loader.showLoader();
     this.hiringRequestService
       .AddCandidateAsEmployee(model)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(
-        response => {
+        (response: IResponseData) => {
           if (response.statusCode === 200) {
+            this.toastr.success('Candidate successfully Selected');
+            this.loader.hideLoader();
+          } else {
+            this.toastr.error(response.message);
+            this.loader.hideLoader();
           }
         },
+        error => {
+          this.toastr.error('Someting went wrong. Please try again');
+          this.loader.hideLoader();
+        }
       );
   }
 

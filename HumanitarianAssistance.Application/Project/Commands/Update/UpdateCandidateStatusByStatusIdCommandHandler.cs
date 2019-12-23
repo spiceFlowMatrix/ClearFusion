@@ -24,26 +24,18 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update {
                 if (request.candidateId != 0) {
                     var candidateDetails = await _dbContext.HiringRequestCandidateStatus
                         .Where (x => x.CandidateId == request.candidateId && x.IsDeleted == false && x.HiringRequestId == request.hiringRequestId && x.ProjectId == request.projectId).FirstOrDefaultAsync ();
-                    if (request.statusId == (int)CandidateStatus.Rejected) {
-                        candidateDetails.CandidateStatus = (int)CandidateStatus.Rejected;
-                    } else if (candidateDetails.CandidateStatus != (int)CandidateStatus.Selected || candidateDetails.CandidateStatus != (int)CandidateStatus.Rejected) {
-                        candidateDetails.CandidateStatus = candidateDetails.CandidateStatus + 1;
-                        candidateDetails.ModifiedById = request.ModifiedById;
-                        candidateDetails.ModifiedDate = request.ModifiedDate;
-                    }
+                         candidateDetails.CandidateStatus = request.statusId;
+                         candidateDetails.ModifiedById = request.ModifiedById;
+                         candidateDetails.ModifiedDate = request.ModifiedDate;
                     await _dbContext.SaveChangesAsync ();
                     response.data.CandidateStatus = candidateDetails;
                 } else if (request.employeeId != 0) {
-                    var candidateDetails = await _dbContext.HiringRequestCandidateStatus.Where (x => x.EmployeeID == request.employeeId && x.IsDeleted == false && x.HiringRequestId == request.hiringRequestId && x.ProjectId == request.projectId).FirstOrDefaultAsync ();
-                    if (request.statusId == (int)CandidateStatus.Rejected) {
-                        candidateDetails.CandidateStatus = (int)CandidateStatus.Rejected;
-                    } else if (candidateDetails.CandidateStatus != (int)CandidateStatus.Selected || candidateDetails.CandidateStatus != (int)CandidateStatus.Rejected) {
-                        candidateDetails.CandidateStatus = candidateDetails.CandidateStatus + 1;
-                        candidateDetails.ModifiedById = request.ModifiedById;
-                        candidateDetails.ModifiedDate = request.ModifiedDate;
-                    }
+                    var employeeDetails = await _dbContext.HiringRequestCandidateStatus.Where (x => x.EmployeeID == request.employeeId && x.IsDeleted == false && x.HiringRequestId == request.hiringRequestId && x.ProjectId == request.projectId).FirstOrDefaultAsync ();
+                         employeeDetails.CandidateStatus = request.statusId;
+                         employeeDetails.ModifiedById = request.ModifiedById;
+                         employeeDetails.ModifiedDate = request.ModifiedDate;
                     await _dbContext.SaveChangesAsync ();
-                    response.data.CandidateStatus = candidateDetails;
+                    response.data.CandidateStatus = employeeDetails;
                 }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
