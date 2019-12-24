@@ -56,5 +56,8 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public int ExperienceYear { get; set; }
         public int ExperienceMonth { get; set; }
         public string Remarks { get; set; }
+        public int? EmployeeID { get; set; }
+        [ForeignKey ("EmployeeID")]
+        public EmployeeDetail EmployeeDetail { get; set; }
     }
 }
