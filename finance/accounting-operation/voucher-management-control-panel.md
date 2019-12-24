@@ -8,7 +8,7 @@
 
 ### Toolbar
 
-![](../../.gitbook/assets/image%20%2818%29.png)
+![](../../.gitbook/assets/image%20%2824%29.png)
 
 1. Edit voucher detail
 2. Export PDF

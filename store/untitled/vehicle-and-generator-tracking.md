@@ -1,4 +1,4 @@
-# Vehicle Tracker Operation
+# Tracking Vehicles
 
 Calarifications.
 
@@ -16,7 +16,7 @@ Calarifications.
 1. Add Mileage 
 2. Edit Details
 
-![](../../.gitbook/assets/image%20%2824%29.png)
+![](../../.gitbook/assets/image%20%2830%29.png)
 
 ### Details
 

@@ -9,7 +9,7 @@ You can add designation by clicking on add button and filing the form.
 
 You can edit designation by clicking on pen icon.
 
-![](../../.gitbook/assets/image%20%2827%29.png)
+![](../../.gitbook/assets/image%20%2834%29.png)
 
 ### Designation details panel
 

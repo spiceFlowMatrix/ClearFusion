@@ -14,7 +14,7 @@ This is where you can access and manage the bellow fields.
 8. Global Salary Tax Report Configurations
 9. Salary Heads
 
-![](../../.gitbook/assets/image%20%2831%29.png)
+![](../../.gitbook/assets/image%20%2839%29.png)
 
 ### General 
 
@@ -28,15 +28,15 @@ This is where you can add, edit and delete the bellow fields.
 6. Profession
 7. Qualification
 
-To add any of them just click on add button and you can edit it by clicking on pen icon ![](../../.gitbook/assets/image%20%283%29.png).
+To add any of them just click on add button and you can edit it by clicking on pen icon ![](../../.gitbook/assets/image%20%285%29.png).
 
 
 
-![](../../.gitbook/assets/image%20%2828%29.png)
+![](../../.gitbook/assets/image%20%2836%29.png)
 
 
 
-![](../../.gitbook/assets/image%20%285%29.png)
+![](../../.gitbook/assets/image%20%289%29.png)
 
 ### Exit Interview
 
@@ -44,7 +44,7 @@ To add any of them just click on add button and you can edit it by clicking on p
 2. Edit 
 3. Delete
 
-![](../../.gitbook/assets/image%20%2813%29.png)
+![](../../.gitbook/assets/image%20%2819%29.png)
 
 ### Leave Policy
 

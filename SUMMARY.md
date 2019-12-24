@@ -52,11 +52,11 @@
 
 ## Store module <a id="store"></a>
 
-* [Store Operation](store/untitled/README.md)
-  * [Store Configuration page](store/untitled/store-configuration-page.md)
-  * [Purchase management panel](store/untitled/purchase-management-panel.md)
-  * [Vehicle Tracker Operation](store/untitled/vehicle-and-generator-tracking.md)
-  * [Generator Tracker Operation](store/untitled/generator-tracker.md)
+* [Administration & Configuration](store/store-configuration-page.md)
+* [Purchases & Procurements](store/purchase-management-panel.md)
+* [Transport Asset Tracker](store/untitled/README.md)
+  * [Tracking Vehicles](store/untitled/vehicle-and-generator-tracking.md)
+  * [Tracking Generators](store/untitled/generator-tracker.md)
 
 ## HR PANEL
 

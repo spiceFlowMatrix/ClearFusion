@@ -1,4 +1,4 @@
-# Generator Tracker Operation
+# Tracking Generators
 
 Calarifications:
 
@@ -16,9 +16,9 @@ Calarifications:
 1. Add Hours
 2. Edit Details
 
-![](../../.gitbook/assets/image%20%2826%29.png)
+![](../../.gitbook/assets/image%20%2832%29.png)
 
-![](../../.gitbook/assets/image%20%2821%29.png)
+![](../../.gitbook/assets/image%20%2827%29.png)
 
 ### Details
 
