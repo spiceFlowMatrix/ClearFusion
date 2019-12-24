@@ -25,9 +25,9 @@
                         <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.CurrencyCodes)">
                             <a (click)="navigateToPath('code/currency-code')">Currency Codes</a>
                         </li>
-                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.OfficeCodes)">
+                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.OfficeCodes)">
                             <a (click)="navigateToPath('code/office-code')">Office Codes</a>
-                        </li>
+                        </li> -->
                         <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.FinancialYear)">
                             <a (click)="navigateToPath('code/financial-year')">Financial Year</a>
                         </li>
@@ -43,39 +43,39 @@
                         <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.AppraisalQuestions)">
                             <a (click)="navigateToPath('code/appraisal-questions')">Appraisal Questions</a>
                         </li>
-                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.TechnicalQuestions)">
+                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.TechnicalQuestions)">
                             <a (click)="navigateToPath('code/technical-questions')">Technical Questions</a>
-                        </li>
+                        </li> -->
                         <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.InterviewRatingQuestions)">
                             <a (click)="navigateToPath('code/interview-rating-questions')">Rating Based Questions</a>
                         </li>
                         <!-- <li (click)="toggleSideFun()">
                             <a [routerLink]="['code/analytical-codes']">Analytical Codes</a>
                         </li> -->
-                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.EmailSettings)">
+                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.EmailSettings)">
                             <a (click)="navigateToPath('code/email-setting')">Email Settings</a>
-                        </li>
+                        </li> -->
                         <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.ExchangeRate)">
                             <a (click)="navigateToPath('code/exchange-rate')">Exchange Rate</a>
                         </li> -->
-                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.LeaveReason)">
+                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.LeaveReason)">
                             <a (click)="navigateToPath('code/leavereason-type')">Leave Type</a>
-                        </li>
-                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.Profession)">
+                        </li> -->
+                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.Profession)">
                             <a (click)="navigateToPath('code/profession-detail')">Profession</a>
-                        </li>
-                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.Department)">
+                        </li> -->
+                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.Department)">
                             <a (click)="navigateToPath('code/department-code')">Department</a>
-                        </li>
-                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.Qualification)">
+                        </li> -->
+                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.Qualification)">
                             <a (click)="navigateToPath('code/qualification-type')"> Qualification</a>
-                        </li>
-                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.Designation)">
+                        </li> -->
+                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.Designation)">
                             <a (click)="navigateToPath('code/designation-type')">Designation</a>
-                        </li>
-                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.JobGrade)">
+                        </li> -->
+                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.JobGrade)">
                             <a (click)="navigateToPath('code/job-grade')">Job Grade</a>
-                        </li>
+                        </li> -->
                         <li (click)="toggleSideFun()" *ngIf="displayModulePages(Code.SalaryHead)">
                             <a (click)="navigateToPath('code/salary-head')">Salary Head</a>
                         </li>
@@ -91,31 +91,31 @@
                     </ul>
                 </li>
 
-                <li class="dropdown" title="Accounts" *ngIf="displayModule(Module.Accounting)">
+                <!-- <li class="dropdown" title="Accounts" *ngIf="displayModule(Module.Accounting)">
                     <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         <span>
                             <i class="fa fa-money"></i>
                         </span> Accounts
                         <i class="fa fa-angle-down pull-right"></i>
                     </a>
-                    <ul class="dropdown-menu sec2-drop-fix">
+                    <ul class="dropdown-menu sec2-drop-fix"> -->
                         <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(Accounting.Vouchers)">
                             <a (click)="navigateToPath('accounts/vouchers')">Vouchers</a>
                         </li> -->
                         <!-- <li role="separator" class="divider" *ngIf="displaySeparator([Accounting.Journal,Accounting.LedgerStatement,Accounting.BudgetBalance,Accounting.TrialBalance])"></li> -->
-                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Accounting.Journal)">
+                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(Accounting.Journal)">
                             <a (click)="navigateToPath('accounts/journal')">Journal</a>
-                        </li>
-                        <li (click)="toggleSideFun()">
+                        </li> -->
+                        <!-- <li (click)="toggleSideFun()">
                             <a (click)="navigateToPath('accounts/ledger')" *ngIf="displayModulePages(Accounting.LedgerStatement)">Ledger Statement</a>
-                        </li>
+                        </li> -->
                         <!-- <li (click)="toggleSideFun()">
                             <a (click)="navigateToPath('accounts/budgetbalance')" *ngIf="displayModulePages(Accounting.BudgetBalance)">Budget Balance</a>
                         </li> -->
-                        <li (click)="toggleSideFun()">
+                        <!-- <li (click)="toggleSideFun()">
                             <a (click)="navigateToPath('accounts/trialbalance')" *ngIf="displayModulePages(Accounting.TrialBalance)">Trial Balance</a>
-                        </li>
-                        <li role="separator" class="divider" *ngIf="displaySeparator([Accounting.FinancialReport,Accounting.CategoryPopulator,Accounting.ExchangeGainLoss,Accounting.GainLossTransaction,Accounting.PensionPayments])"></li>
+                        </li> -->
+                        <!-- <li role="separator" class="divider" *ngIf="displaySeparator([Accounting.FinancialReport,Accounting.CategoryPopulator,Accounting.ExchangeGainLoss,Accounting.GainLossTransaction,Accounting.PensionPayments])"></li> -->
                         <!-- <li (click)="toggleSideFun()">
                             <a (click)="navigateToPath('accounts/financialreport')" *ngIf="displayModulePages(Accounting.FinancialReport)">Financial Report</a>
                         </li> -->
@@ -137,8 +137,8 @@
                         <!-- <li (click)="toggleSideFun()">
                                 <a (click)="navigateToPath('accounts/pension-payments')" *ngIf="displayModulePages(Accounting.PensionPayments)">Pension Payments</a>
                             </li> -->
-                    </ul>
-                </li>
+                    <!-- </ul>
+                </li> -->
 
                 <li class="dropdown" title="HR" *ngIf="displayModule(Module.HR)">
                     <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -169,13 +169,13 @@
                         <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.MonthlyPayrollRegister)">
                             <a (click)="navigateToPath('hr/employee-salary')">Monthly Payroll Register</a>
                         </li>
-                        <li role="separator" class="divider" *ngIf="displaySeparator([HR.Jobs,HR.Interview])"></li>
-                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.Jobs)">
+                        <!-- <li role="separator" class="divider" *ngIf="displaySeparator([HR.Jobs,HR.Interview])"></li> -->
+                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.Jobs)">
                             <a (click)="navigateToPath('hr/job-hiring-details')">Jobs</a>
-                        </li>
-                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.Interview)">
+                        </li> -->
+                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.Interview)">
                             <a (click)="navigateToPath('hr/interview-form')">Interview</a>
-                        </li>
+                        </li> -->
 
                         <li role="separator" class="divider" *ngIf="displaySeparator([HR.EmployeeAppraisal, HR.Advances, HR.Summary])"></li>
 
@@ -185,12 +185,12 @@
                         <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.Advances)">
                             <a (click)="navigateToPath('hr/advances')">Advances</a>
                         </li>
-                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.Summary)">
+                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(HR.Summary)">
                             <a (click)="navigateToPath('hr/summary')">Summary</a>
-                        </li>
+                        </li> -->
                     </ul>
                 </li>
-                <li class="dropdown" title="Store" *ngIf="displayModule(Module.Store)">
+                <!-- <li class="dropdown" title="Store" *ngIf="displayModule(Module.Store)">
                     <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         <span>
                             <i class="fa fa-shopping-cart"></i>
@@ -204,9 +204,9 @@
                         <li (click)="toggleSideFun()" *ngIf="displayModulePages(Store.StoreSourceCodes)">
                             <a href="javascript:void(0)" (click)="navigateToPath('store/store-source-codes')">Store Source Codes</a>
                         </li>
-                        <!-- <li (click)="toggleSideFun()" *ngIf="displayModulePages(Store.PaymentTypes)">
+                        <li (click)="toggleSideFun()" *ngIf="displayModulePages(Store.PaymentTypes)">
                             <a href="javascript:void(0)" (click)="navigateToPath('store/payment-types')">Payment Types</a>
-                        </li> -->
+                        </li>
                         <li role="separator" class="divider" *ngIf="displaySeparator([Store.Store,Store.ProcurementSummary,Store.DepreciationReport])"></li>
                         <li (click)="toggleSideFun()" *ngIf="displayModulePages(Store.Store)">
                             <a href="javascript:void(0)" (click)="navigateToPath('store/store-main')">Store</a>
@@ -222,7 +222,7 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> -->
 
                 <li class="dropdown" title="PMU" *ngIf="displayModule(6)">
                     <!-- <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
