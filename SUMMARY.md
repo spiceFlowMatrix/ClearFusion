@@ -22,14 +22,6 @@
     * [Interviews](project/hiring-request/new-candidate-requests/interviews.md)
   * [Current Candidate Requests](project/hiring-request/current-candidate-request.md)
 
-## Common
-
-* [User Administration](common/user-operation-page/README.md)
-  * [Contract Clauses Page](common/user-operation-page/contract-clauses.md)
-* [Operation](common/operation.md)
-* [API & Data Structure](common/api-and-data-structure.md)
-* [UI Controls](common/ui-controls.md)
-
 ## Finance & Accounting <a id="finance"></a>
 
 * [Accounting Operation Management](finance/accounting-operation/README.md)
@@ -50,34 +42,35 @@
 * [Administration & Configuration](finance/administration-and-configuration.md)
 * [Exchange Gain & Loss Calculator](finance/exchange-gain-and-loss-calculator.md)
 
-## Store module <a id="store"></a>
+## Human Resources Module <a id="hr-module"></a>
 
-* [Administration & Configuration](store/store-configuration-page.md)
-* [Purchases & Procurements](store/purchase-management-panel.md)
-* [Transport Asset Tracker](store/untitled/README.md)
-  * [Tracking Vehicles](store/untitled/vehicle-and-generator-tracking.md)
-  * [Tracking Generators](store/untitled/generator-tracker.md)
+* [HRM Resources Control Panel](hr-module/hr-management-panel/README.md)
+  * [Employee Control Panel](hr-module/hr-management-panel/employee-details-page.md)
+  * [Termination & Resignation](hr-module/hr-management-panel/exit-interview-form.md)
+  * [Appraisals](hr-module/hr-management-panel/employee-appraisals-and-evaluation.md)
+  * [History](hr-module/hr-management-panel/employee-history-page.md)
+  * [Leave](hr-module/hr-management-panel/employee-leave-page.md)
+  * [Attendance](hr-module/hr-management-panel/employee-attendance-page.md)
+  * [Contract](hr-module/hr-management-panel/contracts-page.md)
+  * [Pensions & Taxes](hr-module/hr-management-panel/pensions-and-taxes.md)
+  * [Salary Configuration](hr-module/hr-management-panel/payroll-page.md)
+* [HRM Operations Control Panel](hr-module/employees-management-control-panel/README.md)
+  * [Payroll](hr-module/employees-management-control-panel/monthly-payroll-register.md)
+  * [Advances](hr-module/employees-management-control-panel/advances-clear-fusion.md)
+  * [Attendance Report](hr-module/employees-management-control-panel/attendance.md)
+  * [Turnover Report](hr-module/employees-management-control-panel/turnover-report.md)
+* [Administration & Configuration](hr-module/hr-configuration-operation/README.md)
+  * [Holidays](hr-module/hr-configuration-operation/holidays.md)
+  * [Offices](hr-module/hr-configuration-operation/office-configuration.md)
+  * [Departments](hr-module/hr-configuration-operation/department-configuration.md)
+  * [Designations](hr-module/hr-configuration-operation/designation-configuration.md)
+  * [Attendance Groups](hr-module/hr-configuration-operation/attendance-groups.md)
 
-## HR PANEL
+## Common
 
-* [Hr Management panel](hr-panel/hr-management-panel/README.md)
-  * [Exit interview Form](hr-panel/hr-management-panel/exit-interview-form.md)
-  * [Employee Appraisals & Evaluation](hr-panel/hr-management-panel/employee-appraisals-and-evaluation.md)
-  * [Employee Details Page](hr-panel/hr-management-panel/employee-details-page.md)
-  * [Employee History Page](hr-panel/hr-management-panel/employee-history-page.md)
-  * [Employee Leave Page](hr-panel/hr-management-panel/employee-leave-page.md)
-  * [Employee Attendance Page](hr-panel/hr-management-panel/employee-attendance-page.md)
-  * [Contracts Page](hr-panel/hr-management-panel/contracts-page.md)
-  * [Payroll Page](hr-panel/hr-management-panel/payroll-page.md)
-* [Administration & Configuration](hr-panel/hr-configuration-operation/README.md)
-  * [Payroll Daily Hours](hr-panel/hr-configuration-operation/payroll-daily-hours.md)
-  * [Holidays](hr-panel/hr-configuration-operation/holidays.md)
-  * [Office Configuration](hr-panel/hr-configuration-operation/office-configuration.md)
-  * [Department Configuration](hr-panel/hr-configuration-operation/department-configuration.md)
-  * [Designation Configuration](hr-panel/hr-configuration-operation/designation-configuration.md)
-* [Employees Management Control Panel](hr-panel/employees-management-control-panel/README.md)
-  * [Attendance](hr-panel/employees-management-control-panel/attendance.md)
-  * [Monthly Payroll Register](hr-panel/employees-management-control-panel/monthly-payroll-register.md)
-  * [Employee Appraisal](hr-panel/employees-management-control-panel/employee-appraisal.md)
-  * [Employee Advances](hr-panel/employees-management-control-panel/advances-clear-fusion.md)
+* [User Administration](common/user-operation-page/README.md)
+  * [Contract Clauses Page](common/user-operation-page/contract-clauses.md)
+* [Operation](common/operation.md)
+* [API & Data Structure](common/api-and-data-structure.md)
+* [UI Controls](common/ui-controls.md)
 
