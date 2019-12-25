@@ -27,6 +27,7 @@ import { StaticUtilities } from 'src/app/shared/static-utilities';
 export class AddHiringRequestComponent implements OnInit {
   projectId: number;
   OfficeId: number;
+  isEditable = true;
   isFormSubmitted = false;
   hiringRequestId: number;
   hiringRequestCode: string;
@@ -96,6 +97,7 @@ export class AddHiringRequestComponent implements OnInit {
       this.hiringRequestId
     );
     if (this.data.hiringRequestId !== 0) {
+      this.isEditable = false;
       this.getAllHiringRequestDetail();
     } else {
       this.getHiringRequestCode();

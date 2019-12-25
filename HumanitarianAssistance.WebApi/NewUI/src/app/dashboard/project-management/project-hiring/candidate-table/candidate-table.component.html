@@ -21,11 +21,10 @@
           <span *ngFor="let actionType of item.itemAction">
             <hum-button *ngIf="actionType.button?.status" [type]="actionType.button?.type"
               [text]="actionType.button?.text" (click)='action(item,actionType.button?.text,$event)'></hum-button>
-
-              <a *ngIf="actionType.anchor?.status" [type]="actionType.anchor?.type"
-              [text]="actionType.anchor?.text" (click)='action(item,actionType.anchor?.text,$event)'></a>
-          </span>
-
+              &nbsp;&nbsp;&nbsp;&nbsp;<span *ngIf="actionType.anchor?.status"><b>Employee:&nbsp;</b>
+              <a [type]="actionType.anchor?.type"
+              [text]="actionType.anchor?.text" (click)='action(item,actionType.anchor?.text,$event)'></a></span>
+                </span>
                 </span>
                 <span class="action-span">
           <i *ngIf="itemActions.items?.download" class="fas fa-download" (click)='action(item,"download",$event)'></i>
@@ -37,7 +36,7 @@
           <i *ngIf="itemActions.items?.delete" class="fas fa-trash" (click)='action(item,"delete",$event)'></i>
         </span>
                 <span class="action-span">
-          <p *ngIf="itemActions.items?.link" (click)='action(item,"delete",$event)'>Employee Id</p>
+          <p *ngIf="itemActions.items?.link" (click)='action(item,"delete",$event)'></p>
         </span>
             </td>
 

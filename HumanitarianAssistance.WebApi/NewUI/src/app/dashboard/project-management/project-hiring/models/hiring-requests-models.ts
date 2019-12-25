@@ -123,6 +123,8 @@ export interface ICandidateDetailList {
   CvDocument?: string;
   Interview?: string;
   CandidateStatus?: string;
+  EmployeeCode?: string;
+  EmployeeName?: string;
   firstText?: string;
   subItems?: ISubCandidateList[];
 }
