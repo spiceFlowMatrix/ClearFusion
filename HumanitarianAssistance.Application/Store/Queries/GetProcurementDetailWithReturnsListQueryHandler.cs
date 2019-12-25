@@ -18,7 +18,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
         {
             try
             {
-                
+                var query = _dbContext.StorePurchaseOrders.Where(x=> x.IsDeleted == false)
 
             }
             catch(Exception ex)
