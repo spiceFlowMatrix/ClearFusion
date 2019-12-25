@@ -83,7 +83,8 @@ export enum ApplicationPages {
   ProjectIndicators= 83,
   ProjectPeople= 84,
   VoucherSummaryreport= 85,
-  HiringRequests= 86
+  HiringRequests= 86,
+  RatingQuestions= 87
 }
 
 export enum ApplicationModule {

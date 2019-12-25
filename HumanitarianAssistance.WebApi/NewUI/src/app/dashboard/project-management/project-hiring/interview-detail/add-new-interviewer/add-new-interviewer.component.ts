@@ -4,6 +4,7 @@ import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.
 import { HiringRequestsService } from '../../../project-list/hiring-requests/hiring-requests.service';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-add-new-interviewer',
@@ -13,17 +14,28 @@ import { ToastrService } from 'ngx-toastr';
 export class AddNewInterviewerComponent implements OnInit {
   employeesList: any[] = [];
   employeesListTwo: any[] = [];
+  hiringRequestId: number;
+  projectId: number;
   constructor(
     private commonLoader: CommonLoaderService,
     private hiringRequestService: HiringRequestsService,
     private toastr: ToastrService,
+    private routeActive: ActivatedRoute,
     public dialogRef: MatDialogRef<AddNewInterviewerComponent>
   ) {}
   ngOnInit() {
+    this.routeActive.queryParams.subscribe(params => {
+      this.hiringRequestId = +params['hiringId'];
+      this.projectId = +params['projectId'];
+    });
     this.getEmployeeDropDownList();
   }
   getEmployeeDropDownList() {
-    this.hiringRequestService.GetAllEmployeeList().subscribe(
+    const model = {
+      ProjectId: this.projectId,
+      HiringRequestId: this.hiringRequestId
+    };
+    this.hiringRequestService.GetAllEmployeeList(model).subscribe(
       (response: IResponseData) => {
         this.commonLoader.showLoader();
         if (response.statusCode === 200 && response.data !== null) {
