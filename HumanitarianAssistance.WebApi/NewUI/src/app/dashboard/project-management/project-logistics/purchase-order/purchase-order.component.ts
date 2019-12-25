@@ -9,6 +9,9 @@ import { LogisticRequestStatus } from 'src/app/shared/enum';
 import { ToastrService } from 'ngx-toastr';
 import { GoodsRecievedUploadComponent } from '../goods-recieved-upload/goods-recieved-upload.component';
 import { PurchaseVoucherVerificationComponent } from '../purchase-voucher-verification/purchase-voucher-verification.component';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
+import { GLOBAL } from 'src/app/shared/global';
 
 @Component({
   selector: 'app-purchase-order',
@@ -37,7 +40,9 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
     private routeActive: ActivatedRoute,
     private logisticservice: LogisticService,
     private router: Router,
-    public toastr: ToastrService) { }
+    public toastr: ToastrService,
+    private globalService: GlobalSharedService,
+    private appurl: AppUrlService) { }
 
   ngOnInit() {
     this.logisticservice.goodsRecievedChange$.subscribe(val => {
@@ -149,10 +154,27 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
   navigateToPurchase(id) {
     this.router.navigate(['/store/purchase/edit/' + id]);
   }
+
+  //#region "Download goods received pdf"
+  downLoadPdf() {
+    debugger;
+     const  LogisticRequestId: any = this.requestId;
+     if (LogisticRequestId != null && LogisticRequestId !== undefined) {
+      this.globalService
+        .getFile(
+          this.appurl.getApiUrl() +
+            GLOBAL.API_Pdf_GetLogisticGoodsNoteReportPdf,
+            LogisticRequestId
+        )
+        .pipe()
+        .subscribe();
+    }
+  }
+  //#endregion
 }
 
 interface GoodsRecievedNote {
-  AttachmentName;
-  AttachmentUrl;
-  UploadedBy;
+  AttachmentName: string;
+  AttachmentUrl: string;
+  UploadedBy: string;
 }
