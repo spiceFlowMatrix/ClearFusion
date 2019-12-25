@@ -74,3 +74,11 @@
 * [API & Data Structure](common/api-and-data-structure.md)
 * [UI Controls](common/ui-controls.md)
 
+## Inventory Module
+
+* [Administration & Configuration](inventory-module/administration-and-configuration.md)
+* [Purchases & Procurements](inventory-module/purchases-and-procurements.md)
+* [Transport Asset Tracking](inventory-module/transport-asset-tracking/README.md)
+  * [Tracking Generators](inventory-module/transport-asset-tracking/tracking-generators.md)
+  * [Tracking Vehicles](inventory-module/transport-asset-tracking/tracking-vehicles.md)
+
