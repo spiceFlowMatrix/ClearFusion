@@ -90,7 +90,7 @@ This is a specific section that presents all entity and process metadata to user
 | :--- | :--- |
 | Specific Duties & Responsibilities | Text\(long\) |
 | Submission Guidelines | Text\(long\) |
-| Duty Station | [Office](../../hr-panel/hr-configuration-operation/office-configuration.md) |
+| Duty Station | [Office](../../hr-module/hr-configuration-operation/office-configuration.md) |
 | Position | [Designation](../../finance/accounting-operation/designation-page.md) |
 | Budget Line | [Budget Line](../project-budget-line-management-cantrol-panel.md#budget-line-code) |
 | Total Vacancies | Integer number |
@@ -99,14 +99,14 @@ This is a specific section that presents all entity and process metadata to user
 | Closing Date | Date |
 | Contract Type | Contract Type |
 | Contract Duration \(in Months\) | Integer number |
-| Job Grade | [Job Grade](../../hr-panel/hr-configuration-operation/#general) |
+| Job Grade | [Job Grade](../../hr-module/hr-configuration-operation/#general) |
 | Job Shift | Shift |
-| Job Type | [Department](../../hr-panel/hr-configuration-operation/office-configuration.md#add-department) |
+| Job Type | [Department](../../hr-module/hr-configuration-operation/office-configuration.md#add-department) |
 | Pay Currency | Currency |
 | Pay Hourly Rate | Decimal number |
 | Knowledge & Skills | Text\(long\) |
-| Education Degree | [Education](../../hr-panel/hr-configuration-operation/#general) |
-| Profession | [Profession](../../hr-panel/hr-configuration-operation/#general) |
+| Education Degree | [Education](../../hr-module/hr-configuration-operation/#general) |
+| Profession | [Profession](../../hr-module/hr-configuration-operation/#general) |
 | Experience \(in Years\) | Decimal number |
 | Nationality | [Country](../../common/api-and-data-structure.md#get-countries) |
 | Province | [Province](../../common/api-and-data-structure.md#get-provinces) |
@@ -128,35 +128,35 @@ You can add a new hiring request by navigating to the **Hiring Operations Contro
 
 This is what the form looks like within the application.
 
-![fig:](../../.gitbook/assets/1.png)
+![fig:](../../.gitbook/assets/1%20%282%29.png)
 
 Many of the fields are mandatory or have some sort of validation or rule applied to them. Please see the set of metadata fields specified [here]() for the exact information that users can provide for a Hiring Request.
 
-| Field | Data Type | Section | Notes |
-| :--- | :--- | :--- | :--- |
-| Specific Duties & Responsibilities | Text\(long\) | General Information |  |
-| Submission Guidelines | Text\(long\) | General Information |  |
-| Duty Station | [Office](../../hr-panel/hr-configuration-operation/office-configuration.md) | General Information |  |
-| Position | [Designation](../../finance/accounting-operation/designation-page.md) | General Information |  |
-| Budget Line | [Budget Line](../project-budget-line-management-cantrol-panel.md) | General Information |  |
-| Total Vacancies | Integer number | General Information |  |
-| Current Vacancies | Integer number |  |  |
-| Announcing Date | Date | General Information |  |
-| Closing Date | Date | General Information |  |
-| Contract Type | Contract Type | Contract Information |  |
-| Contract Duration \(in Months\) | Integer number | Contract Information |  |
-| Job Grade | [Job Grade](../../hr-panel/hr-configuration-operation/#general) | Contract Information |  |
-| Job Shift | Shift | Contract Information | Options are \[day, night\] |
-| Job Type | [Department](../../hr-panel/hr-configuration-operation/office-configuration.md#add-department) | Contract Information |  |
-| Pay Currency | Currency | Contract Information |  |
-| Pay Hourly Rate | Decimal number | Contract Information |  |
-| Knowledge & Skills | Text\(long\) | Required Qualifications |  |
-| Education Degree | [Education](../../hr-panel/hr-configuration-operation/#general) | Required Qualifications |  |
-| Profession | [Profession](../../hr-panel/hr-configuration-operation/#general) | Required Qualifications |  |
-| Experience \(in Years\) | Decimal number | Required Qualifications |  |
-| Nationality | [Country](../../common/api-and-data-structure.md#get-countries) | Required Qualifications |  |
-| Province | [Province](../../common/api-and-data-structure.md#get-provinces) | Required Qualifications | Options are cascaded based on selected Nationality |
-| Background | Text\(long\) | Required Qualifications |  |
+| Field | Data Type | Input Method | Section | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| Specific Duties & Responsibilities | Text\(long\) | Manual text input | General Information |  |
+| Submission Guidelines | Text\(long\) | Manual text input | General Information |  |
+| Duty Station | [Office](../../hr-module/hr-configuration-operation/office-configuration.md) | Dropdown | General Information | **LOCKED ON EDIT** |
+| Position | [Designation](../../finance/accounting-operation/designation-page.md) | Dropdown | General Information | **LOCKED ON EDIT** |
+| Budget Line | [Budget Line](../project-budget-line-management-cantrol-panel.md) | Dropdown | General Information | **LOCKED ON EDIT** |
+| Total Vacancies | Integer number | Manual numeric input | General Information | **LOCKED ON EDIT** |
+| Announcing Date | Date | Calendar date selection | General Information |  |
+| Closing Date | Date | Calendar date selection | General Information |  |
+| Contract Type | Contract Type | Dropdown | Contract Information | **LOCKED ON EDIT** |
+| Contract Duration \(in Months\) | Integer number | Manual numeric input | Contract Information | **LOCKED ON EDIT** |
+| Job Grade | [Job Grade](../../hr-module/hr-configuration-operation/#general) | Dropdown | Contract Information | **LOCKED ON EDIT** |
+| Job Shift | Shift | Dropdown | Contract Information | Options are day, night. |
+| Job Type | [Department](../../hr-module/hr-configuration-operation/office-configuration.md#add-department) | Dropdown | Contract Information | **LOCKED ON EDIT** |
+| Pay Currency | Currency | Dropdown | Contract Information | **LOCKED ON EDIT** |
+| Pay Hourly Rate | Decimal number | Manual numeric input | Contract Information |  |
+| Knowledge & Skills | Text\(long\) | Dropdown | Required Qualifications |  |
+| Education Degree | [Education](../../hr-module/hr-configuration-operation/#general) | Dropdown | Required Qualifications | **LOCKED ON EDIT** |
+| Profession | [Profession](../../hr-module/hr-configuration-operation/#general) | Dropdown | Required Qualifications | **LOCKED ON EDIT** |
+| Experience \(in Years\) | Decimal number | Manual numeric input | Required Qualifications |  |
+| Nationality | [Country](../../common/api-and-data-structure.md#get-countries) | Dropdown | Required Qualifications | **LOCKED ON EDIT** |
+| Province | [Province](../../common/api-and-data-structure.md#get-provinces) | Dropdown | Required Qualifications | **LOCKED ON EDIT** |
+| Background | Text\(long\) | Dropdown | Required Qualifications |  |
+| Background | Text\(long\) |  | Required Qualifications |  |
 
 As soon as a new hiring request is **successfully** added, you will be redirected back to the active hiring requests page. The new hiring request will now be available in the listing. Please click an entry in the listing to go to the **Hiring Request Panel** for that request. This is where you can perform actions specific to a hiring request such as managing its candidates.
 
@@ -175,7 +175,7 @@ Making changes to fields are not going to be reflected to objects that had previ
 | :--- | :--- | :--- | :--- | :--- |
 | Specific Duties & Responsibilities | Text\(long\) | Manual text input | General Information |  |
 | Submission Guidelines | Text\(long\) | Manual text input | General Information |  |
-| Duty Station | [Office](../../hr-panel/hr-configuration-operation/office-configuration.md) | Dropdown | General Information | **LOCKED ON EDIT** |
+| Duty Station | [Office](../../hr-module/hr-configuration-operation/office-configuration.md) | Dropdown | General Information | **LOCKED ON EDIT** |
 | Position | [Designation](../../finance/accounting-operation/designation-page.md) | Dropdown | General Information | **LOCKED ON EDIT** |
 | Budget Line | [Budget Line](../project-budget-line-management-cantrol-panel.md) | Dropdown | General Information | **LOCKED ON EDIT** |
 | Total Vacancies | Integer number | Manual numeric input | General Information | **LOCKED ON EDIT** |
@@ -183,14 +183,14 @@ Making changes to fields are not going to be reflected to objects that had previ
 | Closing Date | Date | Calendar date selection | General Information |  |
 | Contract Type | Contract Type | Dropdown | Contract Information | **LOCKED ON EDIT** |
 | Contract Duration \(in Months\) | Integer number | Manual numeric input | Contract Information | **LOCKED ON EDIT** |
-| Job Grade | [Job Grade](../../hr-panel/hr-configuration-operation/#general) | Dropdown | Contract Information | **LOCKED ON EDIT** |
+| Job Grade | [Job Grade](../../hr-module/hr-configuration-operation/#general) | Dropdown | Contract Information | **LOCKED ON EDIT** |
 | Job Shift | Shift | Dropdown | Contract Information | Options are day, night. |
-| Job Type | [Department](../../hr-panel/hr-configuration-operation/office-configuration.md#add-department) | Dropdown | Contract Information | **LOCKED ON EDIT** |
+| Job Type | [Department](../../hr-module/hr-configuration-operation/office-configuration.md#add-department) | Dropdown | Contract Information | **LOCKED ON EDIT** |
 | Pay Currency | Currency | Dropdown | Contract Information | **LOCKED ON EDIT** |
 | Pay Hourly Rate | Decimal number | Manual numeric input | Contract Information |  |
 | Knowledge & Skills | Text\(long\) | Dropdown | Required Qualifications |  |
-| Education Degree | [Education](../../hr-panel/hr-configuration-operation/#general) | Dropdown | Required Qualifications | **LOCKED ON EDIT** |
-| Profession | [Profession](../../hr-panel/hr-configuration-operation/#general) | Dropdown | Required Qualifications | **LOCKED ON EDIT** |
+| Education Degree | [Education](../../hr-module/hr-configuration-operation/#general) | Dropdown | Required Qualifications | **LOCKED ON EDIT** |
+| Profession | [Profession](../../hr-module/hr-configuration-operation/#general) | Dropdown | Required Qualifications | **LOCKED ON EDIT** |
 | Experience \(in Years\) | Decimal number | Manual numeric input | Required Qualifications |  |
 | Nationality | [Country](../../common/api-and-data-structure.md#get-countries) | Dropdown | Required Qualifications | **LOCKED ON EDIT** |
 | Province | [Province](../../common/api-and-data-structure.md#get-provinces) | Dropdown | Required Qualifications | **LOCKED ON EDIT** |

@@ -40,7 +40,7 @@ All these fields are mandatory.
 | :--- | :--- | :--- | :--- |
 | Code | [Hiring Request Code](../hiring-request-management.md#code) | Manual text input |  |
 | Status | Current Workflow State | Manual text input |  |
-| Duty Station | [Office](../../../hr-panel/hr-configuration-operation/office-configuration.md#office-configuration-tab) | Drop-down |  |
+| Duty Station | [Office](../../../hr-module/hr-configuration-operation/office-configuration.md#office-configuration-tab) | Drop-down |  |
 | First Name | Text | Manual text input |  |
 | Last Name | Text | Manual text input |  |
 | Gender | Gender | Dropdown |  |
