@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using HumanitarianAssistance.Domain.Entities.Accounting;
 using HumanitarianAssistance.Domain.Entities.HR;
 
 namespace HumanitarianAssistance.Domain.Entities.Store
@@ -29,7 +30,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public EmployeeDetail EmployeeDetail { get; set; }
 
 
-        public string IssueVoucherNo { get; set; }
+        public long? IssueVoucher { get; set; }
 
         public string Remarks { get; set; }
 
@@ -38,5 +39,7 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public string IssedToLocation { get; set; }
 
         public int StatusAtTimeOfIssue { get; set; }
+        [ForeignKey("IssueVoucher")]
+        public VoucherDetail VoucherDetail { get; set; }
     }
 }
