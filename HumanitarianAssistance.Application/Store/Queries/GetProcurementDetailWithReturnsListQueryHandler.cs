@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Persistence;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Application.Store.Queries
 {
@@ -18,7 +20,9 @@ namespace HumanitarianAssistance.Application.Store.Queries
         {
             try
             {
-                var query = _dbContext.StorePurchaseOrders.Where(x=> x.IsDeleted == false)
+                var query = _dbContext.StorePurchaseOrders
+                                      .Include(x=> x.ReturnProcurementDetailList)
+                                      .Where(x=> x.IsDeleted == false)
 
             }
             catch(Exception ex)
