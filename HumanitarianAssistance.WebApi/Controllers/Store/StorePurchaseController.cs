@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Configuration.Queries;
 using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Application.Store.Commands.Create;
+using HumanitarianAssistance.Application.Store.Commands.Delete;
 using HumanitarianAssistance.Application.Store.Commands.Update;
 using HumanitarianAssistance.Application.Store.Models;
 using HumanitarianAssistance.Application.Store.Queries;
@@ -90,8 +91,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
                 if (receiptTypesResult.Exception == null)
                 {
                     var receipts = await receiptTypesResult;
-                    model.ReceiptTypes= receipts.data.ReceiptTypeList.Select(x=> new ReceiptTypeModel {
-                        ReceiptTypeId= x.ReceiptTypeId,
+                    model.ReceiptTypes = receipts.data.ReceiptTypeList.Select(x => new ReceiptTypeModel
+                    {
+                        ReceiptTypeId = x.ReceiptTypeId,
                         ReceiptTypeName = x.ReceiptTypeName
                     }).ToList();
                 }
@@ -138,7 +140,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetItemDetailByItemId(long PurchaseId)
         {
-            var result = await Task.FromResult(_mediator.Send( new GetItemDetailByPurchaseIdQuery { PurchaseId= PurchaseId } ));
+            var result = await Task.FromResult(_mediator.Send(new GetItemDetailByPurchaseIdQuery { PurchaseId = PurchaseId }));
 
             if (result.Exception == null)
             {
@@ -166,7 +168,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
             }
             else
             {
-                
+
                 return BadRequest(result.Exception.InnerException.Message);
             }
         }
@@ -176,7 +178,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetStorePurchaseById([FromQuery] long id)
         {
-            var result = await Task.FromResult(_mediator.Send(new GetStorePurchaseByIdQuery { PurchaseId = id}));
+            var result = await Task.FromResult(_mediator.Send(new GetStorePurchaseByIdQuery { PurchaseId = id }));
 
             if (result.Exception == null)
             {
@@ -193,7 +195,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetTransportItemDataSource([FromQuery] int id)
         {
-            var result = await Task.FromResult(_mediator.Send(new GetTransportItemDataSourceQuery {ItemGroupTransportType = id }));
+            var result = await Task.FromResult(_mediator.Send(new GetTransportItemDataSourceQuery { ItemGroupTransportType = id }));
 
             if (result.Exception == null)
             {
@@ -230,7 +232,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetVehicleGeneratorTrackerLogs(int id, long entityId)
         {
-            var result = await Task.FromResult(_mediator.Send(new GetVehicleGeneratorTrackerLogsQuery { TransportType = id, EntityId= entityId }));
+            var result = await Task.FromResult(_mediator.Send(new GetVehicleGeneratorTrackerLogsQuery { TransportType = id, EntityId = entityId }));
 
             if (result.Exception == null)
             {
@@ -247,7 +249,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetTransportItemCategoryType(long Id)
         {
-            var result = await Task.FromResult(_mediator.Send(new GetTransportItemCategoryTypeQuery { ItemId = Id}));
+            var result = await Task.FromResult(_mediator.Send(new GetTransportItemCategoryTypeQuery { ItemId = Id }));
 
             if (result.Exception == null)
             {
@@ -265,7 +267,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         {
             var result = await Task.FromResult(_mediator.Send(new GetDefaultUnitTypeByItemIdQuery { Id = id }));
             return Ok(await result);
-           
+
         }
 
         [HttpGet]
@@ -274,7 +276,27 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         {
             var result = await Task.FromResult(_mediator.Send(new GetProcurementDetailWithReturnsListQuery { Id = id }));
             return Ok(await result);
-           
+
+        }
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> AddProcurementReturn([FromBody] AddProcurementReturnCommand command)
+        {
+            command.CreatedById = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var result = await Task.FromResult(_mediator.Send(command));
+            return Ok(await result);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> DeleteReturnProcurement([FromBody] long Id)
+        {
+            DeleteReturnProcurementCommand command = new DeleteReturnProcurementCommand();
+            command.Id = Id;
+            command.ModifiedById = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var result = await Task.FromResult(_mediator.Send(command));
+            return Ok(await result);
         }
 
     }

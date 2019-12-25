@@ -10,6 +10,7 @@ import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.
 import { of } from 'rxjs/internal/observable/of';
 import { ToastrService } from 'ngx-toastr';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-add-procurements',
@@ -21,11 +22,11 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
   addProcurementForm: FormGroup;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  inventoryType$: Observable<IDropDownModel[]>;
-  storeInventory$: Observable<IDropDownModel[]>;
-  storeItemGroups$: Observable<IDropDownModel[]>;
-  storeItems$: Observable<IDropDownModel[]>;
-  purchases$: Observable<IDropDownModel[]>;
+  // inventoryType$: Observable<IDropDownModel[]>;
+  // storeInventory$: Observable<IDropDownModel[]>;
+  // storeItemGroups$: Observable<IDropDownModel[]>;
+  // storeItems$: Observable<IDropDownModel[]>;
+  // purchases$: Observable<IDropDownModel[]>;
   employeeList$: Observable<IDropDownModel[]>;
   projects$: Observable<IDropDownModel[]>;
   storeSource$: Observable<IDropDownModel[]>;
@@ -46,48 +47,51 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder, private purchaseService: PurchaseService,
     private commonLoader: CommonLoaderService, public toastr: ToastrService,
-    private dialogRef: MatDialogRef<AddProcurementsComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
-
+    private route: ActivatedRoute
+    ) {
+      this.route.queryParams.subscribe(params => {
+        this.officeId = params['officeId'];
+    });
   }
 
   ngOnInit() {
     this.initForm();
-    if (this.data.procurement) {
-      this.addProcurementForm.patchValue({
-        'ProcurementId': this.data.procurement.OrderId,
-        'IssuedToEmployeeId': this.data.procurement.EmployeeId,
-        'MustReturn': this.data.procurement.MustReturn,
-        'IssueDate': this.data.procurement.IssueDate,
-        'IssuedQuantity': this.data.procurement.ProcuredAmount,
-        'ProjectId': this.data.procurement.ProjectId,
-        'StatusId': this.data.procurement.StatusId,
-        'StoreSourceId': +this.data.procurement.LocationId,
-        'Returned': this.data.procurement.Returned
-      });
-      this.procurementPageTitle = 'Edit Procurement';
-    }
+    // if (this.data.procurement) {
+    //   this.addProcurementForm.patchValue({
+    //     'ProcurementId': this.data.procurement.OrderId,
+    //     'IssuedToEmployeeId': this.data.procurement.EmployeeId,
+    //     'MustReturn': this.data.procurement.MustReturn,
+    //     'IssueDate': this.data.procurement.IssueDate,
+    //     'IssuedQuantity': this.data.procurement.ProcuredAmount,
+    //     'ProjectId': this.data.procurement.ProjectId,
+    //     'StatusId': this.data.procurement.StatusId,
+    //     'StoreSourceId': +this.data.procurement.LocationId,
+    //     'Returned': this.data.procurement.Returned
+    //   });
+    //   this.procurementPageTitle = 'Edit Procurement';
+    // }
 
-    this.purchaseId = this.data.value;
-    this.officeId = this.data.officeId;
+    // this.purchaseId = this.data.value;
+    // this.officeId = this.data.officeId;
 
     forkJoin([
-      this.getAllInventoryTypes(),
+      // this.getAllInventoryTypes(),
       this.getAllProjects(),
       this.getStoreLocations(),
       this.getAllStatusAtTimeOfIssue(),
       this.getAllEmployeesByOfficeId()
+      this.getAllVouchers()
     ])
       .pipe(takeUntil(this.destroyed$))
       .subscribe(result => {
-        this.subscribeInventoryTypes(result[0]);
-        this.subscribeAllProjects(result[1]);
-        this.subscribeStoreLocations(result[2]);
-        this.subscribeAllStatusAtTimeOfIssue(result[3]);
-        this.subscribeAllEmployeesByOfficeId(result[4]);
+        // this.subscribeInventoryTypes(result[0]);
+        this.subscribeAllProjects(result[0]);
+        this.subscribeStoreLocations(result[1]);
+        this.subscribeAllStatusAtTimeOfIssue(result[2]);
+        this.subscribeAllEmployeesByOfficeId(result[3]);
       });
 
-    this.getItemDetailByPurchaseId(this.purchaseId);
+    // this.getItemDetailByPurchaseId(this.purchaseId);
   }
 
   initForm() {
@@ -134,15 +138,19 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
     return this.purchaseService.getAllStatusAtTimeOfIssue();
   }
 
-  subscribeInventoryTypes(response: any) {
-
-    this.inventoryType$ = of(response.Result.map(y => {
-      return {
-        value: y.Id,
-        name: y.InventoryName
-      };
-    }));
+  getAllVouchers() {
+    return this.purchaseService.getAllVouchers();
   }
+
+  // subscribeInventoryTypes(response: any) {
+
+  //   this.inventoryType$ = of(response.Result.map(y => {
+  //     return {
+  //       value: y.Id,
+  //       name: y.InventoryName
+  //     };
+  //   }));
+  // }
 
   subscribeAllProjects(response: any) {
     this.projects$ = of(response.data.ProjectDetailModel.map(y => {
@@ -171,32 +179,32 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
     }));
   }
 
-  subscribeInventoriesByInventoryTypeId(response: any) {
-    this.storeInventory$ = of(response.data.map(y => {
-      return {
-        name: y.InventoryCode + '-' + y.InventoryName,
-        value: y.InventoryId
-      };
-    }));
-  }
+  // subscribeInventoriesByInventoryTypeId(response: any) {
+  //   this.storeInventory$ = of(response.data.map(y => {
+  //     return {
+  //       name: y.InventoryCode + '-' + y.InventoryName,
+  //       value: y.InventoryId
+  //     };
+  //   }));
+  // }
 
-  subscribeAllStoreItemGroups(response: any) {
-    this.storeItemGroups$ = of(response.data.map(y => {
-      return {
-        name: y.ItemGroupCode + '-' + y.ItemGroupName,
-        value: y.ItemGroupId
-      };
-    }));
-  }
+  // subscribeAllStoreItemGroups(response: any) {
+  //   this.storeItemGroups$ = of(response.data.map(y => {
+  //     return {
+  //       name: y.ItemGroupCode + '-' + y.ItemGroupName,
+  //       value: y.ItemGroupId
+  //     };
+  //   }));
+  // }
 
-  subscribeAllStoreItemsByGroupId(response: any) {
-    this.storeItems$ = of(response.data.map(y => {
-      return {
-        name: y.ItemCode + '-' + y.ItemName,
-        value: y.ItemId
-      };
-    }));
-  }
+  // subscribeAllStoreItemsByGroupId(response: any) {
+  //   this.storeItems$ = of(response.data.map(y => {
+  //     return {
+  //       name: y.ItemCode + '-' + y.ItemName,
+  //       value: y.ItemId
+  //     };
+  //   }));
+  // }
 
   subscribeAllEmployeesByOfficeId(response: any) {
     this.employeeList$ = of(response.data.map(y => {
@@ -207,30 +215,30 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
       }));
   }
 
-  subscribePurchaseListByItemId(response: any) {
-    this.commonLoader.hideLoader();
-    if (response.statusCode === 200) {
-      const index = response.data.findIndex(x => x.PurchaseId === this.purchaseId);
+  // subscribePurchaseListByItemId(response: any) {
+  //   this.commonLoader.hideLoader();
+  //   if (response.statusCode === 200) {
+  //     const index = response.data.findIndex(x => x.PurchaseId === this.purchaseId);
 
-      if (index !== -1) {
-        this.originalQuantityOfPurchase = response.data[index].Quantity;
-        this.procuredQuantityOfPurchase = this.originalProcuredQuantity = response.data[index].ItemsIssuedCount;
-        this.itemsToBeProcuredCount = this.currentQuantityOfPurchase  = this.originalQuantityOfPurchase  - this.procuredQuantityOfPurchase;
-        this.originalIssuedQuantity = this.addProcurementForm.get('IssuedQuantity').value;
-         this.addProcurementForm.get('IssuedQuantity').setValidators(Validators.max(this.itemsToBeProcuredCount));
-       }
+  //     if (index !== -1) {
+  //       this.originalQuantityOfPurchase = response.data[index].Quantity;
+  //       this.procuredQuantityOfPurchase = this.originalProcuredQuantity = response.data[index].ItemsIssuedCount;
+  //       this.itemsToBeProcuredCount = this.currentQuantityOfPurchase  = this.originalQuantityOfPurchase  - this.procuredQuantityOfPurchase;
+  //       this.originalIssuedQuantity = this.addProcurementForm.get('IssuedQuantity').value;
+  //        this.addProcurementForm.get('IssuedQuantity').setValidators(Validators.max(this.itemsToBeProcuredCount));
+  //      }
 
-      this.purchases$ = of(response.data.map(y => {
-        return {
-          name: y.PurchaseCode,
-          value: y.PurchaseId
-        };
-      }));
+  //     this.purchases$ = of(response.data.map(y => {
+  //       return {
+  //         name: y.PurchaseCode,
+  //         value: y.PurchaseId
+  //       };
+  //     }));
 
-    } else {
-      this.toastr.warning(response.message);
-    }
-  }
+  //   } else {
+  //     this.toastr.warning(response.message);
+  //   }
+  // }
 
   validateMaxProcurement() {
     const currentQuantity = this.addProcurementForm.get('IssuedQuantity').value;
@@ -270,41 +278,41 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
       .getPurchaseListByItemId(event);
   }
 
-  getItemDetailByPurchaseId(ItemId: number) {
-    if (ItemId !== 0) {
-      this.commonLoader.showLoader();
-      this.purchaseService
-        .getItemDetailByPurchaseId(ItemId)
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe(x => {
+  // getItemDetailByPurchaseId(ItemId: number) {
+  //   if (ItemId !== 0) {
+  //     this.commonLoader.showLoader();
+  //     this.purchaseService
+  //       .getItemDetailByPurchaseId(ItemId)
+  //       .pipe(takeUntil(this.destroyed$))
+  //       .subscribe(x => {
 
-          if (x != null) {
-            this.addProcurementForm.get('ItemId').patchValue(x.ItemId);
-            this.addProcurementForm.get('InventoryTypeId').patchValue(x.InventoryTypeId);
-            this.addProcurementForm.get('InventoryId').patchValue(x.InventoryId);
-            this.addProcurementForm.get('ItemGroupId').patchValue(x.ItemGroupId);
-            this.addProcurementForm.get('PurchaseId').patchValue(x.PurchaseId);
+  //         if (x != null) {
+  //           this.addProcurementForm.get('ItemId').patchValue(x.ItemId);
+  //           this.addProcurementForm.get('InventoryTypeId').patchValue(x.InventoryTypeId);
+  //           this.addProcurementForm.get('InventoryId').patchValue(x.InventoryId);
+  //           this.addProcurementForm.get('ItemGroupId').patchValue(x.ItemGroupId);
+  //           this.addProcurementForm.get('PurchaseId').patchValue(x.PurchaseId);
 
-            forkJoin([
-              this.getInventoriesByInventoryTypeId(x.InventoryTypeId),
-              this.getAllStoreItemGroups(x.InventoryId),
-              this.getAllStoreItemsByGroupId(x.ItemGroupId),
-              this.getPurchaseListByItemId(x.ItemId)
-            ])
-              .pipe(takeUntil(this.destroyed$))
-              .subscribe(result => {
-                this.subscribeInventoriesByInventoryTypeId(result[0]);
-                this.subscribeAllStoreItemGroups(result[1]);
-                this.subscribeAllStoreItemsByGroupId(result[2]);
-                this.subscribePurchaseListByItemId(result[3]);
-              });
-          }
-        },
-          error => {
-            console.error(error);
-          });
-    }
-  }
+  //           forkJoin([
+  //             this.getInventoriesByInventoryTypeId(x.InventoryTypeId),
+  //             this.getAllStoreItemGroups(x.InventoryId),
+  //             this.getAllStoreItemsByGroupId(x.ItemGroupId),
+  //             this.getPurchaseListByItemId(x.ItemId)
+  //           ])
+  //             .pipe(takeUntil(this.destroyed$))
+  //             .subscribe(result => {
+  //               this.subscribeInventoriesByInventoryTypeId(result[0]);
+  //               this.subscribeAllStoreItemGroups(result[1]);
+  //               this.subscribeAllStoreItemsByGroupId(result[2]);
+  //               this.subscribePurchaseListByItemId(result[3]);
+  //             });
+  //         }
+  //       },
+  //         error => {
+  //           console.error(error);
+  //         });
+  //   }
+  // }
 
   saveProcurement() {
     if (this.addProcurementForm.valid) {
@@ -331,7 +339,7 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
           // this.addProcurementForm.get('ProcurementId').patchValue(x.data.ProcurementModel.ProcurementId);
           // this.addProcurementForm.get('EmployeeName').patchValue(x.data.ProcurementModel.EmployeeName);
           // this.addProcurementForm.get('EmployeeId').patchValue(x.data.ProcurementModel.EmployeeId);
-          this.dialogRef.close(this.addProcurementForm.getRawValue());
+          // this.dialogRef.close(this.addProcurementForm.getRawValue());
           this.toastr.success(x.Message);
           this.commonLoader.hideLoader();
         } else if (x.StatusCode === 400) {
@@ -359,7 +367,7 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
           // this.addProcurementForm.get('ProcurementId').patchValue(x.data.ProcurementModel.ProcurementId);
           // this.addProcurementForm.get('EmployeeName').patchValue(x.data.ProcurementModel.EmployeeName);
           // this.addProcurementForm.get('EmployeeId').patchValue(x.data.ProcurementModel.EmployeeId);
-          this.dialogRef.close(this.addProcurementForm.getRawValue());
+         // this.dialogRef.close(this.addProcurementForm.getRawValue());
           this.toastr.success(x.Message);
           this.commonLoader.hideLoader();
         } else if (x.StatusCode === 400) {
@@ -376,7 +384,7 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
 
   //#region "onCancelPopup"
   onCancelPopup(): void {
-    this.dialogRef.close(false);
+    // this.dialogRef.close(false);
   }
   //#endregion
 

@@ -221,5 +221,4 @@ export interface IProcurementDetailModel {
   Voucher: string;
   IssuedToEmployee: string;
   ReturnedQuantity: number;
-  ReturnsList: IReturnModel[];
 }

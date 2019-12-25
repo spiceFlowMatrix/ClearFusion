@@ -593,11 +593,28 @@ getStoreLogs(id: number, entityId: number) {
     .getDataById(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetDefaultUnitTypeByItemId + '?id=' + ItemId);
 }
 
-getProcurementDetailWithReturnsList() {
+getProcurementDetailWithReturnsList(id) {
   return this.http
       .get<any>(
         this.appurl.getApiUrl() +
-          GLOBAL.API_code_GetAllCurrency);
+          GLOBAL.API_StorePurchase_GetProcurementDetailWithReturnsList + '?id=' + id);
+}
+
+addProcurementReturn(model: any) {
+  return this.globalService
+  .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_AddProcurementReturn, model);
+}
+
+deleteReturnProcurement(id) {
+  return this.globalService
+  .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_DeleteReturnProcurement, id);
+}
+
+getAllVouchers() {
+  return this.http
+      .get<any>(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_StorePurchase_GetProcurementDetailWithReturnsList + '?id=' + id);
 }
 
 getPreviousYearsList(years: number): Observable<IDropDownModel[]> {

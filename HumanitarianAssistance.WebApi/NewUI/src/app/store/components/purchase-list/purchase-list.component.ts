@@ -225,42 +225,26 @@ export class PurchaseListComponent implements OnInit {
         officeId: this.filterValueModel.OfficeId
       };
 
-      this.openProcurementDialog(data);
+      this.router.navigate(['/store/purchases/add-procurement/' + event.item.Id],
+                        { queryParams: { officeId: this.filterValueModel.OfficeId} });
+
+     // this.openProcurementDialog(data);
     } else if (event.type === 'edit') {
       this.router.navigate(['/store/purchase/edit/' + event.item.Id]);
     }
 
   }
 
-  openProcurementDialog(item) {
-    const dialogRef = this.dialog.open(AddProcurementsComponent, {
-      width: '850px',
-      data: item
-    });
+  // openProcurementDialog(item) {
+  //   const dialogRef = this.dialog.open(AddProcurementsComponent, {
+  //     width: '850px',
+  //     data: item
+  //   });
 
-    dialogRef.afterClosed().subscribe(x => {
-      // console.log(x);
-
-      // this.purchaseList$.subscribe((purchase) => {
-      //   // console.log(purchase);
-
-      //   const index = purchase.findIndex(i => i.Id === x.PurchaseId);
-      //   if (index !== -1) {
-      //     purchase[index].subItems.unshift({
-      //       Id: x.ProcurementId,
-      //       IssueDate: this.datePipe.transform(x.IssueDate, 'dd-MM-yyyy'),
-      //       Employee: x.EmployeeName,
-      //       ProcuredAmount: x.IssuedQuantity,
-      //       MustReturn: (x.MustReturn === 'Yes' || x.MustReturn)  ? 'Yes' : 'No',
-      //       Returned: 'No',
-      //       ReturnedOn: null
-      //     } as IProcurementList);
-      //   }
-      //   this.purchaseList$ = of(purchase);
-      // });
-      this.getPurchasesByFilter(this.filterValueModel);
-    });
-  }
+  //   dialogRef.afterClosed().subscribe(x => {
+  //     this.getPurchasesByFilter(this.filterValueModel);
+  //   });
+  // }
 
   procurementAction(event: any) {
     debugger;
@@ -297,7 +281,7 @@ export class PurchaseListComponent implements OnInit {
         procurement: orderData
       };
 
-      this.openProcurementDialog(data);
+      // this.openProcurementDialog(data);
     } else if (event.type === 'add') {
       debugger;
       this.router.navigate(['store/purchases/procurement-control-panel/' + event.subItem.Id]);

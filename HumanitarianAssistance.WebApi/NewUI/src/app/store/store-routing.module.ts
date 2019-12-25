@@ -12,6 +12,7 @@ import { EditGeneratorComponent } from './components/edit-generator/edit-generat
 import { StoreConfigurationComponent } from './components/store-configuration/store-configuration.component';
 import { Panel } from 'primeng/primeng';
 import { ProcurementControlPanelComponent } from './components/procurement-control-panel/procurement-control-panel.component';
+import { AddProcurementsComponent } from './components/add-procurements/add-procurements.component';
 
 const routes: Routes = [
   {
@@ -28,7 +29,9 @@ const routes: Routes = [
       { path: 'vehicle/edit/:id', component: EditVehicleComponent },
       { path: 'generator/edit/:id', component: EditGeneratorComponent },
       { path: 'configuration', component: StoreConfigurationComponent },
-      {path: 'purchases/procurement-control-panel/:id', component: ProcurementControlPanelComponent}
+      {path: 'purchases/procurement-control-panel/:id', component: ProcurementControlPanelComponent},
+      {path: 'purchases/add-procurement/:id', component: AddProcurementsComponent},
+      {path: 'purchases/edit-procurement/:id', component: AddProcurementsComponent}
     ]
   }
 ];

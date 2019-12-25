@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using HumanitarianAssistance.Application.Store.Models;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -32,32 +33,49 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                       .Include(x=> x.StoreItemPurchase)
                                       .ThenInclude(x=> x.StoreInventoryItem)
                                       .Where(x=> x.IsDeleted == false && x.OrderId == request.Id)
-                                      .Select(y=> new  {
+                                      .Select(y=> new ProcurementControlPanelModel {
                                          Id= y.OrderId,
                                          PurchaseId = y.PurchaseId,
                                          MustReturn = y.MustReturn,
                                          Status = statusList.FirstOrDefault(x=> x.StatusAtTimeOfIssueId == y.StatusAtTimeOfIssue) != null ? 
                                                   statusList.FirstOrDefault(x=> x.StatusAtTimeOfIssueId == y.StatusAtTimeOfIssue).StatusName : null,
-                                        Date = y.IssueDate,
+                                        Date = y.IssueDate.ToShortDateString(),
                                         ItemCode = y.StoreInventoryItem != null? y.StoreInventoryItem.ItemCode : null,
-                                        Voucher = y.VoucherDetail != null ? y.VoucherDetail.ReferenceNo : null,
-                                        IssuedToEmployee = y.EmployeeDetail != null ? (y.EmployeeDetail.EmployeeCode +"-"+ y.EmployeeDetail.EmployeeName) : null,
+                                        VoucherNo = y.VoucherDetail != null ? y.VoucherDetail.ReferenceNo : null,
+                                        EmployeeName = y.EmployeeDetail != null ? (y.EmployeeDetail.EmployeeCode +"-"+ y.EmployeeDetail.EmployeeName) : null,
                                         StartingBalance = y.StoreItemPurchase.Quantity,
-                                        CurrentBalance =
+                                        ProjectId = y.Project
+                                      }).FirstOrDefaultAsync();
 
-                                      });
+                var purchases = await _dbContext.StoreItemPurchases
+                                                .Include(x=> x.PurchaseOrders)
+                                                .Include(x=> x.ReturnProcurementDetailList)
+                                                .FirstOrDefaultAsync(x=> x.IsDeleted == false && x.PurchaseId == query.PurchaseId);
 
                 if(query != null)
                 {
-                    var result = 
+                    query.CurrentBalance = (query.StartingBalance-((purchases.PurchaseOrders.Any() ? 
+                                                                purchases.PurchaseOrders.Where(x=> x.IsDeleted == false)
+                                                                .Sum(x=> x.IssuedQuantity) : 0) - (purchases.ReturnProcurementDetailList.Any()?
+                                            purchases.ReturnProcurementDetailList.Where(x=> x.IsDeleted == false).Sum(x=> x.ReturnedQuantity) : 0)));
+                    
+                    var project = await _dbContext.ProjectDetail.FirstOrDefaultAsync(x=> x.IsDeleted == false && x.ProjectId == query.ProjectId);
+                    query.ProjectName = project != null ? (project.ProjectCode + "-" +project.ProjectName) : null;
 
+                    query.ProcurementReturnList = purchases.ReturnProcurementDetailList.Where(x=> x.IsDeleted == false).Select(x=> new ProcurementReturnModel 
+                    {
+                        Date = x.ReturnedDate.ToShortDateString(),
+                        Id= x.Id,
+                        ReturnedQuantity= x.ReturnedQuantity
+                    }).ToList();
                 }
+
+                response.Add("ProcurementDetail", query);
             }
             catch(Exception ex)
             {
                 throw ex;
             }
-
             return response;
         }
     }
