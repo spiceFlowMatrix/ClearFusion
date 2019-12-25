@@ -22,7 +22,7 @@
               <hum-button *ngIf="actionType.button?.status" [type]="actionType.button?.type" [text]="actionType.button?.text"
               (click)='action(item,actionType.button?.text,$event)'></hum-button>
           </span>
-        
+
         </span>
         <span class="action-span">
           <i *ngIf="itemActions.items?.download" class="fas fa-download" (click)='action(item,"download",$event)'></i>
@@ -40,7 +40,7 @@
     <tr *ngIf="isShowSubList[i]" class="sub-table">
       <td [attr.colspan]="(headers | async).length + 1">
         <div class="sub-table">
-          <span [innerHTML]="item.subItemSubtitle"></span> 
+          <span [innerHTML]="item.subItemSubtitle"></span>
           <span>{{subTitle}}</span>
           <table class="table table-striped sub-table">
             <thead>
@@ -61,11 +61,11 @@
                 <td *ngIf="itemActions && (itemActions.subitems)">
                   <span class="action-span">
                     <hum-button *ngIf="itemActions.subitems?.button?.status" [type]="'add'"
-                      [text]="itemActions.items.button.text" (click)='subaction(subItem, item ,"button")'></hum-button>
+                      [text]="itemActions.subitems.button.text" (click)='subAction(subItem, item ,"add")'></hum-button>
                   </span>
                   <span class="action-span">
                     <i *ngIf="itemActions.subitems?.download" class="fas fa-download"
-                      (click)='subaction(subItem, item ,"download")'></i>
+                      (click)='subAction(subItem, item ,"download")'></i>
                   </span>
                   <span class="action-span">
                     <i *ngIf="itemActions.subitems?.edit" class="fa fa-pencil"

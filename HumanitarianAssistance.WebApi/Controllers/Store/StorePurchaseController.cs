@@ -268,5 +268,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
            
         }
 
+        [HttpGet]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> GetProcurementDetailWithReturnsList(int id)
+        {
+            var result = await Task.FromResult(_mediator.Send(new GetProcurementDetailWithReturnsListQuery { Id = id }));
+            return Ok(await result);
+           
+        }
+
     }
 }

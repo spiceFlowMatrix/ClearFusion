@@ -201,3 +201,25 @@ export interface IMonthlyBreakDown {
   CostAnalysisBreakDownList: any[];
 
 }
+
+export interface IReturnModel {
+  Id: number;
+  Date: any;
+  ReturnedQuantity: number;
+}
+
+export interface IProcurementDetailModel {
+  Id: number;
+  PurchaseId: number;
+  StartingBalance: number;
+  CurrentBalance: number;
+  MustReturn: string;
+  Status: string;
+  Date: any;
+  ItemCode: string;
+  Project: string;
+  Voucher: string;
+  IssuedToEmployee: string;
+  ReturnedQuantity: number;
+  ReturnsList: IReturnModel[];
+}

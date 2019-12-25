@@ -10,6 +10,8 @@ import { GeneratorDetailsComponent } from './components/generator-details/genera
 import { EditVehicleComponent } from './components/edit-vehicle/edit-vehicle.component';
 import { EditGeneratorComponent } from './components/edit-generator/edit-generator.component';
 import { StoreConfigurationComponent } from './components/store-configuration/store-configuration.component';
+import { Panel } from 'primeng/primeng';
+import { ProcurementControlPanelComponent } from './components/procurement-control-panel/procurement-control-panel.component';
 
 const routes: Routes = [
   {
@@ -25,7 +27,8 @@ const routes: Routes = [
       { path: 'generator/detail/:id', component: GeneratorDetailsComponent },
       { path: 'vehicle/edit/:id', component: EditVehicleComponent },
       { path: 'generator/edit/:id', component: EditGeneratorComponent },
-      { path: 'configuration', component: StoreConfigurationComponent }
+      { path: 'configuration', component: StoreConfigurationComponent },
+      {path: 'purchases/procurement-control-panel/:id', component: ProcurementControlPanelComponent}
     ]
   }
 ];

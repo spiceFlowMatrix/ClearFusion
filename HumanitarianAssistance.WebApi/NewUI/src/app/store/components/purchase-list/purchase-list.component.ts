@@ -44,7 +44,7 @@ export class PurchaseListComponent implements OnInit {
     'Purchased Quantity', 'Item Code', 'Project Id', 'Item Code Description', 'Description', 'BudgetLine Name',
     'Depreciation Rate', 'Master Inventory Code', 'Office Code', 'Receipt Date', 'Invoice Date',
     'Received From Location', 'Status']);
-  subListHeaders$ = of(['Id', 'Date', 'Employee', 'Procured Amount', 'Must Return', 'Returned', 'Returned On']);
+  subListHeaders$ = of(['Id', 'Date', 'Employee', 'Must Return', 'Procured Balance', 'Status']);
   procurementList$: Observable<IProcurementList[]>;
   hideColums: Observable<{ headers?: string[], items?: string[] }>;
   columnsToShownInPdf: any[] = [];
@@ -89,10 +89,10 @@ export class PurchaseListComponent implements OnInit {
         edit: true
       },
       subitems: {
-        button: { status: false, text: '' },
-        delete: true,
+        button: { status: true, text: 'Add Return' },
+        delete: false,
         download: false,
-        edit: true
+        edit: false
       }
 
     }
@@ -161,10 +161,11 @@ export class PurchaseListComponent implements OnInit {
                 IssueDate: (r.IssueDate != null && r.IssueDate !== undefined) ?
                   this.datePipe.transform(new Date(r.IssueDate), 'dd/MM/yyyy') : null,
                 Employee: r.EmployeeName,
-                ProcuredAmount: r.ProcuredAmount,
                 MustReturn: r.MustReturn ? 'Yes' : 'No',
-                Returned: r.Returned ? 'Yes' : 'No',
-                ReturnedOn: r.ReturnedOn ? this.datePipe.transform(new Date(r.ReturnedOn), 'dd/MM/yyyy') : null,
+                ProcuredAmount: r.ProcuredAmount,
+                Status: (r.ProcuredAmount > 0 && r.MustReturn) ? 'Active' : 'In-Active'
+                // Returned: r.Returned ? 'Yes' : 'No',
+                // ReturnedOn: r.ReturnedOn ? this.datePipe.transform(new Date(r.ReturnedOn), 'dd/MM/yyyy') : null,
               };
             })
           } as IPurchaseList;
@@ -211,6 +212,7 @@ export class PurchaseListComponent implements OnInit {
     this.router.navigate(['/store/purchase/add']);
   }
   actionEvents(event: any) {
+    debugger;
     if (event.type === 'button') {
 
 
@@ -261,6 +263,7 @@ export class PurchaseListComponent implements OnInit {
   }
 
   procurementAction(event: any) {
+    debugger;
     if (event.type === 'delete') {
       this.purchaseService.deleteProcurement(event.subItem.Id)
         .subscribe(x => {
@@ -295,6 +298,9 @@ export class PurchaseListComponent implements OnInit {
       };
 
       this.openProcurementDialog(data);
+    } else if (event.type === 'add') {
+      debugger;
+      this.router.navigate(['store/purchases/procurement-control-panel/' + event.subItem.Id]);
     }
   }
 

@@ -593,6 +593,13 @@ getStoreLogs(id: number, entityId: number) {
     .getDataById(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetDefaultUnitTypeByItemId + '?id=' + ItemId);
 }
 
+getProcurementDetailWithReturnsList() {
+  return this.http
+      .get<any>(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_code_GetAllCurrency);
+}
+
 getPreviousYearsList(years: number): Observable<IDropDownModel[]> {
 
   const yearDropDown: IDropDownModel[] = [];

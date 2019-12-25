@@ -558,6 +558,7 @@ export class GLOBAL {
   public static API_Store_EditItemOrder = 'Store/EditItemOrder';
   public static API_Store_DeleteItemOrder = 'Store/DeleteItemOrder';
   public static API_StorePurchase_AddStorePurchase = 'StorePurchase/AddStorePurchase';
+  public static API_StorePurchase_GetProcurementDetailWithReturnsList = 'StorePurchase/GetProcurementDetailWithReturnsList';
   public static API_VehicleTracker_GetVehicleList = 'VehicleTracker/GetVehicleList';
   public static API_VehicleTracker_AddVehicleMileage = 'VehicleTracker/AddVehicleMileage';
   public static API_VehicleTracker_GetVehicleById = 'VehicleTracker/GetVehicleById';
