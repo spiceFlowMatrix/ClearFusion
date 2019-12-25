@@ -272,6 +272,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<PurchaseUnitType> PurchaseUnitType { get; set; }
         public DbSet<ErrorLogger> ErrorLogger { get; set; }
         public DbSet<StoreLogger> StoreLogger { get; set; }
+        public DbSet<ReturnProcurementDetail> ReturnProcurementDetail { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
