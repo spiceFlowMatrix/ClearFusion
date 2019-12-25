@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.CommonServicesInterface;
@@ -43,7 +44,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     SexId= model.CandidateDetails.GenderId,
                     CountryId= model.CandidateDetails.CountryId,
                     ProvinceId= model.CandidateDetails.ProvinceId,
-                    // District= model.CandidateDetails.DistrictID,
+                   // District= model.CandidateDetails.DistrictID,
                    // ExperienceYear= model.CandidateDetails.RelevantExperienceInYear,
                    Password= model.CandidateDetails.Password,
                    DateOfBirth = model.CandidateDetails.DateOfBirth.ToShortDateString(),
@@ -57,16 +58,21 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                    OfficeId = model.ProjectHiringRequestDetail.OfficeId.Value,
                    EmployeeTypeId = (int)EmployeeTypeStatus.Active
                 };
-
                 response = await _hrService.AddNewEmployee(command);
-
+                var candidateDetail = await _dbContext.CandidateDetails.Where(x=>x.CandidateId==request.CandidateId && x.IsDeleted==false).FirstOrDefaultAsync();
+                if(candidateDetail !=null)
+                {
+                candidateDetail.EmployeeID = response.data.EmployeeDetailModel.EmployeeID;
+                await _dbContext.SaveChangesAsync();
+                }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = "Success";
             }
             catch(Exception ex)
             {
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = ex.Message;
             }
-
             return response;
         }
     }

@@ -32,6 +32,8 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                                              from pr in prd.DefaultIfEmpty()
                                              join d in _dbContext.DistrictDetail on cd.DistrictID equals d.DistrictID into dd
                                              from d in dd.DefaultIfEmpty()
+                                             join emd in _dbContext.EmployeeDetail on cd.EmployeeID equals emd.EmployeeID into edl
+                                             from emd in edl.DefaultIfEmpty()
                                              select new CandidateDetailsModel
                                              {
                                                  CandidateId = cd.CandidateId,
@@ -50,6 +52,9 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                                                  CandidateStatus = s.CandidateStatus,
                                                  RelevantExperienceInYear = cd.RelevantExperienceInYear,
                                                  IrrelevantExperienceInYear = cd.IrrelevantExperienceInYear,
+                                                 EmployeeCode = emd.EmployeeCode,
+                                                 EmployeeId = emd.EmployeeID,
+                                                 EmployeeName =  emd.EmployeeName
                                              }).AsQueryable()
                     .Skip(request.pageSize.Value * request.pageIndex.Value)
                     .Take(request.pageSize.Value)

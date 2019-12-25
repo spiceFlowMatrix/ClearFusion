@@ -352,10 +352,11 @@ export class HiringRequestsService {
   //#endregion
 
   //#region "GetAllEmployeeList"
-  GetAllEmployeeList(): any {
+  GetAllEmployeeList(model: any): any {
     return this.globalService
-      .getList(
-        this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetAllEmployeeList
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetAllEmployeeList,
+        model
       )
       .pipe(
         map(x => {
@@ -887,6 +888,15 @@ export class HiringRequestsService {
     return this.globalService.post(
       this.appurl.getApiUrl() +
         GLOBAL.API_EmployeeDetail_AddCandidateAsEmployee, model
+    ).pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x.data,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
     );
   }
 }

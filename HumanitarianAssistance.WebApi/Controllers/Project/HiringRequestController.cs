@@ -36,10 +36,10 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         {
             return await _mediator.Send(new GetAllProjectHiringRequestDetailByHiringRequestIdQuery { HiringRequestId = HiringRequestId });
         }
-        [HttpGet]
-        public async Task<ApiResponse> GetAllEmployeeList()
+        [HttpPost]
+        public async Task<ApiResponse> GetAllEmployeeList([FromBody]GetAllEmployeeListQuery query)
         {
-            return await _mediator.Send(new GetAllEmployeeListQuery());
+            return await _mediator.Send(query);
         }
         [HttpPost]
         public async Task<ApiResponse> GetHiringCandidatesListById([FromBody]GetAllCandidateListQuery query)

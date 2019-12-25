@@ -13,7 +13,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update {
         public long? JobCategory { get; set; }
         public string MinEducationLevel { get; set; }
         public string Organization { get; set; }
-        public int? Province { get; set; }
+        public int? ProvinceId { get; set; }
         public string ContractType { get; set; }
         public int? ContractDuration { get; set; }
         public int? Gender { get; set; }

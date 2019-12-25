@@ -12,7 +12,7 @@
 
     <hum-button *ngIf="IsHiringRequestCompleted"  [type]="'completed'" [text]="'Completed '"></hum-button>
     <hum-button *ngIf="IsHiringRequestClosed"  [type]="'cancel'" [text]="'Closed '" [disabled]="true"></hum-button>
-    <hum-button [type]="'download'" [text]="'PDF Export'" (click)="onExportHiringRequestPdf()"></hum-button>
+    <hum-button  [type]="'download'" [text]="'PDF Export'" (click)="onExportHiringRequestPdf()"></hum-button>
   </span>
     <div class="action_section"></div>
 </lib-sub-header-template>
