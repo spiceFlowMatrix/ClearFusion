@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using HumanitarianAssistance.Domain.Entities.Accounting;
@@ -41,5 +42,6 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public int StatusAtTimeOfIssue { get; set; }
         [ForeignKey("IssueVoucher")]
         public VoucherDetail VoucherDetail { get; set; }
+        public List<ReturnProcurementDetail> ReturnProcurementDetailList { get; set; }
     }
 }
