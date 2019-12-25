@@ -62,7 +62,6 @@
 * [Administration & Configuration](hr-module/hr-configuration-operation/README.md)
   * [Holidays](hr-module/hr-configuration-operation/holidays.md)
   * [Offices](hr-module/hr-configuration-operation/office-configuration.md)
-  * [Departments](hr-module/hr-configuration-operation/department-configuration.md)
   * [Designations](hr-module/hr-configuration-operation/designation-configuration.md)
   * [Attendance Groups](hr-module/hr-configuration-operation/attendance-groups.md)
 
