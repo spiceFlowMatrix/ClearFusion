@@ -20,13 +20,11 @@ namespace HumanitarianAssistance.Application.Project.Queries
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IPdfExportService _pdfExportService;
         private readonly IHostingEnvironment _env;
-        private readonly IMapper _mapper;
-        public GetCriteriaEvaluationDetailReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IPdfExportService pdfExportService, IHostingEnvironment env, IMapper mapper)
+        public GetCriteriaEvaluationDetailReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IPdfExportService pdfExportService, IHostingEnvironment env)
         {
             _dbContext = dbContext;
             _pdfExportService = pdfExportService;
             _env = env;
-            _mapper = mapper;
         }
 
         public async Task<byte[]> Handle(GetCriteriaEvaluationDetailReportPdfQuery request, CancellationToken cancellationToken)
