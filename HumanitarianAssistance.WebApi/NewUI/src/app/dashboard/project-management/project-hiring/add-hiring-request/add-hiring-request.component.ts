@@ -18,6 +18,7 @@ import {
   IHiringRequestModel
 } from '../models/hiring-requests-models';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { DISABLED } from '@angular/forms/src/model';
 
 @Component({
   selector: 'app-add-hiring-request',
@@ -261,16 +262,18 @@ export class AddHiringRequestComponent implements OnInit {
   }
   //#endregion
   onChangeNationality(CountryId: number) {
-    this.hiringRequestService.getAllProvinceListByCountryId([CountryId]).subscribe(x => {
-      this.provinceList$ = of(
-        x.data.map(element => {
-          return {
-            value: element.ProvinceId,
-            name: element.ProvinceName
-          };
-        })
-      );
-    });
+    this.hiringRequestService
+      .getAllProvinceListByCountryId([CountryId])
+      .subscribe(x => {
+        this.provinceList$ = of(
+          x.data.map(element => {
+            return {
+              value: element.ProvinceId,
+              name: element.ProvinceName
+            };
+          })
+        );
+      });
   }
 
   //#region "Get Department List"
@@ -341,10 +344,13 @@ export class AddHiringRequestComponent implements OnInit {
               KnowledgeAndSkillsRequired:
                 response.data.KnowledgeAndSkillsRequired,
               SubmissionGuidelines: response.data.SubmissionGuidelines,
-              Background :  response.data.Background,
-              ProvinceId : response.data.Province,
-              Nationality : response.data.Country
+              Background: response.data.Background,
+              ProvinceId: response.data.Province,
+              Nationality: response.data.Country
             });
+            this.addHiringRequestForm.controls['ContractDuration'].disable();
+            this.addHiringRequestForm.controls['ContractType'].disable();
+            this.addHiringRequestForm.controls['TotalVacancy'].disable();
             this.getDepartmentList(response.data.Office);
           }
           this.loader.hideLoader();
@@ -388,25 +394,23 @@ export class AddHiringRequestComponent implements OnInit {
       this.addHiringRequestForm.value.AnouncingDate
     );
     this.isFormSubmitted = true;
-    this.hiringRequestService
-      .EditHiringRequestDetail(data)
-      .subscribe(
-        (response: IResponseData) => {
-          if (response.statusCode === 200) {
-            this.toastr.success('Hiring request updated successfully');
-            this.UpdateHiringRequestListRefresh();
-            this.isFormSubmitted = false;
-          } else {
-            this.toastr.error(response.message);
-            this.isFormSubmitted = false;
-          }
-          this.onCancelPopup();
-        },
-        () => {
-          this.toastr.error('Someting went wrong. Please try again');
+    this.hiringRequestService.EditHiringRequestDetail(data).subscribe(
+      (response: IResponseData) => {
+        if (response.statusCode === 200) {
+          this.toastr.success('Hiring request updated successfully');
+          this.UpdateHiringRequestListRefresh();
+          this.isFormSubmitted = false;
+        } else {
+          this.toastr.error(response.message);
           this.isFormSubmitted = false;
         }
-      );
+        this.onCancelPopup();
+      },
+      () => {
+        this.toastr.error('Someting went wrong. Please try again');
+        this.isFormSubmitted = false;
+      }
+    );
   }
   //#endregion
   //#region "On hiring request list refresh"
@@ -424,12 +428,12 @@ export class AddHiringRequestComponent implements OnInit {
   }
   //#endregion
   //#region "On form submission"
-  onFormSubmit(data: any) {
+  onFormSubmit() {
     if (this.addHiringRequestForm.valid) {
       if (this.hiringRequestId === 0) {
-        this.AddHiringRequest(data);
+        this.AddHiringRequest(this.addHiringRequestForm.getRawValue());
       } else {
-        this.EditHiringRequest(data);
+        this.EditHiringRequest(this.addHiringRequestForm.getRawValue());
       }
     }
   }
