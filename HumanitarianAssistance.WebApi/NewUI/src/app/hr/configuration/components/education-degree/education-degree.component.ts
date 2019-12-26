@@ -14,7 +14,6 @@ import { AddEducationDegreeComponent } from './add-education-degree/add-educatio
   styleUrls: ['./education-degree.component.scss']
 })
 export class EducationDegreeComponent implements OnInit {
-
   educationDegreeList$: Observable<any[]>;
   educationDegreeListHeaders$ = of(['Id', 'Name']);
   Id: any;
@@ -26,23 +25,26 @@ export class EducationDegreeComponent implements OnInit {
   };
   RecordCount: number;
 
-  constructor(private hrService: HrService, private dialog: MatDialog, private toastr: ToastrService,
-    private commonLoader: CommonLoaderService) {
-
-      this.actions = {
-        items: {
-          button: { status: false, text: '' },
-          download: false,
-          edit: true,
-          delete: true,
-        },
-        subitems: {
-          button: { status: false, text: '' },
-          delete: false,
-          download: false,
-        }
-      };
-    }
+  constructor(
+    private hrService: HrService,
+    private dialog: MatDialog,
+    private toastr: ToastrService,
+    private commonLoader: CommonLoaderService
+  ) {
+    this.actions = {
+      items: {
+        button: { status: false, text: '' },
+        download: false,
+        edit: true,
+        delete: true
+      },
+      subitems: {
+        button: { status: false, text: '' },
+        delete: false,
+        download: false
+      }
+    };
+  }
 
   ngOnInit() {
     this.getEducationDegreeList();
@@ -50,42 +52,47 @@ export class EducationDegreeComponent implements OnInit {
 
   getEducationDegreeList() {
     this.commonLoader.showLoader();
-    this.hrService.getEducationDegreeList(this.pageModel).subscribe(x => {
-      this.commonLoader.hideLoader();
-      this.educationDegreeList$ = of(x.EducationDegreeList.map(element => {
-        return {
-          Id: element.EducationDegreeId,
-          Name: element.EducationDegreeName,
-        };
-      }));
-      this.RecordCount = x.TotalCount;
-    }, error => {
-      this.commonLoader.hideLoader();
-    });
+    this.hrService.getEducationDegreeList(this.pageModel).subscribe(
+      x => {
+        this.commonLoader.hideLoader();
+        this.educationDegreeList$ = of(
+          x.EducationDegreeList.map(element => {
+            return {
+              Id: element.EducationDegreeId,
+              Name: element.EducationDegreeName
+            };
+          })
+        );
+        this.RecordCount = x.TotalCount;
+      },
+      error => {
+        this.commonLoader.hideLoader();
+      }
+    );
   }
 
   addDegree() {
     const dialogRef = this.dialog.open(AddEducationDegreeComponent, {
-      width: '450px',
+      width: '450px'
     });
 
     dialogRef.afterClosed().subscribe(x => {
       this.getEducationDegreeList();
     });
-}
+  }
 
   actionEvents(event: any) {
-    debugger;
     if (event.type === 'delete') {
       this.hrService.openDeleteDialog().subscribe(res => {
-        if (res) {
+        if (res === true) {
           this.Id = event.item.Id;
-          this.hrService.deleteEducationDegree(this.Id).subscribe(res => {
+          this.hrService.deleteEducationDegree(this.Id).subscribe(response => {
+           if (response === true) {
             this.getEducationDegreeList();
+          }
           });
         }
       });
-
     }
     if (event.type === 'edit') {
       const dialogRef = this.dialog.open(AddEducationDegreeComponent, {
@@ -106,5 +113,4 @@ export class EducationDegreeComponent implements OnInit {
     this.getEducationDegreeList();
   }
   //#endregion
-
 }

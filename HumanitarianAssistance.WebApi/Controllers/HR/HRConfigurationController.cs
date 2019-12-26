@@ -40,6 +40,18 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return Ok(await _mediator.Send(command));
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteDesignationDetail([FromBody] int Id)
+        {
+            return Ok(await _mediator.Send(new DeleteDesignationDetailCommand
+            {
+                Id = Id,
+                ModifiedById = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                ModifiedDate = DateTime.UtcNow
+            }));
+
+        }
         [HttpPost]
         public async Task<IActionResult> GetEducationDegreeList([FromBody] GetAllEducationDegreeQuery request)
         {
@@ -65,8 +77,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpPost]
         public async Task<IActionResult> DeleteEducationDegree([FromBody] int Id)
         {
-
-
             return Ok(await _mediator.Send(new DeleteEducationDegreeCommand
             {
                 Id = Id,

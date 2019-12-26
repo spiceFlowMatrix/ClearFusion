@@ -14,7 +14,6 @@ import { AddQualificationComponent } from './add-qualification/add-qualification
   styleUrls: ['./qualification-master.component.scss']
 })
 export class QualificationMasterComponent implements OnInit {
-
   qualificationList$: Observable<any[]>;
   qualificationHeaders$ = of(['Id', 'Qualification Name']);
 
@@ -24,70 +23,91 @@ export class QualificationMasterComponent implements OnInit {
     PageIndex: 0
   };
   RecordCount: number;
-
-  constructor(private hrService: HrService, private dialog: MatDialog, private toastr: ToastrService,
-    private commonLoader: CommonLoaderService) { }
+  Id: number;
+  constructor(
+    private hrService: HrService,
+    private dialog: MatDialog,
+    private toastr: ToastrService,
+    private commonLoader: CommonLoaderService
+  ) {}
 
   ngOnInit() {
     this.actions = {
       items: {
         button: { status: false, text: '' },
-        delete: false,
         download: false,
-        edit: true
+        edit: true,
+        delete: true,
       },
       subitems: {
         button: { status: false, text: '' },
         delete: false,
-        download: false,
+        download: false
       }
-  };
-  this.getQualificationList();
-}
-getQualificationList() {
-  this.commonLoader.showLoader();
-  this.hrService.getQualificationList(this.pageModel).subscribe(x => {
-    this.commonLoader.hideLoader();
-    this.qualificationList$ = of(x.Result.map(element => {
-      return {
-        QualificationId: element.QualificationId,
-        QualificationName: element.QualificationName,
-      };
-    }));
-    this.RecordCount = x.RecordCount;
-  }, error => {
-    this.commonLoader.hideLoader();
-  });
-}
+    };
+    this.getQualificationList();
+  }
+  getQualificationList() {
+    this.commonLoader.showLoader();
+    this.hrService.getQualificationList(this.pageModel).subscribe(
+      x => {
+        this.commonLoader.hideLoader();
+        this.qualificationList$ = of(
+          x.Result.map(element => {
+            return {
+              QualificationId: element.QualificationId,
+              QualificationName: element.QualificationName
+            };
+          })
+        );
+        this.RecordCount = x.RecordCount;
+      },
+      error => {
+        this.commonLoader.hideLoader();
+      }
+    );
+  }
 
-addQualification() {
-  const dialogRef = this.dialog.open(AddQualificationComponent, {
-    width: '450px',
-  });
-
-  dialogRef.afterClosed().subscribe(x => {
-     this.getQualificationList();
-  });
-}
-
-actionEvents(event: any) {
-  if (event.type === 'edit') {
+  addQualification() {
     const dialogRef = this.dialog.open(AddQualificationComponent, {
-      width: '450px',
-      data: event.item
+      width: '450px'
     });
 
     dialogRef.afterClosed().subscribe(x => {
       this.getQualificationList();
     });
   }
-}
 
-//#region "pageEvent"
-pageEvent(e) {
-  this.pageModel.PageIndex = e.pageIndex;
-  this.pageModel.PageSize = e.pageSize;
-  this.getQualificationList();
-}
-//#endregion
+  actionEvents(event: any) {
+    if (event.type === 'delete') {
+      this.hrService.openDeleteDialog().subscribe(res => {
+        if (res === true) {
+          this.Id = event.item.QualificationId;
+          this.hrService.deleteQualificationDetail(this.Id).subscribe(response => {
+            if (response.StatusCode === 200) {
+              this.getQualificationList();
+            }
+          });
+        }
+      });
+    }
+    if (event.type === 'edit') {
+      const dialogRef = this.dialog.open(AddQualificationComponent, {
+        width: '450px',
+        data: event.item
+      });
+
+      dialogRef.afterClosed().subscribe(x => {
+        this.getQualificationList();
+      });
+    }
+  }
+
+  //#region "pageEvent"
+  pageEvent(e) {
+    this.pageModel.PageIndex = e.pageIndex;
+    this.pageModel.PageSize = e.pageSize;
+    this.getQualificationList();
+  }
+  //#endregion
 }

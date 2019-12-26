@@ -24,7 +24,7 @@ export class JobGradeMasterComponent implements OnInit {
     PageIndex: 0
   };
   RecordCount: number;
-
+  Id: number;
   constructor(private hrService: HrService, private dialog: MatDialog, private toastr: ToastrService,
     private commonLoader: CommonLoaderService) { }
 
@@ -32,9 +32,9 @@ export class JobGradeMasterComponent implements OnInit {
     this.actions = {
       items: {
         button: { status: false, text: '' },
-        delete: false,
         download: false,
-        edit: true
+        edit: true,
+        delete: true,
       },
       subitems: {
         button: { status: false, text: '' },
@@ -71,6 +71,18 @@ addJobGrade() {
 }
 
 actionEvents(event: any) {
+  if (event.type === 'delete') {
+    this.hrService.openDeleteDialog().subscribe(res => {
+      if (res === true) {
+        this.Id = event.item.GradeId;
+        this.hrService.deleteJobGradeDetail(this.Id).subscribe(response => {
+         if (response === true) {
+          this.getJobGradeList();
+        }
+        });
+      }
+    });
+  }
   if (event.type === 'edit') {
     const dialogRef = this.dialog.open(AddJobGradeComponent, {
       width: '450px',

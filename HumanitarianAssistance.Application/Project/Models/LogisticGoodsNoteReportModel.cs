@@ -22,7 +22,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public int TotalQuantity { get; set; }
         public double TotalUnitPrice { get; set; }
         public double TotalEstimatedAmount { get; set; }
-        
+        public string OfficeName { get; set; }
         public List<GoodsNoteAmountModel> GoodsNoteAmountModel { get; set; }
 
     }

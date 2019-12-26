@@ -157,7 +157,6 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
 
   //#region "Download goods received pdf"
   downLoadPdf() {
-    debugger;
      const  LogisticRequestId: any = this.requestId;
      if (LogisticRequestId != null && LogisticRequestId !== undefined) {
       this.globalService

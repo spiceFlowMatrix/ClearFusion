@@ -25,7 +25,7 @@ export class DepartmentMasterComponent implements OnInit {
     PageIndex: 0
   };
   RecordCount: number;
-
+  Id: number;
   constructor(private hrService: HrService, private dialog: MatDialog, private toastr: ToastrService,
     private commonLoader: CommonLoaderService) { }
 
@@ -33,9 +33,9 @@ export class DepartmentMasterComponent implements OnInit {
     this.actions = {
       items: {
         button: { status: false, text: '' },
-        delete: false,
         download: false,
-        edit: true
+        edit: true,
+        delete: true,
       },
       subitems: {
         button: { status: false, text: '' },
@@ -75,6 +75,18 @@ addDepartment() {
 }
 
 actionEvents(event: any) {
+  if (event.type === 'delete') {
+    this.hrService.openDeleteDialog().subscribe(res => {
+      if (res === true) {
+        this.Id = event.item.DepartmentId;
+        this.hrService.deleteDepartmentDetail(this.Id).subscribe(response => {
+         if (response === true) {
+          this.getDepartmentList();
+        }
+        });
+      }
+    });
+  }
   if (event.type === 'edit') {
     const dialogRef = this.dialog.open(AddDepartmentMasterComponent, {
       width: '450px',

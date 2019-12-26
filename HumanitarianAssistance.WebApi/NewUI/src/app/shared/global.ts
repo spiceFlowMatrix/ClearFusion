@@ -93,6 +93,7 @@ export class GLOBAL {
   public static API_Code_EditAccountType = 'Code/EditAccountType';
   public static API_HRConfiguration_AddDesignationDetail = 'HRConfiguration/AddDesignationDetail';
   public static API_HRConfiguration_EditDesignationDetail = 'HRConfiguration/EditDesignationDetail';
+  public static API_HRConfiguration_DeleteDesignationDetail = 'HRConfiguration/DeleteDesignationDetail';
   public static API_HRConfiguration_GetAllDesignationDetail = 'HRConfiguration/GetAllDesignationDetail';
   public static API_HRConfiguration_GetEducationDegreeList = 'HRConfiguration/GetEducationDegreeList';
   public static API_HRConfiguration_AddEducationDegree = 'HRConfiguration/AddEducationDegree';
@@ -157,6 +158,11 @@ export class GLOBAL {
   public static API_Project_GetAllCountryDetails = 'Code/GetAllCountry';
   public static API_OfficeCode_AddOfficeDetail = 'Code/AddOfficeDetail';
   public static API_OfficeCode_EditOfficeDetails = 'Code/EditOfficeDetails';
+  public static API_code_GetAllOffice = 'code/GetAllOfficeDetails';
+  public static API_HRConfiguration_GetOfficeList = 'HRConfiguration/GetOfficeList';
+  public static API_OfficeCode_DeleteOfficeDetails = 'Code/DeleteOfficeDetails';
+
+
   public static API_Project_GetAllProvinceDetails = 'Project/GetAllProvinceDetails';
   public static API_Project_GetAllStrengthConsiderationDetails = 'Project/GetAllStrengthConsiderationDetails';
   public static API_Project_GetAllGenderConsiderationDetails = 'Project/GetAllGenderConsiderationDetails';
@@ -164,8 +170,7 @@ export class GLOBAL {
   public static API_Project_GetAllSecurityConsiderationDetails = 'Project/GetAllSecurityConsiderationDetails';
   public static API_code_GetAllCurrency = 'code/GetAllCurrency';
   public static API_Project_GetAllDistrictvalueByProvinceId = 'Project/GetAllDistrictvalueByProvinceId';
-  public static API_code_GetAllOffice = 'code/GetAllOfficeDetails';
-  public static API_HRConfiguration_GetOfficeList = 'HRConfiguration/GetOfficeList';
+
   public static API_HRConfiguration_GetDepartmentList = 'HRConfiguration/GetDepartmentList';
   public static API_HRConfiguration_GetAllLeaveReasonType = 'HRConfiguration/GetAllLeaveReasonType';
   public static API_HRConfiguration_GetJobGradeList = 'HRConfiguration/GetJobGradeList';
@@ -174,12 +179,18 @@ export class GLOBAL {
   public static API_HRConfiguration_GetQualificationList = 'HRConfiguration/GetQualificationList';
   public static API_Department_AddDepartment = 'Code/AddDepartment';
   public static API_Department_EditDepartment = 'Code/EditDepartment';
+  public static API_Department_DeleteDepartment = 'Code/DeleteDepartment';
+
   public static API_Code_AddAttendanceGroups = 'Code/AddAttendanceGroups';
   public static API_Code_EditAttendanceGroups = 'Code/EditAttendanceGroups';
+  public static API_Code_DeleteAttendanceGroups = 'Code/DeleteAttendanceGroups';
   public static API_Profession_AddProfession = 'Code/AddProfession';
   public static API_Profession_EditProfession = 'Code/EditProfession';
+  public static API_Code_Profession_DeleteProfession = 'Code/DeleteProfession';
   public static API_Code_AddQualificationDetails = 'Code/AddQualificationDetails';
   public static API_Code_EditQualifactionDetails = 'Code/EditQualifactionDetails';
+  public static API_Code_DeleteQualifactionDetails = 'Code/DeleteQualifactionDetails';
+
   public static API_Project_AddEditProjectotherDetail = 'Project/AddEditProjectotherDetail';
   public static API_GetProjectOtherDetailById = 'Project/GetProjectOtherDetailById';
   public static API_Project_AddProjectJobsDetail = 'Project/AddProjectJobDetail';
@@ -205,6 +216,7 @@ export class GLOBAL {
   public static API_Project_GetProjectWinLossStatusById = 'Project/GetProjectWinLossStatusById';
   public static API_HR_AddJobGradeDetail = 'Code/AddJobGradeDetail';
   public static API_HR_EditJobGradeDetail = 'Code/EditJobGradeDetail';
+  public static API_Code_DeleteJobGradeDetail = 'Code/DeleteJobGradeDetail';
 
   public static API_Project_AddEditProjectProposalDetail = 'Project/AddEditProjectProposalDetail';
   public static API_Project_AddEditProjectCurrencyDetail = 'Project/AddEditProjectCurrencyDetail';
