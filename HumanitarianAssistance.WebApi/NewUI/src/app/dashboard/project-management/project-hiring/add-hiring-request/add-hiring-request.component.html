@@ -65,7 +65,8 @@
                         </div>
                         <div class="col-lg-6 col-sm-6">
                             <mat-form-field class="example-full-width">
-                                <input matInput type="number" min="1" max="AvailableVacancies" formControlName="TotalVacancy" placeholder="Total Vacancy" [disabled]="!isEditable" />
+                                <input *ngIf="!isEditable" matInput type="number" min="1" max="AvailableVacancies" formControlName="TotalVacancy" placeholder="Total Vacancy" readonly/>
+                                <input *ngIf="isEditable" matInput type="number" min="1" max="AvailableVacancies" formControlName="TotalVacancy" placeholder="Total Vacancy" />
                                 <mat-error *ngIf="addHiringRequestForm.controls['TotalVacancy'].hasError()">
                                 </mat-error>
                             </mat-form-field>
@@ -92,12 +93,14 @@
                     <div class="row">
                         <div class="col-lg-6 col-sm-6">
                             <mat-form-field class="example-full-width">
-                                <input matInput formControlName="ContractType" placeholder="Contract Type" [disabled]="!isEditable" />
+                                <input *ngIf="!isEditable" matInput formControlName="ContractType" placeholder="Contract Type" readonly/>
+                                <input *ngIf="isEditable" matInput formControlName="ContractType" placeholder="Contract Type" />
                             </mat-form-field>
                         </div>
                         <div class="col-lg-6 col-sm-6">
                             <mat-form-field class="example-full-width">
-                                <input matInput formControlName="ContractDuration" placeholder="Contract Duration (Month)" type="number" [disabled]="!isEditable" />
+                                <input *ngIf="!isEditable" matInput formControlName="ContractDuration" placeholder="Contract Duration (Month)" type="number" readonly/>
+                                <input *ngIf="isEditable" matInput formControlName="ContractDuration" placeholder="Contract Duration (Month)" type="number" />
                             </mat-form-field>
                         </div>
                         <div class="col-lg-6 col-sm-6">
@@ -156,76 +159,6 @@
                             </mat-form-field>
                         </div>
                     </div>
-
-
-                    <!--others-->
-                    <!-- <h4> Others </h4>
-          <div class="row">
-            <div class="col-lg-6 col-sm-6">
-              <lib-hum-dropdown formControlName="JobCategory" [validation]="
-                  addHiringRequestForm.controls['JobCategory'].hasError('required')
-                " [options]="jobList$" [placeHolder]="'Job Category'" (change)="onChangeJobCategory($event)">
-              </lib-hum-dropdown>
-            </div>
-
-            <div class="col-lg-6 col-sm-6">
-              <mat-form-field class="example-full-width">
-                <input matInput formControlName="MinEducationLevel" placeholder="Minimum Education Level" />
-              </mat-form-field>
-            </div>
-
-            <div class="col-lg-6 col-sm-6">
-              <mat-form-field class="example-full-width">
-                <input matInput formControlName="Organization" placeholder="Organization" />
-              </mat-form-field>
-            </div>
-
-            <div class="col-lg-6 col-sm-6">
-              <lib-hum-dropdown formControlName="Gender" [validation]="
-                  addHiringRequestForm.controls['Gender'].hasError('required')
-                " [options]="genderList$" [placeHolder]="'Gender'"></lib-hum-dropdown>
-            </div>
-
-            <div class="col-lg-6 col-sm-6">
-              <mat-form-field class="example-full-width">
-                <input matInput formControlName="SalaryRange" placeholder="Salary Range" />
-              </mat-form-field>
-            </div>
-
-
-            <div class="col-lg-6 col-sm-6">
-              <lib-hum-dropdown formControlName="Country" [validation]="
-                    addHiringRequestForm.controls['Country'].hasError('required')
-                  " [options]="countryList$" [placeHolder]="'Country'" (change)="onChangeCountry($event)">
-              </lib-hum-dropdown>
-            </div>
-
-            <div class="col-lg-6 col-sm-6">
-              <lib-hum-dropdown formControlName="Province" [validation]="
-                      addHiringRequestForm.controls['Province'].hasError('required')
-                    " [options]="provinceList$" [placeHolder]="'Province'"></lib-hum-dropdown>
-            </div>
-
-            <div class="col-lg-6 col-sm-6">
-              <mat-form-field class="example-full-width">
-                <input matInput formControlName="JobStatus" placeholder="Job Status" />
-              </mat-form-field>
-            </div>
-            <div class="col-lg-6 col-sm-6">
-              <lib-hum-dropdown formControlName="Nationality" [validation]="
-                  addHiringRequestForm.controls['Nationality'].hasError('required')
-                " [options]="countryList$" [placeHolder]="'Nationality'"></lib-hum-dropdown>
-            </div>
-
-            <div class="col-lg-12 col-sm-12">
-              <mat-form-field class="example-full-width">
-                <textarea matInput formControlName="Background" placeholder="Background" matTextareaAutosize
-                  matAutosizeMinRows="5" matAutosizeMaxRows="7"></textarea>
-              </mat-form-field>
-            </div>
-
-          </div> -->
-
                 </div>
             </div>
         </div>

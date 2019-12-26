@@ -15,6 +15,7 @@ import { FileManagementService } from '../../../shared/FileManagement/file-manag
 import { JobHiringService } from '../job-hiring-details/job-hiring.service';
 import { IDatasource } from '../../../shared/pipes/job-grade.pipe';
 import { IAttendanceGroup } from '../../code/attendance-group-master/attendance-group-master.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-employees',
@@ -23,7 +24,7 @@ import { IAttendanceGroup } from '../../code/attendance-group-master/attendance-
 })
 export class EmployeesComponent implements OnInit {
   //#region "VARIABLES"
-
+  employeeId: number;
   showInfoTabs: Tab[];
   addEmployeeLoadingPopup = false;
   isEditingAllowed = false;
@@ -63,7 +64,7 @@ export class EmployeesComponent implements OnInit {
   docURL: any;
   countryId: number;
   officeId: number;
-  employeeId: number;
+  newEmployeeId: number;
   tabEventValue: number;
   leaveInfoDataSource: LeaveInfoModel[];
   leaveInfoData: LeaveInfoData;
@@ -183,6 +184,20 @@ export class EmployeesComponent implements OnInit {
       applicationPages.Employees
     );
     this.initDocumentTypeList();
+
+    // this.routeActive.queryParams.subscribe(params => {
+    //   this.newEmployeeId = +params['empCode'];
+    // });
+    // if (this.newEmployeeId != null) {
+    //   this.loading = true;
+    //   this.selectedItemEmployee = this.newEmployeeId;
+    //   this.openInfoTab = 0;
+    //   this.selectedIndex = 0; 
+    //   // this.showActiveEmployeeData = this.newEmployeeId;
+    //   this.GetEmployeeDetailsByEmployeeId(this.newEmployeeId);
+    //   this.employeeId = this.newEmployeeId;
+    //   localStorage.setItem('SelectedEmployee', this.newEmployeeId !== undefined ? this.newEmployeeId.toString() : '');
+    // }
   }
 
   constructor(
@@ -194,6 +209,7 @@ export class EmployeesComponent implements OnInit {
     public commonService: CommonService,
     private codeservice: CodeService,
     private fileManagementService: FileManagementService,
+    private routeActive: ActivatedRoute,
     private jobHiringService: JobHiringService
   ) {
     this.allFormInitialize();
@@ -706,6 +722,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   displayActiveEmpDetails(model) {
+    console.log(model);
     this.loading = true;
     this.selectedItemEmployee = model.EmployeeId;
 
