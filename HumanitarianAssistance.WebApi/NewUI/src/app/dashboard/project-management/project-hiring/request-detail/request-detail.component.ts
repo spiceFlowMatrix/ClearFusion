@@ -437,6 +437,11 @@ export class RequestDetailComponent implements OnInit {
   //#endregion
   // #region adding new candidate
   addNewCandidate(): void {
+    let candidateCount;
+    this.newCandidatesList$.subscribe(res => {
+      candidateCount = res.filter(x => CandidateStatus[x.CandidateStatus] === CandidateStatus.Selected);
+    });
+    if(candidateCount.length < this.hiringRequestDetails.TotalVacancies) {
     // NOTE: It open AddHiringRequest dialog and passed the data into the AddHiringRequestsComponent Model
     const dialogRef = this.dialog.open(AddNewCandidateComponent, {
       width: '700px',
@@ -448,9 +453,13 @@ export class RequestDetailComponent implements OnInit {
     });
     // refresh the list after new request created
     dialogRef.componentInstance.onAddCandidateListRefresh.subscribe(() => {
+      this.hiringRequestDetails.FilledVacancies = this.hiringRequestDetails.FilledVacancies + 1;
       this.getAllCandidateList(this.filterValueModel);
     });
     dialogRef.afterClosed().subscribe(() => {});
+  } else {
+    this.toastr.warning('Vacancies Already Filled');
+  }
   }
   //#endregion
 
