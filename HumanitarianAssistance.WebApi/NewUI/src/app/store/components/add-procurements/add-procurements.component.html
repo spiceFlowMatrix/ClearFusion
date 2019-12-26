@@ -1,11 +1,13 @@
 <lib-sub-header-template>
-  <span class="action_header">Procurement Details Form
+  <span class="action_header"><i (click)="goBack()" class="fas fa-arrow-left"></i> &nbsp; &nbsp; Procurement Details Form &nbsp; &nbsp;
     <hum-button form="ngForm" [disabled]="!addProcurementForm.valid" [type]="'save'" [text]="'SAVE'" (click)="saveProcurement()"></hum-button>
   </span>
 </lib-sub-header-template>
 <mat-divider></mat-divider>
 <mat-card humAddScroll>
-  <div class="container">
+  <div class="alert alert-warning" *ngIf="addProcurementForm.controls['IssuedQuantity'].hasError('max')" role="alert">
+    <p class="txt-center-align">{{maxProcurementMessage}}</p>
+  </div>
     <div class="row">
       <div class="col-md-6">
         <form id="ngForm" #documentEditForm="ngForm" [formGroup]= "addProcurementForm">
@@ -22,6 +24,15 @@
             </div>
             <br>
             <div class="col-sm-12">
+              <b>Which office was this Procurement issued to?</b>
+            </div>
+            <div class="col-sm-12">
+              <lib-hum-dropdown [validation]="addProcurementForm.controls['OfficeId'].hasError('required')"
+              [options]="officeList$" formControlName='OfficeId' [placeHolder]="'Office'"
+              (change)="getAllEmployeesByOfficeId($event)"></lib-hum-dropdown>
+            </div>
+            <br>
+            <div class="col-sm-12">
               <b>Who was this Procurement issued to?</b>
             </div>
             <div class="col-sm-12">
@@ -35,10 +46,11 @@
             </div>
             <div class="col-sm-12">
               <mat-form-field>
-                <input (change)="validateMaxProcurement()" matInput min="0" type="number"
+                <input matInput min="0" type="number"
                   oninput="validity.valid||(value='');" id="IssuedQuantity" formControlName='IssuedQuantity'
                   placeholder="Issued Quantity">
                 <mat-error *ngIf="addProcurementForm.controls['IssuedQuantity'].hasError('required')">required</mat-error>
+                <mat-error *ngIf="addProcurementForm.controls['IssuedQuantity'].hasError('max')">Max quantity allowed is {{maxQuantity}}</mat-error>
               </mat-form-field>
 
             </div>
@@ -49,16 +61,16 @@
             <div class="col-sm-12">
               <lib-hum-dropdown [validation]="addProcurementForm.controls['StatusId'].hasError('required')"
               [options]="statusList$" formControlName='StatusId' [placeHolder]="'Status At Time Of Issue'"
-              (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+              ></lib-hum-dropdown>
             </div>
             <br>
             <div class="col-sm-12">
               <b>Which voucher is this issue tracked?</b>
             </div>
             <div class="col-sm-12">
-              <lib-hum-dropdown [validation]="addProcurementForm.controls['StatusId'].hasError('required')"
-              [options]="statusList$" formControlName='StatusId' [placeHolder]="'Status At Time Of Issue'"
-              (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+              <lib-hum-dropdown [validation]="addProcurementForm.controls['VoucherNo'].hasError('required')"
+              [options]="voucherList$" formControlName='VoucherNo' [placeHolder]="'Voucher No'"
+              ></lib-hum-dropdown>
             </div>
             <br>
             <div class="col-sm-12">
@@ -67,7 +79,7 @@
             <div class="col-sm-12">
               <lib-hum-dropdown [validation]="addProcurementForm.controls['ProjectId'].hasError('required')"
               [options]="projects$" formControlName='ProjectId' [placeHolder]="'Project'"
-              (change)="getMasterInventorySelectedValue($event)"></lib-hum-dropdown>
+              ></lib-hum-dropdown>
             </div>
             <br>
             <div class="col-sm-12">
@@ -76,7 +88,7 @@
             <div class="col-sm-12">
               <lib-hum-dropdown [validation]="addProcurementForm.controls['StoreSourceId'].hasError('required')"
               [options]="storeSource$" formControlName='StoreSourceId' [placeHolder]="'Issued To Location'"
-              (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+              ></lib-hum-dropdown>
             </div>
             <br>
             <div class="col-sm-12">
@@ -89,5 +101,5 @@
       </form>
       </div>
     </div>
-  </div>
+
 </mat-card>

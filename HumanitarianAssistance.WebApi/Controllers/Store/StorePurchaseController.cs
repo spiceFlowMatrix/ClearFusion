@@ -299,5 +299,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
             return Ok(await result);
         }
 
+        [HttpGet]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> GetProcurementDetailsByProcurementId(int id)
+        {
+            
+            var result = await Task.FromResult(_mediator.Send(new GetProcurementDetailsByProcurementIdQuery { Id = id} ));
+            return Ok(await result);
+        }
+
     }
 }

@@ -218,6 +218,7 @@ export class GLOBAL {
   public static API_Accounting_GetAccountDetails = 'Account/GetAllAccountCode';
   public static API_AccountReports_GetAllLedgerDetails = 'AccountReports/GetAllLedgerDetails';
   public static API_AccountReports_GetTrialBalanceReport = 'AccountReports/GetTrialBalanceReport';
+  public static API_Account_GetAllVouchersWithoutFilter = 'Account/GetAllVouchersWithoutFilter';
 
   // ProjectLogistics
   public static API_ProjectLogistics_AddLogisticRequest = 'ProjectLogistic/AddLogisticRequest';
@@ -558,6 +559,7 @@ export class GLOBAL {
   public static API_Store_EditItemOrder = 'Store/EditItemOrder';
   public static API_Store_DeleteItemOrder = 'Store/DeleteItemOrder';
   public static API_StorePurchase_AddStorePurchase = 'StorePurchase/AddStorePurchase';
+  public static API_StorePurchase_GetProcurementDetailsByProcurementId = 'StorePurchase/GetProcurementDetailsByProcurementId';
   public static API_StorePurchase_GetProcurementDetailWithReturnsList = 'StorePurchase/GetProcurementDetailWithReturnsList';
   public static API_VehicleTracker_GetVehicleList = 'VehicleTracker/GetVehicleList';
   public static API_VehicleTracker_AddVehicleMileage = 'VehicleTracker/AddVehicleMileage';

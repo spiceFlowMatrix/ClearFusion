@@ -54,15 +54,24 @@ namespace HumanitarianAssistance.Application.Store.Queries
 
                 if(query != null)
                 {
-                    query.CurrentBalance = (query.StartingBalance-((purchases.PurchaseOrders.Any() ? 
+
+                    int procured = (purchases.PurchaseOrders.Any() ? 
                                                                 purchases.PurchaseOrders.Where(x=> x.IsDeleted == false)
-                                                                .Sum(x=> x.IssuedQuantity) : 0) - (purchases.ReturnProcurementDetailList.Any()?
-                                            purchases.ReturnProcurementDetailList.Where(x=> x.IsDeleted == false).Sum(x=> x.ReturnedQuantity) : 0)));
+                                                                .Select(x=> x.IssuedQuantity)
+                                                                .DefaultIfEmpty(0)
+                                                                .Sum() : 0);
+
+                    int returns = (purchases.ReturnProcurementDetailList.Any()?
+                                            purchases.ReturnProcurementDetailList.Where(x=> x.IsDeleted == false && x.ProcurementId == request.Id)
+                                                                                .Select(x=> x.ReturnedQuantity).DefaultIfEmpty(0).Sum() : 0);
+
+                    query.CurrentBalance = (query.StartingBalance- (procured- returns));
                     
                     var project = await _dbContext.ProjectDetail.FirstOrDefaultAsync(x=> x.IsDeleted == false && x.ProjectId == query.ProjectId);
                     query.ProjectName = project != null ? (project.ProjectCode + "-" +project.ProjectName) : null;
 
-                    query.ProcurementReturnList = purchases.ReturnProcurementDetailList.Where(x=> x.IsDeleted == false).Select(x=> new ProcurementReturnModel 
+                    query.ProcurementReturnList = purchases.ReturnProcurementDetailList.Where(x=> x.IsDeleted == false && x.ProcurementId == request.Id)
+                    .Select(x=> new ProcurementReturnModel 
                     {
                         Date = x.ReturnedDate.ToShortDateString(),
                         Id= x.Id,

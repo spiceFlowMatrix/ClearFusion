@@ -163,6 +163,13 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetAllVouchersWithoutFilter()
+        {
+            var result= await _mediator.Send(new GetAllVouchersWithoutFilterQuery());
+            return Ok(result);
+        }
+
+        [HttpGet]
         public async Task<ApiResponse> GetAllAccountCode()
         {
             return await _mediator.Send(new GetAllAccountsQuery());

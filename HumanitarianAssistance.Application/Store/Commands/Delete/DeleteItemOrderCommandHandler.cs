@@ -26,7 +26,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Delete
             {
                 if (request != null)
                 {
-                    var recordExits = await _dbContext.StorePurchaseOrders.FirstOrDefaultAsync(x => x.OrderId == request.OrderId && x.IsDeleted == false);
+                    var recordExits = await _dbContext.StorePurchaseOrders.FirstOrDefaultAsync(x => x.OrderId == request.OrderId);
                     recordExits.IsDeleted = true;
                     await _dbContext.SaveChangesAsync();
                     //await _uow.SaveAsync();

@@ -10,7 +10,7 @@ import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.
 import { of } from 'rxjs/internal/observable/of';
 import { ToastrService } from 'ngx-toastr';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-procurements',
@@ -31,9 +31,14 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
   projects$: Observable<IDropDownModel[]>;
   storeSource$: Observable<IDropDownModel[]>;
   statusList$: Observable<IDropDownModel[]>;
+  voucherList$: Observable<IDropDownModel[]>;
+  officeList$: Observable<IDropDownModel[]>;
 
   purchaseId: number;
   officeId: number;
+  maxQuantity: number;
+  procurementId: number;
+  itemId: number;
   itemsToBeProcuredCount: number;
   originalQuantityOfPurchase = 0;
   procuredQuantityOfPurchase = 0;
@@ -43,14 +48,20 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
   originalIssuedQuantity = 0;
   procurementPageTitle = 'Add Procurement';
   maxProcurementMessage =
-  'Issued quantity exceeds purchased quantity. Either decrease the quantity, return the issued item or create a new Purchase for the item';
+    'Issued quantity exceeds purchased quantity. Either decrease the quantity, return the issued item or create a new Purchase for the item';
 
   constructor(private fb: FormBuilder, private purchaseService: PurchaseService,
     private commonLoader: CommonLoaderService, public toastr: ToastrService,
-    private route: ActivatedRoute
-    ) {
-      this.route.queryParams.subscribe(params => {
-        this.officeId = params['officeId'];
+    private route: ActivatedRoute, private router: Router
+  ) {
+    this.route.queryParams.subscribe(params => {
+      this.maxQuantity = +params['quantity'];
+      this.purchaseId = +params['purchaseId'];
+      this.itemId = +params['itemId'];
+    });
+
+    this.route.params.subscribe(params => {
+      this.procurementId = +params['id'];
     });
   }
 
@@ -79,8 +90,8 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
       this.getAllProjects(),
       this.getStoreLocations(),
       this.getAllStatusAtTimeOfIssue(),
-      this.getAllEmployeesByOfficeId()
-      this.getAllVouchers()
+      this.getAllVouchers(),
+      this.getAllOffices()
     ])
       .pipe(takeUntil(this.destroyed$))
       .subscribe(result => {
@@ -88,21 +99,23 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
         this.subscribeAllProjects(result[0]);
         this.subscribeStoreLocations(result[1]);
         this.subscribeAllStatusAtTimeOfIssue(result[2]);
-        this.subscribeAllEmployeesByOfficeId(result[3]);
+        this.subscribeAllVouchersResult(result[3]);
+        this.subscribeAllOfficesResult(result[4]);
       });
 
     // this.getItemDetailByPurchaseId(this.purchaseId);
+    this.route.url.subscribe(value => {
+      if (value[1].path === 'edit-procurement') {
+        this.getProcurementDetailsByProcurementId();
+      }
+    });
   }
 
   initForm() {
     this.addProcurementForm = this.fb.group({
       'ProcurementId': [null],
-      'InventoryTypeId': [{value: null, disabled: true}, [Validators.required]],
-      'InventoryId': [{value: null, disabled: true}, [Validators.required]],
-      'ItemGroupId': [{value: null, disabled: true}, [Validators.required]],
-      'ItemId': [{value: null, disabled: true}, [Validators.required]],
-      'PurchaseId': [{value: null, disabled: true}, [Validators.required]],
-      'IssuedQuantity': [0, [Validators.required, Validators.min(1)]],
+      'PurchaseId': [{ value: null, disabled: true }, [Validators.required]],
+      'IssuedQuantity': [0, [Validators.required, Validators.min(1), Validators.max(this.maxQuantity)]],
       'IssuedToEmployeeId': [null, [Validators.required]],
       'IssueDate': [null, [Validators.required]],
       'ProjectId': [null, [Validators.required]],
@@ -110,7 +123,9 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
       'StatusId': [null, [Validators.required]],
       'MustReturn': [false],
       'EmployeeName': [null],
-      'Returned': [false]
+      'Returned': [false],
+      'VoucherNo': [null, Validators.required],
+      'OfficeId': [null, Validators.required]
     });
   }
 
@@ -122,12 +137,15 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
     return this.purchaseService.getAllProjectList();
   }
 
-  getAllEmployeesByOfficeId() {
-    if (this.officeId) {
-      return this.purchaseService.getEmployeesByOfficeId(this.officeId);
-    } else {
-      this.toastr.warning('Office not selected');
-    }
+  getAllEmployeesByOfficeId(officeId) {
+    return this.purchaseService.getEmployeesByOfficeId(officeId).subscribe(response => {
+      this.employeeList$ = of(response.data.map(y => {
+        return {
+          name: y.EmployeeCode + '-' + y.EmployeeName,
+          value: y.EmployeeId
+        };
+      }));
+    });
   }
 
   getStoreLocations() {
@@ -140,6 +158,10 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
 
   getAllVouchers() {
     return this.purchaseService.getAllVouchers();
+  }
+
+  getAllOffices() {
+    return this.purchaseService.getAllOfficeList();
   }
 
   // subscribeInventoryTypes(response: any) {
@@ -206,13 +228,31 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
   //   }));
   // }
 
-  subscribeAllEmployeesByOfficeId(response: any) {
-    this.employeeList$ = of(response.data.map(y => {
+  // subscribeAllEmployeesByOfficeId(response: any) {
+  //   this.employeeList$ = of(response.data.map(y => {
+  //     return {
+  //       name: y.EmployeeCode + '-' + y.EmployeeName,
+  //       value: y.EmployeeId
+  //     };
+  //     }));
+  // }
+
+  subscribeAllVouchersResult(response: any) {
+    this.voucherList$ = of(response.Vouchers.map(y => {
       return {
-        name: y.EmployeeCode + '-' + y.EmployeeName,
-        value: y.EmployeeId
+        name: y.ReferenceNo,
+        value: y.VoucherNo
       };
-      }));
+    }));
+  }
+
+  subscribeAllOfficesResult(response: any) {
+    this.officeList$ = of(response.data.OfficeDetailsList.map(y => {
+      return {
+        value: y.OfficeId,
+        name: y.OfficeCode + '-' + y.OfficeName
+      };
+    }));
   }
 
   // subscribePurchaseListByItemId(response: any) {
@@ -240,15 +280,15 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
   //   }
   // }
 
-  validateMaxProcurement() {
-    const currentQuantity = this.addProcurementForm.get('IssuedQuantity').value;
-    const itemsAvailable =  (this.originalIssuedQuantity - currentQuantity + this.itemsToBeProcuredCount);
-    this.showMaxProcurementMessage = (itemsAvailable >= 0) ? false : true;
-    this.addProcurementForm.get('IssuedQuantity').setValidators(Validators.max(currentQuantity + itemsAvailable));
+  // validateMaxProcurement() {
+  //   const currentQuantity = this.addProcurementForm.get('IssuedQuantity').value;
+  //   const itemsAvailable =  (this.originalIssuedQuantity - currentQuantity + this.itemsToBeProcuredCount);
+  //   this.showMaxProcurementMessage = (itemsAvailable >= 0) ? false : true;
+  //   this.addProcurementForm.get('IssuedQuantity').setValidators(Validators.max(currentQuantity + itemsAvailable));
 
-    this.currentQuantityOfPurchase = itemsAvailable;
-    this.procuredQuantityOfPurchase = (this.originalProcuredQuantity + (currentQuantity - this.originalIssuedQuantity));
-  }
+  //   this.currentQuantityOfPurchase = itemsAvailable;
+  //   this.procuredQuantityOfPurchase = (this.originalProcuredQuantity + (currentQuantity - this.originalIssuedQuantity));
+  // }
 
   getInventoriesByInventoryTypeId(inventoryTypeId: number) {
     return this.purchaseService
@@ -316,26 +356,70 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
 
   saveProcurement() {
     if (this.addProcurementForm.valid) {
-      if (this.addProcurementForm.value.ProcurementId) {
-        this.editProcurement();
+      const model = {
+        IssueDate: this.addProcurementForm.value.IssueDate,
+        IssuedToEmployeeId: this.addProcurementForm.value.IssuedToEmployeeId,
+        IssuedQuantity: this.addProcurementForm.value.IssuedQuantity,
+        StatusId: this.addProcurementForm.value.StatusId,
+        VoucherNo: this.addProcurementForm.value.VoucherNo,
+        ProjectId: this.addProcurementForm.value.ProjectId,
+        StoreSourceId: this.addProcurementForm.value.StoreSourceId,
+        MustReturn: this.addProcurementForm.value.MustReturn,
+        ProcurementId: this.procurementId,
+        PurchaseId: this.purchaseId,
+        ItemId: this.itemId
+      };
+
+      if (this.procurementId) {
+        this.editProcurement(model);
       } else {
-        this.addProcurement();
+        this.addProcurement(model);
       }
     } else {
       this.toastr.warning('Please correct errors in procurement form and submit again');
     }
   }
 
-  editProcurement() {
-    if (this.addProcurementForm.value.IssuedQuantity === 0) {
+  editProcurement(model: any) {
+    if (model.IssuedQuantity === 0) {
       this.toastr.warning('Issued Quantity should be greater than 0');
       return;
     }
-      this.commonLoader.showLoader();
-      this.purchaseService.editProcurement(this.addProcurementForm.getRawValue())
+    this.commonLoader.showLoader();
+    this.purchaseService.editProcurement(model)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
         if (x.StatusCode === 200) {
+          // this.addProcurementForm.get('ProcurementId').patchValue(x.data.ProcurementModel.ProcurementId);
+          // this.addProcurementForm.get('EmployeeName').patchValue(x.data.ProcurementModel.EmployeeName);
+          // this.addProcurementForm.get('EmployeeId').patchValue(x.data.ProcurementModel.EmployeeId);
+          // this.dialogRef.close(this.addProcurementForm.getRawValue());
+          this.toastr.success(x.Message);
+          this.commonLoader.hideLoader();
+          this.router.navigate(['store/purchases']);
+        } else if (x.StatusCode === 400) {
+          this.toastr.warning(x.Message);
+          this.commonLoader.hideLoader();
+        }
+      },
+        error => {
+          console.log(error);
+          this.commonLoader.hideLoader();
+          // console.log(error);
+        });
+  }
+
+  addProcurement(model: any) {
+    if (model.IssuedQuantity === 0) {
+      this.toastr.warning('Issued Quantity should be greater than 0');
+      return;
+    }
+    this.commonLoader.showLoader();
+    this.purchaseService.addProcurement(model)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(x => {
+        if (x.StatusCode === 200) {
+          this.router.navigate(['store/purchases']);
           // this.addProcurementForm.get('ProcurementId').patchValue(x.data.ProcurementModel.ProcurementId);
           // this.addProcurementForm.get('EmployeeName').patchValue(x.data.ProcurementModel.EmployeeName);
           // this.addProcurementForm.get('EmployeeId').patchValue(x.data.ProcurementModel.EmployeeId);
@@ -347,39 +431,60 @@ export class AddProcurementsComponent implements OnInit, OnDestroy {
           this.commonLoader.hideLoader();
         }
       },
-      error => {
-        console.log(error);
-        this.commonLoader.hideLoader();
-        // console.log(error);
-      });
+        error => {
+          console.log(error);
+          this.commonLoader.hideLoader();
+          // console.log(error);
+        });
   }
 
-  addProcurement() {
-    if (this.addProcurementForm.value.IssuedQuantity === 0) {
-      this.toastr.warning('Issued Quantity should be greater than 0');
-      return;
-    }
-      this.commonLoader.showLoader();
-      this.purchaseService.addProcurement(this.addProcurementForm.getRawValue())
+  getProcurementDetailsByProcurementId() {
+    this.commonLoader.showLoader();
+    this.purchaseService.getProcurementDetailsByProcurementId(this.procurementId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(x => {
-        if (x.StatusCode === 200) {
-          // this.addProcurementForm.get('ProcurementId').patchValue(x.data.ProcurementModel.ProcurementId);
-          // this.addProcurementForm.get('EmployeeName').patchValue(x.data.ProcurementModel.EmployeeName);
-          // this.addProcurementForm.get('EmployeeId').patchValue(x.data.ProcurementModel.EmployeeId);
-         // this.dialogRef.close(this.addProcurementForm.getRawValue());
-          this.toastr.success(x.Message);
+        if (x.Procurement) {
+
+          this.addProcurementForm.patchValue({
+            'ProcurementId': x.Procurement.OrderId,
+            'PurchaseId': x.Procurement.PurchaseId,
+            'IssuedQuantity': x.Procurement.IssuedQuantity,
+            'IssuedToEmployeeId': x.Procurement.IssuedToEmployeeId,
+            'IssueDate': x.Procurement.IssueDate,
+            'ProjectId': x.Procurement.ProjectId,
+            'StoreSourceId': x.Procurement.IssedToLocation,
+            'StatusId': x.Procurement.StatusAtTimeOfIssue,
+            'MustReturn': x.Procurement.MustReturn,
+            'EmployeeName': [null],
+            'Returned': [false],
+            'VoucherNo': x.Procurement.VoucherNo,
+            'OfficeId': x.Procurement.OfficeId
+          });
+
+          this.purchaseId = x.Procurement.PurchaseId;
+          this.itemId = x.Procurement.ItemId;
+
+          this.getAllEmployeesByOfficeId(x.Procurement.OfficeId);
+
+          this.maxQuantity = x.Procurement.RemainingQuantity + x.Procurement.IssuedQuantity;
+          this.addProcurementForm.controls['IssuedQuantity'].setValidators(Validators.max(this.maxQuantity));
+          this.addProcurementForm.controls['IssuedQuantity'].updateValueAndValidity();
+
           this.commonLoader.hideLoader();
         } else if (x.StatusCode === 400) {
           this.toastr.warning(x.Message);
           this.commonLoader.hideLoader();
         }
       },
-      error => {
-        console.log(error);
-        this.commonLoader.hideLoader();
-        // console.log(error);
-      });
+        error => {
+          console.log(error);
+          this.commonLoader.hideLoader();
+          // console.log(error);
+        });
+  }
+
+  goBack() {
+    this.router.navigate(['store/purchases']);
   }
 
   //#region "onCancelPopup"

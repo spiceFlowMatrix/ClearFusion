@@ -18,6 +18,7 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() subTitle: string;
   @Input() actions: TableActionsModel;
   @Input() isDefaultAction = true;
+  @Input() isDefaultSubAction = true;
   @Input() hideColums$: Observable<{ headers: string[], items: string[] }>
 
   @Output() actionClick = new EventEmitter<any>();

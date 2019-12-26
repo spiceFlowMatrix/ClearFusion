@@ -322,7 +322,8 @@ getPurchaseFilterList(): any {
       IssueDate: StaticUtilities.getLocalDate(procurement.IssueDate),
       IssedToLocation: procurement.StoreSourceId,
       StatusAtTimeOfIssue: procurement.StatusId,
-      Project: procurement.ProjectId
+      Project: procurement.ProjectId,
+      VoucherNo: procurement.VoucherNo
     };
 
     return this.globalService
@@ -349,7 +350,8 @@ getPurchaseFilterList(): any {
       IssedToLocation: procurement.StoreSourceId,
       StatusAtTimeOfIssue: procurement.StatusId,
       Project: procurement.ProjectId,
-      Returned: procurement.Returned
+      Returned: procurement.Returned,
+      VoucherNo: procurement.VoucherNo
     };
 
     return this.globalService
@@ -419,6 +421,12 @@ getPurchaseFilterList(): any {
 getVehicleList(model: any) {
   return this.globalService
     .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_GetVehicleList, model);
+}
+
+//#region "getProcurementDetailsByProcurementId"
+getProcurementDetailsByProcurementId(id) {
+  return this.globalService
+    .getDataById(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetProcurementDetailsByProcurementId + '?id=' + id);
 }
 
 
@@ -614,7 +622,7 @@ getAllVouchers() {
   return this.http
       .get<any>(
         this.appurl.getApiUrl() +
-          GLOBAL.API_StorePurchase_GetProcurementDetailWithReturnsList + '?id=' + id);
+          GLOBAL.API_Account_GetAllVouchersWithoutFilter);
 }
 
 getPreviousYearsList(years: number): Observable<IDropDownModel[]> {

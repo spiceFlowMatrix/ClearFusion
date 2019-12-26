@@ -140,6 +140,7 @@ export interface IAddEditProcurementModel {
   IssedToLocation: number;
   StatusAtTimeOfIssue: number;
   Project: number;
+  VoucherNo: number;
 }
 
 export interface IDeleteProcurementModel {

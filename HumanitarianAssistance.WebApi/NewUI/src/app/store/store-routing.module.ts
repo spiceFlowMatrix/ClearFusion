@@ -30,7 +30,7 @@ const routes: Routes = [
       { path: 'generator/edit/:id', component: EditGeneratorComponent },
       { path: 'configuration', component: StoreConfigurationComponent },
       {path: 'purchases/procurement-control-panel/:id', component: ProcurementControlPanelComponent},
-      {path: 'purchases/add-procurement/:id', component: AddProcurementsComponent},
+      {path: 'purchases/add-procurement', component: AddProcurementsComponent},
       {path: 'purchases/edit-procurement/:id', component: AddProcurementsComponent}
     ]
   }

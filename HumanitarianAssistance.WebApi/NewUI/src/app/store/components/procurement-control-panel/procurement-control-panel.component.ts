@@ -24,13 +24,18 @@ export class ProcurementControlPanelComponent implements OnInit {
   actions: TableActionsModel;
   hideColums: Observable<{ headers?: string[], items?: string[] }>;
   procurementId: number;
+  quantity: number;
   procurementDetail: IProcurementDetailModel;
 
   @ViewChild('unittype') dialogRef: TemplateRef<any>;
 
   constructor(private router: Router, private routeActive: ActivatedRoute,
     private purchaseService: PurchaseService, private dialog: MatDialog,
-    private fb: FormBuilder, private toastr: ToastrService) { }
+    private fb: FormBuilder, private toastr: ToastrService) {
+      this.routeActive.queryParams.subscribe(params => {
+        this.quantity = +params['quantity'];
+    });
+    }
 
   ngOnInit() {
     this.onInItForm();
@@ -60,8 +65,7 @@ export class ProcurementControlPanelComponent implements OnInit {
   onReturnFormInIt() {
     this.addReturnsForm = this.fb.group({
       'Date': [null, Validators.required],
-      'Quantity': [1, [Validators.required, Validators.min(1), Validators.max(this.procurementDetail.StartingBalance -
-        this.procurementDetail.CurrentBalance)]]
+      'Quantity': [1, [Validators.required, Validators.min(1), Validators.max(this.quantity)]]
     });
   }
 
@@ -83,8 +87,6 @@ export class ProcurementControlPanelComponent implements OnInit {
   }
 
   actionEvents(event: any) {
-    debugger;
-
     if (event.type === 'delete') {
       this.purchaseService.deleteReturnProcurement(event.item.Id).subscribe(x=> {
         if (x) {
@@ -110,7 +112,6 @@ export class ProcurementControlPanelComponent implements OnInit {
   }
 
   saveAddReturns() {
-    debugger;
 
     if (!this.addReturnsForm.valid) {
       this.toastr.warning('Please correct form errors and submit again');
@@ -129,12 +130,30 @@ export class ProcurementControlPanelComponent implements OnInit {
     });
   }
 
+  cancelProcurement() {
+    this.purchaseService.deleteProcurement(this.procurementId)
+    .subscribe(x => {
+      if (x.StatusCode === 200) {
+        this.goToListingPage();
+        this.toastr.success(x.Message);
+      } else {
+        this.toastr.warning(x.Message);
+      }
+    },
+      (error) => {
+        this.toastr.error(error);
+      });
+  }
+
+  editProcurement() {
+    this.router.navigate(['store/purchases/edit-procurement/' + this.procurementId]);
+  }
+
   getProcurementDetails() {
     if (this.procurementId) {
       this.purchaseService.getProcurementDetailWithReturnsList(this.procurementId)
         .subscribe(x => {
           if (x && x.ProcurementDetail) {
-            debugger;
             this.procurementDetail.Id = x.ProcurementDetail.Id;
             this.procurementDetail.Date = x.ProcurementDetail.Date;
             this.procurementDetail.ItemCode = x.ProcurementDetail.ItemCode;

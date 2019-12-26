@@ -1,7 +1,7 @@
 <lib-sub-header-template>
-  <span class="action_header">Procurement Control Panel
+  <span class="action_header"> <i (click)="goToListingPage()" class="fas fa-arrow-left"></i> &nbsp; &nbsp; Procurement Control Panel
     <hum-button [type]="'edit'" [text]="'EDIT'" (click)="editProcurement()"></hum-button>
-    <hum-button [type]="'cancel'" [text]="'CANCEL PROCUREMENT'" (click)="goToListingPage()"></hum-button>
+    <hum-button [type]="'cancel'" [text]="'CANCEL PROCUREMENT'" (click)="cancelProcurement()"></hum-button>
   </span>
 </lib-sub-header-template>
 <mat-divider></mat-divider>
@@ -92,7 +92,7 @@
         <div class="col-sm-6">
           <mat-form-field>
             <input type="number" matInput formControlName="Quantity" placeholder="Quantity">
-            <!-- <mat-error *ngIf="addReturnsForm.Control['Quantity'].errors.max">Maximum returned quantity should be less or equal to {{procurementDetail.StartingBalance - procurementDetail.CurrentBalance}}</mat-error> -->
+            <mat-error *ngIf="addReturnsForm.controls['Quantity'].hasError('max')">Max return quantity allowed is {{quantity}}</mat-error>
             <mat-error>Required</mat-error>
           </mat-form-field>
         </div>
