@@ -10,7 +10,11 @@ import { applicationPages } from '../../../shared/application-pages-enum';
 import { CommonService } from '../../../service/common.service';
 import { AppSettingsService } from '../../../service/app-settings.service';
 import { UploadModel } from '../../../shared/FileManagement/file-management-model';
-import { DocumentFileTypes, FileSourceEntityTypes, EmployeeType } from '../../../shared/enums';
+import {
+  DocumentFileTypes,
+  FileSourceEntityTypes,
+  EmployeeType
+} from '../../../shared/enums';
 import { FileManagementService } from '../../../shared/FileManagement/file-management.service';
 import { JobHiringService } from '../job-hiring-details/job-hiring.service';
 import { IDatasource } from '../../../shared/pipes/job-grade.pipe';
@@ -188,17 +192,6 @@ export class EmployeesComponent implements OnInit {
     this.routeActive.queryParams.subscribe(params => {
       this.newEmployeeId = +params['empCode'];
     });
-    if (this.newEmployeeId != null) {
-      console.log('active');
-    //   this.loading = true;
-    //   this.selectedItemEmployee = this.newEmployeeId;
-    //   this.openInfoTab = 0;
-    //   this.selectedIndex = 0;
-    //   // this.showActiveEmployeeData = this.newEmployeeId;
-    //   this.GetEmployeeDetailsByEmployeeId(this.newEmployeeId);
-    //   this.employeeId = this.newEmployeeId;
-    //   localStorage.setItem('SelectedEmployee', this.newEmployeeId !== undefined ? this.newEmployeeId.toString() : '');
-    }
   }
 
   constructor(
@@ -234,6 +227,28 @@ export class EmployeesComponent implements OnInit {
       this.setting.getDocUrl() + 'nodoc.pdf'
     );
   }
+  testing() {
+    this.hrService
+      .GetEmployeesDetailsByEmployeeId(
+        this.setting.getBaseUrl() + GLOBAL.API_Hr_GetEmployeeById,
+        this.newEmployeeId
+      )
+      .subscribe(data => {
+        this.showActiveEmployeeData = data;
+      });
+    this.loading = true;
+    this.selectedItemEmployee = this.newEmployeeId;
+
+    this.openInfoTab = 0;
+    this.selectedIndex = 0;
+
+    this.GetEmployeeDetailsByEmployeeId(this.newEmployeeId);
+    this.employeeId = this.newEmployeeId;
+    localStorage.setItem(
+      'SelectedEmployee',
+      this.employeeId !== undefined ? this.employeeId.toString() : ''
+    );
+  }
 
   employeeFormInitialize() {
     this.empGeneral = {
@@ -247,9 +262,11 @@ export class EmployeesComponent implements OnInit {
       Phone: null,
       Email: null,
       SexId: null,
-      DateOfBirth: new Date(new Date().getFullYear() - 18,
+      DateOfBirth: new Date(
+        new Date().getFullYear() - 18,
         new Date().getMonth(),
-        new Date().getDate()),
+        new Date().getDate()
+      ),
       Age: null,
       CurrentAddress: null,
       EmployeePhoto: null,
@@ -266,9 +283,11 @@ export class EmployeesComponent implements OnInit {
       GradeId: null,
       OpeningPension: 0,
       EmployeeContractTypeId: null,
-      HiredOn: new Date(new Date().getFullYear(),
-      new Date().getMonth(),
-      new Date().getDate()),
+      HiredOn: new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        new Date().getDate()
+      ),
       FiredOn: null,
       FiredReason: null,
       ResignationOn: null,
@@ -280,13 +299,12 @@ export class EmployeesComponent implements OnInit {
   }
 
   allFormInitialize() {
-
     this.empDocuments = {
       DocumentName: null,
       DocumentDate: null,
       DocumentFilePath: null,
       EmployeeID: null,
-      DocumentType: null,
+      DocumentType: null
     };
 
     this.empHealthInfo = {
@@ -396,7 +414,7 @@ export class EmployeesComponent implements OnInit {
       {
         id: 6,
         text: 'Employee Information'
-      },
+      }
     ];
   }
   //#endregion
@@ -443,48 +461,47 @@ export class EmployeesComponent implements OnInit {
       EntityId: this.employeeId,
       File: this.employeeImage,
       DocumentFileId: null
-  };
-    this.fileManagementService.uploadFile(dataModelImage)
-      .subscribe(
-        data => {
-          if (data.StatusCode === 200) {
-            this.toastr.success('Image Updated Successfully!');
-            this.showData.EmployeePhoto = this.imageURL;
-            if (this.tabEventValue === 1) {
-              const itemIndex = this.prospectiveEmployeeInfo.findIndex(
-                i => i.EmployeeID === this.employeeId
-              );
-              this.prospectiveEmployeeInfo[
-                itemIndex
-              ].EmployeePhoto = this.imageURL;
-            } else if (this.tabEventValue === 2) {
-              const itemIndex = this.activeEmployeeInfo.findIndex(
-                i => i.EmployeeID === this.employeeId
-              );
-              this.activeEmployeeInfo[itemIndex].EmployeePhoto = this.imageURL;
-            } else if (this.tabEventValue === 3) {
-              const itemIndex = this.terminatedEmployeeInfo.findIndex(
-                i => i.EmployeeID === this.employeeId
-              );
-              this.terminatedEmployeeInfo[
-                itemIndex
-              ].EmployeePhoto = this.imageURL;
-            }
-            this.closeImageUpdateForm();
-            // tslint:disable-next-line:curly
-          } else this.toastr.error('Something went wrong!');
-          this.profileImageChangePopupLoading = false;
-        },
-        error => {
-          if (error.StatusCode === 500) {
-            this.toastr.error('Internal Server Error....');
-          } else if (error.StatusCode === 401) {
-            this.toastr.error('Unauthorized Access Error....');
-          } else if (error.StatusCode === 403) {
-            this.toastr.error('Forbidden Error....');
+    };
+    this.fileManagementService.uploadFile(dataModelImage).subscribe(
+      data => {
+        if (data.StatusCode === 200) {
+          this.toastr.success('Image Updated Successfully!');
+          this.showData.EmployeePhoto = this.imageURL;
+          if (this.tabEventValue === 1) {
+            const itemIndex = this.prospectiveEmployeeInfo.findIndex(
+              i => i.EmployeeID === this.employeeId
+            );
+            this.prospectiveEmployeeInfo[
+              itemIndex
+            ].EmployeePhoto = this.imageURL;
+          } else if (this.tabEventValue === 2) {
+            const itemIndex = this.activeEmployeeInfo.findIndex(
+              i => i.EmployeeID === this.employeeId
+            );
+            this.activeEmployeeInfo[itemIndex].EmployeePhoto = this.imageURL;
+          } else if (this.tabEventValue === 3) {
+            const itemIndex = this.terminatedEmployeeInfo.findIndex(
+              i => i.EmployeeID === this.employeeId
+            );
+            this.terminatedEmployeeInfo[
+              itemIndex
+            ].EmployeePhoto = this.imageURL;
           }
+          this.closeImageUpdateForm();
+          // tslint:disable-next-line:curly
+        } else this.toastr.error('Something went wrong!');
+        this.profileImageChangePopupLoading = false;
+      },
+      error => {
+        if (error.StatusCode === 500) {
+          this.toastr.error('Internal Server Error....');
+        } else if (error.StatusCode === 401) {
+          this.toastr.error('Unauthorized Access Error....');
+        } else if (error.StatusCode === 403) {
+          this.toastr.error('Forbidden Error....');
         }
-      );
+      }
+    );
   }
   //#endregion
 
@@ -524,8 +541,6 @@ export class EmployeesComponent implements OnInit {
   //   this.AddEmployeeDocument(data);
   // }
 
-
-
   // Add Document with file uploader
   onFormSubmitDocAdd(data: any) {
     this.addDocPopupLoading = true;
@@ -536,31 +551,30 @@ export class EmployeesComponent implements OnInit {
       EntityId: this.employeeId,
       File: this.imageURLDoc,
       DocumentFileId: null
-  };
-    this.fileManagementService.uploadFile(dataModelImage)
-      .subscribe(
-        data => {
-          if (data.StatusCode === 200) {
-            this.toastr.success('Document Uploaded Successfully');
-            this.popupVisibleAddDoc = false;
-            this.addDocPopupLoading = false;
-            this.getEmployeeDocument(this.employeeId);
-          } else {
-            this.addDocPopupLoading = false;
-            this.toastr.error('Something went wrong!');
-          }
-        },
-        error => {
+    };
+    this.fileManagementService.uploadFile(dataModelImage).subscribe(
+      data => {
+        if (data.StatusCode === 200) {
+          this.toastr.success('Document Uploaded Successfully');
+          this.popupVisibleAddDoc = false;
           this.addDocPopupLoading = false;
-          if (error.StatusCode === 500) {
-            this.toastr.error('Internal Server Error....');
-          } else if (error.StatusCode === 401) {
-            this.toastr.error('Unauthorized Access Error....');
-          } else if (error.StatusCode === 403) {
-            this.toastr.error('Forbidden Error....');
-          }
+          this.getEmployeeDocument(this.employeeId);
+        } else {
+          this.addDocPopupLoading = false;
+          this.toastr.error('Something went wrong!');
         }
-      );
+      },
+      error => {
+        this.addDocPopupLoading = false;
+        if (error.StatusCode === 500) {
+          this.toastr.error('Internal Server Error....');
+        } else if (error.StatusCode === 401) {
+          this.toastr.error('Unauthorized Access Error....');
+        } else if (error.StatusCode === 403) {
+          this.toastr.error('Forbidden Error....');
+        }
+      }
+    );
   }
   //#endregion
 
@@ -570,30 +584,26 @@ export class EmployeesComponent implements OnInit {
       DocumentTypeId: DocumentFileTypes.EmployeeDocument,
       PageId: FileSourceEntityTypes.Employee,
       // tslint:disable-next-line: radix
-      RecordId: employeeId,
+      RecordId: employeeId
     };
 
-    this.fileManagementService
-        .GetDocumentFiles(model)
-        .subscribe(x => {
-          if (x.data.DocumentFileList !== undefined) {
-
-            x.data.DocumentFileList.forEach(y => {
-              this.DocumentFileList.push({
-                FileName: y.FileName,
-                FilePath: y.FilePath,
-                DocumentFileId: y.DocumentFileId,
-                DocumentTypeId: y.DocumentTypeId,
-                FileSignedUrl: y.FileSignedURL,
-              });
-            });
-
-            this.showDocumentData = this.DocumentFileList;
-            this.selectedDropdown = this.DocumentFileList[0].FileName;
-          }
+    this.fileManagementService.GetDocumentFiles(model).subscribe(x => {
+      if (x.data.DocumentFileList !== undefined) {
+        x.data.DocumentFileList.forEach(y => {
+          this.DocumentFileList.push({
+            FileName: y.FileName,
+            FilePath: y.FilePath,
+            DocumentFileId: y.DocumentFileId,
+            DocumentTypeId: y.DocumentTypeId,
+            FileSignedUrl: y.FileSignedURL
+          });
         });
-  }
 
+        this.showDocumentData = this.DocumentFileList;
+        this.selectedDropdown = this.DocumentFileList[0].FileName;
+      }
+    });
+  }
 
   // Event Fire on image Selection
   onImageSelectDoc(event: any) {
@@ -719,11 +729,13 @@ export class EmployeesComponent implements OnInit {
 
     // this.hiredOnDate = model.HiredOn;
     localStorage.setItem('HIREDON', model.HiredOn);
-    localStorage.setItem('SelectedEmployee', this.employeeId !== undefined ? this.employeeId.toString() : '');
+    localStorage.setItem(
+      'SelectedEmployee',
+      this.employeeId !== undefined ? this.employeeId.toString() : ''
+    );
   }
 
   displayActiveEmpDetails(model) {
-    console.log(model);
     this.loading = true;
     this.selectedItemEmployee = model.EmployeeId;
 
@@ -733,7 +745,10 @@ export class EmployeesComponent implements OnInit {
     this.showActiveEmployeeData = model;
     this.GetEmployeeDetailsByEmployeeId(model.EmployeeID);
     this.employeeId = model.EmployeeID;
-    localStorage.setItem('SelectedEmployee', this.employeeId !== undefined ? this.employeeId.toString() : '');
+    localStorage.setItem(
+      'SelectedEmployee',
+      this.employeeId !== undefined ? this.employeeId.toString() : ''
+    );
     // this.showData =this.employeeListDetail;
   }
 
@@ -747,8 +762,10 @@ export class EmployeesComponent implements OnInit {
     this.showTerminatedEmployeeData = model;
     this.GetEmployeeDetailsByEmployeeId(model.EmployeeID);
     this.employeeId = model.EmployeeID;
-    localStorage.setItem('SelectedEmployee', this.employeeId !== undefined ? this.employeeId.toString() : '');
-
+    localStorage.setItem(
+      'SelectedEmployee',
+      this.employeeId !== undefined ? this.employeeId.toString() : ''
+    );
   }
   //#endregion
 
@@ -777,7 +794,10 @@ export class EmployeesComponent implements OnInit {
               });
             });
 
-            const AllOffices = localStorage.getItem('ALLOFFICES') != null ? localStorage.getItem('ALLOFFICES').split(',') : [];
+            const AllOffices =
+              localStorage.getItem('ALLOFFICES') != null
+                ? localStorage.getItem('ALLOFFICES').split(',')
+                : [];
 
             data.data.OfficeDetailsList.forEach(element => {
               const officeFound = AllOffices.indexOf('' + element.OfficeId);
@@ -803,8 +823,10 @@ export class EmployeesComponent implements OnInit {
                   ? this.officeDropdownList[0].OfficeId
                   : this.selectedOffice;
             } else {
-                // tslint:disable-next-line:radix
-              this.selectedOffice = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
+              // tslint:disable-next-line:radix
+              this.selectedOffice = parseInt(
+                localStorage.getItem('EMPLOYEEOFFICEID')
+              );
             }
 
             this.tabOnClick(2); // default selected value
@@ -838,10 +860,10 @@ export class EmployeesComponent implements OnInit {
           this.professionTypeDropdown = [];
           data != null || data !== undefined
             ? data.data.ProfessionList.forEach(element => {
-              this.professionTypeDropdown.push(element);
-            })
+                this.professionTypeDropdown.push(element);
+              })
             : // tslint:disable-next-line:no-unused-expression
-            null;
+              null;
         },
         error => {
           if (error.StatusCode === 500) {
@@ -867,10 +889,10 @@ export class EmployeesComponent implements OnInit {
           this.qualificationTypeDropdown = [];
           data != null || data !== undefined
             ? data.data.QualificationDetailsList.forEach(element => {
-              this.qualificationTypeDropdown.push(element);
-            })
+                this.qualificationTypeDropdown.push(element);
+              })
             : // tslint:disable-next-line:no-unused-expression
-            null;
+              null;
         },
         error => {
           if (error.StatusCode === 500) {
@@ -894,10 +916,10 @@ export class EmployeesComponent implements OnInit {
           this.countryTypeDropdown = [];
           data != null || data !== undefined
             ? data.data.CountryDetailsList.forEach(element => {
-              this.countryTypeDropdown.push(element);
-            })
+                this.countryTypeDropdown.push(element);
+              })
             : // tslint:disable-next-line:no-unused-expression
-            null;
+              null;
         },
         error => {
           if (error.StatusCode === 500) {
@@ -934,10 +956,10 @@ export class EmployeesComponent implements OnInit {
           this.stateTypeDropdown = [];
           data != null || data !== undefined
             ? data.data.ProvinceDetailsList.forEach(element => {
-              this.stateTypeDropdown.push(element);
-            })
+                this.stateTypeDropdown.push(element);
+              })
             : // tslint:disable-next-line:no-unused-expression
-            null;
+              null;
         },
         error => {
           if (error.StatusCode === 500) {
@@ -1057,9 +1079,13 @@ export class EmployeesComponent implements OnInit {
               this.showData.length > 0
             ) {
               if (this.employeeId === 0) {
-                this.GetEmployeeDetailsByEmployeeId(
-                  this.showData[0].EmployeeID
-                );
+                if (this.newEmployeeId != null) {
+                  this.testing();
+                } else {
+                  this.GetEmployeeDetailsByEmployeeId(
+                    this.showData[0].EmployeeID
+                  );
+                }
                 this.employeeId = this.showData[0].EmployeeID;
                 localStorage.setItem('HIREDON', this.showData[0].HiredOn);
               } else {
@@ -1151,13 +1177,14 @@ export class EmployeesComponent implements OnInit {
           data => {
             if (
               data.StatusCode === 200 &&
-              data.data.EmployeeDetailList != null && data.data.EmployeeDetailList.length > 0
+              data.data.EmployeeDetailList != null &&
+              data.data.EmployeeDetailList.length > 0
             ) {
               this.employeeListDetail = [];
               data.data.EmployeeDetailList.forEach(element => {
                 this.employeeListDetail.push(element);
               });
-              // this.showData = this.employeeListDetail[0];
+              this.showData = this.employeeListDetail[0];
               // this.showData.EmployeePhoto =
               //   this.showData.DocumentGUID != null &&
               //     this.showData.DocumentGUID !== ''
@@ -1170,7 +1197,9 @@ export class EmployeesComponent implements OnInit {
               );
               localStorage.setItem(
                 'SelectedEmployeeName',
-                this.showData !== undefined ? this.showData.EmployeeName.toString() : ''
+                this.showData !== undefined
+                  ? this.showData.EmployeeName.toString()
+                  : ''
               );
               this.commonService.setLoader(false);
             } else {
@@ -1198,8 +1227,12 @@ export class EmployeesComponent implements OnInit {
     this.addEmployeePopupLoading = true;
 
     const generalInfo: GeneralInfo = {
-      EmployeeTypeId: this.tabEventValue === EmployeeType.Prospective ? EmployeeType.Prospective :
-                      this.tabEventValue === EmployeeType.Active ? EmployeeType.Active : EmployeeType.Terminated,
+      EmployeeTypeId:
+        this.tabEventValue === EmployeeType.Prospective
+          ? EmployeeType.Prospective
+          : this.tabEventValue === EmployeeType.Active
+          ? EmployeeType.Active
+          : EmployeeType.Terminated,
       EmployeePhoto: this.imageURL,
       Resume: this.fileURL,
       CountryId: this.countryId,
@@ -1238,15 +1271,21 @@ export class EmployeesComponent implements OnInit {
       TinNumber: value.TinNumber,
       GradeId: value.GradeId,
       OpeningPension: value.OpeningPension,
-      EmployeeContractTypeId: this.tabEventValue === EmployeeType.Active ? value.EmployeeContractTypeId : null,
-      HiredOn: this.tabEventValue === EmployeeType.Active ? new Date(
-        new Date(value.HiredOn).getFullYear(),
-        new Date(value.HiredOn).getMonth(),
-        new Date(value.HiredOn).getDate(),
-        new Date().getHours(),
-        new Date().getMinutes(),
-        new Date().getSeconds()
-      ) : value.HiredOn,
+      EmployeeContractTypeId:
+        this.tabEventValue === EmployeeType.Active
+          ? value.EmployeeContractTypeId
+          : null,
+      HiredOn:
+        this.tabEventValue === EmployeeType.Active
+          ? new Date(
+              new Date(value.HiredOn).getFullYear(),
+              new Date(value.HiredOn).getMonth(),
+              new Date(value.HiredOn).getDate(),
+              new Date().getHours(),
+              new Date().getMinutes(),
+              new Date().getSeconds()
+            )
+          : value.HiredOn,
       FiredOn: value.FiredOn,
       FiredReason: value.FiredReason,
       ResignationOn: value.ResignationOn,
@@ -1272,16 +1311,16 @@ export class EmployeesComponent implements OnInit {
 
             let showLeavePopUp = false;
 
-              if (generalInfo.EmployeeTypeId !== EmployeeType.Prospective) {
-                showLeavePopUp = true;
-              }
+            if (generalInfo.EmployeeTypeId !== EmployeeType.Prospective) {
+              showLeavePopUp = true;
+            }
 
-              const employeeLeavePopUpData = {
-                employeeid: this.employeeId,
-                displayLeavePopUp: showLeavePopUp
-              };
+            const employeeLeavePopUpData = {
+              employeeid: this.employeeId,
+              displayLeavePopUp: showLeavePopUp
+            };
 
-              this.triggerEmployeeLeavePopUp(employeeLeavePopUpData);
+            this.triggerEmployeeLeavePopUp(employeeLeavePopUpData);
 
             // if (data.LoggerDetailsModel != null) {
             // }
@@ -1522,9 +1561,9 @@ export class EmployeesComponent implements OnInit {
 
   fireNotification(model) {
     if (model !== undefined) {
-    model.CreatedDate = new Date();
-    model.NotificationPath = './hr/employees';
-    this.commonService.sendMessage(model);
+      model.CreatedDate = new Date();
+      model.NotificationPath = './hr/employees';
+      this.commonService.sendMessage(model);
     }
   }
 
@@ -1549,7 +1588,7 @@ export class EmployeesComponent implements OnInit {
               this.disabledDates.push(
                 new Date(
                   new Date(element.Date).getTime() -
-                  new Date().getTimezoneOffset() * 60000
+                    new Date().getTimezoneOffset() * 60000
                 )
               );
             });
@@ -1733,11 +1772,11 @@ export class EmployeesComponent implements OnInit {
               this.financialYearDropdown.push({
                 StartDate: new Date(
                   new Date(element.StartDate).getTime() -
-                  new Date().getTimezoneOffset() * 60000
+                    new Date().getTimezoneOffset() * 60000
                 ),
                 EndDate: new Date(
                   new Date(element.EndDate).getTime() -
-                  new Date().getTimezoneOffset() * 60000
+                    new Date().getTimezoneOffset() * 60000
                 ),
                 FinancialYearId: element.FinancialYearId,
                 FinancialYearName: element.FinancialYearName
@@ -1814,7 +1853,7 @@ export class EmployeesComponent implements OnInit {
     this.hrService
       .AddByModel(
         this.setting.getBaseUrl() +
-        GLOBAL.API_EmployeeHR_AddEmployeeLeaveDetails,
+          GLOBAL.API_EmployeeHR_AddEmployeeLeaveDetails,
         this.selectedLeaveList
       )
       .subscribe(
@@ -1936,10 +1975,12 @@ export class EmployeesComponent implements OnInit {
 
   checkEmailAlreadyExists(email: string) {
     this.hrService
-      .CheckUserEmailAlreadyExists(this.setting.getBaseUrl() + GLOBAL.API_HR_CheckUserEmailAlreadyExists, email)
+      .CheckUserEmailAlreadyExists(
+        this.setting.getBaseUrl() + GLOBAL.API_HR_CheckUserEmailAlreadyExists,
+        email
+      )
       .subscribe(
         data => {
-
           if (data) {
             this.toastr.warning('Email already exists');
             this.empGeneral.Email = '';
@@ -1959,73 +2000,96 @@ export class EmployeesComponent implements OnInit {
 
   passwordComparison = () => {
     return this.empGeneral.Password;
-}
+  };
 
-checkComparison() {
+  checkComparison() {
     return true;
-}
-
-validateAddEmployeeForm() {
-  if (this.tabEventValue === 2) {
-    if ((this.empGeneral.EmployeeName == null || this.empGeneral.EmployeeName === '') ||
-    (this.empGeneral.FatherName == null || this.empGeneral.FatherName === '' ) ||
-      (this.empGeneral.Email == null || this.empGeneral.Email === '') ||
-      (this.empGeneral.TinNumber == null || this.empGeneral.TinNumber === '') ||
-      this.empGeneral.GradeId == null ||
-      (this.empGeneral.Phone == null || this.empGeneral.Phone === '')  ||
-      this.empGeneral.CountryId == null || this.empGeneral.EmployeeContractTypeId == null ||
-      (this.empGeneral.HiredOn == null || this.empGeneral.HiredOn === '') ||
-      (this.empGeneral.Password == null || this.empGeneral.Password === '')) {
-        this.toastr.warning('Required fields are not filled out');
-      }
-  } else if (this.tabEventValue === 1) {
-    if ((this.empGeneral.EmployeeName == null || this.empGeneral.EmployeeName === '') ||
-    (this.empGeneral.FatherName == null || this.empGeneral.FatherName === '' ) ||
-      (this.empGeneral.Email == null || this.empGeneral.Email === '') ||
-      (this.empGeneral.TinNumber == null || this.empGeneral.TinNumber === '') ||
-      this.empGeneral.GradeId == null ||
-      (this.empGeneral.Phone == null || this.empGeneral.Phone === '')  ||
-      this.empGeneral.CountryId == null || (this.empGeneral.Password == null || this.empGeneral.Password === '')) {
-        this.toastr.warning('Required fields are not filled out');
-      }
-  } else {
-      if ((this.empGeneral.EmployeeName == null || this.empGeneral.EmployeeName === '') ||
-      (this.empGeneral.FatherName == null || this.empGeneral.FatherName === '' ) ||
-      (this.empGeneral.Email == null || this.empGeneral.Email === '') ||
-      (this.empGeneral.TinNumber == null || this.empGeneral.TinNumber === '') ||
-      this.empGeneral.GradeId == null ||
-      (this.empGeneral.Phone == null || this.empGeneral.Phone === '')  ||
-      this.empGeneral.CountryId == null || (this.empGeneral.Password == null || this.empGeneral.Password === '')) {
-        this.toastr.warning('Required fields are not filled out');
-      }
   }
-}
 
-getAttendanceGroupList() {
-  this.codeservice.GetAllDetails(this.setting.getBaseUrl() + GLOBAL.API_Code_GetAttendanceGroups)
-    .subscribe(data => {
-      this.attendanceGroupList = [];
-      if (data.StatusCode === 200) {
-        if (data.data.AttendanceGroupMasterList.length > 0
-          || data.data.AttendanceGroupMasterList !== undefined
-          || data.data.AttendanceGroupMasterList !== null) {
-          data.data.AttendanceGroupMasterList.forEach(element => {
-            this.attendanceGroupList.push(element);
-          });
+  validateAddEmployeeForm() {
+    if (this.tabEventValue === 2) {
+      if (
+        this.empGeneral.EmployeeName == null ||
+        this.empGeneral.EmployeeName === '' ||
+        this.empGeneral.FatherName == null ||
+          this.empGeneral.FatherName === '' ||
+        this.empGeneral.Email == null || this.empGeneral.Email === '' ||
+        this.empGeneral.TinNumber == null || this.empGeneral.TinNumber === '' ||
+        this.empGeneral.GradeId == null ||
+        this.empGeneral.Phone == null || this.empGeneral.Phone === '' ||
+        this.empGeneral.CountryId == null ||
+        this.empGeneral.EmployeeContractTypeId == null ||
+        this.empGeneral.HiredOn == null || this.empGeneral.HiredOn === '' ||
+        this.empGeneral.Password == null || this.empGeneral.Password === ''
+      ) {
+        this.toastr.warning('Required fields are not filled out');
+      }
+    } else if (this.tabEventValue === 1) {
+      if (
+        this.empGeneral.EmployeeName == null ||
+        this.empGeneral.EmployeeName === '' ||
+        this.empGeneral.FatherName == null ||
+          this.empGeneral.FatherName === '' ||
+        this.empGeneral.Email == null || this.empGeneral.Email === '' ||
+        this.empGeneral.TinNumber == null || this.empGeneral.TinNumber === '' ||
+        this.empGeneral.GradeId == null ||
+        this.empGeneral.Phone == null || this.empGeneral.Phone === '' ||
+        this.empGeneral.CountryId == null ||
+        this.empGeneral.Password == null || this.empGeneral.Password === ''
+      ) {
+        this.toastr.warning('Required fields are not filled out');
+      }
+    } else {
+      if (
+        this.empGeneral.EmployeeName == null ||
+        this.empGeneral.EmployeeName === '' ||
+        this.empGeneral.FatherName == null ||
+          this.empGeneral.FatherName === '' ||
+        this.empGeneral.Email == null || this.empGeneral.Email === '' ||
+        this.empGeneral.TinNumber == null || this.empGeneral.TinNumber === '' ||
+        this.empGeneral.GradeId == null ||
+        this.empGeneral.Phone == null || this.empGeneral.Phone === '' ||
+        this.empGeneral.CountryId == null ||
+        this.empGeneral.Password == null || this.empGeneral.Password === ''
+      ) {
+        this.toastr.warning('Required fields are not filled out');
+      }
+    }
+  }
+
+  getAttendanceGroupList() {
+    this.codeservice
+      .GetAllDetails(
+        this.setting.getBaseUrl() + GLOBAL.API_Code_GetAttendanceGroups
+      )
+      .subscribe(
+        data => {
+          this.attendanceGroupList = [];
+          if (data.StatusCode === 200) {
+            if (
+              data.data.AttendanceGroupMasterList.length > 0 ||
+              data.data.AttendanceGroupMasterList !== undefined ||
+              data.data.AttendanceGroupMasterList !== null
+            ) {
+              data.data.AttendanceGroupMasterList.forEach(element => {
+                this.attendanceGroupList.push(element);
+              });
+            }
+          } else {
+            this.toastr.error(data.Message);
+          }
+        },
+        error => {
+          if (error.StatusCode === 500) {
+            this.toastr.error('Internal Server Error....');
+          } else if (error.StatusCode === 401) {
+            this.toastr.error('Unauthorized Access Error....');
+          } else if (error.StatusCode === 403) {
+            this.toastr.error('Forbidden Error....');
+          }
         }
-      } else {
-        this.toastr.error(data.Message);
-      }
-    }, error => {
-      if (error.StatusCode === 500) {
-        this.toastr.error('Internal Server Error....');
-      } else if (error.StatusCode === 401) {
-        this.toastr.error('Unauthorized Access Error....');
-      } else if (error.StatusCode === 403) {
-        this.toastr.error('Forbidden Error....');
-      }
-    });
-}
+      );
+  }
 
   functionCache = {};
   validateRange(min, max) {
