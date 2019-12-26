@@ -227,7 +227,7 @@ export class EmployeesComponent implements OnInit {
       this.setting.getDocUrl() + 'nodoc.pdf'
     );
   }
-  testing() {
+  GetEmployeeDetailsOnSelectedEmployeeId() {
     this.hrService
       .GetEmployeesDetailsByEmployeeId(
         this.setting.getBaseUrl() + GLOBAL.API_Hr_GetEmployeeById,
@@ -246,7 +246,7 @@ export class EmployeesComponent implements OnInit {
     this.employeeId = this.newEmployeeId;
     localStorage.setItem(
       'SelectedEmployee',
-      this.employeeId !== undefined ? this.employeeId.toString() : ''
+      this.newEmployeeId !== undefined ? this.newEmployeeId.toString() : ''
     );
   }
 
@@ -1080,7 +1080,7 @@ export class EmployeesComponent implements OnInit {
             ) {
               if (this.employeeId === 0) {
                 if (this.newEmployeeId != null) {
-                  this.testing();
+                  this.GetEmployeeDetailsOnSelectedEmployeeId();
                 } else {
                   this.GetEmployeeDetailsByEmployeeId(
                     this.showData[0].EmployeeID
