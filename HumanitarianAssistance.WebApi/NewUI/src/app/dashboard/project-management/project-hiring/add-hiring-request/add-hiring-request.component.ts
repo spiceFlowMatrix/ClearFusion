@@ -433,7 +433,6 @@ export class AddHiringRequestComponent implements OnInit {
       if (this.hiringRequestId === 0) {
         this.AddHiringRequest(this.addHiringRequestForm.getRawValue());
       } else {
-        console.log(this.addHiringRequestForm.getRawValue());
         this.EditHiringRequest(this.addHiringRequestForm.getRawValue());
       }
     }
