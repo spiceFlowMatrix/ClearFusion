@@ -26,7 +26,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
         public async Task<byte[]> Handle(GetLogisticGoodsNoteReportPdfQuery request, CancellationToken cancellationToken)
         {
             LogisticGoodsNoteReportModel model = new LogisticGoodsNoteReportModel();
-            
+
             try
             {
                 var query = _dbContext.ProjectLogisticItems
@@ -39,36 +39,36 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                         .Where(x => x.IsDeleted == false && x.LogisticRequestsId == request.LogisticRequestId)
                                                         .AsQueryable();
 
-                  model= query.Select(x => new LogisticGoodsNoteReportModel
-                                                        {
-                                                            Number = x.ProjectLogisticRequests.LogisticRequestsId,
-                                                            ProjectCode = x.ProjectLogisticRequests.ProjectDetail.ProjectCode,
-                                                            JobCode = x.ProjectLogisticRequests.ProjectBudgetLineDetail.ProjectJobDetail.ProjectJobCode,
-                                                            PurchaseDate = x.ProjectLogisticRequests.PurchaseDate!=null ? x.ProjectLogisticRequests.PurchaseDate.Value.ToShortDateString():"",
-                                                            BudgetLine = x.ProjectLogisticRequests.ProjectBudgetLineDetail.BudgetCode,
-                                                            HeaderLogo =  _env.WebRootFileProvider.GetFileInfo("ReportLogo/headertop.png").PhysicalPath,
-                                                            ChaDesignLogo = _env.WebRootFileProvider.GetFileInfo("ReportLogo/humanitarianLogo.png").PhysicalPath,
-                                                            ApplySheetText = _env.WebRootFileProvider.GetFileInfo("ReportLogo/goodsText.png").PhysicalPath,
-                                                            InstructionText = _env.WebRootFileProvider.GetFileInfo("ReportLogo/guidelineText.png").PhysicalPath,
+                model = query.Select(x => new LogisticGoodsNoteReportModel
+                {
+                    Number = x.ProjectLogisticRequests.LogisticRequestsId,
+                    ProjectCode = x.ProjectLogisticRequests.ProjectDetail.ProjectCode,
+                    JobCode = x.ProjectLogisticRequests.ProjectBudgetLineDetail.ProjectJobDetail.ProjectJobCode,
+                    PurchaseDate = x.ProjectLogisticRequests.PurchaseDate != null ? x.ProjectLogisticRequests.PurchaseDate.Value.ToShortDateString() : "",
+                    BudgetLine = x.ProjectLogisticRequests.ProjectBudgetLineDetail.BudgetCode,
+                    HeaderLogo = _env.WebRootFileProvider.GetFileInfo("ReportLogo/headertop.png").PhysicalPath,
+                    ChaDesignLogo = _env.WebRootFileProvider.GetFileInfo("ReportLogo/humanitarianLogo.png").PhysicalPath,
+                    ApplySheetText = _env.WebRootFileProvider.GetFileInfo("ReportLogo/goodsText.png").PhysicalPath,
+                    InstructionText = _env.WebRootFileProvider.GetFileInfo("ReportLogo/guidelineText.png").PhysicalPath,
+                    OfficeName = x.ProjectLogisticRequests.OfficeDetail.OfficeName
+                }).FirstOrDefault();
 
-                                                        }).FirstOrDefault();
+
+                model.GoodsNoteAmountModel = query.Select(x => new GoodsNoteAmountModel
+                {
+                    ItemDescription = x.StoreInventoryItem.ItemName,
+                    Quantity = x.Quantity,
+                    UnitPrice = x.EstimatedUnitCost,
+                    ToBePurchased = x.Quantity,
+                    EstimatedAmount = (x.Quantity * x.EstimatedUnitCost),
 
 
-                model.GoodsNoteAmountModel = query.Select(x=> new GoodsNoteAmountModel
-                                                            {
-                                                                ItemDescription = x.StoreInventoryItem.ItemName,
-                                                                Quantity = x.Quantity,
-                                                                UnitPrice = x.EstimatedUnitCost, 
-                                                                ToBePurchased = x.Quantity,
-                                                                EstimatedAmount = (x.Quantity * x.EstimatedUnitCost),
-                                                              
+                }).ToList();
 
-                                                            }).ToList();
-                
-                model.TotalQuantity =  model.GoodsNoteAmountModel.Sum(x=>x.Quantity);
-                model.TotalUnitPrice = model.GoodsNoteAmountModel.Sum(x=>x.UnitPrice);
-                model.TotalEstimatedAmount = model.GoodsNoteAmountModel.Sum(x=>x.EstimatedAmount);
-                                                         
+                model.TotalQuantity = model.GoodsNoteAmountModel.Sum(x => x.Quantity);
+                model.TotalUnitPrice = model.GoodsNoteAmountModel.Sum(x => x.UnitPrice);
+                model.TotalEstimatedAmount = model.GoodsNoteAmountModel.Sum(x => x.EstimatedAmount);
+
             }
             catch (Exception ex)
             {
