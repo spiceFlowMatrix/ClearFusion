@@ -481,7 +481,10 @@ export class RequestDetailComponent implements OnInit {
         });
         break;
       default:
-        window.open(this.appurl.getOldUiUrl() + 'dashboard/hr/employees', '_blank');
+        let id = data.type.split('-');
+        id = id[0];
+        id = id.substring(1);
+        window.open(this.appurl.getOldUiUrl() + 'dashboard/hr/employees?empCode=' + id, '_blank');
         break;
     }
   }
@@ -570,7 +573,7 @@ export class RequestDetailComponent implements OnInit {
     this.newCandidatesList$.subscribe(element => {
       IsHavingCandidate = element.find(x => x.CandidateStatus === 'Pending Interview');
      });
-     if(IsHavingCandidate){
+     if (IsHavingCandidate){
     this.globalSharedService
       .getFile(
         this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetCandidateDetailReportPdf,
