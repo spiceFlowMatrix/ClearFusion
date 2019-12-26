@@ -14,7 +14,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
     [Produces("application/json")]
     [Route("api/HRConfiguration/[Action]")]
     [Authorize]
-    public class HRConfigurationController: BaseController
+    public class HRConfigurationController : BaseController
     {
 
 
@@ -60,6 +60,20 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             request.ModifiedById = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             request.ModifiedDate = DateTime.UtcNow;
             return Ok(await _mediator.Send(request));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteEducationDegree([FromBody] int Id)
+        {
+
+
+            return Ok(await _mediator.Send(new DeleteEducationDegreeCommand
+            {
+                Id = Id,
+                ModifiedById = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                ModifiedDate = DateTime.UtcNow
+            }));
+
         }
 
         [HttpPost]
@@ -116,7 +130,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return Ok(await _mediator.Send(request));
         }
 
-        
+
         [HttpPost]
         public async Task<IActionResult> GetSequenceNumber([FromBody] GetSequenceNumberQuery model)
         {
@@ -126,7 +140,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpPost]
         public async Task<IActionResult> DeleteExitInterviewQuestion([FromBody] int Id)
         {
-            return Ok(await _mediator.Send(new DeleteExitInterviewQuestionCommand { Id = Id } ));
+            return Ok(await _mediator.Send(new DeleteExitInterviewQuestionCommand { Id = Id }));
         }
 
         [HttpPost]
@@ -138,7 +152,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpPost]
         public async Task<IActionResult> DeleteLeaveType([FromBody] int Id)
         {
-            return Ok(await _mediator.Send(new DeleteLeaveTypeCommand { Id = Id } ));
+            return Ok(await _mediator.Send(new DeleteLeaveTypeCommand { Id = Id }));
         }
     }
 }

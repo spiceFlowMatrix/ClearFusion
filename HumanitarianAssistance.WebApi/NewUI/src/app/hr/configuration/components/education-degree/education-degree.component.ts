@@ -17,6 +17,7 @@ export class EducationDegreeComponent implements OnInit {
 
   educationDegreeList$: Observable<any[]>;
   educationDegreeListHeaders$ = of(['Id', 'Name']);
+  Id: any;
 
   actions: TableActionsModel;
   pageModel = {
@@ -31,9 +32,9 @@ export class EducationDegreeComponent implements OnInit {
       this.actions = {
         items: {
           button: { status: false, text: '' },
-          delete: false,
           download: false,
-          edit: true
+          edit: true,
+          delete: true,
         },
         subitems: {
           button: { status: false, text: '' },
@@ -74,6 +75,18 @@ export class EducationDegreeComponent implements OnInit {
 }
 
   actionEvents(event: any) {
+    debugger;
+    if (event.type === 'delete') {
+      this.hrService.openDeleteDialog().subscribe(res => {
+        if (res) {
+          this.Id = event.item.Id;
+          this.hrService.deleteEducationDegree(this.Id).subscribe(res => {
+            this.getEducationDegreeList();
+          });
+        }
+      });
+
+    }
     if (event.type === 'edit') {
       const dialogRef = this.dialog.open(AddEducationDegreeComponent, {
         width: '450px',

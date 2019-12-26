@@ -97,6 +97,8 @@ export class GLOBAL {
   public static API_HRConfiguration_GetEducationDegreeList = 'HRConfiguration/GetEducationDegreeList';
   public static API_HRConfiguration_AddEducationDegree = 'HRConfiguration/AddEducationDegree';
   public static API_HRConfiguration_EditEducationDegree = 'HRConfiguration/EditEducationDegree';
+  public static API_HRConfiguration_DeleteEducationDegree = 'HRConfiguration/DeleteEducationDegree';
+
   public static API_HRConfiguration_GetAllExitInterviewQuestions = 'HRConfiguration/GetAllExitInterviewQuestions';
   public static API_HRConfiguration_UpsertExitInterviewQuestion = 'HRConfiguration/UpsertExitInterviewQuestion';
   public static API_HRConfiguration_GetSequenceNumber = 'HRConfiguration/GetSequenceNumber';

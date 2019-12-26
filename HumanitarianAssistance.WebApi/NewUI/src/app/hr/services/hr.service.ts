@@ -3,6 +3,9 @@ import { GlobalService } from 'src/app/shared/services/global-services.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { HttpClient } from '@angular/common/http';
 import { GLOBAL } from 'src/app/shared/global';
+import { DeleteConfirmationComponent } from 'projects/library/src/lib/components/delete-confirmation/delete-confirmation.component';
+import { MatDialog } from '@angular/material';
+import { Delete_Confirmation_Texts } from 'src/app/shared/enum';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +14,8 @@ export class HrService {
 
   constructor(private globalService: GlobalService,
     private appurl: AppUrlService,
-    private http: HttpClient) { }
+    private http: HttpClient,
+    private dialog: MatDialog) { }
 
   //#region "getDesignatonList"
   getDesignationList(pageModel: any): any {
@@ -301,6 +305,30 @@ export class HrService {
       );
   }
   //#endregion
+   // common methods
+   openDeleteDialog() {
+    const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
+      width: '300px',
+      height: '250px',
+      data: 'delete',
+      disableClose: false
+    });
+
+    dialogRef.componentInstance.confirmMessage =
+      Delete_Confirmation_Texts.deleteText1;
+
+    dialogRef.componentInstance.confirmText = Delete_Confirmation_Texts.yesText;
+
+    dialogRef.componentInstance.cancelText = Delete_Confirmation_Texts.noText;
+
+    dialogRef.afterClosed().subscribe(result => { });
+
+    return dialogRef.componentInstance.confirmDelete;
+  }
+
+  deleteEducationDegree(data: any) {
+    return this.globalService.post(this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_DeleteEducationDegree, data);
+  }
 }
 
 
