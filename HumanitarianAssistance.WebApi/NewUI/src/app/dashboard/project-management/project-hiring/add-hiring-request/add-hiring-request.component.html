@@ -5,7 +5,7 @@
       <mat-icon aria-label="clear">clear</mat-icon>
     </button>
     </h1>
-    <form class="example-form" [formGroup]="addHiringRequestForm" (ngSubmit)="onFormSubmit(addHiringRequestForm.value)">
+    <form class="example-form" [formGroup]="addHiringRequestForm" (ngSubmit)="onFormSubmit()">
         <div mat-dialog-content>
             <div class="row">
                 <div class="col-sm-12">
@@ -65,8 +65,7 @@
                         </div>
                         <div class="col-lg-6 col-sm-6">
                             <mat-form-field class="example-full-width">
-                                <input *ngIf="!isEditable" matInput type="number" min="1" max="AvailableVacancies" formControlName="TotalVacancy" placeholder="Total Vacancy" readonly/>
-                                <input *ngIf="isEditable" matInput type="number" min="1" max="AvailableVacancies" formControlName="TotalVacancy" placeholder="Total Vacancy" />
+                                <input matInput type="number" min="1" max="AvailableVacancies" formControlName="TotalVacancy" placeholder="Total Vacancy" />
                                 <mat-error *ngIf="addHiringRequestForm.controls['TotalVacancy'].hasError()">
                                 </mat-error>
                             </mat-form-field>
@@ -93,14 +92,12 @@
                     <div class="row">
                         <div class="col-lg-6 col-sm-6">
                             <mat-form-field class="example-full-width">
-                                <input *ngIf="!isEditable" matInput formControlName="ContractType" placeholder="Contract Type" readonly/>
-                                <input *ngIf="isEditable" matInput formControlName="ContractType" placeholder="Contract Type" />
+                                <input matInput formControlName="ContractType" placeholder="Contract Type" />
                             </mat-form-field>
                         </div>
                         <div class="col-lg-6 col-sm-6">
                             <mat-form-field class="example-full-width">
-                                <input *ngIf="!isEditable" matInput formControlName="ContractDuration" placeholder="Contract Duration (Month)" type="number" readonly/>
-                                <input *ngIf="isEditable" matInput formControlName="ContractDuration" placeholder="Contract Duration (Month)" type="number" />
+                                <input matInput formControlName="ContractDuration" placeholder="Contract Duration (Month)" type="number" />
                             </mat-form-field>
                         </div>
                         <div class="col-lg-6 col-sm-6">
