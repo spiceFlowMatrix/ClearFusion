@@ -126,7 +126,8 @@ export class LogisticRequestDetailsComponent implements OnInit {
         // this.requestDetail.ComparativeStatus = res.data.logisticRequest.ComparativeStatus;
       }
 
-      if (!(this.requestDetail.Status === 1) ) { // || !(this.requestDetail.ComparativeStatus === 1)
+      if (!(this.requestDetail.Status === 1) || !(this.requestDetail.ComparativeStatus === 1) ||
+      !(this.requestDetail.TenderStatus === 1)) { //
         this.actions = {
           items: {
             button: { status: false, text: '' },
@@ -459,7 +460,9 @@ export class LogisticRequestDetailsComponent implements OnInit {
   }
 
   editRequest() {
-    if (this.requestDetail.Status !== LogisticRequestStatus['New Request']) {
+    if (this.requestDetail.Status !== LogisticRequestStatus['New Request'] ||
+    this.requestDetail.ComparativeStatus !== LogisticComparativeStatus.Pending ||
+    this.requestDetail.TenderStatus !== LogisticTenderStatus.Pending) {
       return;
     } else {
       this.router.navigate(['../../logistic-requests/new-request/'] ,
@@ -473,10 +476,23 @@ export class LogisticRequestDetailsComponent implements OnInit {
 
   rejectTenderRequest() {
     this.commonLoader.showLoader();
-    this.logisticservice.rejectTenderRequest().subscribe(res => {
+    this.logisticservice.rejectTenderRequest(this.requestId).subscribe(res => {
       if (res.StatusCode === 200) {
         this.commonLoader.hideLoader();
-        this.requestDetail.TenderStatus = LogisticTenderStatus.Cancelled;
+        this.requestDetail.TenderStatus = LogisticTenderStatus['Cancelled'];
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  initiateTenderRequest() {
+    this.commonLoader.showLoader();
+    this.logisticservice.initiateTenderRequest(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.requestDetail.TenderStatus = LogisticTenderStatus['Issued'];
       } else {
         this.commonLoader.hideLoader();
         this.toastr.error('Something went wrong!');

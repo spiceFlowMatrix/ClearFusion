@@ -299,6 +299,24 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.requestId = requestId;
             return await _mediator.Send(model);
         }
+
+        [HttpPost]
+        public async Task<ApiResponse> RejectTenderRequest([FromBody]long requestId)
+        {   
+            RejectTenderRequestCommand model = new RejectTenderRequestCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.requestId = requestId;
+            return await _mediator.Send(model);
+        }
+        
+        [HttpPost]
+        public async Task<ApiResponse> InitiateTenderRequest([FromBody]long requestId)
+        {   
+            InitiateTenderRequestCommand model = new InitiateTenderRequestCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.requestId = requestId;
+            return await _mediator.Send(model);
+        }
         
     }
 

@@ -309,8 +309,18 @@ export class LogisticService {
     );
   }
 
-  rejectTenderRequest() {
+  rejectTenderRequest(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_RejectTenderRequest,
+      requestId
+    );
+  }
 
+  initiateTenderRequest(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_InitiateTenderRequest,
+      requestId
+    );
   }
 
 }
