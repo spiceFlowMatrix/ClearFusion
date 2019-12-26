@@ -309,4 +309,8 @@ export class LogisticService {
     );
   }
 
+  rejectTenderRequest() {
+
+  }
+
 }

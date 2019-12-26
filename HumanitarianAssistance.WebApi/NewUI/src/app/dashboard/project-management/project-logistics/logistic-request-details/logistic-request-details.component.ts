@@ -9,7 +9,7 @@ import { RequestDetailComponent } from '../../project-hiring/request-detail/requ
 import { map } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
-import { LogisticRequestStatus, LogisticComparativeStatus } from 'src/app/shared/enum';
+import { LogisticRequestStatus, LogisticComparativeStatus, LogisticTenderStatus } from 'src/app/shared/enum';
 import { GoodsRecievedUploadComponent } from '../goods-recieved-upload/goods-recieved-upload.component';
 import { PurchaseVoucherVerificationComponent } from '../purchase-voucher-verification/purchase-voucher-verification.component';
 
@@ -33,7 +33,7 @@ export class LogisticRequestDetailsComponent implements OnInit {
   requestId;
   requestItemList: any[];
   requestDetail: RequestDetail = {ProjectId: '', Status: 0, TotalCost: '', RequestId: '' , ComparativeStatus: 0,
-Currency: '', BudgetLine: '', Office: '', Description: ''};
+  TenderStatus: 0, Currency: '', BudgetLine: '', Office: '', Description: ''};
   actions: TableActionsModel;
   totalCost = 0;
   unavailableItemCost = 0;
@@ -471,6 +471,19 @@ Currency: '', BudgetLine: '', Office: '', Description: ''};
     this.router.navigate(['submit-purchase'], { relativeTo: this.routeActive });
   }
 
+  rejectTenderRequest() {
+    this.commonLoader.showLoader();
+    this.logisticservice.rejectTenderRequest().subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.requestDetail.TenderStatus = LogisticTenderStatus.Cancelled;
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
 }
 export interface RequestDetail {
   RequestId;
@@ -478,6 +491,7 @@ export interface RequestDetail {
   Status;
   TotalCost;
   ComparativeStatus;
+  TenderStatus;
   Currency;
   BudgetLine;
   Office;

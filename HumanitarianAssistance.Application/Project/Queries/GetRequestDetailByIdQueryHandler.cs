@@ -36,6 +36,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     Currency = y.CurrencyDetails.CurrencyCode,
                     Office = y.OfficeDetail.OfficeName,
                     ComparativeStatus = y.ComparativeStatus,
+                    TenderStatus = y.TenderStatus,
                     BudgetLineId = y.ProjectBudgetLineDetail.BudgetLineId,
                     CurrencyId = y.CurrencyDetails.CurrencyId,
                     OfficeId = y.OfficeDetail.OfficeId

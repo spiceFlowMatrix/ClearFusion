@@ -263,6 +263,21 @@ namespace HumanitarianAssistance.Common.Enums {
         [Description ("Statement Approved")]
         ApproveStatement = 6,
     }
+
+    public enum LogisticTenderStatus {
+        [Description ("Pending")]
+        Pending = 1,
+        [Description ("Cancelled")]
+        Cancelled = 2,
+        [Description ("Issued")]
+        Issued = 3,
+        [Description ("Statement Submitted")]
+        StatementSubmitted = 4,
+        [Description ("Statement Rejected")]
+        RejectStatement = 5,
+        [Description ("Statement Approved")]
+        ApproveStatement = 6,
+    }
     //#region "StoreItemGroups"
     public enum TransportItemTypes {
         Vehicle = 1,

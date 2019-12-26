@@ -659,6 +659,12 @@ export enum LogisticComparativeStatus {
   'Statement Rejected' = 5,
   'Statement Approved' = 6
 }
+export enum LogisticTenderStatus {
+  NotValid = 0,
+  'Pending' = 1,
+  'Cancelled' = 2,
+  'Issued' = 3,
+}
 export enum CandidateStatus {
   'Pending Shortlist' = 0,
   'Pending Interview' = 1,

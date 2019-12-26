@@ -7,5 +7,5 @@
 </div>
 
 <div *ngIf="(this.totalCost>=10000 && this.totalCost<=59999)">
-  <app-tender-statement [requestStatus]="requestStatus" [totalCost]="this.totalCost"></app-tender-statement>
+  <app-tender-statement [requestStatus]="requestStatus" [tenderStatus]="tenderStatus" [totalCost]="this.totalCost"></app-tender-statement>
 </div>

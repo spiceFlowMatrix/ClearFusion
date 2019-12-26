@@ -20,6 +20,7 @@ export class RequestStatusComponent implements OnInit, OnChanges {
 
   @Input() requestStatus = 0;
   @Input() comparativeStatus = 1;
+  @Input() tenderStatus = 1;
   @Input() totalCost = 0;
   @Input() requestedItems: any[];
   @Output() selectedItemChange = new EventEmitter();

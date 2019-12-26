@@ -39,8 +39,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     BudgetLine = y.ProjectBudgetLineDetail.BudgetCode,
                     Currency = y.CurrencyDetails.CurrencyCode,
                     Office = y.OfficeDetail.OfficeName,
-                    ProcessingType = getProcessingType(y.TotalCost, y.Status ,y.ComparativeStatus)["ProcessingType"],
-                    Status = getProcessingType(y.TotalCost, y.Status ,y.ComparativeStatus)["Status"]
+                    ProcessingType = getProcessingType(y.TotalCost, y.Status ,y.ComparativeStatus, y.TenderStatus)["ProcessingType"],
+                    Status = getProcessingType(y.TotalCost, y.Status ,y.ComparativeStatus, y.TenderStatus)["Status"]
                 })
                 .OrderByDescending(x => x.RequestId).Skip(request.PageIndex * request.PageSize).Take(request.PageSize).ToListAsync();
                 
@@ -57,7 +57,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
             return response;
         }
 
-        private Dictionary<string,string> getProcessingType(double totalCost, int Status,int ComparativeStatus) 
+        private Dictionary<string,string> getProcessingType(double totalCost, int Status,int ComparativeStatus, int TenderStatus) 
         {
             Dictionary<string,string> obj = new Dictionary<string,string>();
             
@@ -70,12 +70,12 @@ namespace HumanitarianAssistance.Application.Project.Queries
                 obj.Add("ProcessingType", "Comparative Statement");
             } 
             else if((totalCost >= 10000) && (totalCost < 60000)) {
-                obj.Add("Status", ((LogisticComparativeStatus)ComparativeStatus).GetDescription());
+                obj.Add("Status", ((LogisticTenderStatus)TenderStatus).GetDescription());
                 obj.Add("ProcessingType", "Local Tender");
             }
             else if(totalCost >= 60000) {
-                 obj.Add("Status", ((LogisticComparativeStatus)ComparativeStatus).GetDescription());
-                 obj.Add("ProcessingType", "International Tender");
+                obj.Add("Status", ((LogisticTenderStatus)TenderStatus).GetDescription());
+                obj.Add("ProcessingType", "International Tender");
             }
             else 
             {

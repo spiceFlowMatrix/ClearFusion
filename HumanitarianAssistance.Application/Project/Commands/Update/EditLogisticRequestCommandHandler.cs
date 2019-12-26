@@ -35,6 +35,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     _logisticReq.BudgetLineId = request.BudgetLineId;
                     _logisticReq.Status = request.Status;
                     _logisticReq.ComparativeStatus = request.ComparativeStatus;
+                    _logisticReq.TenderStatus = request.TenderStatus;
                     _logisticReq.TotalCost = request.TotalCost;
                 }
 
