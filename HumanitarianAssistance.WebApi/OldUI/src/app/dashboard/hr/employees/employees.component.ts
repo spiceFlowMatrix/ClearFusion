@@ -185,19 +185,20 @@ export class EmployeesComponent implements OnInit {
     );
     this.initDocumentTypeList();
 
-    // this.routeActive.queryParams.subscribe(params => {
-    //   this.newEmployeeId = +params['empCode'];
-    // });
-    // if (this.newEmployeeId != null) {
+    this.routeActive.queryParams.subscribe(params => {
+      this.newEmployeeId = +params['empCode'];
+    });
+    if (this.newEmployeeId != null) {
+      console.log('active');
     //   this.loading = true;
     //   this.selectedItemEmployee = this.newEmployeeId;
     //   this.openInfoTab = 0;
-    //   this.selectedIndex = 0; 
+    //   this.selectedIndex = 0;
     //   // this.showActiveEmployeeData = this.newEmployeeId;
     //   this.GetEmployeeDetailsByEmployeeId(this.newEmployeeId);
     //   this.employeeId = this.newEmployeeId;
     //   localStorage.setItem('SelectedEmployee', this.newEmployeeId !== undefined ? this.newEmployeeId.toString() : '');
-    // }
+    }
   }
 
   constructor(
@@ -747,7 +748,7 @@ export class EmployeesComponent implements OnInit {
     this.GetEmployeeDetailsByEmployeeId(model.EmployeeID);
     this.employeeId = model.EmployeeID;
     localStorage.setItem('SelectedEmployee', this.employeeId !== undefined ? this.employeeId.toString() : '');
-    
+
   }
   //#endregion
 
@@ -1156,7 +1157,7 @@ export class EmployeesComponent implements OnInit {
               data.data.EmployeeDetailList.forEach(element => {
                 this.employeeListDetail.push(element);
               });
-              this.showData = this.employeeListDetail[0];
+              // this.showData = this.employeeListDetail[0];
               // this.showData.EmployeePhoto =
               //   this.showData.DocumentGUID != null &&
               //     this.showData.DocumentGUID !== ''
@@ -1279,7 +1280,7 @@ export class EmployeesComponent implements OnInit {
                 employeeid: this.employeeId,
                 displayLeavePopUp: showLeavePopUp
               };
-              
+
               this.triggerEmployeeLeavePopUp(employeeLeavePopUpData);
 
             // if (data.LoggerDetailsModel != null) {
