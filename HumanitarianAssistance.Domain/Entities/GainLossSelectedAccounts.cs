@@ -16,8 +16,11 @@ namespace HumanitarianAssistance.Domain.Entities
         public int GainLossSelectedAccountId { get; set; }
         public int? EmployeeId { get; set; }
         public string UserId { get; set; }
+        public int? CurrencyId { get; set; }
         public long[] SelectedAccounts { get; set; }
         [ForeignKey("EmployeeId")]
         public EmployeeDetail EmployeeDetail { get; set; }
+        [ForeignKey("CurrencyId")]
+        public CurrencyDetails CurrencyDetails { get; set; }
     }
 }

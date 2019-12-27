@@ -140,6 +140,7 @@ export interface IAddEditProcurementModel {
   IssedToLocation: number;
   StatusAtTimeOfIssue: number;
   Project: number;
+  VoucherNo: number;
 }
 
 export interface IDeleteProcurementModel {
@@ -200,4 +201,25 @@ export interface IMonthlyBreakDown {
   UsageAnalysisBreakDownList: any[];
   CostAnalysisBreakDownList: any[];
 
+}
+
+export interface IReturnModel {
+  Id: number;
+  Date: any;
+  ReturnedQuantity: number;
+}
+
+export interface IProcurementDetailModel {
+  Id: number;
+  PurchaseId: number;
+  StartingBalance: number;
+  CurrentBalance: number;
+  MustReturn: string;
+  Status: string;
+  Date: any;
+  ItemCode: string;
+  Project: string;
+  Voucher: string;
+  IssuedToEmployee: string;
+  ReturnedQuantity: number;
 }

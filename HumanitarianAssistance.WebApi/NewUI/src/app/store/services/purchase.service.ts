@@ -322,7 +322,8 @@ getPurchaseFilterList(): any {
       IssueDate: StaticUtilities.getLocalDate(procurement.IssueDate),
       IssedToLocation: procurement.StoreSourceId,
       StatusAtTimeOfIssue: procurement.StatusId,
-      Project: procurement.ProjectId
+      Project: procurement.ProjectId,
+      VoucherNo: procurement.VoucherNo
     };
 
     return this.globalService
@@ -349,7 +350,8 @@ getPurchaseFilterList(): any {
       IssedToLocation: procurement.StoreSourceId,
       StatusAtTimeOfIssue: procurement.StatusId,
       Project: procurement.ProjectId,
-      Returned: procurement.Returned
+      Returned: procurement.Returned,
+      VoucherNo: procurement.VoucherNo
     };
 
     return this.globalService
@@ -419,6 +421,12 @@ getPurchaseFilterList(): any {
 getVehicleList(model: any) {
   return this.globalService
     .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_GetVehicleList, model);
+}
+
+//#region "getProcurementDetailsByProcurementId"
+getProcurementDetailsByProcurementId(id) {
+  return this.globalService
+    .getDataById(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetProcurementDetailsByProcurementId + '?id=' + id);
 }
 
 
@@ -591,6 +599,30 @@ getStoreLogs(id: number, entityId: number) {
  getDefaultUnitTypeByItemId(ItemId: number) {
   return this.globalService
     .getDataById(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetDefaultUnitTypeByItemId + '?id=' + ItemId);
+}
+
+getProcurementDetailWithReturnsList(id) {
+  return this.http
+      .get<any>(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_StorePurchase_GetProcurementDetailWithReturnsList + '?id=' + id);
+}
+
+addProcurementReturn(model: any) {
+  return this.globalService
+  .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_AddProcurementReturn, model);
+}
+
+deleteReturnProcurement(id) {
+  return this.globalService
+  .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_DeleteReturnProcurement, id);
+}
+
+getAllVouchers() {
+  return this.http
+      .get<any>(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Account_GetAllVouchersWithoutFilter);
 }
 
 getPreviousYearsList(years: number): Observable<IDropDownModel[]> {

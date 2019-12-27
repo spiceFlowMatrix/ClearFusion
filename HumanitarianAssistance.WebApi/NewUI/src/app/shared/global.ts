@@ -232,6 +232,7 @@ export class GLOBAL {
   public static API_Accounting_GetAccountDetails = 'Account/GetAllAccountCode';
   public static API_AccountReports_GetAllLedgerDetails = 'AccountReports/GetAllLedgerDetails';
   public static API_AccountReports_GetTrialBalanceReport = 'AccountReports/GetTrialBalanceReport';
+  public static API_Account_GetAllVouchersWithoutFilter = 'Account/GetAllVouchersWithoutFilter';
 
   // ProjectLogistics
   public static API_ProjectLogistics_AddLogisticRequest = 'ProjectLogistic/AddLogisticRequest';
@@ -574,6 +575,8 @@ export class GLOBAL {
   public static API_Store_EditItemOrder = 'Store/EditItemOrder';
   public static API_Store_DeleteItemOrder = 'Store/DeleteItemOrder';
   public static API_StorePurchase_AddStorePurchase = 'StorePurchase/AddStorePurchase';
+  public static API_StorePurchase_GetProcurementDetailsByProcurementId = 'StorePurchase/GetProcurementDetailsByProcurementId';
+  public static API_StorePurchase_GetProcurementDetailWithReturnsList = 'StorePurchase/GetProcurementDetailWithReturnsList';
   public static API_VehicleTracker_GetVehicleList = 'VehicleTracker/GetVehicleList';
   public static API_VehicleTracker_AddVehicleMileage = 'VehicleTracker/AddVehicleMileage';
   public static API_VehicleTracker_GetVehicleById = 'VehicleTracker/GetVehicleById';
@@ -595,6 +598,8 @@ export class GLOBAL {
   public static API_StorePurchase_GetStorePurchaseById = 'StorePurchase/GetStorePurchaseById';
   public static API_StorePurchase_GetTransportItemDataSource = 'StorePurchase/GetTransportItemDataSource';
   public static API_StorePurchase_EditStorePurchase = 'StorePurchase/EditStorePurchase';
+  public static API_StorePurchase_AddProcurementReturn = 'StorePurchase/AddProcurementReturn';
+  public static API_StorePurchase_DeleteReturnProcurement = 'StorePurchase/DeleteReturnProcurement';
   public static API_StorePurchase_GetTransportItemCategoryType = 'StorePurchase/GetTransportItemCategoryType';
 
   public static API_Store_AddPurchaseUnitType = 'Store/AddPurchaseUnitType';

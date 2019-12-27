@@ -12,6 +12,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LibraryModule, SubHeaderTemplateModule } from 'projects/library/src/public_api';
 import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
 import { MatRangeDatepickerModule, MatRangeNativeDateModule } from 'mat-range-datepicker';
+import { ExchangeGainLossReportComponent } from './exchange-gain-loss-report/exchange-gain-loss-report.component';
+import { ConfigurationFilterComponent } from './exchange-gain-loss-report/configuration-filter/configuration-filter.component';
+import { TransactionFilterComponent } from './exchange-gain-loss-report/transaction-filter/transaction-filter.component';
+import { ConsolidateGainLossComponent } from './exchange-gain-loss-report/consolidate-gain-loss/consolidate-gain-loss.component';
 
 @NgModule({
   imports: [
@@ -36,6 +40,10 @@ import { MatRangeDatepickerModule, MatRangeNativeDateModule } from 'mat-range-da
     JournalReportComponent,
     LedgerStatementReportComponent,
     TrialBalanceReportComponent,
+    ExchangeGainLossReportComponent,
+    ConfigurationFilterComponent,
+    TransactionFilterComponent,
+    ConsolidateGainLossComponent,
   ],
   providers: [
     VoucherService

@@ -168,9 +168,9 @@ export class GainLossReportService {
   //#endregion
 
   //#region "SaveExchangeGainLossFilterAccountList"
-  SaveExchangeGainLossFilterAccountList(accountlist: any[]): any {
+  SaveExchangeGainLossFilterAccountList(model: any): any {
     return this.globalService
-      .post(this.appurl.getApiUrl() + GLOBAL.API_FinancialReport_SaveGainLossAccountList, accountlist)
+      .post(this.appurl.getApiUrl() + GLOBAL.API_FinancialReport_SaveGainLossAccountList, model)
       .pipe(
         map(x => {
           const responseData: IResponseData = {

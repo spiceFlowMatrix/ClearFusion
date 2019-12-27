@@ -23,6 +23,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public long BudgetLineId { get; set; }
         public int CurrencyId { get; set; }
         public int ComparativeStatus{ get; set; }
+        public int TenderStatus{ get; set; }
         public long? VoucherNo { get; set; }
         public long[] PurchaseId { get; set; }
         [ForeignKey("OfficeId")]

@@ -539,14 +539,18 @@ export class GainLossReportComponent
     this.gainLossReportfilter.AccountIdList = event.Value;
 
     if (!event.Flag) {
-      this.saveExchangeGainLossFilterAccountList(event.Value);
+      this.saveExchangeGainLossFilterAccountList();
     }
   }
   // #endregion
 
   //#region "getExchangeGainLossFilterAccountList"
-  saveExchangeGainLossFilterAccountList(accountList: any[]) {
-    this.gainLossReportService.SaveExchangeGainLossFilterAccountList(accountList).subscribe(
+  saveExchangeGainLossFilterAccountList() {
+    const model = {
+      AccountIds: this.gainLossReportfilter.AccountIdList,
+      CurrencyId: this.gainLossReportfilter.ToCurrencyId
+    };
+    this.gainLossReportService.SaveExchangeGainLossFilterAccountList(model).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
         }

@@ -30,7 +30,6 @@ namespace HumanitarianAssistance.Application.Store.Models
         public string ProjectName { get; set; }
         public double OriginalCost { get; set; }
         public double DepreciatedCost { get; set; }
-        public int PurchasedQuantity { get; set; }
         public DateTime PurchaseDate {get; set;}
         public string ChasisNo { get; set; }
         public string EngineSerialNo { get; set; }

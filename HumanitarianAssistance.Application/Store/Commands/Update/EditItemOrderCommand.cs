@@ -10,7 +10,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
     {
         public long OrderId { get; set; }
         public long Purchase { get; set; }                                // PurchaseID DropDown
-        public string InventoryItem { get; set; }                           // InventoryID DropDown
+        public long InventoryItem { get; set; }                           // InventoryID DropDown
         public int IssuedQuantity { get; set; }                             // Text Box
         public bool MustReturn { get; set; }                                // CheckBox
         public bool Returned { get; set; }                                // CheckBox
@@ -18,7 +18,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
         public DateTime IssueDate { get; set; }
         public DateTime? ReturnedDate { get; set; }
 
-        public string IssueVoucherNo { get; set; }
+        public long VoucherNo { get; set; }
         public string Remarks { get; set; }
         public long Project { get; set; }
         public string IssedToLocation { get; set; }
