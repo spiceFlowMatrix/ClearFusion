@@ -10,17 +10,8 @@
     </div>
     <div *ngSwitchCase="3" >
       <h4 class="letter_spacing_2">Tender Details</h4>
-      <p><b>Tender</b> allows tracking of <b>Tender Proposal</b> documentation/resources,
-        <b>Bid Submissions</b>, and <b>Bid selection</b> processes.
-      </p>
-      <p>
-          <b>Tender Proposal</b> documentation and resources are used by the organization to announce their
-          <b>Tender offer</b> to the necessary channels as per the needs of this <b>Procurement Request</b>.
-          Once <b>Logistics and Control officer</b> submit <b>Bids</b> for this <b>Tender</b>, it is up to the <b>General
-          Administration & Finance Managers</b> to come to a decision on which bid to select.
-      </p>
       <h4>Tender Proposal Documentation
-          <hum-button [type]="'add'" [text]="'SUBMIT A DOCUMENT'"></hum-button>
+          <hum-button [type]="'add'" [text]="'SUBMIT A DOCUMENT'" (click)="openFilesDialog()"></hum-button>
       </h4>
       <h4>Submitted Bids
           <hum-button [type]="'add'" [text]="'SUBMIT A BID'"></hum-button>

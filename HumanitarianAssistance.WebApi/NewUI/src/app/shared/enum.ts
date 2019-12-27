@@ -573,7 +573,10 @@ export enum FileSourceEntityTypes {
   ProjectLogisticPurchase = 14,
   GoodsRecievedDocument = 15,
   LogisticSupplierInvoice = 16,
-  LogisticSupplierWarranty = 17
+  LogisticSupplierWarranty = 17,
+  TenderProposalDocument = 18,
+  TenderRFPDocument = 19,
+  TenderAnnouncementDocument = 20
 }
 //#endregion
 //#region "EmployeeType"
@@ -737,5 +740,11 @@ export enum QuestionType {
     Male = 1,
     Female = 2,
     Other = 3,
-    }
+  }
+
+  export enum TenderProposalDocumentType {
+    'Proposal Document' = 18,
+    'RFP Document' = 19,
+    'Announcement Document' = 20
+  }
 

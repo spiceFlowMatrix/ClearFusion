@@ -187,7 +187,10 @@ namespace HumanitarianAssistance.Common.Enums {
         ProjectLogisticPurchase = 14,
         GoodsRecievedDocument = 15,
         LogisticSupplierInvoice = 16,
-        LogisticSupplierWarranty = 17
+        LogisticSupplierWarranty = 17,
+        TenderProposalDocument = 18,
+        TenderRFPDocument = 19,
+        TenderAnnouncementDocument = 20
     }
 
     public enum DocumentFileTypes {

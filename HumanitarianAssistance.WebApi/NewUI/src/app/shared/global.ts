@@ -251,6 +251,9 @@ export class GLOBAL {
   public static API_ProjectLogistics_GetCompletedPurchaseOrderDetail = 'ProjectLogistic/GetCompletedPurchaseOrderDetail';
   public static API_ProjectLogistics_RejectTenderRequest = 'ProjectLogistic/RejectTenderRequest';
   public static API_ProjectLogistics_InitiateTenderRequest = 'ProjectLogistic/InitiateTenderRequest';
+  public static API_ProjectLogistics_GetTenderIssuerName = 'ProjectLogistic/GetTenderIssuerName';
+  public static API_ProjectLogistics_GetTenderProposalDocument = 'ProjectLogistic/GetTenderProposalDocument';
+
   // Chart Of Account
   public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';
   public static API_ChartOfAccount_GetAllAccountsByParentId = 'ChartOfAccount/GetAllAccountsByParentId';

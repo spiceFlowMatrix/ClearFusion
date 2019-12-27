@@ -323,4 +323,17 @@ export class LogisticService {
     );
   }
 
+  getTenderIssuer(requestId) {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetTenderIssuerName + '?RequestId=' + requestId,
+    );
+  }
+
+  getTenderProposalDocument(requestId) {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetTenderProposalDocument + '?RequestId=' + requestId,
+    );
+  }
+
+
 }

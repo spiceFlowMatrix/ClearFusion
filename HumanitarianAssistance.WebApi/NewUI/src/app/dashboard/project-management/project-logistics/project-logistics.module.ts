@@ -20,6 +20,7 @@ import { TenderStatementComponent } from './tender-statement/tender-statement.co
 import { PurchaseFinalCostComponent } from './purchase-final-cost/purchase-final-cost.component';
 import { GoodsRecievedUploadComponent } from './goods-recieved-upload/goods-recieved-upload.component';
 import { PurchaseVoucherVerificationComponent } from './purchase-voucher-verification/purchase-voucher-verification.component';
+import { SubmitTenderDocumentComponent } from './submit-tender-document/submit-tender-document.component';
 
 @NgModule({
   declarations: [LogisticRequestsComponent, AddLogisticRequestComponent,
@@ -27,7 +28,8 @@ import { PurchaseVoucherVerificationComponent } from './purchase-voucher-verific
     SubmitPurchaseListComponent, ComparativeStatementComponent, AddSupplierComponent,
     PurchaseOrderComponent, SubmitComparativeStatementComponent, TenderStatementComponent, PurchaseFinalCostComponent,
     GoodsRecievedUploadComponent,
-    PurchaseVoucherVerificationComponent],
+    PurchaseVoucherVerificationComponent,
+    SubmitTenderDocumentComponent],
   imports: [
     CommonModule,
     MatTableModule,
@@ -48,7 +50,7 @@ import { PurchaseVoucherVerificationComponent } from './purchase-voucher-verific
   entryComponents: [
     PurchaseFinalCostComponent,
     AddLogisticItemsComponent,
-    // SubmitPurchaseListComponent,
+    SubmitTenderDocumentComponent,
     AddSupplierComponent,
     SubmitComparativeStatementComponent,
     GoodsRecievedUploadComponent,

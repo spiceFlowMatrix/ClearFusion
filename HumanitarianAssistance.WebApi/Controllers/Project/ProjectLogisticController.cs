@@ -306,6 +306,8 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             RejectTenderRequestCommand model = new RejectTenderRequestCommand();
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             model.requestId = requestId;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow; 
             return await _mediator.Send(model);
         }
         
@@ -315,6 +317,20 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             InitiateTenderRequestCommand model = new InitiateTenderRequestCommand();
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             model.requestId = requestId;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow; 
+            return await _mediator.Send(model);
+        }
+
+        [HttpGet]
+        public async Task<ApiResponse> GetTenderIssuerName([FromQuery]GetTenderIssuerNameQuery model)
+        {   
+            return await _mediator.Send(model);
+        }
+
+        [HttpGet]
+        public async Task<ApiResponse> GetTenderProposalDocument([FromQuery]GetTenderProposalDocumentQuery model)
+        {   
             return await _mediator.Send(model);
         }
         

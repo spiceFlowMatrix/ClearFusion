@@ -45,6 +45,7 @@ export class LogisticRequestDetailsComponent implements OnInit {
   goodsNoteSubmitted = false;
   goodsRecievedModel: GoodsRecievedNote;
   voucherReference = '';
+  tenderIssuerName = '';
 
   constructor(private dialog: MatDialog, private routeActive: ActivatedRoute,
     private logisticservice: LogisticService,
@@ -140,9 +141,17 @@ export class LogisticRequestDetailsComponent implements OnInit {
         };
       }
 
-      // if (this.requestDetail.Status === LogisticRequestStatus['Complete Purchase'] ) {
-      //   this.getGoodsRecievedNote();
-      // }
+      if (this.requestDetail.TenderStatus === LogisticTenderStatus.Issued ) {
+        this.getTenderIssuerName();
+      }
+    });
+  }
+
+  getTenderIssuerName() {
+    this.logisticservice.getTenderIssuer(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200 && res.ResponseData != null) {
+        this.tenderIssuerName = res.ResponseData;
+      }
     });
   }
 
@@ -493,6 +502,7 @@ export class LogisticRequestDetailsComponent implements OnInit {
       if (res.StatusCode === 200) {
         this.commonLoader.hideLoader();
         this.requestDetail.TenderStatus = LogisticTenderStatus['Issued'];
+        this.getTenderIssuerName();
       } else {
         this.commonLoader.hideLoader();
         this.toastr.error('Something went wrong!');
