@@ -20,8 +20,8 @@ namespace HumanitarianAssistance.Domain.Entities
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public DateTime ComparisionDate { get; set; }
-        public long DebitAccountId { get; set; }
-        public long CreditAccountId { get; set; }
+        public long? DebitAccountId { get; set; }
+        public long? CreditAccountId { get; set; }
         public long[] SelectedAccounts { get; set; }
         [ForeignKey("EmployeeId")]
         public EmployeeDetail EmployeeDetail { get; set; }
