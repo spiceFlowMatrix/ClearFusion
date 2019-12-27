@@ -37,6 +37,7 @@ export interface HiringRequestDetailList {
   PayRate?: string;
   Status?: string;
   Office?: string;
+  OfficeId?: number;
   DepartmentName?: string;
   BudgetName?: string;
   AnouncingDate?: any;

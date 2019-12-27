@@ -184,6 +184,7 @@ export class RequestDetailComponent implements OnInit {
         .pipe(takeUntil(this.destroyed$))
         .subscribe(
           (response: IResponseData) => {
+            console.log(response.data);
             if (response.statusCode === 200 && response.data !== null) {
               this.hiringRequestDetails = {
                 HiringRequestId: response.data.HiringRequestId,
@@ -194,6 +195,7 @@ export class RequestDetailComponent implements OnInit {
                 PayCurrency: response.data.PayCurrency,
                 PayRate: response.data.PayRate,
                 Office: response.data.Office,
+                OfficeId: response.data.OfficeId,
                 DepartmentName: response.data.DepartmentName,
                 BudgetName: response.data.BudgetName,
                 AnouncingDate: response.data.AnouncingDate,
@@ -493,7 +495,7 @@ export class RequestDetailComponent implements OnInit {
         let id = data.type.split('-');
         id = id[0];
         id = id.substring(1);
-        window.open(this.appurl.getOldUiUrl() + 'dashboard/hr/employees?empCode=' + id, '_blank');
+        window.open(this.appurl.getOldUiUrl() + 'dashboard/hr/employees?empCode=' + id +'&officeId='+this.hiringRequestDetails.OfficeId, '_blank');
         break;
     }
   }

@@ -66,6 +66,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                HiringRequestStatus = hr.HiringRequestStatus,
                                                SpecificDutiesAndResponsibilities=hr.SpecificDutiesAndResponsblities,
                                                SubmissionGuidelines = hr.SubmissionGuidlines,
+                                               OfficeId = o.OfficeId
 
                                            }).FirstOrDefaultAsync();
                 response.ResponseData = requestDetail;

@@ -40,7 +40,7 @@
         <div class="purchaseTable">
         <hum-table [headers]="purchaseListHeaders$" [items]="purchaseList$" [subHeaders]="subListHeaders$"
           [subTitle]="'Procurements'" [isDefaultAction] = "false" (actionClick)="actionEvents($event)"
-          (subActionClick)="procurementAction($event)" [isDefaultSubAction] = "false" [actions]="actions" [hideColums$]="hideColums"></hum-table>
+          (subActionClick)="procurementAction($event)" [isDefaultSubAction] = "false" [actions]="actions" [hideColums$]="hideColums" [hideColumsSub$]="hideColumsSub"></hum-table>
         </div>
         <mat-paginator [length]="purchaseRecordCount" [pageSize]="filterValueModel.PageSize"
           [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">

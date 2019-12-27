@@ -20,6 +20,7 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() isDefaultAction = true;
   @Input() isDefaultSubAction = true;
   @Input() hideColums$: Observable<{ headers: string[], items: string[] }>
+  @Input() hideColumsSub$: Observable<{ headers: string[], items: string[] }>
 
   @Output() actionClick = new EventEmitter<any>();
   @Output() subActionClick = new EventEmitter<any>();
@@ -91,6 +92,17 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
         })
         this.headers.subscribe(headers => {
           this.headers = of(res.headers);
+
+        })
+      })
+    }
+    if (this.hideColumsSub$ && this.subItemHeaders) {
+      this.hideColumsSub$.subscribe(res => {
+        this.subItemHeaders.subscribe(headers => {
+          this.subItemHeaders = of(headers.filter(r => res.items.includes(r)));
+        })
+        this.subHeaders.subscribe(headers => {
+          this.subHeaders = of(res.headers);
 
         })
       })

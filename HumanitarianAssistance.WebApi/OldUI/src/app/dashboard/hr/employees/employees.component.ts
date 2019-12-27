@@ -187,6 +187,8 @@ export class EmployeesComponent implements OnInit {
     this.initDocumentTypeList();
     this.routeActive.queryParams.subscribe(params => {
       this.newEmployeeId = +params['empCode'];
+     this.selectedOffice = +params['officeId'];
+     this.onOfficeSelected(this.selectedOffice);
     });
   }
 
