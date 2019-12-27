@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 
@@ -21,7 +23,10 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
 
             try
             {
-                
+
+                GainLossSelectedAccounts savedDate = _dbContext.GainLossSelectedAccounts
+                                                               .FirstOrDefault(x=> x.IsDeleted == false && x.UserId == request.)
+
 
             }
             catch(Exception ex)
