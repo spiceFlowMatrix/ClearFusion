@@ -129,6 +129,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<EmployeeSalaryPaymentHistory> EmployeeSalaryPaymentHistory { get; set; }
         public DbSet<EmployeeLanguages> EmployeeLanguages { get; set; }
         public DbSet<AccountHeadType> AccountHeadType { get; set; }
+        public DbSet<GainLossCalculatorConfiguration> GainLossCalculatorConfiguration { get; set; }
         public DbSet<PaymentTypes> PaymentTypes { get; set; }
         public DbSet<PriorityOtherDetail> PriorityOtherDetail { get; set; }
         public DbSet<ApplicationPages> ApplicationPages { get; set; }
@@ -265,7 +266,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<AccountLevel> AccountLevel { get; set; }
         public DbSet<AccountFilterType> AccountFilterType { get; set; }
         public DbSet<ChartOfAccountNew> ChartOfAccountNew { get; set; }
-        public DbSet<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
+        // public DbSet<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
 
         #endregion
         public DbSet<ProjectProposalDocument> ProjectProposalDocument { get; set; }
