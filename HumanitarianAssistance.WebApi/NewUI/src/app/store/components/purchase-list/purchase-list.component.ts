@@ -47,6 +47,7 @@ export class PurchaseListComponent implements OnInit {
   subListHeaders$ = of(['Id', 'Date', 'Employee', 'Must Return', 'Procured Balance', 'Status']);
   procurementList$: Observable<IProcurementList[]>;
   hideColums: Observable<{ headers?: string[], items?: string[] }>;
+  hideColumsSub: Observable<{ headers?: string[], items?: string[] }>;
   columnsToShownInPdf: any[] = [];
 
   constructor(private purchaseService: PurchaseService,
@@ -78,7 +79,10 @@ export class PurchaseListComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.hideColumsSub = of({
+      headers: ['Date', 'Employee', 'Must Return', 'Procured Balance', 'Status'],
+      items: ['IssueDate', 'Employee', 'MustReturn', 'ProcuredAmount', 'Status']
+    })
     this.getScreenSize();
     this.getAllCurrencies();
     this.actions = {
@@ -165,7 +169,7 @@ export class PurchaseListComponent implements OnInit {
                 MustReturn: r.MustReturn ? 'Yes' : 'No',
                 ProcuredAmount: r.ProcuredAmount,
                 Status: r.IsDeleted ? 'Cancelled' : r.ProcuredAmount > 0 ? 'Active' : 'In-Active',
-                itemAction: ((r.MustReturn && r.ProcuredAmount > 0) && !r.IsDeleted)  ? (
+                itemAction: ((r.MustReturn && r.ProcuredAmount > 0) && !r.IsDeleted) ? (
                   {
                     button: {
                       status: true,
@@ -175,7 +179,7 @@ export class PurchaseListComponent implements OnInit {
                     delete: true,
                     download: false,
                     edit: false
-                  }) :  (
+                  }) : (
                     {
                       button: {
                         status: false,
@@ -192,28 +196,28 @@ export class PurchaseListComponent implements OnInit {
             }
             ),
             itemAction: ((element.Quantity - element.ProcurementList
-                                                          .filter(x => x.IsDeleted === false)
-                                                          .reduce(function (a, b) { return a + b.ProcuredAmount; }, 0)) > 0) ?
-                                                          ([
-                                                            {
-                                                              button: {
-                                                                status: true,
-                                                                text: 'ADD PROCUREMENT',
-                                                                type: 'add'
-                                                              },
-                                                              delete: false,
-                                                              download: false,
-                                                              edit: true
-                                                            }]) : ([
-                                                              {
-                                                                button: {
-                                                                  status: false,
-                                                                  text: 'ADD PROCUREMENT',
-                                                                },
-                                                                delete: false,
-                                                                download: false,
-                                                                edit: true
-                                                              }])
+              .filter(x => x.IsDeleted === false)
+              .reduce(function (a, b) { return a + b.ProcuredAmount; }, 0)) > 0) ?
+              ([
+                {
+                  button: {
+                    status: true,
+                    text: 'ADD PROCUREMENT',
+                    type: 'add'
+                  },
+                  delete: false,
+                  download: false,
+                  edit: true
+                }]) : ([
+                  {
+                    button: {
+                      status: false,
+                      text: 'ADD PROCUREMENT',
+                    },
+                    delete: false,
+                    download: false,
+                    edit: true
+                  }])
           } as IPurchaseList;
         }));
         this.loader.hideLoader();
@@ -263,7 +267,7 @@ export class PurchaseListComponent implements OnInit {
       let remainingQuantity = 0;
       if (event.item.subItems.length > 0) {
         let filteredObjects = (event.item.subItems.filter(x => x.Status !== 'Cancelled'));
-         remainingQuantity = (event.item.Quantity - (filteredObjects.reduce(function (a, b) { return a + b.ProcuredAmount; }, 0)));
+        remainingQuantity = (event.item.Quantity - (filteredObjects.reduce(function (a, b) { return a + b.ProcuredAmount; }, 0)));
       } else {
         remainingQuantity = event.item.Quantity;
       }
@@ -342,11 +346,11 @@ export class PurchaseListComponent implements OnInit {
       // this.openProcurementDialog(data);
     } else if (event.type === 'add') {
       this.router.navigate(['store/purchases/procurement-control-panel/' + event.subItem.Id],
-      {
-        queryParams: {
-          quantity: event.subItem.ProcuredAmount,
+        {
+          queryParams: {
+            quantity: event.subItem.ProcuredAmount,
+          }
         }
-      }
       );
     }
   }
