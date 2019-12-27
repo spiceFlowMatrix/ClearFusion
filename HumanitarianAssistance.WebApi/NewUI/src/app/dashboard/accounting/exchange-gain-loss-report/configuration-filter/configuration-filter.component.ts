@@ -9,6 +9,7 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 import { ExchangeGainLossReportService } from '../exchange-gain-loss-report.service';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
 
 @Component({
   selector: 'app-configuration-filter',
@@ -19,29 +20,38 @@ export class ConfigurationFilterComponent implements OnInit, OnDestroy {
 
   showConfig = false;
   gainLossConfigForm: FormGroup;
+  defaultFinancialYearDate: IDefaultFinancialYearDate;
   currency$: Observable<IDropDownModel[]>;
   accounts$: Observable<IDropDownModel[]>;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-   // screen
-   screenHeight: any;
-   screenWidth: any;
-   scrollStyles: any;
+  // screen
+  screenHeight: any;
+  screenWidth: any;
+  scrollStyles: any;
 
   constructor(private eRef: ElementRef, private toastr: ToastrService,
     private fieldConfig: FieldConfigService, private fb: FormBuilder, private gainLossService: ExchangeGainLossReportService) { }
 
   ngOnInit() {
     this.onInItForm();
+
     forkJoin([
       this.getAllCurrency(),
-      this.getAllAccounts()
+      this.getAllAccounts(),
+      this.getDefaultAccountingPeriod()
     ])
       .pipe(takeUntil(this.destroyed$))
       .subscribe(result => {
         this.subscribeAllCurrency(result[0]);
         this.subscribeAllInputAccounts(result[1]);
+        this.subscribeDefaultAccountingPeriod(result[2]);
       });
+
+    this.defaultFinancialYearDate = {
+      startDate: null,
+      endDate: null
+    };
 
   }
 
@@ -101,11 +111,50 @@ export class ConfigurationFilterComponent implements OnInit, OnDestroy {
       this.toastr.warning('Please correct form errors and submit again');
     }
 
+    this.gainLossConfigForm.value.ComparisionDate = StaticUtilities.setLocalDate(this.gainLossConfigForm.value.ComparisionDate);
+    this.gainLossConfigForm.value.StartDate = StaticUtilities.setLocalDate(this.gainLossConfigForm.value.StartDate);
+    this.gainLossConfigForm.value.EndDate = StaticUtilities.setLocalDate(this.gainLossConfigForm.value.EndDate);
+
     this.gainLossService.SaveCalculatorConfigData(this.gainLossConfigForm.value)
+      .subscribe(x => {
+        if (x) {
+          this.toastr.success('Configuration Updated');
+        }
+      }, error => {
+        this.toastr.error('Failed, Please try again');
+      });
+  }
+
+  getData() {
+    this.getConfigurationFilter();
+    this.getDefaultAccountingPeriod();
+  }
+
+  getConfigurationFilter() {
+    this.gainLossService.GetGainLossCaculatorConfiguration().subscribe(x => {
+      if (x.CalculatorConfiguration) {
+        this.onInItForm();
+        this.gainLossConfigForm.patchValue({
+          'CurrencyId': x.CalculatorConfiguration.CurrencyId,
+          'StartDate': x.CalculatorConfiguration.StartDate,
+          'EndDate': x.CalculatorConfiguration.EndDate,
+          'ComparisionDate': x.CalculatorConfiguration.ComparisionDate,
+          'DebitAccount': x.CalculatorConfiguration.DebitAccount,
+          'CreditAccount': x.CalculatorConfiguration.CreditAccount,
+        });
+      }
+    }, error => {
+      this.toastr.error('Failed, Please try again');
+    });
+  }
+
+  getDefaultAccountingPeriod() {
+    return this.gainLossService.GetDefaultAccountingPeriod();
   }
 
   show() {
     this.showConfig = true;
+    this.getData();
   }
 
   getState(e) {
@@ -113,7 +162,32 @@ export class ConfigurationFilterComponent implements OnInit, OnDestroy {
   }
 
   useDefault(event, type: string) {
+    if (type === 'period') {
 
+      if (this.defaultFinancialYearDate.startDate && this.defaultFinancialYearDate.endDate) {
+        this.gainLossConfigForm.patchValue({
+          'StartDate': this.defaultFinancialYearDate.startDate,
+          'EndDate': this.defaultFinancialYearDate.endDate
+        });
+      } else {
+        this.toastr.warning('no default Accounting Period set');
+      }
+    } else if (type === 'comparisionDate') {
+      if (this.defaultFinancialYearDate.endDate) {
+        this.gainLossConfigForm.patchValue({
+          'ComparisionDate': StaticUtilities.getLocalDate(this.defaultFinancialYearDate.endDate),
+        });
+      }
+    }
+  }
+
+  subscribeDefaultAccountingPeriod(response) {
+    if (response.AccountingPeriod) {
+      this.defaultFinancialYearDate = {
+        startDate: StaticUtilities.getLocalDate(response.AccountingPeriod.StartDate),
+        endDate: StaticUtilities.getLocalDate(response.AccountingPeriod.EndDate)
+      };
+    }
   }
 
   ngOnDestroy() {
@@ -121,4 +195,9 @@ export class ConfigurationFilterComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 
+}
+
+export interface IDefaultFinancialYearDate {
+  startDate: any;
+  endDate: any;
 }

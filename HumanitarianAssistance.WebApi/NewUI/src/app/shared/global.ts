@@ -304,6 +304,8 @@ export class GLOBAL {
   public static API_GainLossReport_GetExchangeGainLossVoucherList = 'GainLossReport/GetExchangeGainLossVoucherList';
   public static API_GainLossReport_AddExchangeGainLossVoucher = 'GainLossReport/AddExchangeGainLossVoucher';
   public static API_GainLossReport_DeleteGainLossVoucherTransaction = 'GainLossReport/DeleteGainLossVoucherTransaction';
+  public static API_GainLossReport_GetGainLossCaculatorConfiguration = 'GainLossReport/GetGainLossCaculatorConfiguration';
+  public static API_GainLossReport_GetDefaultAccountingPeriod = 'GainLossReport/GetDefaultAccountingPeriod';
 
   public static API_Account_GetAllAccountFilter = 'Account/GetAllAccountFilter';
   public static API_Account_GetAllVoucherType = 'Account/GetAllVoucherType';

@@ -7,6 +7,7 @@ using HumanitarianAssistance.Application.Accounting.Command;
 using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities;
+using HumanitarianAssistance.Domain.Entities.Accounting;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -30,89 +31,29 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Update
             {
                 if (request.AccountIds.Any())
                 {
-                //     //Get all Accounts that are already saved
-                //     List<GainLossSelectedAccounts> gainLossSelectedAccountsList = await _dbContext.GainLossSelectedAccounts.Where(x => x.IsDeleted == false && x.UserId == request.UserId).ToListAsync();
-
-                //     if (gainLossSelectedAccountsList.Any())
-                //     {
-
-                //         //Get List of Removed Accounts
-                //         List<GainLossSelectedAccounts> removedGainLossSelectedAccounts = gainLossSelectedAccountsList.Where(x => !request.AccountIds.Contains(x.ChartOfAccountNewId)).ToList();
-
-                //         if (removedGainLossSelectedAccounts.Any())
-                //         {
-                //             removedGainLossSelectedAccounts.ForEach(x => x.IsDeleted = true);
-
-                //             //Delete and update the table with the accounts already deleted
-                //             _dbContext.UpdateRange(removedGainLossSelectedAccounts);
-                //             await _dbContext.SaveChangesAsync();
-                //         }
-
-                //         //Get List of Accounts that are to be added
-                //         List<long> addGainLossSelectedAccounts = request.AccountIds.Where(x => !gainLossSelectedAccountsList.Select(y => y.ChartOfAccountNewId).Contains(x)).ToList();
-
-                //         gainLossSelectedAccountsList = new List<GainLossSelectedAccounts>();
-
-                //         foreach (long accountId in addGainLossSelectedAccounts)
-                //         {
-                //             GainLossSelectedAccounts gainLossSelectedAccounts = new GainLossSelectedAccounts
-                //             {
-                //                 IsDeleted = false,
-                //                 CreatedDate = DateTime.Now,
-                //                 ChartOfAccountNewId = accountId,
-                //             };
-
-                //             gainLossSelectedAccountsList.Add(gainLossSelectedAccounts);
-
-                //         }
-                //     }
-                //     else //table is empty so it is safe to save all the accounts
-                //     {
-                //         gainLossSelectedAccountsList = new List<GainLossSelectedAccounts>();
-
-                //         foreach (long accountId in request.AccountIds)
-                //         {
-                //             GainLossSelectedAccounts gainLossSelectedAccounts = new GainLossSelectedAccounts
-                //             {
-                //                 IsDeleted = false,
-                //                 CreatedDate = DateTime.Now,
-                //                 ChartOfAccountNewId = accountId,
-                //             };
-
-                //             gainLossSelectedAccountsList.Add(gainLossSelectedAccounts);
-                //         }
-                //     }
-
-                //     //Save Accounts to the DB
-                //     if (gainLossSelectedAccountsList.Any())
-                //     {
-                //        await _dbContext.GainLossSelectedAccounts.AddRangeAsync(gainLossSelectedAccountsList);
-                //        await _dbContext.SaveChangesAsync();
-                //     }
-
                     //Get all Accounts that are already saved
-                    GainLossSelectedAccounts gainLossSelectedAccounts = await _dbContext.GainLossSelectedAccounts.FirstOrDefaultAsync(x => x.IsDeleted == false && x.UserId == request.UserId);
+                    GainLossCalculatorConfiguration gainLossSelectedAccounts = await _dbContext.GainLossCalculatorConfiguration.FirstOrDefaultAsync(x => x.IsDeleted == false && x.UserId == request.UserId);
 
                     //If not saved then add accounts
                     if(gainLossSelectedAccounts == null)
                     {
-                        gainLossSelectedAccounts = new GainLossSelectedAccounts
+                        gainLossSelectedAccounts = new GainLossCalculatorConfiguration
                         {
-                            CreatedDate = DateTime.UtcNow,
-                            CreatedById= request.UserId,
                             UserId= request.UserId,
                             IsDeleted = false,
+                            CreatedDate= DateTime.UtcNow,
+                            CreatedById= request.UserId,
                             SelectedAccounts = request.AccountIds.ToArray()
                         };
 
-                        await _dbContext.GainLossSelectedAccounts.AddAsync(gainLossSelectedAccounts);
+                        await _dbContext.GainLossCalculatorConfiguration.AddAsync(gainLossSelectedAccounts);
                     } // if saved then update accounts
                     else
                     {
                         gainLossSelectedAccounts.ModifiedDate= DateTime.UtcNow;
                         gainLossSelectedAccounts.ModifiedById= request.UserId;
                         gainLossSelectedAccounts.SelectedAccounts= request.AccountIds.ToArray();
-                        _dbContext.GainLossSelectedAccounts.Update(gainLossSelectedAccounts);
+                        _dbContext.GainLossCalculatorConfiguration.Update(gainLossSelectedAccounts);
                     }
 
                     await _dbContext.SaveChangesAsync();

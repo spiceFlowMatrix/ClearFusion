@@ -250,8 +250,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveCalculatorConfigData([FromBody]UpdatePermissionsOnSelectedRoleCommand model)
+        public async Task<IActionResult> SaveCalculatorConfigData([FromBody]SaveCalculatorConfigDataCommand model)
         {
+            model.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var result= await _mediator.Send(model);
             return Ok(result);
         }

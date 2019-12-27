@@ -12,5 +12,6 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
         public DateTime ComparisionDate { get; set; }
         public long DebitAccount { get; set; }
         public long CreditAccount { get; set; }
+        public string UserId { get; set; }
     }
 }

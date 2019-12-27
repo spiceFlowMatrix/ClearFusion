@@ -14,7 +14,6 @@ import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
 import { MatRangeDatepickerModule, MatRangeNativeDateModule } from 'mat-range-datepicker';
 import { ExchangeGainLossReportComponent } from './exchange-gain-loss-report/exchange-gain-loss-report.component';
 import { ConfigurationFilterComponent } from './exchange-gain-loss-report/configuration-filter/configuration-filter.component';
-import { TransactionFilterComponent } from './exchange-gain-loss-report/transaction-filter/transaction-filter.component';
 import { ConsolidateGainLossComponent } from './exchange-gain-loss-report/consolidate-gain-loss/consolidate-gain-loss.component';
 import { ExchangeGainLossReportService } from './exchange-gain-loss-report/exchange-gain-loss-report.service';
 
@@ -46,7 +45,6 @@ import { ExchangeGainLossReportService } from './exchange-gain-loss-report/excha
     TrialBalanceReportComponent,
     ExchangeGainLossReportComponent,
     ConfigurationFilterComponent,
-    TransactionFilterComponent,
     ConsolidateGainLossComponent,
   ],
   providers: [

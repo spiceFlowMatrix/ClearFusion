@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { GlobalService } from 'src/app/shared/services/global-services.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
-import { GLOBAL } from 'src/app/shared/global';
 import { map } from 'rxjs/internal/operators/map';
 import { IResponseData } from '../vouchers/models/status-code.model';
 import { IGainLossAddVoucherForm } from '../gain-loss-report/gain-loss-report.model';
+import { GLOBAL } from 'src/app/shared/global';
 // import { IGainLossAddVoucherForm } from './gain-loss-report.model';
 
 @Injectable()
@@ -203,19 +203,9 @@ export class ExchangeGainLossReportService {
   //#endregion
 
   //#region "SaveCalculatorConfigData"
-  SaveCalculatorConfigData(): any {
+  SaveCalculatorConfigData(model: any): any {
     return this.globalService
-      .post(this.appurl.getApiUrl() + GLOBAL.API_Account_GetAllVoucherType)
-      .pipe(
-        map(x => {
-          const responseData: IResponseData = {
-            data: x.data.VoucherTypeList,
-            statusCode: x.StatusCode,
-            message: x.Message
-          };
-          return responseData;
-        })
-      );
+      .post(this.appurl.getApiUrl() + GLOBAL.API_Account_SaveCalculatorConfigData, model);
   }
   //#endregion
 
@@ -269,5 +259,16 @@ export class ExchangeGainLossReportService {
       );
   }
   //#endregion
+
+  //#region "GetGainLossCaculatorConfiguration"
+  GetGainLossCaculatorConfiguration() {
+    return this.globalService
+      .getDataById(this.appurl.getApiUrl() + GLOBAL.API_GainLossReport_GetGainLossCaculatorConfiguration);
+  }
+  //#endregion
+  GetDefaultAccountingPeriod() {
+    return this.globalService
+      .getDataById(this.appurl.getApiUrl() + GLOBAL.API_GainLossReport_GetDefaultAccountingPeriod);
+  }
 
 }
