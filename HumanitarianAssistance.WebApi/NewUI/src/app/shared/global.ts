@@ -308,6 +308,7 @@ export class GLOBAL {
   public static API_Account_GetAllAccountFilter = 'Account/GetAllAccountFilter';
   public static API_Account_GetAllVoucherType = 'Account/GetAllVoucherType';
   public static API_Account_GetAllInputLevelAccountCode = 'Account/GetAllInputLevelAccountCode';
+  public static API_Account_SaveCalculatorConfigData = 'Account/SaveCalculatorConfigData';
 
 
   public static API_Project_GetProjectBudgetLineDetail = 'Project/GetProjectBudgetLineDetail';

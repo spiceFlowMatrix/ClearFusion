@@ -28,7 +28,7 @@
         <li [ngClass]="{'active': selectedLink == 2 }" (click)="onsideBarLinkClicked('/accounting/vouchers', 2)" *ngIf="displayChildModule(ModulesAccounting.Vouchers)"><a>Vouchers</a></li>
         <li [ngClass]="{'active': selectedLink == 3 }" (click)="onsideBarLinkClicked('/accounting/chart-of-accounts', 3)" *ngIf="displayChildModule(ModulesAccounting.ChartOfAccount)"><a>Charts of Account</a></li>
         <li [ngClass]="{'active': selectedLink == 4 }" (click)="onsideBarLinkClicked('/accounting/financial-report', 4)"  *ngIf="displayChildModule(ModulesAccounting.FinancialReport)"><a>Financial Report</a></li>
-        <li [ngClass]="{'active': selectedLink == 5 }" (click)="onsideBarLinkClicked('/accounting/gain-loss-report', 5)" *ngIf="displayChildModule(ModulesAccounting.GainLossReport)"><a>Gain/Loss Report</a></li>
+        <li [ngClass]="{'active': selectedLink == 5 }" (click)="onsideBarLinkClicked('/accounting/exchange-gain-loss-report', 5)" *ngIf="displayChildModule(ModulesAccounting.GainLossReport)"><a>Gain/Loss Report</a></li>
         <!-- <li [ngClass]="{'active': selectedLink == 59 }" (click)="onsideBarLinkClicked('/accounting/voucher-summary-report', 59)" *ngIf="displayChildModule(ModulesAccounting.VoucherSummaryReport)"><a>Voucher Summary Report</a></li> -->
         <li [ngClass]="{'active': selectedLink == 17 }" (click)="onsideBarLinkClicked('/accounting/exchange-rate', 17)" *ngIf="displayChildModule(ModulesAccounting.ExchangeRates)"><a>Exchange Rates</a></li>
         <li [ngClass]="{'active': selectedLink == 18 }" (click)="onsideBarLinkClicked('/accounting/journal-report', 18)" *ngIf="displayChildModule(ModulesAccounting.Journal)"><a>Journal</a></li>

@@ -1,3 +1,57 @@
-<p>
-  exchange-gain-loss-report works!
-</p>
+<lib-sub-header-template>
+  <span class="action_header">Results
+    <hum-button [type]="'add'" [text]="'CONSOLIDATE EXCHANGE GAIN/LOSS'" (click)="consolidate()"></hum-button>
+  </span>
+  <div class="action_section">
+    <hum-button [type]="'filter'" [text]="'TRANSACTION FILTERS'" (click)="isBasic=!isBasic"></hum-button>
+    <hum-button [type]="'filter'" [text]="'CONFIGURATION'" (click)="showConfiguration()"></hum-button>
+  </div>
+</lib-sub-header-template>
+<mat-divider></mat-divider>
+  <div class="row" [ngStyle]="scrollStyles">
+    <div class="col-md-12">
+
+      <mat-table #table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="Checked">
+          <mat-header-cell *matHeaderCellDef>Select</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <mat-checkbox [(ngModel)]="element.Checked"></mat-checkbox>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="AccountCode">
+          <mat-header-cell *matHeaderCellDef> Account Code </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.AccountCode}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="AccountName">
+          <mat-header-cell *matHeaderCellDef> Account Name </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.AccountName}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="BalanceOnOriginalTransactionDates">
+          <mat-header-cell *matHeaderCellDef> Bal. On Original Dates </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.BalanceOnOriginalTransactionDates}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="BalanceOnComparisionDate">
+          <mat-header-cell *matHeaderCellDef> Bal. On Comparision Date </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.BalanceOnComparisionDate}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="ResultingGainLoss">
+          <mat-header-cell *matHeaderCellDef> Resulting Gain/Loss </mat-header-cell>
+          <mat-cell *matCellDef="let element"><span [ngClass]="getLabelClass(element.ResultingGainLoss)">{{labelText}}</span> {{element.ResultingGainLoss}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+      <!-- <mat-paginator [length]="purchaseRecordCount" [pageSize]="filterValueModel.PageSize"
+        [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
+      </mat-paginator> -->
+    </div>
+  </div>
+
+  <app-configuration-filter></app-configuration-filter>

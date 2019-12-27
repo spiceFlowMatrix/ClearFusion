@@ -249,6 +249,13 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
             return await _mediator.Send(model);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SaveCalculatorConfigData([FromBody]UpdatePermissionsOnSelectedRoleCommand model)
+        {
+            var result= await _mediator.Send(model);
+            return Ok(result);
+        }
+
         [HttpGet]
         public async Task<string> GetLoggedInUserUserName()
         {
