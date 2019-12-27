@@ -86,8 +86,8 @@ export class RequestDetailComponent implements OnInit {
   screenWidth: any;
   scrollStyles: any;
   actions: TableActionsModel;
-  CandidateStatusSelection = [0, 1, 2];
-  EmployeeStatusSelection = [0, 1, 2];
+  CandidateStatusSelection = [0, 1, 2, 4];
+  EmployeeStatusSelection = [0, 1, 2, 4];
   constructor(
     public dialog: MatDialog,
     private globalSharedService: GlobalSharedService,
@@ -140,7 +140,6 @@ export class RequestDetailComponent implements OnInit {
     this.routeActive.parent.parent.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
-    this.getHiringRequestDetailsByHiringRequestId();
     this.actions = {
       items: {
         button: { status: true, text: '' },
@@ -158,7 +157,7 @@ export class RequestDetailComponent implements OnInit {
       HiringRequestId: [],
       ProjectId: this.projectId
     };
-
+    this.getHiringRequestDetailsByHiringRequestId();
     this.getExistingEmployeeDropDownList();
     this.getScreenSize();
   }
@@ -383,6 +382,21 @@ export class RequestDetailComponent implements OnInit {
                           edit: false
                         }
                       ]
+                    : element.CandidateStatus === CandidateStatus.Selected
+                    ? [
+                        {
+                          anchor: {
+                            status: true,
+                            text:
+                              element.EmployeeCode + '-' + element.EmployeeName,
+                            type: 'link'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false,
+                          link: true
+                        }
+                      ]
                     : [],
                 subItems: [
                   {
@@ -423,6 +437,11 @@ export class RequestDetailComponent implements OnInit {
   //#endregion
   // #region adding new candidate
   addNewCandidate(): void {
+    let candidateCount;
+    this.newCandidatesList$.subscribe(res => {
+      candidateCount = res.filter(x => CandidateStatus[x.CandidateStatus] === CandidateStatus.Selected);
+    });
+    if(candidateCount.length < this.hiringRequestDetails.TotalVacancies) {
     // NOTE: It open AddHiringRequest dialog and passed the data into the AddHiringRequestsComponent Model
     const dialogRef = this.dialog.open(AddNewCandidateComponent, {
       width: '700px',
@@ -434,9 +453,13 @@ export class RequestDetailComponent implements OnInit {
     });
     // refresh the list after new request created
     dialogRef.componentInstance.onAddCandidateListRefresh.subscribe(() => {
+      this.hiringRequestDetails.FilledVacancies = this.hiringRequestDetails.FilledVacancies + 1;
       this.getAllCandidateList(this.filterValueModel);
     });
     dialogRef.afterClosed().subscribe(() => {});
+  } else {
+    this.toastr.warning('Vacancies Already Filled');
+  }
   }
   //#endregion
 
@@ -467,12 +490,16 @@ export class RequestDetailComponent implements OnInit {
         });
         break;
       default:
+        let id = data.type.split('-');
+        id = id[0];
+        id = id.substring(1);
+        window.open(this.appurl.getOldUiUrl() + 'dashboard/hr/employees?empCode=' + id, '_blank');
         break;
     }
   }
   shortListCandidate(data: any) {
     const candidateDetails: any = {
-      statusId : CandidateStatus['Pending Interview'],
+      statusId: CandidateStatus['Pending Interview'],
       candidateId: data.item.CandidateId,
       projectId: this.projectId,
       hiringRequestId: this.hiringRequestId
@@ -481,7 +508,7 @@ export class RequestDetailComponent implements OnInit {
   }
   selectCandidate(data: any) {
     const candidateDetails: any = {
-      statusId : CandidateStatus.Selected,
+      statusId: CandidateStatus.Selected,
       candidateId: data.item.CandidateId,
       projectId: this.projectId,
       hiringRequestId: this.hiringRequestId
@@ -551,6 +578,11 @@ export class RequestDetailComponent implements OnInit {
       HiringRequestId: this.hiringRequestId,
       ProjectId: this.projectId
     };
+    let IsHavingCandidate;
+    this.newCandidatesList$.subscribe(element => {
+      IsHavingCandidate = element.find(x => x.CandidateStatus === 'Pending Interview');
+     });
+     if (IsHavingCandidate){
     this.globalSharedService
       .getFile(
         this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetCandidateDetailReportPdf,
@@ -558,6 +590,9 @@ export class RequestDetailComponent implements OnInit {
       )
       .pipe(takeUntil(this.destroyed$))
       .subscribe();
+     } else {
+       this.toastr.warning('Not Having Shortlist Candidates');
+     }
     this.loader.hideLoader();
   }
   //#endregion
@@ -632,7 +667,11 @@ export class RequestDetailComponent implements OnInit {
 
   //#region "get Existing Employee DropDown List"
   getExistingEmployeeDropDownList() {
-    this.hiringRequestService.GetAllEmployeeList().subscribe(
+    const model = {
+      ProjectId: this.projectId,
+      HiringRequestId: this.hiringRequestId
+    };
+    this.hiringRequestService.GetAllEmployeeList(model).subscribe(
       (response: IResponseData) => {
         this.loader.showLoader();
         if (response.statusCode === 200 && response.data !== null) {
@@ -703,7 +742,7 @@ export class RequestDetailComponent implements OnInit {
   }
   selectEmployee(data: any) {
     const candidateDetails: any = {
-      statusId : CandidateStatus.Selected,
+      statusId: CandidateStatus.Selected,
       // statusId: +CandidateStatus[data.item.CandidateStatus],
       employeeId: data.item.EmployeeId,
       projectId: this.projectId,
@@ -714,7 +753,7 @@ export class RequestDetailComponent implements OnInit {
 
   rejectEmployee(data: any) {
     const candidateDetails: any = {
-      statusId : CandidateStatus.Rejected,
+      statusId: CandidateStatus.Rejected,
       employeeId: data.item.EmployeeId,
       projectId: this.projectId,
       hiringRequestId: this.hiringRequestId
@@ -724,14 +763,15 @@ export class RequestDetailComponent implements OnInit {
   //#endregion
 
   AddCandidateAsEmployee(model: any) {
-    this.loader.showLoader();
+    // this.loader.showLoader();
     this.hiringRequestService
       .AddCandidateAsEmployee(model)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (response: IResponseData) => {
           if (response.statusCode === 200) {
-            this.toastr.success('Candidate successfully Selected');
+            this.updateCandidateStatus(model);
+            this.getAllCandidateList(this.filterValueModel);
             this.loader.hideLoader();
           } else {
             this.toastr.error(response.message);

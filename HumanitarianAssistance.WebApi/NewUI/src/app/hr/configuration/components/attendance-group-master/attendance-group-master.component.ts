@@ -14,8 +14,6 @@ import { AddAttendanceGroupComponent } from './add-attendance-group/add-attendan
   styleUrls: ['./attendance-group-master.component.scss']
 })
 export class AttendanceGroupMasterComponent implements OnInit {
-
-
   attendanceGroupList$: Observable<any[]>;
   attendanceGroupHeaders$ = of(['Id', 'Attendance Group Name', 'Description']);
 
@@ -25,72 +23,92 @@ export class AttendanceGroupMasterComponent implements OnInit {
     PageIndex: 0
   };
   RecordCount: number;
-
-  constructor(private hrService: HrService, private dialog: MatDialog, private toastr: ToastrService,
-    private commonLoader: CommonLoaderService) { }
+  Id: number;
+  constructor(
+    private hrService: HrService,
+    private dialog: MatDialog,
+    private toastr: ToastrService,
+    private commonLoader: CommonLoaderService
+  ) {}
 
   ngOnInit() {
     this.actions = {
       items: {
         button: { status: false, text: '' },
-        delete: false,
         download: false,
-        edit: true
+        edit: true,
+        delete: true
       },
       subitems: {
         button: { status: false, text: '' },
         delete: false,
-        download: false,
+        download: false
       }
-  };
-  this.getAttendanceGroupList();
-}
-getAttendanceGroupList() {
-  this.commonLoader.showLoader();
-  this.hrService.getAttendanceGroupList(this.pageModel).subscribe(x => {
-    this.commonLoader.hideLoader();
-    this.attendanceGroupList$ = of(x.Result.map(element => {
-      return {
-        AttendanceGroupId: element.AttendanceGroupId,
-        Name: element.Name,
-        Description: element.Description,
-      };
-    }));
-    this.RecordCount = x.RecordCount;
-  }, error => {
-    this.commonLoader.hideLoader();
-  });
-}
+    };
+    this.getAttendanceGroupList();
+  }
+  getAttendanceGroupList() {
+    this.commonLoader.showLoader();
+    this.hrService.getAttendanceGroupList(this.pageModel).subscribe(
+      x => {
+        this.commonLoader.hideLoader();
+        this.attendanceGroupList$ = of(
+          x.Result.map(element => {
+            return {
+              AttendanceGroupId: element.AttendanceGroupId,
+              Name: element.Name,
+              Description: element.Description
+            };
+          })
+        );
+        this.RecordCount = x.RecordCount;
+      },
+      error => {
+        this.commonLoader.hideLoader();
+      }
+    );
+  }
 
-addAttendanceGroup() {
-  const dialogRef = this.dialog.open(AddAttendanceGroupComponent, {
-    width: '450px',
-  });
-
-  dialogRef.afterClosed().subscribe(x => {
-     this.getAttendanceGroupList();
-  });
-}
-
-actionEvents(event: any) {
-  if (event.type === 'edit') {
+  addAttendanceGroup() {
     const dialogRef = this.dialog.open(AddAttendanceGroupComponent, {
-      width: '450px',
-      data: event.item
+      width: '450px'
     });
 
     dialogRef.afterClosed().subscribe(x => {
       this.getAttendanceGroupList();
     });
   }
-}
 
-//#region "pageEvent"
-pageEvent(e) {
-  this.pageModel.PageIndex = e.pageIndex;
-  this.pageModel.PageSize = e.pageSize;
-  this.getAttendanceGroupList();
-}
-//#endregion
+  actionEvents(event: any) {
+    if (event.type === 'delete') {
+      this.hrService.openDeleteDialog().subscribe(res => {
+        if (res === true) {
+          this.Id = event.item.AttendanceGroupId;
+          this.hrService.deleteAttendenceDetail(this.Id).subscribe(response => {
+            if (response === true) {
+              this.getAttendanceGroupList();
+            }
+          });
+        }
+      });
+    }
+    if (event.type === 'edit') {
+      const dialogRef = this.dialog.open(AddAttendanceGroupComponent, {
+        width: '450px',
+        data: event.item
+      });
 
+      dialogRef.afterClosed().subscribe(x => {
+        this.getAttendanceGroupList();
+      });
+    }
+  }
+
+  //#region "pageEvent"
+  pageEvent(e) {
+    this.pageModel.PageIndex = e.pageIndex;
+    this.pageModel.PageSize = e.pageSize;
+    this.getAttendanceGroupList();
+  }
+  //#endregion
 }

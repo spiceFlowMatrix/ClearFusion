@@ -18,6 +18,7 @@ import {
   IHiringRequestModel
 } from '../models/hiring-requests-models';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { DISABLED } from '@angular/forms/src/model';
 
 @Component({
   selector: 'app-add-hiring-request',
@@ -27,6 +28,7 @@ import { StaticUtilities } from 'src/app/shared/static-utilities';
 export class AddHiringRequestComponent implements OnInit {
   projectId: number;
   OfficeId: number;
+  isEditable = true;
   isFormSubmitted = false;
   hiringRequestId: number;
   hiringRequestCode: string;
@@ -41,6 +43,7 @@ export class AddHiringRequestComponent implements OnInit {
   departmentList$: Observable<IDropDownModel[]>;
   currencyList$: Observable<IDropDownModel[]>;
   educationDegreeList$: Observable<IDropDownModel[]>;
+  provinceList$: Observable<IDropDownModel[]>;
   onAddHiringRequestListRefresh = new EventEmitter();
   onUpdateHiringRequestListRefresh = new EventEmitter();
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
@@ -76,7 +79,10 @@ export class AddHiringRequestComponent implements OnInit {
       Profession: [null, [Validators.required]],
       SpecificDutiesAndResponsibilities: [null, [Validators.required]],
       KnowledgeAndSkillsRequired: [null, [Validators.required]],
-      SubmissionGuidelines: [null, [Validators.required]]
+      SubmissionGuidelines: [null, [Validators.required]],
+      Background: [null, [Validators.required]],
+      Nationality: [null, [Validators.required]],
+      ProvinceId: [null, [Validators.required]]
     });
     this.jobShiftList$ = of([
       { name: 'Day', value: 1 },
@@ -92,6 +98,7 @@ export class AddHiringRequestComponent implements OnInit {
       this.hiringRequestId
     );
     if (this.data.hiringRequestId !== 0) {
+      this.isEditable = false;
       this.getAllHiringRequestDetail();
     } else {
       this.getHiringRequestCode();
@@ -254,6 +261,20 @@ export class AddHiringRequestComponent implements OnInit {
     );
   }
   //#endregion
+  onChangeNationality(CountryId: number) {
+    this.hiringRequestService
+      .getAllProvinceListByCountryId([CountryId])
+      .subscribe(x => {
+        this.provinceList$ = of(
+          x.data.map(element => {
+            return {
+              value: element.ProvinceId,
+              name: element.ProvinceName
+            };
+          })
+        );
+      });
+  }
 
   //#region "Get Department List"
   getDepartmentList(officeId) {
@@ -296,6 +317,7 @@ export class AddHiringRequestComponent implements OnInit {
         (response: IResponseData) => {
           this.loader.showLoader();
           if (response.statusCode === 200 && response.data !== null) {
+            this.onChangeNationality(response.data.Country);
             this.hiringRequestCode = response.data.HiringRequestCode;
             this.addHiringRequestForm.setValue({
               HiringRequestId: response.data.HiringRequestId,
@@ -321,8 +343,14 @@ export class AddHiringRequestComponent implements OnInit {
                 response.data.SpecificDutiesAndResponsibilities,
               KnowledgeAndSkillsRequired:
                 response.data.KnowledgeAndSkillsRequired,
-              SubmissionGuidelines: response.data.SubmissionGuidelines
+              SubmissionGuidelines: response.data.SubmissionGuidelines,
+              Background: response.data.Background,
+              ProvinceId: response.data.Province,
+              Nationality: response.data.Country
             });
+            this.addHiringRequestForm.controls['ContractDuration'].disable();
+            this.addHiringRequestForm.controls['ContractType'].disable();
+            this.addHiringRequestForm.controls['TotalVacancy'].disable();
             this.getDepartmentList(response.data.Office);
           }
           this.loader.hideLoader();
@@ -358,7 +386,7 @@ export class AddHiringRequestComponent implements OnInit {
   }
   //#endregion
   //#region "Edit hiring request"
-  EditHiringRequest() {
+  EditHiringRequest(data: IHiringRequestModel) {
     this.addHiringRequestForm.value.ClosingDate = StaticUtilities.getLocalDate(
       this.addHiringRequestForm.value.ClosingDate
     );
@@ -366,25 +394,23 @@ export class AddHiringRequestComponent implements OnInit {
       this.addHiringRequestForm.value.AnouncingDate
     );
     this.isFormSubmitted = true;
-    this.hiringRequestService
-      .EditHiringRequestDetail(this.addHiringRequestForm.value)
-      .subscribe(
-        (response: IResponseData) => {
-          if (response.statusCode === 200) {
-            this.toastr.success('Hiring request updated successfully');
-            this.UpdateHiringRequestListRefresh();
-            this.isFormSubmitted = false;
-          } else {
-            this.toastr.error(response.message);
-            this.isFormSubmitted = false;
-          }
-          this.onCancelPopup();
-        },
-        () => {
-          this.toastr.error('Someting went wrong. Please try again');
+    this.hiringRequestService.EditHiringRequestDetail(data).subscribe(
+      (response: IResponseData) => {
+        if (response.statusCode === 200) {
+          this.toastr.success('Hiring request updated successfully');
+          this.UpdateHiringRequestListRefresh();
+          this.isFormSubmitted = false;
+        } else {
+          this.toastr.error(response.message);
           this.isFormSubmitted = false;
         }
-      );
+        this.onCancelPopup();
+      },
+      () => {
+        this.toastr.error('Someting went wrong. Please try again');
+        this.isFormSubmitted = false;
+      }
+    );
   }
   //#endregion
   //#region "On hiring request list refresh"
@@ -402,12 +428,12 @@ export class AddHiringRequestComponent implements OnInit {
   }
   //#endregion
   //#region "On form submission"
-  onFormSubmit(data: any) {
+  onFormSubmit() {
     if (this.addHiringRequestForm.valid) {
       if (this.hiringRequestId === 0) {
-        this.AddHiringRequest(data);
+        this.AddHiringRequest(this.addHiringRequestForm.getRawValue());
       } else {
-        this.EditHiringRequest();
+        this.EditHiringRequest(this.addHiringRequestForm.getRawValue());
       }
     }
   }

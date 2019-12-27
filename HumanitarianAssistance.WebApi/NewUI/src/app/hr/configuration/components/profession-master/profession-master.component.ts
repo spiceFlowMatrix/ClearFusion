@@ -14,7 +14,6 @@ import { AddProfessionComponent } from './add-profession/add-profession.componen
   styleUrls: ['./profession-master.component.scss']
 })
 export class ProfessionMasterComponent implements OnInit {
-
   professionList$: Observable<any[]>;
   professionHeaders$ = of(['Id', 'Profession Name']);
 
@@ -24,70 +23,91 @@ export class ProfessionMasterComponent implements OnInit {
     PageIndex: 0
   };
   RecordCount: number;
-
-  constructor(private hrService: HrService, private dialog: MatDialog, private toastr: ToastrService,
-    private commonLoader: CommonLoaderService) { }
+  Id: number;
+  constructor(
+    private hrService: HrService,
+    private dialog: MatDialog,
+    private toastr: ToastrService,
+    private commonLoader: CommonLoaderService
+  ) {}
 
   ngOnInit() {
     this.actions = {
       items: {
         button: { status: false, text: '' },
-        delete: false,
         download: false,
-        edit: true
+        edit: true,
+        delete: true
       },
       subitems: {
         button: { status: false, text: '' },
         delete: false,
-        download: false,
+        download: false
       }
-  };
-  this.getProfessionList();
-}
-getProfessionList() {
-  this.commonLoader.showLoader();
-  this.hrService.getProfessionList(this.pageModel).subscribe(x => {
-    this.commonLoader.hideLoader();
-    this.professionList$ = of(x.Result.map(element => {
-      return {
-        ProfessionId: element.ProfessionId,
-        ProfessionName: element.ProfessionName,
-      };
-    }));
-    this.RecordCount = x.RecordCount;
-  }, error => {
-    this.commonLoader.hideLoader();
-  });
-}
+    };
+    this.getProfessionList();
+  }
+  getProfessionList() {
+    this.commonLoader.showLoader();
+    this.hrService.getProfessionList(this.pageModel).subscribe(
+      x => {
+        this.commonLoader.hideLoader();
+        this.professionList$ = of(
+          x.Result.map(element => {
+            return {
+              ProfessionId: element.ProfessionId,
+              ProfessionName: element.ProfessionName
+            };
+          })
+        );
+        this.RecordCount = x.RecordCount;
+      },
+      error => {
+        this.commonLoader.hideLoader();
+      }
+    );
+  }
 
-addProfession() {
-  const dialogRef = this.dialog.open(AddProfessionComponent, {
-    width: '450px',
-  });
-
-  dialogRef.afterClosed().subscribe(x => {
-     this.getProfessionList();
-  });
-}
-
-actionEvents(event: any) {
-  if (event.type === 'edit') {
+  addProfession() {
     const dialogRef = this.dialog.open(AddProfessionComponent, {
-      width: '450px',
-      data: event.item
+      width: '450px'
     });
 
     dialogRef.afterClosed().subscribe(x => {
       this.getProfessionList();
     });
   }
-}
 
-//#region "pageEvent"
-pageEvent(e) {
-  this.pageModel.PageIndex = e.pageIndex;
-  this.pageModel.PageSize = e.pageSize;
-  this.getProfessionList();
-}
-//#endregion
+  actionEvents(event: any) {
+    if (event.type === 'delete') {
+      this.hrService.openDeleteDialog().subscribe(res => {
+        if (res === true) {
+          this.Id = event.item.ProfessionId;
+          this.hrService.deleteProfessionDetail(this.Id).subscribe(response => {
+            if (response === true) {
+              this.getProfessionList();
+            }
+          });
+        }
+      });
+    }
+    if (event.type === 'edit') {
+      const dialogRef = this.dialog.open(AddProfessionComponent, {
+        width: '450px',
+        data: event.item
+      });
+
+      dialogRef.afterClosed().subscribe(x => {
+        this.getProfessionList();
+      });
+    }
+  }
+
+  //#region "pageEvent"
+  pageEvent(e) {
+    this.pageModel.PageIndex = e.pageIndex;
+    this.pageModel.PageSize = e.pageSize;
+    this.getProfessionList();
+  }
+  //#endregion
 }

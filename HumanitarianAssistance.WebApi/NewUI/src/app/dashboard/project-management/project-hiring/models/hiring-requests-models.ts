@@ -100,7 +100,7 @@ export interface IHiringRequestModel {
   AnouncingDate?: Date;
   ClosingDate?: Date;
   Country?: number;
-  Province?: number;
+  ProvinceId?: number;
   JobType?: string;
   JobShift?: number;
   JobStatus?: string;
@@ -123,6 +123,8 @@ export interface ICandidateDetailList {
   CvDocument?: string;
   Interview?: string;
   CandidateStatus?: string;
+  EmployeeCode?: string;
+  EmployeeName?: string;
   firstText?: string;
   subItems?: ISubCandidateList[];
 }
@@ -159,6 +161,7 @@ export interface TableActionsModel {
     delete?: boolean;
     edit?: boolean;
     download?: boolean;
+    link?: boolean;
   };
   subitems: {
     button?: { status?: boolean; text?: string };
