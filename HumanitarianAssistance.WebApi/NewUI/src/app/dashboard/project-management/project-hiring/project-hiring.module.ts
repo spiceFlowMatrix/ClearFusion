@@ -34,6 +34,7 @@ import { AddNewTraningComponent } from './interview-detail/add-new-traning/add-n
 import { AddNewInterviewerComponent } from './interview-detail/add-new-interviewer/add-new-interviewer.component';
 import { EntryComponentComponent } from './entry-component/entry-component.component';
 import { CandidateTableComponent } from './candidate-table/candidate-table.component';
+import { AddAnalyticalInfoComponent } from './add-analytical-info/add-analytical-info.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { CandidateTableComponent } from './candidate-table/candidate-table.compo
     AddNewInterviewerComponent,
     InterviewDetailComponent,
     EntryComponentComponent,
-    CandidateTableComponent
+    CandidateTableComponent,
+    AddAnalyticalInfoComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -79,7 +81,8 @@ import { CandidateTableComponent } from './candidate-table/candidate-table.compo
     AddNewCandidateComponent,
     AddNewLanguageComponent,
     AddNewTraningComponent,
-    AddNewInterviewerComponent
+    AddNewInterviewerComponent,
+    AddAnalyticalInfoComponent
   ]
 })
 export class ProjectHiringModule {}

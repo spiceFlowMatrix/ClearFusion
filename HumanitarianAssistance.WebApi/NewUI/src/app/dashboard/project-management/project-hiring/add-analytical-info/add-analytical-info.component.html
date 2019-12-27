@@ -1,0 +1,58 @@
+<div>
+    <h1 mat-dialog-title>
+        Employee Analytical Info Breakdown
+        <button mat-icon-button [mat-dialog-close] class="pull-right">
+    <mat-icon aria-label="clear">clear</mat-icon>
+  </button>
+    </h1>
+    <form class="example-form" [formGroup]="addAnalyticalInfoForm" (ngSubmit)="onFormSubmit(addAnalyticalInfoForm.value)">
+        <div mat-dialog-content>
+            <div class="row">
+                <div class="col-sm-12">
+                    <span>Please submit the employee analytical info breakdown for this existing employee</span><br /><br />
+                    <div class="row">
+                        <div class="col-sm-11">
+                            <app-candidate-table [headers]="analyticalInfoHeaders$" [isDefaultAction]="false" [items]="analyticalInfoList$"></app-candidate-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <span>Entry for this hiring request selection</span><br /><br />
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-lg-3 col-sm-3">
+                        <lib-hum-dropdown formControlName="ProjectId" [validation]="
+                        addAnalyticalInfoForm.controls['ProjectId'].hasError(
+            'required'
+          )
+        " [options]="projectList$" [placeHolder]="'Project'" [disabled]="true"></lib-hum-dropdown>
+                    </div>
+                    <div class="col-lg-3 col-sm-3">
+                        <lib-hum-dropdown formControlName="BudgetlineId" [validation]="
+                      addAnalyticalInfoForm.controls['BudgetlineId'].hasError(
+          'required'
+        )
+      " [options]="budgetLineList$" [placeHolder]="'Budget Line'" [disabled]="true"></lib-hum-dropdown>
+                    </div>
+                    <div class="col-lg-3 col-sm-3">
+                        <lib-hum-dropdown formControlName="AccountCode" [validation]="
+                          addAnalyticalInfoForm.controls['AccountCode'].hasError(
+              'required'
+            )
+          " [options]="accountList$" [placeHolder]="'Account'"></lib-hum-dropdown>
+                    </div>
+                    <div class="col-lg-3 col-sm-3">
+                        <mat-form-field class="example-full-width">
+                            <input matInput formControlName="SalaryPercentage" placeholder="Percentage" type="number" />
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div mat-dialog-actions class="pull-right">
+            <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+            <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'Submit'" [isSubmit]="true"></hum-button>
+            <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+        </div>
+    </form>
+</div>
