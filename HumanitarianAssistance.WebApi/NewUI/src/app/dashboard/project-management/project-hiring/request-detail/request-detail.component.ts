@@ -846,7 +846,7 @@ export class RequestDetailComponent implements OnInit {
 AddAnalyticalInfo(CandidateData: any): void {
   // NOTE: It open AddAnalyticalInfo dialog and passed the data into the AddAnalyticalInfoComponent Model
   const dialogRef = this.dialog.open(AddAnalyticalInfoComponent, {
-    width: '900px',
+    width: '800px',
     autoFocus: false,
     data: {
       hiringRequestId: this.hiringRequestDetails.HiringRequestId,
@@ -857,9 +857,11 @@ AddAnalyticalInfo(CandidateData: any): void {
   });
   // refresh the list after new request created
   dialogRef.componentInstance.onAddAnalyticalInfoRefresh.subscribe(() => {
-   // this.selectEmployee(CandidateData);
+    this.selectEmployee(CandidateData);
   });
-  dialogRef.afterClosed().subscribe(() => {});
+  dialogRef.afterClosed().subscribe(() => {
+    this.selectEmployee(CandidateData);
+  });
 }
 //#endregion
 

@@ -22,7 +22,6 @@ export class AddAnalyticalInfoComponent implements OnInit {
   employeeId: number;
   hiringRequestId: number;
   budgetLineId: number;
-  allowedPercentage: number;
   analyticalInfoList$: Observable<IAnalyticalInfoList[]>;
   accountList$: Observable<IDropDownModel[]>;
   budgetLineList$: Observable<IDropDownModel[]>;
@@ -172,19 +171,16 @@ export class AddAnalyticalInfoComponent implements OnInit {
   //#endregion
   //#region "On form submission"
   onFormSubmit(data: any) {
-    // if (this.analyticalInfoList$ != undefined) {
-    //   this.analyticalInfoList$.subscribe(res => {
-    //     res.forEach(element => {
-    //       this.allowedPercentage = this.allowedPercentage + +(element.Percentage);
-    //     });
-    //     console.log(this.allowedPercentage);
-    //   });
-    // } else {
-    //   this.allowedPercentage = 100;
-    // }
-    // console.log(this.allowedPercentage);
+    let allowedPercentage = 0;
+    if (this.analyticalInfoList$ !== undefined) {
+      this.analyticalInfoList$.subscribe(res => {
+        res.forEach(element => {
+          allowedPercentage = allowedPercentage + (+element.Percentage);
+        });
+      });
+    }
     if (this.addAnalyticalInfoForm.valid) {
-      // if (this.allowedPercentage > data.SalaryPercentage) {
+      if (data.SalaryPercentage + allowedPercentage <= 100) {
         this.isFormSubmitted = true;
         this.hiringRequestService.AddAnalyticalInfo(data).subscribe(
           (response: IResponseData) => {
@@ -203,9 +199,9 @@ export class AddAnalyticalInfoComponent implements OnInit {
             this.isFormSubmitted = false;
           }
         );
-      // } else {
-      //   this.toastr.warning('Percentage total can not be more then 100');
-      // }
+      } else {
+        this.toastr.warning('Percentage total can not be more then 100');
+      }
     }
   }
   //#endregion
