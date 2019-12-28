@@ -12,6 +12,7 @@ import { IAccountList, IGainLossAddVoucherForm } from '../gain-loss-report/gain-
 import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-exchange-gain-loss-report',
@@ -32,18 +33,19 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
   calculatorConfigData: ICalculatorConfig;
   accountDataSource: IDataSource[];
   accountList: IAccountList[] = [];
+
+  selectedRows: GainLossReport[];
   // gainLossAddVoucherForm: IGainLossAddVoucherForm;
   /** control for the MatSelect filter keyword multi-selection */
   public accountMultiFilterCtrl: FormControl = new FormControl();
-  displayedColumns = ['Checked', 'AccountCode', 'AccountName',
+  displayedColumns = ['Select', 'AccountCode', 'AccountName',
     'BalanceOnOriginalTransactionDates', 'BalanceOnComparisionDate', 'GainLossStatus', 'ResultingGainLoss'];
 
-  //dataSource = ELEMENT_DATA;
   labelText: string;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   public filteredAccountsMulti: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+  selection = new SelectionModel<any>(true, []);
   @ViewChild(ConfigurationFilterComponent) fieldConfig: ConfigurationFilterComponent;
-
   constructor(private globalSharedService: GlobalSharedService,
     private gainLossReportService: ExchangeGainLossReportService, private fb: FormBuilder,
     private toastr: ToastrService, private commonLoader: CommonLoaderService, ) { }
@@ -59,6 +61,7 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
     });
 
     this.AccountIdList = [];
+    this.selectedRows = [];
 
     this.GainLossFilter = {
       AccountIdList: [],
@@ -298,7 +301,10 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
     this.AccountIdList = [];
     if (response.statusCode === 200 && response.data !== null) {
       this.AccountIdList = response.data;
+    setTimeout(() => {
       this.getExchangeGainLossData();
+    }, 1000);
+
     }
   }
 
@@ -327,7 +333,6 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
   }
 
   getExchangeGainLossData() {
-    debugger;
     if (!this.calculatorConfigData.CurrencyId && !this.calculatorConfigData.StartDate &&
       !this.calculatorConfigData.EndDate && !this.calculatorConfigData.ComparisionDate) {
       this.toastr.warning('Calculator configuration not set');
@@ -354,13 +359,10 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
       .GetGainLossReportList(this.GainLossFilter)
       .subscribe(
         (response: IResponseData) => {
-          debugger;
           this.gainLossReportList = [];
           if (response.statusCode === 200 && response.data !== null) {
-            debugger;
             response.data.forEach(element => {
               this.gainLossReportList.push({
-                Checked: false,
                 AccountCode: element.AccountCode,
                 AccountName: element.AccountName,
                 BalanceOnOriginalTransactionDates: element.BalanceOnOriginalDate,
@@ -381,22 +383,24 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
           this.commonLoader.hideLoader();
         }
       );
+  }
 
+  selectionevent(event) {
+    console.log(event, 'e');
+    console.log(event, 'e');
+  }
 
+  onConsolidation() {
+    if (this.selection.selected.length <= 0) {
+      this.toastr.warning('Please select atleast one account');
+    } else {
+      this.type = 'consolidation';
+    }
   }
 
   subscribeType(event) {
     this.type = '';
   }
-
-  //#region "sumOfGainLossAmount"
-  // sumOfGainLossAmount() {
-  //   this.gainLossAddVoucherForm.Amount = this.gainLossReportList.reduce(
-  //     (a, { GainLossAmount }) => a + GainLossAmount,
-  //     0
-  //   );
-  // }
-  //#endregion
 
   ngOnDestroy() {
     this.destroyed$.next(true);
@@ -433,7 +437,6 @@ export interface IGainLossFilter {
 }
 
 export interface GainLossReport {
-  Checked: boolean;
   AccountCode: string;
   AccountName: string;
   BalanceOnOriginalTransactionDates: number;

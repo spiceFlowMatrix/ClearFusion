@@ -17,7 +17,6 @@ export class ExchangeGainLossReportService {
 
   //#region "GetGainLossReportList"
   GetGainLossReportList(data: any) {
-    debugger;
     return this.globalService
       .post(this.appurl.getApiUrl() + GLOBAL.API_GainLossReport_GetExchangeGainLossReport, data)
       .pipe(

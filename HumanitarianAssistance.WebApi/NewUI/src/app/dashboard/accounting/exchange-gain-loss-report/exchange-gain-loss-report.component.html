@@ -1,9 +1,9 @@
 <lib-sub-header-template>
   <span class="action_header">Results
-    <hum-button [type]="'add'" [text]="'CONSOLIDATE EXCHANGE GAIN/LOSS'" (click)="type ='consolidation'"></hum-button>
+    <hum-button [type]="'add'" [text]="'CONSOLIDATE EXCHANGE GAIN/LOSS'" *ngIf="type != 'consolidation'" (click)="onConsolidation()"></hum-button>
   </span>
   <div class="action_section">
-    <hum-button [type]="'filter'" [text]="'TRANSACTION FILTERS'" (click)="type='filter'"></hum-button>
+    <hum-button [type]="'filter'" *ngIf="type != 'consolidation'" [text]="'TRANSACTION FILTERS'" (click)="type='filter'"></hum-button>
     <hum-button [type]="'filter'" [text]="'CONFIGURATION'" (click)="showConfiguration()"></hum-button>
   </div>
 </lib-sub-header-template>
@@ -15,11 +15,27 @@
 
       <mat-table #table [dataSource]="gainLossReportList">
 
-        <ng-container matColumnDef="Checked">
+        <!-- <ng-container matColumnDef="Checked">
           <mat-header-cell *matHeaderCellDef>Select</mat-header-cell>
           <mat-cell *matCellDef="let element">
             <mat-checkbox [(ngModel)]="element.Checked"></mat-checkbox>
           </mat-cell>
+        </ng-container> -->
+        <ng-container matColumnDef="Select">
+          <th style="border-bottom-width:0px" mat-header-cell *matHeaderCellDef>
+            <mat-checkbox
+                          [checked]="selection.hasValue()"
+                          [indeterminate]="selection.hasValue()"
+                         >
+            </mat-checkbox>
+          </th>
+          <td style="border-bottom-width:0px" mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)"
+                         >
+            </mat-checkbox>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="AccountCode">
@@ -56,8 +72,9 @@
       </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></mat-row>
       </mat-table>
+
       <!-- <mat-paginator [length]="purchaseRecordCount" [pageSize]="filterValueModel.PageSize"
           [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
         </mat-paginator> -->
@@ -112,7 +129,7 @@
         </form>
       </div>
     </mat-card>
-  <app-consolidate-gain-loss (emitType)="subscribeType($event)" *ngSwitchCase="'consolidation'"></app-consolidate-gain-loss>
+  <app-consolidate-gain-loss [calculatorConfigData] ="calculatorConfigData" [selectedData]= "selection.selected" (emitType)="subscribeType($event)" *ngSwitchCase="'consolidation'"></app-consolidate-gain-loss>
 </ng-container>
 
 

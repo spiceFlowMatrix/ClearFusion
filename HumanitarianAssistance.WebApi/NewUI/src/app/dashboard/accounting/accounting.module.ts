@@ -7,7 +7,7 @@ import { JournalReportComponent } from './journal-report/journal-report.componen
 import { LedgerStatementReportComponent } from './ledger-statement-report/ledger-statement-report.component';
 import { TrialBalanceReportComponent } from './trial-balance-report/trial-balance-report.component';
 import { MatInputModule, MatSelectModule, MatCardModule, MatDatepickerModule, MatButtonModule,
-  MatDividerModule, MatIconModule, MatPaginatorModule, MatTableModule, MatCheckboxModule } from '@angular/material';
+  MatDividerModule, MatIconModule, MatPaginatorModule, MatTableModule, MatCheckboxModule, MatTabsModule } from '@angular/material';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { LibraryModule, SubHeaderTemplateModule } from 'projects/library/src/public_api';
 import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
@@ -35,6 +35,7 @@ import { ExchangeGainLossReportService } from './exchange-gain-loss-report/excha
     ReactiveFormsModule,
     FormsModule,
     MatTableModule,
+    MatTabsModule,
     MatCheckboxModule,
     AccountingRoutingModule // Routing
   ],
