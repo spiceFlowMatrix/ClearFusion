@@ -47,6 +47,7 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
                         OfficeId = model.OfficeId,
                         ProjectId = model.ProjectId,
                         BudgetLineId = model.BudgetLineId,
+                        VoucherDate = model.VoucherDate,
                         IsExchangeGainLossVoucher = true,
                         TimezoneOffset = model.TimezoneOffset,
                     };

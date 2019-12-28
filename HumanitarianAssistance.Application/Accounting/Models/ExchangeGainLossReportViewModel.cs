@@ -1,3 +1,5 @@
+using System;
+
 namespace HumanitarianAssistance.Application.Accounting.Models
 {
     public class ExchangeGainLossReportViewModel
@@ -8,5 +10,6 @@ namespace HumanitarianAssistance.Application.Accounting.Models
         public decimal BalanceOnOriginalDate { get; set; }
         public decimal BalanceOnCurrentDate { get; set; }
         public decimal GainLossAmount { get; set; }
+        public int GainLossStatus { get; set; }
     }
 }

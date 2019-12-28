@@ -249,6 +249,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
             return await _mediator.Send(model);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SaveCalculatorConfigData([FromBody]SaveCalculatorConfigDataCommand model)
+        {
+            model.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var result= await _mediator.Send(model);
+            return Ok(result);
+        }
+
         [HttpGet]
         public async Task<string> GetLoggedInUserUserName()
         {

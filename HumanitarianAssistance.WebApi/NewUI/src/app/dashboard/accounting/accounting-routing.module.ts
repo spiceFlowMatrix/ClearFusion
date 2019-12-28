@@ -9,6 +9,7 @@ import { RoleGuardService } from 'src/app/shared/services/role-guard';
 import { JournalReportComponent } from './journal-report/journal-report.component';
 import { LedgerStatementReportComponent } from './ledger-statement-report/ledger-statement-report.component';
 import { TrialBalanceReportComponent } from './trial-balance-report/trial-balance-report.component';
+import { ExchangeGainLossReportComponent } from './exchange-gain-loss-report/exchange-gain-loss-report.component';
 
 const ModuleId: number = ApplicationModule.AccountingNew;
 
@@ -73,7 +74,12 @@ const routes: Routes = [
       {
         path: 'trial-balance',
         component: TrialBalanceReportComponent
-      }
+      },
+      {
+        path: 'exchange-gain-loss-report',
+        component: ExchangeGainLossReportComponent
+      },
+
       // {
       //   path: 'voucher-summary-report',
       //   loadChildren: './voucher-summary-report/voucher-summary-report.module#VoucherSummaryReportModule',

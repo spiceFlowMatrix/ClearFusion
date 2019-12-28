@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191227092709_GainLossSelectedAccountsFieldsAddition")]
+    partial class GainLossSelectedAccountsFieldsAddition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,52 +256,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasKey("ExRateVerificationId");
 
                     b.ToTable("ExchangeRateVerifications");
-                });
-
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Accounting.GainLossCalculatorConfiguration", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("ComparisionDate");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<long?>("CreditAccountId");
-
-                    b.Property<int?>("CurrencyId");
-
-                    b.Property<long?>("DebitAccountId");
-
-                    b.Property<int?>("EmployeeId");
-
-                    b.Property<DateTime>("EndDate");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<long[]>("SelectedAccounts");
-
-                    b.Property<DateTime>("StartDate");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreditAccountId");
-
-                    b.HasIndex("CurrencyId");
-
-                    b.HasIndex("DebitAccountId");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("GainLossCalculatorConfiguration");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Accounting.VoucherDetail", b =>
@@ -1781,6 +1737,52 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasKey("FinancialYearId");
 
                     b.ToTable("FinancialYearDetail");
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.GainLossSelectedAccounts", b =>
+                {
+                    b.Property<int>("GainLossSelectedAccountId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("ComparisionDate");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<long?>("CreditAccountId");
+
+                    b.Property<int?>("CurrencyId");
+
+                    b.Property<long?>("DebitAccountId");
+
+                    b.Property<int?>("EmployeeId");
+
+                    b.Property<DateTime>("EndDate");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<long[]>("SelectedAccounts");
+
+                    b.Property<DateTime>("StartDate");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("GainLossSelectedAccountId");
+
+                    b.HasIndex("CreditAccountId");
+
+                    b.HasIndex("CurrencyId");
+
+                    b.HasIndex("DebitAccountId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("GainLossSelectedAccounts");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.Advances", b =>
@@ -9235,25 +9237,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .HasForeignKey("ToCurrency");
                 });
 
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Accounting.GainLossCalculatorConfiguration", b =>
-                {
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Accounting.ChartOfAccountNew", "CreditAccount")
-                        .WithMany()
-                        .HasForeignKey("CreditAccountId");
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.CurrencyDetails", "CurrencyDetails")
-                        .WithMany()
-                        .HasForeignKey("CurrencyId");
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.Accounting.ChartOfAccountNew", "DebitAccount")
-                        .WithMany()
-                        .HasForeignKey("DebitAccountId");
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId");
-                });
-
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Accounting.VoucherDetail", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectBudgetLineDetail", "ProjectBudgetLineDetail")
@@ -9367,6 +9350,25 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .WithOne("EntitySourceDocumentDetail")
                         .HasForeignKey("HumanitarianAssistance.Domain.Entities.EntitySourceDocumentDetail", "DocumentFileId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.GainLossSelectedAccounts", b =>
+                {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Accounting.ChartOfAccountNew", "CreditAccount")
+                        .WithMany()
+                        .HasForeignKey("CreditAccountId");
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.CurrencyDetails", "CurrencyDetails")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId");
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Accounting.ChartOfAccountNew", "DebitAccount")
+                        .WithMany()
+                        .HasForeignKey("DebitAccountId");
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.Advances", b =>

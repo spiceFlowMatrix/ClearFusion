@@ -64,5 +64,23 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
             });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetGainLossCaculatorConfiguration()
+        {
+            GetGainLossCaculatorConfigurationQuery model = new GetGainLossCaculatorConfigurationQuery
+            {
+                UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value
+            };
+            var result= await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDefaultAccountingPeriod()
+        {
+            var result= await _mediator.Send(new GetDefaultAccountingPeriodQuery { });
+            return Ok(result);
+        }
+
     }
 }

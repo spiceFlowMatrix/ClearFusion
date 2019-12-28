@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
-using HumanitarianAssistance.Domain.Entities.Accounting;
 using HumanitarianAssistance.Domain.Entities.HR;
 
-namespace HumanitarianAssistance.Domain.Entities
+namespace HumanitarianAssistance.Domain.Entities.Accounting
 {
-    public class GainLossSelectedAccounts : BaseEntity
+    public class GainLossCalculatorConfiguration: BaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1)]
-        public int GainLossSelectedAccountId { get; set; }
+        public int Id { get; set; }
         public int? EmployeeId { get; set; }
         public string UserId { get; set; }
         public int? CurrencyId { get; set; }
