@@ -21,6 +21,7 @@ import { StaticUtilities } from 'src/app/shared/static-utilities';
 export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
 
   showFilters = false;
+  type = '';
   transactionFiltersForm: FormGroup;
   projectList: any[];
   journalList: any[];
@@ -382,6 +383,10 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
       );
 
 
+  }
+
+  subscribeType(event) {
+    this.type = '';
   }
 
   //#region "sumOfGainLossAmount"
