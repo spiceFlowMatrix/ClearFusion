@@ -8,7 +8,7 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 import { takeUntil } from 'rxjs/operators';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 import { IDataSource, IOpenedChange } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
-import { IAccountList } from '../gain-loss-report/gain-loss-report.model';
+import { IAccountList, IGainLossAddVoucherForm } from '../gain-loss-report/gain-loss-report.model';
 import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
@@ -31,12 +31,13 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
   calculatorConfigData: ICalculatorConfig;
   accountDataSource: IDataSource[];
   accountList: IAccountList[] = [];
-    /** control for the MatSelect filter keyword multi-selection */
-    public accountMultiFilterCtrl: FormControl = new FormControl();
+  // gainLossAddVoucherForm: IGainLossAddVoucherForm;
+  /** control for the MatSelect filter keyword multi-selection */
+  public accountMultiFilterCtrl: FormControl = new FormControl();
   displayedColumns = ['Checked', 'AccountCode', 'AccountName',
-    'BalanceOnOriginalTransactionDates', 'BalanceOnComparisionDate', 'ResultingGainLoss'];
+    'BalanceOnOriginalTransactionDates', 'BalanceOnComparisionDate', 'GainLossStatus', 'ResultingGainLoss'];
 
-  dataSource = ELEMENT_DATA;
+  //dataSource = ELEMENT_DATA;
   labelText: string;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   public filteredAccountsMulti: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
@@ -44,7 +45,7 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
 
   constructor(private globalSharedService: GlobalSharedService,
     private gainLossReportService: ExchangeGainLossReportService, private fb: FormBuilder,
-    private toastr: ToastrService, private commonLoader: CommonLoaderService,) { }
+    private toastr: ToastrService, private commonLoader: CommonLoaderService, ) { }
 
   ngOnInit() {
     this.globalSharedService.setMenuHeaderName('Currency Exchange Gain Loss Calculator');
@@ -56,49 +57,63 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
       'projects': [[]],
     });
 
+    this.AccountIdList = [];
+
+    this.GainLossFilter = {
+      AccountIdList: [],
+      ComparisionDate: null,
+      FromDate: null,
+      JournalIdList: [],
+      OfficeIdList: [],
+      ProjectIdList: [],
+      ToCurrencyId: null,
+      ToDate: null
+    };
+
     forkJoin([
       this.getProjectList(),
       this.getJournalList(),
-      this.getOfficeList()
+      this.getOfficeList(),
+      this.getInputLevelAccountList(),
+      this.getExchangeGainLossFilterAccountList()
     ])
       .pipe(takeUntil(this.destroyed$))
       .subscribe(result => {
         this.subscribeProjectList(result[0]);
         this.subscribeJournalList(result[1]);
         this.subscribeOfficeList(result[2]);
+        this.subscribeInputAccountList(result[3]);
+        this.subscribeExchangeGainLossAccountList(result[4]);
       });
-
-      this.getInputLevelAccountList();
-      this.getExchangeGainLossFilterAccountList();
   }
 
   getLabelClass(value) {
-    this.labelText = value > 0 ? 'Gain' : 'Loss';
-    return value > 0 ? 'label label-success' : 'label label-danger';
+    this.labelText = value > 0 ? 'Gain' : value < 0 ? 'Loss' : 'Balanced';
+    return value > 0 ? 'label label-success' : value < 0 ? 'label label-danger' : 'label label-info';
   }
 
   showConfiguration() {
     this.fieldConfig.show();
   }
 
-   //#region "getProjectList"
-   getProjectList() {
+  //#region "getProjectList"
+  getProjectList() {
     return this.gainLossReportService.GetProjectList();
   }
   //#endregion
 
   subscribeProjectList(response) {
-        this.projectList = [];
-        if (response.statusCode === 200 && response.data !== null) {
-          response.data.forEach(element => {
-            this.projectList.push({
-              ProjectId: element.ProjectId,
-              ProjectName: element.ProjectName,
-              ProjectCode: element.ProjectCode,
-              IsChecked: false
-            });
-          });
-        }
+    this.projectList = [];
+    if (response.statusCode === 200 && response.data !== null) {
+      response.data.forEach(element => {
+        this.projectList.push({
+          ProjectId: element.ProjectId,
+          ProjectName: element.ProjectName,
+          ProjectCode: element.ProjectCode,
+          IsChecked: false
+        });
+      });
+    }
   }
 
   //#region "getJournalList"
@@ -108,18 +123,18 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
   //#endregion
 
   subscribeJournalList(response) {
-        this.journalList = [];
-        if (response.statusCode === 200 && response.data !== null) {
-          response.data.forEach(element => {
-            this.journalList.push({
-              JournalCode: element.JournalCode,
-              JournalName: element.JournalName,
-              JournalType: element.JournalType,
-              IsChecked: false
-            });
-          });
-        }
+    this.journalList = [];
+    if (response.statusCode === 200 && response.data !== null) {
+      response.data.forEach(element => {
+        this.journalList.push({
+          JournalCode: element.JournalCode,
+          JournalName: element.JournalName,
+          JournalType: element.JournalType,
+          IsChecked: false
+        });
+      });
     }
+  }
 
   //#region "getOfficeList"
   getOfficeList() {
@@ -128,58 +143,91 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
   //#endregion
 
   subscribeOfficeList(response) {
-        this.officeList = [];
-        if (response.statusCode === 200 && response.data !== null) {
-          response.data.forEach(element => {
-            this.officeList.push({
-              OfficeId: element.OfficeId,
-              OfficeName: element.OfficeName,
-              IsChecked: false
-            });
-          });
-        }
+    this.officeList = [];
+    if (response.statusCode === 200 && response.data !== null) {
+      response.data.forEach(element => {
+        this.officeList.push({
+          OfficeId: element.OfficeId,
+          OfficeName: element.OfficeName,
+          IsChecked: false
+        });
+      });
+    }
   }
 
   //#region "getInputLevelAccountList"
   getInputLevelAccountList() {
-    this.gainLossReportService.GetInputLevelAccountList().subscribe(
-      (response: IResponseData) => {
-        this.accountList = [];
-        this.accountDataSource = [];
-        if (response.statusCode === 200 && response.data !== null) {
+    return this.gainLossReportService.GetInputLevelAccountList();
 
-          response.data.forEach(element => {
-            this.accountList.push({
-              AccountCode: element.AccountCode,
-              AccountName: element.AccountName,
-              ChartOfAccountNewCode: element.ChartOfAccountNewCode
-            });
+    // .subscribe(
+    //   (response: IResponseData) => {
+    //     this.accountList = [];
+    //     this.accountDataSource = [];
+    //     if (response.statusCode === 200 && response.data !== null) {
 
-            this.accountDataSource.push({
-              Id: element.AccountCode,
-              Name: element.AccountName,
-            });
-          });
+    //       response.data.forEach(element => {
+    //         this.accountList.push({
+    //           AccountCode: element.AccountCode,
+    //           AccountName: element.AccountName,
+    //           ChartOfAccountNewCode: element.ChartOfAccountNewCode
+    //         });
+
+    //         this.accountDataSource.push({
+    //           Id: element.AccountCode,
+    //           Name: element.AccountName,
+    //         });
+    //       });
 
 
-          // NOTE: load the initial Account list
-          this.filteredAccountsMulti.next(this.accountList.slice());
+    //       // NOTE: load the initial Account list
+    //       this.filteredAccountsMulti.next(this.accountList.slice());
 
-          // listen for search field value changes
-          this.accountMultiFilterCtrl.valueChanges
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe(() => {
-              this.filterAccounts();
-            });
-        }
-      },
-      error => { }
-    );
+    //       // listen for search field value changes
+    //       this.accountMultiFilterCtrl.valueChanges
+    //         .pipe(takeUntil(this.destroyed$))
+    //         .subscribe(() => {
+    //           this.filterAccounts();
+    //         });
+    //     }
+    //   },
+    //   error => { }
+    // );
   }
   //#endregion
 
-   //#region "FILTER: Account filter"
-   protected filterAccounts() {
+  subscribeInputAccountList(response) {
+    this.accountList = [];
+    this.accountDataSource = [];
+    if (response.statusCode === 200 && response.data !== null) {
+
+      response.data.forEach(element => {
+        this.accountList.push({
+          AccountCode: element.AccountCode,
+          AccountName: element.AccountName,
+          ChartOfAccountNewCode: element.ChartOfAccountNewCode
+        });
+
+        this.accountDataSource.push({
+          Id: element.AccountCode,
+          Name: element.AccountName,
+        });
+      });
+
+
+      // NOTE: load the initial Account list
+      this.filteredAccountsMulti.next(this.accountList.slice());
+
+      // listen for search field value changes
+      this.accountMultiFilterCtrl.valueChanges
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(() => {
+          this.filterAccounts();
+        });
+    }
+  }
+
+  //#region "FILTER: Account filter"
+  protected filterAccounts() {
     if (!this.accountList) {
       return;
     }
@@ -224,24 +272,34 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
 
   //#region "getExchangeGainLossFilterAccountList"
   getExchangeGainLossFilterAccountList() {
-    this.gainLossReportService.GetExchangeGainLossFilterAccountList().subscribe(
-      (response: IResponseData) => {
-        this.AccountIdList = [];
-        if (response.statusCode === 200 && response.data !== null) {
-          // response.data.forEach(element => {
-          //   this.gainLossReportfilter.AccountIdList.push(
-          //     element.ChartOfAccountNewId
-          //   );
-          // });
+    return this.gainLossReportService.GetExchangeGainLossFilterAccountList();
 
-          this.AccountIdList = response.data;
+    // .subscribe(
+    //   (response: IResponseData) => {
+    //     this.AccountIdList = [];
+    //     if (response.statusCode === 200 && response.data !== null) {
+    //       // response.data.forEach(element => {
+    //       //   this.gainLossReportfilter.AccountIdList.push(
+    //       //     element.ChartOfAccountNewId
+    //       //   );
+    //       // });
 
-        }
-      },
-      error => { }
-    );
+    //       this.AccountIdList = response.data;
+
+    //     }
+    //   },
+    //   error => { }
+    // );
   }
   //#endregion
+
+  subscribeExchangeGainLossAccountList(response) {
+    this.AccountIdList = [];
+    if (response.statusCode === 200 && response.data !== null) {
+      this.AccountIdList = response.data;
+      this.getExchangeGainLossData();
+    }
+  }
 
   onSelectionChanged(event: number[]) {
     // this.gainLossReportfilter.AccountIdList = event;
@@ -258,9 +316,19 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
     };
   }
 
+  applyTransactionFilter() {
+    this.getExchangeGainLossData();
+    this.toggeleShowFilter();
+  }
+
+  toggeleShowFilter() {
+    this.showFilters = !this.showFilters;
+  }
+
   getExchangeGainLossData() {
-    if (!this.calculatorConfigData.CurrencyId && ! this.calculatorConfigData.StartDate &&
-      !this.calculatorConfigData.EndDate) {
+    debugger;
+    if (!this.calculatorConfigData.CurrencyId && !this.calculatorConfigData.StartDate &&
+      !this.calculatorConfigData.EndDate && !this.calculatorConfigData.ComparisionDate) {
       this.toastr.warning('Calculator configuration not set');
       return;
     }
@@ -275,25 +343,32 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
     this.GainLossFilter.ComparisionDate = StaticUtilities.setLocalDate(this.calculatorConfigData.ComparisionDate);
     this.GainLossFilter.FromDate = StaticUtilities.setLocalDate(this.calculatorConfigData.StartDate);
     this.GainLossFilter.ToDate = StaticUtilities.setLocalDate(this.calculatorConfigData.EndDate);
+    this.GainLossFilter.AccountIdList = this.AccountIdList;
+    this.GainLossFilter.JournalIdList = this.transactionFiltersForm.value.journals;
+    this.GainLossFilter.OfficeIdList = this.transactionFiltersForm.value.offices;
+    this.GainLossFilter.ProjectIdList = this.transactionFiltersForm.value.projects;
+    this.GainLossFilter.ToCurrencyId = this.calculatorConfigData.CurrencyId;
 
     this.gainLossReportService
       .GetGainLossReportList(this.GainLossFilter)
       .subscribe(
         (response: IResponseData) => {
+          debugger;
           this.gainLossReportList = [];
           if (response.statusCode === 200 && response.data !== null) {
+            debugger;
             response.data.forEach(element => {
               this.gainLossReportList.push({
-                AccountId: element.AccountId,
+                Checked: false,
                 AccountCode: element.AccountCode,
                 AccountName: element.AccountName,
-                AccountCodeName: element.AccountCodeName,
-                BalanceOnOriginalDate: element.BalanceOnOriginalDate,
-                BalanceOnCurrentDate: element.BalanceOnCurrentDate,
-                GainLossAmount: element.GainLossAmount
+                BalanceOnOriginalTransactionDates: element.BalanceOnOriginalDate,
+                BalanceOnComparisionDate: element.BalanceOnCurrentDate,
+                ResultingGainLoss: element.GainLossAmount,
+                GainLossStatus: element.GainLossStatus
               });
             });
-            this.sumOfGainLossAmount();
+            // this.sumOfGainLossAmount();
           } else {
             this.toastr.error(response.message);
           }
@@ -310,12 +385,12 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
   }
 
   //#region "sumOfGainLossAmount"
-  sumOfGainLossAmount() {
-    // this.gainLossAddVoucherForm.Amount = this.gainLossReportList.reduce(
-    //   (a, { GainLossAmount }) => a + GainLossAmount,
-    //   0
-    // );
-  }
+  // sumOfGainLossAmount() {
+  //   this.gainLossAddVoucherForm.Amount = this.gainLossReportList.reduce(
+  //     (a, { GainLossAmount }) => a + GainLossAmount,
+  //     0
+  //   );
+  // }
   //#endregion
 
   ngOnDestroy() {
@@ -346,21 +421,21 @@ export interface IGainLossFilter {
   FromDate: any;
   ToDate: any;
   ToCurrencyId: number;
-  Accounts: any[];
-  Journals: any[];
-  Offices: any[];
-  Projects: any[];
+  AccountIdList: any[];
+  JournalIdList: any[];
+  OfficeIdList: any[];
+  ProjectIdList: any[];
 }
 
 export interface GainLossReport {
-  AccountId: number;
+  Checked: boolean;
   AccountCode: string;
   AccountName: string;
-  AccountCodeName: string;
-  BalanceOnOriginalDate: number;
-  BalanceOnCurrentDate: number;
-  GainLossAmount: number;
+  BalanceOnOriginalTransactionDates: number;
+  BalanceOnComparisionDate: number;
+  ResultingGainLoss: number;
+  GainLossStatus: number;
 }
 
-const ELEMENT_DATA: Element[] = [
-  { Checked: false, AccountCode: '1', AccountName: 'Hydrogen', BalanceOnOriginalTransactionDates: 1.0079, BalanceOnComparisionDate: 22, ResultingGainLoss: 0 }]
+// const ELEMENT_DATA: Element[] = [
+//   { Checked: false, AccountCode: '1', AccountName: 'Hydrogen', BalanceOnOriginalTransactionDates: 1.0079, BalanceOnComparisionDate: 22, ResultingGainLoss: 0 }]
