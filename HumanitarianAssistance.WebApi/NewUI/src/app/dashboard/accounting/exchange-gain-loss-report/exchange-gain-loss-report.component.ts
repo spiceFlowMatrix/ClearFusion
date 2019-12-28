@@ -21,6 +21,7 @@ import { StaticUtilities } from 'src/app/shared/static-utilities';
 export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
 
   showFilters = false;
+  type = '';
   transactionFiltersForm: FormGroup;
   projectList: any[];
   journalList: any[];
@@ -31,8 +32,8 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
   calculatorConfigData: ICalculatorConfig;
   accountDataSource: IDataSource[];
   accountList: IAccountList[] = [];
-    /** control for the MatSelect filter keyword multi-selection */
-    public accountMultiFilterCtrl: FormControl = new FormControl();
+  /** control for the MatSelect filter keyword multi-selection */
+  public accountMultiFilterCtrl: FormControl = new FormControl();
   displayedColumns = ['Checked', 'AccountCode', 'AccountName',
     'BalanceOnOriginalTransactionDates', 'BalanceOnComparisionDate', 'ResultingGainLoss'];
 
@@ -44,7 +45,7 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
 
   constructor(private globalSharedService: GlobalSharedService,
     private gainLossReportService: ExchangeGainLossReportService, private fb: FormBuilder,
-    private toastr: ToastrService, private commonLoader: CommonLoaderService,) { }
+    private toastr: ToastrService, private commonLoader: CommonLoaderService, ) { }
 
   ngOnInit() {
     this.globalSharedService.setMenuHeaderName('Currency Exchange Gain Loss Calculator');
@@ -68,8 +69,8 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
         this.subscribeOfficeList(result[2]);
       });
 
-      this.getInputLevelAccountList();
-      this.getExchangeGainLossFilterAccountList();
+    this.getInputLevelAccountList();
+    this.getExchangeGainLossFilterAccountList();
   }
 
   getLabelClass(value) {
@@ -81,24 +82,24 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
     this.fieldConfig.show();
   }
 
-   //#region "getProjectList"
-   getProjectList() {
+  //#region "getProjectList"
+  getProjectList() {
     return this.gainLossReportService.GetProjectList();
   }
   //#endregion
 
   subscribeProjectList(response) {
-        this.projectList = [];
-        if (response.statusCode === 200 && response.data !== null) {
-          response.data.forEach(element => {
-            this.projectList.push({
-              ProjectId: element.ProjectId,
-              ProjectName: element.ProjectName,
-              ProjectCode: element.ProjectCode,
-              IsChecked: false
-            });
-          });
-        }
+    this.projectList = [];
+    if (response.statusCode === 200 && response.data !== null) {
+      response.data.forEach(element => {
+        this.projectList.push({
+          ProjectId: element.ProjectId,
+          ProjectName: element.ProjectName,
+          ProjectCode: element.ProjectCode,
+          IsChecked: false
+        });
+      });
+    }
   }
 
   //#region "getJournalList"
@@ -108,18 +109,18 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
   //#endregion
 
   subscribeJournalList(response) {
-        this.journalList = [];
-        if (response.statusCode === 200 && response.data !== null) {
-          response.data.forEach(element => {
-            this.journalList.push({
-              JournalCode: element.JournalCode,
-              JournalName: element.JournalName,
-              JournalType: element.JournalType,
-              IsChecked: false
-            });
-          });
-        }
+    this.journalList = [];
+    if (response.statusCode === 200 && response.data !== null) {
+      response.data.forEach(element => {
+        this.journalList.push({
+          JournalCode: element.JournalCode,
+          JournalName: element.JournalName,
+          JournalType: element.JournalType,
+          IsChecked: false
+        });
+      });
     }
+  }
 
   //#region "getOfficeList"
   getOfficeList() {
@@ -128,16 +129,16 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
   //#endregion
 
   subscribeOfficeList(response) {
-        this.officeList = [];
-        if (response.statusCode === 200 && response.data !== null) {
-          response.data.forEach(element => {
-            this.officeList.push({
-              OfficeId: element.OfficeId,
-              OfficeName: element.OfficeName,
-              IsChecked: false
-            });
-          });
-        }
+    this.officeList = [];
+    if (response.statusCode === 200 && response.data !== null) {
+      response.data.forEach(element => {
+        this.officeList.push({
+          OfficeId: element.OfficeId,
+          OfficeName: element.OfficeName,
+          IsChecked: false
+        });
+      });
+    }
   }
 
   //#region "getInputLevelAccountList"
@@ -178,8 +179,8 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
   }
   //#endregion
 
-   //#region "FILTER: Account filter"
-   protected filterAccounts() {
+  //#region "FILTER: Account filter"
+  protected filterAccounts() {
     if (!this.accountList) {
       return;
     }
@@ -259,7 +260,7 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
   }
 
   getExchangeGainLossData() {
-    if (!this.calculatorConfigData.CurrencyId && ! this.calculatorConfigData.StartDate &&
+    if (!this.calculatorConfigData.CurrencyId && !this.calculatorConfigData.StartDate &&
       !this.calculatorConfigData.EndDate) {
       this.toastr.warning('Calculator configuration not set');
       return;

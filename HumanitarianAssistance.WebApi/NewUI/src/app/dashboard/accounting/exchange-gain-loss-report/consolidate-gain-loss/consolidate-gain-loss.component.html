@@ -1,3 +1,76 @@
-<p>
-  consolidate-gain-loss works!
-</p>
+<lib-sub-header-template>
+  <span class="action_header">Exchange Gain/Loss Consolidation
+    <hum-button [type]="'save'" [text]="'Commit'" (click)="consolidate()"></hum-button>
+    <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="consolidate()"></hum-button>
+  </span>
+</lib-sub-header-template>
+<mat-divider></mat-divider>
+<div class="row">
+  <div class="col-md-12">
+    <mat-tab-group>
+      <mat-tab label="GAINS C/L VOUCHER">
+        <ng-template matTabContent>
+          <ng-container *ngTemplateOutlet="gainloass"></ng-container>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="LOSSES C/L VOUCHER">
+        <ng-template matTabContent>
+          <ng-container *ngTemplateOutlet="gainloass"></ng-container>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
+
+<ng-template #gainloass>
+  <mat-card humAddScroll>
+    <div class="row">
+      <form>
+        <div class="col-sm-12">
+          <mat-form-field>
+            <textarea mat-autosize matInput placeholder="Voucher Description"></textarea>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-12">
+          <mat-form-field>
+            <mat-label>Voucher Journal</mat-label>
+            <mat-select>
+              <mat-option>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-12">
+          <mat-form-field>
+            <mat-label>Voucher Type</mat-label>
+            <mat-select>
+              <mat-option>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-12">
+          <mat-form-field>
+            <mat-label>Voucher Office</mat-label>
+            <mat-select>
+              <mat-option>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-12">
+          <div subtitle class="info_text"><i class="fas fa-info-circle icon_color_yellow"></i>
+            Voucher Date is set to End Date of the Active Financial Period</div>
+          <div subtitle class="info_text"><i class="fas fa-info-circle icon_color_yellow"></i> 
+            Voucher Currency is set to the Comparision Currency configured for the Exchange Gain/Loss Calculator
+          </div>
+        </div>
+
+        <div class="col-sm-12 transcation_container" >
+          <div title> Transcations</div>
+          <hum-table [headers]="transactionHeaders$"></hum-table>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+</ng-template>
