@@ -476,6 +476,8 @@ export class GLOBAL {
 
 
   //#region "Hiring request"
+  public static API_ProjectBudget_GetAllProjectDetail = 'Code/GetAllProjectDetails';
+  public static API_EmployeeDetail_GetAllEmployeeSalaryAnalyticalInfo = 'EmployeeDetail/GetAllEmployeeSalaryAnalyticalInfo';
   public static API_HREmployee_AddJobHiringDetail = 'HRJobs/AddJobHiringDetails';
   public static API_HiringRequest_GetProjectHiringRequestDetailsByHiringRequestId =
     'HiringRequest/GetProjectHiringRequestDetailByHiringRequestId';
@@ -510,7 +512,7 @@ export class GLOBAL {
 
 
 
-
+  public static API_EmployeeDetail_AddEmployeeSalaryAnalyticalInfo = 'EmployeeDetail/AddEmployeeSalaryAnalyticalInfo';
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
   public static API_Code_GetAllDesignation = 'Code/GetAllDesignation';
   public static API_HiringRequest_AddHiringRequestDetail = 'HiringRequest/AddHiringRequestDetail';

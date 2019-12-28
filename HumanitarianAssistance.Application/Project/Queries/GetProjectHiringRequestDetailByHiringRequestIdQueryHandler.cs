@@ -53,6 +53,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                PayCurrency = c.CurrencyName,
                                                PayRate = hr.HourlyRate,
                                                BudgetName = b.BudgetName,
+                                               BudgetLineId = b.BudgetLineId,
                                                DepartmentName = d.DepartmentName,
                                                AnouncingDate = hr.AnouncingDate != null ? hr.AnouncingDate.Value.ToString("dd-MM-yyyy") : "",
                                                ClosingDate = hr.ClosingDate != null ? hr.ClosingDate.Value.ToString("dd-MM-yyyy") : "",

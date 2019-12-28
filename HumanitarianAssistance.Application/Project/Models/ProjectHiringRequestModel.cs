@@ -22,6 +22,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public int? HiringRequestStatus { get; set; }
         public string DepartmentName { get; set; }
         public string BudgetName { get; set; }
+        public long? BudgetLineId { get; set; }
         public string AnouncingDate { get; set; }
         public string ClosingDate { get; set; }
         public string ContractType { get; set; }

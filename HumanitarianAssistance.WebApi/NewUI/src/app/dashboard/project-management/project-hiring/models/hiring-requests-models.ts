@@ -40,6 +40,7 @@ export interface HiringRequestDetailList {
   OfficeId?: number;
   DepartmentName?: string;
   BudgetName?: string;
+  BudgetLineId?: string;
   AnouncingDate?: any;
   ClosingDate?: any;
   ContractType?: string;
@@ -272,4 +273,11 @@ export interface CvDownloadModel {
   AttachmentName: string;
   AttachmentUrl: string;
   UploadedBy: string;
+}
+
+export interface IAnalyticalInfoList {
+  Project: string;
+  Budgetline: string;
+  Account: string;
+  Percentage: string;
 }
