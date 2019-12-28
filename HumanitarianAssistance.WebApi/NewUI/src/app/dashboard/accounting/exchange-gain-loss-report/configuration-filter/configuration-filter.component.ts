@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { FieldConfigService } from 'src/app/store/services/field-config.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -24,6 +24,7 @@ export class ConfigurationFilterComponent implements OnInit, OnDestroy {
   currency$: Observable<IDropDownModel[]>;
   accounts$: Observable<IDropDownModel[]>;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  @Output() configData = new EventEmitter();
 
   // screen
   screenHeight: any;
@@ -52,6 +53,8 @@ export class ConfigurationFilterComponent implements OnInit, OnDestroy {
       startDate: null,
       endDate: null
     };
+
+    this.getData();
 
   }
 
@@ -119,6 +122,7 @@ export class ConfigurationFilterComponent implements OnInit, OnDestroy {
       .subscribe(x => {
         if (x) {
           this.toastr.success('Configuration Updated');
+          this.configDataEmit();
         }
       }, error => {
         this.toastr.error('Failed, Please try again');
@@ -142,6 +146,8 @@ export class ConfigurationFilterComponent implements OnInit, OnDestroy {
           'DebitAccount': x.CalculatorConfiguration.DebitAccount,
           'CreditAccount': x.CalculatorConfiguration.CreditAccount,
         });
+
+        this.configDataEmit();
       }
     }, error => {
       this.toastr.error('Failed, Please try again');
@@ -189,6 +195,12 @@ export class ConfigurationFilterComponent implements OnInit, OnDestroy {
       };
     }
   }
+
+   //#region "onListRefresh"
+   configDataEmit() {
+    this.configData.emit(this.gainLossConfigForm.value);
+  }
+  //#endregion
 
   ngOnDestroy() {
     this.destroyed$.next(true);

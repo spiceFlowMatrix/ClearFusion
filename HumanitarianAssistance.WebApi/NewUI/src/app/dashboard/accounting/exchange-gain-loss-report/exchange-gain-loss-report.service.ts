@@ -169,7 +169,7 @@ export class ExchangeGainLossReportService {
   //#endregion
 
   //#region "SaveExchangeGainLossFilterAccountList"
-  SaveExchangeGainLossFilterAccountList(model: any): any {
+  SaveExchangeGainLossFilterAccountList(model): any {
     return this.globalService
       .post(this.appurl.getApiUrl() + GLOBAL.API_FinancialReport_SaveGainLossAccountList, model)
       .pipe(
