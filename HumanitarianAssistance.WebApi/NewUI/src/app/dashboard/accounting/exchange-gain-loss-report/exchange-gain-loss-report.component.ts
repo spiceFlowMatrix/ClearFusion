@@ -301,9 +301,9 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
     this.AccountIdList = [];
     if (response.statusCode === 200 && response.data !== null) {
       this.AccountIdList = response.data;
-    setTimeout(() => {
-      this.getExchangeGainLossData();
-    }, 1000);
+      setTimeout(() => {
+        this.getExchangeGainLossData();
+      }, 1000);
 
     }
   }
@@ -370,7 +370,8 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
                 ResultingGainLoss: element.GainLossAmount,
                 GainLossStatus: element.GainLossStatus
               });
-            });
+            })
+            this.type = '';
             // this.sumOfGainLossAmount();
           } else {
             this.toastr.error(response.message);
