@@ -9,6 +9,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 export class SubmitTenderBidComponent implements OnInit {
 
   tenderBidForm: FormGroup;
+  attachment = [];
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -36,6 +37,15 @@ export class SubmitTenderBidComponent implements OnInit {
       WorkExperience: ['', Validators.required],
       DeliveryDate: [false, Validators.required],
     });
+  }
+
+  openInput() {
+    document.getElementById('fileInput').click();
+  }
+
+  fileChange(file: any) {
+    this.attachment = [];
+    this.attachment.push(file);
   }
 
   onResultsQualifiedChange(value) {

@@ -39,12 +39,9 @@
           <input matInput type="number" formControlName="SecurityAmount" placeholder="Security Amount">
         </mat-form-field>
         <h4>Contract/Guarantee Letter</h4>
-        <!-- <mat-form-field class="example-full-width">
-           <input #securityDate class="fixedWidth"
-            formControlName="SecurityDate" matInput [matDatepicker]="securityDatepicker" placeholder="Security Date" >
-          <mat-datepicker-toggle matSuffix [for]="securityDatepicker"></mat-datepicker-toggle>
-          <mat-datepicker #securityDatepicker></mat-datepicker>
-        </mat-form-field> -->
+        <hum-button [type]="'attachment'" [text]="'UPLOAD ATTACHMENT'" (click)="openInput()"></hum-button>
+        <input id="fileInput" style="display:none" hidden type="file" (change)="fileChange($event.target.files)" name="file">
+        <span *ngIf="this.attachment.length != 0">{{attachment[0][0].name}}</span>
         <h4>Scoring</h4>
         <table class="table table-striped" style="width:70%;">
           <tr>
