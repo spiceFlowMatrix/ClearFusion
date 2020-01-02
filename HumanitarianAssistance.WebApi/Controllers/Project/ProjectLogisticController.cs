@@ -345,6 +345,15 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(model);
         }
         
+        [HttpPost]
+        public async Task<ApiResponse> AddTenderBid([FromBody]AddTenderBidCommand model)
+        {   
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+        
         
     }
 

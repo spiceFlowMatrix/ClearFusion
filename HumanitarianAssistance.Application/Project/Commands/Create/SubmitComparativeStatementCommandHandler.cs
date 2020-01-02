@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.Project;
@@ -18,9 +17,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
 
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IMapper _mapper;
-        private readonly IProjectServices _iProjectServices;
-
-        public SubmitComparativeStatementCommandHandler(HumanitarianAssistanceDbContext dbContext, IMapper mapper, IProjectServices iProjectServices)
+        public SubmitComparativeStatementCommandHandler(HumanitarianAssistanceDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;

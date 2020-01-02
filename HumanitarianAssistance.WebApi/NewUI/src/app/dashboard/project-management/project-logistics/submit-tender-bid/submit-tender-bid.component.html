@@ -2,7 +2,7 @@
 <mat-dialog-content>
   <div class="row">
     <div class="col-md-12">
-      <form [formGroup]="tenderBidForm">
+      <form [formGroup]="tenderBidForm" (ngSubmit)="addTenderBid(tenderBidForm.value)">
         <h4>Contact Details</h4>
         <mat-form-field class="example-full-width">
           <input matInput type="text" formControlName="Name" placeholder="Name">
@@ -11,7 +11,7 @@
           <input matInput type="email" formControlName="Email" placeholder="Email">
         </mat-form-field>
         <mat-form-field class="example-full-width">
-          <input matInput type="number" formControlName="PhoneNumber" placeholder="Phone Number">
+          <input matInput type="text" formControlName="PhoneNumber" placeholder="Phone Number">
         </mat-form-field>
         <mat-form-field class="example-full-width">
           <input matInput type="text" formControlName="Address" placeholder="Address">
@@ -46,7 +46,12 @@
         <table class="table table-striped" style="width:70%;">
           <tr>
             <td class="font_weight_600">Total Score</td>
-            <td>0</td>
+            <td>{{tenderBidForm.value.Profile_Experience + tenderBidForm.value.OfferValididty +
+                tenderBidForm.value.TOR_SOWAcceptance + tenderBidForm.value.Securities_BankGuarantee +
+                tenderBidForm.value.OfferDocumentation +
+                tenderBidForm.value.Company_GoodsSpecification + tenderBidForm.value.Service_Warranty +
+                tenderBidForm.value.Certification_GMP_COPP + tenderBidForm.value.WorkExperience +
+                tenderBidForm.value.DeliveryDate }}</td>
           </tr>
           <tr>
             <td class="font_weight_600">Results Qualified?</td>
@@ -94,11 +99,9 @@
               <input matInput type="number" formControlName="WorkExperience" placeholder="Work Experience">
             </mat-form-field>
             <mat-form-field class="example-full-width">
-              <input #deliveryDate class="fixedWidth"
-                formControlName="DeliveryDate" matInput [matDatepicker]="deliveryDatepicker" placeholder="Delivery Date" >
-              <mat-datepicker-toggle matSuffix [for]="deliveryDatepicker"></mat-datepicker-toggle>
-              <mat-datepicker #deliveryDatepicker></mat-datepicker>
+              <input matInput type="number" formControlName="DeliveryDate" placeholder="Delivery Date">
             </mat-form-field>
+            <button type="submit" #submitBtn style="display: none;"></button>
           </div>
         </div>
       </form>
@@ -106,6 +109,6 @@
   </div>
 </mat-dialog-content>
 <mat-dialog-actions class="margin_top_20">
-  <hum-button [type]="'save'" [text]="'SAVE'" ></hum-button>
-  <hum-button [type]="'cancel'" [text]="'CANCEL'" ></hum-button>
+  <hum-button (click)="submitBtn.click()" [type]="'save'" [text]="'SAVE'" ></hum-button>
+  <hum-button (click)="closeDialog()" [type]="'cancel'" [text]="'CANCEL'" ></hum-button>
 </mat-dialog-actions>

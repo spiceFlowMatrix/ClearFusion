@@ -342,5 +342,10 @@ export class LogisticService {
     );
   }
 
-
+  addTenderBid(model) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_AddTenderBid,
+      model
+    );
+  }
 }

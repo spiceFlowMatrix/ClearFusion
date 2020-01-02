@@ -576,7 +576,8 @@ export enum FileSourceEntityTypes {
   LogisticSupplierWarranty = 17,
   TenderProposalDocument = 18,
   TenderRFPDocument = 19,
-  TenderAnnouncementDocument = 20
+  TenderAnnouncementDocument = 20,
+  TenderBidContractLetter = 21
 }
 //#endregion
 //#region "EmployeeType"
