@@ -39,7 +39,7 @@
       <h4>Purchased Items
         <hum-button (click)="rejectPurchaseOrder()" [type]="'cancel'" [text]="'REJECT'"></hum-button>
         <hum-button (click)="approvePurchaseOrder()" [type]="'save'" [text]="'APPROVE'"></hum-button>
-        <hum-button [type]="'pdf'" [text]="'GOODS RECEIVED NOTE'"></hum-button>
+        <hum-button [type]="'pdf'" [text]="'GOODS RECEIVED NOTE'" (click) = "downLoadPdf()"></hum-button>
       </h4>
       <div *ngIf="goodsNoteSubmitted">
         <span><i class="fas fa-info-circle icon_color_yellow"></i> Signed version of goods received note. <a href="{{goodsRecievedModel.AttachmentUrl}}" target="_blank"><i class="fa fa-download fa-2" aria-hidden="true"></i></a></span><br>
@@ -61,7 +61,7 @@
     </p>
     <div *ngIf="purchaseOrderDetail">
       <h4>Purchased Items
-        <hum-button [type]="'pdf'" [text]="'GOODS RECEIVED NOTE'"></hum-button>
+        <hum-button [type]="'pdf'" [text]="'GOODS RECEIVED NOTE'" (click) = "downLoadPdf()"></hum-button>
       </h4>
       <div *ngFor="let item of purchaseOrderDetail.purchasedItems">
         <span><i class="fas fa-info-circle icon_color_green"></i> New Purchase with <b><a (click)="navigateToPurchase(item.PurchaseId)">Code {{item.PurchaseId}}</a></b> was generated for <b>Item {{item.ItemName}}/{{item.ItemId}}</b>.</span><br>

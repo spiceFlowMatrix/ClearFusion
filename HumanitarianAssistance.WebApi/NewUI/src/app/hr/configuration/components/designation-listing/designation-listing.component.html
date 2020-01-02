@@ -11,7 +11,7 @@
         <div class="designationTable">
         <hum-table [headers]="designationListHeaders$" [items]="designationList$" [subHeaders]="subListHeaders$"
           [subTitle]="'Technical Questions'" (actionClick)="actionEvents($event)"
-          (subActionClick)="deleteProcurement($event)" [actions]="actions" [hideColums$]="hideColums"></hum-table>
+          [actions]="actions"></hum-table>
         </div>
         <mat-paginator [length]="RecordCount" [pageSize]="pageModel.PageSize"
           [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">

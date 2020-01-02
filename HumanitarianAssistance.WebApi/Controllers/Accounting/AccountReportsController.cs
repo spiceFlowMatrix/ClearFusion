@@ -212,14 +212,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         /// <param name="accountIds"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ApiResponse> SaveGainLossAccountList([FromBody] List<long> accountIds)
+        public async Task<ApiResponse> SaveGainLossAccountList([FromBody] List<long> AccountIds)
         {
-            SaveGainLossAccountListCommand command = new SaveGainLossAccountListCommand
-            {
-                AccountIds = accountIds,
-                UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value
-            };
-
+            SaveGainLossAccountListCommand command = new SaveGainLossAccountListCommand();
+            command.AccountIds = AccountIds;
+            command.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             return await _mediator.Send(command);
         }
 

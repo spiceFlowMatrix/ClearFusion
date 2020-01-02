@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities;
+using HumanitarianAssistance.Domain.Entities.Accounting;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
             try
             {
-                GainLossSelectedAccounts gainLossSelectedAccounts = await _dbContext.GainLossSelectedAccounts.FirstOrDefaultAsync(x => x.IsDeleted == false && x.UserId == request.UserId);
+                GainLossCalculatorConfiguration gainLossSelectedAccounts = await _dbContext.GainLossCalculatorConfiguration.FirstOrDefaultAsync(x => x.IsDeleted == false && x.UserId == request.UserId);
                 response.data.GainLossSelectedAccounts = gainLossSelectedAccounts.SelectedAccounts;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "success";

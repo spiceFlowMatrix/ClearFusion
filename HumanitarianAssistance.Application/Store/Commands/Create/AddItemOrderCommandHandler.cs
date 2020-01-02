@@ -35,7 +35,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                 {
                     StorePurchaseOrder obj = _mapper.Map<StorePurchaseOrder>(request);
                     obj.PurchaseId = request.Purchase;
-
+                    obj.IssueVoucher = request.VoucherNo;
                     obj.IsDeleted = false;
 
                     await _dbContext.StorePurchaseOrders.AddAsync(obj);

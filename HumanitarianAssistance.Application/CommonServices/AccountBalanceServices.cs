@@ -302,21 +302,35 @@ namespace HumanitarianAssistance.Application.CommonServices
         public async Task<List<VoucherTransactions>> GetAccountTransactions(List<ChartOfAccountNew> inputLevelAccounts, DateTime startDate,
             DateTime endDate, List<int?> journalList, List<int?> officeList, List<long?> projectIdList)
         {
-            var data = await _dbContext.VoucherTransactions
+            var query = _dbContext.VoucherTransactions
                 .Where(x => x.TransactionDate.Value.Date <= endDate.Date
                             && x.TransactionDate.Value.Date >= startDate.Date
                             && inputLevelAccounts.Select(y => y.ChartOfAccountNewId).Contains((long)x.ChartOfAccountNewId)
                             && x.IsDeleted == false
                             && x.ChartOfAccountNewId != null
-                            && officeList.Contains(x.VoucherDetails.OfficeId)
-                            && journalList.Contains(x.VoucherDetails.JournalCode)
+                            // && officeList.Contains(x.VoucherDetails.OfficeId)
+                            // && journalList.Contains(x.VoucherDetails.JournalCode)
                             //&& projectIdList.Contains(x.VoucherDetails.ProjectId)
-                            && projectIdList.Contains(x.ProjectId)
+                            // && projectIdList.Contains(x.ProjectId)
                             )
                 .Include(x => x.ChartOfAccountDetail)
                 .Include(x => x.VoucherDetails)
-                .ToListAsync();
-            return data;
+                .AsQueryable();
+
+                if(officeList.Any())
+                {
+                   query= query.Where(x=> officeList.Contains(x.VoucherDetails.OfficeId)); 
+                }
+                if(journalList.Any())
+                {
+                   query= query.Where(x=> officeList.Contains(x.VoucherDetails.OfficeId));
+                }
+                if(projectIdList.Any())
+                {
+                    query= query.Where(x=> projectIdList.Contains(x.ProjectId));
+                }
+                
+            return query.ToList();
         }
 
         public async Task<Dictionary<ChartOfAccountNew, double>> GetAccountBalances(List<ChartOfAccountNew> inputLevelAccounts,

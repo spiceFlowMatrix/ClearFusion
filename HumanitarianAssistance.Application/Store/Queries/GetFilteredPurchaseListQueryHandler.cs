@@ -43,6 +43,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                   .Include(x => x.ProjectBudgetLineDetail)
                                   .Include(x => x.StoreSourceCodeDetail)
                                   .Include(x => x.OfficeDetail)
+                                  .Include(x => x.PurchaseOrders)
+                                  .ThenInclude(x => x.ReturnProcurementDetailList)
                                   .Where(x => x.IsDeleted == false);
 
                 if(request.InventoryTypeId != 0)
@@ -105,7 +107,6 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     PurchaseId = x.PurchaseId,
                     PurchaseDate = x.PurchaseDate,
                     CurrencyId = x.Currency,
-                    PurchasedQuantity = x.Quantity,
                     ItemId = x.StoreInventoryItem != null ? x.StoreInventoryItem.ItemId : 0,
                     ItemCode = x.StoreInventoryItem != null ? x.StoreInventoryItem.ItemCode : "",
                     ItemName = x.StoreInventoryItem != null ? (x.StoreInventoryItem.ItemCode + "-" + x.StoreInventoryItem.ItemName) : "",
@@ -140,19 +141,20 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     Quantity = x.Quantity,
                     LogisticRequestId = x.LogisticRequestId,
 
-                    ProcurementList = x.PurchaseOrders.Where(p => !p.IsDeleted).Select(z => new ProcurementListModel
+                    ProcurementList = x.PurchaseOrders.Select(z => new ProcurementListModel
                     {
                         OrderId = z.OrderId,
                         EmployeeName = z.EmployeeDetail.EmployeeCode + "-" + z.EmployeeDetail.EmployeeName,
                         IssueDate = z.IssueDate,
                         MustReturn = z.MustReturn,
-                        ProcuredAmount = z.IssuedQuantity,
+                        ProcuredAmount = z.IssuedQuantity - (z.ReturnProcurementDetailList.Any() ? z.ReturnProcurementDetailList.Where(b=> b.IsDeleted == false).Select(c=> c.ReturnedQuantity).DefaultIfEmpty(0).Sum() : 0),
                         Returned = z.Returned,
                         ReturnedOn = z.ReturnedDate,
                         EmployeeId = z.EmployeeDetail.EmployeeID,
                         LocationId= z.IssedToLocation,
                         ProjectId = z.Project,
                         StatusId= z.StatusAtTimeOfIssue,
+                        IsDeleted = z.IsDeleted
                     }).Where(y => request.IssueStartDate == null ? true : y.IssueDate >= request.IssueStartDate &&
                      request.IssueEndDate == null ? true : y.IssueDate <= request.IssueEndDate).ToList()
                 }).AsQueryable();

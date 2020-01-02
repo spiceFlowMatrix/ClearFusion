@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +24,7 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Delete
 
             try
             {
-                var officeInfo = await _dbContext.OfficeDetail.FirstOrDefaultAsync(c => c.OfficeId == request.OfficeId);
+                OfficeDetail officeInfo = await _dbContext.OfficeDetail.FirstOrDefaultAsync(c => c.OfficeId == request.OfficeId);
 
                 if (officeInfo != null)
                 {
@@ -31,7 +32,8 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Delete
                     officeInfo.ModifiedById = request.ModifiedById;
                     officeInfo.ModifiedDate = request.ModifiedDate;
                     _dbContext.OfficeDetail.Update(officeInfo);
-                }
+                    await _dbContext.SaveChangesAsync();
+                };
 
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

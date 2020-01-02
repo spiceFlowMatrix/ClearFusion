@@ -163,6 +163,13 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetAllVouchersWithoutFilter()
+        {
+            var result= await _mediator.Send(new GetAllVouchersWithoutFilterQuery());
+            return Ok(result);
+        }
+
+        [HttpGet]
         public async Task<ApiResponse> GetAllAccountCode()
         {
             return await _mediator.Send(new GetAllAccountsQuery());
@@ -240,6 +247,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         public async Task<ApiResponse> UpdatePermissionsOnSelectedRole([FromBody]UpdatePermissionsOnSelectedRoleCommand model)
         {
             return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveCalculatorConfigData([FromBody]SaveCalculatorConfigDataCommand model)
+        {
+            model.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var result= await _mediator.Send(model);
+            return Ok(result);
         }
 
         [HttpGet]

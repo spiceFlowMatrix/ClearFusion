@@ -1,0 +1,191 @@
+@model HumanitarianAssistance.Application.Project.Models.LogisticGoodsNoteReportModel
+<!doctype html>
+<html>
+	<head>
+    	<title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+		<style>
+			body { font-family: 'Roboto', sans-serif;}
+			.print{
+				.page-break {
+				  page-break-after: always;
+				  page-break-inside: avoid;
+				  clear:both;
+				}
+				.page-break-before {
+				  page-break-before: always;
+				  page-break-inside: avoid;
+				  clear:both;
+				}
+			}
+			
+		</style>
+    </head>
+	<body>
+		<table style="width:100%; margin:0 auto;"> 
+			<tr>
+				 <table style="width:100%;">
+			 	  <tr>
+					<td style="width:70%;">
+						<img src="@Model.HeaderLogo" alt="">
+					</td>
+					<td >
+		                <img style="margin-right:10px" src="@Model.ChaDesignLogo" alt=""/>
+					</td>
+				  </tr>
+			    </table>
+			</tr>	
+			<tr>
+				<table style="width:100%;">
+					<tr>
+						<td>
+							<table cellpadding="5" style="width:100%;">
+								<tr>
+									<td align="center" style="font-size:20px;font-weight:500;" > <img src="@Model.ApplySheetText" alt=""></td>
+								</tr>
+								<tr>
+									<td align="center" style="font-size:20px;font-weight:500;">PURCHASE REQUISITION SLIP</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<table cellpadding="5" style="width:100%;">
+								<tr>
+									<td style="font-size:15px;font-weight:400;width:10%;">Project: </td>
+									<td style="width:30%;">
+							           @Model.ProjectCode 
+									</td>	
+									<td style="width:30%"></td> 
+									<td style="font-size:15px;font-weight:400;width:10%;float:right;">No: </td>
+								    <td style="width:20%; align:left">
+							         @Model.Number 
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<table cellpadding="5" style="width:100%;">
+								<tr>
+									<td style="font-size:15px;font-weight:400;width:10%;">Job: </td>
+									<td style="width:30%;">
+							          @Model.JobCode
+									</td>
+									<td style="width:30%"></td> 
+									<td style="font-size:15px;font-weight:400;width:10%;float:right;">Date: </td>
+									<td style="width:20%; align:left">
+							         @Model.PurchaseDate
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<table cellpadding="5" style="width:100%;">
+								<tr>
+									<td style="font-size:15px;font-weight:400;width:10%;">Office: </td>
+									<td style="width:30%;">
+							          @Model.OfficeName
+									</td>
+									<td style="width:30%"></td> 
+									<td style="width:10%;float:right;"> </td>
+									<td style="width:20%; align:left">
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td style="border-bottom:1px solid black" colspan="100%">
+						</td>
+					</tr>
+					<tr>
+						<td align="center"  style="font-size:14px;font-weight:500; padding-top:25;">
+							Please Supply, in accordance with the instruction here in the following:
+							</td>
+					</tr>
+					<tr>
+					    <td align="center"><img src = "@Model.InstructionText" alt=""></td>
+					</tr>
+					<tr>
+						<td>
+							<table cellpadding="5" style="width:100%;" border="1" bordercolor="#bfbfbf" cellspacing="0">
+								<tr>
+									<th width="15%">B/Line</th>
+									<th width="30%">Description</th>
+									<th width="15%">Quantity Required</th>
+									<th width="15%">Unit Price</th>
+									<th width="15%">To be Purchased</th>
+									<th width="20%">Estimated Amount</th>
+								</tr>
+								@foreach (var item in @Model.GoodsNoteAmountModel)
+								{
+									<tr>
+									<td>@Model.BudgetLine</td>
+									<td>@item.ItemDescription</td>
+									<td>@item.Quantity</td>
+									<td>@item.UnitPrice</td>
+									<td>@item.ToBePurchased</td>
+									<td>@item.EstimatedAmount</td>
+								</tr>
+								}
+								<tr>
+                                    <td width="15%"></td>
+									<td width="30%">Total</td>
+									<td width="15%">@Model.TotalQuantity</td>
+									<td width="15%">@Model.TotalUnitPrice</td>
+									<td width="15%">@Model.TotalQuantity</td>
+									<td width="20%">@Model.TotalEstimatedAmount</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<table cellpadding="5" style="width:100%;">
+								<tr>
+									<td style="font-size:15px;font-weight:400;width:20%;padding-top:40;">Requested By: </td>
+									<td style="width:30%;"></td>
+									<td style="font-size:15px;font-weight:400;width:30%;padding-top:40;">Date:</td>
+									<td  style="width:20%;"></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<table cellpadding="5" style="width:100%;">
+								<tr>
+									<td style="font-size:15px;font-weight:400;width:20%;">Checked By:</td>
+									<td style="width:30%;"></td>
+									<td style="font-size:15px;font-weight:400;width:30%;">Date: </td>
+									<td  style="width:20%;"></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<table cellpadding="5" style="width:100%;">
+								<tr>
+									<td style="font-size:15px;font-weight:400;width:20%;">Approve By:</td>
+									<td style="width:30%;"></td>
+									<td style="font-size:15px;font-weight:400;width:30%;">Date: </td>
+									<td  style="width:20%;"></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+			    </table>
+			</tr>
+		</table>
+		
+	</body>
+</html>

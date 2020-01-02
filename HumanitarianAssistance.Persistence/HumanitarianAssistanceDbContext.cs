@@ -129,6 +129,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<EmployeeSalaryPaymentHistory> EmployeeSalaryPaymentHistory { get; set; }
         public DbSet<EmployeeLanguages> EmployeeLanguages { get; set; }
         public DbSet<AccountHeadType> AccountHeadType { get; set; }
+        public DbSet<GainLossCalculatorConfiguration> GainLossCalculatorConfiguration { get; set; }
         public DbSet<PaymentTypes> PaymentTypes { get; set; }
         public DbSet<PriorityOtherDetail> PriorityOtherDetail { get; set; }
         public DbSet<ApplicationPages> ApplicationPages { get; set; }
@@ -228,6 +229,8 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<ProjectLogisticItems> ProjectLogisticItems { get; set; }
         public DbSet<ProjectLogisticSuppliers> ProjectLogisticSuppliers { get; set; }
         public DbSet<ComparativeStatementSubmission> ComparativeStatementSubmission { get; set; }
+        public DbSet<TenderBidSubmission> TenderBidSubmission { get; set; }
+        public DbSet<MultiCurrencyOpeningPension> MultiCurrencyOpeningPension { get; set; }
         public DbSet<CandidateDetails> CandidateDetails { get; set; }
         public DbSet<EducationDegreeDetail> EducationDegreeDetails { get; set; }
         public DbSet<HiringRequestCandidateStatus> HiringRequestCandidateStatus { get; set; }
@@ -265,13 +268,14 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<AccountLevel> AccountLevel { get; set; }
         public DbSet<AccountFilterType> AccountFilterType { get; set; }
         public DbSet<ChartOfAccountNew> ChartOfAccountNew { get; set; }
-        public DbSet<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
+        // public DbSet<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
 
         #endregion
         public DbSet<ProjectProposalDocument> ProjectProposalDocument { get; set; }
         public DbSet<PurchaseUnitType> PurchaseUnitType { get; set; }
         public DbSet<ErrorLogger> ErrorLogger { get; set; }
         public DbSet<StoreLogger> StoreLogger { get; set; }
+        public DbSet<ReturnProcurementDetail> ReturnProcurementDetail { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

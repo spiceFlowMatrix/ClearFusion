@@ -1,0 +1,70 @@
+<hum-config-card [showCard]="showConfig" (cardState)="getState($event)">
+  <div title>Calculator Configuration</div>
+  <mat-divider></mat-divider>
+  <div content class="padding_top_30">
+    <form [formGroup] = "gainLossConfigForm" (ngSubmit)="saveCalculatorConfigData()">
+      <div class="row">
+        <div class="col-sm-12">
+          <b>Consolidation Currency</b>
+        </div>
+        <div class="col-sm-12">
+          <lib-hum-dropdown [validation]="gainLossConfigForm.controls['CurrencyId'].hasError('required')"
+            [options]="currency$" formControlName='CurrencyId' [placeHolder]="'Currency'"></lib-hum-dropdown>
+        </div>
+        <br>
+        <div class="col-sm-12">
+          <b>Accounting Period</b>
+          <hum-button [type]="'add'" [text]="'USE DEFAULT'" (click)="useDefault($event, 'period')"></hum-button>
+        </div>
+        <div class="col-sm-12">
+          <mat-form-field>
+            <input matInput [matDatepicker]="StartDate" formControlName='StartDate' placeholder="Start Date">
+            <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
+            <mat-datepicker #StartDate></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-12">
+          <mat-form-field>
+            <input matInput [matDatepicker]="EndDate" formControlName='EndDate' placeholder="End Date">
+            <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
+            <mat-datepicker #EndDate></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <br>
+        <div class="col-sm-12">
+          <b>Comparision Date</b>
+          <hum-button [type]="'add'" [text]="'USE DEFAULT'" (click)="useDefault($event, 'comparisionDate')"></hum-button>
+        </div>
+        <div class="col-sm-12">
+          <mat-form-field>
+            <input matInput [matDatepicker]="ComparisionDate" formControlName='ComparisionDate'
+              placeholder="Comparision Date">
+            <mat-datepicker-toggle matSuffix [for]="ComparisionDate"></mat-datepicker-toggle>
+            <mat-datepicker #ComparisionDate></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <br>
+        <div class="col-sm-12">
+          <b>NET Gain/Loss Accounts</b>
+        </div>
+        <div class="col-sm-12">
+          <lib-hum-dropdown [validation]="gainLossConfigForm.controls['DebitAccount'].hasError('required')"
+            [options]="accounts$" formControlName='DebitAccount' [placeHolder]="'Debit Account for NET Gains'">
+          </lib-hum-dropdown>
+        </div>
+        <div class="col-sm-12">
+          <lib-hum-dropdown [validation]="gainLossConfigForm.controls['CreditAccount'].hasError('required')"
+            [options]="accounts$" formControlName='CreditAccount' [placeHolder]="'Credit Account for NET Losses'">
+          </lib-hum-dropdown>
+        </div>
+        <br>
+        <div class="col-sm-12">
+          <hum-button [disabled]="!gainLossConfigForm.valid" [isSubmit]="true" [type]="'save'" [text]="'save'">
+          </hum-button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div footer>
+  </div>
+</hum-config-card>

@@ -15,5 +15,6 @@ namespace HumanitarianAssistance.Application.Store.Models
         public long ProjectId { get; set; }
         public string LocationId { get; set; }
         public long StatusId { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

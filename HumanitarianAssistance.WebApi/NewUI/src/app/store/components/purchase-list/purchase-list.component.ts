@@ -44,9 +44,10 @@ export class PurchaseListComponent implements OnInit {
     'Purchased Quantity', 'Item Code', 'Project Id', 'Item Code Description', 'Description', 'BudgetLine Name',
     'Depreciation Rate', 'Master Inventory Code', 'Office Code', 'Receipt Date', 'Invoice Date',
     'Received From Location', 'Status']);
-  subListHeaders$ = of(['Id', 'Date', 'Employee', 'Procured Amount', 'Must Return', 'Returned', 'Returned On']);
+  subListHeaders$ = of(['Id', 'Date', 'Employee', 'Must Return', 'Procured Balance', 'Status']);
   procurementList$: Observable<IProcurementList[]>;
   hideColums: Observable<{ headers?: string[], items?: string[] }>;
+  hideColumsSub: Observable<{ headers?: string[], items?: string[] }>;
   columnsToShownInPdf: any[] = [];
 
   constructor(private purchaseService: PurchaseService,
@@ -78,7 +79,10 @@ export class PurchaseListComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.hideColumsSub = of({
+      headers: ['Date', 'Employee', 'Must Return', 'Procured Balance', 'Status'],
+      items: ['IssueDate', 'Employee', 'MustReturn', 'ProcuredAmount', 'Status']
+    })
     this.getScreenSize();
     this.getAllCurrencies();
     this.actions = {
@@ -89,10 +93,10 @@ export class PurchaseListComponent implements OnInit {
         edit: true
       },
       subitems: {
-        button: { status: false, text: '' },
+        button: { status: true, text: 'Add Return' },
         delete: true,
         download: false,
-        edit: true
+        edit: false
       }
 
     }
@@ -138,7 +142,6 @@ export class PurchaseListComponent implements OnInit {
             DepreciatedCost: element.DepreciatedCost,
             PurchaseDate: element.PurchaseDate ? this.datePipe.transform(new Date(element.PurchaseDate), 'dd/MM/yyyy') : null,
             Currency: element.CurrencyName,
-            PurchasedQuantity: element.PurchasedQuantity,
             ItemCode: element.ItemCode,
             ProjectId: element.ProjectId,
             ItemCodeDescription: element.ItemCodeDescription,
@@ -148,12 +151,14 @@ export class PurchaseListComponent implements OnInit {
             MasterInventoryCode: element.MasterInventoryCode,
             OfficeCode: element.OfficeCode,
             ReceiptDate: (element.ReceiptDate),
+            ItemId: element.ItemId,
             // this.datePipe.transform(new Date(element.ReceiptDate), 'dd/MM/yyyy') : null,
             InvoiceDate: (element.InvoiceDate),
             // this.datePipe.transform(new Date(element.InvoiceDate), 'dd/MM/yyyy') : null,
             ReceivedFromLocationName: element.ReceivedFromLocationName,
             Status: element.Status,
             ProcurementList: element.ProcurementList,
+            Quantity: element.Quantity,
             subItemSubtitle: element.LogisticRequestId ? '<b>Note:</b> The purchase was created as a result of <a href="/project/my-project/' + element.ProjectId + '/logistic-requests/' + element.LogisticRequestId + '" target="_blank">purchase-order-id-' + element.LogisticRequestId + ' </a></br>' : '',
             subItems: element.ProcurementList.map((r) => {
               return {
@@ -161,12 +166,58 @@ export class PurchaseListComponent implements OnInit {
                 IssueDate: (r.IssueDate != null && r.IssueDate !== undefined) ?
                   this.datePipe.transform(new Date(r.IssueDate), 'dd/MM/yyyy') : null,
                 Employee: r.EmployeeName,
-                ProcuredAmount: r.ProcuredAmount,
                 MustReturn: r.MustReturn ? 'Yes' : 'No',
-                Returned: r.Returned ? 'Yes' : 'No',
-                ReturnedOn: r.ReturnedOn ? this.datePipe.transform(new Date(r.ReturnedOn), 'dd/MM/yyyy') : null,
+                ProcuredAmount: r.ProcuredAmount,
+                Status: r.IsDeleted ? 'Cancelled' : r.ProcuredAmount > 0 ? 'Active' : 'In-Active',
+                itemAction: ((r.MustReturn && r.ProcuredAmount > 0) && !r.IsDeleted) ? (
+                  {
+                    button: {
+                      status: true,
+                      text: 'ADD RETURN',
+                      type: 'add'
+                    },
+                    delete: true,
+                    download: false,
+                    edit: false
+                  }) : (
+                    {
+                      button: {
+                        status: false,
+                        text: 'ADD RETURN',
+                        type: 'add'
+                      },
+                      delete: false,
+                      download: false,
+                      edit: false
+                    })
+                // Returned: r.Returned ? 'Yes' : 'No',
+                // ReturnedOn: r.ReturnedOn ? this.datePipe.transform(new Date(r.ReturnedOn), 'dd/MM/yyyy') : null,
               };
-            })
+            }
+            ),
+            itemAction: ((element.Quantity - element.ProcurementList
+              .filter(x => x.IsDeleted === false)
+              .reduce(function (a, b) { return a + b.ProcuredAmount; }, 0)) > 0) ?
+              ([
+                {
+                  button: {
+                    status: true,
+                    text: 'ADD PROCUREMENT',
+                    type: 'add'
+                  },
+                  delete: false,
+                  download: false,
+                  edit: true
+                }]) : ([
+                  {
+                    button: {
+                      status: false,
+                      text: 'ADD PROCUREMENT',
+                    },
+                    delete: false,
+                    download: false,
+                    edit: true
+                  }])
           } as IPurchaseList;
         }));
         this.loader.hideLoader();
@@ -211,65 +262,63 @@ export class PurchaseListComponent implements OnInit {
     this.router.navigate(['/store/purchase/add']);
   }
   actionEvents(event: any) {
-    if (event.type === 'button') {
 
-
-      if (!this.filterValueModel.OfficeId) {
-         this.toastr.warning('Select office before adding procurement');
-         return;
+    if (event.type === 'ADD PROCUREMENT') {
+      let remainingQuantity = 0;
+      if (event.item.subItems.length > 0) {
+        let filteredObjects = (event.item.subItems.filter(x => x.Status !== 'Cancelled'));
+        remainingQuantity = (event.item.Quantity - (filteredObjects.reduce(function (a, b) { return a + b.ProcuredAmount; }, 0)));
+      } else {
+        remainingQuantity = event.item.Quantity;
       }
-      const data = {
-        value: event.item.Id,
-        officeId: this.filterValueModel.OfficeId
-      };
 
-      this.openProcurementDialog(data);
+
+      // if (!this.filterValueModel.OfficeId) {
+      //   this.toastr.warning('Select office before adding procurement');
+      //   return;
+      // }
+      // const data = {
+      //   value: event.item.Id,
+      //   officeId: this.filterValueModel.OfficeId,
+      // };
+
+      this.router.navigate(['/store/purchases/add-procurement'],
+        {
+          queryParams: {
+            quantity: remainingQuantity,
+            purchaseId: event.item.Id,
+            itemId: event.item.ItemId
+          }
+        });
+
+      // this.openProcurementDialog(data);
     } else if (event.type === 'edit') {
       this.router.navigate(['/store/purchase/edit/' + event.item.Id]);
     }
 
   }
 
-  openProcurementDialog(item) {
-    const dialogRef = this.dialog.open(AddProcurementsComponent, {
-      width: '850px',
-      data: item
-    });
+  // openProcurementDialog(item) {
+  //   const dialogRef = this.dialog.open(AddProcurementsComponent, {
+  //     width: '850px',
+  //     data: item
+  //   });
 
-    dialogRef.afterClosed().subscribe(x => {
-      // console.log(x);
-
-      // this.purchaseList$.subscribe((purchase) => {
-      //   // console.log(purchase);
-
-      //   const index = purchase.findIndex(i => i.Id === x.PurchaseId);
-      //   if (index !== -1) {
-      //     purchase[index].subItems.unshift({
-      //       Id: x.ProcurementId,
-      //       IssueDate: this.datePipe.transform(x.IssueDate, 'dd-MM-yyyy'),
-      //       Employee: x.EmployeeName,
-      //       ProcuredAmount: x.IssuedQuantity,
-      //       MustReturn: (x.MustReturn === 'Yes' || x.MustReturn)  ? 'Yes' : 'No',
-      //       Returned: 'No',
-      //       ReturnedOn: null
-      //     } as IProcurementList);
-      //   }
-      //   this.purchaseList$ = of(purchase);
-      // });
-      this.getPurchasesByFilter(this.filterValueModel);
-    });
-  }
+  //   dialogRef.afterClosed().subscribe(x => {
+  //     this.getPurchasesByFilter(this.filterValueModel);
+  //   });
+  // }
 
   procurementAction(event: any) {
     if (event.type === 'delete') {
       this.purchaseService.deleteProcurement(event.subItem.Id)
         .subscribe(x => {
           if (x.StatusCode === 200) {
-            this.purchaseList$.subscribe((purchase) => {
+            this.purchaseList$.subscribe((purchase: any) => {
               const index = purchase.findIndex(i => i.Id === event.item.Id);
               if (index >= 0) {
-                const subItemIndex = purchase[index].subItems.findIndex(i => i.OrderId === event.subItem.Id);
-                purchase[index].subItems.splice(subItemIndex, 1);
+                const subItemIndex = purchase[index].subItems.findIndex(i => i.Id === event.subItem.Id);
+                purchase[index].subItems[subItemIndex].Status = 'Cancelled';
               }
               this.purchaseList$ = of(purchase);
             });
@@ -285,8 +334,8 @@ export class PurchaseListComponent implements OnInit {
       if (!this.filterValueModel.OfficeId) {
         this.toastr.warning('Select office before editing procurement');
         return;
-     }
-      const index = event.item.ProcurementList.findIndex(x => x.OrderId ===  event.subItem.Id);
+      }
+      const index = event.item.ProcurementList.findIndex(x => x.OrderId === event.subItem.Id);
       const orderData = event.item.ProcurementList[index];
       const data = {
         value: event.item.Id,
@@ -294,7 +343,15 @@ export class PurchaseListComponent implements OnInit {
         procurement: orderData
       };
 
-      this.openProcurementDialog(data);
+      // this.openProcurementDialog(data);
+    } else if (event.type === 'add') {
+      this.router.navigate(['store/purchases/procurement-control-panel/' + event.subItem.Id],
+        {
+          queryParams: {
+            quantity: event.subItem.ProcuredAmount,
+          }
+        }
+      );
     }
   }
 

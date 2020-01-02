@@ -6,7 +6,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { AddDesignationComponent } from '../add-designation/add-designation.component';
 import { TableActionsModel } from 'projects/library/src/public_api';
-import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 
 @Component({
@@ -28,7 +27,7 @@ export class DesignationListingComponent implements OnInit {
     PageIndex: 0
   };
   RecordCount: number;
-
+  Id: number;
   constructor(private hrService: HrService, private dialog: MatDialog, private toastr: ToastrService,
     private commonLoader: CommonLoaderService) {
 
@@ -40,9 +39,9 @@ export class DesignationListingComponent implements OnInit {
     this.actions = {
       items: {
         button: { status: false, text: '' },
-        delete: false,
         download: false,
-        edit: true
+        edit: true,
+        delete: true,
       },
       subitems: {
         button: { status: false, text: '' },
@@ -86,6 +85,18 @@ export class DesignationListingComponent implements OnInit {
   }
 
   actionEvents(event: any) {
+    if (event.type === 'delete') {
+      this.hrService.openDeleteDialog().subscribe(res => {
+        if (res === true) {
+          this.Id = event.item.Id;
+          this.hrService.deleteDesignationDetail(this.Id).subscribe(response => {
+            if (response === true) {
+              this.getDesignationList();
+            }
+          });
+        }
+      });
+    }
     if (event.type === 'edit') {
       const dialogRef = this.dialog.open(AddDesignationComponent, {
         width: '650px',

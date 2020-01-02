@@ -42,6 +42,7 @@ import { AddItemCategoryComponent } from './components/add-item-category/add-ite
 import { AddItemComponent } from './components/add-item/add-item.component';
 
 import {MatRadioModule} from '@angular/material/radio';
+import { ProcurementControlPanelComponent } from './components/procurement-control-panel/procurement-control-panel.component';
 
 
 @NgModule({
@@ -72,7 +73,8 @@ import {MatRadioModule} from '@angular/material/radio';
     StoreItemConfigComponent,
     AddMasterInventoryComponent,
     AddItemCategoryComponent,
-    AddItemComponent
+    AddItemComponent,
+    ProcurementControlPanelComponent
     // components
     //  DbsidebarComponent,
     // DbheaderComponent,

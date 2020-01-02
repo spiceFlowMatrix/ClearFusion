@@ -24,5 +24,8 @@ namespace HumanitarianAssistance.Application.Project.Models
         public double TotalExperienceInYear { get; set; }
         public double RelevantExperienceInYear { get; set; }
         public double IrrelevantExperienceInYear { get; set; }
+        public string EmployeeCode { get; set; }
+        public string EmployeeName { get; set; }        
+        public int? EmployeeId { get; set; }        
     }
 }

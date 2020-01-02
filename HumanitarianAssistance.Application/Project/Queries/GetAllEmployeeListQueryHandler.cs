@@ -30,6 +30,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                 response.data.EmployeeDetailListData = employeeDetails;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
+               // var result = list1.Where(f => !list2.Contains(f));
             } catch (Exception ex) {
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;

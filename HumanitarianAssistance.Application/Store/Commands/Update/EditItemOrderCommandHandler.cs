@@ -39,6 +39,8 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                     _mapper.Map(request, recordExits);
 
                     recordExits.ReturnedDate = returned? DateTime.UtcNow : recordExits.ReturnedDate;
+                    recordExits.IssueVoucher = request.VoucherNo;
+                    recordExits.InventoryItem= request.InventoryItem;
                     recordExits.IsDeleted = false;
 
                     await _dbContext.SaveChangesAsync();

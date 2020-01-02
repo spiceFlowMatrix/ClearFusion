@@ -62,9 +62,10 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                         exchangeGainLossReport.AccountCode = balance.AccountCode;
                         exchangeGainLossReport.AccountCodeName = balance.AccountCode + "-" + balance.AccountName;
                         exchangeGainLossReport.AccountName = balance.AccountName;
-                        exchangeGainLossReport.BalanceOnCurrentDate = currentDateBalance.Balance;
-                        exchangeGainLossReport.BalanceOnOriginalDate = balance.Balance;
-                        exchangeGainLossReport.GainLossAmount = currentDateBalance.Balance - balance.Balance;
+                        exchangeGainLossReport.BalanceOnCurrentDate = Math.Round(currentDateBalance.Balance, 4);
+                        exchangeGainLossReport.BalanceOnOriginalDate = Math.Round(balance.Balance, 4);
+                        exchangeGainLossReport.GainLossAmount = Math.Round(Math.Abs(currentDateBalance.Balance - balance.Balance), 4);
+                        exchangeGainLossReport.GainLossStatus = Math.Sign(currentDateBalance.Balance - balance.Balance);
                         exchangeGainLossReportData.Add(exchangeGainLossReport);
                     }
 

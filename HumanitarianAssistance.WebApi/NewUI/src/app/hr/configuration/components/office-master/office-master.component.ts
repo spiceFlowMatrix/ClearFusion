@@ -24,6 +24,7 @@ export class OfficeMasterComponent implements OnInit {
     PageIndex: 0
   };
   RecordCount: number;
+  Id: number;
 
   constructor(private hrService: HrService, private dialog: MatDialog, private toastr: ToastrService,
     private commonLoader: CommonLoaderService) { }
@@ -32,9 +33,9 @@ export class OfficeMasterComponent implements OnInit {
     this.actions = {
       items: {
         button: { status: false, text: '' },
-        delete: false,
         download: false,
-        edit: true
+        edit: true,
+        delete: true,
       },
       subitems: {
         button: { status: false, text: '' },
@@ -77,6 +78,18 @@ export class OfficeMasterComponent implements OnInit {
 }
 
   actionEvents(event: any) {
+    if (event.type === 'delete') {
+      this.hrService.openDeleteDialog().subscribe(res => {
+        if (res) {
+          this.Id = event.item.OfficeId;
+          this.hrService.deleteOfficeDegree(this.Id).subscribe(response => {
+            if (response.StatusCode === 200) {
+              this.getOfficeList();
+            }
+          });
+        }
+      });
+    }
     if (event.type === 'edit') {
       const dialogRef = this.dialog.open(AddOfficeMasterComponent, {
         width: '450px',

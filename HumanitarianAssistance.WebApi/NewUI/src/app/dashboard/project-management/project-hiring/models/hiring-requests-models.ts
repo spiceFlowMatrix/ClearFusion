@@ -37,8 +37,10 @@ export interface HiringRequestDetailList {
   PayRate?: string;
   Status?: string;
   Office?: string;
+  OfficeId?: number;
   DepartmentName?: string;
   BudgetName?: string;
+  BudgetLineId?: string;
   AnouncingDate?: any;
   ClosingDate?: any;
   ContractType?: string;
@@ -100,7 +102,7 @@ export interface IHiringRequestModel {
   AnouncingDate?: Date;
   ClosingDate?: Date;
   Country?: number;
-  Province?: number;
+  ProvinceId?: number;
   JobType?: string;
   JobShift?: number;
   JobStatus?: string;
@@ -123,6 +125,8 @@ export interface ICandidateDetailList {
   CvDocument?: string;
   Interview?: string;
   CandidateStatus?: string;
+  EmployeeCode?: string;
+  EmployeeName?: string;
   firstText?: string;
   subItems?: ISubCandidateList[];
 }
@@ -159,6 +163,7 @@ export interface TableActionsModel {
     delete?: boolean;
     edit?: boolean;
     download?: boolean;
+    link?: boolean;
   };
   subitems: {
     button?: { status?: boolean; text?: string };
@@ -268,4 +273,11 @@ export interface CvDownloadModel {
   AttachmentName: string;
   AttachmentUrl: string;
   UploadedBy: string;
+}
+
+export interface IAnalyticalInfoList {
+  Project: string;
+  Budgetline: string;
+  Account: string;
+  Percentage: string;
 }

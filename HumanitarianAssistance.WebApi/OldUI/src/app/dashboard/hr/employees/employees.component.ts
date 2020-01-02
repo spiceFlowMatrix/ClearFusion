@@ -15,6 +15,7 @@ import { FileManagementService } from '../../../shared/FileManagement/file-manag
 import { JobHiringService } from '../job-hiring-details/job-hiring.service';
 import { IDatasource } from '../../../shared/pipes/job-grade.pipe';
 import { IAttendanceGroup } from '../../code/attendance-group-master/attendance-group-master.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-employees',
@@ -64,6 +65,7 @@ export class EmployeesComponent implements OnInit {
   countryId: number;
   officeId: number;
   employeeId: number;
+  newEmployeeId: number;
   tabEventValue: number;
   leaveInfoDataSource: LeaveInfoModel[];
   leaveInfoData: LeaveInfoData;
@@ -183,6 +185,14 @@ export class EmployeesComponent implements OnInit {
       applicationPages.Employees
     );
     this.initDocumentTypeList();
+    this.routeActive.queryParams.subscribe(params => {
+      this.newEmployeeId = +params['empCode'];
+     this.selectedOffice = +params['officeId'];
+     if(this.selectedOffice){
+      this.onOfficeSelected(this.selectedOffice);
+     }
+    
+    });
   }
 
   constructor(
@@ -194,6 +204,7 @@ export class EmployeesComponent implements OnInit {
     public commonService: CommonService,
     private codeservice: CodeService,
     private fileManagementService: FileManagementService,
+    private routeActive: ActivatedRoute,
     private jobHiringService: JobHiringService
   ) {
     this.allFormInitialize();
@@ -1039,11 +1050,17 @@ export class EmployeesComponent implements OnInit {
               this.showData.length > 0
             ) {
               if (this.employeeId === 0) {
-                this.GetEmployeeDetailsByEmployeeId(
-                  this.showData[0].EmployeeID
-                );
+                if (this.newEmployeeId > 0) {
+            // this function is used when we redirect here from hiring request page on the basis of employeeId
+                  this.GetEmployeeDetailsOnSelectedEmployeeId();
+                  this.employeeId = this.newEmployeeId;
+                } else {
+                  this.GetEmployeeDetailsByEmployeeId(
+                    this.showData[0].EmployeeID
+                  );
                 this.employeeId = this.showData[0].EmployeeID;
                 localStorage.setItem('HIREDON', this.showData[0].HiredOn);
+                }
               } else {
                 this.GetEmployeeDetailsByEmployeeId(this.employeeId);
               }
@@ -2008,7 +2025,31 @@ getAttendanceGroupList() {
       }
     });
 }
+//#region redirect employee detail page from hiring request 
+GetEmployeeDetailsOnSelectedEmployeeId() {
+ // this is call to get employee detail to pass employee data in showActiveEmployeeData
+  this.hrService
+    .GetEmployeesDetailsByEmployeeId(
+      this.setting.getBaseUrl() + GLOBAL.API_Hr_GetEmployeeById,
+      this.newEmployeeId
+    )
+    .subscribe(data => {
+      this.showActiveEmployeeData = data;
+    });
+  this.loading = true;
+  this.selectedItemEmployee = this.newEmployeeId;
 
+  this.openInfoTab = 0;
+  this.selectedIndex = 0;
+
+  this.GetEmployeeDetailsByEmployeeId(this.newEmployeeId);
+  this.employeeId = this.newEmployeeId;
+  localStorage.setItem(
+    'SelectedEmployee',
+    this.newEmployeeId !== undefined ? this.newEmployeeId.toString() : ''
+  );
+}
+// #endregion
   functionCache = {};
   validateRange(min, max) {
     if (!this.functionCache[`min${min}max${max}`])

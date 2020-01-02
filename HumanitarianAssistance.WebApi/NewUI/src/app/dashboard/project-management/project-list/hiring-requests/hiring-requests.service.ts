@@ -352,10 +352,11 @@ export class HiringRequestsService {
   //#endregion
 
   //#region "GetAllEmployeeList"
-  GetAllEmployeeList(): any {
+  GetAllEmployeeList(model: any): any {
     return this.globalService
-      .getList(
-        this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetAllEmployeeList
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_GetAllEmployeeList,
+        model
       )
       .pipe(
         map(x => {
@@ -887,6 +888,78 @@ export class HiringRequestsService {
     return this.globalService.post(
       this.appurl.getApiUrl() +
         GLOBAL.API_EmployeeDetail_AddCandidateAsEmployee, model
+    ).pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x.data,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+  }
+  GetAnalyticalInfoByEmployeeId(EmployeeId: number) {
+    return this.globalService
+    .getDataById(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_EmployeeDetail_GetAllEmployeeSalaryAnalyticalInfo +
+        '?EmployeeId=' +
+        EmployeeId
+    ).pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x.data.EmployeeSalaryAnalyticalInfoList,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+  }
+  GetProjectList() {
+    return this.globalService
+      .getDataById(
+        this.appurl.getApiUrl() + GLOBAL.API_ProjectBudget_GetAllProjectDetail
+      ).pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x.data.ProjectDetailList,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+  }
+  GetAccountList() {
+    return this.globalService
+      .getDataById(
+        this.appurl.getApiUrl() + GLOBAL.API_Accounting_GetAccountDetails
+      ).pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x.data.AccountDetailList,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+  }
+  AddAnalyticalInfo(model): any {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_EmployeeDetail_AddEmployeeSalaryAnalyticalInfo, model
+    ).pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x.data,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
     );
   }
 }

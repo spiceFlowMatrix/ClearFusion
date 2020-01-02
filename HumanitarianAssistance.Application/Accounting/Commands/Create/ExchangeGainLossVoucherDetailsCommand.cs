@@ -1,5 +1,6 @@
 using HumanitarianAssistance.Application.Infrastructure;
 using MediatR;
+using System;
 
 namespace HumanitarianAssistance.Application.Accounting.Commands.Create
 {
@@ -17,5 +18,6 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
         public long DebitAccount { get; set; }
         public double Amount { get; set; }
         public int? TimezoneOffset { get; set; }
+        public DateTime VoucherDate { get; set; }
     }
 }
