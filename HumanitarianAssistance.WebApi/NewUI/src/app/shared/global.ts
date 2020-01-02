@@ -229,7 +229,8 @@ export class GLOBAL {
   public static API_Code_GetAllDesignationList = 'Code/GetAllDesignationList';
   public static API_Code_GetAllJournalDetail = 'Code/GetAllJournalDetail';
   public static API_AccountReports_GetJournalVoucherDetails = 'AccountReports/GetJournalVoucherDetails';
-  public static API_Accounting_GetAccountDetails = 'Account/GetAllAccountList';
+  public static API_Accounting_GetAccountDetails = 'Account/GetAllAccountCode';
+  public static API_Accounting_GetAccountList = 'Account/GetAllAccountList';
   public static API_AccountReports_GetAllLedgerDetails = 'AccountReports/GetAllLedgerDetails';
   public static API_AccountReports_GetTrialBalanceReport = 'AccountReports/GetTrialBalanceReport';
   public static API_Account_GetAllVouchersWithoutFilter = 'Account/GetAllVouchersWithoutFilter';
