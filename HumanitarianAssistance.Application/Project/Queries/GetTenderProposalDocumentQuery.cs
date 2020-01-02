@@ -10,7 +10,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
     public class TenderProposalDocumentModel
     {
-        public int DocumentType { get; set; }
+        public string DocumentType { get; set; }
         public string AttachmentName { get; set; }
         public string AttachmentUrl { get; set; }
         public long DocumentFileId { get; set; }

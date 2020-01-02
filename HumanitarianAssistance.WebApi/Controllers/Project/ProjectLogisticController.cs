@@ -333,6 +333,18 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         {   
             return await _mediator.Send(model);
         }
+
+        [HttpPost]
+        public async Task<ApiResponse> DeleteTenderProposalDocument([FromBody]long docTypeId)
+        {   
+            DeleteTenderProposalDocumentCommand model = new DeleteTenderProposalDocumentCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.docTypeId = docTypeId;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow; 
+            return await _mediator.Send(model);
+        }
+        
         
     }
 

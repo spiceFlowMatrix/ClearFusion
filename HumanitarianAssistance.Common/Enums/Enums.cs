@@ -188,8 +188,11 @@ namespace HumanitarianAssistance.Common.Enums {
         GoodsRecievedDocument = 15,
         LogisticSupplierInvoice = 16,
         LogisticSupplierWarranty = 17,
+        [Description ("Proposal Document")]
         TenderProposalDocument = 18,
+        [Description ("RFP Document")]
         TenderRFPDocument = 19,
+        [Description ("Announcement Document")]
         TenderAnnouncementDocument = 20
     }
 

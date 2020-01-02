@@ -1,20 +1,27 @@
 
 <div [ngSwitch]="tenderStatus">
-  <div *ngSwitchCase="1" style="margin-top: 25%;">
+  <div *ngSwitchCase="1" humAddScroll style="margin-top: 25%;">
       <i class="fas fa-info-circle icon_align icon_color_pending"></i>
       <h3 class="text-center">TENDER REQUEST PENDING</h3>
     </div>
-    <div *ngSwitchCase="2" style="margin-top: 25%;">
+    <div *ngSwitchCase="2" humAddScroll style="margin-top: 25%;">
         <i class="fas fa-exclamation-circle icon_align icon_color_cancel"></i>
         <h3 class="text-center">CANCELLED REQUEST</h3>
     </div>
-    <div *ngSwitchCase="3" >
+    <div *ngSwitchCase="3" humAddScroll>
       <h4 class="letter_spacing_2">Tender Details</h4>
       <h4>Tender Proposal Documentation
           <hum-button [type]="'add'" [text]="'SUBMIT A DOCUMENT'" (click)="openFilesDialog()"></hum-button>
+          <table class="table table-striped">
+            <tr *ngFor="let doc of tenderDocsList" style="font-size: 14px;">
+              <td>{{doc.DocumentType}}</td>
+              <td><a href="{{doc.AttachmentUrl}}">{{doc.AttachmentName}}</a></td>
+              <td><i class="fa fa-trash" (click)="deleteTenderDocument(doc.DocumentFileId)"></i></td>
+            </tr>
+          </table>
       </h4>
       <h4>Submitted Bids
-          <hum-button [type]="'add'" [text]="'SUBMIT A BID'"></hum-button>
+          <hum-button [type]="'add'" (click)="submitTenderBid()" [text]="'SUBMIT A BID'"></hum-button>
           <hum-button [type]="'save'" [text]="'PROVIDE BID SELECTION'"></hum-button>
       </h4>
       <span><i class="fas fa-info-circle icon_color_yellow"></i> Pending <b>Bid</b> selection by <b>General Administration & Finance Managers</b>.</span>

@@ -46,7 +46,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                                     select new StoreDocumentModel 
                                     {
                                         DocumentFileId= doc.DocumentFileId,
-                                        DocumentTypeId= doc.DocumentTypeId,
+                                        DocumentTypeId= doc.PageId,
                                     }).ToListAsync();
                 
                 foreach(var doc in documentsAsync)
@@ -67,7 +67,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                         {
                             AttachmentName = documentModel.DocumentName,
                             AttachmentUrl = documentModel.SignedURL,
-                            DocumentType = Convert.ToInt32(doc.DocumentTypeId),
+                            DocumentType = ((FileSourceEntityTypes)Convert.ToInt32(doc.DocumentTypeId)).GetDescription(),
                             DocumentFileId = doc.DocumentFileId
                         });
                     }

@@ -253,6 +253,7 @@ export class GLOBAL {
   public static API_ProjectLogistics_InitiateTenderRequest = 'ProjectLogistic/InitiateTenderRequest';
   public static API_ProjectLogistics_GetTenderIssuerName = 'ProjectLogistic/GetTenderIssuerName';
   public static API_ProjectLogistics_GetTenderProposalDocument = 'ProjectLogistic/GetTenderProposalDocument';
+  public static API_ProjectLogistics_DeleteTenderProposalDocument = 'ProjectLogistic/DeleteTenderProposalDocument';
 
   // Chart Of Account
   public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';

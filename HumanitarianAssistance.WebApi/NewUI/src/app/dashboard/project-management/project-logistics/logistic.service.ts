@@ -335,5 +335,12 @@ export class LogisticService {
     );
   }
 
+  deleteTenderProposalDocument(documentFileId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_DeleteTenderProposalDocument,
+      documentFileId
+    );
+  }
+
 
 }

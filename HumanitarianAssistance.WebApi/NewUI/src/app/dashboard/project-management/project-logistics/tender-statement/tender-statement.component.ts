@@ -4,7 +4,9 @@ import { MatDialog } from '@angular/material';
 import { ToastrService } from 'ngx-toastr';
 import { SubmitTenderDocumentComponent } from '../submit-tender-document/submit-tender-document.component';
 import { ActivatedRoute } from '@angular/router';
-import { LogisticTenderStatus } from 'src/app/shared/enum';
+import { LogisticTenderStatus, FileSourceEntityTypes } from 'src/app/shared/enum';
+import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { SubmitTenderBidComponent } from '../submit-tender-bid/submit-tender-bid.component';
 
 @Component({
   selector: 'app-tender-statement',
@@ -21,7 +23,7 @@ export class TenderStatementComponent implements OnInit {
   tenderDocsList: any[] = [];
   constructor(private logisticservice: LogisticService,
     private dialog: MatDialog, private routeActive: ActivatedRoute,
-    public toastr: ToastrService) {
+    public toastr: ToastrService, private commonLoader: CommonLoaderService) {
       this.routeActive.params.subscribe(params => {
         this.requestId = +params['id'];
       });
@@ -51,6 +53,33 @@ export class TenderStatementComponent implements OnInit {
       this.tenderDocsList = [];
       if (res.StatusCode === 200 && res.data.TenderProposalDoc != null) {
         this.tenderDocsList = res.data.TenderProposalDoc;
+      }
+    });
+  }
+
+  deleteTenderDocument(docFileId) {
+    this.commonLoader.showLoader();
+    this.logisticservice.deleteTenderProposalDocument(docFileId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.getTenderProposalDocument();
+        this.toastr.success('Deleted Successfully!');
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error(res.Message);
+      }
+    });
+  }
+
+  submitTenderBid() {
+    const dialogRef = this.dialog.open(SubmitTenderBidComponent, {
+      width: '500px',
+      data: {RequestId: this.requestId}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined && result.data != null ) {
+        this.getTenderProposalDocument();
       }
     });
   }

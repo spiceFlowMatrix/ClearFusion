@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ProjectLogisticsRoutingModule } from './project-logistics-routing.module';
 import { LogisticRequestsComponent } from './logistic-requests/logistic-requests.component';
 import { MatDividerModule, MatInputModule, MatCardModule, MatPaginatorModule,
-  MatDialogRef, MatTableModule, MatCheckboxModule, MatDialogModule, MatExpansionModule, MatTabsModule, MatDatepickerModule } from '@angular/material';
+  MatDialogRef, MatTableModule, MatCheckboxModule, MatDialogModule, MatExpansionModule, MatTabsModule, MatDatepickerModule, MatSlideToggleModule } from '@angular/material';
 import { SubHeaderTemplateModule, LibraryModule } from 'projects/library/src/public_api';
 import { AddLogisticRequestComponent } from './add-logistic-request/add-logistic-request.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -21,6 +21,7 @@ import { PurchaseFinalCostComponent } from './purchase-final-cost/purchase-final
 import { GoodsRecievedUploadComponent } from './goods-recieved-upload/goods-recieved-upload.component';
 import { PurchaseVoucherVerificationComponent } from './purchase-voucher-verification/purchase-voucher-verification.component';
 import { SubmitTenderDocumentComponent } from './submit-tender-document/submit-tender-document.component';
+import { SubmitTenderBidComponent } from './submit-tender-bid/submit-tender-bid.component';
 
 @NgModule({
   declarations: [LogisticRequestsComponent, AddLogisticRequestComponent,
@@ -29,7 +30,7 @@ import { SubmitTenderDocumentComponent } from './submit-tender-document/submit-t
     PurchaseOrderComponent, SubmitComparativeStatementComponent, TenderStatementComponent, PurchaseFinalCostComponent,
     GoodsRecievedUploadComponent,
     PurchaseVoucherVerificationComponent,
-    SubmitTenderDocumentComponent],
+    SubmitTenderDocumentComponent, SubmitTenderBidComponent],
   imports: [
     CommonModule,
     MatTableModule,
@@ -45,7 +46,8 @@ import { SubmitTenderDocumentComponent } from './submit-tender-document/submit-t
     ReactiveFormsModule,
     MatDialogModule,
     MatTabsModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatSlideToggleModule
   ],
   entryComponents: [
     PurchaseFinalCostComponent,
@@ -54,7 +56,8 @@ import { SubmitTenderDocumentComponent } from './submit-tender-document/submit-t
     AddSupplierComponent,
     SubmitComparativeStatementComponent,
     GoodsRecievedUploadComponent,
-    PurchaseVoucherVerificationComponent
-  ],
+    PurchaseVoucherVerificationComponent,
+    SubmitTenderBidComponent
+  ]
 })
 export class ProjectLogisticsModule { }
