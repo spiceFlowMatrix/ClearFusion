@@ -1,16 +1,20 @@
 <lib-sub-header-template>
   <span class="action_header">Results
-    <hum-button [type]="'add'" [text]="'CONSOLIDATE EXCHANGE GAIN/LOSS'" *ngIf="type != 'consolidation'" (click)="onConsolidation()"></hum-button>
+    <hum-button [type]="'add'" [text]="'CONSOLIDATE EXCHANGE GAIN/LOSS'" *ngIf="type != 'consolidation'"
+      (click)="onConsolidation()"></hum-button>
   </span>
   <div class="action_section">
-    <hum-button [type]="'filter'" *ngIf="type != 'consolidation'" [text]="'TRANSACTION FILTERS'" (click)="type='filter'"></hum-button>
+    <hum-button [type]="'filter'" [text]="'TRANSACTION FILTERS'"
+      (click)="type='filter'"></hum-button>
+      <hum-button [type]="'filter'" [text]="'CLEAR TRANSACTION FILTERS'"
+      (click)="clearTransactionFilters()"></hum-button>
     <hum-button [type]="'filter'" [text]="'CONFIGURATION'" (click)="showConfiguration()"></hum-button>
   </div>
 </lib-sub-header-template>
 <mat-divider></mat-divider>
 
 <ng-container [ngSwitch]="type">
-  <div class="row" [ngStyle]="scrollStyles" *ngSwitchDefault>
+  <div class="row" *ngSwitchDefault humAddScroll [height]="150">
     <div class="col-md-12">
 
       <mat-table #table [dataSource]="gainLossReportList">
@@ -21,19 +25,16 @@
             <mat-checkbox [(ngModel)]="element.Checked"></mat-checkbox>
           </mat-cell>
         </ng-container> -->
-        <ng-container matColumnDef="Select">
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="select">
           <th style="border-bottom-width:0px" mat-header-cell *matHeaderCellDef>
-            <mat-checkbox
-                          [checked]="selection.hasValue()"
-                          [indeterminate]="selection.hasValue()"
-                         >
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
             </mat-checkbox>
           </th>
           <td style="border-bottom-width:0px" mat-cell *matCellDef="let row">
-            <mat-checkbox (click)="$event.stopPropagation()"
-                          (change)="$event ? selection.toggle(row) : null"
-                          [checked]="selection.isSelected(row)"
-                         >
+            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+              [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
             </mat-checkbox>
           </td>
         </ng-container>
@@ -58,18 +59,18 @@
           <mat-cell *matCellDef="let element"> {{element.BalanceOnComparisionDate}} </mat-cell>
         </ng-container>
 
-      <ng-container matColumnDef="GainLossStatus">
-        <mat-header-cell *matHeaderCellDef>Gain/Loss</mat-header-cell>
-        <mat-cell *matCellDef="let element"> <span
-          [ngClass]="getLabelClass(element.GainLossStatus)">{{labelText}}</span>
-        </mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="GainLossStatus">
+          <mat-header-cell *matHeaderCellDef>Gain/Loss</mat-header-cell>
+          <mat-cell *matCellDef="let element"> <span
+              [ngClass]="getLabelClass(element.GainLossStatus)">{{labelText}}</span>
+          </mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="ResultingGainLoss">
-        <mat-header-cell *matHeaderCellDef> Resulting Gain/Loss </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.ResultingGainLoss}}
-        </mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="ResultingGainLoss">
+          <mat-header-cell *matHeaderCellDef> Resulting Gain/Loss </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.ResultingGainLoss}}
+          </mat-cell>
+        </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></mat-row>
@@ -81,55 +82,56 @@
     </div>
   </div>
 
-    <mat-card *ngSwitchCase="'filter'">
-      <h3>Voucher Transaction Filters</h3>
-      <div class="row">
-        <div class="col-sm-2">
-          <lib-search-dropdown placeholder="Accounts" [multiSelect]="true" placeholderSearchLabel="Find Account..."
-            noEntriesFoundLabel="No matching account found" [dataSource]="accountDataSource"
-            [selectedValue]="AccountIdList" (openedChange)="openedChange($event)"
-            (selectionChanged)="onSelectionChanged($event)">
-          </lib-search-dropdown>
+  <mat-card *ngSwitchCase="'filter'">
+    <h3>Voucher Transaction Filters</h3>
+    <div class="row">
+      <div class="col-sm-2">
+        <lib-search-dropdown placeholder="Accounts" [multiSelect]="true" placeholderSearchLabel="Find Account..."
+          noEntriesFoundLabel="No matching account found" [dataSource]="accountDataSource"
+          [selectedValue]="AccountIdList" (openedChange)="openedChange($event)"
+          (selectionChanged)="onSelectionChanged($event)">
+        </lib-search-dropdown>
+      </div>
+    </div>
+    <div class="row">
+      <form [formGroup]="transactionFiltersForm" (ngSubmit)=getExchangeGainLossData()>
+        <div class="col-sm-12">
+          <mat-form-field>
+            <mat-label>Offices</mat-label>
+            <mat-select formControlName="offices" multiple>
+              <mat-option *ngFor="let office of officeList" [value]="office.OfficeId">{{office.OfficeName}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
-      </div>
-      <div class="row">
-        <form [formGroup]="transactionFiltersForm" (ngSubmit)=getExchangeGainLossData()>
-          <div class="col-sm-12">
-            <mat-form-field>
-              <mat-label>Offices</mat-label>
-              <mat-select formControlName="offices" multiple>
-                <mat-option *ngFor="let office of officeList" [value]="office.OfficeId">{{office.OfficeName}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div class="col-sm-12">
-            <mat-form-field>
-              <mat-label>Journals</mat-label>
-              <mat-select formControlName="journals" multiple>
-                <mat-option *ngFor="let journal of journalList" [value]="journal.JournalCode">
-                  {{journal.JournalCode+'-'+journal.JournalName}}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div class="col-sm-12">
-            <mat-form-field>
-              <mat-label>Projects</mat-label>
-              <mat-select formControlName="projects" multiple>
-                <mat-option *ngFor="let project of projectList" [value]="project.ProjectId">
-                  {{project.ProjectCode + '-'+ project.ProjectName}}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div class="col-sm-12">
-            <hum-button [disabled]="!transactionFiltersForm.valid" [isSubmit]="true" [type]="'save'" [text]="'APPLY'">
-            </hum-button>
-            <hum-button (click)="type=''" [type]="'cancel'" [text]="'cancel'"></hum-button>
-          </div>
-        </form>
-      </div>
-    </mat-card>
-  <app-consolidate-gain-loss [calculatorConfigData] ="calculatorConfigData" [selectedData]= "selection.selected" (emitType)="subscribeType($event)" *ngSwitchCase="'consolidation'"></app-consolidate-gain-loss>
+        <div class="col-sm-12">
+          <mat-form-field>
+            <mat-label>Journals</mat-label>
+            <mat-select formControlName="journals" multiple>
+              <mat-option *ngFor="let journal of journalList" [value]="journal.JournalCode">
+                {{journal.JournalCode+'-'+journal.JournalName}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-12">
+          <mat-form-field>
+            <mat-label>Projects</mat-label>
+            <mat-select formControlName="projects" multiple>
+              <mat-option *ngFor="let project of projectList" [value]="project.ProjectId">
+                {{project.ProjectCode + '-'+ project.ProjectName}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-12">
+          <hum-button [disabled]="!transactionFiltersForm.valid" [isSubmit]="true" [type]="'save'" [text]="'APPLY'">
+          </hum-button>
+          <hum-button (click)="type=''" [type]="'cancel'" [text]="'cancel'"></hum-button>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+  <app-consolidate-gain-loss [calculatorConfigData]="calculatorConfigData" [selectedData]="selection.selected"
+    (emitType)="subscribeType($event)" *ngSwitchCase="'consolidation'"></app-consolidate-gain-loss>
 </ng-container>
 
 
