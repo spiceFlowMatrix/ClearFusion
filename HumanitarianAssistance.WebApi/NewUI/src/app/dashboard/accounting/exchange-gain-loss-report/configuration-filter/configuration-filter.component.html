@@ -48,13 +48,13 @@
           <b>NET Gain/Loss Accounts</b>
         </div>
         <div class="col-sm-12">
-          <lib-hum-dropdown [validation]="gainLossConfigForm.controls['DebitAccount'].hasError('required')"
-            [options]="accounts$" formControlName='DebitAccount' [placeHolder]="'Debit Account for NET Gains'">
+          <lib-hum-dropdown [validation]="gainLossConfigForm.controls['CreditAccount'].hasError('required')"
+            [options]="accounts$" formControlName='CreditAccount' [placeHolder]="'Credit Account for NET Gains'">
           </lib-hum-dropdown>
         </div>
         <div class="col-sm-12">
-          <lib-hum-dropdown [validation]="gainLossConfigForm.controls['CreditAccount'].hasError('required')"
-            [options]="accounts$" formControlName='CreditAccount' [placeHolder]="'Credit Account for NET Losses'">
+          <lib-hum-dropdown [validation]="gainLossConfigForm.controls['DebitAccount'].hasError('required')"
+            [options]="accounts$" formControlName='DebitAccount' [placeHolder]="'Debit Account for NET Losses'">
           </lib-hum-dropdown>
         </div>
         <br>

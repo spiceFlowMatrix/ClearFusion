@@ -76,6 +76,8 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
 
   tabChanged(value) {
     if (value.index === 0) {
+
+      this.transactionHeaders$ = of(['Account', 'Credit Amount', 'Description']);
       this.transactionList$ = of(this.gainList.map(x => {
         return {
           Account: x.AccountCode + '-' + x.AccountName,
