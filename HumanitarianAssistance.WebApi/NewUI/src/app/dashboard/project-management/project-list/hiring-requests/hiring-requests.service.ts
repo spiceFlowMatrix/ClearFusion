@@ -935,7 +935,7 @@ export class HiringRequestsService {
   GetAccountList() {
     return this.globalService
       .getDataById(
-        this.appurl.getApiUrl() + GLOBAL.API_Accounting_GetAccountDetails
+        this.appurl.getApiUrl() + GLOBAL.API_Accounting_GetAccountList
       ).pipe(
       map(x => {
         const responseData: IResponseData = {
