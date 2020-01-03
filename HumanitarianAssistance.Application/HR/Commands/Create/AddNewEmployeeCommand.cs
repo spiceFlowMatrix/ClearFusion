@@ -6,7 +6,7 @@ using System.Text;
 
 namespace HumanitarianAssistance.Application.HR.Commands.Create
 {
-   public class AddNewEmployeeCommand : BaseModel, IRequest<ApiResponse>
+    public class AddNewEmployeeCommand : BaseModel, IRequest<ApiResponse>
     {
         public int EmployeeID { get; set; }
         public string EmployeeCode { get; set; }
@@ -67,5 +67,17 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
         public string Password { get; set; }
         public int? AttendanceGroupId { get; set; }
         public int? DutyStation { get; set; }
+
+        public PensionDetail PensionDetail { get; set; }
+    }
+    public class PensionDetail
+    {
+        public DateTime? PensionDate { get; set; }
+        public List<PensionDetialModel> PensionDetialModel { get; set; }
+    }
+    public class PensionDetialModel
+    {
+        public int CurrencyId { get; set; }
+        public double?  Amount { get; set; }
     }
 }

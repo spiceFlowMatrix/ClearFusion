@@ -8,7 +8,7 @@ import {
   ResponseContentType
 } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { HealthModel } from './employees/employees.component';
+import { HealthModel, PensionDetailModel } from './employees/employees.component';
 import { ToastrService } from 'ngx-toastr';
 
 export class EmployeeAttendanceList {
@@ -1411,6 +1411,45 @@ export class HrService {
   }
   //#endregion
 
+  GetAllCodeList(url: string) {
+    const Myheaders = new Headers();
+    Myheaders.append(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('authenticationtoken')
+    );
+    Myheaders.append('Content-Type', 'application/json');
+    const options = new RequestOptions({ headers: Myheaders });
+    return this.http
+      .get(url, options)
+      .map((response: Response) => {
+        const codelist = response.json();
+        if (codelist) {
+          return codelist;
+        }
+      })
+      .catch(this.handleError);
+  }
+
+
+  getExchaneRateVerified(url: string, model: any) {
+    const Myheaders = new Headers();
+    Myheaders.append(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('authenticationtoken')
+    );
+    Myheaders.append('Content-Type', 'application/json');
+    const options = new RequestOptions({ headers: Myheaders });
+    return this.http
+      .post(url, JSON.stringify(model), options)
+      .map((response: Response) => {
+        const journal = response.json();
+        if (journal) {
+          return journal;
+        }
+      })
+      .catch(this.handleError);
+  }
+
     private handleError(error: Response) {
 
     return Observable.throw(error.json().error || 'Server error');
@@ -1466,6 +1505,7 @@ export interface GeneralInfo {
   Password: string;
   AttendanceGroupId?: number;
   DutyStation?: number;
+  PensionDetail?: PensionModel;
 }
 
 export class Documents {
@@ -1498,6 +1538,10 @@ export class DeleteDocument {
   DocumentId: any;
 }
 
+export interface PensionModel {
+  PensionDate?: any;
+  PensionDetailModel?: PensionDetailModel[];
+}
 const deleteDocument: DeleteDocument = {
   DocumentId: ''
 };

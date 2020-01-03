@@ -300,6 +300,7 @@ export class GLOBAL {
   public static API_Code_EditPensionRate = 'Code/EditPensionRate';
   public static API_Code_GetAllPensionRate = 'Code/GetAllPensionRate';
   public static API_ExchangeRates_CheckExchangeRatesExist = 'ExchangeRates/CheckExchangeRatesExist';
+  public static API_ExchangeRates_CheckExchangeRatesVerified = 'ExchangeRates/CheckExchangeRatesVerified';
 
   public static API_Hr_GetEmployeeContractType = 'Code/GetAllEmployeeContractType';
   public static API_Code_SaveContractContent = 'Code/SaveContractContent';
