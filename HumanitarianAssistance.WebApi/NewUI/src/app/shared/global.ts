@@ -230,6 +230,7 @@ export class GLOBAL {
   public static API_Code_GetAllJournalDetail = 'Code/GetAllJournalDetail';
   public static API_AccountReports_GetJournalVoucherDetails = 'AccountReports/GetJournalVoucherDetails';
   public static API_Accounting_GetAccountDetails = 'Account/GetAllAccountCode';
+  public static API_Accounting_GetAccountList = 'Account/GetAllAccountList';
   public static API_AccountReports_GetAllLedgerDetails = 'AccountReports/GetAllLedgerDetails';
   public static API_AccountReports_GetTrialBalanceReport = 'AccountReports/GetTrialBalanceReport';
   public static API_Account_GetAllVouchersWithoutFilter = 'Account/GetAllVouchersWithoutFilter';
@@ -479,6 +480,8 @@ export class GLOBAL {
 
 
   //#region "Hiring request"
+  public static API_ProjectBudget_GetAllProjectDetail = 'Code/GetAllProjectDetails';
+  public static API_EmployeeDetail_GetAllEmployeeSalaryAnalyticalInfo = 'EmployeeDetail/GetAllEmployeeSalaryAnalyticalInfo';
   public static API_HREmployee_AddJobHiringDetail = 'HRJobs/AddJobHiringDetails';
   public static API_HiringRequest_GetProjectHiringRequestDetailsByHiringRequestId =
     'HiringRequest/GetProjectHiringRequestDetailByHiringRequestId';
@@ -513,7 +516,7 @@ export class GLOBAL {
 
 
 
-
+  public static API_EmployeeDetail_AddEmployeeSalaryAnalyticalInfo = 'EmployeeDetail/AddEmployeeSalaryAnalyticalInfo';
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
   public static API_Code_GetAllDesignation = 'Code/GetAllDesignation';
   public static API_HiringRequest_AddHiringRequestDetail = 'HiringRequest/AddHiringRequestDetail';
