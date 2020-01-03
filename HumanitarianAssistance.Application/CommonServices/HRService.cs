@@ -208,9 +208,31 @@ namespace HumanitarianAssistance.Application.CommonServices
                     // to add Multi currencuy Pension detail 
 
 
+                    List<MultiCurrencyOpeningPension> pensionDetail = new List<MultiCurrencyOpeningPension>();
+
+                    if (request.PensionDetailModel != null)
+                    {
+
+                        foreach (var item in request.PensionDetailModel.PensionDetail)
+                        {
+                            MultiCurrencyOpeningPension detail = new MultiCurrencyOpeningPension()
+                            {
+                               EmployeeID = obj.EmployeeID,
+                                PensionStartDate = request.PensionDetailModel.PensionDate,
+                                Amount = item.Amount,
+                                CreatedById = request.CreatedById,
+                                CreatedDate = request.CreatedDate,
+                                IsDeleted = false,
+                                CurrencyId = item.CurrencyId,
+                            };
+
+                            pensionDetail.Add(detail);
+                        }
+                        await _dbContext.MultiCurrencyOpeningPension.AddRangeAsync(pensionDetail);
+                        await _dbContext.SaveChangesAsync();
 
 
-
+                    }
 
                     EmployeeProfessionalDetailModel empprofessional = new EmployeeProfessionalDetailModel
                     {

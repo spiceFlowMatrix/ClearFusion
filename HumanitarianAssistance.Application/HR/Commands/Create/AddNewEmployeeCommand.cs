@@ -68,14 +68,14 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
         public int? AttendanceGroupId { get; set; }
         public int? DutyStation { get; set; }
 
-        public PensionDetail PensionDetail { get; set; }
+        public PensionDetailModel PensionDetailModel { get; set; }
     }
-    public class PensionDetail
+    public class PensionDetailModel
     {
         public DateTime? PensionDate { get; set; }
-        public List<PensionDetialModel> PensionDetialModel { get; set; }
+        public List<PensionDetail> PensionDetail { get; set; }
     }
-    public class PensionDetialModel
+    public class PensionDetail
     {
         public int CurrencyId { get; set; }
         public double?  Amount { get; set; }

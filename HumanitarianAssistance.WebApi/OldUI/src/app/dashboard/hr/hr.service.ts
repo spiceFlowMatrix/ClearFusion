@@ -1505,7 +1505,7 @@ export interface GeneralInfo {
   Password: string;
   AttendanceGroupId?: number;
   DutyStation?: number;
-  PensionDetail?: PensionModel;
+  PensionDetailModel?: PensionModel;
 }
 
 export class Documents {
@@ -1540,7 +1540,7 @@ export class DeleteDocument {
 
 export interface PensionModel {
   PensionDate?: any;
-  PensionDetailModel?: PensionDetailModel[];
+  PensionDetail?: PensionDetailModel[];
 }
 const deleteDocument: DeleteDocument = {
   DocumentId: ''

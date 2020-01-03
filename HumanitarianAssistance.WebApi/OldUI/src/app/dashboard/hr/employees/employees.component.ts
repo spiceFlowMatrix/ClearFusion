@@ -1225,7 +1225,6 @@ export class EmployeesComponent implements OnInit {
 
   //#region "ADD EMPLOYEE"
   AddEmployeeDetails(value) {
-    debugger;
     this.addEmployeePopupLoading = true;
 
     const generalInfo: GeneralInfo = {
@@ -1295,7 +1294,7 @@ export class EmployeesComponent implements OnInit {
       Password: value.Password,
       AttendanceGroupId: value.AttendanceGroupId,
       DutyStation: value.DutyStation,
-      PensionDetail: this.pensionForm
+      PensionDetailModel: this.pensionForm
     };
 
     this.hrService
@@ -2009,7 +2008,6 @@ export class EmployeesComponent implements OnInit {
   }
 
   checkExchangeRateVerified(exchangeRateDate: any) {
-    debugger;
     this.pensionForm.PensionDate = exchangeRateDate;
     const checkExchangeRateModel = {
       ExchangeRateDate: new Date(
@@ -2220,15 +2218,11 @@ export class EmployeesComponent implements OnInit {
   //#endregion
 
   openPensionForm() {
-    debugger;
     this.popupPensionDetail = true;
     this.pensionFormInitialize();
   }
 
   submitPension(formdata: any) {
-    debugger;
-    
-    console.log(formdata);
     this.pensionForm.PensionDate = formdata.PensionDate;
     this.pensionForm.PensionDetail = this.dataSource;
     this.popupPensionDetail = false;
