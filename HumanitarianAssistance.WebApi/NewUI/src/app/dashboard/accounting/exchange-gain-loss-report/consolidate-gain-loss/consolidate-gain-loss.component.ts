@@ -21,6 +21,7 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
   gainList: any[] = [];
   lossList: any[] = [];
   totals: number;
+  accountIds: number[] = [];
   @Input() calculatorConfigData: any;
   transactionList$: Observable<any[]>;
   voucherDataForm: FormGroup;
@@ -37,6 +38,9 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
     this.gainList = this.selectedData.filter(x => x.GainLossStatus === 1);
     this.lossList = this.selectedData.filter(x => x.GainLossStatus === -1);
     this.getTotalGain();
+    this.selectedData.forEach(x => {
+      this.accountIds.push(x.AccountId);
+    });
 
     this.transactionList$ = of(this.gainList.map(x => {
       return {
@@ -181,7 +185,10 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
       OfficeId: this.voucherDataForm.value.OfficeId,
       TimeZoneOffset: new Date().getTimezoneOffset(),
       Description: this.voucherDataForm.value.Description,
-      VoucherDate: StaticUtilities.setLocalDate(new Date())
+      VoucherDate: StaticUtilities.setLocalDate(new Date()),
+      AccountIds: this.accountIds,
+      StartDate: this.calculatorConfigData.StartDate,
+      EndDate: this.calculatorConfigData.EndDate
     };
 
     this.gainLossReportService.AddGainLossVoucher(model).subscribe(
