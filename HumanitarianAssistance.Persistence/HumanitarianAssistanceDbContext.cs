@@ -229,6 +229,8 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<ProjectLogisticItems> ProjectLogisticItems { get; set; }
         public DbSet<ProjectLogisticSuppliers> ProjectLogisticSuppliers { get; set; }
         public DbSet<ComparativeStatementSubmission> ComparativeStatementSubmission { get; set; }
+        public DbSet<TenderBidSubmission> TenderBidSubmission { get; set; }
+        public DbSet<MultiCurrencyOpeningPension> MultiCurrencyOpeningPension { get; set; }
         public DbSet<CandidateDetails> CandidateDetails { get; set; }
         public DbSet<EducationDegreeDetail> EducationDegreeDetails { get; set; }
         public DbSet<HiringRequestCandidateStatus> HiringRequestCandidateStatus { get; set; }
@@ -274,6 +276,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<ErrorLogger> ErrorLogger { get; set; }
         public DbSet<StoreLogger> StoreLogger { get; set; }
         public DbSet<ReturnProcurementDetail> ReturnProcurementDetail { get; set; }
+        public DbSet<ConsolidatedGainLossAccounts> ConsolidatedGainLossAccounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

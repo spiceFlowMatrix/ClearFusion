@@ -38,7 +38,7 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
   // gainLossAddVoucherForm: IGainLossAddVoucherForm;
   /** control for the MatSelect filter keyword multi-selection */
   public accountMultiFilterCtrl: FormControl = new FormControl();
-  displayedColumns = ['Select', 'AccountCode', 'AccountName',
+  displayedColumns = ['select', 'AccountCode', 'AccountName',
     'BalanceOnOriginalTransactionDates', 'BalanceOnComparisionDate', 'GainLossStatus', 'ResultingGainLoss'];
 
   labelText: string;
@@ -54,13 +54,8 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
     this.globalSharedService.setMenuHeaderName('Currency Exchange Gain Loss Calculator');
     this.globalSharedService.setMenuList([]);
 
-    this.transactionFiltersForm = this.fb.group({
-      'offices': [[]],
-      'journals': [[]],
-      'projects': [[]],
-    });
+    this.onFormInIt();
 
-    this.AccountIdList = [];
     this.selectedRows = [];
 
     this.GainLossFilter = {
@@ -89,6 +84,15 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
         this.subscribeInputAccountList(result[3]);
         this.subscribeExchangeGainLossAccountList(result[4]);
       });
+  }
+
+  onFormInIt() {
+    this.transactionFiltersForm = this.fb.group({
+      'offices': [[]],
+      'journals': [[]],
+      'projects': [[]],
+    });
+    this.AccountIdList = [];
   }
 
   getLabelClass(value) {
@@ -403,6 +407,32 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
     this.type = '';
   }
 
+  clearTransactionFilters() {
+    this.onFormInIt();
+  }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.gainLossReportList.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.gainLossReportList.forEach(row => this.selection.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: any): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
   ngOnDestroy() {
     this.destroyed$.next(true);
     this.destroyed$.complete();
@@ -445,6 +475,3 @@ export interface GainLossReport {
   ResultingGainLoss: number;
   GainLossStatus: number;
 }
-
-// const ELEMENT_DATA: Element[] = [
-//   { Checked: false, AccountCode: '1', AccountName: 'Hydrogen', BalanceOnOriginalTransactionDates: 1.0079, BalanceOnComparisionDate: 22, ResultingGainLoss: 0 }]

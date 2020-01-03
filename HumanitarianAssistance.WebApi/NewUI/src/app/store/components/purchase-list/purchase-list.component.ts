@@ -267,7 +267,8 @@ export class PurchaseListComponent implements OnInit {
       let remainingQuantity = 0;
       if (event.item.subItems.length > 0) {
         let filteredObjects = (event.item.subItems.filter(x => x.Status !== 'Cancelled'));
-        remainingQuantity = (event.item.Quantity - (filteredObjects.reduce(function (a, b) { return a + b.ProcuredAmount; }, 0)));
+        debugger;
+         remainingQuantity = (event.item.Quantity - (filteredObjects.reduce(function (a, b) { return a + b.ProcuredAmount; }, 0)));
       } else {
         remainingQuantity = event.item.Quantity;
       }
