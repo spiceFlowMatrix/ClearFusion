@@ -348,4 +348,25 @@ export class LogisticService {
       model
     );
   }
+
+  getAllTenderBids(requestId) {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetAllTenderBids + '?RequestId=' + requestId,
+    );
+  }
+
+  deleteTenderBidById(bidId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_DeleteTenderBidById,
+      bidId
+    );
+  }
+
+  editTenderBid(model) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_EditTenderBid,
+      model
+    );
+  }
+
 }

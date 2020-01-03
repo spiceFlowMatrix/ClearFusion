@@ -226,6 +226,7 @@ namespace HumanitarianAssistance.Application.Infrastructure {
         public CompletedPurchaseOrderDetailModel PurchaseOrderDetail { get; set; }
         public ComparativeStatementModel ComparativeStatement { get; set; }
         public GoodsRecievedNoteModel GoodsRecievedNote { get; set; }
+        public List<TenderBidsModel> TenderBids { get; set; }
         public long logisticRequestId { get; set; }
         public PurchaseOrderDetailModel purchaseOrderDetail { get; set; }
         public List<JobHiringDetailModel> JobDetailList { get; set; }

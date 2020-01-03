@@ -354,7 +354,31 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(model);
         }
         
-        
+        [HttpGet]
+        public async Task<ApiResponse> GetAllTenderBids([FromQuery]GetAllTenderBidsQuery model)
+        {   
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> DeleteTenderBidById([FromBody]long BidId)
+        {   
+            DeleteTenderBidByIdCommand model = new DeleteTenderBidByIdCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.BidId = BidId;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow; 
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> EditTenderBid([FromBody]EditTenderBidCommand model)
+        {   
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        } 
     }
 
 }

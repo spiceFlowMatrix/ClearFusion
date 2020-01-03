@@ -21,6 +21,7 @@ export class TenderStatementComponent implements OnInit {
 
   requestId;
   tenderDocsList: any[] = [];
+  tenderBidsList: any[] = [];
   constructor(private logisticservice: LogisticService,
     private dialog: MatDialog, private routeActive: ActivatedRoute,
     public toastr: ToastrService, private commonLoader: CommonLoaderService) {
@@ -32,6 +33,7 @@ export class TenderStatementComponent implements OnInit {
   ngOnInit() {
     if (this.tenderStatus === LogisticTenderStatus.Issued) {
       this.getTenderProposalDocument();
+      this.getAllTenderBids();
     }
   }
 
@@ -79,9 +81,45 @@ export class TenderStatementComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined && result.data != null ) {
-        this.getTenderProposalDocument();
+        this.getAllTenderBids();
       }
     });
   }
 
+  getAllTenderBids() {
+    this.logisticservice.getAllTenderBids(this.requestId).subscribe(res => {
+      this.tenderBidsList = [];
+      if (res.StatusCode === 200 && res.data.TenderBids != null) {
+        this.tenderBidsList = res.data.TenderBids;
+      }
+    });
+  }
+
+  editTenderBid(BidId) {
+    const dialogRef = this.dialog.open(SubmitTenderBidComponent, {
+      width: '500px',
+      data: {RequestId: this.requestId, BidDetail: this.tenderBidsList.filter(x => x.BidId === BidId)[0]}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined && result.data != null ) {
+        this.getAllTenderBids();
+      }
+    });
+  }
+
+  deleteTenderBid(BidId) {
+    this.logisticservice.openDeleteDialog().subscribe(v => {
+      if (v) {
+        this.logisticservice.deleteTenderBidById(BidId).subscribe(res => {
+          if (res.StatusCode === 200) {
+            this.getAllTenderBids();
+            this.toastr.success('Deleted Sucessfully!');
+          } else {
+            this.toastr.error('Something went wrong!');
+          }
+        });
+      }
+    });
+  }
 }

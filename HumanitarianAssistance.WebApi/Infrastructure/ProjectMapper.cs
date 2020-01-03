@@ -36,6 +36,9 @@ namespace HumanitarianAssistance.WebApi.Infrastructure
             CreateMap<ProjectOtherDetailPdfModel,ProjectOtherDetailNewPdfModel>().ReverseMap();
             CreateMap<ProjectPdfFlags,GetProjectOtherDetailReportPdfQuery>().ReverseMap();
             CreateMap<TenderBidSubmission,AddTenderBidCommand>().ReverseMap();
+            CreateMap<TenderBidSubmission,TenderBidsModel>().ReverseMap();
+            CreateMap<TenderBidSubmission,EditTenderBidCommand>().ReverseMap();
+            
         }
     }
 }

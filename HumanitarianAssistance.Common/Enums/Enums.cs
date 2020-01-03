@@ -193,7 +193,8 @@ namespace HumanitarianAssistance.Common.Enums {
         [Description ("RFP Document")]
         TenderRFPDocument = 19,
         [Description ("Announcement Document")]
-        TenderAnnouncementDocument = 20
+        TenderAnnouncementDocument = 20,
+        TenderBidContractLetter = 21
     }
 
     public enum DocumentFileTypes {

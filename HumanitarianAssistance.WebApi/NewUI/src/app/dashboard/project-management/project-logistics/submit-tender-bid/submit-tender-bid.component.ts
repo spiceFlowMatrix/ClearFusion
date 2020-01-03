@@ -43,7 +43,7 @@ export class SubmitTenderBidComponent implements OnInit {
       isResultQualified: [false, Validators.required],
 
       Profile_Experience: [0, Validators.required],
-      OfferValididty: [0, Validators.required],
+      OfferValidity: [0, Validators.required],
       TOR_SOWAcceptance: [0, Validators.required],
       Securities_BankGuarantee: [0, Validators.required],
       OfferDocumentation: [0, Validators.required],
@@ -55,7 +55,34 @@ export class SubmitTenderBidComponent implements OnInit {
       DeliveryDate: [0, Validators.required],
       LogisticRequestsId : [this.data.RequestId]
     });
+
+    if (this.data.BidDetail !== undefined) {
+      this.tenderBidForm.patchValue({
+        Name: this.data.BidDetail.Name,
+        Email: this.data.BidDetail.Email,
+        PhoneNumber: this.data.BidDetail.PhoneNumber,
+        Address: this.data.BidDetail.Address,
+        Owner: this.data.BidDetail.Owner,
+        OpeningDate: this.data.BidDetail.OpeningDate,
+        SecurityDate: this.data.BidDetail.SecurityDate,
+        QuotedAmount: this.data.BidDetail.QuotedAmount,
+        SecurityAmount: this.data.BidDetail.SecurityAmount,
+        isResultQualified: this.data.BidDetail.isResultQualified,
+
+        Profile_Experience: this.data.BidDetail.Profile_Experience,
+        OfferValidity: this.data.BidDetail.OfferValidity,
+        TOR_SOWAcceptance: this.data.BidDetail.TOR_SOWAcceptance,
+        Securities_BankGuarantee: this.data.BidDetail.Securities_BankGuarantee,
+        OfferDocumentation: this.data.BidDetail.OfferDocumentation,
+
+        Company_GoodsSpecification: this.data.BidDetail.Company_GoodsSpecification,
+        Service_Warranty: this.data.BidDetail.Service_Warranty,
+        Certification_GMP_COPP: this.data.BidDetail.Certification_GMP_COPP,
+        WorkExperience: this.data.BidDetail.WorkExperience,
+        DeliveryDate: this.data.BidDetail.DeliveryDate
+    });
   }
+}
 
   openInput() {
     document.getElementById('fileInput').click();
@@ -79,29 +106,60 @@ export class SubmitTenderBidComponent implements OnInit {
       this.toastr.warning('Please fill required fields!');
       return;
     }
-    if (this.attachment.length === 0) {
+    if (this.attachment.length === 0 && this.data.BidDetail === undefined) {
       this.toastr.warning('Please attach Contract/Guarantee Letter!');
       return;
     }
-    this.tenderBidForm.controls.OpeningDate.setValue(StaticUtilities.getLocalDate(this.tenderBidForm.get('OpeningDate').value));
-    this.tenderBidForm.controls.SecurityDate.setValue(StaticUtilities.getLocalDate(this.tenderBidForm.get('SecurityDate').value));
-    this.commonLoader.showLoader();
-    this.logisticservice.addTenderBid(value).subscribe(res => {
-      if (res.StatusCode === 200 && res.CommonId.LongId != null) {
-        this.globalSharedService
+    if (this.data.BidDetail === undefined) {
+      this.tenderBidForm.controls.OpeningDate.setValue(StaticUtilities.getLocalDate(this.tenderBidForm.get('OpeningDate').value));
+      this.tenderBidForm.controls.SecurityDate.setValue(StaticUtilities.getLocalDate(this.tenderBidForm.get('SecurityDate').value));
+      this.commonLoader.showLoader();
+      this.logisticservice.addTenderBid(this.tenderBidForm.value).subscribe(res => {
+        if (res.StatusCode === 200 && res.CommonId.LongId != null) {
+          this.globalSharedService
             .uploadFile(FileSourceEntityTypes.TenderBidContractLetter, res.CommonId.LongId, this.attachment[0][0])
             .pipe(takeUntil(this.destroyed$))
             .subscribe(y => {
                 this.commonLoader.hideLoader();
-                this.toastr.success('Bid Submitted Successfully!');
+                this.toastr.success('Bid Updated Successfully!');
                 this.dialogRef.close({data: 'Success'});
             },
             err => {
               this.commonLoader.hideLoader();
               this.toastr.error('Something went wrong!');
             });
-      }
-    });
+        }
+      });
+    } else {
+      this.commonLoader.showLoader();
+      this.tenderBidForm.controls.OpeningDate.setValue(StaticUtilities.getLocalDate(this.tenderBidForm.get('OpeningDate').value));
+      this.tenderBidForm.controls.SecurityDate.setValue(StaticUtilities.getLocalDate(this.tenderBidForm.get('SecurityDate').value));
+      const model = this.tenderBidForm.value;
+      model.isContractLetterUpdated = (this.attachment.length === 0) ? false : true;
+      model.BidId = this.data.BidDetail.BidId;
+      this.logisticservice.editTenderBid(model).subscribe(res => {
+        if (res.StatusCode === 200 && res.CommonId.LongId != null) {
+          if (this.attachment.length !== 0) {
+            this.globalSharedService
+              .uploadFile(FileSourceEntityTypes.TenderBidContractLetter, res.CommonId.LongId, this.attachment[0][0])
+              .pipe(takeUntil(this.destroyed$))
+              .subscribe(y => {
+                  this.commonLoader.hideLoader();
+                  this.toastr.success('Bid Updated Successfully!');
+                  this.dialogRef.close({data: 'Success'});
+              },
+              err => {
+                this.commonLoader.hideLoader();
+                this.toastr.error('Something went wrong!');
+              });
+          } else {
+              this.commonLoader.hideLoader();
+              this.toastr.success('Bid Updated Successfully!');
+              this.dialogRef.close({data: 'Success'});
+          }
+        }
+      });
+    }
 
   }
 }
