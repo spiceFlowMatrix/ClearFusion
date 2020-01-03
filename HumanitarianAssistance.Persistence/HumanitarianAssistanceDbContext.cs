@@ -276,6 +276,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<ErrorLogger> ErrorLogger { get; set; }
         public DbSet<StoreLogger> StoreLogger { get; set; }
         public DbSet<ReturnProcurementDetail> ReturnProcurementDetail { get; set; }
+        public DbSet<ConsolidatedGainLossAccounts> ConsolidatedGainLossAccounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
