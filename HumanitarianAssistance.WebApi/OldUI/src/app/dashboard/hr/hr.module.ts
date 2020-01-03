@@ -4,7 +4,7 @@ import { EmployeesComponent } from './employees/employees.component';
 import { HrRoutingModule } from './hr-routing.module';
 import { PayrollMonthlyHoursComponent } from './payroll-monthly-hours/payroll-monthly-hours.component';
 import { HrService } from './hr.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {
   DxDataGridModule,
@@ -169,7 +169,9 @@ import { JobGradePipe } from '../../shared/pipes/job-grade.pipe';
     ProjectsService,
     TranslateService,
     HttpClient,
-    FileManagementService
+    FileManagementService,
+    DatePipe
+
   ]
 })
 export class HrModule {}
