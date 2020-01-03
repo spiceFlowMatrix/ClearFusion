@@ -14,7 +14,7 @@
 <mat-divider></mat-divider>
 
 <ng-container [ngSwitch]="type">
-  <div class="row" [ngStyle]="scrollStyles" *ngSwitchDefault humAddScroll>
+  <div class="row" *ngSwitchDefault humAddScroll [height]="150">
     <div class="col-md-12">
 
       <mat-table #table [dataSource]="gainLossReportList">

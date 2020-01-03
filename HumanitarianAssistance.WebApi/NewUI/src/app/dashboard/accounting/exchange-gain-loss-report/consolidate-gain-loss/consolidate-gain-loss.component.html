@@ -23,7 +23,7 @@
 </div>
 
 <ng-template #gainloass>
-  <mat-card humAddScroll>
+  <mat-card humAddScroll [height]="250">
     <div class="row">
       <form [formGroup]="voucherDataForm">
         <div class="col-sm-12">
@@ -62,10 +62,7 @@
             Totals:
           </div>
           <div class ="col-sm-2">
-            {{totalCredit}}
-          </div>
-          <div class ="col-sm-2">
-            {{totalDebit}}
+            {{totals}}
           </div>
         </div>
       </form>
