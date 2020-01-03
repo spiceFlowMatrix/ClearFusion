@@ -442,29 +442,33 @@ export class RequestDetailComponent implements OnInit {
   //#endregion
   // #region adding new candidate
   addNewCandidate(): void {
-    let candidateCount;
-    this.newCandidatesList$.subscribe(res => {
-      candidateCount = res.filter(x => CandidateStatus[x.CandidateStatus] === CandidateStatus.Selected);
-    });
-    if(candidateCount.length < this.hiringRequestDetails.TotalVacancies) {
-    // NOTE: It open AddHiringRequest dialog and passed the data into the AddHiringRequestsComponent Model
-    const dialogRef = this.dialog.open(AddNewCandidateComponent, {
-      width: '700px',
-      autoFocus: false,
-      data: {
-        hiringRequestId: this.hiringRequestDetails.HiringRequestId,
-        projectId: this.projectId
-      }
-    });
-    // refresh the list after new request created
-    dialogRef.componentInstance.onAddCandidateListRefresh.subscribe(() => {
-      this.hiringRequestDetails.FilledVacancies = this.hiringRequestDetails.FilledVacancies + 1;
-      this.getAllCandidateList(this.filterValueModel);
-    });
-    dialogRef.afterClosed().subscribe(() => {});
-  } else {
-    this.toastr.warning('Vacancies Already Filled');
-  }
+    // let candidateCount;
+    // this.newCandidatesList$.subscribe(res => {
+    //   candidateCount = res.filter(x => CandidateStatus[x.CandidateStatus] === CandidateStatus.Selected);
+    // });
+    if (
+      this.hiringRequestDetails.FilledVacancies <
+      this.hiringRequestDetails.TotalVacancies
+    ) {
+      // NOTE: It open AddHiringRequest dialog and passed the data into the AddHiringRequestsComponent Model
+      const dialogRef = this.dialog.open(AddNewCandidateComponent, {
+        width: '700px',
+        autoFocus: false,
+        data: {
+          hiringRequestId: this.hiringRequestDetails.HiringRequestId,
+          projectId: this.projectId
+        }
+      });
+      // refresh the list after new request created
+      dialogRef.componentInstance.onAddCandidateListRefresh.subscribe(() => {
+        this.hiringRequestDetails.FilledVacancies =
+          this.hiringRequestDetails.FilledVacancies + 1;
+        this.getAllCandidateList(this.filterValueModel);
+      });
+      dialogRef.afterClosed().subscribe(() => {});
+    } else {
+      this.toastr.warning('Vacancies Already Filled');
+    }
   }
   //#endregion
 
@@ -498,7 +502,14 @@ export class RequestDetailComponent implements OnInit {
         let id = data.type.split('-');
         id = id[0];
         id = id.substring(1);
-        window.open(this.appurl.getOldUiUrl() + 'dashboard/hr/employees?empCode=' + id +'&officeId='+this.hiringRequestDetails.OfficeId, '_blank');
+        window.open(
+          this.appurl.getOldUiUrl() +
+            'dashboard/hr/employees?empCode=' +
+            id +
+            '&officeId=' +
+            this.hiringRequestDetails.OfficeId,
+          '_blank'
+        );
         break;
     }
   }
@@ -585,19 +596,21 @@ export class RequestDetailComponent implements OnInit {
     };
     let IsHavingCandidate;
     this.newCandidatesList$.subscribe(element => {
-      IsHavingCandidate = element.find(x => x.CandidateStatus === 'Pending Interview');
-     });
-     if (IsHavingCandidate){
-    this.globalSharedService
-      .getFile(
-        this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetCandidateDetailReportPdf,
-        data
-      )
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe();
-     } else {
-       this.toastr.warning('Not Having Shortlist Candidates');
-     }
+      IsHavingCandidate = element.find(
+        x => x.CandidateStatus === 'Pending Interview'
+      );
+    });
+    if (IsHavingCandidate) {
+      this.globalSharedService
+        .getFile(
+          this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetCandidateDetailReportPdf,
+          data
+        )
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe();
+    } else {
+      this.toastr.warning('Not Having Shortlist Candidates');
+    }
     this.loader.hideLoader();
   }
   //#endregion
@@ -736,7 +749,7 @@ export class RequestDetailComponent implements OnInit {
   empActionEvents(data: any) {
     switch (data.type) {
       case 'Select':
-        this.AddAnalyticalInfo(data)
+        this.AddAnalyticalInfo(data);
         // this.selectEmployee(data);
         break;
       case 'Reject':
@@ -844,40 +857,28 @@ export class RequestDetailComponent implements OnInit {
   }
   //#endregion
 
-// #region add analytical info
-AddAnalyticalInfo(CandidateData: any): void {
-  // NOTE: It open AddAnalyticalInfo dialog and passed the data into the AddAnalyticalInfoComponent Model
-  const dialogRef = this.dialog.open(AddAnalyticalInfoComponent, {
-    width: '800px',
-    autoFocus: false,
-    data: {
-      hiringRequestId: this.hiringRequestDetails.HiringRequestId,
-      projectId: this.projectId,
-      employeeId: CandidateData.item.EmployeeId,
-      budgetLineId: this.hiringRequestDetails.BudgetLineId
-    }
-  });
-  // refresh the list after new request created
-  dialogRef.componentInstance.onAddAnalyticalInfoRefresh.subscribe(() => {
-    this.selectEmployee(CandidateData);
-  });
-  dialogRef.afterClosed().subscribe(() => {
-    this.selectEmployee(CandidateData);
-  });
-}
-//#endregion
-
-
-
-
-
-
-
-
-
-
-
-
+  // #region add analytical info
+  AddAnalyticalInfo(CandidateData: any): void {
+    // NOTE: It open AddAnalyticalInfo dialog and passed the data into the AddAnalyticalInfoComponent Model
+    const dialogRef = this.dialog.open(AddAnalyticalInfoComponent, {
+      width: '800px',
+      autoFocus: false,
+      data: {
+        hiringRequestId: this.hiringRequestDetails.HiringRequestId,
+        projectId: this.projectId,
+        employeeId: CandidateData.item.EmployeeId,
+        budgetLineId: this.hiringRequestDetails.BudgetLineId
+      }
+    });
+    // refresh the list after new request created
+    dialogRef.componentInstance.onAddAnalyticalInfoRefresh.subscribe(() => {
+      this.selectEmployee(CandidateData);
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      this.selectEmployee(CandidateData);
+    });
+  }
+  //#endregion
 
   //#region Navigate back to hiring requset list page
   backToList() {

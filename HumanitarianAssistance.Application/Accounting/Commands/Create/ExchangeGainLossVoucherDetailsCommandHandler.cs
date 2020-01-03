@@ -10,6 +10,7 @@ using HumanitarianAssistance.Application.CommonModels;
 using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Domain.Entities.Accounting;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -110,6 +111,8 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
                         {
                             throw new Exception(StaticResource.TransactionsNotSaved);
                         }
+
+                        AddConsolidatedAccountDetails(model.AccountIds, model.StartDate, model.EndDate, model.CreatedById);
                         tran.Commit();
                         response.StatusCode = StaticResource.successStatusCode;
                         response.Message = StaticResource.SuccessText;
@@ -130,6 +133,29 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
                 }
             }
             return response;
+        }
+
+        public void AddConsolidatedAccountDetails(long[] AccountIds, DateTime StartDate, DateTime EndDate, string UserId)
+        {
+            try
+            {
+                ConsolidatedGainLossAccounts accounts = new ConsolidatedGainLossAccounts
+                {
+                    AccountIds= AccountIds,
+                    CreatedDate= DateTime.UtcNow,
+                    StartDate= StartDate,
+                    EndDate= EndDate,
+                    IsDeleted = false,
+                    CreatedById= UserId
+                };
+                
+                _dbContext.ConsolidatedGainLossAccounts.Add(accounts);
+                _dbContext.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
