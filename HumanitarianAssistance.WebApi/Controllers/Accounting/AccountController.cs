@@ -264,5 +264,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
             model.Id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             return await _mediator.Send(model);
         }
+
+        [HttpGet]
+        public async Task<ApiResponse> GetAllAccountList()
+        {
+            return await _mediator.Send(new GetAllAccountListQuery());
+        }
     }
 }
