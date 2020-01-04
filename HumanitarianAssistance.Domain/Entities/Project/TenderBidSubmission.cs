@@ -36,7 +36,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public int DeliveryDate { get; set; }
         public int Certification_GMP_COPP { get; set; }
         public long LogisticRequestsId { get; set; }
-        public bool IsBidSubmitted { get; set; }
+        public bool IsBidSelected { get; set; }
         [ForeignKey("LogisticRequestsId")]
         public ProjectLogisticRequests ProjectLogisticRequests { get; set; }
     }
