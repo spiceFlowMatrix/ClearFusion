@@ -23,6 +23,7 @@ import { GoodsRecievedUploadComponent } from './goods-recieved-upload/goods-reci
 import { PurchaseVoucherVerificationComponent } from './purchase-voucher-verification/purchase-voucher-verification.component';
 import { SubmitTenderDocumentComponent } from './submit-tender-document/submit-tender-document.component';
 import { SubmitTenderBidComponent } from './submit-tender-bid/submit-tender-bid.component';
+import { TenderBidSelectionComponent } from './tender-bid-selection/tender-bid-selection.component';
 
 @NgModule({
   declarations: [LogisticRequestsComponent, AddLogisticRequestComponent,
@@ -31,7 +32,7 @@ import { SubmitTenderBidComponent } from './submit-tender-bid/submit-tender-bid.
     PurchaseOrderComponent, SubmitComparativeStatementComponent, TenderStatementComponent, PurchaseFinalCostComponent,
     GoodsRecievedUploadComponent,
     PurchaseVoucherVerificationComponent,
-    SubmitTenderDocumentComponent, SubmitTenderBidComponent],
+    SubmitTenderDocumentComponent, SubmitTenderBidComponent, TenderBidSelectionComponent],
   imports: [
     CommonModule,
     MatTableModule,
@@ -58,7 +59,8 @@ import { SubmitTenderBidComponent } from './submit-tender-bid/submit-tender-bid.
     SubmitComparativeStatementComponent,
     GoodsRecievedUploadComponent,
     PurchaseVoucherVerificationComponent,
-    SubmitTenderBidComponent
+    SubmitTenderBidComponent,
+    TenderBidSelectionComponent
   ]
 })
 export class ProjectLogisticsModule { }

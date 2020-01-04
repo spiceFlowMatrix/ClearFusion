@@ -668,6 +668,7 @@ export enum LogisticTenderStatus {
   'Pending' = 1,
   'Cancelled' = 2,
   'Issued' = 3,
+  'Bid Selected' = 4
 }
 export enum CandidateStatus {
   'Pending Shortlist' = 0,

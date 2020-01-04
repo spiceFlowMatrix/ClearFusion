@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { LogisticTenderStatus, FileSourceEntityTypes } from 'src/app/shared/enum';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { SubmitTenderBidComponent } from '../submit-tender-bid/submit-tender-bid.component';
+import { TenderBidSelectionComponent } from '../tender-bid-selection/tender-bid-selection.component';
 
 @Component({
   selector: 'app-tender-statement',
@@ -119,6 +120,19 @@ export class TenderStatementComponent implements OnInit {
             this.toastr.error('Something went wrong!');
           }
         });
+      }
+    });
+  }
+
+  selectTenderBid() {
+    const dialogRef = this.dialog.open(TenderBidSelectionComponent, {
+      width: '400px',
+      data: {BidDetail: this.tenderBidsList}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined && result.data != null ) {
+        // this.getAllTenderBids();
       }
     });
   }

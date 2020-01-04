@@ -369,4 +369,11 @@ export class LogisticService {
     );
   }
 
+  selectTenderBid(BidId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_SelectTenderBid,
+      BidId
+    );
+  }
+
 }

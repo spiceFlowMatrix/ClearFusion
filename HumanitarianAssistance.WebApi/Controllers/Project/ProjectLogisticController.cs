@@ -378,7 +378,19 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.ModifiedById = userId;
             model.ModifiedDate = DateTime.UtcNow;
             return await _mediator.Send(model);
-        } 
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> SelectTenderBid([FromBody]long BidId)
+        {   
+            SelectTenderBidCommand model = new SelectTenderBidCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.BidId = BidId;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow; 
+            return await _mediator.Send(model);
+        }
+         
     }
 
 }

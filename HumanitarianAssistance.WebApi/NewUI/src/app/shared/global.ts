@@ -274,6 +274,7 @@ export class GLOBAL {
   public static API_ProjectLogistics_GetAllTenderBids = 'ProjectLogistic/GetAllTenderBids';
   public static API_ProjectLogistics_DeleteTenderBidById  = 'ProjectLogistic/DeleteTenderBidById';
   public static API_ProjectLogistics_EditTenderBid = 'ProjectLogistic/EditTenderBid';
+  public static API_ProjectLogistics_SelectTenderBid = 'ProjectLogistic/SelectTenderBid';
 
   // Chart Of Account
   public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';

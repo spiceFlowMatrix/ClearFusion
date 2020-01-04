@@ -22,7 +22,7 @@
       </h4>
       <h4>Submitted Bids
           <hum-button [type]="'add'" (click)="submitTenderBid()" [text]="'SUBMIT A BID'"></hum-button>
-          <hum-button [type]="'save'" [text]="'PROVIDE BID SELECTION'"></hum-button>
+          <hum-button [type]="'save'" (click)="selectTenderBid()" [text]="'PROVIDE BID SELECTION'"></hum-button>
       </h4>
       <span><i class="fas fa-info-circle icon_color_yellow"></i> Pending <b>Bid</b> selection by <b>General Administration & Finance Managers</b>.</span>
       <table class="table table-striped">
