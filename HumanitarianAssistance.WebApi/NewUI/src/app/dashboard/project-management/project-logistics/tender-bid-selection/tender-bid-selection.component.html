@@ -1,0 +1,21 @@
+<div mat-dialog-title><h3>Tender Bid Selection</h3></div>
+<mat-dialog-content>
+  <div class="row">
+    <div class="col-md-12">
+        <lib-search-dropdown
+        placeholder="Tender Bid"
+        [multiSelect]="false"
+        placeholderSearchLabel="Find Bids..."
+        noEntriesFoundLabel="No matching Bids found"
+        [dataSource]="bidDropdown"
+        [selectedValue]="SelectedBid"
+        (openedChange)="onOpenedBidSelectionChange($event)">
+      </lib-search-dropdown>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions class="margin_top_20">
+  <hum-button (click)="selectBid()" [type]="'save'" [text]="'SAVE'" ></hum-button>
+  <hum-button (click)="closeDialog()" [type]="'cancel'" [text]="'CANCEL'" ></hum-button>
+</mat-dialog-actions>
+

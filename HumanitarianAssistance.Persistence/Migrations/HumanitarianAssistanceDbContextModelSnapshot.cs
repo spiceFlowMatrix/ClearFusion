@@ -8105,6 +8105,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<string>("Email");
 
+                    b.Property<bool>("IsBidSelected");
+
                     b.Property<bool>("IsDeleted");
 
                     b.Property<long>("LogisticRequestsId");

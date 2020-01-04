@@ -299,7 +299,104 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.requestId = requestId;
             return await _mediator.Send(model);
         }
+
+        [HttpPost]
+        public async Task<ApiResponse> RejectTenderRequest([FromBody]long requestId)
+        {   
+            RejectTenderRequestCommand model = new RejectTenderRequestCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.requestId = requestId;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow; 
+            return await _mediator.Send(model);
+        }
         
+        [HttpPost]
+        public async Task<ApiResponse> InitiateTenderRequest([FromBody]long requestId)
+        {   
+            InitiateTenderRequestCommand model = new InitiateTenderRequestCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.requestId = requestId;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow; 
+            return await _mediator.Send(model);
+        }
+
+        [HttpGet]
+        public async Task<ApiResponse> GetTenderIssuerName([FromQuery]GetTenderIssuerNameQuery model)
+        {   
+            return await _mediator.Send(model);
+        }
+
+        [HttpGet]
+        public async Task<ApiResponse> GetTenderProposalDocument([FromQuery]GetTenderProposalDocumentQuery model)
+        {   
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> DeleteTenderProposalDocument([FromBody]long docTypeId)
+        {   
+            DeleteTenderProposalDocumentCommand model = new DeleteTenderProposalDocumentCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.docTypeId = docTypeId;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow; 
+            return await _mediator.Send(model);
+        }
+        
+        [HttpPost]
+        public async Task<ApiResponse> AddTenderBid([FromBody]AddTenderBidCommand model)
+        {   
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+        
+        [HttpGet]
+        public async Task<ApiResponse> GetAllTenderBids([FromQuery]GetAllTenderBidsQuery model)
+        {   
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> DeleteTenderBidById([FromBody]long BidId)
+        {   
+            DeleteTenderBidByIdCommand model = new DeleteTenderBidByIdCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.BidId = BidId;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow; 
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> EditTenderBid([FromBody]EditTenderBidCommand model)
+        {   
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> SelectTenderBid([FromBody]long BidId)
+        {   
+            SelectTenderBidCommand model = new SelectTenderBidCommand();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.BidId = BidId;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow; 
+            return await _mediator.Send(model);
+        }
+
+        [HttpGet]
+        public async Task<ApiResponse> GetSelectedBidDetail([FromQuery]GetSelectedBidDetailQuery model)
+        {   
+            return await _mediator.Send(model);
+        }
+         
     }
 
 }

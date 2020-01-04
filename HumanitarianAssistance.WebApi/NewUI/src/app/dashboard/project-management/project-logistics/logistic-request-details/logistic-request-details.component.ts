@@ -9,7 +9,7 @@ import { RequestDetailComponent } from '../../project-hiring/request-detail/requ
 import { map } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
-import { LogisticRequestStatus, LogisticComparativeStatus } from 'src/app/shared/enum';
+import { LogisticRequestStatus, LogisticComparativeStatus, LogisticTenderStatus } from 'src/app/shared/enum';
 import { GoodsRecievedUploadComponent } from '../goods-recieved-upload/goods-recieved-upload.component';
 import { PurchaseVoucherVerificationComponent } from '../purchase-voucher-verification/purchase-voucher-verification.component';
 
@@ -33,7 +33,7 @@ export class LogisticRequestDetailsComponent implements OnInit {
   requestId;
   requestItemList: any[];
   requestDetail: RequestDetail = {ProjectId: '', Status: 0, TotalCost: '', RequestId: '' , ComparativeStatus: 0,
-Currency: '', BudgetLine: '', Office: '', Description: ''};
+  TenderStatus: 0, Currency: '', BudgetLine: '', Office: '', Description: ''};
   actions: TableActionsModel;
   totalCost = 0;
   unavailableItemCost = 0;
@@ -45,6 +45,8 @@ Currency: '', BudgetLine: '', Office: '', Description: ''};
   goodsNoteSubmitted = false;
   goodsRecievedModel: GoodsRecievedNote;
   voucherReference = '';
+  tenderIssuerName = '';
+  SelectedBidDetail = { ContactName: '' , SelectedBy: ''};
 
   constructor(private dialog: MatDialog, private routeActive: ActivatedRoute,
     private logisticservice: LogisticService,
@@ -126,7 +128,8 @@ Currency: '', BudgetLine: '', Office: '', Description: ''};
         // this.requestDetail.ComparativeStatus = res.data.logisticRequest.ComparativeStatus;
       }
 
-      if (!(this.requestDetail.Status === 1) ) { // || !(this.requestDetail.ComparativeStatus === 1)
+      if (!(this.requestDetail.Status === 1) || !(this.requestDetail.ComparativeStatus === 1) ||
+      !(this.requestDetail.TenderStatus === 1)) { //
         this.actions = {
           items: {
             button: { status: false, text: '' },
@@ -139,9 +142,20 @@ Currency: '', BudgetLine: '', Office: '', Description: ''};
         };
       }
 
-      // if (this.requestDetail.Status === LogisticRequestStatus['Complete Purchase'] ) {
-      //   this.getGoodsRecievedNote();
-      // }
+      if (this.requestDetail.TenderStatus === LogisticTenderStatus.Issued ) {
+        this.getTenderIssuerName();
+      }
+      if (this.requestDetail.TenderStatus === LogisticTenderStatus['Bid Selected']) {
+        this.getSelectedBidDetail();
+      }
+    });
+  }
+
+  getTenderIssuerName() {
+    this.logisticservice.getTenderIssuer(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200 && res.ResponseData != null) {
+        this.tenderIssuerName = res.ResponseData;
+      }
     });
   }
 
@@ -352,6 +366,13 @@ Currency: '', BudgetLine: '', Office: '', Description: ''};
     this.requestDetail.ComparativeStatus = value;
   }
 
+  tenderStatusChange(value) {
+    this.requestDetail.TenderStatus = value;
+    if (this.requestDetail.TenderStatus === LogisticTenderStatus['Bid Selected']) {
+      this.getSelectedBidDetail();
+    }
+  }
+
   StatusChange(value) {
     this.requestDetail.Status = value;
     // if (this.requestDetail.Status === LogisticRequestStatus['Complete Purchase'] ) {
@@ -459,7 +480,9 @@ Currency: '', BudgetLine: '', Office: '', Description: ''};
   }
 
   editRequest() {
-    if (this.requestDetail.Status !== LogisticRequestStatus['New Request']) {
+    if (this.requestDetail.Status !== LogisticRequestStatus['New Request'] ||
+    this.requestDetail.ComparativeStatus !== LogisticComparativeStatus.Pending ||
+    this.requestDetail.TenderStatus !== LogisticTenderStatus.Pending) {
       return;
     } else {
       this.router.navigate(['../../logistic-requests/new-request/'] ,
@@ -471,6 +494,43 @@ Currency: '', BudgetLine: '', Office: '', Description: ''};
     this.router.navigate(['submit-purchase'], { relativeTo: this.routeActive });
   }
 
+  rejectTenderRequest() {
+    this.commonLoader.showLoader();
+    this.logisticservice.rejectTenderRequest(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.requestDetail.TenderStatus = LogisticTenderStatus['Cancelled'];
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  initiateTenderRequest() {
+    this.commonLoader.showLoader();
+    this.logisticservice.initiateTenderRequest(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.requestDetail.TenderStatus = LogisticTenderStatus['Issued'];
+        this.getTenderIssuerName();
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  getSelectedBidDetail() {
+    this.logisticservice.getSelectedBidDetail(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200 && res.data.SelectedBidDetail != null) {
+        this.SelectedBidDetail = res.data.SelectedBidDetail;
+      } else {
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
 }
 export interface RequestDetail {
   RequestId;
@@ -478,6 +538,7 @@ export interface RequestDetail {
   Status;
   TotalCost;
   ComparativeStatus;
+  TenderStatus;
   Currency;
   BudgetLine;
   Office;

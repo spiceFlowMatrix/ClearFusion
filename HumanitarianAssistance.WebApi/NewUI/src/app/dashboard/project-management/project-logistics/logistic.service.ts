@@ -309,5 +309,76 @@ export class LogisticService {
     );
   }
 
+  rejectTenderRequest(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_RejectTenderRequest,
+      requestId
+    );
+  }
 
+  initiateTenderRequest(requestId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_InitiateTenderRequest,
+      requestId
+    );
+  }
+
+  getTenderIssuer(requestId) {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetTenderIssuerName + '?RequestId=' + requestId,
+    );
+  }
+
+  getTenderProposalDocument(requestId) {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetTenderProposalDocument + '?RequestId=' + requestId,
+    );
+  }
+
+  deleteTenderProposalDocument(documentFileId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_DeleteTenderProposalDocument,
+      documentFileId
+    );
+  }
+
+  addTenderBid(model) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_AddTenderBid,
+      model
+    );
+  }
+
+  getAllTenderBids(requestId) {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetAllTenderBids + '?RequestId=' + requestId,
+    );
+  }
+
+  deleteTenderBidById(bidId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_DeleteTenderBidById,
+      bidId
+    );
+  }
+
+  editTenderBid(model) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_EditTenderBid,
+      model
+    );
+  }
+
+  selectTenderBid(BidId) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_SelectTenderBid,
+      BidId
+    );
+  }
+
+  getSelectedBidDetail(requestId) {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetSelectedBidDetail + '?RequestId=' + requestId,
+    );
+  }
 }

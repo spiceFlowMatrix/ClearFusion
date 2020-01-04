@@ -14,6 +14,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
         public double TotalCost { get; set; }
         public int Status { get; set; }
         public int ComparativeStatus { get; set; }
+        public int TenderStatus { get; set; }
         public List<RequestedLogisticItems> RequestedItems { get; set; }
     }
 

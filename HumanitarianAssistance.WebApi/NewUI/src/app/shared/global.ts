@@ -265,6 +265,17 @@ export class GLOBAL {
   public static API_ProjectLogistics_VerifyPurchaseOrder = 'ProjectLogistic/VerifyPurchaseOrder';
   public static API_ProjectLogistics_CheckDefaultUnitType = 'ProjectLogistic/CheckDefaultUnitType';
   public static API_ProjectLogistics_GetCompletedPurchaseOrderDetail = 'ProjectLogistic/GetCompletedPurchaseOrderDetail';
+  public static API_ProjectLogistics_RejectTenderRequest = 'ProjectLogistic/RejectTenderRequest';
+  public static API_ProjectLogistics_InitiateTenderRequest = 'ProjectLogistic/InitiateTenderRequest';
+  public static API_ProjectLogistics_GetTenderIssuerName = 'ProjectLogistic/GetTenderIssuerName';
+  public static API_ProjectLogistics_GetTenderProposalDocument = 'ProjectLogistic/GetTenderProposalDocument';
+  public static API_ProjectLogistics_DeleteTenderProposalDocument = 'ProjectLogistic/DeleteTenderProposalDocument';
+  public static API_ProjectLogistics_AddTenderBid = 'ProjectLogistic/AddTenderBid';
+  public static API_ProjectLogistics_GetAllTenderBids = 'ProjectLogistic/GetAllTenderBids';
+  public static API_ProjectLogistics_DeleteTenderBidById  = 'ProjectLogistic/DeleteTenderBidById';
+  public static API_ProjectLogistics_EditTenderBid = 'ProjectLogistic/EditTenderBid';
+  public static API_ProjectLogistics_SelectTenderBid = 'ProjectLogistic/SelectTenderBid';
+  public static API_ProjectLogistics_GetSelectedBidDetail = 'ProjectLogistic/GetSelectedBidDetail';
 
   // Chart Of Account
   public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';

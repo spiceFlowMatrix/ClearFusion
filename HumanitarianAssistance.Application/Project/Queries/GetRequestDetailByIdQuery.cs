@@ -19,6 +19,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
         public string Currency { get; set; }
         public string Office { get; set; }   
         public int ComparativeStatus { get; set; }
+        public int TenderStatus { get; set; }
         public string ProcessingType { get; set; }
         public long BudgetLineId { get; set; }
         public long CurrencyId { get; set; }

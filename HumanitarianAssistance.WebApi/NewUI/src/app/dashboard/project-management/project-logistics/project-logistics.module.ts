@@ -4,7 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ProjectLogisticsRoutingModule } from './project-logistics-routing.module';
 import { LogisticRequestsComponent } from './logistic-requests/logistic-requests.component';
 import { MatDividerModule, MatInputModule, MatCardModule, MatPaginatorModule,
-  MatDialogRef, MatTableModule, MatCheckboxModule, MatDialogModule, MatExpansionModule, MatTabsModule, MatDatepickerModule } from '@angular/material';
+  MatDialogRef, MatTableModule, MatCheckboxModule, MatDialogModule, MatExpansionModule,
+  MatTabsModule, MatDatepickerModule, MatSlideToggleModule } from '@angular/material';
 import { SubHeaderTemplateModule, LibraryModule } from 'projects/library/src/public_api';
 import { AddLogisticRequestComponent } from './add-logistic-request/add-logistic-request.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -20,6 +21,9 @@ import { TenderStatementComponent } from './tender-statement/tender-statement.co
 import { PurchaseFinalCostComponent } from './purchase-final-cost/purchase-final-cost.component';
 import { GoodsRecievedUploadComponent } from './goods-recieved-upload/goods-recieved-upload.component';
 import { PurchaseVoucherVerificationComponent } from './purchase-voucher-verification/purchase-voucher-verification.component';
+import { SubmitTenderDocumentComponent } from './submit-tender-document/submit-tender-document.component';
+import { SubmitTenderBidComponent } from './submit-tender-bid/submit-tender-bid.component';
+import { TenderBidSelectionComponent } from './tender-bid-selection/tender-bid-selection.component';
 
 @NgModule({
   declarations: [LogisticRequestsComponent, AddLogisticRequestComponent,
@@ -27,7 +31,8 @@ import { PurchaseVoucherVerificationComponent } from './purchase-voucher-verific
     SubmitPurchaseListComponent, ComparativeStatementComponent, AddSupplierComponent,
     PurchaseOrderComponent, SubmitComparativeStatementComponent, TenderStatementComponent, PurchaseFinalCostComponent,
     GoodsRecievedUploadComponent,
-    PurchaseVoucherVerificationComponent],
+    PurchaseVoucherVerificationComponent,
+    SubmitTenderDocumentComponent, SubmitTenderBidComponent, TenderBidSelectionComponent],
   imports: [
     CommonModule,
     MatTableModule,
@@ -43,16 +48,19 @@ import { PurchaseVoucherVerificationComponent } from './purchase-voucher-verific
     ReactiveFormsModule,
     MatDialogModule,
     MatTabsModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatSlideToggleModule
   ],
   entryComponents: [
     PurchaseFinalCostComponent,
     AddLogisticItemsComponent,
-    // SubmitPurchaseListComponent,
+    SubmitTenderDocumentComponent,
     AddSupplierComponent,
     SubmitComparativeStatementComponent,
     GoodsRecievedUploadComponent,
-    PurchaseVoucherVerificationComponent
-  ],
+    PurchaseVoucherVerificationComponent,
+    SubmitTenderBidComponent,
+    TenderBidSelectionComponent
+  ]
 })
 export class ProjectLogisticsModule { }

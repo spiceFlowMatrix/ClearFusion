@@ -10,7 +10,7 @@ import { TableActionsModel } from 'projects/library/src/public_api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AddLogisticItemsComponent } from '../add-logistic-items/add-logistic-items.component';
 import { map } from 'rxjs/operators';
-import { LogisticRequestStatus, LogisticComparativeStatus } from 'src/app/shared/enum';
+import { LogisticRequestStatus, LogisticComparativeStatus, LogisticTenderStatus } from 'src/app/shared/enum';
 import { RequestDetail } from '../logistic-request-details/logistic-request-details.component';
 
 @Component({
@@ -344,15 +344,19 @@ export class AddLogisticRequestComponent implements OnInit {
     if (this.totalcost < 200) {
       model.Status = LogisticRequestStatus['New Request'];
       model.ComparativeStatus = LogisticComparativeStatus.NotValid;
+      model.TenderStatus = LogisticTenderStatus.NotValid;
     } else if ((this.totalcost >= 200) && (this.totalcost < 10000)) {
       model.Status = LogisticRequestStatus['New Request'];
       model.ComparativeStatus = LogisticComparativeStatus['Pending'];
+      model.TenderStatus = LogisticTenderStatus.NotValid;
     } else if ((this.totalcost >= 10000) && (this.totalcost < 60000)) {
       model.Status = LogisticRequestStatus['New Request'];
       model.ComparativeStatus = LogisticComparativeStatus.NotValid;
+      model.TenderStatus = LogisticTenderStatus.Pending;
     } else if (this.totalcost >= 60000) {
       model.Status = LogisticRequestStatus['New Request'];
       model.ComparativeStatus = LogisticComparativeStatus.NotValid;
+      model.TenderStatus = LogisticTenderStatus.Pending;
     }
 
     if (this.requestId && this.requestId !== 0) {

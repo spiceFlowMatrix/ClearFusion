@@ -187,7 +187,14 @@ namespace HumanitarianAssistance.Common.Enums {
         ProjectLogisticPurchase = 14,
         GoodsRecievedDocument = 15,
         LogisticSupplierInvoice = 16,
-        LogisticSupplierWarranty = 17
+        LogisticSupplierWarranty = 17,
+        [Description ("Proposal Document")]
+        TenderProposalDocument = 18,
+        [Description ("RFP Document")]
+        TenderRFPDocument = 19,
+        [Description ("Announcement Document")]
+        TenderAnnouncementDocument = 20,
+        TenderBidContractLetter = 21
     }
 
     public enum DocumentFileTypes {
@@ -262,6 +269,17 @@ namespace HumanitarianAssistance.Common.Enums {
         RejectStatement = 5,
         [Description ("Statement Approved")]
         ApproveStatement = 6,
+    }
+
+    public enum LogisticTenderStatus {
+        [Description ("Pending")]
+        Pending = 1,
+        [Description ("Cancelled")]
+        Cancelled = 2,
+        [Description ("Issued")]
+        Issued = 3,
+        [Description ("Bid Selected")]
+        BidSelected = 4,
     }
     //#region "StoreItemGroups"
     public enum TransportItemTypes {
