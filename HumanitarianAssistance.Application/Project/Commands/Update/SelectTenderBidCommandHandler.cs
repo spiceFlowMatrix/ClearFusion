@@ -35,7 +35,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                 _tenderBid.ModifiedById = request.ModifiedById;
                 _tenderBid.ModifiedDate = request.ModifiedDate;
 
-                var _logisticReq = 
+                // var _logisticReq = 
                 await _dbContext.SaveChangesAsync();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
