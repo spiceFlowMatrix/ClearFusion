@@ -46,6 +46,7 @@ export class LogisticRequestDetailsComponent implements OnInit {
   goodsRecievedModel: GoodsRecievedNote;
   voucherReference = '';
   tenderIssuerName = '';
+  SelectedBidDetail = { ContactName: '' , SelectedBy: ''};
 
   constructor(private dialog: MatDialog, private routeActive: ActivatedRoute,
     private logisticservice: LogisticService,
@@ -143,6 +144,9 @@ export class LogisticRequestDetailsComponent implements OnInit {
 
       if (this.requestDetail.TenderStatus === LogisticTenderStatus.Issued ) {
         this.getTenderIssuerName();
+      }
+      if (this.requestDetail.TenderStatus === LogisticTenderStatus['Bid Selected']) {
+        this.getSelectedBidDetail();
       }
     });
   }
@@ -362,6 +366,13 @@ export class LogisticRequestDetailsComponent implements OnInit {
     this.requestDetail.ComparativeStatus = value;
   }
 
+  tenderStatusChange(value) {
+    this.requestDetail.TenderStatus = value;
+    if (this.requestDetail.TenderStatus === LogisticTenderStatus['Bid Selected']) {
+      this.getSelectedBidDetail();
+    }
+  }
+
   StatusChange(value) {
     this.requestDetail.Status = value;
     // if (this.requestDetail.Status === LogisticRequestStatus['Complete Purchase'] ) {
@@ -505,6 +516,16 @@ export class LogisticRequestDetailsComponent implements OnInit {
         this.getTenderIssuerName();
       } else {
         this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  getSelectedBidDetail() {
+    this.logisticservice.getSelectedBidDetail(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200 && res.data.SelectedBidDetail != null) {
+        this.SelectedBidDetail = res.data.SelectedBidDetail;
+      } else {
         this.toastr.error('Something went wrong!');
       }
     });

@@ -31,11 +31,17 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                 if(_tenderBid == null) {
                     throw new Exception("Bid doesn't Exist!");
                 }
-                // _tenderBid.IsBidSubmitted = true;
+                _tenderBid.IsBidSelected = true;
                 _tenderBid.ModifiedById = request.ModifiedById;
                 _tenderBid.ModifiedDate = request.ModifiedDate;
 
-                // var _logisticReq = 
+                var _logisticReq = await _dbContext.ProjectLogisticRequests.FirstOrDefaultAsync(x=> x.IsDeleted == false && x.LogisticRequestsId == _tenderBid.LogisticRequestsId);
+                if(_logisticReq == null) {
+                    throw new Exception("Request doesn't Exist!");
+                }
+                _logisticReq.TenderStatus = (int)LogisticTenderStatus.BidSelected;
+                _logisticReq.Status = (int)LogisticRequestStatus.IssuePurchaseOrder;
+                
                 await _dbContext.SaveChangesAsync();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

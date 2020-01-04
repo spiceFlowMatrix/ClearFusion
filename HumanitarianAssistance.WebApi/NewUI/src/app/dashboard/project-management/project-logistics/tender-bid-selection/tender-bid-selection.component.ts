@@ -44,7 +44,17 @@ export class TenderBidSelectionComponent implements OnInit {
       this.toastr.warning('Please provide Bid Selection!');
       return;
     }
-    alert(this.bidSelectionForm.value.SelectedBid);
+    this.commonLoader.showLoader();
+    this.logisticservice.selectTenderBid(this.bidSelectionForm.value.SelectedBid).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.toastr.success('Bid Selection Sucessfull!');
+        this.dialogRef.close({data: 'Success'});
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
   }
 
   closeDialog() {

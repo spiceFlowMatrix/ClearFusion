@@ -121,7 +121,7 @@ export class SubmitTenderBidComponent implements OnInit {
             .pipe(takeUntil(this.destroyed$))
             .subscribe(y => {
                 this.commonLoader.hideLoader();
-                this.toastr.success('Bid Updated Successfully!');
+                this.toastr.success('Bid Submitted Successfully!');
                 this.dialogRef.close({data: 'Success'});
             },
             err => {

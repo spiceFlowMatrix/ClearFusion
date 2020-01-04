@@ -165,7 +165,9 @@
         </tbody>
       </table>
     </div>
+    <div *ngSwitchCase="4" humAddScroll>
+      <app-purchase-order [requestId]="requestId" [requestStatus]="requestStatus" [totalCost]="this.totalCost" [requestedItems]="requestedItems" (selectedItemChange)='selectedPurchaseItemChange($event)' (StatusChange)="StatusEmit($event)"></app-purchase-order>
+    </div>
     <div *ngSwitchDefault>
-
     </div>
 </div>

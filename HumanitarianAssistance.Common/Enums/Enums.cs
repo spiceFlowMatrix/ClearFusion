@@ -278,12 +278,8 @@ namespace HumanitarianAssistance.Common.Enums {
         Cancelled = 2,
         [Description ("Issued")]
         Issued = 3,
-        [Description ("Statement Submitted")]
-        StatementSubmitted = 4,
-        [Description ("Statement Rejected")]
-        RejectStatement = 5,
-        [Description ("Statement Approved")]
-        ApproveStatement = 6,
+        [Description ("Bid Selected")]
+        BidSelected = 4,
     }
     //#region "StoreItemGroups"
     public enum TransportItemTypes {

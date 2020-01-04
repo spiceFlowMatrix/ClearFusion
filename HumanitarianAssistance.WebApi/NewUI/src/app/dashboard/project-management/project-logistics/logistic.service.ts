@@ -376,4 +376,9 @@ export class LogisticService {
     );
   }
 
+  getSelectedBidDetail(requestId) {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() + GLOBAL.API_ProjectLogistics_GetSelectedBidDetail + '?RequestId=' + requestId,
+    );
+  }
 }

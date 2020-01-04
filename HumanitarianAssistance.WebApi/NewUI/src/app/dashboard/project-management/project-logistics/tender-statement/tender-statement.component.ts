@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, EventEmitter, Output } from '@angular/core';
 import { LogisticService } from '../logistic.service';
 import { MatDialog } from '@angular/material';
 import { ToastrService } from 'ngx-toastr';
 import { SubmitTenderDocumentComponent } from '../submit-tender-document/submit-tender-document.component';
 import { ActivatedRoute } from '@angular/router';
-import { LogisticTenderStatus, FileSourceEntityTypes } from 'src/app/shared/enum';
+import { LogisticTenderStatus, FileSourceEntityTypes, LogisticRequestStatus } from 'src/app/shared/enum';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { SubmitTenderBidComponent } from '../submit-tender-bid/submit-tender-bid.component';
 import { TenderBidSelectionComponent } from '../tender-bid-selection/tender-bid-selection.component';
@@ -19,6 +19,11 @@ export class TenderStatementComponent implements OnInit {
   @Input() requestStatus = 0;
   @Input() totalCost = 0;
   @Input() tenderStatus = 1;
+
+  @Output() tenderStatusChange = new EventEmitter();
+  @Output() StatusChange = new EventEmitter();
+  @Input() requestedItems: any[];
+  @Output() selectedItemChange = new EventEmitter();
 
   requestId;
   tenderDocsList: any[] = [];
@@ -132,8 +137,17 @@ export class TenderStatementComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined && result.data != null ) {
-        // this.getAllTenderBids();
+         this.tenderStatusChange.emit(LogisticTenderStatus['Bid Selected']);
+         this.StatusChange.emit(LogisticRequestStatus['Issue Purchase Order']);
       }
     });
+  }
+
+  selectedPurchaseItemChange(value) {
+    this.selectedItemChange.emit(value);
+  }
+
+  StatusEmit(value) {
+    this.StatusChange.emit(value);
   }
 }

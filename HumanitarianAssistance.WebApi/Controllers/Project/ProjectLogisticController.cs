@@ -390,6 +390,12 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.ModifiedDate = DateTime.UtcNow; 
             return await _mediator.Send(model);
         }
+
+        [HttpGet]
+        public async Task<ApiResponse> GetSelectedBidDetail([FromQuery]GetSelectedBidDetailQuery model)
+        {   
+            return await _mediator.Send(model);
+        }
          
     }
 
