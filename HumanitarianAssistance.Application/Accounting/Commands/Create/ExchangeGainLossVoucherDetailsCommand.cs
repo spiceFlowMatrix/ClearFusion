@@ -19,5 +19,8 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
         public double Amount { get; set; }
         public int? TimezoneOffset { get; set; }
         public DateTime VoucherDate { get; set; }
+        public long[] AccountIds { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }

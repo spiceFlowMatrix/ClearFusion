@@ -749,3 +749,10 @@ export enum QuestionType {
     'Announcement Document' = 20
   }
 
+    export enum GainLossStatus {
+      Loss = -1,
+      Balanced = 0,
+      Gain = 1,
+      Consolidated = 2
+      }
+

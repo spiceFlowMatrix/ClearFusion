@@ -20,8 +20,8 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
   @Input() selectedData: any[];
   gainList: any[] = [];
   lossList: any[] = [];
-  totalCredit: number;
-  totalDebit: number;
+  totals: number;
+  accountIds: number[] = [];
   @Input() calculatorConfigData: any;
   transactionList$: Observable<any[]>;
   voucherDataForm: FormGroup;
@@ -30,7 +30,7 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
   officeList$: Observable<IDropDownModel[]>;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  transactionHeaders$ = of(['Account', 'Credit Amount', 'Debit Amount', 'Description']);
+  transactionHeaders$ = of(['Account', 'Credit Amount', 'Description']);
   constructor(private fb: FormBuilder, private gainLossReportService: ExchangeGainLossReportService,
     private toastr: ToastrService, private commonLoader: CommonLoaderService) { }
 
@@ -38,12 +38,14 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
     this.gainList = this.selectedData.filter(x => x.GainLossStatus === 1);
     this.lossList = this.selectedData.filter(x => x.GainLossStatus === -1);
     this.getTotalGain();
+    this.selectedData.forEach(x => {
+      this.accountIds.push(x.AccountId);
+    });
 
     this.transactionList$ = of(this.gainList.map(x => {
       return {
         Account: x.AccountCode + '-' + x.AccountName,
         CreditAmount: x.ResultingGainLoss,
-        DebitAmount: x.ResultingGainLoss,
         Description: 'Gain'
       };
     }));
@@ -76,11 +78,12 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
 
   tabChanged(value) {
     if (value.index === 0) {
+
+      this.transactionHeaders$ = of(['Account', 'Credit Amount', 'Description']);
       this.transactionList$ = of(this.gainList.map(x => {
         return {
           Account: x.AccountCode + '-' + x.AccountName,
           CreditAmount: x.ResultingGainLoss,
-          DebitAmount: x.ResultingGainLoss,
           Description: 'Gain'
         };
       }));
@@ -88,10 +91,10 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
       this.getTotalGain();
     }
     if (value.index === 1) {
+      this.transactionHeaders$ = of(['Account', 'Debit Amount', 'Description']);
       this.transactionList$ = of(this.lossList.map(x => {
         return {
           Account: x.AccountCode + '-' + x.AccountName,
-          CreditAmount: x.ResultingGainLoss,
           DebitAmount: x.ResultingGainLoss,
           Description: 'Loss'
         };
@@ -177,12 +180,15 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
       JournalId: this.voucherDataForm.value.JournalId,
       CreditAccount: this.calculatorConfigData.CreditAccount,
       DebitAccount: this.calculatorConfigData.DebitAccount,
-      Amount: this.totalCredit,
+      Amount: this.totals,
       VoucherType: this.voucherDataForm.value.VoucherType,
       OfficeId: this.voucherDataForm.value.OfficeId,
       TimeZoneOffset: new Date().getTimezoneOffset(),
       Description: this.voucherDataForm.value.Description,
-      VoucherDate: StaticUtilities.setLocalDate(new Date())
+      VoucherDate: StaticUtilities.setLocalDate(new Date()),
+      AccountIds: this.accountIds,
+      StartDate: this.calculatorConfigData.StartDate,
+      EndDate: this.calculatorConfigData.EndDate
     };
 
     this.gainLossReportService.AddGainLossVoucher(model).subscribe(
@@ -207,18 +213,14 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
   }
 
   getTotalGain() {
-    this.totalCredit = this.totalDebit = this.gainList.reduce(
+    this.totals = this.gainList.reduce(
       (a, { ResultingGainLoss }) => a + ResultingGainLoss,
       0
     );
   }
 
   getTotalLoss() {
-    this.totalCredit = this.lossList.reduce(
-      (a, { ResultingGainLoss }) => a + ResultingGainLoss,
-      0
-    );
-    this.totalDebit = this.lossList.reduce(
+    this.totals = this.lossList.reduce(
       (a, { ResultingGainLoss }) => a + ResultingGainLoss,
       0
     );

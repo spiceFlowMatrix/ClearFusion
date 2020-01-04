@@ -4,16 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using HumanitarianAssistance.Application.CommonServicesInterface;
-using HumanitarianAssistance.Application.HR.Models;
 using HumanitarianAssistance.Application.Infrastructure;
-using HumanitarianAssistance.Common.Enums;
-using HumanitarianAssistance.Common.Helpers;
-using HumanitarianAssistance.Domain.Entities;
-using HumanitarianAssistance.Domain.Entities.HR;
+
 using HumanitarianAssistance.Persistence;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace HumanitarianAssistance.Application.HR.Commands.Create
 {

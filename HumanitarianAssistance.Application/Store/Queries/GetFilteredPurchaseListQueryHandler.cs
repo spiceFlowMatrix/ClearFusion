@@ -147,7 +147,9 @@ namespace HumanitarianAssistance.Application.Store.Queries
                         EmployeeName = z.EmployeeDetail.EmployeeCode + "-" + z.EmployeeDetail.EmployeeName,
                         IssueDate = z.IssueDate,
                         MustReturn = z.MustReturn,
-                        ProcuredAmount = z.IssuedQuantity - (z.ReturnProcurementDetailList.Any() ? z.ReturnProcurementDetailList.Where(b=> b.IsDeleted == false).Select(c=> c.ReturnedQuantity).DefaultIfEmpty(0).Sum() : 0),
+                        ProcuredAmount = z.IssuedQuantity - (z.ReturnProcurementDetailList.Any() ? 
+                                         z.ReturnProcurementDetailList.Where(b=> b.IsDeleted == false)
+                                         .Select(c=> c.ReturnedQuantity).DefaultIfEmpty(0).Sum() : 0),
                         Returned = z.Returned,
                         ReturnedOn = z.ReturnedDate,
                         EmployeeId = z.EmployeeDetail.EmployeeID,

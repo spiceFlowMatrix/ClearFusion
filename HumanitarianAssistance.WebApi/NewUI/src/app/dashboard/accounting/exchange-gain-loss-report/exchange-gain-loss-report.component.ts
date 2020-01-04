@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
 import { SelectionModel } from '@angular/cdk/collections';
+import { GainLossStatus } from 'src/app/shared/enum';
 
 @Component({
   selector: 'app-exchange-gain-loss-report',
@@ -38,7 +39,7 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
   // gainLossAddVoucherForm: IGainLossAddVoucherForm;
   /** control for the MatSelect filter keyword multi-selection */
   public accountMultiFilterCtrl: FormControl = new FormControl();
-  displayedColumns = ['Select', 'AccountCode', 'AccountName',
+  displayedColumns = ['select', 'AccountCode', 'AccountName',
     'BalanceOnOriginalTransactionDates', 'BalanceOnComparisionDate', 'GainLossStatus', 'ResultingGainLoss'];
 
   labelText: string;
@@ -54,13 +55,8 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
     this.globalSharedService.setMenuHeaderName('Currency Exchange Gain Loss Calculator');
     this.globalSharedService.setMenuList([]);
 
-    this.transactionFiltersForm = this.fb.group({
-      'offices': [[]],
-      'journals': [[]],
-      'projects': [[]],
-    });
+    this.onFormInIt();
 
-    this.AccountIdList = [];
     this.selectedRows = [];
 
     this.GainLossFilter = {
@@ -91,9 +87,21 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
       });
   }
 
+  onFormInIt() {
+    this.transactionFiltersForm = this.fb.group({
+      'offices': [[]],
+      'journals': [[]],
+      'projects': [[]],
+    });
+    this.AccountIdList = [];
+  }
+
   getLabelClass(value) {
-    this.labelText = value > 0 ? 'Gain' : value < 0 ? 'Loss' : 'Balanced';
-    return value > 0 ? 'label label-success' : value < 0 ? 'label label-danger' : 'label label-info';
+    this.labelText = value === GainLossStatus.Gain ? 'Gain' : value < 0 ? 'Loss' : value === GainLossStatus.Consolidated ?
+    'Consolidated' : 'Balanced' ;
+    return value === GainLossStatus.Gain ? 'label label-success' : value < GainLossStatus.Balanced ?
+              'label label-danger' : value === GainLossStatus.Consolidated ?
+              'label label-primary' : 'label label-info';
   }
 
   showConfiguration() {
@@ -162,40 +170,6 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
   //#region "getInputLevelAccountList"
   getInputLevelAccountList() {
     return this.gainLossReportService.GetInputLevelAccountList();
-
-    // .subscribe(
-    //   (response: IResponseData) => {
-    //     this.accountList = [];
-    //     this.accountDataSource = [];
-    //     if (response.statusCode === 200 && response.data !== null) {
-
-    //       response.data.forEach(element => {
-    //         this.accountList.push({
-    //           AccountCode: element.AccountCode,
-    //           AccountName: element.AccountName,
-    //           ChartOfAccountNewCode: element.ChartOfAccountNewCode
-    //         });
-
-    //         this.accountDataSource.push({
-    //           Id: element.AccountCode,
-    //           Name: element.AccountName,
-    //         });
-    //       });
-
-
-    //       // NOTE: load the initial Account list
-    //       this.filteredAccountsMulti.next(this.accountList.slice());
-
-    //       // listen for search field value changes
-    //       this.accountMultiFilterCtrl.valueChanges
-    //         .pipe(takeUntil(this.destroyed$))
-    //         .subscribe(() => {
-    //           this.filterAccounts();
-    //         });
-    //     }
-    //   },
-    //   error => { }
-    // );
   }
   //#endregion
 
@@ -277,23 +251,6 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
   //#region "getExchangeGainLossFilterAccountList"
   getExchangeGainLossFilterAccountList() {
     return this.gainLossReportService.GetExchangeGainLossFilterAccountList();
-
-    // .subscribe(
-    //   (response: IResponseData) => {
-    //     this.AccountIdList = [];
-    //     if (response.statusCode === 200 && response.data !== null) {
-    //       // response.data.forEach(element => {
-    //       //   this.gainLossReportfilter.AccountIdList.push(
-    //       //     element.ChartOfAccountNewId
-    //       //   );
-    //       // });
-
-    //       this.AccountIdList = response.data;
-
-    //     }
-    //   },
-    //   error => { }
-    // );
   }
   //#endregion
 
@@ -321,6 +278,8 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
       EndDate: event.EndDate,
       StartDate: event.StartDate
     };
+
+    this.getExchangeGainLossData();
   }
 
   applyTransactionFilter() {
@@ -363,6 +322,7 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
           if (response.statusCode === 200 && response.data !== null) {
             response.data.forEach(element => {
               this.gainLossReportList.push({
+                AccountId: element.AccountId,
                 AccountCode: element.AccountCode,
                 AccountName: element.AccountName,
                 BalanceOnOriginalTransactionDates: element.BalanceOnOriginalDate,
@@ -395,12 +355,45 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
     if (this.selection.selected.length <= 0) {
       this.toastr.warning('Please select atleast one account');
     } else {
+      const accounts =  this.selection.selected.filter(x => x.GainLossStatus === GainLossStatus.Consolidated ||
+        x.GainLossStatus === GainLossStatus.Balanced);
+
+      if (accounts.length > 0) {
+        this.toastr.warning('Please remove selected consolidated or balanced accounts and try again');
+        return;
+      }
       this.type = 'consolidation';
     }
   }
 
   subscribeType(event) {
     this.type = '';
+  }
+
+  clearTransactionFilters() {
+    this.onFormInIt();
+  }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.gainLossReportList.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.gainLossReportList.forEach(row => this.selection.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: any): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
   ngOnDestroy() {
@@ -438,6 +431,7 @@ export interface IGainLossFilter {
 }
 
 export interface GainLossReport {
+  AccountId: number;
   AccountCode: string;
   AccountName: string;
   BalanceOnOriginalTransactionDates: number;
@@ -445,6 +439,3 @@ export interface GainLossReport {
   ResultingGainLoss: number;
   GainLossStatus: number;
 }
-
-// const ELEMENT_DATA: Element[] = [
-//   { Checked: false, AccountCode: '1', AccountName: 'Hydrogen', BalanceOnOriginalTransactionDates: 1.0079, BalanceOnComparisionDate: 22, ResultingGainLoss: 0 }]

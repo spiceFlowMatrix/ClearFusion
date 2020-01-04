@@ -112,6 +112,7 @@ export class ConfigurationFilterComponent implements OnInit, OnDestroy {
   saveCalculatorConfigData() {
     if (!this.gainLossConfigForm.valid) {
       this.toastr.warning('Please correct form errors and submit again');
+      return;
     }
 
     this.gainLossConfigForm.value.ComparisionDate = StaticUtilities.setLocalDate(this.gainLossConfigForm.value.ComparisionDate);

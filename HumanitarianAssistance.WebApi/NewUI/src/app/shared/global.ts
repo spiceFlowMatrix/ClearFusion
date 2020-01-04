@@ -230,6 +230,7 @@ export class GLOBAL {
   public static API_Code_GetAllJournalDetail = 'Code/GetAllJournalDetail';
   public static API_AccountReports_GetJournalVoucherDetails = 'AccountReports/GetJournalVoucherDetails';
   public static API_Accounting_GetAccountDetails = 'Account/GetAllAccountCode';
+  public static API_Accounting_GetAccountList = 'Account/GetAllAccountList';
   public static API_AccountReports_GetAllLedgerDetails = 'AccountReports/GetAllLedgerDetails';
   public static API_AccountReports_GetTrialBalanceReport = 'AccountReports/GetTrialBalanceReport';
   public static API_Account_GetAllVouchersWithoutFilter = 'Account/GetAllVouchersWithoutFilter';
@@ -583,6 +584,7 @@ export class GLOBAL {
   public static API_Store_GetAllPurchaseUnitType = 'Store/GetAllPurchaseUnitType';
   public static API_Store_AddPurchase = 'Store/AddPurchase';
   public static API_ExchangeRates_CheckExchangeRatesExist = 'ExchangeRates/CheckExchangeRatesExist';
+
   public static API_Store_GetAllPurchasesByItem = 'Store/GetAllPurchasesByItem';
   public static API_StorePurchase_GetItemDetailByItemId = 'StorePurchase/GetItemDetailByItemId';
   public static API_Store_AddItemOrder = 'Store/AddItemOrder';

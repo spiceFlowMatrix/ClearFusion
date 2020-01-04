@@ -108,75 +108,75 @@ namespace HumanitarianAssistance.Application.CommonServices
         public async Task<ApiResponse> AddUser(UserModel request)
         {
             ApiResponse response = new ApiResponse();
-           
-                try
+
+            try
+            {
+                AppUser newUser = new AppUser
                 {
-                    AppUser newUser = new AppUser
-                    {
-                        UserName = request.Email,
-                        FirstName = request.FirstName,
-                        LastName = request.LastName,
-                        Email = request.Email,
-                        PhoneNumber = request.Phone
-                    };
+                    UserName = request.Email,
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    Email = request.Email,
+                    PhoneNumber = request.Phone
+                };
 
-                    AppUser existUser = await _userManager.FindByNameAsync(request.Email);
+                AppUser existUser = await _userManager.FindByNameAsync(request.Email);
 
-                    if (existUser == null)
-                    {
-                        IdentityResult objNew = await _userManager.CreateAsync(newUser, request.Password);
-
-                        if(!objNew.Succeeded) 
-                        {
-                            throw new Exception("Could Not Create App User");
-                        }
-
-                        UserDetails user = new UserDetails();
-
-                        user.FirstName = request.FirstName;
-                        user.LastName = request.LastName;
-                        user.Password = request.Password;
-                        user.Status = request.Status;
-                        user.Username = request.Email;
-                        user.CreatedById = request.CreatedById;
-                        user.CreatedDate = request.CreatedDate;
-                        user.UserType = request.UserType;
-                        user.AspNetUserId = newUser.Id;
-                        user.EmployeeId = request.EmployeeId;
-
-                        await _dbContext.UserDetails.AddAsync(user);
-                        await _dbContext.SaveChangesAsync();
-
-                        List<UserDetailOffices> lst = new List<UserDetailOffices>();
-
-                        foreach (var item in request.OfficeId)
-                        {
-                            UserDetailOffices obj = new UserDetailOffices();
-                            obj.OfficeId = item;
-                            obj.UserId = user.UserID;
-                            obj.CreatedById = request.CreatedById;
-                            obj.CreatedDate = request.CreatedDate;
-                            obj.IsDeleted = false;
-                            lst.Add(obj);
-                        }
-
-                        await _dbContext.UserDetailOffices.AddRangeAsync(lst);
-                        await _dbContext.SaveChangesAsync();
-
-                        response.StatusCode = StaticResource.successStatusCode;
-                        response.Message = StaticResource.SuccessText;
-                    }
-                    else
-                    {
-                        response.StatusCode = StaticResource.MandateNameAlreadyExistCode;
-                        response.Message = StaticResource.EmailAlreadyExist;
-                    }
-                }
-                catch (Exception ex)
+                if (existUser == null)
                 {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = ex.Message;
+                    IdentityResult objNew = await _userManager.CreateAsync(newUser, request.Password);
+
+                    if (!objNew.Succeeded)
+                    {
+                        throw new Exception("Could Not Create App User");
+                    }
+
+                    UserDetails user = new UserDetails();
+
+                    user.FirstName = request.FirstName;
+                    user.LastName = request.LastName;
+                    user.Password = request.Password;
+                    user.Status = request.Status;
+                    user.Username = request.Email;
+                    user.CreatedById = request.CreatedById;
+                    user.CreatedDate = request.CreatedDate;
+                    user.UserType = request.UserType;
+                    user.AspNetUserId = newUser.Id;
+                    user.EmployeeId = request.EmployeeId;
+
+                    await _dbContext.UserDetails.AddAsync(user);
+                    await _dbContext.SaveChangesAsync();
+
+                    List<UserDetailOffices> lst = new List<UserDetailOffices>();
+
+                    foreach (var item in request.OfficeId)
+                    {
+                        UserDetailOffices obj = new UserDetailOffices();
+                        obj.OfficeId = item;
+                        obj.UserId = user.UserID;
+                        obj.CreatedById = request.CreatedById;
+                        obj.CreatedDate = request.CreatedDate;
+                        obj.IsDeleted = false;
+                        lst.Add(obj);
+                    }
+
+                    await _dbContext.UserDetailOffices.AddRangeAsync(lst);
+                    await _dbContext.SaveChangesAsync();
+
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
                 }
+                else
+                {
+                    response.StatusCode = StaticResource.MandateNameAlreadyExistCode;
+                    response.Message = StaticResource.EmailAlreadyExist;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
 
             return response;
         }
@@ -187,7 +187,7 @@ namespace HumanitarianAssistance.Application.CommonServices
 
             using (IDbContextTransaction tran = _dbContext.Database.BeginTransaction())
             {
-                EmployeeDetailModel model= new EmployeeDetailModel();
+                EmployeeDetailModel model = new EmployeeDetailModel();
 
                 try
                 {
@@ -199,11 +199,40 @@ namespace HumanitarianAssistance.Application.CommonServices
 
                     model.EmployeeID = obj.EmployeeID;
 
-                   // OfficeDetail OfficeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.OfficeId == request.OfficeId && x.IsDeleted == false);
+                    // OfficeDetail OfficeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.OfficeId == request.OfficeId && x.IsDeleted == false);
                     obj.EmployeeCode = "E" + obj.EmployeeID;
 
                     _dbContext.EmployeeDetail.Update(obj);
                     await _dbContext.SaveChangesAsync();
+
+                    // to add Multi currencuy Pension detail 
+
+
+                    List<MultiCurrencyOpeningPension> pensionDetail = new List<MultiCurrencyOpeningPension>();
+
+                    if (request.PensionDetailModel != null)
+                    {
+
+                        foreach (var item in request.PensionDetailModel.PensionDetail)
+                        {
+                            MultiCurrencyOpeningPension detail = new MultiCurrencyOpeningPension()
+                            {
+                               EmployeeID = obj.EmployeeID,
+                                PensionStartDate = request.PensionDetailModel.PensionDate,
+                                Amount = item.Amount,
+                                CreatedById = request.CreatedById,
+                                CreatedDate = request.CreatedDate,
+                                IsDeleted = false,
+                                CurrencyId = item.CurrencyId,
+                            };
+
+                            pensionDetail.Add(detail);
+                        }
+                        await _dbContext.MultiCurrencyOpeningPension.AddRangeAsync(pensionDetail);
+                        await _dbContext.SaveChangesAsync();
+
+
+                    }
 
                     EmployeeProfessionalDetailModel empprofessional = new EmployeeProfessionalDetailModel
                     {
@@ -221,8 +250,8 @@ namespace HumanitarianAssistance.Application.CommonServices
                         FiredReason = request.FiredReason,
                         ResignationOn = request.ResignationOn,
                         ResignationReason = request.ResignationReason,
-                        AttendanceGroupId= request.AttendanceGroupId,
-                        DutyStation= request.DutyStation
+                        AttendanceGroupId = request.AttendanceGroupId,
+                        DutyStation = request.DutyStation
                     };
 
                     EmployeeProfessionalDetail obj1 = _mapper.Map<EmployeeProfessionalDetail>(empprofessional);
@@ -245,27 +274,27 @@ namespace HumanitarianAssistance.Application.CommonServices
                     //Add Employee to UserDetails Table
                     UserModel addUserCommand = new UserModel
                     {
-                        Email= request.Email,
-                        Phone= request.Phone,
-                        FirstName= request.EmployeeName,
-                        OfficeId= office,
+                        Email = request.Email,
+                        Phone = request.Phone,
+                        FirstName = request.EmployeeName,
+                        OfficeId = office,
                         EmployeeId = obj.EmployeeID,
-                        Status= (int)UserStatus.Active,
+                        Status = (int)UserStatus.Active,
                         Password = request.Password,
-                        CreatedById= obj.CreatedById,
-                        CreatedDate= obj.CreatedDate
+                        CreatedById = obj.CreatedById,
+                        CreatedDate = obj.CreatedDate
                     };
 
                     response = await AddUser(addUserCommand);
 
-                    if(response.StatusCode != 200)
+                    if (response.StatusCode != 200)
                     {
                         throw new Exception(response.Message);
                     }
 
                     tran.Commit();
 
-                    
+
                     response.data.EmployeeDetailModel = model;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";

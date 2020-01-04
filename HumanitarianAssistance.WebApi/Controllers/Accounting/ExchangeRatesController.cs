@@ -64,5 +64,10 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         {
             return await _mediator.Send(request);
         }
+         [HttpPost]
+        public async Task<ApiResponse> CheckExchangeRatesVerified([FromBody] GetExchangeRateVerifiedQuery request)
+        {
+            return await _mediator.Send(request);
+        }
     }
 }
