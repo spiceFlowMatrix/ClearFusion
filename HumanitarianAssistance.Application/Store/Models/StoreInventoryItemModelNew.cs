@@ -14,6 +14,7 @@ namespace HumanitarianAssistance.Application.Store.Models
         public long ItemGroupId { get; set; }
         public int? ItemType { get; set; }
         public int? ItemTypeCategory { get; set; }
+        public int? DefaultUnitType { get; set; }
 
     }
 }

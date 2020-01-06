@@ -11,5 +11,10 @@ namespace HumanitarianAssistance.Application.Store.Models
         public bool MustReturn { get; set; }
         public bool Returned { get; set; }
         public DateTime? ReturnedOn { get; set; }
+        public int EmployeeId { get; set; }
+        public long ProjectId { get; set; }
+        public string LocationId { get; set; }
+        public long StatusId { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using AutoMapper;
 using HumanitarianAssistance.Application.Accounting.Commands.Common;
 using HumanitarianAssistance.Application.Accounting.Commands.Create;
 using HumanitarianAssistance.Application.Accounting.Models;
+using HumanitarianAssistance.Application.Accounting.Queries;
 using HumanitarianAssistance.Application.CommonModels;
 using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Application.Infrastructure;
@@ -13,6 +14,7 @@ using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Domain.Entities.Accounting;
 using HumanitarianAssistance.Persistence;
+using HumanitarianAssistance.Persistence.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -296,24 +298,24 @@ namespace HumanitarianAssistance.Application.CommonServices
                     }
                 }
 
-                using (IDbContextTransaction tran = _dbContext.Database.BeginTransaction())
+                // using (IDbContextTransaction tran = _dbContext.Database.BeginTransaction())
+                // {
+                try
                 {
-                    try
-                    {
-                        _dbContext.VoucherTransactions.AddRange(transactionsListAdd);
-                        _dbContext.VoucherTransactions.UpdateRange(transactionsListEdit);
+                    _dbContext.VoucherTransactions.AddRange(transactionsListAdd);
+                    _dbContext.VoucherTransactions.UpdateRange(transactionsListEdit);
 
-                        _dbContext.SaveChanges();
-                        tran.Commit();
-                    }
-
-                    catch (Exception ex)
-                    {
-                        tran.Rollback();
-
-                        throw new Exception(ex.Message);
-                    }
+                    _dbContext.SaveChanges();
+                    // tran.Commit();
                 }
+
+                catch (Exception ex)
+                {
+                    // tran.Rollback();
+
+                    throw new Exception(ex.Message);
+                }
+                // }
 
                 return true;
             }
@@ -449,6 +451,93 @@ namespace HumanitarianAssistance.Application.CommonServices
                 throw new Exception(exception.Message);
             }
             return identityResult.Succeeded;
+        }
+
+        public async Task<ApiResponse> GetJournalReport(JournalReportModel request)
+        {
+            ApiResponse response = new ApiResponse();
+            try
+            {
+                int voucherDetailsCount = 0;
+                List<JournalVoucherViewModel> listJournalView = new List<JournalVoucherViewModel>();
+
+                if (request != null)
+                {
+                    
+                    //get Journal Report from sp get_journal_report by passing parameters
+                    var spJournalReport = await _dbContext.LoadStoredProc("get_journal_report")
+                                          .WithSqlParam("currencyid", request.CurrencyId)
+                                          .WithSqlParam("recordtype", request.RecordType)
+                                          .WithSqlParam("fromdate", request.fromdate.ToString())
+                                          .WithSqlParam("todate", request.todate.ToString())
+                                          .WithSqlParam("officelist", request.OfficesList)
+                                          .WithSqlParam("journalno", request.JournalCode)
+                                          .WithSqlParam("accountslist", request.AccountLists)
+                                          .WithSqlParam("project", request.Project)
+                                          .WithSqlParam("budgetline", request.BudgetLine)
+                                          .WithSqlParam("projectjob", request.JobCode)
+                                          .ExecuteStoredProc<SPJournalReport>();
+
+
+                    listJournalView = spJournalReport.Select(x => new JournalVoucherViewModel
+                    {
+                        AccountCode = x.AccountCode,
+                        ChartOfAccountNewId = x.ChartOfAccountNewId,
+                        JournalCode = x.JournalCode,
+                        CreditAmount = x.CreditAmount,
+                        CurrencyId = x.Currency,
+                        DebitAmount = x.DebitAmount,
+                        ReferenceNo = x.ReferenceNo,
+                        TransactionDate = x.TransactionDate,
+                        TransactionDescription = x.TransactionDescription,
+                        VoucherNo = x.VoucherNo,
+                        AccountName = x.AccountName,
+                        Project = x.ProjectCode,
+                        BudgetLineDescription = x.BudgetCode,
+                        JobCode=x.ProjectJobCode
+                    }).ToList();
+
+                    var journalReport = spJournalReport.GroupBy(x => x.ChartOfAccountNewId).ToList();
+
+                    List<JournalReportViewModel> journalReportList = new List<JournalReportViewModel>();
+
+                    foreach (var accountItem in journalReport)
+                    {
+                        journalReportList.Add(new JournalReportViewModel
+                        {
+                            ChartOfAccountNewId = accountItem.Key,
+                            AccountCode = accountItem.FirstOrDefault(x => x.ChartOfAccountNewId == accountItem.Key).AccountCode,
+                            AccountName = accountItem.FirstOrDefault().AccountName,
+                            DebitAmount = Math.Round(Convert.ToDecimal(accountItem.Sum(x => x.DebitAmount)), 4),
+                            CreditAmount = Math.Round(Convert.ToDecimal(accountItem.Sum(x => x.CreditAmount)), 4),
+                            Balance = Math.Round(Convert.ToDecimal(accountItem.Sum(x => x.DebitAmount) - accountItem.Sum(x => x.CreditAmount)), 4)
+                        });
+                    }
+
+
+                    response.data.JournalVoucherViewList = listJournalView;
+                    response.data.JournalReportList = journalReportList; //Report
+                    response.data.TotalCount = voucherDetailsCount;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+
+
+                }
+                else
+                {
+                    response.data.JournalVoucherViewList = null;
+                    response.data.TotalCount = voucherDetailsCount;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = "Success";
+
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = StaticResource.SomethingWrong + ex.Message;
+            }
+            return response;
         }
 
     }

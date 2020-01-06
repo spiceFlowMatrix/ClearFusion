@@ -1,7 +1,3 @@
--- FUNCTION: public.get_project_projectactivitylist_filter(bigint, text, text, text, text, text, integer[], bigint[], boolean, boolean, boolean, integer, integer, integer, integer, integer, integer, boolean, boolean, boolean, integer)
-
--- DROP FUNCTION public.get_project_projectactivitylist_filter(bigint, text, text, text, text, text, integer[], bigint[], boolean, boolean, boolean, integer, integer, integer, integer, integer, integer, boolean, boolean, boolean, integer);
-
 CREATE OR REPLACE FUNCTION public.get_project_projectactivitylist_filter(
 	project_id bigint,
 	activity_description text DEFAULT ''::text,
@@ -24,13 +20,14 @@ CREATE OR REPLACE FUNCTION public.get_project_projectactivitylist_filter(
 	late_end boolean DEFAULT false,
 	on_schedule boolean DEFAULT false,
 	country_id integer DEFAULT 0)
-    RETURNS TABLE(activityid bigint, activityname character varying, activitydescription text, budgetlineid bigint, budgetname text, employeeid integer, employeename text, statusid integer, statusname text, plannedstartdate timestamp without time zone, plannedenddate timestamp without time zone, recurring boolean, recurringcount integer, recurrintypeid integer, progress double precision, sleepage double precision, countryid integer) 
+    RETURNS TABLE(activityid bigint, activityname character varying, activitydescription text, budgetlineid bigint, budgetname text, employeeid integer, employeename text, statusid integer, statusname text, plannedstartdate timestamp without time zone, plannedenddate timestamp without time zone, recurring boolean, recurringcount integer, recurrintypeid integer, progress double precision, sleepage double precision, countryid integer,createddate timestamp without time zone) 
     LANGUAGE 'plpgsql'
 
     COST 100
     VOLATILE 
     ROWS 1000
 AS $BODY$
+
 
 
 DECLARE
@@ -108,7 +105,8 @@ BEGIN
 			   pa."RecurrinTypeId",
 			   get_projectactivityprogress(pa."ActivityId") as progress,
 			   COALESCE((DATE_PART('day', pa."ActualEndDate":: timestamp  - pa."PlannedEndDate":: timestamp )),0) as sleepage,
-									pa."CountryId"
+			   pa."CountryId",
+		       pa."CreatedDate" 
 		FROM "ProjectActivityDetail" AS pa
 		LEFT JOIN "ProjectBudgetLineDetail" AS pbl
 			ON pa."BudgetLineId" = pbl."BudgetLineId"
@@ -176,14 +174,14 @@ BEGIN
 		  	  (_late_end = false OR pa."PlannedEndDate":: DATE < (SELECT get_project_activityactualenddate_max_byparentid(pa."ActivityId")):: DATE) AND
 			  -- On Schedule Filter (PlannedStartDate >= ActualStartDate &&  PlannedEndDate >= ActualEndDate)
 		  	  (_on_schedule = false OR 
-			   (pa."PlannedStartDate":: DATE >= (SELECT get_project_activityactualstartdate_min_byparentid(pa."ActivityId")):: DATE) AND
+			   (pa."PlannedStartDate":: DATE <= (SELECT get_project_activityactualstartdate_min_byparentid(pa."ActivityId")):: DATE) AND
 			   (pa."PlannedEndDate":: DATE >= (SELECT get_project_activityactualenddate_max_byparentid(pa."ActivityId")):: DATE)
 			  ) AND
 			  -- Activity Description
 			  (_activity_description = '' OR pa."ActivityDescription" ILIKE '%' || _activity_description || '%')
 			  -- Planning Filter
 			  
-		ORDER BY pa."ActivityId" DESC;
+		ORDER BY pa."CreatedDate";
 	
 END;
 

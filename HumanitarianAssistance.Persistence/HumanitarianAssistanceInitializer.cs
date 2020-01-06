@@ -50,6 +50,11 @@ namespace HumanitarianAssistance.Persistence
                 await CreateDefaultUserAndRoleForApplication(context, userManager, roleManager, logger);
             }
 
+            if(!context.EmployeeDetail.Any(x=>x.Email=="hamza@yopmail.com")) 
+            {
+                await MakeExistingDefaultUserEmployeeForApplication(context);
+            }
+
             if (!context.EmployeeContractType.Any())
             {
                 await AddEmployeeContractType(context);
@@ -212,23 +217,6 @@ namespace HumanitarianAssistance.Persistence
             {
                 await AddProjectPhaseDetails(context);
             }
-
-            if (!context.StoreInventories.Any())
-            {
-                await AddStoreInventorySeedData(context);
-            }
-
-            if (!context.StoreItemGroups.Any())
-            {
-                await AddStoreItemGroupSeedData(context);
-            }
-
-             if (!context.InventoryItems.Any())
-            {
-                await AddStoreItemSeedData(context);
-            }
-
-
         }
         private static async Task CreateDefaultUserAndRoleForApplication(
              HumanitarianAssistanceDbContext context,
@@ -245,6 +233,30 @@ namespace HumanitarianAssistance.Persistence
             await AddDefaultRoleToDefaultUser(userManager, email, administratorRole, user, logger);
             await AddDefaultRoles(context, roleManager);
             await AddDefaultPermission(context);
+        }
+
+        private static async Task MakeExistingDefaultUserEmployeeForApplication(
+             HumanitarianAssistanceDbContext context) 
+        {
+            var userDetail = await context.UserDetails.FirstOrDefaultAsync(x=>x.IsDeleted==false && x.Username=="hamza@yopmail.com");
+            if(userDetail != null)
+            {
+                EmployeeDetail obj = new EmployeeDetail 
+                {
+                    IsDeleted = false,
+                    EmployeeName = userDetail.FirstName + ' ' + userDetail.LastName,
+                    FatherName = "test",
+                    Phone = "1234567890",
+                    Email = userDetail.Username,
+                    SexId = (int)Sex.Male,
+                    EmployeeTypeId = 2,
+                    MaritalStatusId = 1
+                };
+                await context.EmployeeDetail.AddAsync(obj);
+                await context.SaveChangesAsync();
+                userDetail.EmployeeId = obj.EmployeeID;
+                await context.SaveChangesAsync();
+            }
         }
 
         private static async Task CreateDefaultAdministratorRole(RoleManager<IdentityRole> rm, string administratorRole, ILogger<HumanitarianAssistanceInitializer> logger)
@@ -742,90 +754,90 @@ namespace HumanitarianAssistance.Persistence
             {
                 List<ProvinceDetails> list = new List<ProvinceDetails>
                 {
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Badghis" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Baghlan" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Balkh" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Bamyan" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Daykundi" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Farah" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Faryab" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Ghazni" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Ghor" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Helmand" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Herat" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Jowzjan" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Kabul" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Kandahar" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Kapisa" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Khost" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Kunar" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Kunduz" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Laghman" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Logar" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Wardak" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Nangarhar" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Nimruz" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Nuristan" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Paktia" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Paktika" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Panjshir" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Parwan" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Samangan" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Sar-e Pol" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Takhar" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Urozgan" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Zabul" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Alabama" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Alaska" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Arizona" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Arkansas" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "California" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Colorado" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Connecticut" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Delaware" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Florida" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Georgia" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Hawaii" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Idaho" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Illinois" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Indiana" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Iowa" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Kansas" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Kentucky" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Louisiana" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Maine" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Maryland" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Massachusetts" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Michigan" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Minnesota" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Mississippi" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Missouri" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Montana" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Nebraska" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Nevada" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "New Hampshire" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "New Jersey" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "New Mexico" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "New York" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "North Carolina" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "North Dakota" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Ohio" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Oklahoma" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Oregon" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Pennsylvania" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Rhode Island" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "South Carolina" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "South Dakota" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Tennessee" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Texas" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Utah" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Vermont" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Virginia" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Washington" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "West Virginia" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Wisconsin" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Wyoming" },
-                    new ProvinceDetails { IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Badakhshan" }
+                    new ProvinceDetails { ProvinceId = 1, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Badghis" },
+                    new ProvinceDetails { ProvinceId = 2, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Baghlan" },
+                    new ProvinceDetails { ProvinceId = 3, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Balkh" },
+                    new ProvinceDetails { ProvinceId = 4, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Bamyan" },
+                    new ProvinceDetails { ProvinceId = 5, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Daykundi" },
+                    new ProvinceDetails { ProvinceId = 6, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Farah" },
+                    new ProvinceDetails { ProvinceId = 7, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Faryab" },
+                    new ProvinceDetails { ProvinceId = 8, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Ghazni" },
+                    new ProvinceDetails { ProvinceId = 9, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Ghor" },
+                    new ProvinceDetails { ProvinceId = 10, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Helmand" },
+                    new ProvinceDetails { ProvinceId = 11, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Herat" },
+                    new ProvinceDetails { ProvinceId = 12, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Jowzjan" },
+                    new ProvinceDetails { ProvinceId = 13, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Kabul" },
+                    new ProvinceDetails { ProvinceId = 14, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Kandahar" },
+                    new ProvinceDetails { ProvinceId = 15, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Kapisa" },
+                    new ProvinceDetails { ProvinceId = 16, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Khost" },
+                    new ProvinceDetails { ProvinceId = 17, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Kunar" },
+                    new ProvinceDetails { ProvinceId = 18, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Kunduz" },
+                    new ProvinceDetails { ProvinceId = 19, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Laghman" },
+                    new ProvinceDetails { ProvinceId = 20, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Logar" },
+                    new ProvinceDetails { ProvinceId = 21, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Wardak" },
+                    new ProvinceDetails { ProvinceId = 22, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Nangarhar" },
+                    new ProvinceDetails { ProvinceId = 23, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Nimruz" },
+                    new ProvinceDetails { ProvinceId = 24, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Nuristan" },
+                    new ProvinceDetails { ProvinceId = 25, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Paktia" },
+                    new ProvinceDetails { ProvinceId = 26, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Paktika" },
+                    new ProvinceDetails { ProvinceId = 27, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Panjshir" },
+                    new ProvinceDetails { ProvinceId = 28, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Parwan" },
+                    new ProvinceDetails { ProvinceId = 29, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Samangan" },
+                    new ProvinceDetails { ProvinceId = 30, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Sar-e Pol" },
+                    new ProvinceDetails { ProvinceId = 31, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Takhar" },
+                    new ProvinceDetails { ProvinceId = 32, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Oruzgan" },
+                    new ProvinceDetails { ProvinceId = 33, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Zabul" },
+                    new ProvinceDetails { ProvinceId = 34, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Alabama" },
+                    new ProvinceDetails { ProvinceId = 35, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Alaska" },
+                    new ProvinceDetails { ProvinceId = 36, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Arizona" },
+                    new ProvinceDetails { ProvinceId = 37, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Arkansas" },
+                    new ProvinceDetails { ProvinceId = 38, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "California" },
+                    new ProvinceDetails { ProvinceId = 39, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Colorado" },
+                    new ProvinceDetails { ProvinceId = 40, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Connecticut" },
+                    new ProvinceDetails { ProvinceId = 41, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Delaware" },
+                    new ProvinceDetails { ProvinceId = 42, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Florida" },
+                    new ProvinceDetails { ProvinceId = 43, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Georgia" },
+                    new ProvinceDetails { ProvinceId = 44, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Hawaii" },
+                    new ProvinceDetails { ProvinceId = 45, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Idaho" },
+                    new ProvinceDetails { ProvinceId = 46, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Illinois" },
+                    new ProvinceDetails { ProvinceId = 47, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Indiana" },
+                    new ProvinceDetails { ProvinceId = 48, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Iowa" },
+                    new ProvinceDetails { ProvinceId = 49, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Kansas" },
+                    new ProvinceDetails { ProvinceId = 50, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Kentucky" },
+                    new ProvinceDetails { ProvinceId = 51, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Louisiana" },
+                    new ProvinceDetails { ProvinceId = 52, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Maine" },
+                    new ProvinceDetails { ProvinceId = 53, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Maryland" },
+                    new ProvinceDetails { ProvinceId = 54, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Massachusetts" },
+                    new ProvinceDetails { ProvinceId = 55, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Michigan" },
+                    new ProvinceDetails { ProvinceId = 56, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Minnesota" },
+                    new ProvinceDetails { ProvinceId = 57, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Mississippi" },
+                    new ProvinceDetails { ProvinceId = 58, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Missouri" },
+                    new ProvinceDetails { ProvinceId = 59, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Montana" },
+                    new ProvinceDetails { ProvinceId = 60, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Nebraska" },
+                    new ProvinceDetails { ProvinceId = 61, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Nevada" },
+                    new ProvinceDetails { ProvinceId = 62, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "New Hampshire" },
+                    new ProvinceDetails { ProvinceId = 63, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "New Jersey" },
+                    new ProvinceDetails { ProvinceId = 64, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "New Mexico" },
+                    new ProvinceDetails { ProvinceId = 65, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "New York" },
+                    new ProvinceDetails { ProvinceId = 66, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "North Carolina" },
+                    new ProvinceDetails { ProvinceId = 67, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "North Dakota" },
+                    new ProvinceDetails { ProvinceId = 68, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Ohio" },
+                    new ProvinceDetails { ProvinceId = 69, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Oklahoma" },
+                    new ProvinceDetails { ProvinceId = 70, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Oregon" },
+                    new ProvinceDetails { ProvinceId = 71, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Pennsylvania" },
+                    new ProvinceDetails { ProvinceId = 72, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Rhode Island" },
+                    new ProvinceDetails { ProvinceId = 73, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "South Carolina" },
+                    new ProvinceDetails { ProvinceId = 74, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "South Dakota" },
+                    new ProvinceDetails { ProvinceId = 75, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Tennessee" },
+                    new ProvinceDetails { ProvinceId = 76, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Texas" },
+                    new ProvinceDetails { ProvinceId = 77, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Utah" },
+                    new ProvinceDetails { ProvinceId = 78, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Vermont" },
+                    new ProvinceDetails { ProvinceId = 79, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Virginia" },
+                    new ProvinceDetails { ProvinceId = 80, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Washington" },
+                    new ProvinceDetails { ProvinceId = 81, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "West Virginia" },
+                    new ProvinceDetails { ProvinceId = 82, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Wisconsin" },
+                    new ProvinceDetails { ProvinceId = 83, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 2, ProvinceName = "Wyoming" },
+                    new ProvinceDetails { ProvinceId = 84, IsDeleted = false, CreatedDate = DateTime.UtcNow, CountryId = 1, ProvinceName = "Badakhshan" }
                };
                 await context.ProvinceDetails.AddRangeAsync(list);
                 await context.SaveChangesAsync();
@@ -1592,77 +1604,5 @@ namespace HumanitarianAssistance.Persistence
                 throw new Exception(ex.Message);
             }
         }
-
-        private static async Task AddStoreInventorySeedData(HumanitarianAssistanceDbContext context)
-        {
-            try
-            {
-                List<StoreInventory> list = new List<StoreInventory>
-                {
-                    new StoreInventory { AssetType= (int)InventoryMasterType.Consumables, InventoryCode= "C01", InventoryName="Transport", InventoryDescription ="Transport", IsDeleted= false, CreatedDate= DateTime.UtcNow },
-                    new StoreInventory { AssetType= (int)InventoryMasterType.Expendables, InventoryCode= "E01", InventoryName="Transport", InventoryDescription ="Transport", IsDeleted= false, CreatedDate= DateTime.UtcNow },
-                    new StoreInventory { AssetType= (int)InventoryMasterType.NonExpendables, InventoryCode= "N01", InventoryName="Transport", InventoryDescription ="Transport", IsDeleted= false, CreatedDate= DateTime.UtcNow }
-                };
-               
-                await context.StoreInventories.AddRangeAsync(list);
-                await context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        private static async Task AddStoreItemGroupSeedData(HumanitarianAssistanceDbContext context)
-        {
-            try
-            {
-                List<StoreItemGroup> list = new List<StoreItemGroup>
-                {
-                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="C01-01", ItemGroupName= "Vehicle", InventoryId =1},
-                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="C01-02", ItemGroupName= "Generator", InventoryId =1},
-                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="E01-01", ItemGroupName= "Vehicle", InventoryId =2},
-                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="E01-02", ItemGroupName= "Generator", InventoryId =2},
-                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="N01-01", ItemGroupName= "Vehicle", InventoryId =3},
-                    new StoreItemGroup { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemGroupCode ="N01-02", ItemGroupName= "Generator", InventoryId =3},
-                };
-                await context.StoreItemGroups.AddRangeAsync(list);
-                await context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        private static async Task AddStoreItemSeedData(HumanitarianAssistanceDbContext context)
-        {
-            try
-            {
-                List<StoreInventoryItem> list = new List<StoreInventoryItem>
-                {
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=1, ItemCode ="C01-01-01", ItemName= "Vehicle Fuel"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=2, ItemCode ="C01-02-01", ItemName= "Generator Fuel"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=1, ItemCode ="C01-01-02", ItemName= "Vehicle Mobil Oil"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=2, ItemCode ="C01-02-02", ItemName= "Generator Mobil Oil"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=1, ItemCode ="C01-01-03", ItemName= "Vehicle Maintenance Service"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 1, ItemGroupId=2, ItemCode ="C01-02-03", ItemName= "Generator Maintenance Service"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 2, ItemGroupId=3, ItemCode ="E01-01-01", ItemName= "Vehicle"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 2, ItemGroupId=4, ItemCode ="E01-02-01", ItemName= "Generator"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 2, ItemGroupId=3, ItemCode ="E01-01-02", ItemName= "Vehicle Spare Parts"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 2, ItemGroupId=4, ItemCode ="E01-02-02", ItemName= "Generator Spare Parts"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 3, ItemGroupId=5, ItemCode ="N01-01-01", ItemName= "Vehicle"},
-                    new StoreInventoryItem { IsDeleted = false, CreatedDate = DateTime.UtcNow, ItemInventory= 3, ItemGroupId=6, ItemCode ="N01-02-01", ItemName= "Generator"},
-                };
-
-                await context.InventoryItems.AddRangeAsync(list);
-                await context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
     }
 }

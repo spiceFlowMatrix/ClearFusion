@@ -48,13 +48,15 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
         }
 
         [HttpPost]
-        public async Task<ApiResponse> DeleteOfficeDetails([FromBody] DeleteOfficeDetailCommand model)
+        public async Task<ApiResponse> DeleteOfficeDetails([FromBody] int Id)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            model.ModifiedById = userId;
-            model.ModifiedDate = DateTime.UtcNow;
-            model.CreatedById = userId;
-            model.CreatedDate = DateTime.UtcNow;
+            DeleteOfficeDetailCommand model = new DeleteOfficeDetailCommand()
+            {
+                OfficeId = Id,
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow
+            };
             return await _mediator.Send(model);
         }
 
@@ -385,6 +387,21 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
         {
             return await _mediator.Send(new GetAllProfessionQuery());
         }
+        // [HttpGet]
+        // public async Task<ApiResponse> GetAllEducationDegree()
+        // {
+        //     return await _mediator.Send(new GetAllEducationDegreeQuery());
+        // }
+         [HttpPost]
+        public async Task<IActionResult> DeleteProfession([FromBody] int Id)
+        {
+           return Ok(await _mediator.Send(new DeleteProfessionDetailsCommand
+            {
+                Id = Id,
+                ModifiedById = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                ModifiedDate = DateTime.UtcNow
+            }));
+        }
         #endregion
 
         #region "Country detail"
@@ -532,7 +549,18 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
             return await _mediator.Send(new GetAllDepartmentQuery());
         }
 
-        #endregion
+        [HttpPost]
+        public async Task<IActionResult> DeleteDepartment([FromBody] int Id)
+        {
+            return Ok(await _mediator.Send(new DeleteDepartmentCommand
+            {
+                Id = Id,
+                ModifiedById = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                ModifiedDate = DateTime.UtcNow
+            }));
+
+        }
+        #endregion 
 
         #region "Qualification detail"
         [HttpPost]
@@ -703,7 +731,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
         public async Task<ApiResponse> GetAllRatingBasedCriteriaQuestionsByOfficeId([FromQuery] int OfficeId)
         {
             return await _mediator.Send(new GetAllRatingBasedCriteriaQuestionsByOfficeIdQuery { OfficeId = OfficeId });
-        }    
+        }
         [HttpPost]
         public async Task<ApiResponse> AddRatingBasedCriteriaQuestions([FromBody]AddRatingBasedCriteriaQuestionsCommand model)
         {
@@ -711,7 +739,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
             model.CreatedById = userId;
             model.CreatedDate = DateTime.UtcNow;
             return await _mediator.Send(model);
-        }  
+        }
         [HttpPost]
         public async Task<ApiResponse> EditRatingBasedCriteriaQuestions([FromBody]EditRatingBasedCriteriaQuestionsCommand model)
         {
@@ -720,9 +748,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
             model.ModifiedDate = DateTime.UtcNow;
             return await _mediator.Send(model);
         }
-        
+
         #endregion
-         
+
         #region "Interview Technical Questions"
         [HttpPost]
         public async Task<ApiResponse> AddInterviewTechnicalQuestions([FromBody]AddInterviewTechnicalQuestionsCommand model)
@@ -883,6 +911,17 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
             return await _mediator.Send(model);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> DeleteAttendanceGroups([FromBody] int Id)
+        {
+            return Ok(await _mediator.Send(new DeleteAttendanceGroupsCommand
+            {
+                Id = Id,
+                ModifiedById = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                ModifiedDate = DateTime.UtcNow
+            }));
+
+        }
         #endregion
 
         [HttpGet]
@@ -910,6 +949,18 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
         }
 
         [HttpPost]
+        public async Task<IActionResult> DeleteJobGradeDetail([FromBody] int Id)
+        {
+            return Ok(await _mediator.Send(new DeleteJobGradeDetailCommand
+            {
+                Id = Id,
+                ModifiedById = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                ModifiedDate = DateTime.UtcNow
+            }));
+
+        }
+        [HttpPost]
+        
         public async Task<ApiResponse> AddTechnicalQuestions([FromBody]AddTechnicalQuestionsCommand model)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -961,6 +1012,19 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
                 return BadRequest(result.Exception.InnerException.Message);
             }
         }
+
+        [HttpGet]
+        public async Task<object> GetAllDesignationList()
+        {
+            return await _mediator.Send(new GetAllDesignationListQuery { });
+        }
+
+        [HttpGet]
+        public async Task<object> GetAllEducationDegreeList()
+        {
+            return await _mediator.Send(new GetAllEducationDegreeListQuery { });
+        }
+
 
     }
 }

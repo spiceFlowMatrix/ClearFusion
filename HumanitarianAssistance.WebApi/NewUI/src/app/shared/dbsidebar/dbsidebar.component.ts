@@ -36,6 +36,7 @@ export class DbsidebarComponent implements OnInit {
 
   ConfigurationPages: any = {
     AppraisalQuestions: ApplicationPages.AppraisalQuestions,
+    RatingQuestions: ApplicationPages.RatingQuestions,
     CurrencyCodes: ApplicationPages.CurrencyCodes,
     Department: ApplicationPages.Department,
     Designation: ApplicationPages.Designation,

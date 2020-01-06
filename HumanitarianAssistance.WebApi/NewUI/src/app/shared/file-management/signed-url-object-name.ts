@@ -14,6 +14,18 @@ import { FileSourceEntityTypes } from '../enum';
       case FileSourceEntityTypes.Employee:
       objectName = 'employeeprofileimage/' + entityId + '/';
       break;
+      case FileSourceEntityTypes.ComparativeStatement:
+      objectName = 'comparativeStatement/' + entityId + '/';
+      break;
+      case FileSourceEntityTypes.HiringRequestCandidateCV:
+      objectName = 'HiringRequestCandidateCV/' + entityId + '/';
+      break;
+      case FileSourceEntityTypes.ProjectLogisticPurchase:
+      objectName = 'ProjectLogisticPurchase/' + entityId + '/';
+      break;
+      case FileSourceEntityTypes.GoodsRecievedDocument:
+      objectName = 'GoodsRecievedDocument/' + entityId + '/';
+      break;
     }
 
     return objectName;

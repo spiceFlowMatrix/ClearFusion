@@ -1,0 +1,103 @@
+<lib-sub-header-template>
+  <span class="action_header"> <i (click)="goToListingPage()" class="fas fa-arrow-left"></i> &nbsp; &nbsp; Procurement Control Panel
+    <hum-button [type]="'edit'" [text]="'EDIT'" (click)="editProcurement()"></hum-button>
+    <hum-button [type]="'cancel'" [text]="'CANCEL PROCUREMENT'" (click)="cancelProcurement()"></hum-button>
+  </span>
+</lib-sub-header-template>
+<mat-divider></mat-divider>
+  <div class="container" humAddScroll [height]="150">
+    <h4>Procurement Details</h4>
+    <br>
+    <div class="row">
+      <div class="col-md-6">
+        <table class="table table-striped">
+          <tr>
+            <td><b>Id</b></td>
+            <td>{{procurementDetail.Id}}</td>
+          </tr>
+          <tr>
+            <td><b>Purchase Id</b></td>
+            <td>{{procurementDetail.PurchaseId}}</td>
+          </tr>
+          <tr>
+            <td><b>Starting Balance/Quantity</b></td>
+            <td>{{procurementDetail.StartingBalance}}</td>
+          </tr>
+          <tr>
+            <td><b>Current Balance/Quantity</b></td>
+            <td>{{procurementDetail.CurrentBalance}}</td>
+          </tr>
+          <tr>
+            <td><b>Must Return</b></td>
+            <td>{{procurementDetail.MustReturn? 'Yes': 'No'}}</td>
+          </tr>
+          <tr>
+            <td><b>Status</b></td>
+            <td>{{procurementDetail.Status}}</td>
+          </tr>
+          <tr>
+            <td><b>Date</b></td>
+            <td>{{procurementDetail.Date}}</td>
+          </tr>
+          <tr>
+            <td><b>Item Code</b></td>
+            <td>{{procurementDetail.ItemCode}}</td>
+          </tr>
+          <tr>
+            <td><b>Project</b></td>
+            <td>{{procurementDetail.Project}}</td>
+          </tr>
+          <tr>
+            <td><b>Voucher</b></td>
+            <td>{{procurementDetail.Voucher}}</td>
+          </tr>
+          <tr>
+            <td><b>Issued To Employee</b></td>
+            <td>{{procurementDetail.IssuedToEmployee}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-1">
+        <h4>Returns</h4>
+      </div>
+      <div class="col-md-11">
+        <hum-button [type]="'add'" *ngIf="quantity > 0" [text]="'ADD RETURNS'" (click)="addReturns()"></hum-button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <hum-table [headers]="returnListHeaders$" [items]="returnList" (actionClick)="actionEvents($event)"
+          [actions]="actions" [hideColums$]="hideColums"></hum-table>
+      </div>
+    </div>
+  </div>
+
+
+<ng-template #unittype>
+  <h1 mat-dialog-title> Add Returns</h1>
+  <form [formGroup]="addReturnsForm" (ngSubmit)="saveAddReturns()">
+  <div mat-dialog-content>
+      <div class="row">
+        <div class="col-sm-6">
+          <mat-form-field>
+            <input matInput formControlName="Date" [matDatepicker]="picker" placeholder="Choose a date">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+          <mat-form-field>
+            <input type="number" matInput formControlName="Quantity" placeholder="Quantity">
+            <mat-error *ngIf="addReturnsForm.controls['Quantity'].hasError('max')">Max return quantity allowed is {{quantity}}</mat-error>
+            <mat-error>Required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+  </div>
+  <div mat-dialog-actions>
+    <hum-button [disabled]="!addReturnsForm.valid || !addReturnsForm.dirty" [type]="'save'" [isSubmit]="true" [text]="'Save'"></hum-button>
+  </div>
+</form>
+</ng-template>

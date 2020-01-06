@@ -45,16 +45,20 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                       PurchaseId= x.PurchaseId,
                                                       TotalCost = x.StoreItemPurchase.UnitCost +
                                                                   x.GeneratorItemDetail.Where(y => y.IsDeleted == false &&
-                                                                  y.GeneratorPurchaseId == x.Id && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorFuel)
+                                                                  y.GeneratorPurchaseId == x.Id && y.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                                     y.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.Fuel)
                                                                                .Select(z => z.StoreItemPurchase.Quantity * z.StoreItemPurchase.UnitCost).DefaultIfEmpty(0).Sum() +
                                                                   x.GeneratorItemDetail.Where(y => y.IsDeleted == false &&
-                                                                  y.GeneratorPurchaseId == x.Id && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMobilOil)
+                                                                  y.GeneratorPurchaseId == x.Id && y.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                                     y.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MobilOil)
                                                                                .Select(z => z.StoreItemPurchase.Quantity * z.StoreItemPurchase.UnitCost).DefaultIfEmpty(0).Sum() +
                                                                   x.GeneratorItemDetail.Where(y => y.IsDeleted == false &&
-                                                                  y.GeneratorPurchaseId == x.Id && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorSpareParts)
+                                                                  y.GeneratorPurchaseId == x.Id && y.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                                     y.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.SpareParts)
                                                                                .Select(z => z.StoreItemPurchase.Quantity * z.StoreItemPurchase.UnitCost).DefaultIfEmpty(0).Sum() +
                                                                   x.GeneratorItemDetail.Where(y => y.IsDeleted == false &&
-                                                                  y.GeneratorPurchaseId == x.Id && y.StoreItemPurchase.StoreInventoryItem.ItemId == (int)TransportItem.GeneratorMaintenanceService)
+                                                                  y.GeneratorPurchaseId == x.Id && y.StoreItemPurchase.StoreInventoryItem.StoreItemGroup.ItemTypeCategory == (int)TransportItemCategory.Generator &&
+                                                     y.StoreItemPurchase.StoreInventoryItem.ItemTypeCategory == (int)TransportItemCategory.MaintenanceService)
                                                                                .Select(z => z.StoreItemPurchase.Quantity * z.StoreItemPurchase.UnitCost).DefaultIfEmpty(0).Sum(),
                                                       OriginalCost = x.StoreItemPurchase.UnitCost,
                                                       OfficeId = x.OfficeId,

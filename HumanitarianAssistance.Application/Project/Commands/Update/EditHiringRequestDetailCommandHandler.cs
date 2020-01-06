@@ -35,45 +35,56 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                     ProjectHiringRequestDetail projectHiringRequest = await _dbContext.ProjectHiringRequestDetail
                                                                                               .FirstOrDefaultAsync(x => x.HiringRequestId == request.HiringRequestId &&
                                                                                                                         x.IsDeleted == false);
-                                 // Note : edit ProjectJob in old Ui
-                if (request.JobCategory != null && request.TotalVacancy!=projectHiringRequest.TotalVacancies  ) {
-                    var jobdetail = await _dbContext.ProjectJobHiringDetail.Where (x => x.JobId == request.JobCategory).FirstOrDefaultAsync ();
-                    var temp=projectHiringRequest.TotalVacancies - request.TotalVacancy;
-                    if(temp>0)
+                    // Note : edit ProjectJob in old Ui
+                    if (projectHiringRequest != null && request.JobCategory != null && request.TotalVacancy != projectHiringRequest.TotalVacancies)
                     {
-                        jobdetail.FilledVacancies=jobdetail.FilledVacancies+temp;
-                    }else{
-                            jobdetail.FilledVacancies=jobdetail.FilledVacancies-(temp * -1);
+                        var jobdetail = await _dbContext.ProjectJobHiringDetail.Where(x => x.JobId == request.JobCategory).FirstOrDefaultAsync();
+                        var temp = projectHiringRequest.TotalVacancies - request.TotalVacancy;
+                        if (temp > 0)
+                        {
+                            jobdetail.FilledVacancies = jobdetail.FilledVacancies + temp;
+                        }
+                        else
+                        {
+                            jobdetail.FilledVacancies = jobdetail.FilledVacancies - (temp * -1);
+                        }
+                        await _dbContext.SaveChangesAsync();
                     }
-                    await _dbContext.SaveChangesAsync ();
-                }
-                    projectHiringRequest.ModifiedById = request.CreatedById;
-                    projectHiringRequest.ModifiedDate = request.CreatedDate;
+                    projectHiringRequest.ModifiedById = request.ModifiedById;
+                    projectHiringRequest.ModifiedDate = request.ModifiedDate;
                     projectHiringRequest.IsDeleted = false;
                     projectHiringRequest.OfficeId = request.Office;
-                    projectHiringRequest.ProfessionId = request.Position;
+                    // projectHiringRequest.ProfessionId = request.Position;
+                    projectHiringRequest.HourlyRate= request.PayHourlyRate;
                     projectHiringRequest.ProjectId = request.ProjectId;
                     projectHiringRequest.TotalVacancies = request.TotalVacancy;
                     projectHiringRequest.AnouncingDate = request.AnouncingDate;
-                   // projectHiringRequest.JobType = request.JobType;
+                    projectHiringRequest.PositionId= request.Position;
+                    projectHiringRequest.BudgetLineId= request.BudgetLine;
                     projectHiringRequest.Background = request.Background;
                     projectHiringRequest.JobStatus = request.JobStatus;
                     projectHiringRequest.JobId = request.JobCategory;
+                    projectHiringRequest.JobTypeId= request.JobType;
+
                     projectHiringRequest.KnowladgeAndSkillRequired = request.KnowledgeAndSkillsRequired;
                     projectHiringRequest.SalaryRange = request.SalaryRange;
                     projectHiringRequest.Shift = request.JobShift;
-                    projectHiringRequest.ProvinceId = request.Province;
+                    projectHiringRequest.ProvinceId = request.ProvinceId;
                     projectHiringRequest.SpecificDutiesAndResponsblities = request.SpecificDutiesAndResponsibilities;
                     projectHiringRequest.SubmissionGuidlines = request.SubmissionGuidelines;
                     projectHiringRequest.ClosingDate = request.ClosingDate;
                     projectHiringRequest.ContractDuration = request.ContractDuration;
                     projectHiringRequest.ContractType = request.ContractType;
-                    projectHiringRequest.CountryId = request.Country;
+                    projectHiringRequest.CountryId = request.Nationality;
                     projectHiringRequest.GenderId = request.Gender;
+                    projectHiringRequest.CurrencyId= request.PayCurrency;
+                    projectHiringRequest.EducationDegreeId= request.EducationDegree;
                     projectHiringRequest.MinimumEducationLevel = request.MinEducationLevel;
                     projectHiringRequest.Experience = request.Experience;
+                    projectHiringRequest.GradeId= request.JobGrade;
+                    projectHiringRequest.ProfessionId= request.Profession;
                     projectHiringRequest.Organization = request.Organization;
-                    await _dbContext.SaveChangesAsync();   
+                    await _dbContext.SaveChangesAsync();
                 }
                 else
                 {

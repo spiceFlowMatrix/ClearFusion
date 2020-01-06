@@ -1,0 +1,107 @@
+@model List<HumanitarianAssistance.Application.HR.Models.EmployeeAnnualTunoverPdfModel>
+<!doctype html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+    <div class="container">
+        <table style="width:100%;font-family:Arial, Verdana, sans-serif;">
+            <tr>
+                <td>
+                    <table cellpadding="5" style="width:100%;">
+                        <tr>
+                            <td><img src="@Model.First().LogoPath" alt=""></td>
+                            <td style="text-align:left"> <img src = "@Model.First().PersianChaName" alt = ""> </td>
+                        </tr>
+                        <tr>
+                         <td colspan="2" align="center" style="font-size:20px;font-weight:500;">COORDINATION OF HUMANITARIAN ASSISTANCE(CHA)<br>Employee Annual Tunover Report</td>
+                        </tr>
+                    </table>
+<table style="width: 100%; font-size: 14px; text-align: center;" border="1" cellspacing="0" cellpadding="5">
+<tbody>
+<tr>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; " >S#</th>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; " >Emp Code</th>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; " >Name</th>
+<th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; " >Desigantion</th>
+  <th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; " >Office</th>
+  <th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; " >Employee Status</th>
+  <th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; " >Tenure with CHA</th>
+  <th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; " >Reason for Leaving </th>
+  <th style="text-align: center; font-weight: 200; font-size: 10px; background-color: #d5f0dd; color: #000000; " >Remarks</th>
+</tr>
+@foreach (var Item in Model) {
+<tr> 
+<td>@Item.SerialNumber</td>
+<td>@Item.EmployeeCode</td>
+<td>@Item.EmployeeName</td>
+<td>@Item.Designation</td>
+<td>@Item.Office</td>
+<td>@Item.EmployeeStatus</td>
+<td>@Item.Tenure</td>
+<td>
+@if(Item.ReasonForLeavingDetails.Benefits == true) 
+{
+    <label>Benefits,</label>
+} 
+@if(Item.ReasonForLeavingDetails.BetterJobOpportunity == true)
+{
+ <label>Better Job Opportunity,</label>
+} 
+@if(Item.ReasonForLeavingDetails.FamilyReasons == true)
+{ 
+    <label>Family Reasons,</label>
+}
+@if(Item.ReasonForLeavingDetails.NotChallenged == true)
+{
+    <label>Not Challenged,</label>
+}
+@if(Item.ReasonForLeavingDetails.Pay == true)
+{
+    <label>Pay,</label>
+}
+@if(Item.ReasonForLeavingDetails.PersonalReasons == true)
+{
+    <label>Personal Reasons,</label>
+}
+@if(Item.ReasonForLeavingDetails.WorkRelationship == true)
+{
+    <label>Work Relationship,</label>
+}
+@if(Item.ReasonForLeavingDetails.ConflictWithOther == true)
+{
+    <label>Conflict With Other,</label>
+}
+@if(Item.ReasonForLeavingDetails.ConflictWithSuoervisors == true)
+{
+    <label>Conflict With Suoervisors,</label>
+}
+@if(Item.ReasonForLeavingDetails.ReturnToSchool == true)
+{
+    <label>Return To School,</label>
+}
+@if(Item.ReasonForLeavingDetails.Relocation == true)
+{
+    <label>Relocation,</label>
+}
+@if(Item.ReasonForLeavingDetails.CompanyInstability == true)
+{
+    <label>Company Instability,</label>
+}
+@if(Item.ReasonForLeavingDetails.CareerChange == true)
+{
+    <label>Career Change,</label>
+}
+@if(Item.ReasonForLeavingDetails.HealthIssue == true)
+{
+    <label>Health Issue,</label>
+}
+</td>
+<td>@Item.Remarks</td>
+</tr>
+}
+</tbody>
+</table>
+</body>
+</html>

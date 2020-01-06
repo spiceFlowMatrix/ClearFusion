@@ -1,15 +1,14 @@
-<div class="voucher-detail-main">
+<div class="container-fluid">
   <div class="row">
-    <div class="col-sm-12" *ngIf="projectJobsDetailLoader; else projectJobsDetailtemplate">
+    <div *ngIf="projectJobsDetailLoader; else projectJobsDetailtemplate">
       <mat-spinner class="center_loader" diameter="50"></mat-spinner>
     </div>
     <ng-template #projectJobsDetailtemplate>
       <div class="col-sm-12">
+        <h4>Project Job</h4>
+      </div>
 
-        <div class="row">
-          <div class="col-sm-12">
-            <b>Project Job</b>
-            <div *ngIf="editProjectJobsDetailLoader; else showArchive" class="loader-mr-left pull-right">
+      <!-- <div *ngIf="editProjectJobsDetailLoader; else showArchive" class="loader-mr-left pull-right">
               <mat-spinner class="margin_top_10" diameter="20">
               </mat-spinner>
             </div>
@@ -19,23 +18,31 @@
                   <mat-icon matTooltip="Archive">delete</mat-icon>
                 </button>
               </div>
-            </ng-template>
+            </ng-template> -->
 
-          </div>
-
+      <div class="col-sm-12">
+        <div class="col-sm-6 margin_top_10">
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Project Job Name" [(ngModel)]="projectJobsDetail.ProjectJobName"
+              (change)="onProjectJobsValuechange()" />
+          </mat-form-field>
         </div>
-        <br>
-        <br>
-        <div class="row">
-          <div class="col-sm-6">
-            <mat-form-field class="example-full-width">
-              <input matInput placeholder="Project Job Name" [(ngModel)]="projectJobsDetail.ProjectJobName"
-                (change)="onProjectJobsValuechange()" />
-            </mat-form-field>
-          </div>
+        <div class="col-sm-6 margin-top: 7px;" *ngIf=" projectJobsDetail.CanDelete==null; else notallowed">
+          <mat-icon class="icon_cursor small_icon tp_15 icon_width" color="warn"
+            (click)="DeleteProjectJob(projectJobsDetail.ProjectJobId)">
+            delete
+          </mat-icon>
         </div>
-
+        <ng-template #notallowed>
+          <td>
+            <mat-icon class="icon_cursor small_icon tp_15 icon_width" color="darkgray"
+              matTooltip="Project Job is selected in Project Budget Line hence not able to Delete.">
+              delete
+            </mat-icon>
+          </td>
+        </ng-template>
       </div>
+
     </ng-template>
   </div>
 </div>

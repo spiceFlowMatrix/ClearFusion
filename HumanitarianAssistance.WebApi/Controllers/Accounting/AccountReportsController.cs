@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Accounting.Command;
 using HumanitarianAssistance.Application.Accounting.Queries;
@@ -211,9 +212,12 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         /// <param name="accountIds"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ApiResponse> SaveGainLossAccountList([FromBody] List<long> accountIds)
+        public async Task<ApiResponse> SaveGainLossAccountList([FromBody] List<long> AccountIds)
         {
-            return await _mediator.Send(new SaveGainLossAccountListCommand { AccountIds= accountIds } );
+            SaveGainLossAccountListCommand command = new SaveGainLossAccountListCommand();
+            command.AccountIds = AccountIds;
+            command.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return await _mediator.Send(command);
         }
 
         /// <summary>
@@ -253,7 +257,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         {
             return await _mediator.Send(model);
         }
-                
+
         /// <summary>
         /// Get Voucher Summary Report
         /// </summary>

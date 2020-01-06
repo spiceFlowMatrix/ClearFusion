@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.Store;
 using HumanitarianAssistance.Persistence;
@@ -39,6 +40,12 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                 generator.MobilOilConsumptionRate = command.MobilOilConsumptionRate;
                 generator.ModelYear = command.ModelYear;
                 generator.OfficeId = command.OfficeId;
+                generator.PersonRemarks = command.Remarks;
+                generator.RegistrationNo= command.RegistrationNo;
+                generator.PersonRemarks = command.Remarks;
+                generator.ChasisNo = command.ChasisNo;
+                generator.EngineNo = command.EngineNo;
+                generator.EmployeeID= command.EmployeeId;
 
                 _dbContext.PurchasedGeneratorDetail.Update(generator);
 
@@ -49,7 +56,9 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                     CreatedById = command.ModifiedById,
                     IsDeleted = false,
                     EventType = "Generator Edited",
-                    LogText = $"Generator details were edited for generator id-{command.GeneratorId}"
+                    LogText = $"Generator details were edited",
+                    TransportType= (int)TransportItemCategory.Generator,
+                    TransportTypeEntityId= command.GeneratorId
                 };
 
                 await _dbContext.StoreLogger.AddAsync(logger);

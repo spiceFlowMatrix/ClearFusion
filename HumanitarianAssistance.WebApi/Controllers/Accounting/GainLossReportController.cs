@@ -24,7 +24,8 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         [HttpGet]
         public async Task<ApiResponse> GetExchangeGainLossFilterAccountList()
         {
-            return await _mediator.Send(new GetExchangeGainLossFilterAccountListQuery());
+            string UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return await _mediator.Send(new GetExchangeGainLossFilterAccountListQuery {UserId = UserId});
         }
 
         [HttpGet]
@@ -61,6 +62,24 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
                 ModifiedById = userId,
                 ModifiedDate = DateTime.UtcNow
             });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetGainLossCaculatorConfiguration()
+        {
+            GetGainLossCaculatorConfigurationQuery model = new GetGainLossCaculatorConfigurationQuery
+            {
+                UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value
+            };
+            var result= await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDefaultAccountingPeriod()
+        {
+            var result= await _mediator.Send(new GetDefaultAccountingPeriodQuery { });
+            return Ok(result);
         }
 
     }

@@ -69,6 +69,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                 model = await _dbContext.StoreItemPurchases
                                   .Include(x=> x.StoreInventoryItem)
                                   .ThenInclude(x=> x.Inventory)
+                                  .Include(x=> x.StoreInventoryItem)
+                                  .ThenInclude(x=> x.StoreItemGroup)
                                   .Include(x=> x.PurchasedVehicleDetailList)
                                   .Include(x=> x.PurchasedGeneratorDetailList)
                                   .Include(x=> x.GeneratorItemDetail)
@@ -107,6 +109,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                        OfficeId= z.OfficeId,
                                        JournalCode= z.JournalCode,
                                        PurchaseName= z.PurchaseName,
+                                       TransportItemTypeCategory= z.StoreInventoryItem.ItemTypeCategory,
+                                       ItemGroupTransportCategory= z.StoreInventoryItem.StoreItemGroup.ItemTypeCategory,
                                        TransportItemId= z.GeneratorItemDetail != null ? z.GeneratorItemDetail.GeneratorPurchaseId :
                                                         z.VehicleItemDetail != null ? z.VehicleItemDetail.VehiclePurchaseId : 0,
                                        PurchasedVehicleList = z.PurchasedVehicleDetailList.Where(x=> x.IsDeleted == false)
@@ -121,8 +125,12 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                                    MobilOilConsumptionRate= y.MobilOilConsumptionRate,
                                                                    OfficeId= y.OfficeId,
                                                                    ModelYear= y.ModelYear,
-                                                                   PurchaseId= y.PurchaseId
-
+                                                                   PurchaseId= y.PurchaseId,
+                                                                   ChasisNo= y.ChasisNo,
+                                                                   EngineNo= y.EngineNo,
+                                                                   ManufacturerCountry= y.ManufacturerCountry,
+                                                                   RegistrationNo= y.RegistrationNo,
+                                                                   Remarks= y.PersonRemarks
                                                                }).ToList(),
                                     PurchasedGeneratorList = z.PurchasedGeneratorDetailList.Where(x=> x.IsDeleted== false)
                                                               .Select(y=> new PurchasedGeneratorModel 
@@ -135,7 +143,13 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                                    MobilOilConsumptionRate= y.MobilOilConsumptionRate,
                                                                    OfficeId= y.OfficeId,
                                                                    ModelYear= y.ModelYear,
-                                                                   PurchaseId= y.PurchaseId
+                                                                   PurchaseId= y.PurchaseId,
+                                                                   ChasisNo= y.ChasisNo,
+                                                                   EngineNo= y.EngineNo,
+                                                                   ManufacturerCountry= y.ManufacturerCountry,
+                                                                   RegistrationNo= y.RegistrationNo,
+                                                                   Remarks= y.PersonRemarks,
+                                                                   EmployeeId= y.EmployeeID
                                                                }).ToList()
                                    }).FirstOrDefaultAsync();
 

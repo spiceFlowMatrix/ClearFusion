@@ -54,8 +54,9 @@
                                                     <div class="usr-name-hdd">
                                                         <h4>{{data.EmployeeName == null ? "" : data.EmployeeName}}</h4>
                                                     </div>
-                                                    <div class="usr-sx-age">{{data.SexName == null ? "" :
-                                                        data.SexName}}, {{ageCalculator(data.EmployeeDOB)}}</div>
+                                                    <div class="usr-sx-age">
+                                                        {{data.SexName == null ? "" : data.SexName}},
+                                                        {{ageCalculator(data.EmployeeDOB)}}</div>
                                                 </div>
                                             </a>
                                         </div>
@@ -89,8 +90,9 @@
                                                         <h4>{{data.EmployeeName == null ? "" : data.EmployeeName}}</h4>
                                                     </div>
                                                     <!-- <div class="usr-sx-age">{{data.SexName == null ? "" : data.SexName}}, {{data.Age == null ? "" : data.Age}}</div> -->
-                                                    <div class="usr-sx-age">{{data.SexName == null ? "" :
-                                                        data.SexName}}, {{ageCalculator(data.EmployeeDOB)}}</div>
+                                                    <div class="usr-sx-age">
+                                                        {{data.SexName == null ? "" : data.SexName}},
+                                                        {{ageCalculator(data.EmployeeDOB)}}</div>
                                                 </div>
                                             </a>
                                         </div>
@@ -122,8 +124,9 @@
                                                     <div class="usr-name-hdd">
                                                         <h4>{{data.EmployeeName == null ? "" : data.EmployeeName}}</h4>
                                                     </div>
-                                                    <div class="usr-sx-age">{{data.SexName == null ? "" : data.SexName
-                                                        }}, {{ageCalculator(data.EmployeeDOB)}}</div>
+                                                    <div class="usr-sx-age">
+                                                        {{data.SexName == null ? "" : data.SexName }},
+                                                        {{ageCalculator(data.EmployeeDOB)}}</div>
                                                 </div>
                                             </a>
                                         </div>
@@ -368,48 +371,48 @@
 
 
 <!-- Document Popup -->
-<dx-popup class="popup doc-popup-content" [width]="500" [height]="300" title="Documents" [showTitle]="true" [dragEnabled]="false"
-    [closeOnOutsideClick]="true" [(visible)]="popupVisibleDocument" [shading]="true" shadingColor="rgba(0, 0, 0, 0.5)">
+<dx-popup class="popup doc-popup-content" [width]="500" [height]="300" title="Documents" [showTitle]="true"
+    [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupVisibleDocument" [shading]="true"
+    shadingColor="rgba(0, 0, 0, 0.5)">
     <div *dxTemplate="let data of 'content'">
-            <dx-scroll-view [height]="250" showScrollbar="always" direction="both">
+        <dx-scroll-view [height]="250" showScrollbar="always" direction="both">
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="main-heading">
-                </div>
-                <div class="doc-iframe-outer">
-                    <!-- <iframe [src]="docpath" style="text-align: center;" height="500px" width="400px"></iframe> -->
-                
-                <ul *ngFor="let item of DocumentFileList">
-                    <li style="text-align: start">
-                        {{item.FileName}}
-                    </li>
-                </ul>
-                </div>
-            </div>
-            <div class="doc-popftr" *ngIf="isEditingAllowed">
-                <div class="doc-popftr-inside">
-                    <div class="doc-popup-dwnload-icon">
-                        <a [href]="docpath" target="_blank">
-                            <i class="fa fa-download"></i>
-                        </a>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="main-heading">
                     </div>
-                    <div class="doc-popup-select-drop">
-                        <dx-select-box [dataSource]="DocumentFileList"
-                            valueExpr="FileSignedUrl" displayExpr="FileName"
-                            (onItemClick)="selectDoc($event.itemData)">
-                        </dx-select-box>
-                    </div>
-                    <div class="doc-popup-ad-btn">
-                        <a href="javascript:void(0);" (click)="addDocument()">
-                            <i aria-hidden="true" class="fa fa-plus-circle"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+                    <div class="doc-iframe-outer">
+                        <!-- <iframe [src]="docpath" style="text-align: center;" height="500px" width="400px"></iframe> -->
 
-        </div>
-    </dx-scroll-view>
+                        <ul *ngFor="let item of DocumentFileList">
+                            <li style="text-align: start">
+                                {{item.FileName}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="doc-popftr" *ngIf="isEditingAllowed">
+                    <div class="doc-popftr-inside">
+                        <div class="doc-popup-dwnload-icon">
+                            <a [href]="docpath" target="_blank">
+                                <i class="fa fa-download"></i>
+                            </a>
+                        </div>
+                        <div class="doc-popup-select-drop">
+                            <dx-select-box [dataSource]="DocumentFileList" valueExpr="FileSignedUrl"
+                                displayExpr="FileName" (onItemClick)="selectDoc($event.itemData)">
+                            </dx-select-box>
+                        </div>
+                        <div class="doc-popup-ad-btn">
+                            <a href="javascript:void(0);" (click)="addDocument()">
+                                <i aria-hidden="true" class="fa fa-plus-circle"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </dx-scroll-view>
     </div>
 </dx-popup>
 
@@ -494,41 +497,46 @@
                     </dxi-item>
 
                     <dxi-item dataField="Email">
-                            <dxi-validation-rule type="required" message="Email is required">
-                            </dxi-validation-rule>
-                            <dxi-validation-rule type="email"></dxi-validation-rule>
-                        </dxi-item>
-    
-                        <dxi-item dataField="TinNumber">
-                            <dxi-validation-rule type="required">
-                            </dxi-validation-rule>
-                        </dxi-item>
-    
-                        <dxi-item dataField="GradeId" caption="Grade" editorType="dxSelectBox"
-                            [editorOptions]="{ dataSource: jobGradeTypeDropdown, displayExpr: 'Name', valueExpr: 'Id'  }">
-                            <dxo-label text="Grade"></dxo-label>
-                            <dxi-validation-rule type="required"> </dxi-validation-rule>
-                        </dxi-item>
+                        <dxi-validation-rule type="required" message="Email is required">
+                        </dxi-validation-rule>
+                        <dxi-validation-rule type="email"></dxi-validation-rule>
+                    </dxi-item>
 
-                        <dxi-item *ngIf="tabEventValue == 2" dataField="AttendanceGroupId" editorType="dxSelectBox" [editorOptions]="{
+                    <dxi-item dataField="TinNumber" caption="TIN Number"
+                        [editorOptions]="{ inputAttr: {'style': 'text-transform: uppercase !important'} }">
+
+                        <dxo-label text="TIN Number"></dxo-label>
+                        <dxi-validation-rule type="required">
+                        </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="GradeId" caption="Grade" editorType="dxSelectBox"
+                        [editorOptions]="{ dataSource: jobGradeTypeDropdown, displayExpr: 'Name', valueExpr: 'Id'  }">
+                        <dxo-label text="Grade"></dxo-label>
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item *ngIf="tabEventValue == 2" dataField="AttendanceGroupId" editorType="dxSelectBox"
+                        [editorOptions]="{
                             dataSource: attendanceGroupList, 
                             displayExpr: 'Name',
                             valueExpr: 'Id'}">
-                                <dxo-label text="Attendance Group">
-                                </dxo-label>
-                                <dxi-validation-rule type="required"> </dxi-validation-rule>
-                            </dxi-item>
+                        <dxo-label text="Attendance Group">
+                        </dxo-label>
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                    </dxi-item>
 
-                            <dxi-item *ngIf="tabEventValue == 2" dataField="DutyStation" editorType="dxSelectBox" [editorOptions]="{
+                    <dxi-item *ngIf="tabEventValue == 2" dataField="DutyStation" editorType="dxSelectBox"
+                        [editorOptions]="{
                                 dataSource: officecodelist, 
                                 displayExpr: 'OfficeName',
                                 valueExpr: 'Office'}">
-                                <dxi-validation-rule type="required"> </dxi-validation-rule>
-                                <dxo-label text="Duty Station"></dxo-label>
-                              </dxi-item>
-                    
+                        <dxi-validation-rule type="required"> </dxi-validation-rule>
+                        <dxo-label text="Duty Station"></dxo-label>
+                    </dxi-item>
 
-                        <dxi-item dataField="Phone" editorType="dxNumberBox"
+
+                    <dxi-item dataField="Phone" editorType="dxNumberBox"
                         [editorOptions]="{  mode: 'number', minLength:10, maxLength: 14}">
                         <dxi-validation-rule type="custom"
                             [validationCallback]="validateRange(1000000000, 99999999999999)" message="Out of range">
@@ -536,19 +544,17 @@
                         <dxi-validation-rule type="required"> </dxi-validation-rule>
                     </dxi-item>
 
-                    <dxi-item dataField="CountryId" 
-                    editorType="dxSelectBox"
-                    [editorOptions]="{ dataSource: countryTypeDropdown, displayExpr: 'CountryName', valueExpr: 'CountryId'}"
-                    >
-                            <dxo-label text="Country"></dxo-label>
-                            <dxi-validation-rule type="required" message="Country is required">
-                            </dxi-validation-rule>
-                        </dxi-item>
-    
-                        <dxi-item dataField="ProvinceId" editorType="dxSelectBox"
-                            [editorOptions]="{ dataSource: stateTypeDropdown, displayExpr: 'ProvinceName', valueExpr: 'ProvinceId', searchEnabled: true }">
-                            <dxo-label text="State"></dxo-label>
-                        </dxi-item>
+                    <dxi-item dataField="CountryId" editorType="dxSelectBox"
+                        [editorOptions]="{ dataSource: countryTypeDropdown, displayExpr: 'CountryName', valueExpr: 'CountryId'}">
+                        <dxo-label text="Country"></dxo-label>
+                        <dxi-validation-rule type="required" message="Country is required">
+                        </dxi-validation-rule>
+                    </dxi-item>
+
+                    <dxi-item dataField="ProvinceId" editorType="dxSelectBox"
+                        [editorOptions]="{ dataSource: stateTypeDropdown, displayExpr: 'ProvinceName', valueExpr: 'ProvinceId', searchEnabled: true }">
+                        <dxo-label text="State"></dxo-label>
+                    </dxi-item>
 
                     <dxi-item *ngIf="tabEventValue == 2" dataField="EmployeeContractTypeId" editorType="dxSelectBox"
                         [editorOptions]="{ disabled: hiredOnFlag, dataSource: employeeContractType, displayExpr: 'EmployeeContractTypeName', valueExpr: 'EmployeeContractTypeId'  }">
@@ -562,29 +568,19 @@
                     </dxi-item>
 
 
-                    <dxi-item dataField="Password"
-                [editorOptions]="{ mode: 'password' }">
-                <dxi-validation-rule 
-                    type="required"
-                    message="Password is required">
-                </dxi-validation-rule>
-            </dxi-item>
-            <dxi-item 
-                editorType="dxTextBox"
-                [editorOptions]="{ mode: 'password' }">
-                <dxo-label
-                    text="Confirm Password">
-                </dxo-label>
-                <dxi-validation-rule 
-                    type="required"
-                    message="Confirm Password is required">
-                </dxi-validation-rule>
-                <dxi-validation-rule 
-                    type="compare" 
-                    [comparisonTarget]="passwordComparison"
-                    message="Password and Confirm Password do not match">
-                </dxi-validation-rule>
-            </dxi-item>
+                    <dxi-item dataField="Password" [editorOptions]="{ mode: 'password' }">
+                        <dxi-validation-rule type="required" message="Password is required">
+                        </dxi-validation-rule>
+                    </dxi-item>
+                    <dxi-item editorType="dxTextBox" [editorOptions]="{ mode: 'password' }">
+                        <dxo-label text="Confirm Password">
+                        </dxo-label>
+                        <dxi-validation-rule type="required" message="Confirm Password is required">
+                        </dxi-validation-rule>
+                        <dxi-validation-rule type="compare" [comparisonTarget]="passwordComparison"
+                            message="Password and Confirm Password do not match">
+                        </dxi-validation-rule>
+                    </dxi-item>
 
 
 
@@ -592,7 +588,8 @@
                         [editorOptions]="{ disabled: firedOnFlag, max : currentDate, displayFormat: 'dd/MM/yyyy'}">
                     </dxi-item>
 
-                    <dxi-item *ngIf="tabEventValue == 3" dataField="FiredReason" [editorOptions]="{ disabled: firedOnFlag }">
+                    <dxi-item *ngIf="tabEventValue == 3" dataField="FiredReason"
+                        [editorOptions]="{ disabled: firedOnFlag }">
                     </dxi-item>
 
                     <dxi-item *ngIf="tabEventValue == 3" dataField="ResignationOn" editorType="dxDateBox"
@@ -610,9 +607,9 @@
                         [editorOptions]="{ type: 'date', max : maxDate , min : minDate, displayFormat: 'dd/MM/yyyy' }">
                     </dxi-item>
 
-                    <dxi-item dataField="OpeningPension" editorType="dxNumberBox" dataType="number"
-                        [editorOptions]="{min: 0, value:0 }">
-                    </dxi-item>
+                    <!-- <dxi-item dataField="OpeningPension" editorType="dxNumberBox" dataType="number" [editorOptions]="{min: 0, value:0 }">
+                    </dxi-item> -->
+
 
                     <dxi-item dataField="ProfessionId" editorType="dxSelectBox"
                         [editorOptions]="{ dataSource: professionTypeDropdown, displayExpr: 'ProfessionName', valueExpr: 'ProfessionId' }">
@@ -673,16 +670,76 @@
                     <dxi-item dataField="ReferBy">
                     </dxi-item>
 
-                    <dxi-item *ngIf="tabEventValue == 3" dataField="ResignationReason" [colSpan]="2" editorType="dxTextArea" [editorOptions]="{ disabled: resignationOnFlag, height: 80 }"></dxi-item>
+                    <dxi-item *ngIf="tabEventValue == 3" dataField="ResignationReason" [colSpan]="2"
+                        editorType="dxTextArea" [editorOptions]="{ disabled: resignationOnFlag, height: 80 }">
+                    </dxi-item>
 
                 </dx-form>
 
+
                 <div class="btn-grp-wrap">
-                    <dx-button text="Save" type="success" validationGroup="addGeneralDetails"
-                        [useSubmitBehavior]="true" (click)="validateAddEmployeeForm(addGeneralDetails)"></dx-button>
+                    <dx-button text="Opening Pension" (click)="openPensionForm()" *ngIf="isEditingAllowed">
+                    </dx-button>
+                    <dx-button text="Save" type="success" validationGroup="addGeneralDetails" [useSubmitBehavior]="true"
+                        (click)="validateAddEmployeeForm(addGeneralDetails)"></dx-button>
                     <dx-button text="Cancel" (click)="closeEmployeeForm()"></dx-button>
                 </div>
             </form>
+            <!-- pension popup -->
+            <dx-popup title="Opening Pension Detail" [dragEnabled]="false" [closeOnOutsideClick]="true"
+                [(visible)]="popupPensionDetail" [width]="500" [minHeight]="400">
+
+                <div *dxTemplate="let data of 'content'">
+                    <div class="alert alert-warning" *ngIf="exchangeRateMessage != '' && exchangeRateMessage != null"
+                        role="alert">
+                        {{exchangeRateMessage}}
+                    </div>
+                    <dx-scroll-view showScrollbar="always" direction="both">
+                        <form action="your-action" (submit)="submitPension(pensionForm)">
+                            <dx-form id="formg" [formData]="pensionForm" [colCount]="2" [readOnly]="false" 
+                                [showColonAfterLabel]="true" [showValidationSummary]="true"
+                                validationGroup="addGeneralDetails" (onFieldDataChanged)="onFieldDataChanged($event)">
+                                <dxi-item dataField="PensionDate" editorType="dxDateBox" 
+                                    [editorOptions]="{ type: 'date', value: currentDate, max : currentDate , displayFormat: 'dd/MM/yyyy'}">
+                                    <dxi-validation-rule type="required"> </dxi-validation-rule>
+                                </dxi-item>
+                            </dx-form>
+
+                            <dx-data-grid id="gridContainer" [dataSource]="pensionDetaildataSource" keyExpr="ID"
+                                [allowColumnReordering]="true" [showBorders]="true">
+
+                                <dxo-paging [enabled]="true"></dxo-paging>
+                                <dxo-editing mode="row" [allowDeleting]="false" [allowAdding]="true">
+                                        <dxo-texts addRow="Add Opening Pension"></dxo-texts> 
+                                </dxo-editing>
+
+                                <dxi-column dataField="CurrencyId" caption="Currency"  >
+                                    <dxo-lookup [dataSource]="currencycodeList" displayExpr="CurrencyName"
+                                        valueExpr="CurrencyId">
+                                    </dxo-lookup>
+                                <dxi-validation-rule type="required"> </dxi-validation-rule>
+                                </dxi-column>
+                                <dxi-column dataField="Amount" editorType="dxNumberBox" dataType="number" 
+                                [editorOptions]="{ min: 0 }">
+                                <dxi-validation-rule type="required"> </dxi-validation-rule>
+                            </dxi-column>
+
+                            </dx-data-grid>
+                            <br>
+                            <div class="row">
+                                <div class="col-sm-12 align-right">
+                                    <dx-button text="Save" type="success"
+                                         [useSubmitBehavior]="true" [disabled] = "disableSubmitFlag" >
+                                    </dx-button>
+                                    <dx-button text="Cancel" (onClick)="popupPensionDetail = false"
+             >
+                               </dx-button>
+                                </div>
+                            </div>
+                        </form>
+                    </dx-scroll-view>
+                </div>
+            </dx-popup>
 
         </dx-scroll-view>
         <ngx-loading [show]="addEmployeePopupLoading" [config]="{ backdropBackgroundColour:'rgba(0,0,0,0.07)' }">
@@ -760,7 +817,9 @@
                         <dxi-validation-rule type="email"></dxi-validation-rule>
                     </dxi-item>
 
-                    <dxi-item dataField="TinNumber">
+                    <dxi-item dataField="TinNumber"
+                        [editorOptions]="{ inputAttr: {'style': 'text-transform: uppercase !important'} }">
+                        <dxo-label text="TIN Number"></dxo-label>
                         <dxi-validation-rule type="required">
                         </dxi-validation-rule>
                     </dxi-item>
@@ -773,9 +832,8 @@
 
                     <dxi-item dataField="CountryId">
                         <dxo-label text="Country"></dxo-label>
-                        <dx-select-box (onValueChanged)="getStateType($event)"
-                            [(dataSource)]="countryTypeDropdown" valueExpr="CountryId" [(value)]="CountryId"
-                            displayExpr="CountryName">
+                        <dx-select-box (onValueChanged)="getStateType($event)" [(dataSource)]="countryTypeDropdown"
+                            valueExpr="CountryId" [(value)]="CountryId" displayExpr="CountryName">
                         </dx-select-box>
                         <!-- <dxi-validation-rule type="required" message="Country is required">
                         </dxi-validation-rule> -->

@@ -25,7 +25,10 @@ import { StaticUtilities } from 'src/app/shared/static-utilities';
 import { ProjectActivitiesService } from '../../service/project-activities.service';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { ToastrService } from 'ngx-toastr';
-import { ProjectActivityStatus } from 'src/app/shared/enum';
+import {
+  ProjectActivityStatus,
+  Delete_Confirmation_Texts
+} from 'src/app/shared/enum';
 import { ProjectActivityDocumentsComponent } from '../../project-activity-documents/project-activity-documents.component';
 import { DatePipe } from '@angular/common';
 import {
@@ -37,6 +40,8 @@ import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 import { HubConnection } from '@aspnet/signalr';
 import * as signalR from '@aspnet/signalr';
+import { DeleteConfirmationComponent } from 'projects/library/src/lib/components/delete-confirmation/delete-confirmation.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sub-activities',
@@ -47,6 +52,7 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
   //#region "variables"
   @Input() subActivityDetail: IProjectSubActivityListingModel;
   @Output() updateActivityStatusId = new EventEmitter<any>();
+  @Output() subActivityListRefreshed = new EventEmitter<any>();
   // @Input() projectSubActivityList: any[];
 
   projectSubActivityForm: FormGroup;
@@ -66,6 +72,7 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
 
   tableHeaderList: string[] = ['StartDate', 'EndDate', 'Description'];
   extensionList: IActivityExtensionMode[] = [];
+  deleteActivitySubscribe: Subscription;
 
   // subscription destroy
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
@@ -76,6 +83,8 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
   markCompletePermission = false;
   addExtensionPermission = false;
   progressDifference: any;
+  IsLoading = false;
+  IsError = false;
   // // signal-r
   // private _hubConnection: HubConnection | undefined;
 
@@ -103,20 +112,24 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   initForm() {
-    this.projectSubActivityForm = this.fb.group({
-      ActivityDescription: [this.subActivityDetail.ActivityDescription],
-      IsCompleted: [this.subActivityDetail.IsCompleted],
-      ChallengesAndSolutions: [this.subActivityDetail.ChallengesAndSolutions],
-      PlannedStartDate: [this.subActivityDetail.PlannedStartDate],
-      PlannedEndDate: [this.subActivityDetail.PlannedEndDate],
-      ActualStartDate: [this.subActivityDetail.ActualStartDate],
-      ActualEndDate: [this.subActivityDetail.ActualEndDate],
-      EmployeeID: [this.subActivityDetail.EmployeeID],
-      Progress: [],
-      Target: [this.subActivityDetail.Target, [Validators.min(0)]],
-      Achieved: [this.subActivityDetail.Achieved, [Validators.min(0)]],
-      SubActivityTitle: [this.subActivityDetail.SubActivityTitle]
-    }, { validator: this.achievedRangeValidator });
+    this.projectSubActivityForm = this.fb.group(
+      {
+        ActivityId: [this.subActivityDetail.ActivityId],
+        ActivityDescription: [this.subActivityDetail.ActivityDescription],
+        IsCompleted: [this.subActivityDetail.IsCompleted],
+        ChallengesAndSolutions: [this.subActivityDetail.ChallengesAndSolutions],
+        PlannedStartDate: [this.subActivityDetail.PlannedStartDate],
+        PlannedEndDate: [this.subActivityDetail.PlannedEndDate],
+        ActualStartDate: [this.subActivityDetail.ActualStartDate],
+        ActualEndDate: [this.subActivityDetail.ActualEndDate],
+        EmployeeID: [this.subActivityDetail.EmployeeID],
+        Progress: [],
+        Target: [this.subActivityDetail.Target, [Validators.min(0)]],
+        Achieved: [this.subActivityDetail.Achieved, [Validators.min(0)]],
+        SubActivityTitle: [this.subActivityDetail.SubActivityTitle]
+      },
+      { validator: this.achievedRangeValidator }
+    );
   }
 
   onChanges(data: any): void {
@@ -126,12 +139,12 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
       this.editProjectSubActivity(data);
     }
   }
-// Note Custom validator
+  // Note Custom validator
   achievedRangeValidator(group: FormGroup): { invalid: boolean } {
     const achieved = group.controls['Achieved'];
     const target = group.controls['Target'];
     if (achieved.value > target.value) {
-       achieved.setErrors({ invalid: true });
+      achieved.setErrors({ invalid: true });
     } else {
       return null;
     }
@@ -152,8 +165,6 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
           this.markCompletePermission = this.checkMarkCompletePermission();
           // Mark Add Extension permission
           this.addExtensionPermission = this.checkAddExtensionPermission();
-
-
         }
       });
   }
@@ -483,6 +494,42 @@ export class SubActivitiesComponent implements OnInit, OnChanges, OnDestroy {
   //   });
   // }
   // //#endregion
+
+  onDeleteSubActivityClick(activityId: number) {
+    const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
+      width: '300px',
+      height: '250px',
+      data: 'delete',
+      disableClose: false
+    });
+    dialogRef.componentInstance.confirmMessage =
+      Delete_Confirmation_Texts.deleteText1;
+
+    dialogRef.componentInstance.confirmText = Delete_Confirmation_Texts.yesText;
+
+    dialogRef.componentInstance.cancelText = Delete_Confirmation_Texts.noText;
+
+    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.componentInstance.confirmDelete.subscribe(res => {
+      dialogRef.componentInstance.isLoading = true;
+
+        this.deleteActivitySubscribe = this.activitiesService
+          .DeleteSubProjectActivity(activityId)
+          .subscribe(
+            (response: IResponseData) => {
+              if (response.statusCode === 200) {
+                this.subActivityListRefreshed.emit();
+              }
+              dialogRef.componentInstance.isLoading = false;
+              dialogRef.componentInstance.onCancelPopup();
+            },
+            error => {
+                  dialogRef.componentInstance.isLoading = false;
+                  dialogRef.componentInstance.onCancelPopup();
+              });
+            }
+          );
+  }
 
   //#region "ngOnDestroy"
   ngOnDestroy() {

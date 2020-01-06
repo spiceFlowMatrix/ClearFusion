@@ -1,0 +1,115 @@
+<div mat-dialog-title><h3>Tender Bid</h3></div>
+<mat-dialog-content>
+  <div class="row">
+    <div class="col-md-12">
+      <form [formGroup]="tenderBidForm" (ngSubmit)="addTenderBid(tenderBidForm.value)">
+        <h4>Contact Details</h4>
+        <mat-form-field class="example-full-width">
+          <input matInput type="text" formControlName="Name" placeholder="Name">
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <input matInput type="email" formControlName="Email" placeholder="Email">
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <input matInput type="text" formControlName="PhoneNumber" placeholder="Phone Number">
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <input matInput type="text" formControlName="Address" placeholder="Address">
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <input matInput type="text" formControlName="Owner" placeholder="Owner">
+        </mat-form-field>
+        <h4>Bid Details</h4>
+        <mat-form-field class="example-full-width">
+          <input #openingDate class="fixedWidth"
+            formControlName="OpeningDate" matInput [matDatepicker]="openingDatepicker" placeholder="Opening Date" >
+          <mat-datepicker-toggle matSuffix [for]="openingDatepicker"></mat-datepicker-toggle>
+          <mat-datepicker #openingDatepicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <input #securityDate class="fixedWidth"
+            formControlName="SecurityDate" matInput [matDatepicker]="securityDatepicker" placeholder="Security Date" >
+          <mat-datepicker-toggle matSuffix [for]="securityDatepicker"></mat-datepicker-toggle>
+          <mat-datepicker #securityDatepicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <input matInput type="number" formControlName="QuotedAmount" placeholder="Quoted Amount">
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <input matInput type="number" formControlName="SecurityAmount" placeholder="Security Amount">
+        </mat-form-field>
+        <h4>Contract/Guarantee Letter</h4>
+        <hum-button [type]="'attachment'" [text]="'UPLOAD ATTACHMENT'" (click)="openInput()"></hum-button>
+        <input id="fileInput" style="display:none" hidden type="file" (change)="fileChange($event.target.files)" name="file">
+        <span class="font_weight_600" *ngIf="this.data.BidDetail && this.attachment.length == 0">{{this.data.BidDetail.ContractLetterName}}</span>
+        <span *ngIf="this.attachment.length != 0">{{attachment[0][0].name}}</span>
+        <h4>Scoring</h4>
+        <table class="table table-striped" style="width:70%;">
+          <tr>
+            <td class="font_weight_600">Total Score</td>
+            <td>{{tenderBidForm.value.Profile_Experience + tenderBidForm.value.OfferValidity +
+                tenderBidForm.value.TOR_SOWAcceptance + tenderBidForm.value.Securities_BankGuarantee +
+                tenderBidForm.value.OfferDocumentation +
+                tenderBidForm.value.Company_GoodsSpecification + tenderBidForm.value.Service_Warranty +
+                tenderBidForm.value.Certification_GMP_COPP + tenderBidForm.value.WorkExperience +
+                tenderBidForm.value.DeliveryDate }}</td>
+          </tr>
+          <tr>
+            <td class="font_weight_600">Results Qualified?</td>
+            <td><mat-slide-toggle class="pull-right" (change)="onResultsQualifiedChange($event)"
+              formControlName="isResultQualified"></mat-slide-toggle></td>
+          </tr>
+        </table>
+        <h5>Administrative Requirement Scoring</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field class="example-full-width">
+              <input matInput type="number" formControlName="Profile_Experience" placeholder="Profile/Experience">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <input matInput type="number" formControlName="OfferValidity" placeholder="Offer Valididty">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <input matInput type="number" formControlName="TOR_SOWAcceptance" placeholder="TOR/SOW Acceptance">
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="example-full-width">
+              <input matInput type="number" formControlName="Securities_BankGuarantee" placeholder="Securities/Bank Guarantee">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <input matInput type="number" formControlName="OfferDocumentation" placeholder="Offer Documentation">
+            </mat-form-field>
+          </div>
+        </div>
+        <h5>Technical Requirement Scoring</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field class="example-full-width">
+              <input matInput type="number" formControlName="Company_GoodsSpecification" placeholder="Company/Goods Specification">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <input matInput type="number" formControlName="Service_Warranty" placeholder="Service/Warranty">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <input matInput type="number" formControlName="Certification_GMP_COPP" placeholder="Certification/GMP/COPP">
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="example-full-width">
+              <input matInput type="number" formControlName="WorkExperience" placeholder="Work Experience">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <input matInput type="number" formControlName="DeliveryDate" placeholder="Delivery Date">
+            </mat-form-field>
+            <button type="submit" #submitBtn style="display: none;"></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions class="margin_top_20">
+  <hum-button (click)="submitBtn.click()" [type]="'save'" [text]="'SAVE'" ></hum-button>
+  <hum-button (click)="closeDialog()" [type]="'cancel'" [text]="'CANCEL'" ></hum-button>
+</mat-dialog-actions>

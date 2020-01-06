@@ -1,0 +1,15 @@
+<div class="container width_100" humAddScroll>
+  <div class="row">
+    <div class="col-md-12">
+      LEAVE TYPES
+        <hum-button [type]="'add'" [text]="'ADD LEAVE TYPE'" (click)="addLeaveType()"></hum-button>
+    </div>
+    <div class="col-md-12">
+      <hum-table [headers]="leaveTypeHeaders$" [items]="leaveTypeList$"
+         (actionClick)="actionEvents($event)" [actions]="actions"></hum-table>
+      <mat-paginator [length]="RecordCount" [pageSize]="pageModel.PageSize"
+        [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
+      </mat-paginator>
+    </div>
+  </div>
+</div>

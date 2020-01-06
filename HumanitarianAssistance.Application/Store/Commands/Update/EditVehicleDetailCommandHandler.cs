@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.Store;
 using HumanitarianAssistance.Persistence;
@@ -31,6 +32,11 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                 PurchasedVehicleDetail vehicle= await _dbContext.PurchasedVehicleDetail
                                                           .FirstOrDefaultAsync(x=> x.IsDeleted == false && x.Id == request.VehicleId);
 
+                if(vehicle == null)
+                {
+                    throw new Exception(StaticResource.RecordNotFound);
+                }
+
                 vehicle.PlateNo = request.PlateNo;
                 vehicle.EmployeeId= request.EmployeeId;
                 vehicle.StartingMileage= request.StartingMileage;
@@ -39,6 +45,11 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                 vehicle.MobilOilConsumptionRate= request.MobilOilConsumptionRate;
                 vehicle.ModelYear= request.ModelYear;
                 vehicle.OfficeId = request.OfficeId;
+                vehicle.EngineNo= request.EngineNo;
+                vehicle.ManufacturerCountry= request.ManufacturerCountry;
+                vehicle.RegistrationNo= request.RegistrationNo;
+                vehicle.ChasisNo= request.ChasisNo;
+                vehicle.PersonRemarks = request.Remarks;
                 vehicle.ModifiedById = request.ModifiedById;
                 vehicle.ModifiedDate= DateTime.UtcNow;
 
@@ -51,11 +62,12 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
                     CreatedById = request.ModifiedById,
                     IsDeleted = false,
                     EventType = "Vehicle Edited",
-                    LogText = $"Generator details were edited for generator id-{request.VehicleId}"
+                    LogText = $"Vehicle details were edited",
+                    TransportType = (int)TransportItemCategory.Vehicle,
+                    TransportTypeEntityId= request.VehicleId
                 };
 
                 await _dbContext.StoreLogger.AddAsync(logger);
-                await _dbContext.SaveChangesAsync();
                 await _dbContext.SaveChangesAsync();
                 isSuccess= true;
             }

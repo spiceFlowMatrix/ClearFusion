@@ -57,7 +57,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                         element.ActualStartDate = request.ActualStartDate;
                         element.ActualEndDate = request.ActualEndDate;
                         element.IsDeleted = false;
-                        element.CreatedById = request.CreatedById;
                         element.ProjectId = request.ProjectId;
                         element.ReoccuredReferenceId = request.ReoccuredReferenceId;
                         element.CountryId = request.CountryId;

@@ -28,6 +28,9 @@ import { LogisticRequestsComponent } from './project-logistics/logistic-requests
 import { LogisticRequestDetailsComponent } from './project-logistics/logistic-request-details/logistic-request-details.component';
 import { RequestDetailComponent } from './project-hiring/request-detail/request-detail.component';
 import { HiringRequestsComponent } from './project-hiring/hiring-requests/hiring-requests.component';
+import { InterviewDetailComponent } from './project-hiring/interview-detail/interview-detail.component';
+import { AddLogisticRequestComponent } from './project-logistics/add-logistic-request/add-logistic-request.component';
+import { SubmitPurchaseListComponent } from './project-logistics/submit-purchase-list/submit-purchase-list.component';
 
 const moduleId: number = ApplicationModule.Projects;
 
@@ -159,31 +162,24 @@ const routes: Routes = [
           },
           {
             path: 'hiring-request',
-            component: HiringRequestsComponent,
+            loadChildren:'./project-hiring/project-hiring.module#ProjectHiringModule',
             canActivate: [RoleGuardService],
             data: {
               module: moduleId,
               page: projectPagesMaster.HiringRequests
             }
+
           },
-          {
-            path: 'hiring-request/:id',
-            component: RequestDetailComponent,
-            canActivate: [RoleGuardService],
-            data: {
-              module: moduleId,
-              page: projectPagesMaster.HiringRequests
-            }
-          },
-          {
-            path: 'job-detail',
-            component: JobDetailComponent,
-            canActivate: [RoleGuardService],
-            data: {
-              module: moduleId,
-              page: projectPagesMaster.HiringRequests
-            }
-          },
+
+          // {
+          //   path: 'job-detail',
+          //   component: JobDetailComponent,
+          //   canActivate: [RoleGuardService],
+          //   data: {
+          //     module: moduleId,
+          //     page: projectPagesMaster.HiringRequests
+          //   }
+          // },
 
           {
             path: 'project-indicators',
@@ -194,9 +190,22 @@ const routes: Routes = [
               page: projectPagesMaster.ProjectIndicators
             }
           },
+          // {
+          //   path: 'logistic-requests',
+          //   loadChildren: './project-logistics/project-logistics.module#ProjectLogisticsModule'
+          // }
           {
             path: 'logistic-requests',
             component: LogisticRequestsComponent,
+            canActivate: [RoleGuardService],
+            data: {
+              module: moduleId,
+              page: projectPagesMaster.ProjectIndicators
+            }
+          },
+          {
+            path: 'logistic-requests/new-request',
+            component: AddLogisticRequestComponent,
             canActivate: [RoleGuardService],
             data: {
               module: moduleId,
@@ -210,8 +219,27 @@ const routes: Routes = [
             data: {
               module: moduleId,
               page: projectPagesMaster.ProjectIndicators
-            }
+            },
+          //   children: [
+          //     {
+          //       path: '',
+          //       component: LogisticRequestDetailsComponent
+          //     },
+          //     {
+          //     path: 'submit-purchase',
+          //     component: SubmitPurchaseListComponent
+          //   }
+          // ]
           },
+          {
+            path: 'logistic-requests/:id/submit-purchase',
+            component: SubmitPurchaseListComponent,
+            canActivate: [RoleGuardService],
+            data: {
+              module: moduleId,
+              page: projectPagesMaster.ProjectIndicators
+            },
+          }
         ]
       }
 

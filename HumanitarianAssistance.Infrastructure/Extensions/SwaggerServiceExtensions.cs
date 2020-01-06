@@ -8,6 +8,7 @@ namespace HumanitarianAssistance.Infrastructure.Extensions
 {
     public static class SwaggerServiceExtensions
     {
+        [System.Obsolete]
         public static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
@@ -16,7 +17,7 @@ namespace HumanitarianAssistance.Infrastructure.Extensions
                 
                 // swagger tags config
                 c.DocInclusionPredicate((_, api) => !string.IsNullOrWhiteSpace(api.GroupName));
-               c.TagActionsBy(api => api.GroupName);
+                c.TagActionsBy(api => api.GroupName);
 
                 // Swagger 2.+ support
                 var security = new Dictionary<string, IEnumerable<string>>

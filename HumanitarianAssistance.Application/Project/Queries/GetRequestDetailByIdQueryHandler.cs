@@ -26,17 +26,22 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
             try
             {
-                var req = await _dbContext.ProjectLogisticRequests.Where(x=>x.IsDeleted==false && x.LogisticRequestsId==request.RequestId).Select(y=>new LogisticsRequestsModel{
+                var req = await _dbContext.ProjectLogisticRequests.Where(x=>x.IsDeleted==false && x.LogisticRequestsId==request.RequestId).Select(y=>new LogisticsRequestsDetailModel{
                     RequestId = y.LogisticRequestsId,
                     ProjectId = y.ProjectId,
-                    RequestName = y.RequestName,
+                    Description = y.Description,
                     Status = y.Status,
                     TotalCost = y.TotalCost,
                     BudgetLine = y.ProjectBudgetLineDetail.BudgetCode,
                     Currency = y.CurrencyDetails.CurrencyCode,
-                    Office = y.OfficeDetail.OfficeName
+                    Office = y.OfficeDetail.OfficeName,
+                    ComparativeStatus = y.ComparativeStatus,
+                    TenderStatus = y.TenderStatus,
+                    BudgetLineId = y.ProjectBudgetLineDetail.BudgetLineId,
+                    CurrencyId = y.CurrencyDetails.CurrencyId,
+                    OfficeId = y.OfficeDetail.OfficeId
                 }).FirstOrDefaultAsync();
-
+                
                 if(req == null) {
                     throw new Exception("Request doesnot exist!");
                 }

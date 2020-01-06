@@ -1,19 +1,19 @@
-import { Component, OnInit, Input } from "@angular/core";
-import { HrService } from "../../hr.service";
-import { Router } from "@angular/router";
-import { ToastrService } from "ngx-toastr";
-import { GLOBAL } from "../../../../shared/global";
+import { Component, OnInit, Input } from '@angular/core';
+import { HrService } from '../../hr.service';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { GLOBAL } from '../../../../shared/global';
 import {
   applicationPages,
   applicationModule
-} from "../../../../shared/application-pages-enum";
-import { CommonService } from "../../../../service/common.service";
-import { AppSettingsService } from "../../../../service/app-settings.service";
+} from '../../../../shared/application-pages-enum';
+import { CommonService } from '../../../../service/common.service';
+import { AppSettingsService } from '../../../../service/app-settings.service';
 
 @Component({
-  selector: "app-analytical-info",
-  templateUrl: "./analytical-info.component.html",
-  styleUrls: ["./analytical-info.component.css"]
+  selector: 'app-analytical-info',
+  templateUrl: './analytical-info.component.html',
+  styleUrls: ['./analytical-info.component.css']
 })
 export class AnalyticalInfoComponent implements OnInit {
   @Input() employeeId: number;
@@ -59,7 +59,7 @@ export class AnalyticalInfoComponent implements OnInit {
       .GetAllDetailsById(
         this.setting.getBaseUrl() +
           GLOBAL.API_EmployeeDetail_GetAllEmployeeSalaryAnalyticalInfo,
-        "EmployeeId",
+        'EmployeeId',
         this.employeeId
       )
       .subscribe(
@@ -102,7 +102,7 @@ export class AnalyticalInfoComponent implements OnInit {
                     ProjectName: element.ProjectName,
                     ProjectCode: element.ProjectCode,
                     ProjectCodeName:
-                      element.ProjectCode + "-" + element.ProjectName
+                      element.ProjectCode + '-' + element.ProjectName
                   });
                 });
               }
@@ -173,7 +173,7 @@ export class AnalyticalInfoComponent implements OnInit {
         // tslint:disable-next-line:no-shadowed-variable
         data => {
           if (data.StatusCode === 200) {
-            this.toastr.success("Added Successfully!");
+            this.toastr.success('Added Successfully!');
           } else {
             this.toastr.error(data.Message);
           }
@@ -202,7 +202,7 @@ export class AnalyticalInfoComponent implements OnInit {
         // tslint:disable-next-line:no-shadowed-variable
         data => {
           if (data.StatusCode === 200) {
-            this.toastr.success("Added Successfully!");
+            this.toastr.success('Added Successfully!');
           } else {
             this.toastr.error(data.Message);
           }
@@ -231,7 +231,7 @@ export class AnalyticalInfoComponent implements OnInit {
         // tslint:disable-next-line:no-shadowed-variable
         data => {
           if (data.StatusCode === 200) {
-            this.toastr.success("Deleted Successfully!");
+            this.toastr.success('Deleted Successfully!');
           } else {
             this.toastr.error(data.Message);
           }
@@ -250,7 +250,7 @@ export class AnalyticalInfoComponent implements OnInit {
   //#region "AddEditAnalyticalInfo"
   AddEditAnalyticalInfo(data: any) {
     // tslint:disable-next-line:radix
-    const employeeId = parseInt(localStorage.getItem("SelectedEmployee"));
+    const employeeId = parseInt(localStorage.getItem('SelectedEmployee'));
 
     if (
       data.EmployeeSalaryAnalyticalInfoId === 0 ||
@@ -347,7 +347,7 @@ export class AnalyticalInfoComponent implements OnInit {
   //#region "onFieldValueChanged"
   onFieldDataChanged(e: any) {
     if (e != null) {
-      if (e.dataField === "ProjectId" && e.value != null) {
+      if (e.dataField === 'ProjectId' && e.value != null) {
         this.getBudgetLineDetails(e.value);
       }
     }

@@ -32,7 +32,13 @@ export class EditGeneratorComponent implements OnInit, OnDestroy {
       'MobilOilConsumptionRate': [null],
       'ModelYear': [null, [Validators.required]],
       'OfficeId': [null, [Validators.required]],
-      'FuelConsumptionRate': [null]
+      'FuelConsumptionRate': [null],
+      'ManufacturerCountry': ['', [Validators.required]],
+      'EngineNo': ['', [Validators.required]],
+      'RegistrationNo': ['', [Validators.required]],
+      'ChasisNo': ['', [Validators.required]],
+      'EmployeeId': ['', [Validators.required]],
+      'Remarks': [''],
     });
 
     this.getGeneratorDetailById();
@@ -50,7 +56,13 @@ export class EditGeneratorComponent implements OnInit, OnDestroy {
           MobilOilConsumptionRate: x.StandardMobilOilConsumptionRate,
           ModelYear: x.ModelYear,
           OfficeId: x.OfficeId,
-          FuelConsumptionRate: x.StandardFuelConsumptionRate
+          FuelConsumptionRate: x.StandardFuelConsumptionRate,
+          ManufacturerCountry: x.ManufacturerCountry,
+          EngineNo: x.EngineNo,
+          RegistrationNo: x.RegistrationNo,
+          ChasisNo: x.ChasisNo,
+          Remarks: x.Remarks,
+          EmployeeId: x.EmployeeId
         });
       });
   }

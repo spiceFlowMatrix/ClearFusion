@@ -4,6 +4,7 @@ using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.Store;
 using HumanitarianAssistance.Persistence;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -29,6 +30,17 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
             {
                 if (request != null)
                 {
+                    if(request.IsDefault)
+                    {
+                        PurchaseUnitType unitType= await _dbContext.PurchaseUnitType.FirstOrDefaultAsync(x=> x.IsDeleted == false && x.IsDefault == true);
+
+                        if(unitType != null)
+                        {
+                            unitType.IsDefault = false;
+                            await _dbContext.SaveChangesAsync();
+                        }
+                    }
+
                     PurchaseUnitType obj = _mapper.Map<PurchaseUnitType>(request);
                     obj.IsDeleted = false;
 
@@ -47,7 +59,7 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
             catch (Exception e)
             {
                 response.StatusCode = StaticResource.failStatusCode;
-                response.Message = StaticResource.SomethingWrong + e.Message;
+                response.Message = e.Message;
                 return response;
             }
 

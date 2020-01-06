@@ -10,6 +10,7 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Create
     {
         public int LeaveReasonId { get; set; }
         public string ReasonName { get; set; }
+        public string Description { get; set; }
         public int Unit { get; set; }
     }
 }

@@ -1,27 +1,30 @@
+<div mat-dialog-title><h3>Request a New Item</h3></div>
 <div class="row">
     <div class="col-md-12">
-        <div mat-dialog-title><h4>Add New Items</h4></div>
       <form [formGroup]="addLogisticItemsForm" (ngSubmit)="addItem(addLogisticItemsForm.value)">
           <!-- <mat-form-field class="example-full-width">
               <input matInput formControlName="Item" placeholder="Item">
           </mat-form-field> -->
+          <p>Select the item you want to include in this Logistic Request</p>
           <lib-search-dropdown
-            placeholder="Select Items"
+            placeholder="Store Item"
             [multiSelect]="false"
             placeholderSearchLabel="Find Items..."
             noEntriesFoundLabel="No matching items found"
             [dataSource]="storeItemsList"
             [selectedValue]="ItemIds"
             (selectionChanged)="onOpenedItemSelectChange($event)"
-            ></lib-search-dropdown>
+          ></lib-search-dropdown>
+          <p>How much do you expect selected items to cost per unit?</p>
           <mat-form-field class="example-full-width">
-              <input matInput type="number" formControlName="Quantity" placeholder="Quantity">
+              <input matInput type="number" formControlName="EstimatedUnitCost" placeholder="Estimated Unit Cost">
           </mat-form-field>
+          <p>How many units do you want to request?</p>
           <mat-form-field class="example-full-width">
-              <input matInput type="number" formControlName="EstimatedCost" placeholder="Estimated Cost">
+              <input matInput type="number" formControlName="RequestedUnits" placeholder="Requested Units">
           </mat-form-field>
-          <hum-button [type]="'save'" [text]="'Save'" [isSubmit]="true"></hum-button>
-          <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="cancelItem()" class="pull-right"></hum-button>
+          <hum-button [type]="'save'" [text]="'Request'" [isSubmit]="true"></hum-button>
+          <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="cancelItem()"></hum-button>
 
       </form>
     </div>

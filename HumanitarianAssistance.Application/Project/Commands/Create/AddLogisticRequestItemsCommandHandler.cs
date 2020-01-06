@@ -35,7 +35,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     LogisticRequestsId= request.RequestId,
                     ItemId = request.ItemId,
                     Quantity = request.Quantity,
-                    EstimatedCost =request.EstimatedCost,
+                    EstimatedUnitCost =request.EstimatedCost,
                     CreatedById = request.CreatedById,
                     CreatedDate = request.CreatedDate,
                     IsDeleted = false
@@ -47,7 +47,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     Id = y.LogisticItemId,
                     Item = y.StoreInventoryItem.ItemName,
                     Quantity = y.Quantity,
-                    EstimatedCost = y.EstimatedCost,
+                    EstimatedCost = y.EstimatedUnitCost,
                     Availability = y.Quantity,
                     ItemId = y.ItemId
                 })

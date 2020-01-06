@@ -25,17 +25,25 @@ namespace HumanitarianAssistance.Application.Store.Commands.Update
         public async Task<ApiResponse> Handle(EditItemOrderCommand request, CancellationToken cancellationToken)
         {
             ApiResponse response = new ApiResponse();
+            bool returned = false;
             try
             {
                 if (request != null)
                 {
                     var recordExits = await _dbContext.StorePurchaseOrders.FirstOrDefaultAsync(x => x.OrderId == request.OrderId && x.IsDeleted == false);
+
+                    if(!recordExits.Returned && request.Returned)
+                    {
+                        returned= true;
+                    }
                     _mapper.Map(request, recordExits);
 
+                    recordExits.ReturnedDate = returned? DateTime.UtcNow : recordExits.ReturnedDate;
+                    recordExits.IssueVoucher = request.VoucherNo;
+                    recordExits.InventoryItem= request.InventoryItem;
                     recordExits.IsDeleted = false;
 
                     await _dbContext.SaveChangesAsync();
-                    //await _uow.SaveAsync();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }

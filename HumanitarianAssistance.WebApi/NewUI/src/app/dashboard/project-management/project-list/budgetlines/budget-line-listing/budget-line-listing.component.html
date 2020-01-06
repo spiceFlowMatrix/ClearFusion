@@ -10,28 +10,17 @@
             </button>
             <div class="icon-file-attach">
               <label class="btn-floating btn-lg pink lighten-1 mt-0 float-left">
-                <mat-icon
-                  class="icon_cursor padding_top_5"
-                  aria-label="icon-button done icon"
-                  pTooltip="Excel sample data entries"
-                  tooltipPosition="top"
-                  (click)="toggleFormate()"
-                  >remove_red_eye</mat-icon
-                >
+                <mat-icon class="icon_cursor padding_top_5" aria-label="icon-button done icon"
+                  pTooltip="Excel sample data entries" tooltipPosition="top" (click)="toggleFormate()">remove_red_eye
+                </mat-icon>
               </label>
-              <app-budget-line-documents
-                [Projectid]="Projectid"
-                (budgetLineListRefresh)="budgetLineListExcelRefresh($event)"
-              ></app-budget-line-documents>
+              <app-budget-line-documents [Projectid]="Projectid"
+                (budgetLineListRefresh)="budgetLineListExcelRefresh($event)"></app-budget-line-documents>
             </div>
           </h4>
           <div class="row">
             <div class="col-sm-6">
-              <button
-                mat-raised-button
-                color="primary"
-                (click)="openAddBudgetLineDialog()"
-              >
+              <button mat-raised-button color="primary" (click)="openAddBudgetLineDialog()">
                 Add
               </button>
             </div>
@@ -57,9 +46,16 @@
                     </tr>
                     <tr>
                       <td>{{ selectedProjectId }}</td>
-                      <td>P00{{ selectedProjectId }}-J001</td>
+                      <td *ngIf="selectedProjectId.toString().length < 2;"> P000{{ selectedProjectId }}-J001 </td>
+                      <td *ngIf="selectedProjectId.toString().length == 2"> P00{{ selectedProjectId }}-J001</td>
+                      <td *ngIf="selectedProjectId.toString().length == 3"> P0{{ selectedProjectId }}-J001</td>
+                      <td *ngIf="selectedProjectId.toString().length == 4"> P{{ selectedProjectId }}-J001</td>
+
                       <td>MyJobName</td>
-                      <td>P00{{ selectedProjectId }}-B00001</td>
+                      <td *ngIf="selectedProjectId.toString().length < 2">P000{{ selectedProjectId }}-B00001</td>
+                      <td *ngIf="selectedProjectId.toString().length == 2"> P00{{ selectedProjectId }}-B00001</td>
+                      <td *ngIf="selectedProjectId.toString().length == 3"> P0{{ selectedProjectId }}-B00001</td>
+                      <td *ngIf="selectedProjectId.toString().length == 4"> P{{ selectedProjectId }}-B00001</td>
                       <td>MyBudgetName</td>
                       <td>100</td>
                       <td>1</td>
@@ -67,9 +63,16 @@
                     </tr>
                     <tr>
                       <td>{{ selectedProjectId }}</td>
-                      <td>P00{{ selectedProjectId }}-J002</td>
+                      <td *ngIf="selectedProjectId.toString().length < 2;"> P000{{ selectedProjectId }}-J002 </td>
+                      <td *ngIf="selectedProjectId.toString().length == 2"> P00{{ selectedProjectId }}-J002</td>
+                      <td *ngIf="selectedProjectId.toString().length == 3"> P0{{ selectedProjectId }}-J002</td>
+                      <td *ngIf="selectedProjectId.toString().length == 4"> P{{ selectedProjectId }}-J002</td>
+
                       <td>MySecondJobName</td>
-                      <td>P00{{ selectedProjectId }}-B00002</td>
+                      <td *ngIf="selectedProjectId.toString().length < 2">P000{{ selectedProjectId }}-B00002</td>
+                      <td *ngIf="selectedProjectId.toString().length == 2"> P00{{ selectedProjectId }}-B00002</td>
+                      <td *ngIf="selectedProjectId.toString().length == 3"> P0{{ selectedProjectId }}-B00002</td>
+                      <td *ngIf="selectedProjectId.toString().length == 4"> P{{ selectedProjectId }}-B00002</td>
                       <td>MySecondBudgetName</td>
                       <td>200</td>
                       <td>2</td>
@@ -77,9 +80,15 @@
                     </tr>
                     <tr>
                       <td>{{ selectedProjectId }}</td>
-                      <td>P00{{ selectedProjectId }}-J003</td>
+                      <td *ngIf="selectedProjectId.toString().length < 2;"> P000{{ selectedProjectId }}-J003 </td>
+                      <td *ngIf="selectedProjectId.toString().length == 2"> P00{{ selectedProjectId }}-J003</td>
+                      <td *ngIf="selectedProjectId.toString().length == 3"> P0{{ selectedProjectId }}-J003</td>
+                      <td *ngIf="selectedProjectId.toString().length == 4"> P{{ selectedProjectId }}-J003</td>
                       <td>MyThirdJobName</td>
-                      <td>P00{{ selectedProjectId }}-B00001</td>
+                      <td *ngIf="selectedProjectId.toString().length < 2">P000{{ selectedProjectId }}-B00003</td>
+                      <td *ngIf="selectedProjectId.toString().length == 2"> P00{{ selectedProjectId }}-B00003</td>
+                      <td *ngIf="selectedProjectId.toString().length == 3"> P0{{ selectedProjectId }}-B00003</td>
+                      <td *ngIf="selectedProjectId.toString().length == 4"> P{{ selectedProjectId }}-B00003</td>
                       <td>MyThirdBudgetName</td>
                       <td>300</td>
                       <td>3</td>
@@ -88,10 +97,10 @@
                   </tbody>
                 </table>
                 <p style="color:red;font-size: 12px; padding-top: 5px">
-                  (*Important : You can also leave ProjectJobCode and
-                  BudgetCode Field Empty it will by default create new job and
-                  if you have two entry by same ProjectJobName in excel it will create
-                  one job for two entry.)
+                  (*Important : You can also leave "ProjectJobCode" and
+                  "BudgetCode" field empty, it will create a new Job and
+                  if you have two entries with same "ProjectJobCode" in excel then it will create
+                  one job for two entries.)
                 </p>
               </mat-card-content>
             </mat-card>
@@ -100,24 +109,14 @@
           <div class="row">
             <div class="col-sm-12">
               <mat-form-field class="example-form-field">
-                <input
-                  matInput
-                  placeholder="Search"
-                  [(ngModel)]="budgetFilter.FilterValue"
-                  (keyup.enter)="
+                <input matInput placeholder="Search" [(ngModel)]="budgetFilter.FilterValue" (keyup.enter)="
                     budgetFilter.FilterValue != '' ? onFilterApplied() : null
-                  "
-                />
+                  " />
               </mat-form-field>
               <!-- Apply -->
               &nbsp;
-              <button
-                mat-raised-button
-                color="primary"
-                class="margin_left_10"
-                [disabled]="budgetFilter.FilterValue === ''"
-                (click)="onFilterApplied()"
-              >
+              <button mat-raised-button color="primary" class="margin_left_10"
+                [disabled]="budgetFilter.FilterValue === ''" (click)="onFilterApplied()">
                 Apply
               </button>
               &nbsp;
@@ -127,53 +126,34 @@
               </button>
 
               <!-- Filter -->
-              <button
-                mat-icon-button
-                class="margin_left_10"
-                [matMenuTriggerFor]="menu"
-              >
+              <button mat-icon-button class="margin_left_10" [matMenuTriggerFor]="menu">
                 <mat-icon>more_vert</mat-icon>
               </button>
               <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="$event.stopPropagation()">
-                  <mat-checkbox [(ngModel)]="budgetFilter.BudgetLineIdFlag"
-                    >BudgetLine Id</mat-checkbox
-                  >
+                  <mat-checkbox [(ngModel)]="budgetFilter.BudgetLineIdFlag">BudgetLine Id</mat-checkbox>
                 </button>
                 <button mat-menu-item (click)="$event.stopPropagation()">
-                  <mat-checkbox [(ngModel)]="budgetFilter.BudgetCodeFlag"
-                    >Budget Code</mat-checkbox
-                  >
+                  <mat-checkbox [(ngModel)]="budgetFilter.BudgetCodeFlag">Budget Code</mat-checkbox>
                 </button>
                 <button mat-menu-item (click)="$event.stopPropagation()">
-                  <mat-checkbox [(ngModel)]="budgetFilter.BudgetNameFlag"
-                    >Budget Name</mat-checkbox
-                  >
+                  <mat-checkbox [(ngModel)]="budgetFilter.BudgetNameFlag">Budget Name</mat-checkbox>
                 </button>
                 <button mat-menu-item (click)="$event.stopPropagation()">
-                  <mat-checkbox [(ngModel)]="budgetFilter.ProjectJobIdFlag"
-                    >Project Job Id</mat-checkbox
-                  >
+                  <mat-checkbox [(ngModel)]="budgetFilter.ProjectJobIdFlag">Project Job Id</mat-checkbox>
                 </button>
                 <button mat-menu-item (click)="$event.stopPropagation()">
-                  <mat-checkbox [(ngModel)]="budgetFilter.InitialBudgetFlag"
-                    >Initial Budget</mat-checkbox
-                  >
+                  <mat-checkbox [(ngModel)]="budgetFilter.InitialBudgetFlag">Initial Budget</mat-checkbox>
                 </button>
                 <button mat-menu-item (click)="$event.stopPropagation()">
-                  <mat-checkbox [(ngModel)]="budgetFilter.DateFlag"
-                    >Created On</mat-checkbox
-                  >
+                  <mat-checkbox [(ngModel)]="budgetFilter.DateFlag">Created On <br>(dd/mm/yyyy)</mat-checkbox>
                 </button>
               </mat-menu>
             </div>
           </div>
 
           <div class="row">
-            <div
-              *ngIf="BudgetListLoaderFlag; else budgetListTemplate"
-              class="col-sm-12"
-            >
+            <div *ngIf="BudgetListLoaderFlag; else budgetListTemplate" class="col-sm-12">
               <mat-spinner class="center_loader" diameter="50"></mat-spinner>
             </div>
             <ng-template #budgetListTemplate>
@@ -192,14 +172,10 @@
                       <td width="20%">Initial Budget</td>
                       <td width="10%">Expenditure</td>
                     </tr>
-                    <tr
-                      (click)="onItemClick(item)"
-                      *ngFor="let item of BudgetLineDetailList"
-                      [ngClass]="{
+                    <tr (click)="onItemClick(item)" *ngFor="let item of BudgetLineDetailList" [ngClass]="{
                         txtColor: item.DebitPercentage >= 80,
                         selected: selectedBudgetId == item.BudgetLineId
-                      }"
-                    >
+                      }">
                       <td width="1%">
                         <p class="width_8"></p>
                       </td>
@@ -208,11 +184,9 @@
                       </td>
 
                       <td width="15%">
-                        <p
-                          [ngClass]="[
+                        <p [ngClass]="[
                             item.DebitPercentage >= 80 ? 'diamonds' : 'diamond'
-                          ]"
-                        ></p>
+                          ]"></p>
                         {{ item.BudgetName }}
                       </td>
                       <td width="15%" class="grey-text">
@@ -234,10 +208,7 @@
                       </td>
 
                       <td width="1%" class="text-center">
-                        <i
-                          *ngIf="selectedBudgetId == item.BudgetLineId"
-                          class="material-icons font-12"
-                        >
+                        <i *ngIf="selectedBudgetId == item.BudgetLineId" class="material-icons font-12">
                           arrow_forward_ios
                         </i>
                       </td>
@@ -245,13 +216,8 @@
                   </tbody>
                 </table>
 
-                <mat-paginator
-                  [length]="budgetFilter.totalCount"
-                  [pageSize]="budgetFilter.pageSize"
-                  [pageIndex]="budgetFilter.pageIndex"
-                  [pageSizeOptions]="[5, 10, 25, 100]"
-                  (page)="pageEvent($event)"
-                >
+                <mat-paginator [length]="budgetFilter.totalCount" [pageSize]="budgetFilter.pageSize"
+                  [pageIndex]="budgetFilter.pageIndex" [pageSizeOptions]="[5, 10, 25, 100]" (page)="pageEvent($event)">
                 </mat-paginator>
               </div>
             </ng-template>
@@ -263,15 +229,10 @@
     <!-- project-budget detail -->
     <div [hidden]="!showBudgetDetail" class="col-sm-6">
       <mat-card [ngStyle]="scrollStyles">
-        <app-budget-line-details
-          [budgetId]="selectedBudgetId"
-          [currencyList]="currencyList"
-          [projectJobList]="projectJobList"
-          [Projectid]="Projectid"
-          [budgetDetailObj]="budgetDetailObj"
+        <app-budget-line-details [budgetId]="selectedBudgetId" [currencyList]="currencyList"
+          [projectJobList]="projectJobList" [Projectid]="Projectid" [budgetDetailObj]="budgetDetailObj"
           (budgetDetailChanged)="budgetLineDetailChangedEmit($event)"
-          (transactiondetail)="transactiondetailListEmit($event)"
-        >
+          (transactiondetail)="transactiondetailListEmit($event)">
         </app-budget-line-details>
       </mat-card>
     </div>

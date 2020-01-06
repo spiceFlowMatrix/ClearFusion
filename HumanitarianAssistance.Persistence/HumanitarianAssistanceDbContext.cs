@@ -73,7 +73,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<EmployeeAppraisalDetails> EmployeeAppraisalDetails { get; set; }
         public DbSet<EmployeeAppraisalQuestions> EmployeeAppraisalQuestions { get; set; }
         public DbSet<EmployeeEvaluation> EmployeeEvaluation { get; set; }
-        public DbSet<InterviewTechnicalQuestions> InterviewTechnicalQuestions { get; set; }    
+        public DbSet<InterviewTechnicalQuestions> InterviewTechnicalQuestions { get; set; }
         public DbSet<Advances> Advances { get; set; }
 
         public DbSet<InterviewDetails> InterviewDetails { get; set; }
@@ -129,6 +129,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<EmployeeSalaryPaymentHistory> EmployeeSalaryPaymentHistory { get; set; }
         public DbSet<EmployeeLanguages> EmployeeLanguages { get; set; }
         public DbSet<AccountHeadType> AccountHeadType { get; set; }
+        public DbSet<GainLossCalculatorConfiguration> GainLossCalculatorConfiguration { get; set; }
         public DbSet<PaymentTypes> PaymentTypes { get; set; }
         public DbSet<PriorityOtherDetail> PriorityOtherDetail { get; set; }
         public DbSet<ApplicationPages> ApplicationPages { get; set; }
@@ -145,6 +146,8 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<ExchangeRateVerification> ExchangeRateVerifications { get; set; }
         public DbSet<DocumentFileDetail> DocumentFileDetail { get; set; }
         public DbSet<AttendanceGroupMaster> AttendanceGroupMaster { get; set; }
+        public DbSet<EducationDegreeMaster> EducationDegreeMaster { get; set; }
+        public DbSet<ExitInterviewQuestionsMaster> ExitInterviewQuestionsMaster { get; set; }
 
         //created by arjun singh
         public DbSet<ChatDetail> ChatDetail { get; set; }
@@ -222,13 +225,19 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<RatingBasedCriteriaQuestions> RatingBasedCriteriaQuestions { get; set; }
 
         public DbSet<ProjectJobHiringDetail> ProjectJobHiringDetail { get; set; }
-        public DbSet<ProjectLogisticRequests> ProjectLogisticRequests { get; set; } 
-        public DbSet<ProjectLogisticItems> ProjectLogisticItems { get; set; }           
-        public DbSet<CandidateDetails> CandidateDetails { get; set; }  
-        public DbSet<EducationDegreeDetail> EducationDegreeDetails { get; set; }  
-        #endregion  
+        public DbSet<ProjectLogisticRequests> ProjectLogisticRequests { get; set; }
+        public DbSet<ProjectLogisticItems> ProjectLogisticItems { get; set; }
+        public DbSet<ProjectLogisticSuppliers> ProjectLogisticSuppliers { get; set; }
+        public DbSet<ComparativeStatementSubmission> ComparativeStatementSubmission { get; set; }
+        public DbSet<TenderBidSubmission> TenderBidSubmission { get; set; }
+        public DbSet<MultiCurrencyOpeningPension> MultiCurrencyOpeningPension { get; set; }
+        public DbSet<CandidateDetails> CandidateDetails { get; set; }
+        public DbSet<EducationDegreeDetail> EducationDegreeDetails { get; set; }
+        public DbSet<HiringRequestCandidateStatus> HiringRequestCandidateStatus { get; set; }
+        public DbSet<ProjectInterviewDetails> ProjectInterviewDetails { get; set; }
+        #endregion
 
-        #region Marketing
+        #region Marketing 
         public DbSet<InvoiceGeneration> InvoiceGeneration { get; set; }
         public DbSet<InvoiceApproval> InvoiceApproval { get; set; }
         public DbSet<PlayoutMinutes> PlayoutMinutes { get; set; }
@@ -259,13 +268,15 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<AccountLevel> AccountLevel { get; set; }
         public DbSet<AccountFilterType> AccountFilterType { get; set; }
         public DbSet<ChartOfAccountNew> ChartOfAccountNew { get; set; }
-        public DbSet<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
+        // public DbSet<GainLossSelectedAccounts> GainLossSelectedAccounts { get; set; }
 
         #endregion
         public DbSet<ProjectProposalDocument> ProjectProposalDocument { get; set; }
         public DbSet<PurchaseUnitType> PurchaseUnitType { get; set; }
         public DbSet<ErrorLogger> ErrorLogger { get; set; }
         public DbSet<StoreLogger> StoreLogger { get; set; }
+        public DbSet<ReturnProcurementDetail> ReturnProcurementDetail { get; set; }
+        public DbSet<ConsolidatedGainLossAccounts> ConsolidatedGainLossAccounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

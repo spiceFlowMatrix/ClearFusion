@@ -13,5 +13,9 @@ namespace HumanitarianAssistance.Domain.Entities.HR
 		[Column(Order = 1)]
 		public int TechnicalQuestionId { get; set; }
 		public string Question { get; set; }
+		public int DesignationId { get; set; }
+		[ForeignKey("DesignationId")]
+		public virtual DesignationDetail DesignationDetail { get; set; }
+		
 	}
 }

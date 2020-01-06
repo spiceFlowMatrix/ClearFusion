@@ -21,7 +21,6 @@ import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/stat
 import { ProjectActivityStatus } from 'src/app/shared/enum';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
-import { min } from 'date-fns';
 
 @Component({
   selector: 'app-project-activity-add',
@@ -281,9 +280,12 @@ export class ProjectActivityAddComponent implements OnInit, OnDestroy {
   onRecurringChange(event: any) {
     // console.log(event);
     if (event.checked === true) {
+      this.projectActivityForm.controls['RecurringCount'].setValue(1);
       this.diasbleEndDate = true;
     } else {
       this.diasbleEndDate = false;
+      this.projectActivityForm.controls['RecurringCount'].setValue(null);
+
     }
   }
 }

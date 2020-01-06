@@ -7,6 +7,7 @@ import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { ReplaySubject, Observable } from 'rxjs';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { IDropDownModel, IMonthlyBreakDown } from '../../models/purchase';
+import { TransportItemCategory } from 'src/app/shared/enum';
 
 @Component({
   selector: 'app-generator-details',
@@ -23,6 +24,7 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   // variables
   generatorDetailForm: any;
   generatorId: number;
+  transportType = TransportItemCategory.Generator;
 
   monthlyBreakdownYear: number;
   monthlyBreakdownYearList$: Observable<IDropDownModel[]>;
@@ -176,7 +178,7 @@ export class GeneratorDetailsComponent implements OnInit, OnDestroy {
   }
 
   getMonthlyBreakDownYears() {
-    this.monthlyBreakdownYearList$ = this.purchaseService.getMonthlyBreakDownYears();
+    this.monthlyBreakdownYearList$ = this.purchaseService.getPreviousYearsList(10);
     this.monthlyBreakdownYearList$.subscribe(x => {
       this.monthlyBreakdownYear = x[0].value;
     });

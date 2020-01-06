@@ -21,30 +21,52 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
         public async Task<ApiResponse> Handle(AddLogisticRequestCommand request, CancellationToken cancellationToken)
         {
             ApiResponse response = new ApiResponse();
-            try
-            {
-                ProjectLogisticRequests obj= new ProjectLogisticRequests{
-                    ProjectId = request.ProjectId,
-                    RequestName = request.RequestName,
-                    CurrencyId = request.CurrencyId,
-                    BudgetLineId = request.BudgetLineId,
-                    OfficeId = request.OfficeId,
-                    Status = (int)LogisticRequestStatus.NewRequest,
-                    TotalCost = 0,
-                    CreatedDate = request.CreatedDate,
-                    CreatedById = request.CreatedById,
-                    IsDeleted = false
-                };
-                await _dbContext.ProjectLogisticRequests.AddAsync(obj);
-                await _dbContext.SaveChangesAsync();
-                response.data.logisticRequestId=obj.LogisticRequestsId;
-                response.StatusCode = StaticResource.successStatusCode;
-                response.Message = StaticResource.SuccessText;
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = StaticResource.failStatusCode;
-                response.Message = ex.Message;
+            using (var _dbTransaction = _dbContext.Database.BeginTransaction()){
+                try
+                {
+                    ProjectLogisticRequests obj= new ProjectLogisticRequests{
+                        ProjectId = request.ProjectId,
+                        Description = request.Description,
+                        CurrencyId = request.CurrencyId,
+                        BudgetLineId = request.BudgetLineId,
+                        OfficeId = request.OfficeId,
+                        Status = request.Status,
+                        ComparativeStatus = request.ComparativeStatus,
+                        TenderStatus = request.TenderStatus,  
+                        TotalCost = request.TotalCost,
+                        CreatedDate = request.CreatedDate,
+                        CreatedById = request.CreatedById,
+                        IsDeleted = false
+                    };
+                    await _dbContext.ProjectLogisticRequests.AddAsync(obj);
+                    await _dbContext.SaveChangesAsync();
+                    foreach (var item in request.RequestedItems)
+                    {
+                        ProjectLogisticItems itemobj= new ProjectLogisticItems{
+                            ItemId = item.ItemId,
+                            EstimatedUnitCost = item.EstimatedUnitCost,
+                            PurchaseSubmitted = false,
+                            Quantity = item.RequestedUnits,
+                            IsDeleted = false,
+                            LogisticRequestsId = obj.LogisticRequestsId,
+                            CreatedDate = request.CreatedDate,
+                            CreatedById = request.CreatedById,
+                        };
+                        await _dbContext.ProjectLogisticItems.AddAsync(itemobj);
+                    }
+                    await _dbContext.SaveChangesAsync();
+                    _dbTransaction.Commit();
+                    
+                    response.data.logisticRequestId=obj.LogisticRequestsId;
+                    response.StatusCode = StaticResource.successStatusCode;
+                    response.Message = StaticResource.SuccessText;
+                }
+                catch (Exception ex)
+                {
+                    _dbTransaction.Rollback();
+                    response.StatusCode = StaticResource.failStatusCode;
+                    response.Message = ex.Message;
+                }
             }
             return response;
         }

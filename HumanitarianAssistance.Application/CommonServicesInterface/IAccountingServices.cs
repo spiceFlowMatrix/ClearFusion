@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Accounting.Commands.Common;
 using HumanitarianAssistance.Application.Accounting.Commands.Create;
 using HumanitarianAssistance.Application.Accounting.Models;
+using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Domain.Entities.Accounting;
 
 namespace HumanitarianAssistance.Application.CommonServicesInterface
@@ -16,5 +17,6 @@ namespace HumanitarianAssistance.Application.CommonServicesInterface
         Task<bool> DeleteTransaction(long voucherId, string userId);
         Task<bool> ReverseEmployeeSalaryVoucher(ReverseEmployeeSalaryVoucherCommand request);
         Task<bool> AddRole(string RoleName);
+        Task<ApiResponse> GetJournalReport(JournalReportModel request);
     }
 }

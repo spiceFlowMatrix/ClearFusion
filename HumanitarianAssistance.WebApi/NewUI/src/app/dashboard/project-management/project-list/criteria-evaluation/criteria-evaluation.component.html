@@ -7,12 +7,11 @@
             <div class="top-header clearfix">
               <h4 class="main_heading">
                 CRITERIA EVALUATION
-                  <button mat-stroked-button color="accent" (click)="downloadPdf()">
-                      <mat-icon aria-hidden="false" aria-label="Example home icon">
-                        vertical_align_bottom </mat-icon
-                      >Export Pdf
-                    </button>
-                    <!-- <mat-icon class="icon_cursor padding_top_5px" aria-label="download" (click)="onExportPdf()">vertical_align_bottom</mat-icon> -->
+                <button mat-stroked-button color="accent" (click)="downloadPdf()">
+                  <mat-icon aria-hidden="false" aria-label="Example home icon">
+                    vertical_align_bottom </mat-icon>Export Pdf
+                </button>
+                <!-- <mat-icon class="icon_cursor padding_top_5px" aria-label="download" (click)="onExportPdf()">vertical_align_bottom</mat-icon> -->
 
                 <a class="pull-right" *ngIf="
                     startCriteriaEvaluationSubmitLoader;
@@ -22,28 +21,32 @@
 
 
                 <ng-template #stopCriteriaEvaluationSubmitLoder>
-                    <button mat-icon-button *ngIf="!IsSubmitCEform.IsCriteriaEvaluationSubmit && !criteriaEvaluationLoader"
-                      [disabled]="disableCriteriaEvaluationForm" (click)="OnCriteriaEvaluationSubmitChange('IsCESubmit')"
-                      class="pull-right" matTooltip="Click Here To Submit For Approval" matTooltipPosition="above">
-                      <mat-icon aria-label="approved" class="grey_color">check</mat-icon>
-                    </button>
-                    <button mat-icon-button *ngIf="IsSubmitCEform.IsCriteriaEvaluationSubmit  && !criteriaEvaluationLoader"
-                      [disabled]="disableCriteriaEvaluationForm"
-                      class="pull-right" matTooltip="Approved" matTooltipPosition="above">
-                      <mat-icon aria-label="approved" class="green">check</mat-icon>
-                    </button>
+                  <button mat-icon-button
+                    *ngIf="!IsSubmitCEform.IsCriteriaEvaluationSubmit && !criteriaEvaluationLoader"
+                    [disabled]="disableCriteriaEvaluationForm" (click)="OnCriteriaEvaluationSubmitChange('IsCESubmit')"
+                    class="pull-right" matTooltip="Click Here To Submit For Approval" matTooltipPosition="above">
+                    <mat-icon aria-label="approved" class="grey_color">check</mat-icon>
+                  </button>
+                  <button mat-icon-button
+                    *ngIf="IsSubmitCEform.IsCriteriaEvaluationSubmit  && !criteriaEvaluationLoader"
+                    [disabled]="disableCriteriaEvaluationForm" class="pull-right" matTooltip="Approved"
+                    matTooltipPosition="above">
+                    <mat-icon aria-label="approved" class="green">check</mat-icon>
+                  </button>
 
-                    <button mat-icon-button *ngIf="IsSubmitCEform.IsCriteriaEvaluationSubmit == true  && !criteriaEvaluationLoader"
+                  <button mat-icon-button
+                    *ngIf="IsSubmitCEform.IsCriteriaEvaluationSubmit == true  && !criteriaEvaluationLoader"
                     [disabled]="disableCriteriaEvaluationForm" (click)="OnCriteriaEvaluationSubmitChange('IsCEReject')"
                     class="pull-right" matTooltip="Click Here To Reject" matTooltipPosition="above">
                     <mat-icon aria-label="Reject" class="grey_color">clear</mat-icon>
                   </button>
-                  <button mat-icon-button *ngIf="IsSubmitCEform.IsCriteriaEvaluationSubmit == false  && !criteriaEvaluationLoader"
-                    [disabled]="disableCriteriaEvaluationForm"
-                    class="pull-right" matTooltip="Rejected" matTooltipPosition="above">
+                  <button mat-icon-button
+                    *ngIf="IsSubmitCEform.IsCriteriaEvaluationSubmit == false  && !criteriaEvaluationLoader"
+                    [disabled]="disableCriteriaEvaluationForm" class="pull-right" matTooltip="Rejected"
+                    matTooltipPosition="above">
                     <mat-icon aria-label="Rejected" class="red">clear</mat-icon>
                   </button>
-                  </ng-template>
+                </ng-template>
               </h4>
             </div>
           </div>
@@ -53,7 +56,8 @@
           <div class="col-sm-12">
             <!-- Note :  if project is not allowed by law then disable the entire form and score value set to 0-->
             <h5 class="main_heading pull-right">
-              <span *ngIf="feasibilityForm.ProjectAllowedBylaw == false; else scoreTempalte">
+              <span
+                *ngIf="feasibilityForm.ProjectAllowedBylaw == false || feasibilityForm.ProjectByLeadership == false; else scoreTempalte">
                 Score: 0.00 </span>
               <ng-template #scoreTempalte>
                 <span *ngIf="!criteriaEvaluationLoader"> Total
@@ -81,27 +85,36 @@
           </div>
         </div>
         <ng-template #CETemplate>
-          <div class=row>
-            <div class="col-sm-6">
+          <div class="mar_left_botm">
+            <div class=row>
+              <div class="col-sm-6">
                 <span class="p-class"> Project allowed by law</span>
-              <mat-slide-toggle class="pull-right" (change)="onProjectallowedByLawChange($event)"
-                [(ngModel)]="feasibilityForm.ProjectAllowedBylaw"></mat-slide-toggle>
-              <div *ngIf="
+                <mat-slide-toggle class="pull-right" (change)="onProjectallowedByLawChange($event)"
+                  [(ngModel)]="feasibilityForm.ProjectAllowedBylaw"></mat-slide-toggle>
+                <div *ngIf="
                       feasibilityForm.ProjectAllowedBylaw == false ||
                       feasibilityForm.ProjectAllowedBylaw == null
                     ">
-                <span class="note_text mr-left">"Warning: Project should be allowed by law"</span>
+                  <span class="note_text">"Warning: Project should be allowed by law"</span>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <mat-form-field class="example-full-width">
+                  <mat-select placeholder="Currency" name="currency" [value]="currencyDetailModel.CurrencyId"
+                    [disabled]="disableCriteriaEvaluationForm" (selectionChange)="currencyDetailsChange($event.value)">
+                    <mat-option *ngFor="let item of CurrencyList" [value]="item.CurrencyId">
+                      {{item.CurrencyCode}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
               </div>
             </div>
-            <div class="col-sm-4">
-              <mat-form-field class="example-full-width">
-                <mat-select placeholder="Currency" name="currency" [value]="currencyDetailModel.CurrencyId"
-                  [disabled]="disableCriteriaEvaluationForm" (selectionChange)="currencyDetailsChange($event.value)">
-                  <mat-option *ngFor="let item of CurrencyList" [value]="item.CurrencyId">
-                    {{item.CurrencyCode}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
+            <div class="row">
+              <div class="col-sm-6">
+                <span class="p-class"> Project allowed by Organization leadership</span>
+                <mat-slide-toggle class="pull-right" (change)="onProjectAllowedByOrganisationChange($event)"
+                  [(ngModel)]="feasibilityForm.ProjectByLeadership"></mat-slide-toggle>
+              </div>
             </div>
           </div>
           <mat-accordion>
@@ -115,7 +128,7 @@
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="proposal-header">
-                      IS PROJECT PRACTICAL
+                      IS PROJECT PRACTICAL <span class="fnt-size"> (Score: 1) </span>
                       <mat-slide-toggle (change)="onIsProjectPracticalChange($event)"
                         [(ngModel)]="feasibilityForm.IsProjectPractical">
                       </mat-slide-toggle>
@@ -131,25 +144,26 @@
                       <div class="capacity-available-compensation ul">
                         <ul>
                           <li>
-                            Train Staff
+                            Train Staff <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" (change)="onCompensationTrainStaffChange($event)"
                               [disabled]="isDisabledCompensation" [(ngModel)]="feasibilityForm.TrainedStaff">
                             </mat-slide-toggle>
+
                           </li>
                           <li>
-                            By Equipment
+                            By Equipment <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" (change)="onCompensationByEquipmentChange($event)"
                               [disabled]="isDisabledCompensation" [(ngModel)]="feasibilityForm.ByEquipment">
                             </mat-slide-toggle>
                           </li>
                           <li>
-                            Expand Scope
+                            Expand Scope <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" (change)="oncompensationExpandScopeChange($event)"
                               [disabled]="isDisabledCompensation" [(ngModel)]="feasibilityForm.ExpandScope">
                             </mat-slide-toggle>
                           </li>
                           <li class="clearfix">
-                            Expand Geographical Presence
+                            Expand Geographical Presence <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" (change)="onCompensationGeographicalChange($event)"
                               [disabled]="isDisabledCompensation" [(ngModel)]="feasibilityForm.GeoGraphicalPresence">
                             </mat-slide-toggle>
@@ -159,7 +173,7 @@
                       <div class="funding-method-status-wrap ul">
                         <div class="clearfix">
                           <h6 class="middle-header">
-                            ALLOWED 3RD PARTY CONTRACTING
+                            ALLOWED 3RD PARTY CONTRACTING <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle (change)="onallowedthirdPartyChange($event)"
                               [(ngModel)]="feasibilityForm.ThirdPartyContract">
                             </mat-slide-toggle>
@@ -215,14 +229,14 @@
                       <div class="capacity-available-compensation ul">
                         <ul>
                           <li>
-                            Useable By Organisation
+                            Useable By Organisation <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" (change)="onUseableByOrganisationChange($event)"
                               [disabled]="isDisabledAnyInKindComponent"
                               [(ngModel)]="feasibilityForm.UseableByOrganisation">
                             </mat-slide-toggle>
                           </li>
                           <li>
-                            Feasible Experts Deployed
+                            Feasible Experts Deployed <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" (change)="onFeasibleExpertDeployedChange($event)"
                               [disabled]="isDisabledAnyInKindComponent"
                               [(ngModel)]="feasibilityForm.FeasibleExpertDeploy">
@@ -260,7 +274,7 @@
                       <div class="capacity-available-compensation ul">
                         <ul>
                           <li>
-                            Enough time for quality Work
+                            Enough time for quality Work <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" (change)="onEnoughTimeQualityChange($event)"
                               [(ngModel)]="feasibilityForm.EnoughTimeForProject"></mat-slide-toggle>
                             <div *ngIf="
@@ -274,26 +288,26 @@
                           <li>
 
                           </li>
-                          <li>
+                          <!-- <li>
                             Project allowed by Organization leadership
                             <mat-slide-toggle class="pull-right" (change)="onProjectAllowedByOrganisationChange($event)"
                               [(ngModel)]="feasibilityForm.ProjectByLeadership"></mat-slide-toggle>
-                          </li>
+                          </li> -->
 
                           <li>
-                            Presence/Coverage in project location
+                            Presence/Coverage in project location <span class="fnt-size"> (Score: 2) </span>
                             <mat-slide-toggle class="pull-right" (change)="onPresenceCoverageinProjectChange($event)"
                               [(ngModel)]="feasibilityForm.PresenceCoverageInProject">
                             </mat-slide-toggle>
                           </li>
                           <li>
-                            Project in line with Organisational focus
+                            Project in line with Organisational focus <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" (change)="
                                 onProjectInLineOrganisationalChange($event)
                               " [(ngModel)]="feasibilityForm.ProjectInLineWithOrgFocus"></mat-slide-toggle>
                           </li>
                           <li>
-                            Enough time to prepare proposal
+                            Enough time to prepare proposal <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" (change)="onENoughTimetoPrepareChange($event)"
                               [(ngModel)]="
                                 feasibilityForm.EnoughTimeToPrepareProposal
@@ -332,7 +346,7 @@
                       </div>
 
                       <div class="row">
-                        <div class="col-sm-10">COST GREATER THAN BUDGET</div>
+                        <div class="col-sm-10">COST GREATER THAN BUDGET (Cost affordablity) <span class="fnt-size"> (Score: 5) </span></div>
                         <div class="col-sm-2">
                           <mat-slide-toggle (change)="onCostGreaterThanBudgetChange($event)"
                             [(ngModel)]="feasibilityForm.IsCostGreaterthenBudget"></mat-slide-toggle>
@@ -356,7 +370,7 @@
 
                       <div class="row">
                         <div class="col-sm-10">
-                          FINANCIAL CONTRIBUTION FULFILLABLE
+                          FINANCIAL CONTRIBUTION FULFILLABLE (Secured) <span class="fnt-size"> (Score: 1) </span>
                         </div>
                         <div class="col-sm-2">
                           <mat-slide-toggle (change)="onFinancialContributionChange($event)"
@@ -429,7 +443,7 @@
                     -->
                       <!-- <div class="opacity"></div> -->
                       <div class="proposal-header">
-                        PROPOSAL ACCEPTED
+                        PROPOSAL ACCEPTED <span class="fnt-size"> (Score: 1) </span>
                         <mat-slide-toggle (change)="onProposalAcceptChange($event)" [disabled]="isDisabled"
                           [(ngModel)]="donorCEForm.ProposalAccepted"></mat-slide-toggle>
                       </div>
@@ -459,28 +473,28 @@
                       <div class="funding-method-status-wrap ul">
                         <ul>
                           <li class="clearfix">
-                            Professional
+                            Professional <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" (change)="onProfessionalChange($event)"
                               [disabled]="isDisabled" [(ngModel)]="donorCEForm.Professional"></mat-slide-toggle>
                           </li>
                           <li class="clearfix">
-                            Funds On Time
+                            Funds On Time <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" (change)="onFundsOnTimeChange($event)"
                               [disabled]="isDisabled" [(ngModel)]="donorCEForm.FundsOnTime"></mat-slide-toggle>
                           </li>
                           <li class="clearfix">
-                            Effective Communication
+                            Effective Communication <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" (change)="onEffectiveCommunicationChange($event)"
                               [disabled]="isDisabled" [(ngModel)]="donorCEForm.EffectiveCommunication">
                             </mat-slide-toggle>
                           </li>
                           <li class="clearfix">
-                            Disputes
+                            Disputes <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" (change)="onDisputesChange($event)"
                               [disabled]="isDisabled" [(ngModel)]="donorCEForm.Dispute"></mat-slide-toggle>
                           </li>
                           <li class="clearfix">
-                            Other Deliverables
+                            Other Deliverables <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" (change)="onOtherDeliverablesChange($event)"
                               [disabled]="isDisabled" [(ngModel)]="donorCEForm.OtherDeliverable"></mat-slide-toggle>
                           </li>
@@ -522,31 +536,31 @@
                     <div class="funding-method-status-wrap ul">
                       <ul>
                         <li class="clearfix">
-                          Performance
+                          Performance <span class="fnt-size"> (Score: 1) </span>
                           <mat-slide-toggle class="pull-right" (change)="onPerformanceChange($event)"
                             [disabled]="isDisabledCriticism" [(ngModel)]="donorCEForm.CriticismPerformance">
                           </mat-slide-toggle>
                         </li>
                         <li class="clearfix">
-                          Time Management
+                          Time Management <span class="fnt-size"> (Score: 1) </span>
                           <mat-slide-toggle class="pull-right" (change)="onTimeManagementChange($event)"
                             [disabled]="isDisabledCriticism" [(ngModel)]="donorCEForm.TimeManagement">
                           </mat-slide-toggle>
                         </li>
                         <li class="clearfix">
-                          Money Allocation
+                          Money Allocation <span class="fnt-size"> (Score: 1) </span>
                           <mat-slide-toggle class="pull-right" (change)="onMoneyAllocationChange($event)"
                             [disabled]="isDisabledCriticism" [(ngModel)]="donorCEForm.MoneyAllocation">
                           </mat-slide-toggle>
                         </li>
                         <li class="clearfix">
-                          Accountability
+                          Accountability <span class="fnt-size"> (Score: 1) </span>
                           <mat-slide-toggle class="pull-right" (change)="onAccountabilityChange($event)"
                             [disabled]="isDisabledCriticism" [(ngModel)]="donorCEForm.Accountability">
                           </mat-slide-toggle>
                         </li>
                         <li class="clearfix">
-                          Deliverable Quality
+                          Deliverable Quality <span class="fnt-size"> (Score: 1) </span>
                           <mat-slide-toggle class="pull-right" (change)="onDeliverableQualityChange($event)"
                             [disabled]="isDisabledCriticism" [(ngModel)]="donorCEForm.DeliverableQuality">
                           </mat-slide-toggle>
@@ -558,45 +572,72 @@
                     <h5>DONOR IMAGE & REPUTATION</h5>
                   </div>
 
-                  <div class="middle-header">
-                    <h6 class="middle-header">Financing History</h6>
-                  </div>
 
-                  <div class="middle-header">
-                    <mat-radio-group class="example-radio-group" name="donorFinancialHistory"
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <span class="pull-right">Financing History <span class="fnt-size"> (Score: 2) </span></span>
+                    </div>
+                    <!-- <mat-radio-group class="example-radio-group" name="donorFinancialHistory"
                       [value]="donorCEForm.DonorFinancingHistory">
                       <mat-radio-button class="example-radio-button" *ngFor="let item of financialHistory"
                         [value]="item.Id" (change)="onFinancialHistoryChange($event.value)">
                         {{ item.Name }}
                       </mat-radio-button>
-                    </mat-radio-group>
+                    </mat-radio-group> -->
+                    <!-- <div class="col-sm-3"> -->
+                    <div class="col-sm-6">
+                      <mat-checkbox (change)="onFinancialHistoryChange($event)"
+                        [(ngModel)]="donorCEForm.DonorFinancingHistory">
+                        Good/Bad </mat-checkbox>
+                    </div>
+                    <!-- </div> -->
                   </div>
-                  <div class="middle-header">
-                    <h6 class="middle-header">Religious Standing</h6>
-                  </div>
+                  <!-- <div class="middle-header">
+                  </div> -->
 
-                  <div class="middle-header">
-                    <mat-radio-group class="example-radio-group" name="donorReligiousStanding"
+                  <div  class="row">
+                    <div class="col-sm-6">
+                      <span class="pull-right">Religious Standing <span class="fnt-size"> (Score: 2) </span></span>
+                      <!-- <mat-radio-group class="example-radio-group" name="donorReligiousStanding"
                       [value]="donorCEForm.ReligiousStanding">
                       <mat-radio-button class="example-radio-button" *ngFor="let item of financialHistory"
                         [value]="item.Id" (change)="onReligiousStandingChange($event.value)">
                         {{ item.Name }}
                       </mat-radio-button>
-                    </mat-radio-group>
+                    </mat-radio-group> -->
+                      <!-- <div class="col-sm-3"> -->
+                    </div>
+                    <div class="col-sm-6">
+                      <mat-checkbox (change)="onReligiousStandingChange($event)"
+                        [(ngModel)]="donorCEForm.ReligiousStanding">
+                        Good/Bad </mat-checkbox>
+                    </div>
+                    <!-- </div> -->
                   </div>
 
-                  <div class="middle-header">
+                  <!-- <div class="middle-header">
                     <h6 class="middle-header">Political Standing</h6>
-                  </div>
+                  </div> -->
 
-                  <div class="middle-header">
-                    <mat-radio-group class="example-radio-group" name="donorPoliticalStanding"
-                      [value]="donorCEForm.PoliticalStanding">
-                      <mat-radio-button class="example-radio-button" *ngFor="let item of financialHistory"
-                        [value]="item.Id" (change)="onPoliticalStandingChange($event.value)">
-                        {{ item.Name }}
-                      </mat-radio-button>
-                    </mat-radio-group>
+                  <div  class="row">
+                    <div class="col-sm-6">
+                      <span class="pull-right">Political Standing  <span class="fnt-size"> (Score: 2) </span></span>
+                    </div>
+                    <!-- <div class="col-sm-6">
+                      <mat-radio-group class="example-radio-group" name="donorPoliticalStanding"
+                        [value]="donorCEForm.PoliticalStanding">
+                        <mat-radio-button class="example-radio-button" *ngFor="let item of financialHistory"
+                          [value]="item.Id" (change)="onPoliticalStandingChange($event.value)">
+                          {{ item.Name }}
+                        </mat-radio-button>
+                      </mat-radio-group>
+                    </div> -->
+
+                    <div class="col-sm-6">
+                      <mat-checkbox (change)="onPoliticalStandingChange($event)"
+                        [(ngModel)]="donorCEForm.PoliticalStanding">
+                        Good/Bad</mat-checkbox>
+                    </div>
                   </div>
 
                   <!-- </div> -->
@@ -618,8 +659,9 @@
                   </h5>
                 </div>
                 <div>
-                  <mat-tab-group>
-                    <mat-tab label="Rural Development and Social Protection">
+                  <mat-tab-group (selectedTabChange)="onTabchangeScore($event)">
+                    <mat-tab label="Rural Development and Social Protection (Score: 2)" >
+                      <ng-template matTabContent>
                       <div class="set-min-height">
                         <div class="col-sm-3">
                           <mat-checkbox (change)="onProdAwarenessChange($event)"
@@ -676,8 +718,10 @@
                           </mat-checkbox>
                         </div>
                       </div>
+                      </ng-template>
                     </mat-tab>
-                    <mat-tab label="Education">
+                    <mat-tab label="Education (Score: 2)">
+                      <ng-template matTabContent>
                       <div class="set-min-height">
 
 
@@ -725,8 +769,10 @@
                           </mat-checkbox>
                         </div>
                       </div>
+                    </ng-template>
                     </mat-tab>
-                    <mat-tab label="Health and Nutrition">
+                    <mat-tab label="Health and Nutrition (Score: 2)">
+                      <ng-template matTabContent>
                       <div class="set-min-height">
                         <div class="col-sm-3">
                           <mat-checkbox (change)="onPrimaryHealthChange($event)"
@@ -797,8 +843,10 @@
                           </mat-checkbox>
                         </div>
                       </div>
+                      </ng-template>
                     </mat-tab>
-                    <mat-tab label="Disaster Risk Reduction">
+                    <mat-tab label="Disaster Risk Reduction (Score: 2)">
+                      <ng-template matTabContent>
                       <div class="set-min-height">
                         <div class="col-sm-3">
                           <mat-checkbox (change)="onMitigationChange($event)"
@@ -848,10 +896,11 @@
                           </mat-checkbox>
                         </div>
                       </div>
+                      </ng-template>
                     </mat-tab>
-                    <mat-tab label="Agriculture and Livestock">
+                    <mat-tab label="Agriculture and Livestock (Score: 2)">
+                      <ng-template matTabContent>
                       <div class="set-min-height">
-
                         <div class="col-sm-3">
                           <mat-checkbox (change)="onNaturalResourceChange($event)"
                             [(ngModel)]="productAndServiceForm.NaturalResourceManagement">
@@ -907,6 +956,7 @@
                           </mat-checkbox>
                         </div>
                       </div>
+                      </ng-template>
                     </mat-tab>
                   </mat-tab-group>
 
@@ -922,48 +972,48 @@
               </div>
               <div class="row">
                 <div class="col-sm-3">
-                  <mat-checkbox (change)="onWomenChange($event)" [(ngModel)]="productAndServiceForm.Women">Women
+                  <mat-checkbox (change)="onWomenChange($event)" [(ngModel)]="productAndServiceForm.Women">Women <span class="fnt-size"> (Score: 0.5) </span>
                   </mat-checkbox>
                 </div>
                 <div class="col-sm-3">
-                  <mat-checkbox (change)="onMenChange($event)" [(ngModel)]="productAndServiceForm.Men">Men
+                  <mat-checkbox (change)="onMenChange($event)" [(ngModel)]="productAndServiceForm.Men">Men <span class="fnt-size"> (Score: 0.5) </span>
                   </mat-checkbox>
                 </div>
                 <div class="col-sm-3">
-                  <mat-checkbox (change)="onYouthChange($event)" [(ngModel)]="productAndServiceForm.Youth">Youth
+                  <mat-checkbox (change)="onYouthChange($event)" [(ngModel)]="productAndServiceForm.Youth">Youth <span class="fnt-size"> (Score: 0.5) </span>
                   </mat-checkbox>
                 </div>
 
                 <div class="col-sm-3">
                   <mat-checkbox (change)="onChildrenChange($event)" [(ngModel)]="productAndServiceForm.Children">
-                    Children
+                    Children <span class="fnt-size"> (Score: 1) </span>
                   </mat-checkbox>
                 </div>
                 <div class="col-sm-3">
                   <mat-checkbox (change)="onDisabledChange($event)" [(ngModel)]="productAndServiceForm.Disabled">
-                    Disabled
+                    Disabled <span class="fnt-size"> (Score: 1) </span>
                   </mat-checkbox>
                 </div>
                 <div class="col-sm-3">
-                  <mat-checkbox (change)="onIDPsChange($event)" [(ngModel)]="productAndServiceForm.IDPs">IDPs
+                  <mat-checkbox (change)="onIDPsChange($event)" [(ngModel)]="productAndServiceForm.IDPs">IDPs <span class="fnt-size"> (Score: 0.5) </span>
                   </mat-checkbox>
                 </div>
                 <div class="col-sm-3">
                   <mat-checkbox (change)="onReturneesChange($event)" [(ngModel)]="
                   productAndServiceForm.Returnees
-                ">Returnees
+                ">Returnees <span class="fnt-size"> (Score: 1) </span>
                   </mat-checkbox>
                 </div>
                 <div class="col-sm-3">
                   <mat-checkbox (change)="onKuchisChange($event)" [(ngModel)]="
                   productAndServiceForm.Kuchis
-                ">Kuchis
+                ">Kuchis <span class="fnt-size"> (Score: 1) </span>
                   </mat-checkbox>
                 </div>
                 <div class="col-sm-3">
                   <mat-checkbox (change)="onWidowsChange($event)" [(ngModel)]="
                   productAndServiceForm.Widows
-                ">Widows
+                ">Widows <span class="fnt-size"> (Score: 1) </span>
                   </mat-checkbox>
                 </div>
               </div>
@@ -979,7 +1029,7 @@
               </mat-expansion-panel-header>
               <div class="middle-header">
                 <h5>
-                  DONOR ELIGIBILITY CRITERA MET
+                  DONOR ELIGIBILITY CRITERA MET <span class="fnt-size"> (Score: 8) </span>
                   <mat-slide-toggle (change)="onDonorEligibiltyCriteraChange($event)"
                     [(ngModel)]="eligibilityForm.DonorCriteriaMet"></mat-slide-toggle>
                 </h5>
@@ -993,13 +1043,16 @@
               </div>
               <div id="EligibilityCriteriaMet" class="funding-box-wrap-eligibility">
                 <div class="proposal-header">
-                  Can eligibility be posssible until the deadline ?
+                  Can eligibility be posssible until the deadline ? <span class="fnt-size"> (Score: 6) </span>
                   <mat-slide-toggle (change)="onDonorEligibilityDeadlineChange($event)"
                     [disabled]="isDisabledEligibilityCriteria" [(ngModel)]="eligibilityForm.EligibilityDealine">
                   </mat-slide-toggle>
                 </div>
                 <div class="proposal-header">
-                  Possible co-partnership ?
+                  <span class="note_text"> NOTE: CHA eligibility against donor criteria (e.g. PADOR, DUNS number, sam# etc)</span>
+                </div>
+                <div class="proposal-header">
+                  Possible co-partnership ? <span class="fnt-size"> (Score: 2) </span>
                   <mat-slide-toggle (change)="onDonorEligibilityPartnershipChange($event)"
                     [disabled]="isDisabledEligibilityCriteria" [(ngModel)]="eligibilityForm.CoPartnership">
                   </mat-slide-toggle>
@@ -1026,16 +1079,16 @@
                     <div class="row">
                       <div class="col-sm-4">
                         <mat-checkbox (change)="onIncreasedReputationChange($event)"
-                          [(ngModel)]="priorityForm.IncreaseReputation">Increased Reputation</mat-checkbox>
+                          [(ngModel)]="priorityForm.IncreaseReputation">Increased Reputation <span class="fnt-size"> (Score: 3) </span></mat-checkbox>
                       </div>
                       <div class="col-sm-4">
                         <mat-checkbox (change)="onImprovedDonorRelationChange($event)"
-                          [(ngModel)]="priorityForm.ImproveDonorRelationship">Improved Donor Relationaship
+                          [(ngModel)]="priorityForm.ImproveDonorRelationship">Improved Donor Relationaship <span class="fnt-size"> (Score: 3) </span>
                         </mat-checkbox>
                       </div>
                       <div class="col-sm-4">
                         <mat-checkbox (change)="onGoodCauseChange($event)" [(ngModel)]="priorityForm.GoodCause">Good
-                          Cause
+                          Cause <span class="fnt-size"> (Score: 1) </span>
                         </mat-checkbox>
                       </div>
                     </div>
@@ -1043,34 +1096,34 @@
                     <div class="row">
                       <div class="col-sm-4">
                         <mat-checkbox (change)="onImprovedPerformanceChange($event)"
-                          [(ngModel)]="priorityForm.ImprovePerformancecapacity">Improved Performance Capacity
+                          [(ngModel)]="priorityForm.ImprovePerformancecapacity">Improved Performance Capacity <span class="fnt-size"> (Score: 1) </span>
                         </mat-checkbox>
                       </div>
                       <div class="col-sm-4">
                         <mat-checkbox (change)="onSkillImprovementChange($event)"
                           [(ngModel)]="priorityForm.SkillImprove">
-                          Skill Improvement</mat-checkbox>
+                          Skill Improvement <span class="fnt-size"> (Score: 2) </span></mat-checkbox>
                       </div>
                       <div class="col-sm-4">
                         <mat-checkbox (change)="onFillingFundingGapChange($event)"
                           [(ngModel)]="priorityForm.FillingFundingGap">
-                          Filling funding gaps</mat-checkbox>
+                          Filling funding gaps <span class="fnt-size"> (Score: 6) </span></mat-checkbox>
                       </div>
                     </div>
 
                     <div class="row">
                       <div class="col-sm-4">
                         <mat-checkbox (change)="onNewSoftwareChange($event)" [(ngModel)]="priorityForm.NewSoftware">New
-                          Software</mat-checkbox>
+                          Software <span class="fnt-size"> (Score: 1) </span></mat-checkbox>
                       </div>
                       <div class="col-sm-4">
                         <mat-checkbox (change)="onNewEquipmentChange($event)" [(ngModel)]="priorityForm.NewEquipment">
                           New
-                          Equipment</mat-checkbox>
+                          Equipment <span class="fnt-size"> (Score: 1) </span></mat-checkbox>
                       </div>
                       <div class="col-sm-4">
                         <mat-checkbox (change)="onCoverageAreaExpensionChange($event)"
-                          [(ngModel)]="priorityForm.CoverageAreaExpansion">Coverage Area Expansion
+                          [(ngModel)]="priorityForm.CoverageAreaExpansion">Coverage Area Expansion <span class="fnt-size"> (Score: 1) </span>
                         </mat-checkbox>
                       </div>
                     </div>
@@ -1078,11 +1131,11 @@
                     <div class="row">
                       <div class="col-sm-4">
                         <mat-checkbox (change)="onNewTrainingChange($event)" [(ngModel)]="priorityForm.NewTraining">New
-                          Training
+                          Training <span class="fnt-size"> (Score: 1) </span>
                         </mat-checkbox>
                       </div>
                       <div class="col-sm-4">
-                        <mat-checkbox (change)="onPriorityOthersChange($event)" [(ngModel)]="priorityForm.Others">Other
+                        <mat-checkbox (change)="onPriorityOthersChange($event)" [(ngModel)]="priorityForm.Others">Other <span class="fnt-size"> (Score: 1) </span>
                         </mat-checkbox>
                         &nbsp; &nbsp;
                         <i *ngIf="isPriorityOther" class="material-icons icon_cursor" (click)="onAddPriorityOther()">
@@ -1107,7 +1160,7 @@
                     <br />
                     <hr />
                     <div class="col-md-offset-3">
-                      PROJECT IN LINE WITH ORGANISATION EXPANSION GOALS
+                      PROJECT IN LINE WITH ORGANISATION EXPANSION GOALS <span class="fnt-size"> (Score: 1) </span>
                       <mat-slide-toggle (change)="onProjectExpensionGoalChange($event)"
                         [(ngModel)]="priorityForm.ExpansionGoal"></mat-slide-toggle>
                       <div *ngIf="
@@ -1136,7 +1189,8 @@
                 <div class="col-sm-3">
                   <!-- <label>Project Activities</label> -->
                   <mat-form-field class="pull-right">
-                    <input matInput min= "0" [(ngModel)]="financialForm.ProjectActivities" placeholder="Direct Costs" (focusout)="
+                    <input matInput min="0" [(ngModel)]="financialForm.ProjectActivities" placeholder="Direct Costs"
+                      (focusout)="
                     onProjectActivityChange(
                       'projectActivity',
                       financialForm.ProjectActivities
@@ -1146,7 +1200,8 @@
                 </div>
                 <div class="col-sm-3">
                   <mat-form-field class="pull-right">
-                    <input matInput min= "0" [(ngModel)]="financialForm.Operational" placeholder="Operational Overhead" (focusout)="
+                    <input matInput min="0" [(ngModel)]="financialForm.Operational" placeholder="Operational Overhead"
+                      (focusout)="
                     onProjectActivityChange(
                       'operational',
                       financialForm.Operational
@@ -1167,7 +1222,7 @@
 
                 <div class="col-sm-3">
                   <mat-form-field class="pull-right">
-                    <input matInput min= "0" name="overheadAdmin" placeholder="Admin Overhead "
+                    <input matInput min="0" name="overheadAdmin" placeholder="Admin Overhead "
                       [(ngModel)]="financialForm.Overhead_Admin" (focusout)="
                     onProjectActivityChange(
                       'overheadAdmin',
@@ -1186,7 +1241,7 @@
                 <div class="col-sm-3">
                   <!-- <label>Lump Sum (From Organisation)</label> -->
                   <mat-form-field class="pull-right">
-                    <input matInput min= "0" name="lumpsum" placeholder="Organizational Contribution"
+                    <input matInput min="0" name="lumpsum" placeholder="Organizational Contribution"
                       [(ngModel)]="financialForm.Lump_Sum" (focusout)="
                     onProjectActivityChange('lumpsum', financialForm.Lump_Sum)
                   " type="number" />
@@ -1241,13 +1296,13 @@
                       <div class="capacity-available-compensation ul">
                         <ul>
                           <li>
-                            Staff
+                           Is staff secured? <span class="fnt-size"> (Score: 2) </span>
                             <mat-slide-toggle class="pull-right" name="Staff" (change)="
                             onRiskChildChange('Staff', riskForm.Staff)
                           " [disabled]="isDisabledRisk" [(ngModel)]="riskForm.Staff"></mat-slide-toggle>
                           </li>
                           <li>
-                            Project Assets
+                            Is project assets secured? <span class="fnt-size"> (Score: 2) </span>
                             <mat-slide-toggle class="pull-right" name="Assets" (change)="
                             onRiskChildChange(
                               'Assets',
@@ -1256,13 +1311,13 @@
                           " [disabled]="isDisabledRisk" [(ngModel)]="riskForm.ProjectAssets"></mat-slide-toggle>
                           </li>
                           <li>
-                            Suppliers
+                            Are suppliers secured? <span class="fnt-size"> (Score: 2) </span>
                             <mat-slide-toggle class="pull-right" name="Suppliers" (change)="
                             onRiskChildChange('Suppliers', riskForm.Suppliers)
                           " [disabled]="isDisabledRisk" [(ngModel)]="riskForm.Suppliers"></mat-slide-toggle>
                           </li>
                           <li class="clearfix">
-                            Beneficiaries
+                            Are beneficiaries secured? <span class="fnt-size"> (Score: 2) </span>
                             <mat-slide-toggle class="pull-right" name="Beneficiaries" (change)="
                             onRiskChildChange(
                               'Beneficiaries',
@@ -1271,7 +1326,7 @@
                           " [disabled]="isDisabledRisk" [(ngModel)]="riskForm.Beneficiaries"></mat-slide-toggle>
                           </li>
                           <li class="clearfix">
-                            Overall Organization
+                             Overall Organization secured? <span class="fnt-size"> (Score: 2) </span>
                             <mat-slide-toggle class="pull-right" name="OverallOrganization" (change)="
                             onRiskChildChange(
                               'OverallOrganization',
@@ -1294,7 +1349,7 @@
                       <div class="capacity-available-compensation ul">
                         <ul>
                           <li>
-                            Religious
+                            Religious <span class="fnt-size"> (Score: 0.2) </span>
                             <mat-slide-toggle class="pull-right" name="Religious" (change)="
                             onReputationChildChange(
                               'Religious',
@@ -1303,7 +1358,7 @@
                           " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.Religious"></mat-slide-toggle>
                           </li>
                           <li>
-                            Sectarian
+                            Sectarian <span class="fnt-size"> (Score: 0.2) </span>
                             <mat-slide-toggle class="pull-right" name="Sectarian" (change)="
                             onReputationChildChange(
                               'Sectarian',
@@ -1312,19 +1367,19 @@
                           " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.Sectarian"></mat-slide-toggle>
                           </li>
                           <li>
-                            Ethnic
+                            Ethnic <span class="fnt-size"> (Score: 0.2) </span>
                             <mat-slide-toggle class="pull-right" name="Ethnic" (change)="
                             onReputationChildChange('Ethnic', riskForm.Ethinc)
                           " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.Ethinc"></mat-slide-toggle>
                           </li>
                           <li class="clearfix">
-                            Social
+                            Social <span class="fnt-size"> (Score: 0.2) </span>
                             <mat-slide-toggle class="pull-right" name="Social" (change)="
                             onReputationChildChange('Social', riskForm.Social)
                           " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.Social"></mat-slide-toggle>
                           </li>
                           <li class="clearfix">
-                            Traditional
+                            Traditional <span class="fnt-size"> (Score: 0.2) </span>
                             <mat-slide-toggle class="pull-right" name="Traditional" (change)="
                             onReputationChildChange(
                               'Traditional',
@@ -1333,7 +1388,7 @@
                           " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.Traditional"></mat-slide-toggle>
                           </li>
                           <li class="clearfix">
-                            Geographical
+                            Geographical <span class="fnt-size"> (Score: 0.2) </span>
                             <mat-slide-toggle class="pull-right" name="Geographical" (change)="
                               onReputationChildChange(
                                 'Geographical',
@@ -1343,7 +1398,7 @@
                             </mat-slide-toggle>
                           </li>
                           <li class="clearfix">
-                            Insecurity
+                            Insecurity <span class="fnt-size"> (Score: 0.2) </span>
                             <mat-slide-toggle class="pull-right" name="Insecurity" (change)="
                                 onReputationChildChange(
                                   'Insecurity',
@@ -1353,7 +1408,7 @@
                             </mat-slide-toggle>
                           </li>
                           <li class="clearfix">
-                            Season
+                            Season <span class="fnt-size"> (Score: 0.2) </span>
                             <mat-slide-toggle class="pull-right" name="Season" (change)="
                                   onReputationChildChange(
                                     'Season',
@@ -1362,7 +1417,7 @@
                                 " [disabled]="isDisabledReputation" [(ngModel)]="riskForm.Season"></mat-slide-toggle>
                           </li>
                           <li class="clearfix">
-                            Ethnicity
+                            Ethnicity <span class="fnt-size"> (Score: 0.1) </span>
                             <mat-slide-toggle class="pull-right" name="Ethnicity" (change)="
                                     onReputationChildChange(
                                       'Ethnicity',
@@ -1372,7 +1427,7 @@
                             </mat-slide-toggle>
                           </li>
                           <li class="clearfix">
-                            Culture
+                            Culture <span class="fnt-size"> (Score: 0.1) </span>
                             <mat-slide-toggle class="pull-right" name="Culture" (change)="
                                       onReputationChildChange(
                                         'Culture',
@@ -1382,7 +1437,7 @@
                             </mat-slide-toggle>
                           </li>
                           <li class="clearfix">
-                            Religious Beliefs
+                            Religious Beliefs <span class="fnt-size"> (Score: 0.2) </span>
                             <mat-slide-toggle class="pull-right" name="ReligiousBeliefs" (change)="
                                         onReputationChildChange(
                                           'ReligiousBeliefs',
@@ -1394,7 +1449,7 @@
                         </ul>
                       </div>
                       <div class="middle-header">
-                        FOCUS DIVERTING RISK
+                        FOCUS DIVERTING RISK <span class="fnt-size"> (Score: 1) </span>
                         <mat-slide-toggle (change)="onFocusDivertingRiskChange($event)"
                           [(ngModel)]="riskForm.FocusDivertingrisk" [disabled]="isDisabledReputation">
                         </mat-slide-toggle>
@@ -1414,7 +1469,7 @@
                       <div class="capacity-available-compensation ul">
                         <ul>
                           <li>
-                            Premature Seizure
+                            Premature Seizure <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" name="PrematureSeizure" (change)="
                             onRiskDeliveryFailureChildChange(
                               'PrematureSeizure',
@@ -1424,7 +1479,7 @@
                             </mat-slide-toggle>
                           </li>
                           <li>
-                            Government Confiscation
+                            Government Confiscation <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" name="GovernmentConfiscation" (change)="
                             onRiskDeliveryFailureChildChange(
                               'GovernmentConfiscation',
@@ -1434,7 +1489,7 @@
                             </mat-slide-toggle>
                           </li>
                           <li>
-                            Distruction by Terrorist Activity
+                            Distruction by Terrorist Activity <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" name="TerroristActivity" (change)="
                             onRiskDeliveryFailureChildChange(
                               'TerroristActivity',
@@ -1453,14 +1508,14 @@
                       <div class="capacity-available-compensation ul">
                         <ul>
                           <li>
-                            Financial Losses
+                            Financial Losses <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" (change)="onFinancialLossesChange($event)"
                               [(ngModel)]="riskForm.Financiallosses"></mat-slide-toggle>
                           </li>
                           <span class="note_text">"Warning: If the organization stands to make financial losses by
                             foregoing this project, it puts this project at a greater value to the organization."</span>
                           <li>
-                            Opportunity Loss
+                            Opportunity Loss <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" (change)="onOpportunityLossChange($event)"
                               [(ngModel)]="riskForm.Opportunityloss"></mat-slide-toggle>
                           </li>
@@ -1490,7 +1545,7 @@
                           </div>
                           <li></li>
                           <li class="clearfix">
-                            Probably Delay/Cuts in funding
+                            Probably Delay/Cuts in funding <span class="fnt-size"> (Score: 1) </span>
                             <mat-slide-toggle class="pull-right" (change)="onProbabilityDelayChange($event)"
                               [(ngModel)]="riskForm.Probablydelaysinfunding"></mat-slide-toggle>
                           </li>
@@ -1501,7 +1556,7 @@
                       </div>
                     </div>
                     <div class="middle-header mar_tp_10">
-                      OTHER ORGANIZATIONAL HARMS
+                      OTHER ORGANIZATIONAL HARMS <span class="fnt-size"> (Score: 1) </span>
                       <mat-slide-toggle (change)="onOtherOrgHarmsChange($event)"
                         [(ngModel)]="riskForm.OtherOrganizationalHarms"></mat-slide-toggle>
                     </div>

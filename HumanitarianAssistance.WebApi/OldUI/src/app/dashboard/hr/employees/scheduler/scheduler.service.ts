@@ -6,6 +6,7 @@ import {
   RequestOptions,
 } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operator/map';
 
 export class Employee {
   id: number;

@@ -1,15 +1,16 @@
 <mat-card>
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
-      <div class="col-md-7 mycontent-right">
+      <div class="col-md-7 mycontent-right" humAddScroll>
           <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
-              <span class="action_header main-heading" style="margin-left: -50px;" (click)="onBackClick()"><i class="fas fa-arrow-left"></i>  Request Details
+              <span class="action_header main-heading" style="margin-left: -25px;"><i class="fas fa-arrow-left" (click)="onBackClick()"></i>  Request Details
+                <hum-button (click)="editRequest()" [type]="'edit'" [text]="'EDIT'" [disabled]="IsEditDisabled" ></hum-button>
               </span>
-            </lib-sub-header-template>
+          </lib-sub-header-template>
         <!-- <h4 class="main-heading" style="padding-left: 0px !important"><i class="fas fa-arrow-left"></i>   Request Details
         </h4> -->
         <h4 class="sub-heading">Workflow Details</h4>
-        <div *ngIf="(this.totalCost<=199)">
+        <div *ngIf="(this.requestDetail.TotalCost<=199)">
           <p>This request is viable for Direct Purchase. Please process the <b>Purchase Order</b> below.</p>
           <mat-divider style="position: unset;"></mat-divider>
             <div class="row" *ngIf="(this.requestDetail.Status==1)">
@@ -28,7 +29,7 @@
                   <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Awaiting order items to be purchased</span>
                 </div>
                 <div class="col-sm-4 margin_top_1">
-                  <hum-button  [type]="'save'" [text]="'COMPLETE PURCHASING'" (click)="completePurchaseOrder()"></hum-button>
+                  <hum-button (click)="submitPurchase()" [type]="'add'" [text]="'SUBMIT PURCHASES'" ></hum-button>
                 </div>
             </div>
             <div class="row" *ngIf="(this.requestDetail.Status==2)">
@@ -41,18 +42,27 @@
                 </div>
             </div>
             <div class="row" *ngIf="(this.requestDetail.Status==4)">
-                <div class="col-sm-7 margin_top_8">
-                  <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
-                  <span class="margin_left_25" style="font-size: 13px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Completed. Awaiting control approval</span>
-                </div>
-                <div class="col-sm-5 margin_top_1">
-                  <hum-button  [type]="'cancel'" [text]="'Reject'"></hum-button>
-                  <hum-button  [type]="'save'" [text]="'Approve'"></hum-button>
-                </div>
+              <div class="col-sm-7 margin_top_8">
+                <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
+                <span class="margin_left_25" style="font-size: 13px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Completed. Awaiting control approval</span>
+              </div>
+              <div class="col-sm-5 margin_top_1">
+                <hum-button  (click)="rejectPurchaseOrder()" [type]="'cancel'" [text]="'Reject'"></hum-button>
+                <hum-button  (click)="approvePurchaseOrder()" [type]="'save'" [text]="'Approve'"></hum-button>
+              </div>
+            </div>
+            <div class="row" *ngIf="(this.requestDetail.Status==7)">
+              <div class="col-sm-4 margin_top_8">
+                <span class="display_inline_block margin_left_10" style="font-size: 14px;color: gray;">Purchase Order</span>
+              </div>
+              <div class="col-sm-8 margin_top_1">
+                <span style="font-size: 13px;color: gray;"><i class="fas fa-info-circle icon_color_green"></i> <b> Purchase Order</b> verified. You will find <b>Issues</b> in the store.
+                <br><b>Voucher</b> with <b>Reference No {{voucherReference}}</b> has been generated.</span>
+              </div>
             </div>
           <mat-divider style="position: unset;"></mat-divider>
         </div>
-        <div *ngIf="(this.totalCost>=200 && this.totalCost<=9999)">
+        <div *ngIf="(this.requestDetail.TotalCost>=200 && this.requestDetail.TotalCost<=9999)">
           <p>This request is viable for <b>Comparative Statement</b>. Please process the <b>Comparative Statement & Purchase Order</b> below.</p>
           <mat-divider style="position: unset;"></mat-divider>
             <div *ngIf="this.requestDetail.ComparativeStatus==1">
@@ -62,8 +72,8 @@
                   <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Pending</span>
                 </div>
                 <div class="col-sm-7 margin_top_1">
-                  <hum-button  [type]="'cancel'" [text]="'CANCEL REQUEST'"></hum-button>
-                  <hum-button  [type]="'save'" [text]="'REQUEST STATEMENT'"></hum-button>
+                  <hum-button (click)="cancelComparativeRequest()" [type]="'cancel'" [text]="'CANCEL REQUEST'"></hum-button>
+                  <hum-button  (click)="issueComparativeStatement()" [type]="'save'" [text]="'INITIATE STATEMENT'"></hum-button>
                 </div>
               </div>
               <mat-divider style="position: unset;"></mat-divider>
@@ -107,21 +117,6 @@
                 </div>
               </div>
             </div>
-            <div *ngIf="this.requestDetail.ComparativeStatus==11">
-              <div class="row">
-                <div class="col-sm-12 margin_top_8">
-                  <span class="display_inline_block" style="font-size: 14px;color: gray;">Comparative Statement</span>
-                  <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Pending</span>
-                </div>
-              </div>
-              <mat-divider style="position: unset;"></mat-divider>
-              <div class="row">
-                <div class="col-sm-12 margin_top_8">
-                  <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
-                  <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Awaiting Statement Approval</span>
-                </div>
-              </div>
-            </div>
             <div *ngIf="this.requestDetail.ComparativeStatus==4">
               <div class="row">
                 <div class="col-sm-5 margin_top_8">
@@ -129,8 +124,8 @@
                   <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Submitted</span>
                 </div>
                 <div class="col-sm-7 margin_top_1">
-                  <hum-button  [type]="'cancel'" [text]="'REJECT'"></hum-button>
-                  <hum-button  [type]="'save'" [text]="'APPROVE STATEMENT'"></hum-button>
+                  <hum-button (click)="rejectComparativeStatement()" [type]="'cancel'" [text]="'REJECT'"></hum-button>
+                  <hum-button  (click)="approveComparativeStatement()" [type]="'save'" [text]="'APPROVE STATEMENT'"></hum-button>
                 </div>
               </div>
               <mat-divider style="position: unset;"></mat-divider>
@@ -156,43 +151,73 @@
                 </div>
               </div>
             </div>
+            <div *ngIf="this.requestDetail.ComparativeStatus==6">
+              <div class="row">
+                <div class="col-sm-12 margin_top_8 margin_left_16">
+                  <span class="display_inline_block" style="font-size: 13px;color: gray;">Comparative Statement</span>
+                  <span class="margin_left_25" style="font-size: 14px;color: gray;"> <i class="fas fa-info-circle icon_color_green"></i> Approved</span>
+                </div>
+              </div>
+              <mat-divider style="position: unset;"></mat-divider>
+              <div class="row">
+                <div class="col-sm-12 margin_top_8" *ngIf="this.requestDetail.Status==3">
+                  <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
+                  <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Awaiting <b>Logistics Officer</b> to enter <b>Purchases</b></span>
+                  <hum-button (click)="submitComparativePurchase()" [type]="'add'" [text]="'SUBMIT PURCHASES'"></hum-button>
+                </div>
+                <div class="col-sm-12 margin_top_8" *ngIf="this.requestDetail.Status==4">
+                  <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
+                  <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Completed. Awaiting control approval</span>
+                  <hum-button  (click)="rejectPurchaseOrder()" [type]="'cancel'" [text]="'Reject'"></hum-button>
+                  <hum-button  (click)="approvePurchaseOrder()" [type]="'save'" [text]="'Approve'"></hum-button>
+                </div>
+                <div class="col-sm-12 margin_top_8" *ngIf="(this.requestDetail.Status==7)">
+                  <div class="col-sm-3 margin_top_8">
+                    <span class="display_inline_block margin_left_10" style="font-size: 14px;color: gray;">Purchase Order</span>
+                  </div>
+                  <div class="col-sm-9 margin_top_1">
+                    <span style="font-size: 13px;color: gray;"><i class="fas fa-info-circle icon_color_green"></i> <b> Purchase Order</b> verified. You will find <b>Issues</b> in the store.
+                    <br><b>Voucher</b> with <b>Reference No {{voucherReference}}</b> has been generated.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           <mat-divider style="position: unset;"></mat-divider>
         </div>
-        <div *ngIf="(this.totalCost>=10000 && this.totalCost<=59999)">
+        <div *ngIf="(this.requestDetail.TotalCost>=10000 && this.requestDetail.TotalCost<=59999)">
           <p>This request is viable for <b>Tender</b>. Please process the <b>Tender & Purchase Order</b> below.</p>
           <mat-divider style="position: unset;"></mat-divider>
-            <div *ngIf="(this.requestDetail.Status==1)">
+            <div *ngIf="(this.requestDetail.TenderStatus==1)">
               <div class="row">
                 <div class="col-sm-5 margin_top_8">
                   <span class="display_inline_block" style="font-size: 14px;color: gray;">National Tender</span>
                   <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Pending</span>
                 </div>
                 <div class="col-sm-7 margin_top_1">
-                  <hum-button  [type]="'cancel'" [text]="'CANCEL'"></hum-button>
-                  <hum-button  [type]="'save'" [text]="'REQUEST A TENDER'"></hum-button>
+                  <hum-button (click)="rejectTenderRequest()" [type]="'cancel'" [text]="'CANCEL'"></hum-button>
+                  <hum-button  (click)="initiateTenderRequest()" [type]="'save'" [text]="'REQUEST A TENDER'"></hum-button>
                 </div>
               </div>
               <mat-divider style="position: unset;"></mat-divider>
               <div class="row">
-                  <div class="col-sm-8 margin_top_8">
-                    <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
-                    <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Awaiting Statement Approval</span>
-                  </div>
-                  <div class="col-sm-4 margin_top_1">
-
-                  </div>
-              </div>
-            </div>
-            <div class="row" *ngIf="(this.requestDetail.Status==3)">
                 <div class="col-sm-8 margin_top_8">
                   <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
                   <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Awaiting Statement Approval</span>
                 </div>
                 <div class="col-sm-4 margin_top_1">
-                  <hum-button  [type]="'save'" [text]="'COMPLETE PURCHASING'"></hum-button>
+
                 </div>
+              </div>
             </div>
-            <div class="row" *ngIf="(this.requestDetail.Status==2)">
+            <div *ngIf="(this.requestDetail.TenderStatus==2)">
+              <div class="row">
+                <div class="col-sm-5 margin_top_8">
+                  <span class="display_inline_block" style="font-size: 14px;color: gray;">National Tender</span>
+                  <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_red"></i> Cancelled</span>
+                </div>
+              </div>
+              <mat-divider style="position: unset;"></mat-divider>
+              <div class="row">
                 <div class="col-sm-8 margin_top_8">
                   <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
                   <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_red"></i> Cancelled</span>
@@ -200,6 +225,56 @@
                 <div class="col-sm-4 margin_top_1">
 
                 </div>
+              </div>
+            </div>
+            <div *ngIf="(this.requestDetail.TenderStatus==3)">
+              <div class="row">
+                <div class="col-sm-10 margin_top_8">
+                  <span class="display_inline_block" style="font-size: 14px;color: gray;">National Tender</span>
+                  <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Issued by <b>{{tenderIssuerName}}</b>. Awaiting Bidding & Selection</span>
+                </div>
+              </div>
+              <mat-divider style="position: unset;"></mat-divider>
+              <div class="row">
+                <div class="col-sm-8 margin_top_8">
+                  <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
+                  <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Awaiting Statement Approval</span>
+                </div>
+                <div class="col-sm-4 margin_top_1">
+
+                </div>
+              </div>
+            </div>
+            <div *ngIf="(this.requestDetail.TenderStatus==4)">
+              <div class="row">
+                <div class="col-sm-10 margin_top_8">
+                  <span class="display_inline_block" style="font-size: 14px;color: gray;">National Tender</span>
+                  <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_green"></i> Bid from <b>{{SelectedBidDetail.ContactName}}</b> selected by <b>{{SelectedBidDetail.SelectedBy}}</b></span>
+                </div>
+              </div>
+              <mat-divider style="position: unset;"></mat-divider>
+              <div class="row">
+                <div class="col-sm-12 margin_top_8" *ngIf="this.requestDetail.Status==3">
+                  <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
+                  <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Awaiting <b>Logistics Officer</b> to enter <b>Purchases</b></span>
+                  <hum-button (click)="submitPurchase()" [type]="'add'" [text]="'SUBMIT PURCHASES'"></hum-button>
+                </div>
+                <div class="col-sm-12 margin_top_8" *ngIf="this.requestDetail.Status==4">
+                  <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
+                  <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Completed. Awaiting control approval</span>
+                  <hum-button  (click)="rejectPurchaseOrder()" [type]="'cancel'" [text]="'Reject'"></hum-button>
+                  <hum-button  (click)="approvePurchaseOrder()" [type]="'save'" [text]="'Approve'"></hum-button>
+                </div>
+                <div class="col-sm-12 margin_top_8" *ngIf="(this.requestDetail.Status==7)">
+                  <div class="col-sm-3 margin_top_8" style="margin-left: -15px;">
+                    <span class="display_inline_block" style="font-size: 14px;color: gray;">Purchase Order</span>
+                  </div>
+                  <div class="col-sm-9 margin_top_1" style="margin-left: -38px;">
+                    <span style="font-size: 13px;color: gray;"><i class="fas fa-info-circle icon_color_green"></i> <b> Purchase Order</b> verified. You will find <b>Issues</b> in the store.
+                    <br><b>Voucher</b> with <b>Reference No {{voucherReference}}</b> has been generated.</span>
+                  </div>
+                </div>
+              </div>
             </div>
           <mat-divider style="position: unset;"></mat-divider>
         </div>
@@ -225,11 +300,11 @@
             <table class="table table-striped" style="width:100%;">
               <tr>
                 <td class="font_weight_600">Total Cost</td>
-                <td>{{this.totalCost}}</td>
+                <td><span *ngIf="this.requestDetail.Currency=='USD'">$</span>{{this.requestDetail.TotalCost}}</td>
               </tr>
               <tr>
                 <td class="font_weight_600">Cost of Unavailable Items</td>
-                <td>{{this.unavailableItemCost | number : '1.2-2'}}</td>
+                <td><span *ngIf="this.requestDetail.Currency=='USD'">$</span>{{this.unavailableItemCost | number : '1.2-2'}}</td>
               </tr>
               <tr>
                 <td class="font_weight_600">Availability Percentage</td>
@@ -240,13 +315,13 @@
         </div>
 
         <h4 class="main-heading" style="padding-left: 0px !important">Requested Items
-            <hum-button [type]="'add'" [text]="'add'" (click)="addItemDialog()" *ngIf="(this.requestDetail.Status==1)"></hum-button>
+            <!-- <hum-button [type]="'add'" [text]="'add'" (click)="addItemDialog()" *ngIf="(this.requestDetail.Status==1 && this.requestDetail.ComparativeStatus==1)"></hum-button> -->
         </h4>
-        <hum-table [headers]="requestedItemsHeaders$" [actions]="actions" [items]="requestedItemsData$" (actionClick)="onActionClick($event)"></hum-table>
+        <hum-table [headers]="requestedItemsHeaders$" [items]="requestedItemsData$" (actionClick)="onActionClick($event)" [hideColums$]="hideItemColums"></hum-table>
       </div>
       <!-- <mat-divider [vertical]="true" style="height:300px"></mat-divider> -->
       <div class="col-md-5">
-        <app-request-status [requestStatus]="this.requestDetail.Status" [comparativeStatus]="this.requestDetail.ComparativeStatus" [totalCost]="this.totalCost" [requestedItems]="this.requestItemList" (selectedItemChange)='selectedItemChange($event)'></app-request-status>
+        <app-request-status [requestStatus]="this.requestDetail.Status" [comparativeStatus]="this.requestDetail.ComparativeStatus" [tenderStatus]="this.requestDetail.TenderStatus" [totalCost]="this.requestDetail.TotalCost" [requestedItems]="this.requestItemList" (selectedItemChange)='selectedItemChange($event)' (comparativeStatusChange)="comparativeStatusChange($event)" (tenderStatusChange)="tenderStatusChange($event)" (StatusChange)="StatusChange($event)" ></app-request-status>
       </div>
     </div>
   </div>

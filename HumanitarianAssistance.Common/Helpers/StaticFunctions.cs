@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Reflection;
 using System.Text;
 
 namespace HumanitarianAssistance.Common.Helpers
@@ -113,8 +115,36 @@ namespace HumanitarianAssistance.Common.Helpers
             return eventDate;
         }
 
+        public static string GetDescription(this Enum value)
+        {
+            Type type = value.GetType();
+            string name = Enum.GetName(type, value);
+            if (name != null)
+            {
+                FieldInfo field = type.GetField(name);
+                if (field != null)
+                {
+                    DescriptionAttribute attr =
+                           Attribute.GetCustomAttribute(field,
+                             typeof(DescriptionAttribute)) as DescriptionAttribute;
+                    if (attr != null)
+                    {
+                        return attr.Description;
+                    }
+                }
+            }
+            return null;
+        }
 
+        public static string GetCharacterFromACIICode(int aciiCode)
+        {
+            int unicode = 65 + aciiCode;
+            char character = (char)unicode;
+            return character.ToString();
+        }
     }
+
+
 
     public static class DefaultValues
     {
