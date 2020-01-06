@@ -24,7 +24,7 @@
       </lib-hum-dropdown>
     </div>
     <div>
-      <mat-card-subtitle><b>This is Default Unit Type for purchase of this item.</b></mat-card-subtitle>
+      <mat-card-subtitle><b>This is the Unit Type that will be selected by default for Purchases of this item.</b></mat-card-subtitle>
       <lib-hum-dropdown [validation]="masterForm.controls['defaultunittype'].hasError('required')"
       [options]="unitTypes$" formControlName="defaultunittype" [placeHolder]="'Default Unit Type'">
     </lib-hum-dropdown>
