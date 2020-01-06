@@ -180,7 +180,7 @@ export class AddAnalyticalInfoComponent implements OnInit {
       });
     }
     if (this.addAnalyticalInfoForm.valid) {
-      if (data.SalaryPercentage + allowedPercentage <= 100) {
+      if (data.SalaryPercentage + allowedPercentage === 100) {
         this.isFormSubmitted = true;
         this.hiringRequestService.AddAnalyticalInfo(data).subscribe(
           (response: IResponseData) => {
