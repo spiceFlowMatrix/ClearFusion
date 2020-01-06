@@ -47,6 +47,7 @@ export class LogisticRequestDetailsComponent implements OnInit {
   voucherReference = '';
   tenderIssuerName = '';
   SelectedBidDetail = { ContactName: '' , SelectedBy: ''};
+  IsEditDisabled = false;
 
   constructor(private dialog: MatDialog, private routeActive: ActivatedRoute,
     private logisticservice: LogisticService,
@@ -148,6 +149,15 @@ export class LogisticRequestDetailsComponent implements OnInit {
       if (this.requestDetail.TenderStatus === LogisticTenderStatus['Bid Selected']) {
         this.getSelectedBidDetail();
       }
+      if (((this.requestDetail.Status === LogisticRequestStatus['New Request']) &&
+      (this.requestDetail.ComparativeStatus === LogisticComparativeStatus['Pending'])) ||
+      ((this.requestDetail.Status === LogisticRequestStatus['New Request']) &&
+      (this.requestDetail.TenderStatus === LogisticTenderStatus['Pending'])) ||
+      (this.requestDetail.Status === LogisticRequestStatus['New Request'])) {
+        this.IsEditDisabled = false;
+      } else {
+        this.IsEditDisabled = true;
+      }
     });
   }
 
@@ -172,7 +182,7 @@ export class LogisticRequestDetailsComponent implements OnInit {
             ItemId: v.ItemId,
             Item: v.Item,
             Quantity: v.Quantity,
-            EstimatedCost: v.EstimatedCost,
+            EstimatedCost: (this.requestDetail.Currency === 'USD') ? '$' + v.EstimatedCost : v.EstimatedCost,
             Availability: v.Availability
            }) as IItemList)));
       }
@@ -480,13 +490,15 @@ export class LogisticRequestDetailsComponent implements OnInit {
   }
 
   editRequest() {
-    if (this.requestDetail.Status !== LogisticRequestStatus['New Request'] ||
-    this.requestDetail.ComparativeStatus !== LogisticComparativeStatus.Pending ||
-    this.requestDetail.TenderStatus !== LogisticTenderStatus.Pending) {
-      return;
-    } else {
+    if (((this.requestDetail.Status === LogisticRequestStatus['New Request']) &&
+    (this.requestDetail.ComparativeStatus === LogisticComparativeStatus['Pending'])) ||
+    ((this.requestDetail.Status === LogisticRequestStatus['New Request']) &&
+    (this.requestDetail.TenderStatus === LogisticTenderStatus['Pending'])) ||
+    (this.requestDetail.Status === LogisticRequestStatus['New Request'])) {
       this.router.navigate(['../../logistic-requests/new-request/'] ,
        { relativeTo: this.routeActive , queryParams: {requestId: this.requestId} });
+    } else {
+      return;
     }
   }
 

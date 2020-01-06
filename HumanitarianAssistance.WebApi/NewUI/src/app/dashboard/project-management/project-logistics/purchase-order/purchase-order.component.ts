@@ -33,7 +33,7 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
   purchasedItemsData$ = of([]);
   selectedItems: any[];
   goodsNoteSubmitted = false;
-  goodsRecievedModel: GoodsRecievedNote;
+  goodsRecievedModel: GoodsRecievedNote = {AttachmentName: '', AttachmentUrl: '', UploadedBy: ''};
   purchaseOrderDetail;
 
   constructor(private dialog: MatDialog,

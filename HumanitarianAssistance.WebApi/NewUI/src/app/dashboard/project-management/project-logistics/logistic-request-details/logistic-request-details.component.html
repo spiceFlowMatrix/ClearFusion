@@ -4,7 +4,7 @@
       <div class="col-md-7 mycontent-right">
           <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
               <span class="action_header main-heading" style="margin-left: -25px;"><i class="fas fa-arrow-left" (click)="onBackClick()"></i>  Request Details
-                <hum-button (click)="editRequest()" [type]="'edit'" [text]="'EDIT'" [disabled]="this.requestDetail.Status!=1 || this.requestDetail.ComparativeStatus!=1 || this.requestDetail.TenderStatus!=1" ></hum-button>
+                <hum-button (click)="editRequest()" [type]="'edit'" [text]="'EDIT'" [disabled]="IsEditDisabled" ></hum-button>
               </span>
           </lib-sub-header-template>
         <!-- <h4 class="main-heading" style="padding-left: 0px !important"><i class="fas fa-arrow-left"></i>   Request Details
@@ -300,11 +300,11 @@
             <table class="table table-striped" style="width:100%;">
               <tr>
                 <td class="font_weight_600">Total Cost</td>
-                <td>{{this.requestDetail.TotalCost}}</td>
+                <td><span *ngIf="this.requestDetail.Currency=='USD'">$</span>{{this.requestDetail.TotalCost}}</td>
               </tr>
               <tr>
                 <td class="font_weight_600">Cost of Unavailable Items</td>
-                <td>{{this.unavailableItemCost | number : '1.2-2'}}</td>
+                <td><span *ngIf="this.requestDetail.Currency=='USD'">$</span>{{this.unavailableItemCost | number : '1.2-2'}}</td>
               </tr>
               <tr>
                 <td class="font_weight_600">Availability Percentage</td>
@@ -317,7 +317,7 @@
         <h4 class="main-heading" style="padding-left: 0px !important">Requested Items
             <!-- <hum-button [type]="'add'" [text]="'add'" (click)="addItemDialog()" *ngIf="(this.requestDetail.Status==1 && this.requestDetail.ComparativeStatus==1)"></hum-button> -->
         </h4>
-        <hum-table [headers]="requestedItemsHeaders$" [actions]="actions" [items]="requestedItemsData$" (actionClick)="onActionClick($event)" [hideColums$]="hideItemColums"></hum-table>
+        <hum-table [headers]="requestedItemsHeaders$" [items]="requestedItemsData$" (actionClick)="onActionClick($event)" [hideColums$]="hideItemColums"></hum-table>
       </div>
       <!-- <mat-divider [vertical]="true" style="height:300px"></mat-divider> -->
       <div class="col-md-5">
