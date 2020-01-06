@@ -5,8 +5,7 @@
   </span>
 </lib-sub-header-template>
 <mat-divider></mat-divider>
-<mat-card humAddScroll>
-  <div class="container">
+  <div class="container" humAddScroll [height]="150">
     <h4>Procurement Details</h4>
     <br>
     <div class="row">
@@ -64,7 +63,7 @@
         <h4>Returns</h4>
       </div>
       <div class="col-md-11">
-        <hum-button [type]="'add'" *ngIf="procurementDetail.CurrentBalance > 0" [text]="'ADD RETURNS'" (click)="addReturns()"></hum-button>
+        <hum-button [type]="'add'" *ngIf="quantity > 0" [text]="'ADD RETURNS'" (click)="addReturns()"></hum-button>
       </div>
     </div>
     <div class="row">
@@ -74,7 +73,6 @@
       </div>
     </div>
   </div>
-</mat-card>
 
 
 <ng-template #unittype>
