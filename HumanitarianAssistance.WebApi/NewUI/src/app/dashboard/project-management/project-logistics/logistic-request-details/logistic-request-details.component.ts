@@ -47,7 +47,7 @@ export class LogisticRequestDetailsComponent implements OnInit {
   voucherReference = '';
   tenderIssuerName = '';
   SelectedBidDetail = { ContactName: '' , SelectedBy: ''};
-  IsEditDisabled = false;
+  IsEditDisabled = true;
 
   constructor(private dialog: MatDialog, private routeActive: ActivatedRoute,
     private logisticservice: LogisticService,
@@ -108,7 +108,7 @@ export class LogisticRequestDetailsComponent implements OnInit {
         ItemId: v.ItemId,
         Item: v.Item,
         Quantity: v.Quantity,
-        EstimatedCost: v.EstimatedCost,
+        EstimatedCost: (this.requestDetail.Currency === 'USD') ? '$' + v.EstimatedCost : v.EstimatedCost,
         Availability: v.Availability
        }) as IItemList)));
     // this.getTotalRequestCost();
@@ -271,7 +271,7 @@ export class LogisticRequestDetailsComponent implements OnInit {
         ItemId: v.ItemId,
         Item: v.Item,
         Quantity: v.Quantity,
-        EstimatedCost: v.EstimatedCost,
+        EstimatedCost: (this.requestDetail.Currency === 'USD') ? '$' + v.EstimatedCost : v.EstimatedCost,
         Availability: v.Availability
        }) as IItemList)));
     this.getRequestDetails();
