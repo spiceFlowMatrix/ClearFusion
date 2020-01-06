@@ -611,16 +611,6 @@
                     </dxi-item> -->
 
 
-
-
-
-                    <!-- today -->
-
-
-
-                    <!-- end -->
-
-
                     <dxi-item dataField="ProfessionId" editorType="dxSelectBox"
                         [editorOptions]="{ dataSource: professionTypeDropdown, displayExpr: 'ProfessionName', valueExpr: 'ProfessionId' }">
                         <dxo-label text="Profession"></dxo-label>
@@ -715,7 +705,7 @@
                                 </dxi-item>
                             </dx-form>
 
-                            <dx-data-grid id="gridContainer" [dataSource]="dataSource" keyExpr="ID"
+                            <dx-data-grid id="gridContainer" [dataSource]="pensionDetaildataSource" keyExpr="ID"
                                 [allowColumnReordering]="true" [showBorders]="true">
 
                                 <dxo-paging [enabled]="true"></dxo-paging>

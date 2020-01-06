@@ -167,7 +167,7 @@ export class EmployeesComponent implements OnInit {
   maritalStatusDropdown: any[];
   employeeImage: File;
   currencycodeList: CurrencyCodeModel[];
-  dataSource: PensionDetailModel[] = [];
+  pensionDetaildataSource: PensionDetailModel[] = [];
   disableSubmitFlag = false;
   @Output() triggerEmployeeLeavePopUpEvent = new EventEmitter<any>();
 
@@ -636,6 +636,8 @@ export class EmployeesComponent implements OnInit {
   openAddForm() {
     this.popupAddEmployeeInfoVisible = true;
     this.employeeFormInitialize();
+    this.pensionDetaildataSource = [];
+
     this.imageURL = '';
     this.CountryId = 0;
     // tslint:disable-next-line:radix
@@ -1955,7 +1957,7 @@ export class EmployeesComponent implements OnInit {
   //#endregion "Get All JobGrade"
 
   onFieldDataChanged(e) {
-    console.log('hsdfjk', this.dataSource);
+    console.log('hsdfjk', this.pensionDetaildataSource);
     if (e.dataField === 'Phone') {
       if (e.value !== undefined && e.value != null) {
         const phone = e.value.toString();
@@ -2224,7 +2226,7 @@ export class EmployeesComponent implements OnInit {
 
   submitPension(formdata: any) {
     this.pensionForm.PensionDate = formdata.PensionDate;
-    this.pensionForm.PensionDetail = this.dataSource;
+    this.pensionForm.PensionDetail = this.pensionDetaildataSource;
     this.popupPensionDetail = false;
   }
 
