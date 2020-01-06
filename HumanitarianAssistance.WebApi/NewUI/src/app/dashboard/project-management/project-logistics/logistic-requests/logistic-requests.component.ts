@@ -21,19 +21,24 @@ export class LogisticRequestsComponent implements OnInit {
 
   logisticListHeaders$ = of([
     'Id',
-    'Name',
-    'Status',
-    'Total Cost',
+    'Code',
+    'Office',
+    'Budget Line',
+    'Currency',
+    'Total Estimated Cost',
+    'Processing Type',
+    'Status'
   ]);
+  navLinks: any[] = [];
   logisticListData$: Observable<any>;
   actions: TableActionsModel;
   projectId;
+  requestCount = 0;
+  PageIndex = 0;
+  PageSize = 10;
   logisticRequestList;
-  officeDropdown: any[];
-  currencyDropdown: any[];
-  currencyId$: Observable<IDropDownModel[]>;
-  budgetLineId$: Observable<IDropDownModel[]>;
-  officeId$: Observable<IDropDownModel[]>;
+  hideRequestColums;
+
   constructor(
     private dialog: MatDialog,
     private router: Router,
@@ -41,13 +46,26 @@ export class LogisticRequestsComponent implements OnInit {
     private logisticservice: LogisticService,
     private commonLoader: CommonLoaderService,
     public toastr: ToastrService
-    ) { }
+    ) {
+      this.navLinks = [
+        {
+          label: 'Active',
+          link: './general',
+          index: 0
+        },
+        {
+          label: 'Archieved',
+          link: './designation',
+          index: 1
+        },
+      ];
+    }
 
   ngOnInit() {
     this.actions = {
       items: {
         button: { status: false, text: '' },
-        delete: true,
+        delete: false,
         download: false,
       },
       subitems: {
@@ -58,183 +76,119 @@ export class LogisticRequestsComponent implements OnInit {
       this.projectId = +params['id'];
     });
     this.getAllRequest();
-    this.getCurrencyCodeList();
-    this.getOfficeCodeList();
-    this.getBudgetLineList();
-  }
-
-  openAddRequestDialog(): void {
-    const dialogRef = this.dialog.open(AddLogisticRequestComponent, {
-      width: '450px',
-      data: {ProjectId: this.projectId, Currency: this.currencyId$, Office: this.officeId$, BudgetLine: this.budgetLineId$}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined && result.data != null ) {
-        this.refreshRequestList(result.data);
-      }
+    this.hideRequestColums = of({
+      headers: ['Code', 'Office', 'Budget Line', 'Currency', 'Total Estimated Cost', 'Processing Type',
+      'Status'],
+      items: ['Code', 'Office', 'BudgetLine', 'Currency', 'TotalEstimatedCost', 'ProcessingType',
+      'Status']
     });
   }
 
-  refreshRequestList(value) {
-    this.logisticRequestList.push(value);
-    this.logisticListData$ = of(this.logisticRequestList).pipe(
-      map(r => r.map(v => ({
-        Id: v.RequestId,
-        Name: v.RequestName,
-        Status: LogisticRequestStatus[v.Status],
-        TotalCost: v.TotalCost
-       }) as IRequestList)));
+  addNewRequest() {
+    this.router.navigate(['../logistic-requests/new-request'], { relativeTo: this.routeActive });
   }
+  pageEvent(e) {
+    this.PageIndex = e.pageIndex;
+    this.PageSize = e.pageSize;
+    this.getAllRequest();
+  }
+
+  // openAddRequestDialog(): void {
+  //   const dialogRef = this.dialog.open(AddLogisticRequestComponent, {
+  //     width: '450px',
+  //     data: {ProjectId: this.projectId, Currency: this.currencyId$, Office: this.officeId$, BudgetLine: this.budgetLineId$}
+  //   });
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result !== undefined && result.data != null ) {
+  //       this.refreshRequestList(result.data);
+  //     }
+  //   });
+  // }
+
+  // refreshRequestList(value) {
+  //   this.logisticRequestList.push(value);
+  //   this.logisticListData$ = of(this.logisticRequestList).pipe(
+  //     map(r => r.map(v => ({
+  //       Id: v.RequestId,
+  //       Name: v.RequestName,
+  //       Status: LogisticRequestStatus[v.Status],
+  //       TotalCost: v.TotalCost
+  //      }) as IRequestList)));
+  //   this.requestCount++;
+  // }
   requestRowClicked(event) {
     this.router.navigate([event.Id], { relativeTo: this.routeActive });
   }
 
   getAllRequest() {
-    this.logisticservice.getAllLogisticRequests(this.projectId).subscribe(res => {
+    this.commonLoader.showLoader();
+    const model = {
+      projectId: this.projectId,
+      PageIndex: this.PageIndex,
+      PageSize: this.PageSize
+    };
+    this.logisticservice.getAllLogisticRequests(model).subscribe(res => {
       this.logisticRequestList = [];
       if (res.StatusCode === 200 && res.data.logisticRequestList != null) {
+        this.requestCount = res.data.TotalCount;
         res.data.logisticRequestList.forEach(element => {
           this.logisticRequestList.push(element);
         });
         this.logisticListData$ = of(this.logisticRequestList).pipe(
           map(r => r.map(v => ({
             Id: v.RequestId,
-            Name: v.RequestName,
-            Status: ((LogisticRequestStatus[v.Status] === 'NewRequest') ? 'New Request' : LogisticRequestStatus[v.Status]),
-            TotalCost: v.TotalCost
+            Code: v.RequestCode,
+            Office: v.Office,
+            BudgetLine: v.BudgetLine,
+            Currency: v.Currency,
+            TotalEstimatedCost: v.TotalCost,
+            ProcessingType: v.ProcessingType,
+            Status: v.Status
            }) as IRequestList)));
       }
+      this.commonLoader.hideLoader();
     });
   }
 
-  onDeleteRequest(event) {
-    if (event.type === 'delete') {
-      this.logisticservice.openDeleteDialog().subscribe(v => {
-        if (v) {
-          this.logisticservice.deleteLogisticRequestById(event.item.Id).subscribe(res => {
-            if (res.StatusCode === 200) {
-              this.refreshRequestListAfterDelete(event.item.Id);
-              this.toastr.success('Deleted Sucessfully!');
-            } else {
-              this.toastr.error('Something went wrong!');
-            }
-          });
-        }
-      });
-    }
-  }
+  // onDeleteRequest(event) {
+  //   if (event.type === 'delete') {
+  //     this.logisticservice.openDeleteDialog().subscribe(v => {
+  //       if (v) {
+  //         this.logisticservice.deleteLogisticRequestById(event.item.Id).subscribe(res => {
+  //           if (res.StatusCode === 200) {
+  //             this.refreshRequestListAfterDelete(event.item.Id);
+  //             this.toastr.success('Deleted Sucessfully!');
+  //           } else {
+  //             this.toastr.error('Something went wrong!');
+  //           }
+  //         });
+  //       }
+  //     });
+  //   }
+  // }
 
-  refreshRequestListAfterDelete(value) {
-    const index = this.logisticRequestList.findIndex(v => v.RequestId === value);
-    if (index !== -1) {
-      this.logisticRequestList.splice(index, 1);
-    }
-    this.logisticListData$ = of(this.logisticRequestList).pipe(
-      map(r => r.map(v => ({
-        Id: v.RequestId,
-        Name: v.RequestName,
-        Status: ((LogisticRequestStatus[v.Status] === 'NewRequest') ? 'New Request' : LogisticRequestStatus[v.Status]),
-        TotalCost: v.TotalCost
-       }) as IRequestList)));
-  }
-
-  getCurrencyCodeList() {
-    this.logisticservice
-      .GetAllCurrencyCodeList()
-      .subscribe(
-        data => {
-          this.currencyDropdown = [];
-          if (data.data.CurrencyList != null) {
-            data.data.CurrencyList.forEach(element => {
-              this.currencyDropdown.push(element);
-            });
-
-            // this.selectedCurrency = this.currencyDropdown[0].CurrencyId;
-            // this.addLogisticRequestForm.controls['CurrencyId'].setValue(this.selectedCurrency);
-            this.currencyId$ = of(this.currencyDropdown.map(y => {
-              return {
-                value: y.CurrencyId,
-                name: y.CurrencyCode + '-' + y.CurrencyName
-              };
-            }));
-          }
-        },
-        error => {
-          if (error.StatusCode === 500) {
-            this.toastr.error('Internal Server Error....');
-          } else if (error.StatusCode === 401) {
-            this.toastr.error('Unauthorized Access Error....');
-          } else if (error.StatusCode === 403) {
-            this.toastr.error('Forbidden Error....');
-          }
-        }
-      );
-  }
-
-  getOfficeCodeList() {
-    this.logisticservice
-      .GetAllOfficeCodeList()
-      .subscribe(
-        data => {
-          if (data.data.OfficeDetailsList != null) {
-            this.officeDropdown = [];
-            data.data.OfficeDetailsList.forEach(element => {
-              this.officeDropdown.push({
-                Id: element.OfficeId,
-                Name: element.OfficeName
-              });
-            });
-            this.officeId$ = of(this.officeDropdown.map(y => {
-              return {
-                value: y.Id,
-                name: y.Name
-              };
-            }));
-          }
-        },
-        error => {
-          if (error.StatusCode === 500) {
-            this.toastr.error('Internal Server Error....');
-          } else if (error.StatusCode === 401) {
-            this.toastr.error('Unauthorized Access Error....');
-          } else if (error.StatusCode === 403) {
-            this.toastr.error('Forbidden Error....');
-          }
-        }
-      );
-  }
-
-  getBudgetLineList() {
-    this.logisticservice
-      .GetBudgetLineListByProjectId(this.projectId)
-      .subscribe(
-        data => {
-          this.currencyDropdown = [];
-          if (data.data.ProjectBudgetLineDetailList != null) {
-            this.budgetLineId$ = of(data.data.ProjectBudgetLineDetailList.map(y => {
-              return {
-                value: y.BudgetLineId,
-                name: y.BudgetName
-              };
-            }));
-          }
-        },
-        error => {
-          if (error.StatusCode === 500) {
-            this.toastr.error('Internal Server Error....');
-          } else if (error.StatusCode === 401) {
-            this.toastr.error('Unauthorized Access Error....');
-          } else if (error.StatusCode === 403) {
-            this.toastr.error('Forbidden Error....');
-          }
-        }
-      );
-  }
+  // refreshRequestListAfterDelete(value) {
+  //   const index = this.logisticRequestList.findIndex(v => v.RequestId === value);
+  //   if (index !== -1) {
+  //     this.logisticRequestList.splice(index, 1);
+  //   }
+  //   this.logisticListData$ = of(this.logisticRequestList).pipe(
+  //     map(r => r.map(v => ({
+  //       Id: v.RequestId,
+  //       Name: v.RequestName,
+  //       Status: ((LogisticRequestStatus[v.Status] === 'NewRequest') ? 'New Request' : LogisticRequestStatus[v.Status]),
+  //       TotalCost: v.TotalCost
+  //      }) as IRequestList)));
+  // }
 }
 
 interface IRequestList {
-  Name;
+  Code;
+  Office;
+  BudgetLine;
+  Currency;
+  TotalEstimatedCost;
+  ProcessingType;
   Status;
-  TotalCost;
 }

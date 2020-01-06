@@ -69,11 +69,13 @@ export class StoreItemConfigComponent implements OnInit {
         })
         return res;
       })
+
       this.dataSource.data = this.inventories;
     })
   }
   // master inventory region
   addMasterInventory() {
+    this.masterInventory = {};
     this.configService.getInventoryCode(this.assetType).subscribe(res => {
       this.masterInventory.InventoryCode = res.data.InventoryCode;
       this.masterInventory.AssetType = this.assetType;
@@ -96,6 +98,7 @@ export class StoreItemConfigComponent implements OnInit {
   openItem(level, inventoryId, invId, isTransportCategory) {
     switch (level) {
       case 0:
+          this.masterInventoryGroup = {};
         this.configService.getGroupItemCode(inventoryId, this.assetType).subscribe(res => {
           this.masterInventoryGroup.InventoryId = inventoryId;
           this.masterInventoryGroup.ItemGroupCode = res.data.ItemGroupCode;
@@ -111,6 +114,7 @@ export class StoreItemConfigComponent implements OnInit {
         })
         break;
       case 1:
+          this.masterInventoryItem = {};
 
         this.configService.getItemCode(inventoryId, this.assetType).subscribe(res => {
           this.masterInventoryItem.ItemTypeCategory = Number(this.inventories.find(x => x.Id == invId).children.find(x => x.Id == inventoryId).ItemTypeCategory);
@@ -190,7 +194,10 @@ export class StoreItemConfigComponent implements OnInit {
           this.masterInventoryItem.isGenerator = null;
         }
 
-        this.masterInventoryItem.ItemTypeCategory = Number(this.inventories.find(x => x.Id == level1ID).children.find(x => x.Id == level0ID).children.find(x => x.Id == level2ID).ItemTypeCategory);
+        this.masterInventoryItem.ItemTypeCategory = Number(this.inventories.find(x => x.Id == level1ID)
+                                                    .children.find(x => x.Id == level0ID).children.find(x => x.Id == level2ID)
+                                                    .ItemTypeCategory);
+
         this.masterInventoryItem.Description = item.Description;
         this.masterInventoryItem.ItemCode = item.Code;
         this.masterInventoryItem.ItemGroupId = item.ItemGroupId;
@@ -198,6 +205,7 @@ export class StoreItemConfigComponent implements OnInit {
         this.masterInventoryItem.ItemInventory = item.InventoryId;
         this.masterInventoryItem.ItemName = item.Name;
         this.masterInventoryItem.ItemType = null;
+        this.masterInventoryItem.DefaultUnitType= item.DefaultUnitType;
         this.masterInventoryItem.AssetType = Number(this.assetType);
         // console.log(level, level2ID, level1ID, level0ID, isTransport, itemcattype)
         const dgItem = this.dialog.open(AddItemComponent, {

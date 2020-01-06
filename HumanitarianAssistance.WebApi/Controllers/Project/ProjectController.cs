@@ -1065,9 +1065,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
 
         #region "Project sub activity"
         [HttpPost]
-        public async Task<ApiResponse> GetProjectSubActivityDetail([FromBody]int projectId)
+        public async Task<ApiResponse> GetProjectSubActivityDetail([FromBody]int ActivityId)
         {
-            return await _mediator.Send(new GetProjectSubActivityDetailsQuery { projectId = projectId });
+            return await _mediator.Send(new GetProjectSubActivityDetailsQuery { ActivityId = ActivityId });
         }
 
         [HttpPost]
@@ -1607,6 +1607,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         public async Task<ApiResponse> EditProjectActivityDetail([FromBody]EditProjectActivityDetailCommand command)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedDate = DateTime.UtcNow;
             command.ModifiedById = userId;
             command.ModifiedDate = DateTime.UtcNow;
             return await _mediator.Send(command);
@@ -1624,6 +1625,23 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
                 ModifiedDate = DateTime.UtcNow,
             });
         }
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> DeleteProjectSubActivityDetail([FromBody] long activityId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+          
+            var result = await Task.FromResult(_mediator.Send(new DeleteProjectSubActivityCommand
+            {
+                ActivityId = activityId,
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow,
+            }));
+            return Ok(await result);
+        }
+
         [HttpPost]
         public async Task<ApiResponse> AllActivityStatus([FromBody]long projectId)
         {
@@ -1757,18 +1775,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
                 worksheet.Cells[1, 6].Value = "InitialBudget";
                 worksheet.Cells[1, 7].Value = "CurrencyId";
                 worksheet.Cells[1, 8].Value = "CurrencyName";
-
-                var cells = worksheet.Cells["A1:J1"];
-
-                //worksheet.Column(1).AutoFit();
-                //worksheet.Column(2).AutoFit();
-                //worksheet.Column(3).AutoFit();
-                //worksheet.Column(4).AutoFit();
-                //worksheet.Column(5).AutoFit();
-                //worksheet.Column(6).AutoFit();
-                //worksheet.Column(7).AutoFit();
-                //worksheet.Column(8).AutoFit();
-
 
                 package.Workbook.Properties.Title = "Attempts";
                 var FileBytesArray = package.GetAsByteArray();

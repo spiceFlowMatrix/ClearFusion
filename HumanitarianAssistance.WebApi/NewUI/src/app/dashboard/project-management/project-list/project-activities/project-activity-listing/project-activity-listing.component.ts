@@ -84,7 +84,6 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
     private routeActive: ActivatedRoute
   ) {
     this.getScreenSize();
-    // this.projectId = +this.routeActive.snapshot.paramMap.get('id');
   }
 
   ngOnInit() {
@@ -219,27 +218,6 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   }
   //#endregion
 
-  //   initializePdfForm()
-  //   {
-  //     this.projectActivityPdfModel = {
-  // ProjectCode: null,
-  // ProjectName: '',
-  // ProjectGoal: '',
-  // ProjectDuration: null,
-  // ProjectLocation: '',
-  // MainActivity: '',
-  // ActivityDuration: '',
-  // Monitoring: null,
-  // Recommendations: '',
-  // Start: '',
-  // End: '',
-  // Province: '',
-  // District: '',
-  // ActualStartDate: '',
-  // ActualEndDate: '',
-  //     };
-  //   }
-
   //#region "openAddActivityDialog"
   openAddActivityDialog(): void {
     // NOTE: It passed the data into the Add Activity Model
@@ -259,7 +237,6 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.componentInstance.onListRefresh.subscribe(() => {
-      // do something
       this.getAllProjectActivityList();
       this.getAllProjectActivityStatus();
     });
@@ -306,8 +283,6 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
               ProjectJobId: element.ProjectJobId,
               ProjectJobName: element.ProjectJobName
             });
-
-            // this.budgetLineList = this.budgetLineList.filter(x => x.ProjectId === this.projectId);
           });
         }
       },
@@ -340,7 +315,6 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   //#region "GetAllCountryList"
 
   getAllCountryList() {
-    // this.countryDistrictFlag = true;
     this.activitiesService.getAllCountryList().subscribe(
       (response: IResponseData) => {
         this.countryList = [];
@@ -352,10 +326,8 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
             });
           });
         }
-      }, // this.countryDistrictFlag = false;
-      error => {
-        // this.countryDistrictFlag = false;
-      }
+      },
+      error => {}
     );
   }
 
@@ -376,8 +348,6 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
           if (response.statusCode === 200 && response.data !== null) {
             this.totalCount = response.total;
             this.setActivityList(response.data);
-
-            // this.onSelectedProvinceDetailId(response.data.ProvinceId);
           }
           this.activityListLoader = false;
         },
@@ -414,30 +384,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
       );
   }
   //#endregion
-  // ************************************************** comment for country
-  // //#region "getAllProvinceList"
-  // getAllProvinceList() {
-  //   // this.provinceDistrictFlag = true;
-  //   this.activitiesService.getAllProvinceList().subscribe(
-  //     (response: IResponseData) => {
-  //       this.provinceSelectionList = [];
-  //       if (response.statusCode === 200 && response.data != null) {
-  //         response.data.forEach(element => {
-  //           this.provinceSelectionList.push({
-  //             value: element.ProvinceId,
-  //             label: element.ProvinceName
-  //           });
-  //         });
-  //       }
-  //       // this.provinceDistrictFlag = false;
-  //     },
-  //     error => {
-  //       // this.provinceDistrictFlag = false;
-  //     }
-  //   );
-  // }
 
-  // //#endregion
   //#region "OnselectedCountryDetailId"
   OnselectedCountryDetailId(event: any) {
     if (event !== undefined && event !== null) {
@@ -462,14 +409,9 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
                   label: element.ProvinceName
                 });
               });
-
-              // this.GetProvinceByProjectId(this.ProjectId);
             }
-            // this.provinceDistrictFlag = false;
           },
-          error => {
-            // this.provinceDistrictFlag = false;
-          }
+          error => {}
         );
     }
   }
@@ -499,13 +441,10 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
             });
           });
           this.districtLoaderFlag = false;
-          // this.GetDistrictByProjectId(this.ProjectId);
         }
-        // this.provinceSelectedFlag = false;
       },
       error => {
         this.districtLoaderFlag = false;
-        // this.provinceSelectedFlag = false;
       }
     );
   }
@@ -654,16 +593,7 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
 
         // Other Properties
         Progress: element.Progress,
-        // this.findProgress(
-        //   element.ImplementationProgress,
-        //   element.MonitoringProgress
-        // ),
         Slippage: element.Slippage,
-        // this.findSleepage(
-        //   StaticUtilities.setLocalDate(element.PlannedEndDate),
-        //   StaticUtilities.setLocalDate(element.ActualEndDate)
-        // ),
-
         IsLoading: false,
         IsError: false
       });
@@ -753,53 +683,6 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
       );
   }
 
-  //#region "findProgress"
-  findProgress(ImplementationProgress: number, MonitoringProgress: number) {
-    if (ImplementationProgress === undefined) {
-      ImplementationProgress = 0;
-    }
-    if (MonitoringProgress === undefined) {
-      MonitoringProgress = 0;
-    }
-    const progress = (ImplementationProgress + MonitoringProgress) / 2;
-    return progress;
-  }
-  //#endregion
-
-  //#region "findSleepage"
-  findSleepage(planningEndDate: any, ImplementationEndDate: any) {
-    if (planningEndDate === undefined || planningEndDate == null) {
-      planningEndDate = new Date();
-    } else {
-      planningEndDate = StaticUtilities.getLocalDate(planningEndDate);
-    }
-    if (ImplementationEndDate === undefined || ImplementationEndDate == null) {
-      ImplementationEndDate = new Date();
-    } else {
-      ImplementationEndDate = StaticUtilities.getLocalDate(
-        ImplementationEndDate
-      );
-    }
-    // let sleepage = Math.round(
-    //   (new Date(ImplementationEndDate).valueOf() -
-    //     new Date(planningEndDate).valueOf()) /
-    //     (1000 * 3600 * 24)
-    // );
-    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-    // let sleepage = Math.round(Math.abs((ImplementationEndDate.getTime() - planningEndDate.getTime()) / (oneDay)));
-    let sleepage = Math.round(
-      (ImplementationEndDate.getTime() - planningEndDate.getTime()) / oneDay
-    );
-
-    if (sleepage <= 0) {
-      sleepage = 0;
-      // return sleepage;
-    }
-
-    return sleepage;
-  }
-  //#endregion
-
   //#region "showProjectDetailPanel"
   showProjectDetailPanel() {
     this.showProjectActivityDetail = true;
@@ -817,30 +700,12 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
 
   //#region "updateActivity"
   updateActivity(data: IProjectActivityDetail) {
-    // const activityDetailIndex = this.projectActivityList.findIndex(
-    //   x => x.ActivityId === data.ActivityId
-    // );
-    // if (activityDetailIndex !== -1) {
-    //   // Other Properties
-    //   data.Progress = 0;
-    //   // this.findProgress(
-    //   //   data.ImplementationProgress,
-    //   //   data.MonitoringProgress
-    //   // );
-    //   data.Slippage = 0;
-    //   // this.findSleepage(
-    //   //   data.PlannedEndDate,
-    //   //   data.ActualEndDate
-    //   // );
-    //   this.projectActivityList[activityDetailIndex] = data;
-    // }
-
     // *note  to get reoccured activity 01-10-2019
     this.getAllProjectActivityList();
   }
   //#endregion
 
-  //#region "refreshProjectSummary"
+  //#region "refreshProjectSummary"  same called for deleted sub activity
   refreshProjectSummary() {
     this.getAllProjectActivityStatus();
   }
@@ -906,25 +771,8 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
   // }
   //   //#endregion
 
-  //#region "ngOnDestroy"
-
-  //#endregion
   //#region "onExportPdf"
   onExportPdf() {
-    // if (this.projectActivityList.length > 0) {
-    //   this.projectActivityList.forEach(element => {
-    //     this.pdfExportModel.ActivityId.push(element.ActivityId);
-    //   });
-    //   this.pdfExportModel.ProjectId = this.projectId;
-    // }
-    // this.globalSharedService
-    //   .getFile(
-    //     this.appurl.getApiUrl() + GLOBAL.API_Pdf_ProjectActivityReportPdf,
-    //     this.pdfExportModel
-    //   )
-    //   .pipe(takeUntil(this.destroyed$))
-    //   .subscribe();
-
     // today
     const filterData: any = {
       ProjectId: this.projectId,
@@ -937,27 +785,10 @@ export class ProjectActivityListingComponent implements OnInit, OnDestroy {
       )
       .pipe(takeUntil(this.destroyed$))
       .subscribe();
-
-    // this.activitiesService
-    //   .GetProjectActivityAdvanceFilterList(filterData)
-    //   .subscribe(
-    //     (response: IResponseData) => {
-    //       this.projectActivityList = [];
-    //       if (response.statusCode === 200 && response.data !== null) {
-    //         this.totalCount = response.total;
-    //         this.setActivityList(response.data);
-
-    //         // this.onSelectedProvinceDetailId(response.data.ProvinceId);
-    //       }
-    //       this.activityListLoader = false;
-    //     },
-    //     error => {
-    //       this.activityListLoader = false;
-    //     }
-    //   );
-
   }
   //#endregion
+
+  //#region "ngOnDestroy"
 
   ngOnDestroy() {
     if (this.deleteActivitySubscribe && !this.deleteActivitySubscribe.closed) {

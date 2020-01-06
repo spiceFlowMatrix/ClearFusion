@@ -1,0 +1,484 @@
+@model HumanitarianAssistance.Application.Project.Models.InterviewDetailsPdfModel
+
+<!doctype html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+    <div class="container">
+        <table style="width:100%;font-family:Arial, Verdana, sans-serif;">
+            <tr>
+                <td>
+                    <table cellpadding="5" style="width:100%;">
+                        <tr>
+                            <td><img src="@Model.LogoPath" alt=""></td>
+                            <td style="text-align:left"> <img src = "@Model.PersianChaName" alt = ""> </td>
+                        </tr>
+                        <tr>
+                         <td colspan="2" align="center" style="font-size:20px;font-weight:500;">COORDINATION OF HUMANITARIAN ASSISTANCE(CHA)<br>Interview Form</td>
+                        </tr>
+                    </table>
+
+  <table cellpadding="10" style="width:100%;font-size:14px;" border="1"  cellspacing="0">
+    <tr>
+      <td style="font-weight:bold; border-right-color: white;" width="200">Candidate Name :</td>
+      <td width="200">@Model.CandidateName</td>
+      <td style="font-weight:bold; border-right-color: white;" width="200">Candidate Position: </td>
+      <td width="200">@Model.Position</td>
+    </tr>
+        <tr>
+      <td style="font-weight:bold; border-right-color: white;" width="200">Residing Province :</td>
+      <td width="200">@Model.Province</td>
+      <td style="font-weight:bold;  border-right-color: white;" width="200"> Duty Station:</td>
+      <td width="200">@Model.DutyStation</td>
+    </tr>
+            <tr>
+      <td  width="200" colspan="2"><img src="@Model.UnCheckedIconPath" alt=""> Ms&nbsp&nbsp&nbsp&nbsp&nbsp<img src="@Model.UnCheckedIconPath" alt=""> Mrs&nbsp&nbsp&nbsp&nbsp&nbsp<img src="@Model.UnCheckedIconPath" alt=""> Mr</td>
+      <td style="font-weight:bold; border-right-color: white;" width="200">Tazkira/Passport No :</td>
+      <td width="200">-</td>
+    </tr>
+    <tr>
+      <td width="200" style="font-weight:bold;  border-right-color: white;">Qualification Title: </td>
+      <td colspan="3">
+      @foreach (var Item in Model.EducationList) {
+        if(Item.EducationName == Model.Qualification) 
+        {
+         <img src="@Model.CheckedIconPath" alt=""> @Item.EducationName 
+        } else {
+          <img src="@Model.UnCheckedIconPath" alt=""> @Item.EducationName 
+        }
+      }
+      </td>
+    </tr>
+        <tr>
+      <td width="200" style="font-weight:bold;  border-right-color: white;">Name Of Institute/University: </td>
+      <td colspan="3">-</td>
+    </tr>
+    
+  </table>
+
+  <table cellpadding="10" style="width:100%;font-size:14px;" border="1"  cellspacing="0">
+    <tr>
+           <th width="150" >Date of Birth : @Model.DateOfBirth</th>
+           <th width="100" >Place of Birth : -</th>
+           <th width="250"  colspan="2">Tazkira Issue Place : -</th>
+           <th width="400" colspan="3">Marital Status: <br>Single &nbsp<img src="@Model.UnCheckedIconPath" alt=""> &nbsp&nbsp Married &nbsp<img src="@Model.UnCheckedIconPath" alt=""></th>
+    </tr>
+    <tr>
+    <td style="font-weight:bold;" colspan="2" align=center>Rating Based Criteria</td>
+      <th>Poor</th>
+      <th>Below Average</th>
+      <th>Average</th>
+      <th>Above Average</th>
+      <th>Outstanding</th>
+    </tr>
+    @foreach (var Item in Model.RatingBasedCriteriaAnswerList) {
+    <tr>
+      <td style="font-weight:bold;" colspan="2" >@Item.Question</td>
+      @if(Item.Score == 0)
+      {
+      <td style="font-weight:bold;" align=center><img src="@Model.CheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      } else if(Item.Score == 3) 
+      {
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.CheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      } else if(Item.Score == 5) 
+      {
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.CheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      } else if(Item.Score == 7) 
+      {
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.CheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      } else if(Item.Score == 10) 
+      {
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.CheckedIconPath" alt=""></td>
+      } else 
+      {
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      <td style="font-weight:bold;" align=center><img src="@Model.UnCheckedIconPath" alt=""></td>
+      }    
+    </tr>
+    }
+      <tr><td  colspan="2"></td>
+      <td>Professional Criteria Marks:</td>
+      <td align=center>@Model.ProfessionalCriteriaMark</td>
+      <td>A: Total marks obtained</td>
+      <td colspan="2" align=center></td>
+    </tr>
+  </table>
+ <table cellpadding="10" style="width:100%;font-size:14px;" border="1"  cellspacing="0">
+<tr>
+    <th width="150">Language Skills:</th>
+    <td colspan="4" width="900">Kindly rate the candidate as per the following rating (Fair, Good, Very Good, Excellent).</td>
+    </tr>
+    <tr>
+    <th>Languages</th>
+      <th>Reading</th>
+      <th>Writting</th>
+      <th>Listening</th>
+       <th>Speaking</th>      
+    </tr>
+    @foreach (var Item in Model.LanguageList) {
+    <tr>
+    <td>@Item.LanguageName</td>
+      <td>@Item.LanguageReading</td>
+      <td>@Item.LanguageWriting</td>
+      <td>@Item.LanguageListining</td>
+      <td>@Item.LanguageSpeaking</td>
+    </tr>
+    }
+  </table>
+    <table cellpadding="10" style="width:100%;font-size:14px;" border="1"  cellspacing="0">
+    <tr>
+    <th>Traning Type</th>
+      <th>Traning Name</th>
+      <th>Studying Country, City</th>
+      <th>Start Date</th>
+       <th>End Date</th>      
+    </tr>
+    @foreach (var Item in Model.TraningList) {
+    <tr>
+    <td>@Item.TraningName</td>
+      <td>@Item.TraningName</td>
+      <td>@Item.TraningCountryAndCity</td>
+      <td>@Item.TraningStartDate</td>
+      <td>@Item.TraningEndDate</td>
+    </tr>
+    }
+  </table>
+    <table cellpadding="10" style="width:100%;font-size:14px;" border="1"  cellspacing="0">
+    <tr>
+      <th rowspan="2">Technical Question: Each</th>
+      <th colspan="5">Scoring:</th>
+    </tr>
+    <tr>
+      <th>0 Poor</th>
+      <th>10 Fair</th>
+      <th>15 Good</th>
+      <th>20 Excellent</th>
+      <th>30 Perfect</th>
+    </tr>
+       @foreach (var Item in Model.TechnicalAnswerList) {
+    <tr>
+    <td>@Item.Question</td>
+
+@if(Item.Score == 0)
+      {
+      <td style="font-weight:bold;" align=center>@Item.Score</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      } else if(Item.Score == 10) 
+      {
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>@Item.Score</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      } else if(Item.Score == 15) 
+      {
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>@Item.Score</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      } else if(Item.Score == 20) 
+      {
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>@Item.Score</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      } else if(Item.Score == 30) 
+      {
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>@Item.Score</td>
+      } else 
+      {
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      <td style="font-weight:bold;" align=center>-</td>
+      }  
+    </tr>
+     }
+  </table>
+
+    <table cellpadding="10" style="width:100%;font-size:14px;" border=1 cellspacing="0"
+    <tr >
+  <td colspan="3" style="border-color:white">Note: scoring criteria show that each question carries equal marks, according to the scoring sheet.</td>
+  </tr>
+<tr>
+<td colspan="3" style="border-color:white">B: Total Marks Obtain : @Model.MarksObtain</td>
+</tr>
+<tr>
+<td  colspan="3" style="border-color:white">C: Written Test Marks Obtained: @Model.WrittenTestMarks</td>
+</tr>
+<tr>
+<td style="border-color:white">1. Are you willing to Travel to provinces if required?</td>
+  <td style="border-color:white">Yes &nbsp
+                                @if (Model.InterviewQuestionOne == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }</td>
+  <td style="border-color:white">No &nbsp
+                                @if (Model.InterviewQuestionOne == false)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }
+  </td>
+</tr>
+<tr>
+<td style="border-color:white">2. Do you have any health-related issue? If yes, please elaborate in detail.</td>
+  <td style="border-color:white">Yes &nbsp
+                                @if (Model.InterviewQuestionTwo == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }</td>
+  <td style="border-color:white">No &nbsp
+                                @if (Model.InterviewQuestionTwo == false)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }
+  </td>
+</tr>
+<tr>
+<td style="border-color:white">3. Are you willing to consider opportunity if it’s based in the provinces?</td>
+  <td style="border-color:white">Yes &nbsp
+                                @if (Model.InterviewQuestionThree == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }</td>
+  <td style="border-color:white">No &nbsp
+                                @if (Model.InterviewQuestionThree == false)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }
+  </td>
+</tr>
+<tr>
+<td  colspan="3" style="border-color:white">4. What province would you prefer if you consider an opportunity given to you?</td>
+</tr>
+  </table>
+  <table cellpadding="10" style="width:100%;font-size:14px;" border=1 cellspacing="0"
+    <tr >
+  <th colspan="5">
+  Compensation and Benefits Requirement (Current / Target)
+  </th>
+  <th>Notice period:</th>
+  <td>
+                                @if (Model.NoticePeriod == 1)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }
+    &nbsp 15 days&nbsp 
+                                @if (Model.NoticePeriod == 2)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }&nbsp 30 days &nbsp  
+                                @if (Model.NoticePeriod != 1 && Model.NoticePeriod != 2)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }&nbsp Other</td>
+</tr>
+<tr>
+<th>Current</th>
+  <td>Base Salary : @Model.CurrentBase</td>
+  <td>Others : @Model.CurrentOther</td>
+  <td>
+                                @if (Model.CurrentTransport == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }
+    
+     &nbsp Transportation</td>
+  <td>
+                                @if (Model.CurrentMeal == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }
+                                &nbsp Meal</td>
+  <td rowspan="2" colspan="2">Date available to join cha: @Model.AvailableDate</td>
+</tr>
+<tr>
+<th>Expectation</th>
+  <td>Base Salary : @Model.ExpectationBase</td>
+  <td>Others : @Model.ExpectationOther</td>
+  <td>
+                                @if (Model.ExpectationTransport == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }
+     &nbsp Transportation</td>
+  <td>
+                                @if (Model.ExpectationMeal == true)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }
+                                 &nbsp Meal</td>
+</tr>
+<tr>
+  <td colspan="7">A+B+C = Total Marks Obtained : @Model.TotalMarksObtain</td>
+</tr>
+<tr>
+  <th colspan="7">Recommendations</th>
+</tr>
+<tr>
+  <td>
+                                @if (Model.Status == 1)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }
+    &nbsp Hire</td>
+  <td>                          @if (Model.Status == 2)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }&nbsp 2nd Choice</td>
+  <td>
+                                @if (Model.Status == 3)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }&nbsp Test Day</td>
+  <td colspan="2">
+                                @if (Model.Status == 4)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }&nbsp Recommended for other position</td>
+  <td>                          @if (Model.Status == 5)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }&nbsp Reject</td>
+  <td>
+                                @if (Model.Status == 6)
+                                {
+                                   <img src="@Model.CheckedIconPath" alt=""> 
+                                }
+                                else 
+                                {
+                                 <img src="@Model.UnCheckedIconPath" alt=""> 
+                                }&nbsp Over Qualified</td>
+</tr>
+@foreach (var Item in Model.InterviewerList) {
+<tr>
+<td>Name Of Interviewer</td>
+  <td colspan="2">@Item.Name</td>
+  <td>Date</td>
+  <td colspan="3">@Item.Date</td>
+</tr>
+<tr>
+<td>Position</td>
+  <td colspan="2">@Item.Position</td>
+  <td>Signatute</td>
+  <td colspan="3">@Item.Signature</td>
+</tr>
+}
+  </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

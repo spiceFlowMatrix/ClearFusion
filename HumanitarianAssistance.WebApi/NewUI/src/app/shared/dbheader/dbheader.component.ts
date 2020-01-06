@@ -64,6 +64,10 @@ export class DbheaderComponent implements OnInit, OnDestroy {
   }
   //#endregion
 
+  goToRoute(route){
+    this.router.navigateByUrl(route);
+  }
+
   //#region "ngOnDestroy"
   ngOnDestroy() {
     if (this.trainingSubscription && !this.trainingSubscription.closed) {

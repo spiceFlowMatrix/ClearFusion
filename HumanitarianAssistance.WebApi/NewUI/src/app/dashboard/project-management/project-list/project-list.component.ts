@@ -172,21 +172,21 @@ export class ProjectListComponent implements OnInit {
           if (res.data.ProjectDetailModel != null && res.data.ProjectDetailModel != undefined) {
             if (res.data.ProjectDetailModel.length > 0 && res.StatusCode === 200) {
               this.projectFilterModel.totalCount =
-              res.data.TotalCount != null ? res.data.TotalCount : 0;
+                res.data.TotalCount != null ? res.data.TotalCount : 0;
               res.data.ProjectDetailModel.forEach(element => {
-              this.projectList.push({
-                ProjectId: element.ProjectId,
-                ProjectName: element.ProjectName,
-                ProjectPhase: element.ProjectPhase,
-                TotalDaysinHours: element.TotalDaysinHours,
-                ProjectCode: element.ProjectCode,
-                ProjectDescription: element.ProjectDescription,
-                IsWin: element.IsWin
+                this.projectList.push({
+                  ProjectId: element.ProjectId,
+                  ProjectName: element.ProjectName,
+                  ProjectPhase: element.ProjectPhase,
+                  TotalDaysinHours: element.TotalDaysinHours,
+                  ProjectCode: element.ProjectCode,
+                  ProjectDescription: element.ProjectDescription,
+                  IsWin: element.IsWin
+                });
               });
-            });
             }
           }
-            this.projectListLoaderFlag = false;
+          this.projectListLoaderFlag = false;
         },
         error => {
           this.projectListLoaderFlag = false;
@@ -223,10 +223,11 @@ export class ProjectListComponent implements OnInit {
                 ProjectDescription: responseData.ProjectDescription
               };
               this.projectList.push(projectData);
-              this.projectList.sort(function(a, b) {
+              this.projectList.sort(function (a, b) {
                 return b.ProjectId - a.ProjectId;
               });
 
+              localStorage.setItem('selectedProject', projectData.ProjectId);
               this.router.navigate(['/project/my-project', projectData.ProjectId]);
             }
           }
@@ -241,6 +242,7 @@ export class ProjectListComponent implements OnInit {
 
   onProjectClicked(data: number) {
     this.projectListService.onShowHideHeader(false);
+    localStorage.setItem('selectedProject', data.toString());
     this.router.navigate(['/project/my-project', data]);
   }
 

@@ -289,6 +289,11 @@ export interface DonorCEModel {
 export interface ProductAndServiceCEModel {
   ProjectId?: number;
   ProductServiceId?: number;
+  RuralDevelopmentSocialProtection?: boolean;
+  Education?: boolean;
+  HealthAndNutrition?: boolean;
+  DisasterRiskReduction?: boolean;
+  AgricultureAndLivestock?: boolean;
   Awareness  ?: boolean;
   Infrastructure?: boolean;
   CapacityBuilding?: boolean;

@@ -37,17 +37,17 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
     private fb: FormBuilder, private budgetLineService: BudgetLineService, private loader : CommonLoaderService) {
 
     this.purchaseFormFilters = this.fb.group({
-      InventoryTypeId: [null, Validators.required],
-      ReceiptTypeId: [null, Validators.required],
-      OfficeId: [null, Validators.required],
-      CurrencyId: [null, Validators.required],
-      ProjectId: [null],
-      JobId: [null],
+      InventoryTypeId: [0, Validators.required],
+      ReceiptTypeId: [0, Validators.required],
+      OfficeId: [0, Validators.required],
+      CurrencyId: [0, Validators.required],
+      ProjectId: [0],
+      JobId: [0],
       DateOfPurchase: [null],
       DateOfIssue: [null],
-      InventoryMasterId: [null],
-      ItemGroupId: [null],
-      ItemId: [null],
+      InventoryMasterId: [0],
+      ItemGroupId: [0],
+      ItemId: [0],
       DepreciationComparisionDate: [null]
     });
   }
@@ -105,10 +105,10 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
       }));
 
       // Set defaults for filter
-      this.purchaseFormFilters.get('InventoryTypeId').patchValue(x.InventoryTypes !== null ? x.InventoryTypes[0].Id : null);
-      this.purchaseFormFilters.get('ReceiptTypeId').patchValue(x.ReceiptTypes !== null ? x.ReceiptTypes[0].ReceiptTypeId : null);
-      this.purchaseFormFilters.get('OfficeId').patchValue(x.Offices !== null ? x.Offices[0].OfficeId : null);
-      this.purchaseFormFilters.get('CurrencyId').patchValue(x.CurrencyModel !== null ? x.CurrencyModel[0].CurrencyId : null);
+      // this.purchaseFormFilters.get('InventoryTypeId').patchValue(x.InventoryTypes !== null ? x.InventoryTypes[0].Id : null);
+      // this.purchaseFormFilters.get('ReceiptTypeId').patchValue(x.ReceiptTypes !== null ? x.ReceiptTypes[0].ReceiptTypeId : null);
+      // this.purchaseFormFilters.get('OfficeId').patchValue(x.Offices !== null ? x.Offices[0].OfficeId : null);
+      // this.purchaseFormFilters.get('CurrencyId').patchValue(x.CurrencyModel !== null ? x.CurrencyModel[0].CurrencyId : null);
 
       this.onPurchaseFilterSelectionChanged();
       this.loader.hideLoader();
@@ -236,6 +236,7 @@ export class PurchaseFiltersComponent implements OnInit, OnDestroy {
 
   clearFilters() {
     this.purchaseFormFilters.reset();
+    this.purchaseFilterSelected.emit(this.purchaseFormFilters);
   }
 
   ngOnDestroy() {

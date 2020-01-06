@@ -5,13 +5,22 @@
         {{SubActivityTitle}}
       </mat-panel-title>
       <mat-panel-description>
-        <div class="row col-sm-10">Progress {{ CalculateProgress }} %</div>
-        <div *ngIf="
-            subActivityCompletedFlag || subActivityDetail.IsCompleted == true
-          " class="row col-sm-2 height_23px">
-          <mat-icon aria-label="check" class="accent_color">check</mat-icon>
-        </div>
+          <div class="col-sm-8">Progress {{ CalculateProgress }} %</div>
+          <div class="col-sm-2 " *ngIf="
+           subActivityCompletedFlag || subActivityDetail.IsCompleted == true">
+            <mat-icon aria-label="check" class="accent_color" matTooltip = "Completed" matTooltipPosition="left">check</mat-icon>
+          </div>
+          <div class="col-sm-2">
+            <button mat-icon-button color="warn"
+              (click)="onDeleteSubActivityClick(this.projectSubActivityForm.get('ActivityId').value)">
+              <i class="material-icons margin_botm">
+                delete
+              </i>
+            </button>
+          </div>
       </mat-panel-description>
+
+
     </mat-expansion-panel-header>
     <div class="row">
       <form class="example-form" [formGroup]="projectSubActivityForm">
@@ -50,8 +59,8 @@
               </button>
             </ng-template>
             &nbsp;
-            <button *ngIf="IsEndSubActivity == null && IsStartSubActivity; else disabledEnd" mat-stroked-button color="primary"
-              (click)="onEndActivityClicked()">
+            <button *ngIf="IsEndSubActivity == null && IsStartSubActivity; else disabledEnd" mat-stroked-button
+              color="primary" (click)="onEndActivityClicked()">
               End
             </button>
             <ng-template #disabledEnd>
@@ -64,12 +73,13 @@
             </ng-template>
             &nbsp;
 
-            <button mat-raised-button color="primary"  (click)="onChanges(projectSubActivityForm.value)" [disabled]="IsEditSubActivityLoaderFlag">
-                <span class="pull-left spinner_center margin_top_10" *ngIf="IsEditSubActivityLoaderFlag">
-                  <mat-spinner [diameter]="15"></mat-spinner>
-                </span>
-                Save
-              </button>
+            <button mat-raised-button color="primary" (click)="onChanges(projectSubActivityForm.value)"
+              [disabled]="IsEditSubActivityLoaderFlag">
+              <span class="pull-left spinner_center margin_top_10" *ngIf="IsEditSubActivityLoaderFlag">
+                <mat-spinner [diameter]="15"></mat-spinner>
+              </span>
+              Save
+            </button>
             <!-- <button mat-stroked-button color="primary" (click)="onChanges(projectSubActivityForm.value)">
               Save
             </button> -->
@@ -77,12 +87,11 @@
         </div>
         <br /><br />
         <div class="row">
-            <div class="col-sm-12">
-                <mat-form-field class="example-full-width">
-                  <input matInput formControlName="SubActivityTitle" type="text"
-                     placeholder="Sub Activity Title" />
-                </mat-form-field>
-              </div>
+          <div class="col-sm-12">
+            <mat-form-field class="example-full-width">
+              <input matInput formControlName="SubActivityTitle" type="text" placeholder="Sub Activity Title" />
+            </mat-form-field>
+          </div>
         </div>
         <div class="row">
           <div class="col-sm-12">
@@ -103,14 +112,15 @@
             <div class="row">
               <div class="col-sm-12">
                 <mat-form-field class="example-full-width">
-                  <input matInput formControlName="Target" type="number" pattern="[0-9]*" [min]="0"
-                   appNumberOnly="true" #activityTarget placeholder="Target" />
+                  <input matInput formControlName="Target" type="number" pattern="[0-9]*" [min]="0" appNumberOnly="true"
+                    #activityTarget placeholder="Target" />
                 </mat-form-field>
               </div>
               <div class="col-sm-12">
                 <mat-form-field class="example-full-width">
-                  <input matInput formControlName="PlannedStartDate" #activityStartDate [min]="subActivityDetail.PlannedStartDate"
-                    [matDatepicker]="planningStartDatepicker" placeholder="Start Date" />
+                  <input matInput formControlName="PlannedStartDate" #activityStartDate
+                    [min]="subActivityDetail.PlannedStartDate" [matDatepicker]="planningStartDatepicker"
+                    placeholder="Start Date" />
                   <mat-datepicker-toggle matSuffix [for]="planningStartDatepicker"></mat-datepicker-toggle>
                   <mat-datepicker color="primary" #planningStartDatepicker></mat-datepicker>
                 </mat-form-field>
@@ -130,10 +140,11 @@
             <div class="row">
               <div class="col-sm-12">
                 <mat-form-field class="example-full-width">
-                  <input matInput formControlName="Achieved" type="number" #activityAchieved pattern="[0-9]*" min="0" max = "Target.value"
-                    appNumberOnly="true"  placeholder="Achieved" />
-                    <mat-error *ngIf="projectSubActivityForm.get('Achieved').hasError('invalid')"> Achieved must be less than or equal to Target</mat-error>
-                  </mat-form-field>
+                  <input matInput formControlName="Achieved" type="number" #activityAchieved pattern="[0-9]*" min="0"
+                    max="Target.value" appNumberOnly="true" placeholder="Achieved" />
+                  <mat-error *ngIf="projectSubActivityForm.get('Achieved').hasError('invalid')"> Achieved must be less
+                    than or equal to Target</mat-error>
+                </mat-form-field>
               </div>
               <div class="col-sm-12">
                 <mat-form-field class="example-full-width">
@@ -171,8 +182,8 @@
       </div>
       <div class="row">
         <div class="col-sm-12">
-          <lib-listing-delete [tableHeaderList]="tableHeaderList" [tableHeader] = "tableHeader" [tableContentList]="extensionList"
-            (deleteConfirm)="deleteExtension($event)">
+          <lib-listing-delete [tableHeaderList]="tableHeaderList" [tableHeader]="tableHeader"
+            [tableContentList]="extensionList" (deleteConfirm)="deleteExtension($event)">
           </lib-listing-delete>
         </div>
       </div>

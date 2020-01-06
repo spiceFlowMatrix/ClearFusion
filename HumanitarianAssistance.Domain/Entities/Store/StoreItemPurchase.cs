@@ -55,6 +55,9 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public int? OfficeId { get; set; }
         public int? JournalCode { get; set; }
         public string PurchaseName { get; set; }
+        public long? LogisticRequestId { get; set; }
+        [ForeignKey("LogisticRequestId")]
+        public ProjectLogisticRequests ProjectLogisticRequests { get; set; }
         
         [ForeignKey("OfficeId")]
         public OfficeDetail OfficeDetail { get; set; }
@@ -84,5 +87,6 @@ namespace HumanitarianAssistance.Domain.Entities.Store
         public List<StorePurchaseOrder> PurchaseOrders { get; set; }
         public List<PurchasedVehicleDetail> PurchasedVehicleDetailList {get; set;}
         public List<PurchasedGeneratorDetail> PurchasedGeneratorDetailList {get; set;}
+        public List<ReturnProcurementDetail> ReturnProcurementDetailList { get; set; }
     }
 }

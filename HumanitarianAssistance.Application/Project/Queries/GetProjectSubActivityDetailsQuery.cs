@@ -5,6 +5,6 @@ namespace HumanitarianAssistance.Application.Project.Queries
 {
     public class GetProjectSubActivityDetailsQuery : IRequest<ApiResponse>
     {
-        public int projectId { get; set; } 
+        public int ActivityId { get; set; } 
     }
 }

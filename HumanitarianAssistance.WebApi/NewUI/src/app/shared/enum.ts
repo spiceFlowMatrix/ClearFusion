@@ -50,12 +50,12 @@ export enum Activities {
 
 //#region "Criteria Evaluation"
 export enum criteriaEvaluationScores {
-  methodOfFunding_Sole = 1,
-  methodOfFunding_Source = 0.9,
+  methodOfFunding_Sole = 2,
+  methodOfFunding_Source = 1,
   methodOfFunding_Default = 0,
 
-  pastFundingExperience_Yes = 1,
-  pastFundingExperience_No = 0,
+  // pastFundingExperience_Yes = 1,
+  // pastFundingExperience_No = 0,
 
   proposalAccepted_Yes = 1,
   proposalAccepted_No = 0,
@@ -78,10 +78,10 @@ export enum criteriaEvaluationScores {
   proposalExp_OtherDeliverable_Yes = 1,
   proposalExp_OtherDeliverable_No = 0,
 
-  pastWorkExperoence_Yes = 1,
-  pastWorkExperoence_No = 0,
+  // pastWorkExperoence_Yes = 1,
+  // pastWorkExperoence_No = 0,
 
-  pastCriticismPerfomance_Yes = 0,
+  pastCriticismPerfomance_Yes = 1,
   pastCriticismPerfomance_No = 0,
 
   pastCriticismTimeManagement_Yes = 1,
@@ -96,203 +96,203 @@ export enum criteriaEvaluationScores {
   pastCriticismQualityDeliverable_Yes = 1,
   pastCriticismQualityDeliverable_No = 0,
 
-  finanacingHistory_Good = 1,
-  finanacingHistory_Neutral = 0,
-  finanacingHistory_Bad = -1,
+  finanacingHistory_Good = 2,
+   finanacingHistory_Neutral = 0,
+  // finanacingHistory_Bad = -1,
 
-  religiousStanding_Good = 1,
-  religiousStanding_Neutral = 0,
-  religiousStanding_Bad = -1,
+  religiousStanding_Good = 2,
+   religiousStanding_Neutral = 0,
+  // religiousStanding_Bad = -1,
 
-  politicalStanding_Good = 1,
-  politicalStanding_Neutral = 0,
-  politicalStanding_Bad = -1,
+  politicalStanding_Good = 2,
+   politicalStanding_Neutral = 0,
+  // politicalStanding_Bad = -1,
 
   // Products && services
 
-  prodAwareness_Yes = 1,
-  prodAwareness_No = 0,
+  // prodAwareness_Yes = 1,
+  // prodAwareness_No = 0,
 
-  prodInfrastructure_Yes = 1,
-  prodInfrastructure_No = 0,
+  // prodInfrastructure_Yes = 1,
+  // prodInfrastructure_No = 0,
 
-  prodCapacityBuilding_Yes = 1,
-  prodCapacityBuilding_No = 0,
+  // prodCapacityBuilding_Yes = 1,
+  // prodCapacityBuilding_No = 0,
 
-  prodIncomeGeneration_Yes = 1,
-  prodIncomeGeneration_No = 0,
+  // prodIncomeGeneration_Yes = 1,
+  // prodIncomeGeneration_No = 0,
 
-  prodMobilization_Yes = 1,
-  prodMobilization_No = 0,
+  // prodMobilization_Yes = 1,
+  // prodMobilization_No = 0,
 
-  prodPeaceBuilding_Yes = 1,
-  prodPeaceBuilding_No = 0,
+  // prodPeaceBuilding_Yes = 1,
+  // prodPeaceBuilding_No = 0,
 
-  prodSocialProtection_Yes = 1,
-  prodSocialProtection_No = 0,
+  // prodSocialProtection_Yes = 1,
+  // prodSocialProtection_No = 0,
 
-  prodSustainableLivelihood_Yes = 1,
-  prodSustainableLivelihood_No = 0,
+  // prodSustainableLivelihood_Yes = 1,
+  // prodSustainableLivelihood_No = 0,
 
-  prodAdvocacy_Yes = 1,
-  prodAdvocacy_No = 0,
+  // prodAdvocacy_Yes = 1,
+  // prodAdvocacy_No = 0,
 
-  prodLiteracy_Yes = 1,
-  prodLiteracy_No = 0,
+  // prodLiteracy_Yes = 1,
+  // prodLiteracy_No = 0,
 
-  prodEducationCapacityBuilding_Yes = 1,
-  prodEducationCapacityBuilding_No = 0,
+  // prodEducationCapacityBuilding_Yes = 1,
+  // prodEducationCapacityBuilding_No = 0,
 
-  prodSchoolUpgrading_Yes = 1,
-  prodSchoolUpgrading_No = 0,
+  // prodSchoolUpgrading_Yes = 1,
+  // prodSchoolUpgrading_No = 0,
 
-  prodEducationInEmergency_Yes = 1,
-  prodEducationInEmergency_No = 0,
+  // prodEducationInEmergency_Yes = 1,
+  // prodEducationInEmergency_No = 0,
 
-  prodOnlineEducation_Yes = 1,
-  prodOnlineEducation_No = 0,
+  // prodOnlineEducation_Yes = 1,
+  // prodOnlineEducation_No = 0,
 
-  prodCommunityBasedEducation_Yes = 1,
-  prodCommunityBasedEducation_No = 0,
+  // prodCommunityBasedEducation_Yes = 1,
+  // prodCommunityBasedEducation_No = 0,
 
-  AcceleratedLearningProgram_Yes = 1,
-  AcceleratedLearningProgram_No = 0,
+  // AcceleratedLearningProgram_Yes = 1,
+  // AcceleratedLearningProgram_No = 0,
 
-  PrimaryHealthServices_Yes = 1,
-  PrimaryHealthServices_No = 0,
+  // PrimaryHealthServices_Yes = 1,
+  // PrimaryHealthServices_No = 0,
 
-  ReproductiveHealth_Yes = 1,
-  ReproductiveHealth_No = 0,
+  // ReproductiveHealth_Yes = 1,
+  // ReproductiveHealth_No = 0,
 
-  Immunization_Yes = 1,
-  Immunization_No = 0,
+  // Immunization_Yes = 1,
+  // Immunization_No = 0,
 
-  InfantandYoungChildFeeding_Yes = 1,
-  InfantandYoungChildFeeding_No = 0,
+  // InfantandYoungChildFeeding_Yes = 1,
+  // InfantandYoungChildFeeding_No = 0,
 
-  Nutrition_Yes = 1,
-  Nutrition_No = 0,
+  // Nutrition_Yes = 1,
+  // Nutrition_No = 0,
 
-  CommunicableDisease_Yes = 1,
-  CommunicableDisease_No = 0,
+  // CommunicableDisease_Yes = 1,
+  // CommunicableDisease_No = 0,
 
-  Hygiene_Yes = 1,
-  Hygiene_No = 0,
+  // Hygiene_Yes = 1,
+  // Hygiene_No = 0,
 
-  EnvironmentalHealth_Yes = 1,
-  EnvironmentalHealth_No = 0,
+  // EnvironmentalHealth_Yes = 1,
+  // EnvironmentalHealth_No = 0,
 
-  MentalHealthandDisabilityService_Yes = 1,
-  MentalHealthandDisabilityService_No = 0,
+  // MentalHealthandDisabilityService_Yes = 1,
+  // MentalHealthandDisabilityService_No = 0,
 
-  HealthCapacityBuilding_Yes = 1,
-  HealthCapacityBuilding_No = 0,
+  // HealthCapacityBuilding_Yes = 1,
+  // HealthCapacityBuilding_No = 0,
 
-  Telemedicine_Yes = 1,
-  Telemedicine_No = 0,
+  // Telemedicine_Yes = 1,
+  // Telemedicine_No = 0,
 
-  MitigationProjects_Yes = 1,
-  MitigationProjects_No = 0,
+  // MitigationProjects_Yes = 1,
+  // MitigationProjects_No = 0,
 
-  WaterSupply_Yes = 1,
-  WaterSupply_No = 0,
+  // WaterSupply_Yes = 1,
+  // WaterSupply_No = 0,
 
-  Sanitation_Yes = 1,
-  Sanitation_No = 0,
+  // Sanitation_Yes = 1,
+  // Sanitation_No = 0,
 
-  DisasterRiskHygiene_Yes = 1,
-  DisasterRiskHygiene_No = 0,
+  // DisasterRiskHygiene_Yes = 1,
+  // DisasterRiskHygiene_No = 0,
 
-  DisasterCapacityBuilding_Yes = 1,
-  DisasterCapacityBuilding_No = 0,
+  // DisasterCapacityBuilding_Yes = 1,
+  // DisasterCapacityBuilding_No = 0,
 
-  EmergencyResponse_Yes = 1,
-  EmergencyResponse_No = 0,
+  // EmergencyResponse_Yes = 1,
+  // EmergencyResponse_No = 0,
 
-  RenewableEnergy_Yes = 1,
-  RenewableEnergy_No = 0,
+  // RenewableEnergy_Yes = 1,
+  // RenewableEnergy_No = 0,
 
-  Shelter_Yes = 1,
-  Shelter_No = 0,
+  // Shelter_Yes = 1,
+  // Shelter_No = 0,
 
-  NaturalResourceManagement_Yes = 1,
-  NaturalResourceManagement_No = 0,
+  // NaturalResourceManagement_Yes = 1,
+  // NaturalResourceManagement_No = 0,
 
-  AggriculutreCapacityBuilding_Yes = 1,
-  AggriculutreCapacityBuilding_No = 0,
+  // AggriculutreCapacityBuilding_Yes = 1,
+  // AggriculutreCapacityBuilding_No = 0,
 
-  LivestockManagement_Yes = 1,
-  LivestockManagement_No = 0,
+  // LivestockManagement_Yes = 1,
+  // LivestockManagement_No = 0,
 
-  FoodSecurity_Yes = 1,
-  FoodSecurity_No = 0,
+  // FoodSecurity_Yes = 1,
+  // FoodSecurity_No = 0,
 
-  ResearchandPublication_Yes = 1,
-  ResearchandPublication_No = 0,
+  // ResearchandPublication_Yes = 1,
+  // ResearchandPublication_No = 0,
 
-  Horticulture_Yes = 1,
-  Horticulture_No = 0,
+  // Horticulture_Yes = 1,
+  // Horticulture_No = 0,
 
-  Irrigation_Yes = 1,
-  Irrigation_No = 0,
+  // Irrigation_Yes = 1,
+  // Irrigation_No = 0,
 
-  Livelihood_Yes = 1,
-  Livelihood_No = 0,
+  // Livelihood_Yes = 1,
+  // Livelihood_No = 0,
 
-  ValueChain_Yes = 1,
-  ValueChain_No = 0,
+  // ValueChain_Yes = 1,
+  // ValueChain_No = 0,
 
-  Women_Yes = 1,
+  Women_Yes = 0.5,
   Women_No = 0,
 
-  Men_Yes = 1,
+  Men_Yes = 0.5,
   Men_No = 0,
 
-  Youth_Yes = 1,
+  Youth_Yes = 0.5,
   Youth_No = 0,
 
-  Children_Yes = 2,
+  Children_Yes = 1,
   Children_No = 0,
 
-  Disabled_Yes = 2,
+  Disabled_Yes = 1,
   Disabled_No = 0,
 
-  IDPs_Yes = 1,
+  IDPs_Yes = 0.5,
   IDPs_No = 0,
 
   Returnees_Yes = 1,
   Returnees_No = 0,
 
-  Kuchis_Yes = 2,
+  Kuchis_Yes = 1,
   Kuchis_No = 0,
 
-  Widows_Yes = 2,
+  Widows_Yes = 1,
   Widows_No = 0,
 
   // donor Eligibility criteria
-  onDonorELegibilityCrteria_Yes = 1,
+  onDonorELegibilityCrteria_Yes = 8,
   onDonorELegibilityCrteria_No = 0,
 
-  donorEligibilityDeadline_Yes = 1,
+  donorEligibilityDeadline_Yes = 6,
   donorEligibilityDeadline_No = 0,
 
-  donorELigibilityPartnership_Yes = 1,
+  donorELigibilityPartnership_Yes = 2,
   donorELigibilityPartnership_No = 0,
 
   // feasibility
   feasibilityCapacityForProject_Yes = 4,
   feasibilityCapacityForProject_No = 0,
 
-  compensationTrainedStaff_Yes = -1,
+  compensationTrainedStaff_Yes = 1,
   compensationTrainedStaff_No = 0,
 
-  compensateByEquipment_Yes = -1,
+  compensateByEquipment_Yes = 1,
   compensateByEquipment_No = 0,
 
-  compensateExpandScope_Yes = -1,
+  compensateExpandScope_Yes = 1,
   compensateExpandScope_No = 0,
 
-  compensateGeographical_Yes = -1,
+  compensateGeographical_Yes = 1,
   compensateGeographical_No = 0,
 
   // feasibility third party
@@ -322,16 +322,16 @@ export enum criteriaEvaluationScores {
   enoughTimeForQualityWork_Yes = 1,
   enoughTimeForQualityWork_No = 0,
 
-  projectAllowedByLaw_Yes = 1,
-  projectAllowedByLaw_No = 0,
+  // projectAllowedByLaw_Yes = 0,
+  // projectAllowedByLaw_No = 0,
 
-  projectAllowByOrganisation_Yes = 1,
-  projectAllowByOrganisation_No = 0,
+  // projectAllowByOrganisation_Yes = 1,
+  // projectAllowByOrganisation_No = 0,
 
   isProjectPractical_Yes = 1,
   isProjectPractical_No = 0,
 
-  presenceCoverage_Yes = 1,
+  presenceCoverage_Yes = 2,
   presenceCoverage_No = 0,
 
   projectinLineWithFocus_Yes = 1,
@@ -341,8 +341,8 @@ export enum criteriaEvaluationScores {
   enoughTimeToPrepareproposal_No = 0,
 
   // cost efficiency
-  costGreaterThanBudget_Yes = 0, // -1 (real score -1 but use only 0 for right calculation)
-  costGreaterThanBudget_No = 1,
+  costGreaterThanBudget_Yes = 5, // -1 (real score -1 but use only 0 for right calculation)
+  costGreaterThanBudget_No = 0,
   costGreaterThanBudgetDefault = 0,
 
   financialCopntributionFulfil_Yes = 1,
@@ -365,34 +365,34 @@ export enum criteriaEvaluationScores {
   increasedEligibility_Yes = 0.4,
   increasedEligibility_No = 0,
 
-  increasedReputation_Yes = 0.1,
+  increasedReputation_Yes = 3,
   increasedReputation_No = 0,
 
-  improvedDonorRelationaship_Yes = 0.2,
+  improvedDonorRelationaship_Yes = 3,
   improvedDonorRelationaship_No = 0,
 
-  goodCause_Yes = 0.1,
+  goodCause_Yes = 1,
   goodCause_No = 0,
 
-  improvedPerformanceCapacity_Yes = 0.1,
+  improvedPerformanceCapacity_Yes = 1,
   improvedPerformanceCapacity_No = 0,
 
-  skillImprovement_Yes = 0.1,
+  skillImprovement_Yes = 2,
   skillImprovement_No = 0,
 
-  fillingfundingGaps_Yes = 0.2,
+  fillingfundingGaps_Yes = 6,
   fillingfundingGaps_No = 0,
 
-  newSoftware_Yes = 0.1,
+  newSoftware_Yes = 1,
   newSoftware_No = 0,
 
-  newEquipment_Yes = 0.1,
+  newEquipment_Yes = 1,
   newEquipment_No = 0,
 
-  coverageAreaExpansion_Yes = 0.2,
+  coverageAreaExpansion_Yes = 1,
   coverageAreaExpansion_No = 0,
 
-  newTraining_Yes = 0.1,
+  newTraining_Yes = 1,
   newTraining_No = 0,
 
   priorityOther_Yes = 1,
@@ -404,17 +404,93 @@ export enum criteriaEvaluationScores {
   //#endregion
 
   //#region risk security form
-  riskSecurity_Yes = 0,
-  riskSecurity_No = 1,
+  // riskSecurity_Yes = 0,
+  // riskSecurity_No = 1,
+  // Note: tab score
+  ruralDevelopmentProtection_Yes = 2,
+  ruralDevelopmentProtection_No = 0,
 
-  riskReputation_Yes = 0,
-  riskReputation_No = 1,
+  education_Yes = 2 ,
+  education_No = 0,
+
+  healthAndNutrition_Yes = 2,
+  healthAndNutrition_No = 0,
+
+  disasterAndRisk_Yes = 2,
+  disasterAndRisk_No = 0,
+
+  agricultureaAndLivestock_Yes = 2,
+  agricultureaAndLivestock_No = 0,
+
+// end tab
+  staffSecured_Yes = 2,
+  staffSecured_No = 0,
+
+  projectAssetSecured_Yes = 2,
+  projectAssetSecured_No = 0,
+
+  supplierSecured_Yes = 2,
+  supplierSecured_No = 0,
+
+  beneficiarieSecured_Yes = 2,
+  beneficiarieSecured_No = 0,
+
+  organizationSecured_Yes = 2,
+  organizationSecured_No = 0,
+
+  prematureSeizure_Yes = 1,
+  prematureSeizure_No = 0,
+
+  governmentConfiscation_Yes = 1,
+  governmentConfiscation_No = 0,
+
+  terroristActivity_Yes = 1,
+  terroristActivity_No = 0,
+
+
+  // riskReputation_Yes = 0,
+  // riskReputation_No = 1,
+  religious_Yes = 0.2,
+  religious_No = 0,
+
+  sectarian_Yes = 0.2,
+  sectarian_No = 0,
+
+  ethnic_Yes = 0.2,
+  ethnic_No = 0,
+
+  social_Yes = 0.2,
+  social_No = 0,
+
+  traditional_Yes = 0.2,
+  traditional_No = 0,
+
+  geographical_Yes = 0.2,
+  geographical_No = 0,
+
+  insecurity_Yes = 0.2,
+  insecurity_No = 0,
+
+  season_Yes = 0.2,
+  season_No = 0,
+
+  ethnicity_Yes = 0.1,
+  ethnicity_No = 0,
+
+  culture_Yes = 0.1,
+  culture_No = 0,
+
+  religiousBeliefs_Yes = 0.2,
+  religiousBeliefs_No = 0,
+
+
+
 
   focusDeliveryRisk_Yes = 1,
   focusDeliveryRisk_No = 0,
 
-  deliveryFailure_Yes = 0,
-  deliveryFailure_No = 1,
+  // deliveryFailure_Yes = 0,
+  // deliveryFailure_No = 1,
 
   otherWayToHarmOrg_Yes = 1,
   otherWayToHarmOrg_No = 0,
@@ -428,23 +504,6 @@ export enum criteriaEvaluationScores {
   probabilityDelayCuts_Yes = 1,
   probabilityDelayCuts_No = 0,
 
-  Geographical_Yes = -1,
-  Geographical_No = 0,
-
-  Insecurity_Yes = -2,
-  Insecurity_No = 0,
-
-  Season_Yes = -1,
-  Season_No = 0,
-
-  Ethnicity_Yes = -1,
-  Ethnicity_No = 0,
-
-  Culture_Yes = -2,
-  Culture_No = 0,
-
-  ReligiousBeliefs_Yes = -2,
-  ReligiousBeliefs_No = 0
 
   //#endregion
 }
@@ -508,7 +567,17 @@ export enum FileSourceEntityTypes {
   ProjectActivityPlanning = 8,
   DonorDetail = 9,
   StorePurchase = 10,
-  Employee = 11
+  Employee = 11,
+  ComparativeStatement = 12,
+  HiringRequestCandidateCV = 13,
+  ProjectLogisticPurchase = 14,
+  GoodsRecievedDocument = 15,
+  LogisticSupplierInvoice = 16,
+  LogisticSupplierWarranty = 17,
+  TenderProposalDocument = 18,
+  TenderRFPDocument = 19,
+  TenderAnnouncementDocument = 20,
+  TenderBidContractLetter = 21
 }
 //#endregion
 //#region "EmployeeType"
@@ -575,7 +644,8 @@ export enum LogisticRequestStatus {
   'Issue Purchase Order' = 3,
   'Complete Purchase' = 4,
   'Control Approved' = 5,
-  'Control Rejected' = 6
+  'Control Rejected' = 6,
+  'Purchase Completed' = 7
 }
 export enum HiringRequestStatus {
   'Open' = 1,
@@ -585,10 +655,105 @@ export enum HiringRequestStatus {
 }
 
 export enum LogisticComparativeStatus {
+  NotValid = 0,
   'Pending' = 1,
   'Cancelled' = 2,
   'Issued' = 3,
   'Statement Submitted' = 4,
-  'Reject Statement' = 5,
-  'Approve Statement' = 6,
+  'Statement Rejected' = 5,
+  'Statement Approved' = 6
 }
+export enum LogisticTenderStatus {
+  NotValid = 0,
+  'Pending' = 1,
+  'Cancelled' = 2,
+  'Issued' = 3,
+  'Bid Selected' = 4
+}
+export enum CandidateStatus {
+  'Pending Shortlist' = 0,
+  'Pending Interview' = 1,
+  'Pending Selection' = 2,
+  'Selected' = 3,
+  'Rejected' = 4
+}
+export enum CandidateAction {
+  'Shortlist' = 0,
+  'Interview' = 1,
+  'Select' = 2
+}
+
+export enum TransportItemCategory {
+  Vehicle = 1,
+  Generator = 2,
+  MobilOil = 3,
+  MaintenanceService = 4,
+  SpareParts = 5,
+  Fuel = 6
+}
+
+export enum RatingAction {
+  Poor = 1,
+  Good = 2,
+  VeryGood = 3,
+  Excellent = 4
+}
+
+export enum Month {
+  January = 1,
+  February = 2,
+  March = 3,
+  April = 4,
+  May = 5,
+  June = 6,
+  July = 7,
+  August = 8,
+  September = 9,
+  October = 10,
+  November = 11,
+  December = 12
+}
+
+export enum Shift {
+Day = 1,
+Night = 2,
+Other = 3,
+}
+
+export enum QuestionType {
+  FeelingAboutEmployeeAspects= 1,
+  ReasonOfLeaving,
+  TheDepartment,
+  TheJobItself,
+  MySupervisor,
+  TheManagement
+  }
+
+  export const QuestionTypeName = new Map<number, string>([
+    [QuestionType.FeelingAboutEmployeeAspects, 'Feeling About Employee Aspects'],
+    [QuestionType.ReasonOfLeaving, 'Reason Of Leaving'],
+    [QuestionType.TheDepartment, 'The Department'],
+    [QuestionType.TheJobItself, 'The Job Itself'],
+    [QuestionType.MySupervisor, 'My Supervisor'],
+    [QuestionType.TheManagement, 'The Management'],
+  ]);
+
+  export enum Gender {
+    Male = 1,
+    Female = 2,
+    Other = 3,
+  }
+
+  export enum TenderProposalDocumentType {
+    'Proposal Document' = 18,
+    'RFP Document' = 19,
+    'Announcement Document' = 20
+  }
+
+    export enum GainLossStatus {
+      Loss = -1,
+      Balanced = 0,
+      Gain = 1,
+      Consolidated = 2
+      }
+

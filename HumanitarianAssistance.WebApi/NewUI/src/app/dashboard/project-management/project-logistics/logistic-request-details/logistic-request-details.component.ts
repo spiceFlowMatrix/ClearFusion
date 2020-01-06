@@ -9,7 +9,9 @@ import { RequestDetailComponent } from '../../project-hiring/request-detail/requ
 import { map } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
-import { LogisticRequestStatus } from 'src/app/shared/enum';
+import { LogisticRequestStatus, LogisticComparativeStatus, LogisticTenderStatus } from 'src/app/shared/enum';
+import { GoodsRecievedUploadComponent } from '../goods-recieved-upload/goods-recieved-upload.component';
+import { PurchaseVoucherVerificationComponent } from '../purchase-voucher-verification/purchase-voucher-verification.component';
 
 
 @Component({
@@ -30,13 +32,22 @@ export class LogisticRequestDetailsComponent implements OnInit {
   requestedItemsData$: Observable<IItemList[]>;
   requestId;
   requestItemList: any[];
-  requestDetail: RequestDetail = {RequestName: '', ProjectId: '', Status: 0, TotalCost: '', RequestId: '' , ComparativeStatus: 0,
-Currency: '', BudgetLine: '', Office: ''};
+  requestDetail: RequestDetail = {ProjectId: '', Status: 0, TotalCost: '', RequestId: '' , ComparativeStatus: 0,
+  TenderStatus: 0, Currency: '', BudgetLine: '', Office: '', Description: ''};
   actions: TableActionsModel;
   totalCost = 0;
   unavailableItemCost = 0;
   availabilityPercentage = 0;
   submitPurchaseItems: any[] = [];
+  hideItemColums;
+  storeItemsList = [];
+  storedropdownItemsList = [];
+  goodsNoteSubmitted = false;
+  goodsRecievedModel: GoodsRecievedNote;
+  voucherReference = '';
+  tenderIssuerName = '';
+  SelectedBidDetail = { ContactName: '' , SelectedBy: ''};
+  IsEditDisabled = true;
 
   constructor(private dialog: MatDialog, private routeActive: ActivatedRoute,
     private logisticservice: LogisticService,
@@ -45,6 +56,15 @@ Currency: '', BudgetLine: '', Office: ''};
     private router: Router) { }
 
   ngOnInit() {
+
+    this.logisticservice.VoucherReference$.subscribe(val => {
+      this.voucherReference = val;
+    });
+
+    this.logisticservice.goodsRecievedChange$.subscribe(val => {
+      this.goodsNoteSubmitted = val;
+    });
+
     this.actions = {
       items: {
         button: { status: false, text: '' },
@@ -56,15 +76,20 @@ Currency: '', BudgetLine: '', Office: ''};
       }
 
     };
+    this.hideItemColums = of({
+      headers: ['Item', 'Quantity', 'Estimated Cost', 'Availability'],
+      items: ['Item', 'Quantity', 'EstimatedCost', 'Availability']
+    });
     this.routeActive.params.subscribe(params => {
       this.requestId = +params['id'];
     });
     this.getRequestDetails();
     this.getAllRequestItems();
+    this.getStoreItems();
   }
   addItemDialog() {
     const dialogRef = this.dialog.open(AddLogisticItemsComponent, {
-      width: '300px',
+      width: '400px',
       data: {RequestId: this.requestId}
     });
 
@@ -83,25 +108,63 @@ Currency: '', BudgetLine: '', Office: ''};
         ItemId: v.ItemId,
         Item: v.Item,
         Quantity: v.Quantity,
-        EstimatedCost: v.EstimatedCost,
+        EstimatedCost: (this.requestDetail.Currency === 'USD') ? '$' + v.EstimatedCost : v.EstimatedCost,
         Availability: v.Availability
        }) as IItemList)));
-    this.getTotalRequestCost();
+    // this.getTotalRequestCost();
     this.getUnavailableItemsCost();
     this.getAvailabilityPercentage();
   }
   getRequestDetails() {
     this.logisticservice.getLogisticRequestDetail(this.requestId).subscribe(res => {
       if (res.StatusCode === 200 && res.data.logisticRequest != null) {
-        this.requestDetail.RequestId = res.data.logisticRequest.RequestId;
-        this.requestDetail.ProjectId = res.data.logisticRequest.ProjectId;
-        this.requestDetail.RequestName = res.data.logisticRequest.RequestName;
-        this.requestDetail.Status = res.data.logisticRequest.Status;
-        this.requestDetail.TotalCost = res.data.logisticRequest.TotalCost;
-        this.requestDetail.Currency = res.data.logisticRequest.Currency;
-        this.requestDetail.BudgetLine = res.data.logisticRequest.BudgetLine;
-        this.requestDetail.Office = res.data.logisticRequest.Office;
-        this.requestDetail.ComparativeStatus = 1;
+        this.requestDetail = res.data.logisticRequest;
+        // this.requestDetail.ProjectId = res.data.logisticRequest.ProjectId;
+        // this.requestDetail.RequestName = res.data.logisticRequest.RequestName;
+        // this.requestDetail.Status = res.data.logisticRequest.Status;
+        // this.requestDetail.TotalCost = res.data.logisticRequest.TotalCost;
+        // this.requestDetail.Currency = res.data.logisticRequest.Currency;
+        // this.requestDetail.BudgetLine = res.data.logisticRequest.BudgetLine;
+        // this.requestDetail.Office = res.data.logisticRequest.Office;
+        // this.requestDetail.ComparativeStatus = res.data.logisticRequest.ComparativeStatus;
+      }
+
+      if (!(this.requestDetail.Status === 1) || !(this.requestDetail.ComparativeStatus === 1) ||
+      !(this.requestDetail.TenderStatus === 1)) { //
+        this.actions = {
+          items: {
+            button: { status: false, text: '' },
+            edit: false,
+            delete: false,
+            download: false,
+          },
+          subitems: {
+          }
+        };
+      }
+
+      if (this.requestDetail.TenderStatus === LogisticTenderStatus.Issued ) {
+        this.getTenderIssuerName();
+      }
+      if (this.requestDetail.TenderStatus === LogisticTenderStatus['Bid Selected']) {
+        this.getSelectedBidDetail();
+      }
+      if (((this.requestDetail.Status === LogisticRequestStatus['New Request']) &&
+      (this.requestDetail.ComparativeStatus === LogisticComparativeStatus['Pending'])) ||
+      ((this.requestDetail.Status === LogisticRequestStatus['New Request']) &&
+      (this.requestDetail.TenderStatus === LogisticTenderStatus['Pending'])) ||
+      (this.requestDetail.Status === LogisticRequestStatus['New Request'])) {
+        this.IsEditDisabled = false;
+      } else {
+        this.IsEditDisabled = true;
+      }
+    });
+  }
+
+  getTenderIssuerName() {
+    this.logisticservice.getTenderIssuer(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200 && res.ResponseData != null) {
+        this.tenderIssuerName = res.ResponseData;
       }
     });
   }
@@ -119,28 +182,28 @@ Currency: '', BudgetLine: '', Office: ''};
             ItemId: v.ItemId,
             Item: v.Item,
             Quantity: v.Quantity,
-            EstimatedCost: v.EstimatedCost,
+            EstimatedCost: (this.requestDetail.Currency === 'USD') ? '$' + v.EstimatedCost : v.EstimatedCost,
             Availability: v.Availability
            }) as IItemList)));
       }
-      this.getTotalRequestCost();
+      // this.getTotalRequestCost();
       this.getUnavailableItemsCost();
       this.getAvailabilityPercentage();
     });
   }
 
-  getTotalRequestCost() {
-    this.totalCost = 0;
-    this.requestItemList.forEach(element => {
-      this.totalCost += element.EstimatedCost;
-    });
-  }
+  // getTotalRequestCost() {
+  //   this.totalCost = 0;
+  //   this.requestItemList.forEach(element => {
+  //     this.totalCost += element.EstimatedCost;
+  //   });
+  // }
 
   getUnavailableItemsCost() {
     this.unavailableItemCost = 0;
     this.requestItemList.forEach(element => {
       if (element.Availability < element.Quantity) {
-        this.unavailableItemCost += ((element.EstimatedCost / element.Quantity) * (element.Quantity - element.Availability));
+        this.unavailableItemCost += ((element.EstimatedCost) * (element.Quantity - element.Availability));
       }
     });
   }
@@ -160,7 +223,11 @@ Currency: '', BudgetLine: '', Office: ''};
     if (event.type === 'delete') {
       this.logisticservice.openDeleteDialog().subscribe(v => {
         if (v) {
-          this.logisticservice.deleteLogisticRequestItemsById(event.item.Id).subscribe(res => {
+          const model = {
+            ItemId: event.item.Id,
+            RequestId: this.requestId
+          };
+          this.logisticservice.deleteLogisticRequestItemsById(model).subscribe(res => {
             if (res.StatusCode === 200) {
               this.refreshRequestListAfterDelete(event.item.Id);
               this.toastr.success('Deleted Sucessfully!');
@@ -173,14 +240,21 @@ Currency: '', BudgetLine: '', Office: ''};
     }
     if (event.type === 'edit') {
       const dialogRef = this.dialog.open(AddLogisticItemsComponent, {
-        width: '300px',
+        width: '400px',
         data: {Id: event.item.Id, ItemId: event.item.ItemId, Quantity: event.item.Quantity,
-          EstimatedCost: event.item.EstimatedCost, RequestId: this.requestId}
+          EstimatedCost: event.item.EstimatedCost, RequestId: this.requestId, 'Storeitems': this.storedropdownItemsList,
+          }
       });
 
       dialogRef.afterClosed().subscribe(result => {
         if (result !== undefined && result.data != null ) {
-          this.getAllRequestItems();
+          if (result.data === 'Success') {
+            this.toastr.success('Updated Successfully!');
+            this.getAllRequestItems();
+            this.getRequestDetails();
+          } else {
+            this.toastr.warning(result.data);
+          }
         }
       });
     }
@@ -197,10 +271,10 @@ Currency: '', BudgetLine: '', Office: ''};
         ItemId: v.ItemId,
         Item: v.Item,
         Quantity: v.Quantity,
-        EstimatedCost: v.EstimatedCost,
+        EstimatedCost: (this.requestDetail.Currency === 'USD') ? '$' + v.EstimatedCost : v.EstimatedCost,
         Availability: v.Availability
        }) as IItemList)));
-    this.getTotalRequestCost();
+    this.getRequestDetails();
     this.getUnavailableItemsCost();
     this.getAvailabilityPercentage();
   }
@@ -218,6 +292,10 @@ Currency: '', BudgetLine: '', Office: ''};
   }
 
   issuePurchaseOrder() {
+    if (this.requestItemList.length === 0) {
+      this.toastr.warning('Please add items to purchase!');
+      return;
+    }
     this.commonLoader.showLoader();
     this.logisticservice.issuePurchaseOrder(this.requestId).subscribe(res => {
       if (res.StatusCode === 200 ) {
@@ -237,42 +315,246 @@ Currency: '', BudgetLine: '', Office: ''};
     this.submitPurchaseItems = value;
   }
 
-  completePurchaseOrder() {
-    if (this.submitPurchaseItems.length === 0) {
-      this.toastr.warning('Submit Purchase items first!');
-    } else {
-      this.commonLoader.showLoader();
-      const requestItems = this.submitPurchaseItems.map(function(val) {
-        return val.Id;
-      });
-      const model = {
-        Id: requestItems,
-        Status : LogisticRequestStatus['Complete Purchase']
-      };
-      this.logisticservice.completePurchaseOrder(model).subscribe(res => {
-        if (res.StatusCode === 200) {
-          this.commonLoader.hideLoader();
-          this.getRequestDetails();
-        } else {
-          this.commonLoader.hideLoader();
-          this.toastr.error('Something went wrong!');
-        }
-      });
-      console.log(model);
+  // completePurchaseOrder() {
+  //   if (this.submitPurchaseItems.length === 0) {
+  //     this.toastr.warning('Submit Purchase items first!');
+  //   } else {
+  //     this.commonLoader.showLoader();
+  //     const requestItems = this.submitPurchaseItems.map(function(val) {
+  //       return {
+  //         Id: val.Id,
+  //         FinalCost: val.EstimatedCost
+  //       };
+  //     });
+  //     const model = {
+  //       submittedList: requestItems,
+  //       Status : LogisticRequestStatus['Complete Purchase']
+  //     };
+  //     this.logisticservice.completePurchaseOrder(model).subscribe(res => {
+  //       if (res.StatusCode === 200) {
+  //         this.commonLoader.hideLoader();
+  //         this.getRequestDetails();
+  //       } else {
+  //         this.commonLoader.hideLoader();
+  //         this.toastr.error('Something went wrong!');
+  //       }
+  //     });
+  //   }
+  // }
+
+  submitPurchase() {
+    this.router.navigate(['submit-purchase'], { relativeTo: this.routeActive });
+  }
+
+  cancelComparativeRequest() {
+    this.commonLoader.showLoader();
+    this.logisticservice.cancelComparativeRequest(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.getRequestDetails();
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  issueComparativeStatement() {
+    this.commonLoader.showLoader();
+    this.logisticservice.IssueComparativeStatement(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.getRequestDetails();
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  comparativeStatusChange(value) {
+    this.requestDetail.ComparativeStatus = value;
+  }
+
+  tenderStatusChange(value) {
+    this.requestDetail.TenderStatus = value;
+    if (this.requestDetail.TenderStatus === LogisticTenderStatus['Bid Selected']) {
+      this.getSelectedBidDetail();
     }
   }
 
+  StatusChange(value) {
+    this.requestDetail.Status = value;
+    // if (this.requestDetail.Status === LogisticRequestStatus['Complete Purchase'] ) {
+    //   this.getGoodsRecievedNote();
+    // }
+  }
+
+  rejectComparativeStatement() {
+    this.commonLoader.showLoader();
+    this.logisticservice.rejectComparativeStatement(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.requestDetail.ComparativeStatus = LogisticComparativeStatus['Statement Rejected'];
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  approveComparativeStatement() {
+    this.commonLoader.showLoader();
+    this.logisticservice.approveComparativeStatement(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.requestDetail.ComparativeStatus = LogisticComparativeStatus['Statement Approved'];
+        this.requestDetail.Status = LogisticRequestStatus['Issue Purchase Order'];
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  getStoreItems() {
+    this.logisticservice.getAllStoreItems().subscribe(res => {
+      this.storeItemsList = [];
+      this.storedropdownItemsList = [];
+      if (res.StatusCode === 200 && res.data.InventoryItemList != null) {
+        res.data.InventoryItemList.forEach(element => {
+          this.storeItemsList.push(element);
+          this.storedropdownItemsList.push({
+            Id: element.ItemId,
+            Name: element.ItemCode + '-' + element.ItemName
+          });
+        });
+        // this.addLogisticItemsForm.controls['Item'].setValue(this.data.ItemId);
+      }
+    });
+  }
+
+  rejectPurchaseOrder() {
+    this.logisticservice.rejectPurchaseOrder(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.requestDetail.Status = LogisticRequestStatus['Issue Purchase Order'];
+      } else {
+         this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  approvePurchaseOrder() {
+    if (!this.goodsNoteSubmitted) {
+      const dialogRef = this.dialog.open(GoodsRecievedUploadComponent, {
+        width: '450px',
+        data: {RequestId: this.requestId}
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result !== undefined && result.data != null ) {
+            this.logisticservice.goodsRecievedChange$.next(true);
+            // this.goodsNoteSubmitted = true;
+          } else {
+            this.logisticservice.goodsRecievedChange$.next(false);
+          }
+      });
+    } else {
+      const dialogRef = this.dialog.open(PurchaseVoucherVerificationComponent, {
+        width: '500px',
+        height: '630px',
+        data: {RequestId: this.requestId}
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result !== undefined && result.data != null ) {
+            this.requestDetail.Status = LogisticRequestStatus['Purchase Completed'];
+            // this.getCompletedPurchaseOrderDetail();
+          } else {
+          }
+      });
+    }
+  }
+
+  getGoodsRecievedNote() {
+    this.logisticservice.getGoodsRecievedNote(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        if (res.data.GoodsRecievedNote == null) {
+          this.goodsNoteSubmitted = false;
+        } else {
+          this.goodsNoteSubmitted = true;
+          this.goodsRecievedModel = res.data.GoodsRecievedNote;
+        }
+      } else {
+         this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  editRequest() {
+    if (((this.requestDetail.Status === LogisticRequestStatus['New Request']) &&
+    (this.requestDetail.ComparativeStatus === LogisticComparativeStatus['Pending'])) ||
+    ((this.requestDetail.Status === LogisticRequestStatus['New Request']) &&
+    (this.requestDetail.TenderStatus === LogisticTenderStatus['Pending'])) ||
+    (this.requestDetail.Status === LogisticRequestStatus['New Request'])) {
+      this.router.navigate(['../../logistic-requests/new-request/'] ,
+       { relativeTo: this.routeActive , queryParams: {requestId: this.requestId} });
+    } else {
+      return;
+    }
+  }
+
+  submitComparativePurchase() {
+    this.router.navigate(['submit-purchase'], { relativeTo: this.routeActive });
+  }
+
+  rejectTenderRequest() {
+    this.commonLoader.showLoader();
+    this.logisticservice.rejectTenderRequest(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.requestDetail.TenderStatus = LogisticTenderStatus['Cancelled'];
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  initiateTenderRequest() {
+    this.commonLoader.showLoader();
+    this.logisticservice.initiateTenderRequest(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200) {
+        this.commonLoader.hideLoader();
+        this.requestDetail.TenderStatus = LogisticTenderStatus['Issued'];
+        this.getTenderIssuerName();
+      } else {
+        this.commonLoader.hideLoader();
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  getSelectedBidDetail() {
+    this.logisticservice.getSelectedBidDetail(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200 && res.data.SelectedBidDetail != null) {
+        this.SelectedBidDetail = res.data.SelectedBidDetail;
+      } else {
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
 }
-interface RequestDetail {
+export interface RequestDetail {
   RequestId;
   ProjectId;
-  RequestName;
   Status;
   TotalCost;
   ComparativeStatus;
+  TenderStatus;
   Currency;
   BudgetLine;
   Office;
+  Description;
 }
 
 interface IItemList {
@@ -282,4 +564,10 @@ interface IItemList {
   Quantity;
   EstimatedCost;
   Availability;
+}
+
+interface GoodsRecievedNote {
+  AttachmentName;
+  AttachmentUrl;
+  UploadedBy;
 }

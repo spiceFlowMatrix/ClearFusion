@@ -8,6 +8,6 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 {
     public class GetExchangeGainLossFilterAccountListQuery: IRequest<ApiResponse>
     {
-        
+        public string UserId {get; set;}
     }
 }

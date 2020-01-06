@@ -10,6 +10,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using HumanitarianAssistance.Common.Enums;
 
 namespace HumanitarianAssistance.Application.Project.Commands.Create
 {
@@ -36,25 +37,37 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                     throw new Exception("Item doesnot exists!");
                 }
                 existitem.ItemId = request.ItemId;
-                existitem.Quantity = request.Quantity;
-                existitem.EstimatedCost = request.EstimatedCost;
+                existitem.Quantity = request.RequestedUnits;
+                existitem.EstimatedUnitCost = request.EstimatedUnitCost;
 
                 existitem.ModifiedDate = request.ModifiedDate;
                 existitem.ModifiedById = request.ModifiedById;
                 existitem.IsDeleted = false;
 
                 await _dbContext.SaveChangesAsync();
-                var returnobj = await _dbContext.ProjectLogisticItems.Where(x=>x.IsDeleted==false && x.LogisticItemId==request.Id)
-                .Select(y=> new LogisticItemModel{
-                    Id = y.LogisticItemId,
-                    Item = y.StoreInventoryItem.ItemName,
-                    Quantity = y.Quantity,
-                    EstimatedCost = y.EstimatedCost,
-                    Availability = y.Quantity,
-                    ItemId = y.ItemId
-                })
-                .FirstOrDefaultAsync();
-                response.data.logisticItem = returnobj;
+                
+                var totalCost = await _dbContext.ProjectLogisticItems.Where(x=>x.IsDeleted == false && x.LogisticRequestsId == request.RequestId)
+                .SumAsync(x=>x.EstimatedUnitCost * x.Quantity);
+                var logisticRequest = await _dbContext.ProjectLogisticRequests.FirstOrDefaultAsync(x=>x.IsDeleted == false && x.LogisticRequestsId == request.RequestId);
+                if (logisticRequest!=null) {
+                    logisticRequest.TotalCost = totalCost;
+                    if(totalCost>=200 && totalCost<=9999)
+                    {
+                        logisticRequest.ComparativeStatus = (int)LogisticComparativeStatus.Pending;
+                    }
+                    await _dbContext.SaveChangesAsync();
+                }
+                // var returnobj = await _dbContext.ProjectLogisticItems.Where(x=>x.IsDeleted==false && x.LogisticItemId==request.Id)
+                // .Select(y=> new LogisticItemModel{
+                //     Id = y.LogisticItemId,
+                //     Item = y.StoreInventoryItem.ItemName,
+                //     Quantity = y.Quantity,
+                //     EstimatedCost = y.EstimatedUnitCost,
+                //     Availability = y.Quantity,
+                //     ItemId = y.ItemId
+                // })
+                // .FirstOrDefaultAsync();
+                // response.data.logisticItem = returnobj;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
             }

@@ -37,6 +37,8 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
         public int? TimezoneOffset { get; set; }
         public string PurchaseName { get; set; }
         public long? TransportItemId { get; set; }
+        public int? ItemGroupTransportCategory { get; set; }
+        public int? ItemTransportCategory { get; set; }
         public List<PurchasedVehicleModel> PurchasedVehicleList { get; set; }
         public List<PurchasedGeneratorModel> PurchasedGeneratorList { get; set; }
     }

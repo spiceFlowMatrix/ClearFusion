@@ -26,19 +26,19 @@ export class PurchaseService {
     private http: HttpClient
   ) {}
 
-  //#region "GetPurchaseFilterList"
-  getPurchaseFilterList(): any {
-    return this.globalService
-      .getList(
-        this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetAllPurchaseFilters
-      )
-      .pipe(
-        map(x => {
-          return x;
-        })
-      );
-  }
-  //#endregion
+//#region "GetPurchaseFilterList"
+getPurchaseFilterList(): any {
+  return this.globalService
+    .getList(
+      this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetAllPurchaseFilters
+    )
+    .pipe(
+      map(x => {
+        return x;
+      })
+    );
+}
+//#endregion
 
   //#region "GetInventoriesByInventoryTypeId"
   getInventoriesByInventoryTypeId(Id: number): any {
@@ -79,6 +79,16 @@ export class PurchaseService {
           };
           return responseData;
         })
+      );
+  }
+  //#endregion
+
+  //#region "getTransportItemCategoryType"
+  getTransportItemCategoryType(Id: number): any {
+    return this.globalService
+      .getItemById(
+        this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetTransportItemCategoryType,
+        Id
       );
   }
   //#endregion
@@ -252,7 +262,7 @@ export class PurchaseService {
       );
   }
 
-  addPurchase(purchase: any) {
+  addPurchase(purchase: any, itemGroupTransportCategory: number, itemTransportCategory: number) {
     const purchaseModel: IAddEditPurchaseModel = {
       ApplyDepreciation: purchase.ApplyDepreciation,
       AssetTypeId: purchase.AssetTypeId,
@@ -279,7 +289,9 @@ export class PurchaseService {
       TimezoneOffset: new Date().getTimezoneOffset(),
       PurchasedVehicleList: purchase.TransportVehicles,
       PurchasedGeneratorList: purchase.TransportGenerators,
-      TransportItemId: purchase.TransportItemId
+      TransportItemId: purchase.TransportItemId,
+      ItemGroupTransportCategory: itemGroupTransportCategory,
+      ItemTransportCategory: itemTransportCategory
     };
 
     return this.globalService
@@ -310,7 +322,8 @@ export class PurchaseService {
       IssueDate: StaticUtilities.getLocalDate(procurement.IssueDate),
       IssedToLocation: procurement.StoreSourceId,
       StatusAtTimeOfIssue: procurement.StatusId,
-      Project: procurement.ProjectId
+      Project: procurement.ProjectId,
+      VoucherNo: procurement.VoucherNo
     };
 
     return this.globalService
@@ -322,6 +335,29 @@ export class PurchaseService {
         map(x => {
           return x;
         })
+      );
+  }
+
+  editProcurement(procurement: any) {
+    const procurementModel: IAddEditProcurementModel = {
+      OrderId: procurement.ProcurementId,
+      Purchase: procurement.PurchaseId,
+      InventoryItem: procurement.ItemId,
+      IssuedQuantity: procurement.IssuedQuantity,
+      MustReturn: procurement.MustReturn,
+      IssuedToEmployeeId: procurement.IssuedToEmployeeId,
+      IssueDate: StaticUtilities.getLocalDate(procurement.IssueDate),
+      IssedToLocation: procurement.StoreSourceId,
+      StatusAtTimeOfIssue: procurement.StatusId,
+      Project: procurement.ProjectId,
+      Returned: procurement.Returned,
+      VoucherNo: procurement.VoucherNo
+    };
+
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_Store_EditItemOrder,
+        procurementModel
       );
   }
 
@@ -387,6 +423,12 @@ getVehicleList(model: any) {
     .post(this.appurl.getApiUrl() + GLOBAL.API_VehicleTracker_GetVehicleList, model);
 }
 
+//#region "getProcurementDetailsByProcurementId"
+getProcurementDetailsByProcurementId(id) {
+  return this.globalService
+    .getDataById(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetProcurementDetailsByProcurementId + '?id=' + id);
+}
+
 
 //#region "getGeneratorList"
 getGeneratorList(model: any) {
@@ -406,9 +448,9 @@ getStorePurchaseById(id: number) {
 }
 
 // getTransportItemDataSource
-getTransportItemDataSource(model: any) {
-  return this.globalService
-  .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetTransportItemDataSource, model);
+getTransportItemDataSource(id: number) {
+  return this.http
+  .get<any>(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetTransportItemDataSource + '?id=' + id);
 }
 
  //#region "getItemDetailByItemId"
@@ -546,18 +588,48 @@ getAllCurrencies() {
           GLOBAL.API_code_GetAllCurrency);
 }
 
-getStoreLogs() {
+getStoreLogs(id: number, entityId: number) {
   return this.http
       .get<any>(
         this.appurl.getApiUrl() +
-          GLOBAL.API_StorePurchase_GetVehicleGeneratorTrackerLogs);
+          GLOBAL.API_StorePurchase_GetVehicleGeneratorTrackerLogs + '?id=' + id + '&entityId=' + entityId);
 }
 
-getMonthlyBreakDownYears(): Observable<IDropDownModel[]> {
+ // getDefaultUnitTypeByItemId
+ getDefaultUnitTypeByItemId(ItemId: number) {
+  return this.globalService
+    .getDataById(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetDefaultUnitTypeByItemId + '?id=' + ItemId);
+}
 
-  let yearDropDown: IDropDownModel[] = [];
+getProcurementDetailWithReturnsList(id) {
+  return this.http
+      .get<any>(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_StorePurchase_GetProcurementDetailWithReturnsList + '?id=' + id);
+}
+
+addProcurementReturn(model: any) {
+  return this.globalService
+  .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_AddProcurementReturn, model);
+}
+
+deleteReturnProcurement(id) {
+  return this.globalService
+  .post(this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_DeleteReturnProcurement, id);
+}
+
+getAllVouchers() {
+  return this.http
+      .get<any>(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Account_GetAllVouchersWithoutFilter);
+}
+
+getPreviousYearsList(years: number): Observable<IDropDownModel[]> {
+
+  const yearDropDown: IDropDownModel[] = [];
   const year = new Date().getFullYear();
-  for (let i = 0; i <= 10; i++) {
+  for (let i = 0; i <= years; i++) {
     yearDropDown.push({name: (year - i).toString(),
     value: year - i});
   }

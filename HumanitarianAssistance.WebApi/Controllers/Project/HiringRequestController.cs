@@ -36,10 +36,10 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         {
             return await _mediator.Send(new GetAllProjectHiringRequestDetailByHiringRequestIdQuery { HiringRequestId = HiringRequestId });
         }
-        [HttpGet]
-        public async Task<ApiResponse> GetAllEmployeeList()
+        [HttpPost]
+        public async Task<ApiResponse> GetAllEmployeeList([FromBody]GetAllEmployeeListQuery query)
         {
-            return await _mediator.Send(new GetAllEmployeeListQuery());
+            return await _mediator.Send(query);
         }
         [HttpPost]
         public async Task<ApiResponse> GetHiringCandidatesListById([FromBody]GetAllCandidateListQuery query)
@@ -131,30 +131,95 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(new GetHiringCandidatesByOfficeIdQuery { OfficeId = OfficeId });
         }
         //new Api's
-        [HttpPost]
-        public async Task<ApiResponse> GetAllJobList([FromBody]GetAllJobListQuery query)
+         
+       [HttpPost]
+        public async Task<ApiResponse> AddNewCandidateDetail([FromBody]AddNewCandidateDetailCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+        } 
+       [HttpPost]
+        public async Task<ApiResponse> GetAllCandidateList([FromBody]GetAllCandidateListQuery query)
         {
             return await _mediator.Send(query);
-        }
-
-        // [HttpPost]
-        // public async Task<ApiResponse> GetOfficeListByJobId([FromBody]GetOfficeListByJobIdQuery query)
-        // {
-        //     return await _mediator.Send(query);
-        // }
+        }  
         
+       [HttpPost]
+         public async Task<ApiResponse> UpdateCandidateStatusByStatusId([FromBody]UpdateCandidateStatusByStatusIdCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.ModifiedById = userId;
+            command.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+        } 
+       
         [HttpPost]
-        public async Task<ApiResponse> GetProfessionListByOfficeId([FromBody]GetProfessionListByOfficeIdQuery query)
+        public async Task<ApiResponse> AddExistingCandidateDetail([FromBody]AddExistingCandidateDetailCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+        } 
+
+        [HttpPost]
+        public async Task<ApiResponse> GetAllExistingCandidateList([FromBody]GetAllExistingCandidateListQuery query)
         {
             return await _mediator.Send(query);
+        } 
 
+        [HttpPost]
+         public async Task<ApiResponse> GetCandidateDetailsByCandidateId([FromBody]long CandidateId)
+        {
+            return await _mediator.Send(new GetCandidateDetailsByCandidateIdQuery{ CandidateId=CandidateId});
+        }  
+
+        [HttpPost]
+        public async Task<ApiResponse> GetAllHiringRequestDetailForInterviewByHiringRequestId([FromBody] GetAllHiringRequestDetailForInterviewByHiringRequestIdQuery query)
+        {
+            return await _mediator.Send(query);
         }
 
         [HttpPost]
-         public async Task<ApiResponse> GetRemainingVacancyByJobId([FromBody]long JobId)
+        public async Task<ApiResponse> GetTechnicalQuestionsByDesignationId([FromBody]int DesignationId)
         {
-            return await _mediator.Send(new GetRemainingVacancyByJobIdQuery{ JobId=JobId});
+            return await _mediator.Send(new GetTechnicalQuestionsByDesignationIdQuery{ DesignationId=DesignationId});
+        }   
+
+        [HttpPost]
+    public async Task<ApiResponse> AddInterviewDetails([FromBody]AddInterviewDetailsCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
         }
+
+
+        [HttpPost]
+        public async Task<ApiResponse> GetInterviewDetailsByInterviewId([FromBody]int InterviewId)
+        {
+            return await _mediator.Send(new GetInterviewDetailsByInterviewIdQuery{ InterviewId=InterviewId});
+        }     
+           
+        [HttpPost]
+        public async Task<ApiResponse> GetHiringRequestCode([FromBody]long ProjectId)
+        {
+            return await _mediator.Send(new GetHiringRequestCodeQuery{
+                ProjectId = ProjectId
+           });
+        }  
+
+        [HttpPost]
+        public async Task<ApiResponse> DownloadCandidateCvByRequestId([FromBody]long requestId)
+        {   
+           DownloadCandidateCvByRequestIdQuery model = new DownloadCandidateCvByRequestIdQuery();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.requestId = requestId;
+            return await _mediator.Send(model);
+        }  
+             
     }  
-    
 }

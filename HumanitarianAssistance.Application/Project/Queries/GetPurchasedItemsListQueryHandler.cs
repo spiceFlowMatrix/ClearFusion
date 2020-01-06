@@ -31,7 +31,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                     Id= x.LogisticItemId,
                                     Item = x.StoreInventoryItem.ItemName,
                                     Quantity = x.Quantity,
-                                    EstimatedCost = x.EstimatedCost,
+                                    EstimatedCost = x.FinalCost,
                                     ItemId = x.StoreInventoryItem.ItemId
                                 })
                                 .ToListAsync();

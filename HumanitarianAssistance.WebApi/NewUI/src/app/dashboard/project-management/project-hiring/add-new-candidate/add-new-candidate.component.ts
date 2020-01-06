@@ -1,7 +1,6 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
-import { ActivatedRoute } from '@angular/router';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -10,6 +9,9 @@ import { IDropDownModel } from 'src/app/store/models/purchase';
 import { takeUntil } from 'rxjs/operators';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
 import { ICandidateDetailModel } from '../models/hiring-requests-models';
+import { PurchaseService } from 'src/app/store/services/purchase.service';
+import { Month, FileSourceEntityTypes } from 'src/app/shared/enum';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 
 @Component({
   selector: 'app-add-new-candidate',
@@ -17,49 +19,37 @@ import { ICandidateDetailModel } from '../models/hiring-requests-models';
   styleUrls: ['./add-new-candidate.component.scss']
 })
 export class AddNewCandidateComponent implements OnInit {
+  projectId: number;
+  hiringRequestId: number;
+  isFormSubmitted = false;
   addNewCandidateForm: FormGroup;
-
   professionList$: Observable<IDropDownModel[]>;
-  officeList$: Observable<IDropDownModel[]>;
   countryList$: Observable<IDropDownModel[]>;
   provinceList$: Observable<IDropDownModel[]>;
   districtList$: Observable<IDropDownModel[]>;
   accountStatusList$: Observable<IDropDownModel[]>;
   genderList$: Observable<IDropDownModel[]>;
   gradeList$: Observable<IDropDownModel[]>;
+  PreviousYearsList$: Observable<IDropDownModel[]>;
+  MonthsList$: Observable<IDropDownModel[]>;
+  educationDegreeList$: Observable<IDropDownModel[]>;
+  onAddCandidateListRefresh = new EventEmitter();
+  attachmentCV: any[] = [];
+  autoGenratedPassword: string;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     public dialogRef: MatDialogRef<AddNewCandidateComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private commonLoader: CommonLoaderService,
-    private routeActive: ActivatedRoute,
     private hiringRequestService: HiringRequestsService,
     private toastr: ToastrService,
     private fb: FormBuilder,
-    private loader: CommonLoaderService
+    private purchaseService: PurchaseService,
+    private globalSharedService: GlobalSharedService
   ) {
-    this.addNewCandidateForm = this.fb.group({
-      FirstName: ['', [Validators.required]],
-      LastName: ['', [Validators.required]],
-      Email: ['', [Validators.required, Validators.email]],
-      PhoneNumber: ['', [Validators.required, Validators.maxLength(14)]],
-      AccountStatus: ['', [Validators.required]],
-      Gender: ['', [Validators.required]],
-      Country: ['', [Validators.required]],
-      Province: ['', [Validators.required]],
-      District: ['', [Validators.required]],
-      Profession: [, [Validators.required]],
-      Grade: ['', [Validators.required]],
-      Office: ['', [Validators.required]],
-      DateOfBirth: ['', [Validators.required]],
-      ExperienceInYear: ['', [Validators.required]],
-      ExperienceInMonth: ['', [Validators.required]]
-    });
-
     this.accountStatusList$ = of([
-      { name: 'Active', value: 1 },
-      { name: 'Nonactive', value: 2 },
-
+      { name: 'Prospective', value: 1 },
+      { name: 'Active', value: 2 }
     ] as IDropDownModel[]);
 
     this.genderList$ = of([
@@ -69,46 +59,92 @@ export class AddNewCandidateComponent implements OnInit {
     ] as IDropDownModel[]);
   }
   ngOnInit() {
+    this.initCadidateForm();
+    this.getAllMonthList();
+    this.getPreviousYearsList();
+    this.projectId = this.data.projectId;
+    this.hiringRequestId = this.data.hiringRequestId;
+    this.addNewCandidateForm.controls['ProjectId'].setValue(this.projectId);
+    this.addNewCandidateForm.controls['HiringRequestId'].setValue(
+      this.hiringRequestId
+    );
     forkJoin([
-      this.getAllOfficeList(),
       this.getAllCountryList(),
       this.getAllJobGradeList(),
-      this.getAllProfessionList()])
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe(result => {
-      this.subscribeOfficeList(result[0]);
-      this.subscribeCountryList(result[1]);
-      this.subscribeGradeList(result[2]);
-      this.subscribeProfessionList(result[3]);
+      this.getAllProfessionList(),
+      this.getAllEducationDegreeList()
+    ])
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(result => {
+        this.subscribeCountryList(result[0]);
+        this.subscribeGradeList(result[1]);
+        this.subscribeProfessionList(result[2]);
+        this.subscribeEducationDegreeList(result[3]);
+      });
+  }
+  //#region "Initialize candidate form"
+  initCadidateForm() {
+    this.PasswordAutoGenrate();
+    this.addNewCandidateForm = this.fb.group({
+      ProjectId: [null],
+      HiringRequestId: [null],
+      FirstName: [null, [Validators.required]],
+      LastName: [null, [Validators.required]],
+      Email: [null, [Validators.required, Validators.email]],
+      Password: [null, [Validators.required]],
+      PhoneNumber: [
+        null,
+        [
+          Validators.required,
+          Validators.pattern(/^-?(0|[1-9]\d*)?$/),
+          Validators.minLength(10),
+          Validators.maxLength(14)
+        ]
+      ],
+      EducationDegree: [null, [Validators.required]],
+      Gender: [null, [Validators.required]],
+      DateOfBirth: [null, [Validators.required]],
+      Country: [null, [Validators.required]],
+      Province: [null, [Validators.required]],
+      District: [null, [Validators.required]],
+      ExperienceYear: [null, [Validators.required]],
+      ExperienceMonth: [null, [Validators.required]],
+      PreviousWork: [null, [Validators.required]],
+      CurrentAddress: [null, [Validators.required]],
+      PermanentAddress: [null, [Validators.required]],
+      Profession: [null, [Validators.required]],
+      RelevantExperienceInYear: [null, [Validators.required]],
+      IrrelevantExperienceInYear: [null, [Validators.required]],
+      Remarks: [null, [Validators.required]]
     });
   }
-  getAllOfficeList() {
-    this.commonLoader.showLoader();
-    return this.hiringRequestService.GetOfficeList();
+  //#endregion
+  //#region "Auto genrate password for new candidate"
+  PasswordAutoGenrate() {
+    this.autoGenratedPassword = Math.random()
+      .toString(36)
+      .slice(-8);
   }
+  //#endregion
+  //#region "Get all month list for ExperienceInMonth dropdown"
+  getAllMonthList() {
+    const monthDropDown: IDropDownModel[] = [];
+    for (let i = Month['January']; i <= Month['December']; i++) {
+      monthDropDown.push({ name: Month[i], value: i });
+    }
+    this.MonthsList$ = of(monthDropDown);
+  }
+  //#endregion
+  //#region "Get all previous years list for ExperienceInYears dropdown"
+  getPreviousYearsList() {
+    this.PreviousYearsList$ = this.purchaseService.getPreviousYearsList(40);
+  }
+  //#endregion
+
+  //#region "Get all countries list for country dropdown"
   getAllCountryList() {
     this.commonLoader.showLoader();
     return this.hiringRequestService.GetCountryList();
-  }
-  getAllJobGradeList() {
-    this.commonLoader.showLoader();
-    return this.hiringRequestService.GetJobGradeList();
-  }
-
-  getAllProfessionList() {
-    this.commonLoader.showLoader();
-    return this.hiringRequestService.GetProfessionList();
-  }
-  subscribeOfficeList(response: any) {
-    this.commonLoader.hideLoader();
-    this.officeList$ = of(
-      response.data.map(y => {
-        return {
-          value: y.OfficeId,
-          name: y.OfficeName
-        };
-      })
-    );
   }
   subscribeCountryList(response: any) {
     this.commonLoader.hideLoader();
@@ -121,6 +157,12 @@ export class AddNewCandidateComponent implements OnInit {
       })
     );
   }
+  //#endregion
+  //#region "Get all job grades list for job grade dropdown"
+  getAllJobGradeList() {
+    this.commonLoader.showLoader();
+    return this.hiringRequestService.GetJobGradeList();
+  }
   subscribeGradeList(response: any) {
     this.commonLoader.hideLoader();
     this.gradeList$ = of(
@@ -131,6 +173,12 @@ export class AddNewCandidateComponent implements OnInit {
         };
       })
     );
+  }
+  //#endregion
+  //#region "Get all profession list for profession dropdown"
+  getAllProfessionList() {
+    this.commonLoader.showLoader();
+    return this.hiringRequestService.GetProfessionList();
   }
   subscribeProfessionList(response: any) {
     this.commonLoader.hideLoader();
@@ -143,6 +191,25 @@ export class AddNewCandidateComponent implements OnInit {
       })
     );
   }
+  //#endregion
+  //#region "Get all education degree list for education dropdown"
+  getAllEducationDegreeList() {
+    this.commonLoader.showLoader();
+    return this.hiringRequestService.GetEducationDegreeList();
+  }
+  subscribeEducationDegreeList(response: any) {
+    this.commonLoader.hideLoader();
+    this.educationDegreeList$ = of(
+      response.map(y => {
+        return {
+          value: y.Id,
+          name: y.Name
+        };
+      })
+    );
+  }
+  //#endregion
+  //#region "Get all province list on selection of country dropdown"
   getAllProvinceList(CountryId: number) {
     this.hiringRequestService
       .getAllProvinceListByCountryId([CountryId])
@@ -166,6 +233,8 @@ export class AddNewCandidateComponent implements OnInit {
         }
       );
   }
+  //#endregion
+  //#region "Get all district list on selection of province dropdown"
   getAllDistrictList(ProvinceId: any) {
     this.hiringRequestService
       .GetAllDistrictvalueByProvinceId([ProvinceId])
@@ -176,7 +245,7 @@ export class AddNewCandidateComponent implements OnInit {
             this.districtList$ = of(
               response.data.map(element => {
                 return {
-                  value: element.DistrictId,
+                  value: element.DistrictID,
                   name: element.District
                 } as IDropDownModel;
               })
@@ -189,41 +258,80 @@ export class AddNewCandidateComponent implements OnInit {
         }
       );
   }
-
-   //#region "AddNewCandidate"
-   AddNewCandidate(data: ICandidateDetailModel) {
-    // this.hiringRequestService.AddNewCandidateDetail(data).subscribe(
-    //   (response: IResponseData) => {
-    //     if (response.statusCode === 200) {
-    //       this.toastr.success('New request is created successfully');
-    //     } else {
-    //       this.toastr.error(response.message);
-    //     }
-    //     this.onCancelPopup();
-    //   },
-    //   error => {
-    //     this.toastr.error('Someting went wrong. Please try again');
-    //   }
-    // );
+  //#endregion
+  //#region "Adding new candidate"
+  AddNewCandidate(data: ICandidateDetailModel, attachmentCV) {
+    this.isFormSubmitted = true;
+    this.hiringRequestService.AddNewCandidateDetail(data).subscribe(
+      response => {
+        // response.CommonId.Id is CandidateId
+        if (response.StatusCode === 200 && response.CommonId.Id != null) {
+          this.globalSharedService
+            .uploadFile(
+              FileSourceEntityTypes.HiringRequestCandidateCV,
+              response.CommonId.Id,
+              attachmentCV
+            )
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe(y => {
+              this.toastr.success('New Candidate added successfully');
+              this.isFormSubmitted = false;
+              this.AddCandidateListRefresh();
+            });
+        } else {
+          this.toastr.error(response.message);
+          this.isFormSubmitted = false;
+        }
+        this.onCancelPopup();
+      },
+      error => {
+        this.toastr.error('Someting went wrong. Please try again');
+        this.isFormSubmitted = false;
+      }
+    );
   }
   //#endregion
-
-//#region "onCancelPopup"
-onCancelPopup(): void {
-  this.dialogRef.close();
-}
-//#endregion
-
+  //#region "Cv upload fucntionality"
+  openInput() {
+    document.getElementById('fileInput').click();
+  }
+  fileChange(file: any) {
+    this.attachmentCV = [];
+    this.attachmentCV.push(file);
+  }
+  //#endregion
+  //#region "Refresh candidate list after adding new candidate"
+  AddCandidateListRefresh() {
+    this.onAddCandidateListRefresh.emit();
+  }
+  // #endregion
+  //#region "On change country selection"
   onChangeCountry(e) {
     this.provinceList$ = null;
     this.districtList$ = null;
     this.getAllProvinceList(e);
   }
+  //#endregion
+  //#region "On change province selection"
   onChangeProvince(e) {
     this.districtList$ = null;
     this.getAllDistrictList(e);
   }
+  //#endregion
+  //#region "On form submission"
   onFormSubmit(data: any) {
-
+    if (this.attachmentCV.length === 0) {
+      this.toastr.warning('Please attach CV!');
+      return;
+    }
+    if (this.addNewCandidateForm.valid) {
+      this.AddNewCandidate(data, this.attachmentCV[0][0]);
+    }
   }
+  //#endregion
+  //#region "on cancel popup"
+  onCancelPopup(): void {
+    this.dialogRef.close();
+  }
+  //#endregion
 }

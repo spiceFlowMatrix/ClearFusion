@@ -3,6 +3,7 @@ using System;
 namespace HumanitarianAssistance.Application.Project.Models {
     public class ProjectHiringRequestDetailModel {
         public long? HiringRequestId { get; set; }
+         public string HiringRequestCode { get; set; }
         public long? ProjectId { get; set; }
         public long? JobCategory { get; set; }
         public string MinEducationLevel { get; set; }
@@ -19,7 +20,6 @@ namespace HumanitarianAssistance.Application.Project.Models {
         public DateTime? ClosingDate { get; set; }
         public int? Country { get; set; }
         public int? Province { get; set; }
-        public string JobType { get; set; }
         public int? JobShift { get; set; }
         public string JobStatus { get; set; }
         public string Experience { get; set; }
@@ -27,5 +27,12 @@ namespace HumanitarianAssistance.Application.Project.Models {
         public string SpecificDutiesAndResponsibilities { get; set; }
         public string KnowledgeAndSkillsRequired { get; set; }
         public string SubmissionGuidelines { get; set; }
+        public int? PayCurrency { get; set; }
+        public long? BudgetLine { get; set; }
+        public int JobType { get; set; }
+        public int? JobGrade { get; set; }
+        public int? EducationDegree { get; set; }
+        public int? Profession { get; set; }
+        public double? PayHourlyRate { get; set; }
     }
 }

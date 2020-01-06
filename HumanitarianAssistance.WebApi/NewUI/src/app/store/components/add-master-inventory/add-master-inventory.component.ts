@@ -35,7 +35,7 @@ export class AddMasterInventoryComponent implements OnInit {
       }else{
         this.masterForm.controls.istransport.setValue("1");
       }
-     
+
     } else {
 
     }
@@ -74,7 +74,7 @@ export class AddMasterInventoryComponent implements OnInit {
       this.masterInventory.InventoryDescription = this.masterForm.value.description;
       this.masterInventory.InventoryDebitAccount = this.masterForm.value.accountId;
       this.masterInventory.InventoryCreditAccount = null;
-      this.masterInventory.IsTransportCategory = (this.masterForm.value.istransport = "0") ? true : false;
+      this.masterInventory.IsTransportCategory = (this.masterForm.value.istransport === "0") ? true : false;
       if (this.data.InventoryId) {
         this.masterInventory.InventoryId = this.data.InventoryId;
         this.configService.EditMasterInventory(this.masterInventory).subscribe(() => {

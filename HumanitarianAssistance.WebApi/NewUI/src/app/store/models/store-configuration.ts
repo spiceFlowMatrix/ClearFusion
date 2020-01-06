@@ -1,6 +1,8 @@
 export interface UnitType {
     UnitTypeId?: number;
     UnitTypeName?: string;
+    IsDefault?: boolean;
+    IsDefaultText?: string;
 }
 export interface SourceCodeType {
     CodeTypeId?: number;
@@ -60,6 +62,7 @@ export interface InventoryItem {
     editText?: string;
     Description?: string;
     ItemTypeCategory?: number;
+    DefaultUnitType?: number;
     // addText:"";
     // editText:"edit item ";
 }
@@ -97,5 +100,6 @@ export class MasterInventoryItemModel {
     AssetType?: number;
     ItemTypeCategory?: number;
     isGenerator?: boolean;
+    DefaultUnitType?: number;
     // Voucher: any;
 }

@@ -1,76 +1,167 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
-  <span class="action_header">Request Details
-    <hum-button [type]="'edit'" [text]="'Edit'" (click)="editHiringRequest()"></hum-button>
-    <hum-button [type]="'add'" [text]="'complete '"></hum-button>
-    <hum-button [type]="'cancel'" [text]="'close'"></hum-button>
+    <span class="action_header">
+    <i class="fa fa-arrow-left bckicon" (click)="backToList()"></i>
+      Request Details
+    <hum-button *ngIf="!IsHiringRequestCompleted && !IsHiringRequestClosed"
+      [type]="'edit'"
+      [text]="'Edit'"
+      (click)="editHiringRequest()"
+    ></hum-button>
+    <hum-button *ngIf="!IsHiringRequestCompleted && !IsHiringRequestClosed"  [type]="'save'" [text]="'complete '" (click)="onCompleteRequest()"></hum-button>
+    <hum-button *ngIf="!IsHiringRequestClosed && !IsHiringRequestCompleted" [type]="'cancel'" (click)="onCloseRequest()" [text]="'close request'"></hum-button>
+
+    <hum-button *ngIf="IsHiringRequestCompleted"  [type]="'completed'" [text]="'Completed '"></hum-button>
+    <hum-button *ngIf="IsHiringRequestClosed"  [type]="'cancel'" [text]="'Closed '" [disabled]="true"></hum-button>
+    <hum-button  [type]="'download'" [text]="'PDF Export'" (click)="onExportHiringRequestPdf()"></hum-button>
   </span>
-  <div class="action_section">
-  </div>
+    <div class="action_section"></div>
 </lib-sub-header-template>
 <mat-divider></mat-divider>
 
 <mat-card [ngStyle]="scrollStyles">
-
-  <div class="row">
-    <div class="col-md-12">
-
-      <div class="col-md-6">
-        <mat-card-title>
-          {{hiringRequestDetails.JobCode}}
-        </mat-card-title>
-        <mat-card-subtitle>
-          Description
-        </mat-card-subtitle>
-        <mat-card-content>
-          {{hiringRequestDetails.Description}}
-        </mat-card-content>
-        <h5>Job Details</h5>
-        <table class="table table-striped">
-          <tbody>
-            <tr>
-              <td>Office</td>
-              <td>{{hiringRequestDetails.Office}}</td>
-            </tr>
-            <tr>
-              <td>Profession/Position</td>
-              <td>{{hiringRequestDetails.Position}}</td>
-            </tr>
-            <tr>
-              <td>Job Grade</td>
-              <td>{{hiringRequestDetails.JobGrade}}</td>
-            </tr>
-            <tr>
-              <td>Total Vacancies</td>
-              <td>{{hiringRequestDetails.TotalVacancies}}</td>
-            </tr>
-            <tr>
-              <td>Filled Vacancies</td>
-              <td>{{hiringRequestDetails.FilledVacancies}}</td>
-            </tr>
-            <tr>
-              <td>Pay Currency</td>
-              <td>{{hiringRequestDetails.PayCurrency}}</td>
-            </tr>
-            <tr>
-              <td>Pay Hourly Rate</td>
-              <td>{{hiringRequestDetails.PayRate}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-6">
+                <h4> <span> Code: </span> {{ hiringRequestDetails.HiringRequestCode }}</h4>
+                <h5> Specific Duties & Responsibilities</h5>
+                <mat-card-subtitle>
+                    {{hiringRequestDetails.SpecificDutiesAndResponsibilities}}
+                </mat-card-subtitle>
+                <h5>Submission Guildelines</h5>
+                <mat-card-subtitle>
+                    {{hiringRequestDetails.SubmissionGuidelines}}
+                </mat-card-subtitle>
+                <br>
+                <h5>Hiring Request Details</h5>
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <td>Office</td>
+                            <td>{{ hiringRequestDetails.Office }}</td>
+                        </tr>
+                        <tr>
+                            <td>Profession/Position</td>
+                            <td>{{ hiringRequestDetails.Position }}</td>
+                        </tr>
+                        <tr>
+                            <td>Job Grade</td>
+                            <td>{{ hiringRequestDetails.JobGrade }}</td>
+                        </tr>
+                        <tr>
+                            <td>Total Vacancies</td>
+                            <td>{{ hiringRequestDetails.TotalVacancies }}</td>
+                        </tr>
+                        <tr>
+                            <td>Filled Vacancies</td>
+                            <td>{{ hiringRequestDetails.FilledVacancies }}</td>
+                        </tr>
+                        <tr>
+                            <td>Pay Currency</td>
+                            <td>{{ hiringRequestDetails.PayCurrency }}</td>
+                        </tr>
+                        <tr>
+                            <td>Pay Hourly Rate</td>
+                            <td>{{ hiringRequestDetails.PayRate }}</td>
+                        </tr>
+                        <tr>
+                            <td>Budget Line</td>
+                            <td>{{ hiringRequestDetails.BudgetName }}</td>
+                        </tr>
+                        <tr>
+                            <td>Job Type</td>
+                            <td>{{ hiringRequestDetails.DepartmentName }}</td>
+                        </tr>
+                        <tr>
+                            <td>Announcing Date</td>
+                            <td>{{ hiringRequestDetails.AnouncingDate }}</td>
+                        </tr>
+                        <tr>
+                            <td>Closing Date</td>
+                            <td>{{ hiringRequestDetails.ClosingDate }}</td>
+                        </tr>
+                        <tr>
+                            <td>Contract Type</td>
+                            <td>{{ hiringRequestDetails.ContractType }}</td>
+                        </tr>
+                        <tr>
+                            <td>Contract Duration(Months)</td>
+                            <td>{{ hiringRequestDetails.ContractDuration }}</td>
+                        </tr>
+                        <tr>
+                            <td>Shift</td>
+                            <td>{{ hiringRequestDetails.Shift }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <mat-tab-group>
-        <mat-tab label="New Candidates">
-          <h5>Candidates <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewCandidate()"></hum-button>
-          </h5>
-
-          <hum-table [headers]="newCandidatesHeaders$" [items]="newCandidatesList$"></hum-table>
-        </mat-tab>
-        <mat-tab label="Existing Candidates"> Content 2 </mat-tab>
-      </mat-tab-group>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="col-md-6">
+                <h5>Required Qualifications</h5>
+                <mat-card-subtitle>
+                    {{ hiringRequestDetails.KnowledgeAndSkills }}
+                </mat-card-subtitle>
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <td>Education Degree</td>
+                            <td>{{ hiringRequestDetails.EducationDegree }}</td>
+                        </tr>
+                        <tr>
+                            <td>Profession</td>
+                            <td>{{ hiringRequestDetails.Profession }}</td>
+                        </tr>
+                        <tr>
+                            <td>Experience(In Years)</td>
+                            <td>{{ hiringRequestDetails.Experience }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-  </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <mat-tab-group>
+                <mat-tab label="New Candidates">
+                    <h5>
+                        Candidates
+                        <hum-button *ngIf="!IsHiringRequestCompleted && !IsHiringRequestClosed" [type]="'add'" [text]="'ADD'" (click)="addNewCandidate()"></hum-button>
+                        <hum-button [type]="'download'" [text]="'PDF Export'" (click)="onExportPdf()"></hum-button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <mat-form-field>
+                            <mat-select placeholder="Status Filter" (selectionChange)="onStatusFilterCandidate($event)" name="statusFilter" multiple [(ngModel)]="CandidateStatusSelection">
+                                <mat-option *ngFor="let item of statusFilter" [value]="item.Id">{{ item.value }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </h5>
+                    <app-candidate-table [headers]="newCandidatesHeaders$" [isDefaultAction]="false" [items]="newCandidatesList2$" [subHeaders]="subListHeaders$" [subTitle]="'Other Details'" [actions]="actions" (actionClick)="newCandActionEvents($event)"></app-candidate-table>
+                </mat-tab>
+                <mat-tab label="Existing Candidates">
+                    <h5>
+                        Candidates &nbsp;&nbsp;&nbsp;&nbsp;
+                        <mat-form-field *ngIf="!IsHiringRequestCompleted && !IsHiringRequestClosed">
+                            <mat-select placeholder="Select Existing Employee'" (selectionChange)="OnExistingEmployeeSelection($event)" name="Employee">
+                                <mat-option *ngFor="let item of existingEmployeesList" [value]="item.Id">{{ item.value }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <mat-form-field>
+                            <mat-select placeholder="Status Filter" (selectionChange)="onStatusFilter($event)" name="statusFilter" multiple [(ngModel)]="EmployeeStatusSelection">
+                                <mat-option *ngFor="let item of statusFilter" [value]="item.Id">{{ item.value }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </h5>
+                    <hum-table [headers]="existingCandidatesHeaders$" [isDefaultAction]="false" [items]="existingCandidatesList$" [actions]="actions" (actionClick)="empActionEvents($event)"></hum-table>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
 </mat-card>

@@ -1,0 +1,173 @@
+
+<div [ngSwitch]="tenderStatus">
+  <div *ngSwitchCase="1" humAddScroll style="margin-top: 25%;">
+      <i class="fas fa-info-circle icon_align icon_color_pending"></i>
+      <h3 class="text-center">TENDER REQUEST PENDING</h3>
+    </div>
+    <div *ngSwitchCase="2" humAddScroll style="margin-top: 25%;">
+        <i class="fas fa-exclamation-circle icon_align icon_color_cancel"></i>
+        <h3 class="text-center">CANCELLED REQUEST</h3>
+    </div>
+    <div *ngSwitchCase="3" humAddScroll>
+      <h4 class="letter_spacing_2">Tender Details</h4>
+      <h4>Tender Proposal Documentation
+          <hum-button [type]="'add'" [text]="'SUBMIT A DOCUMENT'" (click)="openFilesDialog()"></hum-button>
+          <table class="table table-striped">
+            <tr *ngFor="let doc of tenderDocsList" style="font-size: 14px;">
+              <td>{{doc.DocumentType}}</td>
+              <td><a href="{{doc.AttachmentUrl}}">{{doc.AttachmentName}}</a></td>
+              <td><i class="fa fa-trash" (click)="deleteTenderDocument(doc.DocumentFileId)"></i></td>
+            </tr>
+          </table>
+      </h4>
+      <h4>Submitted Bids
+          <hum-button [type]="'add'" (click)="submitTenderBid()" [text]="'SUBMIT A BID'"></hum-button>
+          <hum-button [type]="'save'" (click)="selectTenderBid()" [text]="'PROVIDE BID SELECTION'"></hum-button>
+      </h4>
+      <span><i class="fas fa-info-circle icon_color_yellow"></i> Pending <b>Bid</b> selection by <b>General Administration & Finance Managers</b>.</span>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Contact Name</th>
+            <th>Security Date</th>
+            <th>Quoted Amount</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let data of tenderBidsList">
+          <tr data-toggle="collapse" [attr.data-target]="'#' + data.BidId">
+            <td>{{data.Name}}</td>
+            <td>{{data.SecurityDate | date: 'dd/MM/yyyy'}}</td>
+            <td>{{data.QuotedAmount}}</td>
+            <td><i (click)="editTenderBid(data.BidId)" class="fa fa-edit"></i></td>
+            <td><i (click)="deleteTenderBid(data.BidId)" class="fa fa-trash"></i></td>
+          </tr>
+          <tr class="collapse" [attr.id]="data.BidId">
+            <td colspan="5">
+              <table class="table">
+                <tr>
+                  <td class="font_weight_500">Opening Date</td>
+                  <td class="font_weight_500">Results Qualified</td>
+                  <td class="font_weight_500">Security Amount</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>{{data.OpeningDate | date: 'dd/MM/yyyy'}}</td>
+                  <td>{{data.isResultQualified}}</td>
+                  <td>{{data.SecurityAmount}}</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td colspan="5" class="font_weight_500">Contract & Guarantee Letter</td>
+                </tr>
+                <tr>
+                  <td colspan="5"><a href="{{data.ContractLetterUrl}}">{{data.ContractLetterName}}</a></td>
+                </tr>
+                <tr>
+                  <td colspan="5" class="font_weight_500 icon_color_pending"><i class="fa fa-user"></i> &nbsp; Contact Details</td>
+                </tr>
+                <tr>
+                  <td colspan="5">
+                    <table class="table table-striped">
+                      <tr>
+                        <td colspan="1" class="font_weight_500">Name</td>
+                        <td colspan="4">{{data.Name}}</td>
+                      </tr>
+                      <tr>
+                        <td colspan="1" class="font_weight_500">Email</td>
+                        <td colspan="4">{{data.Email}}</td>
+                      </tr>
+                      <tr>
+                        <td colspan="1" class="font_weight_500">Phone</td>
+                        <td colspan="4">{{data.PhoneNumber}}</td>
+                      </tr>
+                      <tr>
+                        <td colspan="1" class="font_weight_500">Address</td>
+                        <td colspan="4">{{data.Address}}</td>
+                      </tr>
+                      <tr>
+                        <td colspan="1" class="font_weight_500">Owner</td>
+                        <td colspan="4">{{data.Owner}}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="5" class="font_weight_500 icon_color_pending"> &nbsp; Administrative Requirement Scoring</td>
+                </tr>
+                <tr>
+                  <td colspan="5">
+                    <table class="table table-striped">
+                      <tr>
+                        <td colspan="1" class="font_weight_500">Profile/Experience</td>
+                        <td colspan="4">{{data.Profile_Experience}}</td>
+                      </tr>
+                      <tr>
+                        <td colspan="1" class="font_weight_500">Securities/Bank Guarantees</td>
+                        <td colspan="4">{{data.Securities_BankGuarantee}}</td>
+                      </tr>
+                      <tr>
+                        <td colspan="1" class="font_weight_500">Offer Validity</td>
+                        <td colspan="4">{{data.OfferValidity}}</td>
+                      </tr>
+                      <tr>
+                        <td colspan="1" class="font_weight_500">Offer Documentation</td>
+                        <td colspan="4">{{data.OfferDocumentation}}</td>
+                      </tr>
+                      <tr>
+                        <td colspan="1" class="font_weight_500">TOR/SOW Acceptance</td>
+                        <td colspan="4">{{data.TOR_SOWAcceptance}}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="5" class="font_weight_500 icon_color_pending"> &nbsp; Technical Requirement Scoring</td>
+                </tr>
+                <tr>
+                  <td colspan="5">
+                    <table class="table table-striped">
+                      <tr>
+                        <td colspan="1" class="font_weight_500">Company/Goods Specification</td>
+                        <td colspan="4">{{data.Company_GoodsSpecification}}</td>
+                      </tr>
+                      <tr>
+                        <td colspan="1" class="font_weight_500">Work Experience</td>
+                        <td colspan="4">{{data.WorkExperience}}</td>
+                      </tr>
+                      <tr>
+                        <td colspan="1" class="font_weight_500">Service/Warranty</td>
+                        <td colspan="4">{{data.Service_Warranty}}</td>
+                      </tr>
+                      <tr>
+                        <td colspan="1" class="font_weight_500">Delivery Date</td>
+                        <td colspan="4">{{data.DeliveryDate}}</td>
+                      </tr>
+                      <tr>
+                        <td colspan="1" class="font_weight_500">Certification/GMP/COPP</td>
+                        <td colspan="4">{{data.Certification_GMP_COPP}}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="5" class="font_weight_500">Final Score</td>
+                </tr>
+                <tr>
+                  <td colspan="5">{{data.TotalScore}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngSwitchCase="4" humAddScroll>
+      <app-purchase-order [requestId]="requestId" [requestStatus]="requestStatus" [totalCost]="this.totalCost" [requestedItems]="requestedItems" (selectedItemChange)='selectedPurchaseItemChange($event)' (StatusChange)="StatusEmit($event)"></app-purchase-order>
+    </div>
+    <div *ngSwitchDefault>
+    </div>
+</div>

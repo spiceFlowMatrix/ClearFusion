@@ -91,6 +91,20 @@ export class GLOBAL {
   public static API_Code_GetAllEmployeeList = 'Code/GetAllEmployeeList';
   public static API_Code_AddAccountType = 'Code/AddAccountType';
   public static API_Code_EditAccountType = 'Code/EditAccountType';
+  public static API_HRConfiguration_AddDesignationDetail = 'HRConfiguration/AddDesignationDetail';
+  public static API_HRConfiguration_EditDesignationDetail = 'HRConfiguration/EditDesignationDetail';
+  public static API_HRConfiguration_DeleteDesignationDetail = 'HRConfiguration/DeleteDesignationDetail';
+  public static API_HRConfiguration_GetAllDesignationDetail = 'HRConfiguration/GetAllDesignationDetail';
+  public static API_HRConfiguration_GetEducationDegreeList = 'HRConfiguration/GetEducationDegreeList';
+  public static API_HRConfiguration_AddEducationDegree = 'HRConfiguration/AddEducationDegree';
+  public static API_HRConfiguration_EditEducationDegree = 'HRConfiguration/EditEducationDegree';
+  public static API_HRConfiguration_DeleteEducationDegree = 'HRConfiguration/DeleteEducationDegree';
+
+  public static API_HRConfiguration_GetAllExitInterviewQuestions = 'HRConfiguration/GetAllExitInterviewQuestions';
+  public static API_HRConfiguration_UpsertExitInterviewQuestion = 'HRConfiguration/UpsertExitInterviewQuestion';
+  public static API_HRConfiguration_GetSequenceNumber = 'HRConfiguration/GetSequenceNumber';
+  public static API_HRConfiguration_DeleteExitInterviewQuestion = 'HRConfiguration/DeleteExitInterviewQuestion';
+  public static API_HRConfiguration_DeleteLeaveType = 'HRConfiguration/DeleteLeaveType';
   public static API_Policy_AddNewPolicy = 'Policy/AddEditPolicy';
   public static API_Policy_AddPolicyRepeatDays = 'Policy/AddPolicyRepeatDays';
   public static API_Policy_AddNewPolicyTimeSchedule = 'Policy/AddEditPolicyTimeSchedule';
@@ -142,6 +156,13 @@ export class GLOBAL {
   public static API_Project_WinApprovalProjectDetail = 'Project/WinApprovalProjectDetail';
 
   public static API_Project_GetAllCountryDetails = 'Code/GetAllCountry';
+  public static API_OfficeCode_AddOfficeDetail = 'Code/AddOfficeDetail';
+  public static API_OfficeCode_EditOfficeDetails = 'Code/EditOfficeDetails';
+  public static API_code_GetAllOffice = 'code/GetAllOfficeDetails';
+  public static API_HRConfiguration_GetOfficeList = 'HRConfiguration/GetOfficeList';
+  public static API_OfficeCode_DeleteOfficeDetails = 'Code/DeleteOfficeDetails';
+
+
   public static API_Project_GetAllProvinceDetails = 'Project/GetAllProvinceDetails';
   public static API_Project_GetAllStrengthConsiderationDetails = 'Project/GetAllStrengthConsiderationDetails';
   public static API_Project_GetAllGenderConsiderationDetails = 'Project/GetAllGenderConsiderationDetails';
@@ -149,7 +170,27 @@ export class GLOBAL {
   public static API_Project_GetAllSecurityConsiderationDetails = 'Project/GetAllSecurityConsiderationDetails';
   public static API_code_GetAllCurrency = 'code/GetAllCurrency';
   public static API_Project_GetAllDistrictvalueByProvinceId = 'Project/GetAllDistrictvalueByProvinceId';
-  public static API_code_GetAllOffice = 'code/GetAllOfficeDetails';
+
+  public static API_HRConfiguration_GetDepartmentList = 'HRConfiguration/GetDepartmentList';
+  public static API_HRConfiguration_GetAllLeaveReasonType = 'HRConfiguration/GetAllLeaveReasonType';
+  public static API_HRConfiguration_GetJobGradeList = 'HRConfiguration/GetJobGradeList';
+  public static API_HRConfiguration_GetAttendanceGroupList = 'HRConfiguration/GetAttendanceGroupList';
+  public static API_HRConfiguration_GetProfessionList = 'HRConfiguration/GetProfessionList';
+  public static API_HRConfiguration_GetQualificationList = 'HRConfiguration/GetQualificationList';
+  public static API_Department_AddDepartment = 'Code/AddDepartment';
+  public static API_Department_EditDepartment = 'Code/EditDepartment';
+  public static API_Department_DeleteDepartment = 'Code/DeleteDepartment';
+
+  public static API_Code_AddAttendanceGroups = 'Code/AddAttendanceGroups';
+  public static API_Code_EditAttendanceGroups = 'Code/EditAttendanceGroups';
+  public static API_Code_DeleteAttendanceGroups = 'Code/DeleteAttendanceGroups';
+  public static API_Profession_AddProfession = 'Code/AddProfession';
+  public static API_Profession_EditProfession = 'Code/EditProfession';
+  public static API_Code_Profession_DeleteProfession = 'Code/DeleteProfession';
+  public static API_Code_AddQualificationDetails = 'Code/AddQualificationDetails';
+  public static API_Code_EditQualifactionDetails = 'Code/EditQualifactionDetails';
+  public static API_Code_DeleteQualifactionDetails = 'Code/DeleteQualifactionDetails';
+
   public static API_Project_AddEditProjectotherDetail = 'Project/AddEditProjectotherDetail';
   public static API_GetProjectOtherDetailById = 'Project/GetProjectOtherDetailById';
   public static API_Project_AddProjectJobsDetail = 'Project/AddProjectJobDetail';
@@ -173,10 +214,9 @@ export class GLOBAL {
   public static API_Project_UploadFinalizeFile = 'Project/UploadFinalizeFile';
   public static API_Project_GetApprovalProjectDetailById = 'Project/GetApprovalProjectDetailById';
   public static API_Project_GetProjectWinLossStatusById = 'Project/GetProjectWinLossStatusById';
-
-
-
-
+  public static API_HR_AddJobGradeDetail = 'Code/AddJobGradeDetail';
+  public static API_HR_EditJobGradeDetail = 'Code/EditJobGradeDetail';
+  public static API_Code_DeleteJobGradeDetail = 'Code/DeleteJobGradeDetail';
 
   public static API_Project_AddEditProjectProposalDetail = 'Project/AddEditProjectProposalDetail';
   public static API_Project_AddEditProjectCurrencyDetail = 'Project/AddEditProjectCurrencyDetail';
@@ -186,11 +226,14 @@ export class GLOBAL {
   public static API_Project_AddEditTargetBeneficiary = 'Project/AddEditTargetBeneficiary';
 
   public static API_Code_GetAllAccountByAccountHeadTypeId = 'Code/GetAllAccountByAccountHeadTypeId';
+  public static API_Code_GetAllDesignationList = 'Code/GetAllDesignationList';
   public static API_Code_GetAllJournalDetail = 'Code/GetAllJournalDetail';
   public static API_AccountReports_GetJournalVoucherDetails = 'AccountReports/GetJournalVoucherDetails';
   public static API_Accounting_GetAccountDetails = 'Account/GetAllAccountCode';
+  public static API_Accounting_GetAccountList = 'Account/GetAllAccountList';
   public static API_AccountReports_GetAllLedgerDetails = 'AccountReports/GetAllLedgerDetails';
   public static API_AccountReports_GetTrialBalanceReport = 'AccountReports/GetTrialBalanceReport';
+  public static API_Account_GetAllVouchersWithoutFilter = 'Account/GetAllVouchersWithoutFilter';
 
   // ProjectLogistics
   public static API_ProjectLogistics_AddLogisticRequest = 'ProjectLogistic/AddLogisticRequest';
@@ -203,8 +246,37 @@ export class GLOBAL {
   public static API_ProjectLogistics_EditLogisticRequestItems = 'ProjectLogistic/EditLogisticRequestItems';
   public static API_ProjectLogistics_CancelLogisticRequest = 'ProjectLogistic/CancelLogisticRequest';
   public static API_ProjectLogistics_IssuePurchaseOrder = 'ProjectLogistic/IssuePurchaseOrder';
-  public static API_ProjectLogistics_CompletePurchaseOrder = 'ProjectLogistic/CompletePurchaseOrder';
+  public static API_ProjectLogistics_SubmitPurchaseOrder = 'ProjectLogistic/SubmitPurchaseOrder';
   public static API_ProjectLogistics_GetPurchasedItemsList = 'ProjectLogistic/GetPurchasedItemsList';
+  public static API_ProjectLogistics_CancelComparativeRequest = 'ProjectLogistic/CancelComparativeRequest';
+  public static API_ProjectLogistics_IssueComparativeStatement = 'ProjectLogistic/IssueComparativeStatement';
+  public static API_ProjectLogistics_AddLogisticSupplier = 'ProjectLogistic/AddLogisticSupplier';
+  public static API_ProjectLogistics_GetLogisticSupplierList = 'ProjectLogistic/GetLogisticSupplierList';
+  public static API_ProjectLogistics_DeleteLogisticSupplier = 'ProjectLogistic/DeleteLogisticSupplier';
+  public static API_ProjectLogistics_EditLogisticSupplier = 'ProjectLogistic/EditLogisticSupplier';
+  public static API_ProjectLogistics_SubmitComparativeStatement = 'ProjectLogistic/SubmitComparativeStatement';
+  public static API_ProjectLogistics_GetComparativeStatement = 'ProjectLogistic/GetComparativeStatement';
+  public static API_ProjectLogistics_RejectComparativeStatement = 'ProjectLogistic/RejectComparativeStatement';
+  public static API_ProjectLogistics_ApproveComparativeStatement = 'ProjectLogistic/ApproveComparativeStatement';
+  public static API_ProjectLogistics_RejectPurchaseOrder = 'ProjectLogistic/RejectPurchaseOrder';
+  public static API_ProjectLogistics_GetGoodsRecievedNote = 'ProjectLogistic/GetGoodsRecievedNote';
+  public static API_ProjectLogistics_EditLogisticRequest  = 'ProjectLogistic/EditLogisticRequest';
+  public static API_ProjectLogistics_GetPurchaseOrderDetail = 'ProjectLogistic/GetPurchaseOrderDetail';
+  public static API_ProjectLogistics_VerifyPurchaseOrder = 'ProjectLogistic/VerifyPurchaseOrder';
+  public static API_ProjectLogistics_CheckDefaultUnitType = 'ProjectLogistic/CheckDefaultUnitType';
+  public static API_ProjectLogistics_GetCompletedPurchaseOrderDetail = 'ProjectLogistic/GetCompletedPurchaseOrderDetail';
+  public static API_ProjectLogistics_RejectTenderRequest = 'ProjectLogistic/RejectTenderRequest';
+  public static API_ProjectLogistics_InitiateTenderRequest = 'ProjectLogistic/InitiateTenderRequest';
+  public static API_ProjectLogistics_GetTenderIssuerName = 'ProjectLogistic/GetTenderIssuerName';
+  public static API_ProjectLogistics_GetTenderProposalDocument = 'ProjectLogistic/GetTenderProposalDocument';
+  public static API_ProjectLogistics_DeleteTenderProposalDocument = 'ProjectLogistic/DeleteTenderProposalDocument';
+  public static API_ProjectLogistics_AddTenderBid = 'ProjectLogistic/AddTenderBid';
+  public static API_ProjectLogistics_GetAllTenderBids = 'ProjectLogistic/GetAllTenderBids';
+  public static API_ProjectLogistics_DeleteTenderBidById  = 'ProjectLogistic/DeleteTenderBidById';
+  public static API_ProjectLogistics_EditTenderBid = 'ProjectLogistic/EditTenderBid';
+  public static API_ProjectLogistics_SelectTenderBid = 'ProjectLogistic/SelectTenderBid';
+  public static API_ProjectLogistics_GetSelectedBidDetail = 'ProjectLogistic/GetSelectedBidDetail';
+
   // Chart Of Account
   public static API_ChartOfAccount_GetMainLevelAccount = 'ChartOfAccount/GetMainLevelAccount';
   public static API_ChartOfAccount_GetAllAccountsByParentId = 'ChartOfAccount/GetAllAccountsByParentId';
@@ -244,15 +316,22 @@ export class GLOBAL {
   public static API_GainLossReport_GetExchangeGainLossVoucherList = 'GainLossReport/GetExchangeGainLossVoucherList';
   public static API_GainLossReport_AddExchangeGainLossVoucher = 'GainLossReport/AddExchangeGainLossVoucher';
   public static API_GainLossReport_DeleteGainLossVoucherTransaction = 'GainLossReport/DeleteGainLossVoucherTransaction';
+  public static API_GainLossReport_GetGainLossCaculatorConfiguration = 'GainLossReport/GetGainLossCaculatorConfiguration';
+  public static API_GainLossReport_GetDefaultAccountingPeriod = 'GainLossReport/GetDefaultAccountingPeriod';
 
   public static API_Account_GetAllAccountFilter = 'Account/GetAllAccountFilter';
   public static API_Account_GetAllVoucherType = 'Account/GetAllVoucherType';
   public static API_Account_GetAllInputLevelAccountCode = 'Account/GetAllInputLevelAccountCode';
+  public static API_Account_SaveCalculatorConfigData = 'Account/SaveCalculatorConfigData';
 
 
   public static API_Project_GetProjectBudgetLineDetail = 'Project/GetProjectBudgetLineDetail';
   public static API_Project_GetProjectJobDetail = 'Project/GetProjectJobDetail';
   public static API_Code_GetAllProfession = 'Code/GetAllProfession';
+  // public static API_Code_GetAllEducationDegree = 'Code/GetAllEducationDegree';
+  public static API_Code_GetAllEducationDegreeList = 'Code/GetAllEducationDegreeList';
+  public static API_Code_AddLeaveReasonDetail = 'Code/AddLeaveReasonDetail';
+  public static API_Code_EditLeaveReasonDetail = 'Code/EditLeaveReasonDetail';
 
   //#region criteria evaluation form
 
@@ -352,6 +431,7 @@ export class GLOBAL {
   public static API_Project_GetActivityDocumentDetails = 'Project/GetActivityDocumentDetails ';
   public static API_Project_GetProjectMonitoringList = 'Project/GetProjectMonitoringList';
   public static API_Project_GetProjectMonitoringByMonitoringId = 'Project/GetProjectMonitoringByMonitoringId';
+  public static API_Project_DeleteProjectSubActivityDetail = 'Project/DeleteProjectSubActivityDetail';
 
 
   public static API_Project_GetProjectActivityExtension = 'Project/GetProjectActivityExtension';
@@ -411,19 +491,48 @@ export class GLOBAL {
 
 
   //#region "Hiring request"
+  public static API_ProjectBudget_GetAllProjectDetail = 'Code/GetAllProjectDetails';
+  public static API_EmployeeDetail_GetAllEmployeeSalaryAnalyticalInfo = 'EmployeeDetail/GetAllEmployeeSalaryAnalyticalInfo';
   public static API_HREmployee_AddJobHiringDetail = 'HRJobs/AddJobHiringDetails';
   public static API_HiringRequest_GetProjectHiringRequestDetailsByHiringRequestId =
     'HiringRequest/GetProjectHiringRequestDetailByHiringRequestId';
-  public static API_HiringRequest_GetAllJobs = 'HiringRequest/GetAllJobList';
-  // public static API_HiringRequest_GetOfficeListByJobId = 'HiringRequest/GetOfficeListByJobId';
-  public static API_HiringRequest_GetProfessionListByOfficeId = 'HiringRequest/GetProfessionListByOfficeId';
-  public static API_HiringRequest_GetRemainingVacancyByJobId = 'HiringRequest/GetRemainingVacancyByJobId';
   public static API_HiringRequest_GetAllProjectHiringRequestDetailByHiringRequestId =
     'HiringRequest/GetAllProjectHiringRequestDetailByHiringRequestId';
+    public static API_HiringRequest_AddNewCandidateDetail =
+    'HiringRequest/AddNewCandidateDetail';
+    public static API_HiringRequest_GetAllCandidateList =
+    'HiringRequest/GetAllCandidateList';
+    public static API_HiringRequest_UpdateCandidateStatusByStatusId =
+    'HiringRequest/UpdateCandidateStatusByStatusId';
+    public static API_HiringRequest_AddExistingCandidateDetail =
+    'HiringRequest/AddExistingCandidateDetail';
+    public static API_HiringRequest_GetAllExistingCandidateList =
+    'HiringRequest/GetAllExistingCandidateList';
+    public static API_HiringRequest_DownloadCandidateCvByRequestId =
+    'HiringRequest/DownloadCandidateCvByRequestId';
 
+    // interview pages
+    public static API_Code_GetRatingBasedCriteriaQuestions = 'Code/GetAllRatingBasedCriteriaQuestionsByOfficeId';
+    public static API_HiringRequest_GetCandidateDetailsByCandidateId = 'HiringRequest/GetCandidateDetailsByCandidateId';
+    public static API_HiringRequest_GetAllHiringRequestDetailForInterviewByHiringRequestId =
+     'HiringRequest/GetAllHiringRequestDetailForInterviewByHiringRequestId';
+     public static API_HiringRequest_GetTechnicalQuestionsByDesignationId =
+     'HiringRequest/GetTechnicalQuestionsByDesignationId';
+     public static API_HiringRequest_AddInterviewDetails =
+     'HiringRequest/AddInterviewDetails';
+     public static API_HiringRequest_GetInterviewDetailsByInterviewId =
+     'HiringRequest/GetInterviewDetailsByInterviewId';
+     public static API_HiringRequest_GetHiringRequestCode =
+     'HiringRequest/GetHiringRequestCode';
+
+
+
+  public static API_EmployeeDetail_AddEmployeeSalaryAnalyticalInfo = 'EmployeeDetail/AddEmployeeSalaryAnalyticalInfo';
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
+  public static API_Code_GetAllDesignation = 'Code/GetAllDesignation';
   public static API_HiringRequest_AddHiringRequestDetail = 'HiringRequest/AddHiringRequestDetail';
   public static API_HiringRequest_GetProjectHiringRequestDetail = 'HiringRequest/GetProjectHiringRequestDetail';
+  public static API_EmployeeDetail_AddCandidateAsEmployee = 'EmployeeDetail/AddCandidateAsEmployee';
   public static API_HiringRequest_EditHiringRequestDetail = 'HiringRequest/EditHiringRequestDetail';
   public static API_HiringRequest_GetAllEmployeeList = 'HiringRequest/GetAllEmployeeList';
   public static API_HiringRequest_GetEmployeeListByOfficeId = 'HiringRequest/GetHiringCandidatesByOfficeId';
@@ -439,6 +548,7 @@ export class GLOBAL {
   public static API_HREmployee_EditEmployeeProfessionalDetail = 'EmployeeDetail/EditEmployeeProfessionalDetail';
   public static API_HiringRequest_DeleteCandidatDetail = 'HiringRequest/DeleteCandidatDetail';
   public static API_Chat_AddMessage = 'Chat/AddMessage';
+  public static API_Code_GetDepartmentsByOfficeId = 'Code/GetDepartmentsByOfficeId';
 
   // pdf
   public static API_Pdf_GetAllChartOfAccountHierarchyPdf = 'Pdf/GetAllChartOfAccountHierarchyPdf';
@@ -455,6 +565,12 @@ export class GLOBAL {
   public static API_Pdf_GetJournalLedgerReportPdf = 'Pdf/GetJournalLedgerReportPdf';
   public static API_Pdf_GetStorePurchasePdf = 'Pdf/GetStorePurchasePdf';
   public static API_Pdf_GetJournalReportPdf = 'Pdf/GetJournalReportPdf';
+  public static API_Pdf_GetJournalReportExcel = 'Pdf/GetJournalReportExcel';
+
+  public static API_Pdf_GetCandidateDetailReportPdf = 'Pdf/GetCandidateDetailReportPdf';
+  public static API_Pdf_GetInterviewDetailReportPdf = 'Pdf/GetInterviewDetailReportPdf';
+  public static API_Pdf_GetLogisticGoodsNoteReportPdf = 'Pdf/GetLogisticGoodsNoteReportPdf';
+
   //#endregion
 
   // Store
@@ -470,11 +586,15 @@ export class GLOBAL {
   public static API_Store_GetAllPurchaseUnitType = 'Store/GetAllPurchaseUnitType';
   public static API_Store_AddPurchase = 'Store/AddPurchase';
   public static API_ExchangeRates_CheckExchangeRatesExist = 'ExchangeRates/CheckExchangeRatesExist';
+
   public static API_Store_GetAllPurchasesByItem = 'Store/GetAllPurchasesByItem';
   public static API_StorePurchase_GetItemDetailByItemId = 'StorePurchase/GetItemDetailByItemId';
   public static API_Store_AddItemOrder = 'Store/AddItemOrder';
+  public static API_Store_EditItemOrder = 'Store/EditItemOrder';
   public static API_Store_DeleteItemOrder = 'Store/DeleteItemOrder';
   public static API_StorePurchase_AddStorePurchase = 'StorePurchase/AddStorePurchase';
+  public static API_StorePurchase_GetProcurementDetailsByProcurementId = 'StorePurchase/GetProcurementDetailsByProcurementId';
+  public static API_StorePurchase_GetProcurementDetailWithReturnsList = 'StorePurchase/GetProcurementDetailWithReturnsList';
   public static API_VehicleTracker_GetVehicleList = 'VehicleTracker/GetVehicleList';
   public static API_VehicleTracker_AddVehicleMileage = 'VehicleTracker/AddVehicleMileage';
   public static API_VehicleTracker_GetVehicleById = 'VehicleTracker/GetVehicleById';
@@ -483,6 +603,7 @@ export class GLOBAL {
   public static API_VehicleTracker_GetVehicleMonthlyBreakdownDataById = 'VehicleTracker/GetVehicleMonthlyBreakdownDataById';
   public static API_GeneratorTracker_GetGeneratorMonthlyBreakdownDataById = 'GeneratorTracker/GetGeneratorMonthlyBreakdownDataById';
   public static API_StorePurchase_GetVehicleGeneratorTrackerLogs = 'StorePurchase/GetVehicleGeneratorTrackerLogs';
+  public static API_StorePurchase_GetDefaultUnitTypeByItemId = 'StorePurchase/GetDefaultUnitTypeByItemId';
 
   public static API_GeneratorTracker_GetGeneratorList = 'GeneratorTracker/GetGeneratorList';
   public static API_GeneratorTracker_GetGeneratorById = 'GeneratorTracker/GetGeneratorById';
@@ -495,6 +616,9 @@ export class GLOBAL {
   public static API_StorePurchase_GetStorePurchaseById = 'StorePurchase/GetStorePurchaseById';
   public static API_StorePurchase_GetTransportItemDataSource = 'StorePurchase/GetTransportItemDataSource';
   public static API_StorePurchase_EditStorePurchase = 'StorePurchase/EditStorePurchase';
+  public static API_StorePurchase_AddProcurementReturn = 'StorePurchase/AddProcurementReturn';
+  public static API_StorePurchase_DeleteReturnProcurement = 'StorePurchase/DeleteReturnProcurement';
+  public static API_StorePurchase_GetTransportItemCategoryType = 'StorePurchase/GetTransportItemCategoryType';
 
   public static API_Store_AddPurchaseUnitType = 'Store/AddPurchaseUnitType';
   public static API_Store_EditPurchaseUnitType = 'Store/EditPurchaseUnitType';

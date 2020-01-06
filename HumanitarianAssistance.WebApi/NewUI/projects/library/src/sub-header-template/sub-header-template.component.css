@@ -10,5 +10,11 @@
   padding: 10px 15px;
   box-shadow: none;
 }
+.sub_header_template_main2 {
+  background-color: white;
+  height: 70px;
+  padding: 10px 15px;
+  box-shadow: none;
+}
 .float_right { float: right;}
 .display_inline { display: inline-block; margin-top: 0px !important}

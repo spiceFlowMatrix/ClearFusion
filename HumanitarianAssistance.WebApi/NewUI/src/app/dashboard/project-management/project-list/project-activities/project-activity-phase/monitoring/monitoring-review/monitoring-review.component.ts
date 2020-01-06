@@ -19,7 +19,6 @@ import {
   IndicatorQuestionModel
 } from '../../../../project-indicators/project-indicators-model';
 import { ProjectIndicatorService } from '../../../../project-indicators/project-indicator.service';
-import { element } from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-monitoring-review',
@@ -88,7 +87,6 @@ export class MonitoringReviewComponent implements OnInit {
        this.scoreFlag = false;
        this.verificationFlag = false;
 
-
       // for (let i = 0; i < this.monitoringReviewList.MonitoringReviewModel.length;  i++  ) {
       //   this.getQuestionsList(i);
       // }
@@ -108,6 +106,17 @@ export class MonitoringReviewComponent implements OnInit {
     this.monitoringQuantitativeScore = [
       {
         score: 1,
+        name: '1 - Yes'
+      },
+      {
+        score: 0,
+        name: '0 - No'
+      }
+    ];
+
+    this.monitoringQualitativeScore = [
+      {
+        score: 1,
         name: '1-Weak'
       },
       {
@@ -125,17 +134,6 @@ export class MonitoringReviewComponent implements OnInit {
       {
         score: 5,
         name: '5 - Excellent'
-      }
-    ];
-
-    this.monitoringQualitativeScore = [
-      {
-        score: 1,
-        name: '1 - Yes'
-      },
-      {
-        score: 0,
-        name: '0 - No'
       }
     ];
   }

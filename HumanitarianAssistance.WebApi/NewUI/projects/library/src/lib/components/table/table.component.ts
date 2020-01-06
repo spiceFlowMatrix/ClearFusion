@@ -17,7 +17,10 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() items: Observable<Array<Object>>;
   @Input() subTitle: string;
   @Input() actions: TableActionsModel;
+  @Input() isDefaultAction = true;
+  @Input() isDefaultSubAction = true;
   @Input() hideColums$: Observable<{ headers: string[], items: string[] }>
+  @Input() hideColumsSub$: Observable<{ headers: string[], items: string[] }>
 
   @Output() actionClick = new EventEmitter<any>();
   @Output() subActionClick = new EventEmitter<any>();
@@ -26,6 +29,7 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
 
   mainItems: Observable<Array<Object>>;
   subItems: Array<Object> = [];
+  itemAction: Array<Object> = [];
   itemHeaders: Observable<string[]>;
   itemActions: TableActionsModel;
 
@@ -42,7 +46,7 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
   ngOnInit() {
   }
   ngOnChanges(): void {
-    this.itemActions = this.actions
+    this.itemActions = this.actions;
     if (this.items) {
       this.items.subscribe(res => {
         this.subItems = [];
@@ -55,12 +59,25 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
                 this.subItemHeaders = of(Object.keys(element['subItems'][0]));
               }
             }
+            // only if default action is false
+            if (element['itemAction']) {
+              this.itemAction.push(element['itemAction']);
+            }
 
           });
+
           if (this.subItems.length > 0) {
 
             this.itemHeaders.subscribe(r => {
               const index = r.findIndex(v => v === 'subItems');
+              r.splice(index);
+            });
+          }
+          // only if default action is false
+
+          if (this.itemAction.length > 0) {
+            this.itemHeaders.subscribe(r => {
+              const index = r.findIndex(v => v === 'itemAction');
               r.splice(index);
             });
           }
@@ -75,6 +92,17 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
         })
         this.headers.subscribe(headers => {
           this.headers = of(res.headers);
+
+        })
+      })
+    }
+    if (this.hideColumsSub$ && this.subItemHeaders) {
+      this.hideColumsSub$.subscribe(res => {
+        this.subItemHeaders.subscribe(headers => {
+          this.subItemHeaders = of(headers.filter(r => res.items.includes(r)));
+        })
+        this.subHeaders.subscribe(headers => {
+          this.subHeaders = of(res.headers);
 
         })
       })
@@ -113,7 +141,7 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
       })
     }
 
-     }
+  }
 
   switchSubList(i, event) {
     if (this.subItems.length > 0) this.isShowSubList[i] = !this.isShowSubList[i];

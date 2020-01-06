@@ -45,11 +45,14 @@
         </tr>
         <tr>
         	<td>
-            	<table style="width:100%;border-top:1px solid #dfdfdf;" cellpadding="25" cellspacing="0">
+            	<table style="width:100%;border-top:1px solid #dfdfdf;"  cellspacing="0">
                 	<tr>
-                    	<td style="width:50%;">Project allowed by law: <span>@Model.ProjectAllowedBylaw</span></td>
+                    	<td style="font-size:14px;padding-top:20px;padding-left:25px;">Project allowed by law: <span>@Model.ProjectAllowedBylaw</span></td>
+                        <td> Currency:<span>@Model.CurrencyName</span></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:14px;padding-left:25px;">Project allowed by Organization leadership:  <span>@Model.ProjectByLeadership</span></td>
                         <td></td>
-                        <td align="right; width:50%;"> Currency: @Model.CurrencyName</td>
                     </tr>
                 </table>
             </td>
@@ -70,7 +73,7 @@
                     	<td style="width:50%;vertical-align:top;">
                         	<table style="width:100%;font-size:14px;" cellpadding="2" cellspacing="20">
                             	<tr>
-                                	<td style="text-align:center;">IS PROJECT PRACTICAL: <span>@Model.IsProjectPractical</span><br>CAPACITY AVAILABLE FOR PROJECT : <span> @Model.CapacityAvailableForProject</span></td>
+                                	<td style="text-align:center;">IS PROJECT PRACTICAL (Score: 1) <span>@Model.IsProjectPractical</span><br>CAPACITY AVAILABLE FOR PROJECT : <span> @Model.CapacityAvailableForProject</span></td>
                                 </tr>
                                 <tr>
                                 	<td>
@@ -85,31 +88,31 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Train Staff</td>
+                                            	<td>Train Staff (Score: 1)</td>
                                                 <td>@Model.TrainedStaff</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
 	                                            <td>&nbsp;</td>
-                                            	<td>By Equipment</td>
+                                            	<td>By Equipment (Score: 1)</td>
                                                 <td>@Model.ByEquipment</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Expand Scope</td>
+                                            	<td>Expand Scope (Score: 1)</td>
                                                 <td>@Model.ExpandScope</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Expand Geographical Presence</td>
+                                            	<td>Expand Geographical Presence (Score: 1)</td>
                                                 <td>@Model.GeoGraphicalPresence</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td colspan="2">ALLOWED 3RD PARTY CONTRACTING <span>@Model.ThirdPartyContract</span></td>
+                                            	<td colspan="2">ALLOWED 3RD PARTY CONTRACTING (Score: 1)<span>@Model.ThirdPartyContract</span></td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
@@ -142,11 +145,11 @@
                                 	<td>
                                     	<table style="width:100%" cellpadding="0" cellspacing="0">
                                             <tr>
-                                            	<td>Useable By Organisation</td>
+                                            	<td>Useable By Organisation (Score: 1)</td>
                                                 <td>@Model.UseableByOrganisation</td>
                                             </tr>
                                             <tr>
-                                            	<td>Feasible Experts Deployed</td>
+                                            	<td>Feasible Experts Deployed (Score: 1)</td>
                                                 <td>@Model.FeasibleExpertDeploy</td>
                                             </tr>
                                             <tr>
@@ -176,31 +179,26 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Enough time for quality Work<br><p>"Warning: ratio of *(time delay) over total time should be less than 0.33))"</p></td>
+                                            	<td>Enough time for quality Work (Score: 1)<br><p>"Warning: ratio of *(time delay) over total time should be less than 0.33))"</p></td>
                                                 <td>@Model.EnoughTimeForProject</td>
                                                 <td>&nbsp;</td>
                                             </tr>
+                                            
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Project allowed by Organization leadership</td>
-                                                <td>@Model.ProjectByLeadership</td>
-                                                <td>&nbsp;</td>
-                                            </tr>
-                                            <tr>
-                                            	<td>&nbsp;</td>
-                                            	<td>Presence/Coverage in project location</td>
+                                            	<td>Presence/Coverage in project location (Score: 2)</td>
                                                 <td>@Model.PresenceCoverageInProject</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Project in line with Organisational focus</td>
+                                            	<td>Project in line with Organisational focus (Score: 1)</td>
                                                 <td>@Model.ProjectInLineWithOrgFocus</td>
                                                 <td>&nbsp;</td>
                                             </tr>
 										                      	<tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Enough time to prepare proposal<br><p>"Warning: Minimum time to submit the proposal for old Project is 2 weeks"</p></td>
+                                            	<td>Enough time to prepare proposal (Score: 1)<br><p>"Warning: Minimum time to submit the proposal for old Project is 2 weeks"</p></td>
                                                 <td>@Model.EnoughTimeToPrepareProposal</td>
                                                 <td>&nbsp;</td>
                                             </tr>
@@ -224,7 +222,7 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>COST GREATER THAN BUDGET</td>
+                                            	<td>COST GREATER THAN BUDGET(Cost affordablity) (Score: 5)</td>
                                                 <td>@Model.IsCostGreaterthenBudget</td>
                                                 <td>&nbsp;</td>
                                             </tr>
@@ -236,7 +234,7 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>FINANCIAL CONTRIBUTION FULFILLABLE</td>
+                                            	<td>FINANCIAL CONTRIBUTION FULFILLABLE(Secured) (Score: 1)</td>
                                                 <td>@Model.IsFinancialContribution</td>
                                                 <td>&nbsp;</td>
                                             </tr>
@@ -326,11 +324,11 @@
                             	<tr> <td style="text-align:center;">METHOD OF FUNDING :
                                     @if(Model.MethodOfFunding == 1)
                                     {
-                                        @Html.Label("Sole")
+                                        @Html.Label("Sole (Score: 2)")
                                     } 
                                     else 
                                     {
-                                        @Html.Label("Source/Co-finance")
+                                        @Html.Label("Source/Co-finance (Score: 1)")
                                     }
                                      </td> </tr>
                                 <tr>
@@ -344,7 +342,7 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td colspan="2" style="text-align:center;">PROPOSAL ACCEPTED:  <span>@Model.ProposalAccepted</span></td>
+                                            	<td colspan="2" style="text-align:center;">PROPOSAL ACCEPTED: (Score: 1) <span>@Model.ProposalAccepted</span></td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
@@ -364,31 +362,31 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Professional</td>
+                                            	<td>Professional (Score: 1)</td>
                                                 <td>@Model.Professional</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
 	                                            <td>&nbsp;</td>
-                                            	<td>Funds On Time</td>
+                                            	<td>Funds On Time (Score: 1)</td>
                                                 <td>@Model.FundsOnTime</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Effective Communication</td>
+                                            	<td>Effective Communication (Score: 1)</td>
                                                 <td>@Model.EffectiveCommunication</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Disputes</td>
+                                            	<td>Disputes (Score: 1)</td>
                                                 <td>@Model.Dispute</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Other Deliverables</td>
+                                            	<td>Other Deliverables (Score: 1)</td>
                                                 <td>@Model.OtherDeliverable</td>
                                                 <td>&nbsp;</td>
                                             </tr>
@@ -416,31 +414,31 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Performance</td>
+                                            	<td>Performance (Score: 1)</td>
                                                 <td>@Model.CriticismPerformance</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Time Management</td>
+                                            	<td>Time Management (Score: 1)</td>
                                                 <td>@Model.TimeManagement</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Money Allocation</td>
+                                            	<td>Money Allocation (Score: 1)</td>
                                                 <td>@Model.MoneyAllocation</td>
                                                 <td>&nbsp;</td>
                                             </tr>
 											<tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Accountability</td>
+                                            	<td>Accountability (Score: 1)</td>
                                                 <td>@Model.Accountability</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Deliverable Quality</td>
+                                            	<td>Deliverable Quality (Score: 1)</td>
                                                 <td>@Model.DeliverableQuality</td>
                                                 <td>&nbsp;</td>
                                             </tr>
@@ -461,19 +459,11 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Financing History</td>
+                                            	<td>Financing History (Score: 2)</td>
                                                 <td>
                                                     @if(Model.DonorFinancingHistory == 1)
                                                     {
                                                         @Html.Label("Good")
-                                                    }
-                                                    else if(Model.DonorFinancingHistory == 2) 
-                                                    {
-                                                         @Html.Label("Neutral")
-                                                    }
-                                                    else if(Model.DonorFinancingHistory == 3) 
-                                                    {
-                                                         @Html.Label("Bad")
                                                     }
                                                     else if(Model.DonorFinancingHistory== null)
                                                     {
@@ -484,18 +474,10 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Religious Standing</td>
+                                            	<td>Religious Standing (Score: 2)</td>
                                                 <td>@if(Model.ReligiousStanding==1)
                                                     {
                                                         @Html.Label("Good")
-                                                    }
-                                                    else if(Model.ReligiousStanding == 2) 
-                                                    {
-                                                         @Html.Label("Neutral")
-                                                    }
-                                                    else if(Model.ReligiousStanding == 3) 
-                                                    {
-                                                         @Html.Label("Bad")
                                                     }
                                                      else if(Model.ReligiousStanding == null)
                                                     {
@@ -505,19 +487,11 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Political Standing</td>
+                                            	<td>Political Standing (Score: 2)</td>
                                                 <td>
                                                     @if(Model.PoliticalStanding==1)
                                                     {
                                                         @Html.Label("Good")
-                                                    }
-                                                    else if(Model.PoliticalStanding == 2) 
-                                                    {
-                                                         @Html.Label("Neutral")
-                                                    }
-                                                    else if(Model.PoliticalStanding == 3) 
-                                                    {
-                                                         @Html.Label("Bad")
                                                     }
                                                      else if(Model.PoliticalStanding == null)
                                                     {
@@ -564,7 +538,7 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td colspan="4">Rural Development and Social Protection:</td>
+                                            	<td colspan="4">Rural Development and Social Protection (Score: 2)</td>
                                               <td>&nbsp;</td>
                                             </tr>
                                             <tr>
@@ -686,7 +660,7 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td colspan="4">Education:</td>
+                                            	<td colspan="4">Education (Score: 2)</td>
                                               <td>&nbsp;</td>
                                             </tr>
                                             <tr>
@@ -789,7 +763,7 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td colspan="4">Health and Nutrition:</td>
+                                            	<td colspan="4">Health and Nutrition (Score: 2)</td>
                                               <td>&nbsp;</td>
                                             </tr>
                                             <tr>
@@ -940,7 +914,7 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td colspan="4">Disaster Risk Reduction:</td>
+                                            	<td colspan="4">Disaster Risk Reduction (Score: 2)</td>
                                               <td>&nbsp;</td>
                                             </tr>
                                             <tr>
@@ -1046,7 +1020,7 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td colspan="4">Agriculture and Livestock:</td>
+                                            	<td colspan="4">Agriculture and Livestock (Score: 2)</td>
                                               <td>&nbsp;</td>
                                             </tr>
                                             <tr>
@@ -1180,41 +1154,41 @@
                                             	<td>
                                                     @if (Model.Women == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Women");
+                                                        <img src="@Model.CheckedIconPath" alt=""> <label> Women (Score: 0.5 ) </label>;
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Women");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> <label>Women (Score: 0.5 ) </label>;
                                                      } 
                                                 </td>
                                                 <td>
                                                     @if (Model.Men == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Men");
+                                                        <img src="@Model.CheckedIconPath" alt=""> <label> Men (Score: 0.5 )</label>;
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Men");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> <label> Men (Score: 0.5 ) </label>;
                                                      } 
                                                 </td>
                                                 <td>
                                                     @if (Model.Youth == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Youth");
+                                                        <img src="@Model.CheckedIconPath" alt=""> <label> Youth (Score: 0.5 ) </label>;
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Youth");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> <label> Youth (Score: 0.5 ) </label>;
                                                      } 
                                                  </td>
                                                 <td>
                                                     @if (Model.Children == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Children");
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Children (Score: 1)");
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Children");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Children (Score: 1)");
                                                      } 
                                                 </td>
                                                 <td>&nbsp;</td>
@@ -1224,41 +1198,41 @@
                                             	<td>
                                                      @if (Model.Disabled == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Disabled");
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Disabled (Score: 1)");
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Disabled");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Disabled (Score: 1)");
                                                      } 
                                                 </td>
                                                 <td>
                                                     @if (Model.IDPs == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("IDPs");
+                                                        <img src="@Model.CheckedIconPath" alt=""> <label>IDPs (Score: 0.5)</label>;
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("IDPs");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> <label> IDPs (Score: 0.5)</label>;
                                                      } 
                                                 </td>
                                                 <td>
                                                     @if (Model.Returnees == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Returnees");
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Returnees (Score: 1)");
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Returnees");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Returnees (Score: 1)");
                                                      } 
                                                  </td>
                                                 <td>
                                                     @if (Model.Kuchis == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Kuchis");
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Kuchis (Score: 1)");
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Kuchis");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Kuchis (Score: 1)");
                                                      } 
                                                  </td>
                                                 <td>&nbsp;</td>
@@ -1268,11 +1242,11 @@
                                             	<td>
                                                     @if (Model.Widows == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Widows");
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Widows (Score: 1)");
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Widows");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Widows (Score: 1)");
                                                      } 
                                                 </td>
                                                 <td>&nbsp;</td>
@@ -1306,12 +1280,12 @@
         	<td>
             	<table style="width:100%;">
                 	<tr>
-                        <td style="text-align:center;background-color:#f7f7f7;">DONOR ELIGIBILITY CRITERA MET: <span>@Model.DonorCriteriaMet </span>
+                        <td style="text-align:center;background-color:#f7f7f7;">DONOR ELIGIBILITY CRITERA MET (Score: 8) <span>@Model.DonorCriteriaMet </span>
                         </td>
                        
                     </tr>
                     <tr>
-                        <td style="text-align:center;">
+                        <td style="text-align:center; color: rgba(9, 9, 9, 0.67);font-size: 14px;">
                             @if(Model.DonorCriteriaMet == "No")
                             {
                         <label>"Warning: This is a critical criteria. Project may be unsuitable"</label>
@@ -1326,12 +1300,19 @@
                                 </tr>
                                 <tr>
                                     <td>&nbsp;</td>
-                                    <td style="text-align:center;">Can eligibility be posssible until the deadline ? <span>@Model.EligibilityDealine</span></td>
+                                    <td style="text-align:center;">Can eligibility be posssible until the deadline ? (Score: 6) <span>@Model.EligibilityDealine</span></td>
                                     <td>&nbsp;</td>
                                 </tr>
                                 <tr>
                                     <td>&nbsp;</td>
-                                    <td style="text-align:center;">Possible co-partnership ? <span>@Model.CoPartnership</span></td>
+                                    <td style="text-align:center;color: rgba(9, 9, 9, 0.67);font-size: 14px;">
+                                      <label >NOTE: CHA eligibility against donor criteria(e.g. PADOR, DUNS number, sam# etc)</label>
+                                    </td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td style="text-align:center;">Possible co-partnership ? (Score: 2)<span>@Model.CoPartnership</span></td>
                                     <td>&nbsp;</td>
                                 </tr>
                                 <tr>
@@ -1372,31 +1353,31 @@
                                             	<td>
                                                      @if (Model.IncreaseReputation == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Increased Reputation");
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Increased Reputation (Score: 3)");
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Increased Reputation");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Increased Reputation (Score: 3)");
                                                      } 
                                                 </td>
                                                 <td>
                                                     @if (Model.ImproveDonorRelationship == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Improve Donor Relationship");
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Improve Donor Relationship (Score: 3)");
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Improve Donor Relationship");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Improve Donor Relationship (Score: 3)");
                                                      } 
                                                 </td>
                                                 <td>
                                                     @if (Model.GoodCause == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Good Cause");
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Good Cause (Score: 1)");
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Good Cause");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Good Cause (Score: 1)");
                                                      } 
                                                 </td>
                                                 <td>&nbsp;</td>
@@ -1406,31 +1387,31 @@
                                             	<td>
                                                      @if (Model.ImprovePerformancecapacity == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Improve Performance Capacity");
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Improve Performance Capacity (Score: 1)");
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Improve Performance Capacity");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Improve Performance Capacity (Score: 1)");
                                                      } 
                                                 </td>
                                                 <td>
                                                      @if (Model.SkillImprove == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Skill Improve");
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Skill Improve (Score: 1)");
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Skill Improve");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Skill Improve (Score: 1)");
                                                      } 
                                                 </td>
                                                 <td>
                                                      @if (Model.FillingFundingGap == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Filling Funding Gaps");
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Filling Funding Gaps (Score: 6)");
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Filling Funding Gaps");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Filling Funding Gaps (Score: 6)");
                                                      } 
                                                 </td>
                                                 <td>&nbsp;</td>
@@ -1440,31 +1421,31 @@
                                             	<td>
                                                     @if (Model.NewSoftware == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("New Software");
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("New Software (Score: 1)");
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("New Software");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("New Software (Score: 1)");
                                                      } 
                                                 </td>
                                                 <td>
                                                     @if (Model.NewEquipment == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("New Equipment");
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("New Equipment (Score: 1)");
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("New Equipment");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("New Equipment (Score: 1)");
                                                      } 
                                                 </td>
                                                 <td>
                                                     @if (Model.CoverageAreaExpansion == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Coverage Area Expansion");
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Coverage Area Expansion (Score: 1)");
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Coverage Area Expansion");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Coverage Area Expansion (Score: 1)");
                                                      } 
                                                 </td>
                                                 <td>&nbsp;</td>
@@ -1475,21 +1456,21 @@
                                                    <td>
                                                     @if (Model.NewTraining == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("New Training");
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("New Training (Score: 1)");
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("New Training");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("New Training (Score: 1)");
                                                      } 
                                                 </td>
                                                 <td>
                                                     @if (Model.Others == true)
                                                      {
-                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Other");
+                                                        <img src="@Model.CheckedIconPath" alt=""> @Html.Label("Other (Score: 1)");
                                                      }
                                                      else 
                                                      {
-                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Other");
+                                                        <img src="@Model.UnCheckedIconPath" alt=""> @Html.Label("Other (Score: 1)");
                                                      }
                                                 </td>
                                                 <td>&nbsp;</td> 
@@ -1529,7 +1510,7 @@
                                 </tr>
                                 <tr>
                                     <td>&nbsp;</td>
-                                    <td>PROJECT IN LINE WITH ORGANISATION EXPANSION GOALS: <span>@Model.ExpansionGoal</span></td>
+                                    <td>PROJECT IN LINE WITH ORGANISATION EXPANSION GOALS (Score: 1) <span>@Model.ExpansionGoal</span></td>
                                     <td>&nbsp;</td>
                                 </tr>
                                 <tr>
@@ -1626,31 +1607,31 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Staff</td>
+                                            	<td>Is staff secured? (Score: 1)</td>
                                                 <td>@Model.Staff</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
 	                                            <td>&nbsp;</td>
-                                            	<td>Project Assets</td>
+                                            	<td>Is project assets secured? (Score: 1)</td>
                                                 <td>@Model.ProjectAssets</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Suppliers</td>
+                                            	<td>Are suppliers secured? (Score: 1)</td>
                                                 <td>@Model.Suppliers</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Beneficiaries</td>
+                                            	<td>Are beneficiaries secured? (Score: 1)</td>
                                                 <td>@Model.Beneficiaries</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Overall Organization</td>
+                                            	<td>Overall Organization secured? (Score: 1)</td>
                                                 <td>@Model.OverallOrganization</td>
                                                 <td>&nbsp;</td>
                                             </tr>
@@ -1672,72 +1653,72 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Religious</td>
+                                            	<td>Religious (Score: 0.2)</td>
                                                 <td>@Model.Religious</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
 	                                            <td>&nbsp;</td>
-                                            	<td>Sectarian</td>
+                                            	<td>Sectarian (Score: 0.2)</td>
                                                 <td>@Model.Sectarian</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Ethnic</td>
+                                            	<td>Ethnic (Score: 0.2)</td>
                                                 <td>@Model.Ethinc</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Social</td>
+                                            	<td>Social (Score: 0.2)</td>
                                                 <td>@Model.Social</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Traditional</td>
+                                            	<td>Traditional (Score: 0.2)</td>
                                                 <td>@Model.Traditional</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Geographical</td>
+                                            	<td>Geographical (Score: 0.2)</td>
                                                 <td>@Model.Geographical</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Insecurity</td>
+                                            	<td>Insecurity (Score: 0.2)</td>
                                                 <td>@Model.Insecurity</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Season</td>
+                                            	<td>Season (Score: 0.2)</td>
                                                 <td>@Model.Season</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Ethnicity</td>
+                                            	<td>Ethnicity (Score: 0.1)</td>
                                                 <td>@Model.Ethnicity</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Culture</td>
+                                            	<td>Culture (Score: 0.1)</td>
                                                 <td>@Model.Culture</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Religious Beliefs</td>
+                                            	<td>Religious Beliefs (Score: 0.2)</td>
                                                 <td>@Model.ReligiousBeliefs</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
-                                            	<td colspan="4" align="center">FOCUS DIVERTING RISK <span>@Model.FocusDivertingrisk</span></td>
+                                            	<td colspan="4" align="center">FOCUS DIVERTING RISK (Score: 0.2)<span>@Model.FocusDivertingrisk</span></td>
                                             </tr>
                                             <tr>
                                             	<td colspan="4"></td>
@@ -1760,19 +1741,19 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Premature Seizure</td>
+                                            	<td>Premature Seizure (Score: 1)</td>
                                                 <td>@Model.PrematureSeizure</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Government Confiscation</td>
+                                            	<td>Government Confiscation (Score: 1)</td>
                                                 <td>@Model.GovernmentConfiscation</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Distruction by Terrorist Activity</td>
+                                            	<td>Distruction by Terrorist Activity(Score:1)</td>
                                                 <td>@Model.DesctructionByTerroristActivity</td>
                                                 <td>&nbsp;</td>
                                             </tr>
@@ -1790,7 +1771,7 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Financial Losses</td>
+                                            	<td>Financial Losses (Score: 1)</td>
                                                 <td>@Model.Financiallosses</td>
                                                 <td>&nbsp;</td>
                                             </tr>
@@ -1801,7 +1782,7 @@
                                             </tr>
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Opportunity Loss</td>
+                                            	<td>Opportunity Loss (Score: 1)</td>
                                                 <td>@Model.Opportunityloss</td>
                                                 <td>&nbsp;</td>
                                             </tr>
@@ -1822,7 +1803,7 @@
                                           </tr>                                           
                                             <tr>
                                             	<td>&nbsp;</td>
-                                            	<td>Probably Delay/Cuts in funding</td>
+                                            	<td>Probably Delay/Cuts in funding (Score: 1)</td>
                                                 <td>@Model.Probablydelaysinfunding</td>
                                                 <td>&nbsp;</td>
                                             </tr>
@@ -1838,7 +1819,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                	<td style="text-align:center;">OTHER ORGANIZATIONAL HARMS <span>@Model.OtherOrganizationalHarms</span></td>
+                                	<td style="text-align:center;">OTHER ORGANIZATIONAL HARMS (Score: 1)<span>@Model.OtherOrganizationalHarms</span></td>
                                 </tr>
                                 <tr>
                                 	<td>Describe Organisational Harms here...</td>
