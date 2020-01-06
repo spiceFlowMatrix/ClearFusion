@@ -62,7 +62,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                                                 .Sum() : 0);
 
                     int returns = (purchases.ReturnProcurementDetailList.Any()?
-                                            purchases.ReturnProcurementDetailList.Where(x=> x.IsDeleted == false && x.ProcurementId == request.Id)
+                                            purchases.ReturnProcurementDetailList.Where(x=> x.IsDeleted == false)
                                                                                 .Select(x=> x.ReturnedQuantity).DefaultIfEmpty(0).Sum() : 0);
 
                     query.CurrentBalance = (query.StartingBalance- (procured- returns));
