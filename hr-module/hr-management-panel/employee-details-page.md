@@ -14,12 +14,13 @@ This control panel allows you to perform all of the following operations on a sp
 8. Resignation
 9. Termination
 10. Deletion
+11. Audit Logs
 
 
 
 ### Toolbar
 
-![](../../.gitbook/assets/emplyee-control-panel.png)
+![](../../.gitbook/assets/image%20%2823%29.png)
 
 The Toolbar for the Hr Management Employee Control Panel currently allows the following actions:
 

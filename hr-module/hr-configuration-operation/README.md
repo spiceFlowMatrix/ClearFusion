@@ -15,7 +15,7 @@ This is where you can access and manage the bellow fields.
 7. Global Contract Configuration
 8. Attendance Groups
 
-![](../../.gitbook/assets/image%20%2856%29.png)
+![](../../.gitbook/assets/image%20%2863%29.png)
 
 ### General 
 
@@ -29,11 +29,11 @@ This is where you can add, edit and delete the bellow fields.
 6. Qualification
 7. Global Salary Tax Report Configuration
 
-![](../../.gitbook/assets/image%20%2854%29.png)
+![](../../.gitbook/assets/image%20%2860%29.png)
 
-You can add a new Education Degree by clicking the **ADD** button. Doing this will navigate you to the Education degree form where you will be required to provide information about the new education degree and you can edit education degree by clicking on pen icon![](../../.gitbook/assets/image%20%287%29.png).
+You can add a new Education Degree by clicking the **ADD** button. Doing this will navigate you to the Education degree form where you will be required to provide information about the new education degree and you can edit education degree by clicking on pen icon![](../../.gitbook/assets/image%20%289%29.png).
 
-![](../../.gitbook/assets/image%20%2842%29.png)
+![](../../.gitbook/assets/image%20%2848%29.png)
 
 ### Exit Interview
 
@@ -43,7 +43,7 @@ You can add a new Education Degree by clicking the **ADD** button. Doing this wi
 
 This is where you can add Exit interview questions by clicking on add exit interview button doing this will navigate you to the below form.
 
-![](../../.gitbook/assets/image%20%2857%29.png)
+![](../../.gitbook/assets/image%20%2864%29.png)
 
 ### Exit interview question metadata
 
@@ -63,11 +63,11 @@ This is where you can add leave policy by clciking on add leave policy it will n
 
 This is the new leave type form.
 
-![](../../.gitbook/assets/image%20%285%29.png)
+![](../../.gitbook/assets/image%20%286%29.png)
 
 You can edit leave type by clicking on pen icon and you can delete leave type by clicking on delete icon in leave policy management panel.
 
-![](../../.gitbook/assets/image%20%2844%29.png)
+![](../../.gitbook/assets/image%20%2850%29.png)
 
 ### Leave Policy metadata
 

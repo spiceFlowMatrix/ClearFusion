@@ -10,7 +10,7 @@
 6. Add Accounts
 7. Edit Accounts
 
-![](../../.gitbook/assets/image%20%2825%29.png)
+![](../../.gitbook/assets/image%20%2830%29.png)
 
 ### Asset
 

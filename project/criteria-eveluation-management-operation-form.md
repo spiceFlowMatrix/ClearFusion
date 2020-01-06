@@ -22,5 +22,7 @@ This control panel allows you to provide details for select criteria groups list
 11. Assumption
 12. Donor Eligibility Criteria
 
+![](../.gitbook/assets/image%20%2825%29.png)
+
 
 

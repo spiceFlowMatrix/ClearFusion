@@ -1,32 +1,18 @@
 # HRM Resources Control Panel
 
+## Overview
+
 The application provides the following functionality that handles HR management panel:
 
 1. Toolbar
-2. [Hr Operations Control Panel](./)
-3. [Hr Management Control Panel](./#hr-management-control-panel)
+2. Access to [Employee Control Panel](employee-details-page.md) for select employees
+3. [HRM Operations Control Panel](../employees-management-control-panel/)
 4. Adding Employees
 5. Edit Details
 6. Deleting Employees
-7. Office
-8. Actions
+7. Select the Active Office
 
-## Toolbar
-
-The Toolbar is a section of the interface that provides users with control options for running actions on Employees.
-
-The Toolbar for the Employees currently allows the following actions:
-
-![](../../.gitbook/assets/emplyee.png)
-
-1. Add Employee
-2. Delete Employee
-3. Office
-4. Actions
-
-
-
-## Hr Management Control panel
+## Resources Control Panel
 
 You can access this control panel by clicking the HR button in the Application.
 

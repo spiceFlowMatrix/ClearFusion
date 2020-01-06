@@ -10,7 +10,7 @@ This document clarifies how the Exchange Gain & Loss Calculator functions and al
 
 The application provides a single page that contains and allows users to interact with all functionality related to the Exchange Gain & Loss Calculator. This document explains how all components and functionality of this Calculator works.
 
-![](../.gitbook/assets/image%20%286%29.png)
+![](../.gitbook/assets/image%20%287%29.png)
 
 ### Prerequisites
 
@@ -28,11 +28,11 @@ All configurations are Persistent and will be saved for use across the entire ap
 
 You can change the Calculator Configuration by clicking the **CONFIGURATION** button in the top-right corner of the Calculator.
 
-![](../.gitbook/assets/image%20%2861%29.png)
+![](../.gitbook/assets/image%20%2869%29.png)
 
 This will present you with the actual Calculator Configuration Panel where you can change any of the Configurations described below.
 
-![Prototype image of the Configurations panel for Exchange Gain/Loss Calculator](../.gitbook/assets/image%20%2812%29.png)
+![Prototype image of the Configurations panel for Exchange Gain/Loss Calculator](../.gitbook/assets/image%20%2814%29.png)
 
 Once you are done making the desired changes to any of the configurations, press **SAVE** at the bottom of the form and the new configuration will be persisted.
 
@@ -76,8 +76,8 @@ Consolidation of a **NET Gain** or **Loss** for any account will result in a vou
 
 This configuration allows you to:
 
-1. Select the **Debit** account that will be transacted for **Total NET Gains** in the [Consolidation Voucher](exchange-gain-and-loss-calculator.md#consolidation-vouchers).
-2. Select the **Credit** account that will be transacted for **Total NET Losses**  in the [Consolidation Voucher](exchange-gain-and-loss-calculator.md#consolidation-vouchers).
+1. Select the **Credit** account that will be transacted for **Total NET Gains** in the [Consolidation Voucher](exchange-gain-and-loss-calculator.md#consolidation-vouchers).
+2. Select the **Debit** account that will be transacted for **Total NET Losses**  in the [Consolidation Voucher](exchange-gain-and-loss-calculator.md#consolidation-vouchers).
 
 You can change these configurations by opening [Calculator Configuration Panel](exchange-gain-and-loss-calculator.md#calculator-configuration), updating the current values selected for these configurations and clicking **SAVE**.
 
@@ -99,7 +99,7 @@ These are optional and you do not need to set values for this in order for the C
 
 Press the **TRANSACTION FILTERS** button in the [Calculator Results](exchange-gain-and-loss-calculator.md#calculator-results) toolbar.
 
-![Prototype image of the Calculator Results toolbar.](../.gitbook/assets/image%20%2846%29.png)
+![Prototype image of the Calculator Results toolbar.](../.gitbook/assets/image%20%2852%29.png)
 
 This will show you the form for the **Voucher Transaction Filters** where you can provide values for the desired filterable metadata
 
@@ -125,7 +125,7 @@ The Calculator runs calculations for all the Accounts selected in [Account Confi
 2. The Account's [Balance on Comparison Date](exchange-gain-and-loss-calculator.md#balance-on-comparison-date)
 3. The GAIN or LOSS amount for the account based on the [Balance Calculation](exchange-gain-and-loss-calculator.md#balance-calculation)
 
-![](../.gitbook/assets/image%20%2848%29.png)
+![](../.gitbook/assets/image%20%2854%29.png)
 
 ### Balance on Original Date
 
@@ -164,7 +164,7 @@ You can perform Gain/Loss Consolidation for [Selected](exchange-gain-and-loss-ca
 
 You will be directed to the Consolidation page where you can view [Voucher Transaction Previews](exchange-gain-and-loss-calculator.md#voucher-transaction-preview) for both the [Gain and Loss Consolidation Vouchers](exchange-gain-and-loss-calculator.md#consolidation-vouchers).
 
-![Prototype image of the Gain/Loss Consolidation panel](../.gitbook/assets/image%20%2819%29.png)
+![Prototype image of the Gain/Loss Consolidation panel](../.gitbook/assets/image%20%2822%29.png)
 
 Please take a moment to understand what [Consolidation Vouchers](exchange-gain-and-loss-calculator.md#consolidation-vouchers) and [Voucher Transaction Previews](exchange-gain-and-loss-calculator.md#voucher-transaction-preview) are before proceeding to [Commit ](exchange-gain-and-loss-calculator.md#committing-consolidation)the Consolidation Vouchers.
 
@@ -182,11 +182,11 @@ A Consolidation Voucher for any account \(that appears in [Calculator Results](e
 
 **NET Gain Voucher**
 
-This voucher holds one **Credit** transaction for the **NET Gain Account** selected in [NET Gain/Loss Accounts](exchange-gain-and-loss-calculator.md#net-gain-loss-accounts) and one **Debit** transaction for every selected [Calculator Result](exchange-gain-and-loss-calculator.md#selecting-calculator-results) that had resulted in an Exchange Gain.
+This voucher holds one **Credit** transaction for the **NET Gain Account** selected in [NET Gain/Loss Accounts](exchange-gain-and-loss-calculator.md#net-gain-loss-accounts). The amount for this transaction will be the **Total Exchange Gain** amount across the selected [Calculator Result](exchange-gain-and-loss-calculator.md#calculator-results) accounts. This voucher also holds one **Debit** transaction for every selected [Calculator Result](exchange-gain-and-loss-calculator.md#selecting-calculator-results) that had resulted in an Exchange Gain.
 
 #### NET Loss Voucher
 
-This voucher holds one **Debit** transaction for the **NET Loss Account** selected in [NET Gain/Loss Accounts](exchange-gain-and-loss-calculator.md#net-gain-loss-accounts) and one **Credit** transaction for every selected [Calculator Result](exchange-gain-and-loss-calculator.md#selecting-calculator-results) that had resulted in an Exchange Loss.
+This voucher holds one **Debit** transaction for the **NET Loss Account** selected in [NET Gain/Loss Accounts](exchange-gain-and-loss-calculator.md#net-gain-loss-accounts). The amount for this transaction will be the **Total Exchange Loss** amount across the selected [Calculator Result](exchange-gain-and-loss-calculator.md#calculator-results) accounts. and one **Credit** transaction for every selected [Calculator Result](exchange-gain-and-loss-calculator.md#selecting-calculator-results) that had resulted in an Exchange Loss.
 
 ### Voucher Transaction Preview
 
@@ -203,13 +203,13 @@ The preview also allows you to set the following details for the vouchers that w
 
 For the purposes of keeping data integrity, Voucher Date and Voucher Currency will be locked to whatever is specified in the [Calculator Configuration](exchange-gain-and-loss-calculator.md#calculator-configuration-panel)
 
-![Voucher details for a C/L voucher](../.gitbook/assets/image%20%2811%29.png)
+![Voucher details for a C/L voucher](../.gitbook/assets/image%20%2813%29.png)
 
 ### Committing Consolidation
 
 Once you are happy with your voucher transaction previews, you can click the **COMMIT** button in the Gain Loss Consolidation panel Toolbar.
 
-![](../.gitbook/assets/image%20%2823%29.png)
+![](../.gitbook/assets/image%20%2828%29.png)
 
 Once you do this, the application will generate the vouchers that you had previewed and also mark the accounts that were selected for Consolidation as **CONSOLIDATED.** This is so that users cannot create another Consolidation for accounts that have already been consolidated.
 

@@ -5,7 +5,7 @@
 1. Balance Sheet 
 2. Income Expense Report
 
-![](../../../.gitbook/assets/image%20%2852%29.png)
+![](../../../.gitbook/assets/image%20%2858%29.png)
 
 ### Balance Sheet
 

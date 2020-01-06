@@ -11,7 +11,7 @@ You can add a new Designation by clicking the **ADD** button. Doing this will na
 
 This is what the form looks like within the application.
 
-![](../../.gitbook/assets/image%20%2850%29.png)
+![](../../.gitbook/assets/image%20%2856%29.png)
 
 Please see the set of metadata fields specified for the exact information that users can provide for a Designation.
 
@@ -23,7 +23,7 @@ Please see the set of metadata fields specified for the exact information that u
 
 From the Designation management panel, users can use the Edit button and that will redirect them to the designation form \(the same form that was used for adding a new designation\) with all the current details filled in.
 
-![](../../.gitbook/assets/image%20%2847%29.png)
+![](../../.gitbook/assets/image%20%2853%29.png)
 
 
 

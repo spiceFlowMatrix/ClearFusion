@@ -29,7 +29,7 @@ These configuration determine
 
 You can edit and delete existing departments from department configuration tap, you can add a new Department by clicking the **ADD** button. Doing this will navigate you to the Department form where you will be required to provide information about the new department.
 
-![](../../.gitbook/assets/image%20%2838%29.png)
+![](../../.gitbook/assets/image%20%2844%29.png)
 
 ### Attendance Behavior
 

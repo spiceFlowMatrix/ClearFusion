@@ -101,7 +101,8 @@ This is a specific section that presents all entity and process metadata to user
 | Contract Duration \(in Months\) | Integer number |
 | Job Grade | [Job Grade](../../hr-module/hr-configuration-operation/#general) |
 | Job Shift | Shift |
-| Job Type | [Department](../../hr-module/hr-configuration-operation/office-configuration.md#add-department) |
+| Job Type | Part/Full Time |
+| Job Category | [Department](../../hr-module/hr-configuration-operation/office-configuration.md#add-department) |
 | Pay Currency | Currency |
 | Pay Hourly Rate | Decimal number |
 | Knowledge & Skills | Text\(long\) |
@@ -146,7 +147,8 @@ Many of the fields are mandatory or have some sort of validation or rule applied
 | Contract Duration \(in Months\) | Integer number | Manual numeric input | Contract Information | **LOCKED ON EDIT** |
 | Job Grade | [Job Grade](../../hr-module/hr-configuration-operation/#general) | Dropdown | Contract Information | **LOCKED ON EDIT** |
 | Job Shift | Shift | Dropdown | Contract Information | Options are day, night. |
-| Job Type | [Department](../../hr-module/hr-configuration-operation/office-configuration.md#add-department) | Dropdown | Contract Information | **LOCKED ON EDIT** |
+| Job Type | Part/Full Time | Dropdown | Contract Information | **LOCKED ON EDIT** |
+| Job Category | [Department](../../hr-module/hr-configuration-operation/#toolbar) | Dropdown | Contract Information | **LOCKED ON EDIT** |
 | Pay Currency | Currency | Dropdown | Contract Information | **LOCKED ON EDIT** |
 | Pay Hourly Rate | Decimal number | Manual numeric input | Contract Information |  |
 | Knowledge & Skills | Text\(long\) | Dropdown | Required Qualifications |  |
@@ -185,7 +187,8 @@ Making changes to fields are not going to be reflected to objects that had previ
 | Contract Duration \(in Months\) | Integer number | Manual numeric input | Contract Information | **LOCKED ON EDIT** |
 | Job Grade | [Job Grade](../../hr-module/hr-configuration-operation/#general) | Dropdown | Contract Information | **LOCKED ON EDIT** |
 | Job Shift | Shift | Dropdown | Contract Information | Options are day, night. |
-| Job Type | [Department](../../hr-module/hr-configuration-operation/office-configuration.md#add-department) | Dropdown | Contract Information | **LOCKED ON EDIT** |
+| Job Category | [Department](../../hr-module/hr-configuration-operation/office-configuration.md#add-department) | Dropdown | Contract Information | **LOCKED ON EDIT** |
+| Job Type | Part/Full Time | Dropdown | Contract Information | **LOCKED ON EDIT** |
 | Pay Currency | Currency | Dropdown | Contract Information | **LOCKED ON EDIT** |
 | Pay Hourly Rate | Decimal number | Manual numeric input | Contract Information |  |
 | Knowledge & Skills | Text\(long\) | Dropdown | Required Qualifications |  |
@@ -205,6 +208,6 @@ You can download this by going to the details panel for a Hiring Request and cli
 1. The **Vacancy Number/Hiring Request ID** field must show the Code for the Hiring Request.
 2. The **No.jobs/Vacancies \(Job Availability\)** field must show the value that was set for **Total Vacancies** in the Hiring Request.
 3. The **Job Status** field must show the current status of the hiring request.
-4. As a result of inherent data structure differences between this application and the old application that the organization uses, the fields Province, Nationality, and Background cannot be included in this PDF export. This information is inherent to the candidates that apply or applied for the hiring request and can be found in their details.
+4. As a result of inherent data structure differences between this application and the old application that the organization uses, the Background field cannot be included in this PDF export. This information is inherent to the candidates that apply or applied for the hiring request and can be found in their details.
 5. Since this application's payroll system follows an hourly rate system and is supposed to update details for selected candidates automatically, the **Salary Range** field cannot be supported and has been replaced by **Hourly Rate** and **Hourly Rate Currency** fields.
 

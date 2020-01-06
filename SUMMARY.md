@@ -46,7 +46,6 @@
 
 * [HRM Resources Control Panel](hr-module/hr-management-panel/README.md)
   * [Employee Control Panel](hr-module/hr-management-panel/employee-details-page.md)
-  * [Termination & Resignation](hr-module/hr-management-panel/exit-interview-form.md)
   * [Appraisals](hr-module/hr-management-panel/employee-appraisals-and-evaluation.md)
   * [History](hr-module/hr-management-panel/employee-history-page.md)
   * [Leave](hr-module/hr-management-panel/employee-leave-page.md)
@@ -54,6 +53,7 @@
   * [Contract](hr-module/hr-management-panel/contracts-page.md)
   * [Pensions & Taxes](hr-module/hr-management-panel/pensions-and-taxes.md)
   * [Salary Configuration](hr-module/hr-management-panel/payroll-page.md)
+  * [Termination & Resignation](hr-module/hr-management-panel/exit-interview-form.md)
 * [HRM Operations Control Panel](hr-module/employees-management-control-panel/README.md)
   * [Payroll](hr-module/employees-management-control-panel/monthly-payroll-register.md)
   * [Advances](hr-module/employees-management-control-panel/advances-clear-fusion.md)
