@@ -1920,7 +1920,7 @@ export class EmployeesComponent implements OnInit {
   //#region "on office Selected"
   onOfficeSelected(id) {
     this.selectedOffice = id;
-
+    this.newEmployeeId = null;
     // this.loading = true;
     // this.commonServices.setLoader(true);
     this.commonService.setEmployeeOfficeId(id);
