@@ -1,7 +1,7 @@
 <mat-card>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-7 mycontent-right">
+      <div class="col-md-7 mycontent-right" humAddScroll>
           <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
               <span class="action_header main-heading" style="margin-left: -25px;"><i class="fas fa-arrow-left" (click)="onBackClick()"></i>  Request Details
                 <hum-button (click)="editRequest()" [type]="'edit'" [text]="'EDIT'" [disabled]="IsEditDisabled" ></hum-button>
