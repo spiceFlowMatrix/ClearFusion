@@ -186,7 +186,7 @@ export class AddAnalyticalInfoComponent implements OnInit {
           (response: IResponseData) => {
             if (response.statusCode === 200) {
               this.toastr.success('Analytical info added successfully');
-              // this.AddAnalyticalInfoRefresh();
+              this.AddAnalyticalInfoRefresh();
               this.isFormSubmitted = false;
             } else {
               this.toastr.error(response.message);

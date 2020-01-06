@@ -186,7 +186,6 @@ export class RequestDetailComponent implements OnInit {
         .pipe(takeUntil(this.destroyed$))
         .subscribe(
           (response: IResponseData) => {
-            console.log(response.data);
             if (response.statusCode === 200 && response.data !== null) {
               this.hiringRequestDetails = {
                 HiringRequestId: response.data.HiringRequestId,
