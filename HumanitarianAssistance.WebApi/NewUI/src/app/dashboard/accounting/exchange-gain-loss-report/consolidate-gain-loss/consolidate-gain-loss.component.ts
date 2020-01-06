@@ -30,7 +30,7 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
   officeList$: Observable<IDropDownModel[]>;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  transactionHeaders$ = of(['Account', 'Credit Amount', 'Description']);
+  transactionHeaders$ = of(['Account', 'Credit Amount', 'Debit Amount', 'Description']);
   constructor(private fb: FormBuilder, private gainLossReportService: ExchangeGainLossReportService,
     private toastr: ToastrService, private commonLoader: CommonLoaderService) { }
 
@@ -46,6 +46,7 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
       return {
         Account: x.AccountCode + '-' + x.AccountName,
         CreditAmount: x.ResultingGainLoss,
+        DebitAmount: 0,
         Description: 'Gain'
       };
     }));
@@ -79,11 +80,12 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
   tabChanged(value) {
     if (value.index === 0) {
 
-      this.transactionHeaders$ = of(['Account', 'Credit Amount', 'Description']);
+      this.transactionHeaders$ = of(['Account', 'Credit Amount', 'Debit Amount', 'Description']);
       this.transactionList$ = of(this.gainList.map(x => {
         return {
           Account: x.AccountCode + '-' + x.AccountName,
           CreditAmount: x.ResultingGainLoss,
+          DebitAmount: 0,
           Description: 'Gain'
         };
       }));
@@ -91,10 +93,11 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
       this.getTotalGain();
     }
     if (value.index === 1) {
-      this.transactionHeaders$ = of(['Account', 'Debit Amount', 'Description']);
+      this.transactionHeaders$ = of(['Account', 'Credit Amount', 'Debit Amount', 'Description']);
       this.transactionList$ = of(this.lossList.map(x => {
         return {
           Account: x.AccountCode + '-' + x.AccountName,
+          CreditAmount: 0,
           DebitAmount: x.ResultingGainLoss,
           Description: 'Loss'
         };
