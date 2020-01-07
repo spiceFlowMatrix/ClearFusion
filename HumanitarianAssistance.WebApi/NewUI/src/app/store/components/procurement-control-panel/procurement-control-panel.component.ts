@@ -26,6 +26,7 @@ export class ProcurementControlPanelComponent implements OnInit {
   procurementId: number;
   quantity: number;
   procurementDetail: IProcurementDetailModel;
+  showAddReturnsButton = true;
 
   @ViewChild('unittype') dialogRef: TemplateRef<any>;
 
@@ -65,8 +66,9 @@ export class ProcurementControlPanelComponent implements OnInit {
   onReturnFormInIt() {
     this.addReturnsForm = this.fb.group({
       'Date': [null, Validators.required],
-      'Quantity': [1, [Validators.required, Validators.min(1), Validators.max(this.quantity)]]
+      'Quantity': [0, [Validators.required, Validators.min(1), Validators.max(this.procurementDetail.CurrentBalance)]]
     });
+    this.addReturnsForm.controls['Quantity'].markAsTouched();
   }
 
   onInItForm() {
@@ -84,6 +86,7 @@ export class ProcurementControlPanelComponent implements OnInit {
       Status: null,
       Voucher: null,
     };
+    this.onReturnFormInIt();
   }
 
   actionEvents(event: any) {
@@ -168,7 +171,12 @@ export class ProcurementControlPanelComponent implements OnInit {
 
             this.returnList = of(x.ProcurementDetail.ProcurementReturnList);
           }
+          this.toggleShowAddReturnButton();
         });
     }
+  }
+
+  toggleShowAddReturnButton() {
+    this.showAddReturnsButton = this.procurementDetail.CurrentBalance > 0 ? true : false;
   }
 }
