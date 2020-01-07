@@ -315,6 +315,7 @@ export class GLOBAL {
 
 
   public static API_Project_GetProjectBudgetLineDetail = 'Project/GetProjectBudgetLineDetail';
+  public static API_Project_GetAllProjectBudgetLineDetail = 'Project/GetAllProjectBudgetLineDetail';
   public static API_Project_GetProjectJobDetail = 'Project/GetProjectJobDetail';
   public static API_Code_GetAllProfession = 'Code/GetAllProfession';
   // public static API_Code_GetAllEducationDegree = 'Code/GetAllEducationDegree';

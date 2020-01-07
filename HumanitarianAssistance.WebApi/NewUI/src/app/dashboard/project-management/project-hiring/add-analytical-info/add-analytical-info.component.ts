@@ -4,11 +4,11 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { ToastrService } from 'ngx-toastr';
 import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { IDropDownModel } from 'src/app/store/models/purchase';
 import { takeUntil } from 'rxjs/operators';
+import { IAnalyticalInfoList, TableActionsModel } from '../models/hiring-requests-models';
 import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
-import { IAnalyticalInfoList } from '../models/hiring-requests-models';
 
 @Component({
   selector: 'app-add-analytical-info',
@@ -25,6 +25,7 @@ export class AddAnalyticalInfoComponent implements OnInit {
   analyticalInfoList$: Observable<IAnalyticalInfoList[]>;
   accountList$: Observable<IDropDownModel[]>;
   budgetLineList$: Observable<IDropDownModel[]>;
+  allBudgetLineList$: Observable<IDropDownModel[]>;
   projectList$: Observable<IDropDownModel[]>;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   onAddAnalyticalInfoRefresh = new EventEmitter();
@@ -49,11 +50,12 @@ export class AddAnalyticalInfoComponent implements OnInit {
       ProjectId: [null, [Validators.required]],
       BudgetlineId: [null, [Validators.required]],
       AccountCode: [null, [Validators.required]],
-      SalaryPercentage: [null, [Validators.required]]
+      SalaryPercentage: [null, [Validators.required]],
+      EditAnalyticalInfo: this.fb.array([], Validators.required)
     });
     //#endregion
   }
-
+  get formData() { return this.addAnalyticalInfoForm.get('EditAnalyticalInfo'); }
   ngOnInit() {
     this.projectId = this.data.projectId;
     this.hiringRequestId = this.data.hiringRequestId;
@@ -63,6 +65,7 @@ export class AddAnalyticalInfoComponent implements OnInit {
     forkJoin([
       this.getProjectList(),
       this.getBudgetLineList(),
+      this.getAllBudgetLineList(),
       this.getAccountList(),
       this.getAnalyticalInfo()
     ])
@@ -70,8 +73,9 @@ export class AddAnalyticalInfoComponent implements OnInit {
       .subscribe(result => {
         this.subscribeProjectList(result[0]);
         this.subscribeBudgetLineList(result[1]);
-        this.subscribeAccountList(result[2]);
-        this.subscribeAnalyticalInfo(result[3]);
+        this.subscribeAllBudgetLineList(result[2]);
+        this.subscribeAccountList(result[3]);
+        this.subscribeAnalyticalInfo(result[4]);
       });
   }
   //#region "Get all budget line list"
@@ -82,6 +86,23 @@ export class AddAnalyticalInfoComponent implements OnInit {
   subscribeBudgetLineList(response: any) {
     this.commonLoader.hideLoader();
     this.budgetLineList$ = of(
+      response.data.map(y => {
+        return {
+          value: y.BudgetLineId,
+          name: y.BudgetCodeName
+        };
+      })
+    );
+  }
+  //#endregion
+  //#region "Get all budget line list"
+  getAllBudgetLineList() {
+    this.commonLoader.showLoader();
+    return this.hiringRequestService.GetAllBudgetLineList();
+  }
+  subscribeAllBudgetLineList(response: any) {
+    this.commonLoader.hideLoader();
+    this.allBudgetLineList$ = of(
       response.data.map(y => {
         return {
           value: y.BudgetLineId,
@@ -135,20 +156,21 @@ export class AddAnalyticalInfoComponent implements OnInit {
   subscribeAnalyticalInfo(response: any) {
     this.commonLoader.hideLoader();
     if (response.data !== undefined) {
-      let projectName: string;
-      let accountName: string;
+      const control = <FormArray>this.addAnalyticalInfoForm.controls.EditAnalyticalInfo;
       this.analyticalInfoList$ = of(
         response.data.map(y => {
-          this.projectList$.subscribe(res => {
-            projectName = res.find(x => x.value === y.ProjectId).name;
-          });
-          this.accountList$.subscribe(res => {
-            accountName = res.find(x => x.value === y.AccountCode).name;
-          });
+            control.push(
+              this.fb.group({
+                EmployeeSalaryAnalyticalInfoId: y.EmployeeSalaryAnalyticalInfoId,
+                ProjectId: y.ProjectId,
+                BudgetlineId: y.BudgetLineId,
+                AccountCode: y.AccountCode,
+                SalaryPercentage: y.SalaryPercentage
+              }));
           return {
-            Project: projectName,
+            Project: y.ProjectId,
             Budgetline: y.BudgetLineName,
-            Account: accountName,
+            Account: y.AccountCode,
             Percentage: y.SalaryPercentage
           };
         })
@@ -171,13 +193,11 @@ export class AddAnalyticalInfoComponent implements OnInit {
   //#endregion
   //#region "On form submission"
   onFormSubmit(data: any) {
-    let allowedPercentage = 0;
-    if (this.analyticalInfoList$ !== undefined) {
-      this.analyticalInfoList$.subscribe(res => {
-        res.forEach(element => {
-          allowedPercentage = allowedPercentage + (+element.Percentage);
+   let allowedPercentage = 0;
+    if (data.EditAnalyticalInfo.length > 0) {
+      data.EditAnalyticalInfo.forEach(element => {
+          allowedPercentage = allowedPercentage + (+element.SalaryPercentage);
         });
-      });
     }
     if (this.addAnalyticalInfoForm.valid) {
       if (data.SalaryPercentage + allowedPercentage === 100) {
@@ -200,7 +220,7 @@ export class AddAnalyticalInfoComponent implements OnInit {
           }
         );
       } else {
-        this.toastr.warning('Percentage total can not be more then 100');
+        this.toastr.warning('Not Allowed');
       }
     }
   }

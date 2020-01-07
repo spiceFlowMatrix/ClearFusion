@@ -165,7 +165,7 @@ export interface TableActionsModel {
     download?: boolean;
     link?: boolean;
   };
-  subitems: {
+  subitems?: {
     button?: { status?: boolean; text?: string };
     delete?: boolean;
     edit?: boolean;
