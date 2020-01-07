@@ -51,7 +51,7 @@ export class AddAnalyticalInfoComponent implements OnInit {
       BudgetlineId: [null, [Validators.required]],
       AccountCode: [null, [Validators.required]],
       SalaryPercentage: [null, [Validators.required]],
-      EditAnalyticalInfo: this.fb.array([], Validators.required)
+      EditAnalyticalInfo: this.fb.array([])
     });
     //#endregion
   }
