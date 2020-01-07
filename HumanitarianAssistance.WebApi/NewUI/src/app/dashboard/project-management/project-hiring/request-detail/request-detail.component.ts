@@ -873,8 +873,7 @@ export class RequestDetailComponent implements OnInit {
     dialogRef.componentInstance.onAddAnalyticalInfoRefresh.subscribe(() => {
       this.selectEmployee(CandidateData);
     });
-    dialogRef.afterClosed().subscribe(() => {
-      this.selectEmployee(CandidateData);
+    dialogRef.afterClosed().subscribe(() => {''
     });
   }
   //#endregion

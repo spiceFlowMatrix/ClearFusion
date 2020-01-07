@@ -74,6 +74,24 @@ export class HiringRequestsService {
       );
   }
   //#endregion
+//#region "GetAllBudgetLineList"
+GetAllBudgetLineList() {
+  return this.globalService
+    .getList(
+      this.appurl.getApiUrl() + GLOBAL.API_Project_GetAllProjectBudgetLineDetail
+    )
+    .pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x.data.ProjectBudgetLineDetailList,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+}
+//#endregion
 
   //#region "GetOfficeList"
   GetOfficeList(): any {

@@ -4,7 +4,7 @@
   </span>
 </lib-sub-header-template>
 <mat-divider></mat-divider>
-<mat-card humAddScroll>
+<mat-card humAddScroll [height]="150">
   <div class="alert alert-warning" *ngIf="addProcurementForm.controls['IssuedQuantity'].hasError('max')" role="alert">
     <p class="txt-center-align">{{maxProcurementMessage}}</p>
   </div>

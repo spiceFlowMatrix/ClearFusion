@@ -43,7 +43,10 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                         ItemCode = y.StoreInventoryItem != null? y.StoreInventoryItem.ItemCode : null,
                                         VoucherNo = y.VoucherDetail != null ? y.VoucherDetail.ReferenceNo : null,
                                         EmployeeName = y.EmployeeDetail != null ? (y.EmployeeDetail.EmployeeCode +"-"+ y.EmployeeDetail.EmployeeName) : null,
-                                        StartingBalance = y.StoreItemPurchase.Quantity,
+                                        StartingBalance = y.IssuedQuantity,
+                                        CurrentBalance= y.IssuedQuantity- (y.ReturnProcurementDetailList.Any()? y.ReturnProcurementDetailList
+                                                                                              .Where(x=> x.IsDeleted == false)
+                                                                       .Select(x=> x.ReturnedQuantity).DefaultIfEmpty(0).Sum() : 0),
                                         ProjectId = y.Project
                                       }).FirstOrDefaultAsync();
 
@@ -55,17 +58,17 @@ namespace HumanitarianAssistance.Application.Store.Queries
                 if(query != null)
                 {
 
-                    int procured = (purchases.PurchaseOrders.Any() ? 
-                                                                purchases.PurchaseOrders.Where(x=> x.IsDeleted == false)
-                                                                .Select(x=> x.IssuedQuantity)
-                                                                .DefaultIfEmpty(0)
-                                                                .Sum() : 0);
+                    // int procured = (purchases.PurchaseOrders.Any() ? 
+                    //                                             purchases.PurchaseOrders.Where(x=> x.IsDeleted == false)
+                    //                                             .Select(x=> x.IssuedQuantity)
+                    //                                             .DefaultIfEmpty(0)
+                    //                                             .Sum() : 0);
 
-                    int returns = (purchases.ReturnProcurementDetailList.Any()?
-                                            purchases.ReturnProcurementDetailList.Where(x=> x.IsDeleted == false)
-                                                                                .Select(x=> x.ReturnedQuantity).DefaultIfEmpty(0).Sum() : 0);
+                    // int returns = (query.ReturnProcurementDetailList.Any()?
+                    //                         purchases.ReturnProcurementDetailList.Where(x=> x.IsDeleted == false)
+                    //                                                             .Select(x=> x.ReturnedQuantity).DefaultIfEmpty(0).Sum() : 0);
 
-                    query.CurrentBalance = (query.StartingBalance- (procured- returns));
+                    // query.CurrentBalance = query.StartingBalance - returns;
                     
                     var project = await _dbContext.ProjectDetail.FirstOrDefaultAsync(x=> x.IsDeleted == false && x.ProjectId == query.ProjectId);
                     query.ProjectName = project != null ? (project.ProjectCode + "-" +project.ProjectName) : null;

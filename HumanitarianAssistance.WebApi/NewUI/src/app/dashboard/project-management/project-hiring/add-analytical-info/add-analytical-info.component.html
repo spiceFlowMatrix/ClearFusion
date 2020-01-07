@@ -11,8 +11,33 @@
                 <div class="col-sm-12">
                     <span>Please submit the employee analytical info breakdown for this existing employee</span><br /><br />
                     <div class="row">
-                        <div class="col-sm-11">
-                            <app-candidate-table [headers]="analyticalInfoHeaders$" [isDefaultAction]="false" [items]="analyticalInfoList$"></app-candidate-table>
+                        <div class="col-sm-12">
+                            <div class="row" formArrayName="EditAnalyticalInfo">
+                                <div *ngFor="
+                                let Item of addAnalyticalInfoForm.get(
+                                  'EditAnalyticalInfo'
+                                )['controls'];
+                                let i = index
+                              ">
+                                    <div [formGroupName]="i">
+                                        <div class="col-lg-3 col-sm-3">
+                                            <lib-hum-dropdown formControlName="ProjectId" [options]="projectList$" [placeHolder]="'Project'" [disabled]="true"></lib-hum-dropdown>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-3">
+                                            <lib-hum-dropdown formControlName="BudgetlineId" [options]="allBudgetLineList$" [placeHolder]="'Budget Line'" [disabled]="true"></lib-hum-dropdown>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-3">
+                                            <lib-hum-dropdown formControlName="AccountCode" [options]="accountList$" [placeHolder]="'Account'"></lib-hum-dropdown>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-3">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput formControlName="SalaryPercentage" placeholder="Percentage" type="number" />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <app-candidate-table [headers]="analyticalInfoHeaders$" [isDefaultAction]="false" [items]="analyticalInfoList$" ></app-candidate-table> -->
                         </div>
                     </div>
                 </div>
