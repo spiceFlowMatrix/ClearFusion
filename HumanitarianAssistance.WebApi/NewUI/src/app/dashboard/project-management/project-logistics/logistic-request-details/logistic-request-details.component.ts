@@ -48,6 +48,7 @@ export class LogisticRequestDetailsComponent implements OnInit {
   tenderIssuerName = '';
   SelectedBidDetail = { ContactName: '' , SelectedBy: ''};
   IsEditDisabled = true;
+  viewTenderDetail = false;
 
   constructor(private dialog: MatDialog, private routeActive: ActivatedRoute,
     private logisticservice: LogisticService,
@@ -541,6 +542,10 @@ export class LogisticRequestDetailsComponent implements OnInit {
         this.toastr.error('Something went wrong!');
       }
     });
+  }
+
+  viewTenderDetails(val) {
+    this.viewTenderDetail = val;
   }
 
 }
