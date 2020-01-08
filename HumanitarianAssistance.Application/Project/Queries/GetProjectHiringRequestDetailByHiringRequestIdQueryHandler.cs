@@ -41,13 +41,15 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                            from b in bl.DefaultIfEmpty()
                                            join d in _dbContext.Department on hr.JobTypeId equals d.DepartmentId into dp
                                            from d in dp.DefaultIfEmpty()
+                                           join de in _dbContext.DesignationDetail on hr.PositionId equals de.DesignationId into del
+                                           from de in del.DefaultIfEmpty()
                                            select new ProjectHiringRequestModel
                                            {
                                                HiringRequestId = hr.HiringRequestId,
                                                HiringRequestCode = hr.HiringRequestCode,
                                                Office = o.OfficeName,
                                                JobGrade = g.GradeName,
-                                               Position = p.ProfessionName,
+                                               Position = de.Designation,
                                                TotalVacancies = hr.TotalVacancies,
                                                FilledVacancies = hr.FilledVacancies != null ? hr.FilledVacancies : 0,
                                                PayCurrency = c.CurrencyName,
