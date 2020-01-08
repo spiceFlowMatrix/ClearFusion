@@ -95,5 +95,8 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public EducationDegreeMaster EducationDegreeMaster { get; set; }
         [ForeignKey("PositionId")]
         public DesignationDetail DesignationDetail { get; set; }
+        public int? JobCategoryId { get; set; }
+        [ForeignKey("JobCategoryId")]
+        public Department DepartmentDetails { get; set; }
     }
 }
