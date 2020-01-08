@@ -44,7 +44,7 @@ export class PurchaseListComponent implements OnInit {
     'Purchased Quantity', 'Item Code', 'Project Id', 'Item Code Description', 'Description', 'BudgetLine Name',
     'Depreciation Rate', 'Master Inventory Code', 'Office Code', 'Receipt Date', 'Invoice Date',
     'Received From Location', 'Status']);
-  subListHeaders$ = of(['Id', 'Date', 'Employee', 'Must Return', 'Procured Balance', 'Status']);
+  subListHeaders$ = of(['Id', 'Date', 'Employee', 'Must Return', 'Procurement Balance (Quantity)', 'Status']);
   procurementList$: Observable<IProcurementList[]>;
   hideColums: Observable<{ headers?: string[], items?: string[] }>;
   hideColumsSub: Observable<{ headers?: string[], items?: string[] }>;
@@ -80,7 +80,7 @@ export class PurchaseListComponent implements OnInit {
 
   ngOnInit() {
     this.hideColumsSub = of({
-      headers: ['Date', 'Employee', 'Must Return', 'Procured Balance', 'Status'],
+      headers: ['Date', 'Employee', 'Must Return', 'Procurement Balance (Quantity)', 'Status'],
       items: ['IssueDate', 'Employee', 'MustReturn', 'ProcuredAmount', 'Status']
     })
     this.getScreenSize();
