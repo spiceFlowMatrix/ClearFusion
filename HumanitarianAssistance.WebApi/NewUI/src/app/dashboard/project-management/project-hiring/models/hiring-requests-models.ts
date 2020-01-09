@@ -95,7 +95,7 @@ export interface IHiringRequestModel {
   Position?: number;
   Organization?: string;
   Office?: number;
-  ContractType?: string;
+  ContractType?: number;
   ContractDuration?: number;
   Gender?: number;
   Nationality?: number;

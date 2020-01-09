@@ -34,6 +34,7 @@ export class AddHiringRequestComponent implements OnInit {
   hiringRequestCode: string;
   addHiringRequestForm: FormGroup;
   jobTypeList$: Observable<IDropDownModel[]>;
+  contractTypeList$: Observable<IDropDownModel[]>;
   professionList$: Observable<IDropDownModel[]>;
   officeList$: Observable<IDropDownModel[]>;
   jobShiftList$: Observable<IDropDownModel[]>;
@@ -91,8 +92,13 @@ export class AddHiringRequestComponent implements OnInit {
       { name: 'Night', value: 2 }
     ] as IDropDownModel[]);
     this.jobTypeList$ = of([
-      { name: 'Part Time', value: 1 },
-      { name: 'Full Time', value: 2 }
+      { name: 'Part-time', value: 1 },
+      { name: 'Full-time', value: 2 }
+    ] as IDropDownModel[]);
+    this.contractTypeList$ = of([
+      { name: 'Probationary', value: 1 },
+      { name: 'Part-time', value: 2 },
+      { name: 'Permanent/Full-time', value: 3 }
     ] as IDropDownModel[]);
   }
 

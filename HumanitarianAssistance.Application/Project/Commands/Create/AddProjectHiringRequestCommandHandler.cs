@@ -47,7 +47,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                     SubmissionGuidlines = request.SubmissionGuidelines,
                     ClosingDate = request.ClosingDate,
                     ContractDuration = request.ContractDuration,
-                    ContractType = request.ContractType,
+                    ContractTypeId = request.ContractType,
                     CountryId = request.Nationality,
                     GenderId = request.Gender,
                     MinimumEducationLevel = request.MinEducationLevel,

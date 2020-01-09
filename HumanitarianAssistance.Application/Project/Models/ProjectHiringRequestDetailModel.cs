@@ -11,7 +11,7 @@ namespace HumanitarianAssistance.Application.Project.Models {
         public int? Position { get; set; }
         public string Organization { get; set; }
         public int? Office { get; set; }
-        public string ContractType { get; set; }
+        public int? ContractType { get; set; }
         public int? ContractDuration { get; set; }
         public int? Gender { get; set; }
         public int? Nationality { get; set; }

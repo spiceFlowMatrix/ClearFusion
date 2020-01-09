@@ -46,9 +46,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                     join pdl in _dbContext.ProvinceDetails 
                     on hr.ProvinceId equals pdl.ProvinceId into pdd from pdl in pdd.DefaultIfEmpty () 
                     join cdl in _dbContext.CountryDetails 
-                    on hr.CountryId equals cdl.CountryId into cdd from cdl in cdd.DefaultIfEmpty () 
-                    join dpl in _dbContext.Department 
-                    on hr.JobTypeId equals dpl.DepartmentId into dpld from dpl in dpld.DefaultIfEmpty () 
+                    on hr.CountryId equals cdl.CountryId into cdd from cdl in cdd.DefaultIfEmpty ()  
                     select new HiringRequestFormPdfModel {
                         //JobCategory = "-",
                             MinimumEducation = ed.Name,
@@ -57,7 +55,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                            // Organization = hr.Organization,
                             Office = o.OfficeName,
                             Province = pdl.ProvinceName,
-                            ContractType = hr.ContractType,
+                            ContractType = hr.ContractTypeId == 1 ? "Probationary" :  hr.ContractTypeId == 2 ? "Part-time" : "Permanent/Full-time",
                             ContractDuration = hr.ContractDuration,
                             Gender = hr.GenderId == 1 ? "Male" : hr.GenderId == 2 ? "Female" : "Other",
                             HourlyPayRate = hr.HourlyRate,
@@ -68,7 +66,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                             Country = cdl.CountryName,
                             FilledVacancies = hr.FilledVacancies,
                             JobType = hr.JobTypeId == 1 ? "Part Time" : "Full Time",
-                            JobCategory = dpl.DepartmentName,
+                            JobCategory = d.DepartmentName,
                             Shift = hr.Shift == 1 ? "Day" : "Night",
                             JobStatus = ((HiringRequestStatus)(hr.HiringRequestStatus)).ToString(),
                             Experience = hr.Experience,
@@ -80,22 +78,20 @@ namespace HumanitarianAssistance.Application.Project.Queries {
 
                 List<HiringRequestFormPdfModel> summary = new List<HiringRequestFormPdfModel> ();
                 summary.Add (new HiringRequestFormPdfModel {
-                        // JobCategory = requestDetail.JobCategory,
                         MinimumEducation = requestDetail.MinimumEducation,
                         TotalVacancies = requestDetail.TotalVacancies,
                         Position = requestDetail.Position,
-                        // Organization = requestDetail.Organization,
                         Office = requestDetail.Office,
                         Province = requestDetail.Province,
                         ContractType = requestDetail.ContractType,
                         ContractDuration = requestDetail.ContractDuration,
                         Gender = requestDetail.Gender,
-                        // SalaryRange = requestDetail.SalaryRange,
                         AnnouncingDate = requestDetail.AnnouncingDate,
                         ClosingDate = requestDetail.ClosingDate,
                         Country = requestDetail.Country,
                         FilledVacancies = requestDetail.FilledVacancies,
                         JobType = requestDetail.JobType,
+                        JobCategory = requestDetail.JobCategory,
                         Shift = requestDetail.Shift,
                         JobStatus = requestDetail.JobStatus,
                         Experience = requestDetail.Experience,

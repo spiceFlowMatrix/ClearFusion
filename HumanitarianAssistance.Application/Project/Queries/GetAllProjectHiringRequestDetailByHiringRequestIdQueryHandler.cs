@@ -34,7 +34,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                         Position = s.PositionId,
                         Organization = s.Organization,
                         Office = s.OfficeId,
-                        ContractType = s.ContractType,
+                        ContractType = s.ContractTypeId,
                         ContractDuration = s.ContractDuration,
                         Gender = s.GenderId,
                         Nationality = s.CountryId,

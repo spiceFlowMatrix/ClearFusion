@@ -74,7 +74,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                     projectHiringRequest.SubmissionGuidlines = request.SubmissionGuidelines;
                     projectHiringRequest.ClosingDate = request.ClosingDate;
                     projectHiringRequest.ContractDuration = request.ContractDuration;
-                    projectHiringRequest.ContractType = request.ContractType;
+                    projectHiringRequest.ContractTypeId = request.ContractType;
                     projectHiringRequest.CountryId = request.Nationality;
                     projectHiringRequest.GenderId = request.Gender;
                     projectHiringRequest.CurrencyId= request.PayCurrency;

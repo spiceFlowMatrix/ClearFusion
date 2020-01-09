@@ -89,9 +89,10 @@
                     <h4> Contract Details </h4>
                     <div class="row">
                         <div class="col-lg-6 col-sm-6">
-                            <mat-form-field class="example-full-width">
-                                <input matInput formControlName="ContractType" placeholder="Contract Type" />
-                            </mat-form-field>
+                            <lib-hum-dropdown formControlName="ContractType" [validation]="
+                              addHiringRequestForm.controls['ContractType'].hasError('required')
+                            " [options]="contractTypeList$" [placeHolder]="'Contract Type'" [disabled]="!isEditable">
+                            </lib-hum-dropdown>
                         </div>
                         <div class="col-lg-6 col-sm-6">
                             <mat-form-field class="example-full-width">
