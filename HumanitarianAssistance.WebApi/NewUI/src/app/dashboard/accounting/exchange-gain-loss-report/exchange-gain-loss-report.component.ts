@@ -370,6 +370,7 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
 
   subscribeType(event) {
     this.type = '';
+    this.selection.clear();
     this.getExchangeGainLossData();
   }
 
