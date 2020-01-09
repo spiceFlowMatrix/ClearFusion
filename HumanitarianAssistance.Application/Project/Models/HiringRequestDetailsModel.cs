@@ -15,7 +15,7 @@ namespace HumanitarianAssistance.Application.Project.Models {
         public int? JobType { get; set; }
         public string AnouncingDate { get; set; }
         public string ClosingDate { get; set; }
-        public string ContractType { get; set; }
+        public int? ContractType { get; set; }
         public int? ContractDuration { get; set; }
         public string JobShift { get; set; }
         public string Profession { get; set; }

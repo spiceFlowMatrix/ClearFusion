@@ -5,13 +5,13 @@ namespace HumanitarianAssistance.Application.Project.Models {
         public long? HiringRequestId { get; set; }
          public string HiringRequestCode { get; set; }
         public long? ProjectId { get; set; }
-        public long? JobCategory { get; set; }
+        public int? JobCategory { get; set; }
         public string MinEducationLevel { get; set; }
         public int? TotalVacancy { get; set; }
         public int? Position { get; set; }
         public string Organization { get; set; }
         public int? Office { get; set; }
-        public string ContractType { get; set; }
+        public int? ContractType { get; set; }
         public int? ContractDuration { get; set; }
         public int? Gender { get; set; }
         public int? Nationality { get; set; }
