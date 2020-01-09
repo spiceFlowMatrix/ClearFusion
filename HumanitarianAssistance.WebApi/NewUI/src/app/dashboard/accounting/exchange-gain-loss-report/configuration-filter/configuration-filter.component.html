@@ -49,12 +49,14 @@
         </div>
         <div class="col-sm-12">
           <lib-hum-dropdown [validation]="gainLossConfigForm.controls['DebitAccount'].hasError('required')"
-            [options]="accounts$" formControlName='DebitAccount ' [placeHolder]="'Credit Account for NET Gains'">
+            [options]="accounts$" formControlName='DebitAccount' [placeHolder]="'Credit Account for NET Gains'"
+            (change)="getCreditAccountSelectedValue($event)">
           </lib-hum-dropdown>
         </div>
         <div class="col-sm-12">
           <lib-hum-dropdown [validation]="gainLossConfigForm.controls['CreditAccount'].hasError('required')"
-            [options]="accounts$" formControlName='CreditAccount' [placeHolder]="'Debit Account for NET Losses'">
+            [options]="accounts$" formControlName='CreditAccount' [placeHolder]="'Debit Account for NET Losses'"
+            (change)="getDebitAccountSelectedValue($event)">
           </lib-hum-dropdown>
         </div>
         <br>
