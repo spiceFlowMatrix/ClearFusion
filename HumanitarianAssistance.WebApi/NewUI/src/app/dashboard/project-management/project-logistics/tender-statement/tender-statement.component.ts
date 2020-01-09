@@ -82,7 +82,7 @@ export class TenderStatementComponent implements OnInit {
   submitTenderBid() {
     const dialogRef = this.dialog.open(SubmitTenderBidComponent, {
       width: '500px',
-      data: {RequestId: this.requestId}
+      data: {RequestId: this.requestId, ExistingBids: this.tenderBidsList}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -104,7 +104,8 @@ export class TenderStatementComponent implements OnInit {
   editTenderBid(BidId) {
     const dialogRef = this.dialog.open(SubmitTenderBidComponent, {
       width: '500px',
-      data: {RequestId: this.requestId, BidDetail: this.tenderBidsList.filter(x => x.BidId === BidId)[0]}
+      data: {RequestId: this.requestId, BidDetail: this.tenderBidsList.filter(x => x.BidId === BidId)[0],
+        ExistingBids: this.tenderBidsList}
     });
 
     dialogRef.afterClosed().subscribe(result => {

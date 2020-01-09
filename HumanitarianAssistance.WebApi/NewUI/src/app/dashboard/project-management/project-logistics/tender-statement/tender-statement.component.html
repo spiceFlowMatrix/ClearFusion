@@ -37,7 +37,12 @@
         </thead>
         <tbody *ngFor="let data of tenderBidsList">
           <tr data-toggle="collapse" [attr.data-target]="'#' + data.BidId">
-            <td>{{data.Name}}</td>
+            <td>{{data.Name}} - {{data.Profile_Experience + data.OfferValidity +
+              data.TOR_SOWAcceptance + data.Securities_BankGuarantee +
+              data.OfferDocumentation +
+              data.Company_GoodsSpecification + data.Service_Warranty +
+              data.Certification_GMP_COPP + data.WorkExperience +
+              data.DeliveryDate}}</td>
             <td>{{data.SecurityDate | date: 'dd/MM/yyyy'}}</td>
             <td>{{data.QuotedAmount}}</td>
             <td><i (click)="editTenderBid(data.BidId)" class="fa fa-edit"></i></td>
