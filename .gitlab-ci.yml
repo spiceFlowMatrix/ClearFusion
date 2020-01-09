@@ -74,7 +74,7 @@ build_backend:
         - dotnet restore --packages ${NUGET_PACKAGES_DIRECTORY}
     script:
         - dotnet publish -c Release -o ${RELEASE_OBJECTS_DIRECTORY} --no-restore
-        - cp -r ${SOURCE_CODE_PATH}NewUI/dist/ ${SOURCE_CODE_PATH}${RELEASE_OBJECTS_DIRECTORY}NewUI/dist
+        - cp -r ${SOURCE_CODE_PATH}NewUI/dist/ ${SOURCE_CODE_PATH}${RELEASE_OBJECTS_DIRECTORY}NewUI
         - cp -r ${SOURCE_CODE_PATH}OldUI/dist/ ${SOURCE_CODE_PATH}${RELEASE_OBJECTS_DIRECTORY}OldUI
     after_script:
         - find ${SOURCE_CODE_PATH}${RELEASE_OBJECTS_DIRECTORY}
