@@ -26,6 +26,24 @@ import { FileSourceEntityTypes } from '../enum';
       case FileSourceEntityTypes.GoodsRecievedDocument:
       objectName = 'GoodsRecievedDocument/' + entityId + '/';
       break;
+      case FileSourceEntityTypes.LogisticSupplierInvoice:
+      objectName = 'LogisticSupplierInvoice/' + entityId + '/';
+      break;
+      case FileSourceEntityTypes.LogisticSupplierWarranty:
+      objectName = 'LogisticSupplierWarranty/' + entityId + '/';
+      break;
+      case FileSourceEntityTypes.TenderProposalDocument:
+      objectName = 'TenderProposalDocument/' + entityId + '/';
+      break;
+      case FileSourceEntityTypes.TenderRFPDocument:
+      objectName = 'TenderRFPDocument/' + entityId + '/';
+      break;
+      case FileSourceEntityTypes.TenderAnnouncementDocument:
+      objectName = 'TenderAnnouncementDocument/' + entityId + '/';
+      break;
+      case FileSourceEntityTypes.TenderBidContractLetter:
+      objectName = 'TenderBidContractLetter/' + entityId + '/';
+      break;
     }
 
     return objectName;
