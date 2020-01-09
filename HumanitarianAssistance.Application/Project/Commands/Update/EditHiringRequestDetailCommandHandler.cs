@@ -63,7 +63,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                     projectHiringRequest.BudgetLineId= request.BudgetLine;
                     projectHiringRequest.Background = request.Background;
                     projectHiringRequest.JobStatus = request.JobStatus;
-                    projectHiringRequest.JobId = request.JobCategory;
+                    projectHiringRequest.JobCategoryId = request.JobCategory;
                     projectHiringRequest.JobTypeId= request.JobType;
 
                     projectHiringRequest.KnowladgeAndSkillRequired = request.KnowledgeAndSkillsRequired;

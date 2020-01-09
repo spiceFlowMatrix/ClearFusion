@@ -38,7 +38,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                     JobTypeId= request.JobType,
                     Background = request.Background,
                     JobStatus = request.JobStatus,
-                    JobId = request.JobCategory,
+                    JobCategoryId = request.JobCategory,
                     KnowladgeAndSkillRequired = request.KnowledgeAndSkillsRequired,
                     SalaryRange = request.SalaryRange,
                     Shift = request.JobShift,

@@ -95,7 +95,7 @@
                         </div>
                         <div class="col-lg-6 col-sm-6">
                             <mat-form-field class="example-full-width">
-                                <input matInput formControlName="ContractDuration" placeholder="Contract Duration (Month)" type="number" />
+                                <input matInput formControlName="ContractDuration" placeholder="Contract Duration (In Months)" type="number" />
                             </mat-form-field>
                         </div>
                         <div class="col-lg-6 col-sm-6">
@@ -112,7 +112,13 @@
                         <div class="col-lg-6 col-sm-6">
                             <lib-hum-dropdown formControlName="JobType" [validation]="
                 addHiringRequestForm.controls['JobType'].hasError('required')
-              " [options]="departmentList$" [placeHolder]="'Job Type'" [disabled]="!isEditable">
+              " [options]="jobTypeList$" [placeHolder]="'Job Type'" [disabled]="!isEditable">
+                            </lib-hum-dropdown>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <lib-hum-dropdown formControlName="JobCategory" [validation]="
+              addHiringRequestForm.controls['JobCategory'].hasError('required')
+            " [options]="departmentList$" [placeHolder]="'Job Category'" [disabled]="!isEditable">
                             </lib-hum-dropdown>
                         </div>
                         <div class="col-lg-6 col-sm-6">
@@ -150,7 +156,7 @@
                         </div>
                         <div class="col-lg-6 col-sm-6">
                             <mat-form-field class="example-full-width">
-                                <input matInput formControlName="Experience" placeholder="Experience" type="number" />
+                                <input matInput formControlName="Experience" placeholder="Experience  (In Years)" type="number" />
                             </mat-form-field>
                         </div>
                     </div>

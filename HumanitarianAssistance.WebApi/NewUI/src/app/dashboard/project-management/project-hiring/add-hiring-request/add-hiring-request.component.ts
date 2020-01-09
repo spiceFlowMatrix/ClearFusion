@@ -33,6 +33,7 @@ export class AddHiringRequestComponent implements OnInit {
   hiringRequestId: number;
   hiringRequestCode: string;
   addHiringRequestForm: FormGroup;
+  jobTypeList$: Observable<IDropDownModel[]>;
   professionList$: Observable<IDropDownModel[]>;
   officeList$: Observable<IDropDownModel[]>;
   jobShiftList$: Observable<IDropDownModel[]>;
@@ -71,6 +72,7 @@ export class AddHiringRequestComponent implements OnInit {
       AnouncingDate: [null, [Validators.required]],
       ClosingDate: [null, [Validators.required]],
       JobType: [null, [Validators.required]],
+      JobCategory: [null, [Validators.required]],
       PayCurrency: [null, [Validators.required]],
       PayHourlyRate: [null, [Validators.required]],
       JobShift: [null, [Validators.required]],
@@ -87,6 +89,10 @@ export class AddHiringRequestComponent implements OnInit {
     this.jobShiftList$ = of([
       { name: 'Day', value: 1 },
       { name: 'Night', value: 2 }
+    ] as IDropDownModel[]);
+    this.jobTypeList$ = of([
+      { name: 'Part Time', value: 1 },
+      { name: 'Full Time', value: 2 }
     ] as IDropDownModel[]);
   }
 
@@ -331,6 +337,7 @@ export class AddHiringRequestComponent implements OnInit {
               AnouncingDate: response.data.AnouncingDate,
               ClosingDate: response.data.ClosingDate,
               JobType: response.data.JobType,
+              JobCategory: response.data.JobCategory,
               JobShift: response.data.JobShift,
               Experience: response.data.Experience,
               BudgetLine: response.data.BudgetLine,

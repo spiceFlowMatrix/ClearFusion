@@ -28,7 +28,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                         HiringRequestId = s.HiringRequestId,
                         HiringRequestCode = s.HiringRequestCode,
                         ProjectId = s.ProjectId,
-                        JobCategory = s.JobId,
+                        JobCategory = s.JobCategoryId,
                         MinEducationLevel = s.MinimumEducationLevel,
                         TotalVacancy = s.TotalVacancies,
                         Position = s.PositionId,
