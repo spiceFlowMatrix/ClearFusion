@@ -42,15 +42,16 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
     private router: Router,
     public toastr: ToastrService,
     private globalService: GlobalSharedService,
-    private appurl: AppUrlService) { }
+    private appurl: AppUrlService) {
+      this.logisticservice.goodsRecievedChange$.subscribe(val => {
+        this.goodsNoteSubmitted = val;
+        if (this.goodsNoteSubmitted) {
+          this.getGoodsRecievedNote();
+        }
+      });
+    }
 
   ngOnInit() {
-    this.logisticservice.goodsRecievedChange$.subscribe(val => {
-      this.goodsNoteSubmitted = val;
-      if (this.goodsNoteSubmitted) {
-        this.getGoodsRecievedNote();
-      }
-    });
   }
 
   ngOnChanges() {
@@ -102,7 +103,7 @@ export class PurchaseOrderComponent implements OnInit, OnChanges {
       dialogRef.afterClosed().subscribe(result => {
         if (result !== undefined && result.data != null ) {
           this.logisticservice.goodsRecievedChange$.next(true);
-          this.getGoodsRecievedNote();
+          // this.getGoodsRecievedNote();
           } else {
           }
       });
