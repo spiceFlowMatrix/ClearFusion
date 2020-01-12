@@ -219,9 +219,6 @@ deploy_smoprod:
           --wait
           clearfusion
           ./k8s-chart
-    only:
-        refs:
-            - master
 
 .functions: &functions |
     # Functions
