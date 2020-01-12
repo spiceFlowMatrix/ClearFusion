@@ -219,10 +219,9 @@ deploy_smoprod:
           --wait
           clearfusion
           ./k8s-chart
-    after_script:
-        - echo ${POSTGRES_DB_USER}
-        - echo ${POSTGRES_DB_PASSWORD}
-        - echo ${APPLICATION_GCP_SERVICEACCOUNT}
+    only:
+        refs:
+            - master
 
 .functions: &functions |
     # Functions
