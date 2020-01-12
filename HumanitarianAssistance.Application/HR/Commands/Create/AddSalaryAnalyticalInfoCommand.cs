@@ -14,7 +14,15 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
         public long BudgetLineId { get; set; }
         public double SalaryPercentage { get; set; }
         public int EmployeeID { get; set; }
-
         public string BudgetLineName { get; set; }
+        public List<AnalyticalInfoSubItems> EditAnalyticalInfo { get; set; }
+    }
+    public class AnalyticalInfoSubItems
+    {
+        public int EmployeeSalaryAnalyticalInfoId { get; set; }
+        public int? AccountCode { get; set; }
+        public long ProjectId { get; set; }
+        public long BudgetLineId { get; set; }
+        public double SalaryPercentage { get; set; }
     }
 }

@@ -1661,7 +1661,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(command);
         }
         [HttpGet]
-        public async Task<ApiResponse> GetProjectBudgetLineDetail()
+        public async Task<ApiResponse> GetAllProjectBudgetLineDetail()
         {
             return await _mediator.Send(new GetallBudgetLineDetailQuery());
         }

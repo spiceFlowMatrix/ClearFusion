@@ -63,7 +63,7 @@
         <h4>Returns</h4>
       </div>
       <div class="col-md-11">
-        <hum-button [type]="'add'" *ngIf="quantity > 0" [text]="'ADD RETURNS'" (click)="addReturns()"></hum-button>
+        <hum-button *ngIf="showAddReturnsButton" [type]="'add'" [text]="'ADD RETURNS'" (click)="addReturns()"></hum-button>
       </div>
     </div>
     <div class="row">
@@ -90,7 +90,8 @@
         <div class="col-sm-6">
           <mat-form-field>
             <input type="number" matInput formControlName="Quantity" placeholder="Quantity">
-            <mat-error *ngIf="addReturnsForm.controls['Quantity'].hasError('max')">Max return quantity allowed is {{quantity}}</mat-error>
+            <mat-error *ngIf="addReturnsForm.controls['Quantity'].hasError('max')">Max return quantity allowed is {{procurementDetail.CurrentBalance}}</mat-error>
+            <mat-error *ngIf="addReturnsForm.controls['Quantity'].hasError('min')">Return quantity should be above 0</mat-error>
             <mat-error>Required</mat-error>
           </mat-form-field>
         </div>
