@@ -481,9 +481,7 @@
                             <td width="33%"
                               style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:right;font-weight:600; margin-top:0px;">
                             </td>
-                            <td width="30%"
-                              style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
-                              translate>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;" translate>
                               Employer Taxpayer Identification Number (Employer Organization)
                             </td>
                             <td width="10"
@@ -863,11 +861,8 @@
                         print out must have the same 14 fields.</td>
                     </tr>
                     <tr>
-                      <td
-                        style="border-top:2px solid #ddd; border-bottom:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
-                        translate>It's not mandatory to use the actual four parts printed 'Annual and tax withholding
-                        statement'. Employers with computerized system may wish to print out information from payroll
-                        database. Any computerized print out must have the same 14 fields.</td>
+                      <td style="border-top:2px solid #ddd; border-bottom:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
+                        translate>longtext</td>
                     </tr>
                     <tr>
                       <td>
@@ -919,7 +914,7 @@
                                 style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;"
                                 width="33%">
                                 <!-- {{employeeTaxReportData != null ? employeeTaxReportData.OfficerName : ""}} -->
-                                <!-- {{salaryTaxReportForm != null ? salaryTaxReportForm.EmployerAuthorizedOfficerName : ""}} -->
+                                {{salaryTaxReportForm != null ? salaryTaxReportForm.EmployerAuthorizedOfficerName : ""}}
                               </td>
                               <td
                                 style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
@@ -945,7 +940,7 @@
                                 style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:center;font-weight:600; margin-top:0px;"
                                 width="33%">
                                 <!-- {{employeeTaxReportData != null ? employeeTaxReportData.Position : ""}} -->
-                                <!-- {{salaryTaxReportForm != null ? salaryTaxReportForm.PositionAuthorizedOfficer : ""}} -->
+                                {{salaryTaxReportForm != null ? salaryTaxReportForm.PositionAuthorizedOfficer : ""}}
                               </td>
                               <td
                                 style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
