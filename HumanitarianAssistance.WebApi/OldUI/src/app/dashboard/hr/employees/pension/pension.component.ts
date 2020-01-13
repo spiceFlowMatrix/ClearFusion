@@ -8,10 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { applicationPages } from '../../../../shared/application-pages-enum';
 import { CommonService } from '../../../../service/common.service';
 import { AppSettingsService } from '../../../../service/app-settings.service';
-import { Observable } from 'rxjs/Observable';
-import { groupBy, mergeMap, toArray, map } from 'rxjs/operators';
+import { StringifyOptions } from 'querystring';
 
-declare var jquery: any;
 declare let jsPDF;
 declare var $: any;
 @Component({
@@ -46,7 +44,8 @@ export class PensionComponent implements OnInit {
   employeeTaxReportData: EmployeeTaxReportModel;
   salaryTaxDataSource: any;
   salaryTaxReportForm: any;
-  pensionReportList: PensionReportModel[]= [];
+  pensionReportList: PensionReportModel[] = [];
+  fileName: any;
 
   constructor(
     private commonService: CommonService,
@@ -154,27 +153,34 @@ export class PensionComponent implements OnInit {
                 }
               );
               this.pensionList.forEach(a => {
-                if ( this.pensionReportList.filter(x => x.Year === a.Year).length === 0) {
+                if (
+                  this.pensionReportList.filter(x => x.Year === a.Year)
+                    .length === 0
+                ) {
                   this.pensionReportList.push({
                     Year: a.Year,
-                    PensionReportList: [{
+                    PensionReportList: [
+                      {
+                        Date: a.Date,
+                        GrossSalary: a.GrossSalary,
+                        PensionDeduction: a.PensionDeduction,
+                        PensionRate: a.PensionRate,
+                        Profit: a.Profit,
+                        Total: a.Total
+                      }
+                    ]
+                  });
+                } else {
+                  this.pensionReportList
+                    .filter(x => x.Year === a.Year)[0]
+                    .PensionReportList.push({
                       Date: a.Date,
                       GrossSalary: a.GrossSalary,
                       PensionDeduction: a.PensionDeduction,
                       PensionRate: a.PensionRate,
                       Profit: a.Profit,
                       Total: a.Total
-                    }]
-                  });
-                } else {
-                  this.pensionReportList.filter(x => x.Year === a.Year)[0].PensionReportList.push({
-                    Date: a.Date,
-                    GrossSalary: a.GrossSalary,
-                    PensionDeduction: a.PensionDeduction,
-                    PensionRate: a.PensionRate,
-                    Profit: a.Profit,
-                    Total: a.Total
-                  });
+                    });
                 }
               });
               if (
@@ -443,15 +449,41 @@ export class PensionComponent implements OnInit {
 
   //#region "Generate Pension Pdf"
   generatePensionPdf() {
-    const pdf = new jsPDF('p', 'pt', 'legal'),
-      pdfConf = {
-        pagesplit: false,
-        background: '#fff'
-      };
-
-    pdf.addHTML($('#pensionReportPdf'), 0, 15, pdfConf, function() {
-      pdf.save('Employee-Pension.pdf');
-    });
+    const pdfModel: EmployeePensionReportPdfModel = {
+      EmployeeId: this.employeeId,
+      Currency: this.currencyData.CurrencyCode,
+      EmployeeName: this.selectedEmployeeName,
+      PensionReportModel: this.pensionReportList,
+      PensionDeductionTotal: this.pensionDeductionTotal,
+      PensionProfitTotal: this.pensionProfitTotal,
+      Total: this.pensionTotal
+    };
+    if (this.pensionReportList != null && this.pensionReportList.length > 0) {
+      this.hrService
+        .DownloadPDF(
+          this.setting.getBaseUrl() + GLOBAL.API_Pdf_GetEmployeePensionPdf,
+          pdfModel
+        )
+        .subscribe(
+          x => {
+            this.fileName = 'EmployeePensionReport' + '.pdf';
+            if (window.navigator.msSaveOrOpenBlob) {
+              window.navigator.msSaveOrOpenBlob(x, this.fileName);
+            } else {
+              const link = document.createElement('a');
+              link.setAttribute('type', 'hidden');
+              link.download = this.fileName;
+              link.href = window.URL.createObjectURL(x);
+              document.body.appendChild(link);
+              link.click();
+            }
+          },
+          error => {
+            this.toastr.warning(error);
+          }
+        );
+    }
+   
   }
   //#endregion
 
@@ -603,4 +635,14 @@ export interface OpeningPensionDetail {
   Date: any;
   CurrencyName: any;
   Amount: any;
+}
+
+export class EmployeePensionReportPdfModel {
+  EmployeeId: any;
+  EmployeeName: string;
+  Currency: string;
+  PensionReportModel: PensionReportModel[];
+  PensionDeductionTotal: any;
+  PensionProfitTotal: any;
+  Total: any;
 }
