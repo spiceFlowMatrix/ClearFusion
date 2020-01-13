@@ -696,7 +696,7 @@
                     </div>
                     <dx-scroll-view showScrollbar="always" direction="both">
                         <form action="your-action" (submit)="submitPension(pensionForm)">
-                            <dx-form id="formg" [formData]="pensionForm" [colCount]="2" [readOnly]="false" 
+                            <dx-form id="formg" [formData]="pensionForm" [colCount]="2"  [readOnly]="false"
                                 [showColonAfterLabel]="true" [showValidationSummary]="true"
                                 validationGroup="addGeneralDetails" (onFieldDataChanged)="onFieldDataChanged($event)">
                                 <dxi-item dataField="PensionDate" editorType="dxDateBox" 
@@ -710,30 +710,29 @@
 
                                 <dxo-paging [enabled]="true"></dxo-paging>
                                 <dxo-editing mode="row" [allowDeleting]="false" [allowAdding]="true">
-                                        <dxo-texts addRow="Add Opening Pension"></dxo-texts> 
+                                    <dxo-texts addRow="Add Opening Pension"></dxo-texts>
                                 </dxo-editing>
 
-                                <dxi-column dataField="CurrencyId" caption="Currency"  >
+                                <dxi-column dataField="CurrencyId" caption="Currency" >
                                     <dxo-lookup [dataSource]="currencycodeList" displayExpr="CurrencyName"
                                         valueExpr="CurrencyId">
                                     </dxo-lookup>
-                                <dxi-validation-rule type="required"> </dxi-validation-rule>
+                                    <dxi-validation-rule type="required"> </dxi-validation-rule>
                                 </dxi-column>
-                                <dxi-column dataField="Amount" editorType="dxNumberBox" dataType="number" 
-                                [editorOptions]="{ min: 0 }">
-                                <dxi-validation-rule type="required"> </dxi-validation-rule>
-                            </dxi-column>
+                                <dxi-column dataField="Amount" editorType="dxNumberBox" dataType="number"
+                                    [editorOptions]="{ min: 0 }">
+                                    <dxi-validation-rule type="required"> </dxi-validation-rule>
+                                </dxi-column>
 
                             </dx-data-grid>
                             <br>
                             <div class="row">
                                 <div class="col-sm-12 align-right">
-                                    <dx-button text="Save" type="success"
-                                         [useSubmitBehavior]="true" [disabled] = "disableSubmitFlag" >
+                                    <dx-button text="Save" type="success" [useSubmitBehavior]="true"
+                                        [disabled]="disableSubmitFlag">
                                     </dx-button>
-                                    <dx-button text="Cancel" (onClick)="popupPensionDetail = false"
-             >
-                               </dx-button>
+                                    <dx-button text="Cancel" (onClick)="popupPensionDetail = false">
+                                    </dx-button>
                                 </div>
                             </div>
                         </form>
