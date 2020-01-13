@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Application.Store.Models;
-using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Common.Helpers; 
 using HumanitarianAssistance.Domain.Entities.Accounting;
 using HumanitarianAssistance.Persistence;
 using MediatR;
@@ -206,7 +206,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     Status= x.StatusAtTimeOfIssue != null? x.StatusAtTimeOfIssue.StatusName : "",
                     DepreciatedCost = x.UnitCost * x.Quantity,
                     UnitCost= x.UnitCost
-                }).ToList();
+                }).OrderBy(y=> y.PurchaseId).ToList();
 
                 // Calculate Depreciation Cost when Depreciation Comparision Date is not null
                 if(model.StorePurchaseList.Any())
@@ -252,6 +252,8 @@ namespace HumanitarianAssistance.Application.Store.Queries
             {
                 throw ex;
             }
+
+           model.StorePurchaseList= model.StorePurchaseList.OrderBy(y=> y.PurchaseId).ToList();
 
             return await _pdfExportService.ExportToPdf(model, "Pages/PdfTemplates/StorePurchaseReport.cshtml", true);
         }
