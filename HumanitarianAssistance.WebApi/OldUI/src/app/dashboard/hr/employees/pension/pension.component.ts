@@ -1,29 +1,26 @@
-import { Component, OnInit, Input } from "@angular/core";
-import { HrService } from "../../hr.service";
-import { Router } from "@angular/router";
-import { ToastrService } from "ngx-toastr";
-import { GLOBAL } from "../../../../shared/global";
-import { CodeService } from "../../../code/code.service";
-import { TranslateService } from "@ngx-translate/core";
-import {
-  applicationPages,
-  applicationModule
-} from "../../../../shared/application-pages-enum";
-import { CommonService } from "../../../../service/common.service";
-import { AppSettingsService } from "../../../../service/app-settings.service";
+import { Component, OnInit, Input } from '@angular/core';
+import { HrService } from '../../hr.service';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { GLOBAL } from '../../../../shared/global';
+import { CodeService } from '../../../code/code.service';
+import { TranslateService } from '@ngx-translate/core';
+import { applicationPages } from '../../../../shared/application-pages-enum';
+import { CommonService } from '../../../../service/common.service';
+import { AppSettingsService } from '../../../../service/app-settings.service';
+import { StringifyOptions } from 'querystring';
 
-declare var jquery: any;
 declare let jsPDF;
 declare var $: any;
 @Component({
-  selector: "app-pension",
-  templateUrl: "./pension.component.html",
-  styleUrls: ["./pension.component.css"]
+  selector: 'app-pension',
+  templateUrl: './pension.component.html',
+  styleUrls: ['./pension.component.css']
 })
 export class PensionComponent implements OnInit {
   @Input() employeeId: number;
-
   pensionList: EmployeePensionReportModel[];
+  openingPensionList: OpeningPensionDetail[];
   financialYearList: CurrentFinancialYearModel[];
   financialId: number;
   selectedEmployeeName: string;
@@ -44,9 +41,11 @@ export class PensionComponent implements OnInit {
   pensionInfoLoading = false;
   salaryTaxReportloading = false;
   employeePensionReportFlag = true;
-
   employeeTaxReportData: EmployeeTaxReportModel;
   salaryTaxDataSource: any;
+  salaryTaxReportForm: any;
+  pensionReportList: PensionReportModel[] = [];
+  fileName: any;
 
   constructor(
     private commonService: CommonService,
@@ -57,7 +56,7 @@ export class PensionComponent implements OnInit {
     private setting: AppSettingsService,
     private toastr: ToastrService
   ) {
-    translate.setDefaultLang("fa");
+    translate.setDefaultLang('fa');
   }
 
   ngOnInit() {
@@ -66,11 +65,12 @@ export class PensionComponent implements OnInit {
     this.GetSalaryTaxReportContent();
     this.initializeForm();
     this.humanitarianReportLogoPath =
-      this.setting.getDocUrl() + "humanitarianReportLogo.PNG";
-    this.selectedEmployeeName = localStorage.getItem("SelectedEmployeeName");
+      this.setting.getDocUrl() + 'humanitarianReportLogo.PNG';
+    this.selectedEmployeeName = localStorage.getItem('SelectedEmployeeName');
     this.isEditingAllowed = this.commonService.IsEditingAllowed(
       applicationPages.Employees
     );
+    this.getOpeningPensionDetail(this.employeeId);
   }
 
   initializeForm() {
@@ -113,7 +113,7 @@ export class PensionComponent implements OnInit {
   getAllPensionList(yearId: number[], currencyId: number) {
     this.showHidePensionInfoLoading(true);
     const model = {
-      OfficeId: parseInt(localStorage.getItem("EMPLOYEEOFFICEID"), 32),
+      OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID'), 32),
       EmployeeId: this.employeeId,
       FinancialYearId: yearId,
       CurrencyId: currencyId
@@ -136,18 +136,53 @@ export class PensionComponent implements OnInit {
               data.data.EmployeePensionModel.EmployeePensionReportList.forEach(
                 element => {
                   this.pensionList.push({
+                    Year: new Date(
+                      new Date(element.Date).getTime() -
+                        new Date().getTimezoneOffset() * 60000
+                    ).getFullYear(),
                     Date: new Date(
                       new Date(element.Date).getTime() -
                         new Date().getTimezoneOffset() * 60000
                     ),
                     GrossSalary: element.GrossSalary,
-                    PensionDeduction: element.PensionDeduction,
+                    PensionDeduction: element.PensionDeduction.toFixed(4),
                     PensionRate: element.PensionRate,
                     Profit: element.Profit,
-                    Total: element.Total
+                    Total: element.Total.toFixed(4)
                   });
                 }
               );
+              this.pensionList.forEach(a => {
+                if (
+                  this.pensionReportList.filter(x => x.Year === a.Year)
+                    .length === 0
+                ) {
+                  this.pensionReportList.push({
+                    Year: a.Year,
+                    PensionReportList: [
+                      {
+                        Date: a.Date,
+                        GrossSalary: a.GrossSalary,
+                        PensionDeduction: a.PensionDeduction,
+                        PensionRate: a.PensionRate,
+                        Profit: a.Profit,
+                        Total: a.Total
+                      }
+                    ]
+                  });
+                } else {
+                  this.pensionReportList
+                    .filter(x => x.Year === a.Year)[0]
+                    .PensionReportList.push({
+                      Date: a.Date,
+                      GrossSalary: a.GrossSalary,
+                      PensionDeduction: a.PensionDeduction,
+                      PensionRate: a.PensionRate,
+                      Profit: a.Profit,
+                      Total: a.Total
+                    });
+                }
+              });
               if (
                 data.data.EmployeePensionModel.EmployeePensionReportList[0] !=
                   null &&
@@ -162,11 +197,15 @@ export class PensionComponent implements OnInit {
                 )[0];
               }
 
-              this.pensionProfitTotal =
-                data.data.EmployeePensionModel.PensionProfitTotal;
-              this.pensionDeductionTotal =
-                data.data.EmployeePensionModel.PensionDeductionTotal;
-              this.pensionTotal = data.data.EmployeePensionModel.PensionTotal;
+              this.pensionProfitTotal = data.data.EmployeePensionModel.PensionProfitTotal.toFixed(
+                4
+              );
+              this.pensionDeductionTotal = data.data.EmployeePensionModel.PensionDeductionTotal.toFixed(
+                4
+              );
+              this.pensionTotal = data.data.EmployeePensionModel.PensionTotal.toFixed(
+                4
+              );
               this.previousPensionDeduction =
                 data.data.EmployeePensionModel.PreviousPensionDeduction;
               this.previousPensionRate =
@@ -192,16 +231,48 @@ export class PensionComponent implements OnInit {
         error => {
           this.showHideSalaryTaxInfoLoading(false);
           if (error.StatusCode === 500) {
-            this.toastr.error("Internal Server Error....");
+            this.toastr.error('Internal Server Error....');
           } else if (error.StatusCode === 401) {
-            this.toastr.error("Unauthorized Access Error....");
+            this.toastr.error('Unauthorized Access Error....');
           } else if (error.StatusCode === 403) {
-            this.toastr.error("Forbidden Error....");
+            this.toastr.error('Forbidden Error....');
           } else {
-            this.toastr.error("Something went wrong!");
+            this.toastr.error('Something went wrong!');
           }
         }
       );
+  }
+
+  //#endregion
+
+  //#region "Get pension detail"
+  getOpeningPensionDetail(employeeId: any) {
+    if (employeeId !== undefined && employeeId != null) {
+      this.hrService
+        .GetAllDetailsById(
+          this.setting.getBaseUrl() +
+            GLOBAL.API_HR_GetEmployeeOpeningPensionDetail,
+          'employeeId',
+          employeeId
+        )
+        .subscribe(data => {
+          if (data != null) {
+            this.openingPensionList = [];
+            if (data.StatusCode === 200 && data.ResponseData != null) {
+              data.ResponseData.forEach(element => {
+                this.openingPensionList.push({
+                  Date: new Date(
+                    new Date(element.Date).getTime() -
+                      new Date().getTimezoneOffset() * 60000
+                  ),
+                  CurrencyName: element.CurrencyName,
+                  Amount: element.Amount
+                });
+              });
+            }
+          }
+        });
+    }
   }
   //#endregion
 
@@ -230,18 +301,18 @@ export class PensionComponent implements OnInit {
 
             this.financialId = this.financialYearList[0].FinancialYearId;
           } else if (data.StatusCode === 400) {
-            this.toastr.error("Something went wrong !");
+            this.toastr.error('Something went wrong !');
           }
         },
         error => {
           if (error.StatusCode === 500) {
-            this.toastr.error("Internal Server Error....");
+            this.toastr.error('Internal Server Error....');
           } else if (error.StatusCode === 401) {
-            this.toastr.error("Unauthorized Access Error....");
+            this.toastr.error('Unauthorized Access Error....');
           } else if (error.StatusCode === 403) {
-            this.toastr.error("Forbidden Error....");
+            this.toastr.error('Forbidden Error....');
           } else {
-            this.toastr.error("Something went wrong !");
+            this.toastr.error('Something went wrong !');
           }
         }
       );
@@ -266,20 +337,20 @@ export class PensionComponent implements OnInit {
               });
             });
           } else if (data.StatusCode === 400) {
-            this.toastr.error("Something went wrong !");
+            this.toastr.error('Something went wrong !');
           } else {
-            this.toastr.error("Something went wrong !");
+            this.toastr.error('Something went wrong !');
           }
         },
         error => {
           if (error.StatusCode === 500) {
-            this.toastr.error("Internal Server Error....");
+            this.toastr.error('Internal Server Error....');
           } else if (error.StatusCode === 401) {
-            this.toastr.error("Unauthorized Access Error....");
+            this.toastr.error('Unauthorized Access Error....');
           } else if (error.StatusCode === 403) {
-            this.toastr.error("Forbidden Error....");
+            this.toastr.error('Forbidden Error....');
           } else {
-            this.toastr.error("Something went wrong !");
+            this.toastr.error('Something went wrong !');
           }
         }
       );
@@ -288,7 +359,7 @@ export class PensionComponent implements OnInit {
 
   getAllSalaryTaxData(yearId: number, currencyId: number) {
     const model = {
-      OfficeId: parseInt(localStorage.getItem("EMPLOYEEOFFICEID"), 32),
+      OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID'), 32),
       EmployeeId: this.employeeId,
       FinancialYearId: yearId,
       CurrencyId: currencyId
@@ -311,7 +382,7 @@ export class PensionComponent implements OnInit {
               this.salaryTaxDataSource = data.data.SalaryTaxReportModelList;
               this.showHideSalaryTaxInfoLoading(false);
             } else if (data.StatusCode === 400) {
-              this.toastr.error("Something went wrong!");
+              this.toastr.error('Something went wrong!');
               this.showHideSalaryTaxInfoLoading(false);
             }
           } else {
@@ -327,16 +398,14 @@ export class PensionComponent implements OnInit {
 
   //#endregion
 
-  salaryTaxReportForm: any;
   //#region "GetSalaryTaxReportContent"
   GetSalaryTaxReportContent() {
-    const officeId = parseInt(localStorage.getItem("EMPLOYEEOFFICEID"));
-
+    const officeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
     this.codeService
       .GetAllDetailsById(
         this.setting.getBaseUrl() +
           GLOBAL.API_Code_GetSalaryTaxReportContentDetails,
-        "officeId",
+        'officeId',
         officeId
       )
       .subscribe(
@@ -372,35 +441,61 @@ export class PensionComponent implements OnInit {
 
   generateExcel(e) {
     window.open(
-      "data:application/vnd.ms-excel," +
-        encodeURIComponent($("div[id$=pensionReportExcel]").html())
+      'data:application/vnd.ms-excel,' +
+        encodeURIComponent($('div[id$=pensionReportExcel]').html())
     );
     e.preventDefault();
   }
 
   //#region "Generate Pension Pdf"
   generatePensionPdf() {
-    const pdf = new jsPDF("p", "pt", "legal"),
-      pdfConf = {
-        pagesplit: false,
-        background: "#fff"
-      };
-
-    pdf.addHTML($("#pensionReportPdf"), 0, 15, pdfConf, function() {
-      pdf.save("Employee-Pension.pdf");
-    });
+    const pdfModel: EmployeePensionReportPdfModel = {
+      EmployeeId: this.employeeId,
+      Currency: this.currencyData.CurrencyCode,
+      EmployeeName: this.selectedEmployeeName,
+      PensionReportModel: this.pensionReportList,
+      PensionDeductionTotal: this.pensionDeductionTotal,
+      PensionProfitTotal: this.pensionProfitTotal,
+      Total: this.pensionTotal
+    };
+    if (this.pensionReportList != null && this.pensionReportList.length > 0) {
+      this.hrService
+        .DownloadPDF(
+          this.setting.getBaseUrl() + GLOBAL.API_Pdf_GetEmployeePensionPdf,
+          pdfModel
+        )
+        .subscribe(
+          x => {
+            this.fileName = 'EmployeePensionReport' + '.pdf';
+            if (window.navigator.msSaveOrOpenBlob) {
+              window.navigator.msSaveOrOpenBlob(x, this.fileName);
+            } else {
+              const link = document.createElement('a');
+              link.setAttribute('type', 'hidden');
+              link.download = this.fileName;
+              link.href = window.URL.createObjectURL(x);
+              document.body.appendChild(link);
+              link.click();
+            }
+          },
+          error => {
+            this.toastr.warning(error);
+          }
+        );
+    }
+   
   }
   //#endregion
 
   //#region "Generate Pdf"
   generateSalaryTaxPdf() {
-    const pdf = new jsPDF("p", "pt", "legal"),
+    const pdf = new jsPDF('p', 'pt', 'legal'),
       pdfConf = {
         pagesplit: false,
-        background: "#fff"
+        background: '#fff'
       };
-    pdf.addHTML($("#salaryTaxPdf"), 0, 0, pdfConf, function() {
-      pdf.save("Employee-Salary-tax.pdf");
+    pdf.addHTML($('#salaryTaxPdf'), 0, 0, pdfConf, function() {
+      pdf.save('Employee-Salary-tax.pdf');
     });
   }
   //#endregion
@@ -415,7 +510,7 @@ export class PensionComponent implements OnInit {
     const model = {
       EmployeeId: employeeId,
       FinancialYearId: year,
-      OfficeId: parseInt(localStorage.getItem("EMPLOYEEOFFICEID"), 32)
+      OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID'), 32)
     };
 
     this.hrService
@@ -433,11 +528,11 @@ export class PensionComponent implements OnInit {
               this.employeeTaxReportData = data.data.EmployeeTaxReport;
             } else {
               if (data.data.EmployeeTaxReport == null) {
-                this.toastr.warning("No record found !");
+                this.toastr.warning('No record found !');
                 this.showHidePensionInfoLoading(false);
               } else if (data.StatusCode === 400) {
                 // failStatusCode
-                this.toastr.error("Something went wrong !");
+                this.toastr.error('Something went wrong !');
                 this.showHidePensionInfoLoading(false);
               }
             }
@@ -449,11 +544,11 @@ export class PensionComponent implements OnInit {
         error => {
           this.showHidePensionInfoLoading(false);
           if (error.StatusCode === 500) {
-            this.toastr.error("Internal Server Error....");
+            this.toastr.error('Internal Server Error....');
           } else if (error.StatusCode === 401) {
-            this.toastr.error("Unauthorized Access Error....");
+            this.toastr.error('Unauthorized Access Error....');
           } else if (error.StatusCode === 403) {
-            this.toastr.error("Forbidden Error....");
+            this.toastr.error('Forbidden Error....');
           }
         }
       );
@@ -482,6 +577,7 @@ export class CurrentFinancialYearModel {
   StartDate: any;
 }
 export class EmployeePensionReportModel {
+  Year: any;
   Date: any;
   GrossSalary: any;
   PensionRate: any;
@@ -490,12 +586,23 @@ export class EmployeePensionReportModel {
   Total: any;
 }
 
+export interface PensionReportModel {
+  Year: any;
+  PensionReportList: PensionReportList[];
+}
+export interface PensionReportList {
+  Date: any;
+  GrossSalary: any;
+  PensionRate: any;
+  PensionDeduction: any;
+  Profit: any;
+  Total: any;
+}
 export interface CurrencyCodeModel {
   CurrencyId: number;
   CurrencyCode: string;
   CurrencyName: string;
 }
-
 
 class EmployeeTaxReportModel {
   TaxPayerIdentificationNumber: any;
@@ -523,4 +630,19 @@ class EmployeeTaxReportModel {
 interface PensionFilterModel {
   CurrencyId: number;
   FinancialYearId: number[];
+}
+export interface OpeningPensionDetail {
+  Date: any;
+  CurrencyName: any;
+  Amount: any;
+}
+
+export class EmployeePensionReportPdfModel {
+  EmployeeId: any;
+  EmployeeName: string;
+  Currency: string;
+  PensionReportModel: PensionReportModel[];
+  PensionDeductionTotal: any;
+  PensionProfitTotal: any;
+  Total: any;
 }

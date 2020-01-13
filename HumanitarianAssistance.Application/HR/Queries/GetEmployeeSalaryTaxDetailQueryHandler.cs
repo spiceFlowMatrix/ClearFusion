@@ -8,13 +8,14 @@ using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Domain.Entities.Accounting;
+using HumanitarianAssistance.Domain.Entities.HR;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Application.HR.Queries
 {
-    public class GetEmployeeSalaryTaxDetailQueryHandler: IRequestHandler<GetEmployeeSalaryTaxDetailQuery, ApiResponse>
+    public class GetEmployeeSalaryTaxDetailQueryHandler : IRequestHandler<GetEmployeeSalaryTaxDetailQuery, ApiResponse>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
 
@@ -34,8 +35,14 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                 if (financialYear.Any())
                 {
+
+                    EmployeePayroll currencyDetail = await _dbContext.EmployeePayroll.FirstOrDefaultAsync(x => x.IsDeleted == false && x.EmployeeID == request.EmployeeId);
+                    if (currencyDetail == null)
+                    {
+                        throw new Exception(StaticResource.EmployeePayrollCurrencyNotSet);
+                    }
                     // take distinct startyear and endyear else records may repeat itself
-                    var distinctFinancialYears= financialYear.Select(x=> new { StartYear= x.StartDate.Year, EndYear= x.EndDate.Year}).Distinct();
+                    var distinctFinancialYears = financialYear.Select(x => new { StartYear = x.StartDate.Year, EndYear = x.EndDate.Year }).Distinct();
 
                     List<SalaryTaxReportModel> salaryTaxReportListFinal = new List<SalaryTaxReportModel>();
 
@@ -44,8 +51,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                         List<SalaryTaxReportModel> salaryTaxReportList = _dbContext.EmployeePaymentTypes.Where(x => x.IsDeleted == false && x.IsApproved == true && x.OfficeId == request.OfficeId && x.EmployeeID == request.EmployeeId && x.PayrollYear == financialYearDetail.StartYear)
                         .Select(x => new SalaryTaxReportModel
                         {
-                            Currency = _dbContext.CurrencyDetails.Where(o => o.CurrencyId == x.CurrencyId).FirstOrDefault().CurrencyName,
-                            CurrencyId = x.CurrencyId,
+                            Currency = _dbContext.CurrencyDetails.Where(o => o.CurrencyId == currencyDetail.CurrencyId).FirstOrDefault().CurrencyName,
+                            CurrencyId = currencyDetail.CurrencyId,
                             Office = _dbContext.OfficeDetail.Where(o => o.OfficeId == x.OfficeId).FirstOrDefault().OfficeName,
                             Date = new DateTime(x.PayrollYear.Value, x.PayrollMonth.Value, 1),
                             TotalTax = x.SalaryTax
