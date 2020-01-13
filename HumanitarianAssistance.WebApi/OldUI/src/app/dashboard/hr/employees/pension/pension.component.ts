@@ -128,7 +128,7 @@ export class PensionComponent implements OnInit {
         data => {
           if (data != null) {
             this.pensionList = [];
-
+            this.pensionReportList = [];
             if (
               data.StatusCode === 200 &&
               data.data.EmployeePensionModel != null
