@@ -1,3 +1,17 @@
-<p>
-  employee-leave works!
-</p>
+<div>
+  <div class="row" humAddScroll>
+    <div class="col-sm-2">
+      <h4>Leave Balances</h4>
+    </div>
+    <div class="col-sm-3">
+      <hum-button [type]="'add'" [text]="'ADD NEW LEAVE TYPE FROM POLICY'"></hum-button>
+    </div>
+    <div class="col-sm-2">
+      <hum-button [type]="'text'" [text]="'PDF EXPORT'"></hum-button>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <hum-table [headers]="leaveListHeaders$" [items]="leaveList$" [isDefaultAction]="false" (actionClick)="actionEvents($event)"
+           [actions]="actions" [hideColums$]="hideColums$"></hum-table>
+</div>

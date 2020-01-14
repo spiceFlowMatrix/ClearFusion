@@ -181,6 +181,8 @@ export class GLOBAL {
   public static API_Department_EditDepartment = 'Code/EditDepartment';
   public static API_Department_DeleteDepartment = 'Code/DeleteDepartment';
 
+  public static API_EmployeeDetail_GetEmployeeDetailById = 'EmployeeDetail/GetEmployeeDetailById';
+
   public static API_Code_AddAttendanceGroups = 'Code/AddAttendanceGroups';
   public static API_Code_EditAttendanceGroups = 'Code/EditAttendanceGroups';
   public static API_Code_DeleteAttendanceGroups = 'Code/DeleteAttendanceGroups';

@@ -27,9 +27,10 @@ import { EmployeeSalaryConfigComponent } from './components/employee-salary-conf
 import { EmployeeResignationComponent } from './components/employee-resignation/employee-resignation.component';
 import { EmployeeDetailComponent } from './components/employee-detail/employee-detail.component';
 import { MatTabsModule } from '@angular/material';
+import { EmployeeLeaveAddComponent } from './components/employee-leave-add/employee-leave-add.component';
 
 @NgModule({
-  declarations: [EmployeeListComponent, EntryComponentComponent, EmployeeControlPanelComponent, EmployeeHistoryComponent, EmployeeLeaveComponent, EmployeeAttendanceComponent, EmployeeContractComponent, EmployeeSalaryConfigComponent, EmployeeResignationComponent, EmployeeDetailComponent],
+  declarations: [EmployeeListComponent, EntryComponentComponent, EmployeeControlPanelComponent, EmployeeHistoryComponent, EmployeeLeaveComponent, EmployeeAttendanceComponent, EmployeeContractComponent, EmployeeSalaryConfigComponent, EmployeeResignationComponent, EmployeeDetailComponent, EmployeeLeaveAddComponent],
   imports: [
     CommonModule,
     HrRoutingModule,

@@ -5,9 +5,8 @@
     <hum-button [type]="'cancel'" [text]="'TERMINATE'"></hum-button>
   </span>
   <div class="action_section">
-    <hum-button [type]="'text'" [text]="'VIEW DETAILS'"></hum-button>
+    <hum-button [type]="'text'" [text]="'VIEW DETAILS'" (click)="showEmployeeDetails()"></hum-button>
   </div>
-
 </lib-sub-header-template>
 <mat-divider></mat-divider>
 
@@ -52,3 +51,6 @@
     </mat-tab-group>
   </div>
 </div>
+  <app-employee-detail [employeeId] ="employeeId"></app-employee-detail>
+
+
