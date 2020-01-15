@@ -8,41 +8,37 @@ using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-namespace HumanitarianAssistance.Application.HR.Queries
-{
-    public class GetAllEmployeeSalaryBudgetsQueryHandler : IRequestHandler<GetAllEmployeeSalaryBudgetsQuery, ApiResponse>
-    {
+namespace HumanitarianAssistance.Application.HR.Queries {
+    public class GetAllEmployeeSalaryBudgetsQueryHandler : IRequestHandler<GetAllEmployeeSalaryBudgetsQuery, ApiResponse> {
         private HumanitarianAssistanceDbContext _dbContext;
 
-        public GetAllEmployeeSalaryBudgetsQueryHandler(HumanitarianAssistanceDbContext dbContext)
-        {
+        public GetAllEmployeeSalaryBudgetsQueryHandler (HumanitarianAssistanceDbContext dbContext) {
             _dbContext = dbContext;
         }
 
-        public async Task<ApiResponse> Handle(GetAllEmployeeSalaryBudgetsQuery request, CancellationToken cancellationToken)
-        {
-            ApiResponse response = new ApiResponse();
-            try
-            {
-                var employeeHistoryRecord = await _dbContext.EmployeeSalaryBudget.Where(x => x.IsDeleted == false && x.EmployeeID == request.EmployeeId).ToListAsync();
+        public async Task<ApiResponse> Handle (GetAllEmployeeSalaryBudgetsQuery request, CancellationToken cancellationToken) {
+            ApiResponse response = new ApiResponse ();
+            try {
 
-                if (employeeHistoryRecord.Count > 0)
-                {
-                    response.data.EmployeeSalaryBudgetList = employeeHistoryRecord.Select(x => new EmployeeSalaryBudgetModel
-                    {
-                        EmployeeSalaryBudgetId = x.EmployeeSalaryBudgetId,
-                        EmployeeID = x.EmployeeID,
-                        BudgetDisbursed = x.BudgetDisbursed,
-                        CurrencyId = x.CurrencyId,
-                        SalaryBudget = x.SalaryBudget,
-                        Year = x.Year
-                    }).ToList();
+                var employeeHistoryRecord = await (from u in _dbContext.EmployeeSalaryBudget.Where (x => x.IsDeleted == false && x.EmployeeID == request.EmployeeId) 
+                join c in _dbContext.CurrencyDetails on u.CurrencyId equals c.CurrencyId
+                into cd from c in cd.DefaultIfEmpty () 
+                select new EmployeeSalaryBudgetModel {
+                    EmployeeSalaryBudgetId = u.EmployeeSalaryBudgetId,
+                        EmployeeID = u.EmployeeID,
+                        BudgetDisbursed = u.BudgetDisbursed,
+                        CurrencyId = u.CurrencyId,
+                        SalaryBudget = u.SalaryBudget,
+                        Year = u.Year,
+                        CurrencyName = c.CurrencyName
+                }).ToListAsync ();
+                if (employeeHistoryRecord.Count > 0) {
+                    response.data.EmployeeSalaryBudgetList = employeeHistoryRecord;
+
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 response.StatusCode = StaticResource.failStatusCode;
                 response.Message = StaticResource.SomethingWrong + ex.Message;
             }

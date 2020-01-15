@@ -1,0 +1,55 @@
+<div>
+    <h1 mat-dialog-title>
+        Add Information Three References Other Then Relatives
+        <button mat-icon-button [mat-dialog-close] class="pull-right">
+<mat-icon aria-label="clear">clear</mat-icon>
+</button>
+    </h1>
+    <form class="example-form" [formGroup]="referenceDetailForm" (ngSubmit)="onFormSubmit(referenceDetailForm.value)">
+        <div mat-dialog-content>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="Name" placeholder="Name" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="Relationship" placeholder="Relationship" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="Position" placeholder="Position" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="Organization" placeholder="Organization" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="PhoneNo" placeholder="Phone Number" type="number" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="Email" placeholder="Email" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div mat-dialog-actions class="pull-right">
+                <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+                <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
+                <hum-button (click)="onCancelPopup()" [type]="'cancel'" [text]="'cancel'"></hum-button>
+            </div>
+        </div>
+    </form>
+</div>
