@@ -1,0 +1,20 @@
+<lib-sub-header-template [headerClass]="'sub_header_template_main2'">
+  <span class="action_header">Purchases & Procurements
+  </span>
+  <div class="action_section">
+    <hum-button [type]="'text'" [text]="'PDF EXPORT'" (click)="onPdfExportClick()"></hum-button>
+    <hum-button [type]="'text'" [text]="'FIELD CONFIGURATION'" (click)="showConfiguration()"></hum-button>
+  </div>
+
+</lib-sub-header-template>
+<mat-divider></mat-divider>
+<mat-card [ngStyle]="scrollStyles">
+  <mat-card>
+    <div class="row">
+      <div class="col-md-12">
+      </div>
+    </div>
+  </mat-card>
+</mat-card>
+<!--
+<app-purchase-filed-config></app-purchase-filed-config> -->
