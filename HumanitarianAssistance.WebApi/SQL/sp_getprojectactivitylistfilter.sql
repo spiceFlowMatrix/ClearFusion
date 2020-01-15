@@ -1,3 +1,4 @@
+DROP FUNCTION IF EXISTS public.get_project_projectactivitylist_filter(bigint, text, text, text, text, text, integer[], bigint[], boolean, boolean, boolean, integer, integer, integer, integer, integer, integer, boolean, boolean, boolean, integer);
 CREATE OR REPLACE FUNCTION public.get_project_projectactivitylist_filter(
 	project_id bigint,
 	activity_description text DEFAULT ''::text,
