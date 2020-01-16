@@ -1450,6 +1450,27 @@ export class HrService {
       .catch(this.handleError);
   }
 
+
+  //#region "Delete employee History"
+  DeleteEmployeeDocument(url: string, model: any) {
+    const Myheaders = new Headers();
+    Myheaders.append(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('authenticationtoken')
+    );
+    Myheaders.append('Content-Type', 'application/json');
+    const options = new RequestOptions({ headers: Myheaders });
+    return this.http
+      .post(url, JSON.stringify(model), options)
+      .map((response: Response) => {
+        const journal = response.json();
+        if (journal) {
+          return journal;
+        }
+      })
+      .catch(this.handleError);
+  }
+  //#endregion
     private handleError(error: Response) {
 
     return Observable.throw(error.json().error || 'Server error');
