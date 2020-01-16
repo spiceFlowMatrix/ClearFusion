@@ -545,6 +545,7 @@ public static API_FileManagement_GetSignedURLByDocumentFileId = 'FileManagement/
 public static API_FileManagement_GetDocumentFiles = 'FileManagement/GetDocumentFiles';
 
 
+public static API_FileManagement_DeleteDocumentFiles = 'FileManagement/DeleteDocumentFiles';
 
 
 

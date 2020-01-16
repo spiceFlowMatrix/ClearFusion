@@ -408,6 +408,10 @@
                                 <i aria-hidden="true" class="fa fa-plus-circle"></i>
                             </a>
                         </div>
+                        <div>
+                           <a  href="javascript:void(0);" (click)="onDeleteDocument($event)"> <i aria-hidden="true" class ="fa fa-trash-o" style="font-size:30px;"></i></a>
+                            
+                        </div>
                     </div>
                 </div>
 
@@ -424,8 +428,8 @@
         <div *dxTemplate="let data of 'content'">
             <dx-scroll-view [height]="400" showScrollbar="always" direction="both">
 
-                <form action="your-action" (submit)="onFormSubmitDocAdd(addNewDocument)">
-                    <dx-form id="form" [formData]="addNewDocument" [readOnly]="false" [showColonAfterLabel]="true"
+                <form action="your-action" (submit)="onFormSubmitDocAdd(empDocuments)">
+                    <dx-form id="form" [formData]="empDocuments" [readOnly]="false" [showColonAfterLabel]="true"
                         [showValidationSummary]="true" validationGroup="customerData">
 
                         <dxi-item dataField="DocumentDate" editorType="dxDateBox">
