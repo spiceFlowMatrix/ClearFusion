@@ -29,12 +29,22 @@ export class AddCloseRelativeComponent implements OnInit {
       Position: ['', [Validators.required]],
       Organization: ['', [Validators.required]],
       Email: ['', [Validators.required, Validators.email]],
-      PhoneNo: ['', [Validators.required]]
+      PhoneNo: [
+        null,
+        [
+          Validators.required,
+          Validators.pattern(/^-?(0|[1-9]\d*)?$/),
+          Validators.minLength(10),
+          Validators.maxLength(14)
+        ]
+      ]
     });
   }
   ngOnInit() {
     this.employeeId = this.data.employeeId;
-    this.closeRelativeDetailForm.controls['EmployeeID'].setValue(this.employeeId);
+    this.closeRelativeDetailForm.controls['EmployeeID'].setValue(
+      this.employeeId
+    );
   }
 
   onFormSubmit(data: IEmployeeCloseRelativeDetails) {

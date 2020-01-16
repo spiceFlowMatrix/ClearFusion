@@ -28,7 +28,15 @@ export class AddThreeReferenceDetailsComponent implements OnInit {
       Relationship: ['', [Validators.required]],
       Position: ['', [Validators.required]],
       Organization: ['', [Validators.required]],
-      PhoneNo: ['', [Validators.required]],
+      PhoneNo: [
+        null,
+        [
+          Validators.required,
+          Validators.pattern(/^-?(0|[1-9]\d*)?$/),
+          Validators.minLength(10),
+          Validators.maxLength(14)
+        ]
+      ],
       Email: ['', [Validators.required, Validators.email]]
     });
   }

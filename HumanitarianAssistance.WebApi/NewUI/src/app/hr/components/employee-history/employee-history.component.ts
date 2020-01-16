@@ -33,7 +33,11 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./employee-history.component.scss']
 })
 export class EmployeeHistoryComponent implements OnInit {
-  historicalLogHeader$ = of(['Id', 'Date', 'Description']);
+  historicalLogHeader$ = of([
+    'Id',
+    'Date',
+    'Description'
+  ]);
   educationHeader$ = of([
     'Id',
     'Education From',
@@ -130,6 +134,7 @@ export class EmployeeHistoryComponent implements OnInit {
     this.routeActive.params.subscribe(params => {
       this.employeeId = +params['id'];
     });
+    this.getScreenSize();
     this.getEmployeeHistoricalLogList();
     this.getEmployeeEducationDetailsList();
     this.getEmployeeHistoryOfOutsideCountryDetailList();
@@ -138,7 +143,7 @@ export class EmployeeHistoryComponent implements OnInit {
     this.getEmployeeOtherSkillDetailList();
     this.getEmployeeSalaryBudgetDetailList();
     this.getEmployeeLanguageDetailList();
-    this.getScreenSize();
+
   }
   //#region "Dynamic Scroll"
   @HostListener('window:resize', ['$event'])
@@ -165,7 +170,10 @@ export class EmployeeHistoryComponent implements OnInit {
             x.data.EmployeeHistoryDetailList.map(element => {
               return {
                 HistoryId: element.HistoryID,
-                HistoryDate: this.datePipe.transform(element.HistoryDate, 'dd-MM-yyyy'),
+                HistoryDate: this.datePipe.transform(
+                  element.HistoryDate,
+                  'dd-MM-yyyy'
+                ),
                 Description: element.Description
               } as IHistoricalLogDetails;
             })
@@ -176,6 +184,42 @@ export class EmployeeHistoryComponent implements OnInit {
         this.commonLoader.hideLoader();
       }
     );
+  }
+  //#endregion
+  // #region "Add HistoricalLog"
+  addHistoricalLog(): void {
+    /** Open AddHistoricalLog dialog box*/
+    const dialogRef = this.dialog.open(AddHistoricalLogComponent, {
+      width: '500px',
+      data: {
+        employeeId: this.employeeId
+      }
+    });
+    // refresh the list after new request created
+    dialogRef.componentInstance.onAddHistoricalListRefresh.subscribe(() => {
+      this.getEmployeeHistoricalLogList();
+    });
+    dialogRef.afterClosed().subscribe(() => {});
+  }
+  //#endregion
+  // #region "Delete Historical Log"
+  deleteHistoricalLog(HistoryId: number) {
+    this.hrService.openDeleteDialog().subscribe(res => {
+      if (res === true) {
+        this.employeeHistoryService
+          .deleteHistoricalLog(HistoryId)
+          .subscribe(response => {
+            if (response.StatusCode === 200) {
+              let index;
+              this.historicalLogList$.subscribe(data => {
+                index = data.findIndex(x => x.HistoryId === HistoryId);
+                data.splice(index, 1);
+                this.historicalLogList$ = of(data);
+              });
+            }
+          });
+      }
+    });
   }
   //#endregion
 
@@ -192,8 +236,14 @@ export class EmployeeHistoryComponent implements OnInit {
               x.data.EmployeeEducationsList.map(element => {
                 return {
                   EmployeeEducationsId: element.EmployeeEducationsId,
-                  EducationFrom: this.datePipe.transform(element.EducationFrom, 'dd-MM-yyyy'),
-                  EducationTo:  this.datePipe.transform(element.EducationTo, 'dd-MM-yyyy'),
+                  EducationFrom: this.datePipe.transform(
+                    element.EducationFrom,
+                    'dd-MM-yyyy'
+                  ),
+                  EducationTo: this.datePipe.transform(
+                    element.EducationTo,
+                    'dd-MM-yyyy'
+                  ),
                   FieldOfStudy: element.FieldOfStudy,
                   Institute: element.Institute,
                   Degree: element.Degree
@@ -206,6 +256,47 @@ export class EmployeeHistoryComponent implements OnInit {
           this.commonLoader.hideLoader();
         }
       );
+  }
+  //#endregion
+  // #region "Add Education"
+  addEducation(): void {
+    /** Open Education dialog box*/
+    const dialogRef = this.dialog.open(AddEducationComponent, {
+      width: '800px',
+      data: {
+        employeeId: this.employeeId
+      }
+    });
+    // refresh the list after new request created
+    dialogRef.componentInstance.onAddEducationListRefresh.subscribe(() => {
+      this.getEmployeeEducationDetailsList();
+    });
+    dialogRef.afterClosed().subscribe(() => {});
+  }
+  //#endregion
+  // #region "Delete Education Detail"
+  deleteEducationDetail(EmployeeEducationsId: number) {
+    this.hrService.openDeleteDialog().subscribe(res => {
+      if (res === true) {
+        const model = {
+          EmployeeEducationsId: EmployeeEducationsId
+        };
+        this.employeeHistoryService
+          .deleteEducation(model)
+          .subscribe(response => {
+            if (response.StatusCode === 200) {
+              let index;
+              this.educationList$.subscribe(data => {
+                index = data.findIndex(
+                  x => x.EmployeeEducationsId === EmployeeEducationsId
+                );
+                data.splice(index, 1);
+                this.educationList$ = of(data);
+              });
+            }
+          });
+      }
+    });
   }
   //#endregion
 
@@ -223,8 +314,14 @@ export class EmployeeHistoryComponent implements OnInit {
                 return {
                   EmployeeHistoryOutsideCountryId:
                     element.EmployeeHistoryOutsideCountryId,
-                  EmploymentFrom: this.datePipe.transform(element.EmploymentFrom, 'dd-MM-yyyy'),
-                  EmploymentTo: this.datePipe.transform(element.EmploymentTo, 'dd-MM-yyyy'),
+                  EmploymentFrom: this.datePipe.transform(
+                    element.EmploymentFrom,
+                    'dd-MM-yyyy'
+                  ),
+                  EmploymentTo: this.datePipe.transform(
+                    element.EmploymentTo,
+                    'dd-MM-yyyy'
+                  ),
                   Organization: element.Organization,
                   MonthlySalary: element.MonthlySalary,
                   ReasonForLeaving: element.ReasonForLeaving,
@@ -238,6 +335,51 @@ export class EmployeeHistoryComponent implements OnInit {
           this.commonLoader.hideLoader();
         }
       );
+  }
+  //#endregion
+  // #region "Add HistoryOutsideCountry"
+  addHistoryOutsideCountry(): void {
+    /** Open HistoryOutsideCountry dialog box*/
+    const dialogRef = this.dialog.open(AddHistoryOutsideCountryComponent, {
+      width: '800px',
+      data: {
+        employeeId: this.employeeId
+      }
+    });
+    // refresh the list after new request created
+    dialogRef.componentInstance.onAddHistoryOutsideCountryListRefresh.subscribe(
+      () => {
+        this.getEmployeeHistoryOfOutsideCountryDetailList();
+      }
+    );
+    dialogRef.afterClosed().subscribe(() => {});
+  }
+  //#endregion
+  // #region "Delete Outside Country Info"
+  deleteOutsideCountryInfo(EmployeeHistoryOutsideCountryId: number) {
+    this.hrService.openDeleteDialog().subscribe(res => {
+      if (res === true) {
+        const model = {
+          EmployeeHistoryOutsideCountryId: EmployeeHistoryOutsideCountryId
+        };
+        this.employeeHistoryService
+          .deleteEmployeeHistoryOutsideCountry(model)
+          .subscribe(response => {
+            if (response.StatusCode === 200) {
+              let index;
+              this.employeeHistoryOCList$.subscribe(data => {
+                index = data.findIndex(
+                  x =>
+                    x.EmployeeHistoryOutsideCountryId ===
+                    EmployeeHistoryOutsideCountryId
+                );
+                data.splice(index, 1);
+                this.employeeHistoryOCList$ = of(data);
+              });
+            }
+          });
+      }
+    });
   }
   //#endregion
 
@@ -271,6 +413,49 @@ export class EmployeeHistoryComponent implements OnInit {
       );
   }
   //#endregion
+  // #region "Add CloseRelative"
+  addCloseRelative(): void {
+    /** Open AddCloseRelative dialog box*/
+    const dialogRef = this.dialog.open(AddCloseRelativeComponent, {
+      width: '800px',
+      data: {
+        employeeId: this.employeeId
+      }
+    });
+    // refresh the list after new request created
+    dialogRef.componentInstance.onAddCloseRelativeDetailListRefresh.subscribe(
+      () => {
+        this.getEmployeeCloseRelativeDetailList();
+      }
+    );
+    dialogRef.afterClosed().subscribe(() => {});
+  }
+  //#endregion
+  // #region "Delete Close Relative Info"
+  deleteCloseRelativeInfo(EmployeeRelativeInfoId: number) {
+    this.hrService.openDeleteDialog().subscribe(res => {
+      if (res === true) {
+        const model = {
+          EmployeeRelativeInfoId: EmployeeRelativeInfoId
+        };
+        this.employeeHistoryService
+          .deleteCloseRelativeDetail(model)
+          .subscribe(response => {
+            if (response.StatusCode === 200) {
+              let index;
+              this.employeeCloseRelativeList$.subscribe(data => {
+                index = data.findIndex(
+                  x => x.EmployeeRelativeInfoId === EmployeeRelativeInfoId
+                );
+                data.splice(index, 1);
+                this.employeeCloseRelativeList$ = of(data);
+              });
+            }
+          });
+      }
+    });
+  }
+  //#endregion
 
   //#region "get Employee Three Reference Detail List"
   getEmployeeThreeReferenceDetailList() {
@@ -302,6 +487,49 @@ export class EmployeeHistoryComponent implements OnInit {
       );
   }
   //#endregion
+  // #region "Add ThreeReference"
+  addThreeReference(): void {
+    /** Open AddThreeReference dialog box*/
+    const dialogRef = this.dialog.open(AddThreeReferenceDetailsComponent, {
+      width: '800px',
+      data: {
+        employeeId: this.employeeId
+      }
+    });
+    // refresh the list after new request created
+    dialogRef.componentInstance.onThreeReferenceDetailListRefresh.subscribe(
+      () => {
+        this.getEmployeeThreeReferenceDetailList();
+      }
+    );
+    dialogRef.afterClosed().subscribe(() => {});
+  }
+  //#endregion
+  // #region "Delete Employee Reference Info"
+  deleteEmployeeReferenceInfo(EmployeeInfoReferencesId: number) {
+    this.hrService.openDeleteDialog().subscribe(res => {
+      if (res === true) {
+        const model = {
+          EmployeeInfoReferencesId: EmployeeInfoReferencesId
+        };
+        this.employeeHistoryService
+          .deleteEmployeeReferenceInfoDetail(model)
+          .subscribe(response => {
+            if (response.StatusCode === 200) {
+              let index;
+              this.employeeThreeReferenceList$.subscribe(data => {
+                index = data.findIndex(
+                  x => x.EmployeeInfoReferencesId === EmployeeInfoReferencesId
+                );
+                data.splice(index, 1);
+                this.employeeThreeReferenceList$ = of(data);
+              });
+            }
+          });
+      }
+    });
+  }
+  //#endregion
 
   //#region "get Employee Other Skill Detail List"
   getEmployeeOtherSkillDetailList() {
@@ -331,6 +559,47 @@ export class EmployeeHistoryComponent implements OnInit {
       );
   }
   //#endregion
+  // #region "Add OtherSkill"
+  addOtherSkill(): void {
+    /** Open AddOtherSkill dialog box*/
+    const dialogRef = this.dialog.open(AddOtherSkillsComponent, {
+      width: '800px',
+      data: {
+        employeeId: this.employeeId
+      }
+    });
+    // refresh the list after new request created
+    dialogRef.componentInstance.onOtherSkillDetailListRefresh.subscribe(() => {
+      this.getEmployeeOtherSkillDetailList();
+    });
+    dialogRef.afterClosed().subscribe(() => {});
+  }
+  //#endregion
+  // #region "Delete Employee Other Skill"
+  deleteEmployeeOtherSkill(EmployeeOtherSkillsId: number) {
+    this.hrService.openDeleteDialog().subscribe(res => {
+      if (res === true) {
+        const model = {
+          EmployeeOtherSkillsId: EmployeeOtherSkillsId
+        };
+        this.employeeHistoryService
+          .deleteEmployeeOtherSkillDetail(model)
+          .subscribe(response => {
+            if (response.StatusCode === 200) {
+              let index;
+              this.employeeOtherSkillList$.subscribe(data => {
+                index = data.findIndex(
+                  x => x.EmployeeOtherSkillsId === EmployeeOtherSkillsId
+                );
+                data.splice(index, 1);
+                this.employeeOtherSkillList$ = of(data);
+              });
+            }
+          });
+      }
+    });
+  }
+  //#endregion
 
   //#region "get Employee Salary Budget Detail List"
   getEmployeeSalaryBudgetDetailList() {
@@ -345,7 +614,7 @@ export class EmployeeHistoryComponent implements OnInit {
               x.data.EmployeeSalaryBudgetList.map(element => {
                 return {
                   EmployeeSalaryBudgetId: element.EmployeeSalaryBudgetId,
-                  Year: this.datePipe.transform(element.Year, 'dd-MM-yyyy'),
+                  Year: element.Year,
                   // CurrencyId: element.CurrencyId,
                   CurrencyName: element.CurrencyName,
                   SalaryBudget: element.SalaryBudget,
@@ -359,6 +628,49 @@ export class EmployeeHistoryComponent implements OnInit {
           this.commonLoader.hideLoader();
         }
       );
+  }
+  //#endregion
+  // #region "Add SalaryBudget"
+  addSalaryBudget(): void {
+    /** Open AddSalaryBudget dialog box*/
+    const dialogRef = this.dialog.open(AddSalaryBudgetComponent, {
+      width: '800px',
+      data: {
+        employeeId: this.employeeId
+      }
+    });
+    // refresh the list after new request created
+    dialogRef.componentInstance.onSalaryBudgetDetailListRefresh.subscribe(
+      () => {
+        this.getEmployeeSalaryBudgetDetailList();
+      }
+    );
+    dialogRef.afterClosed().subscribe(() => {});
+  }
+  //#endregion
+  // #region "Delete Employee Salary Budget"
+  deleteEmployeeSalaryBudget(EmployeeSalaryBudgetId: number) {
+    this.hrService.openDeleteDialog().subscribe(res => {
+      if (res === true) {
+        const model = {
+          EmployeeSalaryBudgetId: EmployeeSalaryBudgetId
+        };
+        this.employeeHistoryService
+          .deleteEmployeeSalaryBudgetDetail(model)
+          .subscribe(response => {
+            if (response.StatusCode === 200) {
+              let index;
+              this.employeeSalaryBudgetList$.subscribe(data => {
+                index = data.findIndex(
+                  x => x.EmployeeSalaryBudgetId === EmployeeSalaryBudgetId
+                );
+                data.splice(index, 1);
+                this.employeeSalaryBudgetList$ = of(data);
+              });
+            }
+          });
+      }
+    });
   }
   //#endregion
 
@@ -391,79 +703,6 @@ export class EmployeeHistoryComponent implements OnInit {
       );
   }
   //#endregion
-
-  // #region "Add HistoricalLog"
-  addHistoricalLog(): void {
-    /** Open AddHistoricalLog dialog box*/
-    const dialogRef = this.dialog.open(AddHistoricalLogComponent, {
-      width: '500px',
-      data: {
-        employeeId: this.employeeId
-      }
-    });
-    // refresh the list after new request created
-    dialogRef.componentInstance.onAddHistoricalListRefresh.subscribe(() => {
-      this.getEmployeeHistoricalLogList();
-    });
-    dialogRef.afterClosed().subscribe(() => {});
-  }
-  //#endregion
-
-  // #region "Add Education"
-  addEducation(): void {
-    /** Open Education dialog box*/
-    const dialogRef = this.dialog.open(AddEducationComponent, {
-      width: '800px',
-      data: {
-        employeeId: this.employeeId
-      }
-    });
-    // refresh the list after new request created
-    dialogRef.componentInstance.onAddEducationListRefresh.subscribe(() => {
-      this.getEmployeeEducationDetailsList();
-    });
-    dialogRef.afterClosed().subscribe(() => {});
-  }
-  //#endregion
-
-  // #region "Add CloseRelative"
-  addCloseRelative(): void {
-    /** Open AddCloseRelative dialog box*/
-    const dialogRef = this.dialog.open(AddCloseRelativeComponent, {
-      width: '800px',
-      data: {
-        employeeId: this.employeeId
-      }
-    });
-    // refresh the list after new request created
-    dialogRef.componentInstance.onAddCloseRelativeDetailListRefresh.subscribe(
-      () => {
-        this.getEmployeeCloseRelativeDetailList();
-      }
-    );
-    dialogRef.afterClosed().subscribe(() => {});
-  }
-  //#endregion
-
-  // #region "Add HistoryOutsideCountry"
-  addHistoryOutsideCountry(): void {
-    /** Open HistoryOutsideCountry dialog box*/
-    const dialogRef = this.dialog.open(AddHistoryOutsideCountryComponent, {
-      width: '800px',
-      data: {
-        employeeId: this.employeeId
-      }
-    });
-    // refresh the list after new request created
-    dialogRef.componentInstance.onAddHistoryOutsideCountryListRefresh.subscribe(
-      () => {
-        this.getEmployeeHistoryOfOutsideCountryDetailList();
-      }
-    );
-    dialogRef.afterClosed().subscribe(() => {});
-  }
-  //#endregion
-
   // #region "Add Language"
   addLanguage(): void {
     /** Open Language dialog box*/
@@ -480,59 +719,29 @@ export class EmployeeHistoryComponent implements OnInit {
     dialogRef.afterClosed().subscribe(() => {});
   }
   //#endregion
-
-  // #region "Add OtherSkill"
-  addOtherSkill(): void {
-    /** Open AddOtherSkill dialog box*/
-    const dialogRef = this.dialog.open(AddOtherSkillsComponent, {
-      width: '800px',
-      data: {
-        employeeId: this.employeeId
+  // #region "Delete Employee Language Detail"
+  deleteEmployeeLanguageDetail(SpeakLanguageId: number) {
+    this.hrService.openDeleteDialog().subscribe(res => {
+      if (res === true) {
+        const model = {
+          SpeakLanguageId: SpeakLanguageId
+        };
+        this.employeeHistoryService
+          .deleteEmployeeLanguageDetail(model)
+          .subscribe(response => {
+            if (response.StatusCode === 200) {
+              let index;
+              this.employeeLanguageList$.subscribe(data => {
+                index = data.findIndex(
+                  x => x.SpeakLanguageId === SpeakLanguageId
+                );
+                data.splice(index, 1);
+                this.employeeLanguageList$ = of(data);
+              });
+            }
+          });
       }
     });
-    // refresh the list after new request created
-    dialogRef.componentInstance.onOtherSkillDetailListRefresh.subscribe(() => {
-      this.getEmployeeOtherSkillDetailList();
-    });
-    dialogRef.afterClosed().subscribe(() => {});
-  }
-  //#endregion
-
-  // #region "Add ThreeReference"
-  addThreeReference(): void {
-    /** Open AddThreeReference dialog box*/
-    const dialogRef = this.dialog.open(AddThreeReferenceDetailsComponent, {
-      width: '800px',
-      data: {
-        employeeId: this.employeeId
-      }
-    });
-    // refresh the list after new request created
-    dialogRef.componentInstance.onThreeReferenceDetailListRefresh.subscribe(
-      () => {
-        this.getEmployeeThreeReferenceDetailList();
-      }
-    );
-    dialogRef.afterClosed().subscribe(() => {});
-  }
-  //#endregion
-
-  // #region "Add SalaryBudget"
-  addSalaryBudget(): void {
-    /** Open AddSalaryBudget dialog box*/
-    const dialogRef = this.dialog.open(AddSalaryBudgetComponent, {
-      width: '800px',
-      data: {
-        employeeId: this.employeeId
-      }
-    });
-    // refresh the list after new request created
-    dialogRef.componentInstance.onSalaryBudgetDetailListRefresh.subscribe(
-      () => {
-        this.getEmployeeSalaryBudgetDetailList();
-      }
-    );
-    dialogRef.afterClosed().subscribe(() => {});
   }
   //#endregion
 
@@ -540,198 +749,30 @@ export class EmployeeHistoryComponent implements OnInit {
     if (event.type === 'delete') {
       switch (type) {
         case 'historicalLog':
-          this.hrService.openDeleteDialog().subscribe(res => {
-            if (res === true) {
-              this.employeeHistoryService
-                .deleteHistoricalLog(event.item.HistoryId)
-                .subscribe(response => {
-                  if (response.StatusCode === 200) {
-                    let index;
-                    this.historicalLogList$.subscribe(data => {
-                      index = data.findIndex(
-                        x => x.HistoryId === event.item.HistoryId
-                      );
-                      data.splice(index, 1);
-                      this.historicalLogList$ = of(data);
-                    });
-                  }
-                });
-            }
-          });
+          this.deleteHistoricalLog(event.item.HistoryId);
           break;
         case 'education':
-          this.hrService.openDeleteDialog().subscribe(res => {
-            if (res === true) {
-              const model = {
-                EmployeeEducationsId: event.item.EmployeeEducationsId
-              };
-              this.employeeHistoryService
-                .deleteEducation(model)
-                .subscribe(response => {
-                  if (response.StatusCode === 200) {
-                    let index;
-                    this.educationList$.subscribe(data => {
-                      index = data.findIndex(
-                        x =>
-                          x.EmployeeEducationsId ===
-                          event.item.EmployeeEducationsId
-                      );
-                      data.splice(index, 1);
-                      this.educationList$ = of(data);
-                    });
-                  }
-                });
-            }
-          });
+          this.deleteEducationDetail(event.item.EmployeeEducationsId);
           break;
         case 'outsideHistory':
-          this.hrService.openDeleteDialog().subscribe(res => {
-            if (res === true) {
-              const model = {
-                EmployeeHistoryOutsideCountryId:
-                  event.item.EmployeeHistoryOutsideCountryId
-              };
-              this.employeeHistoryService
-                .deleteEmployeeHistoryOutsideCountry(model)
-                .subscribe(response => {
-                  if (response.StatusCode === 200) {
-                    let index;
-                    this.employeeHistoryOCList$.subscribe(data => {
-                      index = data.findIndex(
-                        x =>
-                          x.EmployeeHistoryOutsideCountryId ===
-                          event.item.EmployeeHistoryOutsideCountryId
-                      );
-                      data.splice(index, 1);
-                      this.employeeHistoryOCList$ = of(data);
-                    });
-                  }
-                });
-            }
-          });
+          this.deleteOutsideCountryInfo(
+            event.item.EmployeeHistoryOutsideCountryId
+          );
           break;
         case 'closeReletive':
-          this.hrService.openDeleteDialog().subscribe(res => {
-            if (res === true) {
-              const model = {
-                EmployeeRelativeInfoId: event.item.EmployeeRelativeInfoId
-              };
-              this.employeeHistoryService
-                .deleteCloseRelativeDetail(model)
-                .subscribe(response => {
-                  if (response.StatusCode === 200) {
-                    let index;
-                    this.employeeCloseRelativeList$.subscribe(data => {
-                      index = data.findIndex(
-                        x =>
-                          x.EmployeeRelativeInfoId ===
-                          event.item.EmployeeRelativeInfoId
-                      );
-                      data.splice(index, 1);
-                      this.employeeCloseRelativeList$ = of(data);
-                    });
-                  }
-                });
-            }
-          });
+          this.deleteCloseRelativeInfo(event.item.EmployeeRelativeInfoId);
           break;
         case 'references':
-          this.hrService.openDeleteDialog().subscribe(res => {
-            if (res === true) {
-              const model = {
-                EmployeeInfoReferencesId: event.item.EmployeeInfoReferencesId
-              };
-              this.employeeHistoryService
-                .deleteEmployeeRelativeInfoDetail(model)
-                .subscribe(response => {
-                  if (response.StatusCode === 200) {
-                    let index;
-                    this.employeeThreeReferenceList$.subscribe(data => {
-                      index = data.findIndex(
-                        x =>
-                          x.EmployeeInfoReferencesId ===
-                          event.item.EmployeeInfoReferencesId
-                      );
-                      data.splice(index, 1);
-                      this.employeeThreeReferenceList$ = of(data);
-                    });
-                  }
-                });
-            }
-          });
+          this.deleteEmployeeReferenceInfo(event.item.EmployeeInfoReferencesId);
           break;
         case 'otherSkill':
-          this.hrService.openDeleteDialog().subscribe(res => {
-            if (res === true) {
-              const model = {
-                EmployeeOtherSkillsId: event.item.EmployeeOtherSkillsId
-              };
-              this.employeeHistoryService
-                .deleteEmployeeOtherSkillDetail(model)
-                .subscribe(response => {
-                  if (response.StatusCode === 200) {
-                    let index;
-                    this.employeeOtherSkillList$.subscribe(data => {
-                      index = data.findIndex(
-                        x =>
-                          x.EmployeeOtherSkillsId ===
-                          event.item.EmployeeOtherSkillsId
-                      );
-                      data.splice(index, 1);
-                      this.employeeOtherSkillList$ = of(data);
-                    });
-                  }
-                });
-            }
-          });
+          this.deleteEmployeeOtherSkill(event.item.EmployeeOtherSkillsId);
           break;
         case 'salaryBudget':
-          this.hrService.openDeleteDialog().subscribe(res => {
-            if (res === true) {
-              const model = {
-                EmployeeSalaryBudgetId: event.item.EmployeeSalaryBudgetId
-              };
-              this.employeeHistoryService
-                .deleteEmployeeSalaryBudgetDetail(model)
-                .subscribe(response => {
-                  if (response.StatusCode === 200) {
-                    let index;
-                    this.employeeSalaryBudgetList$.subscribe(data => {
-                      index = data.findIndex(
-                        x =>
-                          x.EmployeeSalaryBudgetId ===
-                          event.item.EmployeeSalaryBudgetId
-                      );
-                      data.splice(index, 1);
-                      this.employeeSalaryBudgetList$ = of(data);
-                    });
-                  }
-                });
-            }
-          });
+          this.deleteEmployeeSalaryBudget(event.item.EmployeeSalaryBudgetId);
           break;
         case 'language':
-          this.hrService.openDeleteDialog().subscribe(res => {
-            if (res === true) {
-              const model = {
-                SpeakLanguageId: event.item.SpeakLanguageId
-              };
-              this.employeeHistoryService
-                .deleteEmployeeLanguageDetail(model)
-                .subscribe(response => {
-                  if (response.StatusCode === 200) {
-                    let index;
-                    this.employeeLanguageList$.subscribe(data => {
-                      index = data.findIndex(
-                        x => x.SpeakLanguageId === event.item.SpeakLanguageId
-                      );
-                      data.splice(index, 1);
-                      this.employeeLanguageList$ = of(data);
-                    });
-                  }
-                });
-            }
-          });
+          this.deleteEmployeeLanguageDetail(event.item.SpeakLanguageId);
           break;
       }
     }

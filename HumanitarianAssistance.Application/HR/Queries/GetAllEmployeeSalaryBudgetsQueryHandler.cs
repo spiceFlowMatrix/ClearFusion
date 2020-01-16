@@ -23,6 +23,7 @@ namespace HumanitarianAssistance.Application.HR.Queries {
                 var employeeHistoryRecord = await (from u in _dbContext.EmployeeSalaryBudget.Where (x => x.IsDeleted == false && x.EmployeeID == request.EmployeeId) 
                 join c in _dbContext.CurrencyDetails on u.CurrencyId equals c.CurrencyId
                 into cd from c in cd.DefaultIfEmpty () 
+                orderby u.EmployeeSalaryBudgetId descending
                 select new EmployeeSalaryBudgetModel {
                     EmployeeSalaryBudgetId = u.EmployeeSalaryBudgetId,
                         EmployeeID = u.EmployeeID,
@@ -31,7 +32,8 @@ namespace HumanitarianAssistance.Application.HR.Queries {
                         SalaryBudget = u.SalaryBudget,
                         Year = u.Year,
                         CurrencyName = c.CurrencyName
-                }).ToListAsync ();
+                } 
+                ).ToListAsync ();
                 if (employeeHistoryRecord.Count > 0) {
                     response.data.EmployeeSalaryBudgetList = employeeHistoryRecord;
 

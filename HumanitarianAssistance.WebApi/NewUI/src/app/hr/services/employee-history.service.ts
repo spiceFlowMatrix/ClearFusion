@@ -30,7 +30,6 @@ export class EmployeeHistoryService {
     );
   }
   //#endregion
-
   //#region "getHistoricalLogList"
   getHistoricalLogList(EmployeeId: number): any {
     return this.globalService.getDataById(
@@ -41,7 +40,6 @@ export class EmployeeHistoryService {
     );
   }
   //#endregion
-
   //#region "getEducationDetailList"
   getEducationDetailList(EmployeeId: number): any {
     return this.globalService.getDataById(
@@ -52,7 +50,6 @@ export class EmployeeHistoryService {
     );
   }
   //#endregion
-
   //#region "getEmployeeHistoryOfOutsideCountryDetailList"
   getEmployeeHistoryOfOutsideCountryDetailList(EmployeeId: number): any {
     return this.globalService.getDataById(
@@ -113,7 +110,6 @@ export class EmployeeHistoryService {
     );
   }
   //#endregion
-
   //#region "addHistoricalLogDetail"
   addHistoricalLogDetail(model: any): any {
     return this.globalService.post(
@@ -138,7 +134,6 @@ export class EmployeeHistoryService {
     );
   }
   //#endregion
-
   //#region "addCloseRelativeDetail"
   addCloseRelativeDetail(model: any): any {
     return this.globalService.post(
@@ -172,14 +167,13 @@ export class EmployeeHistoryService {
   }
   //#endregion
    //#region "addLanguageDetail"
-   addLanguageDetail(model: any): any {
+  addLanguageDetail(model: any): any {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_Hr_AddEmployeeLanguages,
       model
     );
   }
   //#endregion
-
   //#region "deleteHistoricalLog"
   deleteHistoricalLog(HistoryId: number) {
     return this.globalService.deleteById(
@@ -190,7 +184,6 @@ export class EmployeeHistoryService {
     );
   }
   //#endregion
-
   //#region "deleteEducation"
   deleteEducation(model: any) {
     return this.globalService.post(
@@ -208,7 +201,6 @@ export class EmployeeHistoryService {
     );
   }
   //#endregion
-
   //#region "deleteCloseRelativeDetail"
   deleteCloseRelativeDetail(model: any) {
     return this.globalService.post(
@@ -218,15 +210,14 @@ export class EmployeeHistoryService {
     );
   }
   //#endregion
-  //#region "deleteEmployeeRelativeInfoDetail"
-  deleteEmployeeRelativeInfoDetail(model: any) {
+  //#region "deleteEmployeeReferenceInfoDetail"
+  deleteEmployeeReferenceInfoDetail(model: any) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_Hr__DeleteEmployeeInfoReferences,
       model
     );
   }
   //#endregion
-
   //#region "deleteEmployeeOtherSkillDetail"
   deleteEmployeeOtherSkillDetail(model: any) {
     return this.globalService.post(
@@ -235,16 +226,16 @@ export class EmployeeHistoryService {
     );
   }
   //#endregion
-    //#region "deleteEmployeeSalaryBudgetDetail"
-    deleteEmployeeSalaryBudgetDetail(model: any) {
+  //#region "deleteEmployeeSalaryBudgetDetail"
+  deleteEmployeeSalaryBudgetDetail(model: any) {
       return this.globalService.post(
         this.appurl.getApiUrl() + GLOBAL.API_Hr__DeleteEmployeeSalaryBudgets,
         model
       );
-    }
-    //#endregion
-      //#region "deleteEmployeeOtherSkillDetail"
-      deleteEmployeeLanguageDetail(model: any) {
+  }
+  //#endregion
+  //#region "deleteEmployeeOtherSkillDetail"
+  deleteEmployeeLanguageDetail(model: any) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_Hr__RemoveEmployeeLanguages,
       model

@@ -29,11 +29,11 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-4 col-sm-4">
-                            <mat-form-field class="example-full-width">
-                                <input matInput [matDatepicker]="YearPicker" placeholder="Year" formControlName="Year" />
-                                <mat-datepicker-toggle matSuffix [for]="YearPicker"></mat-datepicker-toggle>
-                                <mat-datepicker #YearPicker></mat-datepicker>
-                            </mat-form-field>
+                            <lib-hum-dropdown formControlName="Year" [validation]="
+                            salaryBudgetForm.controls['Year'].hasError(
+                              'required'
+                            )
+                          " [options]="PreviousYearsList$" [placeHolder]="'Year'"></lib-hum-dropdown>
                         </div>
                     </div>
                 </div>

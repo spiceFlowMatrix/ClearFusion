@@ -1,3 +1,4 @@
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { Component, OnInit, EventEmitter, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -17,13 +18,15 @@ export class AddSalaryBudgetComponent implements OnInit {
   salaryBudgetForm: FormGroup;
   isFormSubmitted = false;
   employeeId: number;
-  onSalaryBudgetDetailListRefresh = new EventEmitter();
+  PreviousYearsList$: Observable<IDropDownModel[]>;
   currencyList$: Observable<IDropDownModel[]>;
+  onSalaryBudgetDetailListRefresh = new EventEmitter();
   constructor(
     private fb: FormBuilder,
     private commonLoader: CommonLoaderService,
     private toastr: ToastrService,
     private employeeHistoryService: EmployeeHistoryService,
+    private globalSharedService: GlobalSharedService,
     public dialogRef: MatDialogRef<AddSalaryBudgetComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -39,9 +42,14 @@ export class AddSalaryBudgetComponent implements OnInit {
   ngOnInit() {
     this.employeeId = this.data.employeeId;
     this.salaryBudgetForm.controls['EmployeeID'].setValue(this.employeeId);
+    this.getPreviousYearsList();
     this.getCurrencyList();
   }
-
+ //#region "Get all previous years list for ExperienceInYears dropdown"
+ getPreviousYearsList() {
+  this.PreviousYearsList$ = this.globalSharedService.getPreviousYearsList(40);
+}
+//#endregion
   //#region "get currency  List"
   getCurrencyList() {
     this.commonLoader.showLoader();

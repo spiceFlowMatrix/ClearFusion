@@ -29,7 +29,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                 if (employeeHistoryRecord.Count > 0)
                 {
-                    response.data.EmployeeEducationsList = employeeHistoryRecord.Select(x => new EmployeeEducationsModel
+                    response.data.EmployeeEducationsList = employeeHistoryRecord.OrderByDescending(x=>x.EmployeeEducationsId).Select(x => new EmployeeEducationsModel
                     {
                         EmployeeEducationsId = x.EmployeeEducationsId,
                         EmployeeID = Convert.ToInt32(x.EmployeeID),

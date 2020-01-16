@@ -32,7 +32,8 @@ namespace HumanitarianAssistance.Application.HR.Queries {
             try {
                 var employeeRecord = await (from e in _dbContext.EmployeeLanguages.Where (x => x.EmployeeId == request.EmployeeId && x.IsDeleted == false) 
                 join l in _dbContext.LanguageDetail on e.LanguageId equals l.LanguageId 
-                into ld from l in ld.DefaultIfEmpty () 
+                into ld from l in ld.DefaultIfEmpty ()
+                orderby e.SpeakLanguageId descending 
                 select new EmployeeLanguageModel {
                     SpeakLanguageId = e.SpeakLanguageId,
                         LanguageName = l.LanguageName,
