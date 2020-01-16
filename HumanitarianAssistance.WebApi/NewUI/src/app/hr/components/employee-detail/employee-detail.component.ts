@@ -58,7 +58,6 @@ export class EmployeeDetailComponent implements OnInit {
     this.showDetail = true;
   }
   getState(e) {
-    debugger;
     this.showDetail = e;
   }
 

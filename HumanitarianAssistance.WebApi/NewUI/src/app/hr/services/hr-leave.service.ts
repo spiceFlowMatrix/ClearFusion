@@ -18,12 +18,58 @@ export class HrLeaveService {
     private dialog: MatDialog
   ) {}
 
-   //#region "getEmployeeDetail"
-   getEmployeeDetail(employeeid: number): any {
+   //#region "getEmployeeBalanceLeave"
+   getEmployeeBalanceLeave(employeeid: number): any {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HR_GetAllEmployeeAssignLeave + '?EmployeeId=' +
+        employeeid
+    );
+  }
+  //#endregion
+
+  //#region "addEmployeeLeave"
+  addEmployeeLeave(model: any): any {
     return this.globalService.post(
       this.appurl.getApiUrl() +
-        GLOBAL.API_EmployeeDetail_GetEmployeeDetailById,
-        employeeid
+        GLOBAL.API_HR_AddEmployeeLeave,
+        model
+    );
+  }
+  //#endregion
+
+  //#region "getFinancialYearList"
+  getFinancialYearList(): any {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_Code_GetCurrentFinancialYear
+    );
+  }
+  //#endregion
+
+  //#region "getAllLeaveReasonList"
+  getAllLeaveReasonType(): any {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_Code_LeaveReasonType
+    );
+  }
+  //#endregion
+
+   //#region "assignLeave"
+   assignLeave(model: any): any {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HR_AssignLeaveToEmployeeDetail, model
+    );
+  }
+  //#endregion
+
+   //#region "getAllLeaveInfoById"
+   getAllLeaveInfoById(employeeid: any): any {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HR_GetEmployeeAppliedLeaves + '?id=' + employeeid
     );
   }
   //#endregion

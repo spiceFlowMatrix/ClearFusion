@@ -26,11 +26,13 @@ import { EmployeeContractComponent } from './components/employee-contract/employ
 import { EmployeeSalaryConfigComponent } from './components/employee-salary-config/employee-salary-config.component';
 import { EmployeeResignationComponent } from './components/employee-resignation/employee-resignation.component';
 import { EmployeeDetailComponent } from './components/employee-detail/employee-detail.component';
-import { MatTabsModule } from '@angular/material';
-import { EmployeeLeaveAddComponent } from './components/employee-leave-add/employee-leave-add.component';
+import { MatTabsModule, MatOptionModule, MatDialogModule } from '@angular/material';
+import { EmployeeLeaveAddComponent } from './components/employee-leave/employee-leave-add/employee-leave-add.component';
+import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
+import { AssignLeaveComponent } from './components/employee-leave/assign-leave/assign-leave.component';
 
 @NgModule({
-  declarations: [EmployeeListComponent, EntryComponentComponent, EmployeeControlPanelComponent, EmployeeHistoryComponent, EmployeeLeaveComponent, EmployeeAttendanceComponent, EmployeeContractComponent, EmployeeSalaryConfigComponent, EmployeeResignationComponent, EmployeeDetailComponent, EmployeeLeaveAddComponent],
+  declarations: [EmployeeListComponent, EntryComponentComponent, EmployeeControlPanelComponent, EmployeeHistoryComponent, EmployeeLeaveComponent, EmployeeAttendanceComponent, EmployeeContractComponent, EmployeeSalaryConfigComponent, EmployeeResignationComponent, EmployeeDetailComponent, EmployeeLeaveAddComponent, AssignLeaveComponent],
   imports: [
     CommonModule,
     HrRoutingModule,
@@ -54,9 +56,14 @@ import { EmployeeLeaveAddComponent } from './components/employee-leave-add/emplo
     MatInputModule,
     MatPaginatorModule,
     MatDividerModule,
-    MatTabsModule
+    MatTabsModule,
+    SatDatepickerModule,
+    SatNativeDateModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatDialogModule,
    // ConfigurationModule
-  ]
+  ], entryComponents: [EmployeeLeaveAddComponent, AssignLeaveComponent]
 })
 export class HrModule {
   entryComponents: [];

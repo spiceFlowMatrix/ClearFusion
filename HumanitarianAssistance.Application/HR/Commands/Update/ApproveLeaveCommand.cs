@@ -1,0 +1,11 @@
+using HumanitarianAssistance.Application.Infrastructure;
+using MediatR;
+
+namespace HumanitarianAssistance.Application.HR.Commands.Update
+{
+    public class ApproveLeaveCommand: BaseModel, IRequest<object>
+    {
+        public long Id { get; set; }
+        public bool Approved { get; set; }
+    }
+}
