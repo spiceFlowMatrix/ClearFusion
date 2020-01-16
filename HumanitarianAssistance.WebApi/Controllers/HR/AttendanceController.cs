@@ -20,7 +20,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
     [Authorize]
     public class AttendanceController : BaseController
     {
-        
+
         #region "Monthly Payroll Hours"
 
         [HttpPost]
@@ -90,6 +90,12 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return await _mediator.Send(model);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GetFilteredAttendanceDetails([FromBody] GetFilteredAttendanceQuery model)
+        {
+            var result= await _mediator.Send(model);
+            return Ok(result);
+        }
         [HttpPost]
         public async Task<object> GetAllEmployeesAttendanceByDate([FromBody] GetEmployeesAttendanceByDateQuery model)
         {
