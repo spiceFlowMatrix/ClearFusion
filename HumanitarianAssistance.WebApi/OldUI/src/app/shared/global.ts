@@ -110,6 +110,8 @@ export class GLOBAL {
   public static API_HR_GetEmployeeProfessionalDetail = 'EmployeeDetail/GetEmployeeProfessionalDetail';
   public static API_HR_GetAnnualAppraisalReportPdf = 'Pdf/GetAnnualAppraisalReportPdf';
   public static API_Pdf_GetEmployeeExitInteviewPdf = 'Pdf/GetEmployeeExitInteviewPdf';
+  public static API_Pdf_GetEmployeePensionPdf = 'Pdf/GetEmployeePensionPdf';
+
   public static API_Pdf_EmployeeAnnualTunoverReport = 'Pdf/EmployeeAnnualTunoverReport';
 
 
@@ -291,7 +293,7 @@ export class GLOBAL {
 
   // public static API_HR_EmployeePensionReport = 'HREmployee/EmployeePensionReport';
   public static API_HR_EmployeePensionReport = 'EmployeePayroll/EmployeePensionReport';
-
+  public static API_HR_GetEmployeeOpeningPensionDetail = 'EmployeePayroll/GetEmployeeOpeningPensionDetail';
   public static API_PMU_GetAllEmployeesBudgetLine = 'ProjectPipeLining/GetAssignedEmployeesInBudgetLine';
   public static API_PMU_AssignEmployeeToBudgetLine = 'ProjectPipeLining/AssignEmployeeToBudgetLine';
   public static API_Hr_GetAllEmployeeProject = 'HREmployee/GetAllEmployeeProjects';
