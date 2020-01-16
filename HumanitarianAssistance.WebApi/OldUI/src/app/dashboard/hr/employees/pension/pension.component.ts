@@ -1,24 +1,24 @@
-import { Component, OnInit, Input } from "@angular/core";
-import { HrService } from "../../hr.service";
-import { Router } from "@angular/router";
-import { ToastrService } from "ngx-toastr";
-import { GLOBAL } from "../../../../shared/global";
-import { CodeService } from "../../../code/code.service";
-import { TranslateService } from "@ngx-translate/core";
+import { Component, OnInit, Input } from '@angular/core';
+import { HrService } from '../../hr.service';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { GLOBAL } from '../../../../shared/global';
+import { CodeService } from '../../../code/code.service';
+import { TranslateService } from '@ngx-translate/core';
 import {
   applicationPages,
   applicationModule
-} from "../../../../shared/application-pages-enum";
-import { CommonService } from "../../../../service/common.service";
-import { AppSettingsService } from "../../../../service/app-settings.service";
+} from '../../../../shared/application-pages-enum';
+import { CommonService } from '../../../../service/common.service';
+import { AppSettingsService } from '../../../../service/app-settings.service';
 
 declare var jquery: any;
 declare let jsPDF;
 declare var $: any;
 @Component({
-  selector: "app-pension",
-  templateUrl: "./pension.component.html",
-  styleUrls: ["./pension.component.css"]
+  selector: 'app-pension',
+  templateUrl: './pension.component.html',
+  styleUrls: ['./pension.component.css']
 })
 export class PensionComponent implements OnInit {
   @Input() employeeId: number;
@@ -57,7 +57,7 @@ export class PensionComponent implements OnInit {
     private setting: AppSettingsService,
     private toastr: ToastrService
   ) {
-    translate.setDefaultLang("fa");
+    translate.setDefaultLang('fa');
   }
 
   ngOnInit() {
@@ -66,8 +66,8 @@ export class PensionComponent implements OnInit {
     this.GetSalaryTaxReportContent();
     this.initializeForm();
     this.humanitarianReportLogoPath =
-      this.setting.getDocUrl() + "humanitarianReportLogo.PNG";
-    this.selectedEmployeeName = localStorage.getItem("SelectedEmployeeName");
+      this.setting.getDocUrl() + 'humanitarianReportLogo.PNG';
+    this.selectedEmployeeName = localStorage.getItem('SelectedEmployeeName');
     this.isEditingAllowed = this.commonService.IsEditingAllowed(
       applicationPages.Employees
     );
@@ -113,7 +113,7 @@ export class PensionComponent implements OnInit {
   getAllPensionList(yearId: number[], currencyId: number) {
     this.showHidePensionInfoLoading(true);
     const model = {
-      OfficeId: parseInt(localStorage.getItem("EMPLOYEEOFFICEID"), 32),
+      OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID'), 32),
       EmployeeId: this.employeeId,
       FinancialYearId: yearId,
       CurrencyId: currencyId
@@ -192,13 +192,13 @@ export class PensionComponent implements OnInit {
         error => {
           this.showHideSalaryTaxInfoLoading(false);
           if (error.StatusCode === 500) {
-            this.toastr.error("Internal Server Error....");
+            this.toastr.error('Internal Server Error....');
           } else if (error.StatusCode === 401) {
-            this.toastr.error("Unauthorized Access Error....");
+            this.toastr.error('Unauthorized Access Error....');
           } else if (error.StatusCode === 403) {
-            this.toastr.error("Forbidden Error....");
+            this.toastr.error('Forbidden Error....');
           } else {
-            this.toastr.error("Something went wrong!");
+            this.toastr.error('Something went wrong!');
           }
         }
       );
@@ -230,18 +230,18 @@ export class PensionComponent implements OnInit {
 
             this.financialId = this.financialYearList[0].FinancialYearId;
           } else if (data.StatusCode === 400) {
-            this.toastr.error("Something went wrong !");
+            this.toastr.error('Something went wrong !');
           }
         },
         error => {
           if (error.StatusCode === 500) {
-            this.toastr.error("Internal Server Error....");
+            this.toastr.error('Internal Server Error....');
           } else if (error.StatusCode === 401) {
-            this.toastr.error("Unauthorized Access Error....");
+            this.toastr.error('Unauthorized Access Error....');
           } else if (error.StatusCode === 403) {
-            this.toastr.error("Forbidden Error....");
+            this.toastr.error('Forbidden Error....');
           } else {
-            this.toastr.error("Something went wrong !");
+            this.toastr.error('Something went wrong !');
           }
         }
       );
@@ -266,20 +266,20 @@ export class PensionComponent implements OnInit {
               });
             });
           } else if (data.StatusCode === 400) {
-            this.toastr.error("Something went wrong !");
+            this.toastr.error('Something went wrong !');
           } else {
-            this.toastr.error("Something went wrong !");
+            this.toastr.error('Something went wrong !');
           }
         },
         error => {
           if (error.StatusCode === 500) {
-            this.toastr.error("Internal Server Error....");
+            this.toastr.error('Internal Server Error....');
           } else if (error.StatusCode === 401) {
-            this.toastr.error("Unauthorized Access Error....");
+            this.toastr.error('Unauthorized Access Error....');
           } else if (error.StatusCode === 403) {
-            this.toastr.error("Forbidden Error....");
+            this.toastr.error('Forbidden Error....');
           } else {
-            this.toastr.error("Something went wrong !");
+            this.toastr.error('Something went wrong !');
           }
         }
       );
@@ -288,7 +288,7 @@ export class PensionComponent implements OnInit {
 
   getAllSalaryTaxData(yearId: number, currencyId: number) {
     const model = {
-      OfficeId: parseInt(localStorage.getItem("EMPLOYEEOFFICEID"), 32),
+      OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID'), 32),
       EmployeeId: this.employeeId,
       FinancialYearId: yearId,
       CurrencyId: currencyId
@@ -311,7 +311,7 @@ export class PensionComponent implements OnInit {
               this.salaryTaxDataSource = data.data.SalaryTaxReportModelList;
               this.showHideSalaryTaxInfoLoading(false);
             } else if (data.StatusCode === 400) {
-              this.toastr.error("Something went wrong!");
+              this.toastr.error('Something went wrong!');
               this.showHideSalaryTaxInfoLoading(false);
             }
           } else {
@@ -330,13 +330,13 @@ export class PensionComponent implements OnInit {
   salaryTaxReportForm: any;
   //#region "GetSalaryTaxReportContent"
   GetSalaryTaxReportContent() {
-    const officeId = parseInt(localStorage.getItem("EMPLOYEEOFFICEID"));
+    const officeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
 
     this.codeService
       .GetAllDetailsById(
         this.setting.getBaseUrl() +
           GLOBAL.API_Code_GetSalaryTaxReportContentDetails,
-        "officeId",
+        'officeId',
         officeId
       )
       .subscribe(
@@ -372,35 +372,35 @@ export class PensionComponent implements OnInit {
 
   generateExcel(e) {
     window.open(
-      "data:application/vnd.ms-excel," +
-        encodeURIComponent($("div[id$=pensionReportExcel]").html())
+      'data:application/vnd.ms-excel,' +
+        encodeURIComponent($('div[id$=pensionReportExcel]').html())
     );
     e.preventDefault();
   }
 
   //#region "Generate Pension Pdf"
   generatePensionPdf() {
-    const pdf = new jsPDF("p", "pt", "legal"),
+    const pdf = new jsPDF('p', 'pt', 'legal'),
       pdfConf = {
         pagesplit: false,
-        background: "#fff"
+        background: '#fff'
       };
 
-    pdf.addHTML($("#pensionReportPdf"), 0, 15, pdfConf, function() {
-      pdf.save("Employee-Pension.pdf");
+    pdf.addHTML($('#pensionReportPdf'), 0, 15, pdfConf, function() {
+      pdf.save('Employee-Pension.pdf');
     });
   }
   //#endregion
 
   //#region "Generate Pdf"
   generateSalaryTaxPdf() {
-    const pdf = new jsPDF("p", "pt", "legal"),
+    const pdf = new jsPDF('p', 'pt', 'legal'),
       pdfConf = {
         pagesplit: false,
-        background: "#fff"
+        background: '#fff'
       };
-    pdf.addHTML($("#salaryTaxPdf"), 0, 0, pdfConf, function() {
-      pdf.save("Employee-Salary-tax.pdf");
+    pdf.addHTML($('#salaryTaxPdf'), 0, 0, pdfConf, function() {
+      pdf.save('Employee-Salary-tax.pdf');
     });
   }
   //#endregion
@@ -415,7 +415,7 @@ export class PensionComponent implements OnInit {
     const model = {
       EmployeeId: employeeId,
       FinancialYearId: year,
-      OfficeId: parseInt(localStorage.getItem("EMPLOYEEOFFICEID"), 32)
+      OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID'), 32)
     };
 
     this.hrService
@@ -433,11 +433,11 @@ export class PensionComponent implements OnInit {
               this.employeeTaxReportData = data.data.EmployeeTaxReport;
             } else {
               if (data.data.EmployeeTaxReport == null) {
-                this.toastr.warning("No record found !");
+                this.toastr.warning('No record found !');
                 this.showHidePensionInfoLoading(false);
               } else if (data.StatusCode === 400) {
                 // failStatusCode
-                this.toastr.error("Something went wrong !");
+                this.toastr.error('Something went wrong !');
                 this.showHidePensionInfoLoading(false);
               }
             }
@@ -449,11 +449,11 @@ export class PensionComponent implements OnInit {
         error => {
           this.showHidePensionInfoLoading(false);
           if (error.StatusCode === 500) {
-            this.toastr.error("Internal Server Error....");
+            this.toastr.error('Internal Server Error....');
           } else if (error.StatusCode === 401) {
-            this.toastr.error("Unauthorized Access Error....");
+            this.toastr.error('Unauthorized Access Error....');
           } else if (error.StatusCode === 403) {
-            this.toastr.error("Forbidden Error....");
+            this.toastr.error('Forbidden Error....');
           }
         }
       );

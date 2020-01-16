@@ -645,6 +645,8 @@ export class GLOBAL {
   public static API_Store_AddInventoryItems = 'Store/AddInventoryItems';
   public static API_Store_EditInventoryItems = 'Store/EditInventoryItems';
   public static API_Store_DeleteInventoryItems = 'Store/DeleteInventoryItems';
+
+  public static API_Code_GetAllFinancialYearDetail = 'Code/GetAllFinancialYearDetail';
 }
 
 
