@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { EmployeeDetailComponent } from '../employee-detail/employee-detail.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-employee-control-panel',
@@ -7,9 +9,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EmployeeControlPanelComponent implements OnInit {
 
-  constructor() { }
+  @ViewChild(EmployeeDetailComponent) employeeDetail: EmployeeDetailComponent;
+  employeeId: number;
+  constructor(private activatedRoute: ActivatedRoute) {
+      this.activatedRoute.params.subscribe(params => {
+      this.employeeId = +params['id'];
+    });
+  }
 
   ngOnInit() {
   }
 
+  showEmployeeDetails() {
+   this.employeeDetail.show();
+  }
 }

@@ -115,17 +115,18 @@ export class GlobalService {
   getDataById(url: string, options?: any): Observable<any> {
     return this.http.get<any>(url, options).pipe(
       map((response) => response),
-      retryWhen(errors =>
+      catchError(this.handleError),
+      // retryWhen(errors =>
 
-        errors.pipe(
-          tap(r => {
-            this.toastr.warning('Slow internet connection retrying ...')
-          }
-          ),
-          delay(10000),
-          take(3)
-        )
-      ),
+      //   errors.pipe(
+      //     tap(r => {
+      //       this.toastr.warning('Slow internet connection retrying ...')
+      //     }
+      //     ),
+      //     delay(10000),
+      //     take(3)
+      //   )
+      // ),
       finalize(() => {
         // this.loader.hideLoader();
       })

@@ -657,6 +657,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         }
 
         [HttpPost]
+        public async Task<IActionResult> GetEmployeeDetailById([FromBody] int id)
+        {
+            var result= await _mediator.Send(new GetEmployeeDetailByIdQuery { EmployeeId = id });
+            return Ok(result);
+        }
         public async Task<IActionResult> GetAllEmployeeDetailList([FromBody]GetAllEmployeeDetailListQuery model)
         {
             var result = await _mediator.Send(model);

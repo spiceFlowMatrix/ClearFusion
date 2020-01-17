@@ -180,6 +180,17 @@ export class GLOBAL {
   public static API_Department_AddDepartment = 'Code/AddDepartment';
   public static API_Department_EditDepartment = 'Code/EditDepartment';
   public static API_Department_DeleteDepartment = 'Code/DeleteDepartment';
+  public static API_Code_GetCurrentFinancialYear = 'Code/GetCurrentFinancialYear';
+  public static API_Code_LeaveReasonType = 'Code/GetAllLeaveReasonList';
+  public static API_HR_AssignLeaveToEmployeeDetail = 'Attendance/AssignLeaveToEmployeeDetail';
+  public static API_HR_GetEmployeeApplyLeaveDetailById = 'Attendance/GetEmployeeApplyLeaveDetailById';
+  public static API_HR_GetEmployeeAppliedLeaves = 'Attendance/GetEmployeeAppliedLeaves';
+  public static API_HR_ApproveRejectLeave = 'Attendance/ApproveRejectLeave';
+
+  public static API_EmployeeDetail_GetEmployeeDetailById = 'EmployeeDetail/GetEmployeeDetailById';
+  public static API_HR_GetAllEmployeeAssignLeave = 'Attendance/GetAllEmployeeAssignLeave';
+  public static API_HR_AddEmployeeApplyLeaveDetail = 'Attendance/AddEmployeeApplyLeaveDetail';
+  public static API_HR_AddEmployeeLeave = 'Attendance/AddEmployeeLeave';
 
   public static API_Code_AddAttendanceGroups = 'Code/AddAttendanceGroups';
   public static API_Code_EditAttendanceGroups = 'Code/EditAttendanceGroups';

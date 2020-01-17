@@ -1,3 +1,126 @@
-<p>
-  employee-detail works!
-</p>
+<hum-config-card [showCard]="showDetail" (cardState)="getState($event)">
+  <div title>Employee Details</div>
+  <!-- <div subtitle>Please select all the fields that should be displayed in the purchases list and also the PDF
+    export.</div> -->
+  <div content humAddScroll [height]="90">
+      <div subtitle></div>
+      <h5>Identity Details</h5>
+      <table class="table table-striped">
+        <tr>
+          <td>First Name</td>
+          <td>{{employeeDetail.FirstName}}</td>
+        </tr>
+        <tr>
+          <td>Last Name</td>
+          <td>{{employeeDetail.LastName}}</td>
+        </tr>
+        <tr>
+          <td>Email</td>
+          <td>{{employeeDetail.Email}}</td>
+        </tr>
+        <tr>
+          <td>Phone Number</td>
+          <td>{{employeeDetail.Phone}}</td>
+        </tr>
+      </table>
+      <div subtitle></div>
+      <h5>Personal Details</h5>
+      <table class="table table-striped">
+        <tr>
+          <td>Sex</td>
+          <td>{{employeeDetail.Sex}}</td>
+        </tr>
+        <tr>
+          <td>Date Of Birth</td>
+          <td>{{employeeDetail.DateOfBirth}}</td>
+        </tr>
+        <tr>
+          <td>Country</td>
+          <td>{{employeeDetail.Country}}</td>
+        </tr>
+        <tr>
+          <td>State/Village/Province</td>
+          <td>{{employeeDetail.State}}</td>
+        </tr>
+        <tr>
+          <td>Profession</td>
+          <td>{{employeeDetail.Profession}}</td>
+        </tr>
+        <tr>
+          <td>Qualification</td>
+          <td>{{employeeDetail.Qualification}}</td>
+        </tr>
+        <tr>
+          <td>Experience Year</td>
+          <td>{{employeeDetail.ExperienceYear}}</td>
+        </tr>
+        <tr>
+          <td>Experience Month</td>
+          <td>{{employeeDetail.ExperienceMonth}}</td>
+        </tr>
+        <tr>
+          <td>Previous Work</td>
+          <td>{{employeeDetail.PreviousWork}}</td>
+        </tr>
+        <tr>
+          <td>Current Address</td>
+          <td>{{employeeDetail.CurrentAddress}}</td>
+        </tr>
+        <tr>
+          <td>Permanent Address</td>
+          <td>{{employeeDetail.PermanentAddress}}</td>
+        </tr>
+      </table>
+      <div subtitle></div>
+      <h5>Professional Details</h5>
+      <table class="table table-striped">
+        <tr>
+          <td>Employement Status</td>
+          <td>{{employeeDetail.EmployementStatus}}</td>
+        </tr>
+        <tr>
+          <td>Duty Station</td>
+          <td>{{employeeDetail.DutyStation}}</td>
+        </tr>
+        <tr>
+          <td>Hired On</td>
+          <td>{{employeeDetail.HiredOn}}</td>
+        </tr>
+        <tr>
+          <td>Attendance Group</td>
+          <td>{{employeeDetail.AttendanceGroup}}</td>
+        </tr>
+        <tr>
+          <td>Job Description</td>
+          <td>{{employeeDetail.JobDescription}}</td>
+        </tr>
+        <tr>
+          <td>Resigned</td>
+          <td>{{employeeDetail.Resigned}}</td>
+        </tr>
+        <tr>
+          <td>Resigned On</td>
+          <td>{{employeeDetail.ResignedOn}}</td>
+        </tr>
+        <tr>
+          <td>Resigned Reason</td>
+          <td>{{employeeDetail.ResignedReason}}</td>
+        </tr>
+        <tr>
+          <td>Terminated</td>
+          <td>{{employeeDetail.Terminated}}</td>
+        </tr>
+        <tr>
+          <td>Terminated On</td>
+          <td>{{employeeDetail.TerminatedOn}}</td>
+        </tr>
+        <tr>
+          <td>Terminated Reason</td>
+          <td>{{employeeDetail.TerminationReason}}</td>
+        </tr>
+      </table>
+
+  </div>
+  <div footer>
+  </div>
+</hum-config-card>

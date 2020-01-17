@@ -26,10 +26,14 @@ import { EmployeeContractComponent } from './components/employee-contract/employ
 import { EmployeeSalaryConfigComponent } from './components/employee-salary-config/employee-salary-config.component';
 import { EmployeeResignationComponent } from './components/employee-resignation/employee-resignation.component';
 import { EmployeeDetailComponent } from './components/employee-detail/employee-detail.component';
-import { MatTabsModule, MatTableModule, MatCheckboxModule, MatRadioModule } from '@angular/material';
+import { MatTabsModule, MatOptionModule, MatDialogModule } from '@angular/material';
+import { EmployeeLeaveAddComponent } from './components/employee-leave/employee-leave-add/employee-leave-add.component';
+import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
+import { AssignLeaveComponent } from './components/employee-leave/assign-leave/assign-leave.component';
+import { MatTableModule, MatCheckboxModule, MatRadioModule } from '@angular/material';
 
 @NgModule({
-  declarations: [EmployeeListComponent, EntryComponentComponent, EmployeeControlPanelComponent, EmployeeHistoryComponent, EmployeeLeaveComponent, EmployeeAttendanceComponent, EmployeeContractComponent, EmployeeSalaryConfigComponent, EmployeeResignationComponent, EmployeeDetailComponent],
+  declarations: [EmployeeListComponent, EntryComponentComponent, EmployeeControlPanelComponent, EmployeeHistoryComponent, EmployeeLeaveComponent, EmployeeAttendanceComponent, EmployeeContractComponent, EmployeeSalaryConfigComponent, EmployeeResignationComponent, EmployeeDetailComponent, EmployeeLeaveAddComponent, AssignLeaveComponent],
   imports: [
     CommonModule,
     HrRoutingModule,
@@ -54,12 +58,17 @@ import { MatTabsModule, MatTableModule, MatCheckboxModule, MatRadioModule } from
     MatPaginatorModule,
     MatDividerModule,
     MatTabsModule,
+    SatDatepickerModule,
+    SatNativeDateModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatDialogModule,
     MatSelectModule,
     MatTableModule,
     MatCheckboxModule,
     MatRadioModule
    // ConfigurationModule
-  ]
+  ], entryComponents: [EmployeeLeaveAddComponent, AssignLeaveComponent]
 })
 export class HrModule {
   entryComponents: [];
