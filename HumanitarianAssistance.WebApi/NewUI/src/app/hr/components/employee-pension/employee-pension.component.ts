@@ -41,11 +41,19 @@ export class EmployeePensionComponent implements OnInit {
     private commonLoader: CommonLoaderService,
     private employeePensionService: EmployeePensionService,
     private activeRoute: ActivatedRoute
-  ) {}
+  ) {
+
+  }
 
   ngOnInit() {
+     this.initModel();
+    this.selectedFinancialYearPension = {
+      value: 0,
+      name: 'Financial Year'
+    };
+    this.selectedFinancialYearTax = { value: 0, name: 'Financial Year' };
     this.getCurrencyList();
-    this.getFinancialYearList();
+    // this.getFinancialYearList();
     this.activeRoute.params.subscribe(params => {
       this.employeeId = params['id'];
     });
@@ -55,15 +63,35 @@ export class EmployeePensionComponent implements OnInit {
       .subscribe(result => {
         this.subscribeAllCurrency(result[0]);
         this.subscribeAllFinanacialYear(result[1]);
+
       });
     // this.getAllPensionList(data.FinancialYearId, data.CurrencyId);
     // this.getAllSalaryTaxData(data.FinancialYearId, data.CurrencyId);
     // this.getEmployeeTaxCalculation(this.employeeId, data.FinancialYearId);
   }
+
+  initModel() {
+    this.selectedCurrencyTax = {
+      name: null,
+      value: null
+    };
+    this.selectedCurrencyPension = {
+      name: null,
+      value: null,
+    };
+    this.selectedFinancialYearPension = {
+      name: null,
+      value: null,
+    };
+    this.selectedFinancialYearTax = {
+      name: null,
+      value: null,
+    };
+  }
+
   //#region "get currency  List"
   getCurrencyList() {
     return this.employeePensionService.GetCurrencyList();
-    // debugger;
     // this.commonLoader.showLoader();
     // this.employeePensionService.GetCurrencyList().subscribe(
     //   x => {
@@ -176,18 +204,21 @@ export class EmployeePensionComponent implements OnInit {
         })
       );
       this.commonLoader.hideLoader();
-      this.financialYearList$.subscribe(element => {
-        this.selectedFinancialYearTax = {
-          value: element[0].value,
-          name: element[0].name
-        };
-        this.selectedFinancialYearPension = {
-          value: element[0].value,
-          name: element[0].name
-        };
-      }, error => {
-        this.commonLoader.hideLoader();
-      });
+      this.financialYearList$.subscribe(
+        element => {
+          this.selectedFinancialYearTax = {
+            value: element[0].value,
+            name: element[0].name
+          };
+          this.selectedFinancialYearPension = {
+            value: element[0].value,
+            name: element[0].name
+          };
+        },
+        error => {
+          this.commonLoader.hideLoader();
+        }
+      );
     } else {
       this.selectedFinancialYearPension = {
         value: 0,
