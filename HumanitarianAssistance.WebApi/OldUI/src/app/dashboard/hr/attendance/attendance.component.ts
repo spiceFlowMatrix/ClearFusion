@@ -109,7 +109,7 @@ export class AttendanceComponent implements OnInit {
 // tslint:disable-next-line: radix
       OfficeId: this.selectedOffice,
       AttendanceStatus: attendanceStaus,
-      AttendanceGroupId: attendanceGroupId
+      AttendanceGroupId: this.AttendanceGroupId
     };
     this.isAttandanceMarked = false; // for toggle
     this.hrService

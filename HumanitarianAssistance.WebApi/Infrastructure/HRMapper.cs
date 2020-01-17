@@ -55,6 +55,7 @@ namespace HumanitarianAssistance.WebApi.Infrastructure
             CreateMap<EditExitInterviewCommand,ExistInterviewDetails>().ReverseMap();
             CreateMap<GetEmployeeExitInterviewPdfQuery,EmployeeExitInteviewPdfModel>().ReverseMap();
             CreateMap<AddHolidayDetailCommand,HolidayDetails>().ReverseMap();
+            CreateMap<GetEmployeePensionReportPdfQuery,EmployeePensionReportPdfMdel>().ReverseMap();
         }
     }
 }

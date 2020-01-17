@@ -24,7 +24,9 @@ import {
   CandidateAction,
   Shift,
   HiringRequestStatus,
-  Gender
+  Gender,
+  ContractType,
+  JobType
 } from 'src/app/shared/enum';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
@@ -119,7 +121,8 @@ export class RequestDetailComponent implements OnInit {
       PayRate: '',
       Status: '',
       Office: '',
-      DepartmentName: '',
+      JobType: '',
+      JobCategory: '',
       BudgetName: '',
       AnouncingDate: null,
       ClosingDate: null,
@@ -197,11 +200,12 @@ export class RequestDetailComponent implements OnInit {
                 PayRate: response.data.PayRate,
                 Office: response.data.Office,
                 OfficeId: response.data.OfficeId,
-                DepartmentName: response.data.DepartmentName,
+                JobType: JobType[response.data.JobType],
+                JobCategory: response.data.JobCategory,
                 BudgetName: response.data.BudgetName,
                 AnouncingDate: response.data.AnouncingDate,
                 ClosingDate: response.data.ClosingDate,
-                ContractType: response.data.ContractType,
+                ContractType: ContractType[response.data.ContractType],
                 ContractDuration: response.data.ContractDuration,
                 Shift: Shift[response.data.Shift],
                 EducationDegree: response.data.EducationDegree,
@@ -460,8 +464,6 @@ export class RequestDetailComponent implements OnInit {
       });
       // refresh the list after new request created
       dialogRef.componentInstance.onAddCandidateListRefresh.subscribe(() => {
-        this.hiringRequestDetails.FilledVacancies =
-          this.hiringRequestDetails.FilledVacancies + 1;
         this.getAllCandidateList(this.filterValueModel);
       });
       dialogRef.afterClosed().subscribe(() => {});

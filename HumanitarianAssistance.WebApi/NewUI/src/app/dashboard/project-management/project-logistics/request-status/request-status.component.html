@@ -6,6 +6,6 @@
   <app-comparative-statement [requestStatus]="requestStatus" [totalCost]="this.totalCost" [comparativeStatus]="comparativeStatus" [requestedItems]="requestedItems" (comparativeStatusChange)="comparativeStatusEmit($event)" (StatusChange)="StatusEmit($event)" (selectedItemChange)='selectedPurchaseItemChange($event)'></app-comparative-statement>
 </div>
 
-<div *ngIf="(this.totalCost>=10000 && this.totalCost<=59999)">
+<div *ngIf="(this.totalCost>=10000 && this.totalCost<=59999) || (this.totalCost>=60000)">
   <app-tender-statement [requestStatus]="requestStatus" [tenderStatus]="tenderStatus" [requestedItems]="requestedItems" [totalCost]="this.totalCost" [showTenderDetail]="showTenderDetail" (tenderStatusChange)="tenderStatusEmit($event)" (StatusChange)="StatusEmit($event)"></app-tender-statement>
 </div>
