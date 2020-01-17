@@ -14,12 +14,12 @@ import { TenderBidSelectionComponent } from '../tender-bid-selection/tender-bid-
   templateUrl: './tender-statement.component.html',
   styleUrls: ['./tender-statement.component.scss']
 })
-export class TenderStatementComponent implements OnInit {
+export class TenderStatementComponent implements OnInit, OnChanges {
 
   @Input() requestStatus = 0;
   @Input() totalCost = 0;
   @Input() tenderStatus = 1;
-
+  @Input() showTenderDetail = false;
   @Output() tenderStatusChange = new EventEmitter();
   @Output() StatusChange = new EventEmitter();
   @Input() requestedItems: any[];
@@ -28,6 +28,7 @@ export class TenderStatementComponent implements OnInit {
   requestId;
   tenderDocsList: any[] = [];
   tenderBidsList: any[] = [];
+  SelectedBidDetail = { ContactName: '' , SelectedBy: ''};
   constructor(private logisticservice: LogisticService,
     private dialog: MatDialog, private routeActive: ActivatedRoute,
     public toastr: ToastrService, private commonLoader: CommonLoaderService) {
@@ -38,6 +39,14 @@ export class TenderStatementComponent implements OnInit {
 
   ngOnInit() {
     if (this.tenderStatus === LogisticTenderStatus.Issued) {
+      this.getTenderProposalDocument();
+      this.getAllTenderBids();
+    }
+  }
+
+  ngOnChanges() {
+    if (this.showTenderDetail) {
+      this.getSelectedBidDetail();
       this.getTenderProposalDocument();
       this.getAllTenderBids();
     }
@@ -82,7 +91,7 @@ export class TenderStatementComponent implements OnInit {
   submitTenderBid() {
     const dialogRef = this.dialog.open(SubmitTenderBidComponent, {
       width: '500px',
-      data: {RequestId: this.requestId}
+      data: {RequestId: this.requestId, ExistingBids: this.tenderBidsList}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -104,7 +113,8 @@ export class TenderStatementComponent implements OnInit {
   editTenderBid(BidId) {
     const dialogRef = this.dialog.open(SubmitTenderBidComponent, {
       width: '500px',
-      data: {RequestId: this.requestId, BidDetail: this.tenderBidsList.filter(x => x.BidId === BidId)[0]}
+      data: {RequestId: this.requestId, BidDetail: this.tenderBidsList.filter(x => x.BidId === BidId)[0],
+        ExistingBids: this.tenderBidsList}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -139,6 +149,16 @@ export class TenderStatementComponent implements OnInit {
       if (result !== undefined && result.data != null ) {
          this.tenderStatusChange.emit(LogisticTenderStatus['Bid Selected']);
          this.StatusChange.emit(LogisticRequestStatus['Issue Purchase Order']);
+      }
+    });
+  }
+
+  getSelectedBidDetail() {
+    this.logisticservice.getSelectedBidDetail(this.requestId).subscribe(res => {
+      if (res.StatusCode === 200 && res.data.SelectedBidDetail != null) {
+        this.SelectedBidDetail = res.data.SelectedBidDetail;
+      } else {
+        this.toastr.error('Something went wrong!');
       }
     });
   }

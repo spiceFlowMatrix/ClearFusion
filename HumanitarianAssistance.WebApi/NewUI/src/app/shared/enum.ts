@@ -583,6 +583,12 @@ export enum EmployeeType {
 }
 //#endregion
 
+export enum EmploymentStatus {
+  Prospective = 1,
+  Active = 2,
+  Terminated = 3
+}
+
 //#region "StoreMasterCategory"
 export enum StoreMasterCategory {
   ConsumableTransport = 1,

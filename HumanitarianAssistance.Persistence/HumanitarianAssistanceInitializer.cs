@@ -50,11 +50,6 @@ namespace HumanitarianAssistance.Persistence
                 await CreateDefaultUserAndRoleForApplication(context, userManager, roleManager, logger);
             }
 
-            if(!context.EmployeeDetail.Any(x=>x.Email=="hamza@yopmail.com")) 
-            {
-                await MakeExistingDefaultUserEmployeeForApplication(context);
-            }
-
             if (!context.EmployeeContractType.Any())
             {
                 await AddEmployeeContractType(context);
@@ -180,6 +175,11 @@ namespace HumanitarianAssistance.Persistence
             if (!context.EmployeeType.Any())
             {
                 await AddEmployeeType(context);
+            }
+
+            if(!context.EmployeeDetail.Any(x=>x.Email=="hamza@yopmail.com")) 
+            {
+                await MakeExistingDefaultUserEmployeeForApplication(context);
             }
 
 
@@ -1446,9 +1446,9 @@ namespace HumanitarianAssistance.Persistence
             {
                 List<EmployeeType> list = new List<EmployeeType>
                 {
-                    new EmployeeType { EmployeeTypeName = "Prospective", IsDeleted = false, CreatedDate = DateTime.UtcNow },
-                    new EmployeeType { EmployeeTypeName = "Active", IsDeleted = false, CreatedDate = DateTime.UtcNow },
-                    new EmployeeType { EmployeeTypeName = "Terminated", IsDeleted = false, CreatedDate = DateTime.UtcNow }
+                    new EmployeeType { EmployeeTypeId = 1, EmployeeTypeName = "Prospective", IsDeleted = false, CreatedDate = DateTime.UtcNow },
+                    new EmployeeType { EmployeeTypeId = 2, EmployeeTypeName = "Active", IsDeleted = false, CreatedDate = DateTime.UtcNow },
+                    new EmployeeType { EmployeeTypeId = 3, EmployeeTypeName = "Terminated", IsDeleted = false, CreatedDate = DateTime.UtcNow }
                 };
                 await context.EmployeeType.AddRangeAsync(list);
                 await context.SaveChangesAsync();

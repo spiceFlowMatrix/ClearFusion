@@ -168,7 +168,7 @@ export class AddLogisticRequestComponent implements OnInit {
                 name: y.CurrencyCode + '-' + y.CurrencyName
               };
             }));
-            this.selectedCurrency = this.currencyDropdown[3].CurrencyId;
+            this.selectedCurrency = this.currencyDropdown.filter(x => x.CurrencyCode === 'USD')[0].CurrencyId;
             this.addLogisticRequestForm.controls['CurrencyId'].setValue(this.selectedCurrency);
           }
         },
