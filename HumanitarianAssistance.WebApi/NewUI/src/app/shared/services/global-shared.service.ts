@@ -102,7 +102,7 @@ export class GlobalSharedService {
       )
       .pipe(
        concatMap(res => {
-         console.log('res', res);
+         // console.log('res', res);
         const responseData: IResponseData = {
           data: res.data.SignedUrl,
           statusCode: res.StatusCode,
