@@ -1,3 +1,161 @@
-<p>
-  employee-salary-config works!
-</p>
+<mat-card humAddScroll>
+    <div class="row header">
+        <span class="action_header">Salary Configuration
+      <hum-button [type]="'edit'" [text]="'RECONFIGURE'"></hum-button>
+    </span>
+    </div><br/>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-4">
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <td>Salary Currency</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Active Base Salary</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="row header">
+        <span class="action_header">Monthly Salary Breakdown
+    <hum-button [type]="'add'" [text]="'ADD BONUS'"></hum-button>
+    <hum-button  [type]="'addNew'" [text]="'ADD FINE'"></hum-button>
+
+    <button mat-button [matMenuTriggerFor]="MonthMenu">
+      <h5 style="color: #0390D1;">{{selectedMonth.name | uppercase}}  &nbsp;<i class="fas fa-caret-down"></i></h5>
+    </button>
+<mat-menu #MonthMenu="matMenu">
+      <button (click)="selectedMonthChanged(month)" *ngFor="let month of monthDropdown$ | async" mat-menu-item>{{month.name}}</button>
+    </mat-menu>
+
+
+  </span>
+    </div><br/>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-4">
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <td>Active Hourly Rate</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Month</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Total Gross Salary</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Total Net Salary</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Salary Paid Amount</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <mat-tab-group>
+                <mat-tab label="Accumulated">
+                    <div class="col-md-12">
+                        <hum-table [headers]="accumulatedHeaders$" [isDefaultAction]="false" [items]="accumulatedList$"></hum-table>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Bonuses & Fines">
+                    <div class="col-md-12">
+                        <hum-table [headers]="bonusAndFineHeaders$" [isDefaultAction]="false" [items]="bonusAndFineList$" [actions]="actions" (actionClick)="empActionEvents($event)"></hum-table>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+
+
+    <!-- <div class="row header">
+      <span class="action_header">Salary Taxes
+    <button mat-button [matMenuTriggerFor]="TaxCurrencyMenu">
+      <h5 style="color: #0390D1;">
+        {{selectedCurrencyTax.name | uppercase}}  &nbsp;<i class="fas fa-caret-down"></i>
+      </h5>
+    </button>
+    <mat-menu #TaxCurrencyMenu="matMenu">
+      <button (click)="selectedCurrencyChangedForTax(taxCurrency)" *ngFor="let taxCurrency of currencyList$ | async" mat-menu-item>
+        {{ taxCurrency.name }}
+      </button>
+    </mat-menu>
+    <button mat-button [matMenuTriggerFor]="TaxFinancialYearMenu">
+      <h5 style="color: #0390D1;">
+        {{selectedFinancialYearTax.name | uppercase}} &nbsp;<i class="fas fa-caret-down"></i>
+      </h5>
+    </button>
+    <mat-menu #TaxFinancialYearMenu="matMenu">
+      <button (click)="selectedFinancialYearForTax(financialYear)"
+        *ngFor="let financialYear of financialYearList$ | async"
+        mat-menu-item
+      >
+        {{ financialYear.name }}
+      </button>
+    </mat-menu>
+    <hum-button [type]="'download'" [text]="'PDF EXPORT'"></hum-button>
+  </span>
+  </div>
+  <div class="row">
+      <div class="col-md-6">
+          <hum-table [headers]="taxListHeaders$" [items]="taxList$"></hum-table>
+      </div>
+  </div>
+  <br /> -->
+    <!-- <div class="row header">
+      <span class="action_header">Salary Pension
+    <button mat-button [matMenuTriggerFor]="PensionCurrencyMenu">
+      <h5 style="color: #0390D1;">
+        {{selectedCurrencyPension.name | uppercase}} &nbsp;<i class="fas fa-caret-down"></i>
+      </h5>
+    </button>
+    <mat-menu #PensionCurrencyMenu="matMenu">
+      <button (click)="selectedCurrencyChangedForPension(pensionCurrency)" *ngFor="let pensionCurrency of currencyList$ | async" mat-menu-item>
+        {{ pensionCurrency.name }}
+      </button>
+    </mat-menu>
+    <button mat-button [matMenuTriggerFor]="PensionFinancialYearMenu">
+      <h5 style="color: #0390D1;">
+        {{selectedFinancialYearPension.name | uppercase}}&nbsp;<i class="fas fa-caret-down"></i>
+      </h5>
+    </button>
+    <mat-menu #PensionFinancialYearMenu="matMenu">
+      <button (click)="selectedFinancialYearForPension(financialYear)"
+        *ngFor="let financialYear of financialYearList$ | async"
+        mat-menu-item
+      >
+        {{ financialYear.name }}
+      </button>
+    </mat-menu>
+    <hum-button [type]="'download'" [text]="'PDF EXPORT'"></hum-button>
+  </span>
+  </div>
+  <div class="row">
+      <div class="col-md-8">
+          <hum-table [headers]="pensionListHeaders$" [items]="pensionList$"></hum-table>
+      </div>
+  </div> -->
+</mat-card>
