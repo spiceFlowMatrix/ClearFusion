@@ -57,7 +57,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                             CurrentAddress = x.CurrentAddress,
                                             PermanentAddress = x.PermanentAddress,
                                             EmployementStatus = x.EmployeeType != null ? x.EmployeeType.EmployeeTypeName : "",
-                                            DutyStation= x.EmployeeProfessionalDetail.DutyStation != null ? _dbContext.OfficeDetail.First(z=> z.OfficeId == x.EmployeeProfessionalDetail.DutyStation.Value).OfficeName : "",
+                                            DutyStation= x.EmployeeProfessionalDetail.DutyStation != null ? (_dbContext.OfficeDetail.FirstOrDefault(z=> z.OfficeId == x.EmployeeProfessionalDetail.DutyStation.Value).OfficeName) : "",
                                             HiredOn = x.EmployeeProfessionalDetail.HiredOn != null ? x.EmployeeProfessionalDetail.HiredOn.Value.ToShortDateString() : "",
                                             AttendanceGroup = x.EmployeeProfessionalDetail.AttendanceGroupId != null ? x.EmployeeProfessionalDetail.AttendanceGroupMaster.Name : "",
                                             JobDescription = x.EmployeeProfessionalDetail.JobDescription,

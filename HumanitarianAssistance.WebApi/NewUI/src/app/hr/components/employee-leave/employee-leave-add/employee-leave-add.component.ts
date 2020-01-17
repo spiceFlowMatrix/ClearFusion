@@ -85,6 +85,9 @@ export class EmployeeLeaveAddComponent implements OnInit {
         this.isFormSubmitted = false;
         this.closeDialog();
       }
+    }, error => {
+      this.toastr.warning(error);
+      this.isFormSubmitted = false;
     });
   }
 

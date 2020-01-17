@@ -226,11 +226,10 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         }
 
         [HttpPost]
-        public async Task<IActionResult> ApproveLeave([FromBody] )
+        public async Task<IActionResult> ApproveRejectLeave([FromBody] ApproveRejectLeaveCommand model)
         {
-           GetEmployeeAppliedLeavesQuery query = new GetEmployeeAppliedLeavesQuery();
-           query.EmployeeId = id;
-            var item =  await _mediator.Send(query);
+            model .ModifiedById = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var item =  await _mediator.Send(model);
             return Ok(item);
         }
     }

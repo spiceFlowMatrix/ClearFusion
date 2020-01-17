@@ -73,4 +73,12 @@ export class HrLeaveService {
     );
   }
   //#endregion
+
+  //#region "approveRejectLeave"
+  approveRejectLeave(model: any): any {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HR_ApproveRejectLeave, model);
+  }
+  //#endregion
 }

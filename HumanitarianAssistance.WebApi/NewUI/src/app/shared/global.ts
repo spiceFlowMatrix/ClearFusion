@@ -185,7 +185,7 @@ export class GLOBAL {
   public static API_HR_AssignLeaveToEmployeeDetail = 'Attendance/AssignLeaveToEmployeeDetail';
   public static API_HR_GetEmployeeApplyLeaveDetailById = 'Attendance/GetEmployeeApplyLeaveDetailById';
   public static API_HR_GetEmployeeAppliedLeaves = 'Attendance/GetEmployeeAppliedLeaves';
-
+  public static API_HR_ApproveRejectLeave = 'Attendance/ApproveRejectLeave';
 
   public static API_EmployeeDetail_GetEmployeeDetailById = 'EmployeeDetail/GetEmployeeDetailById';
   public static API_HR_GetAllEmployeeAssignLeave = 'Attendance/GetAllEmployeeAssignLeave';

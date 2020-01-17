@@ -95,29 +95,28 @@ export class EmployeeLeaveComponent implements OnInit {
           };
         })
         );
+      }, error => {
+        this.toastr.warning(error);
       });
   }
 
   // Leave Details
   //#region "Get All Leave Details"
   GetAllLeaveDetails() {
-    debugger;
-
     this.hrLeave
       .getAllLeaveInfoById(this.employeeId)
       .subscribe(x => {
         if (x && x.LeaveList.length > 0) {
-          debugger;
             this.assignedLeaveList$ = of(x.LeaveList.map((element) => {
               return {
                 Id: element.ApplyLeaveId,
                 LeaveType: element.LeaveReasonName,
                 AppliedHours: element.LeaveHoursCount,
                 Status: element.ApplyLeaveStatus,
-                StatusId: element.StatusId,
+                StatusId: element.ApplyLeaveStatusId,
                 FromDate: element.FromDate,
                 ToDate: element.ToDate,
-                itemAction: (!element.StatusId) ? ([
+                itemAction: (!element.ApplyLeaveStatusId) ? ([
                   {
                     button: {
                       status: true,
@@ -151,8 +150,9 @@ export class EmployeeLeaveComponent implements OnInit {
                 ]) : ([
                     {
                       button: {
-                        status: false,
-                        text: 'ADD PROCUREMENT',
+                        status: true,
+                        text: 'SEE DAYS',
+                        type: 'text'
                       },
                       delete: false,
                       download: false,
@@ -162,16 +162,35 @@ export class EmployeeLeaveComponent implements OnInit {
             })
             );
         }
+      }, error => {
+        this.toastr.warning(error);
       });
   }
   //#endregion
 
   appliedLeaveActionEvents(event) {
-    debugger;
-    if (event.type === 'APPROVE') {
-
-
+    if (event.type === 'SEE DAYS') {
+      return;
     }
+    const model = {
+      Id: event.item.Id,
+      EmployeeId: this.employeeId,
+      Approved: false
+    };
+    if (event.type === 'APPROVE') {
+      model.Approved = true;
+    } else if (event.type === 'REJECT') {
+      model.Approved = false;
+    }
+
+    this.hrLeave.approveRejectLeave(model).subscribe(x => {
+      if (x) {
+        this.getLeaveBalanceDetails();
+        this.GetAllLeaveDetails();
+      }
+    }, error => {
+      this.toastr.warning(error);
+    });
   }
 
   assignLeave() {
