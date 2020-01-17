@@ -211,5 +211,32 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
 
             return await _mediator.Send(model);
         }
+
+         [HttpPost]
+        public async Task<IActionResult> AddEmployeeLeave([FromBody] ApplyEmployeeLeaveCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            var item =  await _mediator.Send(model);
+            return Ok(item);
+        }
+
+         [HttpGet]
+        public async Task<IActionResult> GetEmployeeAppliedLeaves(int id)
+        {
+           GetEmployeeAppliedLeavesQuery query = new GetEmployeeAppliedLeavesQuery();
+           query.EmployeeId = id;
+            var item =  await _mediator.Send(query);
+            return Ok(item);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveRejectLeave([FromBody] ApproveRejectLeaveCommand model)
+        {
+            model .ModifiedById = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var item =  await _mediator.Send(model);
+            return Ok(item);
+        }
     }
 }

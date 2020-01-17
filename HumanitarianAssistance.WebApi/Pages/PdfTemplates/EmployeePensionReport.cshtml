@@ -1,0 +1,129 @@
+@model HumanitarianAssistance.Application.HR.Models.EmployeePensionReportPdfMdel
+<!doctype html>
+<html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+        <div class="container">
+            <table style="width:100%;font-family:Arial, Verdana, sans-serif;">
+                <tr>
+                    <td>
+                        <table cellpadding="5" style="width:100%;">
+                            <tr>
+                            <td><img src="@Model.LogoPath" alt=""></td>
+                            <td colspan="2" align="center" style="font-size:20px;font-weight:500;">COORDINATION OF HUMANITARIAN ASSISTANCE(CHA)<br>Employee Pension Report</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table cellpadding="0" style="width:100%;">
+                            <tr>
+                                <td width="120" style="color:#333;padding:30px 0 15px;">Employee Code:</td>
+                                <td width="120" style="font-weight:500; color:#636363;padding:30px 0 15px;">@Model.EmployeeId</td>
+                                <td>&nbsp;</td>
+                                <td width="120" style="color:#333;padding:30px 0 15px;">Employee Name: </td>
+                                <td width="120" style="font-weight:500; color:#636363;padding:30px 0 15px;">@Model.EmployeeName</td>
+                            </tr>
+                            <tr>
+                                <td style="color:#333;padding:5px 0 15px;">Currency: </td>
+                                <td style="font-weight:500;padding:5px 0 15px; color:#636363;">@Model.Currency</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table style="text-align: center; width: 100%; border-collapse: collapse;" border="1">
+                            <tr>
+                                <th style="text-align: center; width: 50px;">
+                                Sr. No.
+                                </th>
+                                <th style="text-align: center; width: 50px;">
+                                Year
+                                </th>
+                                <th style="text-align: center; width: 100px;">
+                                Month
+                                </th>
+                                <th style="text-align: center;width: 200px;">
+                                Gross Salary
+                                </th>
+                                <th style="text-align: center;width: 200px;">
+                                Pension Deduction
+                                </th>
+                                <th style="text-align: center; width: 90px;">
+                                Pension Rate
+                                </th>
+                                <th style="text-align: center;width:100px">
+                                Profit
+                                </th>
+                                <th style="text-align: center;width:150px">
+                                Total
+                                </th>
+                            </tr>
+                            @{int count = 1;
+
+                            @foreach (var item in @Model.PensionReportListModel)
+                            {
+                                <tr>
+                                    <td colspan="8">
+                                        <table style="text-align: center; width: 100%; border-collapse: collapse;">
+                                            <tr >
+                                                <td colspan="8">
+                                                    Balances for Financial Year @item.Year
+                                                </td>
+                                           </tr>
+                                         @foreach (var i in  item.PensionList)
+                                         {
+                                         <tr>
+                                            <td
+                                                style="text-align: center; width: 50px;  border-bottom:0px;border-top: 1px solid;border-right: 1px solid;">
+                                                @(count++)
+                                             </td>
+                                            <td
+                                                style="text-align: center; width: 50px;  border-bottom:0px;border-top: 1px solid;border-right: 1px solid;">
+                                                @item.Year </td>
+                                            <td
+                                                style="text-align: center; width: 100px; border-bottom:0px;border-top: 1px solid;border-right: 1px solid;">
+                                                @i.Date </td>
+                                            <td
+                                                style="text-align: center; width: 200px; border-bottom:0px;border-top: 1px solid;border-right: 1px solid;">
+                                                @i.GrossSalary</td>
+                                            <td
+                                                style="text-align: center; width: 200px; border-bottom:0px;border-top: 1px solid;border-right: 1px solid;">
+                                                @i.PensionDeduction</td>
+                                            <td
+                                                style="text-align: center; width: 90px;  border-bottom:0px;border-top: 1px solid;border-right: 1px solid;">
+                                                @i.PensionRate</td>
+                                            <td
+                                                style="text-align: center; width: 100px; border-bottom:0px;border-top: 1px solid;border-right: 1px solid;">
+                                                @i.Profit</td>
+                                            <td
+                                                style="text-align: center; width: 150px; border-bottom:0px;border-top: 1px solid;border-right: 0px;">
+                                                @i.Total</td>
+                                        </tr>
+                                         }
+                                        </table>
+                                    </td>
+                                </tr>  
+                              }
+                            }
+                             <tr style="font-weight: bold;">
+                                    <td style="text-align: center; width: 360px;" colSpan="4">Total</td>
+                                    <td style="text-align: center; width: 200px;">@Model.PensionDeductionTotal</td>
+                                    <td style="text-align: center; width: 100px;">@Model.PensionProfitTotal</td>
+                                    <td style="text-align: center; width: 150px;">@Model.Total</td>
+                             </tr>
+                            </table>
+                        </td>
+                    </td>
+                </tr>
+            </table>    
+        </div>
+    </body>
+</html>

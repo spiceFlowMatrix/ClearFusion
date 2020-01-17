@@ -38,5 +38,20 @@ export class StaticUtilities {
       new Date().getMilliseconds()
     );
   }
+
+  static groupBy(list, keyGetter) {
+    let newmap = new Map();
+    list.forEach((item) => {
+         const key = keyGetter(item);
+         const collection = newmap.get(key);
+         if (!collection) {
+          newmap.set(key, [item]);
+         } else {
+             collection.push(item);
+         }
+    });
+    newmap = new Map(Array.from(newmap).sort((a, b) => a[0] > b[0] ? 1 : -1));
+    return newmap;
+  }
   //#endregion
 }

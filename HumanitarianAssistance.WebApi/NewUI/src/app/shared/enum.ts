@@ -97,15 +97,15 @@ export enum criteriaEvaluationScores {
   pastCriticismQualityDeliverable_No = 0,
 
   finanacingHistory_Good = 2,
-   finanacingHistory_Neutral = 0,
+  finanacingHistory_Neutral = 0,
   // finanacingHistory_Bad = -1,
 
   religiousStanding_Good = 2,
-   religiousStanding_Neutral = 0,
+  religiousStanding_Neutral = 0,
   // religiousStanding_Bad = -1,
 
   politicalStanding_Good = 2,
-   politicalStanding_Neutral = 0,
+  politicalStanding_Neutral = 0,
   // politicalStanding_Bad = -1,
 
   // Products && services
@@ -410,7 +410,7 @@ export enum criteriaEvaluationScores {
   ruralDevelopmentProtection_Yes = 2,
   ruralDevelopmentProtection_No = 0,
 
-  education_Yes = 2 ,
+  education_Yes = 2,
   education_No = 0,
 
   healthAndNutrition_Yes = 2,
@@ -422,7 +422,7 @@ export enum criteriaEvaluationScores {
   agricultureaAndLivestock_Yes = 2,
   agricultureaAndLivestock_No = 0,
 
-// end tab
+  // end tab
   staffSecured_Yes = 2,
   staffSecured_No = 0,
 
@@ -446,7 +446,6 @@ export enum criteriaEvaluationScores {
 
   terroristActivity_Yes = 1,
   terroristActivity_No = 0,
-
 
   // riskReputation_Yes = 0,
   // riskReputation_No = 1,
@@ -483,9 +482,6 @@ export enum criteriaEvaluationScores {
   religiousBeliefs_Yes = 0.2,
   religiousBeliefs_No = 0,
 
-
-
-
   focusDeliveryRisk_Yes = 1,
   focusDeliveryRisk_No = 0,
 
@@ -502,8 +498,7 @@ export enum criteriaEvaluationScores {
   opportunityLoss_No = 0,
 
   probabilityDelayCuts_Yes = 1,
-  probabilityDelayCuts_No = 0,
-
+  probabilityDelayCuts_No = 0
 
   //#endregion
 }
@@ -587,6 +582,12 @@ export enum EmployeeType {
   Terminated = 3
 }
 //#endregion
+
+export enum EmploymentStatus {
+  Prospective = 1,
+  Active = 2,
+  Terminated = 3
+}
 
 //#region "StoreMasterCategory"
 export enum StoreMasterCategory {
@@ -715,45 +716,53 @@ export enum Month {
 }
 
 export enum Shift {
-Day = 1,
-Night = 2,
-Other = 3,
+  Day = 1,
+  Night = 2,
+  Other = 3
 }
 
 export enum QuestionType {
-  FeelingAboutEmployeeAspects= 1,
+  FeelingAboutEmployeeAspects = 1,
   ReasonOfLeaving,
   TheDepartment,
   TheJobItself,
   MySupervisor,
   TheManagement
-  }
+}
 
-  export const QuestionTypeName = new Map<number, string>([
-    [QuestionType.FeelingAboutEmployeeAspects, 'Feeling About Employee Aspects'],
-    [QuestionType.ReasonOfLeaving, 'Reason Of Leaving'],
-    [QuestionType.TheDepartment, 'The Department'],
-    [QuestionType.TheJobItself, 'The Job Itself'],
-    [QuestionType.MySupervisor, 'My Supervisor'],
-    [QuestionType.TheManagement, 'The Management'],
-  ]);
+export const QuestionTypeName = new Map<number, string>([
+  [QuestionType.FeelingAboutEmployeeAspects, 'Feeling About Employee Aspects'],
+  [QuestionType.ReasonOfLeaving, 'Reason Of Leaving'],
+  [QuestionType.TheDepartment, 'The Department'],
+  [QuestionType.TheJobItself, 'The Job Itself'],
+  [QuestionType.MySupervisor, 'My Supervisor'],
+  [QuestionType.TheManagement, 'The Management']
+]);
 
-  export enum Gender {
-    Male = 1,
-    Female = 2,
-    Other = 3,
-  }
+export enum Gender {
+  Male = 1,
+  Female = 2,
+  Other = 3
+}
 
-  export enum TenderProposalDocumentType {
-    'Proposal Document' = 18,
-    'RFP Document' = 19,
-    'Announcement Document' = 20
-  }
+export enum TenderProposalDocumentType {
+  'Proposal Document' = 18,
+  'RFP Document' = 19,
+  'Announcement Document' = 20
+}
 
-    export enum GainLossStatus {
-      Loss = -1,
-      Balanced = 0,
-      Gain = 1,
-      Consolidated = 2
-      }
-
+export enum GainLossStatus {
+  Loss = -1,
+  Balanced = 0,
+  Gain = 1,
+  Consolidated = 2
+}
+export enum JobType {
+  'Part-time' = 1,
+  'Full-time' = 2
+}
+export enum ContractType {
+  'Probationary' = 1,
+  'Part-time' = 2,
+  'Permanent/Full-time' = 3
+}

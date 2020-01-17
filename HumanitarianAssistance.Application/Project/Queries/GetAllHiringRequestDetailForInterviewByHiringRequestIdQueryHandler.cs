@@ -54,7 +54,7 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                                 JobType = hrd.JobTypeId,
                                 AnouncingDate = hrd.AnouncingDate.Value.ToString("dd/MM/yyyy"),
                                 ClosingDate = hrd.ClosingDate.Value.ToString("dd/MM/yyyy"),
-                                ContractType = hrd.ContractType,
+                                ContractType = hrd.ContractTypeId,
                                 ContractDuration = hrd.ContractDuration,
                                 JobShift = hrd.Shift == 1 ? "Day" : hrd.Shift == 2 ? "Night" : "Others",                               
                                 Profession = pr.ProfessionName,

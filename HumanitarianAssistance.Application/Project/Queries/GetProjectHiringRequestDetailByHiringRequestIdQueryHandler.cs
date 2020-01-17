@@ -39,25 +39,28 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                            from p in pd.DefaultIfEmpty()
                                            join b in _dbContext.ProjectBudgetLineDetail on hr.BudgetLineId equals b.BudgetLineId into bl
                                            from b in bl.DefaultIfEmpty()
-                                           join d in _dbContext.Department on hr.JobTypeId equals d.DepartmentId into dp
+                                           join d in _dbContext.Department on hr.JobCategoryId equals d.DepartmentId into dp
                                            from d in dp.DefaultIfEmpty()
+                                           join de in _dbContext.DesignationDetail on hr.PositionId equals de.DesignationId into del
+                                           from de in del.DefaultIfEmpty()
                                            select new ProjectHiringRequestModel
                                            {
                                                HiringRequestId = hr.HiringRequestId,
                                                HiringRequestCode = hr.HiringRequestCode,
                                                Office = o.OfficeName,
                                                JobGrade = g.GradeName,
-                                               Position = p.ProfessionName,
+                                               Position = de.Designation,
                                                TotalVacancies = hr.TotalVacancies,
                                                FilledVacancies = hr.FilledVacancies != null ? hr.FilledVacancies : 0,
                                                PayCurrency = c.CurrencyName,
                                                PayRate = hr.HourlyRate,
                                                BudgetName = b.BudgetName,
                                                BudgetLineId = b.BudgetLineId,
-                                               DepartmentName = d.DepartmentName,
+                                               JobCategory = d.DepartmentName,
+                                               JobType = hr.JobTypeId,
                                                AnouncingDate = hr.AnouncingDate != null ? hr.AnouncingDate.Value.ToString("dd-MM-yyyy") : "",
                                                ClosingDate = hr.ClosingDate != null ? hr.ClosingDate.Value.ToString("dd-MM-yyyy") : "",
-                                               ContractType = hr.ContractType,
+                                               ContractType = hr.ContractTypeId,
                                                ContractDuration = hr.ContractDuration,
                                                Shift = hr.Shift,
                                                EducationDegree = hr.EducationDegreeMaster.Name,
