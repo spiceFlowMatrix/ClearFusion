@@ -38,7 +38,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     LeaveReasonId = x.LeaveReasonId,
                     LeaveReasonName = x.LeaveReasonDetails?.ReasonName ?? null,
                     ApplyLeaveStatusId = x.ApplyLeaveStatusId,
-                    ApplyLeaveStatus = x.ApplyLeaveStatusId == (int)ApplyLeaveStatus.Approve ? "Approve" : x.ApplyLeaveStatusId == (int)ApplyLeaveStatus.Reject ? "Reject" : "",
+                    ApplyLeaveStatus = x.ApplyLeaveStatusId == (int)ApplyLeaveStatus.Approve ? "Approve" : x.ApplyLeaveStatusId == (int)ApplyLeaveStatus.Reject ? "Reject" : "Pending",
                     Remarks = x.Remarks
                 }).ToList();
                 

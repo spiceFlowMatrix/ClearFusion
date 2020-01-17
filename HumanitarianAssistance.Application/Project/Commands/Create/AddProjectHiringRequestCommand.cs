@@ -10,11 +10,11 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
         public int? Office { get; set; }
         public int? GradeId { get; set; }
         public long? ProjectId { get; set; }
-        public long? JobCategory { get; set; }
+        public int? JobCategory { get; set; }
         public string MinEducationLevel { get; set; }
         public string Organization { get; set; }
         public int? ProvinceId { get; set; }
-        public string ContractType { get; set; }
+        public int? ContractType { get; set; }
         public int? ContractDuration { get; set; }
         public int? Gender { get; set; }
         public string SalaryRange { get; set; }

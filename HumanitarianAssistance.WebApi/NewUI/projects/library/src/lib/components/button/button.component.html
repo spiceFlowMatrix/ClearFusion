@@ -36,7 +36,7 @@
       {{text | uppercase}}
     </h5>
   </button>
-    <button *ngSwitchCase="'filter'" [disabled]="disabled" mat-flat-button class="blue" (click)="btnClick()" type="button">
+    <button *ngSwitchCase="'filter'" [disabled]="disabled" mat-flat-button class="blue" (click)="btnClick()" [type]="(isSubmit)?'submit':'button'">
     <h5>
       <i class="fas fa-filter"></i>
       {{text | uppercase}}
@@ -87,6 +87,24 @@
     <h5>
       <i class="fas fa-plus"></i>
       {{text | uppercase}}
+    </h5>
+  </button>
+    <button *ngSwitchCase="'delete'" mat-flat-button class="red" (click)="btnClick()" type="button">
+    <h5>
+      <i class="fas fa-trash fa-1"></i>
+      {{text| uppercase}}
+    </h5>
+  </button>
+    <button *ngSwitchCase="'exclamation'" mat-flat-button class="red" (click)="btnClick()" type="button">
+    <h5>
+      <i class="fas fa-exclamation-circle fa-1"></i>
+      {{text| uppercase}}
+    </h5>
+  </button>
+    <button *ngSwitchCase="'minus'" mat-flat-button class="green" (click)="btnClick()" type="button">
+    <h5>
+        <i class="fas fa-minus-circle fa-1"></i>
+      {{text| uppercase}}
     </h5>
   </button>
 </ng-container>

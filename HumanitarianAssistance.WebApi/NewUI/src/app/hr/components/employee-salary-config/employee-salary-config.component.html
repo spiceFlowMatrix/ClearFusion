@@ -1,7 +1,7 @@
 <mat-card humAddScroll>
     <div class="row header">
         <span class="action_header">Salary Configuration
-      <hum-button [type]="'edit'" [text]="'RECONFIGURE'"></hum-button>
+      <hum-button [type]="'edit'" [text]="'RECONFIGURE'" (click)="addSalaryConfiguration()"></hum-button>
     </span>
     </div><br/>
     <div class="row">
@@ -25,8 +25,8 @@
     <br/>
     <div class="row header">
         <span class="action_header">Monthly Salary Breakdown
-    <hum-button [type]="'add'" [text]="'ADD BONUS'"></hum-button>
-    <hum-button  [type]="'addNew'" [text]="'ADD FINE'"></hum-button>
+    <hum-button [type]="'add'" [text]="'ADD BONUS'" (click)="addBonus()"></hum-button>
+    <hum-button  [type]="'addNew'" [text]="'ADD FINE'" (click)="addFine()"></hum-button>
 
     <button mat-button [matMenuTriggerFor]="MonthMenu">
       <h5 style="color: #0390D1;">{{selectedMonth.name | uppercase}}  &nbsp;<i class="fas fa-caret-down"></i></h5>
