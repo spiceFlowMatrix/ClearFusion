@@ -9,6 +9,7 @@ variables:
     CF_CLEAN_URL: cleantestedg.cha-net.org
     CF_REVIEW_URL: review.cha-net.org
     CF_CHAPROD_URL: manage.cha-net.org
+    CF_SMOPROD_URL: manage.sabacent.org
     CF_APP_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}
     DOCKER_TLS_CERTDIR: "" # required since we use dind with no tls
     DOCKER_HOST: tcp://localhost:2375/ # required since we use dind
@@ -74,7 +75,7 @@ build_backend:
         - dotnet restore --packages ${NUGET_PACKAGES_DIRECTORY}
     script:
         - dotnet publish -c Release -o ${RELEASE_OBJECTS_DIRECTORY} --no-restore
-        - cp -r ${SOURCE_CODE_PATH}NewUI/dist/ ${SOURCE_CODE_PATH}${RELEASE_OBJECTS_DIRECTORY}NewUI/dist
+        - cp -r ${SOURCE_CODE_PATH}NewUI/dist/ ${SOURCE_CODE_PATH}${RELEASE_OBJECTS_DIRECTORY}NewUI
         - cp -r ${SOURCE_CODE_PATH}OldUI/dist/ ${SOURCE_CODE_PATH}${RELEASE_OBJECTS_DIRECTORY}OldUI
     after_script:
         - find ${SOURCE_CODE_PATH}${RELEASE_OBJECTS_DIRECTORY}
@@ -84,7 +85,7 @@ build_backend:
         expire_in: 1 week
     retry: 2
 
-publish_production:
+publish_container:
     image: docker:git
     services:
         - docker:18.09.7-dind
@@ -95,6 +96,11 @@ publish_production:
         - docker build --cache-from ${CF_APP_IMAGE} -t ${CF_APP_IMAGE} -f ./Dockerfile .
         - docker push ${CF_APP_IMAGE}
     retry: 2
+    only:
+        refs:
+            - cleanarch
+            - review
+            - master
 
 deploy_cleanarch:
     image: devth/helm
@@ -191,6 +197,36 @@ deploy_chaprod:
         refs:
             - master
 
+deploy_smoprod:
+    stage: deploy
+    image: devth/helm
+    environment:
+        name: smoprod
+        url: https://${CF_SMOPROD_URL}
+    variables:
+        HOSTING_ENV: Production
+    script:
+        - init_gke
+        - helm upgrade
+          --install
+          --namespace ${KUBE_NAMESPACE}
+          --set web.image="${CF_APP_IMAGE}"
+          --set web.host="${CF_SMOPROD_URL}"
+          --set app.env="${HOSTING_ENV}"
+          --set deployment.namespace="${KUBE_NAMESPACE}"
+          --set ci.project.path="${CI_PROJECT_PATH_SLUG}"
+          --set ci.project.environment="${CI_ENVIRONMENT_SLUG}"
+          --set app.secret.appdbconnectionstring="${LINUX_DBCONNECTION_STRING}"
+          --set app.secret.postgresuser="${POSTGRES_DB_USER}"
+          --set app.secret.postgrespassword="${POSTGRES_DB_PASSWORD}"
+          --set app.secret.appserviceaccount="${APPLICATION_GCP_SERVICEACCOUNT}"
+          --set app.secret.googlebucketname="${APP_GOOGLE_BUCKET_NAME}"
+          --wait
+          clearfusion
+          ./k8s-chart
+    only:
+        refs:
+            - master
 
 .functions: &functions |
     # Functions

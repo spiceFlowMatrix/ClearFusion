@@ -50,11 +50,6 @@ namespace HumanitarianAssistance.Persistence
                 await CreateDefaultUserAndRoleForApplication(context, userManager, roleManager, logger);
             }
 
-            if(!context.EmployeeDetail.Any(x=>x.Email=="hamza@yopmail.com")) 
-            {
-                await MakeExistingDefaultUserEmployeeForApplication(context);
-            }
-
             if (!context.EmployeeContractType.Any())
             {
                 await AddEmployeeContractType(context);
@@ -180,6 +175,11 @@ namespace HumanitarianAssistance.Persistence
             if (!context.EmployeeType.Any())
             {
                 await AddEmployeeType(context);
+            }
+
+            if(!context.EmployeeDetail.Any(x=>x.Email=="hamza@yopmail.com")) 
+            {
+                await MakeExistingDefaultUserEmployeeForApplication(context);
             }
 
 

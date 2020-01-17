@@ -15,6 +15,7 @@ export class TenderBidSelectionComponent implements OnInit {
 
   bidDropdown = [];
   bidSelectionForm: FormGroup;
+  max = {TotalScore: 0 , BidId: 0};
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private fb: FormBuilder,
   private dialogRef: MatDialogRef<TenderBidSelectionComponent>,
   private toastr: ToastrService, private logisticservice: LogisticService, private commonLoader: CommonLoaderService) { }
@@ -26,9 +27,36 @@ export class TenderBidSelectionComponent implements OnInit {
     this.data.BidDetail.forEach(element => {
       this.bidDropdown.push({
         Id: element.BidId,
-        Name: element.Name
+        Name: element.Name + '-' + (element.Profile_Experience + element.OfferValidity +
+          element.TOR_SOWAcceptance + element.Securities_BankGuarantee +
+          element.OfferDocumentation +
+          element.Company_GoodsSpecification + element.Service_Warranty +
+          element.Certification_GMP_COPP + element.WorkExperience +
+          element.DeliveryDate)
       });
     });
+
+    this.max = {TotalScore: 0 , BidId: 0};
+    this.data.BidDetail.forEach(element => {
+      if ((element.Profile_Experience + element.OfferValidity +
+        element.TOR_SOWAcceptance + element.Securities_BankGuarantee +
+        element.OfferDocumentation +
+        element.Company_GoodsSpecification + element.Service_Warranty +
+        element.Certification_GMP_COPP + element.WorkExperience +
+        element.DeliveryDate) > this.max.TotalScore) {
+        this.max.TotalScore = (element.Profile_Experience + element.OfferValidity +
+          element.TOR_SOWAcceptance + element.Securities_BankGuarantee +
+          element.OfferDocumentation +
+          element.Company_GoodsSpecification + element.Service_Warranty +
+          element.Certification_GMP_COPP + element.WorkExperience +
+          element.DeliveryDate);
+        this.max.BidId = element.BidId;
+      }
+    });
+
+    if (this.max.BidId !== 0) {
+      this.bidSelectionForm.controls['SelectedBid'].setValue(this.max.BidId);
+    }
   }
 
   get SelectedBid() {
@@ -42,6 +70,10 @@ export class TenderBidSelectionComponent implements OnInit {
   selectBid() {
     if (!this.bidSelectionForm.valid) {
       this.toastr.warning('Please provide Bid Selection!');
+      return;
+    }
+    if (this.bidSelectionForm.value.SelectedBid !== this.max.BidId) {
+      this.toastr.warning('Please select Bid with highest score!');
       return;
     }
     this.commonLoader.showLoader();
