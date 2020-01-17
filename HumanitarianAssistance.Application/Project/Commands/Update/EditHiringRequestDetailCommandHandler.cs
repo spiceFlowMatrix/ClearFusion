@@ -63,7 +63,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                     projectHiringRequest.BudgetLineId= request.BudgetLine;
                     projectHiringRequest.Background = request.Background;
                     projectHiringRequest.JobStatus = request.JobStatus;
-                    projectHiringRequest.JobId = request.JobCategory;
+                    projectHiringRequest.JobCategoryId = request.JobCategory;
                     projectHiringRequest.JobTypeId= request.JobType;
 
                     projectHiringRequest.KnowladgeAndSkillRequired = request.KnowledgeAndSkillsRequired;
@@ -74,7 +74,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update
                     projectHiringRequest.SubmissionGuidlines = request.SubmissionGuidelines;
                     projectHiringRequest.ClosingDate = request.ClosingDate;
                     projectHiringRequest.ContractDuration = request.ContractDuration;
-                    projectHiringRequest.ContractType = request.ContractType;
+                    projectHiringRequest.ContractTypeId = request.ContractType;
                     projectHiringRequest.CountryId = request.Nationality;
                     projectHiringRequest.GenderId = request.Gender;
                     projectHiringRequest.CurrencyId= request.PayCurrency;
