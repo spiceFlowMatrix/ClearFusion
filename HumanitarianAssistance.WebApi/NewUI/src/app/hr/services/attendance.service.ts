@@ -17,7 +17,6 @@ export class AttendanceService {
 
   //#region "getAttendancelist"
   getAttendanceList(model: any) {
-    debugger;
     return this.globalService
       .post(
         this.appurl.getApiUrl() +
