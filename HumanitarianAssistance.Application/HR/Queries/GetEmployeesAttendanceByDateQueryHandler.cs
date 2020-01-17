@@ -34,6 +34,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
             {
 
                 int month = DateTime.Parse(request.SelectedDate).Month;
+                int year = DateTime.Parse(request.SelectedDate).Year;
 
                 List<EmployeeAttendance> empattendancelist = await _dbContext.EmployeeAttendance
                                                                              .Include(x=> x.EmployeeDetails)
@@ -83,7 +84,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     int count = 0;
 
                     //Get Default In-time and out-time for an office and for current year and current month
-                    PayrollMonthlyHourDetail xPayrollMonthlyHourDetail = _dbContext.PayrollMonthlyHourDetail.FirstOrDefault(x => x.IsDeleted == false && x.OfficeId == request.OfficeId && x.PayrollYear == DateTime.Now.Year
+                    PayrollMonthlyHourDetail xPayrollMonthlyHourDetail = _dbContext.PayrollMonthlyHourDetail.FirstOrDefault(x => x.IsDeleted == false && x.OfficeId == request.OfficeId && x.PayrollYear == year
                                                                                                                             && x.PayrollMonth == month && x.AttendanceGroupId== request.AttendanceGroupId);
                     if (xPayrollMonthlyHourDetail != null)
                     {

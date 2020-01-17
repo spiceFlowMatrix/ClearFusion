@@ -148,6 +148,9 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<AttendanceGroupMaster> AttendanceGroupMaster { get; set; }
         public DbSet<EducationDegreeMaster> EducationDegreeMaster { get; set; }
         public DbSet<ExitInterviewQuestionsMaster> ExitInterviewQuestionsMaster { get; set; }
+        public DbSet<EmployeeResignationDetail> EmployeeResignationDetail { get; set; }
+        public DbSet<EmployeeResignationQuestionDetail> EmployeeResignationQuestionDetail { get; set; }
+
 
         //created by arjun singh
         public DbSet<ChatDetail> ChatDetail { get; set; }
