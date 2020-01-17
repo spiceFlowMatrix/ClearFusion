@@ -6,5 +6,6 @@ namespace HumanitarianAssistance.Application.HR.Queries
     {
         public int PageSize { get; set; }
         public int PageIndex { get; set; }
+        public bool IsPaginated { get; set; }
     }
 }

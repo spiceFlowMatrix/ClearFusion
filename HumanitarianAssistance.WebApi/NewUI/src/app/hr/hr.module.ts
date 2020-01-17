@@ -26,7 +26,7 @@ import { EmployeeContractComponent } from './components/employee-contract/employ
 import { EmployeeSalaryConfigComponent } from './components/employee-salary-config/employee-salary-config.component';
 import { EmployeeResignationComponent } from './components/employee-resignation/employee-resignation.component';
 import { EmployeeDetailComponent } from './components/employee-detail/employee-detail.component';
-import { MatTabsModule, MatTableModule, MatCheckboxModule } from '@angular/material';
+import { MatTabsModule, MatTableModule, MatCheckboxModule, MatRadioModule } from '@angular/material';
 
 @NgModule({
   declarations: [EmployeeListComponent, EntryComponentComponent, EmployeeControlPanelComponent, EmployeeHistoryComponent, EmployeeLeaveComponent, EmployeeAttendanceComponent, EmployeeContractComponent, EmployeeSalaryConfigComponent, EmployeeResignationComponent, EmployeeDetailComponent],
@@ -56,7 +56,8 @@ import { MatTabsModule, MatTableModule, MatCheckboxModule } from '@angular/mater
     MatTabsModule,
     MatSelectModule,
     MatTableModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatRadioModule
    // ConfigurationModule
   ]
 })

@@ -25,7 +25,8 @@ export class ExitInterviewQuestionsComponent implements OnInit {
   actions: TableActionsModel;
   pageModel = {
     PageSize: 10,
-    PageIndex: 0
+    PageIndex: 0,
+    IsPaginated: true
   };
   RecordCount: number;
 
