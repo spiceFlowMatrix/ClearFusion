@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200109044408_updateColumnInProjectHiringRequestDetailTbl")]
+    partial class updateColumnInProjectHiringRequestDetailTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2352,8 +2354,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<bool>("IsResigned");
-
                     b.Property<string>("IssuePlace");
 
                     b.Property<string>("Language");
@@ -2405,8 +2405,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<string>("RegCode");
 
                     b.Property<string>("Remarks");
-
-                    b.Property<int>("ResignationStatus");
 
                     b.Property<string>("Resume");
 
@@ -3383,66 +3381,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("EmployeeID");
 
                     b.ToTable("EmployeeRelativeInfo");
-                });
-
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeResignationDetail", b =>
-                {
-                    b.Property<long>("EmployeeResignationId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CommentsIssues");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<int>("EmployeeID");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<bool>("IsIssueUnresolved");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<DateTime>("ResignDate");
-
-                    b.HasKey("EmployeeResignationId");
-
-                    b.HasIndex("EmployeeID");
-
-                    b.ToTable("EmployeeResignationDetail");
-                });
-
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeResignationQuestionDetail", b =>
-                {
-                    b.Property<int>("ResignationQuestionId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("Answer");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int>("QuestionId");
-
-                    b.Property<long>("ResignationId");
-
-                    b.HasKey("ResignationQuestionId");
-
-                    b.HasIndex("QuestionId");
-
-                    b.HasIndex("ResignationId");
-
-                    b.ToTable("EmployeeResignationQuestionDetail");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeSalaryAnalyticalInfo", b =>
@@ -9895,27 +9833,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
                         .WithMany()
                         .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeResignationDetail", b =>
-                {
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
-                        .WithMany()
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeResignationQuestionDetail", b =>
-                {
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.ExitInterviewQuestionsMaster", "ExitInterviewQuestionsMaster")
-                        .WithMany()
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeResignationDetail", "EmployeeResignationDetail")
-                        .WithMany()
-                        .HasForeignKey("ResignationId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
