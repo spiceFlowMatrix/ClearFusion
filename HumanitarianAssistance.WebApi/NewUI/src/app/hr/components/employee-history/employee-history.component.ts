@@ -8,7 +8,7 @@ import { AddEducationComponent } from './add-education/add-education.component';
 import { AddHistoricalLogComponent } from './add-historical-log/add-historical-log.component';
 import { EmployeeHistoryService } from './../../services/employee-history.service';
 import { Component, OnInit, HostListener } from '@angular/core';
-import { of, Observable } from 'rxjs';
+import { of, Observable, forkJoin, ReplaySubject } from 'rxjs';
 import {
   IHistoricalLogDetails,
   IEducationDetails,
@@ -26,6 +26,7 @@ import { TableActionsModel } from 'projects/library/src/public_api';
 import { HrService } from '../../services/hr.service';
 import { ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-employee-history',
@@ -33,11 +34,7 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./employee-history.component.scss']
 })
 export class EmployeeHistoryComponent implements OnInit {
-  historicalLogHeader$ = of([
-    'Id',
-    'Date',
-    'Description'
-  ]);
+  historicalLogHeader$ = of(['Id', 'Date', 'Description']);
   educationHeader$ = of([
     'Id',
     'Education From',
@@ -108,6 +105,7 @@ export class EmployeeHistoryComponent implements OnInit {
   employeeOtherSkillList$: Observable<IEmployeeOtherSkillDetails[]>;
   employeeSalaryBudgetList$: Observable<IEmployeeSalaryBudgetDetails[]>;
   employeeLanguageList$: Observable<IEmployeeLanguageDetails[]>;
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     public dialog: MatDialog,
     private hrService: HrService,
@@ -135,15 +133,28 @@ export class EmployeeHistoryComponent implements OnInit {
       this.employeeId = +params['id'];
     });
     this.getScreenSize();
-    this.getEmployeeHistoricalLogList();
-    this.getEmployeeEducationDetailsList();
-    this.getEmployeeHistoryOfOutsideCountryDetailList();
-    this.getEmployeeCloseRelativeDetailList();
-    this.getEmployeeThreeReferenceDetailList();
-    this.getEmployeeOtherSkillDetailList();
-    this.getEmployeeSalaryBudgetDetailList();
-    this.getEmployeeLanguageDetailList();
 
+    forkJoin([
+      this.getEmployeeHistoricalLogList(),
+      this.getEmployeeEducationDetailsList(),
+      this.getEmployeeHistoryOfOutsideCountryDetailList(),
+      this.getEmployeeCloseRelativeDetailList(),
+      this.getEmployeeThreeReferenceDetailList(),
+      this.getEmployeeOtherSkillDetailList(),
+      this.getEmployeeSalaryBudgetDetailList(),
+      this.getEmployeeLanguageDetailList()
+    ])
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(result => {
+        this.subscribeEmployeeHistoricalLogList(result[0]);
+        this.subscribeEmployeeEducationDetailsList(result[1]);
+        this.subscribeEmployeeHistoryOfOutsideCountryDetailList(result[2]);
+        this.subscribeEmployeeCloseRelativeDetailList(result[3]);
+        this.subscribeEmployeeThreeReferenceDetailList(result[4]);
+        this.subscribeEmployeeOtherSkillDetailList(result[5]);
+        this.subscribeEmployeeSalaryBudgetDetailList(result[6]);
+        this.subscribeEmployeeLanguageDetailList(result[7]);
+      });
   }
   //#region "Dynamic Scroll"
   @HostListener('window:resize', ['$event'])
@@ -161,31 +172,24 @@ export class EmployeeHistoryComponent implements OnInit {
 
   //#region "get Employee Historical Log List"
   getEmployeeHistoricalLogList() {
+    return this.employeeHistoryService.getHistoricalLogList(this.employeeId);
+  }
+  subscribeEmployeeHistoricalLogList(response: any) {
     this.commonLoader.showLoader();
-    this.employeeHistoryService.getHistoricalLogList(this.employeeId).subscribe(
-      x => {
-        this.commonLoader.hideLoader();
-        if (x.data.EmployeeHistoryDetailList.length > 0) {
-          this.historicalLogList$ = of(
-            x.data.EmployeeHistoryDetailList.map(element => {
-              return {
-                HistoryId: element.HistoryID,
-                HistoryDate: this.datePipe.transform(
-                  element.HistoryDate,
-                  'dd-MM-yyyy'
-                ),
-                Description: element.Description
-              } as IHistoricalLogDetails;
-            })
-          );
-        }
-      },
-      () => {
-        this.commonLoader.hideLoader();
-      }
-    );
+    if (response.data.EmployeeHistoryDetailList !== undefined) {
+      this.historicalLogList$ = of(
+        response.data.EmployeeHistoryDetailList.map(y => {
+          return {
+            HistoryId: y.HistoryID,
+            HistoryDate: this.datePipe.transform(y.HistoryDate, 'dd-MM-yyyy'),
+            Description: y.Description
+          } as IHistoricalLogDetails;
+        })
+      );
+    }
   }
   //#endregion
+
   // #region "Add HistoricalLog"
   addHistoricalLog(): void {
     /** Open AddHistoricalLog dialog box*/
@@ -225,37 +229,26 @@ export class EmployeeHistoryComponent implements OnInit {
 
   //#region "get Employee Education Details List"
   getEmployeeEducationDetailsList() {
-    this.commonLoader.showLoader();
-    this.employeeHistoryService
-      .getEducationDetailList(this.employeeId)
-      .subscribe(
-        x => {
-          this.commonLoader.hideLoader();
-          if (x.data.EmployeeEducationsList.length > 0) {
-            this.educationList$ = of(
-              x.data.EmployeeEducationsList.map(element => {
-                return {
-                  EmployeeEducationsId: element.EmployeeEducationsId,
-                  EducationFrom: this.datePipe.transform(
-                    element.EducationFrom,
-                    'dd-MM-yyyy'
-                  ),
-                  EducationTo: this.datePipe.transform(
-                    element.EducationTo,
-                    'dd-MM-yyyy'
-                  ),
-                  FieldOfStudy: element.FieldOfStudy,
-                  Institute: element.Institute,
-                  Degree: element.Degree
-                } as IEducationDetails;
-              })
-            );
-          }
-        },
-        () => {
-          this.commonLoader.hideLoader();
-        }
+    return this.employeeHistoryService.getEducationDetailList(this.employeeId);
+  }
+  subscribeEmployeeEducationDetailsList(response: any) {
+    if (response.data.EmployeeEducationsList !== undefined) {
+      this.educationList$ = of(
+        response.data.EmployeeEducationsList.map(y => {
+          return {
+            EmployeeEducationsId: y.EmployeeEducationsId,
+            EducationFrom: this.datePipe.transform(
+              y.EducationFrom,
+              'dd-MM-yyyy'
+            ),
+            EducationTo: this.datePipe.transform(y.EducationTo, 'dd-MM-yyyy'),
+            FieldOfStudy: y.FieldOfStudy,
+            Institute: y.Institute,
+            Degree: y.Degree
+          } as IEducationDetails;
+        })
       );
+    }
   }
   //#endregion
   // #region "Add Education"
@@ -302,39 +295,29 @@ export class EmployeeHistoryComponent implements OnInit {
 
   //#region "get Employee History Of Outside Country Detail List"
   getEmployeeHistoryOfOutsideCountryDetailList() {
-    this.commonLoader.showLoader();
-    this.employeeHistoryService
-      .getEmployeeHistoryOfOutsideCountryDetailList(this.employeeId)
-      .subscribe(
-        x => {
-          this.commonLoader.hideLoader();
-          if (x.data.EmployeeHistoryOutsideOrganizationList.length > 0) {
-            this.employeeHistoryOCList$ = of(
-              x.data.EmployeeHistoryOutsideOrganizationList.map(element => {
-                return {
-                  EmployeeHistoryOutsideCountryId:
-                    element.EmployeeHistoryOutsideCountryId,
-                  EmploymentFrom: this.datePipe.transform(
-                    element.EmploymentFrom,
-                    'dd-MM-yyyy'
-                  ),
-                  EmploymentTo: this.datePipe.transform(
-                    element.EmploymentTo,
-                    'dd-MM-yyyy'
-                  ),
-                  Organization: element.Organization,
-                  MonthlySalary: element.MonthlySalary,
-                  ReasonForLeaving: element.ReasonForLeaving,
-                  Position: element.Position
-                } as IHistoryOutsideCountryDetails;
-              })
-            );
-          }
-        },
-        () => {
-          this.commonLoader.hideLoader();
-        }
+    return this.employeeHistoryService.getEmployeeHistoryOfOutsideCountryDetailList(
+      this.employeeId
+    );
+  }
+  subscribeEmployeeHistoryOfOutsideCountryDetailList(response: any) {
+    if (response.data.EmployeeHistoryOutsideOrganizationList !== undefined) {
+      this.employeeHistoryOCList$ = of(
+        response.data.EmployeeHistoryOutsideOrganizationList.map(y => {
+          return {
+            EmployeeHistoryOutsideCountryId: y.EmployeeHistoryOutsideCountryId,
+            EmploymentFrom: this.datePipe.transform(
+              y.EmploymentFrom,
+              'dd-MM-yyyy'
+            ),
+            EmploymentTo: this.datePipe.transform(y.EmploymentTo, 'dd-MM-yyyy'),
+            Organization: y.Organization,
+            MonthlySalary: y.MonthlySalary,
+            ReasonForLeaving: y.ReasonForLeaving,
+            Position: y.Position
+          } as IHistoryOutsideCountryDetails;
+        })
       );
+    }
   }
   //#endregion
   // #region "Add HistoryOutsideCountry"
@@ -385,32 +368,26 @@ export class EmployeeHistoryComponent implements OnInit {
 
   //#region "get Employee Close Relative Detail List"
   getEmployeeCloseRelativeDetailList() {
-    this.commonLoader.showLoader();
-    this.employeeHistoryService
-      .getEmployeeCloseRelativeList(this.employeeId)
-      .subscribe(
-        x => {
-          this.commonLoader.hideLoader();
-          if (x.data.EmployeeRelativeInfoList.length > 0) {
-            this.employeeCloseRelativeList$ = of(
-              x.data.EmployeeRelativeInfoList.map(element => {
-                return {
-                  EmployeeRelativeInfoId: element.EmployeeRelativeInfoId,
-                  Name: element.Name,
-                  Relationship: element.Relationship,
-                  Position: element.Position,
-                  Email: element.Email,
-                  PhoneNo: element.PhoneNo,
-                  Organization: element.Organization
-                } as IEmployeeCloseRelativeDetails;
-              })
-            );
-          }
-        },
-        () => {
-          this.commonLoader.hideLoader();
-        }
+    return this.employeeHistoryService.getEmployeeCloseRelativeList(
+      this.employeeId
+    );
+  }
+  subscribeEmployeeCloseRelativeDetailList(response: any) {
+    if (response.data.EmployeeRelativeInfoList !== undefined) {
+      this.employeeCloseRelativeList$ = of(
+        response.data.EmployeeRelativeInfoList.map(y => {
+          return {
+            EmployeeRelativeInfoId: y.EmployeeRelativeInfoId,
+            Name: y.Name,
+            Relationship: y.Relationship,
+            Position: y.Position,
+            Email: y.Email,
+            PhoneNo: y.PhoneNo,
+            Organization: y.Organization
+          } as IEmployeeCloseRelativeDetails;
+        })
       );
+    }
   }
   //#endregion
   // #region "Add CloseRelative"
@@ -459,32 +436,26 @@ export class EmployeeHistoryComponent implements OnInit {
 
   //#region "get Employee Three Reference Detail List"
   getEmployeeThreeReferenceDetailList() {
-    this.commonLoader.showLoader();
-    this.employeeHistoryService
-      .getEmployeeThreeReferenceDetailList(this.employeeId)
-      .subscribe(
-        x => {
-          this.commonLoader.hideLoader();
-          if (x.data.EmployeeRelativeInfoList.length > 0) {
-            this.employeeThreeReferenceList$ = of(
-              x.data.EmployeeRelativeInfoList.map(element => {
-                return {
-                  EmployeeInfoReferencesId: element.EmployeeInfoReferencesId,
-                  Name: element.Name,
-                  Relationship: element.Relationship,
-                  Position: element.Position,
-                  Email: element.Email,
-                  PhoneNo: element.PhoneNo,
-                  Organization: element.Organization
-                } as IEmployeeThreeReferenceDetails;
-              })
-            );
-          }
-        },
-        () => {
-          this.commonLoader.hideLoader();
-        }
+    return this.employeeHistoryService.getEmployeeThreeReferenceDetailList(
+      this.employeeId
+    );
+  }
+  subscribeEmployeeThreeReferenceDetailList(response: any) {
+    if (response.data.EmployeeRelativeInfoList !== undefined) {
+      this.employeeThreeReferenceList$ = of(
+        response.data.EmployeeRelativeInfoList.map(y => {
+          return {
+            EmployeeInfoReferencesId: y.EmployeeInfoReferencesId,
+            Name: y.Name,
+            Relationship: y.Relationship,
+            Position: y.Position,
+            Email: y.Email,
+            PhoneNo: y.PhoneNo,
+            Organization: y.Organization
+          } as IEmployeeThreeReferenceDetails;
+        })
       );
+    }
   }
   //#endregion
   // #region "Add ThreeReference"
@@ -533,30 +504,24 @@ export class EmployeeHistoryComponent implements OnInit {
 
   //#region "get Employee Other Skill Detail List"
   getEmployeeOtherSkillDetailList() {
-    this.commonLoader.showLoader();
-    this.employeeHistoryService
-      .getEmployeeOtherSkillDetailList(this.employeeId)
-      .subscribe(
-        x => {
-          this.commonLoader.hideLoader();
-          if (x.data.EmployeeOtherSkillsList.length > 0) {
-            this.employeeOtherSkillList$ = of(
-              x.data.EmployeeOtherSkillsList.map(element => {
-                return {
-                  EmployeeOtherSkillsId: element.EmployeeOtherSkillsId,
-                  TypeOfSkill: element.TypeOfSkill,
-                  AbilityLevel: element.AbilityLevel,
-                  Experience: element.Experience,
-                  Remarks: element.Remarks
-                } as IEmployeeOtherSkillDetails;
-              })
-            );
-          }
-        },
-        () => {
-          this.commonLoader.hideLoader();
-        }
+    return this.employeeHistoryService.getEmployeeOtherSkillDetailList(
+      this.employeeId
+    );
+  }
+  subscribeEmployeeOtherSkillDetailList(response: any) {
+    if (response.data.EmployeeOtherSkillsList !== undefined) {
+      this.employeeOtherSkillList$ = of(
+        response.data.EmployeeOtherSkillsList.map(y => {
+          return {
+            EmployeeOtherSkillsId: y.EmployeeOtherSkillsId,
+            TypeOfSkill: y.TypeOfSkill,
+            AbilityLevel: y.AbilityLevel,
+            Experience: y.Experience,
+            Remarks: y.Remarks
+          } as IEmployeeOtherSkillDetails;
+        })
       );
+    }
   }
   //#endregion
   // #region "Add OtherSkill"
@@ -603,31 +568,25 @@ export class EmployeeHistoryComponent implements OnInit {
 
   //#region "get Employee Salary Budget Detail List"
   getEmployeeSalaryBudgetDetailList() {
-    this.commonLoader.showLoader();
-    this.employeeHistoryService
-      .getEmployeeSalaryBudgetDetailList(this.employeeId)
-      .subscribe(
-        x => {
-          this.commonLoader.hideLoader();
-          if (x.data.EmployeeSalaryBudgetList.length > 0) {
-            this.employeeSalaryBudgetList$ = of(
-              x.data.EmployeeSalaryBudgetList.map(element => {
-                return {
-                  EmployeeSalaryBudgetId: element.EmployeeSalaryBudgetId,
-                  Year: element.Year,
-                  // CurrencyId: element.CurrencyId,
-                  CurrencyName: element.CurrencyName,
-                  SalaryBudget: element.SalaryBudget,
-                  BudgetDisbursed: element.BudgetDisbursed
-                } as IEmployeeSalaryBudgetDetails;
-              })
-            );
-          }
-        },
-        () => {
-          this.commonLoader.hideLoader();
-        }
+    return this.employeeHistoryService.getEmployeeSalaryBudgetDetailList(
+      this.employeeId
+    );
+  }
+  subscribeEmployeeSalaryBudgetDetailList(response: any) {
+    if (response.data.EmployeeSalaryBudgetList !== undefined) {
+      this.employeeSalaryBudgetList$ = of(
+        response.data.EmployeeSalaryBudgetList.map(y => {
+          return {
+            EmployeeSalaryBudgetId: y.EmployeeSalaryBudgetId,
+            Year: y.Year,
+            // CurrencyId: y.CurrencyId,
+            CurrencyName: y.CurrencyName,
+            SalaryBudget: y.SalaryBudget,
+            BudgetDisbursed: y.BudgetDisbursed
+          } as IEmployeeSalaryBudgetDetails;
+        })
       );
+    }
   }
   //#endregion
   // #region "Add SalaryBudget"
@@ -676,31 +635,26 @@ export class EmployeeHistoryComponent implements OnInit {
 
   //#region "get Employee Language Detail List"
   getEmployeeLanguageDetailList() {
-    this.commonLoader.showLoader();
-    this.employeeHistoryService
-      .getEmployeeLanguageDetailList(this.employeeId)
-      .subscribe(
-        x => {
-          this.commonLoader.hideLoader();
-          if (x.data.EmployeeLanguagesList.length > 0) {
-            this.employeeLanguageList$ = of(
-              x.data.EmployeeLanguagesList.map(element => {
-                return {
-                  SpeakLanguageId: element.SpeakLanguageId,
-                  Language: element.LanguageName,
-                  Writing: RatingAction[element.Writing],
-                  Speaking: RatingAction[element.Speaking],
-                  Reading: RatingAction[element.Reading],
-                  Listening: RatingAction[element.Listening]
-                } as IEmployeeLanguageDetails;
-              })
-            );
-          }
-        },
-        () => {
-          this.commonLoader.hideLoader();
-        }
+    return this.employeeHistoryService.getEmployeeLanguageDetailList(
+      this.employeeId
+    );
+  }
+  subscribeEmployeeLanguageDetailList(response: any) {
+    if (response.data.EmployeeLanguagesList !== undefined) {
+      this.employeeLanguageList$ = of(
+        response.data.EmployeeLanguagesList.map(y => {
+          return {
+            SpeakLanguageId: y.SpeakLanguageId,
+            Language: y.LanguageName,
+            Writing: RatingAction[y.Writing],
+            Speaking: RatingAction[y.Speaking],
+            Reading: RatingAction[y.Reading],
+            Listening: RatingAction[y.Listening]
+          } as IEmployeeLanguageDetails;
+        })
       );
+    }
+    this.commonLoader.hideLoader();
   }
   //#endregion
   // #region "Add Language"
