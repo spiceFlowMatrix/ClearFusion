@@ -1,3 +1,5 @@
+using System;
+
 namespace HumanitarianAssistance.Application.HR.Models
 {
     public class DisplayEmployeeAttendanceModel
@@ -8,5 +10,10 @@ namespace HumanitarianAssistance.Application.HR.Models
         public string startDate { get; set; }
         public string endDate { get; set; }
         public int? OverTimeHours { get; set; }
+        public DateTime? Date { get; set; }
+        public string InTime { get; set; }
+        public string OutTime { get; set; }
+
+
     }
 }
