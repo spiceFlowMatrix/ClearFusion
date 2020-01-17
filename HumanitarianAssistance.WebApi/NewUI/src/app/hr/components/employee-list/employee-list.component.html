@@ -1,20 +1,104 @@
-<!-- <lib-sub-header-template [headerClass]="'sub_header_template_main2'">
-  <span class="action_header">Purchases & Procurements
+<lib-sub-header-template [headerClass]="'sub_header_template_main2'">
+  <span class="action_header">Employees
+    <hum-button [type]="'add'" [text]="'ADD EMPLOYEE'"></hum-button>
+    <hum-button [type]="'delete'" [text]="'DELETE EMPLOYEE'" (click)="deleteEmployee()"></hum-button>
+    <button mat-button [matMenuTriggerFor]="OfficeMenu">
+      <h5 style="color: #0390D1;">{{selectedOffice.name | uppercase}} &nbsp;<i class="fas fa-caret-down"></i></h5>
+    </button>
+    <button mat-button [matMenuTriggerFor]="OfficeMenu" [disabled]="true">
+      <h5>SET ATTENDANCE &nbsp;<i class="fas fa-caret-down"></i></h5>
+    </button>
+    <button mat-button [matMenuTriggerFor]="OfficeMenu" [disabled]="true">
+      <h5>RECONFIGURE SALARY</h5>
+    </button>
+    <mat-menu #OfficeMenu="matMenu">
+      <button (click)="selectedOfficeChanged(office)" *ngFor="let office of officeDropdown$ | async" mat-menu-item>{{office.name}}</button>
+    </mat-menu>
   </span>
   <div class="action_section">
-    <hum-button [type]="'text'" [text]="'PDF EXPORT'" (click)="onPdfExportClick()"></hum-button>
-    <hum-button [type]="'text'" [text]="'FIELD CONFIGURATION'" (click)="showConfiguration()"></hum-button>
   </div>
 
 </lib-sub-header-template>
 <mat-divider></mat-divider>
-<mat-card [ngStyle]="scrollStyles">
-  <mat-card>
+
+<div class="container-fluid">
+  <form [formGroup]="employeeListFilterForm" (ngSubmit)="filterEmployee(employeeListFilterForm.value)">
+    <h4>Filters
+        <hum-button class="pull-right" [type]="'filter'" [text]="'APPLY FILTER'" [isSubmit]="true"></hum-button>
+    </h4>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-2">
+        <mat-form-field class="example-full-width">
+          <input matInput type="text" formControlName="FirstName" placeholder="First Name">
+        </mat-form-field>
+      </div>
+      <div class="col-md-2">
+        <mat-form-field class="example-full-width">
+          <input matInput type="text" formControlName="LastName" placeholder="Last Name">
+        </mat-form-field>
+      </div>
+      <div class="col-md-2">
+        <lib-hum-dropdown formControlName="Sex" [validation]="
+        employeeListFilterForm.controls['Sex'].hasError()" [options]="genderList$" [placeHolder]="'Sex'"></lib-hum-dropdown>
+      </div>
+      <div class="col-md-2">
+        <lib-hum-dropdown formControlName="EmploymentStatus" [validation]="
+        employeeListFilterForm.controls['EmploymentStatus'].hasError()" [options]="accountStatusList$" [placeHolder]="'Employment Status'"></lib-hum-dropdown>
+      </div>
+      <div class="col-md-2">
+        <mat-form-field class="example-full-width">
+          <input matInput type="text" formControlName="EmployeeId" placeholder="EmployeeId">
+        </mat-form-field>
       </div>
     </div>
-  </mat-card>
-</mat-card> -->
-<!--
-<app-purchase-filed-config></app-purchase-filed-config> -->
+  </form>
+</div>
+<div class="row">
+  <div class="col-md-12">
+      <mat-table #table [dataSource]="employeeDataSource">
+        <ng-container matColumnDef="select">
+          <th style="border-bottom-width:0px" mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+            </mat-checkbox>
+          </th>
+          <td style="border-bottom-width:0px" mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+              [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Code">
+          <mat-header-cell *matHeaderCellDef> Code </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.Code}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="FirstName">
+          <mat-header-cell *matHeaderCellDef> First Name </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.FirstName}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="LastName">
+          <mat-header-cell *matHeaderCellDef> Last Name </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.LastName}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="EmploymentStatus">
+          <mat-header-cell *matHeaderCellDef> Employment Status </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.EmploymentStatus}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="Profession">
+          <mat-header-cell *matHeaderCellDef> Profession </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.Profession}}
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="navigateToDetails(row)"></mat-row>
+      </mat-table>
+      <mat-paginator [length]="TotalCount" [pageSize]="filterModel.PageSize"
+      [pageIndex]="filterModel.PageIndex" [pageSizeOptions]="[10, 25, 50, 100]" (page)="pageEvent($event)"></mat-paginator>
+  </div>
+</div>

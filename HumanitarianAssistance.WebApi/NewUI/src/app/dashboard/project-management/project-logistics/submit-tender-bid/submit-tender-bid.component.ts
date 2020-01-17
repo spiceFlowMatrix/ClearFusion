@@ -25,7 +25,6 @@ export class SubmitTenderBidComponent implements OnInit {
     private globalSharedService: GlobalSharedService, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
-    console.log(this.data);
     this.tenderBidForm = this.fb.group({
       Name: ['', Validators.required],
       Email: ['', [Validators.required, Validators.email, this.emailValidator(this.data)]],
