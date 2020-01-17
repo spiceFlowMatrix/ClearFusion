@@ -460,8 +460,6 @@ export class RequestDetailComponent implements OnInit {
       });
       // refresh the list after new request created
       dialogRef.componentInstance.onAddCandidateListRefresh.subscribe(() => {
-        this.hiringRequestDetails.FilledVacancies =
-          this.hiringRequestDetails.FilledVacancies + 1;
         this.getAllCandidateList(this.filterValueModel);
       });
       dialogRef.afterClosed().subscribe(() => {});

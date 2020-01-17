@@ -562,6 +562,9 @@ export class GLOBAL {
   public static API_Chat_AddMessage = 'Chat/AddMessage';
   public static API_Code_GetDepartmentsByOfficeId = 'Code/GetDepartmentsByOfficeId';
 
+  public static API_EmployeeDetail_GetAllEmployeeDetailList = 'EmployeeDetail/GetAllEmployeeDetailList';
+  public static API_EmployeeDetail_DeleteMurtipleEmployeesById = 'EmployeeDetail/DeleteMurtipleEmployeesById';
+
   // pdf
   public static API_Pdf_GetAllChartOfAccountHierarchyPdf = 'Pdf/GetAllChartOfAccountHierarchyPdf';
   public static API_Pdf_GetAllVoucherSummaryReportPdf = 'Pdf/GetAllVoucherSummaryReportPdf';
