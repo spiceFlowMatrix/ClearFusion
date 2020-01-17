@@ -38,7 +38,8 @@ export interface HiringRequestDetailList {
   Status?: string;
   Office?: string;
   OfficeId?: number;
-  DepartmentName?: string;
+  JobType?: string;
+  JobCategory?: string;
   BudgetName?: string;
   BudgetLineId?: string;
   AnouncingDate?: any;
@@ -94,7 +95,7 @@ export interface IHiringRequestModel {
   Position?: number;
   Organization?: string;
   Office?: number;
-  ContractType?: string;
+  ContractType?: number;
   ContractDuration?: number;
   Gender?: number;
   Nationality?: number;

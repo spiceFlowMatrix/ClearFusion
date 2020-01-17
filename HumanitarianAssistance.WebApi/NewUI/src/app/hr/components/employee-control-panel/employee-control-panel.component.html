@@ -1,13 +1,12 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main2'">
   <span class="action_header">Employee Control Panel
     <hum-button [type]="'edit'" [text]="'EDIT DETAILS'"></hum-button>
-    <hum-button [type]="'cancel'" [text]="'DELETE'"></hum-button>
-    <hum-button [type]="'cancel'" [text]="'TERMINATE'"></hum-button>
+    <hum-button [type]="'delete'" [text]="'DELETE'"></hum-button>
+    <hum-button [type]="'exclamation'" [text]="'TERMINATE'"></hum-button>
   </span>
   <div class="action_section">
-    <hum-button [type]="'text'" [text]="'VIEW DETAILS'"></hum-button>
+    <hum-button [type]="'text'" [text]="'VIEW DETAILS'" (click)="showEmployeeDetails()"></hum-button>
   </div>
-
 </lib-sub-header-template>
 <mat-divider></mat-divider>
 
@@ -52,3 +51,6 @@
     </mat-tab-group>
   </div>
 </div>
+  <app-employee-detail [employeeId] ="employeeId"></app-employee-detail>
+
+

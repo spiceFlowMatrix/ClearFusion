@@ -1,3 +1,5 @@
+import { AssignLeaveComponent } from './components/employee-leave/assign-leave/assign-leave.component';
+import { EmployeeLeaveAddComponent } from './components/employee-leave/employee-leave-add/employee-leave-add.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -27,7 +29,16 @@ import { EmployeeContractComponent } from './components/employee-contract/employ
 import { EmployeeSalaryConfigComponent } from './components/employee-salary-config/employee-salary-config.component';
 import { EmployeeResignationComponent } from './components/employee-resignation/employee-resignation.component';
 import { EmployeeDetailComponent } from './components/employee-detail/employee-detail.component';
-import { MatTabsModule, MatDialogModule, MatFormFieldModule, MatSelectModule } from '@angular/material';
+import {
+  MatTabsModule,
+  MatDialogModule,
+  MatFormFieldModule,
+  MatSelectModule,
+  MatOptionModule,
+  MatTableModule,
+  MatCheckboxModule,
+  MatRadioModule
+} from '@angular/material';
 import { AddHistoricalLogComponent } from './components/employee-history/add-historical-log/add-historical-log.component';
 import { AddEducationComponent } from './components/employee-history/add-education/add-education.component';
 import { AddHistoryOutsideCountryComponent } from './components/employee-history/add-history-outside-country/add-history-outside-country.component';
@@ -36,6 +47,7 @@ import { AddThreeReferenceDetailsComponent } from './components/employee-history
 import { AddOtherSkillsComponent } from './components/employee-history/add-other-skills/add-other-skills.component';
 import { AddSalaryBudgetComponent } from './components/employee-history/add-salary-budget/add-salary-budget.component';
 import { AddLanguageComponent } from './components/employee-history/add-language/add-language.component';
+import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
 
 @NgModule({
   declarations: [
@@ -56,10 +68,22 @@ import { AddLanguageComponent } from './components/employee-history/add-language
     AddThreeReferenceDetailsComponent,
     AddOtherSkillsComponent,
     AddSalaryBudgetComponent,
-    AddLanguageComponent
+    AddLanguageComponent,
+    EmployeeListComponent,
+    EntryComponentComponent,
+    EmployeeControlPanelComponent,
+    EmployeeHistoryComponent,
+    EmployeeLeaveComponent,
+    EmployeeAttendanceComponent,
+    EmployeeContractComponent,
+    EmployeeSalaryConfigComponent,
+    EmployeeResignationComponent,
+    EmployeeDetailComponent,
+    EmployeeLeaveAddComponent,
+    AssignLeaveComponent
   ],
   imports: [
-    MatFormFieldModule ,
+    MatFormFieldModule,
     MatSelectModule,
     CommonModule,
     HrRoutingModule,
@@ -86,8 +110,19 @@ import { AddLanguageComponent } from './components/employee-history/add-language
     MatTabsModule,
     MatDialogModule,
     // ConfigurationModule
+    SatDatepickerModule,
+    SatNativeDateModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatDialogModule,
+    MatSelectModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatRadioModule
   ],
   entryComponents: [
+    EmployeeLeaveAddComponent,
+    AssignLeaveComponent,
     AddHistoricalLogComponent,
     AddEducationComponent,
     AddHistoryOutsideCountryComponent,

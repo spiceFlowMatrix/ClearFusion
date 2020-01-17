@@ -117,6 +117,7 @@ export class EmployeesComponent implements OnInit {
 
   windows: any;
   rules: any;
+  dataModelImage: UploadModel;
 
   maxDate: Date = new Date(
     this.currentDate.getFullYear() - 18,
@@ -132,7 +133,7 @@ export class EmployeesComponent implements OnInit {
   pattern: any = /^\(\d{3}\)\ \d{3}-\d{4}$/i;
   namePattern: any = /^[^0-9]+$/;
 
-  empDocuments: any;
+  empDocuments: UploadModel;
   showDocumentData: any[];
   popupAddDocumentVisible = false;
   popupEditDocumentVisible = false;
@@ -149,7 +150,7 @@ export class EmployeesComponent implements OnInit {
   imageURLDoc: any;
   EmployeeDocumentDetails: any[];
   selectedDropdown: any;
-
+  DocumentFileId: number;
   // loader
   addDocPopupLoading = false;
 
@@ -174,6 +175,7 @@ export class EmployeesComponent implements OnInit {
   //#endregion "VARIABLES"
 
   ngOnInit() {
+    this.initDocumentUploadForm();
     this.getOfficeCodeList();
     this.imageURL = '';
     this.defaultImagePath = 'assets/images/blank-image.png';
@@ -239,10 +241,8 @@ export class EmployeesComponent implements OnInit {
     this.docpath = _DomSanitizer.bypassSecurityTrustResourceUrl(
       this.setting.getDocUrl() + 'nodoc.pdf'
     );
-   
   }
 
-  
   employeeFormInitialize() {
     this.empGeneral = {
       EmployeeName: null,
@@ -297,15 +297,16 @@ export class EmployeesComponent implements OnInit {
       PensionDetail: []
     };
   }
-  allFormInitialize() {
+  initDocumentUploadForm() {
     this.empDocuments = {
-      DocumentName: null,
-      DocumentDate: null,
-      DocumentFilePath: null,
-      EmployeeID: null,
-      DocumentType: null
+      PageId: null,
+      EntityId: null,
+      File: null,
+      DocumentTypeId: null,
+      DocumentFileId: null
     };
-
+  }
+  allFormInitialize() {
     this.empHealthInfo = {
       EmployeeID: null,
       BloodGroup: null,
@@ -424,6 +425,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   addDocument() {
+    this.initDocumentUploadForm();
     this.popupVisibleAddDoc = !this.popupVisibleAddDoc;
   }
   cancelDeleteVoucher() {
@@ -543,15 +545,14 @@ export class EmployeesComponent implements OnInit {
   // Add Document with file uploader
   onFormSubmitDocAdd(data: any) {
     this.addDocPopupLoading = true;
-    let dataModelImage: UploadModel;
-    dataModelImage = {
+    this.empDocuments = {
       DocumentTypeId: DocumentFileTypes.EmployeeDocument,
       PageId: FileSourceEntityTypes.Employee,
       EntityId: this.employeeId,
       File: this.imageURLDoc,
       DocumentFileId: null
     };
-    this.fileManagementService.uploadFile(dataModelImage).subscribe(
+    this.fileManagementService.uploadFile(this.empDocuments).subscribe(
       data => {
         if (data.StatusCode === 200) {
           this.toastr.success('Document Uploaded Successfully');
@@ -594,7 +595,8 @@ export class EmployeesComponent implements OnInit {
             FilePath: y.FilePath,
             DocumentFileId: y.DocumentFileId,
             DocumentTypeId: y.DocumentTypeId,
-            FileSignedUrl: y.FileSignedURL
+            FileSignedUrl: y.FileSignedURL,
+            StorageDirectoryPath: y.StorageDirectoryPath
           });
         });
 
@@ -1559,6 +1561,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   selectDoc(e) {
+    this.DocumentFileId = e.DocumentFileId;
     this.docpath = e.FileSignedUrl;
     this.selectedDropdown = e.FileSignedUrl;
   }
@@ -1979,7 +1982,6 @@ export class EmployeesComponent implements OnInit {
     if (e.dataField === 'PensionDate') {
       if (e.value !== undefined && e.value != null && e.value !== '') {
         this.checkExchangeRateVerified(e.value);
-        
       }
     }
   }
@@ -2218,6 +2220,43 @@ export class EmployeesComponent implements OnInit {
       );
   }
   //#endregion
+
+  //#region "onDelete"
+  onDeleteDocument(event: any) {
+    if (this.DocumentFileId != null && this.DocumentFileId != undefined) {
+      const DocumentData = {
+        DocumentFileId: this.DocumentFileId
+      };
+      this.hrService
+        .DeleteEmployeeDocument(
+          this.setting.getBaseUrl() +
+            GLOBAL.API_FileManagement_DeleteDocumentFiles,
+          DocumentData
+        )
+        .subscribe(
+          data => {
+            if (data.StatusCode === 200) {
+              const index = this.DocumentFileList.findIndex(
+                x => x.DocumentFileId === this.DocumentFileId
+              );
+              this.DocumentFileList.splice(index, 1);
+            }
+          },
+          error => {
+            if (error.StatusCode === 500) {
+              this.toastr.error('Internal Server Error....');
+            } else if (error.StatusCode === 401) {
+              this.toastr.error('Unauthorized Access Error....');
+            } else if (error.StatusCode === 403) {
+              this.toastr.error('Forbidden Error....');
+            }
+            this.loading = false;
+          }
+        );
+    }
+  }
+  //#endregion
+  
 
   openPensionForm() {
     this.popupPensionDetail = true;
