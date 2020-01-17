@@ -12,5 +12,6 @@ namespace HumanitarianAssistance.Application.HR.Models
         public double SalaryBudget { get; set; }
         public double BudgetDisbursed { get; set; }
         public int EmployeeID { get; set; }
+        public string CurrencyName { get; set; }
     }
 }
