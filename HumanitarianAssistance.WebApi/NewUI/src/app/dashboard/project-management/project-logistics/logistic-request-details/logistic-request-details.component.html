@@ -184,13 +184,14 @@
             </div>
           <mat-divider style="position: unset;"></mat-divider>
         </div>
-        <div *ngIf="(this.requestDetail.TotalCost>=10000 && this.requestDetail.TotalCost<=59999)">
+        <div *ngIf="(this.requestDetail.TotalCost>=10000 && this.requestDetail.TotalCost<=59999) || (this.requestDetail.TotalCost>=60000)">
           <p>This request is viable for <b>Tender</b>. Please process the <b>Tender & Purchase Order</b> below.</p>
           <mat-divider style="position: unset;"></mat-divider>
             <div *ngIf="(this.requestDetail.TenderStatus==1)">
               <div class="row">
                 <div class="col-sm-5 margin_top_8">
-                  <span class="display_inline_block" style="font-size: 14px;color: gray;">National Tender</span>
+                  <span *ngIf="(this.requestDetail.TotalCost>=10000 && this.requestDetail.TotalCost<=59999)" class="display_inline_block" style="font-size: 14px;color: gray;">National Tender</span>
+                  <span *ngIf="(this.requestDetail.TotalCost>=60000)" class="display_inline_block" style="font-size: 14px;color: gray;">International Tender</span>
                   <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Pending</span>
                 </div>
                 <div class="col-sm-7 margin_top_1">
@@ -212,7 +213,8 @@
             <div *ngIf="(this.requestDetail.TenderStatus==2)">
               <div class="row">
                 <div class="col-sm-5 margin_top_8">
-                  <span class="display_inline_block" style="font-size: 14px;color: gray;">National Tender</span>
+                  <span *ngIf="(this.requestDetail.TotalCost>=10000 && this.requestDetail.TotalCost<=59999)" class="display_inline_block" style="font-size: 14px;color: gray;">National Tender</span>
+                  <span *ngIf="(this.requestDetail.TotalCost>=60000)" class="display_inline_block" style="font-size: 14px;color: gray;">International Tender</span>
                   <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_red"></i> Cancelled</span>
                 </div>
               </div>
@@ -230,7 +232,8 @@
             <div *ngIf="(this.requestDetail.TenderStatus==3)">
               <div class="row">
                 <div class="col-sm-10 margin_top_8">
-                  <span class="display_inline_block" style="font-size: 14px;color: gray;">National Tender</span>
+                  <span  *ngIf="(this.requestDetail.TotalCost>=10000 && this.requestDetail.TotalCost<=59999)" class="display_inline_block" style="font-size: 14px;color: gray;">National Tender</span>
+                  <span  *ngIf="(this.requestDetail.TotalCost>=60000)" class="display_inline_block" style="font-size: 14px;color: gray;">International Tender</span>
                   <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_yellow"></i> Issued by <b>{{tenderIssuerName}}</b>. Awaiting Bidding & Selection</span>
                 </div>
               </div>
@@ -248,7 +251,8 @@
             <div *ngIf="(this.requestDetail.TenderStatus==4)">
               <div class="row">
                 <div class="col-sm-10 margin_top_8" (click)="viewTenderDetails(true)" style="cursor: pointer;">
-                  <span class="display_inline_block" style="font-size: 14px;color: gray;">National Tender</span>
+                  <span *ngIf="(this.requestDetail.TotalCost>=10000 && this.requestDetail.TotalCost<=59999)" class="display_inline_block" style="font-size: 14px;color: gray;">National Tender</span>
+                  <span *ngIf="(this.requestDetail.TotalCost>=60000)" class="display_inline_block" style="font-size: 14px;color: gray;">International Tender</span>
                   <span class="margin_left_25" style="font-size: 14px;color: gray;"><i class="fas fa-info-circle icon_color_green"></i> Bid from <b>{{SelectedBidDetail.ContactName}}</b> selected by <b>{{SelectedBidDetail.SelectedBy}}</b></span>
                 </div>
               </div>
@@ -321,7 +325,7 @@
       </div>
       <!-- <mat-divider [vertical]="true" style="height:300px"></mat-divider> -->
       <div class="col-md-5">
-        <app-request-status [requestStatus]="this.requestDetail.Status" [comparativeStatus]="this.requestDetail.ComparativeStatus" [tenderStatus]="this.requestDetail.TenderStatus" [totalCost]="this.requestDetail.TotalCost" [requestedItems]="this.requestItemList" [showTenderDetail]="viewTenderDetail" (selectedItemChange)='selectedItemChange($event)' (comparativeStatusChange)="comparativeStatusChange($event)" (tenderStatusChange)="tenderStatusChange($event)" (StatusChange)="StatusChange($event)" ></app-request-status>
+        <app-request-status *ngIf="this.requestDetail.RequestId !== ''" [requestStatus]="this.requestDetail.Status" [comparativeStatus]="this.requestDetail.ComparativeStatus" [tenderStatus]="this.requestDetail.TenderStatus" [totalCost]="this.requestDetail.TotalCost" [requestedItems]="this.requestItemList" [showTenderDetail]="viewTenderDetail" (selectedItemChange)='selectedItemChange($event)' (comparativeStatusChange)="comparativeStatusChange($event)" (tenderStatusChange)="tenderStatusChange($event)" (StatusChange)="StatusChange($event)" ></app-request-status>
       </div>
     </div>
   </div>

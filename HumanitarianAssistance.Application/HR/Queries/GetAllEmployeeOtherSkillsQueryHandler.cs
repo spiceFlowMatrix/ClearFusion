@@ -29,7 +29,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                 if (employeeHistoryRecord.Count > 0)
                 {
-                    response.data.EmployeeOtherSkillsList = employeeHistoryRecord.Select(x => new EmployeeOtherSkillsModel
+                    response.data.EmployeeOtherSkillsList = employeeHistoryRecord.OrderByDescending(x=>x.EmployeeOtherSkillsId).Select(x => new EmployeeOtherSkillsModel
                     {
                         EmployeeOtherSkillsId = x.EmployeeOtherSkillsId,
                         AbilityLevel = x.AbilityLevel,

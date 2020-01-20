@@ -48,7 +48,8 @@ namespace HumanitarianAssistance.Application.FileManagement.Queries
                         FileName = x.DocumentFileDetail.Name,
                         FilePath = x.DocumentFileDetail.StorageDirectoryPath,
                         DocumentFileId = x.DocumentFileId,
-                        DocumentTypeId = x.DocumentFileDetail.DocumentTypeId
+                        DocumentTypeId = x.DocumentFileDetail.DocumentTypeId,
+                        StorageDirectoryPath = x.DocumentFileDetail.StorageDirectoryPath
                     }).ToListAsync();
 
                     if (fileList.Any())

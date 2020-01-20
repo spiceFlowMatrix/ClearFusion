@@ -32,7 +32,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                 if (employeeHistoryRecord.Count > 0)
                 {
-                    response.data.EmployeeHistoryOutsideOrganizationList = employeeHistoryRecord.Select(x => new EmployeeHistoryOutsideOrganizationModel
+                    response.data.EmployeeHistoryOutsideOrganizationList = employeeHistoryRecord.OrderByDescending(x=>x.EmployeeHistoryOutsideCountryId).Select(x => new EmployeeHistoryOutsideOrganizationModel
                     {
                         EmployeeHistoryOutsideCountryId = x.EmployeeHistoryOutsideCountryId,
                         EmployeeID = Convert.ToInt32(x.EmployeeID),

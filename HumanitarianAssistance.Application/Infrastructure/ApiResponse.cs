@@ -389,7 +389,7 @@ namespace HumanitarianAssistance.Application.Infrastructure {
 
         public List<EmployeeSalaryAnalyticalInfoModel> EmployeeSalaryAnalyticalInfoList { get; set; }
         public EmployeeHealthInformationModel EmployeeHealthInfo { get; set; }
-        public List<EmployeeLanguages> EmployeeLanguagesList { get; set; }
+        public List<EmployeeLanguageModel> EmployeeLanguagesList { get; set; }
 
         public IList<EmployeeDetailModel> EmployeeDetailList { get; set; }
         public IList<EmployeeDocumentDetailModel> EmployeeDocumentList { get; set; }

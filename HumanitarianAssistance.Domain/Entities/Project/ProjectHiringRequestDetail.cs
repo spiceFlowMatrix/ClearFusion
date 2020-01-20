@@ -25,7 +25,8 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         [ForeignKey("ProvinceId")]
         public int? ProvinceId { get; set; }
         public ProvinceDetails ProvinceDetails { get; set; }
-        public string ContractType { get; set; }
+        //public string ContractType { get; set; }
+        public int? ContractTypeId { get; set; }
         public int? ContractDuration { get; set; }
         public int? GenderId { get; set; }
         public string SalaryRange { get; set; }
@@ -95,5 +96,8 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public EducationDegreeMaster EducationDegreeMaster { get; set; }
         [ForeignKey("PositionId")]
         public DesignationDetail DesignationDetail { get; set; }
+        public int? JobCategoryId { get; set; }
+        [ForeignKey("JobCategoryId")]
+        public Department DepartmentDetails { get; set; }
     }
 }
