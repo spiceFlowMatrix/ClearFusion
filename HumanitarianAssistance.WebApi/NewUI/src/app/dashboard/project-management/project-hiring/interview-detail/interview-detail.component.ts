@@ -160,6 +160,7 @@ export class InterviewDetailComponent implements OnInit {
     this.interviewDetailForm = this.fb.group({
       CandidateId: [null],
       HiringRequestId: [null],
+      InterviewId: [null],
       RatingBasedCriteriaList: [[], [Validators.required]],
       TechnicalQuestionList: [[], [Validators.required]],
       LanguageList: [[], [Validators.required]],
@@ -644,10 +645,49 @@ export class InterviewDetailComponent implements OnInit {
     this.commonLoader.showLoader();
   }
   //#endregion
+  //#region "Add interview details"
+  EditInterviewDetails(data: InterviewDetailModel) {
+    this.commonLoader.showLoader();
+    data.CandidateId = this.candidateId;
+    data.HiringRequestId = this.hiringRequestId;
+    data.InterviewId = this.interviewId;
+    this.languagesList$.subscribe(res => {
+      data.LanguageList = res;
+    });
+    this.traningList$.subscribe(res => {
+      data.TraningList = res;
+    });
+    data.ProfessionalCriteriaMark = this.professionalCriteriaMarks;
+    data.MarksObtain = this.marksObtain;
+    data.RatingBasedCriteriaList = this.ratingBasedCriteriaQuestionList;
+    data.TechnicalQuestionList = this.technicalQuestionList;
+    this.interviewerList$.subscribe(res => {
+      data.InterviewerList = res;
+    });
+    this.hiringRequestService.EditInterviewDetails(data).subscribe(
+      (response: IResponseData) => {
+        if (response.statusCode === 200) {
+          this.toastr.success('Interview details added successfully');
+          this.backToRequestDetail();
+        } else {
+          this.toastr.error(response.message);
+        }
+      },
+      error => {
+        this.toastr.error('Someting went wrong. Please try again');
+      }
+    );
+    this.commonLoader.hideLoader();
+  }
+  //#endregion
   //#region "On submission of interview form"
   onFormSubmit(data: any) {
     if (this.interviewDetailForm.valid) {
-      this.AddInterviewDetails(data);
+      if (this.interviewId > 0) {
+        this.EditInterviewDetails(data);
+      } else {
+        this.AddInterviewDetails(data);
+      }
     } else {
       this.toastr.warning('Please fill all required fields');
     }
@@ -714,7 +754,10 @@ export class InterviewDetailComponent implements OnInit {
       CurrentTransport: data.CurrentTransport,
       CurrentMeal: data.CurrentMeal,
       ExpectationTransport: data.ExpectationTransport,
-      ExpectationMeal: data.ExpectationMeal
+      ExpectationMeal: data.ExpectationMeal,
+      LanguageList : data.LanguageList,
+      TraningList : data.TraningList,
+      InterviewerList : data.InterviewerList
     });
     this.interviewDetails = data;
   }
