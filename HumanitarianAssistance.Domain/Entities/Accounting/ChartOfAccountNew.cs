@@ -17,7 +17,7 @@ namespace HumanitarianAssistance.Domain.Entities.Accounting
         // App logic must always set this during add/edit actions
         public bool? IsCreditBalancetype { get; set; }
 
-        [StringLength(100)]
+        // [StringLength(100)]
         public string AccountName { get; set; }
         public long ParentID { get; set; }
 
