@@ -26,6 +26,7 @@ build_newui:
         - cd HumanitarianAssistance.WebApi/NewUI/
     script:
         - npm install --quiet
+        - npm run build --prod
       
     after_script:
         - find HumanitarianAssistance.WebApi/NewUI/dist/
@@ -57,7 +58,7 @@ build_oldui:
     retry: 2
 
 build_backend:
-    image: microsoft/dotnet:2.2
+    image: microsoft/dotnet:latest
     stage: integration
     variables:
         OBJECTS_DIRECTORY: obj/
