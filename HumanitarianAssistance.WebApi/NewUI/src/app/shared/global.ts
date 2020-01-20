@@ -660,7 +660,8 @@ export class GLOBAL {
   public static API_Store_EditInventoryItems = 'Store/EditInventoryItems';
   public static API_Store_DeleteInventoryItems = 'Store/DeleteInventoryItems';
 
-  public static API_Code_GetAllFinancialYearDetail = 'Code/GetAllFinancialYearDetail';
+
+
 // Hr Hisotry
   public static API_EmployeeHR_GetLanguageList = 'Code/GetAllLanguages';
 
@@ -694,6 +695,12 @@ export class GLOBAL {
   //#region Hr Attendance
   public static API_Attendance_GetFilteredAttendanceDetails = 'Attendance/GetFilteredAttendanceDetails';
 
+  //#endregion
+
+
+  //#region  "hr employee salary and tax"
+  public static API_Code_GetAllFinancialYearDetail = 'Code/GetAllFinancialYearDetail';
+  public static API_HR_EmployeePensionReport = 'EmployeePayroll/EmployeePensionReport';
   //#endregion
 }
 

@@ -110,6 +110,7 @@ export class PensionComponent implements OnInit {
 
   //#region "GET ALL Pension By financial year id"
   getAllPensionList(yearId: number[], currencyId: number) {
+    debugger;
     this.showHidePensionInfoLoading(true);
     const model = {
       OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID'), 32),
