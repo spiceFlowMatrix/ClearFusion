@@ -57,7 +57,7 @@ build_oldui:
     retry: 2
 
 build_backend:
-    image: microsoft/dotnet:latest
+    image: microsoft/dotnet:2.2
     stage: integration
     variables:
         OBJECTS_DIRECTORY: obj/
