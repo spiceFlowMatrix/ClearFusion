@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef } from '@angular/material';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { EmployeeSalaryConfigService } from 'src/app/hr/services/employee-salary-config.service';
@@ -25,7 +25,12 @@ export class AddSalaryConfigurationComponent implements OnInit {
     private salaryConfigService: EmployeeSalaryConfigService,
     private globalSharedService: GlobalSharedService,
     public dialogRef: MatDialogRef<AddSalaryConfigurationComponent>,
-  ) { }
+  ) {
+    this.salaryConfigForm = this.fb.group({
+      CurrencyId: ['', [Validators.required]],
+      ActiveSalary: ['', [Validators.required]]
+    });
+  }
 
   ngOnInit() {
     this.getCurrencyList();
@@ -68,8 +73,7 @@ onNoClick(): void {
     );
 }
 //#endregion
-onFormSubmit(data: any)
-{
+onFormSubmit(data: any) {
 
 }
 }

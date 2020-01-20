@@ -1,6 +1,10 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef } from '@angular/material';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { EmployeeSalaryConfigService } from 'src/app/hr/services/employee-salary-config.service';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 
 @Component({
   selector: 'app-add-fine',
@@ -9,10 +13,22 @@ import { MatDialogRef } from '@angular/material';
 })
 export class AddFineComponent implements OnInit {
   onAddFineRefresh = new EventEmitter();
+  fineForm: FormGroup;
+  isFormSubmitted = false;
   constructor(
+    private fb: FormBuilder,
+    private commonLoader: CommonLoaderService,
+    private salaryConfigService: EmployeeSalaryConfigService,
+    private globalSharedService: GlobalSharedService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<AddFineComponent>,
-  ) { }
+  ) {
+    this.fineForm = this.fb.group({
+      SalaryHead: ['', [Validators.required]],
+      SalaryAmount: ['', [Validators.required]],
+      Description: ['', [Validators.required]]
+    });
+   }
 
   ngOnInit() {
   }
@@ -30,4 +46,5 @@ onCancelPopup(): void {
 onNoClick(): void {
   this.dialogRef.close();
 }
+onFormSubmit(data: any) {}
 }
