@@ -681,5 +681,28 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return Ok(result);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddEmployeeResignation([FromBody]int EmployeeID)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var result = await _mediator.Send(new AddEmployeeResignationCommand
+            {
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow,
+                EmployeeID = EmployeeID
+            });
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveEmployeeResignation([FromBody]SaveEmployeeResignationCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
     }
 }

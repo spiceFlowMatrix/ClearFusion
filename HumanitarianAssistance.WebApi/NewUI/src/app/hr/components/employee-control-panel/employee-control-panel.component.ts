@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 export class EmployeeControlPanelComponent implements OnInit {
 
   @ViewChild(EmployeeDetailComponent) employeeDetail: EmployeeDetailComponent;
+
   employeeId: number;
   constructor(private activatedRoute: ActivatedRoute) {
       this.activatedRoute.params.subscribe(params => {
@@ -22,5 +23,6 @@ export class EmployeeControlPanelComponent implements OnInit {
 
   showEmployeeDetails() {
    this.employeeDetail.show();
+   this.employeeDetail.employeeDetail
   }
 }

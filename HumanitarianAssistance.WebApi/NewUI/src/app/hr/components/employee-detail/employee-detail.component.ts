@@ -51,6 +51,8 @@ export class EmployeeDetailComponent implements OnInit {
       Terminated: '',
       TerminatedOn: '',
       TerminationReason: '',
+      IsResigned: false,
+      ResignationStatus: 0
     };
   }
 
@@ -90,7 +92,9 @@ export class EmployeeDetailComponent implements OnInit {
           State: x.EmployeeDetail.State,
           Terminated: x.EmployeeDetail.Terminated,
           TerminatedOn: x.EmployeeDetail.TerminatedOn,
-          TerminationReason: x.EmployeeDetail.TerminationReason
+          TerminationReason: x.EmployeeDetail.TerminationReason,
+          IsResigned: x.EmployeeDetail.IsResigned,
+          ResignationStatus: x.EmployeeDetail.ResignationStatus
         };
       }
     }, error => {
