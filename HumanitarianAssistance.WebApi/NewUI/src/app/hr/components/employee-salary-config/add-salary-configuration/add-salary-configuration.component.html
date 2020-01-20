@@ -1,3 +1,48 @@
-<p>
-  add-salary-configuration works!
-</p>
+<!-- <div>
+  <h1 mat-dialog-title>
+      Add Salary Budget
+      <button mat-icon-button [mat-dialog-close] class="pull-right">
+<mat-icon aria-label="clear">clear</mat-icon>
+</button>
+  </h1>
+  <form class="example-form" [formGroup]="salaryConfigForm" (ngSubmit)="onFormSubmit(salaryConfigForm.value)">
+      <div mat-dialog-content>
+          <div class="row">
+              <div class="col-sm-12">
+                  <div class="row">
+                      <div class="col-lg-4 col-sm-4">
+                          <lib-hum-dropdown formControlName="CurrencyId" [validation]="
+                    salaryBudgetForm.controls['CurrencyId'].hasError('required')
+                  " [options]="currencyList$" [placeHolder]="'Currency'">
+                          </lib-hum-dropdown>
+                      </div>
+                      <div class="col-lg-4 col-sm-4">
+                          <mat-form-field class="example-full-width">
+                              <input matInput formControlName="SalaryBudget" placeholder="SalaryBudget" type="number" />
+                          </mat-form-field>
+                      </div>
+                      <div class="col-lg-4 col-sm-4">
+                          <mat-form-field class="example-full-width">
+                              <input matInput formControlName="BudgetDisbursed" placeholder="Budget Disbursed" type="number" />
+                          </mat-form-field>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-lg-4 col-sm-4">
+                          <lib-hum-dropdown formControlName="Year" [validation]="
+                          salaryBudgetForm.controls['Year'].hasError(
+                            'required'
+                          )
+                        " [options]="PreviousYearsList$" [placeHolder]="'Year'"></lib-hum-dropdown>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div mat-dialog-actions class="pull-right">
+              <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+              <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
+              <hum-button (click)="onCancelPopup()" [type]="'cancel'" [text]="'cancel'"></hum-button>
+          </div>
+      </div>
+  </form>
+</div> -->

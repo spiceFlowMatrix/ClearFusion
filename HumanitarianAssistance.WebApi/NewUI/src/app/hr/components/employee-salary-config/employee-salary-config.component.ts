@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { TableActionsModel } from 'projects/library/src/public_api';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material';
+import { Month } from 'src/app/shared/enum';
 
 @Component({
   selector: 'app-employee-salary-config',
@@ -27,19 +28,13 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   ]);
   accumulatedList$: Observable<any[]>;
   bonusAndFineList$: Observable<any[]>;
-  monthDropdown$: Observable<IDropDownModel[]>;
+  monthsList$: Observable<IDropDownModel[]>;
   selectedMonth: IDropDownModel;
   actions: TableActionsModel;
   constructor(
     public dialog: MatDialog,
     private toastr: ToastrService,
   ) {
-    this.monthDropdown$ = of([
-      { name: '1st', value: 1 },
-      { name: '2nd', value: 2 },
-      { name: '3rd', value: 3 }
-    ] as IDropDownModel[]);
-
     this.selectedMonth = { name: 'SELECT MONTH', value: 0 };
   }
 
@@ -57,6 +52,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
         download: false
       }
     };
+    this.getAllMonthList();
   }
 
   // #region Add Salary Configuration
@@ -96,6 +92,16 @@ addFine(): void {
   dialogRef.afterClosed().subscribe(() => {});
 }
 //#endregion
+
+  //#region "Get all month list for ExperienceInMonth dropdown"
+  getAllMonthList() {
+    const monthDropDown: IDropDownModel[] = [];
+    for (let i = Month['January']; i <= Month['December']; i++) {
+      monthDropDown.push({ name: Month[i], value: i });
+    }
+    this.monthsList$ = of(monthDropDown);
+  }
+  //#endregion
   selectedMonthChanged(SelectedMonth) {
     this.selectedMonth = {
       name: SelectedMonth.name,

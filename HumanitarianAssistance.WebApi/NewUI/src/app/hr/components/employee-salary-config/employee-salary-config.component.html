@@ -32,7 +32,7 @@
       <h5 style="color: #0390D1;">{{selectedMonth.name | uppercase}}  &nbsp;<i class="fas fa-caret-down"></i></h5>
     </button>
 <mat-menu #MonthMenu="matMenu">
-      <button (click)="selectedMonthChanged(month)" *ngFor="let month of monthDropdown$ | async" mat-menu-item>{{month.name}}</button>
+      <button (click)="selectedMonthChanged(month)" *ngFor="let month of monthsList$ | async" mat-menu-item>{{month.name}}</button>
     </mat-menu>
 
 
