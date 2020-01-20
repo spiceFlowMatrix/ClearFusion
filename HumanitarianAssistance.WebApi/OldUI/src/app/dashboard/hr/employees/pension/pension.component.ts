@@ -8,7 +8,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { applicationPages } from '../../../../shared/application-pages-enum';
 import { CommonService } from '../../../../service/common.service';
 import { AppSettingsService } from '../../../../service/app-settings.service';
-import { StringifyOptions } from 'querystring';
 
 declare let jsPDF;
 declare var $: any;

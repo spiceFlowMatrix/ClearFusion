@@ -1,3 +1,27 @@
-<p>
-  employee-leave works!
-</p>
+<div class="padding_left_30" humAddScroll>
+  <div class="row" >
+    <div class="col-sm-2">
+      <h4>Leave Balances</h4>
+    </div>
+    <div class="col-sm-3">
+      <hum-button [type]="'add'" [text]="'ADD NEW LEAVE TYPE FROM POLICY'" (click)="assignLeave()"></hum-button>
+    </div>
+    <div class="col-sm-2">
+      <hum-button [type]="'text'" [text]="'PDF EXPORT'"></hum-button>
+    </div>
+  </div>
+  <div class="row">
+    <hum-table [headers]="leaveListHeaders$" [items]="leaveList$" (actionClick)="actionEvents($event)"
+             [actions]="actions" [hideColums$]="hideColums$"></hum-table>
+  </div>
+  <div class="row" >
+    <div class="col-sm-2">
+      <h4>Leave Applications</h4>
+    </div>
+  </div>
+  <div class="row">
+    <hum-table [isDefaultAction]="false" [headers]="appliedleaveListHeaders$" [items]="assignedLeaveList$" (actionClick)="appliedLeaveActionEvents($event)"
+              [hideColums$]="hideColumsAppliedHours$"></hum-table>
+  </div>
+</div>
+

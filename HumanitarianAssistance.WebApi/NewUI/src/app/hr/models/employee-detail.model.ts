@@ -1,0 +1,28 @@
+export interface IEmployeeDetail {
+  FirstName: string;
+  LastName: string;
+  Email: string;
+  Phone: string;
+  Sex: string;
+  DateOfBirth: string;
+  Country: string;
+  State: string;
+  Profession: string;
+  Qualification: string;
+  ExperienceYear: string;
+  ExperienceMonth: string;
+  PreviousWork: string;
+  CurrentAddress: string;
+  PermanentAddress: string;
+  EmployementStatus: string;
+  DutyStation: string;
+  HiredOn: string;
+  AttendanceGroup: string;
+  JobDescription: string;
+  Resigned: string;
+  ResignedOn: string;
+  ResignedReason: string;
+  Terminated: string;
+  TerminatedOn: string;
+  TerminationReason: string;
+}
