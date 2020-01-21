@@ -188,6 +188,8 @@ export class GLOBAL {
   public static API_HR_ApproveRejectLeave = 'Attendance/ApproveRejectLeave';
   public static API_HR_AddEmployeeSalaryCurrencyAndBasicSalary = 'EmployeePayroll/AddEmployeeSalaryCurrencyAndBasicSalary';
   public static API_HR_EditEmployeeSalaryCurrencyAndBasicSalary = 'EmployeePayroll/EditEmployeeSalaryCurrencyAndBasicSalary';
+  public static API_HR_AddEmployeeBonusFineSalaryHead = 'EmployeePayroll/AddEmployeeBonusFineSalaryHead';
+  public static API_HR_GetEmployeeBonusFineSalaryHead = 'EmployeePayroll/GetEmployeeBonusFineSalaryHead';
 
   public static API_EmployeeDetail_GetEmployeeDetailById = 'EmployeeDetail/GetEmployeeDetailById';
   public static API_HR_GetAllEmployeeAssignLeave = 'Attendance/GetAllEmployeeAssignLeave';

@@ -48,4 +48,20 @@ export class EmployeeSalaryConfigService {
       );
     }
     //#endregion
+
+    //#region "saveBonusFineSalaryHead"
+    saveBonusFineSalaryHead(model: any): any {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_HR_AddEmployeeBonusFineSalaryHead, model
+      );
+    }
+    //#endregion
+
+    //#region "getEmployeeBonusFineSalaryHead"
+    getEmployeeBonusFineSalaryHead(id): any {
+      return this.globalService.getDataById(
+        this.appurl.getApiUrl() + GLOBAL.API_HR_GetEmployeeBonusFineSalaryHead + '?id=' + id
+      );
+    }
+    //#endregion
 }

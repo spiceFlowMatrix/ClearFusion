@@ -1,6 +1,6 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter, Inject } from '@angular/core';
 import { AddSalaryConfigurationComponent } from '../add-salary-configuration/add-salary-configuration.component';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { IDropDownModel } from 'src/app/store/models/purchase';
@@ -24,11 +24,12 @@ export class AddBonusComponent implements OnInit {
     private salaryConfigService: EmployeeSalaryConfigService,
     private globalSharedService: GlobalSharedService,
     private toastr: ToastrService,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<AddSalaryConfigurationComponent>
   ) {
     this.bonusForm = this.fb.group({
       SalaryHead: ['', [Validators.required]],
-      SalaryAmount: ['', [Validators.required]],
+      Amount: ['', [Validators.required, Validators.min(1)]],
       Description: ['', [Validators.required]]
     });
   }
@@ -44,10 +45,33 @@ export class AddBonusComponent implements OnInit {
   onCancelPopup(): void {
     this.dialogRef.close();
   }
+
   //#endregion
-  onNoClick(): void {
-    this.dialogRef.close();
+  onFormSubmit(data: any) {
+    if (!this.bonusForm.valid) {
+      this.toastr.warning('Please correct form errors and submit again');
+      return;
+    }
+    this.commonLoader.showLoader();
+    const model = {
+      SalaryHead: this.bonusForm.value.SalaryHead,
+      Amount: this.bonusForm.value.Amount,
+      Description: this.bonusForm.value.Description,
+      EmployeeId: this.data.EmployeeId,
+      IsBonus: true
+    };
+    this.salaryConfigService.saveBonusFineSalaryHead(model).subscribe(x => {
+      if (x) {
+        this.toastr.success('Added Successfully');
+        this.commonLoader.hideLoader();
+        this.onCancelPopup();
+      } else {
+        this.toastr.warning('Please try again');
+        this.commonLoader.hideLoader();
+      }
+    }, error => {
+      this.toastr.warning(error);
+      this.commonLoader.hideLoader();
+    });
   }
-  //#endregion
-  onFormSubmit(data: any) {}
 }

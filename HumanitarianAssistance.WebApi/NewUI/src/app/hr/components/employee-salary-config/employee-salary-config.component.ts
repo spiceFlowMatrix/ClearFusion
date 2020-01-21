@@ -102,6 +102,9 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   const dialogRef = this.dialog.open(AddBonusComponent, {
     width: '500px',
     autoFocus: false,
+    data: {
+      EmployeeId: this.employeeId
+    }
   });
   // refresh the data after new request created
   dialogRef.componentInstance.onAddBonusRefresh.subscribe(() => {});
@@ -114,6 +117,9 @@ addFine(): void {
   const dialogRef = this.dialog.open(AddFineComponent, {
     width: '500px',
     autoFocus: false,
+    data: {
+      EmployeeId: this.employeeId
+    }
   });
   // refresh the data after new request created
   dialogRef.componentInstance.onAddFineRefresh.subscribe(() => {});
@@ -138,6 +144,14 @@ addFine(): void {
   }
   empActionEvents(event: any) {
     console.log(event.item);
+  }
+
+  getEmployeeBonusFineSalaryHead() {
+    this.salaryConfigService.getEmployeeBonusFineSalaryHead(this.employeeId).subscribe(x => {
+      if (x && x.EmployeeCurrencyAmount) {
+        this.employeeCurrencyAndAmount = x.EmployeeCurrencyAmount;
+      }
+    });
   }
 
   getEmployeeBasicPayAndCurrency() {
