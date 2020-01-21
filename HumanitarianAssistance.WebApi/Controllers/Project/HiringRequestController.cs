@@ -220,6 +220,20 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.requestId = requestId;
             return await _mediator.Send(model);
         }  
+        [HttpPost]
+        public async Task<IActionResult> GetCandidateAllDetailByCandidateId([FromBody]int CandidateId)
+        {
+            var result = await Task.FromResult(_mediator.Send(new GetCandidateAllDetailByCandidateIdQuery{ CandidateId=CandidateId}));
+
+            if (result.Exception == null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result.Exception.InnerException.Message);
+            }           
+        }   
              
     }  
 }

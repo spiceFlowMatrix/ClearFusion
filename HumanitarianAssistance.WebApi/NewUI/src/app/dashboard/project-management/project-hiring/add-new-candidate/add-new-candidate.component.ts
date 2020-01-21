@@ -21,6 +21,7 @@ import { GlobalSharedService } from 'src/app/shared/services/global-shared.servi
 export class AddNewCandidateComponent implements OnInit {
   projectId: number;
   hiringRequestId: number;
+  candidateId: number;
   isFormSubmitted = false;
   addNewCandidateForm: FormGroup;
   professionList$: Observable<IDropDownModel[]>;
@@ -64,6 +65,7 @@ export class AddNewCandidateComponent implements OnInit {
     this.getPreviousYearsList();
     this.projectId = this.data.projectId;
     this.hiringRequestId = this.data.hiringRequestId;
+    this.candidateId = this.data.candidateId;
     this.addNewCandidateForm.controls['ProjectId'].setValue(this.projectId);
     this.addNewCandidateForm.controls['HiringRequestId'].setValue(
       this.hiringRequestId
@@ -72,7 +74,8 @@ export class AddNewCandidateComponent implements OnInit {
       this.getAllCountryList(),
       this.getAllJobGradeList(),
       this.getAllProfessionList(),
-      this.getAllEducationDegreeList()
+      this.getAllEducationDegreeList(),
+      this.getCandidateDetails()
     ])
       .pipe(takeUntil(this.destroyed$))
       .subscribe(result => {
@@ -81,6 +84,7 @@ export class AddNewCandidateComponent implements OnInit {
         this.subscribeProfessionList(result[2]);
         this.subscribeEducationDegreeList(result[3]);
       });
+      console.log(this.candidateId);
   }
   //#region "Initialize candidate form"
   initCadidateForm() {
@@ -119,6 +123,13 @@ export class AddNewCandidateComponent implements OnInit {
     });
   }
   //#endregion
+  //#region "Get candidate details"
+  getCandidateDetails() {
+    this.commonLoader.showLoader();
+    return this.hiringRequestService.GetCandidateDetailByCandidateId(this.candidateId);
+  }
+  //#region
+
   //#region "Auto genrate password for new candidate"
   PasswordAutoGenrate() {
     this.autoGenratedPassword = Math.random()
