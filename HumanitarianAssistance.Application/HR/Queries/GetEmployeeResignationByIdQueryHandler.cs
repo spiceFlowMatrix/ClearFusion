@@ -35,7 +35,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     EmployeeResignationId =y.EmployeeResignationId
                 }).FirstOrDefaultAsync(); 
                 result.Add("ResignationDetail", resignationDetail);
-                var resignationQuestionDetail = await _dbContext.EmployeeResignationQuestionDetail
+                if(resignationDetail !=null) {
+                    var resignationQuestionDetail = await _dbContext.EmployeeResignationQuestionDetail
                             .Include(x=>x.ExitInterviewQuestionsMaster)
                             .Where(x=> x.IsDeleted == false && x.ResignationId == resignationDetail.EmployeeResignationId)
                             .Select(x=>new {
@@ -45,7 +46,9 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                 QuestionText = x.ExitInterviewQuestionsMaster.QuestionText
                             })
                             .ToListAsync();
-                result.Add("ResignationQuestionDetail", resignationQuestionDetail);
+                    result.Add("ResignationQuestionDetail", resignationQuestionDetail);
+                }
+                
             }
             catch (Exception ex) 
             {

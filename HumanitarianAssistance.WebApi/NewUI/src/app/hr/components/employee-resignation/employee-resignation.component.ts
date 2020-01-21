@@ -93,6 +93,7 @@ export class EmployeeResignationComponent implements OnInit, OnChanges {
           };
         });
         this.groupedQuestions = StaticUtilities.groupBy(this.exitInterviewQuestionsList, y => y.QuestionType);
+        this.questionByType = [];
         this.groupedQuestions.forEach((value: any, key: any) => {
           this.questionByType[key] = value;
         });
@@ -121,7 +122,6 @@ export class EmployeeResignationComponent implements OnInit, OnChanges {
 
   setAllAnswers() {
     for (let i = 1; i <= 6 ; i++) {
-      debugger;
        (<FormArray>this.resignationForm.get('QuestionType' + i)).removeAt(0);
       // (this.resignationForm.controls['QuestionType' + i] as FormArray) = this.fb.array([]);
       this.questionByType[i].forEach(e => {
@@ -145,7 +145,7 @@ export class EmployeeResignationComponent implements OnInit, OnChanges {
       this.toastr.warning('Please enter Comments & Issues!');
       return;
     }
-    debugger;
+    this.commonLoader.showLoader();
     value.QuestionType2.forEach(element => {
       if (element.Answer) {
         element.Answer = '1';
@@ -153,7 +153,6 @@ export class EmployeeResignationComponent implements OnInit, OnChanges {
         element.Answer = '0';
       }
     });
-    debugger;
     const model = {
       ResignDate: StaticUtilities.getLocalDate(this.resignationForm.get('ResignDate').value),
       EmployeeID: this.employeeId,
@@ -168,10 +167,11 @@ export class EmployeeResignationComponent implements OnInit, OnChanges {
     };
     this.employeeService.saveResignation(model).subscribe(res => {
       if (res) {
+        this.commonLoader.hideLoader();
         this.toastr.success('Resignation saved successfully!');
-        this.getResignationDetail();
       }
     }, err =>  {
+      this.commonLoader.hideLoader();
       this.toastr.warning(err);
     });
   }
@@ -180,11 +180,15 @@ export class EmployeeResignationComponent implements OnInit, OnChanges {
     if (this.employeeDetail.IsResigned) {
       return;
     }
+    this.commonLoader.showLoader();
     this.employeeService.addResignation(this.employeeId).subscribe(res => {
       if (res) {
         this.employeeDetail.IsResigned = true;
+        this.getResignationDetail();
+        this.commonLoader.hideLoader();
       }
     }, err => {
+      this.commonLoader.hideLoader();
       this.toastr.warning(err);
     });
   }
@@ -192,7 +196,6 @@ export class EmployeeResignationComponent implements OnInit, OnChanges {
   getResignationDetail() {
     this.employeeService.getResignationDetailById(this.employeeId).subscribe(res => {
       if (res.ResignationDetail !== null) {
-        debugger;
         this.resignationForm.patchValue({
           ResignDate: StaticUtilities.setLocalDate(res.ResignationDetail.ResignDate),
           IsIssueUnresolved: (' ' + res.ResignationDetail.IsIssueUnresolved).trim(),
