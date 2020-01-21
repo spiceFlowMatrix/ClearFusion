@@ -667,7 +667,6 @@ export class InterviewDetailComponent implements OnInit {
   //#endregion
   //#region "Add interview details"
   EditInterviewDetails(data: InterviewDetailModel) {
-    debugger;
     this.commonLoader.showLoader();
     data.CandidateId = this.candidateId;
     data.HiringRequestId = this.hiringRequestId;
@@ -695,12 +694,10 @@ export class InterviewDetailComponent implements OnInit {
     this.interviewerList$.subscribe(res => {
       data.InterviewerList = res;
     });
-    console.log(data);
     this.hiringRequestService.EditInterviewDetails(data).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
           this.toastr.success('Interview details updated successfully');
-          //this.backToRequestDetail();
         } else {
           this.toastr.error(response.message);
         }
