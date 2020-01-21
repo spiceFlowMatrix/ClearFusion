@@ -128,8 +128,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int>("AccountLevelId");
 
-                    b.Property<string>("AccountName")
-                        .HasMaxLength(100);
+                    b.Property<string>("AccountName");
 
                     b.Property<int?>("AccountTypeId");
 
@@ -2352,6 +2351,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<bool>("IsDeleted");
 
+                    b.Property<bool>("IsResigned");
+
                     b.Property<string>("IssuePlace");
 
                     b.Property<string>("Language");
@@ -2403,6 +2404,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<string>("RegCode");
 
                     b.Property<string>("Remarks");
+
+                    b.Property<int>("ResignationStatus");
 
                     b.Property<string>("Resume");
 
@@ -3379,6 +3382,66 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("EmployeeID");
 
                     b.ToTable("EmployeeRelativeInfo");
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeResignationDetail", b =>
+                {
+                    b.Property<long>("EmployeeResignationId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CommentsIssues");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int>("EmployeeID");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("IsIssueUnresolved");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<DateTime>("ResignDate");
+
+                    b.HasKey("EmployeeResignationId");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.ToTable("EmployeeResignationDetail");
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeResignationQuestionDetail", b =>
+                {
+                    b.Property<int>("ResignationQuestionId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Answer");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int>("QuestionId");
+
+                    b.Property<long>("ResignationId");
+
+                    b.HasKey("ResignationQuestionId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("ResignationId");
+
+                    b.ToTable("EmployeeResignationQuestionDetail");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeSalaryAnalyticalInfo", b =>
@@ -6804,7 +6867,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("ContractDuration");
 
-                    b.Property<string>("ContractType");
+                    b.Property<int?>("ContractTypeId");
 
                     b.Property<int?>("CountryId");
 
@@ -6837,6 +6900,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<bool>("IsCompleted");
 
                     b.Property<bool>("IsDeleted");
+
+                    b.Property<int?>("JobCategoryId");
 
                     b.Property<long?>("JobId");
 
@@ -6889,6 +6954,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("EmployeeID");
 
                     b.HasIndex("GradeId");
+
+                    b.HasIndex("JobCategoryId");
 
                     b.HasIndex("JobId");
 
@@ -9830,6 +9897,27 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeResignationDetail", b =>
+                {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
+                        .WithMany()
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeResignationQuestionDetail", b =>
+                {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.ExitInterviewQuestionsMaster", "ExitInterviewQuestionsMaster")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeResignationDetail", "EmployeeResignationDetail")
+                        .WithMany()
+                        .HasForeignKey("ResignationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeSalaryAnalyticalInfo", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Accounting.ChartOfAccountNew", "ChartOfAccountNew")
@@ -10684,6 +10772,10 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.JobGrade", "JobGrade")
                         .WithMany()
                         .HasForeignKey("GradeId");
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Department", "DepartmentDetails")
+                        .WithMany()
+                        .HasForeignKey("JobCategoryId");
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectJobHiringDetail", "ProjectJobHiringDetail")
                         .WithMany()

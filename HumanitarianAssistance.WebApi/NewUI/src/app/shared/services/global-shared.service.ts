@@ -9,6 +9,8 @@ import { IMenuList } from '../dbheader/dbheader.component';
 import { FileModel } from '../file-management/file-management-model';
 import { SignedUrlObjectName } from '../file-management/signed-url-object-name';
 import { concatMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { IDropDownModel } from 'src/app/store/models/purchase';
 
 @Injectable({
   providedIn: 'root'
@@ -102,7 +104,7 @@ export class GlobalSharedService {
       )
       .pipe(
        concatMap(res => {
-         console.log('res', res);
+         // console.log('res', res);
         const responseData: IResponseData = {
           data: res.data.SignedUrl,
           statusCode: res.StatusCode,
@@ -205,5 +207,16 @@ export class GlobalSharedService {
       .post(
         this.appurl.getApiUrl() + GLOBAL.API_FileManagement_DeleteDocumentFiles, model
       );
+  }
+
+  getPreviousYearsList(years: number): Observable<IDropDownModel[]> {
+
+    const yearDropDown: IDropDownModel[] = [];
+    const year = new Date().getFullYear();
+    for (let i = 0; i <= years; i++) {
+      yearDropDown.push({name: (year - i).toString(),
+      value: year - i});
+    }
+    return of(yearDropDown);
   }
 }
