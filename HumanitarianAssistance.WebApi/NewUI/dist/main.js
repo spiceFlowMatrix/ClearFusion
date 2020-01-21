@@ -4036,6 +4036,7 @@ var GLOBAL = /** @class */ (function () {
     GLOBAL.API_HiringRequest_AddInterviewDetails = 'HiringRequest/AddInterviewDetails';
     GLOBAL.API_HiringRequest_GetInterviewDetailsByInterviewId = 'HiringRequest/GetInterviewDetailsByInterviewId';
     GLOBAL.API_HiringRequest_GetHiringRequestCode = 'HiringRequest/GetHiringRequestCode';
+    GLOBAL.API_HiringRequest_EditInterviewDetails = 'HiringRequest/EditCandidateInterviewDetail';
     GLOBAL.API_EmployeeDetail_AddEmployeeSalaryAnalyticalInfo = 'EmployeeDetail/AddEmployeeSalaryAnalyticalInfo';
     GLOBAL.API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
     GLOBAL.API_Code_GetAllDesignation = 'Code/GetAllDesignation';
