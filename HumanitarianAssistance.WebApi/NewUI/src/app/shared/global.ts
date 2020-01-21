@@ -660,6 +660,36 @@ export class GLOBAL {
   public static API_Store_EditInventoryItems = 'Store/EditInventoryItems';
   public static API_Store_DeleteInventoryItems = 'Store/DeleteInventoryItems';
 
+  public static API_Code_GetAllFinancialYearDetail = 'Code/GetAllFinancialYearDetail';
+// Hr Hisotry
+  public static API_EmployeeHR_GetLanguageList = 'Code/GetAllLanguages';
+
+  public static API_Hr_GetAllEmployeeHistoryByEmployeeId = 'EmployeeDetail/GetAllEmployeeHistoryByEmployeeId';
+  public static API_EmployeeDetail_GetAllEmployeeEducations = 'EmployeeDetail/GetAllEmployeeEducations';
+  public static API_EmployeeDetail_GetAllEmployeeHistoryOutsideCountry = 'EmployeeDetail/GetAllEmployeeHistoryOutsideCountry';
+  public static API_EmployeeDetail_GetAllEmployeeRelativeInformation = 'EmployeeDetail/GetAllEmployeeRelativeInformation';
+  public static API_EmployeeDetail_GetAllEmployeeInfoReferences = 'EmployeeDetail/GetAllEmployeeInfoReferences';
+  public static API_EmployeeDetail_GetAllEmployeeOtherSkills = 'EmployeeDetail/GetAllEmployeeOtherSkills';
+  public static API_EmployeeDetail_GetAllEmployeeSalaryBudgets = 'EmployeeDetail/GetAllEmployeeSalaryBudgets';
+  public static API_EmployeeDetail_GetAllEmployeeLanguages = 'EmployeeDetail/GetAllEmployeeLanguages';
+
+  public static API_Hr_AddEmployeeHistoryDetail = 'EmployeeDetail/AddEmployeeHistoryDetail';
+  public static API_Hr_AddEmployeeEducations = 'EmployeeDetail/AddEmployeeEducations';
+  public static API_Hr_AddEmployeeHistoryOutsideCountry = 'EmployeeDetail/AddEmployeeHistoryOutsideCountry';
+  public static API_Hr_AddEmployeeRelativeInformation = 'EmployeeDetail/AddEmployeeRelativeInformation';
+  public static API_Hr_AddEmployeeInfoReferences = 'EmployeeDetail/AddEmployeeInfoReferences';
+  public static API_Hr_AddEmployeeOtherSkills = 'EmployeeDetail/AddEmployeeOtherSkills';
+  public static API_Hr_AddEmployeeSalaryBudgets = 'EmployeeDetail/AddEmployeeSalaryBudgets';
+  public static API_Hr_AddEmployeeLanguages = 'EmployeeDetail/AddEmployeeLanguages';
+
+  public static API_Hr__DeleteEmployeeHistoryDetail = 'EmployeeDetail/DeleteEmployeeHistoryDetail';
+  public static API_Hr__DeleteEmployeeEducations = 'EmployeeDetail/DeleteEmployeeEducations';
+  public static API_Hr__DeleteEmployeeHistoryOutsideCountry = 'EmployeeDetail/DeleteEmployeeHistoryOutsideCountry';
+  public static API_Hr__DeleteEmployeeRelativeInformation = 'EmployeeDetail/DeleteEmployeeRelativeInformation';
+  public static API_Hr__DeleteEmployeeInfoReferences = 'EmployeeDetail/DeleteEmployeeInfoReferences';
+  public static API_Hr__DeleteEmployeeOtherSkills = 'EmployeeDetail/DeleteEmployeeOtherSkills';
+  public static API_Hr__DeleteEmployeeSalaryBudgets = 'EmployeeDetail/DeleteEmployeeSalaryBudgets';
+  public static API_Hr__RemoveEmployeeLanguages = 'EmployeeDetail/RemoveEmployeeLanguages';
 
   //#region Hr Attendance
   public static API_Attendance_GetFilteredAttendanceDetails = 'Attendance/GetFilteredAttendanceDetails';
