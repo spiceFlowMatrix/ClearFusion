@@ -556,4 +556,7 @@ public static API_FileManagement_DeleteDocumentFiles = 'FileManagement/DeleteDoc
   // public static API_Store_AddItemSpecification = 'Store/AddItemSpecification';
   // public static API_Store_EditItemSpecification = 'Store/EditItemSpecification';
   // public static API_Store_DeleteItemSpecification = 'Store/DeleteItemSpecification';
+  
+  public static API_Hr_AddOpeningPensionDetail = 'EmployeeDetail/AddOpeningPensionDetail';
+
 }
