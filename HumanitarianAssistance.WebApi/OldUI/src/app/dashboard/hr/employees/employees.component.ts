@@ -1960,7 +1960,6 @@ export class EmployeesComponent implements OnInit {
   //#endregion "Get All JobGrade"
 
   onFieldDataChanged(e) {
-    console.log('hsdfjk', this.pensionDetaildataSource);
     if (e.dataField === 'Phone') {
       if (e.value !== undefined && e.value != null) {
         const phone = e.value.toString();
