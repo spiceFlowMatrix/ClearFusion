@@ -1,3 +1,4 @@
+import { LanguageChange } from './../../../../../../../OldUI/src/app/shared/languageChange';
 import { Component, OnInit, HostListener, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
@@ -592,35 +593,53 @@ export class InterviewDetailComponent implements OnInit {
   // #region "Delete perticular data from list"
   actionEventsLanguage(event: any) {
     if (event.type === 'delete') {
-      const index = (this.interviewDetailForm.controls['LanguageList']
-        .value as Array<any>).findIndex(
-        x => x.LanguageName === event.item.LanguageName
-      );
-      (this.interviewDetailForm.controls['LanguageList'].value as Array<
-        any
-      >).splice(index, 1);
+      let index;
+      this.languagesList$.subscribe(res => {
+        index = res.findIndex(x => x.LanguageName === event.item.LanguageName);
+        res.splice(index, 1);
+        this.languagesList$ = of(res);
+      });
+      // const index = (this.interviewDetailForm.controls['LanguageList']
+      //   .value as Array<any>).findIndex(
+      //   x => x.LanguageName === event.item.LanguageName
+      // );
+      // (this.interviewDetailForm.controls['LanguageList'].value as Array<
+      //   any
+      // >).splice(index, 1);
     }
   }
   actionEventsTraining(event: any) {
     if (event.type === 'delete') {
-      const index = (this.interviewDetailForm.controls['TraningList']
-        .value as Array<any>).findIndex(
-        x => x.LanguageName === event.item.LanguageName
-      );
-      (this.interviewDetailForm.controls['TraningList'].value as Array<
-        any
-      >).splice(index, 1);
+      let index;
+      this.traningList$.subscribe(res => {
+        index = res.findIndex(x => x.TraningName === event.item.TraningName);
+        res.splice(index, 1);
+        this.traningList$ = of(res);
+      });
+      // const index = (this.interviewDetailForm.controls['TraningList']
+      //   .value as Array<any>).findIndex(
+      //   x => x.LanguageName === event.item.LanguageName
+      // );
+      // (this.interviewDetailForm.controls['TraningList'].value as Array<
+      //   any
+      // >).splice(index, 1);
     }
   }
   actionEventsInterviewers(event: any) {
     if (event.type === 'delete') {
-      const index = (this.interviewDetailForm.controls['InterviewerList']
-        .value as Array<any>).findIndex(
-        x => x.EmployeeId === event.item.EmployeeId
-      );
-      (this.interviewDetailForm.controls['InterviewerList'].value as Array<
-        any
-      >).splice(index, 1);
+      let index;
+      this.interviewerList$.subscribe(res => {
+        index = res.findIndex(x => x.EmployeeId === event.item.EmployeeId);
+        res.splice(index, 1);
+        this.interviewerList$ = of(res);
+      });
+      // const index = (this.interviewDetailForm.controls['InterviewerList']
+      //   .value as Array<any>).findIndex(
+      //   x => x.EmployeeId === event.item.EmployeeId
+      // );
+      // (this.interviewDetailForm.controls['InterviewerList'].value as Array<
+      //   any
+      // >).splice(index, 1);
     }
   }
   //#endregion
@@ -667,8 +686,8 @@ export class InterviewDetailComponent implements OnInit {
     this.hiringRequestService.EditInterviewDetails(data).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
-          this.toastr.success('Interview details added successfully');
-          this.backToRequestDetail();
+          this.toastr.success('Interview details updated successfully');
+          //this.backToRequestDetail();
         } else {
           this.toastr.error(response.message);
         }
@@ -712,8 +731,38 @@ export class InterviewDetailComponent implements OnInit {
       );
   }
   //#endregion
+
   //#region "Set remaining interview details"
   setRemainingInterviewDetails(data: any) {
+    this.interviewDetailForm.patchValue({
+      CandidateId: data.CandidateId,
+      HiringRequestId: data.HiringRequestId,
+      InterviewId: data.InterviewId,
+      Description: data.Description,
+      NoticePeriod: data.NoticePeriod,
+      AvailableDate: data.AvailableDate,
+      WrittenTestMarks: data.WrittenTestMarks,
+      CurrentBase: data.CurrentBase,
+      CurrentOther: data.CurrentOther,
+      ExpectationBase: data.ExpectationBase,
+      ExpectationOther: data.ExpectationOther,
+      Status: data.Status,
+      InterviewQuestionOne: data.InterviewQuestionOne,
+      InterviewQuestionTwo: data.InterviewQuestionTwo,
+      InterviewQuestionThree: data.InterviewQuestionThree,
+      CurrentTransport: data.CurrentTransport,
+      CurrentMeal: data.CurrentMeal,
+      ExpectationTransport: data.ExpectationTransport,
+      ExpectationMeal: data.ExpectationMeal,
+      LanguageList: data.LanguageList,
+      TraningList: data.TraningList,
+      InterviewerList: data.InterviewerList,
+      ProfessionalCriteriaMark: data.ProfessionalCriteriaMark,
+      MarksObtain: data.MarksObtain,
+      TotalMarksObtain: data.TotalMarksObtain,
+      RatingBasedCriteriaList: data.RatingBasedCriteriaList,
+      TechnicalQuestionList: data.TechnicalQuestionList
+    });
     data.CandidateId = this.candidateId;
     data.HiringRequestId = this.hiringRequestId;
     data.CandidateName = this.candidateDetails.FullName;
@@ -736,32 +785,33 @@ export class InterviewDetailComponent implements OnInit {
     this.languagesList$ = of(data.LanguageList);
     this.traningList$ = of(data.TraningList);
     this.interviewerList$ = of(data.InterviewerList);
-    this.interviewDetailForm = this.fb.group({
-      CandidateId: data.CandidateId,
-      HiringRequestId: data.HiringRequestId,
-      Description: data.Description,
-      NoticePeriod: data.NoticePeriod,
-      AvailableDate: data.AvailableDate,
-      WrittenTestMarks: data.WrittenTestMarks,
-      CurrentBase: data.CurrentBase,
-      CurrentOther: data.CurrentOther,
-      ExpectationBase: data.ExpectationBase,
-      ExpectationOther: data.ExpectationOther,
-      Status: data.Status,
-      InterviewQuestionOne: data.InterviewQuestionOne,
-      InterviewQuestionTwo: data.InterviewQuestionTwo,
-      InterviewQuestionThree: data.InterviewQuestionThree,
-      CurrentTransport: data.CurrentTransport,
-      CurrentMeal: data.CurrentMeal,
-      ExpectationTransport: data.ExpectationTransport,
-      ExpectationMeal: data.ExpectationMeal,
-      LanguageList : data.LanguageList,
-      TraningList : data.TraningList,
-      InterviewerList : data.InterviewerList
-    });
-    this.interviewDetails = data;
+    //   this.interviewDetailForm = this.fb.group({
+    //     CandidateId: data.CandidateId,
+    //     HiringRequestId: data.HiringRequestId,
+    //     Description: data.Description,
+    //     NoticePeriod: data.NoticePeriod,
+    //     AvailableDate: data.AvailableDate,
+    //     WrittenTestMarks: data.WrittenTestMarks,
+    //     CurrentBase: data.CurrentBase,
+    //     CurrentOther: data.CurrentOther,
+    //     ExpectationBase: data.ExpectationBase,
+    //     ExpectationOther: data.ExpectationOther,
+    //     Status: data.Status,
+    //     InterviewQuestionOne: data.InterviewQuestionOne,
+    //     InterviewQuestionTwo: data.InterviewQuestionTwo,
+    //     InterviewQuestionThree: data.InterviewQuestionThree,
+    //     CurrentTransport: data.CurrentTransport,
+    //     CurrentMeal: data.CurrentMeal,
+    //     ExpectationTransport: data.ExpectationTransport,
+    //     ExpectationMeal: data.ExpectationMeal,
+    //     LanguageList : data.LanguageList,
+    //     TraningList : data.TraningList,
+    //     InterviewerList : data.InterviewerList
+    //   });
+    //   this.interviewDetails = data;
   }
   //#endregion
+
   //#region "On export of interview details pdf"
   onExportInterviewDetailsPdf() {
     this.commonLoader.showLoader();
