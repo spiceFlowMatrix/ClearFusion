@@ -29,7 +29,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                 {
                     CreatedDate= DateTime.UtcNow,
                     CreatedById = request.CreatedById,
-                    MonthlyAmount = request.BasicSalary,
+                    MonthlyAmount = request.ActiveSalary,
                     HeadTypeId = (int)SalaryHeadType.GENERAL,
                     TransactionTypeId = (int)TransactionType.Debit,
                     SalaryHeadId = salaryHead.SalaryHeadId,

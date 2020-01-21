@@ -7,6 +7,6 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
     {
         public int EmployeeId { get; set; }
         public int CurrencyId { get; set; }
-        public double BasicSalary { get; set; }
+        public double ActiveSalary { get; set; }
     }
 }

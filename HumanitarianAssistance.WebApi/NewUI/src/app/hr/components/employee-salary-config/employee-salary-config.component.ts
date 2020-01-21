@@ -81,10 +81,18 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       const dialogRef = this.dialog.open(AddSalaryConfigurationComponent, {
         width: '500px',
         autoFocus: false,
+        data: {
+          PayrollId: this.employeeCurrencyAndAmount.PayrollId,
+          CurrencyId: this.employeeCurrencyAndAmount.CurrencyId,
+          EmployeeId: this.employeeId,
+          MonthlyAmount: this.employeeCurrencyAndAmount.MonthlyAmount
+        }
       });
       // refresh the data after new request created
       dialogRef.componentInstance.onAddSalaryConfigurationRefresh.subscribe(() => {});
-      dialogRef.afterClosed().subscribe(() => {});
+      dialogRef.afterClosed().subscribe(() => {
+        this.getEmployeeBasicPayAndCurrency();
+      });
   }
   //#endregion
 
@@ -133,8 +141,7 @@ addFine(): void {
   }
 
   getEmployeeBasicPayAndCurrency() {
-    this.salaryConfigService.getEmployeeBasicPayAndCurrency(this.employeeId).subscribe(x=> {
-      debugger;
+    this.salaryConfigService.getEmployeeBasicPayAndCurrency(this.employeeId).subscribe(x => {
       if (x && x.EmployeeCurrencyAmount) {
         this.employeeCurrencyAndAmount = x.EmployeeCurrencyAmount;
       }

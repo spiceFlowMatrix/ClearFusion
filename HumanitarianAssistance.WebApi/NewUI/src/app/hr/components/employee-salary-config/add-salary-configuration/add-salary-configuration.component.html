@@ -19,6 +19,7 @@
           <div class="col-lg-6 col-sm-6">
             <mat-form-field class="example-full-width">
               <input matInput formControlName="ActiveSalary" placeholder="Active Salary" type="number" />
+              <mat-error *ngIf="salaryConfigForm.controls['ActiveSalary'].hasError('min')">Basic salary should be greater than 0</mat-error>
             </mat-form-field>
           </div>
         </div>

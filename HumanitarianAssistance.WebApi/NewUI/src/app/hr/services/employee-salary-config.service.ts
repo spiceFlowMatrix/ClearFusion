@@ -40,4 +40,12 @@ export class EmployeeSalaryConfigService {
       );
     }
     //#endregion
+
+     //#region "editBasicSalary"
+     editBasicSalary(model: any): any {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_HR_EditEmployeeSalaryCurrencyAndBasicSalary, model
+      );
+    }
+    //#endregion
 }

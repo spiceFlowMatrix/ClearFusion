@@ -1,6 +1,6 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter, Inject } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
@@ -25,10 +25,12 @@ export class AddSalaryConfigurationComponent implements OnInit {
     private salaryConfigService: EmployeeSalaryConfigService,
     private globalSharedService: GlobalSharedService,
     public dialogRef: MatDialogRef<AddSalaryConfigurationComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.salaryConfigForm = this.fb.group({
-      CurrencyId: ['', [Validators.required]],
-      ActiveSalary: ['', [Validators.required]]
+      PayrollId: [this.data.PayrollId],
+      CurrencyId: [this.data.CurrencyId, [Validators.required]],
+      ActiveSalary: [this.data.MonthlyAmount, [Validators.required, Validators.min(1)]]
     });
   }
 
@@ -75,10 +77,28 @@ export class AddSalaryConfigurationComponent implements OnInit {
   //#endregion
   onFormSubmit(data: any) {
     if (this.salaryConfigForm.valid) {
+      const model = {
+        PayrollId: this.salaryConfigForm.value.PayrollId,
+        CurrencyId: this.salaryConfigForm.value.CurrencyId,
+        ActiveSalary: this.salaryConfigForm.value.ActiveSalary,
+        EmployeeId: this.data.EmployeeId
+      };
+      if (this.salaryConfigForm.value.PayrollId === 0) {
+        this.addBasicSalaryAndCurrency(model);
+      } else {
+        this.editBasicSalaryAndCurrency(model);
+      }
+    } else {
+      this.toastr.warning('Please correct form errors and submit again');
+    }
+  }
+
+  addBasicSalaryAndCurrency(model: any) {
       this.commonLoader.showLoader();
-      this.salaryConfigService.saveBasicSalary(this.salaryConfigForm.value).subscribe(x =>  {
+      this.salaryConfigService.saveBasicSalary(model).subscribe(x =>  {
         if (x) {
           this.commonLoader.hideLoader();
+          this.onCancelPopup();
         } else {
           this.commonLoader.hideLoader();
           this.toastr.warning('Please try again');
@@ -86,9 +106,20 @@ export class AddSalaryConfigurationComponent implements OnInit {
       }, error => {
         this.toastr.warning(error);
       });
+  }
 
-    } else {
-      this.toastr.warning('Please correct form errors and submit again');
-    }
+  editBasicSalaryAndCurrency(model: any) {
+      this.commonLoader.showLoader();
+      this.salaryConfigService.editBasicSalary(model).subscribe(x =>  {
+        if (x) {
+          this.commonLoader.hideLoader();
+          this.onCancelPopup();
+        } else {
+          this.commonLoader.hideLoader();
+          this.toastr.warning('Please try again');
+        }
+      }, error => {
+        this.toastr.warning(error);
+      });
   }
 }
