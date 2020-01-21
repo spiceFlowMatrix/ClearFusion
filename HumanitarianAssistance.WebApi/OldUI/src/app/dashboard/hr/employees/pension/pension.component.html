@@ -47,7 +47,9 @@
     <div class="col-sm-12">
       <br>
       <br>
-      <h3 class="page-heading-report empProject pension-heading">Opening Pension Detail</h3>
+      <h3 class="page-heading-report empProject pension-heading">Opening Pension Detail
+      <dx-button text="Opening Pension" (click)="openPensionForm()" *ngIf="isEditingAllowed">
+      </dx-button></h3>
       <dx-data-grid id="openingPension" [dataSource]="openingPensionList" [allowColumnReordering]="true"
         [allowColumnResizing]="true" [showRowLines]="true">
         <dxo-paging [pageSize]="10"></dxo-paging>
@@ -62,6 +64,61 @@
     </div>
 
   </div>
+
+   <!-- pension popup -->
+   <dx-popup title="Opening Pension Detail" [dragEnabled]="false" [closeOnOutsideClick]="true"
+   [(visible)]="popupPensionDetail" [width]="500" [minHeight]="400">
+
+   <div *dxTemplate="let data of 'content'">
+       <div class="alert alert-warning" *ngIf="exchangeRateMessage != '' && exchangeRateMessage != null"
+           role="alert">
+           {{exchangeRateMessage}}
+       </div>
+       <dx-scroll-view showScrollbar="always" direction="both">
+           <form action="your-action" (submit)="submitPension(pensionForm)">
+               <dx-form id="formg" [formData]="pensionForm" [colCount]="2"  [readOnly]="false"
+                   [showColonAfterLabel]="true" [showValidationSummary]="true"
+                   validationGroup="addGeneralDetails" (onFieldDataChanged)="onFieldDataChanged($event)">
+                   <dxi-item dataField="PensionDate" editorType="dxDateBox" 
+                       [editorOptions]="{ type: 'date', value: currentDate, max : currentDate , displayFormat: 'dd/MM/yyyy'}">
+                       <dxi-validation-rule type="required"> </dxi-validation-rule>
+                   </dxi-item>
+               </dx-form>
+
+               <dx-data-grid id="gridContainer" [dataSource]="pensionDetaildataSource" keyExpr="ID"
+                   [allowColumnReordering]="true" [showBorders]="true">
+
+                   <dxo-paging [enabled]="true"></dxo-paging>
+                   <dxo-editing mode="row" [allowDeleting]="false" [allowAdding]="true">
+                       <dxo-texts addRow="Add Opening Pension"></dxo-texts>
+                   </dxo-editing>
+
+                   <dxi-column dataField="CurrencyId" caption="Currency" >
+                       <dxo-lookup [dataSource]="currencycodeList" displayExpr="CurrencyName"
+                           valueExpr="CurrencyId">
+                       </dxo-lookup>
+                       <dxi-validation-rule type="required"> </dxi-validation-rule>
+                   </dxi-column>
+                   <dxi-column dataField="Amount" editorType="dxNumberBox" dataType="number"
+                       [editorOptions]="{ min: 0 }">
+                       <dxi-validation-rule type="required"> </dxi-validation-rule>
+                   </dxi-column>
+
+               </dx-data-grid>
+               <br>
+               <div class="row">
+                   <div class="col-sm-12 align-right">
+                       <dx-button text="Save" type="success" [useSubmitBehavior]="true"
+                           [disabled]="disableSubmitFlag">
+                       </dx-button>
+                       <dx-button text="Cancel" (onClick)="popupPensionDetail = false">
+                       </dx-button>
+                   </div>
+               </div>
+           </form>
+       </dx-scroll-view>
+   </div>
+</dx-popup>
   <div *ngIf="employeePensionReportFlag; else pensionReport">
     <div class="row">
       <div class="col-md-12">
