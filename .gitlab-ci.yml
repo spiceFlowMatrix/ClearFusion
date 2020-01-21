@@ -58,7 +58,7 @@ build_oldui:
     retry: 2
 
 build_backend:
-    image: mcr.microsoft.com/dotnet/core/aspnet:2.2
+    image: mcr.microsoft.com/dotnet/core/sdk:2.2
     stage: integration
     variables:
         OBJECTS_DIRECTORY: obj/
