@@ -55,7 +55,10 @@ export class EmployeeResignationComponent implements OnInit, OnChanges {
     }
 
   ngOnInit() {
-    this.getExitInterviewQuestionsList();
+    // this.getExitInterviewQuestionsList();
+    if (this.employeeDetail.IsResigned) {
+      this.getResignationDetail();
+    }
   }
 
   ngOnChanges() {
@@ -116,6 +119,23 @@ export class EmployeeResignationComponent implements OnInit, OnChanges {
     }
   }
 
+  setAllAnswers() {
+    for (let i = 1; i <= 6 ; i++) {
+      debugger;
+       (<FormArray>this.resignationForm.get('QuestionType' + i)).removeAt(0);
+      // (this.resignationForm.controls['QuestionType' + i] as FormArray) = this.fb.array([]);
+      this.questionByType[i].forEach(e => {
+        if (i !== 2 ) {
+          (this.resignationForm.controls['QuestionType' + i] as FormArray)
+        .push(this.createQuestion(e.QuestionId, e.QuestionText, e.QuestionType, (e.Answer + '').trim()));
+        } else {
+          (this.resignationForm.controls['QuestionType' + i] as FormArray)
+          .push(this.createQuestion(e.QuestionId, e.QuestionText, e.QuestionType, (e.Answer === 1) ? true : false));
+        }
+      });
+    }
+  }
+
   saveResignationForm(value) {
     if (!this.resignationForm.valid) {
       this.toastr.warning('Please select Resign Date');
@@ -125,9 +145,15 @@ export class EmployeeResignationComponent implements OnInit, OnChanges {
       this.toastr.warning('Please enter Comments & Issues!');
       return;
     }
+    debugger;
     value.QuestionType2.forEach(element => {
-      element.Answer = (element.Answer) ? '1' : '0';
+      if (element.Answer) {
+        element.Answer = '1';
+      } else {
+        element.Answer = '0';
+      }
     });
+    debugger;
     const model = {
       ResignDate: StaticUtilities.getLocalDate(this.resignationForm.get('ResignDate').value),
       EmployeeID: this.employeeId,
@@ -143,6 +169,7 @@ export class EmployeeResignationComponent implements OnInit, OnChanges {
     this.employeeService.saveResignation(model).subscribe(res => {
       if (res) {
         this.toastr.success('Resignation saved successfully!');
+        this.getResignationDetail();
       }
     }, err =>  {
       this.toastr.warning(err);
@@ -162,9 +189,26 @@ export class EmployeeResignationComponent implements OnInit, OnChanges {
     });
   }
 
-  // onCheckBoxChange(e, QuestionId) {
-  //   if (e.checked) {
-  //     (this.resignationForm.controls.QuestionType2 as FormArray)
-  //   }
-  // }
+  getResignationDetail() {
+    this.employeeService.getResignationDetailById(this.employeeId).subscribe(res => {
+      if (res.ResignationDetail !== null) {
+        debugger;
+        this.resignationForm.patchValue({
+          ResignDate: StaticUtilities.setLocalDate(res.ResignationDetail.ResignDate),
+          IsIssueUnresolved: (' ' + res.ResignationDetail.IsIssueUnresolved).trim(),
+          Issues: res.ResignationDetail.CommentsIssues.trim()
+        });
+        this.groupedQuestions = StaticUtilities.groupBy(res.ResignationQuestionDetail, y => y.QuestionType);
+        this.questionByType = [];
+        this.groupedQuestions.forEach((value: any, key: any) => {
+          this.questionByType[key] = value;
+        });
+        this.setAllAnswers();
+      } else {
+        this.getExitInterviewQuestionsList();
+      }
+    }, err => {
+      this.toastr.warning(err);
+    });
+  }
 }

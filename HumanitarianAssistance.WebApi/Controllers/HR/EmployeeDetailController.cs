@@ -662,6 +662,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             var result= await _mediator.Send(new GetEmployeeDetailByIdQuery { EmployeeId = id });
             return Ok(result);
         }
+        [HttpPost]
         public async Task<IActionResult> GetAllEmployeeDetailList([FromBody]GetAllEmployeeDetailListQuery model)
         {
             var result = await _mediator.Send(model);
@@ -701,6 +702,15 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             model.CreatedById = userId;
             model.CreatedDate = DateTime.UtcNow;
             var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetEmployeeResignationById([FromQuery]int Id)
+        {
+            var result = await _mediator.Send(new GetEmployeeResignationByIdQuery {
+                EmployeeID = Id
+            });
             return Ok(result);
         }
 

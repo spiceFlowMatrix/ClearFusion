@@ -47,4 +47,11 @@ export class EmployeeListService {
       model
     );
   }
+
+  getResignationDetailById(id) {
+    return this.globalService.getItemById(
+      this.appurl.getApiUrl() + GLOBAL.API_EmployeeDetail_GetEmployeeResignationById,
+      id
+    );
+  }
 }

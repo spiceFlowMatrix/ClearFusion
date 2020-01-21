@@ -1,4 +1,4 @@
-<div class="container-fluid" humAddScroll>
+<div class="container-fluid" >
     <h4 class="letter_spacing_2">Resignation Exit Interview
       <hum-button [type]="'add'" [text]="'ADD RESIGNATION'" (click)="addResignation()" [disabled]="employeeDetail.IsResigned"></hum-button>
       <hum-button [type]="'edit'" [text]="'SAVE CHANGES'" (click)="saveResignationForm(resignationForm.value)" *ngIf="employeeDetail.IsResigned"></hum-button>
@@ -7,7 +7,7 @@
       <hum-button [type]="'exclamation'" [text]="'REVOKE RESIGNATION'" [disabled]="!employeeDetail.IsResigned"></hum-button>
     </h4>
     <h5 *ngIf="!employeeDetail.IsResigned"><i class="fas fa-info-circle icon_color_yellow"></i> &nbsp;There is no Active Resignation. Please Add one in order to see its details.</h5>
-  <div class="row" *ngIf="employeeDetail.IsResigned">
+  <div class="row" *ngIf="employeeDetail.IsResigned" humAddScroll [height]="250">
     <div class="col-md-12">
       <form [formGroup]="resignationForm">
         <p class="font_size_16">When did the employee resign?</p>
