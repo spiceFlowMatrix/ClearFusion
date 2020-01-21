@@ -26,7 +26,7 @@ build_newui:
         - cd HumanitarianAssistance.WebApi/NewUI/
     script:
         - npm install --quiet
-        - npm run build --prod
+        
       
     after_script:
         - find HumanitarianAssistance.WebApi/NewUI/dist/
