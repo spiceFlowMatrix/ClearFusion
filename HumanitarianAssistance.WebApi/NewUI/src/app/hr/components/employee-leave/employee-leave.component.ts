@@ -106,7 +106,7 @@ export class EmployeeLeaveComponent implements OnInit {
     this.hrLeave
       .getAllLeaveInfoById(this.employeeId)
       .subscribe(x => {
-        if (x && x.LeaveList.length > 0) {
+        if (x && x.LeaveList && x.LeaveList.length > 0) {
             this.assignedLeaveList$ = of(x.LeaveList.map((element) => {
               return {
                 Id: element.ApplyLeaveId,
