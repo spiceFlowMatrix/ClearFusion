@@ -353,4 +353,19 @@ namespace HumanitarianAssistance.Common.Enums {
         VeryGood = 3,
         Excellent = 4
     }
+    
+    public enum ResignationQuestionType {
+        [Description ("Feeling About Employee Aspects")]
+        FeelingAboutEmployeeAspects = 1,
+        [Description ("Reason Of Leaving")]
+        ReasonOfLeaving,
+        [Description ("The Department")]
+        TheDepartment,
+        [Description ("The Job Itself")]
+        TheJobItself,
+        [Description ("My Supervisor")]
+        MySupervisor,
+        [Description ("The Management")]
+        TheManagement
+    }
 }

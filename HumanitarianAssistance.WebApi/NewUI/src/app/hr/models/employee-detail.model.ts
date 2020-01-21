@@ -25,4 +25,6 @@ export interface IEmployeeDetail {
   Terminated: string;
   TerminatedOn: string;
   TerminationReason: string;
+  IsResigned: boolean;
+  ResignationStatus: number;
 }
