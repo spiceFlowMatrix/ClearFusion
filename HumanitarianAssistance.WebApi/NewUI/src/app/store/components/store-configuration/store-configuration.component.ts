@@ -7,6 +7,7 @@ import { UnitType, SourceCodeType, SourceCode } from '../../models/store-configu
 import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { concatMap, map } from 'rxjs/operators';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -47,7 +48,8 @@ export class StoreConfigurationComponent implements OnInit {
 
   constructor(private dialog: MatDialog,
     private configservice: ConfigService,
-    private fb: FormBuilder, private loader: CommonLoaderService) { }
+    private fb: FormBuilder, private loader: CommonLoaderService,
+    private toastr: ToastrService) { }
   //#region "Dynamic Scroll"
 
   ngOnInit() {
@@ -120,6 +122,7 @@ export class StoreConfigurationComponent implements OnInit {
       if (this.unitTypeGroup.value.unitTypeId) {
         // this.unitType.UnitTypeName = this.unitTypeGroup.value.typeName;
         this.configservice.editUnit(this.unitTypeGroup.value).subscribe(res => {
+          this.toastr.success('Updated Successfully');
           this.configservice.getUnitType().subscribe(res1 => {
             this.getAllUnitTypes(res1);
             this.loader.hideLoader();
@@ -131,6 +134,7 @@ export class StoreConfigurationComponent implements OnInit {
        // this.unitType.UnitTypeName = this.typeName.value;
        this.unitTypeGroup.value.unitTypeId = 0;
         this.configservice.saveUnit(this.unitTypeGroup.value).subscribe(res => {
+          this.toastr.success('Added Successfully');
           this.configservice.getUnitType().subscribe(res1 => {
             this.getAllUnitTypes(res1);
           });
@@ -147,6 +151,7 @@ export class StoreConfigurationComponent implements OnInit {
         if (res) {
           this.unitType = data.item;
           this.configservice.deleteUnit(this.unitType).subscribe(res => {
+            this.toastr.success('Deleted Successfully');
             this.configservice.getUnitType().subscribe(res1 => {
               this.getAllUnitTypes(res1);
             });
@@ -179,11 +184,11 @@ export class StoreConfigurationComponent implements OnInit {
       code: [''],
       description: ['', Validators.required],
       address: ['', Validators.required],
-      phone: ['', [Validators.pattern(contactRegex)]],
-      fax: [''],
-      emailAddress: ['', Validators.email],
-      guarantor: [''],
-      codeTypeId: ['']
+      phone: ['', [Validators.required, Validators.pattern(contactRegex)]],
+      fax: ['', [Validators.required]],
+      emailAddress: ['', [Validators.required, Validators.email]],
+      guarantor: ['', [Validators.required]],
+      codeTypeId: ['', [Validators.required]]
     });
   }
   getAllSourCodeTypes(res) {
@@ -199,6 +204,8 @@ export class StoreConfigurationComponent implements OnInit {
   }
   codePopUp(codeTypeId) {
     this.configservice.getCodeByType(codeTypeId).subscribe(res => {
+      this.isEditCode = false;
+      this.sourCodeForm.reset();
       this.sourCodeForm.controls.code.setValue(res.data.StoreSourceCode);
       this.sourCodeForm.controls.codeTypeId.setValue(codeTypeId);
       this.dialog.open(this.codeDialogRef, {
@@ -226,6 +233,7 @@ export class StoreConfigurationComponent implements OnInit {
       this.sourceCode.SourceCodeId = this.sourCodeForm.controls.sourceCodeId.value;
       this.configservice.editCode(this.sourceCode).pipe(
         concatMap(val => {
+          this.toastr.success('Updated Successfully');
           return this.configservice.getSourceCodeById(this.sourceCode.CodeTypeId);
         })
       ).subscribe(res => {
@@ -239,6 +247,7 @@ export class StoreConfigurationComponent implements OnInit {
       this.sourceCode.SourceCodeId = 0;
       this.configservice.saveCode(this.sourceCode).pipe(
         concatMap(val => {
+          this.toastr.success('Added Successfully');
           return this.configservice.getSourceCodeById(this.sourceCode.CodeTypeId);
         })
       ).subscribe(res => {
@@ -259,6 +268,7 @@ export class StoreConfigurationComponent implements OnInit {
         if (res) {
           this.configservice.deleteCode(data.item.SourceCodeId).pipe(
             concatMap(val => {
+              this.toastr.success('Deleted Successfully');
               return this.configservice.getSourceCodeById(data.item.CodeTypeId);
             })).subscribe(res => {
               this.sourceCodeByType$ = of(res);
