@@ -213,5 +213,22 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         {
             return await _mediator.Send(new GetEmployeePensionDetailQuery { EmployeeId = employeeId });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddEmployeeSalaryCurrencyAndBasicSalary([FromBody]AddEmployeeSalaryCurrencyAndBasicSalaryCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetEmployeeBasicPayAndCurrency([FromQuery] int id)
+        {
+            var result = await _mediator.Send(new GetEmployeeBasicPayAndCurrencyQuery() { EmployeeId = id });
+            return Ok(result);
+        }
     }
 }

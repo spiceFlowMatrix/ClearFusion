@@ -24,4 +24,20 @@ export class EmployeeSalaryConfigService {
       );
     }
     //#endregion
+
+    //#region "SaveBasicSalary"
+    saveBasicSalary(model: any): any {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_HR_AddEmployeeSalaryCurrencyAndBasicSalary, model
+      );
+    }
+    //#endregion
+
+    //#region "getEmployeeBasicPayAndCurrency"
+    getEmployeeBasicPayAndCurrency(employeeId: number): any {
+      return this.globalService.getDataById(
+        this.appurl.getApiUrl() + GLOBAL.API_HR_GetEmployeeBasicPayAndCurrency + '?id=' + employeeId
+      );
+    }
+    //#endregion
 }

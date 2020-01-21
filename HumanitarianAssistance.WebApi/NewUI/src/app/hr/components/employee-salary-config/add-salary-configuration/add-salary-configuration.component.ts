@@ -35,45 +35,60 @@ export class AddSalaryConfigurationComponent implements OnInit {
   ngOnInit() {
     this.getCurrencyList();
   }
-//#region "Add Salary Configuration Refresh"
-AddSalaryConfigurationRefresh() {
-  this.onAddSalaryConfigurationRefresh.emit();
-}
-//#endregion
-//#region "onCancelPopup"
-onCancelPopup(): void {
-  this.dialogRef.close();
-}
-//#endregion
-onNoClick(): void {
-  this.dialogRef.close();
-}
- //#region "get currency  List"
- getCurrencyList() {
-  this.commonLoader.showLoader();
-  this.salaryConfigService
-    .GetCurrencyList()
-    .subscribe(
-      x => {
-        this.commonLoader.hideLoader();
-        if (x.data.CurrencyList.length > 0) {
-          this.currencyList$ = of(
-            x.data.CurrencyList.map(y => {
-              return {
-                value: y.CurrencyId,
-                name: y.CurrencyName
-              } as IDropDownModel;
-            })
-          );
+  //#region "Add Salary Configuration Refresh"
+  AddSalaryConfigurationRefresh() {
+    this.onAddSalaryConfigurationRefresh.emit();
+  }
+  //#endregion
+  //#region "onCancelPopup"
+  onCancelPopup(): void {
+    this.dialogRef.close();
+  }
+  //#endregion
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+  //#region "get currency  List"
+  getCurrencyList() {
+    this.commonLoader.showLoader();
+    this.salaryConfigService
+      .GetCurrencyList()
+      .subscribe(
+        x => {
+          this.commonLoader.hideLoader();
+          if (x.data.CurrencyList.length > 0) {
+            this.currencyList$ = of(
+              x.data.CurrencyList.map(y => {
+                return {
+                  value: y.CurrencyId,
+                  name: y.CurrencyName
+                } as IDropDownModel;
+              })
+            );
+          }
+        },
+        () => {
+          this.commonLoader.hideLoader();
         }
-      },
-      () => {
-        this.commonLoader.hideLoader();
-      }
-    );
-}
-//#endregion
-onFormSubmit(data: any) {
+      );
+  }
+  //#endregion
+  onFormSubmit(data: any) {
+    if (this.salaryConfigForm.valid) {
+      this.commonLoader.showLoader();
+      this.salaryConfigService.saveBasicSalary(this.salaryConfigForm.value).subscribe(x =>  {
+        if (x) {
+          this.commonLoader.hideLoader();
+        } else {
+          this.commonLoader.hideLoader();
+          this.toastr.warning('Please try again');
+        }
+      }, error => {
+        this.toastr.warning(error);
+      });
 
-}
+    } else {
+      this.toastr.warning('Please correct form errors and submit again');
+    }
+  }
 }

@@ -9,6 +9,8 @@ import { TableActionsModel } from 'projects/library/src/public_api';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material';
 import { Month } from 'src/app/shared/enum';
+import { ActivatedRoute } from '@angular/router';
+import { EmployeeSalaryConfigService } from '../../services/employee-salary-config.service';
 
 @Component({
   selector: 'app-employee-salary-config',
@@ -31,12 +33,24 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   monthsList$: Observable<IDropDownModel[]>;
   selectedMonth: IDropDownModel;
   actions: TableActionsModel;
+  employeeId: number;
+
+  employeeCurrencyAndAmount: any;
+
+
   constructor(
     public dialog: MatDialog,
     private toastr: ToastrService,
+    private activatedRoute: ActivatedRoute,
+    private salaryConfigService: EmployeeSalaryConfigService,
   ) {
     this.selectedMonth = { name: 'SELECT MONTH', value: 0 };
-  }
+    this.activatedRoute.params.subscribe(params => {
+      this.employeeId = +params['id'];
+      this.getEmployeeBasicPayAndCurrency();
+  });
+}
+
 
   ngOnInit() {
     this.actions = {
@@ -53,6 +67,12 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       }
     };
     this.getAllMonthList();
+    this.employeeCurrencyAndAmount = {
+      CurrencyId: 0,
+      CurrencyName: '-',
+      MonthlyAmount: 0,
+      PayrollId: 0
+    };
   }
 
   // #region Add Salary Configuration
@@ -110,5 +130,14 @@ addFine(): void {
   }
   empActionEvents(event: any) {
     console.log(event.item);
+  }
+
+  getEmployeeBasicPayAndCurrency() {
+    this.salaryConfigService.getEmployeeBasicPayAndCurrency(this.employeeId).subscribe(x=> {
+      debugger;
+      if (x && x.EmployeeCurrencyAmount) {
+        this.employeeCurrencyAndAmount = x.EmployeeCurrencyAmount;
+      }
+    });
   }
 }
