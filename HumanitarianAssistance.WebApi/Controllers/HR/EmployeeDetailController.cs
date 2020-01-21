@@ -608,7 +608,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
 
         #endregion
 
-         [HttpPost]
+        [HttpPost]
         public async Task<ApiResponse> EmployeeTaxCalculation([FromBody]GetEmployeeTaxCalculationQuery model)
         {
             return await _mediator.Send(model);
@@ -617,8 +617,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpGet]
         public async Task<object> GetSelectedEmployeeContractByEmployeeId([FromQuery]int EmployeeId)
         {
-            return await _mediator.Send(new GetContractByEmployeeIdQuery {
-                EmployeeId= EmployeeId
+            return await _mediator.Send(new GetContractByEmployeeIdQuery
+            {
+                EmployeeId = EmployeeId
             });
         }
 
@@ -637,7 +638,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpGet]
         public async Task<IActionResult> CheckUserEmailAlreadyExists(string Email)
         {
-            if(!string.IsNullOrEmpty(Email))
+            if (!string.IsNullOrEmpty(Email))
             {
                 return Ok(await _mediator.Send(new CheckUserEmailAlreadyExistsQuery { Email = Email }));
             }
@@ -659,7 +660,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpPost]
         public async Task<IActionResult> GetEmployeeDetailById([FromBody] int id)
         {
-            var result= await _mediator.Send(new GetEmployeeDetailByIdQuery { EmployeeId = id });
+            var result = await _mediator.Send(new GetEmployeeDetailByIdQuery { EmployeeId = id });
             return Ok(result);
         }
         [HttpPost]
@@ -714,5 +715,15 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return Ok(result);
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> AddOpeningPensionDetail([FromBody] AddOpeningPensionDetailCommand model)
+        {
+           var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            var result = await Task.FromResult(_mediator.Send(model));
+            return  Ok(await result);
+        }
     }
 }
