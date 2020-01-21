@@ -1,0 +1,56 @@
+<lib-sub-header-template [headerClass]="'sub_header_template_main2'">
+    <span class="action_header">Employee Control Panel
+    <hum-button [type]="'edit'" [text]="'EDIT DETAILS'"></hum-button>
+    <hum-button [type]="'delete'" [text]="'DELETE'"></hum-button>
+    <hum-button [type]="'exclamation'" [text]="'TERMINATE'"></hum-button>
+  </span>
+  <div class="action_section">
+    <hum-button [type]="'text'" [text]="'VIEW DETAILS'" (click)="showEmployeeDetails()"></hum-button>
+  </div>
+</lib-sub-header-template>
+<mat-divider></mat-divider>
+
+<div class="row">
+  <div class="col-md-12">
+    <mat-tab-group>
+      <mat-tab label="HISTORY">
+        <ng-template matTabContent>
+         <app-employee-history></app-employee-history>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="LEAVE">
+        <ng-template matTabContent>
+          <app-employee-leave></app-employee-leave>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="ATTENDANCE">
+        <ng-template matTabContent>
+          <app-employee-attendance></app-employee-attendance>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="CONTRACT">
+        <ng-template matTabContent>
+          <app-employee-contract></app-employee-contract>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="TAX & PENSION">
+        <ng-template matTabContent>
+          <app-employee-pension></app-employee-pension>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="SALARY CONFIG">
+        <ng-template matTabContent>
+          <app-employee-salary-config></app-employee-salary-config>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="RESIGNATION">
+        <ng-template matTabContent>
+          <app-employee-resignation></app-employee-resignation>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
+  <app-employee-detail [employeeId] ="employeeId"></app-employee-detail>
+
+

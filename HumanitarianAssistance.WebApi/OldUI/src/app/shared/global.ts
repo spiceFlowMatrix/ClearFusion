@@ -164,7 +164,7 @@ export class GLOBAL {
   // public static API_HR_GetAllActiveEmployeeForAttendance = 'HREmployee/GetAllActiveEmployeeForAttendance';
   // public static API_HR_AddEmployeeAttendanceDetails = 'HREmployee/AddEmployeeAttendanceDetails';
   public static API_HR_AddEmployeeAttendanceDetails = 'Attendance/AddEmployeeAttendanceDetails'; // new
-  public static API_HR_GetEmployeeAttendanceDetails = 'Attendance/GetEmployeeAttendanceDetails';
+  public static API_HR_GetEmployeeAttendanceDetails = 'Attendance/GetEmployeeAttendanceDetails'; // old
 
   public static API_Code_AddFinancialYearDetail = 'Code/AddFinancialYearDetail';
   public static API_Code_EditFinancialYearDetail = 'Code/EditFinancialYearDetail';
@@ -547,6 +547,7 @@ public static API_FileManagement_GetSignedURLByDocumentFileId = 'FileManagement/
 public static API_FileManagement_GetDocumentFiles = 'FileManagement/GetDocumentFiles';
 
 
+public static API_FileManagement_DeleteDocumentFiles = 'FileManagement/DeleteDocumentFiles';
 
 
 
