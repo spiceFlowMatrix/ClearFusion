@@ -51,6 +51,7 @@ import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
 import { AddSalaryConfigurationComponent } from './components/employee-salary-config/add-salary-configuration/add-salary-configuration.component';
 import { AddBonusComponent } from './components/employee-salary-config/add-bonus/add-bonus.component';
 import { AddFineComponent } from './components/employee-salary-config/add-fine/add-fine.component';
+import { EmployeePensionComponent } from './components/employee-pension/employee-pension.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { AddFineComponent } from './components/employee-salary-config/add-fine/a
     AssignLeaveComponent,
     AddSalaryConfigurationComponent,
     AddBonusComponent,
-    AddFineComponent
+    AddFineComponent,
+    EmployeePensionComponent
   ],
   imports: [
     MatFormFieldModule,
