@@ -74,6 +74,7 @@ export class InterviewDetailComponent implements OnInit {
   languagesList$: Observable<ILanguageDetailModel[]>;
   tempLanguagesList: ILanguageDetailModel[] = [];
   traningList$: Observable<ITraningDetailModel[]>;
+  traningListTwo$: Observable<ITraningDetailModel[]>;
   interviewerList$: Observable<IInterviewerDetailModel[]>;
   ratingBasedCriteriaQuestionList: any[] = [];
   technicalQuestionList: any[] = [];
@@ -519,12 +520,12 @@ export class InterviewDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
         (result.TraningStartDate = this.datePipe.transform(
-          StaticUtilities.getLocalDate(result.TraningStartDate),
-          'dd-MM-yyyy'
+          result.TraningStartDate,
+          'd/M/yyyy'
         )),
           (result.TraningEndDate = this.datePipe.transform(
-            StaticUtilities.getLocalDate(result.TraningEndDate),
-            'dd-MM-yyyy'
+            result.TraningEndDate,
+            'd/M/yyyy'
           ));
         if (this.traningList$ === undefined) {
           /** binding result data(traning details) to traning list*/
@@ -676,6 +677,16 @@ export class InterviewDetailComponent implements OnInit {
     this.traningList$.subscribe(res => {
       data.TraningList = res;
     });
+    // data.TraningList.forEach(element => {
+    //   (element.TraningStartDate = this.datePipe.transform(
+    //     StaticUtilities.getLocalDate(new Date(element.TraningStartDate)),
+    //     'dd-MM-yyyy'
+    //   )),
+    //     (element.TraningEndDate = this.datePipe.transform(
+    //       StaticUtilities.getLocalDate(new Date(element.TraningEndDate)),
+    //       'dd-MM-yyyy'
+    //     ));
+    // });
     data.ProfessionalCriteriaMark = this.professionalCriteriaMarks;
     data.MarksObtain = this.marksObtain;
     data.RatingBasedCriteriaList = this.ratingBasedCriteriaQuestionList;
@@ -687,7 +698,6 @@ export class InterviewDetailComponent implements OnInit {
       (response: IResponseData) => {
         if (response.statusCode === 200) {
           this.toastr.success('Interview details updated successfully');
-          //this.backToRequestDetail();
         } else {
           this.toastr.error(response.message);
         }
@@ -785,30 +795,7 @@ export class InterviewDetailComponent implements OnInit {
     this.languagesList$ = of(data.LanguageList);
     this.traningList$ = of(data.TraningList);
     this.interviewerList$ = of(data.InterviewerList);
-    //   this.interviewDetailForm = this.fb.group({
-    //     CandidateId: data.CandidateId,
-    //     HiringRequestId: data.HiringRequestId,
-    //     Description: data.Description,
-    //     NoticePeriod: data.NoticePeriod,
-    //     AvailableDate: data.AvailableDate,
-    //     WrittenTestMarks: data.WrittenTestMarks,
-    //     CurrentBase: data.CurrentBase,
-    //     CurrentOther: data.CurrentOther,
-    //     ExpectationBase: data.ExpectationBase,
-    //     ExpectationOther: data.ExpectationOther,
-    //     Status: data.Status,
-    //     InterviewQuestionOne: data.InterviewQuestionOne,
-    //     InterviewQuestionTwo: data.InterviewQuestionTwo,
-    //     InterviewQuestionThree: data.InterviewQuestionThree,
-    //     CurrentTransport: data.CurrentTransport,
-    //     CurrentMeal: data.CurrentMeal,
-    //     ExpectationTransport: data.ExpectationTransport,
-    //     ExpectationMeal: data.ExpectationMeal,
-    //     LanguageList : data.LanguageList,
-    //     TraningList : data.TraningList,
-    //     InterviewerList : data.InterviewerList
-    //   });
-    //   this.interviewDetails = data;
+       this.interviewDetails = data;
   }
   //#endregion
 
