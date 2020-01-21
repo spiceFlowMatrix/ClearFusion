@@ -220,6 +220,18 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             model.requestId = requestId;
             return await _mediator.Send(model);
         }  
+
+        [HttpPost]
+        public async Task<ApiResponse> EditCandidateInterviewDetail([FromBody]EditCandidateInterviewDetailCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+             command.ModifiedById = userId;
+            command.ModifiedDate = DateTime.UtcNow;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+        }
+
              
     }  
 }
