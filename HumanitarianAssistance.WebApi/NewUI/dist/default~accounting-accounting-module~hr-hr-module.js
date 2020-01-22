@@ -5137,7 +5137,7 @@ var LibraryService = /** @class */ (function () {
 /*!********************************************!*\
   !*** ./projects/library/src/public_api.ts ***!
   \********************************************/
-/*! exports provided: LibraryComponent, LibraryModule, SubHeaderTemplateModule, LibraryService */
+/*! exports provided: LibraryModule, LibraryService, LibraryComponent, SubHeaderTemplateModule */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

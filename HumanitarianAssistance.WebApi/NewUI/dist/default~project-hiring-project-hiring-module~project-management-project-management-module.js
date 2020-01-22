@@ -772,7 +772,7 @@ var AddHiringRequestComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div>\r\n    <h1 mat-dialog-title>\r\n        New Candidate Form\r\n        <button mat-icon-button [mat-dialog-close] class=\"pull-right\">\r\n      <mat-icon aria-label=\"clear\">clear</mat-icon>\r\n    </button>\r\n    </h1>\r\n    <form class=\"example-form\" [formGroup]=\"addNewCandidateForm\" (ngSubmit)=\"onFormSubmit(addNewCandidateForm.value)\">\r\n        <div mat-dialog-content>\r\n            <div class=\"row\">\r\n                <span class=\"formHeading\">Identity Details</span><br />\r\n                <div class=\"col-sm-12\">\r\n                    <div class=\"row\">\r\n                        <div class=\"col-lg-4 col-sm-4\">\r\n                            <mat-form-field class=\"example-full-width\">\r\n                                <input matInput formControlName=\"FirstName\" placeholder=\"First Name\" />\r\n                            </mat-form-field>\r\n                        </div>\r\n                        <div class=\"col-lg-4 col-sm-4\">\r\n                            <mat-form-field class=\"example-full-width\">\r\n                                <input matInput formControlName=\"LastName\" placeholder=\"Last Name\" />\r\n                            </mat-form-field>\r\n                        </div>\r\n                        <div class=\"col-lg-4 col-sm-4\">\r\n                            <mat-form-field class=\"example-full-width\">\r\n                                <input matInput formControlName=\"PhoneNumber\" placeholder=\"Phone Number\" minlength=\"10\" maxlength=\"14\" />\r\n                            </mat-form-field>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"row\">\r\n                        <div class=\"col-lg-4 col-sm-4\">\r\n                            <mat-form-field class=\"example-full-width\">\r\n                                <input matInput formControlName=\"Email\" placeholder=\"Email\" />\r\n                            </mat-form-field>\r\n                        </div>\r\n                        <div class=\"col-lg-4 col-sm-4\">\r\n                            <mat-form-field class=\"example-full-width\">\r\n                                <input matInput formControlName=\"Password\" placeholder=\"Password (Auto Generated)\" [(ngModel)]=\"autoGenratedPassword\" readonly/>\r\n                            </mat-form-field>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"row\">\r\n                        <span class=\"formHeading\">Personal Details</span><br />\r\n                        <div class=\"col-sm-12\">\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-4 col-sm-4\">\r\n                                    <lib-hum-dropdown formControlName=\"Gender\" [validation]=\"\r\n                      addNewCandidateForm.controls['Gender'].hasError(\r\n                        'required'\r\n                      )\r\n                    \" [options]=\"genderList$\" [placeHolder]=\"'Gender'\"></lib-hum-dropdown>\r\n                                </div>\r\n                                <div class=\"col-lg-4 col-sm-4\">\r\n                                    <mat-form-field class=\"example-full-width\">\r\n                                        <input matInput [matDatepicker]=\"DateOfBirthPicker\" placeholder=\"Date Of Birth\" formControlName=\"DateOfBirth\" />\r\n                                        <mat-datepicker-toggle matSuffix [for]=\"DateOfBirthPicker\"></mat-datepicker-toggle>\r\n                                        <mat-datepicker #DateOfBirthPicker></mat-datepicker>\r\n                                    </mat-form-field>\r\n                                </div>\r\n                                <div class=\"col-lg-4 col-sm-4\">\r\n                                    <lib-hum-dropdown formControlName=\"Country\" [validation]=\"\r\n                      addNewCandidateForm.controls['Country'].hasError(\r\n                        'required'\r\n                      )\r\n                    \" [options]=\"countryList$\" [placeHolder]=\"'Country'\" (change)=\"onChangeCountry($event)\"></lib-hum-dropdown>\r\n                                </div>\r\n                            </div>\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-4 col-sm-4\">\r\n                                    <lib-hum-dropdown formControlName=\"Province\" [validation]=\"\r\n                      addNewCandidateForm.controls['Province'].hasError(\r\n                        'required'\r\n                      )\r\n                    \" [options]=\"provinceList$\" [placeHolder]=\"'Province/State'\" (change)=\"onChangeProvince($event)\"></lib-hum-dropdown>\r\n                                </div>\r\n                                <div class=\"col-lg-4 col-sm-4\">\r\n                                    <lib-hum-dropdown formControlName=\"District\" [validation]=\"\r\n                      addNewCandidateForm.controls['District'].hasError(\r\n                        'required'\r\n                      )\r\n                    \" [options]=\"districtList$\" [placeHolder]=\"'City/Village/District'\"></lib-hum-dropdown>\r\n                                </div>\r\n                                <div class=\"col-lg-4 col-sm-4\">\r\n                                    <lib-hum-dropdown formControlName=\"ExperienceYear\" [validation]=\"\r\n                      addNewCandidateForm.controls['ExperienceYear'].hasError(\r\n                        'required'\r\n                      )\r\n                    \" [options]=\"PreviousYearsList$\" [placeHolder]=\"'Experience Year'\"></lib-hum-dropdown>\r\n                                </div>\r\n                            </div>\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-4 col-sm-4\">\r\n                                    <lib-hum-dropdown formControlName=\"ExperienceMonth\" [validation]=\"\r\n                      addNewCandidateForm.controls['ExperienceMonth'].hasError(\r\n                        'required'\r\n                      )\r\n                    \" [options]=\"MonthsList$\" [placeHolder]=\"'Experience Month'\"></lib-hum-dropdown>\r\n                                </div>\r\n                            </div>\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-12 col-sm-12\">\r\n                                    <mat-form-field class=\"example-full-width\">\r\n                                        <textarea matInput rows=\"2\" formControlName=\"PreviousWork\" placeholder=\"Previous Work\"></textarea>\r\n                                    </mat-form-field>\r\n                                </div>\r\n                            </div>\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-12 col-sm-12\">\r\n                                    <mat-form-field class=\"example-full-width\">\r\n                                        <textarea matInput rows=\"2\" formControlName=\"CurrentAddress\" placeholder=\"Current Address\"></textarea>\r\n                                    </mat-form-field>\r\n                                </div>\r\n                            </div>\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-12 col-sm-12\">\r\n                                    <mat-form-field class=\"example-full-width\">\r\n                                        <textarea matInput rows=\"2\" formControlName=\"PermanentAddress\" placeholder=\"Permanent Address\"></textarea>\r\n                                    </mat-form-field>\r\n                                </div>\r\n                            </div>\r\n\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-12 col-sm-12\">\r\n                                    <mat-form-field class=\"example-full-width\">\r\n                                        <textarea matInput rows=\"2\" formControlName=\"Remarks\" placeholder=\"Remarks/Description\"></textarea>\r\n                                    </mat-form-field>\r\n                                </div>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"row\">\r\n                        <span class=\"formHeading\">Qualifications\r\n                <hum-button [type]=\"'attachment'\" [text]=\"'ATTACH CV'\" (click)='openInput()'></hum-button>\r\n                <input id=\"fileInput\" style=\"display:none\" hidden type=\"file\" (change)=\"fileChange($event.target.files)\" name=\"file\">\r\n            </span><br />\r\n                        <div class=\"col-sm-12\">\r\n                            <h5 *ngIf=\"this.attachmentCV.length === 0\"><i class=\"fa fa-exclamation-triangle fa-1\" style=\"color: red;\"></i> CV File required. Please Attach.</h5>\r\n                            <h5 *ngFor=\"let uploadedItem of this.attachmentCV\">{{uploadedItem[0].name}}</h5>\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-6 col-sm-6\">\r\n                                    <mat-form-field class=\"example-full-width\">\r\n                                        <input matInput type=\"number\" formControlName=\"RelevantExperienceInYear\" placeholder=\"Current Relevant Experience(in Years)\" />\r\n                                    </mat-form-field>\r\n                                </div>\r\n                                <div class=\"col-lg-6 col-sm-6\">\r\n                                    <mat-form-field class=\"example-full-width\">\r\n                                        <input matInput type=\"number\" formControlName=\"IrrelevantExperienceInYear\" placeholder=\"Current Irrelevant Experience(in Years)\" />\r\n                                    </mat-form-field>\r\n                                </div>\r\n                            </div>\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-6 col-sm-6\">\r\n                                    <lib-hum-dropdown formControlName=\"EducationDegree\" [validation]=\"\r\n                    addNewCandidateForm.controls['EducationDegree'].hasError(\r\n                      'required'\r\n                    )\r\n                  \" [options]=\"educationDegreeList$\" [placeHolder]=\"'Education'\"></lib-hum-dropdown>\r\n                                </div>\r\n                                <div class=\"col-lg-6 col-sm-6\">\r\n                                    <lib-hum-dropdown formControlName=\"Profession\" [validation]=\"\r\n                    addNewCandidateForm.controls['Profession'].hasError(\r\n                      'required'\r\n                    )\r\n                  \" [options]=\"professionList$\" [placeHolder]=\"'Profession'\"></lib-hum-dropdown>\r\n                                </div>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div mat-dialog-actions class=\"pull-right\">\r\n            <hum-button *ngIf=\"isFormSubmitted\" [type]=\"'loading'\" [text]=\"'Saving....'\"></hum-button>\r\n            <hum-button *ngIf=\"!isFormSubmitted\" [type]=\"'save'\" [text]=\"'save'\" [isSubmit]=\"true\"></hum-button>\r\n            <hum-button (click)='onCancelPopup()' [type]=\"'cancel'\" [text]=\"'cancel'\"></hum-button>\r\n        </div>\r\n    </form>\r\n</div>"
+module.exports = "<div>\r\n    <h1 mat-dialog-title>\r\n        New Candidate Form\r\n        <button mat-icon-button [mat-dialog-close] class=\"pull-right\">\r\n      <mat-icon aria-label=\"clear\">clear</mat-icon>\r\n    </button>\r\n    </h1>\r\n    <form class=\"example-form\" [formGroup]=\"addNewCandidateForm\" (ngSubmit)=\"onFormSubmit(addNewCandidateForm.value)\">\r\n        <div mat-dialog-content>\r\n            <div class=\"row\">\r\n                <span class=\"formHeading\">Identity Details</span><br />\r\n                <div class=\"col-sm-12\">\r\n                    <div class=\"row\">\r\n                        <div class=\"col-lg-4 col-sm-4\">\r\n                            <mat-form-field class=\"example-full-width\">\r\n                                <input matInput formControlName=\"FirstName\" placeholder=\"First Name\" />\r\n                            </mat-form-field>\r\n                        </div>\r\n                        <div class=\"col-lg-4 col-sm-4\">\r\n                            <mat-form-field class=\"example-full-width\">\r\n                                <input matInput formControlName=\"LastName\" placeholder=\"Last Name\" />\r\n                            </mat-form-field>\r\n                        </div>\r\n                        <div class=\"col-lg-4 col-sm-4\">\r\n                            <mat-form-field class=\"example-full-width\">\r\n                                <input matInput formControlName=\"PhoneNumber\" placeholder=\"Phone Number\" minlength=\"10\" maxlength=\"14\" />\r\n                            </mat-form-field>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"row\">\r\n                        <div class=\"col-lg-4 col-sm-4\">\r\n                            <mat-form-field class=\"example-full-width\">\r\n                                <input matInput formControlName=\"Email\" placeholder=\"Email\" />\r\n                            </mat-form-field>\r\n                        </div>\r\n                        <div class=\"col-lg-4 col-sm-4\">\r\n                            <mat-form-field class=\"example-full-width\">\r\n                                <input matInput formControlName=\"Password\" placeholder=\"Password (Auto Generated)\" [(ngModel)]=\"autoGenratedPassword\" readonly/>\r\n                            </mat-form-field>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"row\">\r\n                        <span class=\"formHeading\">Personal Details</span><br />\r\n                        <div class=\"col-sm-12\">\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-4 col-sm-4\">\r\n                                    <lib-hum-dropdown formControlName=\"Gender\" [validation]=\"\r\n                      addNewCandidateForm.controls['Gender'].hasError(\r\n                        'required'\r\n                      )\r\n                    \" [options]=\"genderList$\" [placeHolder]=\"'Gender'\"></lib-hum-dropdown>\r\n                                </div>\r\n                                <div class=\"col-lg-4 col-sm-4\">\r\n                                    <mat-form-field class=\"example-full-width\">\r\n                                        <input matInput [matDatepicker]=\"DateOfBirthPicker\" placeholder=\"Date Of Birth\" formControlName=\"DateOfBirth\" />\r\n                                        <mat-datepicker-toggle matSuffix [for]=\"DateOfBirthPicker\"></mat-datepicker-toggle>\r\n                                        <mat-datepicker #DateOfBirthPicker></mat-datepicker>\r\n                                    </mat-form-field>\r\n                                </div>\r\n                                <div class=\"col-lg-4 col-sm-4\">\r\n                                    <lib-hum-dropdown formControlName=\"Country\" [validation]=\"\r\n                      addNewCandidateForm.controls['Country'].hasError(\r\n                        'required'\r\n                      )\r\n                    \" [options]=\"countryList$\" [placeHolder]=\"'Country'\" (change)=\"onChangeCountry($event)\"></lib-hum-dropdown>\r\n                                </div>\r\n                            </div>\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-4 col-sm-4\">\r\n                                    <lib-hum-dropdown formControlName=\"Province\" [validation]=\"\r\n                      addNewCandidateForm.controls['Province'].hasError(\r\n                        'required'\r\n                      )\r\n                    \" [options]=\"provinceList$\" [placeHolder]=\"'Province/State'\" (change)=\"onChangeProvince($event)\"></lib-hum-dropdown>\r\n                                </div>\r\n                                <div class=\"col-lg-4 col-sm-4\">\r\n                                    <lib-hum-dropdown formControlName=\"District\" [validation]=\"\r\n                      addNewCandidateForm.controls['District'].hasError(\r\n                        'required'\r\n                      )\r\n                    \" [options]=\"districtList$\" [placeHolder]=\"'City/Village/District'\"></lib-hum-dropdown>\r\n                                </div>\r\n                                <div class=\"col-lg-4 col-sm-4\">\r\n                                    <lib-hum-dropdown formControlName=\"ExperienceYear\" [validation]=\"\r\n                      addNewCandidateForm.controls['ExperienceYear'].hasError(\r\n                        'required'\r\n                      )\r\n                    \" [options]=\"PreviousYearsList$\" [placeHolder]=\"'Experience Year'\"></lib-hum-dropdown>\r\n                                </div>\r\n                            </div>\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-4 col-sm-4\">\r\n                                    <lib-hum-dropdown formControlName=\"ExperienceMonth\" [validation]=\"\r\n                      addNewCandidateForm.controls['ExperienceMonth'].hasError(\r\n                        'required'\r\n                      )\r\n                    \" [options]=\"MonthsList$\" [placeHolder]=\"'Experience Month'\"></lib-hum-dropdown>\r\n                                </div>\r\n                            </div>\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-12 col-sm-12\">\r\n                                    <mat-form-field class=\"example-full-width\">\r\n                                        <textarea matInput rows=\"2\" formControlName=\"PreviousWork\" placeholder=\"Previous Work\"></textarea>\r\n                                    </mat-form-field>\r\n                                </div>\r\n                            </div>\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-12 col-sm-12\">\r\n                                    <mat-form-field class=\"example-full-width\">\r\n                                        <textarea matInput rows=\"2\" formControlName=\"CurrentAddress\" placeholder=\"Current Address\"></textarea>\r\n                                    </mat-form-field>\r\n                                </div>\r\n                            </div>\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-12 col-sm-12\">\r\n                                    <mat-form-field class=\"example-full-width\">\r\n                                        <textarea matInput rows=\"2\" formControlName=\"PermanentAddress\" placeholder=\"Permanent Address\"></textarea>\r\n                                    </mat-form-field>\r\n                                </div>\r\n                            </div>\r\n\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-12 col-sm-12\">\r\n                                    <mat-form-field class=\"example-full-width\">\r\n                                        <textarea matInput rows=\"2\" formControlName=\"Remarks\" placeholder=\"Remarks/Description\"></textarea>\r\n                                    </mat-form-field>\r\n                                </div>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"row\">\r\n                        <span class=\"formHeading\">Qualifications\r\n                <hum-button [type]=\"'attachment'\" [text]=\"'ATTACH CV'\" (click)='openInput()'></hum-button>\r\n                <input id=\"fileInput\" style=\"display:none\" hidden type=\"file\" (change)=\"fileChange($event.target.files)\" name=\"file\">\r\n            </span><br />\r\n                        <div class=\"col-sm-12\">\r\n                            <h5 *ngIf=\"this.attachmentCV.length === 0 && this.candidateId == 0\"><i class=\"fa fa-exclamation-triangle fa-1\" style=\"color: red;\"></i> CV File required. Please Attach.</h5>\r\n                            <h5 *ngFor=\"let uploadedItem of this.attachmentCV\">{{uploadedItem[0].name}}</h5>\r\n                            <h5 *ngIf=\"this.candidateId > 0 &&  this.attachmentCV.length === 0\">{{cvName}}</h5>\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-6 col-sm-6\">\r\n                                    <mat-form-field class=\"example-full-width\">\r\n                                        <input matInput type=\"number\" formControlName=\"RelevantExperienceInYear\" placeholder=\"Current Relevant Experience(in Years)\" />\r\n                                    </mat-form-field>\r\n                                </div>\r\n                                <div class=\"col-lg-6 col-sm-6\">\r\n                                    <mat-form-field class=\"example-full-width\">\r\n                                        <input matInput type=\"number\" formControlName=\"IrrelevantExperienceInYear\" placeholder=\"Current Irrelevant Experience(in Years)\" />\r\n                                    </mat-form-field>\r\n                                </div>\r\n                            </div>\r\n                            <div class=\"row\">\r\n                                <div class=\"col-lg-6 col-sm-6\">\r\n                                    <lib-hum-dropdown formControlName=\"EducationDegree\" [validation]=\"\r\n                    addNewCandidateForm.controls['EducationDegree'].hasError(\r\n                      'required'\r\n                    )\r\n                  \" [options]=\"educationDegreeList$\" [placeHolder]=\"'Education'\"></lib-hum-dropdown>\r\n                                </div>\r\n                                <div class=\"col-lg-6 col-sm-6\">\r\n                                    <lib-hum-dropdown formControlName=\"Profession\" [validation]=\"\r\n                    addNewCandidateForm.controls['Profession'].hasError(\r\n                      'required'\r\n                    )\r\n                  \" [options]=\"professionList$\" [placeHolder]=\"'Profession'\"></lib-hum-dropdown>\r\n                                </div>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div mat-dialog-actions class=\"pull-right\">\r\n            <hum-button *ngIf=\"isFormSubmitted\" [type]=\"'loading'\" [text]=\"'Saving....'\"></hum-button>\r\n            <hum-button *ngIf=\"!isFormSubmitted\" [type]=\"'save'\" [text]=\"'save'\" [isSubmit]=\"true\"></hum-button>\r\n            <hum-button (click)='onCancelPopup()' [type]=\"'cancel'\" [text]=\"'cancel'\"></hum-button>\r\n        </div>\r\n    </form>\r\n</div>"
 
 /***/ }),
 
@@ -862,6 +862,7 @@ var AddNewCandidateComponent = /** @class */ (function () {
         this.getPreviousYearsList();
         this.projectId = this.data.projectId;
         this.hiringRequestId = this.data.hiringRequestId;
+        this.candidateId = this.data.candidateId;
         this.addNewCandidateForm.controls['ProjectId'].setValue(this.projectId);
         this.addNewCandidateForm.controls['HiringRequestId'].setValue(this.hiringRequestId);
         Object(rxjs__WEBPACK_IMPORTED_MODULE_6__["forkJoin"])([
@@ -877,6 +878,12 @@ var AddNewCandidateComponent = /** @class */ (function () {
             _this.subscribeProfessionList(result[2]);
             _this.subscribeEducationDegreeList(result[3]);
         });
+        if (this.candidateId > 0) {
+            this.getCandidateDetails();
+        }
+        else {
+            this.candidateId = 0;
+        }
     };
     //#region "Initialize candidate form"
     AddNewCandidateComponent.prototype.initCadidateForm = function () {
@@ -915,6 +922,48 @@ var AddNewCandidateComponent = /** @class */ (function () {
         });
     };
     //#endregion
+    //#region "Get candidate details"
+    AddNewCandidateComponent.prototype.getCandidateDetails = function () {
+        var _this = this;
+        this.commonLoader.showLoader();
+        this.hiringRequestService
+            .GetCandidateDetailByCandidateId(this.candidateId)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["takeUntil"])(this.destroyed$))
+            .subscribe(function (response) {
+            if (response.statusCode === 200 && response.data !== null) {
+                console.log(response.data);
+                _this.cvName = response.data.AttachmentName;
+                _this.getAllProvinceList(response.data.CountryId);
+                _this.getAllDistrictList(response.data.ProvinceId);
+                _this.addNewCandidateForm.patchValue({
+                    FirstName: response.data.FirstName,
+                    LastName: response.data.LastName,
+                    Email: response.data.Email,
+                    Password: response.data.Password,
+                    PhoneNumber: response.data.PhoneNumber,
+                    EducationDegree: response.data.EducationDegreeId,
+                    Gender: response.data.GenderId,
+                    DateOfBirth: response.data.DateOfBirth,
+                    Country: response.data.CountryId,
+                    Province: response.data.ProvinceId,
+                    District: response.data.DistrictID,
+                    ExperienceYear: response.data.ExperienceYear,
+                    ExperienceMonth: response.data.ExperienceMonth,
+                    PreviousWork: response.data.PreviousWork,
+                    CurrentAddress: response.data.CurrentAddress,
+                    PermanentAddress: response.data.PermanentAddress,
+                    Profession: response.data.ProfessionId,
+                    RelevantExperienceInYear: response.data.RelevantExperienceInYear,
+                    IrrelevantExperienceInYear: response.data.IrrelevantExperienceInYear,
+                    Remarks: response.data.Remarks
+                });
+            }
+            _this.commonLoader.hideLoader();
+        }, function () {
+            _this.commonLoader.hideLoader();
+        });
+    };
+    //#region
     //#region "Auto genrate password for new candidate"
     AddNewCandidateComponent.prototype.PasswordAutoGenrate = function () {
         this.autoGenratedPassword = Math.random()
@@ -1039,7 +1088,7 @@ var AddNewCandidateComponent = /** @class */ (function () {
     };
     //#endregion
     //#region "Adding new candidate"
-    AddNewCandidateComponent.prototype.AddNewCandidate = function (data, attachmentCV) {
+    AddNewCandidateComponent.prototype.addNewCandidate = function (data, attachmentCV) {
         var _this = this;
         this.isFormSubmitted = true;
         this.hiringRequestService.AddNewCandidateDetail(data).subscribe(function (response) {
@@ -1063,6 +1112,35 @@ var AddNewCandidateComponent = /** @class */ (function () {
             _this.toastr.error('Someting went wrong. Please try again');
             _this.isFormSubmitted = false;
         });
+    };
+    //#endregion
+    //#region "Adding new candidate"
+    AddNewCandidateComponent.prototype.editCandidate = function (data, attachmentCV) {
+        var _this = this;
+        this.isFormSubmitted = true;
+        data.CandidateId = this.candidateId;
+        (data.IsCvUpdated = this.attachmentCV.length === 0 ? false : true),
+            this.hiringRequestService.EditCandidateDetails(data).subscribe(function (response) {
+                // response.CommonId.Id is CandidateId
+                if (response.StatusCode === 200 && response.CommonId.Id != null) {
+                    if (_this.attachmentCV.length !== 0) {
+                        _this.globalSharedService.uploadFile(src_app_shared_enum__WEBPACK_IMPORTED_MODULE_9__["FileSourceEntityTypes"].HiringRequestCandidateCV, response.CommonId.Id, attachmentCV).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["takeUntil"])(_this.destroyed$))
+                            .subscribe(function (y) {
+                            _this.toastr.success('New Candidate added successfully');
+                            _this.isFormSubmitted = false;
+                            _this.AddCandidateListRefresh();
+                        });
+                    }
+                }
+                else {
+                    _this.toastr.error(response.message);
+                    _this.isFormSubmitted = false;
+                }
+                _this.onCancelPopup();
+            }, function (error) {
+                _this.toastr.error('Someting went wrong. Please try again');
+                _this.isFormSubmitted = false;
+            });
     };
     //#endregion
     //#region "Cv upload fucntionality"
@@ -1094,12 +1172,17 @@ var AddNewCandidateComponent = /** @class */ (function () {
     //#endregion
     //#region "On form submission"
     AddNewCandidateComponent.prototype.onFormSubmit = function (data) {
-        if (this.attachmentCV.length === 0) {
-            this.toastr.warning('Please attach CV!');
-            return;
-        }
         if (this.addNewCandidateForm.valid) {
-            this.AddNewCandidate(data, this.attachmentCV[0][0]);
+            if (this.candidateId > 0) {
+                this.editCandidate(data, this.attachmentCV[0][0]);
+            }
+            else {
+                if (this.attachmentCV.length === 0) {
+                    this.toastr.warning('Please attach CV!');
+                    return;
+                }
+                this.addNewCandidate(data, this.attachmentCV[0][0]);
+            }
         }
     };
     //#endregion
@@ -3407,7 +3490,7 @@ var RequestDetailComponent = /** @class */ (function () {
                 button: { status: true, text: '' },
                 delete: false,
                 download: false,
-                edit: false
+                edit: true
             },
             subitems: {
                 button: { status: false, text: '' },
@@ -3683,7 +3766,8 @@ var RequestDetailComponent = /** @class */ (function () {
                 autoFocus: false,
                 data: {
                     hiringRequestId: this.hiringRequestDetails.HiringRequestId,
-                    projectId: this.projectId
+                    projectId: this.projectId,
+                    candidateId: this.candidateId
                 }
             });
             // refresh the list after new request created
@@ -3700,6 +3784,11 @@ var RequestDetailComponent = /** @class */ (function () {
     // #region Changes Status of New candidate
     RequestDetailComponent.prototype.newCandActionEvents = function (data) {
         switch (data.type) {
+            case 'edit':
+                this.candidateId = data.item.CandidateId;
+                this.addNewCandidate();
+                this.candidateId = 0;
+                break;
             case 'Candidate Cv':
                 this.getCandidateCvByCandidateId(data);
                 break;
@@ -4291,6 +4380,11 @@ var HiringRequestsService = /** @class */ (function () {
         return this.globalService.post(this.appurl.getApiUrl() + src_app_shared_global__WEBPACK_IMPORTED_MODULE_3__["GLOBAL"].API_HiringRequest_AddNewCandidateDetail, data);
     };
     //#endregion
+    //#region "EditCandidateDetails"
+    HiringRequestsService.prototype.EditCandidateDetails = function (data) {
+        return this.globalService.post(this.appurl.getApiUrl() + src_app_shared_global__WEBPACK_IMPORTED_MODULE_3__["GLOBAL"].API_HiringRequest_EditCandidateDetails, data);
+    };
+    //#endregion
     //#region "AddExistingCandidateDetail"
     HiringRequestsService.prototype.AddExistingCandidateDetail = function (data) {
         return this.globalService
@@ -4839,6 +4933,19 @@ var HiringRequestsService = /** @class */ (function () {
             src_app_shared_global__WEBPACK_IMPORTED_MODULE_3__["GLOBAL"].API_EmployeeDetail_AddEmployeeSalaryAnalyticalInfo, model).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (x) {
             var responseData = {
                 data: x.data,
+                statusCode: x.StatusCode,
+                message: x.Message
+            };
+            return responseData;
+        }));
+    };
+    HiringRequestsService.prototype.GetCandidateDetailByCandidateId = function (CandidateId) {
+        return this.globalService
+            .post(this.appurl.getApiUrl() +
+            src_app_shared_global__WEBPACK_IMPORTED_MODULE_3__["GLOBAL"].API_HiringRequest_GetCandidateDetailByCandidateId, CandidateId)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (x) {
+            var responseData = {
+                data: x.ResponseData,
                 statusCode: x.StatusCode,
                 message: x.Message
             };

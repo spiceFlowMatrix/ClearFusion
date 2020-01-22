@@ -4028,6 +4028,7 @@ var GLOBAL = /** @class */ (function () {
     GLOBAL.API_HiringRequest_AddExistingCandidateDetail = 'HiringRequest/AddExistingCandidateDetail';
     GLOBAL.API_HiringRequest_GetAllExistingCandidateList = 'HiringRequest/GetAllExistingCandidateList';
     GLOBAL.API_HiringRequest_DownloadCandidateCvByRequestId = 'HiringRequest/DownloadCandidateCvByRequestId';
+    GLOBAL.API_HiringRequest_EditCandidateDetails = 'HiringRequest/EditCandidateDetails';
     // interview pages
     GLOBAL.API_Code_GetRatingBasedCriteriaQuestions = 'Code/GetAllRatingBasedCriteriaQuestionsByOfficeId';
     GLOBAL.API_HiringRequest_GetCandidateDetailsByCandidateId = 'HiringRequest/GetCandidateDetailsByCandidateId';
@@ -4036,6 +4037,7 @@ var GLOBAL = /** @class */ (function () {
     GLOBAL.API_HiringRequest_AddInterviewDetails = 'HiringRequest/AddInterviewDetails';
     GLOBAL.API_HiringRequest_GetInterviewDetailsByInterviewId = 'HiringRequest/GetInterviewDetailsByInterviewId';
     GLOBAL.API_HiringRequest_GetHiringRequestCode = 'HiringRequest/GetHiringRequestCode';
+    GLOBAL.API_HiringRequest_GetCandidateDetailByCandidateId = 'HiringRequest/GetCandidateAllDetailByCandidateId';
     GLOBAL.API_HiringRequest_EditInterviewDetails = 'HiringRequest/EditCandidateInterviewDetail';
     GLOBAL.API_EmployeeDetail_AddEmployeeSalaryAnalyticalInfo = 'EmployeeDetail/AddEmployeeSalaryAnalyticalInfo';
     GLOBAL.API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
