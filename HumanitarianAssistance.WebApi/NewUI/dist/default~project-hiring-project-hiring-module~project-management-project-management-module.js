@@ -2104,10 +2104,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_shared_enum__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! src/app/shared/enum */ "./src/app/shared/enum.ts");
 /* harmony import */ var _add_new_interviewer_add_new_interviewer_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./add-new-interviewer/add-new-interviewer.component */ "./src/app/dashboard/project-management/project-hiring/interview-detail/add-new-interviewer/add-new-interviewer.component.ts");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
-/* harmony import */ var src_app_shared_static_utilities__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! src/app/shared/static-utilities */ "./src/app/shared/static-utilities.ts");
-/* harmony import */ var src_app_shared_global__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! src/app/shared/global */ "./src/app/shared/global.ts");
-/* harmony import */ var src_app_shared_services_global_shared_service__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! src/app/shared/services/global-shared.service */ "./src/app/shared/services/global-shared.service.ts");
-/* harmony import */ var src_app_shared_services_app_url_service__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! src/app/shared/services/app-url.service */ "./src/app/shared/services/app-url.service.ts");
+/* harmony import */ var src_app_shared_global__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! src/app/shared/global */ "./src/app/shared/global.ts");
+/* harmony import */ var src_app_shared_services_global_shared_service__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! src/app/shared/services/global-shared.service */ "./src/app/shared/services/global-shared.service.ts");
+/* harmony import */ var src_app_shared_services_app_url_service__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! src/app/shared/services/app-url.service */ "./src/app/shared/services/app-url.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2117,7 +2116,6 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -2561,8 +2559,8 @@ var InterviewDetailComponent = /** @class */ (function () {
         });
         dialogRef.afterClosed().subscribe(function (result) {
             if (result !== undefined) {
-                (result.TraningStartDate = _this.datePipe.transform(src_app_shared_static_utilities__WEBPACK_IMPORTED_MODULE_15__["StaticUtilities"].getLocalDate(result.TraningStartDate), 'dd-MM-yyyy')),
-                    (result.TraningEndDate = _this.datePipe.transform(src_app_shared_static_utilities__WEBPACK_IMPORTED_MODULE_15__["StaticUtilities"].getLocalDate(result.TraningEndDate), 'dd-MM-yyyy'));
+                (result.TraningStartDate = _this.datePipe.transform(result.TraningStartDate, 'd/M/yyyy')),
+                    (result.TraningEndDate = _this.datePipe.transform(result.TraningEndDate, 'd/M/yyyy'));
                 if (_this.traningList$ === undefined) {
                     /** binding result data(traning details) to traning list*/
                     _this.traningList$ = Object(rxjs__WEBPACK_IMPORTED_MODULE_6__["of"])([
@@ -2720,6 +2718,16 @@ var InterviewDetailComponent = /** @class */ (function () {
         this.traningList$.subscribe(function (res) {
             data.TraningList = res;
         });
+        // data.TraningList.forEach(element => {
+        //   (element.TraningStartDate = this.datePipe.transform(
+        //     StaticUtilities.getLocalDate(new Date(element.TraningStartDate)),
+        //     'dd-MM-yyyy'
+        //   )),
+        //     (element.TraningEndDate = this.datePipe.transform(
+        //       StaticUtilities.getLocalDate(new Date(element.TraningEndDate)),
+        //       'dd-MM-yyyy'
+        //     ));
+        // });
         data.ProfessionalCriteriaMark = this.professionalCriteriaMarks;
         data.MarksObtain = this.marksObtain;
         data.RatingBasedCriteriaList = this.ratingBasedCriteriaQuestionList;
@@ -2730,7 +2738,6 @@ var InterviewDetailComponent = /** @class */ (function () {
         this.hiringRequestService.EditInterviewDetails(data).subscribe(function (response) {
             if (response.statusCode === 200) {
                 _this.toastr.success('Interview details updated successfully');
-                //this.backToRequestDetail();
             }
             else {
                 _this.toastr.error(response.message);
@@ -2827,37 +2834,14 @@ var InterviewDetailComponent = /** @class */ (function () {
         this.languagesList$ = Object(rxjs__WEBPACK_IMPORTED_MODULE_6__["of"])(data.LanguageList);
         this.traningList$ = Object(rxjs__WEBPACK_IMPORTED_MODULE_6__["of"])(data.TraningList);
         this.interviewerList$ = Object(rxjs__WEBPACK_IMPORTED_MODULE_6__["of"])(data.InterviewerList);
-        //   this.interviewDetailForm = this.fb.group({
-        //     CandidateId: data.CandidateId,
-        //     HiringRequestId: data.HiringRequestId,
-        //     Description: data.Description,
-        //     NoticePeriod: data.NoticePeriod,
-        //     AvailableDate: data.AvailableDate,
-        //     WrittenTestMarks: data.WrittenTestMarks,
-        //     CurrentBase: data.CurrentBase,
-        //     CurrentOther: data.CurrentOther,
-        //     ExpectationBase: data.ExpectationBase,
-        //     ExpectationOther: data.ExpectationOther,
-        //     Status: data.Status,
-        //     InterviewQuestionOne: data.InterviewQuestionOne,
-        //     InterviewQuestionTwo: data.InterviewQuestionTwo,
-        //     InterviewQuestionThree: data.InterviewQuestionThree,
-        //     CurrentTransport: data.CurrentTransport,
-        //     CurrentMeal: data.CurrentMeal,
-        //     ExpectationTransport: data.ExpectationTransport,
-        //     ExpectationMeal: data.ExpectationMeal,
-        //     LanguageList : data.LanguageList,
-        //     TraningList : data.TraningList,
-        //     InterviewerList : data.InterviewerList
-        //   });
-        //   this.interviewDetails = data;
+        this.interviewDetails = data;
     };
     //#endregion
     //#region "On export of interview details pdf"
     InterviewDetailComponent.prototype.onExportInterviewDetailsPdf = function () {
         this.commonLoader.showLoader();
         this.globalSharedService
-            .getFile(this.appurl.getApiUrl() + src_app_shared_global__WEBPACK_IMPORTED_MODULE_16__["GLOBAL"].API_Pdf_GetInterviewDetailReportPdf, this.interviewDetails)
+            .getFile(this.appurl.getApiUrl() + src_app_shared_global__WEBPACK_IMPORTED_MODULE_15__["GLOBAL"].API_Pdf_GetInterviewDetailReportPdf, this.interviewDetails)
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_8__["takeUntil"])(this.destroyed$))
             .subscribe();
         this.commonLoader.hideLoader();
@@ -2886,8 +2870,8 @@ var InterviewDetailComponent = /** @class */ (function () {
             _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"],
             _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"],
             _project_list_hiring_requests_hiring_requests_service__WEBPACK_IMPORTED_MODULE_4__["HiringRequestsService"],
-            src_app_shared_services_global_shared_service__WEBPACK_IMPORTED_MODULE_17__["GlobalSharedService"],
-            src_app_shared_services_app_url_service__WEBPACK_IMPORTED_MODULE_18__["AppUrlService"],
+            src_app_shared_services_global_shared_service__WEBPACK_IMPORTED_MODULE_16__["GlobalSharedService"],
+            src_app_shared_services_app_url_service__WEBPACK_IMPORTED_MODULE_17__["AppUrlService"],
             ngx_toastr__WEBPACK_IMPORTED_MODULE_5__["ToastrService"]])
     ], InterviewDetailComponent);
     return InterviewDetailComponent;

@@ -241,7 +241,7 @@ var EmployeeContractComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<lib-sub-header-template [headerClass]=\"'sub_header_template_main2'\">\r\n    <span class=\"action_header\">Employee Control Panel\r\n    <hum-button [type]=\"'edit'\" [text]=\"'EDIT DETAILS'\"></hum-button>\r\n    <hum-button [type]=\"'delete'\" [text]=\"'DELETE'\"></hum-button>\r\n    <hum-button [type]=\"'exclamation'\" [text]=\"'TERMINATE'\"></hum-button>\r\n  </span>\r\n  <div class=\"action_section\">\r\n    <hum-button [type]=\"'text'\" [text]=\"'VIEW DETAILS'\" (click)=\"showEmployeeDetails()\"></hum-button>\r\n  </div>\r\n</lib-sub-header-template>\r\n<mat-divider></mat-divider>\r\n\r\n<div class=\"row\">\r\n  <div class=\"col-md-12\">\r\n    <mat-tab-group>\r\n      <mat-tab label=\"HISTORY\">\r\n        <ng-template matTabContent>\r\n         <app-employee-history></app-employee-history>\r\n        </ng-template>\r\n      </mat-tab>\r\n      <mat-tab label=\"LEAVE\">\r\n        <ng-template matTabContent>\r\n          <app-employee-leave></app-employee-leave>\r\n        </ng-template>\r\n      </mat-tab>\r\n      <mat-tab label=\"ATTENDANCE\">\r\n        <ng-template matTabContent>\r\n          <app-employee-attendance></app-employee-attendance>\r\n        </ng-template>\r\n      </mat-tab>\r\n      <mat-tab label=\"CONTRACT\">\r\n        <ng-template matTabContent>\r\n          <app-employee-contract></app-employee-contract>\r\n        </ng-template>\r\n      </mat-tab>\r\n      <mat-tab label=\"TAX & PENSION\">\r\n        <ng-template matTabContent>\r\n          <app-employee-pension></app-employee-pension>\r\n        </ng-template>\r\n      </mat-tab>\r\n      <mat-tab label=\"SALARY CONFIG\">\r\n        <ng-template matTabContent>\r\n          <app-employee-salary-config></app-employee-salary-config>\r\n        </ng-template>\r\n      </mat-tab>\r\n      <mat-tab label=\"RESIGNATION\">\r\n        <ng-template matTabContent>\r\n          <app-employee-resignation></app-employee-resignation>\r\n        </ng-template>\r\n      </mat-tab>\r\n    </mat-tab-group>\r\n  </div>\r\n</div>\r\n  <app-employee-detail [employeeId] =\"employeeId\"></app-employee-detail>\r\n\r\n\r\n"
+module.exports = "<lib-sub-header-template [headerClass]=\"'sub_header_template_main2'\">\r\n    <span class=\"action_header\"><i class=\"fas fa-arrow-left\" (click)=\"backClick()\"></i> &nbsp;Employee Control Panel\r\n    <hum-button [type]=\"'edit'\" [text]=\"'EDIT DETAILS'\"></hum-button>\r\n    <hum-button [type]=\"'delete'\" [text]=\"'DELETE'\"></hum-button>\r\n    <hum-button [type]=\"'exclamation'\" [text]=\"'TERMINATE'\"></hum-button>\r\n  </span>\r\n  <div class=\"action_section\">\r\n    <hum-button [type]=\"'text'\" [text]=\"'VIEW DETAILS'\" (click)=\"showEmployeeDetails()\"></hum-button>\r\n  </div>\r\n</lib-sub-header-template>\r\n<mat-divider></mat-divider>\r\n\r\n<div class=\"row\">\r\n  <div class=\"col-md-12\">\r\n    <mat-tab-group>\r\n      <mat-tab label=\"HISTORY\">\r\n        <ng-template matTabContent>\r\n         <app-employee-history></app-employee-history>\r\n        </ng-template>\r\n      </mat-tab>\r\n      <mat-tab label=\"LEAVE\">\r\n        <ng-template matTabContent>\r\n          <app-employee-leave></app-employee-leave>\r\n        </ng-template>\r\n      </mat-tab>\r\n      <mat-tab label=\"ATTENDANCE\">\r\n        <ng-template matTabContent>\r\n          <app-employee-attendance></app-employee-attendance>\r\n        </ng-template>\r\n      </mat-tab>\r\n      <mat-tab label=\"CONTRACT\">\r\n        <ng-template matTabContent>\r\n          <app-employee-contract></app-employee-contract>\r\n        </ng-template>\r\n      </mat-tab>\r\n      <mat-tab label=\"TAX & PENSION\">\r\n        <ng-template matTabContent>\r\n          <app-employee-pension></app-employee-pension>\r\n        </ng-template>\r\n      </mat-tab>\r\n      <mat-tab label=\"SALARY CONFIG\">\r\n        <ng-template matTabContent>\r\n          <app-employee-salary-config></app-employee-salary-config>\r\n        </ng-template>\r\n      </mat-tab>\r\n      <mat-tab label=\"RESIGNATION\">\r\n        <ng-template matTabContent>\r\n          <app-employee-resignation [employeeDetail]=\"employeeDetail.employeeDetail\"></app-employee-resignation>\r\n        </ng-template>\r\n      </mat-tab>\r\n    </mat-tab-group>\r\n  </div>\r\n</div>\r\n  <app-employee-detail [employeeId] =\"employeeId\"></app-employee-detail>\r\n\r\n\r\n"
 
 /***/ }),
 
@@ -282,9 +282,10 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 var EmployeeControlPanelComponent = /** @class */ (function () {
-    function EmployeeControlPanelComponent(activatedRoute) {
+    function EmployeeControlPanelComponent(activatedRoute, router) {
         var _this = this;
         this.activatedRoute = activatedRoute;
+        this.router = router;
         this.activatedRoute.params.subscribe(function (params) {
             _this.employeeId = +params['id'];
         });
@@ -293,6 +294,9 @@ var EmployeeControlPanelComponent = /** @class */ (function () {
     };
     EmployeeControlPanelComponent.prototype.showEmployeeDetails = function () {
         this.employeeDetail.show();
+    };
+    EmployeeControlPanelComponent.prototype.backClick = function () {
+        this.router.navigate(['/hr/employees']);
     };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])(_employee_detail_employee_detail_component__WEBPACK_IMPORTED_MODULE_1__["EmployeeDetailComponent"]),
@@ -304,7 +308,7 @@ var EmployeeControlPanelComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./employee-control-panel.component.html */ "./src/app/hr/components/employee-control-panel/employee-control-panel.component.html"),
             styles: [__webpack_require__(/*! ./employee-control-panel.component.scss */ "./src/app/hr/components/employee-control-panel/employee-control-panel.component.scss")]
         }),
-        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"]])
+        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
     ], EmployeeControlPanelComponent);
     return EmployeeControlPanelComponent;
 }());
@@ -400,6 +404,8 @@ var EmployeeDetailComponent = /** @class */ (function () {
             Terminated: '',
             TerminatedOn: '',
             TerminationReason: '',
+            IsResigned: false,
+            ResignationStatus: 0
         };
     };
     EmployeeDetailComponent.prototype.show = function () {
@@ -438,7 +444,9 @@ var EmployeeDetailComponent = /** @class */ (function () {
                     State: x.EmployeeDetail.State,
                     Terminated: x.EmployeeDetail.Terminated,
                     TerminatedOn: x.EmployeeDetail.TerminatedOn,
-                    TerminationReason: x.EmployeeDetail.TerminationReason
+                    TerminationReason: x.EmployeeDetail.TerminationReason,
+                    IsResigned: x.EmployeeDetail.IsResigned,
+                    ResignationStatus: x.EmployeeDetail.ResignationStatus
                 };
             }
         }, function (error) {
@@ -3471,7 +3479,7 @@ var EmployeePensionComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container-fluid\" humAddScroll>\r\n    <h4 class=\"letter_spacing_2\">Resignation Exit Interview\r\n      <hum-button [type]=\"'add'\" [text]=\"'ADD RESIGNATION'\" ></hum-button>\r\n      <hum-button [type]=\"'edit'\" [text]=\"'SAVE CHANGES'\" (click)=\"submitBtn.click()\"></hum-button>\r\n      <hum-button [type]=\"'minus'\" [text]=\"'REHIRE EMPLOYEE'\" ></hum-button>\r\n      <hum-button [type]=\"'exclamation'\" [text]=\"'REVOKE RESIGNATION'\" ></hum-button>\r\n    </h4>\r\n  <div class=\"row\" >\r\n    <div class=\"col-md-12\">\r\n      <form [formGroup]=\"resignationForm\" (ngSubmit)=\"saveResignationForm(resignationForm.value)\">\r\n        <p class=\"font_size_16\">When did the employee resign?</p>\r\n        <mat-form-field>\r\n          <input #resignDate class=\"fixedWidth\"\r\n            formControlName=\"ResignDate\" matInput [matDatepicker]=\"picker\" placeholder=\"Resigned On (Date)\" >\r\n          <mat-datepicker-toggle matSuffix [for]=\"picker\"></mat-datepicker-toggle>\r\n          <mat-datepicker #picker></mat-datepicker>\r\n        </mat-form-field>\r\n        <p class=\"font_size_16\">Are there any Unresolved Issues or Additional Comments?</p>\r\n        <mat-radio-group formControlName=\"IsIssueUnresolved\">\r\n          <mat-radio-button value=\"true\">Yes</mat-radio-button>\r\n          <mat-radio-button value=\"false\">No</mat-radio-button>\r\n        </mat-radio-group>\r\n        <p class=\"font_size_16\">If answer is Yes, please explain fully</p>\r\n        <mat-form-field style=\"width: 50%;\" >\r\n          <textarea formControlName=\"Issues\" matInput rows=\"3\" placeholder=\"Comments & Issues\"></textarea>\r\n        </mat-form-field>\r\n        <mat-divider></mat-divider>\r\n        <h4>Feeling About Employee Aspects</h4>\r\n        <table class=\"table table-striped\">\r\n          <tbody formArrayName=\"QuestionType1\">\r\n            <tr *ngFor=\"let item of resignationForm.get('QuestionType1')['controls']; let i = index;\" [formGroupName]=\"i\">\r\n              <td width=\"30%\" class=\"font_size_16 font_weight_500\">{{item.value.QuestionText}}</td>\r\n              <td>\r\n                <mat-radio-group formControlName=\"Answer\">\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"1\">Very Satisfied</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"2\">Satisfied</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"3\">Dissatisfied</mat-radio-button>\r\n                </mat-radio-group>\r\n              </td>\r\n            </tr>\r\n          </tbody>\r\n        </table>\r\n        <h4>Reason for Leaving</h4>\r\n        <div class=\"row\" formArrayName=\"QuestionType2\">\r\n          <div class=\"col-md-3\" *ngFor=\"let item of resignationForm.get('QuestionType2')['controls']; let i = index;\" [formGroupName]=\"i\">\r\n              <mat-checkbox formControlName=\"Answer\" class=\"font_size_16 font_weight_500\">{{item.value.QuestionText}}</mat-checkbox>\r\n          </div>\r\n        </div>\r\n        <h4>The Department</h4>\r\n        <table class=\"table table-striped\">\r\n          <tbody formArrayName=\"QuestionType3\">\r\n            <tr *ngFor=\"let item of resignationForm.get('QuestionType3')['controls']; let i = index;\" [formGroupName]=\"i\">\r\n              <td width=\"30%\" class=\"font_size_16 font_weight_500\">{{item.value.QuestionText}}</td>\r\n              <td>\r\n                <mat-radio-group formControlName=\"Answer\">\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"1\">Strongly Disagree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"2\">Disagree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"3\">Neutral</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"4\">Agree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"5\">Strongly Agree</mat-radio-button>\r\n                </mat-radio-group>\r\n              </td>\r\n            </tr>\r\n          </tbody>\r\n        </table>\r\n        <h4>The Job Itself</h4>\r\n        <table class=\"table table-striped\">\r\n          <tbody formArrayName=\"QuestionType4\">\r\n            <tr *ngFor=\"let item of resignationForm.get('QuestionType4')['controls']; let i = index;\" [formGroupName]=\"i\">\r\n              <td width=\"30%\" class=\"font_size_16 font_weight_500\">{{item.value.QuestionText}}</td>\r\n              <td>\r\n                <mat-radio-group formControlName=\"Answer\">\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"1\">Strongly Disagree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"2\">Disagree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"3\">Neutral</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"4\">Agree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"5\">Strongly Agree</mat-radio-button>\r\n                </mat-radio-group>\r\n              </td>\r\n            </tr>\r\n          </tbody>\r\n        </table>\r\n        <h4>My Supervisor</h4>\r\n        <table class=\"table table-striped\">\r\n          <tbody formArrayName=\"QuestionType5\">\r\n            <tr *ngFor=\"let item of resignationForm.get('QuestionType5')['controls']; let i = index;\" [formGroupName]=\"i\">\r\n              <td width=\"30%\" class=\"font_size_16 font_weight_500\">{{item.value.QuestionText}}</td>\r\n              <td>\r\n                <mat-radio-group formControlName=\"Answer\">\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"1\">Strongly Disagree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"2\">Disagree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"3\">Neutral</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"4\">Agree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"5\">Strongly Agree</mat-radio-button>\r\n                </mat-radio-group>\r\n              </td>\r\n            </tr>\r\n          </tbody>\r\n        </table>\r\n        <h4>The Management</h4>\r\n        <table class=\"table table-striped\">\r\n          <tbody formArrayName=\"QuestionType6\">\r\n            <tr *ngFor=\"let item of resignationForm.get('QuestionType6')['controls']; let i = index;\" [formGroupName]=\"i\">\r\n              <td width=\"30%\" class=\"font_size_16 font_weight_500\">{{item.value.QuestionText}}</td>\r\n              <td>\r\n                <mat-radio-group formControlName=\"Answer\">\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"1\">Strongly Disagree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"2\">Disagree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"3\">Neutral</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"4\">Agree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"5\">Strongly Agree</mat-radio-button>\r\n                </mat-radio-group>\r\n              </td>\r\n            </tr>\r\n          </tbody>\r\n        </table>\r\n        <button type=\"submit\" #submitBtn style=\"display: none;\"></button>\r\n      </form>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div class=\"container-fluid\" >\r\n    <h4 class=\"letter_spacing_2\">Resignation Exit Interview\r\n      <hum-button [type]=\"'add'\" [text]=\"'ADD RESIGNATION'\" (click)=\"addResignation()\" [disabled]=\"employeeDetail.IsResigned\"></hum-button>\r\n      <hum-button [type]=\"'edit'\" [text]=\"'SAVE CHANGES'\" (click)=\"saveResignationForm(resignationForm.value)\" *ngIf=\"employeeDetail.IsResigned\"></hum-button>\r\n      <hum-button [type]=\"'edit'\" [text]=\"'SAVE CHANGES'\" [disabled]=\"!employeeDetail.IsResigned\" *ngIf=\"!employeeDetail.IsResigned\"></hum-button>\r\n      <hum-button [type]=\"'minus'\" [text]=\"'REHIRE EMPLOYEE'\" [disabled]=\"!employeeDetail.IsResigned\"></hum-button>\r\n      <hum-button [type]=\"'exclamation'\" [text]=\"'REVOKE RESIGNATION'\" [disabled]=\"!employeeDetail.IsResigned\"></hum-button>\r\n    </h4>\r\n    <h5 *ngIf=\"!employeeDetail.IsResigned\"><i class=\"fas fa-info-circle icon_color_yellow\"></i> &nbsp;There is no Active Resignation. Please Add one in order to see its details.</h5>\r\n  <div class=\"row\" *ngIf=\"employeeDetail.IsResigned\" humAddScroll [height]=\"250\">\r\n    <div class=\"col-md-12\">\r\n      <form [formGroup]=\"resignationForm\">\r\n        <p class=\"font_size_16\">When did the employee resign?</p>\r\n        <mat-form-field>\r\n          <input #resignDate class=\"fixedWidth\"\r\n            formControlName=\"ResignDate\" matInput [matDatepicker]=\"picker\" placeholder=\"Resigned On (Date)\" >\r\n          <mat-datepicker-toggle matSuffix [for]=\"picker\"></mat-datepicker-toggle>\r\n          <mat-datepicker #picker></mat-datepicker>\r\n        </mat-form-field>\r\n        <p class=\"font_size_16\">Are there any Unresolved Issues or Additional Comments?</p>\r\n        <mat-radio-group formControlName=\"IsIssueUnresolved\">\r\n          <mat-radio-button value=\"true\">Yes</mat-radio-button>\r\n          <mat-radio-button value=\"false\">No</mat-radio-button>\r\n        </mat-radio-group>\r\n        <p class=\"font_size_16\">If answer is Yes, please explain fully</p>\r\n        <mat-form-field style=\"width: 50%;\" >\r\n          <textarea formControlName=\"Issues\" matInput rows=\"3\" placeholder=\"Comments & Issues\"></textarea>\r\n        </mat-form-field>\r\n        <mat-divider></mat-divider>\r\n        <h4>Feeling About Employee Aspects</h4>\r\n        <table class=\"table table-striped\">\r\n          <tbody formArrayName=\"QuestionType1\">\r\n            <tr *ngFor=\"let item of resignationForm.get('QuestionType1')['controls']; let i = index;\" [formGroupName]=\"i\">\r\n              <td width=\"30%\" class=\"font_size_16 font_weight_500\">{{item.value.QuestionText}}</td>\r\n              <td>\r\n                <mat-radio-group formControlName=\"Answer\">\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"1\">Very Satisfied</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"2\">Satisfied</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"3\">Dissatisfied</mat-radio-button>\r\n                </mat-radio-group>\r\n              </td>\r\n            </tr>\r\n          </tbody>\r\n        </table>\r\n        <h4>Reason for Leaving</h4>\r\n        <div class=\"row\" formArrayName=\"QuestionType2\">\r\n          <div class=\"col-md-3\" *ngFor=\"let item of resignationForm.get('QuestionType2')['controls']; let i = index;\" [formGroupName]=\"i\">\r\n              <mat-checkbox formControlName=\"Answer\" class=\"font_size_16 font_weight_500\">{{item.value.QuestionText}}</mat-checkbox>\r\n          </div>\r\n        </div>\r\n        <h4>The Department</h4>\r\n        <table class=\"table table-striped\">\r\n          <tbody formArrayName=\"QuestionType3\">\r\n            <tr *ngFor=\"let item of resignationForm.get('QuestionType3')['controls']; let i = index;\" [formGroupName]=\"i\">\r\n              <td width=\"30%\" class=\"font_size_16 font_weight_500\">{{item.value.QuestionText}}</td>\r\n              <td>\r\n                <mat-radio-group formControlName=\"Answer\">\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"1\">Strongly Disagree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"2\">Disagree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"3\">Neutral</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"4\">Agree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"5\">Strongly Agree</mat-radio-button>\r\n                </mat-radio-group>\r\n              </td>\r\n            </tr>\r\n          </tbody>\r\n        </table>\r\n        <h4>The Job Itself</h4>\r\n        <table class=\"table table-striped\">\r\n          <tbody formArrayName=\"QuestionType4\">\r\n            <tr *ngFor=\"let item of resignationForm.get('QuestionType4')['controls']; let i = index;\" [formGroupName]=\"i\">\r\n              <td width=\"30%\" class=\"font_size_16 font_weight_500\">{{item.value.QuestionText}}</td>\r\n              <td>\r\n                <mat-radio-group formControlName=\"Answer\">\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"1\">Strongly Disagree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"2\">Disagree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"3\">Neutral</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"4\">Agree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"5\">Strongly Agree</mat-radio-button>\r\n                </mat-radio-group>\r\n              </td>\r\n            </tr>\r\n          </tbody>\r\n        </table>\r\n        <h4>My Supervisor</h4>\r\n        <table class=\"table table-striped\">\r\n          <tbody formArrayName=\"QuestionType5\">\r\n            <tr *ngFor=\"let item of resignationForm.get('QuestionType5')['controls']; let i = index;\" [formGroupName]=\"i\">\r\n              <td width=\"30%\" class=\"font_size_16 font_weight_500\">{{item.value.QuestionText}}</td>\r\n              <td>\r\n                <mat-radio-group formControlName=\"Answer\">\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"1\">Strongly Disagree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"2\">Disagree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"3\">Neutral</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"4\">Agree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"5\">Strongly Agree</mat-radio-button>\r\n                </mat-radio-group>\r\n              </td>\r\n            </tr>\r\n          </tbody>\r\n        </table>\r\n        <h4>The Management</h4>\r\n        <table class=\"table table-striped\">\r\n          <tbody formArrayName=\"QuestionType6\">\r\n            <tr *ngFor=\"let item of resignationForm.get('QuestionType6')['controls']; let i = index;\" [formGroupName]=\"i\">\r\n              <td width=\"30%\" class=\"font_size_16 font_weight_500\">{{item.value.QuestionText}}</td>\r\n              <td>\r\n                <mat-radio-group formControlName=\"Answer\">\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"1\">Strongly Disagree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"2\">Disagree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"3\">Neutral</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"4\">Agree</mat-radio-button>\r\n                  <mat-radio-button class=\"font_size_16 padding_right_20\" value=\"5\">Strongly Agree</mat-radio-button>\r\n                </mat-radio-group>\r\n              </td>\r\n            </tr>\r\n          </tbody>\r\n        </table>\r\n        <!-- <button type=\"submit\" #submitBtn style=\"display: none;\"></button> -->\r\n      </form>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -3482,7 +3490,7 @@ module.exports = "<div class=\"container-fluid\" humAddScroll>\r\n    <h4 class=
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".letter_spacing_2 {\n  letter-spacing: 2px; }\n\n.font_size_16 {\n  font-size: 16px; }\n\n.font_weight_500 {\n  font-weight: 500; }\n\n.padding_right_20 {\n  padding-right: 20px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaHIvY29tcG9uZW50cy9lbXBsb3llZS1yZXNpZ25hdGlvbi9kOlxcRGF5IFVzZXJcXEF2aW5hc2hcXE9mZmljaWFsXFxIdW1hbml0YXJpYW5cXEdpdExhYlJlcG9cXGNsZWFyLWZ1c2lvblxcSHVtYW5pdGFyaWFuQXNzaXN0YW5jZS5XZWJBcGlcXE5ld1VJL3NyY1xcYXBwXFxoclxcY29tcG9uZW50c1xcZW1wbG95ZWUtcmVzaWduYXRpb25cXGVtcGxveWVlLXJlc2lnbmF0aW9uLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0UsbUJBQW1CLEVBQUE7O0FBRXJCO0VBQ0UsZUFBZSxFQUFBOztBQUVqQjtFQUNFLGdCQUFnQixFQUFBOztBQUVsQjtFQUNFLG1CQUFtQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvaHIvY29tcG9uZW50cy9lbXBsb3llZS1yZXNpZ25hdGlvbi9lbXBsb3llZS1yZXNpZ25hdGlvbi5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5sZXR0ZXJfc3BhY2luZ18ye1xyXG4gIGxldHRlci1zcGFjaW5nOiAycHg7XHJcbn1cclxuLmZvbnRfc2l6ZV8xNntcclxuICBmb250LXNpemU6IDE2cHg7XHJcbn1cclxuLmZvbnRfd2VpZ2h0XzUwMCB7XHJcbiAgZm9udC13ZWlnaHQ6IDUwMDtcclxufVxyXG4ucGFkZGluZ19yaWdodF8yMCB7XHJcbiAgcGFkZGluZy1yaWdodDogMjBweDtcclxufVxyXG4iXX0= */"
+module.exports = ".letter_spacing_2 {\n  letter-spacing: 2px; }\n\n.font_size_16 {\n  font-size: 16px; }\n\n.font_weight_500 {\n  font-weight: 500; }\n\n.padding_right_20 {\n  padding-right: 20px; }\n\n.icon_color_yellow {\n  color: darkgoldenrod; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaHIvY29tcG9uZW50cy9lbXBsb3llZS1yZXNpZ25hdGlvbi9kOlxcRGF5IFVzZXJcXEF2aW5hc2hcXE9mZmljaWFsXFxIdW1hbml0YXJpYW5cXEdpdExhYlJlcG9cXGNsZWFyLWZ1c2lvblxcSHVtYW5pdGFyaWFuQXNzaXN0YW5jZS5XZWJBcGlcXE5ld1VJL3NyY1xcYXBwXFxoclxcY29tcG9uZW50c1xcZW1wbG95ZWUtcmVzaWduYXRpb25cXGVtcGxveWVlLXJlc2lnbmF0aW9uLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0UsbUJBQW1CLEVBQUE7O0FBRXJCO0VBQ0UsZUFBZSxFQUFBOztBQUVqQjtFQUNFLGdCQUFnQixFQUFBOztBQUVsQjtFQUNFLG1CQUFtQixFQUFBOztBQUVyQjtFQUNFLG9CQUFvQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvaHIvY29tcG9uZW50cy9lbXBsb3llZS1yZXNpZ25hdGlvbi9lbXBsb3llZS1yZXNpZ25hdGlvbi5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5sZXR0ZXJfc3BhY2luZ18ye1xyXG4gIGxldHRlci1zcGFjaW5nOiAycHg7XHJcbn1cclxuLmZvbnRfc2l6ZV8xNntcclxuICBmb250LXNpemU6IDE2cHg7XHJcbn1cclxuLmZvbnRfd2VpZ2h0XzUwMCB7XHJcbiAgZm9udC13ZWlnaHQ6IDUwMDtcclxufVxyXG4ucGFkZGluZ19yaWdodF8yMCB7XHJcbiAgcGFkZGluZy1yaWdodDogMjBweDtcclxufVxyXG4uaWNvbl9jb2xvcl95ZWxsb3d7XHJcbiAgY29sb3I6IGRhcmtnb2xkZW5yb2Q7XHJcbn1cclxuIl19 */"
 
 /***/ }),
 
@@ -3503,6 +3511,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_shared_enum__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/shared/enum */ "./src/app/shared/enum.ts");
 /* harmony import */ var src_app_shared_static_utilities__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/app/shared/static-utilities */ "./src/app/shared/static-utilities.ts");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _services_employee_list_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../services/employee-list.service */ "./src/app/hr/services/employee-list.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -3519,12 +3529,17 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
+
 var EmployeeResignationComponent = /** @class */ (function () {
-    function EmployeeResignationComponent(commonLoader, toastr, hrService, fb) {
+    function EmployeeResignationComponent(commonLoader, toastr, hrService, fb, employeeService, activatedRoute) {
+        var _this = this;
         this.commonLoader = commonLoader;
         this.toastr = toastr;
         this.hrService = hrService;
         this.fb = fb;
+        this.employeeService = employeeService;
+        this.activatedRoute = activatedRoute;
         this.questionTypes = [
             { value: 1, name: 'Feeling About Employee Aspects' },
             { value: 2, name: 'Reason Of Leaving' },
@@ -3534,6 +3549,9 @@ var EmployeeResignationComponent = /** @class */ (function () {
             { value: 6, name: 'The Management' },
         ];
         this.questionByType = [];
+        this.activatedRoute.params.subscribe(function (params) {
+            _this.employeeId = +params['id'];
+        });
         this.resignationForm = this.fb.group({
             ResignDate: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_6__["Validators"].required],
             IsIssueUnresolved: ['false'],
@@ -3547,7 +3565,13 @@ var EmployeeResignationComponent = /** @class */ (function () {
         });
     }
     EmployeeResignationComponent.prototype.ngOnInit = function () {
-        this.getExitInterviewQuestionsList();
+        // this.getExitInterviewQuestionsList();
+        if (this.employeeDetail.IsResigned) {
+            this.getResignationDetail();
+        }
+    };
+    EmployeeResignationComponent.prototype.ngOnChanges = function () {
+        // console.log(this.employeeDetail);
     };
     EmployeeResignationComponent.prototype.createQuestion = function (QuestionId, QuestionText, QuestionTypeId, Answer) {
         return this.fb.group({
@@ -3577,6 +3601,7 @@ var EmployeeResignationComponent = /** @class */ (function () {
                     };
                 });
                 _this.groupedQuestions = src_app_shared_static_utilities__WEBPACK_IMPORTED_MODULE_5__["StaticUtilities"].groupBy(_this.exitInterviewQuestionsList, function (y) { return y.QuestionType; });
+                _this.questionByType = [];
                 _this.groupedQuestions.forEach(function (value, key) {
                     _this.questionByType[key] = value;
                 });
@@ -3607,9 +3632,112 @@ var EmployeeResignationComponent = /** @class */ (function () {
             _loop_1(i);
         }
     };
-    EmployeeResignationComponent.prototype.saveResignationForm = function (value) {
-        console.log(value);
+    EmployeeResignationComponent.prototype.setAllAnswers = function () {
+        var _this = this;
+        var _loop_2 = function (i) {
+            this_2.resignationForm.get('QuestionType' + i).removeAt(0);
+            // (this.resignationForm.controls['QuestionType' + i] as FormArray) = this.fb.array([]);
+            this_2.questionByType[i].forEach(function (e) {
+                if (i !== 2) {
+                    _this.resignationForm.controls['QuestionType' + i]
+                        .push(_this.createQuestion(e.QuestionId, e.QuestionText, e.QuestionType, (e.Answer + '').trim()));
+                }
+                else {
+                    _this.resignationForm.controls['QuestionType' + i]
+                        .push(_this.createQuestion(e.QuestionId, e.QuestionText, e.QuestionType, (e.Answer === 1) ? true : false));
+                }
+            });
+        };
+        var this_2 = this;
+        for (var i = 1; i <= 6; i++) {
+            _loop_2(i);
+        }
     };
+    EmployeeResignationComponent.prototype.saveResignationForm = function (value) {
+        var _this = this;
+        if (!this.resignationForm.valid) {
+            this.toastr.warning('Please select Resign Date');
+            return;
+        }
+        if (value.IsIssueUnresolved === 'true' && value.Issues === '') {
+            this.toastr.warning('Please enter Comments & Issues!');
+            return;
+        }
+        this.commonLoader.showLoader();
+        value.QuestionType2.forEach(function (element) {
+            if (element.Answer) {
+                element.Answer = '1';
+            }
+            else {
+                element.Answer = '0';
+            }
+        });
+        var model = {
+            ResignDate: src_app_shared_static_utilities__WEBPACK_IMPORTED_MODULE_5__["StaticUtilities"].getLocalDate(this.resignationForm.get('ResignDate').value),
+            EmployeeID: this.employeeId,
+            IsUnresolvedIssue: (value.IsIssueUnresolved === 'true'),
+            CommentsIssues: value.Issues,
+            QuestionType1: value.QuestionType1,
+            QuestionType2: value.QuestionType2,
+            QuestionType3: value.QuestionType3,
+            QuestionType4: value.QuestionType4,
+            QuestionType5: value.QuestionType5,
+            QuestionType6: value.QuestionType6,
+        };
+        this.employeeService.saveResignation(model).subscribe(function (res) {
+            if (res) {
+                _this.commonLoader.hideLoader();
+                _this.toastr.success('Resignation saved successfully!');
+            }
+        }, function (err) {
+            _this.commonLoader.hideLoader();
+            _this.toastr.warning(err);
+        });
+    };
+    EmployeeResignationComponent.prototype.addResignation = function () {
+        var _this = this;
+        if (this.employeeDetail.IsResigned) {
+            return;
+        }
+        this.commonLoader.showLoader();
+        this.employeeService.addResignation(this.employeeId).subscribe(function (res) {
+            if (res) {
+                _this.employeeDetail.IsResigned = true;
+                _this.getResignationDetail();
+                _this.commonLoader.hideLoader();
+            }
+        }, function (err) {
+            _this.commonLoader.hideLoader();
+            _this.toastr.warning(err);
+        });
+    };
+    EmployeeResignationComponent.prototype.getResignationDetail = function () {
+        var _this = this;
+        this.employeeService.getResignationDetailById(this.employeeId).subscribe(function (res) {
+            if (res.ResignationDetail !== null) {
+                _this.resignationForm.patchValue({
+                    ResignDate: src_app_shared_static_utilities__WEBPACK_IMPORTED_MODULE_5__["StaticUtilities"].setLocalDate(res.ResignationDetail.ResignDate),
+                    IsIssueUnresolved: (' ' + res.ResignationDetail.IsIssueUnresolved).trim(),
+                    Issues: res.ResignationDetail.CommentsIssues.trim()
+                });
+                _this.groupedQuestions = src_app_shared_static_utilities__WEBPACK_IMPORTED_MODULE_5__["StaticUtilities"].groupBy(res.ResignationQuestionDetail, function (y) { return y.QuestionType; });
+                _this.questionByType = [];
+                _this.groupedQuestions.forEach(function (value, key) {
+                    _this.questionByType[key] = value;
+                });
+                _this.setAllAnswers();
+            }
+            else {
+                _this.getExitInterviewQuestionsList();
+            }
+        }, function (err) {
+            _this.toastr.warning(err);
+        });
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], EmployeeResignationComponent.prototype, "employeeDetail", void 0);
     EmployeeResignationComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'app-employee-resignation',
@@ -3619,7 +3747,9 @@ var EmployeeResignationComponent = /** @class */ (function () {
         __metadata("design:paramtypes", [src_app_shared_common_loader_common_loader_service__WEBPACK_IMPORTED_MODULE_1__["CommonLoaderService"],
             ngx_toastr__WEBPACK_IMPORTED_MODULE_2__["ToastrService"],
             _services_hr_service__WEBPACK_IMPORTED_MODULE_3__["HrService"],
-            _angular_forms__WEBPACK_IMPORTED_MODULE_6__["FormBuilder"]])
+            _angular_forms__WEBPACK_IMPORTED_MODULE_6__["FormBuilder"],
+            _services_employee_list_service__WEBPACK_IMPORTED_MODULE_7__["EmployeeListService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_8__["ActivatedRoute"]])
     ], EmployeeResignationComponent);
     return EmployeeResignationComponent;
 }());
@@ -4299,6 +4429,15 @@ var EmployeeListService = /** @class */ (function () {
     };
     EmployeeListService.prototype.deleteMurtipleEmployeesById = function (model) {
         return this.globalService.post(this.appurl.getApiUrl() + src_app_shared_global__WEBPACK_IMPORTED_MODULE_4__["GLOBAL"].API_EmployeeDetail_DeleteMurtipleEmployeesById, model);
+    };
+    EmployeeListService.prototype.addResignation = function (EmployeeID) {
+        return this.globalService.post(this.appurl.getApiUrl() + src_app_shared_global__WEBPACK_IMPORTED_MODULE_4__["GLOBAL"].API_EmployeeDetail_AddEmployeeResignation, EmployeeID);
+    };
+    EmployeeListService.prototype.saveResignation = function (model) {
+        return this.globalService.post(this.appurl.getApiUrl() + src_app_shared_global__WEBPACK_IMPORTED_MODULE_4__["GLOBAL"].API_EmployeeDetail_SaveEmployeeResignation, model);
+    };
+    EmployeeListService.prototype.getResignationDetailById = function (id) {
+        return this.globalService.getItemById(this.appurl.getApiUrl() + src_app_shared_global__WEBPACK_IMPORTED_MODULE_4__["GLOBAL"].API_EmployeeDetail_GetEmployeeResignationById, id);
     };
     EmployeeListService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
