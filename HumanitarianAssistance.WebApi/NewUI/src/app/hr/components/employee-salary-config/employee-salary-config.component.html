@@ -25,9 +25,10 @@
     <br/>
     <div class="row header">
         <span class="action_header">Monthly Salary Breakdown
-    <hum-button [type]="'add'" [text]="'ADD BONUS'" (click)="addBonus()"></hum-button>
-    <hum-button  [type]="'addNew'" [text]="'ADD FINE'" (click)="addFine()"></hum-button>
-
+    <hum-button [type]="'add'" [disabled]="selectedMonth.value ==0" [text]="'ADD BONUS'" (click)="addBonus()"></hum-button>
+    <hum-button  [type]="'addNew'" [disabled]="selectedMonth.value ==0" [text]="'ADD FINE'" (click)="addFine()"></hum-button>
+    <hum-button  [type]="'save'" [text]="'APPROVE SALARY'" (click)="approveSalary()"></hum-button>
+    <hum-button  [type]="'exclamation'" [text]="'REVOKE SALARY'" (click)="revokeSalary()"></hum-button>
     <button mat-button [matMenuTriggerFor]="MonthMenu">
       <h5 style="color: #0390D1;">{{selectedMonth.name | uppercase}}  &nbsp;<i class="fas fa-caret-down"></i></h5>
     </button>
@@ -45,27 +46,27 @@
                     <tbody>
                         <tr>
                             <td>Active Hourly Rate</td>
-                            <td>-</td>
+                            <td>{{monthlySalaryBreakdown.HourlyRate}}</td>
                         </tr>
                         <tr>
                             <td>Month</td>
-                            <td>-</td>
+                            <td>{{monthlySalaryBreakdown.Month}}</td>
                         </tr>
                         <tr>
                             <td>Total Gross Salary</td>
-                            <td>-</td>
+                            <td>{{monthlySalaryBreakdown.GrossSalary}}</td>
                         </tr>
                         <tr>
                             <td>Total Net Salary</td>
-                            <td>-</td>
+                            <td>{{monthlySalaryBreakdown.NetSalary}}</td>
                         </tr>
                         <tr>
                             <td>Status</td>
-                            <td>-</td>
+                            <td>{{monthlySalaryBreakdown.Status}}</td>
                         </tr>
                         <tr>
                             <td>Salary Paid Amount</td>
-                            <td>-</td>
+                            <td>{{monthlySalaryBreakdown.SalaryPaidAmount}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -83,7 +84,7 @@
                 </mat-tab>
                 <mat-tab label="Bonuses & Fines">
                     <div class="col-md-12">
-                        <hum-table [headers]="bonusAndFineHeaders$" [isDefaultAction]="false" [items]="bonusAndFineList$" [actions]="actions" (actionClick)="empActionEvents($event)"></hum-table>
+                        <hum-table [headers]="bonusAndFineHeaders$" [hideColums$]="hideColumsBounusFine" [isDefaultAction]="false" [items]="bonusAndFineList$" [actions]="actions" (actionClick)="bonusFineEvents($event)"></hum-table>
                     </div>
                 </mat-tab>
             </mat-tab-group>

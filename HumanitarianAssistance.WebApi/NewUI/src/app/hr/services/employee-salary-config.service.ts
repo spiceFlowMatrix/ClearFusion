@@ -64,4 +64,20 @@ export class EmployeeSalaryConfigService {
       );
     }
     //#endregion
+
+    //#region "deleteEmployeeBonusFineSalaryHead"
+    deleteEmployeeBonusFineSalaryHead(id): any {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_HR_DeleteEmployeeBonusFineSalaryHead, id
+      );
+    }
+    //#endregion
+
+    //#region "getEmployeeAccumulatedSalaryHead"
+    getEmployeeAccumulatedSalaryHead(id): any {
+      return this.globalService.getDataById(
+        this.appurl.getApiUrl() + GLOBAL.API_HR_GetEmployeeAccumulatedSalaryHead + '?id=' + id
+      );
+    }
+    //#endregion
 }

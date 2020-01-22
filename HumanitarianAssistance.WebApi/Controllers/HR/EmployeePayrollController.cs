@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.HR.Commands.Create;
+using HumanitarianAssistance.Application.HR.Commands.Delete;
 using HumanitarianAssistance.Application.HR.Commands.Update;
 using HumanitarianAssistance.Application.HR.Models;
 using HumanitarianAssistance.Application.HR.Queries;
@@ -255,6 +256,32 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         public async Task<IActionResult> GetEmployeeBonusFineSalaryHead([FromQuery] int id)
         {
             var result = await _mediator.Send(new GetEmployeeBonusFineSalaryHeadQuery() { EmployeeId = id });
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteEmployeeBonusFineSalaryHead([FromBody] int id)
+        { 
+             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            DeleteEmployeeBonusFineSalaryHeadCommand  command = new DeleteEmployeeBonusFineSalaryHeadCommand
+            {
+                Id = id,
+                ModifiedById= userId
+            };
+
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetEmployeeAccumulatedSalaryHead([FromBody] int id)
+        { 
+            GetEmployeeAccumulatedSalaryHeadQuery command = new GetEmployeeAccumulatedSalaryHeadQuery
+            {
+                EmployeeId = id,
+            };
+            
+            var result = await _mediator.Send(command);
             return Ok(result);
         }
     }
