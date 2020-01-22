@@ -59,7 +59,8 @@ onFormSubmit(data: any) {
     Amount: this.fineForm.value.Amount,
     Description: this.fineForm.value.Description,
     EmployeeId: this.data.EmployeeId,
-    IsBonus: false
+    IsBonus: false,
+    Month: this.data.SelectedMonth
   };
   this.salaryConfigService.saveBonusFineSalaryHead(model).subscribe(x => {
     if (x) {

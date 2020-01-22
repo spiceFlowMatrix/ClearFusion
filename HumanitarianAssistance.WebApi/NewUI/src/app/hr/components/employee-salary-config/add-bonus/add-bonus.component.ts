@@ -58,7 +58,8 @@ export class AddBonusComponent implements OnInit {
       Amount: this.bonusForm.value.Amount,
       Description: this.bonusForm.value.Description,
       EmployeeId: this.data.EmployeeId,
-      IsBonus: true
+      IsBonus: true,
+      Month: this.data.SelectedMonth
     };
     this.salaryConfigService.saveBonusFineSalaryHead(model).subscribe(x => {
       if (x) {

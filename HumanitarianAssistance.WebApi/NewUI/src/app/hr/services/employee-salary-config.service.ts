@@ -58,9 +58,9 @@ export class EmployeeSalaryConfigService {
     //#endregion
 
     //#region "getEmployeeBonusFineSalaryHead"
-    getEmployeeBonusFineSalaryHead(id): any {
-      return this.globalService.getDataById(
-        this.appurl.getApiUrl() + GLOBAL.API_HR_GetEmployeeBonusFineSalaryHead + '?id=' + id
+    getEmployeeBonusFineSalaryHead(model: any): any {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_HR_GetEmployeeBonusFineSalaryHead, model
       );
     }
     //#endregion
@@ -77,6 +77,14 @@ export class EmployeeSalaryConfigService {
     getEmployeeAccumulatedSalaryHead(id): any {
       return this.globalService.getDataById(
         this.appurl.getApiUrl() + GLOBAL.API_HR_GetEmployeeAccumulatedSalaryHead + '?id=' + id
+      );
+    }
+    //#endregion
+
+    //#region "getEmployeePayroll"
+    getEmployeePayroll(model): any {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_HR_GetEmployeeMonthlyPayroll, model
       );
     }
     //#endregion

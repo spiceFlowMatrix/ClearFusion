@@ -252,10 +252,10 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return Ok(result);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetEmployeeBonusFineSalaryHead([FromQuery] int id)
+        [HttpPost]
+        public async Task<IActionResult> GetEmployeeBonusFineSalaryHead([FromBody] GetEmployeeBonusFineSalaryHeadQuery model)
         {
-            var result = await _mediator.Send(new GetEmployeeBonusFineSalaryHeadQuery() { EmployeeId = id });
+            var result = await _mediator.Send(model);
             return Ok(result);
         }
 
@@ -274,14 +274,16 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetEmployeeAccumulatedSalaryHead([FromBody] int id)
+        public async Task<IActionResult> GetEmployeeAccumulatedSalaryHead([FromBody] GetEmployeeAccumulatedSalaryHeadQuery model)
         { 
-            GetEmployeeAccumulatedSalaryHeadQuery command = new GetEmployeeAccumulatedSalaryHeadQuery
-            {
-                EmployeeId = id,
-            };
-            
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetEmployeeMonthlyPayroll([FromBody] GetEmployeeMonthlyPayrollQuery model)
+        { 
+            var result = await _mediator.Send(model);
             return Ok(result);
         }
     }

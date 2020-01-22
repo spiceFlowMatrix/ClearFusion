@@ -10,5 +10,6 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
         public string Description { get; set; }
         public int EmployeeId { get; set; }
         public bool IsBonus { get; set; }
+        public int Month { get; set; }
     }
 }

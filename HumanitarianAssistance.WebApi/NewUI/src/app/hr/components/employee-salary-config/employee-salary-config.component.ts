@@ -4,13 +4,16 @@ import { AddSalaryConfigurationComponent } from './add-salary-configuration/add-
 import { IDropDownModel } from './../../../store/models/purchase';
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit } from '@angular/core';
-import { of } from 'rxjs';
+import { of, observable, empty } from 'rxjs';
 import { TableActionsModel } from 'projects/library/src/public_api';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material';
 import { Month, TransactionType } from 'src/app/shared/enum';
 import { ActivatedRoute } from '@angular/router';
 import { EmployeeSalaryConfigService } from '../../services/employee-salary-config.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
+import 'rxjs/add/observable/empty';
 
 @Component({
   selector: 'app-employee-salary-config',
@@ -51,8 +54,6 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     this.selectedMonth = { name: 'SELECT MONTH', value: 0 };
     this.activatedRoute.params.subscribe(params => {
       this.employeeId = +params['id'];
-      this.getEmployeeBasicPayAndCurrency();
-      this.getEmployeeBonusFineSalaryHead();
     });
   }
 
@@ -88,7 +89,6 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     };
 
     this.getEmployeeBasicPayAndCurrency();
-    this.getEmployeeBonusFineSalaryHead();
   }
 
   // #region Add Salary Configuration
@@ -114,7 +114,6 @@ export class EmployeeSalaryConfigComponent implements OnInit {
 
   // #region Add Bonus
   addBonus(): void {
-
     if (this.selectedMonth.value === 0) {
       this.toastr.warning('Please select Month');
       return;
@@ -124,7 +123,8 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       width: '500px',
       autoFocus: false,
       data: {
-        EmployeeId: this.employeeId
+        EmployeeId: this.employeeId,
+        SelectedMonth: this.selectedMonth.value
       }
     });
     // refresh the data after new request created
@@ -143,7 +143,8 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       width: '500px',
       autoFocus: false,
       data: {
-        EmployeeId: this.employeeId
+        EmployeeId: this.employeeId,
+        SelectedMonth: this.selectedMonth.value
       }
     });
     // refresh the data after new request created
@@ -166,6 +167,12 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       name: SelectedMonth.name,
       value: SelectedMonth.value
     };
+
+    this.getEmployeeBonusFineSalaryHead();
+    this.monthlySalaryBreakdown.HourlyRate = (this.employeeCurrencyAndAmount.MonthlyAmount /
+      StaticUtilities.getDaysInMonth(SelectedMonth.value, (new Date()).getFullYear())).toFixed(2);
+      this.monthlySalaryBreakdown.Month = Month[SelectedMonth.value];
+      this.getEmployeePayroll();
   }
   empActionEvents(event: any) {
     console.log(event.item);
@@ -180,7 +187,11 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   }
 
   getEmployeeBonusFineSalaryHead() {
-    this.salaryConfigService.getEmployeeBonusFineSalaryHead(this.employeeId).subscribe(x => {
+    const model = {
+      EmployeeId: this.employeeId,
+      Month: this.selectedMonth.value
+    };
+    this.salaryConfigService.getEmployeeBonusFineSalaryHead(model).subscribe(x => {
       if (x && x.BonusFineSalaryHead && x.BonusFineSalaryHead.length > 0) {
         this.bonusAndFineList$ = of(x.BonusFineSalaryHead.map(y => {
           return {
@@ -190,6 +201,8 @@ export class EmployeeSalaryConfigComponent implements OnInit {
             SalaryDeduction: y.TransactionTypeId === TransactionType.Credit ? y.Amount : 0,
           };
         }));
+      } else {
+        this.bonusAndFineList$ =  of([]);
       }
     });
   }
@@ -224,6 +237,32 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     });
   }
 
+  getEmployeePayroll() {
+    const model = {
+      EmployeeId: this.employeeId,
+      Month: this.selectedMonth.value
+    };
+
+    this.salaryConfigService.getEmployeePayroll(model).subscribe(x => {
+      if (x && x.payroll) {
+
+        this.monthlySalaryBreakdown.NetSalary = x.payroll.NetSalary;
+        this.monthlySalaryBreakdown.GrossSalary = x.payroll.GrossSalary;
+        this.monthlySalaryBreakdown.SalaryPaidAmount = x.payroll.SalaryPaid;
+
+        this.accumulatedList$ = of(x.payroll.AccumulatedPayrollHeadList.map(y => {
+          return {
+            SalaryComponent: y.PayrollHeadName,
+            SalaryAllowance: y.TransactionType === TransactionType.Debit ? y.Amount : 0,
+            SalaryDeduction: y.TransactionType === TransactionType.Credit ? y.Amount : 0,
+          };
+        }));
+      }
+    }, error => {
+      this.toastr.warning(error);
+    });
+  }
+
   approveSalary() {
 
   }
@@ -234,7 +273,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
 }
 
 export interface IMonthlySalaryBreakdown {
-  HourlyRate: number;
+  HourlyRate: any;
   Month: string;
   GrossSalary: number;
   NetSalary: number;

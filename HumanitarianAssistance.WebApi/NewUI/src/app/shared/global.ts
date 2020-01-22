@@ -191,6 +191,8 @@ export class GLOBAL {
   public static API_HR_AddEmployeeBonusFineSalaryHead = 'EmployeePayroll/AddEmployeeBonusFineSalaryHead';
   public static API_HR_GetEmployeeBonusFineSalaryHead = 'EmployeePayroll/GetEmployeeBonusFineSalaryHead';
   public static API_HR_DeleteEmployeeBonusFineSalaryHead = 'EmployeePayroll/DeleteEmployeeBonusFineSalaryHead';
+  public static API_HR_GetEmployeeAccumulatedSalaryHead = 'EmployeePayroll/GetEmployeeAccumulatedSalaryHead';
+  public static API_HR_GetEmployeeMonthlyPayroll = 'EmployeePayroll/GetEmployeeMonthlyPayroll';
 
   public static API_EmployeeDetail_GetEmployeeDetailById = 'EmployeeDetail/GetEmployeeDetailById';
   public static API_HR_GetAllEmployeeAssignLeave = 'Attendance/GetAllEmployeeAssignLeave';

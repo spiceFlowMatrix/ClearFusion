@@ -26,7 +26,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
             {
                 var result = await _dbContext.EmployeeBonusFineSalaryHead
                                        .Where(x => x.IsDeleted == false &&
-                                       x.EmployeeId == request.EmployeeId)
+                                       x.EmployeeId == request.EmployeeId && x.Month == request.Month && x.Year == DateTime.UtcNow.Year)
                                        .Select(x => new
                                        {
                                            Id = x.Id,

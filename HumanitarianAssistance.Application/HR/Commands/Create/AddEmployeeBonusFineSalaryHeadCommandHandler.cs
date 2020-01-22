@@ -38,6 +38,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     CreatedById= request.CreatedById,
                     CreatedDate = request.CreatedDate,
                     Description = request.Description,
+                    Month = request.Month,
+                    Year = DateTime.UtcNow.Year,
                     TransactionTypeId = request.IsBonus ? (int)TransactionType.Debit : (int)TransactionType.Credit
                 };
 
