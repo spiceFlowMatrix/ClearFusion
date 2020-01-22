@@ -276,7 +276,9 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
       DebitAccount: event.DebitAccount,
       CurrencyId: event.CurrencyId,
       EndDate: event.EndDate,
-      StartDate: event.StartDate
+      StartDate: event.StartDate,
+      CreditAccountName: event.CreditAccountName,
+      DebitAccountName: event.DebitAccountName
     };
 
     this.getExchangeGainLossData();
@@ -368,6 +370,8 @@ export class ExchangeGainLossReportComponent implements OnInit, OnDestroy {
 
   subscribeType(event) {
     this.type = '';
+    this.selection.clear();
+    this.getExchangeGainLossData();
   }
 
   clearTransactionFilters() {
@@ -417,6 +421,8 @@ export interface ICalculatorConfig {
   ComparisionDate: any;
   DebitAccount: number;
   CreditAccount: number;
+  CreditAccountName: string;
+  DebitAccountName: string;
 }
 
 export interface IGainLossFilter {

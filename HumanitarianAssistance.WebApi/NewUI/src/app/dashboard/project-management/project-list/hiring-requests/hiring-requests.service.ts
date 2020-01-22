@@ -818,6 +818,26 @@ GetAllBudgetLineList() {
   }
   //#endregion
 
+  //#region "AddInterviewDetails"
+  EditInterviewDetails(data: InterviewDetailModel) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_EditInterviewDetails,
+        data
+      )
+      .pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
   //#region "GetCandidateDetailsByCandidateId"
   GetInterviewDetailsByInterviewId(InterviewId: number) {
     return this.globalService

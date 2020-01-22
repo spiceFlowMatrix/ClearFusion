@@ -23,6 +23,7 @@ export class ConfigurationFilterComponent implements OnInit, OnDestroy {
   defaultFinancialYearDate: IDefaultFinancialYearDate;
   currency$: Observable<IDropDownModel[]>;
   accounts$: Observable<IDropDownModel[]>;
+  accountsList: any[];
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   @Output() configData = new EventEmitter();
 
@@ -66,6 +67,8 @@ export class ConfigurationFilterComponent implements OnInit, OnDestroy {
       'ComparisionDate': [null, Validators.required],
       'DebitAccount': [null, Validators.required],
       'CreditAccount': [null, Validators.required],
+      'DebitAccountName': [null],
+      'CreditAccountName': [null]
     });
   }
 
@@ -107,6 +110,7 @@ export class ConfigurationFilterComponent implements OnInit, OnDestroy {
         name: y.AccountName
       };
     }));
+    this.accountsList = response.data;
   }
 
   saveCalculatorConfigData() {
@@ -146,6 +150,8 @@ export class ConfigurationFilterComponent implements OnInit, OnDestroy {
           'ComparisionDate': x.CalculatorConfiguration.ComparisionDate,
           'DebitAccount': x.CalculatorConfiguration.DebitAccount,
           'CreditAccount': x.CalculatorConfiguration.CreditAccount,
+          'CreditAccountName': x.CalculatorConfiguration.CreditAccountName,
+          'DebitAccountName': x.CalculatorConfiguration.DebitAccountName,
         });
 
         this.configDataEmit();
@@ -194,6 +200,20 @@ export class ConfigurationFilterComponent implements OnInit, OnDestroy {
         startDate: StaticUtilities.getLocalDate(response.AccountingPeriod.StartDate),
         endDate: StaticUtilities.getLocalDate(response.AccountingPeriod.EndDate)
       };
+    }
+  }
+
+  getCreditAccountSelectedValue(value) {
+    const index =  this.accountsList.findIndex(x => x.AccountCode === value);
+    if (index !== -1) {
+      this.gainLossConfigForm.controls['CreditAccountName'].patchValue(this.accountsList[index].AccountName);
+    }
+  }
+
+  getDebitAccountSelectedValue(value) {
+    const index =  this.accountsList.findIndex(x => x.AccountCode === value);
+    if (index !== -1) {
+      this.gainLossConfigForm.controls['DebitAccountName'].patchValue(this.accountsList[index].AccountName);
     }
   }
 

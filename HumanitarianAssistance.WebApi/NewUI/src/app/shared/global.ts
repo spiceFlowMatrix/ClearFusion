@@ -540,6 +540,9 @@ export class GLOBAL {
      'HiringRequest/GetHiringRequestCode';
      public static API_HiringRequest_GetCandidateDetailByCandidateId =
      'HiringRequest/GetCandidateAllDetailByCandidateId';
+     public static API_HiringRequest_EditInterviewDetails =
+     'HiringRequest/EditCandidateInterviewDetail';
+
 
 
   public static API_EmployeeDetail_AddEmployeeSalaryAnalyticalInfo = 'EmployeeDetail/AddEmployeeSalaryAnalyticalInfo';
