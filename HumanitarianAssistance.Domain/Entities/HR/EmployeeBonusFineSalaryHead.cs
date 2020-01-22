@@ -13,6 +13,8 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public string Description { get; set; }
         public double Amount { get; set; }
         public int TransactionTypeId { get; set; }
+        public int Month {get; set;}
+        public int Year {get; set;}
         public int EmployeeId { get; set; }
         [ForeignKey("EmployeeId")]
         public EmployeeDetail EmployeeDetail { get; set; }
