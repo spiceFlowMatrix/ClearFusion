@@ -134,8 +134,9 @@
                 <input id="fileInput" style="display:none" hidden type="file" (change)="fileChange($event.target.files)" name="file">
             </span><br />
                         <div class="col-sm-12">
-                            <h5 *ngIf="this.attachmentCV.length === 0"><i class="fa fa-exclamation-triangle fa-1" style="color: red;"></i> CV File required. Please Attach.</h5>
+                            <h5 *ngIf="this.attachmentCV.length === 0 && this.candidateId == 0"><i class="fa fa-exclamation-triangle fa-1" style="color: red;"></i> CV File required. Please Attach.</h5>
                             <h5 *ngFor="let uploadedItem of this.attachmentCV">{{uploadedItem[0].name}}</h5>
+                            <h5 *ngIf="this.candidateId > 0 &&  this.attachmentCV.length === 0">{{cvName}}</h5>
                             <div class="row">
                                 <div class="col-lg-6 col-sm-6">
                                     <mat-form-field class="example-full-width">

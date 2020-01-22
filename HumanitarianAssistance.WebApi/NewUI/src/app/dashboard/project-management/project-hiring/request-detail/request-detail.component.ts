@@ -72,6 +72,7 @@ export class RequestDetailComponent implements OnInit {
     'Employee Status'
   ]);
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  candidateId: number;
   existingEmployeesList: any[] = [];
   newCandidatesList$: Observable<ICandidateDetailList[]>;
   newCandidatesList2$: Observable<ICandidateDetailList[]>;
@@ -150,7 +151,7 @@ export class RequestDetailComponent implements OnInit {
         button: { status: true, text: '' },
         delete: false,
         download: false,
-        edit: false
+        edit: true
       },
       subitems: {
         button: { status: false, text: '' },
@@ -459,7 +460,8 @@ export class RequestDetailComponent implements OnInit {
         autoFocus: false,
         data: {
           hiringRequestId: this.hiringRequestDetails.HiringRequestId,
-          projectId: this.projectId
+          projectId: this.projectId,
+          candidateId: this.candidateId
         }
       });
       // refresh the list after new request created
@@ -476,6 +478,11 @@ export class RequestDetailComponent implements OnInit {
   // #region Changes Status of New candidate
   newCandActionEvents(data: any) {
     switch (data.type) {
+      case 'edit':
+        this.candidateId = data.item.CandidateId;
+        this.addNewCandidate();
+        this.candidateId = 0;
+        break;
       case 'Candidate Cv':
         this.getCandidateCvByCandidateId(data);
         break;
@@ -875,7 +882,8 @@ export class RequestDetailComponent implements OnInit {
     dialogRef.componentInstance.onAddAnalyticalInfoRefresh.subscribe(() => {
       this.selectEmployee(CandidateData);
     });
-    dialogRef.afterClosed().subscribe(() => {''
+    dialogRef.afterClosed().subscribe(() => {
+      '';
     });
   }
   //#endregion
