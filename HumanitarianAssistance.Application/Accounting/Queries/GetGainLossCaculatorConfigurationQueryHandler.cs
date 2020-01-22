@@ -26,15 +26,19 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
             try
             {
                 var data = await _dbContext.GainLossCalculatorConfiguration
+                                            .Include(x => x.DebitAccount)
+                                            .Include(x => x.CreditAccount)
                                                                         .Where(x => x.IsDeleted == false && x.UserId == request.UserId)
                                                                         .Select(x => new
                                                                         {
                                                                             CurrencyId = x.CurrencyId,
-                                                                            ComparisionDate= x.ComparisionDate,
-                                                                            StartDate= x.StartDate,
-                                                                            EndDate= x.EndDate,
-                                                                            DebitAccount= x.DebitAccountId,
-                                                                            CreditAccount= x.CreditAccountId
+                                                                            ComparisionDate = x.ComparisionDate,
+                                                                            StartDate = x.StartDate,
+                                                                            EndDate = x.EndDate,
+                                                                            DebitAccount = x.DebitAccountId,
+                                                                            CreditAccount = x.CreditAccountId,
+                                                                            DebitAccountName= x.DebitAccount != null? (x.DebitAccount.ChartOfAccountNewCode +"-"+x.DebitAccount.AccountName) : "",
+                                                                            CreditAccountName= x.CreditAccount != null? (x.CreditAccount.ChartOfAccountNewCode +"-"+x.CreditAccount.AccountName) : ""
                                                                         })
                                                                         .FirstOrDefaultAsync();
                 response.Add("CalculatorConfiguration", data);
