@@ -686,11 +686,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpPost]
         public async Task<IActionResult> AddOpeningPensionDetail([FromBody] AddOpeningPensionDetailCommand model)
         {
-           var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            model.CreatedById = userId;
-            model.CreatedDate = DateTime.UtcNow;
-            var result = await Task.FromResult(_mediator.Send(model));
-            return  Ok(await result);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var result = await _mediator.Send(new AddOpeningPensionDetailCommand
+            {
+                CreatedById = userId,
+                CreatedDate = DateTime.UtcNow
+            });
+            return Ok(result);
         }
     }
 }
