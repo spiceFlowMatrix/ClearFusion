@@ -4,7 +4,7 @@ using MediatR;
 
 namespace HumanitarianAssistance.Application.Project.Queries
 {
-    public class GetCandidateAllDetailByCandidateIdQuery : IRequest<CandidateDetailsModel>
+    public class GetCandidateAllDetailByCandidateIdQuery : IRequest<ApiResponse>
     {
         public int CandidateId { get; set; }
     }

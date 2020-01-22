@@ -64,6 +64,7 @@ export interface OfficeDetailModel {
 }
 
 export interface ICandidateDetailModel {
+  CandidateId?: number;
   FirstName?: string;
   LastName?: string;
   Email?: string;
@@ -83,6 +84,7 @@ export interface ICandidateDetailModel {
   RelevantExperienceInYear?: number;
   IrrelevantExperienceInYear?: number;
   Remarks?: string;
+  IsCvUpdated?: boolean;
 }
 
 export interface IHiringRequestModel {

@@ -221,19 +221,18 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
             return await _mediator.Send(model);
         }  
         [HttpPost]
-        public async Task<IActionResult> GetCandidateAllDetailByCandidateId([FromBody]int CandidateId)
+        public async Task<ApiResponse> GetCandidateAllDetailByCandidateId([FromBody]int CandidateId)
         {
-            var result = await Task.FromResult(_mediator.Send(new GetCandidateAllDetailByCandidateIdQuery{ CandidateId=CandidateId}));
+            return await _mediator.Send(new GetCandidateAllDetailByCandidateIdQuery{ CandidateId=CandidateId});         
+        }  
 
-            if (result.Exception == null)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return BadRequest(result.Exception.InnerException.Message);
-            }           
-        }   
-             
+        [HttpPost]
+        public async Task<ApiResponse> EditCandidateDetails([FromBody]EditCandidateDetailsCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.ModifiedById = userId;
+            command.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(command);
+        }  
     }  
 }

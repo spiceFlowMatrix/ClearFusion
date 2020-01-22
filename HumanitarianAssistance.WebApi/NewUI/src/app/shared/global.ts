@@ -522,6 +522,8 @@ export class GLOBAL {
     'HiringRequest/GetAllExistingCandidateList';
     public static API_HiringRequest_DownloadCandidateCvByRequestId =
     'HiringRequest/DownloadCandidateCvByRequestId';
+    public static API_HiringRequest_EditCandidateDetails =
+    'HiringRequest/EditCandidateDetails';
 
     // interview pages
     public static API_Code_GetRatingBasedCriteriaQuestions = 'Code/GetAllRatingBasedCriteriaQuestionsByOfficeId';
@@ -537,7 +539,7 @@ export class GLOBAL {
      public static API_HiringRequest_GetHiringRequestCode =
      'HiringRequest/GetHiringRequestCode';
      public static API_HiringRequest_GetCandidateDetailByCandidateId =
-     'HiringRequest/GetCandidateDetailByCandidateId';
+     'HiringRequest/GetCandidateAllDetailByCandidateId';
 
 
   public static API_EmployeeDetail_AddEmployeeSalaryAnalyticalInfo = 'EmployeeDetail/AddEmployeeSalaryAnalyticalInfo';

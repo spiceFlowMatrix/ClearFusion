@@ -240,7 +240,14 @@ GetAllBudgetLineList() {
     );
   }
   //#endregion
-
+  //#region "EditCandidateDetails"
+  EditCandidateDetails(data: ICandidateDetailModel) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_EditCandidateDetails,
+      data
+    );
+  }
+  //#endregion
   //#region "AddExistingCandidateDetail"
   AddExistingCandidateDetail(data: any) {
     return this.globalService
@@ -990,7 +997,7 @@ GetAllBudgetLineList() {
     .pipe(
       map(x => {
         const responseData: IResponseData = {
-          data: x.data.InterviewDetails,
+          data: x.ResponseData,
           statusCode: x.StatusCode,
           message: x.Message
         };

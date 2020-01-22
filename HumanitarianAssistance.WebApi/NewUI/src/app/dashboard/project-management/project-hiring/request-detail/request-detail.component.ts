@@ -481,6 +481,7 @@ export class RequestDetailComponent implements OnInit {
       case 'edit':
         this.candidateId = data.item.CandidateId;
         this.addNewCandidate();
+        this.candidateId = 0;
         break;
       case 'Candidate Cv':
         this.getCandidateCvByCandidateId(data);
