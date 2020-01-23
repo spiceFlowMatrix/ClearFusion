@@ -180,6 +180,17 @@ export class GLOBAL {
   public static API_Department_AddDepartment = 'Code/AddDepartment';
   public static API_Department_EditDepartment = 'Code/EditDepartment';
   public static API_Department_DeleteDepartment = 'Code/DeleteDepartment';
+  public static API_Code_GetCurrentFinancialYear = 'Code/GetCurrentFinancialYear';
+  public static API_Code_LeaveReasonType = 'Code/GetAllLeaveReasonList';
+  public static API_HR_AssignLeaveToEmployeeDetail = 'Attendance/AssignLeaveToEmployeeDetail';
+  public static API_HR_GetEmployeeApplyLeaveDetailById = 'Attendance/GetEmployeeApplyLeaveDetailById';
+  public static API_HR_GetEmployeeAppliedLeaves = 'Attendance/GetEmployeeAppliedLeaves';
+  public static API_HR_ApproveRejectLeave = 'Attendance/ApproveRejectLeave';
+
+  public static API_EmployeeDetail_GetEmployeeDetailById = 'EmployeeDetail/GetEmployeeDetailById';
+  public static API_HR_GetAllEmployeeAssignLeave = 'Attendance/GetAllEmployeeAssignLeave';
+  public static API_HR_AddEmployeeApplyLeaveDetail = 'Attendance/AddEmployeeApplyLeaveDetail';
+  public static API_HR_AddEmployeeLeave = 'Attendance/AddEmployeeLeave';
 
   public static API_Code_AddAttendanceGroups = 'Code/AddAttendanceGroups';
   public static API_Code_EditAttendanceGroups = 'Code/EditAttendanceGroups';
@@ -525,6 +536,8 @@ export class GLOBAL {
      'HiringRequest/GetInterviewDetailsByInterviewId';
      public static API_HiringRequest_GetHiringRequestCode =
      'HiringRequest/GetHiringRequestCode';
+     public static API_HiringRequest_EditInterviewDetails =
+     'HiringRequest/EditCandidateInterviewDetail';
 
 
 
@@ -550,6 +563,9 @@ export class GLOBAL {
   public static API_HiringRequest_DeleteCandidatDetail = 'HiringRequest/DeleteCandidatDetail';
   public static API_Chat_AddMessage = 'Chat/AddMessage';
   public static API_Code_GetDepartmentsByOfficeId = 'Code/GetDepartmentsByOfficeId';
+
+  public static API_EmployeeDetail_GetAllEmployeeDetailList = 'EmployeeDetail/GetAllEmployeeDetailList';
+  public static API_EmployeeDetail_DeleteMurtipleEmployeesById = 'EmployeeDetail/DeleteMurtipleEmployeesById';
 
   // pdf
   public static API_Pdf_GetAllChartOfAccountHierarchyPdf = 'Pdf/GetAllChartOfAccountHierarchyPdf';
@@ -645,6 +661,42 @@ export class GLOBAL {
   public static API_Store_AddInventoryItems = 'Store/AddInventoryItems';
   public static API_Store_EditInventoryItems = 'Store/EditInventoryItems';
   public static API_Store_DeleteInventoryItems = 'Store/DeleteInventoryItems';
+
+  public static API_Code_GetAllFinancialYearDetail = 'Code/GetAllFinancialYearDetail';
+// Hr Hisotry
+  public static API_EmployeeHR_GetLanguageList = 'Code/GetAllLanguages';
+
+  public static API_Hr_GetAllEmployeeHistoryByEmployeeId = 'EmployeeDetail/GetAllEmployeeHistoryByEmployeeId';
+  public static API_EmployeeDetail_GetAllEmployeeEducations = 'EmployeeDetail/GetAllEmployeeEducations';
+  public static API_EmployeeDetail_GetAllEmployeeHistoryOutsideCountry = 'EmployeeDetail/GetAllEmployeeHistoryOutsideCountry';
+  public static API_EmployeeDetail_GetAllEmployeeRelativeInformation = 'EmployeeDetail/GetAllEmployeeRelativeInformation';
+  public static API_EmployeeDetail_GetAllEmployeeInfoReferences = 'EmployeeDetail/GetAllEmployeeInfoReferences';
+  public static API_EmployeeDetail_GetAllEmployeeOtherSkills = 'EmployeeDetail/GetAllEmployeeOtherSkills';
+  public static API_EmployeeDetail_GetAllEmployeeSalaryBudgets = 'EmployeeDetail/GetAllEmployeeSalaryBudgets';
+  public static API_EmployeeDetail_GetAllEmployeeLanguages = 'EmployeeDetail/GetAllEmployeeLanguages';
+
+  public static API_Hr_AddEmployeeHistoryDetail = 'EmployeeDetail/AddEmployeeHistoryDetail';
+  public static API_Hr_AddEmployeeEducations = 'EmployeeDetail/AddEmployeeEducations';
+  public static API_Hr_AddEmployeeHistoryOutsideCountry = 'EmployeeDetail/AddEmployeeHistoryOutsideCountry';
+  public static API_Hr_AddEmployeeRelativeInformation = 'EmployeeDetail/AddEmployeeRelativeInformation';
+  public static API_Hr_AddEmployeeInfoReferences = 'EmployeeDetail/AddEmployeeInfoReferences';
+  public static API_Hr_AddEmployeeOtherSkills = 'EmployeeDetail/AddEmployeeOtherSkills';
+  public static API_Hr_AddEmployeeSalaryBudgets = 'EmployeeDetail/AddEmployeeSalaryBudgets';
+  public static API_Hr_AddEmployeeLanguages = 'EmployeeDetail/AddEmployeeLanguages';
+
+  public static API_Hr__DeleteEmployeeHistoryDetail = 'EmployeeDetail/DeleteEmployeeHistoryDetail';
+  public static API_Hr__DeleteEmployeeEducations = 'EmployeeDetail/DeleteEmployeeEducations';
+  public static API_Hr__DeleteEmployeeHistoryOutsideCountry = 'EmployeeDetail/DeleteEmployeeHistoryOutsideCountry';
+  public static API_Hr__DeleteEmployeeRelativeInformation = 'EmployeeDetail/DeleteEmployeeRelativeInformation';
+  public static API_Hr__DeleteEmployeeInfoReferences = 'EmployeeDetail/DeleteEmployeeInfoReferences';
+  public static API_Hr__DeleteEmployeeOtherSkills = 'EmployeeDetail/DeleteEmployeeOtherSkills';
+  public static API_Hr__DeleteEmployeeSalaryBudgets = 'EmployeeDetail/DeleteEmployeeSalaryBudgets';
+  public static API_Hr__RemoveEmployeeLanguages = 'EmployeeDetail/RemoveEmployeeLanguages';
+
+  //#region Hr Attendance
+  public static API_Attendance_GetFilteredAttendanceDetails = 'Attendance/GetFilteredAttendanceDetails';
+
+  //#endregion
 }
 
 

@@ -52,7 +52,6 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                         applyleavelist.Add(obj);
                     }
                     await _dbContext.EmployeeApplyLeave.AddRangeAsync(applyleavelist);
-
                     await _dbContext.SaveChangesAsync();
 
                     if (existrecord != null)

@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ToastrService } from 'ngx-toastr';
 import { LogisticService } from '../logistic.service';
@@ -27,12 +27,13 @@ export class SubmitTenderBidComponent implements OnInit {
   ngOnInit() {
     this.tenderBidForm = this.fb.group({
       Name: ['', Validators.required],
-      Email: ['', [Validators.required, Validators.email]],
+      Email: ['', [Validators.required, Validators.email, this.emailValidator(this.data)]],
       PhoneNumber: ['', [
         Validators.required,
         Validators.pattern(/^-?(0|[1-9]\d*)?$/),
         Validators.minLength(10),
-        Validators.maxLength(14)
+        Validators.maxLength(14),
+        this.phoneValidator(this.data)
         ]],
       Address: [''],
       Owner: ['', Validators.required],
@@ -161,5 +162,31 @@ export class SubmitTenderBidComponent implements OnInit {
       });
     }
 
+  }
+
+  emailValidator(data): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (data.BidDetail === undefined && data.ExistingBids !== undefined && data.ExistingBids.some(x => x.Email === control.value)) {
+        return { 'emailError': true };
+      }
+      if (data.BidDetail !== undefined && data.ExistingBids !== undefined &&
+        data.ExistingBids.some(x => x.Email === control.value && x.BidId !== data.BidDetail.BidId)) {
+        return { 'emailError': true };
+      }
+      return null;
+    };
+  }
+
+  phoneValidator(data): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (data.BidDetail === undefined && data.ExistingBids !== undefined && data.ExistingBids.some(x => x.PhoneNumber === control.value)) {
+        return { 'phoneError': true };
+      }
+      if (data.BidDetail !== undefined && data.ExistingBids !== undefined &&
+        data.ExistingBids.some(x => x.PhoneNumber === control.value && x.BidId !== data.BidDetail.BidId)) {
+        return { 'phoneError': true };
+      }
+      return null;
+    };
   }
 }

@@ -137,7 +137,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpGet]
         public async Task<ApiResponse> GetEmployeeSalaryDetailsByEmployeeId(int employeeid)
         {
-           return await _mediator.Send(new GetSalaryByEmployeeIdQuery { EmployeeId= employeeid});
+            return await _mediator.Send(new GetSalaryByEmployeeIdQuery { EmployeeId = employeeid });
         }
 
         [HttpPost]
@@ -153,7 +153,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpPost]
         public async Task<ApiResponse> ApproveAdvances([FromBody]ApproveAdvanceCommand model)
         {
-           var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             model.ModifiedById = userId;
             model.ModifiedDate = DateTime.UtcNow;
 
@@ -165,10 +165,11 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            return await _mediator.Send(new GetAdvancesByOfficeIdQuery {
-                Month= month,
-                Year= year,
-                OfficeId= OfficeId
+            return await _mediator.Send(new GetAdvancesByOfficeIdQuery
+            {
+                Month = month,
+                Year = year,
+                OfficeId = OfficeId
             });
         }
 
@@ -176,8 +177,8 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         public async Task<ApiResponse> EditAdvances([FromBody] EditAdvanceCommand model)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            model.ModifiedById= userId;
-            model.ModifiedDate= DateTime.UtcNow;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
 
             return await _mediator.Send(model);
         }
@@ -186,8 +187,8 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         public async Task<ApiResponse> AddAdvances([FromBody]AddAdvanceCommand model)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            model.CreatedById= userId;
-            model.CreatedDate= DateTime.UtcNow;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
 
             return await _mediator.Send(model);
         }
@@ -205,6 +206,12 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             model.ModifiedById = userId;
             model.ModifiedDate = DateTime.UtcNow;
             return await _mediator.Send(model);
+        }
+
+        [HttpGet]
+        public async Task<ApiResponse> GetEmployeeOpeningPensionDetail(int employeeId)
+        {
+            return await _mediator.Send(new GetEmployeePensionDetailQuery { EmployeeId = employeeId });
         }
     }
 }

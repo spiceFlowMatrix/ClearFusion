@@ -9,9 +9,15 @@
         </mat-form-field>
         <mat-form-field class="example-full-width">
           <input matInput type="email" formControlName="Email" placeholder="Email">
+          <mat-error *ngIf="tenderBidForm.get('Email').hasError('emailError')">
+            Bid already exist with this Email!
+          </mat-error>
         </mat-form-field>
         <mat-form-field class="example-full-width">
           <input matInput type="text" formControlName="PhoneNumber" placeholder="Phone Number">
+          <mat-error *ngIf="tenderBidForm.get('PhoneNumber').hasError('phoneError')">
+            Bid already exist with this Phone Number!
+          </mat-error>
         </mat-form-field>
         <mat-form-field class="example-full-width">
           <input matInput type="text" formControlName="Address" placeholder="Address">

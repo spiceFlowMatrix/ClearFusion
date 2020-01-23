@@ -1,0 +1,55 @@
+<mat-card [ngStyle]="scrollStyles">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="col-sm-3">
+        <h4>
+          Daily Attendance
+        </h4>
+      </div>
+      <div class="col-md-3">
+        <mat-form-field>
+          <input matInput [matDatepicker]="picker" [max]="maxDate" [(ngModel)]="Month" placeholder="Date">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker (monthSelected)="monthSelected($event)" startView="multi-year"></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="responsive_table-responsive">
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <td></td>
+              <td>Date</td>
+              <td>In Time</td>
+              <td>Out Time</td>
+              <td>Attended</td>
+              <td width="1%"></td>
+            </tr>
+
+            <tr *ngFor= 'let item of attendanceList' >
+              <td></td>
+              <td>
+                {{item.Date}}
+              </td>
+              <td> {{item.InTime}}</td>
+              <td> {{item.OutTime}}</td>
+              <td>{{item.Attended}}</td>
+              <td width="1%"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <mat-paginator
+                    [length]="attendanceForm.TotalCount"
+                    [pageSize]="attendanceForm.PageSize"
+                    [pageIndex]="attendanceForm.PageIndex"
+                    [pageSizeOptions]="[5, 10, 25, 100]"
+                    (page)="pageEvent($event)"
+                  >
+      </mat-paginator>
+    </div>
+  </div>
+</mat-card>

@@ -59,12 +59,14 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 var attendancelist = queryResult.Select(x => new DisplayEmployeeAttendanceModel
                 {
                     attendanceId = x.AttendanceId,
-
                     employeeID = x.EmployeeId,
                     OverTimeHours = x.HoverTimeHours,
                     text = x.AttendanceTypeId == (int)AttendanceType.P ? "P" : x.AttendanceTypeId == (int)AttendanceType.A ? "A" : x.AttendanceTypeId == (int)AttendanceType.L ? "L" : "",
                     startDate = x.AttendanceTypeId == (int)AttendanceType.P ? x.InTime?.ToString() : x.InTime.Value.ToString("MM/dd/yyyy h:mm tt"),
-                    endDate = x.AttendanceTypeId == (int)AttendanceType.P ? x.OutTime.ToString() : x.OutTime?.ToString("MM/dd/yyyy h:mm tt")
+                    endDate = x.AttendanceTypeId == (int)AttendanceType.P ? x.OutTime.ToString() : x.OutTime?.ToString("MM/dd/yyyy h:mm tt"),
+                    Date =  x.Date.Date,
+                    InTime = x.AttendanceTypeId == (int)AttendanceType.P ? x.InTime?.ToString() : x.InTime.Value.ToString("h:mm tt"),
+                    OutTime = x.AttendanceTypeId == (int)AttendanceType.P ? x.OutTime.ToString() : x.OutTime?.ToString("h:mm tt")
                 }).ToList();
 
                 response.data.DisEmployeeAttendanceList = attendancelist;
