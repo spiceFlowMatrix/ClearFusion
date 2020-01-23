@@ -21,6 +21,7 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
   gainList: any[] = [];
   lossList: any[] = [];
   totals: number;
+  tabIndex = 0;
   accountIds: number[] = [];
   @Input() calculatorConfigData: any;
   transactionList$: Observable<any[]>;
@@ -28,6 +29,10 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
   journalList$: Observable<IDropDownModel[]>;
   voucherTypeList$: Observable<IDropDownModel[]>;
   officeList$: Observable<IDropDownModel[]>;
+  hideColums = of({
+    headers: ['Account', 'Credit Amount', 'Debit Amount', 'Description'],
+    items: ['Account', 'CreditAmount', 'DebitAmount', 'Description']
+  });
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   transactionHeaders$ = of(['Account', 'Credit Amount', 'Debit Amount', 'Description']);
@@ -41,15 +46,6 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
     this.selectedData.forEach(x => {
       this.accountIds.push(x.AccountId);
     });
-
-    this.transactionList$ = of(this.gainList.map(x => {
-      return {
-        Account: x.AccountCode + '-' + x.AccountName,
-        CreditAmount: x.ResultingGainLoss,
-        DebitAmount: 0,
-        Description: 'Gain'
-      };
-    }));
   }
 
   ngOnInit() {
@@ -78,31 +74,10 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
   }
 
   tabChanged(value) {
+    this.tabIndex = value.index;
     if (value.index === 0) {
-
-      this.transactionHeaders$ = of(['Account', 'Credit Amount', 'Debit Amount', 'Description']);
-      this.transactionList$ = of(this.gainList.map(x => {
-        return {
-          Account: x.AccountCode + '-' + x.AccountName,
-          CreditAmount: x.ResultingGainLoss,
-          DebitAmount: 0,
-          Description: 'Gain'
-        };
-      }));
-
       this.getTotalGain();
-    }
-    if (value.index === 1) {
-      this.transactionHeaders$ = of(['Account', 'Credit Amount', 'Debit Amount', 'Description']);
-      this.transactionList$ = of(this.lossList.map(x => {
-        return {
-          Account: x.AccountCode + '-' + x.AccountName,
-          CreditAmount: 0,
-          DebitAmount: x.ResultingGainLoss,
-          Description: 'Loss'
-        };
-      }));
-
+    } else if (value.index === 1) {
       this.getTotalLoss();
     }
   }
@@ -177,19 +152,20 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
     }
 
     this.commonLoader.showLoader();
+    let transactionlist: any[] = [];
+    this.transactionList$.subscribe(x => transactionlist = x);
+
+    transactionlist.splice((transactionlist.length - 1), 1);
 
     const model = {
       CurrencyId: this.calculatorConfigData.CurrencyId,
       JournalId: this.voucherDataForm.value.JournalId,
-      CreditAccount: this.calculatorConfigData.CreditAccount,
-      DebitAccount: this.calculatorConfigData.DebitAccount,
-      Amount: this.totals,
       VoucherType: this.voucherDataForm.value.VoucherType,
       OfficeId: this.voucherDataForm.value.OfficeId,
       TimeZoneOffset: new Date().getTimezoneOffset(),
       Description: this.voucherDataForm.value.Description,
       VoucherDate: StaticUtilities.setLocalDate(new Date()),
-      AccountIds: this.accountIds,
+      TransactionList: transactionlist,
       StartDate: this.calculatorConfigData.StartDate,
       EndDate: this.calculatorConfigData.EndDate
     };
@@ -216,10 +192,44 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
   }
 
   getTotalGain() {
+    this.gainList = [];
+    this.gainList = this.selectedData.filter(x => x.GainLossStatus === 1);
     this.totals = this.gainList.reduce(
       (a, { ResultingGainLoss }) => a + ResultingGainLoss,
       0
     );
+
+    if (this.gainList.length > 0) {
+      this.gainList.push({
+        AccountId: this.calculatorConfigData.CreditAccount,
+        AccountCode: '',
+        AccountName: this.calculatorConfigData.CreditAccountName,
+        BalanceOnOriginalTransactionDates: 0,
+        BalanceOnComparisionDate: 0,
+        ResultingGainLoss: this.totals,
+        GainLossStatus: 0
+      });
+
+      this.gainList.push({
+        AccountId: 0,
+        AccountCode: '0',
+        AccountName: '<b>Totals</b>',
+        BalanceOnOriginalTransactionDates: this.totals,
+        BalanceOnComparisionDate: this.totals,
+        ResultingGainLoss: this.totals,
+        GainLossStatus: 0
+      });
+    }
+
+    this.transactionList$ = of(this.gainList.map(x => {
+      return {
+        AccountId: x.AccountId,
+        Account: x.GainLossStatus !== 0 ? (x.AccountCode + '-' + x.AccountName) : x.AccountName,
+        CreditAmount: (x.GainLossStatus === 0 || x.AccountId === 0) ? x.ResultingGainLoss : 0,
+        DebitAmount: (x.GainLossStatus !== 0 || x.AccountId === 0) ? x.ResultingGainLoss : 0,
+        Description: x.AccountId === 0 ? '' : 'Gain'
+      };
+    }));
   }
 
   getTotalLoss() {
@@ -227,5 +237,43 @@ export class ConsolidateGainLossComponent implements OnInit, OnChanges {
       (a, { ResultingGainLoss }) => a + ResultingGainLoss,
       0
     );
+
+    this.lossList = [];
+    this.lossList = this.selectedData.filter(x => x.GainLossStatus === -1);
+    this.totals = this.lossList.reduce(
+      (a, { ResultingGainLoss }) => a + ResultingGainLoss,
+      0
+    );
+
+    if (this.lossList.length > 0) {
+      this.lossList.push({
+        AccountId: this.calculatorConfigData.DebitAccount,
+        AccountCode: '',
+        AccountName: this.calculatorConfigData.DebitAccountName,
+        BalanceOnOriginalTransactionDates: 0,
+        BalanceOnComparisionDate: 0,
+        ResultingGainLoss: this.totals,
+        GainLossStatus: 0
+      });
+      this.lossList.push({
+        AccountId: 0,
+        AccountCode: '0',
+        AccountName: '<b>Totals</b>',
+        BalanceOnOriginalTransactionDates: this.totals,
+        BalanceOnComparisionDate: this.totals,
+        ResultingGainLoss: this.totals,
+        GainLossStatus: 0
+      });
+    }
+
+    this.transactionList$ = of(this.lossList.map(x => {
+      return {
+        AccountId: x.AccountId,
+        Account: x.GainLossStatus !== 0 ? (x.AccountCode + '-' + x.AccountName) : x.AccountName,
+        CreditAmount: (x.GainLossStatus !== 0 || x.AccountId === 0) ? x.ResultingGainLoss : 0,
+        DebitAmount: (x.GainLossStatus === 0 || x.AccountId === 0) ? x.ResultingGainLoss : 0,
+        Description: x.AccountId === 0 ? '' : 'Loss'
+      };
+    }));
   }
 }

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using HumanitarianAssistance.Application.Infrastructure;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities;
@@ -14,49 +15,51 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace HumanitarianAssistance.Application.Project.Commands.Create {
-
-    public class AddInterviewDetailsCommandHandler : IRequestHandler<AddInterviewDetailsCommand, ApiResponse> {
+namespace HumanitarianAssistance.Application.Project.Commands.Update {
+    public class EditCandidateInterviewDetailCommandHandler : IRequestHandler<EditCandidateInterviewDetailCommand, ApiResponse> {
         private HumanitarianAssistanceDbContext _dbContext;
-        public AddInterviewDetailsCommandHandler (HumanitarianAssistanceDbContext dbContext) {
+        private IMapper _mapper;
+        public EditCandidateInterviewDetailCommandHandler (HumanitarianAssistanceDbContext dbContext, IMapper mapper) {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
-        public async Task<ApiResponse> Handle (AddInterviewDetailsCommand request, CancellationToken cancellationToken) {
+        public async Task<ApiResponse> Handle (EditCandidateInterviewDetailCommand request, CancellationToken cancellationToken) {
             ApiResponse response = new ApiResponse ();
             using (IDbContextTransaction tran = _dbContext.Database.BeginTransaction ()) {
                 try {
-                ProjectInterviewDetails interviewDetails = new ProjectInterviewDetails () {
-                Description = request.Description,
-                NoticePeriod = request.NoticePeriod,
-                AvailableDate = request.AvailableDate,
-                WrittenTestMarks = (int) request.WrittenTestMarks,
-                CurrentBase = request.CurrentBase,
-                CurrentOther = request.CurrentOther,
-                ExpectationBase = request.ExpectationBase,
-                ExpectationOther = request.ExpectationOther,
-                Status = request.Status,
-                InterviewQuestionOne = request.InterviewQuestionOne,
-                InterviewQuestionTwo = request.InterviewQuestionTwo,
-                InterviewQuestionThree = request.InterviewQuestionThree,
-                CurrentTransport = request.CurrentTransport,
-                CurrentMeal = request.CurrentMeal,
-                ExpectationTransport = request.ExpectationTransport,
-                ExpectationMeal = request.ExpectationMeal,
-                ProfessionalCriteriaMarks = request.ProfessionalCriteriaMark,
-                MarksObtained = request.MarksObtain,
-                TotalMarksObtain = request.TotalMarksObtain,
-                CreatedById = request.CreatedById,
-                CreatedDate = request.CreatedDate,
-                IsDeleted = false
-                    };
-                    await _dbContext.ProjectInterviewDetails.AddAsync (interviewDetails);
+                    var interviewDetails = await _dbContext.ProjectInterviewDetails.Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false).FirstOrDefaultAsync ();
+                    interviewDetails.Description = request.Description;
+                    interviewDetails.NoticePeriod = request.NoticePeriod;
+                    interviewDetails.AvailableDate = request.AvailableDate;
+                    interviewDetails.WrittenTestMarks = (int) request.WrittenTestMarks;
+                    interviewDetails.CurrentBase = request.CurrentBase;
+                    interviewDetails.CurrentOther = request.CurrentOther;
+                    interviewDetails.ExpectationBase = request.ExpectationBase;
+                    interviewDetails.ExpectationOther = request.ExpectationOther;
+                    interviewDetails.Status = request.Status;
+                    interviewDetails.InterviewQuestionOne = request.InterviewQuestionOne;
+                    interviewDetails.InterviewQuestionTwo = request.InterviewQuestionTwo;
+                    interviewDetails.InterviewQuestionThree = request.InterviewQuestionThree;
+                    interviewDetails.CurrentTransport = request.CurrentTransport;
+                    interviewDetails.CurrentMeal = request.CurrentMeal;
+                    interviewDetails.ExpectationTransport = request.ExpectationTransport;
+                    interviewDetails.ExpectationMeal = request.ExpectationMeal;
+                    interviewDetails.ProfessionalCriteriaMarks = request.ProfessionalCriteriaMark;
+                    interviewDetails.MarksObtained = request.MarksObtain;
+                    interviewDetails.TotalMarksObtain = request.TotalMarksObtain;
+                    interviewDetails.ModifiedById = request.ModifiedById;
+                    interviewDetails.ModifiedDate = request.ModifiedDate;
+                    await _dbContext.SaveChangesAsync ();
+
+                    var RatingData = _dbContext.RatingBasedCriteria.Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false).ToList ();
+                    _dbContext.RatingBasedCriteria.RemoveRange (RatingData);
                     await _dbContext.SaveChangesAsync ();
                     List<RatingBasedCriteria> ratingObj = new List<RatingBasedCriteria> ();
                     foreach (var item in request.RatingBasedCriteriaList) {
                         RatingBasedCriteria question = new RatingBasedCriteria () {
                             InterviewId = interviewDetails.InterviewId,
                             QuestionId = item.QuestionId,
-                            Score = item.Score,
+                            Score = item.Selected,
                             CreatedById = request.CreatedById,
                             CreatedDate = request.CreatedDate,
                             IsDeleted = false
@@ -67,12 +70,15 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                     await _dbContext.RatingBasedCriteria.AddRangeAsync (ratingObj);
                     await _dbContext.SaveChangesAsync ();
 
+                    var InterviewTechnicalData = _dbContext.InterviewTechnicalQuestion.Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false).ToList ();
+                    _dbContext.InterviewTechnicalQuestion.RemoveRange (InterviewTechnicalData);
+                    await _dbContext.SaveChangesAsync ();
                     List<InterviewTechnicalQuestion> technicalObj = new List<InterviewTechnicalQuestion> ();
                     foreach (var item in request.TechnicalQuestionList) {
                         InterviewTechnicalQuestion question = new InterviewTechnicalQuestion () {
                             InterviewId = interviewDetails.InterviewId,
                             QuestionId = item.QuestionId,
-                            Score = item.Score,
+                            Score = item.Selected,
                             CreatedById = request.CreatedById,
                             CreatedDate = request.CreatedDate,
                             IsDeleted = false
@@ -82,6 +88,10 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                     await _dbContext.InterviewTechnicalQuestion.AddRangeAsync (technicalObj);
                     await _dbContext.SaveChangesAsync ();
 
+
+                    var LanguageData = _dbContext.InterviewLanguages.Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false).ToList ();
+                    _dbContext.InterviewLanguages.RemoveRange (LanguageData);
+                    await _dbContext.SaveChangesAsync ();
                     List<InterviewLanguages> languageObj = new List<InterviewLanguages> ();
                     foreach (var item in request.LanguageList) {
                         InterviewLanguages details = new InterviewLanguages () {
@@ -100,6 +110,9 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                     await _dbContext.InterviewLanguages.AddRangeAsync (languageObj);
                     await _dbContext.SaveChangesAsync ();
 
+                    var TrainingData = _dbContext.InterviewTrainings.Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false).ToList ();
+                    _dbContext.InterviewTrainings.RemoveRange (TrainingData);
+                    await _dbContext.SaveChangesAsync ();
                     List<InterviewTrainings> traningObj = new List<InterviewTrainings> ();
                     foreach (var item in request.TraningList) {
                         InterviewTrainings details = new InterviewTrainings () {
@@ -107,8 +120,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                             NewTraininigType = item.TraningType,
                             TrainingName = item.TraningName,
                             StudyingCountry = item.TraningCountryAndCity,
-                            StartDate = Convert.ToDateTime(item.TraningStartDate),
-                            EndDate = Convert.ToDateTime(item.TraningEndDate), 
+                            StartDate = Convert.ToDateTime(item.TraningStartDate), 
+                            EndDate = Convert.ToDateTime(item.TraningEndDate),
                             CreatedById = request.CreatedById,
                             CreatedDate = request.CreatedDate,
                             IsDeleted = false
@@ -118,6 +131,9 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                     await _dbContext.InterviewTrainings.AddRangeAsync (traningObj);
                     await _dbContext.SaveChangesAsync ();
 
+                    var InterviewergData = _dbContext.HRJobInterviewers.Where (x => x.InterviewId == request.InterviewId && x.IsDeleted == false).ToList ();
+                    _dbContext.HRJobInterviewers.RemoveRange (InterviewergData);
+                    await _dbContext.SaveChangesAsync ();
                     List<HRJobInterviewers> interviewerObj = new List<HRJobInterviewers> ();
                     foreach (var item in request.InterviewerList) {
                         HRJobInterviewers details = new HRJobInterviewers () {
@@ -132,15 +148,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create {
                     await _dbContext.HRJobInterviewers.AddRangeAsync (interviewerObj);
                     await _dbContext.SaveChangesAsync ();
 
-                    HiringRequestCandidateStatus statusDetails = await _dbContext.HiringRequestCandidateStatus.Where (x => x.HiringRequestId == request.HiringRequestId && x.CandidateId == request.CandidateId && x.IsDeleted == false).FirstOrDefaultAsync ();
-                    if (statusDetails != null) {
-                        statusDetails.ModifiedById = request.CreatedById;
-                        statusDetails.ModifiedDate = request.CreatedDate;
-                        statusDetails.InterviewId = interviewDetails.InterviewId;
-                        statusDetails.CandidateStatus = 2;
-                    }
-
-                    await _dbContext.SaveChangesAsync ();
                     tran.Commit ();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = StaticResource.SuccessText;
