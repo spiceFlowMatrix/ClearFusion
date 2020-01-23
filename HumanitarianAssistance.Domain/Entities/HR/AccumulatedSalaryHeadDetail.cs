@@ -12,7 +12,10 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public int SalaryComponentId { get; set; }
         public double SalaryAllowance { get; set; }
         public double SalaryDeduction { get; set; }
+        public int EmployeeId { get; set; }
         public int Month { get; set; }
         public int Year { get; set; }
+        [ForeignKey("EmployeeId")]
+        public EmployeeDetail EmployeeDetail { get; set; }
     }
 }
