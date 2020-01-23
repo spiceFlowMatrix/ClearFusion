@@ -25,10 +25,10 @@
     <br/>
     <div class="row header">
         <span class="action_header">Monthly Salary Breakdown
-    <hum-button [type]="'add'" [disabled]="selectedMonth.value ==0" [text]="'ADD BONUS'" (click)="addBonus()"></hum-button>
-    <hum-button  [type]="'addNew'" [disabled]="selectedMonth.value ==0" [text]="'ADD FINE'" (click)="addFine()"></hum-button>
-    <hum-button  [type]="'save'" [text]="'APPROVE SALARY'" (click)="approveSalary()"></hum-button>
-    <hum-button  [type]="'exclamation'" [text]="'REVOKE SALARY'" (click)="revokeSalary()"></hum-button>
+    <hum-button [type]="'add'" [disabled]="selectedMonth.value ==0 || isSalaryApproved" [text]="'ADD BONUS'" (click)="addBonus()"></hum-button>
+    <hum-button  [type]="'addNew'" [disabled]="selectedMonth.value ==0 || isSalaryApproved" [text]="'ADD FINE'" (click)="addFine()"></hum-button>
+    <hum-button  [type]="'save'" [text]="'APPROVE SALARY'" [disabled]="isSalaryApproved" (click)="approveSalary()"></hum-button>
+    <hum-button  [type]="'exclamation'" [text]="'REVOKE SALARY'" [disabled]="!isSalaryApproved" (click)="revokeSalary()"></hum-button>
     <button mat-button [matMenuTriggerFor]="MonthMenu">
       <h5 style="color: #0390D1;">{{selectedMonth.name | uppercase}}  &nbsp;<i class="fas fa-caret-down"></i></h5>
     </button>
@@ -79,7 +79,7 @@
             <mat-tab-group>
                 <mat-tab label="Accumulated">
                     <div class="col-md-12">
-                        <hum-table [headers]="accumulatedHeaders$" [isDefaultAction]="false" [items]="accumulatedList$"></hum-table>
+                        <hum-table [headers]="accumulatedHeaders$" [hideColums$]="hideColumsAccumulatedSalaryHeads" [isDefaultAction]="false" [items]="accumulatedList$"></hum-table>
                     </div>
                 </mat-tab>
                 <mat-tab label="Bonuses & Fines">

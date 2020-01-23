@@ -88,4 +88,12 @@ export class EmployeeSalaryConfigService {
       );
     }
     //#endregion
+
+    //#region "approvePayroll"
+    approvePayroll(model): any {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_HR_ApproveEmployeeMonthlyPayroll, model
+      );
+    }
+    //#endregion
 }

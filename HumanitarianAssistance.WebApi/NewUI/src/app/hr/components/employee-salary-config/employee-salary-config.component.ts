@@ -38,7 +38,13 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   actions: TableActionsModel;
   employeeId: number;
   monthlySalaryBreakdown: IMonthlySalaryBreakdown;
+  employeeSalary: IEmployeeSalary;
+  isSalaryApproved = false;
   hideColumsBounusFine = of({
+    headers: ['Salary Component', 'Salary Allowance', 'Salary Deduction'],
+    items: ['SalaryComponent', 'SalaryAllowance', 'SalaryDeduction']
+  });
+  hideColumsAccumulatedSalaryHeads = of({
     headers: ['Salary Component', 'Salary Allowance', 'Salary Deduction'],
     items: ['SalaryComponent', 'SalaryAllowance', 'SalaryDeduction']
   });
@@ -86,6 +92,12 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       NetSalary: 0,
       SalaryPaidAmount: 0,
       Status: ''
+    };
+
+    this.employeeSalary = {
+      GrossSalary: 0,
+      NetSalary: 0,
+      SalaryHeadList: []
     };
 
     this.getEmployeeBasicPayAndCurrency();
@@ -252,6 +264,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
 
         this.accumulatedList$ = of(x.payroll.AccumulatedPayrollHeadList.map(y => {
           return {
+            Id: y.Id,
             SalaryComponent: y.PayrollHeadName,
             SalaryAllowance: y.TransactionType === TransactionType.Debit ? y.Amount : 0,
             SalaryDeduction: y.TransactionType === TransactionType.Credit ? y.Amount : 0,
@@ -264,7 +277,32 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   }
 
   approveSalary() {
+    debugger;
+    this.employeeSalary = {
+      GrossSalary: this.monthlySalaryBreakdown.GrossSalary,
+      NetSalary: this.monthlySalaryBreakdown.NetSalary,
+      SalaryHeadList: []
+    };
 
+    this.accumulatedList$.subscribe(x => {
+      x.forEach(element => {
+        this.employeeSalary.SalaryHeadList.push({
+          Id: element.Id,
+          SalaryAllowance: element.SalaryAllowance,
+          SalaryDeduction: element.SalaryDeduction
+        });
+      });
+    });
+
+    this.salaryConfigService.approvePayroll(this.employeeSalary).subscribe(x => {
+      if (x) {
+        this.isSalaryApproved = true;
+      } else {
+        this.toastr.warning('Please try again');
+      }
+    }, error => {
+      this.toastr.warning(error);
+    });
   }
 
   revokeSalary() {
@@ -279,4 +317,16 @@ export interface IMonthlySalaryBreakdown {
   NetSalary: number;
   Status: string;
   SalaryPaidAmount: number;
+}
+
+export interface IEmployeeSalary {
+  GrossSalary: number;
+  NetSalary: number;
+  SalaryHeadList: ISalaryHead[];
+}
+
+export interface ISalaryHead {
+  Id: number;
+  SalaryAllowance: number;
+  SalaryDeduction: number;
 }
