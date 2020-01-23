@@ -281,6 +281,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<ReturnProcurementDetail> ReturnProcurementDetail { get; set; }
         public DbSet<ConsolidatedGainLossAccounts> ConsolidatedGainLossAccounts { get; set; }
         public DbSet<EmployeeBonusFineSalaryHead> EmployeeBonusFineSalaryHead { get; set; }
+        public DbSet<AccumulatedSalaryHeadDetail> AccumulatedSalaryHeadDetail { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
