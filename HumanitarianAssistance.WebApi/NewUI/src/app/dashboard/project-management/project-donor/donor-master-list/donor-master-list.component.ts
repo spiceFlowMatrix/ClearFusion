@@ -191,6 +191,7 @@ export class DonorMasterListComponent implements OnInit {
       .subscribe(
       data => {
         this.donorList = [];
+        let i = 1;
         if (data.data.DonorDetail != null && data.data.DonorDetail != undefined) {
         if (data.data.DonorDetail.length > 0 && data.StatusCode === 200) {
           // this.projectFilterModel.totalCount = res.data.TotalCount != null ? res.data.TotalCount : 0;
@@ -199,6 +200,7 @@ export class DonorMasterListComponent implements OnInit {
           // this.tottalRecord = data.data.DonorDetail.length;
           data.data.DonorDetail.forEach(element => {
             this.donorList.push({
+              SerialNumber: i,
               DonorId: element.DonorId,
               Name: element.Name,
               ContactPerson: element.ContactPerson,
@@ -207,6 +209,7 @@ export class DonorMasterListComponent implements OnInit {
               ContactPersonCell: element.ContactPersonCell
             });
             this.DonorDetailModel = this.donorList;
+            i = i + 1;
           });
         }
       }
