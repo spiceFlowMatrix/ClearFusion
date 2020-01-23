@@ -97,6 +97,8 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     this.employeeSalary = {
       GrossSalary: 0,
       NetSalary: 0,
+      EmployeeId: 0,
+      Month: 0,
       SalaryHeadList: []
     };
 
@@ -141,7 +143,10 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     });
     // refresh the data after new request created
     dialogRef.componentInstance.onAddBonusRefresh.subscribe(() => { });
-    dialogRef.afterClosed().subscribe(() => { this.getEmployeeBonusFineSalaryHead(); });
+    dialogRef.afterClosed().subscribe(() => {
+      this.getEmployeeBonusFineSalaryHead();
+      this.getEmployeePayroll();
+    });
   }
   //#endregion
   // #region Add Bonus
@@ -161,7 +166,10 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     });
     // refresh the data after new request created
     dialogRef.componentInstance.onAddFineRefresh.subscribe(() => { });
-    dialogRef.afterClosed().subscribe(() => { this.getEmployeeBonusFineSalaryHead(); });
+    dialogRef.afterClosed().subscribe(() => {
+      this.getEmployeeBonusFineSalaryHead();
+      this.getEmployeePayroll();
+    });
   }
   //#endregion
 
@@ -258,18 +266,33 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     this.salaryConfigService.getEmployeePayroll(model).subscribe(x => {
       if (x && x.payroll) {
 
+        debugger;
+
         this.monthlySalaryBreakdown.NetSalary = x.payroll.NetSalary;
         this.monthlySalaryBreakdown.GrossSalary = x.payroll.GrossSalary;
         this.monthlySalaryBreakdown.SalaryPaidAmount = x.payroll.SalaryPaid;
+        this.monthlySalaryBreakdown.Status = x.payroll.Status;
+        this.isSalaryApproved = x.payroll.IsSalaryApproved;
 
-        this.accumulatedList$ = of(x.payroll.AccumulatedPayrollHeadList.map(y => {
-          return {
-            Id: y.Id,
-            SalaryComponent: y.PayrollHeadName,
-            SalaryAllowance: y.TransactionType === TransactionType.Debit ? y.Amount : 0,
-            SalaryDeduction: y.TransactionType === TransactionType.Credit ? y.Amount : 0,
-          };
-        }));
+        if (!this.isSalaryApproved) {
+          this.accumulatedList$ = of(x.payroll.AccumulatedPayrollHeadList.map(y => {
+            return {
+              Id: y.Id,
+              SalaryComponent: y.PayrollHeadName,
+              SalaryAllowance: y.TransactionType === TransactionType.Debit ? y.Amount : 0,
+              SalaryDeduction: y.TransactionType === TransactionType.Credit ? y.Amount : 0,
+            };
+          }));
+        } else {
+          this.accumulatedList$ = of(x.payroll.SavedAccumulatedPayrollHeadList.map(y => {
+            return {
+              Id: y.Id,
+              SalaryComponent: y.PayrollHeadName,
+              SalaryAllowance: y.SalaryAllowance,
+              SalaryDeduction: y.SalaryDeduction,
+            };
+          }));
+        }
       }
     }, error => {
       this.toastr.warning(error);
@@ -277,10 +300,15 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   }
 
   approveSalary() {
-    debugger;
+    if (this.isSalaryApproved) {
+      return;
+    }
+
     this.employeeSalary = {
       GrossSalary: this.monthlySalaryBreakdown.GrossSalary,
       NetSalary: this.monthlySalaryBreakdown.NetSalary,
+      EmployeeId: this.employeeId,
+      Month: this.selectedMonth.value,
       SalaryHeadList: []
     };
 
@@ -296,7 +324,8 @@ export class EmployeeSalaryConfigComponent implements OnInit {
 
     this.salaryConfigService.approvePayroll(this.employeeSalary).subscribe(x => {
       if (x) {
-        this.isSalaryApproved = true;
+        this.getEmployeePayroll();
+        this.toastr.success('Salary Approved');
       } else {
         this.toastr.warning('Please try again');
       }
@@ -306,6 +335,28 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   }
 
   revokeSalary() {
+    debugger;
+
+    if (!this.isSalaryApproved) {
+      return;
+    }
+
+    const model = {
+      EmployeeId: this.employeeId,
+      Month: this.selectedMonth.value
+    };
+
+    this.salaryConfigService.revokeEmployeePayroll(model).subscribe(x => {
+      if (x) {
+        this.getEmployeePayroll();
+        this.toastr.success('Salary Revoked');
+      } else {
+        this.toastr.warning('Please try again');
+      }
+    }, error => {
+      this.toastr.warning(error);
+    });
+
 
   }
 }
@@ -322,6 +373,8 @@ export interface IMonthlySalaryBreakdown {
 export interface IEmployeeSalary {
   GrossSalary: number;
   NetSalary: number;
+  EmployeeId: number;
+  Month: number;
   SalaryHeadList: ISalaryHead[];
 }
 

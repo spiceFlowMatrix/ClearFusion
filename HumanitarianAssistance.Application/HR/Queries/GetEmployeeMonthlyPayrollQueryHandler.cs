@@ -47,7 +47,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 }
                 else
                 {
-
+                    object model = FetchEmployeePayroll(empPayrollAttendance, request);
+                    response.Add("payroll", model);
                 }
             }
             catch (Exception ex)
@@ -97,7 +98,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     throw new Exception(StaticResource.BasicPayNotSet + empPayrollAttendance.EmployeeDetails.EmployeeCode);
                 }
 
-                model.isSalaryApproved = empPayrollAttendance.IsApproved;
+                model.Status= "Unapproved Salary";
+                model.IsSalaryApproved = empPayrollAttendance.IsApproved;
 
                 var bonusAndFines = _dbContext.EmployeeBonusFineSalaryHead.Where(x => x.EmployeeId == request.EmployeeId
                                                                             && x.Month == request.Month && x.Year == DateTime.UtcNow.Year).ToList();
@@ -217,11 +219,23 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 model.NetSalary = (double)empPayrollAttendance.NetSalary;
                 model.SalaryPaid = model.NetSalary;
                 model.Status = "Salary Approved";
+                model.IsSalaryApproved = true;
 
-                List<AccumulatedSalaryHeadDetail> salaryHeads = _dbContext.AccumulatedSalaryHeadDetail.Where(x=> x.IsDeleted == false 
-                                                                && x.Month == request.Month &&
-                                                                x.Year == DateTime.UtcNow.Year && x.EmployeeId == request.EmployeeId)
-                model.AccumulatedPayrollHeadList.
+                List<AccumulatedSalaryHeadDetail> salaryHeads = _dbContext.AccumulatedSalaryHeadDetail.Where(x=> x.IsDeleted == false && 
+                                                                x.Month == request.Month &&
+                                                                x.Year == DateTime.UtcNow.Year && x.EmployeeId == request.EmployeeId).ToList();
+
+                foreach(var item in salaryHeads)
+                {
+                   SavedAccumulatedPayrollHeads salaryHead = new  SavedAccumulatedPayrollHeads
+                   {
+                      Id = item.SalaryComponentId,
+                      SalaryAllowance  = item.SalaryAllowance,
+                      SalaryDeduction = item.SalaryDeduction,
+                      PayrollHeadName = ((AccumulatedSalaryHead)item.SalaryComponentId).ToString()
+                   };
+                   model.SavedAccumulatedPayrollHeadList.Add(salaryHead);
+                }
             }
             catch (System.Exception)
             {
@@ -229,6 +243,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 throw;
             }
 
+            return model;
         }
     }
 }

@@ -293,5 +293,12 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             var result = await _mediator.Send(model);
             return Ok(result);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> RevokeEmployeeMonthlyPayroll([FromBody] RevokeEmployeePayrollCommand model)
+        { 
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
     }
 }

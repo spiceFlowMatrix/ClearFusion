@@ -15,7 +15,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
 
     public class AccumulatedSalaryHead
     {
-        public int SalaryComponentId { get; set; }
+        public int Id { get; set; }
         public double SalaryAllowance { get; set; }
         public double SalaryDeduction { get; set; }
     }

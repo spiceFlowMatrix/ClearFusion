@@ -96,4 +96,12 @@ export class EmployeeSalaryConfigService {
       );
     }
     //#endregion
+
+    //#region "revokeEmployeePayroll"
+    revokeEmployeePayroll(model): any {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_HR_RevokeEmployeeMonthlyPayroll, model
+      );
+    }
+    //#endregion
 }

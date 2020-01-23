@@ -48,9 +48,11 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                             CreatedDate = DateTime.UtcNow,
                             IsDeleted = false,
                             Month = request.Month,
+                            Year= DateTime.UtcNow.Year,
+                            EmployeeId = request.EmployeeId,
                             SalaryAllowance = item.SalaryAllowance,
-                            SalaryDeduction = item.SalaryComponentId,
-                            SalaryComponentId = item.SalaryComponentId
+                            SalaryDeduction = item.SalaryDeduction,
+                            SalaryComponentId = item.Id
                         };
                         salaryHead.Add(obj);
                     }
