@@ -240,7 +240,14 @@ GetAllBudgetLineList() {
     );
   }
   //#endregion
-
+  //#region "EditCandidateDetails"
+  EditCandidateDetails(data: ICandidateDetailModel) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_HiringRequest_EditCandidateDetails,
+      data
+    );
+  }
+  //#endregion
   //#region "AddExistingCandidateDetail"
   AddExistingCandidateDetail(data: any) {
     return this.globalService
@@ -993,6 +1000,24 @@ GetAllBudgetLineList() {
       map(x => {
         const responseData: IResponseData = {
           data: x.data,
+          statusCode: x.StatusCode,
+          message: x.Message
+        };
+        return responseData;
+      })
+    );
+  }
+  GetCandidateDetailByCandidateId(CandidateId: number): any {
+    return this.globalService
+    .post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HiringRequest_GetCandidateDetailByCandidateId,
+      CandidateId
+    )
+    .pipe(
+      map(x => {
+        const responseData: IResponseData = {
+          data: x.ResponseData,
           statusCode: x.StatusCode,
           message: x.Message
         };
