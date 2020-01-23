@@ -1,0 +1,48 @@
+<!-- <mat-card humAddScroll> -->
+<div class="container width_100">
+  <div class="row">
+    <div class="col-md-12" class="items-float-right">
+      <hum-button [type]="'add'" [text]="'ADD HOLIDAY'" (click)="addHolidayPopup()"></hum-button>
+      <hum-button [type]="'text'" [text]="'CONFIGURE WEEKEND'" (click)="addWeekend()"></hum-button>
+    </div>
+    <div class="col-md-12">
+      <div class="designationTable">
+        <!-- <hum-table [headers]="educationDegreeListHeaders$" [items]="educationDegreeList$"
+           (actionClick)="actionEvents($event)" [actions]="actions"></hum-table>
+        </div>
+        <mat-paginator [length]="RecordCount" [pageSize]="pageModel.PageSize"
+          [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
+        </mat-paginator> -->
+      </div>
+    </div>
+  </div>
+  <!-- </mat-card> -->
+
+  <!-- Add holiday popup-->
+  <ng-template #addHoliday>
+    <div>
+      <h1 mat-dialog-title>Add Holiday</h1>
+      <hr>
+    </div>
+      <mat-dialog-content>
+        <div class="row">
+          <div class="col-sm-12">
+            <mat-calendar 
+            [selected]="selectedDate" 
+            [startAt]="startAt"
+            [minDate]="minDate" 
+            [maxDate]="maxDate" 
+            [dateFilter]="myDateFilter"
+            (selectedChange)="onSelect($event)">
+            </mat-calendar>
+          </div>
+        </div>
+      </mat-dialog-content>
+      <mat-dialog-actions class="items-float-right">
+        <!-- <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
+        <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+        <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button> -->
+      </mat-dialog-actions>
+
+  </ng-template>
+  <!-- Add holiday popup -->

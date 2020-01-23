@@ -37,6 +37,8 @@ import { ExitInterviewQuestionsComponent } from './components/exit-interview-que
 import { AddExitInterviewQuestionsComponent } from './components/exit-interview-questions/add-exit-interview-questions/add-exit-interview-questions.component';
 import { LeaveTypeComponent } from './components/leave-type/leave-type.component';
 import { AddLeaveTypeComponent } from './components/leave-type/add-leave-type/add-leave-type.component';
+import { HolidaysComponent } from './components/holidays/holidays.component';
+import { MatDatepickerModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -63,6 +65,7 @@ import { AddLeaveTypeComponent } from './components/leave-type/add-leave-type/ad
     AddExitInterviewQuestionsComponent,
     LeaveTypeComponent,
     AddLeaveTypeComponent,
+    HolidaysComponent,
   ],
   imports: [
     CommonModule,
@@ -80,7 +83,8 @@ import { AddLeaveTypeComponent } from './components/leave-type/add-leave-type/ad
     FormsModule,
     ShareLayoutModule,
     SubHeaderTemplateModule,
-    LibraryModule
+    LibraryModule,
+    MatDatepickerModule
   ],
   entryComponents: [AddDesignationComponent, AddEducationDegreeComponent, AddOfficeMasterComponent,
                    AddDepartmentMasterComponent, AddJobGradeComponent, AddAttendanceGroupComponent,
