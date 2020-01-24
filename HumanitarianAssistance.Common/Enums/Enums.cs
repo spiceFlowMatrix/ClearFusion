@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace HumanitarianAssistance.Common.Enums {
@@ -353,6 +353,14 @@ namespace HumanitarianAssistance.Common.Enums {
         VeryGood = 3,
         Excellent = 4
     }
+
+
+     public enum AccumulatedSalaryHead {
+        Pension = 1,
+        GrossSalary = 2,
+        SalaryTax = 3,
+        AdvanceRecovery = 4
+    }
     
     public enum ResignationQuestionType {
         [Description ("Feeling About Employee Aspects")]
@@ -367,5 +375,6 @@ namespace HumanitarianAssistance.Common.Enums {
         MySupervisor,
         [Description ("The Management")]
         TheManagement
+
     }
 }

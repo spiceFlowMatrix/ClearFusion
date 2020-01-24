@@ -634,7 +634,6 @@ export class PensionComponent implements OnInit {
   }
 
   submitPension(formdata: any) {
-    debugger;
     if (formdata !== undefined) {
       this.pensionForm.EmployeeId = this.employeeId;
       this.pensionForm.PensionDate = formdata.PensionDate;
