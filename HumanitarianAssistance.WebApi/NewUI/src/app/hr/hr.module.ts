@@ -48,9 +48,17 @@ import { AddOtherSkillsComponent } from './components/employee-history/add-other
 import { AddSalaryBudgetComponent } from './components/employee-history/add-salary-budget/add-salary-budget.component';
 import { AddLanguageComponent } from './components/employee-history/add-language/add-language.component';
 import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
+import { AddSalaryConfigurationComponent } from './components/employee-salary-config/add-salary-configuration/add-salary-configuration.component';
+import { AddBonusComponent } from './components/employee-salary-config/add-bonus/add-bonus.component';
+import { AddFineComponent } from './components/employee-salary-config/add-fine/add-fine.component';
 import { EmployeePensionComponent } from './components/employee-pension/employee-pension.component';
 import { SetEmployeeAttendanceComponent } from './components/set-employee-attendance/set-employee-attendance.component';
 import {NgxMaterialTimepickerModule} from '../../../node_modules/ngx-material-timepicker';
+import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
+import { AddContractComponent } from './components/employee-contract/add-contract/add-contract.component';
 
 @NgModule({
   declarations: [
@@ -76,6 +84,11 @@ import {NgxMaterialTimepickerModule} from '../../../node_modules/ngx-material-ti
     AssignLeaveComponent,
     EmployeePensionComponent,
     SetEmployeeAttendanceComponent
+    AddSalaryConfigurationComponent,
+    AddBonusComponent,
+    AddFineComponent,
+    SeeDaysComponent,
+    AddContractComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -115,6 +128,18 @@ import {NgxMaterialTimepickerModule} from '../../../node_modules/ngx-material-ti
     MatCheckboxModule,
     MatRadioModule,
     NgxMaterialTimepickerModule
+
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
+  ],
+  providers: [
+    TranslateService,
+    HttpClient,
   ],
   entryComponents: [
     EmployeeLeaveAddComponent,
@@ -128,8 +153,15 @@ import {NgxMaterialTimepickerModule} from '../../../node_modules/ngx-material-ti
     AddSalaryBudgetComponent,
     AddLanguageComponent,
     SetEmployeeAttendanceComponent
+    AddSalaryConfigurationComponent,
+    AddBonusComponent,
+    AddFineComponent,
+    SeeDaysComponent
   ]
 })
 export class HrModule {
   entryComponents: [];
+}
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
 }
