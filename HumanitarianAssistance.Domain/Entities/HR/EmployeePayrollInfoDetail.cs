@@ -13,6 +13,11 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public double BasicSalary { get; set; }
         public double NetSalary { get; set; }
         public double GrossSalary { get; set; }
+        public int EmployeeId { get; set; }
         public bool IsSalaryApproved { get; set; }
+        [ForeignKey("CurrencyId")]
+        public CurrencyDetails CurrencyDetails { get; set; }
+        [ForeignKey("EmployeeId")]
+        public EmployeeDetail EmployeeDetail { get; set; }
     }
 }
