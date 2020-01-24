@@ -222,6 +222,21 @@ namespace HumanitarianAssistance.WebApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetEmployeeSalaryTaxPdf([FromBody] GetEmployeeSalaryTaxReportPdfQuery model)
+        {
+            try
+            {
+                var file = await _mediator.Send(model);
+                return File(file, "application/pdf", "EmployeeSalaryAndTaxReport.pdf");
+            }
+            catch (Exception ex)
+            {
+                Response.Headers.Add("ExMessage", ex.Message);
+                return BadRequest();
+            }
+        }
     }
 }
 

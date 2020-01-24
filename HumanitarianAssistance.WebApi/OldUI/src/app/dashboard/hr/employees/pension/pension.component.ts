@@ -4,11 +4,11 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GLOBAL } from '../../../../shared/global';
 import { CodeService } from '../../../code/code.service';
-import { TranslateService } from '@ngx-translate/core';
 import { applicationPages } from '../../../../shared/application-pages-enum';
 import { CommonService } from '../../../../service/common.service';
 import { AppSettingsService } from '../../../../service/app-settings.service';
 import { DatePipe } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core/src/translate.service';
 
 declare let jsPDF;
 declare var $: any;
@@ -375,12 +375,12 @@ export class PensionComponent implements OnInit {
   //#endregion
 
   getAllSalaryTaxData(yearId: number, currencyId: number) {
-    const model = {
-      OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID'), 32),
-      EmployeeId: this.employeeId,
-      FinancialYearId: yearId,
-      CurrencyId: currencyId
-    };
+      const model = {
+        OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID'), 32),
+        EmployeeId: this.employeeId,
+        FinancialYearId: yearId,
+        CurrencyId: currencyId
+      };
 
     this.showHideSalaryTaxInfoLoading(true);
     this.hrService
