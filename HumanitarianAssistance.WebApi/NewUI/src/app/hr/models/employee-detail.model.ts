@@ -28,3 +28,22 @@ export interface IEmployeeDetail {
   IsResigned: boolean;
   ResignationStatus: number;
 }
+export interface IEmployeeDetailModel {
+EmployeeID: number;
+FirstName: string;
+LastName: string;
+EmployeeCode: string;
+Designation: number;
+ContractStartDate: Date;
+ContractEndDate: Date;
+DurationOfContract: number;
+Grade: number;
+DutyStation: number;
+Country: number;
+Province: number;
+Project: number;
+Job: string;
+BudgetLine: number;
+WorkTime: string;
+WorkDay: number;
+}

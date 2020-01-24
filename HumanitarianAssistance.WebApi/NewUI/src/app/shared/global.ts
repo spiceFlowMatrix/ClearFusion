@@ -704,6 +704,10 @@ export class GLOBAL {
   public static API_Attendance_GetFilteredAttendanceDetails = 'Attendance/GetFilteredAttendanceDetails';
 
   //#endregion
+  // Hr Contract
+  public static API_Hr_AddEmployeeContractDetails = 'EmployeeDetail/AddEmployeeContractDetails';
+  public static API_EmployeeDetail_GetEmployeeDetailForContractById = 'EmployeeDetail/GetEmployeeDetailForContractById';
+  public static API_Hr_GetSelectedEmployeeContractByEmployeeId = 'EmployeeDetail/GetSelectedEmployeeContractByEmployeeId';
 }
 
 

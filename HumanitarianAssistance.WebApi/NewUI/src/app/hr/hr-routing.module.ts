@@ -1,3 +1,4 @@
+import { AddContractComponent } from './components/employee-contract/add-contract/add-contract.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ConfigurationComponent } from './configuration/configuration.component';
@@ -7,10 +8,16 @@ import { EmployeeControlPanelComponent } from './components/employee-control-pan
 
 const routes: Routes = [
   {
-    path: '', component: EntryComponentComponent,
+    path: '',
+    component: EntryComponentComponent,
     children: [
+      {
+        path: 'employee/:id',
+        component: EmployeeControlPanelComponent,
+        children: [{ path: 'addContract', component: AddContractComponent }]
+      },
       { path: 'employees', component: EmployeeListComponent },
-      { path: 'employee/:id', component: EmployeeControlPanelComponent }
+
     ]
   },
   {
@@ -23,4 +30,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class HrRoutingModule { }
+export class HrRoutingModule {}
