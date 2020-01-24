@@ -713,6 +713,8 @@ export class GLOBAL {
 
   //#region Hr Attendance
   public static API_Attendance_GetFilteredAttendanceDetails = 'Attendance/GetFilteredAttendanceDetails';
+  public static API_Attendance_GetPayrollDailyHourByEmployeeIds = 'Attendance/GetPayrollDailyHourByEmployeeIds';
+  public static API_Attendance_AddEditEmployeeAttendance = 'Attendance/AddEditEmployeeAttendanceDetails';
   static API_HR_GetEmployeeBasicPayAndCurrency = 'EmployeePayroll/GetEmployeeBasicPayAndCurrency';
 
   //#endregion

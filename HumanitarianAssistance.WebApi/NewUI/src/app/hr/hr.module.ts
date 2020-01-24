@@ -52,6 +52,8 @@ import { AddSalaryConfigurationComponent } from './components/employee-salary-co
 import { AddBonusComponent } from './components/employee-salary-config/add-bonus/add-bonus.component';
 import { AddFineComponent } from './components/employee-salary-config/add-fine/add-fine.component';
 import { EmployeePensionComponent } from './components/employee-pension/employee-pension.component';
+import { SetEmployeeAttendanceComponent } from './components/set-employee-attendance/set-employee-attendance.component';
+import {NgxMaterialTimepickerModule} from '../../../node_modules/ngx-material-timepicker';
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -80,10 +82,11 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     AddLanguageComponent,
     EmployeeLeaveAddComponent,
     AssignLeaveComponent,
+    EmployeePensionComponent,
+    SetEmployeeAttendanceComponent,
     AddSalaryConfigurationComponent,
     AddBonusComponent,
     AddFineComponent,
-    EmployeePensionComponent,
     SeeDaysComponent,
     AddContractComponent
   ],
@@ -124,6 +127,7 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     MatTableModule,
     MatCheckboxModule,
     MatRadioModule,
+    NgxMaterialTimepickerModule,
 
     TranslateModule.forRoot({
       loader: {
@@ -148,6 +152,7 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     AddOtherSkillsComponent,
     AddSalaryBudgetComponent,
     AddLanguageComponent,
+    SetEmployeeAttendanceComponent,
     AddSalaryConfigurationComponent,
     AddBonusComponent,
     AddFineComponent,
