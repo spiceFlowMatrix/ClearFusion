@@ -49,6 +49,7 @@ import { AddSalaryBudgetComponent } from './components/employee-history/add-sala
 import { AddLanguageComponent } from './components/employee-history/add-language/add-language.component';
 import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
 import { EmployeePensionComponent } from './components/employee-pension/employee-pension.component';
+import { AddEmployeeComponent } from './components/add-employee/add-employee.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import { EmployeePensionComponent } from './components/employee-pension/employee
     AddLanguageComponent,
     EmployeeLeaveAddComponent,
     AssignLeaveComponent,
-    EmployeePensionComponent
+    EmployeePensionComponent,
+    AddEmployeeComponent
   ],
   imports: [
     MatFormFieldModule,

@@ -1,3 +1,4 @@
+import { AddEmployeeComponent } from './components/add-employee/add-employee.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ConfigurationComponent } from './configuration/configuration.component';
@@ -10,7 +11,8 @@ const routes: Routes = [
     path: '', component: EntryComponentComponent,
     children: [
       { path: 'employees', component: EmployeeListComponent },
-      { path: 'employee/:id', component: EmployeeControlPanelComponent }
+      { path: 'employee/:id', component: EmployeeControlPanelComponent },
+      { path: 'addEmployee', component: AddEmployeeComponent }
     ]
   },
   {
