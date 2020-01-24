@@ -1,8 +1,10 @@
 using System;
+using HumanitarianAssistance.Application.Infrastructure;
+using MediatR;
 
-namespace HumanitarianAssistance.Application.HR.Models
+namespace HumanitarianAssistance.Application.HR.Queries
 {
-    public class EmployeeTaxReportModel
+    public class GetEmployeeSalaryTaxReportPdfQuery: BaseModel, IRequest<byte[]>
     {
         public long TaxPayerIdentificationNumber { get; set; }
 		public string NameOfBusiness { get; set; }
@@ -26,8 +28,6 @@ namespace HumanitarianAssistance.Application.HR.Models
 		public string OfficerName { get; set; }
 		public string Position { get; set; }
 		public DateTime Date { get; set; }
-		public string LogoPath { get; set; }
-		public string ReportDate { get; set; }
 
     }
 }

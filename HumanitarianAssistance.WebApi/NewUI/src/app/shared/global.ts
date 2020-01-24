@@ -701,6 +701,10 @@ export class GLOBAL {
   //#region  "hr employee salary and tax"
   public static API_Code_GetAllFinancialYearDetail = 'Code/GetAllFinancialYearDetail';
   public static API_HR_EmployeePensionReport = 'EmployeePayroll/EmployeePensionReport';
+  public static API_Hr_EmployeeSalaryTaxDetails = 'EmployeePayroll/EmployeeSalaryTaxDetails';
+  public static API_Hr_EmployeeTaxCalculation = 'EmployeeDetail/EmployeeTaxCalculation';
+  public static API_Pdf_GetEmployeePensionPdf = 'Pdf/GetEmployeePensionPdf';
+  public static API_Pdf_GetEmployeeSalaryTaxPdf = 'Pdf/GetEmployeeSalaryTaxPdf';
   //#endregion
 }
 

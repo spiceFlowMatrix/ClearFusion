@@ -101,6 +101,9 @@ export class EmployeeDetailComponent implements OnInit {
           'SelectedOfficeId',
           this.employeeDetail.OfficeId.toString()
         );
+        const fullName =
+          this.employeeDetail.FirstName + ' ' + this.employeeDetail.LastName;
+        localStorage.setItem('selectedEmployeeName', fullName);
       },
       error => {
         this.toAstr.warning(error);

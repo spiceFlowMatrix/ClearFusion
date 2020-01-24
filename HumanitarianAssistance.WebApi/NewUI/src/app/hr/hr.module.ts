@@ -49,6 +49,9 @@ import { AddSalaryBudgetComponent } from './components/employee-history/add-sala
 import { AddLanguageComponent } from './components/employee-history/add-language/add-language.component';
 import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
 import { EmployeePensionComponent } from './components/employee-pension/employee-pension.component';
+import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 @NgModule({
   declarations: [
@@ -110,7 +113,19 @@ import { EmployeePensionComponent } from './components/employee-pension/employee
     MatSelectModule,
     MatTableModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
+
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
+  ],
+  providers: [
+    TranslateService,
+    HttpClient,
   ],
   entryComponents: [
     EmployeeLeaveAddComponent,
@@ -127,4 +142,7 @@ import { EmployeePensionComponent } from './components/employee-pension/employee
 })
 export class HrModule {
   entryComponents: [];
+}
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
 }

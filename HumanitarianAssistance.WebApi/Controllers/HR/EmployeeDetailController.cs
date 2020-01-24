@@ -691,7 +691,10 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             var result = await _mediator.Send(new AddOpeningPensionDetailCommand
             {
                 CreatedById = userId,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow,
+                EmployeeID = model.EmployeeID,
+                PensionDate = model.PensionDate,
+                PensionDetail = model.PensionDetail
             });
             return Ok(result);
         }
