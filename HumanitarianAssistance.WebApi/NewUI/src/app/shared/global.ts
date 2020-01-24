@@ -701,6 +701,11 @@ export class GLOBAL {
   public static API_Attendance_GetFilteredAttendanceDetails = 'Attendance/GetFilteredAttendanceDetails';
 
   //#endregion
+
+  // add employee
+  public static API_Code_GetAllEmployeeType = 'Code/GetAllEmployeeType';
+  public static API_Hr_GetEmployeeContractType = 'Code/GetAllEmployeeContractType';
+  public static API_Hr__AddNewEmployee = 'EmployeeDetail/AddNewEmployeeDetails';
 }
 
 

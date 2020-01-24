@@ -606,7 +606,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return await _mediator.Send(model);
         }
 
-        #endregion
+        #endregion 
 
         [HttpPost]
         public async Task<ApiResponse> EmployeeTaxCalculation([FromBody]GetEmployeeTaxCalculationQuery model)
@@ -691,6 +691,15 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             model.CreatedDate = DateTime.UtcNow;
             var result = await Task.FromResult(_mediator.Send(model));
             return  Ok(await result);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> AddNewEmployeeDetails([FromBody]AddNewEmployeeDetailsCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
         }
     }
 }

@@ -26,3 +26,44 @@ export interface IEmployeeDetail {
   TerminatedOn: string;
   TerminationReason: string;
 }
+
+export interface IEmployeeAllDetails {
+  FirstName: string;
+  LastName: string;
+  Email: string;
+  PhoneNo: number;
+  Password: string;
+  ConfirmPassword: string;
+  Gender: number;
+  DateOfBirth: Date;
+  MaritalStatus: number;
+  Country: number;
+  Province: number;
+  District: number;
+  BirthPlace: string;
+  TinNumber: string;
+  PassportNumber: string;
+  University: string;
+  Profession: number;
+  Qualification: number;
+  ExperienceYear: number;
+  ExperienceMonth: number;
+  IssuePlace: string;
+  ReferBy: string;
+  PreviousWork: string;
+  CurrentAddress: string;
+  PermanentAddress: string;
+  EmployeeType: number;
+  JobGrade: number;
+  Office: number;
+  Department: number;
+  Designation: number;
+  EmployeeCotractType: number;
+  HiredOn: Date;
+  AttendanceGroup: number;
+  DutyStation: number;
+  TrainingAndBenefits: string;
+  JobDescription: string;
+  Currency: number;
+  Amount: number;
+}
