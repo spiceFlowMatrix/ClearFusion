@@ -52,6 +52,7 @@ import { AddSalaryConfigurationComponent } from './components/employee-salary-co
 import { AddBonusComponent } from './components/employee-salary-config/add-bonus/add-bonus.component';
 import { AddFineComponent } from './components/employee-salary-config/add-fine/add-fine.component';
 import { EmployeePensionComponent } from './components/employee-pension/employee-pension.component';
+import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { EmployeePensionComponent } from './components/employee-pension/employee
     AddSalaryConfigurationComponent,
     AddBonusComponent,
     AddFineComponent,
-    EmployeePensionComponent
+    EmployeePensionComponent,
+    SeeDaysComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -131,7 +133,8 @@ import { EmployeePensionComponent } from './components/employee-pension/employee
     AddLanguageComponent,
     AddSalaryConfigurationComponent,
     AddBonusComponent,
-    AddFineComponent
+    AddFineComponent,
+    SeeDaysComponent
   ]
 })
 export class HrModule {

@@ -10,6 +10,7 @@ import { AddLeaveTypeComponent } from '../../configuration/components/leave-type
 import { AssignLeaveComponent } from './assign-leave/assign-leave.component';
 import { ToastrService } from 'ngx-toastr';
 import { DatePipe } from '@angular/common';
+import { SeeDaysComponent } from './see-days/see-days.component';
 
 @Component({
   selector: 'app-employee-leave',
@@ -189,27 +190,39 @@ export class EmployeeLeaveComponent implements OnInit {
 
   appliedLeaveActionEvents(event) {
     if (event.type === 'SEE DAYS') {
-      return;
-    }
-    const model = {
-      Id: event.item.Id,
-      EmployeeId: this.employeeId,
-      Approved: false
-    };
-    if (event.type === 'APPROVE') {
-      model.Approved = true;
-    } else if (event.type === 'REJECT') {
-      model.Approved = false;
+      debugger;
+
+      const dialogRef = this.dialog.open(SeeDaysComponent, {
+        width: '450px',
+        data: {
+          EmployeeId: this.employeeId,
+          Id: event.item.Id,
+          FromDate: event.item.FromDate,
+          ToDate: event.item.ToDate
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+       // this.getLeaveBalanceDetails();
+      });
     }
 
-    this.hrLeave.approveRejectLeave(model).subscribe(x => {
-      if (x) {
-        this.getLeaveBalanceDetails();
-        this.GetAllLeaveDetails();
-      }
-    }, error => {
-      this.toastr.warning(error);
-    });
+    if (event.type === 'APPROVE') {
+      const model = {
+        Id: event.item.Id,
+        EmployeeId: this.employeeId,
+        Approved: true
+      };
+      this.approveOrRejectLeave(model);
+    } else if (event.type === 'REJECT') {
+      const model = {
+        Id: event.item.Id,
+        EmployeeId: this.employeeId,
+        Approved: false
+      };
+
+      this.approveOrRejectLeave(model);
+    }
   }
 
   assignLeave() {
@@ -224,4 +237,16 @@ export class EmployeeLeaveComponent implements OnInit {
       this.getLeaveBalanceDetails();
     });
   }
+
+  approveOrRejectLeave(model: any) {
+    this.hrLeave.approveRejectLeave(model).subscribe(x => {
+      if (x) {
+        this.getLeaveBalanceDetails();
+        this.GetAllLeaveDetails();
+      }
+    }, error => {
+      this.toastr.warning(error);
+    });
+  }
+
 }

@@ -73,6 +73,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     applyleavelist.FinancialYearId = existrecord.FinancialYearId;
                     applyleavelist.CreatedById = request.CreatedById;
                     applyleavelist.CreatedDate = DateTime.UtcNow;
+                    applyleavelist.AppliedLeaveCount = request.LeaveApplied;
                     applyleavelist.IsDeleted = false;
 
                     await _dbContext.EmployeeApplyLeave.AddAsync(applyleavelist);
@@ -81,8 +82,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     //update existing record with availed leave hours
                     if (existrecord != null)
                     {
-                        int? usedleaveunit = existrecord.UsedLeaveUnit == null ? 0 : existrecord.UsedLeaveUnit;
-                        existrecord.UsedLeaveUnit = usedleaveunit - request.LeaveApplied;
+                         int? usedleaveunit = existrecord.UsedLeaveUnit == null ? 0 : existrecord.UsedLeaveUnit;
+                        existrecord.UsedLeaveUnit = usedleaveunit +request.LeaveApplied;
                         existrecord.ModifiedById = request.ModifiedById;
                         existrecord.ModifiedDate = DateTime.UtcNow;
                         existrecord.IsDeleted = false;
