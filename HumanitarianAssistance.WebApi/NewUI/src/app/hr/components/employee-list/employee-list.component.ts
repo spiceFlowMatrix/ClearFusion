@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { EmployeeListService } from '../../services/employee-list.service';
 import { Observable, of } from 'rxjs';
 import { IDropDownModel } from 'src/app/store/models/purchase';
@@ -7,9 +7,11 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
 import { EmployeeFilterModel, EmployeeDetailList } from '../../models/employee-list.model';
 import { EmploymentStatus } from 'src/app/shared/enum';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatDatepicker, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { SetEmployeeAttendanceComponent } from '../set-employee-attendance/set-employee-attendance.component';
+import { AttendanceService } from '../../services/attendance.service';
 
 @Component({
   selector: 'app-employee-list',
@@ -32,12 +34,16 @@ export class EmployeeListComponent implements OnInit {
   employeeDataSource;
   TotalCount = 0;
 
+  EmployeeAttendanceList: any[];
+
   constructor(
     private employeeListService: EmployeeListService,
+    private attendanceService: AttendanceService,
     private toastr: ToastrService,
     private fb: FormBuilder,
     private router: Router,
-    private commonLoader: CommonLoaderService) {
+    private commonLoader: CommonLoaderService,
+    private dialog: MatDialog) {
       this.accountStatusList$ = of([
         { name: 'Prospective', value: 1 },
         { name: 'Active', value: 2 },
@@ -163,6 +169,68 @@ export class EmployeeListComponent implements OnInit {
       this.toastr.warning(err);
       this.commonLoader.hideLoader();
     });
+  }
+
+  setAttendance(picker: MatDatepicker<'dd/MM/yyyy'>) {
+    if (this.selection.selected.length === 0) {
+      return;
+    }
+    picker.open();
+  }
+
+  onDateChanged(event) {
+    this.commonLoader.showLoader();
+    const attendanceDate = event.target.value;
+    const model = {
+      Date: attendanceDate,
+      OfficeId: this.selectedOffice.value,
+      EmpIds: []
+    };
+    this.selection.selected.forEach(res => {
+      model.EmpIds.push(res.EmployeeId);
+    });
+    this.EmployeeAttendanceList =  this.selection.selected;
+    this.attendanceService.getPayrollHoursByEmployeeIds(model).subscribe(
+      res => {
+        this.EmployeeAttendanceList.forEach(e => {
+          const emp = res.EmployeeAttendanceGroupDetail.filter(x => x.EmployeeID === e.EmployeeId);
+          if (emp.length !== 0) {
+            e.InTime = new Date(
+              new Date(emp[0].InTime).getTime() -
+                new Date().getTimezoneOffset() * 60000
+            );
+            e.OutTime = new Date(
+              new Date(emp[0].OutTime).getTime() -
+                new Date().getTimezoneOffset() * 60000
+            );
+            e.Attendance = emp[0].AttendanceType;
+            e.AttendanceGroupId = emp[0].AttendanceGroupId;
+          }
+        });
+        this.commonLoader.hideLoader();
+        const dialogRef = this.dialog.open(SetEmployeeAttendanceComponent, {
+          width: '600px',
+          data: {'AttendanceDate': attendanceDate, 'EmployeeList': this.EmployeeAttendanceList,
+          'errors': false, 'errorMessage': '', 'OfficeId': this.selectedOffice.value}
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          if (result !== undefined && result.data != null ) {
+          }
+        });
+      },
+      err => {
+        this.commonLoader.hideLoader();
+        const dialogRef = this.dialog.open(SetEmployeeAttendanceComponent, {
+          width: '600px',
+          data: {'AttendanceDate': attendanceDate, 'EmployeeList': this.EmployeeAttendanceList,
+          'errors': true, 'errorMessage': err, 'OfficeId': this.selectedOffice.value}
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          if (result !== undefined && result.data != null ) {
+          }
+        });
+      }
+    );
   }
 
   /** Whether the number of selected elements matches the total number of rows. */

@@ -25,5 +25,23 @@ export class AttendanceService {
       );
 
   }
+
+  getPayrollHoursByEmployeeIds(model: any) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Attendance_GetPayrollDailyHourByEmployeeIds,
+        model
+      );
+  }
+
+  saveEmployeeAttendance(model: any) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Attendance_AddEditEmployeeAttendance,
+        model
+      );
+  }
   //#endregion
 }

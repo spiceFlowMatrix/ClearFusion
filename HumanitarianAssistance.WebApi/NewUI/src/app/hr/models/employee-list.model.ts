@@ -17,3 +17,4 @@ export interface EmployeeDetailList {
   EmploymentStatus: string;
   Profession: string;
 }
+

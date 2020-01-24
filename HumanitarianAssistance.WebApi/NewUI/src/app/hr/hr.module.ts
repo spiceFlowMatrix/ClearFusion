@@ -49,6 +49,8 @@ import { AddSalaryBudgetComponent } from './components/employee-history/add-sala
 import { AddLanguageComponent } from './components/employee-history/add-language/add-language.component';
 import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
 import { EmployeePensionComponent } from './components/employee-pension/employee-pension.component';
+import { SetEmployeeAttendanceComponent } from './components/set-employee-attendance/set-employee-attendance.component';
+import {NgxMaterialTimepickerModule} from '../../../node_modules/ngx-material-timepicker';
 
 @NgModule({
   declarations: [
@@ -72,7 +74,8 @@ import { EmployeePensionComponent } from './components/employee-pension/employee
     AddLanguageComponent,
     EmployeeLeaveAddComponent,
     AssignLeaveComponent,
-    EmployeePensionComponent
+    EmployeePensionComponent,
+    SetEmployeeAttendanceComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -110,7 +113,8 @@ import { EmployeePensionComponent } from './components/employee-pension/employee
     MatSelectModule,
     MatTableModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
+    NgxMaterialTimepickerModule
   ],
   entryComponents: [
     EmployeeLeaveAddComponent,
@@ -122,7 +126,8 @@ import { EmployeePensionComponent } from './components/employee-pension/employee
     AddThreeReferenceDetailsComponent,
     AddOtherSkillsComponent,
     AddSalaryBudgetComponent,
-    AddLanguageComponent
+    AddLanguageComponent,
+    SetEmployeeAttendanceComponent
   ]
 })
 export class HrModule {
