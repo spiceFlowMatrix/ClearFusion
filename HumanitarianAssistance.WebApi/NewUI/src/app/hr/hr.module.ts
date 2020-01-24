@@ -83,7 +83,7 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     EmployeeLeaveAddComponent,
     AssignLeaveComponent,
     EmployeePensionComponent,
-    SetEmployeeAttendanceComponent
+    SetEmployeeAttendanceComponent,
     AddSalaryConfigurationComponent,
     AddBonusComponent,
     AddFineComponent,
@@ -127,7 +127,7 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     MatTableModule,
     MatCheckboxModule,
     MatRadioModule,
-    NgxMaterialTimepickerModule
+    NgxMaterialTimepickerModule,
 
     TranslateModule.forRoot({
       loader: {
@@ -152,7 +152,7 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     AddOtherSkillsComponent,
     AddSalaryBudgetComponent,
     AddLanguageComponent,
-    SetEmployeeAttendanceComponent
+    SetEmployeeAttendanceComponent,
     AddSalaryConfigurationComponent,
     AddBonusComponent,
     AddFineComponent,
