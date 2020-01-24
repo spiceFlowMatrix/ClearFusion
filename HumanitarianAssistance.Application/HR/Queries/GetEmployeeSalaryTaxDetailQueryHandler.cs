@@ -36,8 +36,10 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 if (financialYear.Any())
                 {
 
-                    EmployeePayroll currencyDetail = await _dbContext.EmployeePayroll.FirstOrDefaultAsync(x => x.IsDeleted == false && x.EmployeeID == request.EmployeeId);
-                    if (currencyDetail == null)
+                    EmployeePayroll payrollDetail = await _dbContext.EmployeePayroll
+                                                                    .Include(x => x.CurrencyDetails)
+                                                                    .FirstOrDefaultAsync(x => x.IsDeleted == false && x.EmployeeID == request.EmployeeId);
+                    if (payrollDetail == null)
                     {
                         throw new Exception(StaticResource.EmployeePayrollCurrencyNotSet);
                     }
@@ -48,19 +50,27 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                     foreach (var financialYearDetail in distinctFinancialYears)
                     {
-                        List<SalaryTaxReportModel> salaryTaxReportList = _dbContext.EmployeePaymentTypes.Where(x => x.IsDeleted == false && x.IsApproved == true && x.OfficeId == request.OfficeId && x.EmployeeID == request.EmployeeId && x.PayrollYear == financialYearDetail.StartYear)
-                        .Select(x => new SalaryTaxReportModel
-                        {
-                            Currency = _dbContext.CurrencyDetails.Where(o => o.CurrencyId == currencyDetail.CurrencyId).FirstOrDefault().CurrencyName,
-                            CurrencyId = currencyDetail.CurrencyId,
-                            Office = _dbContext.OfficeDetail.Where(o => o.OfficeId == x.OfficeId).FirstOrDefault().OfficeName,
-                            Date = new DateTime(x.PayrollYear.Value, x.PayrollMonth.Value, 1),
-                            TotalTax = x.SalaryTax
-                        }).OrderBy(x => x.Date).ToList();
+                        List<SalaryTaxReportModel> salaryTaxReportList = await _dbContext.EmployeePaymentTypes
+                                                                                   .Where(x => x.IsDeleted == false &&
+                                                                                               x.IsApproved == true &&
+                                                                                               x.OfficeId == request.OfficeId &&
+                                                                                               x.EmployeeID == request.EmployeeId &&
+                                                                                               x.PayrollYear == financialYearDetail.StartYear)
+                                                                                    .Select(x => new SalaryTaxReportModel
+                                                                                    {
+                                                                                        Currency = payrollDetail.CurrencyDetails.CurrencyName,
+                                                                                        CurrencyId = payrollDetail.CurrencyId,
+                                                                                        Office = _dbContext.OfficeDetail.Where(o => o.OfficeId == x.OfficeId).FirstOrDefault().OfficeName,
+                                                                                        Date = new DateTime(x.PayrollYear.Value, x.PayrollMonth.Value, 1),
+                                                                                        TotalTax = x.SalaryTax
+                                                                                    }).OrderBy(x => x.Date).ToListAsync();
 
                         foreach (SalaryTaxReportModel item in salaryTaxReportList)
                         {
-                            ExchangeRateDetail exchangeRate = await _dbContext.ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == item.CurrencyId && x.ToCurrency == request.CurrencyId);
+                            ExchangeRateDetail exchangeRate = await _dbContext.ExchangeRateDetail.OrderByDescending(x => x.Date)
+                                                                                                 .FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                                                                                                                           x.FromCurrency == item.CurrencyId &&
+                                                                                                                           x.ToCurrency == request.CurrencyId);
 
                             if (item.CurrencyId != request.CurrencyId)
                             {
@@ -77,7 +87,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     response.data.SalaryTaxReportModelList = salaryTaxReportListFinal;
                 }
                 else
-                    response.data.SalaryTaxReportModelList = null;
+                response.data.SalaryTaxReportModelList = null;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

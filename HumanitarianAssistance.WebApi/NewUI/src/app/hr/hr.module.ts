@@ -52,6 +52,9 @@ import { AddSalaryConfigurationComponent } from './components/employee-salary-co
 import { AddBonusComponent } from './components/employee-salary-config/add-bonus/add-bonus.component';
 import { AddFineComponent } from './components/employee-salary-config/add-fine/add-fine.component';
 import { EmployeePensionComponent } from './components/employee-pension/employee-pension.component';
+import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
 import { AddContractComponent } from './components/employee-contract/add-contract/add-contract.component';
 
@@ -120,7 +123,19 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     MatSelectModule,
     MatTableModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
+
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
+  ],
+  providers: [
+    TranslateService,
+    HttpClient,
   ],
   entryComponents: [
     EmployeeLeaveAddComponent,
@@ -141,4 +156,7 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
 })
 export class HrModule {
   entryComponents: [];
+}
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
 }
