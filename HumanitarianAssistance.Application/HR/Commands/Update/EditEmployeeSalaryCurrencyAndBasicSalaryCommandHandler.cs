@@ -24,7 +24,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
 
             try
             {
-                EmployeePayroll payroll = await _dbContext.EmployeePayroll.FirstOrDefaultAsync(x => x.IsDeleted == false && x.PayrollId == request.PayrollId);
+                EmployeeBasicSalaryDetail payroll = await _dbContext.EmployeeBasicSalaryDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.Id == request.PayrollId);
 
                 if(payroll == null)
                 {
@@ -32,11 +32,11 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                 }
 
                 payroll.CurrencyId = request.CurrencyId;
-                payroll.MonthlyAmount = request.ActiveSalary;
+                payroll.BasicSalary = request.ActiveSalary;
                 payroll.ModifiedById = request.ModifiedById;
                 payroll.ModifiedDate = DateTime.UtcNow;
 
-                _dbContext.EmployeePayroll.Update(payroll);
+                _dbContext.EmployeeBasicSalaryDetail.Update(payroll);
                 await _dbContext.SaveChangesAsync();
                 success = true;
             }

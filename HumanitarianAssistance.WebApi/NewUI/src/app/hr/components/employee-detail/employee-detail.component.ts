@@ -52,7 +52,9 @@ export class EmployeeDetailComponent implements OnInit {
       State: '',
       Terminated: '',
       TerminatedOn: '',
-      TerminationReason: ''
+      TerminationReason: '',
+      IsResigned: false,
+      ResignationStatus: 0
     };
   }
 
@@ -94,7 +96,9 @@ export class EmployeeDetailComponent implements OnInit {
             Terminated: x.EmployeeDetail.Terminated,
             TerminatedOn: x.EmployeeDetail.TerminatedOn,
             TerminationReason: x.EmployeeDetail.TerminationReason,
-            OfficeId: x.EmployeeDetail.OfficeId
+            OfficeId: x.EmployeeDetail.OfficeId,
+            IsResigned: x.EmployeeDetail.IsResigned,
+            ResignationStatus: x.EmployeeDetail.ResignationStatus
           };
         }
         localStorage.setItem(

@@ -56,6 +56,7 @@ import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-transla
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
+import { AddContractComponent } from './components/employee-contract/add-contract/add-contract.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.
     AddBonusComponent,
     AddFineComponent,
     EmployeePensionComponent,
-    SeeDaysComponent
+    SeeDaysComponent,
+    AddContractComponent
   ],
   imports: [
     MatFormFieldModule,

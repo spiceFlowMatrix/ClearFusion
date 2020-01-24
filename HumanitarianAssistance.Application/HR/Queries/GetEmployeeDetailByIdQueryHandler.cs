@@ -43,6 +43,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                         {
                                             FirstName = x.EmployeeName.Trim().Substring(0, ((x.EmployeeName.IndexOf(' ') != -1) ? x.EmployeeName.IndexOf(' ') :  x.EmployeeName.Length-1)),
                                             LastName= (x.EmployeeName.IndexOf(' ') != -1) ? (x.EmployeeName.Trim().Substring(x.EmployeeName.IndexOf(' '), x.EmployeeName.Length-1)) : "",
+                                            EmployeeCode = x.EmployeeCode,
                                             Email= x.Email,
                                             Phone = x.Phone,
                                             Sex= (x.SexId == (int)Gender.MALE) ? "Male" : (x.SexId == (int)Gender.FEMALE) ? "Female" : "Other",
@@ -68,6 +69,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                             TerminatedOn = x.EmployeeProfessionalDetail.FiredOn != null ? x.EmployeeProfessionalDetail.FiredOn.Value.ToShortDateString() : "",
                                             TerminationReason = x.EmployeeProfessionalDetail.ResignationReason,
                                             OfficeId =  x.EmployeeProfessionalDetail.OfficeId
+                                            IsResigned = x.IsResigned,
+                                            ResignationStatus = x.ResignationStatus
                                         }).FirstOrDefaultAsync();
 
                 if(result == null)
