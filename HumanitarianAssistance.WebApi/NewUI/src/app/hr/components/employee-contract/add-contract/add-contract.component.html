@@ -1,0 +1,141 @@
+<lib-sub-header-template [headerClass]="'sub_header_template_main1'">
+    <span class="action_header">
+    <i class="fa fa-arrow-left bckicon" (click)="hideContractForm()"></i>
+    Employee Contract
+    <hum-button
+      [type]="'save'"
+      [text]="'Save '"
+      [isSubmit]="true"
+      (click)="contractDetailFormButton.click()"
+    ></hum-button>
+    <hum-button
+      [type]="'cancel'"
+      [text]="'Cancel'"
+      (click)="hideContractForm()"
+    ></hum-button>
+  </span>
+    <div class="action_section"></div>
+</lib-sub-header-template>
+<mat-card humAddScroll>
+    <div class="row">
+        <div class="col-md-12">
+            <form [formGroup]="contractDetailForm" (ngSubmit)="onFormSubmit(contractDetailForm.value)">
+                <button #contractDetailFormButton type="submit" style="display: none;"></button>
+                <mat-dialog-content>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="FirstName" placeholder="First Name" readonly/>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-3">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="LastName" placeholder="Last Name" readonly/>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="EmployeeCode" placeholder="Employee Code" readonly/>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-3">
+                            <lib-hum-dropdown formControlName="Designation" [validation]="
+                  contractDetailForm.controls['Designation'].hasError(
+                    'required'
+                  )
+                " [options]="designationList$" [placeHolder]="'Designation'"></lib-hum-dropdown>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <mat-form-field class="example-full-width">
+                                <input matInput [matDatepicker]="ContractStartDatePicker" placeholder="Contract Start Date" formControlName="ContractStartDate" />
+                                <mat-datepicker-toggle matSuffix [for]="ContractStartDatePicker"></mat-datepicker-toggle>
+                                <mat-datepicker #ContractStartDatePicker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-3">
+                            <mat-form-field class="example-full-width">
+                                <input matInput [matDatepicker]="ContractEndDatePicker" placeholder="Contract End Date" formControlName="ContractEndDate" />
+                                <mat-datepicker-toggle matSuffix [for]="ContractEndDatePicker"></mat-datepicker-toggle>
+                                <mat-datepicker #ContractEndDatePicker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="DurationOfContract" placeholder="Duration Of Contract" type="number" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-3">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="Salary" placeholder="Salary" type="number" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <lib-hum-dropdown formControlName="Grade" [validation]="
+                  contractDetailForm.controls['Grade'].hasError('required')
+                " [options]="jobGradeList$" [placeHolder]="'Grade'"></lib-hum-dropdown>
+                        </div>
+                        <div class="col-sm-3">
+                            <lib-hum-dropdown formControlName="DutyStation" [validation]="
+                  contractDetailForm.controls['DutyStation'].hasError(
+                    'required'
+                  )
+                " [options]="officeList$" [placeHolder]="'Duty Station'"></lib-hum-dropdown>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <lib-hum-dropdown formControlName="Country" [validation]="
+                  contractDetailForm.controls['Country'].hasError('required')
+                " [options]="countryList$" [placeHolder]="'Country'" (change)="onChangeCountry($event)"></lib-hum-dropdown>
+                        </div>
+                        <div class="col-sm-3">
+                            <lib-hum-dropdown formControlName="Province" [validation]="
+                  contractDetailForm.controls['Province'].hasError('required')
+                " [options]="provinceList$" [placeHolder]="'Province'"></lib-hum-dropdown>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <lib-hum-dropdown formControlName="Project" [validation]="
+                  contractDetailForm.controls['Project'].hasError('required')
+                " [options]="projectList$" [placeHolder]="'Project'" (change)="onChangeProject($event)"></lib-hum-dropdown>
+                        </div>
+                        <div class="col-sm-3">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="Job" placeholder="Job" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <lib-hum-dropdown formControlName="BudgetLine" [validation]="
+                  contractDetailForm.controls['BudgetLine'].hasError('required')
+                " [options]="budgetLineList$" [placeHolder]="'Budget Line'"></lib-hum-dropdown>
+                        </div>
+                        <div class="col-sm-3">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="WorkTime" placeholder="Work Time" type="number" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="WorkDayHours" placeholder="Work Day (Hours)" type="number" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </mat-dialog-content>
+            </form>
+        </div>
+    </div>
+</mat-card>
