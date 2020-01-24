@@ -185,7 +185,17 @@ export class GLOBAL {
   public static API_HR_AssignLeaveToEmployeeDetail = 'Attendance/AssignLeaveToEmployeeDetail';
   public static API_HR_GetEmployeeApplyLeaveDetailById = 'Attendance/GetEmployeeApplyLeaveDetailById';
   public static API_HR_GetEmployeeAppliedLeaves = 'Attendance/GetEmployeeAppliedLeaves';
+  public static API_HR_GetEmployeeWorkingTimeByMonth = 'Attendance/GetEmployeeWorkingTimeByMonth';
   public static API_HR_ApproveRejectLeave = 'Attendance/ApproveRejectLeave';
+  public static API_HR_AddEmployeeSalaryCurrencyAndBasicSalary = 'EmployeePayroll/AddEmployeeSalaryCurrencyAndBasicSalary';
+  public static API_HR_EditEmployeeSalaryCurrencyAndBasicSalary = 'EmployeePayroll/EditEmployeeSalaryCurrencyAndBasicSalary';
+  public static API_HR_AddEmployeeBonusFineSalaryHead = 'EmployeePayroll/AddEmployeeBonusFineSalaryHead';
+  public static API_HR_GetEmployeeBonusFineSalaryHead = 'EmployeePayroll/GetEmployeeBonusFineSalaryHead';
+  public static API_HR_DeleteEmployeeBonusFineSalaryHead = 'EmployeePayroll/DeleteEmployeeBonusFineSalaryHead';
+  public static API_HR_GetEmployeeAccumulatedSalaryHead = 'EmployeePayroll/GetEmployeeAccumulatedSalaryHead';
+  public static API_HR_GetEmployeeMonthlyPayroll = 'EmployeePayroll/GetEmployeeMonthlyPayroll';
+  public static API_HR_ApproveEmployeeMonthlyPayroll = 'EmployeePayroll/ApproveEmployeeMonthlyPayroll';
+  public static API_HR_RevokeEmployeeMonthlyPayroll = 'EmployeePayroll/RevokeEmployeeMonthlyPayroll';
 
   public static API_EmployeeDetail_GetEmployeeDetailById = 'EmployeeDetail/GetEmployeeDetailById';
   public static API_HR_GetAllEmployeeAssignLeave = 'Attendance/GetAllEmployeeAssignLeave';
@@ -522,6 +532,8 @@ export class GLOBAL {
     'HiringRequest/GetAllExistingCandidateList';
     public static API_HiringRequest_DownloadCandidateCvByRequestId =
     'HiringRequest/DownloadCandidateCvByRequestId';
+    public static API_HiringRequest_EditCandidateDetails =
+    'HiringRequest/EditCandidateDetails';
 
     // interview pages
     public static API_Code_GetRatingBasedCriteriaQuestions = 'Code/GetAllRatingBasedCriteriaQuestionsByOfficeId';
@@ -536,6 +548,10 @@ export class GLOBAL {
      'HiringRequest/GetInterviewDetailsByInterviewId';
      public static API_HiringRequest_GetHiringRequestCode =
      'HiringRequest/GetHiringRequestCode';
+     public static API_HiringRequest_GetCandidateDetailByCandidateId =
+     'HiringRequest/GetCandidateAllDetailByCandidateId';
+     public static API_HiringRequest_EditInterviewDetails =
+     'HiringRequest/EditCandidateInterviewDetail';
 
 
 
@@ -694,6 +710,7 @@ export class GLOBAL {
 
   //#region Hr Attendance
   public static API_Attendance_GetFilteredAttendanceDetails = 'Attendance/GetFilteredAttendanceDetails';
+  static API_HR_GetEmployeeBasicPayAndCurrency = 'EmployeePayroll/GetEmployeeBasicPayAndCurrency';
 
   //#endregion
 

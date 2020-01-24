@@ -353,4 +353,11 @@ namespace HumanitarianAssistance.Common.Enums {
         VeryGood = 3,
         Excellent = 4
     }
+
+     public enum AccumulatedSalaryHead {
+        Pension = 1,
+        GrossSalary = 2,
+        SalaryTax = 3,
+        AdvanceRecovery = 4
+    }
 }
