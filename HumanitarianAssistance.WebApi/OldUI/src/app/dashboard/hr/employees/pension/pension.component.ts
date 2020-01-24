@@ -79,6 +79,7 @@ export class PensionComponent implements OnInit {
       applicationPages.Employees
     );
     this.getOpeningPensionDetail(this.employeeId);
+    this.checkExchangeRateVerified(new Date());
   }
 
   initializeForm() {
