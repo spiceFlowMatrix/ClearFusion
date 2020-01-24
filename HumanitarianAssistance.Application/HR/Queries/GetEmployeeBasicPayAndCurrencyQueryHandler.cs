@@ -26,7 +26,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
             try
             {
-                var basicPayDetail = await _dbContext.EmployeePayrollInfoDetail
+                var basicPayDetail = await _dbContext.EmployeeBasicSalaryDetail
                                                      .Include(x => x.CurrencyDetails)
                                                      .Where(x => x.IsDeleted == false &&
                                                                     x.EmployeeId == request.EmployeeId)

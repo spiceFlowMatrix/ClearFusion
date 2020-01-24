@@ -25,7 +25,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
             {
                 // SalaryHeadDetails salaryHead = await _dbContext.SalaryHeadDetails.FirstOrDefaultAsync(x=> x.IsDeleted == false && x.HeadTypeId == (int)SalaryHeadType.GENERAL);
 
-                EmployeePayrollInfoDetail payroll = new EmployeePayrollInfoDetail 
+                EmployeeBasicSalaryDetail payroll = new EmployeeBasicSalaryDetail 
                 {
                     CreatedDate= DateTime.UtcNow,
                     CreatedById = request.CreatedById,
@@ -34,7 +34,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     CurrencyId = request.CurrencyId
                 };
 
-                await _dbContext.EmployeePayrollInfoDetail.AddAsync(payroll);
+                await _dbContext.EmployeeBasicSalaryDetail.AddAsync(payroll);
                 await _dbContext.SaveChangesAsync();
                 success= true;
             }

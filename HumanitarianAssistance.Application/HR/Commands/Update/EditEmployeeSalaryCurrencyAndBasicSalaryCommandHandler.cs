@@ -24,7 +24,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
 
             try
             {
-                EmployeePayrollInfoDetail payroll = await _dbContext.EmployeePayrollInfoDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.Id == request.PayrollId);
+                EmployeeBasicSalaryDetail payroll = await _dbContext.EmployeeBasicSalaryDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.Id == request.PayrollId);
 
                 if(payroll == null)
                 {
@@ -36,7 +36,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                 payroll.ModifiedById = request.ModifiedById;
                 payroll.ModifiedDate = DateTime.UtcNow;
 
-                _dbContext.EmployeePayrollInfoDetail.Update(payroll);
+                _dbContext.EmployeeBasicSalaryDetail.Update(payroll);
                 await _dbContext.SaveChangesAsync();
                 success = true;
             }

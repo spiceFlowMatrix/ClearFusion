@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.HR;
 using HumanitarianAssistance.Persistence;
 using MediatR;
@@ -27,17 +28,16 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                 try
                 {
 
-                    EmployeePayrollInfoDetail payroll = await _dbContext.EmployeePayrollInfoDetail.FirstOrDefaultAsync()
-                    EmployeeMonthlyAttendance monthlyAttendance = await _dbContext.EmployeeMonthlyAttendance
-                                                                           .FirstOrDefaultAsync(x => x.IsDeleted == false &&
-                                                                           x.Month == request.Month && x.Year == DateTime.UtcNow.Year &&
-                                                                           x.EmployeeId == request.EmployeeId);
+                    EmployeePayrollInfoDetail payroll = new EmployeePayrollInfoDetail();
 
-                    monthlyAttendance.IsApproved = true;
-                    monthlyAttendance.GrossSalary = request.GrossSalary;
-                    monthlyAttendance.NetSalary = request.NetSalary;
+                    payroll.IsSalaryApproved = true;
+                    payroll.GrossSalary = request.GrossSalary;
+                    payroll.NetSalary = request.NetSalary;
+                    payroll.Month = request.Month;
+                    payroll.Year = DateTime.UtcNow.Year;
+                    payroll.EmployeeId = request.EmployeeId;
 
-                    _dbContext.EmployeeMonthlyAttendance.Update(monthlyAttendance);
+                    _dbContext.EmployeePayrollInfoDetail.Add(payroll);
                     await _dbContext.SaveChangesAsync();
 
                     List<AccumulatedSalaryHeadDetail> salaryHead = new List<AccumulatedSalaryHeadDetail>();

@@ -40,14 +40,10 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     throw new Exception(StaticResource.AttendanceNotFound);
                 }
 
-                EmployeePayrollInfoDetail payroll = await _dbContext.EmployeePayrollInfoDetail.FirstOrDefaultAsync(x=> x.IsDeleted == false && x.EmployeeId == request.EmployeeId);
+                var payroll = _dbContext.EmployeePayrollInfoDetail.FirstOrDefault(x=> x.IsDeleted == false && x.EmployeeId == request.EmployeeId &&
+                                                                                   x.Month == request.Month && x.Year == DateTime.UtcNow.Year);
 
-                if(payroll == null)
-                {
-                    throw new Exception("Basic pay not set for Employee");
-                }
-
-                if (!payroll.IsSalaryApproved)
+                if (payroll == null)
                 {
                     object model = calculateEmployeePayroll(empPayrollAttendance, request, payroll);
                     response.Add("payroll", model);
@@ -86,6 +82,14 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
             try
             {
+                EmployeeBasicSalaryDetail basicPay = _dbContext.EmployeeBasicSalaryDetail.FirstOrDefault(x=> x.IsDeleted == false && x.EmployeeId == request.EmployeeId);
+
+                double dBasicPayPerhour = basicPay.BasicSalary / DateTime.DaysInMonth(DateTime.UtcNow.Year, request.Month);
+
+                if(basicPay == null)
+                {
+                    throw new Exception("Basic pay not set for Employee");
+                }
 
                 EmployeeDetail employeeDetail = _dbContext.EmployeeDetail
                                                           .Include(x=> x.EmployeeProfessionalDetail)
@@ -127,7 +131,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 int overTimeMinutes = empPayrollAttendance.Select(x=> x.OverTimeMinutes).DefaultIfEmpty(0).Sum();
 
                 double convertMinutesToHours = ((double)(workTimeMinutes + overTimeMinutes) / 60d);
-                model.GrossSalary = Math.Round((double)(payroll.BasicSalary * (workTimeHours + overtimehours + convertMinutesToHours) + totalBonus), 2);
+                model.GrossSalary = Math.Round((double)(dBasicPayPerhour * (workTimeHours + overtimehours + convertMinutesToHours) + totalBonus), 2);
                 AccumulatedPayrollHeads pensionHead = new AccumulatedPayrollHeads
                 {
                     Id = (int)AccumulatedSalaryHead.Pension,
@@ -150,7 +154,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                 if (model.GrossSalary > 5000)
                 {
-                    double exchangeRate = getExchangeRate(payroll.CurrencyId);
+                    double exchangeRate = getExchangeRate(basicPay.CurrencyId);
 
                     AccumulatedPayrollHeads salaryTax = new AccumulatedPayrollHeads
                     {
