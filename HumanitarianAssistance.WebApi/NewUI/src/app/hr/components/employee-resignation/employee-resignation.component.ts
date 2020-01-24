@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { mergeMap, groupBy, map, reduce } from 'rxjs/operators';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { ToastrService } from 'ngx-toastr';
@@ -7,13 +7,16 @@ import { QuestionTypeName } from 'src/app/shared/enum';
 import { of, Observable } from 'rxjs';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
+import { IEmployeeDetail } from '../../models/employee-detail.model';
+import { EmployeeListService } from '../../services/employee-list.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-employee-resignation',
   templateUrl: './employee-resignation.component.html',
   styleUrls: ['./employee-resignation.component.scss']
 })
-export class EmployeeResignationComponent implements OnInit {
+export class EmployeeResignationComponent implements OnInit, OnChanges {
 
   questionTypes = [
     {value: 1, name: 'Feeling About Employee Aspects'},
@@ -23,14 +26,21 @@ export class EmployeeResignationComponent implements OnInit {
     {value: 5, name: 'My Supervisor'},
     {value: 6, name: 'The Management'},
   ];
+  @Input() employeeDetail: IEmployeeDetail;
   exitInterviewQuestionsList: any[];
   questionByType = [];
+  employeeId;
   groupedQuestions: Map<any, any>;
   resignationForm: FormGroup;
   constructor(private commonLoader: CommonLoaderService,
     private toastr: ToastrService,
     private hrService: HrService,
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    private employeeService: EmployeeListService,
+    private activatedRoute: ActivatedRoute) {
+      this.activatedRoute.params.subscribe(params => {
+        this.employeeId = +params['id'];
+      });
       this.resignationForm = this.fb.group({
         ResignDate: ['', Validators.required],
         IsIssueUnresolved: ['false'],
@@ -45,7 +55,14 @@ export class EmployeeResignationComponent implements OnInit {
     }
 
   ngOnInit() {
-    this.getExitInterviewQuestionsList();
+    // this.getExitInterviewQuestionsList();
+    if (this.employeeDetail.IsResigned) {
+      this.getResignationDetail();
+    }
+  }
+
+  ngOnChanges() {
+    // console.log(this.employeeDetail);
   }
 
   createQuestion(QuestionId, QuestionText, QuestionTypeId, Answer): FormGroup {
@@ -76,6 +93,7 @@ export class EmployeeResignationComponent implements OnInit {
           };
         });
         this.groupedQuestions = StaticUtilities.groupBy(this.exitInterviewQuestionsList, y => y.QuestionType);
+        this.questionByType = [];
         this.groupedQuestions.forEach((value: any, key: any) => {
           this.questionByType[key] = value;
         });
@@ -102,7 +120,98 @@ export class EmployeeResignationComponent implements OnInit {
     }
   }
 
+  setAllAnswers() {
+    for (let i = 1; i <= 6 ; i++) {
+       (<FormArray>this.resignationForm.get('QuestionType' + i)).removeAt(0);
+      // (this.resignationForm.controls['QuestionType' + i] as FormArray) = this.fb.array([]);
+      this.questionByType[i].forEach(e => {
+        if (i !== 2 ) {
+          (this.resignationForm.controls['QuestionType' + i] as FormArray)
+        .push(this.createQuestion(e.QuestionId, e.QuestionText, e.QuestionType, (e.Answer + '').trim()));
+        } else {
+          (this.resignationForm.controls['QuestionType' + i] as FormArray)
+          .push(this.createQuestion(e.QuestionId, e.QuestionText, e.QuestionType, (e.Answer === 1) ? true : false));
+        }
+      });
+    }
+  }
+
   saveResignationForm(value) {
-    console.log(value);
+    if (!this.resignationForm.valid) {
+      this.toastr.warning('Please select Resign Date');
+      return;
+    }
+    if (value.IsIssueUnresolved === 'true' && value.Issues === '') {
+      this.toastr.warning('Please enter Comments & Issues!');
+      return;
+    }
+    this.commonLoader.showLoader();
+    value.QuestionType2.forEach(element => {
+      if (element.Answer) {
+        element.Answer = '1';
+      } else {
+        element.Answer = '0';
+      }
+    });
+    const model = {
+      ResignDate: StaticUtilities.getLocalDate(this.resignationForm.get('ResignDate').value),
+      EmployeeID: this.employeeId,
+      IsUnresolvedIssue: (value.IsIssueUnresolved === 'true'),
+      CommentsIssues: value.Issues,
+      QuestionType1: value.QuestionType1,
+      QuestionType2: value.QuestionType2,
+      QuestionType3: value.QuestionType3,
+      QuestionType4: value.QuestionType4,
+      QuestionType5: value.QuestionType5,
+      QuestionType6: value.QuestionType6,
+    };
+    this.employeeService.saveResignation(model).subscribe(res => {
+      if (res) {
+        this.commonLoader.hideLoader();
+        this.toastr.success('Resignation saved successfully!');
+      }
+    }, err =>  {
+      this.commonLoader.hideLoader();
+      this.toastr.warning(err);
+    });
+  }
+
+  addResignation() {
+    if (this.employeeDetail.IsResigned) {
+      return;
+    }
+    this.commonLoader.showLoader();
+    this.employeeService.addResignation(this.employeeId).subscribe(res => {
+      if (res) {
+        this.employeeDetail.IsResigned = true;
+        this.getResignationDetail();
+        this.commonLoader.hideLoader();
+      }
+    }, err => {
+      this.commonLoader.hideLoader();
+      this.toastr.warning(err);
+    });
+  }
+
+  getResignationDetail() {
+    this.employeeService.getResignationDetailById(this.employeeId).subscribe(res => {
+      if (res.ResignationDetail !== null) {
+        this.resignationForm.patchValue({
+          ResignDate: StaticUtilities.setLocalDate(res.ResignationDetail.ResignDate),
+          IsIssueUnresolved: (' ' + res.ResignationDetail.IsIssueUnresolved).trim(),
+          Issues: res.ResignationDetail.CommentsIssues.trim()
+        });
+        this.groupedQuestions = StaticUtilities.groupBy(res.ResignationQuestionDetail, y => y.QuestionType);
+        this.questionByType = [];
+        this.groupedQuestions.forEach((value: any, key: any) => {
+          this.questionByType[key] = value;
+        });
+        this.setAllAnswers();
+      } else {
+        this.getExitInterviewQuestionsList();
+      }
+    }, err => {
+      this.toastr.warning(err);
+    });
   }
 }

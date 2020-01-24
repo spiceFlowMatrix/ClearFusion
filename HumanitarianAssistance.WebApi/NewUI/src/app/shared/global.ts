@@ -580,6 +580,9 @@ export class GLOBAL {
 
   public static API_EmployeeDetail_GetAllEmployeeDetailList = 'EmployeeDetail/GetAllEmployeeDetailList';
   public static API_EmployeeDetail_DeleteMurtipleEmployeesById = 'EmployeeDetail/DeleteMurtipleEmployeesById';
+  public static API_EmployeeDetail_AddEmployeeResignation = 'EmployeeDetail/AddEmployeeResignation';
+  public static API_EmployeeDetail_SaveEmployeeResignation = 'EmployeeDetail/SaveEmployeeResignation';
+  public static API_EmployeeDetail_GetEmployeeResignationById = 'EmployeeDetail/GetEmployeeResignationById';
 
   // pdf
   public static API_Pdf_GetAllChartOfAccountHierarchyPdf = 'Pdf/GetAllChartOfAccountHierarchyPdf';
@@ -712,6 +715,10 @@ export class GLOBAL {
   static API_HR_GetEmployeeBasicPayAndCurrency = 'EmployeePayroll/GetEmployeeBasicPayAndCurrency';
 
   //#endregion
+  // Hr Contract
+  public static API_Hr_AddEmployeeContractDetails = 'EmployeeDetail/AddEmployeeContractDetails';
+  public static API_EmployeeDetail_GetEmployeeDetailForContractById = 'EmployeeDetail/GetEmployeeDetailForContractById';
+  public static API_Hr_GetSelectedEmployeeContractByEmployeeId = 'EmployeeDetail/GetSelectedEmployeeContractByEmployeeId';
 }
 
 

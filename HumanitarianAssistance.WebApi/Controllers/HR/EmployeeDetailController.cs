@@ -663,6 +663,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             var result = await _mediator.Send(new GetEmployeeDetailByIdQuery { EmployeeId = id });
             return Ok(result);
         }
+        [HttpPost]
         public async Task<IActionResult> GetAllEmployeeDetailList([FromBody]GetAllEmployeeDetailListQuery model)
         {
             var result = await _mediator.Send(model);
@@ -682,6 +683,38 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return Ok(result);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddEmployeeResignation([FromBody]int EmployeeID)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var result = await _mediator.Send(new AddEmployeeResignationCommand
+            {
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow,
+                EmployeeID = EmployeeID
+            });
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveEmployeeResignation([FromBody]SaveEmployeeResignationCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetEmployeeResignationById([FromQuery]int Id)
+        {
+            var result = await _mediator.Send(new GetEmployeeResignationByIdQuery {
+                EmployeeID = Id
+            });
+            return Ok(result);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> AddOpeningPensionDetail([FromBody] AddOpeningPensionDetailCommand model)
@@ -691,6 +724,13 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             model.CreatedDate = DateTime.UtcNow;
             var result = await Task.FromResult(_mediator.Send(model));
             return  Ok(await result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetEmployeeDetailForContractById([FromBody] int EmployeeId)
+        {
+            var result = await _mediator.Send(new GetEmployeeDetailForContractByIdQuery { EmployeeId = EmployeeId });
+            return Ok(result);
         }
     }
 }
