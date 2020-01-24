@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.HR.Commands.Create;
+using HumanitarianAssistance.Application.HR.Commands.Delete;
 using HumanitarianAssistance.Application.HR.Commands.Update;
 using HumanitarianAssistance.Application.HR.Models;
 using HumanitarianAssistance.Application.HR.Queries;
@@ -212,6 +213,92 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         public async Task<ApiResponse> GetEmployeeOpeningPensionDetail(int employeeId)
         {
             return await _mediator.Send(new GetEmployeePensionDetailQuery { EmployeeId = employeeId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddEmployeeSalaryCurrencyAndBasicSalary([FromBody]AddEmployeeSalaryCurrencyAndBasicSalaryCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditEmployeeSalaryCurrencyAndBasicSalary([FromBody]EditEmployeeSalaryCurrencyAndBasicSalaryCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetEmployeeBasicPayAndCurrency([FromQuery] int id)
+        {
+            var result = await _mediator.Send(new GetEmployeeBasicPayAndCurrencyQuery() { EmployeeId = id });
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddEmployeeBonusFineSalaryHead([FromBody]AddEmployeeBonusFineSalaryHeadCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetEmployeeBonusFineSalaryHead([FromBody] GetEmployeeBonusFineSalaryHeadQuery model)
+        {
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteEmployeeBonusFineSalaryHead([FromBody] int id)
+        { 
+             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            DeleteEmployeeBonusFineSalaryHeadCommand  command = new DeleteEmployeeBonusFineSalaryHeadCommand
+            {
+                Id = id,
+                ModifiedById= userId
+            };
+
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetEmployeeAccumulatedSalaryHead([FromBody] GetEmployeeAccumulatedSalaryHeadQuery model)
+        { 
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetEmployeeMonthlyPayroll([FromBody] GetEmployeeMonthlyPayrollQuery model)
+        { 
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveEmployeeMonthlyPayroll([FromBody] ApproveEmployeeMonthlyPayrollCommand model)
+        { 
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RevokeEmployeeMonthlyPayroll([FromBody] RevokeEmployeePayrollCommand model)
+        { 
+            var result = await _mediator.Send(model);
+            return Ok(result);
         }
     }
 }

@@ -2024,6 +2024,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<long>("ApplyLeaveId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("AppliedLeaveCount");
+
                     b.Property<int?>("ApplyLeaveStatusId")
                         .HasMaxLength(30);
 

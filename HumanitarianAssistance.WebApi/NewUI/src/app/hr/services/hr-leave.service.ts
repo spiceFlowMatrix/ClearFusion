@@ -81,4 +81,13 @@ export class HrLeaveService {
         GLOBAL.API_HR_ApproveRejectLeave, model);
   }
   //#endregion
+
+  //#region "getEmployeeWorkingTimeByMonth"
+  getEmployeeWorkingTimeByMonth(model: any): any {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HR_GetEmployeeWorkingTimeByMonth, model
+    );
+  }
+  //#endregion
 }

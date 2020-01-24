@@ -48,7 +48,11 @@ import { AddOtherSkillsComponent } from './components/employee-history/add-other
 import { AddSalaryBudgetComponent } from './components/employee-history/add-salary-budget/add-salary-budget.component';
 import { AddLanguageComponent } from './components/employee-history/add-language/add-language.component';
 import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
+import { AddSalaryConfigurationComponent } from './components/employee-salary-config/add-salary-configuration/add-salary-configuration.component';
+import { AddBonusComponent } from './components/employee-salary-config/add-bonus/add-bonus.component';
+import { AddFineComponent } from './components/employee-salary-config/add-fine/add-fine.component';
 import { EmployeePensionComponent } from './components/employee-pension/employee-pension.component';
+import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +76,11 @@ import { EmployeePensionComponent } from './components/employee-pension/employee
     AddLanguageComponent,
     EmployeeLeaveAddComponent,
     AssignLeaveComponent,
-    EmployeePensionComponent
+    AddSalaryConfigurationComponent,
+    AddBonusComponent,
+    AddFineComponent,
+    EmployeePensionComponent,
+    SeeDaysComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -122,7 +130,11 @@ import { EmployeePensionComponent } from './components/employee-pension/employee
     AddThreeReferenceDetailsComponent,
     AddOtherSkillsComponent,
     AddSalaryBudgetComponent,
-    AddLanguageComponent
+    AddLanguageComponent,
+    AddSalaryConfigurationComponent,
+    AddBonusComponent,
+    AddFineComponent,
+    SeeDaysComponent
   ]
 })
 export class HrModule {
