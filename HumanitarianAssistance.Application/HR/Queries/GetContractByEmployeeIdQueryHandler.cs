@@ -99,12 +99,9 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                     BudgetLineDari = ec.BudgetLineDari,
                                     ProjectCode = px.ProjectCode
                                 }).ToList();
-
                     response.data.EmployeeContractDetails = dataModel;
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
-
-
                 }
                 else
                 {
