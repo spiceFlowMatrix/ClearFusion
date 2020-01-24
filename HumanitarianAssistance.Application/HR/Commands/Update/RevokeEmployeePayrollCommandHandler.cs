@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Application.HR.Commands.Update
 {
-    public class RevokeEmployeePayrollCommandHandler: IRequestHandler<RevokeEmployeePayrollCommand, object>
+    public class RevokeEmployeePayrollCommandHandler : IRequestHandler<RevokeEmployeePayrollCommand, object>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         public RevokeEmployeePayrollCommandHandler(HumanitarianAssistanceDbContext dbContext)
@@ -25,32 +25,31 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
 
             try
             {
-                EmployeeMonthlyAttendance attendance = await _dbContext.EmployeeMonthlyAttendance
-                                                                       .FirstOrDefaultAsync(x=> x.IsDeleted == false &&
-                                                                        x.EmployeeId == request.EmployeeId && x.Month == request.Month &&
-                                                                        x.Year == DateTime.UtcNow.Year);
+                EmployeePayrollInfoDetail payroll = await _dbContext.EmployeePayrollInfoDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.EmployeeId == request.EmployeeId
+                                                                                                               && x.Month == request.Month && x.Year == DateTime.UtcNow.Year);
 
-                if(attendance == null)
+                if (payroll == null)
                 {
                     throw new Exception(StaticResource.RecordNotFound);
                 }
 
-                attendance.IsApproved = false;
+                payroll.IsSalaryApproved = false;
+                payroll.IsDeleted = true;
 
-                List<AccumulatedSalaryHeadDetail> list = await _dbContext.AccumulatedSalaryHeadDetail.Where(x=> x.IsDeleted == false &&
+                List<AccumulatedSalaryHeadDetail> list = await _dbContext.AccumulatedSalaryHeadDetail.Where(x => x.IsDeleted == false &&
                                                                 x.EmployeeId == request.EmployeeId && x.Month == request.Month &&
                                                                 x.Year == DateTime.UtcNow.Year).ToListAsync();
 
-                if(list.Any())
+                if (list.Any())
                 {
-                    list.ForEach(x=> x.IsDeleted = true);
+                    list.ForEach(x => x.IsDeleted = true);
                 }
 
                 await _dbContext.SaveChangesAsync();
 
                 success = true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
