@@ -26,6 +26,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
             {
                 try
                 {
+
+                    EmployeePayrollInfoDetail payroll = await _dbContext.EmployeePayrollInfoDetail.FirstOrDefaultAsync()
                     EmployeeMonthlyAttendance monthlyAttendance = await _dbContext.EmployeeMonthlyAttendance
                                                                            .FirstOrDefaultAsync(x => x.IsDeleted == false &&
                                                                            x.Month == request.Month && x.Year == DateTime.UtcNow.Year &&

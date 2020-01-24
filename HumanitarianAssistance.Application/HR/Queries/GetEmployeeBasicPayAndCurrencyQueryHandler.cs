@@ -26,16 +26,15 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
             try
             {
-                var basicPayDetail = await _dbContext.EmployeePayroll
+                var basicPayDetail = await _dbContext.EmployeePayrollInfoDetail
                                                      .Include(x => x.CurrencyDetails)
                                                      .Where(x => x.IsDeleted == false &&
-                                                                    x.EmployeeID == request.EmployeeId &&
-                                                                    x.HeadTypeId == (int)SalaryHeadType.GENERAL)
+                                                                    x.EmployeeId == request.EmployeeId)
                                                                     .Select(x => new
                                                                     {
-                                                                       PayrollId= x.PayrollId,
+                                                                       PayrollId= x.Id,
                                                                        CurrencyId= x.CurrencyId,
-                                                                       MonthlyAmount= x.MonthlyAmount,
+                                                                       MonthlyAmount= x.BasicSalary,
                                                                        CurrencyName = x.CurrencyDetails.CurrencyName
                                                                     }).FirstOrDefaultAsync();
 
