@@ -24,7 +24,7 @@ export class EmployeeLeaveComponent implements OnInit {
   hideColums$ = of({
     headers: ['Leave Type', 'Policy Allowed Hours', 'Applied/Approved Hours',
       'Hour Balance'],
-    items: ['LeaveType', 'AllowedHours', 'ApprovedHours', 'HourBalance',]
+    items: ['LeaveType', 'AllowedHours', 'ApprovedHours', 'HourBalance']
   });
   hideColumsAppliedHours$ = of({
     headers: ['Leave Type', 'Applied Hours', 'Status'],
@@ -82,6 +82,25 @@ export class EmployeeLeaveComponent implements OnInit {
   }
 
   getLeaveBalanceDetails() {
+    this.hrLeave
+      .getEmployeeBalanceLeave(this.employeeId)
+      .subscribe(data => {
+        this.leaveList$ = of(data.data.AssignLeaveToEmployeeList.map((element) => {
+          return {
+            Id: element.LeaveReasonId,
+            LeaveType: element.LeaveReasonName,
+            AllowedHours: element.Unit,
+            ApprovedHours: element.AssignUnit,
+            HourBalance: element.BlanceLeave
+          };
+        })
+        );
+      }, error => {
+        this.toastr.warning(error);
+      });
+  }
+
+  getEmployeeWorkingTime() {
     this.hrLeave
       .getEmployeeBalanceLeave(this.employeeId)
       .subscribe(data => {

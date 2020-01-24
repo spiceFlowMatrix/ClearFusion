@@ -85,14 +85,8 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       MonthlyAmount: 0,
       PayrollId: 0
     };
-    this.monthlySalaryBreakdown = {
-      GrossSalary: 0,
-      HourlyRate: 0,
-      Month: '',
-      NetSalary: 0,
-      SalaryPaidAmount: 0,
-      Status: ''
-    };
+
+    this.onInitForm();
 
     this.employeeSalary = {
       GrossSalary: 0,
@@ -103,6 +97,19 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     };
 
     this.getEmployeeBasicPayAndCurrency();
+  }
+
+  onInitForm() {
+    this.monthlySalaryBreakdown = {
+      GrossSalary: 0,
+      HourlyRate: 0,
+      Month: '',
+      NetSalary: 0,
+      SalaryPaidAmount: 0,
+      Status: ''
+    };
+    this.accumulatedList$ = of();
+    this.bonusAndFineList$ = of();
   }
 
   // #region Add Salary Configuration
@@ -189,10 +196,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     };
 
     this.getEmployeeBonusFineSalaryHead();
-    this.monthlySalaryBreakdown.HourlyRate = (this.employeeCurrencyAndAmount.MonthlyAmount /
-      StaticUtilities.getDaysInMonth(SelectedMonth.value, (new Date()).getFullYear())).toFixed(2);
-      this.monthlySalaryBreakdown.Month = Month[SelectedMonth.value];
-      this.getEmployeePayroll();
+    this.getEmployeePayroll();
   }
   empActionEvents(event: any) {
     console.log(event.item);
@@ -233,6 +237,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
         if (x) {
           this.toastr.success('Item Deleted Successfully');
           this.getEmployeeBonusFineSalaryHead();
+          this.getEmployeePayroll();
         } else {
           this.toastr.warning('Please try again');
         }
@@ -265,14 +270,15 @@ export class EmployeeSalaryConfigComponent implements OnInit {
 
     this.salaryConfigService.getEmployeePayroll(model).subscribe(x => {
       if (x && x.payroll) {
-
-        debugger;
-
         this.monthlySalaryBreakdown.NetSalary = x.payroll.NetSalary;
         this.monthlySalaryBreakdown.GrossSalary = x.payroll.GrossSalary;
         this.monthlySalaryBreakdown.SalaryPaidAmount = x.payroll.SalaryPaid;
         this.monthlySalaryBreakdown.Status = x.payroll.Status;
         this.isSalaryApproved = x.payroll.IsSalaryApproved;
+
+        this.monthlySalaryBreakdown.HourlyRate = (this.employeeCurrencyAndAmount.MonthlyAmount /
+          StaticUtilities.getDaysInMonth(this.selectedMonth.value, (new Date()).getFullYear())).toFixed(2);
+          this.monthlySalaryBreakdown.Month = Month[this.selectedMonth.value];
 
         if (!this.isSalaryApproved) {
           this.accumulatedList$ = of(x.payroll.AccumulatedPayrollHeadList.map(y => {
@@ -293,8 +299,11 @@ export class EmployeeSalaryConfigComponent implements OnInit {
             };
           }));
         }
+      } else {
+        this.toastr.warning('Cannot retrieve data. Please try again');
       }
     }, error => {
+      this.onInitForm();
       this.toastr.warning(error);
     });
   }
@@ -335,8 +344,6 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   }
 
   revokeSalary() {
-    debugger;
-
     if (!this.isSalaryApproved) {
       return;
     }
