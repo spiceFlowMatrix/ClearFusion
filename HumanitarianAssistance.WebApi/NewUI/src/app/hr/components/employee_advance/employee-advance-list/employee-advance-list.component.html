@@ -1,3 +1,12 @@
-<p>
-  employee-advance-list works!
-</p>
+<div humAddScroll>
+  <div class="row header">
+      <span class="action_header">Advance
+    <hum-button [type]="'add'" [text]="'ADD ADVANCE REQUEST'" (click)="displayAddContractForm()"></hum-button>
+  </span>
+  </div>
+  <div class="row">
+      <div class="col-md-12">
+          <hum-table [headers]="advanceListHeader$" [isDefaultAction]="false" [items]="advanceList$" (actionClick)="actionEvents($event)" [actions]="actions"></hum-table>
+      </div>
+  </div>
+</div>

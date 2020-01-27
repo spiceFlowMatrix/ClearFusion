@@ -714,6 +714,7 @@ export class GLOBAL {
   //#region Hr Attendance
   public static API_Attendance_GetFilteredAttendanceDetails = 'Attendance/GetFilteredAttendanceDetails';
   static API_HR_GetEmployeeBasicPayAndCurrency = 'EmployeePayroll/GetEmployeeBasicPayAndCurrency';
+  public static API_EmployeePayroll_GetAdvanceListByEmployeeId = 'EmployeePayroll/GetAdvanceListByEmployeeId';
 
   //#endregion
 

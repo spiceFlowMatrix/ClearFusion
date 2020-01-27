@@ -261,12 +261,12 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
 
         [HttpPost]
         public async Task<IActionResult> DeleteEmployeeBonusFineSalaryHead([FromBody] int id)
-        { 
-             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            DeleteEmployeeBonusFineSalaryHeadCommand  command = new DeleteEmployeeBonusFineSalaryHeadCommand
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            DeleteEmployeeBonusFineSalaryHeadCommand command = new DeleteEmployeeBonusFineSalaryHeadCommand
             {
                 Id = id,
-                ModifiedById= userId
+                ModifiedById = userId
             };
 
             var result = await _mediator.Send(command);
@@ -275,29 +275,36 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
 
         [HttpPost]
         public async Task<IActionResult> GetEmployeeAccumulatedSalaryHead([FromBody] GetEmployeeAccumulatedSalaryHeadQuery model)
-        { 
+        {
             var result = await _mediator.Send(model);
             return Ok(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> GetEmployeeMonthlyPayroll([FromBody] GetEmployeeMonthlyPayrollQuery model)
-        { 
+        {
             var result = await _mediator.Send(model);
             return Ok(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> ApproveEmployeeMonthlyPayroll([FromBody] ApproveEmployeeMonthlyPayrollCommand model)
-        { 
+        {
             var result = await _mediator.Send(model);
             return Ok(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> RevokeEmployeeMonthlyPayroll([FromBody] RevokeEmployeePayrollCommand model)
-        { 
+        {
             var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAdvanceListByEmployeeId([FromQuery] int id)
+        {
+            var result = await _mediator.Send(new GetEmployeeBasicPayAndCurrencyQuery() { EmployeeId = id });
             return Ok(result);
         }
     }

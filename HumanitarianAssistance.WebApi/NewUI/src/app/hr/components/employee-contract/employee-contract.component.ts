@@ -111,8 +111,14 @@ export class EmployeeContractComponent implements OnInit {
   //#endregion
   hideAddContract(): void {
     this.displayAddContract = true;
-    this.getEmployeeContractDetailByEmployeeId();
+    this.getAdvanceListByEmployeeId();
   }
+
+  getAdvanceListByEmployeeId() {
+    debugger;
+    this.
+  }
+
   actionEvents(event: any) {
     console.log(event);
   }
