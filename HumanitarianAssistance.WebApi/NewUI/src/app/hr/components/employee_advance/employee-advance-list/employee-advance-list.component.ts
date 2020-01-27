@@ -8,6 +8,7 @@ import { DatePipe } from '@angular/common';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { EmployeeContractService } from 'src/app/hr/services/employee-contract.service';
 import { ActivatedRoute } from '@angular/router';
+import { EmployeeAdvanceService } from 'src/app/hr/services/employee-advance.service';
 
 @Component({
   selector: 'app-employee-advance-list',
@@ -33,6 +34,7 @@ export class EmployeeAdvanceListComponent implements OnInit {
   constructor(public dialog: MatDialog,
     private datePipe: DatePipe,
     private commonLoader: CommonLoaderService,
+    private advanceService: EmployeeAdvanceService,
     private routeActive: ActivatedRoute) {
       this.actions = {
         items: {
@@ -53,6 +55,15 @@ export class EmployeeAdvanceListComponent implements OnInit {
     this.routeActive.params.subscribe(params => {
       this.employeeId = +params['id'];
     });
+  }
+
+  getAdvanceListByEmployeeId() {
+
+    this.advanceService.getAdvanceListEmployeeId(this.employeeId)
+        .subscribe(x => {
+
+        });
+
   }
 
 }

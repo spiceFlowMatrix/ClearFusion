@@ -25,11 +25,18 @@ namespace HumanitarianAssistance.Application.HR.Queries
             {
                 var result = await _dbContext.Advances
                                              .Include(x=> x.CurrencyDetails)
+                                             .Include(x=> x.ApprovedByEmployee)
                                              .Where(x=> x.IsDeleted == false && x.EmployeeId == request.EmployeeId)
                                              .Select(x=> new  {
                                                  CurrencyId = x.CurrencyId,
                                                  CurrencyName = x.CurrencyDetails.CurrencyName,
-                                                 ApprovedBy = 
+                                                 ApprovedByEmployeeId = x.ApprovedBy,
+                                                 ApprovedByEmployeeName = x.ApprovedByEmployee.EmployeeName,
+                                                 ModeOfReturn = x.ModeOfReturn,
+                                                 RequestAmount = x.RequestAmount,
+                                                 AdvanceAmount = x.AdvanceAmount,
+                                                 Status = x.ApprovedBy
+
                                              })
                                              .ToListAsync();
 
