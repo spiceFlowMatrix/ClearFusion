@@ -1,12 +1,13 @@
-<div humAddScroll>
-  <div class="row header">
+<div class="container-fluid" humAddScroll>
       <span class="action_header">Advance
-    <hum-button [type]="'add'" [text]="'ADD ADVANCE REQUEST'" (click)="displayAddContractForm()"></hum-button>
+    <hum-button [type]="'add'" [disabled]="errorMessage != '' && errorMessage != null" [text]="'ADD ADVANCE REQUEST'" (click)="addAdvanceRequest()"></hum-button>
   </span>
-  </div>
   <div class="row">
       <div class="col-md-12">
-          <hum-table [headers]="advanceListHeader$" [isDefaultAction]="false" [items]="advanceList$" (actionClick)="actionEvents($event)" [actions]="actions"></hum-table>
+        <div class="alert alert-warning" *ngIf="errorMessage != '' && errorMessage != null" role="alert">
+          <p class="txt-center-align">{{errorMessage}}</p>
+        </div>
+          <hum-table [hideColums$]="hideColums$" [isDefaultAction]="false" [headers]="advanceListHeader$" [items]="advanceList$" (actionClick)="actionEvents($event)" [actions]="actions"></hum-table>
       </div>
   </div>
 </div>

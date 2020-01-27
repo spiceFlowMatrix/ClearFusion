@@ -157,7 +157,8 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     AddSalaryConfigurationComponent,
     AddBonusComponent,
     AddFineComponent,
-    SeeDaysComponent
+    SeeDaysComponent,
+    NewAdvanceRequestComponent
   ]
 })
 export class HrModule {

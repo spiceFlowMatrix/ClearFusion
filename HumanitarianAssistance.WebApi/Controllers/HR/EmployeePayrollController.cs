@@ -8,6 +8,7 @@ using HumanitarianAssistance.Application.HR.Commands.Update;
 using HumanitarianAssistance.Application.HR.Models;
 using HumanitarianAssistance.Application.HR.Queries;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Application.Project.Commands.Create;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -304,7 +305,24 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpGet]
         public async Task<IActionResult> GetAdvanceListByEmployeeId([FromQuery] int id)
         {
-            var result = await _mediator.Send(new GetEmployeeBasicPayAndCurrencyQuery() { EmployeeId = id });
+            var result = await _mediator.Send(new GetAdvanceListByEmployeeIdQuery() { EmployeeId = id });
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddNewAdvanceRequest([FromBody] AddNewAdvanceRequestCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAdvanceDetailById([FromQuery] int id)
+        {
+            var result = await _mediator.Send(new GetAdvanceDetailByIdQuery() { Id = id });
             return Ok(result);
         }
     }

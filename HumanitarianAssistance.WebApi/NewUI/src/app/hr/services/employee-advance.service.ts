@@ -24,4 +24,35 @@ export class EmployeeAdvanceService {
       );
   }
   //#endregion
+
+  //#region "getEmployeeList"
+  getEmployeeList() {
+    return this.globalService
+      .getList(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Code_GetAllEmployeeList
+      );
+  }
+  //#endregion
+
+  //#region "addAdvance"
+  addAdvance(model) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_EmployeePayroll_AddNewAdvanceRequest, model
+      );
+  }
+  //#endregion
+
+  //#region "getAdvanceDetailById"
+  getAdvanceDetailById(id) {
+    debugger;
+    return this.globalService
+      .getDataById(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_EmployeePayroll_GetAdvanceDetailById + '?id=' + id
+      );
+  }
+  //#endregion
 }

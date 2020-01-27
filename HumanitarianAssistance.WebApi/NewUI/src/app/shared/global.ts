@@ -161,6 +161,8 @@ export class GLOBAL {
   public static API_code_GetAllOffice = 'code/GetAllOfficeDetails';
   public static API_HRConfiguration_GetOfficeList = 'HRConfiguration/GetOfficeList';
   public static API_OfficeCode_DeleteOfficeDetails = 'Code/DeleteOfficeDetails';
+  public static API_EmployeePayroll_AddNewAdvanceRequest = 'EmployeePayroll/AddNewAdvanceRequest';
+  public static API_EmployeePayroll_GetAdvanceDetailById = 'EmployeePayroll/GetAdvanceDetailById';
 
 
   public static API_Project_GetAllProvinceDetails = 'Project/GetAllProvinceDetails';

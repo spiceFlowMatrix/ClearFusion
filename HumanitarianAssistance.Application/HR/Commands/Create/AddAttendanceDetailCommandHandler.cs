@@ -220,7 +220,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                             if (xAdvances != null)
                             {
                                 xEmployeeMonthlyAttendance.AdvanceId = xAdvances.AdvancesId;
-                                xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
+                                // xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
                                 xEmployeeMonthlyAttendance.AdvanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
                             }
 
@@ -272,7 +272,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                                     if (xAdvances != null)
                                     {
                                         xEmployeeMonthlyAttendance.AdvanceId = xAdvances.AdvancesId;
-                                        xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
+                                       // xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
                                         xEmployeeMonthlyAttendance.AdvanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
                                     }
 
@@ -297,7 +297,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                                     {
                                         xEmployeeMonthlyAttendance.AdvanceId = xAdvances.AdvancesId;
                                         xEmployeeMonthlyAttendance.AdvanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
-                                        xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
+                                        // xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
                                     }
 
                                     await _dbContext.EmployeeMonthlyAttendance.AddAsync(xEmployeeMonthlyAttendance);
