@@ -71,31 +71,37 @@
       {{text | uppercase}}
     </h5>
   </button>
-  <button *ngSwitchCase="'attachment'" mat-flat-button class="blue" (click)="btnClick()" type="button">
+    <button *ngSwitchCase="'attachment'" mat-flat-button class="blue" (click)="btnClick()" type="button">
     <h5>
       <i class="fa fa-paperclip fa-1"></i>
       {{text| uppercase}}
     </h5>
   </button>
-  <button *ngSwitchCase="'pdf'" mat-flat-button class="blue" (click)="btnClick()" type="button">
+    <button *ngSwitchCase="'pdf'" mat-flat-button class="blue" (click)="btnClick()" type="button">
     <h5>
       <i class="fa fa-file-pdf-o fa-1"></i>
       {{text| uppercase}}
     </h5>
   </button>
-  <button *ngSwitchCase="'delete'" mat-flat-button class="red" (click)="btnClick()" type="button">
+    <button *ngSwitchCase="'addNew'" [disabled]="disabled" mat-flat-button class="goldenrod" (click)="btnClick()" type="button">
+    <h5>
+      <i class="fas fa-plus"></i>
+      {{text | uppercase}}
+    </h5>
+  </button>
+    <button *ngSwitchCase="'delete'" [disabled]="disabled" mat-flat-button class="red" (click)="btnClick()" type="button">
     <h5>
       <i class="fas fa-trash fa-1"></i>
       {{text| uppercase}}
     </h5>
   </button>
-  <button *ngSwitchCase="'exclamation'" mat-flat-button class="red" (click)="btnClick()" type="button">
+    <button *ngSwitchCase="'exclamation'" [disabled]="disabled" mat-flat-button class="red" (click)="btnClick()" type="button">
     <h5>
       <i class="fas fa-exclamation-circle fa-1"></i>
       {{text| uppercase}}
     </h5>
   </button>
-  <button *ngSwitchCase="'minus'" mat-flat-button class="green" (click)="btnClick()" type="button">
+    <button *ngSwitchCase="'minus'" [disabled]="disabled" mat-flat-button class="green" (click)="btnClick()" type="button">
     <h5>
         <i class="fas fa-minus-circle fa-1"></i>
       {{text| uppercase}}

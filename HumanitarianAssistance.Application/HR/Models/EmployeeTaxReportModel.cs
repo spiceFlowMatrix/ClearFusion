@@ -26,5 +26,8 @@ namespace HumanitarianAssistance.Application.HR.Models
 		public string OfficerName { get; set; }
 		public string Position { get; set; }
 		public DateTime Date { get; set; }
+		public string LogoPath { get; set; }
+		public string ReportDate { get; set; }
+
     }
 }
