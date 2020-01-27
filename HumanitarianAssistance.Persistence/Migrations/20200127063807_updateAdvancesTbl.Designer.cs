@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200127063807_updateAdvancesTbl")]
+    partial class updateAdvancesTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1851,19 +1853,19 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime>("AdvanceDate");
 
-                    b.Property<DateTime?>("AdvanceRecoveryDate");
+                    b.Property<DateTime>("AdvanceRecoveryDate");
 
                     b.Property<DateTime>("AppraisalApprovedDate");
 
-                    b.Property<int?>("ApprovedBy");
+                    b.Property<int>("ApprovedBy");
 
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int?>("CurrencyId");
+                    b.Property<int>("CurrencyId");
 
-                    b.Property<DateTime?>("DeductedDate");
+                    b.Property<DateTime>("DeductedDate");
 
                     b.Property<string>("Description");
 
@@ -1873,7 +1875,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<bool>("IsAdvanceRecovery");
 
-                    b.Property<bool?>("IsApproved");
+                    b.Property<bool>("IsApproved");
 
                     b.Property<bool>("IsDeducted");
 
@@ -1887,7 +1889,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("NumberOfInstallments");
 
-                    b.Property<int?>("OfficeId");
+                    b.Property<int>("OfficeId");
 
                     b.Property<double>("RecoveredAmount");
 
@@ -9710,11 +9712,13 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "ApprovedByEmployee")
                         .WithMany()
-                        .HasForeignKey("ApprovedBy");
+                        .HasForeignKey("ApprovedBy")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.CurrencyDetails", "CurrencyDetails")
                         .WithMany()
-                        .HasForeignKey("CurrencyId");
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
                         .WithMany()
