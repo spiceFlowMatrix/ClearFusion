@@ -697,6 +697,10 @@ export class GLOBAL {
   public static API_Attendance_GetFilteredAttendanceDetails = 'Attendance/GetFilteredAttendanceDetails';
 
   //#endregion
+
+  //#region Holidays
+  public static API_HR_GetAllWeeklyHolidaysByOfficeID ='EmployeeHolidays/GetAllHolidayWeeklyDetails'
+  //#endregion
 }
 
 

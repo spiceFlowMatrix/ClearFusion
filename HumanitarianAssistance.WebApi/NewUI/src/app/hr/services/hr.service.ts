@@ -385,4 +385,8 @@ export class HrService {
       data
     );
   }
+
+  getHolidays(officeid: number) {
+    return this.globalService.getList(GLOBAL.API_HR_GetAllWeeklyHolidaysByOfficeID + '?OfficeId=' + officeid);
+  }
 }
