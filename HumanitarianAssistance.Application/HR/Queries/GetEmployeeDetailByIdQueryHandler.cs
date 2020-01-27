@@ -68,7 +68,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                             Terminated = x.EmployeeProfessionalDetail.FiredOn == null ? "No": "Yes",
                                             TerminatedOn = x.EmployeeProfessionalDetail.FiredOn != null ? x.EmployeeProfessionalDetail.FiredOn.Value.ToShortDateString() : "",
                                             TerminationReason = x.EmployeeProfessionalDetail.ResignationReason,
-                                            OfficeId =  x.EmployeeProfessionalDetail.OfficeId
+                                            OfficeId =  x.EmployeeProfessionalDetail.OfficeId,
                                             IsResigned = x.IsResigned,
                                             ResignationStatus = x.ResignationStatus
                                         }).FirstOrDefaultAsync();
