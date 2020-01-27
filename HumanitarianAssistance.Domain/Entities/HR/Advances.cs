@@ -19,8 +19,9 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public EmployeeDetail EmployeeDetail { get; set; }
         public string EmployeeCode { get; set; }
         public int CurrencyId { get; set; }
+        [ForeignKey("CurrencyId")]
         public CurrencyDetails CurrencyDetails { get; set; }
-        public long VoucherReferenceNo { get; set; }
+        public long? VoucherReferenceNo { get; set; }
         public string Description { get; set; }
         public string ModeOfReturn { get; set; }
         public int ApprovedBy { get; set; }
@@ -34,6 +35,8 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public bool IsAdvanceRecovery { get; set; }
         public DateTime AdvanceRecoveryDate { get; set; }
         public int? NumberOfInstallments { get; set; }
+        [ForeignKey("ApprovedBy")]
+        public EmployeeDetail ApprovedByEmployee { get; set; }
         public double RecoveredAmount { get; set; }
     }
 }
