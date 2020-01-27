@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import { ToastrService } from 'ngx-toastr';
 import { HrLeaveService } from 'src/app/hr/services/hr-leave.service';
+import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 
 @Component({
   selector: 'app-employee-leave-add',
@@ -14,7 +15,8 @@ export class EmployeeLeaveAddComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<EmployeeLeaveAddComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, private fb: FormBuilder,
-    private toastr: ToastrService, private hrLeaveService: HrLeaveService) { }
+    private toastr: ToastrService, private hrLeaveService: HrLeaveService,
+    private commonLoader: CommonLoaderService) { }
 
   isFormSubmitted = false;
   applyLeaveForm: FormGroup;
@@ -31,7 +33,7 @@ export class EmployeeLeaveAddComponent implements OnInit {
       'LeaveDate': [{'begin': new Date(new Date().getFullYear(), 0, 1), 'end': new Date()},
                      Validators.required],
       'BalanceLeave': [{value: this.data.HourBalance, disabled: true}],
-      // 'LeaveApplied': [null, [Validators.required, Validators.min(1), Validators.max(this.data.HourBalance)]],
+      'LeaveApplied': [null, [Validators.required, Validators.min(1), Validators.max(this.data.HourBalance)]],
       'Remarks': [null, [Validators.required]]
     });
   }
@@ -60,23 +62,23 @@ export class EmployeeLeaveAddComponent implements OnInit {
       new Date().getSeconds()
     );
 
-    const difference = ((ToDate.getTime() - FromDate.getTime()) / (1000 * 3600 * 24));
+    // const difference = ((ToDate.getTime() - FromDate.getTime()) / (1000 * 3600 * 24));
 
-    if ((this.applyLeaveForm.value.BalanceLeave - difference) < 0) {
-      this.toastr.warning('Applied leave exceeds Balance leave');
-      this.isFormSubmitted = false;
-      return;
-    }
+    // if ((this.applyLeaveForm.value.BalanceLeave - difference) < 0) {
+    //   this.toastr.warning('Applied leave exceeds Balance leave');
+    //   this.isFormSubmitted = false;
+    //   return;
+    // }
 
        const model = {
         LeaveReasonId: this.applyLeaveForm.value.LeaveReasonId,
         Remarks: this.applyLeaveForm.value.Remarks,
         LeaveReasonName: this.applyLeaveForm.value.LeaveType,
-        BlanceLeave: this.applyLeaveForm.value.LeaveApplied,
+        BlanceLeave: this.applyLeaveForm.value.BalanceLeave,
+        LeaveApplied: this.applyLeaveForm.value.LeaveApplied,
         EmployeeId: this.applyLeaveForm.value.EmployeeId,
         FromDate: FromDate,
-        ToDate: ToDate,
-        TotalLeaveCount: difference + 1
+        ToDate: ToDate
       };
 
     this.hrLeaveService.addEmployeeLeave(model).subscribe(x => {
@@ -89,6 +91,31 @@ export class EmployeeLeaveAddComponent implements OnInit {
       this.toastr.warning(error);
       this.isFormSubmitted = false;
     });
+  }
+
+  // dateInput(event) {
+  //   debugger;
+  //   const model = {
+  //     EmployeeId: this.data.EmployeeId,
+
+  //   }
+  //   this.commonLoader.showLoader();
+  //   this.hrLeaveService.addEmployeeLeave(model).subscribe(x => {
+  //     if (x) {
+  //       this.commonLoader.hideLoader();
+  //     } else {
+  //       this.commonLoader.showLoader();
+  //       this.toastr.warning('Could not retrieve working hour for the selected month');
+  //     }
+  //   }, error => {
+  //     this.toastr.warning(error);
+  //     this.commonLoader.hideLoader();
+  //   });
+  // }
+
+  onAppliedHourChange(event) {
+    this.applyLeaveForm.controls['BalanceLeave'].setValue(this.data.HourBalance - (+event.target.value));
+    this.applyLeaveForm.updateValueAndValidity();
   }
 
   closeDialog() {

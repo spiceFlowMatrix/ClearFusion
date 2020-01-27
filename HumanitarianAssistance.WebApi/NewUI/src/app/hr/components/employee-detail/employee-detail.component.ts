@@ -9,11 +9,13 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./employee-detail.component.scss']
 })
 export class EmployeeDetailComponent implements OnInit {
-
   showDetail = false;
   @Input() employeeId: number;
   employeeDetail: IEmployeeDetail;
-  constructor(private hrControlPanelService: HrControlPanelService, private toAstr: ToastrService) { }
+  constructor(
+    private hrControlPanelService: HrControlPanelService,
+    private toAstr: ToastrService
+  ) {}
 
   ngOnInit() {
     this.onModelInIt();
@@ -51,6 +53,8 @@ export class EmployeeDetailComponent implements OnInit {
       Terminated: '',
       TerminatedOn: '',
       TerminationReason: '',
+      IsResigned: false,
+      ResignationStatus: 0
     };
   }
 
@@ -62,39 +66,52 @@ export class EmployeeDetailComponent implements OnInit {
   }
 
   getEmployeeDetail(id) {
-    this.hrControlPanelService.getEmployeeDetail(id).subscribe((x) => {
-      if (x.EmployeeDetail) {
-        this.employeeDetail = {
-          AttendanceGroup: x.EmployeeDetail.AttendanceGroup,
-          Country: x.EmployeeDetail.Country,
-          CurrentAddress: x.EmployeeDetail.CurrentAddress,
-          DateOfBirth: x.EmployeeDetail.DateOfBirth,
-          DutyStation: x.EmployeeDetail.DutyStation,
-          Email: x.EmployeeDetail.Email,
-          EmployementStatus: x.EmployeeDetail.EmployementStatus,
-          ExperienceMonth: x.EmployeeDetail.ExperienceMonth,
-          ExperienceYear: x.EmployeeDetail.ExperienceYear,
-          FirstName: x.EmployeeDetail.FirstName,
-          HiredOn: x.EmployeeDetail.HiredOn,
-          JobDescription: x.EmployeeDetail.JobDescription,
-          LastName: x.EmployeeDetail.LastName,
-          PermanentAddress: x.EmployeeDetail.PermanentAddress,
-          Phone: x.EmployeeDetail.Phone,
-          PreviousWork: x.EmployeeDetail.PreviousWork,
-          Profession: x.EmployeeDetail.Profession,
-          Qualification: x.EmployeeDetail.Qualification,
-          Resigned: x.EmployeeDetail.Resigned,
-          ResignedOn: x.EmployeeDetail.ResignedOn,
-          ResignedReason: x.EmployeeDetail.ResignedReason,
-          Sex: x.EmployeeDetail.Sex,
-          State: x.EmployeeDetail.State,
-          Terminated: x.EmployeeDetail.Terminated,
-          TerminatedOn: x.EmployeeDetail.TerminatedOn,
-          TerminationReason: x.EmployeeDetail.TerminationReason
-        };
+    this.hrControlPanelService.getEmployeeDetail(id).subscribe(
+      x => {
+        if (x.EmployeeDetail) {
+          this.employeeDetail = {
+            AttendanceGroup: x.EmployeeDetail.AttendanceGroup,
+            Country: x.EmployeeDetail.Country,
+            CurrentAddress: x.EmployeeDetail.CurrentAddress,
+            DateOfBirth: x.EmployeeDetail.DateOfBirth,
+            DutyStation: x.EmployeeDetail.DutyStation,
+            Email: x.EmployeeDetail.Email,
+            EmployementStatus: x.EmployeeDetail.EmployementStatus,
+            ExperienceMonth: x.EmployeeDetail.ExperienceMonth,
+            ExperienceYear: x.EmployeeDetail.ExperienceYear,
+            FirstName: x.EmployeeDetail.FirstName,
+            HiredOn: x.EmployeeDetail.HiredOn,
+            JobDescription: x.EmployeeDetail.JobDescription,
+            LastName: x.EmployeeDetail.LastName,
+            PermanentAddress: x.EmployeeDetail.PermanentAddress,
+            Phone: x.EmployeeDetail.Phone,
+            PreviousWork: x.EmployeeDetail.PreviousWork,
+            Profession: x.EmployeeDetail.Profession,
+            Qualification: x.EmployeeDetail.Qualification,
+            Resigned: x.EmployeeDetail.Resigned,
+            ResignedOn: x.EmployeeDetail.ResignedOn,
+            ResignedReason: x.EmployeeDetail.ResignedReason,
+            Sex: x.EmployeeDetail.Sex,
+            State: x.EmployeeDetail.State,
+            Terminated: x.EmployeeDetail.Terminated,
+            TerminatedOn: x.EmployeeDetail.TerminatedOn,
+            TerminationReason: x.EmployeeDetail.TerminationReason,
+            OfficeId: x.EmployeeDetail.OfficeId,
+            IsResigned: x.EmployeeDetail.IsResigned,
+            ResignationStatus: x.EmployeeDetail.ResignationStatus
+          };
+        }
+        localStorage.setItem(
+          'SelectedOfficeId',
+          this.employeeDetail.OfficeId.toString()
+        );
+        const fullName =
+          this.employeeDetail.FirstName + ' ' + this.employeeDetail.LastName;
+        localStorage.setItem('selectedEmployeeName', fullName);
+      },
+      error => {
+        this.toAstr.warning(error);
       }
-    }, error => {
-      this.toAstr.warning(error);
-    });
+    );
   }
 }

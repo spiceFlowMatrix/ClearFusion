@@ -48,10 +48,18 @@ import { AddOtherSkillsComponent } from './components/employee-history/add-other
 import { AddSalaryBudgetComponent } from './components/employee-history/add-salary-budget/add-salary-budget.component';
 import { AddLanguageComponent } from './components/employee-history/add-language/add-language.component';
 import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
+import { AddSalaryConfigurationComponent } from './components/employee-salary-config/add-salary-configuration/add-salary-configuration.component';
+import { AddBonusComponent } from './components/employee-salary-config/add-bonus/add-bonus.component';
+import { AddFineComponent } from './components/employee-salary-config/add-fine/add-fine.component';
 import { EmployeePensionComponent } from './components/employee-pension/employee-pension.component';
 import { EmployeeAdvanceListComponent } from './components/employee_advance/employee-advance-list/employee-advance-list.component';
 import { NewAdvanceRequestComponent } from './components/employee_advance/new-advance-request/new-advance-request.component';
 import { AdvanceHistoryComponent } from './components/employee_advance/advance-history/advance-history.component';
+import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
+import { AddContractComponent } from './components/employee-contract/add-contract/add-contract.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +86,12 @@ import { AdvanceHistoryComponent } from './components/employee_advance/advance-h
     EmployeePensionComponent,
     EmployeeAdvanceListComponent,
     NewAdvanceRequestComponent,
-    AdvanceHistoryComponent
+    AdvanceHistoryComponent,
+    AddSalaryConfigurationComponent,
+    AddBonusComponent,
+    AddFineComponent,
+    SeeDaysComponent,
+    AddContractComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -116,7 +129,19 @@ import { AdvanceHistoryComponent } from './components/employee_advance/advance-h
     MatSelectModule,
     MatTableModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
+
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
+  ],
+  providers: [
+    TranslateService,
+    HttpClient,
   ],
   entryComponents: [
     EmployeeLeaveAddComponent,
@@ -128,9 +153,16 @@ import { AdvanceHistoryComponent } from './components/employee_advance/advance-h
     AddThreeReferenceDetailsComponent,
     AddOtherSkillsComponent,
     AddSalaryBudgetComponent,
-    AddLanguageComponent
+    AddLanguageComponent,
+    AddSalaryConfigurationComponent,
+    AddBonusComponent,
+    AddFineComponent,
+    SeeDaysComponent
   ]
 })
 export class HrModule {
   entryComponents: [];
+}
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
 }

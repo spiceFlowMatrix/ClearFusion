@@ -82,7 +82,8 @@ export class PurchaseListComponent implements OnInit {
     this.hideColumsSub = of({
       headers: ['Date', 'Employee', 'Must Return', 'Procurement Balance (Quantity)', 'Status'],
       items: ['IssueDate', 'Employee', 'MustReturn', 'ProcuredAmount', 'Status']
-    })
+    });
+
     this.getScreenSize();
     this.getAllCurrencies();
     this.actions = {
@@ -98,8 +99,8 @@ export class PurchaseListComponent implements OnInit {
         download: false,
         edit: false
       }
+    };
 
-    }
     this.fieldConfigservice.data.subscribe(res => {
       if (res.length > 0) {
         const headers = res.map(r => r.headerName);
