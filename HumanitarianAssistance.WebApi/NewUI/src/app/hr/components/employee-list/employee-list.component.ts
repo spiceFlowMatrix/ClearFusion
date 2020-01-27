@@ -13,6 +13,7 @@ import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.
 import { SetEmployeeAttendanceComponent } from '../set-employee-attendance/set-employee-attendance.component';
 import { AttendanceService } from '../../services/attendance.service';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { AddSalaryConfigurationComponent } from '../employee-salary-config/add-salary-configuration/add-salary-configuration.component';
 
 @Component({
   selector: 'app-employee-list',
@@ -232,6 +233,19 @@ export class EmployeeListComponent implements OnInit {
         });
       }
     );
+  }
+
+  setFixedSalary() {
+    const dialogRef = this.dialog.open(AddSalaryConfigurationComponent, {
+      width: '500px',
+      autoFocus: false,
+      data: {
+        ForAllEmployees: true
+      }
+    });
+    dialogRef.afterClosed().subscribe(() => {
+
+    });
   }
 
   /** Whether the number of selected elements matches the total number of rows. */

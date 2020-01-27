@@ -12,11 +12,15 @@
       <input matInput [matDatepicker]="picker" (dateChange)="onDateChanged($event)">
       <mat-datepicker #picker ></mat-datepicker>
     </mat-form-field>
-    <button mat-button [matMenuTriggerFor]="OfficeMenu" [disabled]="true">
-      <h5>RECONFIGURE SALARY</h5>
+    <button mat-button [disabled]="(this.selection.selected.length === 0)" [matMenuTriggerFor]="SalaryReconfigureMenu">
+      <h5 [ngStyle]="{'color':  (this.selection.selected.length === 0) ? 'inherit' : '#0390D1' }">RECONFIGURE SALARY &nbsp;<i class="fas fa-caret-down"></i></h5>
     </button>
     <mat-menu #OfficeMenu="matMenu">
       <button (click)="selectedOfficeChanged(office)" *ngFor="let office of officeDropdown$ | async" mat-menu-item>{{office.name}}</button>
+    </mat-menu>
+    <mat-menu #SalaryReconfigureMenu="matMenu">
+      <button (click)="setFixedSalary()" mat-menu-item>Set a Fixed Salary</button>
+      <button mat-menu-item>Increment/Decrement Salary</button>
     </mat-menu>
   </span>
   <div class="action_section">

@@ -122,7 +122,8 @@ export class EmployeeSalaryConfigComponent implements OnInit {
         PayrollId: this.employeeCurrencyAndAmount.PayrollId,
         CurrencyId: this.employeeCurrencyAndAmount.CurrencyId,
         EmployeeId: this.employeeId,
-        MonthlyAmount: this.employeeCurrencyAndAmount.MonthlyAmount
+        MonthlyAmount: this.employeeCurrencyAndAmount.MonthlyAmount,
+        ForAllEmployees: false
       }
     });
     // refresh the data after new request created
