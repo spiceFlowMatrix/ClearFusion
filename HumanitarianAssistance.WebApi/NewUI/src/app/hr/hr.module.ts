@@ -48,8 +48,16 @@ import { AddOtherSkillsComponent } from './components/employee-history/add-other
 import { AddSalaryBudgetComponent } from './components/employee-history/add-salary-budget/add-salary-budget.component';
 import { AddLanguageComponent } from './components/employee-history/add-language/add-language.component';
 import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
+import { AddSalaryConfigurationComponent } from './components/employee-salary-config/add-salary-configuration/add-salary-configuration.component';
+import { AddBonusComponent } from './components/employee-salary-config/add-bonus/add-bonus.component';
+import { AddFineComponent } from './components/employee-salary-config/add-fine/add-fine.component';
 import { EmployeePensionComponent } from './components/employee-pension/employee-pension.component';
 import { AddEmployeeComponent } from './components/add-employee/add-employee.component';
+import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
+import { AddContractComponent } from './components/employee-contract/add-contract/add-contract.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +82,13 @@ import { AddEmployeeComponent } from './components/add-employee/add-employee.com
     EmployeeLeaveAddComponent,
     AssignLeaveComponent,
     EmployeePensionComponent,
-    AddEmployeeComponent
+    AddEmployeeComponent,
+    AddSalaryConfigurationComponent,
+    AddBonusComponent,
+    AddFineComponent,
+    EmployeePensionComponent,
+    SeeDaysComponent,
+    AddContractComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -112,7 +126,19 @@ import { AddEmployeeComponent } from './components/add-employee/add-employee.com
     MatSelectModule,
     MatTableModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
+
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
+  ],
+  providers: [
+    TranslateService,
+    HttpClient,
   ],
   entryComponents: [
     EmployeeLeaveAddComponent,
@@ -124,9 +150,16 @@ import { AddEmployeeComponent } from './components/add-employee/add-employee.com
     AddThreeReferenceDetailsComponent,
     AddOtherSkillsComponent,
     AddSalaryBudgetComponent,
-    AddLanguageComponent
+    AddLanguageComponent,
+    AddSalaryConfigurationComponent,
+    AddBonusComponent,
+    AddFineComponent,
+    SeeDaysComponent
   ]
 })
 export class HrModule {
   entryComponents: [];
+}
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
 }

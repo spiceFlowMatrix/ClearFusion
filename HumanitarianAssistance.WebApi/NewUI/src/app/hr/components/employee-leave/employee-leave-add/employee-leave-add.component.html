@@ -7,23 +7,9 @@
     <div mat-dialog-content>
       <div class="row">
         <div class="col-sm-12">
-          <b>This is the Leave Reason</b>
-        </div>
-        <div class="col-sm-12">
           <mat-form-field class="example-full-width">
             <input formControlName="LeaveType" [readOnly]="true" matInput placeholder="Leave Type">
           </mat-form-field>
-        </div>
-        <div class="col-sm-12">
-          <b>How much balance is left for this leave?</b>
-        </div>
-        <div class="col-sm-12">
-          <mat-form-field class="example-full-width">
-            <input formControlName="BalanceLeave" [readOnly]="true" matInput placeholder="Balance Leave">
-          </mat-form-field>
-        </div>
-        <div class="col-sm-12">
-          <b>When will this Leave be applied?</b>
         </div>
         <div class="col-sm-12">
           <mat-form-field>
@@ -35,18 +21,17 @@
             <sat-datepicker-toggle matSuffix [for]="resultPicker"></sat-datepicker-toggle>
           </mat-form-field>
         </div>
-        <!-- <div class="col-sm-12">
-          <b>How much leave employee want to avail?</b>
-        </div>
         <div class="col-sm-12">
           <mat-form-field class="example-full-width">
-            <input type="number" matInput formControlName="LeaveApplied" placeholder="Leave Applied">
+            <input type="number" matInput (change)="onAppliedHourChange($event)" formControlName="LeaveApplied" placeholder="Applied Hours" type="number">
             <mat-error *ngIf="applyLeaveForm.controls['LeaveApplied'].hasError('min')">unit should be greater than 0</mat-error>
             <mat-error *ngIf="applyLeaveForm.controls['LeaveApplied'].hasError('max')">Max unit allowed is {{data.HourBalance}}</mat-error>
           </mat-form-field>
-        </div> -->
+        </div>
         <div class="col-sm-12">
-          <b>Provide any remarks</b>
+          <mat-form-field class="example-full-width">
+            <input formControlName="BalanceLeave" [readOnly]="true" matInput placeholder="Balance Leave">
+          </mat-form-field>
         </div>
         <div class="col-sm-12">
           <mat-form-field class="example-full-width">

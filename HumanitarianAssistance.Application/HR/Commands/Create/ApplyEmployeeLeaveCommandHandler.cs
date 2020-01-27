@@ -15,12 +15,10 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
     public class ApplyEmployeeLeaveCommandHandler : IRequestHandler<ApplyEmployeeLeaveCommand, object>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
-        private readonly IMapper _mapper;
 
-        public ApplyEmployeeLeaveCommandHandler(HumanitarianAssistanceDbContext dbContext, IMapper mapper)
+        public ApplyEmployeeLeaveCommandHandler(HumanitarianAssistanceDbContext dbContext)
         {
             _dbContext = dbContext;
-            _mapper = mapper;
         }
         public async Task<object> Handle(ApplyEmployeeLeaveCommand request, CancellationToken cancellationToken)
         {
@@ -29,33 +27,33 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
             try
             {
                 //Get hours for employee attendance group in office
-                var obj = (from e in _dbContext.EmployeeDetail.Where(x=> x.EmployeeID == request.EmployeeId)
-                             join p in _dbContext.EmployeeProfessionalDetail on  e.EmployeeID equals p.EmployeeId
-                             join o in _dbContext.OfficeDetail on p.OfficeId equals o.OfficeId
-                             join h in _dbContext.PayrollMonthlyHourDetail on p.AttendanceGroupId equals h.AttendanceGroupId 
-                             where h.OfficeId == p.OfficeId
-                             select new 
-                             {
-                                 h.Hours,
-                                 o.OfficeName
-                             }).FirstOrDefault();
+                // var obj = (from e in _dbContext.EmployeeDetail.Where(x=> x.EmployeeID == request.EmployeeId)
+                //              join p in _dbContext.EmployeeProfessionalDetail on  e.EmployeeID equals p.EmployeeId
+                //              join o in _dbContext.OfficeDetail on p.OfficeId equals o.OfficeId
+                //              join h in _dbContext.PayrollMonthlyHourDetail on p.AttendanceGroupId equals h.AttendanceGroupId 
+                //              where h.OfficeId == p.OfficeId
+                //              select new 
+                //              {
+                //                  h.Hours,
+                //                  o.OfficeName
+                //              }).FirstOrDefault();
 
-                if(obj == null)
-                {
-                    var employeeInfo= _dbContext.EmployeeDetail.Include(x=> x.EmployeeProfessionalDetail).ThenInclude(x=> x.OfficeDetail).FirstOrDefault(x=> x.EmployeeID == request.EmployeeId);
+                // if(obj == null)
+                // {
+                //     var employeeInfo= _dbContext.EmployeeDetail.Include(x=> x.EmployeeProfessionalDetail).ThenInclude(x=> x.OfficeDetail).FirstOrDefault(x=> x.EmployeeID == request.EmployeeId);
 
-                    if(employeeInfo.EmployeeProfessionalDetail.AttendanceGroupId == null)
-                    {
-                        throw new Exception(string.Format(StaticResource.AttendanceGroupNotSet+ employeeInfo.EmployeeCode));
-                    }
-                    throw new Exception(string.Format(StaticResource.PayrollDailyHoursNotSaved, CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(request.FromDate.Month), employeeInfo.EmployeeProfessionalDetail.OfficeDetail.OfficeName));
-                }
+                //     if(employeeInfo.EmployeeProfessionalDetail.AttendanceGroupId == null)
+                //     {
+                //         throw new Exception(string.Format(StaticResource.AttendanceGroupNotSet+ employeeInfo.EmployeeCode));
+                //     }
+                //     throw new Exception(string.Format(StaticResource.PayrollDailyHoursNotSaved, CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(request.FromDate.Month), employeeInfo.EmployeeProfessionalDetail.OfficeDetail.OfficeName));
+                // }
 
                 //get Total leave in days
                 int leaveDays = request.ToDate.Subtract(request.FromDate).Days+1;
 
                 //get total leave hours
-                int totalLeaveHours = obj.Hours.Value * leaveDays;
+                // int totalLeaveHours = obj.Hours.Value * leaveDays;
 
                 //get exiting record for applied leave 
                 var existrecord = await _dbContext.AssignLeaveToEmployee.FirstOrDefaultAsync(x => x.EmployeeId == request.EmployeeId && x.LeaveReasonId == request.LeaveReasonId);
@@ -64,7 +62,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                 int balanceleaveHours = (int)existrecord.AssignUnit - (int)(existrecord.UsedLeaveUnit == null ? 0 : existrecord.UsedLeaveUnit);
 
                 // check if leave balance hour is greater than availed hours of leave
-                if (balanceleaveHours >= (totalLeaveHours-balanceleaveHours))
+                if (balanceleaveHours >= (request.LeaveApplied))
                 {
                     EmployeeApplyLeave applyleavelist = new EmployeeApplyLeave();
                     applyleavelist.EmployeeId = request.EmployeeId;
@@ -75,6 +73,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     applyleavelist.FinancialYearId = existrecord.FinancialYearId;
                     applyleavelist.CreatedById = request.CreatedById;
                     applyleavelist.CreatedDate = DateTime.UtcNow;
+                    applyleavelist.AppliedLeaveCount = request.LeaveApplied;
                     applyleavelist.IsDeleted = false;
 
                     await _dbContext.EmployeeApplyLeave.AddAsync(applyleavelist);
@@ -83,8 +82,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     //update existing record with availed leave hours
                     if (existrecord != null)
                     {
-                        int? usedleaveunit = existrecord.UsedLeaveUnit == null ? 0 : existrecord.UsedLeaveUnit;
-                        existrecord.UsedLeaveUnit = usedleaveunit + totalLeaveHours;
+                         int? usedleaveunit = existrecord.UsedLeaveUnit == null ? 0 : existrecord.UsedLeaveUnit;
+                        existrecord.UsedLeaveUnit = usedleaveunit +request.LeaveApplied;
                         existrecord.ModifiedById = request.ModifiedById;
                         existrecord.ModifiedDate = DateTime.UtcNow;
                         existrecord.IsDeleted = false;

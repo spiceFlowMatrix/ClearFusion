@@ -1,0 +1,38 @@
+<div>
+  <h1 mat-dialog-title>
+    Add Salary Configuration
+    <button mat-icon-button [mat-dialog-close] class="pull-right">
+      <mat-icon aria-label="clear">clear</mat-icon>
+    </button>
+  </h1>
+  <div mat-dialog-content>
+    <form class="example-form" [formGroup]="salaryConfigForm" (ngSubmit)="onFormSubmit(salaryConfigForm.value)">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-lg-6 col-sm-6">
+            <lib-hum-dropdown formControlName="CurrencyId" [validation]="
+                          salaryConfigForm.controls['CurrencyId'].hasError('required')
+                  " [options]="currencyList$" [placeHolder]="'Currency'">
+            </lib-hum-dropdown>
+          </div>
+          <div class="col-lg-6 col-sm-6">
+            <mat-form-field class="example-full-width">
+              <input matInput formControlName="ActiveSalary" placeholder="Active Salary" type="number" />
+              <mat-error *ngIf="salaryConfigForm.controls['ActiveSalary'].hasError('min')">Basic salary should be greater than 0</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button type="submit" style="display: none;" #btnSubmit></button>
+    </form>
+  </div>
+  <div mat-dialog-actions class="pull-right">
+    <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+    <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" (click)="btnSubmit.click()"></hum-button>
+    <hum-button (click)="onCancelPopup()" [type]="'cancel'" [text]="'cancel'"></hum-button>
+  </div>
+
+
+</div>

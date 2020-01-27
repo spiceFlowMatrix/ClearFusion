@@ -30,30 +30,30 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 
                 if (queryResult.Any())
                 {
-                    //Get hours for employee attendance group in office
-                    var obj = (from e in _dbContext.EmployeeDetail.Where(x => x.EmployeeID == request.EmployeeId)
-                               join p in _dbContext.EmployeeProfessionalDetail on e.EmployeeID equals p.EmployeeId
-                               join o in _dbContext.OfficeDetail on p.OfficeId equals o.OfficeId
-                               join h in _dbContext.PayrollMonthlyHourDetail on p.AttendanceGroupId equals h.AttendanceGroupId
-                               where h.OfficeId == p.OfficeId
-                               select new
-                               {
-                                   h.Hours,
-                                   o.OfficeName
-                               }).FirstOrDefault();
+                    // //Get hours for employee attendance group in office
+                    // var obj = (from e in _dbContext.EmployeeDetail.Where(x => x.EmployeeID == request.EmployeeId)
+                    //            join p in _dbContext.EmployeeProfessionalDetail on e.EmployeeID equals p.EmployeeId
+                    //            join o in _dbContext.OfficeDetail on p.OfficeId equals o.OfficeId
+                    //            join h in _dbContext.PayrollMonthlyHourDetail on p.AttendanceGroupId equals h.AttendanceGroupId
+                    //            where h.OfficeId == p.OfficeId
+                    //            select new
+                    //            {
+                    //                h.Hours,
+                    //                o.OfficeName
+                    //            }).FirstOrDefault();
 
-                    if (obj == null)
-                    {
-                        throw new Exception(string.Format(StaticResource.PayrollDailyHoursNotSaved, DateTime.Now.Month, obj.OfficeName));
-                    }
+                    // if (obj == null)
+                    // {
+                    //     throw new Exception(string.Format(StaticResource.PayrollDailyHoursNotSaved, DateTime.Now.Month, obj.OfficeName));
+                    // }
 
                     var empapplyleavelist = queryResult.Select(x => new
                     {
                         ApplyLeaveId = x.ApplyLeaveId,
                         EmployeeId = x.EmployeeId,
-                        FromDate = x.FromDate,
-                        ToDate = x.ToDate,
-                        LeaveHoursCount = (x.ToDate.Subtract(x.FromDate).Days + 1) * obj.Hours.Value,
+                        FromDate = x.FromDate.ToShortDateString(),
+                        ToDate = x.ToDate.ToShortDateString(),
+                        LeaveHoursCount = x.AppliedLeaveCount,
                         LeaveReasonId = x.LeaveReasonId,
                         LeaveReasonName = x.LeaveReasonDetails?.ReasonName ?? null,
                         ApplyLeaveStatusId = x.ApplyLeaveStatusId,

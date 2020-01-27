@@ -17,6 +17,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public EmployeeDetail EmployeeDetails { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
+        public int AppliedLeaveCount { get; set; }
         //[StringLength(30)]
         //public int LeaveTypeId { get; set; } //1 = Full Day, 2 = Half Day
         public int LeaveReasonId { get; set; }
