@@ -20,10 +20,10 @@ export class AddEmployeeService {
     );
   }
 
-  //#region "GetEducationDegreeList"
-  GetEducationDegreeList(): any {
+  //#region "GetQualificationList"
+  GetQualificationList(): any {
     return this.globalService.getList(
-      this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllEducationDegreeList
+      this.appurl.getApiUrl() + GLOBAL.API_Code_GetAllQualification
     );
   }
   //#region "GetJobGradeList"
@@ -112,10 +112,11 @@ export class AddEmployeeService {
   }
   //#endregion
   //#region "AddNewEmployeeData"
-  AddNewEmploye(model:IEmployeeAllDetails): any {
+  AddNewEmployeeDetails(model: IEmployeeAllDetails): any {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_Hr__AddNewEmployee, model
     );
   }
   //#endregion
+
 }

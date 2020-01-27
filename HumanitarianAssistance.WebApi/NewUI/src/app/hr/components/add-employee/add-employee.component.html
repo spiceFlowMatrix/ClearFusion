@@ -1,7 +1,7 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
     <span class="action_header">
     New Employee Form
-    <hum-button [type]="'save'" [text]="'Save '" [isSubmit]="true"  (click)="employeeDetailFormButton.click()"></hum-button>
+    <hum-button [type]="'save'" [text]="'Save '" [isSubmit]="true"  (click)="onFormSubmit()"></hum-button>
     <hum-button [type]="'cancel'" [text]="'Cancel'"></hum-button>
   </span>
     <div class="action_section"></div>
@@ -17,12 +17,12 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput formControlName="FirstName" placeholder="First Name" />
+                                    <input matInput formControlName="FullName" placeholder="Full Name" />
                                 </mat-form-field>
                             </div>
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput formControlName="LastName" placeholder="Last Name" />
+                                    <input matInput formControlName="FatherName" placeholder="Father Name" />
                                 </mat-form-field>
                             </div>
                         </div>
@@ -71,7 +71,7 @@
                     employeeDetailForm.controls['MaritalStatus'].hasError(
                       'required'
                     )
-                  " [options]="maritalStatusList$" [placeHolder]="'MaritalStatus'"></lib-hum-dropdown>
+                  " [options]="maritalStatusList$" [placeHolder]="'Marital Status'"></lib-hum-dropdown>
                             </div>
                             <div class="col-md-3">
                                 <lib-hum-dropdown formControlName="Country" [validation]="
@@ -128,7 +128,7 @@
                     employeeDetailForm.controls['Qualification'].hasError(
                       'required'
                     )
-                  " [options]="educationDegreeList$" [placeHolder]="'Qualification'"></lib-hum-dropdown>
+                  " [options]="qualificationList$" [placeHolder]="'Qualification'"></lib-hum-dropdown>
                             </div>
                         </div>
                         <div class="row">
@@ -191,7 +191,7 @@
                 </mat-tab>
                 <mat-tab label="Profesional Details">
                     <form [formGroup]="employeeProfessionalDetailForm">
-                        <button #employeeProfessionalDetailFormButton type="submit" style="display: none;"></button>
+                        <button id="ProfessionalDetail" type="button" #employeeProfessionalDetailFormButton type="submit" style="display: none;"></button>
                         <h4>Professional Details</h4>
 
                         <div class="row">
@@ -281,24 +281,29 @@
                     </form>
                 </mat-tab>
                 <mat-tab label="Opening Pension">
-                    <form [formGroup]="employeePensionDetailForm">
-                        <button #employeePensionDetailFormButton type="submit" style="display: none;"></button>
-                        <h4>Pension Details</h4>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <lib-hum-dropdown formControlName="Currency" [validation]="
-                                employeePensionDetailForm.controls['Currency'].hasError('required')
-                  " [options]="currencyList$" [placeHolder]="'Currency'"></lib-hum-dropdown>
-                            </div>
+                    <div class="row">
+                        <lib-sub-header-template>
+                            <span class="action_header">Pension Detail
+                    <hum-button [type]="'add'" [text]="'ADD ENTRY'" (click)="addPension()"></hum-button>
+                  </span>
+                        </lib-sub-header-template>
+                        <div class="col-md-4">
+                            <table class="table table-striped">
+                                <tbody>
+                                    <tr>
+                                        <th>Currency</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                    <tr *ngFor="let data of pensionListDisplay">
+                                        <td>{{data.Currency}}</td>
+                                        <td>{{data.Amount}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- <hum-table [headers]="pensionHeader$" [isDefaultAction]="false" [items]="pensionListDisplay$"></hum-table> -->
                         </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <mat-form-field class="example-full-width">
-                                    <input matInput formControlName="Amount" placeholder="Amount" type="number" />
-                                </mat-form-field>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
+
                 </mat-tab>
             </mat-tab-group>
         </div>

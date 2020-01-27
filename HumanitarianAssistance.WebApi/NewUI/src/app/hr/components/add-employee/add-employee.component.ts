@@ -1,3 +1,4 @@
+import { IEmployeePensionDetails } from './../../models/employee-detail.model';
 import { AddEmployeeService } from './../../services/add-employee.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -9,6 +10,8 @@ import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.
 import { PurchaseService } from 'src/app/store/services/purchase.service';
 import { Month } from 'src/app/shared/enum';
 import { IEmployeeAllDetails } from '../../models/employee-detail.model';
+import { MatDialog } from '@angular/material';
+import { AddOpeningPensionComponent } from './add-opening-pension/add-opening-pension.component';
 
 @Component({
   selector: 'app-add-employee',
@@ -18,7 +21,6 @@ import { IEmployeeAllDetails } from '../../models/employee-detail.model';
 export class AddEmployeeComponent implements OnInit {
   employeeDetailForm: FormGroup;
   employeeProfessionalDetailForm: FormGroup;
-  employeePensionDetailForm: FormGroup;
   genderList$: Observable<IDropDownModel[]>;
   maritalStatusList$: Observable<IDropDownModel[]>;
   previousYearsList$: Observable<IDropDownModel[]>;
@@ -29,24 +31,28 @@ export class AddEmployeeComponent implements OnInit {
   districtList$: Observable<IDropDownModel[]>;
   gradeList$: Observable<IDropDownModel[]>;
   employeeTypeList$: Observable<IDropDownModel[]>;
-  educationDegreeList$: Observable<IDropDownModel[]>;
+  qualificationList$: Observable<IDropDownModel[]>;
   currencyList$: Observable<IDropDownModel[]>;
   designationList$: Observable<IDropDownModel[]>;
   officeList$: Observable<IDropDownModel[]>;
   departmentList$: Observable<IDropDownModel[]>;
   contractTypeList$: Observable<IDropDownModel[]>;
   attendanceGroupList$: Observable<IDropDownModel[]>;
+  pensionListDisplay: any[] = [];
+  pensionList: IEmployeePensionDetails[] = [];
   employeeAllDetails: IEmployeeAllDetails;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     private fb: FormBuilder,
+    public dialog: MatDialog,
     private commonLoader: CommonLoaderService,
     private purchaseService: PurchaseService,
-    private employeeService: AddEmployeeService
+    private employeeService: AddEmployeeService,
+    private toastr: ToastrService
   ) {
     this.employeeDetailForm = this.fb.group({
-      FirstName: ['', [Validators.required]],
-      LastName: ['', [Validators.required]],
+      FullName: ['', [Validators.required]],
+      FatherName: ['', [Validators.required]],
       Email: ['', [Validators.required, Validators.email]],
       PhoneNo: [
         null,
@@ -92,10 +98,7 @@ export class AddEmployeeComponent implements OnInit {
       TrainingAndBenefits: ['', [Validators.required]],
       JobDescription: ['', [Validators.required]]
     });
-    this.employeePensionDetailForm = this.fb.group({
-      Currency: ['', [Validators.required]],
-      Amount: ['', [Validators.required]]
-    });
+
     this.genderList$ = of([
       { name: 'Male', value: 1 },
       { name: 'Female', value: 2 },
@@ -114,7 +117,7 @@ export class AddEmployeeComponent implements OnInit {
       this.getAllCountryList(),
       this.getAllJobGradeList(),
       this.getAllProfessionList(),
-      this.getAllEducationDegreeList(),
+      this.getAllQualificationList(),
       this.getEmployeeTypeList(),
       this.getAllOfficeList(),
       this.getDesignationList(),
@@ -127,7 +130,7 @@ export class AddEmployeeComponent implements OnInit {
         this.subscribeCountryList(result[0]);
         this.subscribeGradeList(result[1]);
         this.subscribeProfessionList(result[2]);
-        this.subscribeEducationDegreeList(result[3]);
+        this.subscribeQualificationList(result[3]);
         this.subscribeEmployeeTypeList(result[4]);
         this.subscribeOfficeList(result[5]);
         this.subscribeDesignationList(result[6]);
@@ -137,6 +140,11 @@ export class AddEmployeeComponent implements OnInit {
       });
     this.getAllMonthList();
     this.getPreviousYearsList();
+    this.employeeAllDetails = {
+      EmployeeBasicDetail: {},
+      EmployeeProfessionalDetails: {},
+      EmployeePensionDetail: []
+    };
   }
 
   //#region "Get all month list for ExperienceInMonth dropdown"
@@ -206,17 +214,17 @@ export class AddEmployeeComponent implements OnInit {
   }
   //#endregion
   //#region "Get all education degree list for education dropdown"
-  getAllEducationDegreeList() {
+  getAllQualificationList() {
     this.commonLoader.showLoader();
-    return this.employeeService.GetEducationDegreeList();
+    return this.employeeService.GetQualificationList();
   }
-  subscribeEducationDegreeList(response: any) {
+  subscribeQualificationList(response: any) {
     this.commonLoader.hideLoader();
-    this.educationDegreeList$ = of(
-      response.map(y => {
+    this.qualificationList$ = of(
+      response.data.QualificationDetailsList.map(y => {
         return {
-          value: y.Id,
-          name: y.Name
+          value: y.QualificationId,
+          name: y.QualificationName
         };
       })
     );
@@ -404,13 +412,57 @@ export class AddEmployeeComponent implements OnInit {
     this.departmentList$ = null;
     this.getDepartmentList(e);
   }
-  onFormSubmit(data: any) {
+
+  // #region "Add Pension"
+  addPension(): void {
+    /** Open Education dialog box*/
+    const dialogRef = this.dialog.open(AddOpeningPensionComponent, {
+      width: '400px',
+    });
+    // refresh the list after new request created
+    dialogRef.componentInstance.onPensionDetailListRefresh.subscribe(result => {
+      console.log(result);
+      if (result !== undefined) {
+            this.pensionList.push(result);
+            let currency;
+            this.currencyList$.subscribe(res => {
+              currency = res.find(x => x.value === result.Currency).name;
+            });
+            this.pensionListDisplay.push({
+              Currency: currency,
+                Amount: result.Amount
+            });
+      }
+    });
+    dialogRef.afterClosed().subscribe(() => {});
+  }
+  //#endregion
+
+  onFormSubmit() {
     if (
       this.employeeDetailForm.valid &&
-      this.employeeProfessionalDetailForm.valid &&
-      this.employeePensionDetailForm.valid
+      this.employeeProfessionalDetailForm.valid && this.pensionList.length !== 0
     ) {
-      console.log('Ok');
+      this.employeeAllDetails.EmployeeBasicDetail = this.employeeDetailForm.value;
+      this.employeeAllDetails.EmployeeProfessionalDetails = this.employeeProfessionalDetailForm.value;
+      this.employeeAllDetails.EmployeePensionDetail = this.pensionList;
+      console.log(this.employeeAllDetails);
+      this.employeeService
+        .AddNewEmployeeDetails(this.employeeAllDetails)
+        .subscribe(
+          x => {
+            if (x.StatusCode === 200) {
+              this.toastr.success('Employee Successfully Added');
+            } else {
+              this.toastr.warning(x.Message);
+            }
+          },
+          error => {
+            this.toastr.warning(error);
+          }
+        );
+    } else {
+      this.toastr.warning('Forms Are Not Valid');
     }
   }
 }

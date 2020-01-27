@@ -1,15 +1,21 @@
 using System;
+using System.Collections.Generic;
 using HumanitarianAssistance.Application.Infrastructure;
 using MediatR;
 
 namespace HumanitarianAssistance.Application.HR.Commands.Create {
     public class AddNewEmployeeDetailsCommand : BaseModel, IRequest<ApiResponse> {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public EmployeeBasicDetail EmployeeBasicDetail { get; set; }
+        public EmployeeProfessionalDetails EmployeeProfessionalDetails { get; set; }
+        public List<EmployeePensionDetail> EmployeePensionDetail { get; set; }
+    }
+
+    public class EmployeeBasicDetail {
+        public string FullName { get; set; }
+        public string FatherName { get; set; }
         public string Email { get; set; }
         public int? PhoneNo { get; set; }
         public string Password { get; set; }
-        public string ConfirmPassword { get; set; }
         public int? Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
         public int? MaritalStatus { get; set; }
@@ -29,9 +35,11 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create {
         public string PreviousWork { get; set; }
         public string CurrentAddress { get; set; }
         public string PermanentAddress { get; set; }
+    }
+    public class EmployeeProfessionalDetails {
         public int? EmployeeType { get; set; }
         public int? JobGrade { get; set; }
-        public int? Office { get; set; }
+        public int Office { get; set; }
         public int? Department { get; set; }
         public int? Designation { get; set; }
         public int? EmployeeCotractType { get; set; }
@@ -40,6 +48,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create {
         public int? DutyStation { get; set; }
         public string TrainingAndBenefits { get; set; }
         public string JobDescription { get; set; }
+    }
+    public class EmployeePensionDetail {
         public int? Currency { get; set; }
         public int? Amount { get; set; }
     }

@@ -721,6 +721,7 @@ export class GLOBAL {
   public static API_Code_GetAllEmployeeType = 'Code/GetAllEmployeeType';
   public static API_Hr_GetEmployeeContractType = 'Code/GetAllEmployeeContractType';
   public static API_Hr__AddNewEmployee = 'EmployeeDetail/AddNewEmployeeDetails';
+  public static API_Code_GetAllQualification = 'Code/GetAllQualification';
 
   //#region  "hr employee salary and tax"
   public static API_Code_GetAllFinancialYearDetail = 'Code/GetAllFinancialYearDetail';

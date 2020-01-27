@@ -58,6 +58,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
 import { AddContractComponent } from './components/employee-contract/add-contract/add-contract.component';
+import { AddOpeningPensionComponent } from './components/add-employee/add-opening-pension/add-opening-pension.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +89,8 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     AddFineComponent,
     EmployeePensionComponent,
     SeeDaysComponent,
-    AddContractComponent
+    AddContractComponent,
+    AddOpeningPensionComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -154,7 +156,8 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     AddSalaryConfigurationComponent,
     AddBonusComponent,
     AddFineComponent,
-    SeeDaysComponent
+    SeeDaysComponent,
+    AddOpeningPensionComponent
   ]
 })
 export class HrModule {
