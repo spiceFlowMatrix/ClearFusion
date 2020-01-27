@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { SetEmployeeAttendanceComponent } from '../set-employee-attendance/set-employee-attendance.component';
 import { AttendanceService } from '../../services/attendance.service';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
 
 @Component({
   selector: 'app-employee-list',
@@ -182,7 +183,7 @@ export class EmployeeListComponent implements OnInit {
     this.commonLoader.showLoader();
     const attendanceDate = event.target.value;
     const model = {
-      Date: attendanceDate,
+      Date: StaticUtilities.getLocalDate(attendanceDate),
       OfficeId: this.selectedOffice.value,
       EmpIds: []
     };
