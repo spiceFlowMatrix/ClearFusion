@@ -179,6 +179,9 @@ export class NewAdvanceRequestComponent implements OnInit {
 
           const control = new FormControl();
           this.newAdvanceRequestForm.addControl('AdvanceAmount', control);
+          this.newAdvanceRequestForm.controls['AdvanceAmount'].setValidators([Validators.required,
+                                Validators.max(x.AdvanceDetail.RequestAmount)]);
+                                this.newAdvanceRequestForm.updateValueAndValidity();
         } else if (this.data.btnStatus === AdvanceBtnStatus.EDIT) {
           this.newAdvanceRequestForm.patchValue({
             'AdvanceId': x.AdvanceDetail.AdvanceId,

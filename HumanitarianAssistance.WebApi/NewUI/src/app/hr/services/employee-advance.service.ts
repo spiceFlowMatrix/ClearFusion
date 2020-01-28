@@ -90,7 +90,7 @@ export class EmployeeAdvanceService {
     return this.globalService
       .getDataById(
         this.appurl.getApiUrl() +
-          GLOBAL.API_EmployeePayroll_GetEmployeeAdvanceHistoryDetail + '?AdvanceID=' + id
+          GLOBAL.API_EmployeePayroll_GetAdvanceHistoryById + '?id=' + id
       );
   }
   //#endregion

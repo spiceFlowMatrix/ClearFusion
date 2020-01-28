@@ -357,5 +357,12 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             var result = await _mediator.Send(model);
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAdvanceHistoryById([FromQuery] int id)
+        {
+            var result = await _mediator.Send(new GetAdvanceHistoryByIdQuery() { AdvanceId = id });
+            return Ok(result);
+        }
     }
 }

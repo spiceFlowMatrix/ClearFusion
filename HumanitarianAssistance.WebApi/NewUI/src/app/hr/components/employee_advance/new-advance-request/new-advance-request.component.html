@@ -41,6 +41,7 @@
         <div class="col-sm-12" *ngIf="data.btnStatus == advanceBtnStatus.APPROVE">
           <mat-form-field class="example-full-width">
             <input formControlName="AdvanceAmount" matInput placeholder="Advance Amount" type="number">
+            <mat-error *ngIf="newAdvanceRequestForm.controls['AdvanceAmount'].hasError('max')">Advance Amount exceeds Requested Amount</mat-error>
           </mat-form-field>
         </div>
         <div class="col-sm-12">
