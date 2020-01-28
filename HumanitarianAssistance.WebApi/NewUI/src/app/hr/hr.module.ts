@@ -52,6 +52,9 @@ import { AddSalaryConfigurationComponent } from './components/employee-salary-co
 import { AddBonusComponent } from './components/employee-salary-config/add-bonus/add-bonus.component';
 import { AddFineComponent } from './components/employee-salary-config/add-fine/add-fine.component';
 import { EmployeePensionComponent } from './components/employee-pension/employee-pension.component';
+import { EmployeeAdvanceListComponent } from './components/employee_advance/employee-advance-list/employee-advance-list.component';
+import { NewAdvanceRequestComponent } from './components/employee_advance/new-advance-request/new-advance-request.component';
+import { AdvanceHistoryComponent } from './components/employee_advance/advance-history/advance-history.component';
 import { SetEmployeeAttendanceComponent } from './components/set-employee-attendance/set-employee-attendance.component';
 import {NgxMaterialTimepickerModule} from '../../../node_modules/ngx-material-timepicker';
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
@@ -83,6 +86,9 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     EmployeeLeaveAddComponent,
     AssignLeaveComponent,
     EmployeePensionComponent,
+    EmployeeAdvanceListComponent,
+    NewAdvanceRequestComponent,
+    AdvanceHistoryComponent,
     SetEmployeeAttendanceComponent,
     AddSalaryConfigurationComponent,
     AddBonusComponent,
@@ -156,7 +162,9 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     AddSalaryConfigurationComponent,
     AddBonusComponent,
     AddFineComponent,
-    SeeDaysComponent
+    SeeDaysComponent,
+    NewAdvanceRequestComponent,
+    AdvanceHistoryComponent
   ]
 })
 export class HrModule {
