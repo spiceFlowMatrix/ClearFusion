@@ -1,4 +1,7 @@
 <mat-card humAddScroll>
+  <div class="alert alert-warning" *ngIf="isError">
+    {{ErrorMessage}}
+  </div>
   <div class="row header">
     <span class="action_header">Salary Taxes
       <button mat-button [matMenuTriggerFor]="TaxCurrencyMenu">

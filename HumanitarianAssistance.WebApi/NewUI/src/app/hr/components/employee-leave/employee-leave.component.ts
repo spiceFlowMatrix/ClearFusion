@@ -190,8 +190,6 @@ export class EmployeeLeaveComponent implements OnInit {
 
   appliedLeaveActionEvents(event) {
     if (event.type === 'SEE DAYS') {
-      debugger;
-
       const dialogRef = this.dialog.open(SeeDaysComponent, {
         width: '450px',
         data: {

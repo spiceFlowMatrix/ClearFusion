@@ -40,6 +40,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   monthlySalaryBreakdown: IMonthlySalaryBreakdown;
   employeeSalary: IEmployeeSalary;
   isSalaryApproved = false;
+  isPayrollAdded = true;
   hideColumsBounusFine = of({
     headers: ['Salary Component', 'Salary Allowance', 'Salary Deduction'],
     items: ['SalaryComponent', 'SalaryAllowance', 'SalaryDeduction']
@@ -270,6 +271,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
 
     this.salaryConfigService.getEmployeePayroll(model).subscribe(x => {
       if (x && x.payroll) {
+        this.isPayrollAdded = true;
         this.monthlySalaryBreakdown.NetSalary = x.payroll.NetSalary;
         this.monthlySalaryBreakdown.GrossSalary = x.payroll.GrossSalary;
         this.monthlySalaryBreakdown.SalaryPaidAmount = x.payroll.SalaryPaid;
@@ -304,7 +306,9 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       }
     }, error => {
       this.onInitForm();
-      this.toastr.warning(error);
+      this.isPayrollAdded = false
+      // this.toastr.warning(error);
+
     });
   }
 

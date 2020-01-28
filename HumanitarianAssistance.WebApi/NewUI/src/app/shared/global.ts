@@ -161,6 +161,12 @@ export class GLOBAL {
   public static API_code_GetAllOffice = 'code/GetAllOfficeDetails';
   public static API_HRConfiguration_GetOfficeList = 'HRConfiguration/GetOfficeList';
   public static API_OfficeCode_DeleteOfficeDetails = 'Code/DeleteOfficeDetails';
+  public static API_EmployeePayroll_AddNewAdvanceRequest = 'EmployeePayroll/AddNewAdvanceRequest';
+  public static API_EmployeePayroll_GetAdvanceDetailById = 'EmployeePayroll/GetAdvanceDetailById';
+  public static API_EmployeePayroll_ApproveAdvanceRequest = 'EmployeePayroll/ApproveAdvanceRequest';
+  public static API_EmployeePayroll_RejectAdvanceRequest = 'EmployeePayroll/RejectAdvanceRequest';
+  public static API_EmployeePayroll_EditAdvanceRequest = 'EmployeePayroll/EditAdvanceRequest';
+  public static API_EmployeePayroll_GetAdvanceHistoryById = 'EmployeePayroll/GetAdvanceHistoryById';
 
 
   public static API_Project_GetAllProvinceDetails = 'Project/GetAllProvinceDetails';
@@ -196,6 +202,7 @@ export class GLOBAL {
   public static API_HR_GetEmployeeMonthlyPayroll = 'EmployeePayroll/GetEmployeeMonthlyPayroll';
   public static API_HR_ApproveEmployeeMonthlyPayroll = 'EmployeePayroll/ApproveEmployeeMonthlyPayroll';
   public static API_HR_RevokeEmployeeMonthlyPayroll = 'EmployeePayroll/RevokeEmployeeMonthlyPayroll';
+  public static API_EmployeePayroll_GetEmployeeAdvanceHistoryDetail = 'EmployeePayroll/GetEmployeeAdvanceHistoryDetail';
 
   public static API_EmployeeDetail_GetEmployeeDetailById = 'EmployeeDetail/GetEmployeeDetailById';
   public static API_HR_GetAllEmployeeAssignLeave = 'Attendance/GetAllEmployeeAssignLeave';
@@ -714,6 +721,7 @@ export class GLOBAL {
   //#region Hr Attendance
   public static API_Attendance_GetFilteredAttendanceDetails = 'Attendance/GetFilteredAttendanceDetails';
   static API_HR_GetEmployeeBasicPayAndCurrency = 'EmployeePayroll/GetEmployeeBasicPayAndCurrency';
+  public static API_EmployeePayroll_GetAdvanceListByEmployeeId = 'EmployeePayroll/GetAdvanceListByEmployeeId';
 
   //#endregion
 
