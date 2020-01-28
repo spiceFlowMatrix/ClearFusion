@@ -31,7 +31,6 @@ export class NewAdvanceRequestComponent implements OnInit {
     }
 
   ngOnInit() {
-    debugger;
     this.getEmployeeList();
     if (this.data.btnStatus === AdvanceBtnStatus.NEW) {
       this.headerText = 'Add Advance Request';
