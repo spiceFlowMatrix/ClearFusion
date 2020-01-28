@@ -62,6 +62,8 @@ export class EmployeePensionComponent implements OnInit {
   pensionList: EmployeePensionReportModel[];
   pensionReportList: PensionReportModel[] = [];
   employeeTaxReportData: EmployeeTaxReportModel;
+  isError = false;
+  ErrorMessage ='';
 
   // salary tax pdf
   marginX = 0;
@@ -302,15 +304,18 @@ export class EmployeePensionComponent implements OnInit {
           }
         },
         error => {
-          if (error.StatusCode === 500) {
-            this.toastr.error('Internal Server Error....');
-          } else if (error.StatusCode === 401) {
-            this.toastr.error('Unauthorized Access Error....');
-          } else if (error.StatusCode === 403) {
-            this.toastr.error('Forbidden Error....');
-          } else {
-            this.toastr.error('Something went wrong!');
-          }
+          // if (error.StatusCode === 500) {
+          //   this.toastr.error('Internal Server Error....');
+          // } else if (error.StatusCode === 401) {
+          //   this.toastr.error('Unauthorized Access Error....');
+          // } else if (error.StatusCode === 403) {
+          //   this.toastr.error('Forbidden Error....');
+          // } else {
+           
+          //  this.toastr.error('Something went wrong!');
+          // }
+          this.isError= true;
+          this.ErrorMessage = error.Message
         }
       );
     }
@@ -371,7 +376,9 @@ export class EmployeePensionComponent implements OnInit {
             // this.salaryTaxDataSource = data.data.SalaryTaxReportModelList;
             // this.showHideSalaryTaxInfoLoading(false);
           } else if (data.StatusCode === 400) {
-            this.toastr.error('Something went wrong!');
+           // this.toastr.error('Something went wrong!');
+           this.isError= true;
+           this.ErrorMessage = data.Message
           }
         }
       },
@@ -422,10 +429,14 @@ export class EmployeePensionComponent implements OnInit {
             this.employeeTaxReportData = data.data.EmployeeTaxReport;
           } else {
             if (data.data.EmployeeTaxReport == null) {
-              this.toastr.warning('No record found !');
+              this.isError= true;
+              this.ErrorMessage = 'No record found !';
+              // this.toastr.warning('No record found !');
             } else if (data.StatusCode === 400) {
+              this.isError= true;
+              this.ErrorMessage = data.Message
               // failStatusCode
-              this.toastr.error('Something went wrong !');
+            //  this.toastr.error('Something went wrong !');
             }
           }
         } else {
@@ -433,13 +444,15 @@ export class EmployeePensionComponent implements OnInit {
       },
       error => {
         // this.showHidePensionInfoLoading(false);
-        if (error.StatusCode === 500) {
-          this.toastr.error('Internal Server Error....');
-        } else if (error.StatusCode === 401) {
-          this.toastr.error('Unauthorized Access Error....');
-        } else if (error.StatusCode === 403) {
-          this.toastr.error('Forbidden Error....');
-        }
+        // if (error.StatusCode === 500) {
+        //   this.toastr.error('Internal Server Error....');
+        // } else if (error.StatusCode === 401) {
+        //   this.toastr.error('Unauthorized Access Error....');
+        // } else if (error.StatusCode === 403) {
+        //   this.toastr.error('Forbidden Error....');
+        // }
+        this.isError= true;
+        this.ErrorMessage = error.Message
       }
     );
   }
