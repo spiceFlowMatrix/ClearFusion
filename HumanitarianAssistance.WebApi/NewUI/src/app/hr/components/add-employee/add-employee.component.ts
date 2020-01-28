@@ -1,7 +1,8 @@
 import {
   IEmployeePensionDetails,
   IEmployeePensionList,
-  IEmployeePensionListModel
+  IEmployeePensionListModel,
+  IEmployeeAllDetailsForEdit
 } from './../../models/employee-detail.model';
 import { AddEmployeeService } from './../../services/add-employee.service';
 import { Component, OnInit } from '@angular/core';
@@ -47,7 +48,9 @@ export class AddEmployeeComponent implements OnInit {
   pensionListDisplay: any[] = [];
   pensionList: IEmployeePensionListModel[] = [];
   employeeAllDetails: IEmployeeAllDetails;
+  employeeAllDetailsForEdit: IEmployeeAllDetailsForEdit;
   IsPensionDateSet = false;
+  IsEditing = false;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     private fb: FormBuilder,
@@ -60,6 +63,7 @@ export class AddEmployeeComponent implements OnInit {
   ) {
     this.employeeDetailForm = this.fb.group(
       {
+        EmployeeId: [null],
         FullName: ['', [Validators.required]],
         FatherName: ['', [Validators.required]],
         Email: ['', [Validators.required, Validators.email]],
@@ -124,9 +128,9 @@ export class AddEmployeeComponent implements OnInit {
       { name: 'Widow', value: 3 }
     ] as IDropDownModel[]);
 
-    // this.routeActive.queryParams.subscribe(params => {
-    //   this.employeeId = +params['empId'];
-    // });
+    this.routeActive.queryParams.subscribe(params => {
+      this.employeeId = +params['empId'];
+    });
   }
 
   ngOnInit() {
@@ -162,6 +166,15 @@ export class AddEmployeeComponent implements OnInit {
       EmployeeProfessionalDetails: {},
       EmployeePensionDetail: {}
     };
+    if (this.employeeId > 0) {
+      this.IsEditing = true;
+      this.employeeAllDetailsForEdit = {
+        EmployeeBasicDetail: {},
+        EmployeeProfessionalDetails: {}
+      };
+      this.getEmployeeDetailsByEmployeeId();
+      this.getEmployeeProfessionalDetailsByEmployeeId();
+    }
   }
 
   //#region "Get all month list for ExperienceInMonth dropdown"
@@ -494,11 +507,20 @@ export class AddEmployeeComponent implements OnInit {
       );
   }
   onFormSubmit() {
+    if (this.employeeId > 0) {
+      this.EditEmployeeDetails();
+    } else {
+      this.AddEmployeeDetails();
+    }
+  }
+
+  AddEmployeeDetails() {
     if (
       this.employeeDetailForm.valid &&
       this.employeeProfessionalDetailForm.valid &&
       this.pensionList.length !== 0
     ) {
+      this.employeeDetailForm.controls['EmployeeId'].setValue(this.employeeId);
       this.employeeAllDetails.EmployeeBasicDetail = this.employeeDetailForm.value;
       this.employeeAllDetails.EmployeeProfessionalDetails = this.employeeProfessionalDetailForm.value;
       this.employeeAllDetails.EmployeePensionDetail.PensionList = this.pensionList;
@@ -520,9 +542,113 @@ export class AddEmployeeComponent implements OnInit {
       this.toastr.warning('Forms Are Not Valid');
     }
   }
+
+  EditEmployeeDetails() {
+    if (
+      this.employeeDetailForm.valid &&
+      this.employeeProfessionalDetailForm.valid
+    ) {
+      this.employeeDetailForm.controls['EmployeeId'].setValue(this.employeeId);
+      this.employeeAllDetailsForEdit.EmployeeBasicDetail = this.employeeDetailForm.value;
+      this.employeeAllDetailsForEdit.EmployeeProfessionalDetails = this.employeeProfessionalDetailForm.value;
+      this.employeeService
+        .EditEmployeeDetails(this.employeeAllDetailsForEdit)
+        .subscribe(
+          x => {
+            if (x.StatusCode === 200) {
+              this.toastr.success('Employee Successfully Updated');
+            } else {
+              this.toastr.warning(x.Message);
+            }
+          },
+          error => {
+            this.toastr.warning(error);
+          }
+        );
+    } else {
+      this.toastr.warning('Forms Are Not Valid');
+    }
+  }
+
+  getEmployeeDetailsByEmployeeId() {
+    this.employeeService
+      .GetEmployeeDetailByEmployeeId(this.employeeId)
+      .subscribe(
+        x => {
+          if (x.StatusCode === 200) {
+            this.onChangeCountry(x.data.EmployeeDetailList[0].CountryId);
+            this.employeeDetailForm.patchValue({
+              FullName: x.data.EmployeeDetailList[0].EmployeeName,
+              FatherName: x.data.EmployeeDetailList[0].FatherName,
+              Email: x.data.EmployeeDetailList[0].Email,
+              PhoneNo: x.data.EmployeeDetailList[0].Phone,
+              // Password: x.data.EmployeeDetailList[0].EmployeeName,
+              // ConfirmPassword: x.data.EmployeeDetailList[0].EmployeeName,
+              Gender: x.data.EmployeeDetailList[0].SexId,
+              DateOfBirth: x.data.EmployeeDetailList[0].DateOfBirth,
+              MaritalStatus: x.data.EmployeeDetailList[0].MaritalStatus,
+              Country: x.data.EmployeeDetailList[0].CountryId,
+              Province: x.data.EmployeeDetailList[0].ProvinceId,
+              // District: x.data.EmployeeDetailList[0].EmployeeName,
+              BirthPlace: x.data.EmployeeDetailList[0].BirthPlace,
+              TinNumber: x.data.EmployeeDetailList[0].TinNumber,
+              PassportNumber: x.data.EmployeeDetailList[0].PassportNo,
+              University: x.data.EmployeeDetailList[0].University,
+              Profession: x.data.EmployeeDetailList[0].ProfessionId,
+              Qualification: x.data.EmployeeDetailList[0].HigherQualificationId,
+              ExperienceYear: x.data.EmployeeDetailList[0].ExperienceYear,
+              ExperienceMonth: x.data.EmployeeDetailList[0].ExperienceMonth,
+              IssuePlace: x.data.EmployeeDetailList[0].IssuePlace,
+              ReferBy: x.data.EmployeeDetailList[0].ReferBy,
+              PreviousWork: x.data.EmployeeDetailList[0].PreviousWork,
+              CurrentAddress: x.data.EmployeeDetailList[0].CurrentAddress,
+              PermanentAddress: x.data.EmployeeDetailList[0].PermanentAddress
+            });
+            console.log(x.data.EmployeeDetailList);
+          } else {
+            this.toastr.warning(x.Message);
+          }
+        },
+        error => {
+          this.toastr.warning(error);
+        }
+      );
+  }
+  getEmployeeProfessionalDetailsByEmployeeId() {
+    this.employeeService
+      .GetEmployeeProfessionalDetailByEmployeeId(this.employeeId)
+      .subscribe(
+        x => {
+          if (x.StatusCode === 200) {
+            this.employeeProfessionalDetailForm.patchValue({
+              EmployeeType: x.data.EmployeeProfessionalList[0].EmployeeTypeId,
+              // JobGrade: x.data.EmployeeProfessionalList[0].EmployeeName,
+              Office: x.data.EmployeeProfessionalList[0].OfficeId,
+              // Department: x.data.EmployeeProfessionalList[0].EmployeeName,
+              // Designation: x.data.EmployeeProfessionalList[0].EmployeeName,
+              EmployeeCotractType:
+                x.data.EmployeeProfessionalList[0].EmployeeContractTypeId,
+              HiredOn: x.data.EmployeeProfessionalList[0].HiredOn,
+              AttendanceGroup:
+                x.data.EmployeeProfessionalList[0].AttendanceGroupId,
+              DutyStation: x.data.EmployeeProfessionalList[0].DutyStation
+              //  TrainingAndBenefits:
+              //     x.data.EmployeeProfessionalList[0].EmployeeName,
+              //   JobDescription: x.data.EmployeeProfessionalList[0].EmployeeName
+            });
+            console.log(x.data.EmployeeProfessionalList);
+          } else {
+            this.toastr.warning(x.Message);
+          }
+        },
+        error => {
+          this.toastr.warning(error);
+        }
+      );
+  }
 }
 
-// custom validator to check that two fields match
+// custom validator to check that two fields match GetEmployeeOpeningPensionDetail
 export function MustMatch(controlName: string, matchingControlName: string) {
   return (formGroup: FormGroup) => {
     const control = formGroup.controls[controlName];

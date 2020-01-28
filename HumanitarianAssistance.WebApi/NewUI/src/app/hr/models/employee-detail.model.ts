@@ -54,8 +54,13 @@ export interface IEmployeeAllDetails {
   EmployeeProfessionalDetails: IEmployeeProfessionalDetails;
   EmployeePensionDetail: IEmployeePensionDetails;
 }
+export interface IEmployeeAllDetailsForEdit {
+  EmployeeBasicDetail: IEmployeeBasicDetail;
+  EmployeeProfessionalDetails: IEmployeeProfessionalDetails;
+}
 
 export interface IEmployeeBasicDetail {
+  EmployeeId?: number;
   FullName?: string;
   FatherName?: string;
   Email?: string;
