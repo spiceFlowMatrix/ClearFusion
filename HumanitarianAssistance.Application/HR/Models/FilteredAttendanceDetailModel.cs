@@ -17,8 +17,8 @@ namespace HumanitarianAssistance.Application.HR.Models
     public class AttendanceListModel
     {
         public string Date { get; set; }
-        public string InTime { get; set; }
-        public string OutTime { get; set; }
+        public DateTime? InTime { get; set; }
+        public DateTime? OutTime { get; set; }
         public string Attended { get; set; }
     }
 }

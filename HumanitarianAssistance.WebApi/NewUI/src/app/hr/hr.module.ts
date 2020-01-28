@@ -53,6 +53,7 @@ import { AddBonusComponent } from './components/employee-salary-config/add-bonus
 import { AddFineComponent } from './components/employee-salary-config/add-fine/add-fine.component';
 import { EmployeePensionComponent } from './components/employee-pension/employee-pension.component';
 import { AddEmployeeComponent } from './components/add-employee/add-employee.component';
+import { SetEmployeeAttendanceComponent } from './components/set-employee-attendance/set-employee-attendance.component';
 import { EmployeeAdvanceListComponent } from './components/employee_advance/employee-advance-list/employee-advance-list.component';
 import { NewAdvanceRequestComponent } from './components/employee_advance/new-advance-request/new-advance-request.component';
 import { AdvanceHistoryComponent } from './components/employee_advance/advance-history/advance-history.component';
@@ -62,6 +63,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
 import { AddContractComponent } from './components/employee-contract/add-contract/add-contract.component';
 import { AddOpeningPensionComponent } from './components/add-employee/add-opening-pension/add-opening-pension.component';
+import { IncrementDecrementSalaryComponent } from './components/employee-salary-config/increment-decrement-salary/increment-decrement-salary.component';
 
 @NgModule({
   declarations: [
@@ -87,6 +89,7 @@ import { AddOpeningPensionComponent } from './components/add-employee/add-openin
     AssignLeaveComponent,
     EmployeePensionComponent,
     AddEmployeeComponent,
+    SetEmployeeAttendanceComponent,
     EmployeeAdvanceListComponent,
     NewAdvanceRequestComponent,
     AdvanceHistoryComponent,
@@ -95,7 +98,8 @@ import { AddOpeningPensionComponent } from './components/add-employee/add-openin
     AddFineComponent,
     SeeDaysComponent,
     AddContractComponent,
-    AddOpeningPensionComponent
+    AddOpeningPensionComponent,
+    IncrementDecrementSalaryComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -134,6 +138,7 @@ import { AddOpeningPensionComponent } from './components/add-employee/add-openin
     MatTableModule,
     MatCheckboxModule,
     MatRadioModule,
+    NgxMaterialTimepickerModule,
 
     TranslateModule.forRoot({
       loader: {
@@ -158,11 +163,13 @@ import { AddOpeningPensionComponent } from './components/add-employee/add-openin
     AddOtherSkillsComponent,
     AddSalaryBudgetComponent,
     AddLanguageComponent,
+    SetEmployeeAttendanceComponent,
     AddSalaryConfigurationComponent,
     AddBonusComponent,
     AddFineComponent,
     SeeDaysComponent,
     AddOpeningPensionComponent,
+    IncrementDecrementSalaryComponent,
     NewAdvanceRequestComponent,
     AdvanceHistoryComponent
   ]

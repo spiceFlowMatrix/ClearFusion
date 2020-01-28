@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.HR.Commands.Create;
+using HumanitarianAssistance.Application.HR.Commands.Common;
 using HumanitarianAssistance.Application.HR.Commands.Delete;
 using HumanitarianAssistance.Application.HR.Commands.Update;
 using HumanitarianAssistance.Application.HR.Models;
@@ -238,5 +239,33 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             var item =  await _mediator.Send(model);
             return Ok(item);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetPayrollDailyHourByEmployeeIds([FromBody]GetPayrollDailyHourByEmployeeIdsQuery model)
+        {
+            var item =  await _mediator.Send(model);
+            return Ok(item);
+        }
+
+        [HttpPost]
+        public async Task<object> AddEditEmployeeAttendanceDetails([FromBody] AddEditAttendanceDetailCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            AddEditAttendanceDetailCommand command = new AddEditAttendanceDetailCommand();
+
+            if (model.EmployeeAttendance.Any())
+            {
+                model.EmployeeAttendance.ForEach(x =>
+                {
+                    x.CreatedById = userId;
+                    x.CreatedDate = DateTime.UtcNow;
+                });
+            }
+
+            var result =  await _mediator.Send(model);
+            return Ok(result);
+        }
+
     }
 }

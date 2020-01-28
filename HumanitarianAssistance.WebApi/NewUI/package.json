@@ -61,6 +61,7 @@
     "ngx-daterangepicker-material": "^1.2.4",
     "ngx-file-drop": "^5.0.0",
     "ngx-mat-select-search": "^1.7.0",
+    "ngx-material-timepicker": "^3.3.1",
     "ngx-order-pipe": "^2.0.2",
     "ngx-spinner": "^6.1.2",
     "ngx-toastr": "^9.1.1",

@@ -202,6 +202,8 @@ export class GLOBAL {
   public static API_HR_GetEmployeeMonthlyPayroll = 'EmployeePayroll/GetEmployeeMonthlyPayroll';
   public static API_HR_ApproveEmployeeMonthlyPayroll = 'EmployeePayroll/ApproveEmployeeMonthlyPayroll';
   public static API_HR_RevokeEmployeeMonthlyPayroll = 'EmployeePayroll/RevokeEmployeeMonthlyPayroll';
+  public static API_HR_SetMultipleEmployeeFixedSalary = 'EmployeePayroll/SetMultipleEmployeeFixedSalary';
+  public static API_HR_IncrementDecrementEmployeesSalary = 'EmployeePayroll/IncrementDecrementEmployeesSalary';
   public static API_EmployeePayroll_GetEmployeeAdvanceHistoryDetail = 'EmployeePayroll/GetEmployeeAdvanceHistoryDetail';
 
   public static API_EmployeeDetail_GetEmployeeDetailById = 'EmployeeDetail/GetEmployeeDetailById';
@@ -720,6 +722,8 @@ export class GLOBAL {
 
   //#region Hr Attendance
   public static API_Attendance_GetFilteredAttendanceDetails = 'Attendance/GetFilteredAttendanceDetails';
+  public static API_Attendance_GetPayrollDailyHourByEmployeeIds = 'Attendance/GetPayrollDailyHourByEmployeeIds';
+  public static API_Attendance_AddEditEmployeeAttendance = 'Attendance/AddEditEmployeeAttendanceDetails';
   static API_HR_GetEmployeeBasicPayAndCurrency = 'EmployeePayroll/GetEmployeeBasicPayAndCurrency';
   public static API_EmployeePayroll_GetAdvanceListByEmployeeId = 'EmployeePayroll/GetAdvanceListByEmployeeId';
 
