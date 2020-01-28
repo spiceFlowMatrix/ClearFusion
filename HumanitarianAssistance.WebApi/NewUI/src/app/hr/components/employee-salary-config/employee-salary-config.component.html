@@ -1,9 +1,9 @@
 <mat-card humAddScroll>
     <div class="row header">
         <span class="action_header">Salary Configuration
-      <hum-button [type]="'edit'" [text]="'RECONFIGURE'" (click)="addSalaryConfiguration()"></hum-button>
-    </span>
-    </div><br/>
+            <hum-button [type]="'edit'" [text]="'RECONFIGURE'" (click)="addSalaryConfiguration()"></hum-button>
+        </span>
+    </div><br />
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-4">
@@ -22,24 +22,31 @@
             </div>
         </div>
     </div>
-    <br/>
+    <br />
     <div class="row header">
         <span class="action_header">Monthly Salary Breakdown
-    <hum-button [type]="'add'" [disabled]="monthlySalaryBreakdown.Month == '' || isSalaryApproved" [text]="'ADD BONUS'" (click)="addBonus()"></hum-button>
-    <hum-button  [type]="'addNew'" [disabled]="monthlySalaryBreakdown.Month == '' || isSalaryApproved" [text]="'ADD FINE'" (click)="addFine()"></hum-button>
-    <hum-button  [type]="'save'" [text]="'APPROVE SALARY'" [disabled]=" monthlySalaryBreakdown.Month == '' || isSalaryApproved" (click)="approveSalary()"></hum-button>
-    <hum-button  [type]="'exclamation'" [text]="'REVOKE SALARY'" [disabled]="!isSalaryApproved" (click)="revokeSalary()"></hum-button>
-    <button mat-button [matMenuTriggerFor]="MonthMenu">
-      <h5 style="color: #0390D1;">{{selectedMonth.name | uppercase}}  &nbsp;<i class="fas fa-caret-down"></i></h5>
-    </button>
-<mat-menu #MonthMenu="matMenu">
-      <button (click)="selectedMonthChanged(month)" *ngFor="let month of monthsList$ | async" mat-menu-item>{{month.name}}</button>
-    </mat-menu>
+            <hum-button [type]="'add'" [disabled]="monthlySalaryBreakdown.Month == '' || isSalaryApproved"
+                [text]="'ADD BONUS'" (click)="addBonus()"></hum-button>
+            <hum-button [type]="'addNew'" [disabled]="monthlySalaryBreakdown.Month == '' || isSalaryApproved"
+                [text]="'ADD FINE'" (click)="addFine()"></hum-button>
+            <hum-button [type]="'save'" [text]="'APPROVE SALARY'"
+                [disabled]=" monthlySalaryBreakdown.Month == '' || isSalaryApproved" (click)="approveSalary()">
+            </hum-button>
+            <hum-button [type]="'exclamation'" [text]="'REVOKE SALARY'" [disabled]="!isSalaryApproved"
+                (click)="revokeSalary()"></hum-button>
+            <button mat-button [matMenuTriggerFor]="MonthMenu">
+                <h5 style="color: #0390D1;">{{selectedMonth.name | uppercase}} &nbsp;<i class="fas fa-caret-down"></i>
+                </h5>
+            </button>
+            <mat-menu #MonthMenu="matMenu">
+                <button (click)="selectedMonthChanged(month)" *ngFor="let month of monthsList$ | async"
+                    mat-menu-item>{{month.name}}</button>
+            </mat-menu>
 
 
-  </span>
-    </div><br/>
-    <div class="row">
+        </span>
+    </div><br />
+    <div class="row" *ngIf="isPayrollAdded">
         <div class="col-md-12">
             <div class="col-md-4">
                 <table class="table table-striped">
@@ -74,20 +81,30 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" *ngIf="isPayrollAdded">
         <div class="col-md-12">
             <mat-tab-group>
                 <mat-tab label="Accumulated">
                     <div class="col-md-12">
-                        <hum-table [headers]="accumulatedHeaders$" [hideColums$]="hideColumsAccumulatedSalaryHeads" [isDefaultAction]="false" [items]="accumulatedList$"></hum-table>
+                        <hum-table [headers]="accumulatedHeaders$" [hideColums$]="hideColumsAccumulatedSalaryHeads"
+                            [isDefaultAction]="false" [items]="accumulatedList$"></hum-table>
                     </div>
                 </mat-tab>
                 <mat-tab label="Bonuses & Fines">
                     <div class="col-md-12">
-                        <hum-table [headers]="bonusAndFineHeaders$" [hideColums$]="hideColumsBounusFine" [isDefaultAction]="false" [items]="bonusAndFineList$" [actions]="actions" (actionClick)="bonusFineEvents($event)"></hum-table>
+                        <hum-table [headers]="bonusAndFineHeaders$" [hideColums$]="hideColumsBounusFine"
+                            [isDefaultAction]="false" [items]="bonusAndFineList$" [actions]="actions"
+                            (actionClick)="bonusFineEvents($event)"></hum-table>
                     </div>
                 </mat-tab>
             </mat-tab-group>
+        </div>
+    </div>
+    <div class="row" *ngIf="!isPayrollAdded">
+        <div class="col-md-12">
+            <i class="fas fa-info-circle icon_color_yellow"></i>&nbsp;
+            <b>Payroll Hours are not configured for this month. Please Add Payroll Hours for the selected month for this
+                employee's Attendance Group.</b>
         </div>
     </div>
 </mat-card>
