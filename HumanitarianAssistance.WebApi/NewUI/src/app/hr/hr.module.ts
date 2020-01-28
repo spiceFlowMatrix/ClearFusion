@@ -162,7 +162,7 @@ import { AddOpeningPensionComponent } from './components/add-employee/add-openin
     AddBonusComponent,
     AddFineComponent,
     SeeDaysComponent,
-    AddOpeningPensionComponent
+    AddOpeningPensionComponent,
     NewAdvanceRequestComponent,
     AdvanceHistoryComponent
   ]
