@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200127081927_updateAdvancesColumnsNullable")]
+    partial class updateAdvancesColumnsNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1842,36 +1844,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.ToTable("AccumulatedSalaryHeadDetail");
                 });
 
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.AdvanceHistoryDetail", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AdvanceId");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<double>("InstallmentBalance");
-
-                    b.Property<double>("InstallmentPaid");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<DateTime>("PaymentDate");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdvanceId");
-
-                    b.ToTable("AdvanceHistoryDetail");
-                });
-
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.Advances", b =>
                 {
                     b.Property<int>("AdvancesId")
@@ -2263,13 +2235,11 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<double>("BasicSalary");
 
-                    b.Property<double>("CapacityBuildingAmount");
-
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int?>("CurrencyId");
+                    b.Property<int>("CurrencyId");
 
                     b.Property<int>("EmployeeId");
 
@@ -2278,8 +2248,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<string>("ModifiedById");
 
                     b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<double>("SecurityAmount");
 
                     b.HasKey("Id");
 
@@ -9740,14 +9708,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.AdvanceHistoryDetail", b =>
-                {
-                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.Advances", "Advances")
-                        .WithMany()
-                        .HasForeignKey("AdvanceId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.Advances", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "ApprovedByEmployee")
@@ -9838,7 +9798,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.CurrencyDetails", "CurrencyDetails")
                         .WithMany()
-                        .HasForeignKey("CurrencyId");
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
                         .WithMany()
