@@ -5,6 +5,7 @@ import { DesignationListingComponent } from './components/designation-listing/de
 import { GeneralComponent } from './components/general/general.component';
 import { ExitInterviewQuestionsComponent } from './components/exit-interview-questions/exit-interview-questions.component';
 import { LeaveTypeComponent } from './components/leave-type/leave-type.component';
+import { AppraisalConfigComponent } from './components/appraisal-config/appraisal-config.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,9 @@ const routes: Routes = [
       },
       {
         path: 'leave-policy', component: LeaveTypeComponent
+      },
+      {
+        path: 'appraisal-questions', component: AppraisalConfigComponent
       },
       {
         path: '', redirectTo: 'general', pathMatch: 'full'
