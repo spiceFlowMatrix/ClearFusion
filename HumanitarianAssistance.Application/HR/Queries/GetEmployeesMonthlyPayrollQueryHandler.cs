@@ -177,14 +177,14 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                                     obj.AdvanceRecoveryAmount = Math.Round((Convert.ToDouble(xAdvances.AdvanceAmount / xAdvances.NumberOfInstallments ?? 1)), 2);
                                     obj.AdvanceAmount = xAdvances.AdvanceAmount;
-                                    obj.IsAdvanceApproved = Convert.ToBoolean(xAdvances.IsApproved);
+                                    // obj.IsAdvanceApproved = xAdvances.IsApproved;
                                     obj.AdvanceBalanceAmount = xAdvances.AdvanceAmount;
                                 }
                                 else
                                 {
                                     Double iBalanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
                                     obj.AdvanceRecoveryAmount = Math.Round((Convert.ToDouble(iBalanceAmount / xAdvances.NumberOfInstallments)),2);
-                                    obj.IsAdvanceApproved = Convert.ToBoolean(xAdvances.IsApproved);
+                                    // obj.IsAdvanceApproved = xAdvances.IsApproved;
                                     obj.AdvanceAmount = xAdvances.AdvanceAmount;
                                     obj.AdvanceBalanceAmount = iBalanceAmount;
                                 }
