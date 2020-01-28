@@ -1,3 +1,4 @@
+import { AddEmployeeComponent } from './components/add-employee/add-employee.component';
 import { AddContractComponent } from './components/employee-contract/add-contract/add-contract.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -16,6 +17,8 @@ const routes: Routes = [
         children: [{ path: 'addContract', component: AddContractComponent }]
       },
       { path: 'employees', component: EmployeeListComponent },
+      { path: 'employee/:id', component: EmployeeControlPanelComponent },
+      { path: 'addEmployee', component: AddEmployeeComponent }
 
     ]
   },

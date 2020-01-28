@@ -251,7 +251,11 @@ namespace HumanitarianAssistance.Application.CommonServices
                         ResignationOn = request.ResignationOn,
                         ResignationReason = request.ResignationReason,
                         AttendanceGroupId = request.AttendanceGroupId,
-                        DutyStation = request.DutyStation
+                        DutyStation = request.DutyStation,
+                        DepartmentId = request.Department,
+                        TrainingBenefits = request.TrainingAndBenefits,
+                        JobDescription = request.JobDescription,
+                        DesignationId = request.Designation
                     };
 
                     EmployeeProfessionalDetail obj1 = _mapper.Map<EmployeeProfessionalDetail>(empprofessional);

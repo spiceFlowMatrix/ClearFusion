@@ -8,6 +8,11 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
 {
     public class AddNewEmployeeCommand : BaseModel, IRequest<ApiResponse>
     {
+        public AddNewEmployeeCommand()
+        {
+            PensionDetailModel = new PensionDetailModel();
+            //PensionDetail = new PensionList();
+        } 
         public int EmployeeID { get; set; }
         public string EmployeeCode { get; set; }
         public int? EmployeeTypeId { get; set; }
@@ -67,6 +72,10 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
         public string Password { get; set; }
         public int? AttendanceGroupId { get; set; }
         public int? DutyStation { get; set; }
+public string TrainingAndBenefits { get; set; }
+public string JobDescription { get; set; }
+public int? Department { get; set; }
+public int? Designation { get; set; }
 
         public PensionDetailModel PensionDetailModel { get; set; }
     }
