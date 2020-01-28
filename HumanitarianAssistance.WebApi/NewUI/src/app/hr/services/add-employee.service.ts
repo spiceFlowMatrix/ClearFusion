@@ -119,4 +119,14 @@ export class AddEmployeeService {
   }
   //#endregion
 
+  //#region "CheckExchangeRatesVerified"
+  CheckExchangeRatesVerified(model: any): any {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_ExchangeRates_CheckExchangeRatesVerified, model
+    );
+  }
+  //#endregion
+
+
+
 }

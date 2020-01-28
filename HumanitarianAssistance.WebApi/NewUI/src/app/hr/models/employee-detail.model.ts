@@ -52,14 +52,14 @@ export interface IEmployeeDetailModel {
 export interface IEmployeeAllDetails {
   EmployeeBasicDetail: IEmployeeBasicDetail;
   EmployeeProfessionalDetails: IEmployeeProfessionalDetails;
-  EmployeePensionDetail: IEmployeePensionDetails[];
+  EmployeePensionDetail: IEmployeePensionDetails;
 }
 
 export interface IEmployeeBasicDetail {
   FullName?: string;
   FatherName?: string;
   Email?: string;
-  PhoneNo?: number;
+  PhoneNo?: string;
   Password?: string;
   Gender?: number;
   DateOfBirth?: Date;
@@ -96,6 +96,17 @@ export interface IEmployeeProfessionalDetails {
 }
 
 export interface IEmployeePensionDetails {
-  Currency?: number;
-  Amount?: number;
+  PensionDate?: Date;
+  PensionList?: IEmployeePensionList[];
+}
+
+export interface IEmployeePensionList {
+  Currency: number;
+  Amount: number;
+}
+
+export interface IEmployeePensionListModel {
+  Id: number;
+  Currency: number;
+  Amount: number;
 }

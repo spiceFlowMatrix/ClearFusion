@@ -1,3 +1,14 @@
 ::ng-deep .humDropdownCustomStyle {
     width: 100%;
 }
+
+::ng-deep .clsMatDatePicker {
+    font-size: 15px;
+    width: 143px;
+    margin-left: 20px;
+    margin-top: -8px;
+}
+
+::ng-deep .mat-tab-body-content {
+    overflow-x: hidden !important;
+}

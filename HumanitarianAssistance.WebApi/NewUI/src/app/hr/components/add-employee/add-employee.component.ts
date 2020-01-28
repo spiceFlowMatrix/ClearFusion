@@ -1,4 +1,8 @@
-import { IEmployeePensionDetails } from './../../models/employee-detail.model';
+import {
+  IEmployeePensionDetails,
+  IEmployeePensionList,
+  IEmployeePensionListModel
+} from './../../models/employee-detail.model';
 import { AddEmployeeService } from './../../services/add-employee.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -12,6 +16,7 @@ import { Month } from 'src/app/shared/enum';
 import { IEmployeeAllDetails } from '../../models/employee-detail.model';
 import { MatDialog } from '@angular/material';
 import { AddOpeningPensionComponent } from './add-opening-pension/add-opening-pension.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-add-employee',
@@ -19,6 +24,7 @@ import { AddOpeningPensionComponent } from './add-opening-pension/add-opening-pe
   styleUrls: ['./add-employee.component.scss']
 })
 export class AddEmployeeComponent implements OnInit {
+  employeeId: number;
   employeeDetailForm: FormGroup;
   employeeProfessionalDetailForm: FormGroup;
   genderList$: Observable<IDropDownModel[]>;
@@ -39,8 +45,9 @@ export class AddEmployeeComponent implements OnInit {
   contractTypeList$: Observable<IDropDownModel[]>;
   attendanceGroupList$: Observable<IDropDownModel[]>;
   pensionListDisplay: any[] = [];
-  pensionList: IEmployeePensionDetails[] = [];
+  pensionList: IEmployeePensionListModel[] = [];
   employeeAllDetails: IEmployeeAllDetails;
+  IsPensionDateSet = false;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     private fb: FormBuilder,
@@ -48,43 +55,49 @@ export class AddEmployeeComponent implements OnInit {
     private commonLoader: CommonLoaderService,
     private purchaseService: PurchaseService,
     private employeeService: AddEmployeeService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private routeActive: ActivatedRoute
   ) {
-    this.employeeDetailForm = this.fb.group({
-      FullName: ['', [Validators.required]],
-      FatherName: ['', [Validators.required]],
-      Email: ['', [Validators.required, Validators.email]],
-      PhoneNo: [
-        null,
-        [
-          Validators.required,
-          Validators.pattern(/^-?(0|[1-9]\d*)?$/),
-          Validators.minLength(10),
-          Validators.maxLength(14)
-        ]
-      ],
-      Password: ['', [Validators.required]],
-      ConfirmPassword: ['', [Validators.required]],
-      Gender: ['', [Validators.required]],
-      DateOfBirth: ['', [Validators.required]],
-      MaritalStatus: ['', [Validators.required]],
-      Country: ['', [Validators.required]],
-      Province: ['', [Validators.required]],
-      District: ['', [Validators.required]],
-      BirthPlace: ['', [Validators.required]],
-      TinNumber: ['', [Validators.required]],
-      PassportNumber: ['', [Validators.required]],
-      University: ['', [Validators.required]],
-      Profession: ['', [Validators.required]],
-      Qualification: ['', [Validators.required]],
-      ExperienceYear: ['', [Validators.required]],
-      ExperienceMonth: ['', [Validators.required]],
-      IssuePlace: ['', [Validators.required]],
-      ReferBy: ['', [Validators.required]],
-      PreviousWork: ['', [Validators.required]],
-      CurrentAddress: ['', [Validators.required]],
-      PermanentAddress: ['', [Validators.required]]
-    });
+    this.employeeDetailForm = this.fb.group(
+      {
+        FullName: ['', [Validators.required]],
+        FatherName: ['', [Validators.required]],
+        Email: ['', [Validators.required, Validators.email]],
+        PhoneNo: [
+          null,
+          [
+            Validators.required,
+            Validators.pattern(/^-?(0|[1-9]\d*)?$/),
+            Validators.minLength(10),
+            Validators.maxLength(14)
+          ]
+        ],
+        Password: ['', [Validators.required]],
+        ConfirmPassword: ['', [Validators.required]],
+        Gender: ['', [Validators.required]],
+        DateOfBirth: ['', [Validators.required]],
+        MaritalStatus: ['', [Validators.required]],
+        Country: ['', [Validators.required]],
+        Province: ['', [Validators.required]],
+        District: ['', [Validators.required]],
+        BirthPlace: ['', [Validators.required]],
+        TinNumber: ['', [Validators.required]],
+        PassportNumber: ['', [Validators.required]],
+        University: ['', [Validators.required]],
+        Profession: ['', [Validators.required]],
+        Qualification: ['', [Validators.required]],
+        ExperienceYear: ['', [Validators.required]],
+        ExperienceMonth: ['', [Validators.required]],
+        IssuePlace: ['', [Validators.required]],
+        ReferBy: ['', [Validators.required]],
+        PreviousWork: ['', [Validators.required]],
+        CurrentAddress: ['', [Validators.required]],
+        PermanentAddress: ['', [Validators.required]]
+      },
+      {
+        validator: MustMatch('Password', 'ConfirmPassword')
+      }
+    );
     this.employeeProfessionalDetailForm = this.fb.group({
       EmployeeType: ['', [Validators.required]],
       JobGrade: ['', [Validators.required]],
@@ -110,6 +123,10 @@ export class AddEmployeeComponent implements OnInit {
       { name: 'Divorced', value: 3 },
       { name: 'Widow', value: 3 }
     ] as IDropDownModel[]);
+
+    // this.routeActive.queryParams.subscribe(params => {
+    //   this.employeeId = +params['empId'];
+    // });
   }
 
   ngOnInit() {
@@ -143,7 +160,7 @@ export class AddEmployeeComponent implements OnInit {
     this.employeeAllDetails = {
       EmployeeBasicDetail: {},
       EmployeeProfessionalDetails: {},
-      EmployeePensionDetail: []
+      EmployeePensionDetail: {}
     };
   }
 
@@ -418,35 +435,73 @@ export class AddEmployeeComponent implements OnInit {
     /** Open Education dialog box*/
     const dialogRef = this.dialog.open(AddOpeningPensionComponent, {
       width: '400px',
+      data: this.pensionList.length + 1
     });
     // refresh the list after new request created
     dialogRef.componentInstance.onPensionDetailListRefresh.subscribe(result => {
-      console.log(result);
       if (result !== undefined) {
-            this.pensionList.push(result);
-            let currency;
-            this.currencyList$.subscribe(res => {
-              currency = res.find(x => x.value === result.Currency).name;
-            });
-            this.pensionListDisplay.push({
-              Currency: currency,
-                Amount: result.Amount
-            });
+        this.pensionList.push(result);
+        let currency;
+        this.currencyList$.subscribe(res => {
+          currency = res.find(x => x.value === result.Currency).name;
+        });
+        this.pensionListDisplay.push({
+          Id: result.Id,
+          Currency: currency,
+          Amount: result.Amount
+        });
       }
     });
     dialogRef.afterClosed().subscribe(() => {});
   }
-  //#endregion
 
+  deletePensionItem(data: any) {
+    const index = this.pensionList.findIndex(x => x.Id === data.Id);
+    this.pensionList.splice(index, 1);
+    this.pensionListDisplay.splice(index, 1);
+  }
+  //#endregion
+  checkExchangeRateVerified(exchangeRateDate: any) {
+    // this.pensionForm.PensionDate = exchangeRateDate;
+    const checkExchangeRateModel = {
+      ExchangeRateDate: new Date(
+        new Date(exchangeRateDate).getFullYear(),
+        new Date(exchangeRateDate).getMonth(),
+        new Date(exchangeRateDate).getDate(),
+        new Date().getHours(),
+        new Date().getMinutes(),
+        new Date().getSeconds()
+      )
+    };
+    this.employeeService
+      .CheckExchangeRatesVerified(checkExchangeRateModel)
+      .subscribe(
+        data => {
+          if (data.StatusCode === 200) {
+            if (data.ResponseData) {
+              this.IsPensionDateSet = true;
+              this.employeeAllDetails.EmployeePensionDetail.PensionDate = exchangeRateDate;
+            } else {
+              this.toastr.warning(
+                'No Exchange Rate set/verified for this date'
+              );
+            }
+          } else {
+            this.toastr.error(data.Message);
+          }
+        },
+        error => {}
+      );
+  }
   onFormSubmit() {
     if (
       this.employeeDetailForm.valid &&
-      this.employeeProfessionalDetailForm.valid && this.pensionList.length !== 0
+      this.employeeProfessionalDetailForm.valid &&
+      this.pensionList.length !== 0
     ) {
       this.employeeAllDetails.EmployeeBasicDetail = this.employeeDetailForm.value;
       this.employeeAllDetails.EmployeeProfessionalDetails = this.employeeProfessionalDetailForm.value;
-      this.employeeAllDetails.EmployeePensionDetail = this.pensionList;
-      console.log(this.employeeAllDetails);
+      this.employeeAllDetails.EmployeePensionDetail.PensionList = this.pensionList;
       this.employeeService
         .AddNewEmployeeDetails(this.employeeAllDetails)
         .subscribe(
@@ -465,4 +520,24 @@ export class AddEmployeeComponent implements OnInit {
       this.toastr.warning('Forms Are Not Valid');
     }
   }
+}
+
+// custom validator to check that two fields match
+export function MustMatch(controlName: string, matchingControlName: string) {
+  return (formGroup: FormGroup) => {
+    const control = formGroup.controls[controlName];
+    const matchingControl = formGroup.controls[matchingControlName];
+
+    if (matchingControl.errors && !matchingControl.errors.mustMatch) {
+      // return if another validator has already found an error on the matchingControl
+      return;
+    }
+
+    // set error on matchingControl if validation fails
+    if (control.value !== matchingControl.value) {
+      matchingControl.setErrors({ mustMatch: true });
+    } else {
+      matchingControl.setErrors(null);
+    }
+  };
 }

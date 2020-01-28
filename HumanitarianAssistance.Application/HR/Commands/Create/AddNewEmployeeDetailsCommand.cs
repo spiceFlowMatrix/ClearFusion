@@ -7,14 +7,14 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create {
     public class AddNewEmployeeDetailsCommand : BaseModel, IRequest<ApiResponse> {
         public EmployeeBasicDetail EmployeeBasicDetail { get; set; }
         public EmployeeProfessionalDetails EmployeeProfessionalDetails { get; set; }
-        public List<EmployeePensionDetail> EmployeePensionDetail { get; set; }
+        public EmployeePensionDetail EmployeePensionDetail { get; set; }
     }
 
     public class EmployeeBasicDetail {
         public string FullName { get; set; }
         public string FatherName { get; set; }
         public string Email { get; set; }
-        public int? PhoneNo { get; set; }
+        public string PhoneNo { get; set; }
         public string Password { get; set; }
         public int? Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
@@ -50,7 +50,11 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create {
         public string JobDescription { get; set; }
     }
     public class EmployeePensionDetail {
-        public int? Currency { get; set; }
-        public int? Amount { get; set; }
+        public DateTime? PensionDate { get; set; }
+        public List<PensionList> PensionList { get; set; }
+    }
+        public class PensionList {
+        public int Currency { get; set; }
+        public double? Amount { get; set; }
     }
 }

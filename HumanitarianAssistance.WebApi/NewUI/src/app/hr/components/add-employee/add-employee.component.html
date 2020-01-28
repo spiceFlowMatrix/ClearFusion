@@ -6,7 +6,7 @@
   </span>
     <div class="action_section"></div>
 </lib-sub-header-template>
-<mat-card humAddScroll>
+<mat-card humAddScroll [height]="150">
     <div class="row">
         <div class="col-md-12">
             <mat-tab-group>
@@ -284,7 +284,16 @@
                     <div class="row">
                         <lib-sub-header-template>
                             <span class="action_header">Pension Detail
-                    <hum-button [type]="'add'" [text]="'ADD ENTRY'" (click)="addPension()"></hum-button>
+                    <hum-button *ngIf="IsPensionDateSet===true" [type]="'add'" [text]="'ADD ENTRY'" (click)="addPension()"></hum-button>
+
+
+                    <mat-form-field *ngIf="IsPensionDateSet===false" class="clsMatDatePicker">
+                      <input matInput [matDatepicker]="picker" placeholder="Pension Date" (dateChange)="checkExchangeRateVerified($event.value)">
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+
                   </span>
                         </lib-sub-header-template>
                         <div class="col-md-4">
@@ -297,6 +306,7 @@
                                     <tr *ngFor="let data of pensionListDisplay">
                                         <td>{{data.Currency}}</td>
                                         <td>{{data.Amount}}</td>
+                                        <td> <i class="fas fa-trash" (click)='deletePensionItem(data)'></i></td>
                                     </tr>
                                 </tbody>
                             </table>

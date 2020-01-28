@@ -1,8 +1,8 @@
-import { IEmployeePensionDetails } from './../../../models/employee-detail.model';
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { IEmployeePensionDetails, IEmployeePensionListModel } from './../../../models/employee-detail.model';
+import { Component, OnInit, EventEmitter, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ReplaySubject, forkJoin, Observable, of } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
@@ -26,8 +26,10 @@ export class AddOpeningPensionComponent implements OnInit {
     private commonLoader: CommonLoaderService,
     private employeeService: AddEmployeeService,
     public dialogRef: MatDialogRef<AddOpeningPensionComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.employeePensionDetailForm = this.fb.group({
+      Id: [null],
       Currency: ['', [Validators.required]],
       Amount: ['', [Validators.required]]
     });
@@ -59,14 +61,15 @@ subscribeCurrencyList(response: any) {
 }
 //#endregion
 
-  onFormSubmit(data: IEmployeePensionDetails) {
+  onFormSubmit(data: IEmployeePensionListModel) {
     this.isFormSubmitted = true;
     if (this.employeePensionDetailForm.valid) {
+      data.Id = this.data;
       this.AddPensionDetailListRefresh(data);
     }
   }
   //#region "On historical list refresh"
-  AddPensionDetailListRefresh(data: IEmployeePensionDetails) {
+  AddPensionDetailListRefresh(data: IEmployeePensionListModel) {
     this.onPensionDetailListRefresh.emit(data);
     this.isFormSubmitted = false;
     this.onNoClick();
