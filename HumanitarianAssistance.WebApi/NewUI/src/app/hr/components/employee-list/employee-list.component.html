@@ -5,9 +5,13 @@
     <button mat-button [matMenuTriggerFor]="OfficeMenu">
       <h5 style="color: #0390D1;">{{selectedOffice.name | uppercase}} &nbsp;<i class="fas fa-caret-down"></i></h5>
     </button>
-    <button mat-button [matMenuTriggerFor]="OfficeMenu" [disabled]="true">
-      <h5>SET ATTENDANCE &nbsp;<i class="fas fa-caret-down"></i></h5>
+    <button mat-button [disabled]="(this.selection.selected.length === 0)" (click)="setAttendance(picker)">
+      <h5 [ngStyle]="{'color':  (this.selection.selected.length === 0) ? 'inherit' : '#0390D1' }">SET ATTENDANCE </h5>
     </button>
+    <mat-form-field style="width:1px;visibility:hidden;">
+      <input matInput [matDatepicker]="picker" (dateChange)="onDateChanged($event)">
+      <mat-datepicker #picker ></mat-datepicker>
+    </mat-form-field>
     <button mat-button [matMenuTriggerFor]="OfficeMenu" [disabled]="true">
       <h5>RECONFIGURE SALARY</h5>
     </button>
@@ -53,7 +57,7 @@
     </div>
   </form>
 </div>
-<div class="row">
+<div class="row" humAddScroll [height]="250">
   <div class="col-md-12">
       <mat-table #table [dataSource]="employeeDataSource">
         <ng-container matColumnDef="select">
