@@ -183,7 +183,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 model.NetSalary = Math.Round((double)(model.GrossSalary - totalFine - dSalaryTax - dPension), 2);
                 model.SalaryPaid = model.NetSalary;
 
-                Advances xAdvances = _dbContext.Advances.FirstOrDefault(x => x.IsDeleted == false && x.IsApproved == true
+                Advances xAdvances = _dbContext.AdvanceHistoryDetail.FirstOrDefault(x => x.IsDeleted == false && x.IsApproved == true
                                                                            && x.EmployeeId == request.EmployeeId && x.OfficeId == employeeDetail.EmployeeProfessionalDetail.OfficeId
                                                                            && x.AdvanceDate.Date < DateTime.Now.Date && x.IsDeducted == false);
 

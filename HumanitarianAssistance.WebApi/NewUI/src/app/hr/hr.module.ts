@@ -60,6 +60,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
 import { AddContractComponent } from './components/employee-contract/add-contract/add-contract.component';
+import { AddAdvanceRecoveryComponent } from './components/employee-salary-config/add-advance-recovery/add-advance-recovery.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +92,8 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     AddBonusComponent,
     AddFineComponent,
     SeeDaysComponent,
-    AddContractComponent
+    AddContractComponent,
+    AddAdvanceRecoveryComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -159,7 +161,8 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     AddFineComponent,
     SeeDaysComponent,
     NewAdvanceRequestComponent,
-    AdvanceHistoryComponent
+    AdvanceHistoryComponent,
+    AddAdvanceRecoveryComponent
   ]
 })
 export class HrModule {

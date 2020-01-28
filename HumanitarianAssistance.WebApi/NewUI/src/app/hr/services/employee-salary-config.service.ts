@@ -104,4 +104,20 @@ export class EmployeeSalaryConfigService {
       );
     }
     //#endregion
+
+    //#region "addAdvanceRecovery"
+    addAdvanceRecovery(model): any {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_EmployeePayroll_AddAdvanceRecovery, model
+      );
+    }
+    //#endregion
+
+    //#region "getEmployeeAdvanceDetail"
+    getEmployeeAdvanceDetail(id): any {
+      return this.globalService.getDataById(
+        this.appurl.getApiUrl() + GLOBAL.API_EmployeePayroll_GetEmployeePayrollAdvanceDetail + '?id=' + id
+      );
+    }
+    //#endregion
 }

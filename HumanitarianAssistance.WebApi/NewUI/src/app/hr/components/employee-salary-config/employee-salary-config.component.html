@@ -29,6 +29,8 @@
                 [text]="'ADD BONUS'" (click)="addBonus()"></hum-button>
             <hum-button [type]="'addNew'" [disabled]="monthlySalaryBreakdown.Month == '' || isSalaryApproved"
                 [text]="'ADD FINE'" (click)="addFine()"></hum-button>
+                <hum-button [type]="'add'" [disabled]="monthlySalaryBreakdown.Month == '' || isSalaryApproved"
+                [text]="'ADD ADVANCE RECOVERY'" (click)="addAdvance()"></hum-button>
             <hum-button [type]="'save'" [text]="'APPROVE SALARY'"
                 [disabled]=" monthlySalaryBreakdown.Month == '' || isSalaryApproved" (click)="approveSalary()">
             </hum-button>

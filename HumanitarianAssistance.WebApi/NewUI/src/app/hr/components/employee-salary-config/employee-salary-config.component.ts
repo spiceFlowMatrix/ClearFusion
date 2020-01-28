@@ -11,9 +11,9 @@ import { MatDialog } from '@angular/material';
 import { Month, TransactionType } from 'src/app/shared/enum';
 import { ActivatedRoute } from '@angular/router';
 import { EmployeeSalaryConfigService } from '../../services/employee-salary-config.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
 import 'rxjs/add/observable/empty';
+import { AddAdvanceRecoveryComponent } from './add-advance-recovery/add-advance-recovery.component';
 
 @Component({
   selector: 'app-employee-salary-config',
@@ -306,7 +306,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       }
     }, error => {
       this.onInitForm();
-      this.isPayrollAdded = false
+      this.isPayrollAdded = false;
       // this.toastr.warning(error);
 
     });
@@ -344,6 +344,27 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       }
     }, error => {
       this.toastr.warning(error);
+    });
+  }
+
+  addAdvance() {
+    if (this.selectedMonth.value === 0) {
+      this.toastr.warning('Please select Month');
+      return;
+    }
+    // NOTE: It open AddFine dialog and passed the data into the AddFineComponent Model
+    const dialogRef = this.dialog.open(AddAdvanceRecoveryComponent, {
+      width: '500px',
+      autoFocus: false,
+      data: {
+        EmployeeId: this.employeeId,
+        SelectedMonth: this.selectedMonth.value
+      }
+    });
+    // refresh the data after new request created
+    dialogRef.afterClosed().subscribe(() => {
+      this.getEmployeeBonusFineSalaryHead();
+      this.getEmployeePayroll();
     });
   }
 
