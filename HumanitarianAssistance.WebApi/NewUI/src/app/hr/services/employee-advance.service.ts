@@ -47,11 +47,50 @@ export class EmployeeAdvanceService {
 
   //#region "getAdvanceDetailById"
   getAdvanceDetailById(id) {
-    debugger;
     return this.globalService
       .getDataById(
         this.appurl.getApiUrl() +
           GLOBAL.API_EmployeePayroll_GetAdvanceDetailById + '?id=' + id
+      );
+  }
+  //#endregion
+
+  //#region "approveAdvance"
+  approveAdvance(model) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_EmployeePayroll_ApproveAdvanceRequest, model
+      );
+  }
+  //#endregion
+
+  //#region "editAdvance"
+  editAdvance(model) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_EmployeePayroll_EditAdvanceRequest, model
+      );
+  }
+  //#endregion
+
+  //#region "rejectAdvance"
+  rejectAdvance(id) {
+    return this.globalService
+      .getDataById(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_EmployeePayroll_RejectAdvanceRequest + '?id=' + id
+      );
+  }
+  //#endregion
+
+  //#region "getAdvanceHistory"
+  getAdvanceHistory(id) {
+    return this.globalService
+      .getDataById(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_EmployeePayroll_GetEmployeeAdvanceHistoryDetail + '?AdvanceID=' + id
       );
   }
   //#endregion

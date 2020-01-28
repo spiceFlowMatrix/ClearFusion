@@ -26,6 +26,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
             try
             {
                 Advances obj = _mapper.Map<Advances>(request);
+                obj.ApprovedBy = request.ApprovedByEmployeeId;
                 await _dbContext.Advances.AddAsync(obj);
                 await _dbContext.SaveChangesAsync();
                 response.Add("Success", true);

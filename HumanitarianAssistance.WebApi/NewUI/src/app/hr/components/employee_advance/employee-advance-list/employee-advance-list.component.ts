@@ -10,6 +10,9 @@ import { EmployeeContractService } from 'src/app/hr/services/employee-contract.s
 import { ActivatedRoute } from '@angular/router';
 import { EmployeeAdvanceService } from 'src/app/hr/services/employee-advance.service';
 import { NewAdvanceRequestComponent } from '../new-advance-request/new-advance-request.component';
+import { AdvanceBtnStatus } from 'src/app/shared/enum';
+import { ToastrService } from 'ngx-toastr';
+import { AdvanceHistoryComponent } from '../advance-history/advance-history.component';
 
 @Component({
   selector: 'app-employee-advance-list',
@@ -41,6 +44,7 @@ export class EmployeeAdvanceListComponent implements OnInit {
   constructor(public dialog: MatDialog,
     private datePipe: DatePipe,
     private commonLoader: CommonLoaderService,
+    private toastr: ToastrService,
     private advanceService: EmployeeAdvanceService,
     private routeActive: ActivatedRoute) {
     this.actions = {
@@ -82,13 +86,13 @@ export class EmployeeAdvanceListComponent implements OnInit {
               itemAction: (y.Status !== 'UnApproved') ? ([
                 {
                   button: {
-                    status: false,
-                    text: '',
+                    status: true,
+                    text: 'SEE HISTORY',
                     type: 'text'
                   },
                   delete: false,
                   download: false,
-                  edit: false
+                  edit: true
                 }
               ]) : ([
                   {
@@ -124,7 +128,7 @@ export class EmployeeAdvanceListComponent implements OnInit {
                   {
                     button: {
                       status: true,
-                      text: '',
+                      text: 'EDIT',
                       type: 'edit'
                     },
                     delete: false,
@@ -139,12 +143,12 @@ export class EmployeeAdvanceListComponent implements OnInit {
       });
   }
 
-  openPopUp(newRequest: boolean, id: number) {
+  openAddAdvancePopUp(status: number, id: number) {
     const dialogRef = this.dialog.open(NewAdvanceRequestComponent, {
       width: '450px',
       data: {
         EmployeeId: this.employeeId,
-        IsNewRequest: newRequest,
+        btnStatus: status,
         Id: id
       }
     });
@@ -154,14 +158,45 @@ export class EmployeeAdvanceListComponent implements OnInit {
     });
   }
 
+  showAdvanceHistoryPopUp(id: number) {
+    const dialogRef = this.dialog.open(AdvanceHistoryComponent, {
+      width: '450px',
+      data: {
+        Id: id,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.getAdvanceListByEmployeeId();
+    });
+  }
+
   addAdvanceRequest() {
-    this.openPopUp(true, 0);
+    this.openAddAdvancePopUp(AdvanceBtnStatus.NEW, 0);
   }
 
   actionEvents(event) {
-    debugger;
     if (event.type === 'APPROVE') {
-      this.openPopUp(false, event.item.AdvanceId);
+      this.openAddAdvancePopUp(AdvanceBtnStatus.APPROVE, event.item.AdvanceId);
+    } else if (event.type === 'REJECT') {
+      this.rejectAdvance(event.item.AdvanceId);
+    } else if (event.type === 'EDIT') {
+      this.openAddAdvancePopUp(AdvanceBtnStatus.EDIT, event.item.AdvanceId);
+    } else if (event.type === 'SEE HISTORY') {
+      this.showAdvanceHistoryPopUp(event.item.AdvanceId);
     }
+  }
+
+  rejectAdvance(id: number) {
+    this.advanceService.rejectAdvance(id).subscribe(x => {
+      if (x) {
+        this.toastr.success('Rejected Successfully');
+        this.getAdvanceListByEmployeeId();
+      } else {
+        this.toastr.warning('Something went wrong. Please try again');
+      }
+    }, error => {
+      this.toastr.warning(error);
+    });
   }
 }

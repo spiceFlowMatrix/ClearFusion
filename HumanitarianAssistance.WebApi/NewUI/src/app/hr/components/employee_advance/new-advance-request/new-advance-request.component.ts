@@ -8,6 +8,7 @@ import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
 import { IDropDownModel } from 'src/app/store/models/purchase';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { AdvanceBtnStatus } from 'src/app/shared/enum';
 
 @Component({
   selector: 'app-new-advance-request',
@@ -19,6 +20,7 @@ export class NewAdvanceRequestComponent implements OnInit {
   newAdvanceRequestForm: FormGroup;
   isFormSubmitted = false;
   headerText = 'Add Advance Request';
+  advanceBtnStatus = AdvanceBtnStatus; // use enum in html
   employeeList$: Observable<IDropDownModel[]>;
 
   constructor(private dialogRef: MatDialogRef<NewAdvanceRequestComponent>,
@@ -29,13 +31,17 @@ export class NewAdvanceRequestComponent implements OnInit {
     }
 
   ngOnInit() {
+    debugger;
     this.getEmployeeList();
-    if (this.data.IsNewRequest) {
+    if (this.data.btnStatus === AdvanceBtnStatus.NEW) {
       this.headerText = 'Add Advance Request';
-    } else {
+    } else if (this.data.btnStatus === AdvanceBtnStatus.APPROVE) {
       this.headerText = 'Approve Advance';
       const control = new FormControl();
       this.newAdvanceRequestForm.addControl('AdvanceAmount', control);
+      this.getAdvanceDetailById();
+    } else if (this.data.btnStatus === AdvanceBtnStatus.EDIT) {
+      this.headerText = 'Edit Advance';
       this.getAdvanceDetailById();
     }
   }
@@ -72,9 +78,11 @@ export class NewAdvanceRequestComponent implements OnInit {
       this.toastr.warning('Please correct form errors and submit again');
     }
 
-    if (this.data.IsNewRequest) {
+    if (this.data.btnStatus === AdvanceBtnStatus.NEW) {
       this.addNewAdvance();
-    } else {
+    } else if (this.data.btnStatus === AdvanceBtnStatus.APPROVE) {
+      this.approveAdvance();
+    } else if (this.data.btnStatus === AdvanceBtnStatus.EDIT) {
       this.editAdvance();
     }
   }
@@ -106,7 +114,7 @@ export class NewAdvanceRequestComponent implements OnInit {
     });
   }
 
-  editAdvance() {
+  approveAdvance() {
     this.isFormSubmitted = true;
 
     const model = {
@@ -114,34 +122,75 @@ export class NewAdvanceRequestComponent implements OnInit {
       AdvanceAmount: this.newAdvanceRequestForm.getRawValue().AdvanceAmount
     };
 
-    // this.advanceService.editAdvance(model).subscribe(x => {
-    //   if (x && x.Success) {
-    //     this.isFormSubmitted = false;
-    //     this.toastr.success('Added Successfully');
-    //     this.closeDialog();
-    //   } else {
-    //     this.isFormSubmitted = false;
-    //   }
-    // }, error => {
-    //   this.isFormSubmitted = false;
-    //   this.toastr.warning(error);
-    // });
+    this.advanceService.approveAdvance(model).subscribe(x => {
+      if (x) {
+        this.isFormSubmitted = false;
+        this.toastr.success('Approved Successfully');
+        this.closeDialog();
+      } else {
+        this.isFormSubmitted = false;
+      }
+    }, error => {
+      this.isFormSubmitted = false;
+      this.toastr.warning(error);
+    });
+  }
+
+  editAdvance() {
+    this.isFormSubmitted = true;
+    const model = {
+      AdvanceId: this.newAdvanceRequestForm.value.AdvanceId,
+      RequestAmount: this.newAdvanceRequestForm.value.RequestAmount,
+      AdvanceDate: this.newAdvanceRequestForm.value.AdvanceDate,
+      ApprovedBy: this.newAdvanceRequestForm.value.ApprovedBy,
+      NumberOfInstallments: this.newAdvanceRequestForm.value.NumberOfInstallments,
+      ModeOfReturn: this.newAdvanceRequestForm.value.ModeOfReturn,
+      Description: this.newAdvanceRequestForm.value.Description,
+    };
+
+    this.advanceService.editAdvance(model).subscribe(x => {
+      if (x) {
+        this.isFormSubmitted = false;
+        this.toastr.success('Updated Successfully');
+        this.closeDialog();
+      } else {
+        this.isFormSubmitted = false;
+      }
+    }, error => {
+      this.isFormSubmitted = false;
+      this.toastr.warning(error);
+    });
   }
 
   getAdvanceDetailById() {
     this.advanceService.getAdvanceDetailById(this.data.Id).subscribe(x => {
-      debugger;
       if (x && x.AdvanceDetail) {
-        debugger;
-        this.newAdvanceRequestForm.patchValue({
-          'AdvanceId': x.AdvanceDetail.AdvanceId,
-          'AdvanceDate': x.AdvanceDetail.AdvanceDate,
-          'ApprovedBy': x.AdvanceDetail.ApprovedBy,
-          'NumberOfInstallments': x.AdvanceDetail.NumberOfInstallments,
-          'ModeOfReturn': x.AdvanceDetail.ModeOfReturn,
-          'RequestAmount': x.AdvanceDetail.RequestAmount,
-          'Description': x.AdvanceDetail.Description
-        });
+
+        if (this.data.btnStatus === AdvanceBtnStatus.APPROVE) {
+          this.newAdvanceRequestForm = this.fb.group({
+            'AdvanceId': [{value: x.AdvanceDetail.AdvanceId, disabled: true}],
+            'AdvanceDate':  [{value: x.AdvanceDetail.AdvanceDate, disabled: true}],
+            'ApprovedBy': [{value: x.AdvanceDetail.ApprovedBy, disabled: true}],
+            'NumberOfInstallments': [{value: x.AdvanceDetail.NumberOfInstallments, disabled: true}],
+            'ModeOfReturn': [{value: x.AdvanceDetail.ModeOfReturn, disabled: true}],
+            'RequestAmount': [{value: x.AdvanceDetail.RequestAmount, disabled: true}],
+            'Description': [{value: x.AdvanceDetail.Description, disabled: true}]
+          });
+
+          const control = new FormControl();
+          this.newAdvanceRequestForm.addControl('AdvanceAmount', control);
+        } else if (this.data.btnStatus === AdvanceBtnStatus.EDIT) {
+          this.newAdvanceRequestForm.patchValue({
+            'AdvanceId': x.AdvanceDetail.AdvanceId,
+            'AdvanceDate': x.AdvanceDetail.AdvanceDate,
+            'ApprovedBy': x.AdvanceDetail.ApprovedBy,
+            'NumberOfInstallments': x.AdvanceDetail.NumberOfInstallments,
+            'ModeOfReturn': x.AdvanceDetail.ModeOfReturn,
+            'RequestAmount': x.AdvanceDetail.RequestAmount,
+            'Description': x.AdvanceDetail.Description
+          });
+        }
+
       } else {
         this.toastr.warning('Please try again');
       }
