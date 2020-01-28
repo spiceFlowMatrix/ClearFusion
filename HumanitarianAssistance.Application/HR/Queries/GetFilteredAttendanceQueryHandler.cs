@@ -61,8 +61,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     AttendanceListModel model = new AttendanceListModel()
                     {
                         Date = date.ToShortDateString(),
-                        InTime = payrollDetail.InTime.Value.ToString("h:mm tt"),
-                        OutTime = payrollDetail.OutTime?.ToString("h:mm tt"),
+                        InTime = (queryResult.Select(x => x.Date.Day).Contains(date.Day)) ? (queryResult.Where(x => x.Date.Day == date.Day).Select(x=>x.InTime).FirstOrDefault()) : payrollDetail.InTime,
+                        OutTime = (queryResult.Select(x => x.Date.Day).Contains(date.Day)) ? (queryResult.Where(x => x.Date.Day == date.Day).Select(x=>x.OutTime).FirstOrDefault()) : payrollDetail.OutTime,
                         Attended = queryResult.Select(x => x.Date.Day).Contains(date.Day) ? "Yes" : "No"
                     };
                     attendanceModel.attendanceList.Add(model);

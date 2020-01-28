@@ -52,6 +52,8 @@ import { AddSalaryConfigurationComponent } from './components/employee-salary-co
 import { AddBonusComponent } from './components/employee-salary-config/add-bonus/add-bonus.component';
 import { AddFineComponent } from './components/employee-salary-config/add-fine/add-fine.component';
 import { EmployeePensionComponent } from './components/employee-pension/employee-pension.component';
+import { SetEmployeeAttendanceComponent } from './components/set-employee-attendance/set-employee-attendance.component';
+import {NgxMaterialTimepickerModule} from '../../../node_modules/ngx-material-timepicker';
 import { EmployeeAdvanceListComponent } from './components/employee_advance/employee-advance-list/employee-advance-list.component';
 import { NewAdvanceRequestComponent } from './components/employee_advance/new-advance-request/new-advance-request.component';
 import { AdvanceHistoryComponent } from './components/employee_advance/advance-history/advance-history.component';
@@ -60,6 +62,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
 import { AddContractComponent } from './components/employee-contract/add-contract/add-contract.component';
+import { IncrementDecrementSalaryComponent } from './components/employee-salary-config/increment-decrement-salary/increment-decrement-salary.component';
 
 @NgModule({
   declarations: [
@@ -84,6 +87,7 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     EmployeeLeaveAddComponent,
     AssignLeaveComponent,
     EmployeePensionComponent,
+    SetEmployeeAttendanceComponent,
     EmployeeAdvanceListComponent,
     NewAdvanceRequestComponent,
     AdvanceHistoryComponent,
@@ -91,7 +95,8 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     AddBonusComponent,
     AddFineComponent,
     SeeDaysComponent,
-    AddContractComponent
+    AddContractComponent,
+    IncrementDecrementSalaryComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -130,6 +135,7 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     MatTableModule,
     MatCheckboxModule,
     MatRadioModule,
+    NgxMaterialTimepickerModule,
 
     TranslateModule.forRoot({
       loader: {
@@ -154,10 +160,12 @@ import { AddContractComponent } from './components/employee-contract/add-contrac
     AddOtherSkillsComponent,
     AddSalaryBudgetComponent,
     AddLanguageComponent,
+    SetEmployeeAttendanceComponent,
     AddSalaryConfigurationComponent,
     AddBonusComponent,
     AddFineComponent,
     SeeDaysComponent,
+    IncrementDecrementSalaryComponent,
     NewAdvanceRequestComponent,
     AdvanceHistoryComponent
   ]

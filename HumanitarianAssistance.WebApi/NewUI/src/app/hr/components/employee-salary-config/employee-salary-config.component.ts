@@ -3,7 +3,7 @@ import { AddBonusComponent } from './add-bonus/add-bonus.component';
 import { AddSalaryConfigurationComponent } from './add-salary-configuration/add-salary-configuration.component';
 import { IDropDownModel } from './../../../store/models/purchase';
 import { Observable } from 'rxjs/Observable';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { of, observable, empty } from 'rxjs';
 import { TableActionsModel } from 'projects/library/src/public_api';
 import { ToastrService } from 'ngx-toastr';
@@ -18,7 +18,7 @@ import 'rxjs/add/observable/empty';
 @Component({
   selector: 'app-employee-salary-config',
   templateUrl: './employee-salary-config.component.html',
-  styleUrls: ['./employee-salary-config.component.scss']
+  styleUrls: ['./employee-salary-config.component.scss'],
 })
 export class EmployeeSalaryConfigComponent implements OnInit {
   accumulatedHeaders$ = of([
@@ -123,7 +123,8 @@ export class EmployeeSalaryConfigComponent implements OnInit {
         PayrollId: this.employeeCurrencyAndAmount.PayrollId,
         CurrencyId: this.employeeCurrencyAndAmount.CurrencyId,
         EmployeeId: this.employeeId,
-        MonthlyAmount: this.employeeCurrencyAndAmount.MonthlyAmount
+        MonthlyAmount: this.employeeCurrencyAndAmount.MonthlyAmount,
+        ForAllEmployees: false
       }
     });
     // refresh the data after new request created

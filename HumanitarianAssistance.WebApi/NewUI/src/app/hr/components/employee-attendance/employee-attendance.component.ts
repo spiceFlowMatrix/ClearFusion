@@ -5,6 +5,8 @@ import { AttendanceService } from '../../services/attendance.service';
 import { ToastrService } from 'ngx-toastr';
 import { IAttendanceModel } from '../../models/attendance-models';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-employee-attendance',
@@ -32,7 +34,8 @@ export class EmployeeAttendanceComponent implements OnInit {
     private routeActive: ActivatedRoute,
     private attendanceService: AttendanceService,
     private toastr: ToastrService,
-    public commonLoader: CommonLoaderService
+    public commonLoader: CommonLoaderService,
+    private datePipe: DatePipe
   ) {
     this.getScreenSize();
   }
@@ -92,8 +95,8 @@ export class EmployeeAttendanceComponent implements OnInit {
           response.attendanceList.forEach(element => {
             this.attendanceList.push({
               Date: element.Date,
-              InTime: element.InTime,
-              OutTime: element.OutTime,
+              InTime: this.datePipe.transform(StaticUtilities.setLocalDate(element.InTime), 'shortTime'),
+              OutTime: this.datePipe.transform(StaticUtilities.setLocalDate(element.OutTime), 'shortTime'),
               Attended: element.Attended
             });
           });
