@@ -300,5 +300,25 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             var result = await _mediator.Send(model);
             return Ok(result);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SetMultipleEmployeeFixedSalary([FromBody] SetMultipleEmployeeFixedSalaryCommand model)
+        { 
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> IncrementDecrementEmployeesSalary([FromBody] IncrementDecrementEmployeesSalaryCommand model)
+        { 
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
     }
 }

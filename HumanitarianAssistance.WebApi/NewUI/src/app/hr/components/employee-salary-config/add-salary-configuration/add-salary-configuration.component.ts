@@ -134,9 +134,33 @@ export class AddSalaryConfigurationComponent implements OnInit {
   }
 
   setFixedSalaryForAllEmployees(value) {
+    this.errMsg = null;
     if ((value.FixedSalary === null) && (value.CapacityBuilding === null) && (value.Security === null)) {
       this.errMsg = 'Please enter one of the values to be updated!';
       return;
     }
+    this.commonLoader.showLoader();
+    const model = {
+      EmployeeIds: this.data.SelectedEmployees.map(x => {
+        return x.EmployeeId;
+      }),
+      FixedSalary: value.FixedSalary,
+      CapacityBuilding: value.CapacityBuilding,
+      Security: value.Security
+    };
+    this.salaryConfigService.saveMultipleFixedSalaryForEmployees(model).subscribe(res => {
+      if (res) {
+        this.toastr.success('Salary updated successfully!');
+        this.commonLoader.hideLoader();
+        this.dialogRef.close();
+      } else {
+        this.commonLoader.hideLoader();
+        this.errMsg = 'Something went wrong!';
+      }
+    }, err => {
+      this.commonLoader.hideLoader();
+      this.errMsg = err;
+    });
+    console.log(model);
   }
 }

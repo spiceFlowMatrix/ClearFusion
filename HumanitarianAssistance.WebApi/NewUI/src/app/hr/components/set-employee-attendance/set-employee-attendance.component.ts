@@ -48,7 +48,7 @@ export class SetEmployeeAttendanceComponent implements OnInit {
     (<FormArray>this.attendanceForm.get('EmployeeAttendance')).removeAt(0);
     this.data.EmployeeList.forEach(element => {
       (this.attendanceForm.controls['EmployeeAttendance'] as FormArray)
-        .push(this.createAttendanceEntry(element.EmployeeId, element.FirstName + ' ' + element.LastName.trim(),
+        .push(this.createAttendanceEntry(element.EmployeeId, element.Name,
         this.datePipe.transform(element.InTime, 'shortTime'),
         this.datePipe.transform(element.OutTime, 'shortTime'), element.Attendance,
         element.AttendanceGroupId));
@@ -102,8 +102,6 @@ export class SetEmployeeAttendanceComponent implements OnInit {
       this.toastr.warning(err);
       this.commonLoader.hideLoader();
     });
-    console.log(model);
-
   }
 
   convert12hTimeToHours(time12h): number {

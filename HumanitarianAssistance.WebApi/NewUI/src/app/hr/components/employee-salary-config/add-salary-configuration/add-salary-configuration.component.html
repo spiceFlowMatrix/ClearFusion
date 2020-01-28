@@ -43,7 +43,7 @@
     <div class="row">
       <div class="col-md-12">
         <p class="font_size_15">Please set a fixed salary, capacity building, or security for the selected employees,</p>
-        <div class="alert alert-warning alert-dismissible" *ngIf="errMsg!=null">{{errMsg}}</div>
+        <div class="alert alert-warning" *ngIf="errMsg!=null">{{errMsg}}</div>
         <form [formGroup]="fixedSalaryForm" (ngSubmit)="setFixedSalaryForAllEmployees(fixedSalaryForm.value)">
           <mat-form-field class="example-full-width">
             <input matInput formControlName="FixedSalary" placeholder="Fixed Salary" type="number" />
