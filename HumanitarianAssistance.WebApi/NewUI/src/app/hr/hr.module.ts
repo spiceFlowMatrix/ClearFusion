@@ -1,3 +1,4 @@
+import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { AssignLeaveComponent } from './components/employee-leave/assign-leave/assign-leave.component';
 import { EmployeeLeaveAddComponent } from './components/employee-leave/employee-leave-add/employee-leave-add.component';
 import { NgModule } from '@angular/core';
@@ -41,13 +42,16 @@ import {
 } from '@angular/material';
 import { AddHistoricalLogComponent } from './components/employee-history/add-historical-log/add-historical-log.component';
 import { AddEducationComponent } from './components/employee-history/add-education/add-education.component';
+// tslint:disable-next-line: max-line-length
 import { AddHistoryOutsideCountryComponent } from './components/employee-history/add-history-outside-country/add-history-outside-country.component';
 import { AddCloseRelativeComponent } from './components/employee-history/add-close-relative/add-close-relative.component';
+// tslint:disable-next-line: max-line-length
 import { AddThreeReferenceDetailsComponent } from './components/employee-history/add-three-reference-details/add-three-reference-details.component';
 import { AddOtherSkillsComponent } from './components/employee-history/add-other-skills/add-other-skills.component';
 import { AddSalaryBudgetComponent } from './components/employee-history/add-salary-budget/add-salary-budget.component';
 import { AddLanguageComponent } from './components/employee-history/add-language/add-language.component';
 import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
+// tslint:disable-next-line: max-line-length
 import { AddSalaryConfigurationComponent } from './components/employee-salary-config/add-salary-configuration/add-salary-configuration.component';
 import { AddBonusComponent } from './components/employee-salary-config/add-bonus/add-bonus.component';
 import { AddFineComponent } from './components/employee-salary-config/add-fine/add-fine.component';
@@ -58,12 +62,12 @@ import {NgxMaterialTimepickerModule} from '../../../node_modules/ngx-material-ti
 import { EmployeeAdvanceListComponent } from './components/employee_advance/employee-advance-list/employee-advance-list.component';
 import { NewAdvanceRequestComponent } from './components/employee_advance/new-advance-request/new-advance-request.component';
 import { AdvanceHistoryComponent } from './components/employee_advance/advance-history/advance-history.component';
-import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
 import { AddContractComponent } from './components/employee-contract/add-contract/add-contract.component';
 import { AddOpeningPensionComponent } from './components/add-employee/add-opening-pension/add-opening-pension.component';
+// tslint:disable-next-line: max-line-length
 import { IncrementDecrementSalaryComponent } from './components/employee-salary-config/increment-decrement-salary/increment-decrement-salary.component';
 
 @NgModule({

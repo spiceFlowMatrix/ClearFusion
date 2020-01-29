@@ -25,7 +25,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./add-employee.component.scss']
 })
 export class AddEmployeeComponent implements OnInit {
-  employeeId: number;
+  employeeId = 0;
   employeeDetailForm: FormGroup;
   employeeProfessionalDetailForm: FormGroup;
   genderList$: Observable<IDropDownModel[]>;
@@ -577,6 +577,7 @@ export class AddEmployeeComponent implements OnInit {
         x => {
           if (x.StatusCode === 200) {
             this.onChangeCountry(x.data.EmployeeDetailList[0].CountryId);
+            this.onChangeProvince(x.data.EmployeeDetailList[0].ProvinceId);
             this.employeeDetailForm.patchValue({
               FullName: x.data.EmployeeDetailList[0].EmployeeName,
               FatherName: x.data.EmployeeDetailList[0].FatherName,
@@ -585,7 +586,7 @@ export class AddEmployeeComponent implements OnInit {
               // Password: x.data.EmployeeDetailList[0].EmployeeName,
               // ConfirmPassword: x.data.EmployeeDetailList[0].EmployeeName,
               Gender: x.data.EmployeeDetailList[0].SexId,
-              DateOfBirth: x.data.EmployeeDetailList[0].DateOfBirth,
+              DateOfBirth: new Date(x.data.EmployeeDetailList[0].DateOfBirth),
               MaritalStatus: x.data.EmployeeDetailList[0].MaritalStatus,
               Country: x.data.EmployeeDetailList[0].CountryId,
               Province: x.data.EmployeeDetailList[0].ProvinceId,
@@ -604,7 +605,9 @@ export class AddEmployeeComponent implements OnInit {
               CurrentAddress: x.data.EmployeeDetailList[0].CurrentAddress,
               PermanentAddress: x.data.EmployeeDetailList[0].PermanentAddress
             });
-            console.log(x.data.EmployeeDetailList);
+            this.employeeProfessionalDetailForm.patchValue({
+              JobGrade: x.data.EmployeeDetailList[0].GradeId
+            });
           } else {
             this.toastr.warning(x.Message);
           }
@@ -620,23 +623,23 @@ export class AddEmployeeComponent implements OnInit {
       .subscribe(
         x => {
           if (x.StatusCode === 200) {
+            this.onChangeOffice(x.data.EmployeeProfessionalList[0].OfficeId);
             this.employeeProfessionalDetailForm.patchValue({
               EmployeeType: x.data.EmployeeProfessionalList[0].EmployeeTypeId,
               // JobGrade: x.data.EmployeeProfessionalList[0].EmployeeName,
               Office: x.data.EmployeeProfessionalList[0].OfficeId,
-              // Department: x.data.EmployeeProfessionalList[0].EmployeeName,
-              // Designation: x.data.EmployeeProfessionalList[0].EmployeeName,
+              Department: x.data.EmployeeProfessionalList[0].DepartmentId,
+              Designation: x.data.EmployeeProfessionalList[0].DesignationId,
               EmployeeCotractType:
                 x.data.EmployeeProfessionalList[0].EmployeeContractTypeId,
               HiredOn: x.data.EmployeeProfessionalList[0].HiredOn,
               AttendanceGroup:
                 x.data.EmployeeProfessionalList[0].AttendanceGroupId,
-              DutyStation: x.data.EmployeeProfessionalList[0].DutyStation
-              //  TrainingAndBenefits:
-              //     x.data.EmployeeProfessionalList[0].EmployeeName,
-              //   JobDescription: x.data.EmployeeProfessionalList[0].EmployeeName
+              DutyStation: x.data.EmployeeProfessionalList[0].DutyStation,
+              TrainingAndBenefits:
+                x.data.EmployeeProfessionalList[0].TrainingBenefits,
+              JobDescription: x.data.EmployeeProfessionalList[0].JobDescription
             });
-            console.log(x.data.EmployeeProfessionalList);
           } else {
             this.toastr.warning(x.Message);
           }

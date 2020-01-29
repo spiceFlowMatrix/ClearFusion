@@ -114,7 +114,7 @@ export class AddEmployeeService {
   //#region "AddNewEmployeeData"
   AddNewEmployeeDetails(model: IEmployeeAllDetails): any {
     return this.globalService.post(
-      this.appurl.getApiUrl() + GLOBAL.API_Hr__EditEmployee,
+      this.appurl.getApiUrl() + GLOBAL.API_Hr__AddNewEmployee,
       model
     );
   }
@@ -123,7 +123,7 @@ export class AddEmployeeService {
    //#region "AddNewEmployeeData"
    EditEmployeeDetails(model: IEmployeeAllDetailsForEdit): any {
     return this.globalService.post(
-      this.appurl.getApiUrl() + GLOBAL.API_Hr__AddNewEmployee,
+      this.appurl.getApiUrl() + GLOBAL.API_Hr__EditEmployee,
       model
     );
   }
