@@ -67,6 +67,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
 import { AddContractComponent } from './components/employee-contract/add-contract/add-contract.component';
+import { AddAdvanceRecoveryComponent } from './components/employee-salary-config/add-advance-recovery/add-advance-recovery.component';
 import { AddOpeningPensionComponent } from './components/add-employee/add-opening-pension/add-opening-pension.component';
 // tslint:disable-next-line: max-line-length
 import { IncrementDecrementSalaryComponent } from './components/employee-salary-config/increment-decrement-salary/increment-decrement-salary.component';
@@ -104,6 +105,7 @@ import { IncrementDecrementSalaryComponent } from './components/employee-salary-
     AddFineComponent,
     SeeDaysComponent,
     AddContractComponent,
+    AddAdvanceRecoveryComponent,
     AddOpeningPensionComponent,
     IncrementDecrementSalaryComponent
   ],
@@ -177,7 +179,8 @@ import { IncrementDecrementSalaryComponent } from './components/employee-salary-
     AddOpeningPensionComponent,
     IncrementDecrementSalaryComponent,
     NewAdvanceRequestComponent,
-    AdvanceHistoryComponent
+    AdvanceHistoryComponent,
+    AddAdvanceRecoveryComponent
   ]
 })
 export class HrModule {

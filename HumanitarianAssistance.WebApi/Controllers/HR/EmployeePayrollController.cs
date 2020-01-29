@@ -384,5 +384,22 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             var result = await _mediator.Send(new GetAdvanceHistoryByIdQuery() { AdvanceId = id });
             return Ok(result);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetEmployeePayrollAdvanceDetail([FromBody] GetEmployeePayrollAdvanceDetailQuery model)
+        {
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+         [HttpPost]
+        public async Task<IActionResult> AddAdvanceRecovery([FromBody] AddAdvanceRecoveryCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
     }
 }
