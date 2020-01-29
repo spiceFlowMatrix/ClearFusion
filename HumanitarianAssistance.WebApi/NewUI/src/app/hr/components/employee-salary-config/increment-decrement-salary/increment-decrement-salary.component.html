@@ -1,0 +1,41 @@
+<div mat-dialog-title><h3>Reconfigure Salary</h3></div>
+<mat-dialog-content>
+  <div class="row">
+    <div class="col-md-12">
+      <mat-tab-group (selectedTabChange)="tabChanged($event)">
+        <mat-tab label="Increment">
+          <ng-template matTabContent>
+            <div class="alert alert-warning margin_top_10" *ngIf="error !== null">{{error}}</div>
+            <form [formGroup]="incrementDecrementForm" class="margin_top_20">
+              <mat-form-field class="example-full-width">
+                <input matInput formControlName="Percent" placeholder="Percentage of Increment" (change)="PercentChanged()" type="number" />
+              </mat-form-field>
+              <span class="font_size_15">Or</span>
+              <mat-form-field class="example-full-width">
+                <input matInput formControlName="Amount" placeholder="Amount of Increment" (change)="AmountChanged()" type="number" />
+              </mat-form-field>
+            </form>
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="Decrement" >
+          <ng-template matTabContent>
+              <div class="alert alert-warning margin_top_10" *ngIf="error !== null">{{error}}</div>
+              <form [formGroup]="incrementDecrementForm" class="margin_top_20" (ngSubmit)="incrementDecrementFormSubmit(2)">
+                <mat-form-field class="example-full-width">
+                  <input matInput formControlName="Percent" placeholder="Percentage of Decrement" (change)="PercentChanged()" type="number" />
+                </mat-form-field>
+                <span class="font_size_15">Or</span>
+                <mat-form-field class="example-full-width">
+                  <input matInput formControlName="Amount" placeholder="Amount of Decrement" (change)="AmountChanged()" type="number" />
+                </mat-form-field>
+              </form>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <hum-button [type]="'save'" [text]="'Save'" (click)="incrementDecrementFormSubmit()"></hum-button>
+  <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="onCancelPopup()" ></hum-button>
+</mat-dialog-actions>

@@ -202,6 +202,8 @@ export class GLOBAL {
   public static API_HR_GetEmployeeMonthlyPayroll = 'EmployeePayroll/GetEmployeeMonthlyPayroll';
   public static API_HR_ApproveEmployeeMonthlyPayroll = 'EmployeePayroll/ApproveEmployeeMonthlyPayroll';
   public static API_HR_RevokeEmployeeMonthlyPayroll = 'EmployeePayroll/RevokeEmployeeMonthlyPayroll';
+  public static API_HR_SetMultipleEmployeeFixedSalary = 'EmployeePayroll/SetMultipleEmployeeFixedSalary';
+  public static API_HR_IncrementDecrementEmployeesSalary = 'EmployeePayroll/IncrementDecrementEmployeesSalary';
   public static API_EmployeePayroll_GetEmployeeAdvanceHistoryDetail = 'EmployeePayroll/GetEmployeeAdvanceHistoryDetail';
   public static API_EmployeePayroll_AddAdvanceRecovery = 'EmployeePayroll/AddAdvanceRecovery';
   public static API_EmployeePayroll_GetEmployeePayrollAdvanceDetail = 'EmployeePayroll/GetEmployeePayrollAdvanceDetail';
@@ -722,11 +724,22 @@ export class GLOBAL {
 
   //#region Hr Attendance
   public static API_Attendance_GetFilteredAttendanceDetails = 'Attendance/GetFilteredAttendanceDetails';
+  public static API_Attendance_GetPayrollDailyHourByEmployeeIds = 'Attendance/GetPayrollDailyHourByEmployeeIds';
+  public static API_Attendance_AddEditEmployeeAttendance = 'Attendance/AddEditEmployeeAttendanceDetails';
   static API_HR_GetEmployeeBasicPayAndCurrency = 'EmployeePayroll/GetEmployeeBasicPayAndCurrency';
   public static API_EmployeePayroll_GetAdvanceListByEmployeeId = 'EmployeePayroll/GetAdvanceListByEmployeeId';
 
   //#endregion
 
+  // add employee
+  public static API_Code_GetAllEmployeeType = 'Code/GetAllEmployeeType';
+  public static API_Hr_GetEmployeeContractType = 'Code/GetAllEmployeeContractType';
+  public static API_Hr__AddNewEmployee = 'EmployeeDetail/AddNewEmployeeDetails';
+  public static API_Hr__EditEmployee = 'EmployeeDetail/EditEmployeeDetails';
+  public static API_Code_GetAllQualification = 'Code/GetAllQualification';
+  public static API_ExchangeRates_CheckExchangeRatesVerified = 'ExchangeRates/CheckExchangeRatesVerified';
+  public static API_Hr_GetEmployeeById = 'EmployeeDetail/GetEmployeeDetailsByEmployeeId';
+  public static API_HR_GetEmployeeProfessionalDetail = 'EmployeeDetail/GetEmployeeProfessionalDetail';
 
   //#region  "hr employee salary and tax"
   public static API_Code_GetAllFinancialYearDetail = 'Code/GetAllFinancialYearDetail';
@@ -742,6 +755,7 @@ export class GLOBAL {
   public static API_Hr_AddEmployeeContractDetails = 'EmployeeDetail/AddEmployeeContractDetails';
   public static API_EmployeeDetail_GetEmployeeDetailForContractById = 'EmployeeDetail/GetEmployeeDetailForContractById';
   public static API_Hr_GetSelectedEmployeeContractByEmployeeId = 'EmployeeDetail/GetSelectedEmployeeContractByEmployeeId';
+
 }
 
 

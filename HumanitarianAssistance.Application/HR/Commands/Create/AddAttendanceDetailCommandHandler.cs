@@ -144,177 +144,177 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                             await _dbContext.SaveChangesAsync();
                         }
 
-                        EmployeeMonthlyAttendance xEmployeeMonthlyAttendanceRecord = await _dbContext.EmployeeMonthlyAttendance.FirstOrDefaultAsync(x => x.EmployeeId == list.EmployeeId && x.Month == list.Date.Month && x.Year == list.Date.Year && x.IsDeleted == false);
+                        // EmployeeMonthlyAttendance xEmployeeMonthlyAttendanceRecord = await _dbContext.EmployeeMonthlyAttendance.FirstOrDefaultAsync(x => x.EmployeeId == list.EmployeeId && x.Month == list.Date.Month && x.Year == list.Date.Year && x.IsDeleted == false);
 
-                        EmployeeMonthlyAttendance xEmployeeMonthlyAttendance = new EmployeeMonthlyAttendance();
+                        // EmployeeMonthlyAttendance xEmployeeMonthlyAttendance = new EmployeeMonthlyAttendance();
 
-                        //If Employee record is present in monthly attendance table then 
-                        if (xEmployeeMonthlyAttendanceRecord != null)
-                        {
+                        // //If Employee record is present in monthly attendance table then 
+                        // if (xEmployeeMonthlyAttendanceRecord != null)
+                        // {
 
-                            //if Employee is absent without any leave
-                            if (totalworkhour.ToString() == "00:00:00" || list.AttendanceTypeId == (int)AttendanceType.A)
-                            {
-                                xEmployeeMonthlyAttendance.AbsentHours = xEmployeeMonthlyAttendance.AbsentHours == null ? 0 : xEmployeeMonthlyAttendance.AbsentHours;
-                                xEmployeeMonthlyAttendance.AbsentHours += officeDailyHour;
-                            }
+                        //     //if Employee is absent without any leave
+                        //     if (totalworkhour.ToString() == "00:00:00" || list.AttendanceTypeId == (int)AttendanceType.A)
+                        //     {
+                        //         xEmployeeMonthlyAttendance.AbsentHours = xEmployeeMonthlyAttendance.AbsentHours == null ? 0 : xEmployeeMonthlyAttendance.AbsentHours;
+                        //         xEmployeeMonthlyAttendance.AbsentHours += officeDailyHour;
+                        //     }
 
-                            //update total attendance hours
-                            if ((workingHours != 0 || workingMinutes !=0) && overtime == 0)
-                            {
-                                xEmployeeMonthlyAttendanceRecord.AttendanceHours += totalworkhour.Value.Hours;
-                                xEmployeeMonthlyAttendanceRecord.AttendanceMinutes += workingMinutes.Value;
-                                xEmployeeMonthlyAttendanceRecord.OverTimeMinutes += overtimeMinutes.Value;
+                        //     //update total attendance hours
+                        //     if ((workingHours != 0 || workingMinutes !=0) && overtime == 0)
+                        //     {
+                        //         xEmployeeMonthlyAttendanceRecord.AttendanceHours += totalworkhour.Value.Hours;
+                        //         xEmployeeMonthlyAttendanceRecord.AttendanceMinutes += workingMinutes.Value;
+                        //         xEmployeeMonthlyAttendanceRecord.OverTimeMinutes += overtimeMinutes.Value;
 
-                            }
-                            //update total attendance hours and also add overtime hours
-                            else if ((workingHours != 0 || workingMinutes !=0) && overtime != 0)
-                            {
-                                xEmployeeMonthlyAttendanceRecord.AttendanceHours += totalworkhour.Value.Hours;
-                                xEmployeeMonthlyAttendanceRecord.OvertimeHours = xEmployeeMonthlyAttendanceRecord.OvertimeHours ?? 0;
-                                xEmployeeMonthlyAttendanceRecord.OvertimeHours += overtime;
-                                xEmployeeMonthlyAttendanceRecord.AttendanceMinutes += workingMinutes.Value;
-                                xEmployeeMonthlyAttendanceRecord.OverTimeMinutes += overtimeMinutes.Value;
-                            }
+                        //     }
+                        //     //update total attendance hours and also add overtime hours
+                        //     else if ((workingHours != 0 || workingMinutes !=0) && overtime != 0)
+                        //     {
+                        //         xEmployeeMonthlyAttendanceRecord.AttendanceHours += totalworkhour.Value.Hours;
+                        //         xEmployeeMonthlyAttendanceRecord.OvertimeHours = xEmployeeMonthlyAttendanceRecord.OvertimeHours ?? 0;
+                        //         xEmployeeMonthlyAttendanceRecord.OvertimeHours += overtime;
+                        //         xEmployeeMonthlyAttendanceRecord.AttendanceMinutes += workingMinutes.Value;
+                        //         xEmployeeMonthlyAttendanceRecord.OverTimeMinutes += overtimeMinutes.Value;
+                        //     }
 
-                            //updating employee monthly attendance record
-                            _dbContext.EmployeeMonthlyAttendance.Update(xEmployeeMonthlyAttendanceRecord);
-                            await _dbContext.SaveChangesAsync();
-                        }
-                        else// if employee monthly attendance record does not exists then add a record
-                        {
-                            // int monthDays = GetMonthDays(modellist.FirstOrDefault().Date.Month, modellist.FirstOrDefault().Date.Year);
+                        //     //updating employee monthly attendance record
+                        //     _dbContext.EmployeeMonthlyAttendance.Update(xEmployeeMonthlyAttendanceRecord);
+                        //     await _dbContext.SaveChangesAsync();
+                        // }
+                        // else// if employee monthly attendance record does not exists then add a record
+                        // {
+                        //     // int monthDays = GetMonthDays(modellist.FirstOrDefault().Date.Month, modellist.FirstOrDefault().Date.Year);
 
-                            int monthDays = DateTime.DaysInMonth(list.Date.Year, list.Date.Month);
+                        //     int monthDays = DateTime.DaysInMonth(list.Date.Year, list.Date.Month);
 
-                            //if employee is absent without any leave
-                            if (totalworkhour.ToString() == "00:00:00" || list.AttendanceTypeId == (int)AttendanceType.A)
-                            {
-                                xEmployeeMonthlyAttendance.IsDeleted = false;
-                                xEmployeeMonthlyAttendance.EmployeeId = list.EmployeeId;
-                                xEmployeeMonthlyAttendance.Month = list.Date.Month;
-                                xEmployeeMonthlyAttendance.Year = list.Date.Year;
-                                xEmployeeMonthlyAttendance.AttendanceHours = 0;
-                                xEmployeeMonthlyAttendance.OvertimeHours = 0;
-                                xEmployeeMonthlyAttendance.AbsentHours = officeDailyHour;
-                                xEmployeeMonthlyAttendance.OfficeId = list.OfficeId;
-                                xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
-                            }
-                            else
-                            {
-                                xEmployeeMonthlyAttendance.IsDeleted = false;
-                                xEmployeeMonthlyAttendance.EmployeeId = list.EmployeeId;
-                                xEmployeeMonthlyAttendance.Month = list.Date.Month;
-                                xEmployeeMonthlyAttendance.Year = list.Date.Year;
-                                xEmployeeMonthlyAttendance.AttendanceHours = workingHours;
-                                xEmployeeMonthlyAttendance.OvertimeHours = overtime;
-                                xEmployeeMonthlyAttendance.OfficeId = list.OfficeId;
-                                xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
-                                xEmployeeMonthlyAttendance.AttendanceMinutes = list.WorkTimeMinutes.Value;
-                                xEmployeeMonthlyAttendance.OverTimeMinutes = list.OvertimeMinutes.Value;
-                            }
+                        //     //if employee is absent without any leave
+                        //     if (totalworkhour.ToString() == "00:00:00" || list.AttendanceTypeId == (int)AttendanceType.A)
+                        //     {
+                        //         xEmployeeMonthlyAttendance.IsDeleted = false;
+                        //         xEmployeeMonthlyAttendance.EmployeeId = list.EmployeeId;
+                        //         xEmployeeMonthlyAttendance.Month = list.Date.Month;
+                        //         xEmployeeMonthlyAttendance.Year = list.Date.Year;
+                        //         xEmployeeMonthlyAttendance.AttendanceHours = 0;
+                        //         xEmployeeMonthlyAttendance.OvertimeHours = 0;
+                        //         xEmployeeMonthlyAttendance.AbsentHours = officeDailyHour;
+                        //         xEmployeeMonthlyAttendance.OfficeId = list.OfficeId;
+                        //         xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
+                        //     }
+                        //     else
+                        //     {
+                        //         xEmployeeMonthlyAttendance.IsDeleted = false;
+                        //         xEmployeeMonthlyAttendance.EmployeeId = list.EmployeeId;
+                        //         xEmployeeMonthlyAttendance.Month = list.Date.Month;
+                        //         xEmployeeMonthlyAttendance.Year = list.Date.Year;
+                        //         xEmployeeMonthlyAttendance.AttendanceHours = workingHours;
+                        //         xEmployeeMonthlyAttendance.OvertimeHours = overtime;
+                        //         xEmployeeMonthlyAttendance.OfficeId = list.OfficeId;
+                        //         xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
+                        //         xEmployeeMonthlyAttendance.AttendanceMinutes = list.WorkTimeMinutes.Value;
+                        //         xEmployeeMonthlyAttendance.OverTimeMinutes = list.OvertimeMinutes.Value;
+                        //     }
 
-                            Advances xAdvances = await _dbContext.Advances.Where(x => x.IsDeleted == false && x.IsApproved == true
-                                                                            && x.EmployeeId == list.EmployeeId && x.OfficeId == list.OfficeId && x.IsDeducted == false
-                                                                            && x.AdvanceDate <= DateTime.Now).FirstOrDefaultAsync();
-                            if (xAdvances != null)
-                            {
-                                xEmployeeMonthlyAttendance.AdvanceId = xAdvances.AdvancesId;
-                                // xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
-                                xEmployeeMonthlyAttendance.AdvanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
-                            }
+                        //     Advances xAdvances = await _dbContext.Advances.Where(x => x.IsDeleted == false && x.IsApproved == true
+                        //                                                     && x.EmployeeId == list.EmployeeId && x.OfficeId == list.OfficeId && x.IsDeducted == false
+                        //                                                     && x.AdvanceDate <= DateTime.Now).FirstOrDefaultAsync();
+                        //     if (xAdvances != null)
+                        //     {
+                        //         xEmployeeMonthlyAttendance.AdvanceId = xAdvances.AdvancesId;
+                        //         xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
+                        //         xEmployeeMonthlyAttendance.AdvanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
+                        //     }
 
-                            await _dbContext.EmployeeMonthlyAttendance.AddAsync(xEmployeeMonthlyAttendance);
-                            await _dbContext.SaveChangesAsync();
-                        }
+                        //     await _dbContext.EmployeeMonthlyAttendance.AddAsync(xEmployeeMonthlyAttendance);
+                        //     await _dbContext.SaveChangesAsync();
+                        // }
                     }
 
-                    //If Employee is not present then check the leave table and update leave record accordingly
-                    List<EmployeeApplyLeave> xEmployeeLeaveDetailList = await _dbContext.EmployeeApplyLeave
-                                                                                  .Include(x => x.EmployeeDetails.EmployeeProfessionalDetail)
-                                                                                  .Where(x => x.FromDate.Date >= request.EmployeeAttendance.First().Date.Date &&
-                                                                                    x.ToDate.Date <= request.EmployeeAttendance.First().Date.Date &&
-                                                                                    x.EmployeeDetails.EmployeeProfessionalDetail.OfficeId == request.EmployeeAttendance.First().OfficeId
-                                                                                    && x.IsDeleted == false)
-                                                                                  .ToListAsync();
+                    // //If Employee is not present then check the leave table and update leave record accordingly
+                    // List<EmployeeApplyLeave> xEmployeeLeaveDetailList = await _dbContext.EmployeeApplyLeave
+                    //                                                               .Include(x => x.EmployeeDetails.EmployeeProfessionalDetail)
+                    //                                                               .Where(x => x.FromDate.Date >= request.EmployeeAttendance.First().Date.Date &&
+                    //                                                                 x.ToDate.Date <= request.EmployeeAttendance.First().Date.Date &&
+                    //                                                                 x.EmployeeDetails.EmployeeProfessionalDetail.OfficeId == request.EmployeeAttendance.First().OfficeId
+                    //                                                                 && x.IsDeleted == false)
+                    //                                                               .ToListAsync();
 
-                    //If leave Exists then check the status of leave if approved then add the working hours of the day in attendance hours
-                    if (xEmployeeLeaveDetailList.Count != 0)
-                    {
-                        int monthDays = DateTime.DaysInMonth(request.EmployeeAttendance.First().Date.Year, request.EmployeeAttendance.First().Date.Month);
+                    // //If leave Exists then check the status of leave if approved then add the working hours of the day in attendance hours
+                    // if (xEmployeeLeaveDetailList.Count != 0)
+                    // {
+                    //     int monthDays = DateTime.DaysInMonth(request.EmployeeAttendance.First().Date.Year, request.EmployeeAttendance.First().Date.Month);
 
-                        foreach (EmployeeApplyLeave xEmployeeApplyLeave in xEmployeeLeaveDetailList)
-                        {
-                            EmployeeMonthlyAttendance xEmployeeMonthlyAttendanceRecord = await _dbContext.EmployeeMonthlyAttendance.FirstOrDefaultAsync(x => x.EmployeeId == xEmployeeApplyLeave.EmployeeId && x.Month == request.EmployeeAttendance.First().Date.Date.Month && x.Year == request.EmployeeAttendance.First().Date.Date.Year && x.IsDeleted == false);
+                    //     foreach (EmployeeApplyLeave xEmployeeApplyLeave in xEmployeeLeaveDetailList)
+                    //     {
+                    //         EmployeeMonthlyAttendance xEmployeeMonthlyAttendanceRecord = await _dbContext.EmployeeMonthlyAttendance.FirstOrDefaultAsync(x => x.EmployeeId == xEmployeeApplyLeave.EmployeeId && x.Month == request.EmployeeAttendance.First().Date.Date.Month && x.Year == request.EmployeeAttendance.First().Date.Date.Year && x.IsDeleted == false);
 
-                            if (xEmployeeMonthlyAttendanceRecord == null)
-                            {
+                    //         if (xEmployeeMonthlyAttendanceRecord == null)
+                    //         {
 
-                                EmployeeMonthlyAttendance xEmployeeMonthlyAttendance = new EmployeeMonthlyAttendance();
+                    //             EmployeeMonthlyAttendance xEmployeeMonthlyAttendance = new EmployeeMonthlyAttendance();
 
-                                if (xEmployeeApplyLeave.ApplyLeaveStatusId == 1)
-                                {
-                                    //remove hardcoded attendance hours once all office hours are available in master table
-                                    xEmployeeMonthlyAttendance.IsDeleted = false;
-                                    xEmployeeMonthlyAttendance.OfficeId = request.EmployeeAttendance.First().OfficeId;
-                                    xEmployeeMonthlyAttendance.EmployeeId = xEmployeeApplyLeave.EmployeeId;
-                                    xEmployeeMonthlyAttendance.Month = request.EmployeeAttendance.First().Date.Month;
-                                    xEmployeeMonthlyAttendance.Year = request.EmployeeAttendance.First().Date.Year;
-                                    xEmployeeMonthlyAttendance.AttendanceHours = xEmployeeMonthlyAttendance.AttendanceHours != null ? xEmployeeMonthlyAttendance.AttendanceHours.Value : 0;
-                                    //xEmployeeMonthlyAttendance.AttendanceHours += officeDailyHour;
-                                    xEmployeeMonthlyAttendance.LeaveHours += xEmployeeMonthlyAttendance.LeaveHours != null ? xEmployeeMonthlyAttendance.LeaveHours : 0;
-                                    xEmployeeMonthlyAttendance.LeaveHours += officeDailyHour;
-                                    xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
+                    //             if (xEmployeeApplyLeave.ApplyLeaveStatusId == 1)
+                    //             {
+                    //                 //remove hardcoded attendance hours once all office hours are available in master table
+                    //                 xEmployeeMonthlyAttendance.IsDeleted = false;
+                    //                 xEmployeeMonthlyAttendance.OfficeId = request.EmployeeAttendance.First().OfficeId;
+                    //                 xEmployeeMonthlyAttendance.EmployeeId = xEmployeeApplyLeave.EmployeeId;
+                    //                 xEmployeeMonthlyAttendance.Month = request.EmployeeAttendance.First().Date.Month;
+                    //                 xEmployeeMonthlyAttendance.Year = request.EmployeeAttendance.First().Date.Year;
+                    //                 xEmployeeMonthlyAttendance.AttendanceHours = xEmployeeMonthlyAttendance.AttendanceHours != null ? xEmployeeMonthlyAttendance.AttendanceHours.Value : 0;
+                    //                 //xEmployeeMonthlyAttendance.AttendanceHours += officeDailyHour;
+                    //                 xEmployeeMonthlyAttendance.LeaveHours += xEmployeeMonthlyAttendance.LeaveHours != null ? xEmployeeMonthlyAttendance.LeaveHours : 0;
+                    //                 xEmployeeMonthlyAttendance.LeaveHours += officeDailyHour;
+                    //                 xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
 
-                                    Advances xAdvances = await _dbContext.Advances.Where(x => x.IsDeleted == false && x.IsApproved == true && x.IsDeducted == false
-                                                                               && x.EmployeeId == xEmployeeApplyLeave.EmployeeId && x.OfficeId == request.EmployeeAttendance.First().OfficeId
-                                                                               && x.AdvanceDate <= DateTime.Now).FirstOrDefaultAsync();
-                                    if (xAdvances != null)
-                                    {
-                                        xEmployeeMonthlyAttendance.AdvanceId = xAdvances.AdvancesId;
-                                       // xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
-                                        xEmployeeMonthlyAttendance.AdvanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
-                                    }
+                    //                 Advances xAdvances = await _dbContext.Advances.Where(x => x.IsDeleted == false && x.IsApproved == true && x.IsDeducted == false
+                    //                                                            && x.EmployeeId == xEmployeeApplyLeave.EmployeeId && x.OfficeId == request.EmployeeAttendance.First().OfficeId
+                    //                                                            && x.AdvanceDate <= DateTime.Now).FirstOrDefaultAsync();
+                    //                 if (xAdvances != null)
+                    //                 {
+                    //                     xEmployeeMonthlyAttendance.AdvanceId = xAdvances.AdvancesId;
+                    //                     xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
+                    //                     xEmployeeMonthlyAttendance.AdvanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
+                    //                 }
 
-                                    await _dbContext.EmployeeMonthlyAttendance.AddAsync(xEmployeeMonthlyAttendance);
-                                    await _dbContext.SaveChangesAsync();
-                                }
-                                else
-                                {
-                                    xEmployeeMonthlyAttendance.IsDeleted = false;
-                                    xEmployeeMonthlyAttendance.OfficeId = request.EmployeeAttendance.First().OfficeId;
-                                    xEmployeeMonthlyAttendance.EmployeeId = xEmployeeApplyLeave.EmployeeId;
-                                    xEmployeeMonthlyAttendance.Month = request.EmployeeAttendance.First().Date.Month;
-                                    xEmployeeMonthlyAttendance.Year = request.EmployeeAttendance.First().Date.Year;
-                                    xEmployeeMonthlyAttendance.AbsentHours = xEmployeeMonthlyAttendance.AbsentHours == null ? 0 : xEmployeeMonthlyAttendance.AbsentHours;
-                                    xEmployeeMonthlyAttendance.AbsentHours += officeDailyHour;
-                                    xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
+                    //                 await _dbContext.EmployeeMonthlyAttendance.AddAsync(xEmployeeMonthlyAttendance);
+                    //                 await _dbContext.SaveChangesAsync();
+                    //             }
+                    //             else
+                    //             {
+                    //                 xEmployeeMonthlyAttendance.IsDeleted = false;
+                    //                 xEmployeeMonthlyAttendance.OfficeId = request.EmployeeAttendance.First().OfficeId;
+                    //                 xEmployeeMonthlyAttendance.EmployeeId = xEmployeeApplyLeave.EmployeeId;
+                    //                 xEmployeeMonthlyAttendance.Month = request.EmployeeAttendance.First().Date.Month;
+                    //                 xEmployeeMonthlyAttendance.Year = request.EmployeeAttendance.First().Date.Year;
+                    //                 xEmployeeMonthlyAttendance.AbsentHours = xEmployeeMonthlyAttendance.AbsentHours == null ? 0 : xEmployeeMonthlyAttendance.AbsentHours;
+                    //                 xEmployeeMonthlyAttendance.AbsentHours += officeDailyHour;
+                    //                 xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
 
-                                    Advances xAdvances = await _dbContext.Advances.Where(x => x.IsDeleted == false && x.IsApproved == true && x.IsDeducted == false
-                                                                              && x.EmployeeId == xEmployeeApplyLeave.EmployeeId && x.OfficeId == request.EmployeeAttendance.First().OfficeId
-                                                                              && x.AdvanceDate < DateTime.Now).FirstOrDefaultAsync();
-                                    if (xAdvances != null)
-                                    {
-                                        xEmployeeMonthlyAttendance.AdvanceId = xAdvances.AdvancesId;
-                                        xEmployeeMonthlyAttendance.AdvanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
-                                        // xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
-                                    }
+                    //                 Advances xAdvances = await _dbContext.Advances.Where(x => x.IsDeleted == false && x.IsApproved == true && x.IsDeducted == false
+                    //                                                           && x.EmployeeId == xEmployeeApplyLeave.EmployeeId && x.OfficeId == request.EmployeeAttendance.First().OfficeId
+                    //                                                           && x.AdvanceDate < DateTime.Now).FirstOrDefaultAsync();
+                    //                 if (xAdvances != null)
+                    //                 {
+                    //                     xEmployeeMonthlyAttendance.AdvanceId = xAdvances.AdvancesId;
+                    //                     xEmployeeMonthlyAttendance.AdvanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
+                    //                     xEmployeeMonthlyAttendance.IsAdvanceApproved = xAdvances.IsApproved;
+                    //                 }
 
-                                    await _dbContext.EmployeeMonthlyAttendance.AddAsync(xEmployeeMonthlyAttendance);
-                                    await _dbContext.SaveChangesAsync();
-                                }
-                            }
-                            else//if Employee Monthly Attendance Record is present then add leave hours
-                            {
-                                if (xEmployeeApplyLeave.ApplyLeaveStatusId == (int)ApplyLeaveStatus.Approve)
-                                {
-                                    xEmployeeMonthlyAttendanceRecord.LeaveHours = officeDailyHour;
-                                    _dbContext.EmployeeMonthlyAttendance.Update(xEmployeeMonthlyAttendanceRecord);
-                                    await _dbContext.SaveChangesAsync();
-                                }
-                            }
-                        }
-                    }
+                    //                 await _dbContext.EmployeeMonthlyAttendance.AddAsync(xEmployeeMonthlyAttendance);
+                    //                 await _dbContext.SaveChangesAsync();
+                    //             }
+                    //         }
+                    //         else//if Employee Monthly Attendance Record is present then add leave hours
+                    //         {
+                    //             if (xEmployeeApplyLeave.ApplyLeaveStatusId == (int)ApplyLeaveStatus.Approve)
+                    //             {
+                    //                 xEmployeeMonthlyAttendanceRecord.LeaveHours = officeDailyHour;
+                    //                 _dbContext.EmployeeMonthlyAttendance.Update(xEmployeeMonthlyAttendanceRecord);
+                    //                 await _dbContext.SaveChangesAsync();
+                    //             }
+                    //         }
+                    //     }
+                    // }
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";

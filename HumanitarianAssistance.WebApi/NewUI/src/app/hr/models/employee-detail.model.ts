@@ -30,21 +30,88 @@ export interface IEmployeeDetail {
   ResignationStatus: number;
 }
 export interface IEmployeeDetailModel {
-EmployeeID: number;
-FirstName: string;
-LastName: string;
-EmployeeCode: string;
-Designation: number;
-ContractStartDate: Date;
-ContractEndDate: Date;
-DurationOfContract: number;
-Grade: number;
-DutyStation: number;
-Country: number;
-Province: number;
-Project: number;
-Job: string;
-BudgetLine: number;
-WorkTime: string;
-WorkDay: number;
+  EmployeeID: number;
+  FirstName: string;
+  LastName: string;
+  EmployeeCode: string;
+  Designation: number;
+  ContractStartDate: Date;
+  ContractEndDate: Date;
+  DurationOfContract: number;
+  Grade: number;
+  DutyStation: number;
+  Country: number;
+  Province: number;
+  Project: number;
+  Job: string;
+  BudgetLine: number;
+  WorkTime: string;
+  WorkDay: number;
+}
+
+export interface IEmployeeAllDetails {
+  EmployeeBasicDetail: IEmployeeBasicDetail;
+  EmployeeProfessionalDetails: IEmployeeProfessionalDetails;
+  EmployeePensionDetail: IEmployeePensionDetails;
+}
+export interface IEmployeeAllDetailsForEdit {
+  EmployeeBasicDetail: IEmployeeBasicDetail;
+  EmployeeProfessionalDetails: IEmployeeProfessionalDetails;
+}
+
+export interface IEmployeeBasicDetail {
+  EmployeeId?: number;
+  FullName?: string;
+  FatherName?: string;
+  Email?: string;
+  PhoneNo?: string;
+  Password?: string;
+  Gender?: number;
+  DateOfBirth?: Date;
+  MaritalStatus?: number;
+  Country?: number;
+  Province?: number;
+  District?: number;
+  BirthPlace?: string;
+  TinNumber?: string;
+  PassportNumber?: string;
+  University?: string;
+  Profession?: number;
+  Qualification?: number;
+  ExperienceYear?: number;
+  ExperienceMonth?: number;
+  IssuePlace?: string;
+  ReferBy?: string;
+  PreviousWork?: string;
+  CurrentAddress?: string;
+  PermanentAddress?: string;
+}
+export interface IEmployeeProfessionalDetails {
+  EmployeeType?: number;
+  JobGrade?: number;
+  Office?: number;
+  Department?: number;
+  Designation?: number;
+  EmployeeCotractType?: number;
+  HiredOn?: Date;
+  AttendanceGroup?: number;
+  DutyStation?: number;
+  TrainingAndBenefits?: string;
+  JobDescription?: string;
+}
+
+export interface IEmployeePensionDetails {
+  PensionDate?: Date;
+  PensionList?: IEmployeePensionList[];
+}
+
+export interface IEmployeePensionList {
+  Currency: number;
+  Amount: number;
+}
+
+export interface IEmployeePensionListModel {
+  Id: number;
+  Currency: number;
+  Amount: number;
 }

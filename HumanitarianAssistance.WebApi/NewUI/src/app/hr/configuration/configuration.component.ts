@@ -39,6 +39,11 @@ export class ConfigurationComponent implements OnInit {
         link: './leave-policy',
         index: 3
       },
+      {
+        label: 'APPRAISAL QUESTIONS',
+        link: './appraisal-questions',
+        index: 4
+      },
     ];
   }
 

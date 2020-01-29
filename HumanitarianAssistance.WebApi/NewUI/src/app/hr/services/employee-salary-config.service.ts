@@ -120,4 +120,15 @@ export class EmployeeSalaryConfigService {
       );
     }
     //#endregion
+    saveMultipleFixedSalaryForEmployees(model) {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_HR_SetMultipleEmployeeFixedSalary, model
+      );
+    }
+
+    incrementDecrementSalary(model) {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_HR_IncrementDecrementEmployeesSalary, model
+      );
+    }
 }

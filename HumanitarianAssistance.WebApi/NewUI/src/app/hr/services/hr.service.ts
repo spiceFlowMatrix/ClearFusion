@@ -16,13 +16,13 @@ export class HrService {
     private appurl: AppUrlService,
     private http: HttpClient,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   //#region "getDesignatonList"
   getDesignationList(pageModel: any): any {
     return this.globalService.post(
       this.appurl.getApiUrl() +
-        GLOBAL.API_HRConfiguration_GetAllDesignationDetail,
+      GLOBAL.API_HRConfiguration_GetAllDesignationDetail,
       pageModel
     );
   }
@@ -41,7 +41,7 @@ export class HrService {
   editDesignation(model: any): any {
     return this.globalService.post(
       this.appurl.getApiUrl() +
-        GLOBAL.API_HRConfiguration_EditDesignationDetail,
+      GLOBAL.API_HRConfiguration_EditDesignationDetail,
       model
     );
   }
@@ -51,7 +51,7 @@ export class HrService {
   getEducationDegreeList(pageModel: any): any {
     return this.globalService.post(
       this.appurl.getApiUrl() +
-        GLOBAL.API_HRConfiguration_GetEducationDegreeList,
+      GLOBAL.API_HRConfiguration_GetEducationDegreeList,
       pageModel
     );
   }
@@ -160,7 +160,7 @@ export class HrService {
   getAttendanceGroupList(model: any): any {
     return this.globalService.post(
       this.appurl.getApiUrl() +
-        GLOBAL.API_HRConfiguration_GetAttendanceGroupList,
+      GLOBAL.API_HRConfiguration_GetAttendanceGroupList,
       model
     );
   }
@@ -242,7 +242,7 @@ export class HrService {
   getExitInterviewQuestionsList(model: any): any {
     return this.globalService.post(
       this.appurl.getApiUrl() +
-        GLOBAL.API_HRConfiguration_GetAllExitInterviewQuestions,
+      GLOBAL.API_HRConfiguration_GetAllExitInterviewQuestions,
       model
     );
   }
@@ -252,7 +252,7 @@ export class HrService {
   UpsertExitInterviewQuestion(model: any): any {
     return this.globalService.post(
       this.appurl.getApiUrl() +
-        GLOBAL.API_HRConfiguration_UpsertExitInterviewQuestion,
+      GLOBAL.API_HRConfiguration_UpsertExitInterviewQuestion,
       model
     );
   }
@@ -271,7 +271,7 @@ export class HrService {
   deleteExitinterviewQuestion(Id: any): any {
     return this.globalService.post(
       this.appurl.getApiUrl() +
-        GLOBAL.API_HRConfiguration_DeleteExitInterviewQuestion,
+      GLOBAL.API_HRConfiguration_DeleteExitInterviewQuestion,
       Id
     );
   }
@@ -281,7 +281,7 @@ export class HrService {
   getLeaveTypeList(pageModel: any): any {
     return this.globalService.post(
       this.appurl.getApiUrl() +
-        GLOBAL.API_HRConfiguration_GetAllLeaveReasonType,
+      GLOBAL.API_HRConfiguration_GetAllLeaveReasonType,
       pageModel
     );
   }
@@ -329,7 +329,7 @@ export class HrService {
 
     dialogRef.componentInstance.cancelText = Delete_Confirmation_Texts.noText;
 
-    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.afterClosed().subscribe(result => { });
 
     return dialogRef.componentInstance.confirmDelete;
   }
@@ -337,7 +337,7 @@ export class HrService {
   deleteEducationDegree(data: any) {
     return this.globalService.post(
       this.appurl.getApiUrl() +
-        GLOBAL.API_HRConfiguration_DeleteEducationDegree,
+      GLOBAL.API_HRConfiguration_DeleteEducationDegree,
       data
     );
   }
@@ -382,6 +382,25 @@ export class HrService {
   deleteDesignationDetail(data: any) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_DeleteDesignationDetail,
+      data
+    );
+  }
+
+  getAppraisalQuestions(officeId: number) {
+    return this.globalService.getList(
+      this.appurl.getApiUrl() + 'Code/GetAppraisalQuestions' + '?OfficeId=' + officeId
+    );
+  }
+
+  addAppraisalQuestion(data) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + 'Code/AddAppraisalQuestion',
+      data
+    );
+  }
+  editAppraisalQuestion(data) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + 'Code/EditAppraisalQuestion',
       data
     );
   }

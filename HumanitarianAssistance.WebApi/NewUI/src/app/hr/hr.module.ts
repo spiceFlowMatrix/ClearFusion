@@ -52,6 +52,9 @@ import { AddSalaryConfigurationComponent } from './components/employee-salary-co
 import { AddBonusComponent } from './components/employee-salary-config/add-bonus/add-bonus.component';
 import { AddFineComponent } from './components/employee-salary-config/add-fine/add-fine.component';
 import { EmployeePensionComponent } from './components/employee-pension/employee-pension.component';
+import { AddEmployeeComponent } from './components/add-employee/add-employee.component';
+import { SetEmployeeAttendanceComponent } from './components/set-employee-attendance/set-employee-attendance.component';
+import {NgxMaterialTimepickerModule} from '../../../node_modules/ngx-material-timepicker';
 import { EmployeeAdvanceListComponent } from './components/employee_advance/employee-advance-list/employee-advance-list.component';
 import { NewAdvanceRequestComponent } from './components/employee_advance/new-advance-request/new-advance-request.component';
 import { AdvanceHistoryComponent } from './components/employee_advance/advance-history/advance-history.component';
@@ -61,6 +64,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
 import { AddContractComponent } from './components/employee-contract/add-contract/add-contract.component';
 import { AddAdvanceRecoveryComponent } from './components/employee-salary-config/add-advance-recovery/add-advance-recovery.component';
+import { AddOpeningPensionComponent } from './components/add-employee/add-opening-pension/add-opening-pension.component';
+import { IncrementDecrementSalaryComponent } from './components/employee-salary-config/increment-decrement-salary/increment-decrement-salary.component';
 
 @NgModule({
   declarations: [
@@ -85,6 +90,8 @@ import { AddAdvanceRecoveryComponent } from './components/employee-salary-config
     EmployeeLeaveAddComponent,
     AssignLeaveComponent,
     EmployeePensionComponent,
+    AddEmployeeComponent,
+    SetEmployeeAttendanceComponent,
     EmployeeAdvanceListComponent,
     NewAdvanceRequestComponent,
     AdvanceHistoryComponent,
@@ -93,7 +100,9 @@ import { AddAdvanceRecoveryComponent } from './components/employee-salary-config
     AddFineComponent,
     SeeDaysComponent,
     AddContractComponent,
-    AddAdvanceRecoveryComponent
+    AddAdvanceRecoveryComponent,
+    AddOpeningPensionComponent,
+    IncrementDecrementSalaryComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -132,6 +141,7 @@ import { AddAdvanceRecoveryComponent } from './components/employee-salary-config
     MatTableModule,
     MatCheckboxModule,
     MatRadioModule,
+    NgxMaterialTimepickerModule,
 
     TranslateModule.forRoot({
       loader: {
@@ -156,10 +166,13 @@ import { AddAdvanceRecoveryComponent } from './components/employee-salary-config
     AddOtherSkillsComponent,
     AddSalaryBudgetComponent,
     AddLanguageComponent,
+    SetEmployeeAttendanceComponent,
     AddSalaryConfigurationComponent,
     AddBonusComponent,
     AddFineComponent,
     SeeDaysComponent,
+    AddOpeningPensionComponent,
+    IncrementDecrementSalaryComponent,
     NewAdvanceRequestComponent,
     AdvanceHistoryComponent,
     AddAdvanceRecoveryComponent
