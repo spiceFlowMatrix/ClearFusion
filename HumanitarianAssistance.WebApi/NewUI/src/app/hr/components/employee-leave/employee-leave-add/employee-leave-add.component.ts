@@ -30,7 +30,7 @@ export class EmployeeLeaveAddComponent implements OnInit {
       'EmployeeId': [this.data.EmployeeId],
       'LeaveType': [{value: this.data.LeaveType, disabled: true}],
       'LeaveReasonId': [this.data.LeaveReasonId],
-      'LeaveDate': [{'begin': new Date(new Date().getFullYear(), 0, 1), 'end': new Date()},
+      'LeaveDate': [{'begin': null, 'end': null},
                      Validators.required],
       'BalanceLeave': [{value: this.data.HourBalance, disabled: true}],
       'LeaveApplied': [null, [Validators.required, Validators.min(1), Validators.max(this.data.HourBalance)]],

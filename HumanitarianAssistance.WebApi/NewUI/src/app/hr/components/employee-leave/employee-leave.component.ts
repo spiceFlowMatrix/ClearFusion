@@ -247,4 +247,8 @@ export class EmployeeLeaveComponent implements OnInit {
     });
   }
 
+  getEmployeeAttendanceHour() {
+
+  }
+
 }
