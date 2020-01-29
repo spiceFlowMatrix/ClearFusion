@@ -36,7 +36,7 @@ export class EmployeeLeaveAddComponent implements OnInit {
                      Validators.required],
       'BalanceLeave': [{value: this.data.HourBalance, disabled: true}],
       'LeaveApplied': [{value: null, disabled: true}, [Validators.required, Validators.min(1), Validators.max(this.data.HourBalance)]],
-      'Remarks': [null, [Validators.required]]
+      // 'Remarks': [null, [Validators.required]]
     });
   }
 
@@ -74,7 +74,7 @@ export class EmployeeLeaveAddComponent implements OnInit {
 
        const model = {
         LeaveReasonId: this.applyLeaveForm.value.LeaveReasonId,
-        Remarks: this.applyLeaveForm.value.Remarks,
+        Remarks: '',
         LeaveReasonName: this.applyLeaveForm.value.LeaveType,
         BlanceLeave: this.applyLeaveForm.value.BalanceLeave,
         LeaveApplied: this.applyLeaveForm.value.LeaveApplied,
