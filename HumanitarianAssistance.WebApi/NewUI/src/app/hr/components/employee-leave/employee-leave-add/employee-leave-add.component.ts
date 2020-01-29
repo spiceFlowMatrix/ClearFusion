@@ -5,6 +5,7 @@ import { ToastModule } from 'primeng/toast';
 import { ToastrService } from 'ngx-toastr';
 import { HrLeaveService } from 'src/app/hr/services/hr-leave.service';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
 
 @Component({
   selector: 'app-employee-leave-add',
@@ -20,6 +21,7 @@ export class EmployeeLeaveAddComponent implements OnInit {
 
   isFormSubmitted = false;
   applyLeaveForm: FormGroup;
+  errorMessage = '';
 
   ngOnInit() {
     this.onFormInIt();
@@ -33,7 +35,7 @@ export class EmployeeLeaveAddComponent implements OnInit {
       'LeaveDate': [{'begin': null, 'end': null},
                      Validators.required],
       'BalanceLeave': [{value: this.data.HourBalance, disabled: true}],
-      'LeaveApplied': [null, [Validators.required, Validators.min(1), Validators.max(this.data.HourBalance)]],
+      'LeaveApplied': [{value: null, disabled: true}, [Validators.required, Validators.min(1), Validators.max(this.data.HourBalance)]],
       'Remarks': [null, [Validators.required]]
     });
   }
@@ -113,10 +115,10 @@ export class EmployeeLeaveAddComponent implements OnInit {
   //   });
   // }
 
-  onAppliedHourChange(event) {
-    this.applyLeaveForm.controls['BalanceLeave'].setValue(this.data.HourBalance - (+event.target.value));
-    this.applyLeaveForm.updateValueAndValidity();
-  }
+  // onAppliedHourChange(event) {
+  //   this.applyLeaveForm.controls['BalanceLeave'].setValue(this.data.HourBalance - (+event.target.value));
+  //   this.applyLeaveForm.updateValueAndValidity();
+  // }
 
   closeDialog() {
     this.dialogRef.close();
@@ -126,5 +128,28 @@ export class EmployeeLeaveAddComponent implements OnInit {
     const day = d.getDay();
     // Prevent Saturday and Sunday from being selected.
     return day !== 0 && day !== 6;
+  }
+
+  DateSelectionChanged(event) {
+    const model = {
+      StartDate: StaticUtilities.getLocalDate(event.value.begin),
+      EndDate: StaticUtilities.getLocalDate(event.value.end),
+      EmployeeId: this.data.EmployeeId
+    };
+
+    this.hrLeaveService.getAppliedLeaveHours(model).subscribe(x => {
+      if (x.AppliedHours) {
+        this.errorMessage = '';
+        this.applyLeaveForm.controls['LeaveApplied'].setValue(x.AppliedHours);
+        const value = this.applyLeaveForm.getRawValue().BalanceLeave - x.AppliedHours;
+        this.applyLeaveForm.controls['BalanceLeave'].setValue(value);
+      } else {
+        this.errorMessage = 'Something went wrong, Please try again';
+      }
+    }, error => {
+      this.applyLeaveForm.controls['LeaveApplied'].setValue(null);
+      this.applyLeaveForm.controls['BalanceLeave'].setValue(this.data.HourBalance);
+      this.errorMessage = error;
+    });
   }
 }
