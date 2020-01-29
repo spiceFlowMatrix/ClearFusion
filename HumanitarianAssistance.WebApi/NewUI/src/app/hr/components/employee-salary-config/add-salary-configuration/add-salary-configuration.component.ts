@@ -34,8 +34,8 @@ export class AddSalaryConfigurationComponent implements OnInit {
         PayrollId: [this.data.PayrollId],
         CurrencyId: [this.data.CurrencyId, [Validators.required]],
         ActiveSalary: [this.data.MonthlyAmount, [Validators.required, Validators.min(1)]],
-        CapacityBuilding: [0, [Validators.required]],
-        Security: [0, [Validators.required]],
+        CapacityBuilding: [this.data.CapacityBuilding, [Validators.required]],
+        Security: [this.data.Security, [Validators.required]],
       });
     } else {  // for Setting Fixed Salary from Employee Listing Page
       this.fixedSalaryForm = this.fb.group({

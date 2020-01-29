@@ -56,7 +56,7 @@
 
         </span>
     </div><br />
-    <div class="row" *ngIf="isPayrollAdded">
+    <div class="row" *ngIf="isNoError">
         <div class="col-md-12">
             <div class="col-md-4">
                 <table class="table table-striped">
@@ -91,7 +91,7 @@
         </div>
     </div>
 
-    <div class="row" *ngIf="isPayrollAdded">
+    <div class="row" *ngIf="isNoError">
         <div class="col-md-12">
             <mat-tab-group>
                 <mat-tab label="Accumulated">
@@ -110,11 +110,10 @@
             </mat-tab-group>
         </div>
     </div>
-    <div class="row" *ngIf="!isPayrollAdded">
+    <div class="row" *ngIf="!isNoError">
         <div class="col-md-12">
             <i class="fas fa-info-circle icon_color_yellow"></i>&nbsp;
-            <b>Payroll Hours are not configured for this month. Please Add Payroll Hours for the selected month for this
-                employee's Attendance Group.</b>
+            <b>{{errorMessage}}</b>
         </div>
     </div>
 </mat-card>
