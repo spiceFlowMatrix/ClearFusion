@@ -1,4 +1,4 @@
-import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
+
 import { AssignLeaveComponent } from './components/employee-leave/assign-leave/assign-leave.component';
 import { EmployeeLeaveAddComponent } from './components/employee-leave/employee-leave-add/employee-leave-add.component';
 import { NgModule } from '@angular/core';
