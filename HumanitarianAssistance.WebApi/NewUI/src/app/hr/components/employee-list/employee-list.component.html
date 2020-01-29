@@ -23,90 +23,87 @@
       <button (click)="incrementDecrementSalary()" mat-menu-item>Increment/Decrement Salary</button>
     </mat-menu>
   </span>
-  <div class="action_section">
-  </div>
+    <div class="action_section">
+    </div>
 
 </lib-sub-header-template>
 <mat-divider></mat-divider>
 
 <div class="container-fluid">
-  <form [formGroup]="employeeListFilterForm" (ngSubmit)="filterEmployee(employeeListFilterForm.value)">
-    <h4>Filters
-        <hum-button class="pull-right" [type]="'filter'" [text]="'APPLY FILTER'" [isSubmit]="true"></hum-button>
-    </h4>
-    <div class="row">
-      <div class="col-md-2">
-        <mat-form-field class="example-full-width">
-          <input matInput type="text" formControlName="Name" placeholder="Name">
-        </mat-form-field>
-      </div>
-      <!-- <div class="col-md-2">
+    <form [formGroup]="employeeListFilterForm" (ngSubmit)="filterEmployee(employeeListFilterForm.value)">
+        <h4>Filters
+            <hum-button class="pull-right" [type]="'filter'" [text]="'APPLY FILTER'" [isSubmit]="true"></hum-button>
+        </h4>
+        <div class="row">
+            <div class="col-md-2">
+                <mat-form-field class="example-full-width">
+                    <input matInput type="text" formControlName="Name" placeholder="Name">
+                </mat-form-field>
+            </div>
+            <!-- <div class="col-md-2">
         <mat-form-field class="example-full-width">
           <input matInput type="text" formControlName="LastName" placeholder="Last Name">
         </mat-form-field>
       </div> -->
-      <div class="col-md-2">
-        <lib-hum-dropdown formControlName="Sex" [validation]="
+            <div class="col-md-2">
+                <lib-hum-dropdown formControlName="Sex" [validation]="
         employeeListFilterForm.controls['Sex'].hasError()" [options]="genderList$" [placeHolder]="'Sex'"></lib-hum-dropdown>
-      </div>
-      <div class="col-md-2">
-        <lib-hum-dropdown formControlName="EmploymentStatus" [validation]="
+            </div>
+            <div class="col-md-2">
+                <lib-hum-dropdown formControlName="EmploymentStatus" [validation]="
         employeeListFilterForm.controls['EmploymentStatus'].hasError()" [options]="accountStatusList$" [placeHolder]="'Employment Status'"></lib-hum-dropdown>
-      </div>
-      <div class="col-md-2">
-        <mat-form-field class="example-full-width">
-          <input matInput type="text" formControlName="EmployeeId" placeholder="EmployeeId">
-        </mat-form-field>
-      </div>
-    </div>
-  </form>
+            </div>
+            <div class="col-md-2">
+                <mat-form-field class="example-full-width">
+                    <input matInput type="text" formControlName="EmployeeId" placeholder="EmployeeId">
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
 </div>
 <div class="row" humAddScroll [height]="250">
-  <div class="col-md-12">
-      <mat-table #table [dataSource]="employeeDataSource">
-        <ng-container matColumnDef="select">
-          <th style="border-bottom-width:0px" mat-header-cell *matHeaderCellDef>
-            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-              [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
-            </mat-checkbox>
-          </th>
-          <td style="border-bottom-width:0px" mat-cell *matCellDef="let row">
-            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-              [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
-            </mat-checkbox>
-          </td>
-        </ng-container>
+    <div class="col-md-12">
+        <mat-table #table [dataSource]="employeeDataSource">
+            <ng-container matColumnDef="select">
+                <th style="border-bottom-width:0px" mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                    </mat-checkbox>
+                </th>
+                <td style="border-bottom-width:0px" mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="Code">
-          <mat-header-cell *matHeaderCellDef> Code </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.Code}} </mat-cell>
-        </ng-container>
+            <ng-container matColumnDef="Code">
+                <mat-header-cell *matHeaderCellDef> Code </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.Code}} </mat-cell>
+            </ng-container>
 
-        <ng-container matColumnDef="Name">
-          <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.Name}} </mat-cell>
-        </ng-container>
+            <ng-container matColumnDef="Name">
+                <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.Name}} </mat-cell>
+            </ng-container>
 
-        <ng-container matColumnDef="FatherName">
-          <mat-header-cell *matHeaderCellDef> Father Name </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.FatherName}} </mat-cell>
-        </ng-container>
+            <ng-container matColumnDef="FatherName">
+                <mat-header-cell *matHeaderCellDef> Father Name </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.FatherName}} </mat-cell>
+            </ng-container>
 
-        <ng-container matColumnDef="EmploymentStatus">
-          <mat-header-cell *matHeaderCellDef> Employment Status </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.EmploymentStatus}} </mat-cell>
-        </ng-container>
+            <ng-container matColumnDef="EmploymentStatus">
+                <mat-header-cell *matHeaderCellDef> Employment Status </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.EmploymentStatus}} </mat-cell>
+            </ng-container>
 
-        <ng-container matColumnDef="Profession">
-          <mat-header-cell *matHeaderCellDef> Profession </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.Profession}}
-          </mat-cell>
-        </ng-container>
+            <ng-container matColumnDef="Profession">
+                <mat-header-cell *matHeaderCellDef> Profession </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.Profession}}
+                </mat-cell>
+            </ng-container>
 
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="navigateToDetails(row)"></mat-row>
-      </mat-table>
-      <mat-paginator [length]="TotalCount" [pageSize]="filterModel.PageSize"
-      [pageIndex]="filterModel.PageIndex" [pageSizeOptions]="[10, 25, 50, 100]" (page)="pageEvent($event)"></mat-paginator>
-  </div>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="navigateToDetails(row)"></mat-row>
+        </mat-table>
+        <mat-paginator [length]="TotalCount" [pageSize]="filterModel.PageSize" [pageIndex]="filterModel.PageIndex" [pageSizeOptions]="[10, 25, 50, 100]" (page)="pageEvent($event)"></mat-paginator>
+    </div>
 </div>

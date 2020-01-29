@@ -1,8 +1,9 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
     <span class="action_header">
     New Employee Form
-    <hum-button [type]="'save'" [text]="'Save '" [isSubmit]="true"  (click)="onFormSubmit()"></hum-button>
-    <hum-button [type]="'cancel'" [text]="'Cancel'"></hum-button>
+    <hum-button *ngIf=!IsEditing [type]="'save'" [text]="'Save '" [isSubmit]="true"  (click)="onFormSubmit()"></hum-button>
+    <hum-button *ngIf=IsEditing [type]="'save'" [text]="'Update '" [isSubmit]="true"  (click)="onFormSubmit()"></hum-button>
+    <hum-button [type]="'cancel'" [text]="'Cancel'" routerLink="/hr/employees"></hum-button>
   </span>
     <div class="action_section"></div>
 </lib-sub-header-template>
@@ -41,12 +42,12 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput formControlName="Password" placeholder="Password" />
+                                    <input matInput formControlName="Password" placeholder="Password" type="password" />
                                 </mat-form-field>
                             </div>
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput formControlName="ConfirmPassword" placeholder="Confirm Password" />
+                                    <input matInput formControlName="ConfirmPassword" placeholder="Confirm Password" type="password" />
                                 </mat-form-field>
                             </div>
                         </div>
@@ -253,7 +254,7 @@
                                 employeeProfessionalDetailForm.controls['AttendanceGroup'].hasError(
                       'required'
                     )
-                  " [options]="attendanceGroupList$" [placeHolder]="'AttendanceGroup'"></lib-hum-dropdown>
+                  " [options]="attendanceGroupList$" [placeHolder]="'Attendance Group'"></lib-hum-dropdown>
                             </div>
                         </div>
 
