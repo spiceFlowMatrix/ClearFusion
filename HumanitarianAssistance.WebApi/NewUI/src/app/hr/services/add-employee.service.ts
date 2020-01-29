@@ -1,4 +1,4 @@
-import { IEmployeeAllDetails } from './../models/employee-detail.model';
+import { IEmployeeAllDetails, IEmployeeAllDetailsForEdit } from './../models/employee-detail.model';
 import { Injectable } from '@angular/core';
 import { GlobalService } from 'src/app/shared/services/global-services.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
@@ -114,7 +114,17 @@ export class AddEmployeeService {
   //#region "AddNewEmployeeData"
   AddNewEmployeeDetails(model: IEmployeeAllDetails): any {
     return this.globalService.post(
-      this.appurl.getApiUrl() + GLOBAL.API_Hr__AddNewEmployee, model
+      this.appurl.getApiUrl() + GLOBAL.API_Hr__EditEmployee,
+      model
+    );
+  }
+  //#endregion
+
+   //#region "AddNewEmployeeData"
+   EditEmployeeDetails(model: IEmployeeAllDetailsForEdit): any {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_Hr__AddNewEmployee,
+      model
     );
   }
   //#endregion
@@ -122,11 +132,32 @@ export class AddEmployeeService {
   //#region "CheckExchangeRatesVerified"
   CheckExchangeRatesVerified(model: any): any {
     return this.globalService.post(
-      this.appurl.getApiUrl() + GLOBAL.API_ExchangeRates_CheckExchangeRatesVerified, model
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ExchangeRates_CheckExchangeRatesVerified,
+      model
     );
   }
   //#endregion
 
+  //#region "GetEmployeeDetailByEmployeeId"
+  GetEmployeeDetailByEmployeeId(employeeId): any {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_Hr_GetEmployeeById +
+        '?EmployeeId=' +
+        employeeId
+    );
+  }
+  //#endregion
 
-
+  //#region "GetEmployeeProfessionalDetailByEmployeeId"
+  GetEmployeeProfessionalDetailByEmployeeId(employeeId): any {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HR_GetEmployeeProfessionalDetail +
+        '?EmployeeId=' +
+        employeeId
+    );
+  }
+  //#endregion
 }

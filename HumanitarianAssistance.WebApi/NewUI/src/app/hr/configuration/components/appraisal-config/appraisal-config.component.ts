@@ -48,7 +48,7 @@ export class AppraisalConfigComponent implements OnInit {
     };
   }
   getAppraisalQuestions() {
-    this.hrService.getAppraisalQuestions(1).subscribe(res => {
+    this.hrService.getAppraisalQuestions(Number(localStorage.getItem('SelectedOfficeId'))).subscribe(res => {
       this.commonLoader.hideLoader();
       this.appraisalList$ = of(res.data.AppraisalList.map(x => {
         return {
@@ -57,7 +57,7 @@ export class AppraisalConfigComponent implements OnInit {
           DariQuestion: x.DariQuestion,
           SequenceNo: x.SequenceNo
 
-        } as AppraisalQuestions
+        } as AppraisalQuestions ;
       }));
       this.RecordCount = res.RecordCount;
     })

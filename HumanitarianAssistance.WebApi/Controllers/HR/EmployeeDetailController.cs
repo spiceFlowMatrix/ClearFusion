@@ -747,5 +747,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             model.CreatedDate = DateTime.UtcNow;
             return await _mediator.Send(model);
         }
+
+        [HttpPost]
+        public async Task<ApiResponse> EditEmployeeDetails([FromBody]EditEmployeeDetailsCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
     }
 }

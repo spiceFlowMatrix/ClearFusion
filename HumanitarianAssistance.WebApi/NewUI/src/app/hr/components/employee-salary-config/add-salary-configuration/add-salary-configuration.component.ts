@@ -17,7 +17,9 @@ export class AddSalaryConfigurationComponent implements OnInit {
   onAddSalaryConfigurationRefresh = new EventEmitter();
   currencyList$: Observable<IDropDownModel[]>;
   salaryConfigForm: FormGroup;
+  fixedSalaryForm: FormGroup;
   isFormSubmitted = false;
+  errMsg = null;
   constructor(
     private fb: FormBuilder,
     private commonLoader: CommonLoaderService,
@@ -27,11 +29,19 @@ export class AddSalaryConfigurationComponent implements OnInit {
     public dialogRef: MatDialogRef<AddSalaryConfigurationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.salaryConfigForm = this.fb.group({
-      PayrollId: [this.data.PayrollId],
-      CurrencyId: [this.data.CurrencyId, [Validators.required]],
-      ActiveSalary: [this.data.MonthlyAmount, [Validators.required, Validators.min(1)]]
-    });
+    if (!this.data.ForAllEmployees) {
+      this.salaryConfigForm = this.fb.group({
+        PayrollId: [this.data.PayrollId],
+        CurrencyId: [this.data.CurrencyId, [Validators.required]],
+        ActiveSalary: [this.data.MonthlyAmount, [Validators.required, Validators.min(1)]]
+      });
+    } else {  // for Setting Fixed Salary from Employee Listing Page
+      this.fixedSalaryForm = this.fb.group({
+        FixedSalary: [null],
+        CapacityBuilding: [null],
+        Security: [null]
+      });
+    }
   }
 
   ngOnInit() {
@@ -121,5 +131,36 @@ export class AddSalaryConfigurationComponent implements OnInit {
       }, error => {
         this.toastr.warning(error);
       });
+  }
+
+  setFixedSalaryForAllEmployees(value) {
+    this.errMsg = null;
+    if ((value.FixedSalary === null) && (value.CapacityBuilding === null) && (value.Security === null)) {
+      this.errMsg = 'Please enter one of the values to be updated!';
+      return;
+    }
+    this.commonLoader.showLoader();
+    const model = {
+      EmployeeIds: this.data.SelectedEmployees.map(x => {
+        return x.EmployeeId;
+      }),
+      FixedSalary: value.FixedSalary,
+      CapacityBuilding: value.CapacityBuilding,
+      Security: value.Security
+    };
+    this.salaryConfigService.saveMultipleFixedSalaryForEmployees(model).subscribe(res => {
+      if (res) {
+        this.toastr.success('Salary updated successfully!');
+        this.commonLoader.hideLoader();
+        this.dialogRef.close();
+      } else {
+        this.commonLoader.hideLoader();
+        this.errMsg = 'Something went wrong!';
+      }
+    }, err => {
+      this.commonLoader.hideLoader();
+      this.errMsg = err;
+    });
+    console.log(model);
   }
 }

@@ -64,6 +64,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
 import { AddContractComponent } from './components/employee-contract/add-contract/add-contract.component';
 import { AddOpeningPensionComponent } from './components/add-employee/add-opening-pension/add-opening-pension.component';
+import { IncrementDecrementSalaryComponent } from './components/employee-salary-config/increment-decrement-salary/increment-decrement-salary.component';
 
 @NgModule({
   declarations: [
@@ -89,16 +90,17 @@ import { AddOpeningPensionComponent } from './components/add-employee/add-openin
     AssignLeaveComponent,
     EmployeePensionComponent,
     AddEmployeeComponent,
+    SetEmployeeAttendanceComponent,
     EmployeeAdvanceListComponent,
     NewAdvanceRequestComponent,
     AdvanceHistoryComponent,
-    SetEmployeeAttendanceComponent,
     AddSalaryConfigurationComponent,
     AddBonusComponent,
     AddFineComponent,
     SeeDaysComponent,
     AddContractComponent,
-    AddOpeningPensionComponent
+    AddOpeningPensionComponent,
+    IncrementDecrementSalaryComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -168,6 +170,7 @@ import { AddOpeningPensionComponent } from './components/add-employee/add-openin
     AddFineComponent,
     SeeDaysComponent,
     AddOpeningPensionComponent,
+    IncrementDecrementSalaryComponent,
     NewAdvanceRequestComponent,
     AdvanceHistoryComponent
   ]

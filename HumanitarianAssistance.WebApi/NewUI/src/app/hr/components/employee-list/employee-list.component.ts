@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
 import { EmployeeListService } from '../../services/employee-list.service';
 import { Observable, of } from 'rxjs';
 import { IDropDownModel } from 'src/app/store/models/purchase';
@@ -13,6 +13,8 @@ import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.
 import { SetEmployeeAttendanceComponent } from '../set-employee-attendance/set-employee-attendance.component';
 import { AttendanceService } from '../../services/attendance.service';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { AddSalaryConfigurationComponent } from '../employee-salary-config/add-salary-configuration/add-salary-configuration.component';
+import { IncrementDecrementSalaryComponent } from '../employee-salary-config/increment-decrement-salary/increment-decrement-salary.component';
 
 @Component({
   selector: 'app-employee-list',
@@ -28,10 +30,10 @@ export class EmployeeListComponent implements OnInit {
   accountStatusList$: Observable<IDropDownModel[]>;
   employeeList: EmployeeDetailList[] = [];
   selection = new SelectionModel<EmployeeDetailList>(true, []);
-  displayedColumns = ['select', 'Code', 'FirstName',
-    'LastName', 'EmploymentStatus', 'Profession'];
-  filterModel: EmployeeFilterModel = {EmployeeIdFilter: null, EmploymentStatusFilter: 0, FirstNameFilter: null,
-    LastNameFilter: null, PageIndex: 0, PageSize: 10, OfficeId: 0, GenderFilter: 0};
+  displayedColumns = ['select', 'Code', 'Name',
+    'FatherName', 'EmploymentStatus', 'Profession'];
+  filterModel: EmployeeFilterModel = {EmployeeIdFilter: null, EmploymentStatusFilter: 0, NameFilter: null,
+    PageIndex: 0, PageSize: 10, OfficeId: 0, GenderFilter: 0};
   employeeDataSource;
   TotalCount = 0;
 
@@ -56,8 +58,8 @@ export class EmployeeListComponent implements OnInit {
         { name: 'Other', value: 3 }
       ] as IDropDownModel[]);
       this.employeeListFilterForm = this.fb.group({
-        FirstName: [''],
-        LastName: [''],
+        Name: [''],
+        // LastName: [''],
         Sex: [''],
         EmploymentStatus: [''],
         EmployeeId: ['']
@@ -115,8 +117,9 @@ export class EmployeeListComponent implements OnInit {
           this.employeeList.push({
             EmployeeId: element.EmployeeID,
             Code: element.EmployeeCode,
-            FirstName: element.FirstName,
-            LastName: element.LastName,
+            Name: element.Name,
+            FatherName: element.FatherName,
+            // LastName: element.LastName,
             EmploymentStatus: EmploymentStatus[element.EmployeeTypeId],
             Profession: (element.Profession === undefined) ? 'N/A' : element.Profession
           });
@@ -130,7 +133,7 @@ export class EmployeeListComponent implements OnInit {
 
   filterEmployee(value) {
     this.filterModel = {EmployeeIdFilter: value.EmployeeId, EmploymentStatusFilter: value.EmploymentStatus,
-      FirstNameFilter: value.FirstName, LastNameFilter: value.LastName, PageIndex: 0, PageSize: 10, OfficeId: this.selectedOffice.value,
+      NameFilter: value.Name, PageIndex: 0, PageSize: 10, OfficeId: this.selectedOffice.value,
       GenderFilter: value.Sex
     };
     this.getFilteredEmployeeList(this.filterModel);
@@ -232,6 +235,33 @@ export class EmployeeListComponent implements OnInit {
         });
       }
     );
+  }
+
+  setFixedSalary() {
+    const dialogRef = this.dialog.open(AddSalaryConfigurationComponent, {
+      width: '500px',
+      autoFocus: false,
+      data: {
+        ForAllEmployees: true,
+        SelectedEmployees: this.selection.selected
+      }
+    });
+    dialogRef.afterClosed().subscribe(() => {
+
+    });
+  }
+
+  incrementDecrementSalary() {
+    const dialogRef = this.dialog.open(IncrementDecrementSalaryComponent, {
+      width: '500px',
+      autoFocus: false,
+      data: {
+        SelectedEmployees: this.selection.selected
+      }
+    });
+    dialogRef.afterClosed().subscribe(() => {
+
+    });
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
