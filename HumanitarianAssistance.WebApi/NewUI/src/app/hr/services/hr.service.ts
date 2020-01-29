@@ -321,7 +321,6 @@ export class HrService {
       data: 'delete',
       disableClose: false
     });
-
     dialogRef.componentInstance.confirmMessage =
       Delete_Confirmation_Texts.deleteText1;
 
@@ -431,6 +430,27 @@ export class HrService {
         GLOBAL.API_HR_GetAllHolidayWeeklyDetails +
         '?officeId=' +
         officeId
+    );
+  }
+  getAppraisalQuestions(officeId: number) {
+    return this.globalService.getList(
+      this.appurl.getApiUrl() +
+        'Code/GetAppraisalQuestions' +
+        '?OfficeId=' +
+        officeId
+    );
+  }
+
+  addAppraisalQuestion(data) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + 'Code/AddAppraisalQuestion',
+      data
+    );
+  }
+  editAppraisalQuestion(data) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + 'Code/EditAppraisalQuestion',
+      data
     );
   }
 }

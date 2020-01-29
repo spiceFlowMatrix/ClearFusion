@@ -104,4 +104,31 @@ export class EmployeeSalaryConfigService {
       );
     }
     //#endregion
+
+    //#region "addAdvanceRecovery"
+    addAdvanceRecovery(model): any {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_EmployeePayroll_AddAdvanceRecovery, model
+      );
+    }
+    //#endregion
+
+    //#region "getEmployeeAdvanceDetail"
+    getEmployeeAdvanceDetail(model): any {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_EmployeePayroll_GetEmployeePayrollAdvanceDetail, model
+      );
+    }
+    //#endregion
+    saveMultipleFixedSalaryForEmployees(model) {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_HR_SetMultipleEmployeeFixedSalary, model
+      );
+    }
+
+    incrementDecrementSalary(model) {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_HR_IncrementDecrementEmployeesSalary, model
+      );
+    }
 }

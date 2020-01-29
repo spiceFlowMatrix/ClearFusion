@@ -66,7 +66,7 @@ export class EmployeeLeaveComponent implements OnInit {
     if (event.type === 'button') {
       const dialogRef = this.dialog.open(EmployeeLeaveAddComponent, {
         width: '450px',
-        height: '450px',
+        height: '370px',
         data: {
           EmployeeId: this.employeeId,
           LeaveReasonId: event.item.Id,
@@ -126,7 +126,7 @@ export class EmployeeLeaveComponent implements OnInit {
     this.hrLeave
       .getAllLeaveInfoById(this.employeeId)
       .subscribe(x => {
-        if (x && x.LeaveList.length > 0) {
+        if (x && x.LeaveList && x.LeaveList.length > 0) {
             this.assignedLeaveList$ = of(x.LeaveList.map((element) => {
               return {
                 Id: element.ApplyLeaveId,
@@ -245,6 +245,10 @@ export class EmployeeLeaveComponent implements OnInit {
     }, error => {
       this.toastr.warning(error);
     });
+  }
+
+  getEmployeeAttendanceHour() {
+
   }
 
 }

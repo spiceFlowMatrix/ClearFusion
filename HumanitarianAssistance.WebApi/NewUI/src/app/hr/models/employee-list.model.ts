@@ -1,7 +1,7 @@
 export class EmployeeFilterModel {
     EmploymentStatusFilter;
-    FirstNameFilter;
-    LastNameFilter;
+    NameFilter;
+    // LastNameFilter;
     GenderFilter;
     EmployeeIdFilter;
     OfficeId;
@@ -12,8 +12,9 @@ export class EmployeeFilterModel {
 export interface EmployeeDetailList {
   EmployeeId: number;
   Code: string;
-  FirstName: string;
-  LastName: string;
+  Name: string;
+  FatherName: string;
   EmploymentStatus: string;
   Profession: string;
 }
+

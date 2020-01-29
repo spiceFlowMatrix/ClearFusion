@@ -1,0 +1,322 @@
+<lib-sub-header-template [headerClass]="'sub_header_template_main1'">
+    <span class="action_header">
+    New Employee Form
+    <hum-button *ngIf=!IsEditing [type]="'save'" [text]="'Save '" [isSubmit]="true"  (click)="onFormSubmit()"></hum-button>
+    <hum-button *ngIf=IsEditing [type]="'save'" [text]="'Update '" [isSubmit]="true"  (click)="onFormSubmit()"></hum-button>
+    <hum-button [type]="'cancel'" [text]="'Cancel'" routerLink="/hr/employees"></hum-button>
+  </span>
+    <div class="action_section"></div>
+</lib-sub-header-template>
+<mat-card humAddScroll [height]="150">
+    <div class="row">
+        <div class="col-md-12">
+            <mat-tab-group>
+                <mat-tab label="General">
+                    <form [formGroup]="employeeDetailForm">
+                        <button #employeeDetailFormButton type="submit" style="display: none;"></button>
+                        <h4>Identity Details</h4>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="FullName" placeholder="Full Name" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="FatherName" placeholder="Father Name" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="Email" placeholder="Email" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="PhoneNo" placeholder="Phone Number" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="Password" placeholder="Password" type="password" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="ConfirmPassword" placeholder="Confirm Password" type="password" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <h4>Personal Details</h4>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <lib-hum-dropdown formControlName="Gender" [validation]="
+                    employeeDetailForm.controls['Gender'].hasError('required')
+                  " [options]="genderList$" [placeHolder]="'Gender'"></lib-hum-dropdown>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput [matDatepicker]="DateOfBirthPicker" placeholder="Date Of Birth" formControlName="DateOfBirth" />
+                                    <mat-datepicker-toggle matSuffix [for]="DateOfBirthPicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #DateOfBirthPicker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <lib-hum-dropdown formControlName="MaritalStatus" [validation]="
+                    employeeDetailForm.controls['MaritalStatus'].hasError(
+                      'required'
+                    )
+                  " [options]="maritalStatusList$" [placeHolder]="'Marital Status'"></lib-hum-dropdown>
+                            </div>
+                            <div class="col-md-3">
+                                <lib-hum-dropdown formControlName="Country" [validation]="
+                    employeeDetailForm.controls['Country'].hasError('required')
+                  " [options]="countryList$" [placeHolder]="'Country'" (change)="onChangeCountry($event)"></lib-hum-dropdown>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <lib-hum-dropdown formControlName="Province" [validation]="
+                    employeeDetailForm.controls['Province'].hasError('required')
+                  " [options]="provinceList$" [placeHolder]="'Province/State'" (change)="onChangeProvince($event)"></lib-hum-dropdown>
+                            </div>
+                            <div class="col-md-3">
+                                <lib-hum-dropdown formControlName="District" [validation]="
+                    employeeDetailForm.controls['District'].hasError('required')
+                  " [options]="districtList$" [placeHolder]="'City/Village/District'"></lib-hum-dropdown>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="BirthPlace" placeholder="Birth Place" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="TinNumber" placeholder="Tin Number" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="PassportNumber" placeholder="Passport Number" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="University" placeholder="University" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <lib-hum-dropdown formControlName="Profession" [validation]="
+                    employeeDetailForm.controls['Profession'].hasError(
+                      'required'
+                    )
+                  " [options]="professionList$" [placeHolder]="'Profession'"></lib-hum-dropdown>
+                            </div>
+                            <div class="col-md-3">
+                                <lib-hum-dropdown formControlName="Qualification" [validation]="
+                    employeeDetailForm.controls['Qualification'].hasError(
+                      'required'
+                    )
+                  " [options]="qualificationList$" [placeHolder]="'Qualification'"></lib-hum-dropdown>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <lib-hum-dropdown formControlName="ExperienceYear" [validation]="
+                    employeeDetailForm.controls['ExperienceYear'].hasError(
+                      'required'
+                    )
+                  " [options]="previousYearsList$" [placeHolder]="'Experience Year'"></lib-hum-dropdown>
+                            </div>
+                            <div class="col-md-3">
+                                <lib-hum-dropdown formControlName="ExperienceMonth" [validation]="
+                    employeeDetailForm.controls['ExperienceMonth'].hasError(
+                      'required'
+                    )
+                  " [options]="monthsList$" [placeHolder]="'Experience Month'"></lib-hum-dropdown>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="IssuePlace" placeholder="Issue Place" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="ReferBy" placeholder="Refer By" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field class="example-full-width">
+                                    <textarea matInput rows="3" formControlName="PreviousWork" placeholder="Previous Work"></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field class="example-full-width">
+                                    <textarea matInput rows="3" formControlName="CurrentAddress" placeholder="Current Address"></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field class="example-full-width">
+                                    <textarea matInput rows="3" formControlName="PermanentAddress" placeholder="Permanent Address"></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field class="example-full-width">
+                                    <textarea matInput rows="3" formControlName="CurrentAddress" placeholder="Current Address"></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </form>
+                </mat-tab>
+                <mat-tab label="Profesional Details">
+                    <form [formGroup]="employeeProfessionalDetailForm">
+                        <button id="ProfessionalDetail" type="button" #employeeProfessionalDetailFormButton type="submit" style="display: none;"></button>
+                        <h4>Professional Details</h4>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <lib-hum-dropdown formControlName="EmployeeType" [validation]="
+                                employeeProfessionalDetailForm.controls['EmployeeType'].hasError(
+                      'required'
+                    )
+                  " [options]="employeeTypeList$" [placeHolder]="'Employee Type'"></lib-hum-dropdown>
+                            </div>
+                            <div class="col-md-3">
+                                <lib-hum-dropdown formControlName="JobGrade" [validation]="
+                                employeeProfessionalDetailForm.controls['JobGrade'].hasError('required')
+                  " [options]="gradeList$" [placeHolder]="'Job Grade'"></lib-hum-dropdown>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <lib-hum-dropdown formControlName="Office" [validation]="
+                                employeeProfessionalDetailForm.controls['Office'].hasError('required')
+                  " [options]="officeList$" [placeHolder]="'Office'" (change)="onChangeOffice($event)"></lib-hum-dropdown>
+                            </div>
+                            <div class="col-md-3">
+                                <lib-hum-dropdown formControlName="Department" [validation]="
+                                employeeProfessionalDetailForm.controls['Department'].hasError(
+                      'required'
+                    )
+                  " [options]="departmentList$" [placeHolder]="'Department'"></lib-hum-dropdown>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <lib-hum-dropdown formControlName="Designation" [validation]="
+                                employeeProfessionalDetailForm.controls['Designation'].hasError(
+                      'required'
+                    )
+                  " [options]="designationList$" [placeHolder]="'Designation'"></lib-hum-dropdown>
+                            </div>
+                            <div class="col-md-3">
+                                <lib-hum-dropdown formControlName="EmployeeCotractType" [validation]="
+                                employeeProfessionalDetailForm.controls['EmployeeCotractType'].hasError(
+                      'required'
+                    )
+                  " [options]="contractTypeList$" [placeHolder]="'Employee Contract Type'"></lib-hum-dropdown>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput [matDatepicker]="HiredOnPicker" placeholder="Hired On" formControlName="HiredOn" />
+                                    <mat-datepicker-toggle matSuffix [for]="HiredOnPicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #HiredOnPicker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <lib-hum-dropdown formControlName="AttendanceGroup" [validation]="
+                                employeeProfessionalDetailForm.controls['AttendanceGroup'].hasError(
+                      'required'
+                    )
+                  " [options]="attendanceGroupList$" [placeHolder]="'Attendance Group'"></lib-hum-dropdown>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <lib-hum-dropdown formControlName="DutyStation" [validation]="
+                                employeeProfessionalDetailForm.controls['DutyStation'].hasError(
+                      'required'
+                    )
+                  " [options]="officeList$" [placeHolder]="'Duty Station'"></lib-hum-dropdown>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="TrainingAndBenefits" placeholder="Training/Benefits" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field class="example-full-width">
+                                    <textarea matInput rows="3" formControlName="JobDescription" placeholder="Job Description"></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </form>
+                </mat-tab>
+                <mat-tab label="Opening Pension" *ngIf=!IsEditing>
+                    <div class="row">
+                        <lib-sub-header-template>
+                            <span class="action_header">Pension Detail
+                    <hum-button *ngIf="IsPensionDateSet===true" [type]="'add'" [text]="'ADD ENTRY'" (click)="addPension()"></hum-button>
+
+
+                    <mat-form-field *ngIf="IsPensionDateSet===false" class="clsMatDatePicker">
+                      <input matInput [matDatepicker]="picker" placeholder="Pension Date" (dateChange)="checkExchangeRateVerified($event.value)">
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+
+                  </span>
+                        </lib-sub-header-template>
+                        <div class="col-md-4">
+                            <table class="table table-striped">
+                                <tbody>
+                                    <tr>
+                                        <th>Currency</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                    <tr *ngFor="let data of pensionListDisplay">
+                                        <td>{{data.Currency}}</td>
+                                        <td>{{data.Amount}}</td>
+                                        <td> <i class="fas fa-trash" (click)='deletePensionItem(data)'></i></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- <hum-table [headers]="pensionHeader$" [isDefaultAction]="false" [items]="pensionListDisplay$"></hum-table> -->
+                        </div>
+                    </div>
+
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+</mat-card>

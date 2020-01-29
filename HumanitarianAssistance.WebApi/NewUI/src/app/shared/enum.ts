@@ -776,3 +776,10 @@ export enum HolidayType {
 'DayInMonth'= 1,
 'Weekly' = 2
 }
+
+export enum AdvanceBtnStatus {
+  NEW = 1,
+  APPROVE= 2,
+  REJECT= 3,
+  EDIT= 4
+}

@@ -32,8 +32,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                         EmployeeTypeId = x.EmployeeTypeId,
                         EmployeeID = x.EmployeeID,
                         EmployeeCode = x.EmployeeCode,
-                        FirstName = x.EmployeeName.Trim().Substring(0, ((x.EmployeeName.IndexOf(' ') != -1) ? x.EmployeeName.IndexOf(' ') : x.EmployeeName.Length-1)),
-                        LastName= (x.EmployeeName.IndexOf(' ') != -1) ? (x.EmployeeName.Trim().Substring(x.EmployeeName.IndexOf(' '), x.EmployeeName.Length-1)) : "",
+                        Name = x.EmployeeName,
+                        FatherName= x.FatherName,
                         Profession = x.EmployeeProfessionalDetail.professionDetails.ProfessionName,
                         SexId = x.SexId,
                         SexName = x.SexId == (int)Gender.MALE ? "Male" : x.SexId == (int)Gender.FEMALE ? "Female" : x.SexId == (int)Gender.OTHER ? "Other" : null,
@@ -43,15 +43,15 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 query = query.Where(x=> x.EmployeeTypeId == request.EmploymentStatusFilter);
             }
 
-            if(!string.IsNullOrEmpty(request.FirstNameFilter))
+            if(!string.IsNullOrEmpty(request.NameFilter))
             {
-                query = query.Where(x=> x.FirstName.Contains(request.FirstNameFilter));
+                query = query.Where(x=> x.Name.Contains(request.NameFilter));
             }
 
-            if(!string.IsNullOrEmpty(request.LastNameFilter))
-            {
-                query = query.Where(x=> x.LastName.Contains(request.LastNameFilter));
-            }
+            // if(!string.IsNullOrEmpty(request.LastNameFilter))
+            // {
+            //     query = query.Where(x=> x.LastName.Contains(request.LastNameFilter));
+            // }
 
             if(request.GenderFilter != 0)
             {

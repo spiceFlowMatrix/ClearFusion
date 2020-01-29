@@ -40,7 +40,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     throw new Exception(StaticResource.AttendanceNotFound);
                 }
 
-                var payroll = _dbContext.EmployeePayrollInfoDetail.FirstOrDefault(x=> x.IsDeleted == false && x.EmployeeId == request.EmployeeId &&
+                var payroll = _dbContext.EmployeePayrollInfoDetail.FirstOrDefault(x => x.IsDeleted == false && x.EmployeeId == request.EmployeeId &&
                                                                                    x.Month == request.Month && x.Year == DateTime.UtcNow.Year);
 
                 if (payroll == null)
@@ -79,21 +79,22 @@ namespace HumanitarianAssistance.Application.HR.Queries
         public object calculateEmployeePayroll(List<EmployeeAttendance> empPayrollAttendance, GetEmployeeMonthlyPayrollQuery request, EmployeePayrollInfoDetail payroll)
         {
             PayrollModel model = new PayrollModel();
+            List<AccumulatedPayrollHeads> accumulatedSalaryHeads = new List<AccumulatedPayrollHeads>();
 
             try
             {
-                EmployeeBasicSalaryDetail basicPay = _dbContext.EmployeeBasicSalaryDetail.FirstOrDefault(x=> x.IsDeleted == false && x.EmployeeId == request.EmployeeId);
+                EmployeeBasicSalaryDetail basicPay = _dbContext.EmployeeBasicSalaryDetail.FirstOrDefault(x => x.IsDeleted == false && x.EmployeeId == request.EmployeeId);
 
                 double dBasicPayPerhour = basicPay.BasicSalary / DateTime.DaysInMonth(DateTime.UtcNow.Year, request.Month);
 
-                if(basicPay == null)
+                if (basicPay == null)
                 {
                     throw new Exception("Basic pay not set for Employee");
                 }
 
                 EmployeeDetail employeeDetail = _dbContext.EmployeeDetail
-                                                          .Include(x=> x.EmployeeProfessionalDetail)
-                                                          .FirstOrDefault(x=> x.IsDeleted == false && x.EmployeeID == request.EmployeeId);
+                                                          .Include(x => x.EmployeeProfessionalDetail)
+                                                          .FirstOrDefault(x => x.IsDeleted == false && x.EmployeeID == request.EmployeeId);
 
                 PayrollMonthlyHourDetail payrollHours = _dbContext.PayrollMonthlyHourDetail
                                                                                     .FirstOrDefault(x => x.IsDeleted == false && x.OfficeId == employeeDetail.EmployeeProfessionalDetail.OfficeId
@@ -107,7 +108,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 //Note: default 0.045 i.e. (4.5 %)
                 var pension = _dbContext.EmployeePensionRate.FirstOrDefault(x => x.IsDefault == true && x.IsDeleted == false);
 
-                if(pension == null)
+                if (pension == null)
                 {
                     throw new Exception("Pension rate not set");
                 }
@@ -125,102 +126,54 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 double dSalaryTax = 0;
                 double dPension = 0;
 
-                int workTimeHours = empPayrollAttendance.Select(x=> Convert.ToInt32(x.TotalWorkTime)).DefaultIfEmpty(0).Sum();
-                int workTimeMinutes = empPayrollAttendance.Select(x=> x.WorkTimeMinutes).DefaultIfEmpty(0).Sum();
-                int? overtimehours = empPayrollAttendance.Select(x=> x.HoverTimeHours).DefaultIfEmpty(0).Sum();
-                int overTimeMinutes = empPayrollAttendance.Select(x=> x.OverTimeMinutes).DefaultIfEmpty(0).Sum();
+                int workTimeHours = empPayrollAttendance.Select(x => Convert.ToInt32(x.TotalWorkTime)).DefaultIfEmpty(0).Sum();
+                int workTimeMinutes = empPayrollAttendance.Select(x => x.WorkTimeMinutes).DefaultIfEmpty(0).Sum();
+                int? overtimehours = empPayrollAttendance.Select(x => x.HoverTimeHours).DefaultIfEmpty(0).Sum();
+                int overTimeMinutes = empPayrollAttendance.Select(x => x.OverTimeMinutes).DefaultIfEmpty(0).Sum();
 
                 double convertMinutesToHours = ((double)(workTimeMinutes + overTimeMinutes) / 60d);
                 model.GrossSalary = Math.Round((double)(dBasicPayPerhour * (workTimeHours + overtimehours + convertMinutesToHours) + totalBonus), 2);
-                AccumulatedPayrollHeads pensionHead = new AccumulatedPayrollHeads
-                {
-                    Id = (int)AccumulatedSalaryHead.Pension,
-                    Amount = dPension = Math.Round(((double)(model.GrossSalary * pension.PensionRate) / 100), 2), // i.e. 4.5 % => 0.045
-                    PayrollHeadName = "Pension",
-                    TransactionType = (int)TransactionType.Credit
-                };
 
-                model.AccumulatedPayrollHeadList.Add(pensionHead);
-
-                AccumulatedPayrollHeads grossSalary = new AccumulatedPayrollHeads
-                {
-                    Id = (int)AccumulatedSalaryHead.GrossSalary,
-                    Amount = model.GrossSalary,
-                    PayrollHeadName = "Gross Salary",
-                    TransactionType = (int)TransactionType.Credit
-                };
-
-                model.AccumulatedPayrollHeadList.Add(grossSalary);
+                //Calculate pension
+                dPension = Math.Round(((double)(model.GrossSalary * pension.PensionRate) / 100), 2); // i.e. 4.5 % => 0.045
+                
+                
 
                 if (model.GrossSalary > 5000)
                 {
                     double exchangeRate = getExchangeRate(basicPay.CurrencyId);
-
-                    AccumulatedPayrollHeads salaryTax = new AccumulatedPayrollHeads
-                    {
-                        Id = (int)AccumulatedSalaryHead.SalaryTax,
-                        Amount = dSalaryTax = Math.Round(Convert.ToDouble((StaticFunctions.SalaryCalculate(model.GrossSalary, exchangeRate))), 2),
-                        PayrollHeadName = "Salary Tax",
-                        TransactionType = (int)TransactionType.Credit
-                    };
-
-                    model.AccumulatedPayrollHeadList.Add(salaryTax);
+                    dSalaryTax = Math.Round(Convert.ToDouble((StaticFunctions.SalaryCalculate(model.GrossSalary, exchangeRate))), 2);
                 }
                 else
                 {
-                    AccumulatedPayrollHeads salaryTax = new AccumulatedPayrollHeads
-                    {
-                        Id = (int)AccumulatedSalaryHead.SalaryTax,
-                        Amount = dSalaryTax = 0,
-                        PayrollHeadName = "Salary Tax",
-                        TransactionType = (int)TransactionType.Credit
-                    };
-
-                    model.AccumulatedPayrollHeadList.Add(salaryTax);
+                    dSalaryTax = 0;
                 }
+
+                //Add Accumulated Salary Head for Salary Tax
+                AddEmployeeSalaryHeads((int)AccumulatedSalaryHead.SalaryTax, dSalaryTax, "Salary Tax", (int)TransactionType.Credit, ref accumulatedSalaryHeads);
+                //Add Accumulated Salary Head for pension
+                AddEmployeeSalaryHeads((int)AccumulatedSalaryHead.Pension, dPension, "Pension", (int)TransactionType.Credit, ref accumulatedSalaryHeads);
+
+
+                AdvanceHistoryDetail xAdvanceHistory = _dbContext.AdvanceHistoryDetail.FirstOrDefault(x => x.IsDeleted == false
+                                                                           && x.EmployeeId == request.EmployeeId && x.PaymentDate.Month == request.Month);
+
+                double advanceAmount = xAdvanceHistory == null ? 0 : xAdvanceHistory.InstallmentPaid;
+
+                //Add Accumulated Salary Head for Advance Amount
+                AddEmployeeSalaryHeads((int)AccumulatedSalaryHead.AdvanceRecovery, advanceAmount, "Advance Recovery", (int)TransactionType.Credit, ref accumulatedSalaryHeads);
+                //Add Accumulated Salary Head for Capacity Building
+                AddEmployeeSalaryHeads((int)AccumulatedSalaryHead.CapacityBuilding, basicPay.CapacityBuildingAmount, "Capacity Building", (int)TransactionType.Credit, ref accumulatedSalaryHeads);
+                //Add Accumulated Salary Head for Security
+                AddEmployeeSalaryHeads((int)AccumulatedSalaryHead.Security, basicPay.SecurityAmount, "Security", (int)TransactionType.Credit, ref accumulatedSalaryHeads);
+                //Add Accumulated Salary Head for Gross Salary
+                AddEmployeeSalaryHeads((int)AccumulatedSalaryHead.GrossSalary, model.GrossSalary, "Gross Salary", (int)TransactionType.Credit, ref accumulatedSalaryHeads);
 
                 //Net Salary  = (Gross + Allowances) - Deductions
-                model.NetSalary = Math.Round((double)(model.GrossSalary - totalFine - dSalaryTax - dPension), 2);
+                model.NetSalary = Math.Round((double)(model.GrossSalary - totalFine - dSalaryTax - dPension - advanceAmount - basicPay.SecurityAmount - basicPay.CapacityBuildingAmount), 2);
                 model.SalaryPaid = model.NetSalary;
 
-                Advances xAdvances = _dbContext.Advances.FirstOrDefault(x => x.IsDeleted == false && x.IsApproved == true
-                                                                           && x.EmployeeId == request.EmployeeId && x.OfficeId == employeeDetail.EmployeeProfessionalDetail.OfficeId
-                                                                           && x.AdvanceDate.Date < DateTime.Now.Date && x.IsDeducted == false);
-
-                AccumulatedPayrollHeads advance = new AccumulatedPayrollHeads();
-                if (xAdvances != null)
-                {
-                    if (xAdvances.RecoveredAmount == 0)
-                    {
-
-                        if (xAdvances.NumberOfInstallments == 0)
-                        {
-                            xAdvances.NumberOfInstallments = 1;
-                        }
-
-                        advance.Id = (int)AccumulatedSalaryHead.AdvanceRecovery;
-                        advance.Amount = Math.Round((Convert.ToDouble(xAdvances.AdvanceAmount / xAdvances.NumberOfInstallments ?? 1)), 2);
-                        advance.PayrollHeadName = "Advance Recovery";
-                        advance.TransactionType = (int)TransactionType.Credit;
-                    }
-                    else
-                    {
-                        Double iBalanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
-                        advance.Id = (int)AccumulatedSalaryHead.AdvanceRecovery;
-                        advance.Amount = Math.Round((Convert.ToDouble(iBalanceAmount / xAdvances.NumberOfInstallments)), 2);
-                        advance.PayrollHeadName = "Advance Recovery";
-                        advance.TransactionType = (int)TransactionType.Credit;
-                    }
-                }
-                else
-                {
-                    advance.Id = (int)AccumulatedSalaryHead.AdvanceRecovery;
-                    advance.Amount = 0;
-                    advance.PayrollHeadName = "Advance Recovery";
-                    advance.TransactionType = (int)TransactionType.Credit;
-                }
-
-                model.AccumulatedPayrollHeadList.Add(advance);
+                model.AccumulatedPayrollHeadList = accumulatedSalaryHeads;
             }
             catch (Exception ex)
             {
@@ -228,6 +181,20 @@ namespace HumanitarianAssistance.Application.HR.Queries
             }
 
             return model;
+        }
+
+        public void AddEmployeeSalaryHeads(int id, double amount, string headName, int transactionType, ref List<AccumulatedPayrollHeads> payrollHeads)
+        {
+
+            AccumulatedPayrollHeads accumulatedSalaryHead = new AccumulatedPayrollHeads
+            {
+                Id = id,
+                Amount = amount,
+                PayrollHeadName = headName,
+                TransactionType = transactionType
+            };
+
+            payrollHeads.Add(accumulatedSalaryHead);
         }
 
         public object FetchEmployeePayroll(List<EmployeeAttendance> empPayrollAttendance, GetEmployeeMonthlyPayrollQuery request, EmployeePayrollInfoDetail payroll)

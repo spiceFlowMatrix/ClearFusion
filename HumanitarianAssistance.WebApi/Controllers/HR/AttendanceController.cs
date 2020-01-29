@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.HR.Commands.Create;
+using HumanitarianAssistance.Application.HR.Commands.Common;
 using HumanitarianAssistance.Application.HR.Commands.Delete;
 using HumanitarianAssistance.Application.HR.Commands.Update;
 using HumanitarianAssistance.Application.HR.Models;
@@ -93,7 +94,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpPost]
         public async Task<IActionResult> GetFilteredAttendanceDetails([FromBody] GetFilteredAttendanceQuery model)
         {
-            var result= await _mediator.Send(model);
+            var result = await _mediator.Send(model);
             return Ok(result);
         }
         [HttpPost]
@@ -212,31 +213,66 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return await _mediator.Send(model);
         }
 
-         [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> AddEmployeeLeave([FromBody] ApplyEmployeeLeaveCommand model)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             model.ModifiedById = userId;
             model.ModifiedDate = DateTime.UtcNow;
-            var item =  await _mediator.Send(model);
+            var item = await _mediator.Send(model);
             return Ok(item);
         }
 
-         [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> GetEmployeeAppliedLeaves(int id)
         {
-           GetEmployeeAppliedLeavesQuery query = new GetEmployeeAppliedLeavesQuery();
-           query.EmployeeId = id;
-            var item =  await _mediator.Send(query);
+            GetEmployeeAppliedLeavesQuery query = new GetEmployeeAppliedLeavesQuery();
+            query.EmployeeId = id;
+            var item = await _mediator.Send(query);
             return Ok(item);
         }
 
         [HttpPost]
         public async Task<IActionResult> ApproveRejectLeave([FromBody] ApproveRejectLeaveCommand model)
         {
-            model .ModifiedById = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var item =  await _mediator.Send(model);
+            model.ModifiedById = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var item = await _mediator.Send(model);
             return Ok(item);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetPayrollDailyHourByEmployeeIds([FromBody]GetPayrollDailyHourByEmployeeIdsQuery model)
+        {
+            var item = await _mediator.Send(model);
+            return Ok(item);
+        }
+
+        [HttpPost]
+        public async Task<object> AddEditEmployeeAttendanceDetails([FromBody] AddEditAttendanceDetailCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            AddEditAttendanceDetailCommand command = new AddEditAttendanceDetailCommand();
+
+            if (model.EmployeeAttendance.Any())
+            {
+                model.EmployeeAttendance.ForEach(x =>
+                {
+                    x.CreatedById = userId;
+                    x.CreatedDate = DateTime.UtcNow;
+                });
+            }
+
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetEmployeeAppliedLeaveHours([FromBody] GetEmployeeAppliedLeaveHoursQuery model)
+        {
+            var item = await _mediator.Send(model);
+            return Ok(item);
+        }
+
     }
 }

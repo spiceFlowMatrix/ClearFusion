@@ -35,7 +35,9 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                                                        PayrollId= x.Id,
                                                                        CurrencyId= x.CurrencyId,
                                                                        MonthlyAmount= x.BasicSalary,
-                                                                       CurrencyName = x.CurrencyDetails.CurrencyName
+                                                                       CurrencyName = x.CurrencyDetails.CurrencyName,
+                                                                       CapacityBuilding= x.CapacityBuildingAmount,
+                                                                       Security = x.SecurityAmount
                                                                     }).FirstOrDefaultAsync();
 
                 response.Add("EmployeeCurrencyAmount", basicPayDetail);

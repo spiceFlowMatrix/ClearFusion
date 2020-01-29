@@ -90,4 +90,13 @@ export class HrLeaveService {
     );
   }
   //#endregion
+
+  //#region "getAppliedLeaveHours"
+  getAppliedLeaveHours(model: any): any {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HR_GetEmployeeAppliedLeaveHours, model
+    );
+  }
+  //#endregion
 }

@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="!data.ForAllEmployees">
   <h1 mat-dialog-title>
     Add Salary Configuration
     <button mat-icon-button [mat-dialog-close] class="pull-right">
@@ -24,6 +24,20 @@
           </div>
         </div>
       </div>
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-lg-6 col-sm-6">
+            <mat-form-field class="example-full-width">
+              <input matInput formControlName="CapacityBuilding" placeholder="Capacity Building" type="number" />
+            </mat-form-field>
+          </div>
+          <div class="col-lg-6 col-sm-6">
+            <mat-form-field class="example-full-width">
+              <input matInput formControlName="Security" placeholder="Security" type="number" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
     </div>
     <button type="submit" style="display: none;" #btnSubmit></button>
     </form>
@@ -35,4 +49,32 @@
   </div>
 
 
+</div>
+
+<div *ngIf="data.ForAllEmployees">
+  <div mat-dialog-title><h3>Set a fixed salary, capacity building or security</h3></div>
+  <mat-dialog-content>
+    <div class="row">
+      <div class="col-md-12">
+        <p class="font_size_15">Please set a fixed salary, capacity building, or security for the selected employees,</p>
+        <div class="alert alert-warning" *ngIf="errMsg!=null">{{errMsg}}</div>
+        <form [formGroup]="fixedSalaryForm" (ngSubmit)="setFixedSalaryForAllEmployees(fixedSalaryForm.value)">
+          <mat-form-field class="example-full-width">
+            <input matInput formControlName="FixedSalary" placeholder="Fixed Salary" type="number" />
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <input matInput formControlName="CapacityBuilding" placeholder="Capacity Building" type="number" />
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <input matInput formControlName="Security" placeholder="Security" type="number" />
+          </mat-form-field>
+          <button type="submit" #submitbtn style="display: none;"></button>
+        </form>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <hum-button [type]="'save'" [text]="'Save'" (click)="submitbtn.click()"></hum-button>
+    <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="onCancelPopup()" ></hum-button>
+  </mat-dialog-actions>
 </div>

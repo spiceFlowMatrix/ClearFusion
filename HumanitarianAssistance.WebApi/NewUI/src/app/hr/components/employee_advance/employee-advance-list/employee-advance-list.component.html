@@ -1,0 +1,14 @@
+<div class="alert alert-warning" *ngIf="errorMessage != '' && errorMessage != null" role="alert">
+  <p class="txt-center-align">{{errorMessage}}</p>
+</div>
+
+<div class="container-fluid" humAddScroll *ngIf="(errorMessage == '' || errorMessage == null)">
+      <span class="action_header">Advance
+    <hum-button [type]="'add'" [text]="'ADD ADVANCE REQUEST'" (click)="addAdvanceRequest()"></hum-button>
+  </span>
+  <div class="row">
+      <div class="col-md-12">
+          <hum-table [hideColums$]="hideColums$" [isDefaultAction]="false" [headers]="advanceListHeader$" [items]="advanceList$" (actionClick)="actionEvents($event)" [actions]="actions"></hum-table>
+      </div>
+  </div>
+</div>

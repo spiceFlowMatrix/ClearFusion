@@ -9,8 +9,10 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 1)]
         public long Id { get; set; }
-        public int CurrencyId { get; set; }
+        public int? CurrencyId { get; set; }
         public double BasicSalary { get; set; }
+        public double CapacityBuildingAmount { get; set; }
+        public double SecurityAmount { get; set; }
         public int EmployeeId { get; set; }
         [ForeignKey("EmployeeId")]
         public EmployeeDetail EmployeeDetail { get; set; }
