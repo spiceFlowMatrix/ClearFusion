@@ -52,6 +52,7 @@ import { AddSalaryConfigurationComponent } from './components/employee-salary-co
 import { AddBonusComponent } from './components/employee-salary-config/add-bonus/add-bonus.component';
 import { AddFineComponent } from './components/employee-salary-config/add-fine/add-fine.component';
 import { EmployeePensionComponent } from './components/employee-pension/employee-pension.component';
+import { AddEmployeeComponent } from './components/add-employee/add-employee.component';
 import { SetEmployeeAttendanceComponent } from './components/set-employee-attendance/set-employee-attendance.component';
 import {NgxMaterialTimepickerModule} from '../../../node_modules/ngx-material-timepicker';
 import { EmployeeAdvanceListComponent } from './components/employee_advance/employee-advance-list/employee-advance-list.component';
@@ -62,6 +63,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
 import { AddContractComponent } from './components/employee-contract/add-contract/add-contract.component';
+import { AddOpeningPensionComponent } from './components/add-employee/add-opening-pension/add-opening-pension.component';
 import { IncrementDecrementSalaryComponent } from './components/employee-salary-config/increment-decrement-salary/increment-decrement-salary.component';
 
 @NgModule({
@@ -87,6 +89,7 @@ import { IncrementDecrementSalaryComponent } from './components/employee-salary-
     EmployeeLeaveAddComponent,
     AssignLeaveComponent,
     EmployeePensionComponent,
+    AddEmployeeComponent,
     SetEmployeeAttendanceComponent,
     EmployeeAdvanceListComponent,
     NewAdvanceRequestComponent,
@@ -96,6 +99,7 @@ import { IncrementDecrementSalaryComponent } from './components/employee-salary-
     AddFineComponent,
     SeeDaysComponent,
     AddContractComponent,
+    AddOpeningPensionComponent,
     IncrementDecrementSalaryComponent
   ],
   imports: [
@@ -165,6 +169,7 @@ import { IncrementDecrementSalaryComponent } from './components/employee-salary-
     AddBonusComponent,
     AddFineComponent,
     SeeDaysComponent,
+    AddOpeningPensionComponent,
     IncrementDecrementSalaryComponent,
     NewAdvanceRequestComponent,
     AdvanceHistoryComponent

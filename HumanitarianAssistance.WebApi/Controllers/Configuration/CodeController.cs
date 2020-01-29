@@ -503,7 +503,6 @@ namespace HumanitarianAssistance.WebApi.Controllers.Configuration
         {
             return await _mediator.Send(new GetAllEmployeeTypeQuery());
         }
-
         #endregion
 
         #region"Budget Line type detail"
