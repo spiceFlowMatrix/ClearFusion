@@ -385,10 +385,10 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return Ok(result);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetEmployeePayrollAdvanceDetail([FromQuery] int id)
+        [HttpPost]
+        public async Task<IActionResult> GetEmployeePayrollAdvanceDetail([FromBody] GetEmployeePayrollAdvanceDetailQuery model)
         {
-            var result = await _mediator.Send(new GetEmployeePayrollAdvanceDetailQuery() { EmployeeId = id });
+            var result = await _mediator.Send(model);
             return Ok(result);
         }
 

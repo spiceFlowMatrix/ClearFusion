@@ -19,6 +19,7 @@ export class AddAdvanceRecoveryComponent implements OnInit {
     public dialogRef: MatDialogRef<AddAdvanceRecoveryComponent>) { }
     advanceData: any;
     isFormSubmitted =  false;
+    errorMessage = '';
 
   ngOnInit() {
     this.advanceRecoveryForm = this.fb.group({
@@ -63,7 +64,11 @@ export class AddAdvanceRecoveryComponent implements OnInit {
   }
 
   getEmployeeAdvanceDetail() {
-    this.salaryConfigService.getEmployeeAdvanceDetail(this.data.EmployeeId)
+    const model = {
+      EmployeeId: this.data.EmployeeId,
+      Month: this.data.SelectedMonth
+    }
+    this.salaryConfigService.getEmployeeAdvanceDetail(model)
       .subscribe(x => {
         this.advanceData.AdvanceId = x.Advance.AdvanceId;
         this.advanceData.RequestedAmount = x.Advance.RequestedAmount;
@@ -71,7 +76,9 @@ export class AddAdvanceRecoveryComponent implements OnInit {
 
         this.advanceRecoveryForm.controls['RecoveryAmount'].setValidators([Validators.required, Validators.max(x.Advance.BalanceAmount)]);
         this.advanceRecoveryForm.updateValueAndValidity();
-      });
+      }, error => {
+        this.errorMessage = error;
+      } );
   }
 
   closeDialog() {

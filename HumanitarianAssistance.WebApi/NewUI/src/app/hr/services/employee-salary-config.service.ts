@@ -114,9 +114,9 @@ export class EmployeeSalaryConfigService {
     //#endregion
 
     //#region "getEmployeeAdvanceDetail"
-    getEmployeeAdvanceDetail(id): any {
-      return this.globalService.getDataById(
-        this.appurl.getApiUrl() + GLOBAL.API_EmployeePayroll_GetEmployeePayrollAdvanceDetail + '?id=' + id
+    getEmployeeAdvanceDetail(model): any {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_EmployeePayroll_GetEmployeePayrollAdvanceDetail, model
       );
     }
     //#endregion

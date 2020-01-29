@@ -35,6 +35,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                 payroll.BasicSalary = request.ActiveSalary;
                 payroll.ModifiedById = request.ModifiedById;
                 payroll.ModifiedDate = DateTime.UtcNow;
+                payroll.CapacityBuildingAmount = request.CapacityBuilding;
+                payroll.SecurityAmount = request.Security;
 
                 _dbContext.EmployeeBasicSalaryDetail.Update(payroll);
                 await _dbContext.SaveChangesAsync();

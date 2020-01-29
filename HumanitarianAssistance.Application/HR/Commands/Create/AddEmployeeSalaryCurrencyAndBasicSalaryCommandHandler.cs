@@ -23,15 +23,15 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
 
             try
             {
-                // SalaryHeadDetails salaryHead = await _dbContext.SalaryHeadDetails.FirstOrDefaultAsync(x=> x.IsDeleted == false && x.HeadTypeId == (int)SalaryHeadType.GENERAL);
-
                 EmployeeBasicSalaryDetail payroll = new EmployeeBasicSalaryDetail 
                 {
                     CreatedDate= DateTime.UtcNow,
                     CreatedById = request.CreatedById,
                     BasicSalary = request.ActiveSalary,
                     EmployeeId = request.EmployeeId,
-                    CurrencyId = request.CurrencyId
+                    CurrencyId = request.CurrencyId,
+                    CapacityBuildingAmount = request.CapacityBuilding,
+                    SecurityAmount = request.Security
                 };
 
                 await _dbContext.EmployeeBasicSalaryDetail.AddAsync(payroll);

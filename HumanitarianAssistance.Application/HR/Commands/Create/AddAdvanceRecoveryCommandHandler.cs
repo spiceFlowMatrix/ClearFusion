@@ -31,25 +31,40 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     var advanceRecord = await _dbContext.Advances
                                                  .FirstOrDefaultAsync(x => x.AdvancesId == request.AdvanceId);
 
-                    double recoveredAmount = _dbContext.AdvanceHistoryDetail.Where(x => x.IsDeleted == false && x.AdvanceId == request.AdvanceId)
+                    double recoveredAmount = _dbContext.AdvanceHistoryDetail.Where(x => x.IsDeleted == false && x.AdvanceId == request.AdvanceId && x.PaymentDate.Month != request.Month)
                                                       .Select(x => x.InstallmentPaid).DefaultIfEmpty(0).Sum();
 
-                    AdvanceHistoryDetail advanceHistory = new AdvanceHistoryDetail
+                    AdvanceHistoryDetail advanceRecordExist = await _dbContext.AdvanceHistoryDetail.FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                                                                    x.PaymentDate.Month == request.Month && x.EmployeeId == request.EmployeeId);
+
+                    if (advanceRecordExist == null)
                     {
-                        AdvanceId = request.AdvanceId,
-                        CreatedById = request.CreatedById,
-                        CreatedDate = DateTime.UtcNow,
-                        InstallmentPaid = request.Amount,
-                        EmployeeId = request.EmployeeId,
-                        InstallmentBalance = recoveredAmount - request.Amount,
-                        IsDeleted = false,
-                        PaymentDate = DateTime.UtcNow
-                    };
+                        AdvanceHistoryDetail advanceHistory = new AdvanceHistoryDetail
+                        {
+                            AdvanceId = request.AdvanceId,
+                            CreatedById = request.CreatedById,
+                            CreatedDate = DateTime.UtcNow,
+                            InstallmentPaid = request.Amount,
+                            EmployeeId = request.EmployeeId,
+                            InstallmentBalance = recoveredAmount - request.Amount,
+                            IsDeleted = false,
+                            PaymentDate = DateTime.UtcNow
+                        };
 
-                    await _dbContext.AdvanceHistoryDetail.AddAsync(advanceHistory);
-                    await _dbContext.SaveChangesAsync();
+                        await _dbContext.AdvanceHistoryDetail.AddAsync(advanceHistory);
+                        await _dbContext.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        advanceRecordExist.InstallmentPaid = request.Amount;
+                        advanceRecordExist.InstallmentBalance = recoveredAmount - request.Amount;
+                        advanceRecordExist.ModifiedById = request.CreatedById;
+                        advanceRecordExist.ModifiedDate = DateTime.UtcNow;
+                        _dbContext.AdvanceHistoryDetail.Update(advanceRecordExist);
+                        await _dbContext.SaveChangesAsync();
+                    }
 
-                    if (advanceRecord.AdvanceAmount == (recoveredAmount+request.Amount))
+                    if (advanceRecord.AdvanceAmount == (recoveredAmount + request.Amount))
                     {
                         advanceRecord.IsDeducted = true;
                         _dbContext.Advances.Update(advanceRecord);

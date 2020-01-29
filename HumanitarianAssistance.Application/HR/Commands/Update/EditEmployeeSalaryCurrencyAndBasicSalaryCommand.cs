@@ -8,5 +8,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
         public long PayrollId { get; set; }
         public int CurrencyId { get; set; }
         public double ActiveSalary { get; set; }
+        public double CapacityBuilding { get; set; }
+        public double Security { get; set; }
     }
 }
