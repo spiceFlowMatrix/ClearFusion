@@ -33,7 +33,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update {
                   //  employeeinfo.District = request.EmployeeBasicDetail.District;
                     employeeinfo.ProvinceId = request.EmployeeBasicDetail.Province;
                     employeeinfo.CountryId = request.EmployeeBasicDetail.Country;
-                    // employeeinfo.Phone = request.Phone;
+                    employeeinfo.Phone = request.EmployeeBasicDetail.PhoneNo;
                     // employeeinfo.Fax = request.Fax;
                     // employeeinfo.Email = request.Email;
                     // employeeinfo.ReferBy = request.ReferBy;
