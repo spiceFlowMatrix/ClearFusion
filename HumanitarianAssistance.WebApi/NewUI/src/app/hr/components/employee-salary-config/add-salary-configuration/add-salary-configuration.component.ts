@@ -33,7 +33,9 @@ export class AddSalaryConfigurationComponent implements OnInit {
       this.salaryConfigForm = this.fb.group({
         PayrollId: [this.data.PayrollId],
         CurrencyId: [this.data.CurrencyId, [Validators.required]],
-        ActiveSalary: [this.data.MonthlyAmount, [Validators.required, Validators.min(1)]]
+        ActiveSalary: [this.data.MonthlyAmount, [Validators.required, Validators.min(1)]],
+        CapacityBuilding: [this.data.CapacityBuilding, [Validators.required]],
+        Security: [this.data.Security, [Validators.required]],
       });
     } else {  // for Setting Fixed Salary from Employee Listing Page
       this.fixedSalaryForm = this.fb.group({
@@ -91,6 +93,8 @@ export class AddSalaryConfigurationComponent implements OnInit {
         PayrollId: this.salaryConfigForm.value.PayrollId,
         CurrencyId: this.salaryConfigForm.value.CurrencyId,
         ActiveSalary: this.salaryConfigForm.value.ActiveSalary,
+        CapacityBuilding: this.salaryConfigForm.value.CapacityBuilding,
+        Security: this.salaryConfigForm.value.Security,
         EmployeeId: this.data.EmployeeId
       };
       if (this.salaryConfigForm.value.PayrollId === 0) {

@@ -347,7 +347,9 @@ namespace HumanitarianAssistance.Common.Enums {
         Pension = 1,
         GrossSalary = 2,
         SalaryTax = 3,
-        AdvanceRecovery = 4
+        AdvanceRecovery = 4,
+        CapacityBuilding = 5,
+        Security = 6
     }
     
     public enum ResignationQuestionType {
