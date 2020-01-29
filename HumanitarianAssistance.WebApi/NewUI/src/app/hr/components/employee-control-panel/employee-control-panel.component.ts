@@ -8,21 +8,22 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./employee-control-panel.component.scss']
 })
 export class EmployeeControlPanelComponent implements OnInit {
-
   @ViewChild(EmployeeDetailComponent) employeeDetail: EmployeeDetailComponent;
 
   employeeId: number;
   constructor(private activatedRoute: ActivatedRoute, private router: Router) {
-      this.activatedRoute.params.subscribe(params => {
+    this.activatedRoute.params.subscribe(params => {
       this.employeeId = +params['id'];
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   showEmployeeDetails() {
-   this.employeeDetail.show();
+    this.employeeDetail.show();
+  }
+  editEmployee() {
+    this.router.navigate(['/hr/addEmployee'], { queryParams: { empId: this.employeeId } });
   }
 
   backClick() {

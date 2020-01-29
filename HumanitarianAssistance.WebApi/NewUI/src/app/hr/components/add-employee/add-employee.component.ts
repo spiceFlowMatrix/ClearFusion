@@ -1,6 +1,4 @@
 import {
-  IEmployeePensionDetails,
-  IEmployeePensionList,
   IEmployeePensionListModel,
   IEmployeeAllDetailsForEdit
 } from './../../models/employee-detail.model';
@@ -503,7 +501,7 @@ export class AddEmployeeComponent implements OnInit {
             this.toastr.error(data.Message);
           }
         },
-        error => {}
+        () => {}
       );
   }
   onFormSubmit() {
