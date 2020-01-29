@@ -28,7 +28,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                        .Where(x=> x.IsDeleted == false && x.AdvanceId == request.AdvanceId)
                                        .Select(x=> new 
                                        {
-                                          PaymentDate = x.PaymentDate,
+                                          PaymentDate = x.PaymentDate.ToShortDateString(),
                                           InstallmentPaid= x.InstallmentPaid,
                                           InstallmentBalance= x.InstallmentBalance 
                                        }).ToListAsync();
