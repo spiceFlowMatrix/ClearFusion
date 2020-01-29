@@ -7,6 +7,7 @@ using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using HumanitarianAssistance.Domain.Entities;
 
 namespace HumanitarianAssistance.Application.HR.Commands.Update {
     public class EditEmployeeDetailsCommandHandler : IRequestHandler<EditEmployeeDetailsCommand, ApiResponse> {
@@ -73,7 +74,6 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update {
                     employeeprofessionalinfo.JobDescription = request.EmployeeProfessionalDetails.JobDescription;
 
                     await _dbContext.SaveChangesAsync ();
-
 
                     UserDetails user = new UserDetails();
                     user.Password = request.EmployeeBasicDetail.Password;
