@@ -40,6 +40,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                         CreatedById = request.CreatedById,
                         CreatedDate = DateTime.UtcNow,
                         InstallmentPaid = request.Amount,
+                        EmployeeId = request.EmployeeId,
                         InstallmentBalance = recoveredAmount - request.Amount,
                         IsDeleted = false,
                         PaymentDate = DateTime.UtcNow
