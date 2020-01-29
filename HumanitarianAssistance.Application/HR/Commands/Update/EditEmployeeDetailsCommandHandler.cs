@@ -25,61 +25,59 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update {
                 if (employeeinfo != null) {
                     employeeinfo.EmployeeTypeId = request.EmployeeProfessionalDetails.EmployeeType;
                     employeeinfo.EmployeeName = request.EmployeeBasicDetail.FullName;
-                 //   employeeinfo.IDCard = request.IDCard;
+                    //   employeeinfo.IDCard = request.IDCard;
                     employeeinfo.FatherName = request.EmployeeBasicDetail.FatherName;
                     employeeinfo.GradeId = request.EmployeeProfessionalDetails.JobGrade;
                     employeeinfo.PermanentAddress = request.EmployeeBasicDetail.PermanentAddress;
-                 //   employeeinfo.City = request.City;
-                  //  employeeinfo.District = request.EmployeeBasicDetail.District;
+                    //   employeeinfo.City = request.City;
+                    //  employeeinfo.District = request.EmployeeBasicDetail.District;
                     employeeinfo.ProvinceId = request.EmployeeBasicDetail.Province;
                     employeeinfo.CountryId = request.EmployeeBasicDetail.Country;
                     employeeinfo.Phone = request.EmployeeBasicDetail.PhoneNo;
                     // employeeinfo.Fax = request.Fax;
-                    // employeeinfo.Email = request.Email;
-                    // employeeinfo.ReferBy = request.ReferBy;
-                    // employeeinfo.Passport = request.Passport;
+                    employeeinfo.Email = request.EmployeeBasicDetail.Email;
+                    employeeinfo.ReferBy = request.EmployeeBasicDetail.ReferBy;
+                    employeeinfo.Passport = request.EmployeeBasicDetail.PassportNumber;
                     // employeeinfo.NationalityId = request.NationalityId;
                     // employeeinfo.Language = request.Language;
-                    // employeeinfo.SexId = request.SexId;
+                    employeeinfo.SexId = request.EmployeeBasicDetail.Gender;
                     // employeeinfo.Age = request.Age;
-                    // employeeinfo.DateOfBirth = Convert.ToDateTime (request.DateOfBirth);
-                    // employeeinfo.HigherQualificationId = request.HigherQualificationId;
-                    // employeeinfo.CurrentAddress = request.CurrentAddress;
-                    // employeeinfo.PreviousWork = request.PreviousWork;
+                    employeeinfo.DateOfBirth = Convert.ToDateTime (request.EmployeeBasicDetail.DateOfBirth);
+                    employeeinfo.HigherQualificationId = request.EmployeeBasicDetail.Qualification;
+                    employeeinfo.CurrentAddress = request.EmployeeBasicDetail.CurrentAddress;
+                    employeeinfo.PreviousWork = request.EmployeeBasicDetail.PreviousWork;
                     // employeeinfo.Remarks = request.Remarks;
-                    // employeeinfo.ExperienceYear = request.ExperienceYear;
-                    // employeeinfo.ExperienceMonth = request.ExperienceMonth;
+                    employeeinfo.ExperienceYear = request.EmployeeBasicDetail.ExperienceYear;
+                    employeeinfo.ExperienceMonth = request.EmployeeBasicDetail.ExperienceMonth;
                     // employeeinfo.EmployeePhoto = request.EmployeePhoto;
-                    // employeeinfo.MaritalStatusId = request.MaritalStatus;
-                    // employeeinfo.University = request.University;
-                    // employeeinfo.PassportNo = request.PassportNo;
-                    // employeeinfo.BirthPlace = request.BirthPlace;
-                    // employeeinfo.IssuePlace = request.IssuePlace;
-
-                    _dbContext.EmployeeDetail.Update (employeeinfo);
+                    employeeinfo.MaritalStatusId = request.EmployeeBasicDetail.MaritalStatus;
+                    employeeinfo.University = request.EmployeeBasicDetail.University;
+                    employeeinfo.PassportNo = request.EmployeeBasicDetail.PassportNumber;
+                    employeeinfo.BirthPlace = request.EmployeeBasicDetail.BirthPlace;
+                    employeeinfo.IssuePlace = request.EmployeeBasicDetail.IssuePlace;
+                    employeeinfo.GradeId = request.EmployeeProfessionalDetails.JobGrade;
                     await _dbContext.SaveChangesAsync ();
-                    // var employeeprofessionalinfo = await _dbContext.EmployeeProfessionalDetail.FirstOrDefaultAsync (x => x.EmployeeId == request.EmployeeID && x.IsDeleted == false);
-                    // employeeprofessionalinfo.ProfessionId = request.ProfessionId;
-                    // employeeprofessionalinfo.TinNumber = request.TinNumber;
-                    // _dbContext.EmployeeProfessionalDetail.Update (employeeprofessionalinfo);
-                    // await _dbContext.SaveChangesAsync ();
 
-                    // var user = await _dbContext.UserDetails.FirstOrDefaultAsync(x => x.AspNetUserId == request.ModifiedById);
+                    var employeeprofessionalinfo = await _dbContext.EmployeeProfessionalDetail.FirstOrDefaultAsync (x => x.EmployeeId == request.EmployeeBasicDetail.EmployeeId && x.IsDeleted == false);
+                    employeeprofessionalinfo.ProfessionId = request.EmployeeBasicDetail.Profession;
+                    employeeprofessionalinfo.TinNumber = request.EmployeeBasicDetail.TinNumber;
+                    employeeprofessionalinfo.EmployeeTypeId = request.EmployeeProfessionalDetails.EmployeeType;
+                    employeeprofessionalinfo.OfficeId = request.EmployeeProfessionalDetails.Office;
+                    employeeprofessionalinfo.DepartmentId = request.EmployeeProfessionalDetails.Department;
+                    employeeprofessionalinfo.DesignationId = request.EmployeeProfessionalDetails.Designation;
+                    employeeprofessionalinfo.EmployeeContractTypeId = request.EmployeeProfessionalDetails.EmployeeCotractType;
+                    employeeprofessionalinfo.HiredOn = request.EmployeeProfessionalDetails.HiredOn;
+                    employeeprofessionalinfo.AttendanceGroupId = request.EmployeeProfessionalDetails.AttendanceGroup;
+                    employeeprofessionalinfo.DutyStation = request.EmployeeProfessionalDetails.DutyStation;
+                    employeeprofessionalinfo.TrainingBenefits = request.EmployeeProfessionalDetails.TrainingAndBenefits;
+                    employeeprofessionalinfo.JobDescription = request.EmployeeProfessionalDetails.JobDescription;
 
-                    // LoggerDetailsModel loggerObj = new LoggerDetailsModel
-                    // {
-                    //     NotificationId = (int)Common.Enums.LoggerEnum.EmployeeUpdate,
-                    //     IsRead = false,
-                    //     UserName = user.FirstName + " " + user.LastName,
-                    //     UserId = request.ModifiedById,
-                    //     LoggedDetail = "Employee " + employeeinfo.EmployeeName + " Updated",
-                    //     CreatedDate = request.CreatedDate
-                    // };
+                    await _dbContext.SaveChangesAsync ();
 
-                    // response.LoggerDetailsModel = loggerObj;
 
-                    // await _dbContext.SaveChangesAsync();
-
+                    UserDetails user = new UserDetails();
+                    user.Password = request.EmployeeBasicDetail.Password;
+                    await _dbContext.SaveChangesAsync();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
                 }
