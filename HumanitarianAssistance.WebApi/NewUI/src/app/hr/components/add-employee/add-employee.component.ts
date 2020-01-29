@@ -15,7 +15,7 @@ import { Month } from 'src/app/shared/enum';
 import { IEmployeeAllDetails } from '../../models/employee-detail.model';
 import { MatDialog } from '@angular/material';
 import { AddOpeningPensionComponent } from './add-opening-pension/add-opening-pension.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-employee',
@@ -57,7 +57,8 @@ export class AddEmployeeComponent implements OnInit {
     private purchaseService: PurchaseService,
     private employeeService: AddEmployeeService,
     private toastr: ToastrService,
-    private routeActive: ActivatedRoute
+    private routeActive: ActivatedRoute,
+    private router: Router
   ) {
     this.employeeDetailForm = this.fb.group(
       {
@@ -528,6 +529,7 @@ export class AddEmployeeComponent implements OnInit {
           x => {
             if (x.StatusCode === 200) {
               this.toastr.success('Employee Successfully Added');
+              this.router.navigate(['/hr/employees']);
             } else {
               this.toastr.warning(x.Message);
             }
@@ -555,6 +557,7 @@ export class AddEmployeeComponent implements OnInit {
           x => {
             if (x.StatusCode === 200) {
               this.toastr.success('Employee Successfully Updated');
+              this.router.navigate(['/hr/employees']);
             } else {
               this.toastr.warning(x.Message);
             }
