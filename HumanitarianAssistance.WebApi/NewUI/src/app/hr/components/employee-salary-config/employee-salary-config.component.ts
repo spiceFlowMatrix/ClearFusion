@@ -11,9 +11,9 @@ import { MatDialog } from '@angular/material';
 import { Month, TransactionType } from 'src/app/shared/enum';
 import { ActivatedRoute } from '@angular/router';
 import { EmployeeSalaryConfigService } from '../../services/employee-salary-config.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
 import 'rxjs/add/observable/empty';
+import { AddAdvanceRecoveryComponent } from './add-advance-recovery/add-advance-recovery.component';
 
 @Component({
   selector: 'app-employee-salary-config',
@@ -40,7 +40,8 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   monthlySalaryBreakdown: IMonthlySalaryBreakdown;
   employeeSalary: IEmployeeSalary;
   isSalaryApproved = false;
-  isPayrollAdded = true;
+  isNoError = true;
+  errorMessage = '';
   hideColumsBounusFine = of({
     headers: ['Salary Component', 'Salary Allowance', 'Salary Deduction'],
     items: ['SalaryComponent', 'SalaryAllowance', 'SalaryDeduction']
@@ -98,6 +99,10 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     };
 
     this.getEmployeeBasicPayAndCurrency();
+    if (this.selectedMonth.value === 0) {
+      this.isNoError = false;
+      this.errorMessage = 'Please select month for which payroll is to be generated';
+    }
   }
 
   onInitForm() {
@@ -124,6 +129,8 @@ export class EmployeeSalaryConfigComponent implements OnInit {
         CurrencyId: this.employeeCurrencyAndAmount.CurrencyId,
         EmployeeId: this.employeeId,
         MonthlyAmount: this.employeeCurrencyAndAmount.MonthlyAmount,
+        CapacityBuilding: this.employeeCurrencyAndAmount.CapacityBuilding,
+        Security: this.employeeCurrencyAndAmount.Security,
         ForAllEmployees: false
       }
     });
@@ -202,6 +209,8 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   }
   empActionEvents(event: any) {
     console.log(event.item);
+  this.errorMessage = '';
+  this.isNoError = true;
   }
 
   getEmployeeBasicPayAndCurrency() {
@@ -272,7 +281,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
 
     this.salaryConfigService.getEmployeePayroll(model).subscribe(x => {
       if (x && x.payroll) {
-        this.isPayrollAdded = true;
+        this.isNoError = true;
         this.monthlySalaryBreakdown.NetSalary = x.payroll.NetSalary;
         this.monthlySalaryBreakdown.GrossSalary = x.payroll.GrossSalary;
         this.monthlySalaryBreakdown.SalaryPaidAmount = x.payroll.SalaryPaid;
@@ -303,12 +312,17 @@ export class EmployeeSalaryConfigComponent implements OnInit {
           }));
         }
       } else {
+        this.isNoError = false;
         this.toastr.warning('Cannot retrieve data. Please try again');
       }
     }, error => {
       this.onInitForm();
-      this.isPayrollAdded = false
+      this.isNoError = false;
+      this.errorMessage = error;
       // this.toastr.warning(error);
+
+      //Payroll Hours are not configured for this month. Please Add Payroll Hours for the selected month for this
+      //employee's Attendance Group.
 
     });
   }
@@ -345,6 +359,27 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       }
     }, error => {
       this.toastr.warning(error);
+    });
+  }
+
+  addAdvance() {
+    if (this.selectedMonth.value === 0) {
+      this.toastr.warning('Please select Month');
+      return;
+    }
+    // NOTE: It open AddFine dialog and passed the data into the AddFineComponent Model
+    const dialogRef = this.dialog.open(AddAdvanceRecoveryComponent, {
+      width: '500px',
+      autoFocus: false,
+      data: {
+        EmployeeId: this.employeeId,
+        SelectedMonth: this.selectedMonth.value
+      }
+    });
+    // refresh the data after new request created
+    dialogRef.afterClosed().subscribe(() => {
+      this.getEmployeeBonusFineSalaryHead();
+      this.getEmployeePayroll();
     });
   }
 

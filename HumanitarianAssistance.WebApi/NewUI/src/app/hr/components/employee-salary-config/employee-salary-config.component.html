@@ -17,6 +17,14 @@
                             <td>Active Base Salary</td>
                             <td>{{employeeCurrencyAndAmount.MonthlyAmount}}</td>
                         </tr>
+                        <tr>
+                          <td>Capacity Building</td>
+                          <td>{{employeeCurrencyAndAmount.CapacityBuilding}}</td>
+                      </tr>
+                      <tr>
+                        <td>Security</td>
+                        <td>{{employeeCurrencyAndAmount.Security}}</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -29,6 +37,8 @@
                 [text]="'ADD BONUS'" (click)="addBonus()"></hum-button>
             <hum-button [type]="'addNew'" [disabled]="monthlySalaryBreakdown.Month == '' || isSalaryApproved"
                 [text]="'ADD FINE'" (click)="addFine()"></hum-button>
+                <hum-button [type]="'add'" [disabled]="monthlySalaryBreakdown.Month == '' || isSalaryApproved"
+                [text]="'ADD ADVANCE RECOVERY'" (click)="addAdvance()"></hum-button>
             <hum-button [type]="'save'" [text]="'APPROVE SALARY'"
                 [disabled]=" monthlySalaryBreakdown.Month == '' || isSalaryApproved" (click)="approveSalary()">
             </hum-button>
@@ -46,7 +56,7 @@
 
         </span>
     </div><br />
-    <div class="row" *ngIf="isPayrollAdded">
+    <div class="row" *ngIf="isNoError">
         <div class="col-md-12">
             <div class="col-md-4">
                 <table class="table table-striped">
@@ -81,7 +91,7 @@
         </div>
     </div>
 
-    <div class="row" *ngIf="isPayrollAdded">
+    <div class="row" *ngIf="isNoError">
         <div class="col-md-12">
             <mat-tab-group>
                 <mat-tab label="Accumulated">
@@ -100,11 +110,10 @@
             </mat-tab-group>
         </div>
     </div>
-    <div class="row" *ngIf="!isPayrollAdded">
+    <div class="row" *ngIf="!isNoError">
         <div class="col-md-12">
             <i class="fas fa-info-circle icon_color_yellow"></i>&nbsp;
-            <b>Payroll Hours are not configured for this month. Please Add Payroll Hours for the selected month for this
-                employee's Attendance Group.</b>
+            <b>{{errorMessage}}</b>
         </div>
     </div>
 </mat-card>
