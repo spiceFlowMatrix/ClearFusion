@@ -608,7 +608,6 @@ export class AddEmployeeComponent implements OnInit {
             this.employeeProfessionalDetailForm.patchValue({
               JobGrade: x.data.EmployeeDetailList[0].GradeId
             });
-            console.log(x.data.EmployeeDetailList);
           } else {
             this.toastr.warning(x.Message);
           }
@@ -641,7 +640,6 @@ export class AddEmployeeComponent implements OnInit {
                 x.data.EmployeeProfessionalList[0].TrainingBenefits,
               JobDescription: x.data.EmployeeProfessionalList[0].JobDescription
             });
-            console.log(x.data.EmployeeProfessionalList);
           } else {
             this.toastr.warning(x.Message);
           }
