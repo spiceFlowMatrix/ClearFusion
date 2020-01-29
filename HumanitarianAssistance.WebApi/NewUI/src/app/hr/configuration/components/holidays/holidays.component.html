@@ -3,46 +3,160 @@
   <div class="row">
     <div class="col-md-12" class="items-float-right">
       <hum-button [type]="'add'" [text]="'ADD HOLIDAY'" (click)="addHolidayPopup()"></hum-button>
-      <hum-button [type]="'text'" [text]="'CONFIGURE WEEKEND'" (click)="addWeekend()"></hum-button>
+      <hum-button [type]="'text'" [text]="'CONFIGURE WEEKEND'" (click)="addWeekendPopup()"></hum-button>
     </div>
     <div class="col-md-12">
-      <div class="designationTable">
-        <!-- <hum-table [headers]="educationDegreeListHeaders$" [items]="educationDegreeList$"
-           (actionClick)="actionEvents($event)" [actions]="actions"></hum-table>
-        </div>
-        <mat-paginator [length]="RecordCount" [pageSize]="pageModel.PageSize"
-          [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
-        </mat-paginator> -->
+      <div class="holidayTable">
+        <hum-table [hideColums$]="hideColums" [headers]="holidayListHeaders$" [items]="holidayList$"
+          (actionClick)="actionEvents($event)" [actions]="actions"></hum-table>
       </div>
+
+      <mat-paginator [length]="RecordCount" [pageSize]="pageModel.PageSize" [pageSizeOptions]="[10, 5, 25, 100]"
+        (page)="pageEvent($event)">
+      </mat-paginator>
     </div>
   </div>
-  <!-- </mat-card> -->
+</div>
+<!-- </mat-card> -->
 
-  <!-- Add holiday popup-->
-  <ng-template #addHoliday>
-    <div>
-      <h1 mat-dialog-title>Add Holiday</h1>
-      <hr>
-    </div>
-      <mat-dialog-content>
-        <div class="row">
-          <div class="col-sm-12">
-            <mat-calendar 
-            [selected]="selectedDate" 
-            [startAt]="startAt"
-            [minDate]="minDate" 
-            [maxDate]="maxDate" 
-            [dateFilter]="cfDateFilter"
-            (selectedChange)="onSelect($event)">
-            </mat-calendar>
+<!-- Add holiday popup-->
+<ng-template #addHoliday>
+  <div>
+    <h1 mat-dialog-title>Add Holiday</h1>
+    <hr>
+  </div>
+  <!-- if we add holiday by day in a month -->
+  <form [formGroup]='addHolidayForm' (ngSubmit)="saveHolidayForm('DayInMonth', addHolidayForm.valid)">
+    <mat-dialog-content>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="col-sm-6">
+            <mat-form-field class="example-form-field">
+              <input matInput type="text" placeholder="Holiday Name" name="HolidayName" formControlName="HolidayName" />
+            </mat-form-field>
+          </div>
+          <div class="col-sm-6">
+            <mat-form-field class="example-form-field">
+              <input matInput type="text" placeholder="Remarks" name="Remarks" formControlName="Remarks" />
+            </mat-form-field>
           </div>
         </div>
-      </mat-dialog-content>
-      <mat-dialog-actions class="items-float-right">
-        <!-- <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
-        <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
-        <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button> -->
-      </mat-dialog-actions>
+        <div class="col-sm-12">
+          <div class="col-sm-6" *ngIf="ifAddHolidayFalg == true;else editOfiiceHoliday">
+            <mat-form-field class="example-full-width">
+              <mat-select placeholder="Office" name="OfficeId" formControlName="OfficeId" multiple
+                (selectionChange)="onOfficeChange($event)">
+                <mat-option *ngFor="let item of officeList" [value]="item.OfficeId">
+                  {{ item.OfficeName }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <ng-template #editOfiiceHoliday>
+            <mat-form-field class="example-full-width">
+              <mat-select placeholder="Office" name="OfficeId" formControlName="OfficeId"
+                (selectionChange)="onOfficeChange($event)">
+                <mat-option *ngFor="let item of officeList" [value]="item.OfficeId">
+                  {{ item.OfficeName }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-template>
+        </div>
 
-  </ng-template>
-  <!-- Add holiday popup -->
+        <div class="col-sm-12">
+
+          <mat-calendar [selected]="selectedDate" [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate"
+            [dateFilter]="cfDateFilter" (selectedChange)="onSelect($event)">
+          </mat-calendar>
+        </div>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="items-float-right">
+      <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
+      <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+      <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+    </mat-dialog-actions>
+  </form>
+</ng-template>
+<!-- Add holiday popup -->
+
+<ng-template #addWeeklyHoliday>
+  <div>
+    <h1 mat-dialog-title>Weekly Holidays</h1>
+    <hr>
+  </div>
+  <form [formGroup]='addWeeklyHolidayForm' (ngSubmit)="saveHolidayForm('Weekly', addWeeklyHolidayForm.valid)">
+    <mat-dialog-content>
+      <div class="col-sm-12">
+        <div class="col-sm-6" *ngIf="ifAddWeeklyHolidayFalg == true;else editOfiiceHoliday">
+          <mat-form-field class="example-full-width">
+            <mat-select placeholder="Office" name="OfficeId" formControlName="OfficeId" multiple
+              (selectionChange)="onWeeklyHolidayOfficeChange($event)">
+              <mat-option *ngFor="let item of officeList" [value]="item.OfficeId">
+                {{ item.OfficeName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <ng-template #editOfiiceHoliday>
+          <mat-form-field class="example-full-width">
+            <mat-select placeholder="Office" name="OfficeId" formControlName="OfficeId"
+              (selectionChange)="onWeeklyHolidayOfficeChange($event)">
+              <mat-option *ngFor="let item of officeList" [value]="item.OfficeId">
+                {{ item.OfficeName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </ng-template>
+
+
+
+      </div>
+      <div class="col-sm-12">
+        <div class="col-sm-4">
+          <mat-checkbox formControlName="Sun">Sunday
+          </mat-checkbox>
+        </div>
+        <div class="col-sm-4">
+          <mat-checkbox  formControlName="Mon" >Monday
+          </mat-checkbox>
+        </div>
+        <div class="col-sm-4">
+          <mat-checkbox  formControlName="Tue">Tuesday
+          </mat-checkbox>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="col-sm-4">
+          <mat-checkbox formControlName="Tue" >Wednesday
+          </mat-checkbox>
+        </div>
+        <div class="col-sm-4">
+          <mat-checkbox formControlName="Wed">Thursday
+          </mat-checkbox>
+        </div>
+        <div class="col-sm-4">
+          <mat-checkbox  formControlName="Fri" >Friday
+          </mat-checkbox>
+        </div>
+
+      </div>
+      <div class="col-sm-12">
+        <div class="col-sm-4">
+          <mat-checkbox  formControlName="Sat">Saturday
+          </mat-checkbox>
+        </div>
+      </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="items-float-right">
+      <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
+      <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+      <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+    </mat-dialog-actions>
+  </form>
+
+</ng-template>

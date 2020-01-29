@@ -38,7 +38,7 @@ import { AddExitInterviewQuestionsComponent } from './components/exit-interview-
 import { LeaveTypeComponent } from './components/leave-type/leave-type.component';
 import { AddLeaveTypeComponent } from './components/leave-type/add-leave-type/add-leave-type.component';
 import { HolidaysComponent } from './components/holidays/holidays.component';
-import { MatDatepickerModule } from '@angular/material';
+import { MatDatepickerModule, MatSelectModule, MatCheckboxModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -84,7 +84,9 @@ import { MatDatepickerModule } from '@angular/material';
     ShareLayoutModule,
     SubHeaderTemplateModule,
     LibraryModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatSelectModule,
+    MatCheckboxModule
   ],
   entryComponents: [AddDesignationComponent, AddEducationDegreeComponent, AddOfficeMasterComponent,
                    AddDepartmentMasterComponent, AddJobGradeComponent, AddAttendanceGroupComponent,

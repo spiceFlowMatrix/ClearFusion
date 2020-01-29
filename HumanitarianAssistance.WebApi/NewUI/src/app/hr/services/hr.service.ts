@@ -381,12 +381,56 @@ export class HrService {
   }
   deleteDesignationDetail(data: any) {
     return this.globalService.post(
-      this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_DeleteDesignationDetail,
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HRConfiguration_DeleteDesignationDetail,
       data
     );
   }
 
-  getHolidays(officeid: number) {
-    return this.globalService.getList(GLOBAL.API_HR_GetAllWeeklyHolidaysByOfficeID + '?OfficeId=' + officeid);
+  getAllHolidaysList(model: any) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_HR_GetAllHoliday,
+      model
+    );
+  }
+
+  //#region "addHoliday"
+  addHoliday(model: any): any {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_Hr_AddHoliday,
+      model
+    );
+  }
+  //#endregion
+
+  getAllOfficeCodeList() {
+    return this.globalService.getList(
+      this.appurl.getApiUrl() + GLOBAL.API_code_GetAllOffice
+    );
+  }
+
+  //#region "EditHoliday"
+  editHoliday(model: any): any {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_Hr_EditHoliday,
+      model
+    );
+  }
+  //#endregion
+  deleteHoliday(holidayId: any) {
+    return this.globalService.deleteById(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_Hr_DeleteHolidayDetails +
+        '?id=' +
+        holidayId
+    );
+  }
+  getWeeklyHolidaysList(officeId: any) {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HR_GetAllHolidayWeeklyDetails +
+        '?officeId=' +
+        officeId
+    );
   }
 }

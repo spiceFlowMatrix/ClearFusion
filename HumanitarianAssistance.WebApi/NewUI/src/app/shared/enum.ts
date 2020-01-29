@@ -771,3 +771,8 @@ export enum TransactionType {
   Credit = 1,
   Debit = 2
 }
+
+export enum HolidayType {
+'DayInMonth'= 1,
+'Weekly' = 2
+}
