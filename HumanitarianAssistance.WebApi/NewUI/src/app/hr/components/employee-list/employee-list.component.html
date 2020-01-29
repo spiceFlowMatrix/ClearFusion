@@ -1,6 +1,6 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main2'">
   <span class="action_header">Employees
-    <hum-button [type]="'add'" [text]="'ADD EMPLOYEE'"></hum-button>
+    <hum-button [type]="'add'" [text]="'ADD EMPLOYEE'" routerLink="/hr/addEmployee"></hum-button>
     <hum-button [type]="'delete'" [text]="'DELETE EMPLOYEE'" (click)="deleteEmployee()"></hum-button>
     <button mat-button [matMenuTriggerFor]="OfficeMenu">
       <h5 style="color: #0390D1;">{{selectedOffice.name | uppercase}} &nbsp;<i class="fas fa-caret-down"></i></h5>
