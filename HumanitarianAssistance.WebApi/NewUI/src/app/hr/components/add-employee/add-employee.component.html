@@ -1,7 +1,8 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
     <span class="action_header">
     New Employee Form
-    <hum-button [type]="'save'" [text]="'Save '" [isSubmit]="true"  (click)="onFormSubmit()"></hum-button>
+    <hum-button *ngIf=!IsEditing [type]="'save'" [text]="'Save '" [isSubmit]="true"  (click)="onFormSubmit()"></hum-button>
+    <hum-button *ngIf=IsEditing [type]="'save'" [text]="'Update '" [isSubmit]="true"  (click)="onFormSubmit()"></hum-button>
     <hum-button [type]="'cancel'" [text]="'Cancel'" routerLink="/hr/employees"></hum-button>
   </span>
     <div class="action_section"></div>
@@ -46,7 +47,7 @@
                             </div>
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput formControlName="ConfirmPassword" placeholder="Confirm Password" />
+                                    <input matInput formControlName="ConfirmPassword" placeholder="Confirm Password" type="password" />
                                 </mat-form-field>
                             </div>
                         </div>
