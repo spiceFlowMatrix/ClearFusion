@@ -245,6 +245,18 @@ namespace HumanitarianAssistance.WebApi.Controllers
             var file = await _mediator.Send(model);
             return File(file, "application/pdf", "ContractDetailReport.pdf");
         }
+
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> ExportEmployeeLeavePdf([FromBody]int id)
+        {
+            ExportEmployeeLeavePdfQuery model = new ExportEmployeeLeavePdfQuery
+            {
+                EmployeeId = id
+            };
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "EmployeeLeave.pdf");
+        }
     }
 }
 

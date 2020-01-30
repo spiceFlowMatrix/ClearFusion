@@ -137,7 +137,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                         if (model.EmployeeLeaves.Any(x => x.LeaveReasonId == leave.LeaveReasonId.LeaveReasonId))
                         {
-                            int balanceLeave = model.EmployeeLeaves.OrderByDescending(x => x.LeaveMonthNumber).FirstOrDefault(x => x.LeaveReasonId == leave.LeaveReasonId.LeaveReasonId).BalanceLeave;
+                            int? balanceLeave = model.EmployeeLeaves.OrderByDescending(x => x.LeaveMonthNumber).FirstOrDefault(x => x.LeaveReasonId == leave.LeaveReasonId.LeaveReasonId).BalanceLeave;
                             leaveModel.BalanceLeave = balanceLeave - (leave.Leaves.Count * workingHours);
                         }
                         else
