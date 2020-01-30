@@ -66,7 +66,7 @@ export class EmployeeLeaveComponent implements OnInit {
     if (event.type === 'button') {
       const dialogRef = this.dialog.open(EmployeeLeaveAddComponent, {
         width: '450px',
-        height: '370px',
+        height: '400px',
         data: {
           EmployeeId: this.employeeId,
           LeaveReasonId: event.item.Id,
