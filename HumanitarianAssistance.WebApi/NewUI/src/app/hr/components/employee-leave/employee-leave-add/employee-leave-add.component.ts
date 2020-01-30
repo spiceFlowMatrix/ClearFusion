@@ -34,7 +34,7 @@ export class EmployeeLeaveAddComponent implements OnInit {
       'LeaveReasonId': [this.data.LeaveReasonId],
       'LeaveDate': [{'begin': null, 'end': null},
                      Validators.required],
-      'BalanceLeave': [{value: this.data.HourBalance, disabled: true}],
+      'BalanceLeave': [{value: this.data.HourBalance, disabled: true}, [Validators.min(0)]],
       'LeaveApplied': [{value: null, disabled: true}, [Validators.required, Validators.min(1), Validators.max(this.data.HourBalance)]],
       // 'Remarks': [null, [Validators.required]]
     });
@@ -141,8 +141,14 @@ export class EmployeeLeaveAddComponent implements OnInit {
       if (x.AppliedHours) {
         this.errorMessage = '';
         this.applyLeaveForm.controls['LeaveApplied'].setValue(x.AppliedHours);
-        const value = this.applyLeaveForm.getRawValue().BalanceLeave - x.AppliedHours;
+        const value = this.data.HourBalance - x.AppliedHours;
         this.applyLeaveForm.controls['BalanceLeave'].setValue(value);
+
+        if (x.AppliedHours > this.data.HourBalance) {
+          this.errorMessage = 'Max Applied hour unit allowed is ' + this.data.HourBalance;
+        } else {
+          this.errorMessage = '';
+        }
       } else {
         this.errorMessage = 'Something went wrong, Please try again';
       }
