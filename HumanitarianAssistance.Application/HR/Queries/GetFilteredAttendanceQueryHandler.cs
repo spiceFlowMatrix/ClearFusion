@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.HR.Models;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.HR;
 using HumanitarianAssistance.Persistence;
@@ -50,7 +51,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 }
                 List<EmployeeAttendance> queryResult = await _dbContext.EmployeeAttendance.Where(x => x.EmployeeId == request.EmployeeId &&
                                                                                                       x.Date.Year == request.Year &&
-                                                                                                      x.Date.Month == request.Month && x.IsDeleted == false)
+                                                                                                      x.Date.Month == request.Month && x.IsDeleted == false
+                                                                                                      && x.AttendanceTypeId == (int)AttendanceType.P)
                                                                                            .ToListAsync();
 
                 int monthDays = DateTime.DaysInMonth(request.Year, request.Month);

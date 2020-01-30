@@ -34,15 +34,17 @@ export class AdvanceHistoryComponent implements OnInit {
 
   getAdvanceHistory() {
     this.advanceService.getAdvanceHistory(this.data.Id).subscribe(x => {
-      if (x.StatusCode === 200) {
-        this.advanceHistoryList$ = of(x.data.AdvanceHistory.map(y => {
+      if (x.AdvanceHistory) {
+        this.advanceHistoryList$ = of(x.AdvanceHistory.map(y => {
           return {
             PaymentDate: y.PaymentDate,
             InstallmentPaid: y.InstallmentPaid,
-            BalanceAmount: y.BalanceAmount
+            BalanceAmount: y.InstallmentBalance
           };
         }));
       }
+    }, error =>  {
+      this.toastr.warning(error);
     });
   }
 }

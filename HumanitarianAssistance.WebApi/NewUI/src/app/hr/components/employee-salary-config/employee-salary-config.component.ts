@@ -144,6 +144,11 @@ export class EmployeeSalaryConfigComponent implements OnInit {
 
   // #region Add Bonus
   addBonus(): void {
+
+    if (this.monthlySalaryBreakdown.Month === '' || this.isSalaryApproved) {
+      return;
+    }
+
     if (this.selectedMonth.value === 0) {
       this.toastr.warning('Please select Month');
       return;
@@ -167,6 +172,9 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   //#endregion
   // #region Add Bonus
   addFine(): void {
+    if (this.monthlySalaryBreakdown.Month === '' || this.isSalaryApproved) {
+      return;
+    }
     if (this.selectedMonth.value === 0) {
       this.toastr.warning('Please select Month');
       return;
@@ -328,6 +336,11 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   }
 
   approveSalary() {
+
+    if (this.monthlySalaryBreakdown.Month === '' || this.isSalaryApproved) {
+      return;
+    }
+
     if (this.isSalaryApproved) {
       return;
     }
@@ -363,6 +376,10 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   }
 
   addAdvance() {
+    if (this.monthlySalaryBreakdown.Month === '' || this.isSalaryApproved) {
+      return;
+    }
+
     if (this.selectedMonth.value === 0) {
       this.toastr.warning('Please select Month');
       return;

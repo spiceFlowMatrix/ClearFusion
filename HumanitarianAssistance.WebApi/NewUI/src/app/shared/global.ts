@@ -192,6 +192,7 @@ export class GLOBAL {
   public static API_HR_GetEmployeeApplyLeaveDetailById = 'Attendance/GetEmployeeApplyLeaveDetailById';
   public static API_HR_GetEmployeeAppliedLeaves = 'Attendance/GetEmployeeAppliedLeaves';
   public static API_HR_GetEmployeeWorkingTimeByMonth = 'Attendance/GetEmployeeWorkingTimeByMonth';
+  public static API_HR_GetEmployeeAppliedLeaveHours = 'Attendance/GetEmployeeAppliedLeaveHours';
   public static API_HR_ApproveRejectLeave = 'Attendance/ApproveRejectLeave';
   public static API_HR_AddEmployeeSalaryCurrencyAndBasicSalary = 'EmployeePayroll/AddEmployeeSalaryCurrencyAndBasicSalary';
   public static API_HR_EditEmployeeSalaryCurrencyAndBasicSalary = 'EmployeePayroll/EditEmployeeSalaryCurrencyAndBasicSalary';
@@ -731,6 +732,9 @@ export class GLOBAL {
 
   //#endregion
 
+  //#region Holidays
+  public static API_HR_GetAllWeeklyHolidaysByOfficeID ='EmployeeHolidays/GetAllHolidayWeeklyDetails'
+  //#endregion
   // add employee
   public static API_Code_GetAllEmployeeType = 'Code/GetAllEmployeeType';
   public static API_Hr_GetEmployeeContractType = 'Code/GetAllEmployeeContractType';
@@ -756,6 +760,20 @@ export class GLOBAL {
   public static API_EmployeeDetail_GetEmployeeDetailForContractById = 'EmployeeDetail/GetEmployeeDetailForContractById';
   public static API_Hr_GetSelectedEmployeeContractByEmployeeId = 'EmployeeDetail/GetSelectedEmployeeContractByEmployeeId';
   public static API_Pdf_GetEmployeeContractReportPdf = 'Pdf/GetEmployeeContractReportPdf';
+
+
+
+
+  //#region "Holiday" new UI
+  public static API_Hr_AddHoliday = 'EmployeeHolidays/AddHoliday';
+  public static API_HR_GetAllHoliday = 'EmployeeHolidays/GetAllHoliday';
+  public static API_Hr_EditHoliday = 'EmployeeHolidays/EditHoliday';
+  public static API_Hr_DeleteHolidayDetails = 'EmployeeHolidays/DeleteHolidayDetails';
+
+  public static API_HR_GetAllHolidayWeeklyDetails = 'EmployeeHolidays/GetAllHolidayWeeklyDetails';
+
+
+  //#endregion
 
 }
 

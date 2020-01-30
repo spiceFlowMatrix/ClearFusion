@@ -772,6 +772,11 @@ export enum TransactionType {
   Debit = 2
 }
 
+export enum HolidayType {
+'ParticularDay'= 1,
+'Weekly' = 2
+}
+
 export enum AdvanceBtnStatus {
   NEW = 1,
   APPROVE= 2,
