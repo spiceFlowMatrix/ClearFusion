@@ -759,6 +759,7 @@ export class GLOBAL {
   public static API_Hr_AddEmployeeContractDetails = 'EmployeeDetail/AddEmployeeContractDetails';
   public static API_EmployeeDetail_GetEmployeeDetailForContractById = 'EmployeeDetail/GetEmployeeDetailForContractById';
   public static API_Hr_GetSelectedEmployeeContractByEmployeeId = 'EmployeeDetail/GetSelectedEmployeeContractByEmployeeId';
+  public static API_Pdf_GetEmployeeContractReportPdf = 'Pdf/GetEmployeeContractReportPdf';
 
 
 

@@ -237,6 +237,14 @@ namespace HumanitarianAssistance.WebApi.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetEmployeeContractReportPdf([FromBody]GetEmployeeContractReportPdfQuery model)
+        {
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "ContractDetailReport.pdf");
+        }
     }
 }
 
