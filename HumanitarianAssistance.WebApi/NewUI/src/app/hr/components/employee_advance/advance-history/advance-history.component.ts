@@ -34,9 +34,7 @@ export class AdvanceHistoryComponent implements OnInit {
 
   getAdvanceHistory() {
     this.advanceService.getAdvanceHistory(this.data.Id).subscribe(x => {
-      debugger;
       if (x.AdvanceHistory) {
-        debugger;
         this.advanceHistoryList$ = of(x.AdvanceHistory.map(y => {
           return {
             PaymentDate: y.PaymentDate,

@@ -155,7 +155,6 @@ export class EmployeeSalaryComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log(this.currentDate);
     this.getAllCurrencyType();
     this.getLevelFourAccountDetails();
     this.getOfficeCodeList();
@@ -318,7 +317,6 @@ export class EmployeeSalaryComponent implements OnInit {
 
   //#region "onRowPreparedUpdateSalaryEvent"
   onRowPreparedUpdateSalaryEvent(e) {
-    console.log(e);
     if (e.row !== undefined) {
       // const value = e.component.cellValue(e.row.rowIndex, 'AdvanceAmount');
       // // tslint:disable-next-line:curly
