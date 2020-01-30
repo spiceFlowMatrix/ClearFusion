@@ -7,6 +7,9 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { takeUntil } from 'rxjs/operators';
 import { DatePipe } from '@angular/common';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
+import { GLOBAL } from 'src/app/shared/global';
 
 @Component({
   selector: 'app-employee-contract',
@@ -33,7 +36,9 @@ export class EmployeeContractComponent implements OnInit {
     private datePipe: DatePipe,
     private commonLoader: CommonLoaderService,
     private contractService: EmployeeContractService,
-    private routeActive: ActivatedRoute
+    private routeActive: ActivatedRoute,
+    private globalSharedService: GlobalSharedService,
+    private appurl: AppUrlService
   ) {
     this.actions = {
       items: {
@@ -115,5 +120,23 @@ export class EmployeeContractComponent implements OnInit {
   }
   actionEvents(event: any) {
     console.log(event);
+      this.onExportContractReportPdf(event.item.Id);
   }
+
+  //#region "On export of contract report pdf"
+  onExportContractReportPdf(ContractId: number) {
+    this.commonLoader.showLoader();
+    const model = {
+      ContractId: ContractId
+    };
+    this.globalSharedService
+      .getFile(
+        this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetEmployeeContractReportPdf,
+        model
+      )
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe();
+    this.commonLoader.hideLoader();
+  }
+  //#endregion
 }

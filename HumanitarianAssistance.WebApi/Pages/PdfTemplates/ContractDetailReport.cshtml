@@ -1,5 +1,5 @@
+@model HumanitarianAssistance.Application.HR.Models.ContractDetailReportPdfModel
 <html>
-
 <head>
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -32,21 +32,19 @@
 <body>
     <div class="container">
         <div class="row">
-            <table cellpadding="5" style="width:100%;">
-                <tr>
-                    <td width="60"><img src="logo.jpg" alt=""></td>
-                    <td style="font-size:20px;font-weight:500;text-align:center;">Coordination of Humanitarian Assistance (CHA)
-                        <br>
-                        <p style="font-size:16px;font-weight:400;text-align:center;">Employment Contract Detail Report
-                            <p>
-                    </td>
-
-                </tr>
-            </table>
+                    <table cellpadding="5" style="width:100%;">
+                        <tr>
+                            <td><img src="@Model.LogoPath" alt=""></td>
+                            <td style="text-align:left"> <img src = "@Model.PersianChaName" alt = ""> </td>
+                        </tr>
+                        <tr>
+                         <td colspan="2" align="center" style="font-size:20px;font-weight:500;">COORDINATION OF HUMANITARIAN ASSISTANCE(CHA)<br>Contract Report</td>
+                        </tr>
+                    </table>
         </div>
         <div class="row">
             <p style="font-size: 17px;">
-                Employment Contract
+               <b> Employment Contract</b>
             </p>
             <p>
                 This contract is between Coordination of Humanitarian Assistance (CHA) and employees for specific task, the details of the contract are as follow:
@@ -57,71 +55,71 @@
                 <tbody>
                     <tr>
                         <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Employee's Name</b></td>
-                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid;">testing data</td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid;">@Model.EmployeeName</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Father Name</b></td>
-                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">-</td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">@Model.FatherName</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Employee Code</b></td>
-                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">-</td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.EmployeeCode</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Designation</b></td>
-                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">-</td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">@Model.Designation</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Contract Start Date</b></td>
-                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">-</td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.ContractStartDate</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Contract End Date</b></td>
-                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">-</td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.ContractEndDate</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Duration Of Contract</b></td>
-                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">-</td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.DurationOfContract</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Salary</b></td>
-                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">-</td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.Salary</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Grade</b></td>
-                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">-</td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.Grade</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Project Name</b></td>
-                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">-</td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">@Model.ProjectName</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Project Code</b></td>
-                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">-</td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">@Model.ProjectCode</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Duty Station</b></td>
-                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">-</td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">@Model.DutyStation</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Provicne</b></td>
-                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">-</td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.Province</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Budget Line</b></td>
-                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">-</td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">@Model.BudgetLine</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Job</b></td>
-                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">-</td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.Job</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Work Time</b></td>
-                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">-</td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.WorkTime</td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Work Day (Hours)</b></td>
-                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">-</td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">@Model.WorkDay</td>
                     </tr>
                 </tbody>
             </table>
@@ -215,7 +213,7 @@ employee promises to:
             </p>
             <p><b>Contract singed by:</b></p>
             <p><b>Name:</b></p>
-            <p><b>Signature:(                      )</b></p>
+            <p><b>Signature: (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</b></p>
         </div>
     </div>
 </body>
