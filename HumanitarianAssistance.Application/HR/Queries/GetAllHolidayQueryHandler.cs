@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Domain.Entities.HR;
@@ -36,10 +37,11 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     var queryData = _dbContext.HolidayDetails
                                                       .Include(x => x.OfficeDetails)
                                                       .Where(x => x.IsDeleted == false &&
-                                                                  x.FinancialYearId == financialyear.FinancialYearId).AsQueryable();
+                                                                  x.FinancialYearId == financialyear.FinancialYearId && x.HolidayType == (int)HolidayType.PARTICULARDATE).AsQueryable();
 
 
                     var holidaylist = queryData.Skip(request.PageIndex * request.PageSize).Take(request.PageSize)
+                                                                          .OrderByDescending(x=>x.HolidayId)
                                                                           .Select(y => new
                                                                           {
                                                                               HolidayId = y.HolidayId,
