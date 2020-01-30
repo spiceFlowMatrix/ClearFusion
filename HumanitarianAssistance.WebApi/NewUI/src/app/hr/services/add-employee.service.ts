@@ -160,4 +160,14 @@ export class AddEmployeeService {
     );
   }
   //#endregion
+
+  //#region "Add By Model"
+  GetAllPensionList(EmployeeId: any) {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() + GLOBAL.API_HR_GetEmployeeOpeningPensionDetail +
+      '?employeeId=' +
+      EmployeeId
+    );
+  }
+  //#endregion
 }

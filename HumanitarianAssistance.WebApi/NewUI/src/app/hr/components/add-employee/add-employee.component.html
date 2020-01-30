@@ -10,7 +10,7 @@
 <mat-card humAddScroll [height]="150">
     <div class="row">
         <div class="col-md-12">
-            <mat-tab-group>
+            <mat-tab-group (selectedTabChange)="onTabChange($event)">
                 <mat-tab label="General">
                     <form [formGroup]="employeeDetailForm">
                         <button #employeeDetailFormButton type="submit" style="display: none;"></button>
@@ -281,7 +281,7 @@
                         </div>
                     </form>
                 </mat-tab>
-                <mat-tab label="Opening Pension" *ngIf=!IsEditing>
+                <mat-tab label="Opening Pension">
                     <div class="row">
                         <lib-sub-header-template>
                             <span class="action_header">Pension Detail
@@ -307,7 +307,9 @@
                                     <tr *ngFor="let data of pensionListDisplay">
                                         <td>{{data.Currency}}</td>
                                         <td>{{data.Amount}}</td>
-                                        <td> <i class="fas fa-trash" (click)='deletePensionItem(data)'></i></td>
+                                        <td> <i class="fa fa-pencil" (click)='editPensionItem(data)'></i>&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <i class="fas fa-trash" (click)='deletePensionItem(data)'></i>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

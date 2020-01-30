@@ -111,7 +111,7 @@ export interface IEmployeePensionList {
 }
 
 export interface IEmployeePensionListModel {
-  Id: number;
+  Id?: number;
   Currency: number;
   Amount: number;
 }

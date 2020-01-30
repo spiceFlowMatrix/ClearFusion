@@ -1,4 +1,7 @@
-import { IEmployeePensionDetails, IEmployeePensionListModel } from './../../../models/employee-detail.model';
+import {
+  IEmployeePensionDetails,
+  IEmployeePensionListModel
+} from './../../../models/employee-detail.model';
 import { Component, OnInit, EventEmitter, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -17,8 +20,11 @@ import { AddEmployeeService } from 'src/app/hr/services/add-employee.service';
 export class AddOpeningPensionComponent implements OnInit {
   employeePensionDetailForm: FormGroup;
   isFormSubmitted = false;
+  pensionId: number;
+  pensionDetails: any;
   currencyList$: Observable<IDropDownModel[]>;
   onPensionDetailListRefresh = new EventEmitter();
+  onUpdatePensionDetailListRefresh = new EventEmitter();
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     private fb: FormBuilder,
@@ -36,41 +42,61 @@ export class AddOpeningPensionComponent implements OnInit {
   }
 
   ngOnInit() {
-    forkJoin([
-      this.getCurrencyList()])
+    this.pensionId = this.data.pensionId;
+    this.pensionDetails = this.data.item;
+    forkJoin([this.getCurrencyList()])
       .pipe(takeUntil(this.destroyed$))
       .subscribe(result => {
         this.subscribeCurrencyList(result[0]);
       });
+    if (this.pensionDetails !== undefined) {
+      this.employeePensionDetailForm.patchValue({
+        Id: this.pensionDetails.Id,
+        Currency: this.pensionDetails.Currency,
+        Amount: this.pensionDetails.Amount
+      });
+    }
   }
-//#region "Get all currency list"
-getCurrencyList() {
-  this.commonLoader.showLoader();
-  return this.employeeService.GetCurrencyList();
-}
-subscribeCurrencyList(response: any) {
-  this.commonLoader.hideLoader();
-  this.currencyList$ = of(
-    response.data.CurrencyList.map(y => {
-      return {
-        value: y.CurrencyId,
-        name: y.CurrencyName
-      };
-    })
-  );
-}
-//#endregion
+  //#region "Get all currency list"
+  getCurrencyList() {
+    this.commonLoader.showLoader();
+    return this.employeeService.GetCurrencyList();
+  }
+  subscribeCurrencyList(response: any) {
+    this.commonLoader.hideLoader();
+    this.currencyList$ = of(
+      response.data.CurrencyList.map(y => {
+        return {
+          value: y.CurrencyId,
+          name: y.CurrencyName
+        };
+      })
+    );
+  }
+  //#endregion
 
   onFormSubmit(data: IEmployeePensionListModel) {
     this.isFormSubmitted = true;
     if (this.employeePensionDetailForm.valid) {
-      data.Id = this.data;
+
+      if(this.pensionDetails === undefined)
+      {
+      data.Id = this.data.pensionId;
       this.AddPensionDetailListRefresh(data);
+      } else {
+        data.Id = this.pensionDetails.Id;
+        this.UpdatePensionDetailListRefresh(data);
+      }
     }
   }
   //#region "On historical list refresh"
   AddPensionDetailListRefresh(data: IEmployeePensionListModel) {
     this.onPensionDetailListRefresh.emit(data);
+    this.isFormSubmitted = false;
+    this.onNoClick();
+  }
+  UpdatePensionDetailListRefresh(data: IEmployeePensionListModel) {
+    this.onUpdatePensionDetailListRefresh.emit(data);
     this.isFormSubmitted = false;
     this.onNoClick();
   }

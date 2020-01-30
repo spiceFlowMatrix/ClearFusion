@@ -3,7 +3,7 @@ import {
   IEmployeeAllDetailsForEdit
 } from './../../models/employee-detail.model';
 import { AddEmployeeService } from './../../services/add-employee.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { IDropDownModel } from 'src/app/store/models/purchase';
@@ -23,6 +23,9 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./add-employee.component.scss']
 })
 export class AddEmployeeComponent implements OnInit {
+  @ViewChild('employeeDetailFormButton') employeeDetailFormButton: ElementRef;
+  @ViewChild('employeeProfessionalDetailFormButton')
+  employeeProfessionalDetailFormButton: ElementRef;
   employeeId = 0;
   employeeDetailForm: FormGroup;
   employeeProfessionalDetailForm: FormGroup;
@@ -49,6 +52,7 @@ export class AddEmployeeComponent implements OnInit {
   employeeAllDetailsForEdit: IEmployeeAllDetailsForEdit;
   IsPensionDateSet = false;
   IsEditing = false;
+  IsFormSubmitted = false;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     private fb: FormBuilder,
@@ -173,6 +177,7 @@ export class AddEmployeeComponent implements OnInit {
       };
       this.getEmployeeDetailsByEmployeeId();
       this.getEmployeeProfessionalDetailsByEmployeeId();
+      this.getAllPensionList();
     }
   }
 
@@ -447,7 +452,7 @@ export class AddEmployeeComponent implements OnInit {
     /** Open Education dialog box*/
     const dialogRef = this.dialog.open(AddOpeningPensionComponent, {
       width: '400px',
-      data: this.pensionList.length + 1
+      data: { pensionId: this.pensionList.length + 1 }
     });
     // refresh the list after new request created
     dialogRef.componentInstance.onPensionDetailListRefresh.subscribe(result => {
@@ -472,6 +477,44 @@ export class AddEmployeeComponent implements OnInit {
     this.pensionList.splice(index, 1);
     this.pensionListDisplay.splice(index, 1);
   }
+  editPensionItem(data: any) {
+    console.log(data);
+    let currencyId;
+    this.currencyList$.subscribe(res => {
+      currencyId = res.find(x => x.name === data.Currency).value;
+    });
+    const model = {
+      Id: data.Id,
+      Currency: currencyId,
+      Amount: data.Amount
+    };
+    /** Open Education dialog box*/
+    const dialogRef = this.dialog.open(AddOpeningPensionComponent, {
+      width: '400px',
+      data: { item: model }
+    });
+    // refresh the list after new request created
+    dialogRef.componentInstance.onUpdatePensionDetailListRefresh.subscribe(
+      result => {
+        console.log(result);
+        if (result !== undefined) {
+          const index = this.pensionList.findIndex(x => x.Id === result.Id);
+          console.log(this.pensionList);
+          this.pensionList[index] = {
+            Amount: result.Amount,
+            Currency: result.Currency
+          };
+
+          this.pensionListDisplay[index] = {
+            Amount: result.Amount,
+            Currency: result.Currency
+          };
+        }
+      }
+    );
+    dialogRef.afterClosed().subscribe(() => {});
+  }
+
   //#endregion
   checkExchangeRateVerified(exchangeRateDate: any) {
     // this.pensionForm.PensionDate = exchangeRateDate;
@@ -506,6 +549,9 @@ export class AddEmployeeComponent implements OnInit {
       );
   }
   onFormSubmit() {
+    this.IsFormSubmitted = true;
+    this.employeeDetailFormButton.nativeElement.click();
+    this.employeeProfessionalDetailFormButton.nativeElement.click();
     if (this.employeeId > 0) {
       this.EditEmployeeDetails();
     } else {
@@ -539,7 +585,15 @@ export class AddEmployeeComponent implements OnInit {
           }
         );
     } else {
-      this.toastr.warning('Forms Are Not Valid');
+      if (this.employeeDetailForm.invalid) {
+        this.toastr.warning('Employee Genreal Form Is Not Valid');
+      }
+      if (this.employeeProfessionalDetailForm.invalid) {
+        this.toastr.warning('Employee Professional Detail Form Is Not Valid');
+      }
+      if (this.pensionList.length === 0) {
+        this.toastr.warning('Pension List Is Empty');
+      }
     }
   }
 
@@ -567,7 +621,15 @@ export class AddEmployeeComponent implements OnInit {
           }
         );
     } else {
-      this.toastr.warning('Forms Are Not Valid');
+      if (this.employeeDetailForm.invalid) {
+        this.toastr.warning('Employee Genreal Form Is Not Valid');
+      }
+      if (this.employeeProfessionalDetailForm.invalid) {
+        this.toastr.warning('Employee Professional Detail Form Is Not Valid');
+      }
+      if (this.pensionList.length === 0) {
+        this.toastr.warning('Pension List Is Empty');
+      }
     }
   }
 
@@ -627,7 +689,6 @@ export class AddEmployeeComponent implements OnInit {
             this.onChangeOffice(x.data.EmployeeProfessionalList[0].OfficeId);
             this.employeeProfessionalDetailForm.patchValue({
               EmployeeType: x.data.EmployeeProfessionalList[0].EmployeeTypeId,
-              // JobGrade: x.data.EmployeeProfessionalList[0].EmployeeName,
               Office: x.data.EmployeeProfessionalList[0].OfficeId,
               Department: x.data.EmployeeProfessionalList[0].DepartmentId,
               Designation: x.data.EmployeeProfessionalList[0].DesignationId,
@@ -649,6 +710,40 @@ export class AddEmployeeComponent implements OnInit {
           this.toastr.warning(error);
         }
       );
+  }
+  getAllPensionList() {
+    this.employeeService.GetAllPensionList(this.employeeId).subscribe(
+      x => {
+        if (x.StatusCode === 200) {
+          let id = 1;
+          x.ResponseData.forEach(element => {
+            let currencyId;
+            this.currencyList$.subscribe(res => {
+              currencyId = res.find(x => x.name === element.CurrencyName).value;
+            });
+            this.pensionListDisplay.push({
+              Id: id,
+              Currency: element.CurrencyName,
+              Amount: element.Amount
+            });
+            id += 1;
+          });
+        } else {
+          this.toastr.warning(x.Message);
+        }
+      },
+      error => {
+        this.toastr.warning(error);
+      }
+    );
+  }
+
+  onTabChange(event: any) {
+    if (event.index === 0 && this.IsFormSubmitted) {
+      this.employeeDetailFormButton.nativeElement.click();
+    } else if (event.index === 1 && this.IsFormSubmitted) {
+      this.employeeProfessionalDetailFormButton.nativeElement.click();
+    }
   }
 }
 
