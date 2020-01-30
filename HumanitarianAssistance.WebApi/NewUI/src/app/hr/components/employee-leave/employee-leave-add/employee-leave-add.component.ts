@@ -48,17 +48,17 @@ export class EmployeeLeaveAddComponent implements OnInit {
     this.isFormSubmitted = true;
 
    const FromDate = new Date(
-      new Date(this.applyLeaveForm.value.LeaveDate.begin).getFullYear(),
-      new Date(this.applyLeaveForm.value.LeaveDate.begin).getMonth(),
-      new Date(this.applyLeaveForm.value.LeaveDate.begin).getDate(),
+      new Date(this.applyLeaveForm.getRawValue().LeaveDate.begin).getFullYear(),
+      new Date(this.applyLeaveForm.getRawValue().LeaveDate.begin).getMonth(),
+      new Date(this.applyLeaveForm.getRawValue().LeaveDate.begin).getDate(),
       new Date().getHours(),
       new Date().getMinutes(),
       new Date().getSeconds()
     );
     const ToDate = new Date(
-      new Date(this.applyLeaveForm.value.LeaveDate.end).getFullYear(),
-      new Date(this.applyLeaveForm.value.LeaveDate.end).getMonth(),
-      new Date(this.applyLeaveForm.value.LeaveDate.end).getDate(),
+      new Date(this.applyLeaveForm.getRawValue().LeaveDate.end).getFullYear(),
+      new Date(this.applyLeaveForm.getRawValue().LeaveDate.end).getMonth(),
+      new Date(this.applyLeaveForm.getRawValue().LeaveDate.end).getDate(),
       new Date().getHours(),
       new Date().getMinutes(),
       new Date().getSeconds()
@@ -73,12 +73,12 @@ export class EmployeeLeaveAddComponent implements OnInit {
     // }
 
        const model = {
-        LeaveReasonId: this.applyLeaveForm.value.LeaveReasonId,
+        LeaveReasonId: this.applyLeaveForm.getRawValue().LeaveReasonId,
         Remarks: '',
-        LeaveReasonName: this.applyLeaveForm.value.LeaveType,
-        BlanceLeave: this.applyLeaveForm.value.BalanceLeave,
-        LeaveApplied: this.applyLeaveForm.value.LeaveApplied,
-        EmployeeId: this.applyLeaveForm.value.EmployeeId,
+        LeaveReasonName: this.applyLeaveForm.getRawValue().LeaveType,
+        BlanceLeave: this.applyLeaveForm.getRawValue().BalanceLeave,
+        LeaveApplied: this.applyLeaveForm.getRawValue().LeaveApplied,
+        EmployeeId: this.applyLeaveForm.getRawValue().EmployeeId,
         FromDate: FromDate,
         ToDate: ToDate
       };
