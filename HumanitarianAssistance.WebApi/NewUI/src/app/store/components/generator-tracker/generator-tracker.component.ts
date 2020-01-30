@@ -136,7 +136,6 @@ export class GeneratorTrackerComponent implements OnInit {
         }
       },
         (error) => {
-          console.error(error);
         });
   }
 

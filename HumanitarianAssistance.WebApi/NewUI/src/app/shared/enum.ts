@@ -773,7 +773,7 @@ export enum TransactionType {
 }
 
 export enum HolidayType {
-'DayInMonth'= 1,
+'ParticularDay'= 1,
 'Weekly' = 2
 }
 

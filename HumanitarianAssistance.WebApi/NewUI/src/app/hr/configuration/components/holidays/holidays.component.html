@@ -26,7 +26,7 @@
     <hr>
   </div>
   <!-- if we add holiday by day in a month -->
-  <form [formGroup]='addHolidayForm' (ngSubmit)="saveHolidayForm('DayInMonth', addHolidayForm.valid)">
+  <form [formGroup]='addHolidayForm' (ngSubmit)="saveHolidayForm('ParticularDay', addHolidayForm.valid)">
     <mat-dialog-content>
       <div class="row">
         <div class="col-sm-12">
@@ -52,15 +52,18 @@
               </mat-select>
             </mat-form-field>
           </div>
+
           <ng-template #editOfiiceHoliday>
-            <mat-form-field class="example-full-width">
-              <mat-select placeholder="Office" name="OfficeId" formControlName="OfficeId"
-                (selectionChange)="onOfficeChange($event)">
-                <mat-option *ngFor="let item of officeList" [value]="item.OfficeId">
-                  {{ item.OfficeName }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <div class="col-sm-6">
+              <mat-form-field class="example-full-width">
+                <mat-select placeholder="Office" name="OfficeId" formControlName="OfficeId"
+                  (selectionChange)="onOfficeChange($event)">
+                  <mat-option *ngFor="let item of officeList" [value]="item.OfficeId">
+                    {{ item.OfficeName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
           </ng-template>
         </div>
 
@@ -101,14 +104,16 @@
           </mat-form-field>
         </div>
         <ng-template #editOfiiceHoliday>
-          <mat-form-field class="example-full-width">
-            <mat-select placeholder="Office" name="OfficeId" formControlName="OfficeId"
-              (selectionChange)="onWeeklyHolidayOfficeChange($event)">
-              <mat-option *ngFor="let item of officeList" [value]="item.OfficeId">
-                {{ item.OfficeName }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+          <div class="col-sm-6">
+            <mat-form-field class="example-full-width">
+              <mat-select placeholder="Office" name="OfficeId" formControlName="OfficeId"
+                (selectionChange)="onWeeklyHolidayOfficeChange($event)">
+                <mat-option *ngFor="let item of officeList" [value]="item.OfficeId">
+                  {{ item.OfficeName }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
         </ng-template>
 
 
@@ -120,17 +125,17 @@
           </mat-checkbox>
         </div>
         <div class="col-sm-4">
-          <mat-checkbox  formControlName="Mon" >Monday
+          <mat-checkbox formControlName="Mon">Monday
           </mat-checkbox>
         </div>
         <div class="col-sm-4">
-          <mat-checkbox  formControlName="Tue">Tuesday
+          <mat-checkbox formControlName="Tue">Tuesday
           </mat-checkbox>
         </div>
       </div>
       <div class="col-sm-12">
         <div class="col-sm-4">
-          <mat-checkbox formControlName="Tue" >Wednesday
+          <mat-checkbox formControlName="Tue">Wednesday
           </mat-checkbox>
         </div>
         <div class="col-sm-4">
@@ -138,14 +143,14 @@
           </mat-checkbox>
         </div>
         <div class="col-sm-4">
-          <mat-checkbox  formControlName="Fri" >Friday
+          <mat-checkbox formControlName="Fri">Friday
           </mat-checkbox>
         </div>
 
       </div>
       <div class="col-sm-12">
         <div class="col-sm-4">
-          <mat-checkbox  formControlName="Sat">Saturday
+          <mat-checkbox formControlName="Sat">Saturday
           </mat-checkbox>
         </div>
       </div>

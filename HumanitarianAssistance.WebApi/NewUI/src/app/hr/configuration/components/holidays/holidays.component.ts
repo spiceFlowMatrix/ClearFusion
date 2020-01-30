@@ -146,6 +146,13 @@ export class HolidaysComponent implements OnInit {
     });
   }
 
+  //#region "cancel popup"
+  onCancelPopup() {
+    // this.dialogRef.close();
+    this.dialog.closeAll();
+  }
+  //#endregion
+
   //#region "Calander"
   onSelect(event) {
     console.log(event);
@@ -165,17 +172,13 @@ export class HolidaysComponent implements OnInit {
 
   //#region "getAllHolidays"
   getAllHolidays() {
-    // this.commonLoader.showLoader();
+    this.commonLoader.showLoader();
     this.hrservice.getAllHolidaysList(this.pageModel).subscribe(
       res => {
         console.log(res);
         if (res.holidaylist.length > 0 && res !== undefined) {
-          this.commonLoader.hideLoader();
-          const filterData = res.holidaylist.filter(
-            x => x.HolidayType === HolidayType.DayInMonth
-          );
           this.holidayList$ = of(
-            filterData.map(element => {
+            res.holidaylist.map(element => {
               return {
                 Id: element.HolidayId,
                 Name: element.HolidayName,
@@ -189,6 +192,7 @@ export class HolidaysComponent implements OnInit {
             })
           );
           this.RecordCount = res.totalCount;
+          this.commonLoader.hideLoader();
         }
       },
       error => {
@@ -236,8 +240,9 @@ export class HolidaysComponent implements OnInit {
   saveHolidayForm(event: any, formData: any) {
     if (formData === true) {
       this.isFormSubmitted = true;
-      if (event === 'DayInMonth' && formData === true) {
-        this.addHolidayForm.value.HolidayTypeId = HolidayType.DayInMonth;
+      // Note: add holiday in particular day
+      if (event === 'ParticularDay' && formData === true) {
+        this.addHolidayForm.value.HolidayTypeId = HolidayType.ParticularDay;
         const finalData: any = {
           HolidayId: this.addHolidayForm.value.HolidayId,
           Date: StaticUtilities.getLocalDate(this.selectedDate),
@@ -258,7 +263,7 @@ export class HolidaysComponent implements OnInit {
           this.editHolidayDate(finalData);
         }
       } else if (event === 'Weekly') {
-        // add weekly holiday
+        // Note: add weekly holiday
         this.repeatWeeklyDay = [];
         if (this.addWeeklyHolidayForm.value.Sun === true) {
           this.repeatWeeklyDay.push({
@@ -295,7 +300,6 @@ export class HolidaysComponent implements OnInit {
             Day: 'Saturday'
           });
         }
-        console.log(this.repeatWeeklyDay);
         const weeklyfinalData: any = {
           HolidayId: 0,
           HolidayType: HolidayType.Weekly,
@@ -344,7 +348,7 @@ export class HolidaysComponent implements OnInit {
   editHolidayDate(finalData: any) {
     this.hrservice.editHoliday(finalData).subscribe(
       x => {
-        if (x != null && x != undefined) {
+        if (x != null && x !== undefined) {
           this.isFormSubmitted = false;
           this.initForm();
           this.dialog.closeAll();
@@ -358,12 +362,6 @@ export class HolidaysComponent implements OnInit {
         this.isFormSubmitted = false;
       }
     );
-  }
-  //#endregion
-  //#region "cancel popup"
-  onCancelPopup() {
-    // this.dialogRef.close();
-    this.dialog.closeAll();
   }
   //#endregion
 
@@ -402,7 +400,6 @@ export class HolidaysComponent implements OnInit {
         width: '450px',
         data: event.item
       });
-      console.log(event.item);
       dialogRef.afterClosed().subscribe(x => {
         this.getAllHolidays();
       });
@@ -428,27 +425,27 @@ export class HolidaysComponent implements OnInit {
           response.data.HolidayWeeklyDetailsList.length > 0
         ) {
           response.data.HolidayWeeklyDetailsList.forEach(element => {
-            // tslint:disable-next-line:curly
-            if (element.Day === 'Sunday')
+            if (element.Day === 'Sunday') {
               this.addWeeklyHolidayForm.value.Sun = true;
-            // tslint:disable-next-line:curly
-            if (element.Day === 'Monday')
+            }
+            if (element.Day === 'Monday') {
               this.addWeeklyHolidayForm.value.Mon = true;
-            // tslint:disable-next-line:curly
-            if (element.Day === 'Tuesday')
+            }
+            if (element.Day === 'Tuesday') {
               this.addWeeklyHolidayForm.value.Tue = true;
-            // tslint:disable-next-line:curly
-            if (element.Day === 'Wednesday')
+            }
+            if (element.Day === 'Wednesday') {
               this.addWeeklyHolidayForm.value.Wed = true;
-            // tslint:disable-next-line:curly
-            if (element.Day === 'Thursday')
+            }
+            if (element.Day === 'Thursday') {
               this.addWeeklyHolidayForm.value.Thu = true;
-            // tslint:disable-next-line:curly
-            if (element.Day === 'Friday')
+            }
+            if (element.Day === 'Friday') {
               this.addWeeklyHolidayForm.value.Fri = true;
-            // tslint:disable-next-line:curly
-            if (element.Day === 'Saturday')
+            }
+            if (element.Day === 'Saturday') {
               this.addWeeklyHolidayForm.value.Sat = true;
+            }
           });
           this.holidayFormWeeklyDataFlag = true;
         }
