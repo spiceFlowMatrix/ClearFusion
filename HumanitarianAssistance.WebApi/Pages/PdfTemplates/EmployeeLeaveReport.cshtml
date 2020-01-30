@@ -67,7 +67,6 @@
                             <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Assigned Hours</th>
                             <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Applied Leave</th>
                             <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Balance Leave</th>
-                            <th style="background-color:#789d4f;color:#ffffff;border-color:#789d4f;border-left-color:#608637;font-weight:400;font-size:16px;">Remarks</th>
                         </tr>
                         @foreach (var item in @Model.EmployeeLeaves)
                         {
@@ -78,56 +77,9 @@
                                 <td>@item.AssignedHours</td>
                                 <td>@item.AppliedLeave</td>
                                 <td>@item.BalanceLeave</td>
-                                <td>@item.Remarks</td>
                             </tr>
 
                         }
-
-                        <!-- @*<tr>
-            <td>Feb</td>
-            <td>Annual Leave</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Mar</td>
-            <td>Maternity Leave</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Apr</td>
-            <td>Emergency Leave</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>May</td>
-            <td>Sick Leave</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Jun</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>*@ -->
                     </table>
                 </td>
             </tr>

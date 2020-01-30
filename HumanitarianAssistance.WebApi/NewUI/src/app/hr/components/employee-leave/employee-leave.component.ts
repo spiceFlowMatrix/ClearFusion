@@ -247,8 +247,11 @@ export class EmployeeLeaveComponent implements OnInit {
     });
   }
 
-  getEmployeeAttendanceHour() {
-
+  exportPdf() {
+    this.hrLeave.exportEmployeeLeavePdf(this.employeeId).subscribe(x => {
+    }, error => {
+      this.toastr.warning(error);
+    });
   }
 
 }
