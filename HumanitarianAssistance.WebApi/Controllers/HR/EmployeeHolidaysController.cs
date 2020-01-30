@@ -47,7 +47,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         }
 
         [HttpDelete]
-        public async Task<ApiResponse> DeleteHolidayDetails(long holidayId)
+        public async Task<ApiResponse> DeleteHolidayDetails([FromQuery] long id)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -55,7 +55,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             {
                 ModifiedById = userId,
                 ModifiedDate = DateTime.UtcNow,
-                HolidayId = holidayId
+                HolidayId = id
             });
         }
 
@@ -80,6 +80,32 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         public async Task<ApiResponse> GetAllHolidayWeeklyDetails(int officeid)
         {
             return await _mediator.Send(new GetAllHolidayWeeklyDetailsQuery { OfficeId = officeid });
+        }
+
+
+        // changes for new Ui
+        [HttpPost]
+        public async Task<IActionResult> AddHoliday([FromBody] AddHolidayCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+
+            return Ok(await _mediator.Send(model));
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetAllHoliday([FromBody]GetAllHolidayQuery model)
+        {
+            return Ok(await _mediator.Send(model));
+        }
+        // EditHoliday
+        [HttpPost]
+        public async Task<IActionResult> EditHoliday([FromBody] EditHolidayCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            return Ok(await _mediator.Send(model));
         }
     }
 }
