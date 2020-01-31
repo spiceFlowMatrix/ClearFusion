@@ -8,7 +8,6 @@ namespace HumanitarianAssistance.Application.HR.Queries
 {
    public class GetAllHolidayWeeklyDetailsQuery: IRequest<ApiResponse>
     {
-        public int OfficeId { get; set; }
 
     }
 }

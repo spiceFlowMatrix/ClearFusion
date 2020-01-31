@@ -69,7 +69,7 @@ export class HolidaysComponent implements OnInit {
 
   addWeeklyHolidayForm: FormGroup;
   ifAddWeeklyHolidayFalg = true;
-
+  isWeeklyFormValidFlag = false;
   constructor(
     public dialog: MatDialog,
     public hrservice: HrService,
@@ -112,13 +112,13 @@ export class HolidaysComponent implements OnInit {
 
   initWeeklyHolidayForm() {
     this.addWeeklyHolidayForm = this.fb.group({
-      Sun: [null],
-      Mon: [null],
-      Tue: [null],
-      Wed: [null],
-      Thu: [null],
-      Fri: [null],
-      Sat: [null]
+      Sun: [null,  this.NullCheckValidator.bind(this)],
+      Mon: [null,  this.NullCheckValidator.bind(this)],
+      Tue: [null, this.NullCheckValidator.bind(this)],
+      Wed: [null, this.NullCheckValidator.bind(this)],
+      Thu: [null, this.NullCheckValidator.bind(this)],
+      Fri: [null, this.NullCheckValidator.bind(this)],
+      Sat: [null, this.NullCheckValidator.bind(this)]
     });
   }
 
@@ -136,11 +136,11 @@ export class HolidaysComponent implements OnInit {
   addWeekendPopup() {
     this.ifAddWeeklyHolidayFalg = true;
     this.initWeeklyHolidayForm();
-    const control = new FormControl([]);
-    this.addWeeklyHolidayForm.addControl('OfficeId', control);
-    this.addWeeklyHolidayForm.controls['OfficeId'].setValidators(
-      Validators.required
-    );
+    // const control = new FormControl([]);
+    // this.addWeeklyHolidayForm.addControl('OfficeId', control);
+    // this.addWeeklyHolidayForm.controls['OfficeId'].setValidators(
+    //   Validators.required
+    // );
     const diagRef = this.dialog.open(this.addWeeklyHoliday, {
       width: '600px'
     });
@@ -202,41 +202,41 @@ export class HolidaysComponent implements OnInit {
   //#endregion
 
   //#region  "Get weekly holiday"
-  getWeeklyHolidays(officeId: any) {
-    if (officeId != null && officeId != undefined) {
-      this.hrservice.getWeeklyHolidaysList(officeId).subscribe(response => {
-        if (
-          response.data !== undefined &&
-          response.data != null &&
-          response.data.HolidayWeeklyDetailsList.length > 0
-        ) {
-          response.data.HolidayWeeklyDetailsList.forEach(element => {
-            if (element.Day === 'Sunday') {
-              this.addWeeklyHolidayForm.value.Sun = true;
-            }
-            if (element.Day === 'Monday') {
-              this.addWeeklyHolidayForm.value.Mon = true;
-            }
-            if (element.Day === 'Tuesday') {
-              this.addWeeklyHolidayForm.value.Tue = true;
-            }
-            if (element.Day === 'Wednesday') {
-              this.addWeeklyHolidayForm.value.Wed = true;
-            }
-            if (element.Day === 'Thursday') {
-              this.addWeeklyHolidayForm.value.Thu = true;
-            }
-            if (element.Day === 'Friday') {
-              this.addWeeklyHolidayForm.value.Fri = true;
-            }
-            if (element.Day === 'Saturday') {
-              this.addWeeklyHolidayForm.value.Sat = true;
-            }
-          });
-          this.holidayFormWeeklyDataFlag = true;
-        }
-      });
-    }
+  getWeeklyHolidays() {
+    // if (officeId != null && officeId != undefined) {
+    this.hrservice.getWeeklyHolidaysList().subscribe(response => {
+      if (
+        response.data !== undefined &&
+        response.data != null &&
+        response.data.HolidayWeeklyDetailsList.length > 0
+      ) {
+        response.data.HolidayWeeklyDetailsList.forEach(element => {
+          if (element.Day === 'Sunday') {
+            this.addWeeklyHolidayForm.value.Sun = true;
+          }
+          if (element.Day === 'Monday') {
+            this.addWeeklyHolidayForm.value.Mon = true;
+          }
+          if (element.Day === 'Tuesday') {
+            this.addWeeklyHolidayForm.value.Tue = true;
+          }
+          if (element.Day === 'Wednesday') {
+            this.addWeeklyHolidayForm.value.Wed = true;
+          }
+          if (element.Day === 'Thursday') {
+            this.addWeeklyHolidayForm.value.Thu = true;
+          }
+          if (element.Day === 'Friday') {
+            this.addWeeklyHolidayForm.value.Fri = true;
+          }
+          if (element.Day === 'Saturday') {
+            this.addWeeklyHolidayForm.value.Sat = true;
+          }
+        });
+        this.holidayFormWeeklyDataFlag = true;
+      }
+    });
+    // }
   }
   //#endregion
 
@@ -276,20 +276,21 @@ export class HolidaysComponent implements OnInit {
   }
   //#endregion
 
-  //#region "weelky holiday addWeekendPopup"
-  onWeeklyHolidayOfficeChange(data: any) {
-    if (data.value.length > 0 && data.value !== undefined) {
-      this.addWeeklyHolidayForm.value.OfficeId = data.value;
-    }
-  }
-  //#endregion
+  // //#region "weelky holiday addWeekendPopup"
+  // onWeeklyHolidayOfficeChange(data: any) {
+  //   if (data.value.length > 0 && data.value !== undefined) {
+  //     this.addWeeklyHolidayForm.value.OfficeId = data.value;
+  //   }
+  // }
+  // //#endregion
 
   //#region "saveHolidayForm for daily and weekly"
   saveHolidayForm(event: any, formData: any) {
+    debugger;
     if (formData === true) {
-      this.isFormSubmitted = true;
       // Note: add holiday in particular day
       if (event === 'ParticularDay' && formData === true) {
+      this.isFormSubmitted = true;
         this.addHolidayForm.value.HolidayTypeId = HolidayType.ParticularDay;
         const finalData: any = {
           HolidayId: this.addHolidayForm.value.HolidayId,
@@ -312,58 +313,65 @@ export class HolidaysComponent implements OnInit {
         }
       } else if (event === 'Weekly') {
         // Note: add weekly holiday
-        this.repeatWeeklyDay = [];
-        if (this.addWeeklyHolidayForm.value.Sun === true) {
-          this.repeatWeeklyDay.push({
-            Day: 'Sunday'
-          });
+        if (this.isWeeklyFormValidFlag === true) {
+          this.isFormSubmitted = true;
+          this.repeatWeeklyDay = [];
+          if (this.addWeeklyHolidayForm.value.Sun === true) {
+            this.repeatWeeklyDay.push({
+              Day: 'Sunday'
+            });
+          }
+          if (this.addWeeklyHolidayForm.value.Mon === true) {
+            this.repeatWeeklyDay.push({
+              Day: 'Monday'
+            });
+          }
+          if (this.addWeeklyHolidayForm.value.Tue === true) {
+            this.repeatWeeklyDay.push({
+              Day: 'Tuesday'
+            });
+          }
+          if (this.addWeeklyHolidayForm.value.Wed === true) {
+            this.repeatWeeklyDay.push({
+              Day: 'Wednesday'
+            });
+          }
+          if (this.addWeeklyHolidayForm.value.Thu === true) {
+            this.repeatWeeklyDay.push({
+              Day: 'Thursday'
+            });
+          }
+          if (this.addWeeklyHolidayForm.value.Fri === true) {
+            this.repeatWeeklyDay.push({
+              Day: 'Friday'
+            });
+          }
+          if (this.addWeeklyHolidayForm.value.Sat === true) {
+            this.repeatWeeklyDay.push({
+              Day: 'Saturday'
+            });
+          }
+
+          const weeklyfinalData: any = {
+            HolidayId: 0,
+            HolidayType: HolidayType.Weekly,
+            RepeatWeeklyDay: this.repeatWeeklyDay,
+            Date: new Date()
+            // OfficeId: this.addWeeklyHolidayForm.value.OfficeId
+          };
+          // if (
+          //   this.addHolidayForm.value.HolidayId === 0 ||
+          //   this.addHolidayForm.value.HolidayId === '' ||
+          //   this.addHolidayForm.value.HolidayId == null
+          // ) {
+          this.addHolidayData(weeklyfinalData);
+          // } else {
+          //   this.editHolidayDate(weeklyfinalData);
+          // }
+          this.isFormSubmitted = false;
         }
-        if (this.addWeeklyHolidayForm.value.Mon === true) {
-          this.repeatWeeklyDay.push({
-            Day: 'Monday'
-          });
-        }
-        if (this.addWeeklyHolidayForm.value.Tue === true) {
-          this.repeatWeeklyDay.push({
-            Day: 'Tuesday'
-          });
-        }
-        if (this.addWeeklyHolidayForm.value.Wed === true) {
-          this.repeatWeeklyDay.push({
-            Day: 'Wednesday'
-          });
-        }
-        if (this.addWeeklyHolidayForm.value.Thu === true) {
-          this.repeatWeeklyDay.push({
-            Day: 'Thursday'
-          });
-        }
-        if (this.addWeeklyHolidayForm.value.Fri === true) {
-          this.repeatWeeklyDay.push({
-            Day: 'Friday'
-          });
-        }
-        if (this.addWeeklyHolidayForm.value.Sat === true) {
-          this.repeatWeeklyDay.push({
-            Day: 'Saturday'
-          });
-        }
-        const weeklyfinalData: any = {
-          HolidayId: 0,
-          HolidayType: HolidayType.Weekly,
-          RepeatWeeklyDay: this.repeatWeeklyDay,
-          Date: new Date(),
-          OfficeId: this.addWeeklyHolidayForm.value.OfficeId
-        };
-        // if (
-        //   this.addHolidayForm.value.HolidayId === 0 ||
-        //   this.addHolidayForm.value.HolidayId === '' ||
-        //   this.addHolidayForm.value.HolidayId == null
-        // ) {
-        this.addHolidayData(weeklyfinalData);
-        // } else {
-        //   this.editHolidayDate(weeklyfinalData);
-        // }
+      } else {
+      this.isFormSubmitted = false;
       }
     } else {
       this.isFormSubmitted = false;
@@ -380,7 +388,7 @@ export class HolidaysComponent implements OnInit {
           this.initForm();
           this.dialog.closeAll();
           this.getAllHolidays();
-          this.getWeeklyHolidays(this.addWeeklyHolidayForm.value.OfficeId);
+          this.getWeeklyHolidays();
         } else {
           this.isFormSubmitted = false;
         }
@@ -455,4 +463,12 @@ export class HolidaysComponent implements OnInit {
     }
   }
   //#endregion
+  NullCheckValidator(control: FormControl) {
+    debugger;
+    if (control.value != null ) {
+      this.isWeeklyFormValidFlag = true;
+    } else {
+      this.isWeeklyFormValidFlag = false;
+    }
+  }
 }
