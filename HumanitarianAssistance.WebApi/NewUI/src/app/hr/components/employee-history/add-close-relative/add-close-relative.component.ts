@@ -55,8 +55,8 @@ export class AddCloseRelativeComponent implements OnInit {
           if (x.StatusCode === 200) {
             this.toastr.success('Success');
             this.isFormSubmitted = false;
-            this.dialogRef.close();
             this.AddCloseRelativeDetailListRefresh();
+            this.dialogRef.close();
           } else {
             this.toastr.warning(x.Message);
             this.isFormSubmitted = false;

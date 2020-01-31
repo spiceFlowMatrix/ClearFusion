@@ -70,6 +70,7 @@ import { AddAdvanceRecoveryComponent } from './components/employee-salary-config
 import { AddOpeningPensionComponent } from './components/add-employee/add-opening-pension/add-opening-pension.component';
 // tslint:disable-next-line: max-line-length
 import { IncrementDecrementSalaryComponent } from './components/employee-salary-config/increment-decrement-salary/increment-decrement-salary.component';
+import { AddHistoryOutsideOrganizationComponent } from './components/employee-history/add-history-outside-organization/add-history-outside-organization.component';
 
 @NgModule({
   declarations: [
@@ -106,7 +107,8 @@ import { IncrementDecrementSalaryComponent } from './components/employee-salary-
     AddContractComponent,
     AddAdvanceRecoveryComponent,
     AddOpeningPensionComponent,
-    IncrementDecrementSalaryComponent
+    IncrementDecrementSalaryComponent,
+    AddHistoryOutsideOrganizationComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -179,7 +181,8 @@ import { IncrementDecrementSalaryComponent } from './components/employee-salary-
     IncrementDecrementSalaryComponent,
     NewAdvanceRequestComponent,
     AdvanceHistoryComponent,
-    AddAdvanceRecoveryComponent
+    AddAdvanceRecoveryComponent,
+    AddHistoryOutsideOrganizationComponent
   ]
 })
 export class HrModule {

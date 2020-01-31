@@ -17,21 +17,21 @@ export class EmployeeHistoryService {
   ) {}
 
   //#region "GetCurrencyList"
-  GetCurrencyList(): any {
+  GetCurrencyList() {
     return this.globalService.getList(
       this.appurl.getApiUrl() + GLOBAL.API_code_GetAllCurrency
     );
   }
   //#endregion
   //#region "GetCurrencyList"
-  GetLanguageList(): any {
+  GetLanguageList() {
     return this.globalService.getList(
       this.appurl.getApiUrl() + GLOBAL.API_EmployeeHR_GetLanguageList
     );
   }
   //#endregion
   //#region "getHistoricalLogList"
-  getHistoricalLogList(EmployeeId: number): any {
+  getHistoricalLogList(EmployeeId: number) {
     return this.globalService.getDataById(
       this.appurl.getApiUrl() +
         GLOBAL.API_Hr_GetAllEmployeeHistoryByEmployeeId +
@@ -41,7 +41,7 @@ export class EmployeeHistoryService {
   }
   //#endregion
   //#region "getEducationDetailList"
-  getEducationDetailList(EmployeeId: number): any {
+  getEducationDetailList(EmployeeId: number) {
     return this.globalService.getDataById(
       this.appurl.getApiUrl() +
         GLOBAL.API_EmployeeDetail_GetAllEmployeeEducations +
@@ -51,7 +51,7 @@ export class EmployeeHistoryService {
   }
   //#endregion
   //#region "getEmployeeHistoryOfOutsideCountryDetailList"
-  getEmployeeHistoryOfOutsideCountryDetailList(EmployeeId: number): any {
+  getEmployeeHistoryOfOutsideCountryDetailList(EmployeeId: number) {
     return this.globalService.getDataById(
       this.appurl.getApiUrl() +
         GLOBAL.API_EmployeeDetail_GetAllEmployeeHistoryOutsideCountry +
@@ -60,8 +60,20 @@ export class EmployeeHistoryService {
     );
   }
   //#endregion
+
+  //#region "getEmployeeHistoryOfOutsideOrganizationDetailList"
+  getEmployeeHistoryOfOutsideOrganizationDetailList(EmployeeId: number) {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_EmployeeDetail_GetAllEmployeeHistoryOutsideOrganization +
+        '?EmployeeId=' +
+        EmployeeId
+    );
+  }
+  //#endregion
+
   //#region "getEmployeeCloseRelativeList"
-  getEmployeeCloseRelativeList(EmployeeId: number): any {
+  getEmployeeCloseRelativeList(EmployeeId: number) {
     return this.globalService.getDataById(
       this.appurl.getApiUrl() +
         GLOBAL.API_EmployeeDetail_GetAllEmployeeRelativeInformation +
@@ -71,7 +83,7 @@ export class EmployeeHistoryService {
   }
   //#endregion
   //#region "getEmployeeThreeReferenceDetailList"
-  getEmployeeThreeReferenceDetailList(EmployeeId: number): any {
+  getEmployeeThreeReferenceDetailList(EmployeeId: number) {
     return this.globalService.getDataById(
       this.appurl.getApiUrl() +
         GLOBAL.API_EmployeeDetail_GetAllEmployeeInfoReferences +
@@ -81,7 +93,7 @@ export class EmployeeHistoryService {
   }
   //#endregion
   //#region "getEmployeeOtherSkillDetailList"
-  getEmployeeOtherSkillDetailList(EmployeeId: number): any {
+  getEmployeeOtherSkillDetailList(EmployeeId: number) {
     return this.globalService.getDataById(
       this.appurl.getApiUrl() +
         GLOBAL.API_EmployeeDetail_GetAllEmployeeOtherSkills +
@@ -91,7 +103,7 @@ export class EmployeeHistoryService {
   }
   //#endregion
   //#region "getEmployeeSalarybudgetDetailList"
-  getEmployeeSalaryBudgetDetailList(EmployeeId: number): any {
+  getEmployeeSalaryBudgetDetailList(EmployeeId: number) {
     return this.globalService.getDataById(
       this.appurl.getApiUrl() +
         GLOBAL.API_EmployeeDetail_GetAllEmployeeSalaryBudgets +
@@ -101,7 +113,7 @@ export class EmployeeHistoryService {
   }
   //#endregion
   //#region "getEmployeeLanguageDetailList"
-  getEmployeeLanguageDetailList(EmployeeId: number): any {
+  getEmployeeLanguageDetailList(EmployeeId: number) {
     return this.globalService.getDataById(
       this.appurl.getApiUrl() +
         GLOBAL.API_EmployeeDetail_GetAllEmployeeLanguages +
@@ -111,7 +123,7 @@ export class EmployeeHistoryService {
   }
   //#endregion
   //#region "addHistoricalLogDetail"
-  addHistoricalLogDetail(model: any): any {
+  addHistoricalLogDetail(model: any) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_Hr_AddEmployeeHistoryDetail,
       model
@@ -119,7 +131,7 @@ export class EmployeeHistoryService {
   }
   //#endregion
   //#region "addEducationDetail"
-  addEducationDetail(model: any): any {
+  addEducationDetail(model: any) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_Hr_AddEmployeeEducations,
       model
@@ -127,15 +139,23 @@ export class EmployeeHistoryService {
   }
   //#endregion
   //#region "addHistoryOutsideCountry"
-  addHistoryOutsideCountry(model: any): any {
+  addHistoryOutsideCountry(model: any) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_Hr_AddEmployeeHistoryOutsideCountry,
       model
     );
   }
   //#endregion
+    //#region "addHistoryOutsideOrganization"
+    addHistoryOutsideOrganization(model: any) {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_Hr_AddEmployeeHistoryOutsideOrganization,
+        model
+      );
+    }
+    //#endregion
   //#region "addCloseRelativeDetail"
-  addCloseRelativeDetail(model: any): any {
+  addCloseRelativeDetail(model: any) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_Hr_AddEmployeeRelativeInformation,
       model
@@ -143,7 +163,7 @@ export class EmployeeHistoryService {
   }
   //#endregion
   //#region "addThreeReferenceDetail"
-  addThreeReferenceDetail(model: any): any {
+  addThreeReferenceDetail(model: any) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_Hr_AddEmployeeInfoReferences,
       model
@@ -151,7 +171,7 @@ export class EmployeeHistoryService {
   }
   //#endregion
   //#region "addOtherSkillDetail"
-  addOtherSkillDetail(model: any): any {
+  addOtherSkillDetail(model: any) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_Hr_AddEmployeeOtherSkills,
       model
@@ -159,15 +179,15 @@ export class EmployeeHistoryService {
   }
   //#endregion
   //#region "addSalaryBudgetDetail"
-  addSalaryBudgetDetail(model: any): any {
+  addSalaryBudgetDetail(model: any) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_Hr_AddEmployeeSalaryBudgets,
       model
     );
   }
   //#endregion
-   //#region "addLanguageDetail"
-  addLanguageDetail(model: any): any {
+  //#region "addLanguageDetail"
+  addLanguageDetail(model: any) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_Hr_AddEmployeeLanguages,
       model
@@ -201,6 +221,15 @@ export class EmployeeHistoryService {
     );
   }
   //#endregion
+    //#region "deleteEmployeeHistoryOutsideCountry"
+    deleteEmployeeHistoryOutsideOrganization(model: any) {
+      return this.globalService.post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Hr__DeleteEmployeeHistoryOutsideOrganization,
+        model
+      );
+    }
+    //#endregion
   //#region "deleteCloseRelativeDetail"
   deleteCloseRelativeDetail(model: any) {
     return this.globalService.post(
@@ -228,10 +257,10 @@ export class EmployeeHistoryService {
   //#endregion
   //#region "deleteEmployeeSalaryBudgetDetail"
   deleteEmployeeSalaryBudgetDetail(model: any) {
-      return this.globalService.post(
-        this.appurl.getApiUrl() + GLOBAL.API_Hr__DeleteEmployeeSalaryBudgets,
-        model
-      );
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_Hr__DeleteEmployeeSalaryBudgets,
+      model
+    );
   }
   //#endregion
   //#region "deleteEmployeeOtherSkillDetail"
