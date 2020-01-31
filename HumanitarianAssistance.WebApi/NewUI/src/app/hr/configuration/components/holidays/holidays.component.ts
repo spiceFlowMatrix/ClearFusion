@@ -5,7 +5,7 @@ import {
   TemplateRef,
   Inject
 } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { HrService } from 'src/app/hr/services/hr.service';
 import {
   FormGroup,
@@ -25,6 +25,7 @@ import {
 } from 'src/app/hr/models/employee-holiday.model';
 import { TableActionsModel } from 'projects/library/src/public_api';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { WeekDay } from '@angular/common';
 
 @Component({
   selector: 'app-holidays',
@@ -52,6 +53,7 @@ export class HolidaysComponent implements OnInit {
   repeatWeeklyDay: RepeatWeeklyDay[] = [];
   officeList: IOfficeListModel[] = [];
   holidayFormWeeklyDataFlag = false;
+  weekday: WeekDay;
 
   hideColums = of({
     headers: ['Id', 'Name', 'Date', 'Office'],
@@ -90,6 +92,7 @@ export class HolidaysComponent implements OnInit {
         download: false
       }
     };
+    this.getWeeklyHolidays();
   }
 
   ngOnInit() {
@@ -97,6 +100,7 @@ export class HolidaysComponent implements OnInit {
     this.initForm();
     this.getOfficeList();
     this.initWeeklyHolidayForm();
+
     // this.getWeeklyHolidays(this.);
   }
 
@@ -112,8 +116,9 @@ export class HolidaysComponent implements OnInit {
 
   initWeeklyHolidayForm() {
     this.addWeeklyHolidayForm = this.fb.group({
-      Sun: [null,  this.NullCheckValidator.bind(this)],
-      Mon: [null,  this.NullCheckValidator.bind(this)],
+      HolidayWeeklyId: [null],
+      Sun: [null, this.NullCheckValidator.bind(this)],
+      Mon: [null, this.NullCheckValidator.bind(this)],
       Tue: [null, this.NullCheckValidator.bind(this)],
       Wed: [null, this.NullCheckValidator.bind(this)],
       Thu: [null, this.NullCheckValidator.bind(this)],
@@ -135,12 +140,6 @@ export class HolidaysComponent implements OnInit {
 
   addWeekendPopup() {
     this.ifAddWeeklyHolidayFalg = true;
-    this.initWeeklyHolidayForm();
-    // const control = new FormControl([]);
-    // this.addWeeklyHolidayForm.addControl('OfficeId', control);
-    // this.addWeeklyHolidayForm.controls['OfficeId'].setValidators(
-    //   Validators.required
-    // );
     const diagRef = this.dialog.open(this.addWeeklyHoliday, {
       width: '600px'
     });
@@ -161,10 +160,23 @@ export class HolidaysComponent implements OnInit {
     this.DayAndDate =
       dateValue[0] + ',' + ' ' + dateValue[1] + ' ' + dateValue[2];
   }
-  cfDateFilter(d: Date): boolean {
+  cfDateFilter = (d: Date): boolean => {
     const day = d.getDay();
+    let x = false;
     // Prevent Saturday and Sunday from being selected.
-    return day !== 0 && day !== 6;
+    if (this.repeatWeeklyDay !== undefined && this.repeatWeeklyDay.length > 0) {
+      for (const element of this.repeatWeeklyDay) {
+        if (day !== WeekDay[element.Day]) {
+          x = true;
+        } else {
+          x = false;
+          break;
+        }
+      }
+    }
+
+    return x;
+    // return day !== 0 && day !== 6;
   }
   //#endregion
 
@@ -205,32 +217,35 @@ export class HolidaysComponent implements OnInit {
   getWeeklyHolidays() {
     // if (officeId != null && officeId != undefined) {
     this.hrservice.getWeeklyHolidaysList().subscribe(response => {
+      this.repeatWeeklyDay = [];
       if (
         response.data !== undefined &&
         response.data != null &&
         response.data.HolidayWeeklyDetailsList.length > 0
       ) {
         response.data.HolidayWeeklyDetailsList.forEach(element => {
+          this.repeatWeeklyDay.push(element);
+          console.log('repest', this.repeatWeeklyDay);
           if (element.Day === 'Sunday') {
-            this.addWeeklyHolidayForm.value.Sun = true;
+            this.addWeeklyHolidayForm.controls['Sun'].setValue(true);
           }
           if (element.Day === 'Monday') {
-            this.addWeeklyHolidayForm.value.Mon = true;
+            this.addWeeklyHolidayForm.controls['Mon'].setValue(true);
           }
           if (element.Day === 'Tuesday') {
-            this.addWeeklyHolidayForm.value.Tue = true;
+            this.addWeeklyHolidayForm.controls['Tue'].setValue(true);
           }
           if (element.Day === 'Wednesday') {
-            this.addWeeklyHolidayForm.value.Wed = true;
+            this.addWeeklyHolidayForm.controls['Wed'].setValue(true);
           }
           if (element.Day === 'Thursday') {
-            this.addWeeklyHolidayForm.value.Thu = true;
+            this.addWeeklyHolidayForm.controls['Thu'].setValue(true);
           }
           if (element.Day === 'Friday') {
-            this.addWeeklyHolidayForm.value.Fri = true;
+            this.addWeeklyHolidayForm.controls['Fri'].setValue(true);
           }
           if (element.Day === 'Saturday') {
-            this.addWeeklyHolidayForm.value.Sat = true;
+            this.addWeeklyHolidayForm.controls['Sat'].setValue(true);
           }
         });
         this.holidayFormWeeklyDataFlag = true;
@@ -286,11 +301,10 @@ export class HolidaysComponent implements OnInit {
 
   //#region "saveHolidayForm for daily and weekly"
   saveHolidayForm(event: any, formData: any) {
-    debugger;
     if (formData === true) {
       // Note: add holiday in particular day
       if (event === 'ParticularDay' && formData === true) {
-      this.isFormSubmitted = true;
+        this.isFormSubmitted = true;
         this.addHolidayForm.value.HolidayTypeId = HolidayType.ParticularDay;
         const finalData: any = {
           HolidayId: this.addHolidayForm.value.HolidayId,
@@ -371,7 +385,7 @@ export class HolidaysComponent implements OnInit {
           this.isFormSubmitted = false;
         }
       } else {
-      this.isFormSubmitted = false;
+        this.isFormSubmitted = false;
       }
     } else {
       this.isFormSubmitted = false;
@@ -464,8 +478,7 @@ export class HolidaysComponent implements OnInit {
   }
   //#endregion
   NullCheckValidator(control: FormControl) {
-    debugger;
-    if (control.value != null ) {
+    if (control.value != null) {
       this.isWeeklyFormValidFlag = true;
     } else {
       this.isWeeklyFormValidFlag = false;

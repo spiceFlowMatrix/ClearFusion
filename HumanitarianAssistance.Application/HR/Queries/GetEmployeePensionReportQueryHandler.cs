@@ -81,7 +81,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 var previousPensionList = await _dbContext.AccumulatedSalaryHeadDetail.Where(x => x.Year < financialYearList.OrderByDescending(y => y.StartDate)
                                                                                                                             .FirstOrDefault()
                                                                                                                             .StartDate.Year && x.IsDeleted == false &&
-                                                                                                                             x.EmployeeId == request.EmployeeId && 
+                                                                                                                             x.EmployeeId == request.EmployeeId &&
                                                                                                                              x.SalaryComponentId == (int)AccumulatedSalaryHead.Pension)
                                                                                                                              .ToListAsync();
 
@@ -90,6 +90,10 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 EmployeeBasicSalaryDetail currencyDetail = await _dbContext.EmployeeBasicSalaryDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.EmployeeId == request.EmployeeId);
                 // to get currency value 
                 if (currencyDetail == null)
+                {
+                    throw new Exception(StaticResource.EmployeePayrollCurrencyNotSet);
+                }
+                else if (currencyDetail.CurrencyId == null)
                 {
                     throw new Exception(StaticResource.EmployeePayrollCurrencyNotSet);
                 }
@@ -107,7 +111,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                     foreach (var item in empList)
                     {
-                       double grossSalary = empGrossSalaryList.FirstOrDefault(x => x.Year == item.Year && x.Month== item.Month ).SalaryDeduction;
+                        double grossSalary = empGrossSalaryList.FirstOrDefault(x => x.Year == item.Year && x.Month == item.Month).SalaryDeduction;
                         EmployeePensionReportModel obj = new EmployeePensionReportModel();
                         obj.CurrencyId = currencyDetail.CurrencyId.Value;
                         obj.Date = new DateTime(item.Year, item.Month, 1);

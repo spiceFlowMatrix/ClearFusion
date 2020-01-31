@@ -35,7 +35,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     .Where(x => x.IsDeleted == false && x.FinancialYearId == financialyear.FinancialYearId)
                     .Select(x => new RepeatWeeklyDay
                     {
-                        Day = x.Day
+                        Day = x.Day,
                     }).ToListAsync();
 
                 response.data.HolidayWeeklyDetailsList = queryResult;

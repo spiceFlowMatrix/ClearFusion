@@ -39,8 +39,13 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                     EmployeeBasicSalaryDetail payrollDetail = await _dbContext.EmployeeBasicSalaryDetail
                                                                     .Include(x => x.CurrencyDetails)
-                                                                    .FirstOrDefaultAsync(x => x.IsDeleted == false && x.EmployeeId == request.EmployeeId);
+                                                                    .FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                                                                      x.EmployeeId == request.EmployeeId);
                     if (payrollDetail == null)
+                    {
+                        throw new Exception(StaticResource.EmployeePayrollCurrencyNotSet);
+                    }
+                    else if(payrollDetail.CurrencyDetails == null)
                     {
                         throw new Exception(StaticResource.EmployeePayrollCurrencyNotSet);
                     }
@@ -48,10 +53,10 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     var distinctFinancialYears = financialYear.Select(x => new { StartYear = x.StartDate.Year, EndYear = x.EndDate.Year }).Distinct();
 
                     List<SalaryTaxReportModel> salaryTaxReportListFinal = new List<SalaryTaxReportModel>();
-                    var employeeData = await _dbContext.EmployeeDetail.Include(x=> x.EmployeeProfessionalDetail)      
-                                                                .ThenInclude(x=> x.OfficeDetail)
-                                                                .FirstOrDefaultAsync(x=>x.EmployeeID == request.EmployeeId);
-                                                                
+                    var employeeData = await _dbContext.EmployeeDetail.Include(x => x.EmployeeProfessionalDetail)
+                                                                .ThenInclude(x => x.OfficeDetail)
+                                                                .FirstOrDefaultAsync(x => x.EmployeeID == request.EmployeeId);
+
 
                     foreach (var financialYearDetail in distinctFinancialYears)
                     {
@@ -91,7 +96,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     response.data.SalaryTaxReportModelList = salaryTaxReportListFinal;
                 }
                 else
-                response.data.SalaryTaxReportModelList = null;
+                    response.data.SalaryTaxReportModelList = null;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }
