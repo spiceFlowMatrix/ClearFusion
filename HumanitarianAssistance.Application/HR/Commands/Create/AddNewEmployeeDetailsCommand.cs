@@ -55,6 +55,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create {
         public List<PensionList> PensionList { get; set; }
     }
     public class PensionList {
+        public int PensionId { get; set; }
         public int Currency { get; set; }
         public double? Amount { get; set; }
     }
