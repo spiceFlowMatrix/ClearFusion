@@ -31,7 +31,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     var advanceRecord = await _dbContext.Advances
                                                  .FirstOrDefaultAsync(x => x.AdvancesId == request.AdvanceId);
 
-                    double recoveredAmount = _dbContext.AdvanceHistoryDetail.Where(x => x.IsDeleted == false && x.AdvanceId == request.AdvanceId && x.PaymentDate.Month != request.Month)
+                    double recoveredAmount = _dbContext.AdvanceHistoryDetail.Where(x => x.IsDeleted == false && x.AdvanceId == request.AdvanceId && x.PaymentDate.Month <= request.Month)
                                                       .Select(x => x.InstallmentPaid).DefaultIfEmpty(0).Sum();
 
                     AdvanceHistoryDetail advanceRecordExist = await _dbContext.AdvanceHistoryDetail.FirstOrDefaultAsync(x => x.IsDeleted == false &&
@@ -46,7 +46,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                             CreatedDate = DateTime.UtcNow,
                             InstallmentPaid = request.Amount,
                             EmployeeId = request.EmployeeId,
-                            InstallmentBalance = recoveredAmount - request.Amount,
+                            InstallmentBalance = advanceRecord.AdvanceAmount- (recoveredAmount + request.Amount),
                             IsDeleted = false,
                             PaymentDate = DateTime.UtcNow
                         };
@@ -57,7 +57,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     else
                     {
                         advanceRecordExist.InstallmentPaid = request.Amount;
-                        advanceRecordExist.InstallmentBalance = recoveredAmount - request.Amount;
+                        advanceRecordExist.InstallmentBalance = advanceRecord.AdvanceAmount- (recoveredAmount + request.Amount);
                         advanceRecordExist.ModifiedById = request.CreatedById;
                         advanceRecordExist.ModifiedDate = DateTime.UtcNow;
                         _dbContext.AdvanceHistoryDetail.Update(advanceRecordExist);
