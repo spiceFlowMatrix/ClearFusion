@@ -15,6 +15,7 @@ export interface IEmployeeDetail {
   CurrentAddress: string;
   PermanentAddress: string;
   EmployementStatus: string;
+  EmploymentStatusId: number;
   DutyStation: string;
   HiredOn: string;
   AttendanceGroup: string;
