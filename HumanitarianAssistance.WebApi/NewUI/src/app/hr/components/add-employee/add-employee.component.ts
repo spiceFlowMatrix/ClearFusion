@@ -1,9 +1,10 @@
+import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { Response } from '@angular/http';
 import {
   IEmployeePensionListModel,
-  IEmployeeAllDetailsForEdit
 } from './../../models/employee-detail.model';
 import { AddEmployeeService } from './../../services/add-employee.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { IDropDownModel } from 'src/app/store/models/purchase';
@@ -23,6 +24,9 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./add-employee.component.scss']
 })
 export class AddEmployeeComponent implements OnInit {
+  @ViewChild('employeeDetailFormButton') employeeDetailFormButton: ElementRef;
+  @ViewChild('employeeProfessionalDetailFormButton')
+  employeeProfessionalDetailFormButton: ElementRef;
   employeeId = 0;
   employeeDetailForm: FormGroup;
   employeeProfessionalDetailForm: FormGroup;
@@ -46,9 +50,10 @@ export class AddEmployeeComponent implements OnInit {
   pensionListDisplay: any[] = [];
   pensionList: IEmployeePensionListModel[] = [];
   employeeAllDetails: IEmployeeAllDetails;
-  employeeAllDetailsForEdit: IEmployeeAllDetailsForEdit;
   IsPensionDateSet = false;
   IsEditing = false;
+  IsFormSubmitted = false;
+  setPensionDate = new Date();
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     private fb: FormBuilder,
@@ -167,12 +172,14 @@ export class AddEmployeeComponent implements OnInit {
     };
     if (this.employeeId > 0) {
       this.IsEditing = true;
-      this.employeeAllDetailsForEdit = {
-        EmployeeBasicDetail: {},
-        EmployeeProfessionalDetails: {}
-      };
+      this.employeeDetailForm.get('Password').clearValidators();
+      this.employeeDetailForm.get('ConfirmPassword').clearValidators();
+      this.employeeDetailForm.get('Password').updateValueAndValidity();
+      this.employeeDetailForm.get('ConfirmPassword').updateValueAndValidity();
+
       this.getEmployeeDetailsByEmployeeId();
       this.getEmployeeProfessionalDetailsByEmployeeId();
+      this.getAllPensionList();
     }
   }
 
@@ -447,7 +454,7 @@ export class AddEmployeeComponent implements OnInit {
     /** Open Education dialog box*/
     const dialogRef = this.dialog.open(AddOpeningPensionComponent, {
       width: '400px',
-      data: this.pensionList.length + 1
+      data: { pensionId: this.pensionList.length + 1 }
     });
     // refresh the list after new request created
     dialogRef.componentInstance.onPensionDetailListRefresh.subscribe(result => {
@@ -472,6 +479,41 @@ export class AddEmployeeComponent implements OnInit {
     this.pensionList.splice(index, 1);
     this.pensionListDisplay.splice(index, 1);
   }
+  editPensionItem(data: any) {
+    const index = this.pensionList.findIndex(x => x.Id === data.Id);
+    const model = {
+      Id: this.pensionList[index].Id,
+      PensionId: this.pensionList[index].PensionId,
+      Currency: this.pensionList[index].Currency,
+      Amount: this.pensionList[index].Amount
+    };
+    /** Open Education dialog box*/
+    const dialogRef = this.dialog.open(AddOpeningPensionComponent, {
+      width: '400px',
+      data: { item: model }
+    });
+    // refresh the list after new request created
+    dialogRef.componentInstance.onUpdatePensionDetailListRefresh.subscribe(
+      result => {
+        if (result !== undefined) {
+          const pensionlist = this.pensionList.find(x => x.Id === result.Id);
+          pensionlist.Currency = result.Currency;
+          pensionlist.Amount = result.Amount;
+          let currency;
+          this.currencyList$.subscribe(res => {
+            currency = res.find(x => x.value === result.Currency).name;
+          });
+          const pensionlistDisplay = this.pensionListDisplay.find(
+            x => x.Id === result.Id
+          );
+          pensionlistDisplay.Amount = result.Amount;
+          pensionlistDisplay.Currency = currency;
+        }
+      }
+    );
+    dialogRef.afterClosed().subscribe(() => {});
+  }
+
   //#endregion
   checkExchangeRateVerified(exchangeRateDate: any) {
     // this.pensionForm.PensionDate = exchangeRateDate;
@@ -506,6 +548,9 @@ export class AddEmployeeComponent implements OnInit {
       );
   }
   onFormSubmit() {
+    this.IsFormSubmitted = true;
+    this.employeeDetailFormButton.nativeElement.click();
+    this.employeeProfessionalDetailFormButton.nativeElement.click();
     if (this.employeeId > 0) {
       this.EditEmployeeDetails();
     } else {
@@ -539,20 +584,34 @@ export class AddEmployeeComponent implements OnInit {
           }
         );
     } else {
-      this.toastr.warning('Forms Are Not Valid');
+      if (this.employeeDetailForm.invalid) {
+        this.toastr.warning('Employee Genreal Form Is Not Valid');
+      }
+      if (this.employeeProfessionalDetailForm.invalid) {
+        this.toastr.warning('Employee Professional Detail Form Is Not Valid');
+      }
+      if (this.pensionList.length === 0) {
+        this.toastr.warning('Pension List Is Empty');
+      }
     }
   }
 
   EditEmployeeDetails() {
     if (
       this.employeeDetailForm.valid &&
-      this.employeeProfessionalDetailForm.valid
+      this.employeeProfessionalDetailForm.valid &&
+      this.pensionList.length !== 0
     ) {
+      if(this.IsPensionDateSet === false)
+      {
+        this.employeeAllDetails.EmployeePensionDetail.PensionDate = this.setPensionDate;
+      }
       this.employeeDetailForm.controls['EmployeeId'].setValue(this.employeeId);
-      this.employeeAllDetailsForEdit.EmployeeBasicDetail = this.employeeDetailForm.value;
-      this.employeeAllDetailsForEdit.EmployeeProfessionalDetails = this.employeeProfessionalDetailForm.value;
+      this.employeeAllDetails.EmployeeBasicDetail = this.employeeDetailForm.value;
+      this.employeeAllDetails.EmployeeProfessionalDetails = this.employeeProfessionalDetailForm.value;
+      this.employeeAllDetails.EmployeePensionDetail.PensionList = this.pensionList;
       this.employeeService
-        .EditEmployeeDetails(this.employeeAllDetailsForEdit)
+        .EditEmployeeDetails(this.employeeAllDetails)
         .subscribe(
           x => {
             if (x.StatusCode === 200) {
@@ -567,7 +626,15 @@ export class AddEmployeeComponent implements OnInit {
           }
         );
     } else {
-      this.toastr.warning('Forms Are Not Valid');
+      if (this.employeeDetailForm.invalid) {
+        this.toastr.warning('Employee Genreal Form Is Not Valid');
+      }
+      if (this.employeeProfessionalDetailForm.invalid) {
+        this.toastr.warning('Employee Professional Detail Form Is Not Valid');
+      }
+      if (this.pensionList.length === 0) {
+        this.toastr.warning('Pension List Is Empty');
+      }
     }
   }
 
@@ -584,10 +651,8 @@ export class AddEmployeeComponent implements OnInit {
               FatherName: x.data.EmployeeDetailList[0].FatherName,
               Email: x.data.EmployeeDetailList[0].Email,
               PhoneNo: x.data.EmployeeDetailList[0].Phone,
-              // Password: x.data.EmployeeDetailList[0].EmployeeName,
-              // ConfirmPassword: x.data.EmployeeDetailList[0].EmployeeName,
               Gender: x.data.EmployeeDetailList[0].SexId,
-              DateOfBirth: new Date(x.data.EmployeeDetailList[0].DateOfBirth),
+              DateOfBirth: StaticUtilities.setLocalDate(new Date(x.data.EmployeeDetailList[0].DateOfBirth)),
               MaritalStatus: x.data.EmployeeDetailList[0].MaritalStatus,
               Country: x.data.EmployeeDetailList[0].CountryId,
               Province: x.data.EmployeeDetailList[0].ProvinceId,
@@ -627,13 +692,12 @@ export class AddEmployeeComponent implements OnInit {
             this.onChangeOffice(x.data.EmployeeProfessionalList[0].OfficeId);
             this.employeeProfessionalDetailForm.patchValue({
               EmployeeType: x.data.EmployeeProfessionalList[0].EmployeeTypeId,
-              // JobGrade: x.data.EmployeeProfessionalList[0].EmployeeName,
               Office: x.data.EmployeeProfessionalList[0].OfficeId,
               Department: x.data.EmployeeProfessionalList[0].DepartmentId,
               Designation: x.data.EmployeeProfessionalList[0].DesignationId,
               EmployeeCotractType:
                 x.data.EmployeeProfessionalList[0].EmployeeContractTypeId,
-              HiredOn: x.data.EmployeeProfessionalList[0].HiredOn,
+              HiredOn: StaticUtilities.setLocalDate(x.data.EmployeeProfessionalList[0].HiredOn),
               AttendanceGroup:
                 x.data.EmployeeProfessionalList[0].AttendanceGroupId,
               DutyStation: x.data.EmployeeProfessionalList[0].DutyStation,
@@ -649,6 +713,46 @@ export class AddEmployeeComponent implements OnInit {
           this.toastr.warning(error);
         }
       );
+  }
+  getAllPensionList() {
+    this.employeeService.GetAllPensionList(this.employeeId).subscribe(
+      x => {
+        if (x.StatusCode === 200 && x.ResponseData.length > 0) {
+          let id = 1;
+          this.setPensionDate = StaticUtilities.setLocalDate(
+            x.ResponseData[0].Date
+          );
+          x.ResponseData.forEach(element => {
+            this.pensionListDisplay.push({
+              Id: id,
+              PensionId: element.PensionId,
+              Currency: element.CurrencyName,
+              Amount: element.Amount
+            });
+            this.pensionList.push({
+              Id: id,
+              PensionId: element.PensionId,
+              Currency: element.CurrencyId,
+              Amount: element.Amount
+            });
+            id += 1;
+          });
+        } else {
+          this.toastr.warning(x.Message);
+        }
+      },
+      error => {
+        this.toastr.warning(error);
+      }
+    );
+  }
+
+  onTabChange(event: any) {
+    if (event.index === 0 && this.IsFormSubmitted) {
+      this.employeeDetailFormButton.nativeElement.click();
+    } else if (event.index === 1 && this.IsFormSubmitted) {
+      this.employeeProfessionalDetailFormButton.nativeElement.click();
+    }
   }
 }
 
