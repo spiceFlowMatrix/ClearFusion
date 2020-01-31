@@ -32,10 +32,10 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 var financialyear = await _dbContext.FinancialYearDetail.FirstOrDefaultAsync(x => x.IsDefault == true);
 
                 var queryResult = await _dbContext.HolidayWeeklyDetails
-                    .Where(x => x.IsDeleted == false && x.OfficeId == request.OfficeId && x.FinancialYearId == financialyear.FinancialYearId)
+                    .Where(x => x.IsDeleted == false && x.FinancialYearId == financialyear.FinancialYearId)
                     .Select(x => new RepeatWeeklyDay
                     {
-                        Day = x.Day
+                        Day = x.Day,
                     }).ToListAsync();
 
                 response.data.HolidayWeeklyDetailsList = queryResult;

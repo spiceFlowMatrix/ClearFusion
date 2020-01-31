@@ -424,12 +424,10 @@ export class HrService {
         holidayId
     );
   }
-  getWeeklyHolidaysList(officeId: any) {
-    return this.globalService.getDataById(
+  getWeeklyHolidaysList() {
+    return this.globalService.getList(
       this.appurl.getApiUrl() +
-        GLOBAL.API_HR_GetAllHolidayWeeklyDetails +
-        '?officeId=' +
-        officeId
+        GLOBAL.API_HR_GetAllHolidayWeeklyDetails
     );
   }
   getAppraisalQuestions(officeId: number) {
