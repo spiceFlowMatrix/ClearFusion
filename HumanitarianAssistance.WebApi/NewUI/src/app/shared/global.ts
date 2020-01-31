@@ -191,6 +191,7 @@ export class GLOBAL {
   public static API_HR_AssignLeaveToEmployeeDetail = 'Attendance/AssignLeaveToEmployeeDetail';
   public static API_HR_GetEmployeeApplyLeaveDetailById = 'Attendance/GetEmployeeApplyLeaveDetailById';
   public static API_HR_GetEmployeeAppliedLeaves = 'Attendance/GetEmployeeAppliedLeaves';
+  public static API_Pdf_ExportEmployeeLeavePdf = 'Pdf/ExportEmployeeLeavePdf';
   public static API_HR_GetEmployeeWorkingTimeByMonth = 'Attendance/GetEmployeeWorkingTimeByMonth';
   public static API_HR_GetEmployeeAppliedLeaveHours = 'Attendance/GetEmployeeAppliedLeaveHours';
   public static API_HR_ApproveRejectLeave = 'Attendance/ApproveRejectLeave';
@@ -595,6 +596,8 @@ export class GLOBAL {
   public static API_EmployeeDetail_AddEmployeeResignation = 'EmployeeDetail/AddEmployeeResignation';
   public static API_EmployeeDetail_SaveEmployeeResignation = 'EmployeeDetail/SaveEmployeeResignation';
   public static API_EmployeeDetail_GetEmployeeResignationById = 'EmployeeDetail/GetEmployeeResignationById';
+  public static API_EmployeeDetail_TerminateEmployeeByEmployeeId = 'EmployeeDetail/TerminateEmployeeByEmployeeId';
+  public static API_EmployeeDetail_DeleteEmployeeByEmployeeId = 'EmployeeDetail/DeleteEmployeeByEmployeeId';
 
   // pdf
   public static API_Pdf_GetAllChartOfAccountHierarchyPdf = 'Pdf/GetAllChartOfAccountHierarchyPdf';

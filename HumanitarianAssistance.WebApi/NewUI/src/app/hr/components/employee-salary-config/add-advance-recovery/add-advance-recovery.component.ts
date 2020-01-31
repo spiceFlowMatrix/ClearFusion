@@ -37,6 +37,7 @@ export class AddAdvanceRecoveryComponent implements OnInit {
   onFormSubmit() {
     if (!this.advanceRecoveryForm.valid) {
       this.toastr.warning('Please correct form errors and submit again');
+      return;
     }
 
     this.isFormSubmitted = true;

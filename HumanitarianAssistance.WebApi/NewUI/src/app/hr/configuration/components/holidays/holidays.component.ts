@@ -148,14 +148,12 @@ export class HolidaysComponent implements OnInit {
 
   //#region "cancel popup"
   onCancelPopup() {
-    // this.dialogRef.close();
     this.dialog.closeAll();
   }
   //#endregion
 
-  //#region "Calander"
+  //#region "Calander" event
   onSelect(event) {
-    console.log(event);
     this.selectedDate = event;
     const dateString = event.toDateString();
     const dateValue = dateString.split(' ');
@@ -203,11 +201,42 @@ export class HolidaysComponent implements OnInit {
   }
   //#endregion
 
-  //#region "pageEvent"
-  pageEvent(e) {
-    this.pageModel.PageIndex = e.pageIndex;
-    this.pageModel.PageSize = e.pageSize;
-    this.getAllHolidays();
+  //#region  "Get weekly holiday"
+  getWeeklyHolidays(officeId: any) {
+    if (officeId != null && officeId != undefined) {
+      this.hrservice.getWeeklyHolidaysList(officeId).subscribe(response => {
+        if (
+          response.data !== undefined &&
+          response.data != null &&
+          response.data.HolidayWeeklyDetailsList.length > 0
+        ) {
+          response.data.HolidayWeeklyDetailsList.forEach(element => {
+            if (element.Day === 'Sunday') {
+              this.addWeeklyHolidayForm.value.Sun = true;
+            }
+            if (element.Day === 'Monday') {
+              this.addWeeklyHolidayForm.value.Mon = true;
+            }
+            if (element.Day === 'Tuesday') {
+              this.addWeeklyHolidayForm.value.Tue = true;
+            }
+            if (element.Day === 'Wednesday') {
+              this.addWeeklyHolidayForm.value.Wed = true;
+            }
+            if (element.Day === 'Thursday') {
+              this.addWeeklyHolidayForm.value.Thu = true;
+            }
+            if (element.Day === 'Friday') {
+              this.addWeeklyHolidayForm.value.Fri = true;
+            }
+            if (element.Day === 'Saturday') {
+              this.addWeeklyHolidayForm.value.Sat = true;
+            }
+          });
+          this.holidayFormWeeklyDataFlag = true;
+        }
+      });
+    }
   }
   //#endregion
 
@@ -230,11 +259,30 @@ export class HolidaysComponent implements OnInit {
   }
   //#endregion
 
+  //#region "pageEvent"
+  pageEvent(e) {
+    this.pageModel.PageIndex = e.pageIndex;
+    this.pageModel.PageSize = e.pageSize;
+    this.getAllHolidays();
+  }
+  //#endregion
+
+  //#region "onparticular holiday office change"
   onOfficeChange(data: any) {
     if (data.value.length > 0 && data.value !== undefined) {
       this.addHolidayForm.value.OfficeId = data.value;
+      // this.getWeeklyHolidays(data.value);
     }
   }
+  //#endregion
+
+  //#region "weelky holiday addWeekendPopup"
+  onWeeklyHolidayOfficeChange(data: any) {
+    if (data.value.length > 0 && data.value !== undefined) {
+      this.addWeeklyHolidayForm.value.OfficeId = data.value;
+    }
+  }
+  //#endregion
 
   //#region "saveHolidayForm for daily and weekly"
   saveHolidayForm(event: any, formData: any) {
@@ -321,9 +369,9 @@ export class HolidaysComponent implements OnInit {
       this.isFormSubmitted = false;
     }
   }
-
   //#endregion
 
+  //#region "addHolidayData" for particular day and weekly
   addHolidayData(finalData: any) {
     this.hrservice.addHoliday(finalData).subscribe(
       x => {
@@ -343,8 +391,9 @@ export class HolidaysComponent implements OnInit {
       }
     );
   }
+  //#endregion
 
-  //#region "Edit holiday detail"
+  //#region "Edit holiday detail" for particular day and weekly holiday
   editHolidayDate(finalData: any) {
     this.hrservice.editHoliday(finalData).subscribe(
       x => {
@@ -406,50 +455,4 @@ export class HolidaysComponent implements OnInit {
     }
   }
   //#endregion
-
-  //#region "weelky  holiday addWeekendPopup"
-
-  onWeeklyHolidayOfficeChange(data: any) {
-    if (data.value.length > 0 && data.value !== undefined) {
-      this.addWeeklyHolidayForm.value.OfficeId = data.value;
-    }
-  }
-  //#endregion
-
-  getWeeklyHolidays(officeId: any) {
-    if (officeId != null && officeId != undefined) {
-      this.hrservice.getWeeklyHolidaysList(officeId).subscribe(response => {
-        if (
-          response.data !== undefined &&
-          response.data != null &&
-          response.data.HolidayWeeklyDetailsList.length > 0
-        ) {
-          response.data.HolidayWeeklyDetailsList.forEach(element => {
-            if (element.Day === 'Sunday') {
-              this.addWeeklyHolidayForm.value.Sun = true;
-            }
-            if (element.Day === 'Monday') {
-              this.addWeeklyHolidayForm.value.Mon = true;
-            }
-            if (element.Day === 'Tuesday') {
-              this.addWeeklyHolidayForm.value.Tue = true;
-            }
-            if (element.Day === 'Wednesday') {
-              this.addWeeklyHolidayForm.value.Wed = true;
-            }
-            if (element.Day === 'Thursday') {
-              this.addWeeklyHolidayForm.value.Thu = true;
-            }
-            if (element.Day === 'Friday') {
-              this.addWeeklyHolidayForm.value.Fri = true;
-            }
-            if (element.Day === 'Saturday') {
-              this.addWeeklyHolidayForm.value.Sat = true;
-            }
-          });
-          this.holidayFormWeeklyDataFlag = true;
-        }
-      });
-    }
-  }
 }

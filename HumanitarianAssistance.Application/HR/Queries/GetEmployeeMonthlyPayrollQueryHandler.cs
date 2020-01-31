@@ -85,8 +85,6 @@ namespace HumanitarianAssistance.Application.HR.Queries
             {
                 EmployeeBasicSalaryDetail basicPay = _dbContext.EmployeeBasicSalaryDetail.FirstOrDefault(x => x.IsDeleted == false && x.EmployeeId == request.EmployeeId);
 
-                double dBasicPayPerhour = basicPay.BasicSalary / DateTime.DaysInMonth(DateTime.UtcNow.Year, request.Month);
-
                 if (basicPay == null)
                 {
                     throw new Exception("Basic pay not set for Employee");
@@ -104,6 +102,11 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 {
                     throw new Exception(StaticResource.PayrollDailyHoursNotSet);
                 }
+
+                int workingHours = payrollHours.OutTime.Value.Subtract(payrollHours.InTime.Value).Hours;
+
+                 double dBasicPayPerhour = Math.Round(basicPay.BasicSalary / (DateTime.DaysInMonth(DateTime.UtcNow.Year, request.Month) * workingHours), 2);
+                 model.HourlyRate = dBasicPayPerhour;
 
                 //Note: default 0.045 i.e. (4.5 %)
                 var pension = _dbContext.EmployeePensionRate.FirstOrDefault(x => x.IsDefault == true && x.IsDeleted == false);
@@ -203,11 +206,31 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
             try
             {
+                EmployeeDetail employeeDetail = _dbContext.EmployeeDetail
+                                                          .Include(x => x.EmployeeProfessionalDetail)
+                                                          .FirstOrDefault(x => x.IsDeleted == false && x.EmployeeID == request.EmployeeId);
+
+                EmployeeBasicSalaryDetail basicPay = _dbContext.EmployeeBasicSalaryDetail.FirstOrDefault(x => x.IsDeleted == false && x.EmployeeId == request.EmployeeId);
+
                 model.GrossSalary = payroll.GrossSalary;
                 model.NetSalary = payroll.NetSalary;
                 model.SalaryPaid = model.NetSalary;
                 model.Status = "Salary Approved";
                 model.IsSalaryApproved = true;
+
+                PayrollMonthlyHourDetail payrollHours = _dbContext.PayrollMonthlyHourDetail
+                                                                                    .FirstOrDefault(x => x.IsDeleted == false && x.OfficeId == employeeDetail.EmployeeProfessionalDetail.OfficeId
+                                                                                    && x.PayrollMonth == request.Month && x.PayrollYear == DateTime.UtcNow.Year && x.AttendanceGroupId == employeeDetail.EmployeeProfessionalDetail.AttendanceGroupId);
+
+                if (payrollHours == null)
+                {
+                    throw new Exception(StaticResource.PayrollDailyHoursNotSet);
+                }
+
+                int workingHours = payrollHours.OutTime.Value.Subtract(payrollHours.InTime.Value).Hours;
+
+                 double dBasicPayPerhour = Math.Round(basicPay.BasicSalary / (DateTime.DaysInMonth(DateTime.UtcNow.Year, request.Month) * workingHours), 2);
+                 model.HourlyRate = dBasicPayPerhour;
 
                 List<AccumulatedSalaryHeadDetail> salaryHeads = _dbContext.AccumulatedSalaryHeadDetail.Where(x => x.IsDeleted == false &&
                                                                 x.Month == request.Month &&
