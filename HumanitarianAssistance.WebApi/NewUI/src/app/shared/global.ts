@@ -702,6 +702,7 @@ export class GLOBAL {
   public static API_Hr_GetAllEmployeeHistoryByEmployeeId = 'EmployeeDetail/GetAllEmployeeHistoryByEmployeeId';
   public static API_EmployeeDetail_GetAllEmployeeEducations = 'EmployeeDetail/GetAllEmployeeEducations';
   public static API_EmployeeDetail_GetAllEmployeeHistoryOutsideCountry = 'EmployeeDetail/GetAllEmployeeHistoryOutsideCountry';
+  public static API_EmployeeDetail_GetAllEmployeeHistoryOutsideOrganization = 'EmployeeDetail/GetAllEmployeeHistoryOutsideOrganization';
   public static API_EmployeeDetail_GetAllEmployeeRelativeInformation = 'EmployeeDetail/GetAllEmployeeRelativeInformation';
   public static API_EmployeeDetail_GetAllEmployeeInfoReferences = 'EmployeeDetail/GetAllEmployeeInfoReferences';
   public static API_EmployeeDetail_GetAllEmployeeOtherSkills = 'EmployeeDetail/GetAllEmployeeOtherSkills';
@@ -711,6 +712,7 @@ export class GLOBAL {
   public static API_Hr_AddEmployeeHistoryDetail = 'EmployeeDetail/AddEmployeeHistoryDetail';
   public static API_Hr_AddEmployeeEducations = 'EmployeeDetail/AddEmployeeEducations';
   public static API_Hr_AddEmployeeHistoryOutsideCountry = 'EmployeeDetail/AddEmployeeHistoryOutsideCountry';
+  public static API_Hr_AddEmployeeHistoryOutsideOrganization = 'EmployeeDetail/AddEmployeeHistoryOutsideOrganization';
   public static API_Hr_AddEmployeeRelativeInformation = 'EmployeeDetail/AddEmployeeRelativeInformation';
   public static API_Hr_AddEmployeeInfoReferences = 'EmployeeDetail/AddEmployeeInfoReferences';
   public static API_Hr_AddEmployeeOtherSkills = 'EmployeeDetail/AddEmployeeOtherSkills';
@@ -720,6 +722,7 @@ export class GLOBAL {
   public static API_Hr__DeleteEmployeeHistoryDetail = 'EmployeeDetail/DeleteEmployeeHistoryDetail';
   public static API_Hr__DeleteEmployeeEducations = 'EmployeeDetail/DeleteEmployeeEducations';
   public static API_Hr__DeleteEmployeeHistoryOutsideCountry = 'EmployeeDetail/DeleteEmployeeHistoryOutsideCountry';
+  public static API_Hr__DeleteEmployeeHistoryOutsideOrganization = 'EmployeeDetail/DeleteEmployeeHistoryOutsideOrganization';
   public static API_Hr__DeleteEmployeeRelativeInformation = 'EmployeeDetail/DeleteEmployeeRelativeInformation';
   public static API_Hr__DeleteEmployeeInfoReferences = 'EmployeeDetail/DeleteEmployeeInfoReferences';
   public static API_Hr__DeleteEmployeeOtherSkills = 'EmployeeDetail/DeleteEmployeeOtherSkills';
