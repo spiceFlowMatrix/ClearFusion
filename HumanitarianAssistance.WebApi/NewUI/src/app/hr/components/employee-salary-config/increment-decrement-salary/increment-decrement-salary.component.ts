@@ -65,8 +65,16 @@ export class IncrementDecrementSalaryComponent implements OnInit {
   }
 
   tabChanged(tabChangeEvent: MatTabChangeEvent) {
+    this.error = null;
     this.selectedTab = tabChangeEvent.index;
+    this.incrementDecrementForm.setValue({
+      Percent: null,
+      Amount: null
+    });
+    this.incrementDecrementForm.controls.Percent.enable();
+    this.incrementDecrementForm.controls.Amount.enable();
   }
+
 
   PercentChanged() {
     if (this.incrementDecrementForm.controls.Percent.value !== null) {

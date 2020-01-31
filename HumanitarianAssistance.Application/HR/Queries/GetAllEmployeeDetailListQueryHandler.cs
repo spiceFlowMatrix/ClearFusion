@@ -64,7 +64,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
             }
 
             long count = await query.CountAsync();
-            var queryResult= await query.Skip(request.PageSize * request.PageIndex).Take(request.PageSize).ToListAsync();
+            var queryResult= await query.OrderByDescending(x=>x.EmployeeID).Skip(request.PageSize * request.PageIndex).Take(request.PageSize).ToListAsync();
             result.Add("RecordCount", count);
             result.Add("EmployeeList", queryResult);
             
