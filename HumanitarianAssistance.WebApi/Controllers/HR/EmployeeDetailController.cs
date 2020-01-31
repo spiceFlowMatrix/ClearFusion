@@ -756,5 +756,31 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             model.ModifiedDate = DateTime.UtcNow;
             return await _mediator.Send(model);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> TerminateEmployeeByEmployeeId([FromBody] int EmployeeId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            TerminateEmployeeByEmployeeIdCommand model = new TerminateEmployeeByEmployeeIdCommand {
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow,
+                EmployeeId = EmployeeId
+            };
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteEmployeeByEmployeeId([FromBody] int EmployeeId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            DeleteEmployeeByEmployeeIdCommand model = new DeleteEmployeeByEmployeeIdCommand {
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow,
+                EmployeeId = EmployeeId
+            };
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
     }
 }
