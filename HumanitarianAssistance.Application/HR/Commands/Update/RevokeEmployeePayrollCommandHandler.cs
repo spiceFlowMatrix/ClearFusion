@@ -33,14 +33,16 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                     throw new Exception(StaticResource.RecordNotFound);
                 }
 
-                // AdvanceHistoryDetail advanceHistory = await _dbContext.AdvanceHistoryDetail
-                //                                                       .FirstOrDefaultAsync(x=> x.IsDeleted == false &&
-                //                                                       x.EmployeeId == request.EmployeeId && x.PaymentDate.Month == request.Month);
+                AdvanceHistoryDetail advanceHistory = await _dbContext.AdvanceHistoryDetail
+                                                                      .FirstOrDefaultAsync(x=> x.IsDeleted == false &&
+                                                                      x.EmployeeId == request.EmployeeId && x.PaymentDate.Month == request.Month);
 
-                // if(advanceHistory != null)
-                // {
-                //     Advances advance = await _dbContext.Advances.FirstOrDefaultAsync(x=> x.AdvancesId == advanceHistory.AdvanceId);
-                // }
+                if(advanceHistory != null)
+                {
+                    advanceHistory.IsDeleted = true;
+                    _dbContext.AdvanceHistoryDetail.Update(advanceHistory);
+                    await _dbContext.SaveChangesAsync();
+                }
 
                 payroll.IsSalaryApproved = false;
                 payroll.IsDeleted = true;
