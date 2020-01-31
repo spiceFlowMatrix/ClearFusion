@@ -296,8 +296,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
         this.monthlySalaryBreakdown.Status = x.payroll.Status;
         this.isSalaryApproved = x.payroll.IsSalaryApproved;
 
-        this.monthlySalaryBreakdown.HourlyRate = (this.employeeCurrencyAndAmount.MonthlyAmount /
-          StaticUtilities.getDaysInMonth(this.selectedMonth.value, (new Date()).getFullYear())).toFixed(2);
+        this.monthlySalaryBreakdown.HourlyRate = x.payroll.HourlyRate;
           this.monthlySalaryBreakdown.Month = Month[this.selectedMonth.value];
 
         if (!this.isSalaryApproved) {
