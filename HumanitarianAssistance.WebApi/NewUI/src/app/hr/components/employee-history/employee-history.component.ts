@@ -17,7 +17,8 @@ import {
   IEmployeeThreeReferenceDetails,
   IEmployeeLanguageDetails,
   IEmployeeOtherSkillDetails,
-  IEmployeeSalaryBudgetDetails
+  IEmployeeSalaryBudgetDetails,
+  IHistoryOutsideOrganizationDetails
 } from '../../models/employee-history-models';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { RatingAction } from 'src/app/shared/enum';
@@ -27,6 +28,7 @@ import { HrService } from '../../services/hr.service';
 import { ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { takeUntil } from 'rxjs/operators';
+import { AddHistoryOutsideOrganizationComponent } from './add-history-outside-organization/add-history-outside-organization.component';
 
 @Component({
   selector: 'app-employee-history',
@@ -52,6 +54,16 @@ export class EmployeeHistoryComponent implements OnInit {
     'Reason for Leaving',
     'Position'
   ]);
+  employeeHistoryOrgHeader$ = of([
+    'Id',
+    'Employment Form',
+    'Employment To',
+    'Organization',
+    'Monthly Salary',
+    'Reason for Leaving',
+    'Position'
+  ]);
+
   infoOfCloseRelativeHeader$ = of([
     'Id',
     'Name',
@@ -100,6 +112,7 @@ export class EmployeeHistoryComponent implements OnInit {
   historicalLogList$: Observable<IHistoricalLogDetails[]>;
   educationList$: Observable<IEducationDetails[]>;
   employeeHistoryOCList$: Observable<IHistoryOutsideCountryDetails[]>;
+  employeeHistoryOrgList$: Observable<IHistoryOutsideOrganizationDetails[]>;
   employeeCloseRelativeList$: Observable<IEmployeeCloseRelativeDetails[]>;
   employeeThreeReferenceList$: Observable<IEmployeeThreeReferenceDetails[]>;
   employeeOtherSkillList$: Observable<IEmployeeOtherSkillDetails[]>;
@@ -138,6 +151,7 @@ export class EmployeeHistoryComponent implements OnInit {
       this.getEmployeeHistoricalLogList(),
       this.getEmployeeEducationDetailsList(),
       this.getEmployeeHistoryOfOutsideCountryDetailList(),
+      this.getEmployeeHistoryOfOutsideOrganizationDetailList(),
       this.getEmployeeCloseRelativeDetailList(),
       this.getEmployeeThreeReferenceDetailList(),
       this.getEmployeeOtherSkillDetailList(),
@@ -149,11 +163,12 @@ export class EmployeeHistoryComponent implements OnInit {
         this.subscribeEmployeeHistoricalLogList(result[0]);
         this.subscribeEmployeeEducationDetailsList(result[1]);
         this.subscribeEmployeeHistoryOfOutsideCountryDetailList(result[2]);
-        this.subscribeEmployeeCloseRelativeDetailList(result[3]);
-        this.subscribeEmployeeThreeReferenceDetailList(result[4]);
-        this.subscribeEmployeeOtherSkillDetailList(result[5]);
-        this.subscribeEmployeeSalaryBudgetDetailList(result[6]);
-        this.subscribeEmployeeLanguageDetailList(result[7]);
+        this.subscribeEmployeeHistoryOfOutsideOrganizationDetailList(result[3]);
+        this.subscribeEmployeeCloseRelativeDetailList(result[4]);
+        this.subscribeEmployeeThreeReferenceDetailList(result[5]);
+        this.subscribeEmployeeOtherSkillDetailList(result[6]);
+        this.subscribeEmployeeSalaryBudgetDetailList(result[7]);
+        this.subscribeEmployeeLanguageDetailList(result[8]);
       });
   }
   //#region "Dynamic Scroll"
@@ -200,8 +215,11 @@ export class EmployeeHistoryComponent implements OnInit {
       }
     });
     // refresh the list after new request created
-    dialogRef.componentInstance.onAddHistoricalListRefresh.subscribe(() => {
-      this.getEmployeeHistoricalLogList();
+    dialogRef.componentInstance.onAddHistoricalListRefresh.subscribe(res => {
+      this.getEmployeeHistoricalLogList().subscribe(response => {
+        this.subscribeEmployeeHistoricalLogList(response);
+      });
+      this.commonLoader.hideLoader();
     });
     dialogRef.afterClosed().subscribe(() => {});
   }
@@ -262,7 +280,10 @@ export class EmployeeHistoryComponent implements OnInit {
     });
     // refresh the list after new request created
     dialogRef.componentInstance.onAddEducationListRefresh.subscribe(() => {
-      this.getEmployeeEducationDetailsList();
+      this.getEmployeeEducationDetailsList().subscribe(response => {
+        this.subscribeEmployeeEducationDetailsList(response);
+      });
+      this.commonLoader.hideLoader();
     });
     dialogRef.afterClosed().subscribe(() => {});
   }
@@ -332,7 +353,12 @@ export class EmployeeHistoryComponent implements OnInit {
     // refresh the list after new request created
     dialogRef.componentInstance.onAddHistoryOutsideCountryListRefresh.subscribe(
       () => {
-        this.getEmployeeHistoryOfOutsideCountryDetailList();
+        this.getEmployeeHistoryOfOutsideCountryDetailList().subscribe(
+          response => {
+            this.subscribeEmployeeHistoryOfOutsideCountryDetailList(response);
+          }
+        );
+        this.commonLoader.hideLoader();
       }
     );
     dialogRef.afterClosed().subscribe(() => {});
@@ -365,6 +391,108 @@ export class EmployeeHistoryComponent implements OnInit {
     });
   }
   //#endregion
+
+
+
+
+
+
+
+  //#region "get Employee History Of Outside Organization Detail List"
+  getEmployeeHistoryOfOutsideOrganizationDetailList() {
+    return this.employeeHistoryService.getEmployeeHistoryOfOutsideOrganizationDetailList(
+      this.employeeId
+    );
+  }
+  subscribeEmployeeHistoryOfOutsideOrganizationDetailList(response: any) {
+    if (response.data.EmployeeHistoryOutsideOrganizationList !== undefined) {
+      this.employeeHistoryOrgList$ = of(
+        response.data.EmployeeHistoryOutsideOrganizationList.map(y => {
+          return {
+            EmployeeHistoryOutsideOrganizationId: y.EmployeeHistoryOutsideOrganizationId,
+            EmploymentFrom: this.datePipe.transform(
+              y.EmploymentFrom,
+              'dd-MM-yyyy'
+            ),
+            EmploymentTo: this.datePipe.transform(y.EmploymentTo, 'dd-MM-yyyy'),
+            Organization: y.Organization,
+            MonthlySalary: y.MonthlySalary,
+            ReasonForLeaving: y.ReasonForLeaving,
+            Position: y.Position
+          } as IHistoryOutsideOrganizationDetails;
+        })
+      );
+    }
+  }
+  //#endregion
+  // #region "Add HistoryOutsideOrganization"
+  addHistoryOutsideOrganization(): void {
+    /** Open HistoryOutsideOrganization dialog box*/
+    const dialogRef = this.dialog.open(AddHistoryOutsideOrganizationComponent, {
+      width: '800px',
+      data: {
+        employeeId: this.employeeId
+      }
+    });
+    // refresh the list after new request created
+    dialogRef.componentInstance.onAddHistoryOutsideOrganizationListRefresh.subscribe(
+      () => {
+        this.getEmployeeHistoryOfOutsideOrganizationDetailList().subscribe(
+          response => {
+            this.subscribeEmployeeHistoryOfOutsideOrganizationDetailList(response);
+          }
+        );
+        this.commonLoader.hideLoader();
+      }
+    );
+    dialogRef.afterClosed().subscribe(() => {});
+  }
+  //#endregion
+  // #region "Delete Outside Organization Info"
+  deleteOutsideOrganizationInfo(EmployeeHistoryOutsideOrganizationId: number) {
+    this.hrService.openDeleteDialog().subscribe(res => {
+      if (res === true) {
+        const model = {
+          EmployeeHistoryOutsideOrganizationId: EmployeeHistoryOutsideOrganizationId
+        };
+        this.employeeHistoryService
+          .deleteEmployeeHistoryOutsideOrganization(model)
+          .subscribe(response => {
+            if (response.StatusCode === 200) {
+              let index;
+              this.employeeHistoryOrgList$.subscribe(data => {
+                index = data.findIndex(
+                  x =>
+                    x.EmployeeHistoryOutsideOrganizationId ===
+                    EmployeeHistoryOutsideOrganizationId
+                );
+                data.splice(index, 1);
+                this.employeeHistoryOrgList$ = of(data);
+              });
+            }
+          });
+      }
+    });
+  }
+  //#endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   //#region "get Employee Close Relative Detail List"
   getEmployeeCloseRelativeDetailList() {
@@ -402,7 +530,10 @@ export class EmployeeHistoryComponent implements OnInit {
     // refresh the list after new request created
     dialogRef.componentInstance.onAddCloseRelativeDetailListRefresh.subscribe(
       () => {
-        this.getEmployeeCloseRelativeDetailList();
+        this.getEmployeeCloseRelativeDetailList().subscribe(response => {
+          this.subscribeEmployeeCloseRelativeDetailList(response);
+        });
+        this.commonLoader.hideLoader();
       }
     );
     dialogRef.afterClosed().subscribe(() => {});
@@ -470,7 +601,10 @@ export class EmployeeHistoryComponent implements OnInit {
     // refresh the list after new request created
     dialogRef.componentInstance.onThreeReferenceDetailListRefresh.subscribe(
       () => {
-        this.getEmployeeThreeReferenceDetailList();
+        this.getEmployeeThreeReferenceDetailList().subscribe(response => {
+          this.subscribeEmployeeThreeReferenceDetailList(response);
+        });
+        this.commonLoader.hideLoader();
       }
     );
     dialogRef.afterClosed().subscribe(() => {});
@@ -535,7 +669,10 @@ export class EmployeeHistoryComponent implements OnInit {
     });
     // refresh the list after new request created
     dialogRef.componentInstance.onOtherSkillDetailListRefresh.subscribe(() => {
-      this.getEmployeeOtherSkillDetailList();
+      this.getEmployeeOtherSkillDetailList().subscribe(response => {
+        this.subscribeEmployeeOtherSkillDetailList(response);
+      });
+      this.commonLoader.hideLoader();
     });
     dialogRef.afterClosed().subscribe(() => {});
   }
@@ -601,7 +738,10 @@ export class EmployeeHistoryComponent implements OnInit {
     // refresh the list after new request created
     dialogRef.componentInstance.onSalaryBudgetDetailListRefresh.subscribe(
       () => {
-        this.getEmployeeSalaryBudgetDetailList();
+        this.getEmployeeSalaryBudgetDetailList().subscribe(response => {
+          this.subscribeEmployeeSalaryBudgetDetailList(response);
+        });
+        this.commonLoader.hideLoader();
       }
     );
     dialogRef.afterClosed().subscribe(() => {});
@@ -668,7 +808,10 @@ export class EmployeeHistoryComponent implements OnInit {
     });
     // refresh the list after new request created
     dialogRef.componentInstance.onLanguageDetailListRefresh.subscribe(() => {
-      this.getEmployeeLanguageDetailList();
+      this.getEmployeeLanguageDetailList().subscribe(response => {
+        this.subscribeEmployeeLanguageDetailList(response);
+      });
+      this.commonLoader.hideLoader();
     });
     dialogRef.afterClosed().subscribe(() => {});
   }
@@ -708,11 +851,16 @@ export class EmployeeHistoryComponent implements OnInit {
         case 'education':
           this.deleteEducationDetail(event.item.EmployeeEducationsId);
           break;
-        case 'outsideHistory':
+        case 'outsideCountryHistory':
           this.deleteOutsideCountryInfo(
             event.item.EmployeeHistoryOutsideCountryId
           );
           break;
+          case 'outsideOrganizationHistory':
+            this.deleteOutsideOrganizationInfo(
+              event.item.EmployeeHistoryOutsideOrganizationId
+            );
+            break;
         case 'closeReletive':
           this.deleteCloseRelativeInfo(event.item.EmployeeRelativeInfoId);
           break;

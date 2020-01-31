@@ -24,6 +24,16 @@ export interface IHistoryOutsideCountryDetails {
   Position?: string;
 }
 
+export interface IHistoryOutsideOrganizationDetails {
+  EmployeeHistoryOutsideOrganizationId?: number;
+  EmploymentFrom?: any;
+  EmploymentTo?: any;
+  Organization?: string;
+  MonthlySalary?: number;
+  ReasonForLeaving?: string;
+  Position?: string;
+}
+
 export interface IEmployeeCloseRelativeDetails {
   EmployeeRelativeInfoId?: number;
   Name: string;
