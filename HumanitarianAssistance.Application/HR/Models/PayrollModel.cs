@@ -14,6 +14,7 @@ namespace HumanitarianAssistance.Application.HR.Models
         public double NetSalary { get; set; }
         public double SalaryPaid { get; set; }
         public bool IsSalaryApproved { get; set; }
+        public double HourlyRate { get; set; }
         public string Status { get; set; }
         public List<AccumulatedPayrollHeads> AccumulatedPayrollHeadList {get; set;}
         public List<SavedAccumulatedPayrollHeads> SavedAccumulatedPayrollHeadList { get; set; }

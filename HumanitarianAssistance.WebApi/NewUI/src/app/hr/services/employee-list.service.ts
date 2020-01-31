@@ -54,4 +54,18 @@ export class EmployeeListService {
       id
     );
   }
+
+  terminateEmployeeByEmployeeeId(id) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_EmployeeDetail_TerminateEmployeeByEmployeeId,
+      id
+    );
+  }
+
+  deleteEmployeeByEmployeeeId(id) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_EmployeeDetail_DeleteEmployeeByEmployeeId,
+      id
+    );
+  }
 }

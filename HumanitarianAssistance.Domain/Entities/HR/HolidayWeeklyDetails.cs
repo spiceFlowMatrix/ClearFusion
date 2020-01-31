@@ -14,7 +14,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public int HolidayWeeklyId { get; set; }
         [StringLength(30)]
         public string Day { get; set; }
-        public int OfficeId { get; set; }
+        public int? OfficeId { get; set; }
         public OfficeDetail OfficeDetails { get; set; }
         public int FinancialYearId { get; set; }
         public FinancialYearDetail FinancialYearDetails { get; set; }
