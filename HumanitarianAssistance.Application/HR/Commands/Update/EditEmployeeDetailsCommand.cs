@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using HumanitarianAssistance.Application.Infrastructure;
 using MediatR;
 
@@ -6,6 +7,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update {
     public class EditEmployeeDetailsCommand : BaseModel, IRequest<ApiResponse> {
         public EmployeeBasicDetail EmployeeBasicDetail { get; set; }
         public EmployeeProfessionalDetails EmployeeProfessionalDetails { get; set; }
+        public EmployeePensionDetail EmployeePensionDetail { get; set; }
     }
     public class EmployeeBasicDetail {
         public int? EmployeeId { get; set; }
@@ -46,5 +48,14 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update {
         public int? DutyStation { get; set; }
         public string TrainingAndBenefits { get; set; }
         public string JobDescription { get; set; }
+    }
+    public class EmployeePensionDetail {
+        public DateTime? PensionDate { get; set; }
+        public List<PensionList> PensionList { get; set; }
+    }
+    public class PensionList {
+        public int PensionId { get; set; }
+        public int Currency { get; set; }
+        public double? Amount { get; set; }
     }
 }

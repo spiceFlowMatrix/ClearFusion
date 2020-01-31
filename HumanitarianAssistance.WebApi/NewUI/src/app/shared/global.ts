@@ -747,6 +747,7 @@ export class GLOBAL {
   public static API_ExchangeRates_CheckExchangeRatesVerified = 'ExchangeRates/CheckExchangeRatesVerified';
   public static API_Hr_GetEmployeeById = 'EmployeeDetail/GetEmployeeDetailsByEmployeeId';
   public static API_HR_GetEmployeeProfessionalDetail = 'EmployeeDetail/GetEmployeeProfessionalDetail';
+  public static API_HR_GetEmployeeOpeningPensionDetail = 'EmployeePayroll/GetEmployeeOpeningPensionDetail';
 
   //#region  "hr employee salary and tax"
   public static API_Code_GetAllFinancialYearDetail = 'Code/GetAllFinancialYearDetail';

@@ -30,9 +30,11 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                                     .Where(x => x.IsDeleted == false && x.EmployeeID == request.EmployeeId)
                                                     .Select(x => new EmployeePensionDetailModel
                                                     {
+                                                        PensionId = x.PensionId,
                                                         Date = x.PensionStartDate,
                                                         CurrencyName = x.CurrencyDetails.CurrencyName,
-                                                        Amount = x.Amount
+                                                        Amount = x.Amount,
+                                                        CurrencyId = x.CurrencyId
                                                     })
                                                     .ToListAsync();
                 response.ResponseData = openingPensionDetail;

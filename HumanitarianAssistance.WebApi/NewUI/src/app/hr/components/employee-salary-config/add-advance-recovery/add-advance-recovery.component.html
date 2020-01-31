@@ -29,7 +29,7 @@
   </div>
   <div mat-dialog-actions class="pull-right">
     <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
-    <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" (click)="btnSubmit.click()"></hum-button>
+    <hum-button *ngIf="!isFormSubmitted" [disabled]="!advanceRecoveryForm.valid" [type]="'save'" [text]="'save'" (click)="btnSubmit.click()"></hum-button>
     <hum-button (click)="closeDialog()" [type]="'cancel'" [text]="'cancel'"></hum-button>
   </div>
 </div>
