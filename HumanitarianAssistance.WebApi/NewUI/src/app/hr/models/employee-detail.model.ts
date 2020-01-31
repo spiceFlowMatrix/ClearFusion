@@ -54,10 +54,6 @@ export interface IEmployeeAllDetails {
   EmployeeProfessionalDetails: IEmployeeProfessionalDetails;
   EmployeePensionDetail: IEmployeePensionDetails;
 }
-export interface IEmployeeAllDetailsForEdit {
-  EmployeeBasicDetail: IEmployeeBasicDetail;
-  EmployeeProfessionalDetails: IEmployeeProfessionalDetails;
-}
 
 export interface IEmployeeBasicDetail {
   EmployeeId?: number;
@@ -106,12 +102,14 @@ export interface IEmployeePensionDetails {
 }
 
 export interface IEmployeePensionList {
+  PensionId?: number;
   Currency: number;
   Amount: number;
 }
 
 export interface IEmployeePensionListModel {
   Id?: number;
+  PensionId?: number;
   Currency: number;
   Amount: number;
 }

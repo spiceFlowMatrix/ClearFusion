@@ -1,4 +1,4 @@
-import { IEmployeeAllDetails, IEmployeeAllDetailsForEdit } from './../models/employee-detail.model';
+import { IEmployeeAllDetails } from './../models/employee-detail.model';
 import { Injectable } from '@angular/core';
 import { GlobalService } from 'src/app/shared/services/global-services.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
@@ -121,7 +121,7 @@ export class AddEmployeeService {
   //#endregion
 
    //#region "AddNewEmployeeData"
-   EditEmployeeDetails(model: IEmployeeAllDetailsForEdit): any {
+   EditEmployeeDetails(model: IEmployeeAllDetails): any {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_Hr__EditEmployee,
       model

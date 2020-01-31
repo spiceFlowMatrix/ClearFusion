@@ -36,6 +36,7 @@ export class AddOpeningPensionComponent implements OnInit {
   ) {
     this.employeePensionDetailForm = this.fb.group({
       Id: [null],
+      PensionId: [null],
       Currency: ['', [Validators.required]],
       Amount: ['', [Validators.required]]
     });
@@ -52,6 +53,7 @@ export class AddOpeningPensionComponent implements OnInit {
     if (this.pensionDetails !== undefined) {
       this.employeePensionDetailForm.patchValue({
         Id: this.pensionDetails.Id,
+        PensionId: this.pensionDetails.PensionId,
         Currency: this.pensionDetails.Currency,
         Amount: this.pensionDetails.Amount
       });

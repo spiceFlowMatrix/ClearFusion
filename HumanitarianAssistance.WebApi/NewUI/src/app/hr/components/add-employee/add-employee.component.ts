@@ -1,6 +1,7 @@
+import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { Response } from '@angular/http';
 import {
   IEmployeePensionListModel,
-  IEmployeeAllDetailsForEdit
 } from './../../models/employee-detail.model';
 import { AddEmployeeService } from './../../services/add-employee.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
@@ -49,10 +50,10 @@ export class AddEmployeeComponent implements OnInit {
   pensionListDisplay: any[] = [];
   pensionList: IEmployeePensionListModel[] = [];
   employeeAllDetails: IEmployeeAllDetails;
-  employeeAllDetailsForEdit: IEmployeeAllDetailsForEdit;
   IsPensionDateSet = false;
   IsEditing = false;
   IsFormSubmitted = false;
+  setPensionDate = new Date();
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     private fb: FormBuilder,
@@ -171,10 +172,11 @@ export class AddEmployeeComponent implements OnInit {
     };
     if (this.employeeId > 0) {
       this.IsEditing = true;
-      this.employeeAllDetailsForEdit = {
-        EmployeeBasicDetail: {},
-        EmployeeProfessionalDetails: {}
-      };
+      this.employeeDetailForm.get('Password').clearValidators();
+      this.employeeDetailForm.get('ConfirmPassword').clearValidators();
+      this.employeeDetailForm.get('Password').updateValueAndValidity();
+      this.employeeDetailForm.get('ConfirmPassword').updateValueAndValidity();
+
       this.getEmployeeDetailsByEmployeeId();
       this.getEmployeeProfessionalDetailsByEmployeeId();
       this.getAllPensionList();
@@ -478,15 +480,12 @@ export class AddEmployeeComponent implements OnInit {
     this.pensionListDisplay.splice(index, 1);
   }
   editPensionItem(data: any) {
-    console.log(data);
-    let currencyId;
-    this.currencyList$.subscribe(res => {
-      currencyId = res.find(x => x.name === data.Currency).value;
-    });
+    const index = this.pensionList.findIndex(x => x.Id === data.Id);
     const model = {
-      Id: data.Id,
-      Currency: currencyId,
-      Amount: data.Amount
+      Id: this.pensionList[index].Id,
+      PensionId: this.pensionList[index].PensionId,
+      Currency: this.pensionList[index].Currency,
+      Amount: this.pensionList[index].Amount
     };
     /** Open Education dialog box*/
     const dialogRef = this.dialog.open(AddOpeningPensionComponent, {
@@ -496,19 +495,19 @@ export class AddEmployeeComponent implements OnInit {
     // refresh the list after new request created
     dialogRef.componentInstance.onUpdatePensionDetailListRefresh.subscribe(
       result => {
-        console.log(result);
         if (result !== undefined) {
-          const index = this.pensionList.findIndex(x => x.Id === result.Id);
-          console.log(this.pensionList);
-          this.pensionList[index] = {
-            Amount: result.Amount,
-            Currency: result.Currency
-          };
-
-          this.pensionListDisplay[index] = {
-            Amount: result.Amount,
-            Currency: result.Currency
-          };
+          const pensionlist = this.pensionList.find(x => x.Id === result.Id);
+          pensionlist.Currency = result.Currency;
+          pensionlist.Amount = result.Amount;
+          let currency;
+          this.currencyList$.subscribe(res => {
+            currency = res.find(x => x.value === result.Currency).name;
+          });
+          const pensionlistDisplay = this.pensionListDisplay.find(
+            x => x.Id === result.Id
+          );
+          pensionlistDisplay.Amount = result.Amount;
+          pensionlistDisplay.Currency = currency;
         }
       }
     );
@@ -600,13 +599,19 @@ export class AddEmployeeComponent implements OnInit {
   EditEmployeeDetails() {
     if (
       this.employeeDetailForm.valid &&
-      this.employeeProfessionalDetailForm.valid
+      this.employeeProfessionalDetailForm.valid &&
+      this.pensionList.length !== 0
     ) {
+      if(this.IsPensionDateSet === false)
+      {
+        this.employeeAllDetails.EmployeePensionDetail.PensionDate = this.setPensionDate;
+      }
       this.employeeDetailForm.controls['EmployeeId'].setValue(this.employeeId);
-      this.employeeAllDetailsForEdit.EmployeeBasicDetail = this.employeeDetailForm.value;
-      this.employeeAllDetailsForEdit.EmployeeProfessionalDetails = this.employeeProfessionalDetailForm.value;
+      this.employeeAllDetails.EmployeeBasicDetail = this.employeeDetailForm.value;
+      this.employeeAllDetails.EmployeeProfessionalDetails = this.employeeProfessionalDetailForm.value;
+      this.employeeAllDetails.EmployeePensionDetail.PensionList = this.pensionList;
       this.employeeService
-        .EditEmployeeDetails(this.employeeAllDetailsForEdit)
+        .EditEmployeeDetails(this.employeeAllDetails)
         .subscribe(
           x => {
             if (x.StatusCode === 200) {
@@ -646,10 +651,8 @@ export class AddEmployeeComponent implements OnInit {
               FatherName: x.data.EmployeeDetailList[0].FatherName,
               Email: x.data.EmployeeDetailList[0].Email,
               PhoneNo: x.data.EmployeeDetailList[0].Phone,
-              // Password: x.data.EmployeeDetailList[0].EmployeeName,
-              // ConfirmPassword: x.data.EmployeeDetailList[0].EmployeeName,
               Gender: x.data.EmployeeDetailList[0].SexId,
-              DateOfBirth: new Date(x.data.EmployeeDetailList[0].DateOfBirth),
+              DateOfBirth: StaticUtilities.setLocalDate(new Date(x.data.EmployeeDetailList[0].DateOfBirth)),
               MaritalStatus: x.data.EmployeeDetailList[0].MaritalStatus,
               Country: x.data.EmployeeDetailList[0].CountryId,
               Province: x.data.EmployeeDetailList[0].ProvinceId,
@@ -694,7 +697,7 @@ export class AddEmployeeComponent implements OnInit {
               Designation: x.data.EmployeeProfessionalList[0].DesignationId,
               EmployeeCotractType:
                 x.data.EmployeeProfessionalList[0].EmployeeContractTypeId,
-              HiredOn: x.data.EmployeeProfessionalList[0].HiredOn,
+              HiredOn: StaticUtilities.setLocalDate(x.data.EmployeeProfessionalList[0].HiredOn),
               AttendanceGroup:
                 x.data.EmployeeProfessionalList[0].AttendanceGroupId,
               DutyStation: x.data.EmployeeProfessionalList[0].DutyStation,
@@ -714,16 +717,22 @@ export class AddEmployeeComponent implements OnInit {
   getAllPensionList() {
     this.employeeService.GetAllPensionList(this.employeeId).subscribe(
       x => {
-        if (x.StatusCode === 200) {
+        if (x.StatusCode === 200 && x.ResponseData.length > 0) {
           let id = 1;
+          this.setPensionDate = StaticUtilities.setLocalDate(
+            x.ResponseData[0].Date
+          );
           x.ResponseData.forEach(element => {
-            let currencyId;
-            this.currencyList$.subscribe(res => {
-              currencyId = res.find(x => x.name === element.CurrencyName).value;
-            });
             this.pensionListDisplay.push({
               Id: id,
+              PensionId: element.PensionId,
               Currency: element.CurrencyName,
+              Amount: element.Amount
+            });
+            this.pensionList.push({
+              Id: id,
+              PensionId: element.PensionId,
+              Currency: element.CurrencyId,
               Amount: element.Amount
             });
             id += 1;
