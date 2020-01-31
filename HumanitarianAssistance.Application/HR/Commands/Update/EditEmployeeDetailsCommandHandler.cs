@@ -104,10 +104,11 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update {
                         }
                         await _dbContext.MultiCurrencyOpeningPension.AddRangeAsync (pensionDetail);
                         await _dbContext.SaveChangesAsync ();
-
-                        UserDetails user = new UserDetails ();
-                        user.Password = request.EmployeeBasicDetail.Password;
-                        await _dbContext.SaveChangesAsync ();
+                        if (request.EmployeeBasicDetail.Password != "") {
+                            UserDetails user = new UserDetails ();
+                            user.Password = request.EmployeeBasicDetail.Password;
+                            await _dbContext.SaveChangesAsync ();
+                        }
                         tran.Commit ();
                         response.StatusCode = StaticResource.successStatusCode;
                         response.Message = "Success";
