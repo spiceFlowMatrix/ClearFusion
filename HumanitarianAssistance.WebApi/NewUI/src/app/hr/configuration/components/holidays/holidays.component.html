@@ -69,7 +69,7 @@
 
         <div class="col-sm-12">
 
-          <mat-calendar [selected]="selectedDate" [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate"
+          <mat-calendar [selected]="selectedDate" [startAt]="startAt" [minDate]="minDate"
             [dateFilter]="cfDateFilter" (selectedChange)="onSelect($event)">
           </mat-calendar>
         </div>
@@ -83,7 +83,7 @@
     </mat-dialog-actions>
   </form>
 </ng-template>
-<!-- Add holiday popup -->
+<!-- Add addWeeklyHoliday popup -->
 
 <ng-template #addWeeklyHoliday>
   <div>
@@ -92,7 +92,7 @@
   </div>
   <form [formGroup]='addWeeklyHolidayForm' (ngSubmit)="saveHolidayForm('Weekly', addWeeklyHolidayForm.valid)">
     <mat-dialog-content>
-      <div class="col-sm-12">
+      <!-- <div class="col-sm-12">
         <div class="col-sm-6" *ngIf="ifAddWeeklyHolidayFalg == true;else editOfiiceHoliday">
           <mat-form-field class="example-full-width">
             <mat-select placeholder="Office" name="OfficeId" formControlName="OfficeId" multiple
@@ -118,7 +118,7 @@
 
 
 
-      </div>
+      </div> -->
       <div class="col-sm-12">
         <div class="col-sm-4">
           <mat-checkbox formControlName="Sun">Sunday
@@ -135,11 +135,11 @@
       </div>
       <div class="col-sm-12">
         <div class="col-sm-4">
-          <mat-checkbox formControlName="Tue">Wednesday
+          <mat-checkbox formControlName="Wed">Wednesday
           </mat-checkbox>
         </div>
         <div class="col-sm-4">
-          <mat-checkbox formControlName="Wed">Thursday
+          <mat-checkbox formControlName="Thu">Thursday
           </mat-checkbox>
         </div>
         <div class="col-sm-4">

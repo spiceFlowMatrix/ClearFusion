@@ -77,9 +77,10 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
 
 
         [HttpGet]
-        public async Task<ApiResponse> GetAllHolidayWeeklyDetails(int officeid)
+        public async Task<ApiResponse> GetAllHolidayWeeklyDetails()
         {
-            return await _mediator.Send(new GetAllHolidayWeeklyDetailsQuery { OfficeId = officeid });
+            GetAllHolidayWeeklyDetailsQuery model = new GetAllHolidayWeeklyDetailsQuery();
+            return await _mediator.Send(model);
         }
 
 

@@ -90,6 +90,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     throw new Exception("Basic pay not set for Employee");
                 }
 
+
                 EmployeeDetail employeeDetail = _dbContext.EmployeeDetail
                                                           .Include(x => x.EmployeeProfessionalDetail)
                                                           .FirstOrDefault(x => x.IsDeleted == false && x.EmployeeID == request.EmployeeId);
@@ -105,8 +106,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                 int workingHours = payrollHours.OutTime.Value.Subtract(payrollHours.InTime.Value).Hours;
 
-                 double dBasicPayPerhour = Math.Round(basicPay.BasicSalary / (DateTime.DaysInMonth(DateTime.UtcNow.Year, request.Month) * workingHours), 2);
-                 model.HourlyRate = dBasicPayPerhour;
+                double dBasicPayPerhour = Math.Round(basicPay.BasicSalary / (DateTime.DaysInMonth(DateTime.UtcNow.Year, request.Month) * workingHours), 2);
+                model.HourlyRate = dBasicPayPerhour;
 
                 //Note: default 0.045 i.e. (4.5 %)
                 var pension = _dbContext.EmployeePensionRate.FirstOrDefault(x => x.IsDefault == true && x.IsDeleted == false);
@@ -139,13 +140,21 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                 //Calculate pension
                 dPension = Math.Round(((double)(model.GrossSalary * pension.PensionRate) / 100), 2); // i.e. 4.5 % => 0.045
-                
-                
+
 
                 if (model.GrossSalary > 5000)
                 {
-                    double exchangeRate = getExchangeRate(basicPay.CurrencyId);
-                    dSalaryTax = Math.Round(Convert.ToDouble((StaticFunctions.SalaryCalculate(model.GrossSalary, exchangeRate))), 2);
+
+                    if (basicPay.CurrencyId != null)
+                    {
+                        double exchangeRate = getExchangeRate(basicPay.CurrencyId);
+                        dSalaryTax = Math.Round(Convert.ToDouble((StaticFunctions.SalaryCalculate(model.GrossSalary, exchangeRate))), 2);
+                    }
+                    else 
+                    {
+                        throw new Exception(StaticResource.EmployeePayrollCurrencyNotSet);
+                    }
+
                 }
                 else
                 {
