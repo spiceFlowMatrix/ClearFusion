@@ -595,6 +595,8 @@ export class GLOBAL {
   public static API_EmployeeDetail_AddEmployeeResignation = 'EmployeeDetail/AddEmployeeResignation';
   public static API_EmployeeDetail_SaveEmployeeResignation = 'EmployeeDetail/SaveEmployeeResignation';
   public static API_EmployeeDetail_GetEmployeeResignationById = 'EmployeeDetail/GetEmployeeResignationById';
+  public static API_EmployeeDetail_TerminateEmployeeByEmployeeId = 'EmployeeDetail/TerminateEmployeeByEmployeeId';
+  public static API_EmployeeDetail_DeleteEmployeeByEmployeeId = 'EmployeeDetail/DeleteEmployeeByEmployeeId';
 
   // pdf
   public static API_Pdf_GetAllChartOfAccountHierarchyPdf = 'Pdf/GetAllChartOfAccountHierarchyPdf';

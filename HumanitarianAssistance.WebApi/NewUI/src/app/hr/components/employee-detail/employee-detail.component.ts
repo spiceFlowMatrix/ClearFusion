@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { HrControlPanelService } from '../../services/hr-control-panel.service';
 import { IEmployeeDetail } from '../../models/employee-detail.model';
 import { ToastrService } from 'ngx-toastr';
@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 export class EmployeeDetailComponent implements OnInit {
   showDetail = false;
   @Input() employeeId: number;
+  @Output() employeeStatus = new EventEmitter<number>();
   employeeDetail: IEmployeeDetail;
   constructor(
     private hrControlPanelService: HrControlPanelService,
@@ -34,6 +35,7 @@ export class EmployeeDetailComponent implements OnInit {
       DutyStation: '',
       Email: '',
       EmployementStatus: '',
+      EmploymentStatusId: 0,
       ExperienceMonth: '',
       ExperienceYear: '',
       FirstName: '',
@@ -77,6 +79,7 @@ export class EmployeeDetailComponent implements OnInit {
             DutyStation: x.EmployeeDetail.DutyStation,
             Email: x.EmployeeDetail.Email,
             EmployementStatus: x.EmployeeDetail.EmployementStatus,
+            EmploymentStatusId: x.EmployeeDetail.EmploymentStatusId,
             ExperienceMonth: x.EmployeeDetail.ExperienceMonth,
             ExperienceYear: x.EmployeeDetail.ExperienceYear,
             FirstName: x.EmployeeDetail.FirstName,
@@ -100,6 +103,7 @@ export class EmployeeDetailComponent implements OnInit {
             IsResigned: x.EmployeeDetail.IsResigned,
             ResignationStatus: x.EmployeeDetail.ResignationStatus
           };
+          this.employeeStatus.emit(this.employeeDetail.EmploymentStatusId);
         }
         localStorage.setItem(
           'SelectedOfficeId',
