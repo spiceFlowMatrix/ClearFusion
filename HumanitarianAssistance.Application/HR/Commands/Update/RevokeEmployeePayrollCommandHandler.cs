@@ -39,8 +39,16 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
 
                 if(advanceHistory != null)
                 {
+                    var advanceRecord = await _dbContext.Advances
+                                                 .FirstOrDefaultAsync(x => x.AdvancesId == advanceHistory.AdvanceId);
+
+                    if(advanceRecord != null && advanceRecord.IsDeducted == true)
+                    {
+                        advanceRecord.IsDeducted = false;
+                        await _dbContext.SaveChangesAsync();
+                    }
+
                     advanceHistory.IsDeleted = true;
-                    _dbContext.AdvanceHistoryDetail.Update(advanceHistory);
                     await _dbContext.SaveChangesAsync();
                 }
 

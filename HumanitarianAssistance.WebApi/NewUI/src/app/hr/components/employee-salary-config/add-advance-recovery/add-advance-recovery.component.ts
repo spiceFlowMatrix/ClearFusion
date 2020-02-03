@@ -70,9 +70,10 @@ export class AddAdvanceRecoveryComponent implements OnInit {
     this.salaryConfigService.getEmployeeAdvanceDetail(model)
       .subscribe(x => {
         this.advanceData.AdvanceId = x.Advance.AdvanceId;
-        this.advanceData.RequestedAmount = x.Advance.RequestedAmount;
+        this.advanceData.RequestedAmount = x.Advance.AdvanceAmount;
         this.advanceData.BalanceAmount = x.Advance.BalanceAmount;
 
+        this.advanceRecoveryForm.controls['RecoveryAmount'].setValue(x.Advance.InstallmentToBePaid);
         this.advanceRecoveryForm.controls['RecoveryAmount'].setValidators([Validators.required, Validators.max(x.Advance.BalanceAmount)]);
         this.advanceRecoveryForm.updateValueAndValidity();
       }, error => {

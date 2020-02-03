@@ -136,7 +136,6 @@ export class AddNewCandidateComponent implements OnInit {
       .subscribe(
         (response: IResponseData) => {
           if (response.statusCode === 200 && response.data !== null) {
-            console.log(response.data);
             this.cvName = response.data.AttachmentName;
             this.getAllProvinceList(response.data.CountryId);
             this.getAllDistrictList(response.data.ProvinceId);
@@ -346,7 +345,7 @@ export class AddNewCandidateComponent implements OnInit {
   }
   //#endregion
   //#region "Adding new candidate"
-  editCandidate(data: ICandidateDetailModel, attachmentCV) {
+  editCandidate(data: ICandidateDetailModel) {
     this.isFormSubmitted = true;
     data.CandidateId = this.candidateId;
     (data.IsCvUpdated = this.attachmentCV.length === 0 ? false : true),
@@ -358,14 +357,14 @@ export class AddNewCandidateComponent implements OnInit {
               this.globalSharedService.uploadFile(
                 FileSourceEntityTypes.HiringRequestCandidateCV,
                 response.CommonId.Id,
-                attachmentCV
+                this.attachmentCV[0][0]
               ).pipe(takeUntil(this.destroyed$))
               .subscribe(y => {
-                this.toastr.success('New Candidate added successfully');
                 this.isFormSubmitted = false;
-                this.AddCandidateListRefresh();
               });
             }
+            this.toastr.success('Candidate successfully updated');
+            this.AddCandidateListRefresh();
           } else {
             this.toastr.error(response.message);
             this.isFormSubmitted = false;
@@ -411,7 +410,7 @@ export class AddNewCandidateComponent implements OnInit {
   onFormSubmit(data: any) {
     if (this.addNewCandidateForm.valid) {
       if (this.candidateId > 0) {
-        this.editCandidate(data, this.attachmentCV[0][0]);
+        this.editCandidate(data);
       } else {
         if (this.attachmentCV.length === 0) {
           this.toastr.warning('Please attach CV!');

@@ -89,7 +89,8 @@ export class RequestDetailComponent implements OnInit {
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
-  actions: TableActionsModel;
+  actionsNewCandidate: TableActionsModel;
+  actionsExistingCandidate: TableActionsModel;
   CandidateStatusSelection = [0, 1, 2, 4];
   EmployeeStatusSelection = [0, 1, 2, 4];
   constructor(
@@ -146,12 +147,25 @@ export class RequestDetailComponent implements OnInit {
     this.routeActive.parent.parent.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
-    this.actions = {
+    this.actionsNewCandidate = {
       items: {
         button: { status: true, text: '' },
         delete: false,
         download: false,
         edit: true
+      },
+      subitems: {
+        button: { status: false, text: '' },
+        delete: false,
+        download: false
+      }
+    };
+    this.actionsExistingCandidate = {
+      items: {
+        button: { status: true, text: '' },
+        delete: false,
+        download: false,
+        edit: false
       },
       subitems: {
         button: { status: false, text: '' },

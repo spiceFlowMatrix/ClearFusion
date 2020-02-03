@@ -25,7 +25,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
             {
 
                 var result = await _dbContext.AdvanceHistoryDetail
-                                       .Where(x=> x.IsDeleted == false && x.AdvanceId == request.AdvanceId)
+                                       .Where(x=> x.IsDeleted == false && x.AdvanceId == request.AdvanceId && x.IsApproved == true)
                                        .Select(x=> new 
                                        {
                                           PaymentDate = x.PaymentDate.ToShortDateString(),

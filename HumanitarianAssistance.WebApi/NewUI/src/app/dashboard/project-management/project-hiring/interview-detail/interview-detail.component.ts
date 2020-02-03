@@ -1,4 +1,3 @@
-
 import { Component, OnInit, HostListener, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
@@ -521,11 +520,11 @@ export class InterviewDetailComponent implements OnInit {
       if (result !== undefined) {
         (result.TraningStartDate = this.datePipe.transform(
           result.TraningStartDate,
-          'd/M/yyyy'
+          'dd-MM-yyyy'
         )),
           (result.TraningEndDate = this.datePipe.transform(
             result.TraningEndDate,
-            'd/M/yyyy'
+            'dd-MM-yyyy'
           ));
         if (this.traningList$ === undefined) {
           /** binding result data(traning details) to traning list*/
@@ -649,6 +648,15 @@ export class InterviewDetailComponent implements OnInit {
     this.commonLoader.showLoader();
     data.CandidateId = this.candidateId;
     data.HiringRequestId = this.hiringRequestId;
+    data.TraningList.map(r => {
+      return {
+        TraningType: r.TraningType,
+        TraningName: r.TraningName,
+        TraningCountryAndCity: r.TraningCountryAndCity,
+        TraningStartDate: new Date(r.TraningStartDate),
+        TraningEndDate: new Date(r.TraningEndDate)
+      } as ITraningDetailModel;
+    });
     this.hiringRequestService.AddInterviewDetails(data).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
@@ -676,17 +684,16 @@ export class InterviewDetailComponent implements OnInit {
     });
     this.traningList$.subscribe(res => {
       data.TraningList = res;
+      data.TraningList.map(r => {
+        return {
+          TraningType: r.TraningType,
+          TraningName: r.TraningName,
+          TraningCountryAndCity: r.TraningCountryAndCity,
+          TraningStartDate: new Date(r.TraningStartDate),
+          TraningEndDate: new Date(r.TraningEndDate)
+        } as ITraningDetailModel;
+      });
     });
-    // data.TraningList.forEach(element => {
-    //   (element.TraningStartDate = this.datePipe.transform(
-    //     StaticUtilities.getLocalDate(new Date(element.TraningStartDate)),
-    //     'dd-MM-yyyy'
-    //   )),
-    //     (element.TraningEndDate = this.datePipe.transform(
-    //       StaticUtilities.getLocalDate(new Date(element.TraningEndDate)),
-    //       'dd-MM-yyyy'
-    //     ));
-    // });
     data.ProfessionalCriteriaMark = this.professionalCriteriaMarks;
     data.MarksObtain = this.marksObtain;
     data.RatingBasedCriteriaList = this.ratingBasedCriteriaQuestionList;
@@ -795,7 +802,7 @@ export class InterviewDetailComponent implements OnInit {
     this.languagesList$ = of(data.LanguageList);
     this.traningList$ = of(data.TraningList);
     this.interviewerList$ = of(data.InterviewerList);
-       this.interviewDetails = data;
+    this.interviewDetails = data;
   }
   //#endregion
 
