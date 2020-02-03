@@ -1,4 +1,3 @@
-
 import { Component, OnInit, HostListener, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
@@ -649,6 +648,15 @@ export class InterviewDetailComponent implements OnInit {
     this.commonLoader.showLoader();
     data.CandidateId = this.candidateId;
     data.HiringRequestId = this.hiringRequestId;
+    data.TraningList.map(r => {
+      return {
+        TraningType: r.TraningType,
+        TraningName: r.TraningName,
+        TraningCountryAndCity: r.TraningCountryAndCity,
+        TraningStartDate: new Date(r.TraningStartDate),
+        TraningEndDate: new Date(r.TraningEndDate)
+      } as ITraningDetailModel;
+    });
     this.hiringRequestService.AddInterviewDetails(data).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
@@ -676,6 +684,15 @@ export class InterviewDetailComponent implements OnInit {
     });
     this.traningList$.subscribe(res => {
       data.TraningList = res;
+      data.TraningList.map(r => {
+        return {
+          TraningType: r.TraningType,
+          TraningName: r.TraningName,
+          TraningCountryAndCity: r.TraningCountryAndCity,
+          TraningStartDate: new Date(r.TraningStartDate),
+          TraningEndDate: new Date(r.TraningEndDate)
+        } as ITraningDetailModel;
+      });
     });
     data.ProfessionalCriteriaMark = this.professionalCriteriaMarks;
     data.MarksObtain = this.marksObtain;
@@ -684,7 +701,6 @@ export class InterviewDetailComponent implements OnInit {
     this.interviewerList$.subscribe(res => {
       data.InterviewerList = res;
     });
-    console.log(data.TraningList);
     this.hiringRequestService.EditInterviewDetails(data).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
@@ -784,10 +800,9 @@ export class InterviewDetailComponent implements OnInit {
     this.marksObtain = data.MarksObtain;
     this.professionalCriteriaMarks = data.ProfessionalCriteriaMark;
     this.languagesList$ = of(data.LanguageList);
-    console.log(data.TraningList);
     this.traningList$ = of(data.TraningList);
     this.interviewerList$ = of(data.InterviewerList);
-       this.interviewDetails = data;
+    this.interviewDetails = data;
   }
   //#endregion
 
