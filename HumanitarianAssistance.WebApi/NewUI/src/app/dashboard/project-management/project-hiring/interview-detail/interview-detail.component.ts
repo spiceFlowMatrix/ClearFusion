@@ -701,7 +701,6 @@ export class InterviewDetailComponent implements OnInit {
     this.interviewerList$.subscribe(res => {
       data.InterviewerList = res;
     });
-    console.log(data.TraningList);
     this.hiringRequestService.EditInterviewDetails(data).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
@@ -801,7 +800,6 @@ export class InterviewDetailComponent implements OnInit {
     this.marksObtain = data.MarksObtain;
     this.professionalCriteriaMarks = data.ProfessionalCriteriaMark;
     this.languagesList$ = of(data.LanguageList);
-    console.log(data.TraningList);
     this.traningList$ = of(data.TraningList);
     this.interviewerList$ = of(data.InterviewerList);
     this.interviewDetails = data;
