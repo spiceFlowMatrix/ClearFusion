@@ -26,29 +26,6 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
 
             try
             {
-                //Get hours for employee attendance group in office
-                // var obj = (from e in _dbContext.EmployeeDetail.Where(x=> x.EmployeeID == request.EmployeeId)
-                //              join p in _dbContext.EmployeeProfessionalDetail on  e.EmployeeID equals p.EmployeeId
-                //              join o in _dbContext.OfficeDetail on p.OfficeId equals o.OfficeId
-                //              join h in _dbContext.PayrollMonthlyHourDetail on p.AttendanceGroupId equals h.AttendanceGroupId 
-                //              where h.OfficeId == p.OfficeId
-                //              select new 
-                //              {
-                //                  h.Hours,
-                //                  o.OfficeName
-                //              }).FirstOrDefault();
-
-                // if(obj == null)
-                // {
-                //     var employeeInfo= _dbContext.EmployeeDetail.Include(x=> x.EmployeeProfessionalDetail).ThenInclude(x=> x.OfficeDetail).FirstOrDefault(x=> x.EmployeeID == request.EmployeeId);
-
-                //     if(employeeInfo.EmployeeProfessionalDetail.AttendanceGroupId == null)
-                //     {
-                //         throw new Exception(string.Format(StaticResource.AttendanceGroupNotSet+ employeeInfo.EmployeeCode));
-                //     }
-                //     throw new Exception(string.Format(StaticResource.PayrollDailyHoursNotSaved, CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(request.FromDate.Month), employeeInfo.EmployeeProfessionalDetail.OfficeDetail.OfficeName));
-                // }
-
                 //get Total leave in days
                 int leaveDays = request.ToDate.Subtract(request.FromDate).Days+1;
 
@@ -78,18 +55,6 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
 
                     await _dbContext.EmployeeApplyLeave.AddAsync(applyleavelist);
                     await _dbContext.SaveChangesAsync();
-
-                    //update existing record with availed leave hours
-                    if (existrecord != null)
-                    {
-                         int? usedleaveunit = existrecord.UsedLeaveUnit == null ? 0 : existrecord.UsedLeaveUnit;
-                        existrecord.UsedLeaveUnit = usedleaveunit +request.LeaveApplied;
-                        existrecord.ModifiedById = request.ModifiedById;
-                        existrecord.ModifiedDate = DateTime.UtcNow;
-                        existrecord.IsDeleted = false;
-                        _dbContext.AssignLeaveToEmployee.Update(existrecord);
-                        await _dbContext.SaveChangesAsync();
-                    }
                 } 
                 else
                 {

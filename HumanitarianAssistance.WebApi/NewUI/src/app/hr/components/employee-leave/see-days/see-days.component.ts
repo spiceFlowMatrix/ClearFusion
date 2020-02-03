@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatCalendarCellCssClasses } from '@angular/material';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -37,5 +37,24 @@ export class SeeDaysComponent implements OnInit {
         return true;
       }
     }
+  }
+
+  dateClass() {
+    return (date: Date): MatCalendarCellCssClasses => {
+      const dates = [];
+      if (this.data.ToDate === this.data.FromDate) {
+        if (date === this.data.FromDate) {
+          dates.push(date);
+        }
+      } else {
+        if (date >= new Date(this.data.FromDate) && date <= new Date(this.data.ToDate)) {
+          dates.push(date);
+        }
+      }
+      const highlightDate = dates
+        .map(strDate => new Date(strDate))
+        .some(d => d.getDate() === date.getDate() && d.getMonth() === date.getMonth() && d.getFullYear() === date.getFullYear());
+      return highlightDate ? 'special-date' : '';
+    };
   }
 }

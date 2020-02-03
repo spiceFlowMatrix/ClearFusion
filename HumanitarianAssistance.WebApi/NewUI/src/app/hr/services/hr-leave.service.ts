@@ -110,4 +110,13 @@ export class HrLeaveService {
     );
   }
   //#endregion
+
+  //#region "getAppliedLeaveDates"
+  getAppliedLeaveDates(model): any {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_Attendance_GetAppliedLeaveDates, model
+    );
+  }
+  //#endregion
 }
