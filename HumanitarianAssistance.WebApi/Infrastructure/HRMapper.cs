@@ -6,6 +6,7 @@ using HumanitarianAssistance.Application.HR.Commands.Delete;
 using HumanitarianAssistance.Application.HR.Commands.Update;
 using HumanitarianAssistance.Application.HR.Models;
 using HumanitarianAssistance.Application.HR.Queries;
+using HumanitarianAssistance.Application.Project.Commands.Create;
 using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Domain.Entities.HR;
 
@@ -34,7 +35,7 @@ namespace HumanitarianAssistance.WebApi.Infrastructure
             CreateMap<EditSalaryAnalyticalInfoCommand, EmployeeSalaryAnalyticalInfo>().ReverseMap();
             CreateMap<EmployeeAttendanceModel, EmployeeAttendance>().ReverseMap();
             CreateMap<JobHiringDetails, JobHiringDetailsModel>().ReverseMap();
-            CreateMap<AddInterviewDetailsCommand, InterviewDetails>().ReverseMap();
+            // CreateMap<AddInterviewDetailsCommand, InterviewDetails>().ReverseMap();
             CreateMap<AddExitInterviewCommand, ExistInterviewDetails>().ReverseMap();
             CreateMap<AddEmployeeAppraisalCommand, EmployeeAppraisalDetails>().ReverseMap();
             CreateMap<AddJobHiringDetailCommand, JobHiringDetails>().ReverseMap();
@@ -54,6 +55,9 @@ namespace HumanitarianAssistance.WebApi.Infrastructure
             CreateMap<EditEmployeeSalaryBudgetsCommand, EmployeeSalaryBudget>().ReverseMap();
             CreateMap<EditExitInterviewCommand,ExistInterviewDetails>().ReverseMap();
             CreateMap<GetEmployeeExitInterviewPdfQuery,EmployeeExitInteviewPdfModel>().ReverseMap();
+            CreateMap<AddHolidayDetailCommand,HolidayDetails>().ReverseMap();
+            CreateMap<GetEmployeePensionReportPdfQuery,EmployeePensionReportPdfMdel>().ReverseMap();
+            CreateMap<AddNewAdvanceRequestCommand,Advances>().ReverseMap();
         }
     }
 }

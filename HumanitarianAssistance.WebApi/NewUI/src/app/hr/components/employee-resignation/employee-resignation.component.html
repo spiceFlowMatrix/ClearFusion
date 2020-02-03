@@ -1,0 +1,152 @@
+<div class="container-fluid" >
+    <h4 class="letter_spacing_2">Resignation Exit Interview
+      <hum-button [type]="'add'" [text]="'ADD RESIGNATION'" (click)="addResignation()" [disabled]="employeeDetail.IsResigned"></hum-button>
+      <hum-button [type]="'edit'" [text]="'SAVE CHANGES'" (click)="saveResignationForm(resignationForm.value)" *ngIf="employeeDetail.IsResigned"></hum-button>
+      <hum-button [type]="'edit'" [text]="'SAVE CHANGES'" [disabled]="!employeeDetail.IsResigned" *ngIf="!employeeDetail.IsResigned"></hum-button>
+      <hum-button [type]="'minus'" [text]="'REHIRE EMPLOYEE'" [disabled]="!employeeDetail.IsResigned" (click)="rehireEmployee()"></hum-button>
+      <hum-button [type]="'exclamation'" [text]="'REVOKE RESIGNATION'" [disabled]="!employeeDetail.IsResigned" (click)="revokeEmployeeResignation()"></hum-button>
+    </h4>
+    <h5 *ngIf="!employeeDetail.IsResigned"><i class="fas fa-info-circle icon_color_yellow"></i> &nbsp;There is no Active Resignation. Please Add one in order to see its details.</h5>
+  <div class="row" *ngIf="employeeDetail.IsResigned" humAddScroll [height]="250">
+    <div class="col-md-12">
+      <form [formGroup]="resignationForm">
+        <div id="err">
+          <div *ngIf="err !== null" class="alert alert-warning">{{err}}</div>
+        </div>
+        <p class="font_size_16">When did the employee resign?</p>
+        <mat-form-field>
+          <input #resignDate class="fixedWidth"
+            formControlName="ResignDate" matInput [matDatepicker]="picker" placeholder="Resigned On (Date)" >
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <p class="font_size_16">Are there any Unresolved Issues or Additional Comments?</p>
+        <mat-radio-group formControlName="IsIssueUnresolved">
+          <mat-radio-button value="true">Yes</mat-radio-button>
+          <mat-radio-button value="false">No</mat-radio-button>
+        </mat-radio-group>
+        <p class="font_size_16">If answer is Yes, please explain fully</p>
+        <mat-form-field style="width: 50%;" >
+          <textarea formControlName="Issues" matInput rows="3" placeholder="Comments & Issues"></textarea>
+        </mat-form-field>
+        <mat-divider></mat-divider>
+        <h4>Feeling About Employee Aspects</h4>
+        <table class="table table-striped">
+          <tbody formArrayName="QuestionType1">
+            <tr *ngIf="questionByType[1] && questionByType[1].length === 0">
+              <td>
+                <div class="alert alert-warning">There are no questions in this category.</div>
+              </td>
+            </tr>
+            <tr *ngFor="let item of resignationForm.get('QuestionType1')['controls']; let i = index;" [formGroupName]="i">
+              <td width="30%" class="font_size_16 font_weight_500">{{item.value.QuestionText}}</td>
+              <td>
+                <mat-radio-group formControlName="Answer">
+                  <mat-radio-button class="font_size_16 padding_right_20" value="1">Very Satisfied</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="2">Satisfied</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="3">Dissatisfied</mat-radio-button>
+                </mat-radio-group>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <h4>Reason for Leaving</h4>
+        <div class="row" formArrayName="QuestionType2">
+          <div *ngIf="questionByType[2] && questionByType[2].length === 0" class="alert alert-warning">There are no questions in this category.</div>
+          <div class="col-md-3" *ngFor="let item of resignationForm.get('QuestionType2')['controls']; let i = index;" [formGroupName]="i">
+              <mat-checkbox formControlName="Answer" class="font_size_16 font_weight_500">{{item.value.QuestionText}}</mat-checkbox>
+          </div>
+        </div>
+        <h4>The Department</h4>
+        <table class="table table-striped">
+          <tbody formArrayName="QuestionType3">
+            <tr *ngIf="questionByType[3] && questionByType[3].length === 0">
+              <td>
+                <div class="alert alert-warning">There are no questions in this category.</div>
+              </td>
+            </tr>
+            <tr *ngFor="let item of resignationForm.get('QuestionType3')['controls']; let i = index;" [formGroupName]="i">
+              <td width="30%" class="font_size_16 font_weight_500">{{item.value.QuestionText}}</td>
+              <td>
+                <mat-radio-group formControlName="Answer">
+                  <mat-radio-button class="font_size_16 padding_right_20" value="1">Strongly Disagree</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="2">Disagree</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="3">Neutral</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="4">Agree</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="5">Strongly Agree</mat-radio-button>
+                </mat-radio-group>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <h4>The Job Itself</h4>
+        <table class="table table-striped">
+          <tbody formArrayName="QuestionType4">
+            <tr *ngIf="questionByType[4] && questionByType[4].length === 0">
+              <td>
+                <div class="alert alert-warning">There are no questions in this category.</div>
+              </td>
+            </tr>
+            <tr *ngFor="let item of resignationForm.get('QuestionType4')['controls']; let i = index;" [formGroupName]="i">
+              <td width="30%" class="font_size_16 font_weight_500">{{item.value.QuestionText}}</td>
+              <td>
+                <mat-radio-group formControlName="Answer">
+                  <mat-radio-button class="font_size_16 padding_right_20" value="1">Strongly Disagree</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="2">Disagree</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="3">Neutral</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="4">Agree</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="5">Strongly Agree</mat-radio-button>
+                </mat-radio-group>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <h4>My Supervisor</h4>
+        <table class="table table-striped">
+          <tbody formArrayName="QuestionType5">
+            <tr *ngIf="questionByType[5] && questionByType[5].length === 0">
+              <td>
+                <div class="alert alert-warning">There are no questions in this category.</div>
+              </td>
+            </tr>
+            <tr *ngFor="let item of resignationForm.get('QuestionType5')['controls']; let i = index;" [formGroupName]="i">
+              <td width="30%" class="font_size_16 font_weight_500">{{item.value.QuestionText}}</td>
+              <td>
+                <mat-radio-group formControlName="Answer">
+                  <mat-radio-button class="font_size_16 padding_right_20" value="1">Strongly Disagree</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="2">Disagree</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="3">Neutral</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="4">Agree</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="5">Strongly Agree</mat-radio-button>
+                </mat-radio-group>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <h4>The Management</h4>
+        <table class="table table-striped">
+          <tbody formArrayName="QuestionType6">
+            <tr *ngIf="questionByType[6] && questionByType[6].length === 0">
+              <td>
+                <div class="alert alert-warning">There are no questions in this category.</div>
+              </td>
+            </tr>
+            <tr *ngFor="let item of resignationForm.get('QuestionType6')['controls']; let i = index;" [formGroupName]="i">
+              <td width="30%" class="font_size_16 font_weight_500">{{item.value.QuestionText}}</td>
+              <td>
+                <mat-radio-group formControlName="Answer">
+                  <mat-radio-button class="font_size_16 padding_right_20" value="1">Strongly Disagree</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="2">Disagree</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="3">Neutral</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="4">Agree</mat-radio-button>
+                  <mat-radio-button class="font_size_16 padding_right_20" value="5">Strongly Agree</mat-radio-button>
+                </mat-radio-group>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- <button type="submit" #submitBtn style="display: none;"></button> -->
+      </form>
+    </div>
+  </div>
+</div>

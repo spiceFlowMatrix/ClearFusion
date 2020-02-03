@@ -62,8 +62,8 @@ namespace HumanitarianAssistance.Application.Project.Queries {
                                 TraningType = it.NewTraininigType,
                                     TraningName = it.TrainingName,
                                     TraningCountryAndCity = it.StudyingCountry,
-                                    TraningStartDate = it.StartDate.ToString ("dd/MM/yyyy"),
-                                    TraningEndDate = it.EndDate.ToString ("dd/MM/yyyy")
+                                    TraningStartDate = it.StartDate.ToString(),
+                                    TraningEndDate = it.EndDate.ToString(),
                             }).ToList (),
                             InterviewerList = (from hji in _dbContext.HRJobInterviewers.Where (x => x.InterviewId == pid.InterviewId) 
                             join ed in _dbContext.EmployeeDetail on hji.EmployeeId equals ed.EmployeeID into edl from ed in edl.DefaultIfEmpty () 

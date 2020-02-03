@@ -538,7 +538,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
                     this.uploadedPurchasedFiles[i].DocumentTypeId)
                   .pipe(takeUntil(this.destroyed$))
                   .subscribe(y => {
-                    console.log('uploadSuccess', y);
                     if (i === filteredRecords.length - 1) {
                       this.isAddPurchaseFormSubmitted = false;
                       this.toastr.success('Success');
@@ -560,7 +559,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         },
           error => {
             this.isAddPurchaseFormSubmitted = false;
-            console.log(error);
           });
     } else {
       this.toastr.warning('Please correct errors in purchase form and submit again');
@@ -568,7 +566,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   editPurchaseFormSubmit() {
-    console.log(this.addPurchaseForm);
     const purchaseId = this.addPurchaseForm.value.PurchaseId;
     if (this.addPurchaseForm.valid) {
       this.isAddPurchaseFormSubmitted = true;
@@ -589,7 +586,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
                     .subscribe(y => {
                       if (i === filteredRecords.length - 1) {
                         this.isAddPurchaseFormSubmitted = false;
-                        console.log('uploadsuccess');
                         this.router.navigate(['store/purchases']);
                         this.toastr.success('Success');
                       }
@@ -931,7 +927,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         }
 
       }, error => {
-        console.log(error);
+        this.toastr.error(error);
       });
     } else {
       (<FormArray>this.addPurchaseForm.get('TransportVehicles')).removeAt(index);

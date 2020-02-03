@@ -21,7 +21,9 @@ import { GlobalSharedService } from 'src/app/shared/services/global-shared.servi
 export class AddNewCandidateComponent implements OnInit {
   projectId: number;
   hiringRequestId: number;
+  candidateId: number;
   isFormSubmitted = false;
+  cvName: string;
   addNewCandidateForm: FormGroup;
   professionList$: Observable<IDropDownModel[]>;
   countryList$: Observable<IDropDownModel[]>;
@@ -64,6 +66,7 @@ export class AddNewCandidateComponent implements OnInit {
     this.getPreviousYearsList();
     this.projectId = this.data.projectId;
     this.hiringRequestId = this.data.hiringRequestId;
+    this.candidateId = this.data.candidateId;
     this.addNewCandidateForm.controls['ProjectId'].setValue(this.projectId);
     this.addNewCandidateForm.controls['HiringRequestId'].setValue(
       this.hiringRequestId
@@ -81,6 +84,11 @@ export class AddNewCandidateComponent implements OnInit {
         this.subscribeProfessionList(result[2]);
         this.subscribeEducationDegreeList(result[3]);
       });
+    if (this.candidateId > 0) {
+      this.getCandidateDetails();
+    } else {
+      this.candidateId = 0;
+    }
   }
   //#region "Initialize candidate form"
   initCadidateForm() {
@@ -119,6 +127,51 @@ export class AddNewCandidateComponent implements OnInit {
     });
   }
   //#endregion
+  //#region "Get candidate details"
+  getCandidateDetails() {
+    this.commonLoader.showLoader();
+    this.hiringRequestService
+      .GetCandidateDetailByCandidateId(this.candidateId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        (response: IResponseData) => {
+          if (response.statusCode === 200 && response.data !== null) {
+            this.cvName = response.data.AttachmentName;
+            this.getAllProvinceList(response.data.CountryId);
+            this.getAllDistrictList(response.data.ProvinceId);
+            this.addNewCandidateForm.patchValue({
+              FirstName: response.data.FirstName,
+              LastName: response.data.LastName,
+              Email: response.data.Email,
+              Password: response.data.Password,
+              PhoneNumber: response.data.PhoneNumber,
+              EducationDegree: response.data.EducationDegreeId,
+              Gender: response.data.GenderId,
+              DateOfBirth: response.data.DateOfBirth,
+              Country: response.data.CountryId,
+              Province: response.data.ProvinceId,
+              District: response.data.DistrictID,
+              ExperienceYear: response.data.ExperienceYear,
+              ExperienceMonth: response.data.ExperienceMonth,
+              PreviousWork: response.data.PreviousWork,
+              CurrentAddress: response.data.CurrentAddress,
+              PermanentAddress: response.data.PermanentAddress,
+              Profession: response.data.ProfessionId,
+              RelevantExperienceInYear: response.data.RelevantExperienceInYear,
+              IrrelevantExperienceInYear:
+                response.data.IrrelevantExperienceInYear,
+              Remarks: response.data.Remarks
+            });
+          }
+          this.commonLoader.hideLoader();
+        },
+        () => {
+          this.commonLoader.hideLoader();
+        }
+      );
+  }
+  //#region
+
   //#region "Auto genrate password for new candidate"
   PasswordAutoGenrate() {
     this.autoGenratedPassword = Math.random()
@@ -260,7 +313,7 @@ export class AddNewCandidateComponent implements OnInit {
   }
   //#endregion
   //#region "Adding new candidate"
-  AddNewCandidate(data: ICandidateDetailModel, attachmentCV) {
+  addNewCandidate(data: ICandidateDetailModel, attachmentCV) {
     this.isFormSubmitted = true;
     this.hiringRequestService.AddNewCandidateDetail(data).subscribe(
       response => {
@@ -291,6 +344,41 @@ export class AddNewCandidateComponent implements OnInit {
     );
   }
   //#endregion
+  //#region "Adding new candidate"
+  editCandidate(data: ICandidateDetailModel) {
+    this.isFormSubmitted = true;
+    data.CandidateId = this.candidateId;
+    (data.IsCvUpdated = this.attachmentCV.length === 0 ? false : true),
+      this.hiringRequestService.EditCandidateDetails(data).subscribe(
+        response => {
+          // response.CommonId.Id is CandidateId
+          if (response.StatusCode === 200 && response.CommonId.Id != null) {
+            if (this.attachmentCV.length !== 0) {
+              this.globalSharedService.uploadFile(
+                FileSourceEntityTypes.HiringRequestCandidateCV,
+                response.CommonId.Id,
+                this.attachmentCV[0][0]
+              ).pipe(takeUntil(this.destroyed$))
+              .subscribe(y => {
+                this.isFormSubmitted = false;
+              });
+            }
+            this.toastr.success('Candidate successfully updated');
+            this.AddCandidateListRefresh();
+          } else {
+            this.toastr.error(response.message);
+            this.isFormSubmitted = false;
+          }
+          this.onCancelPopup();
+        },
+        error => {
+          this.toastr.error('Someting went wrong. Please try again');
+          this.isFormSubmitted = false;
+        }
+      );
+  }
+  //#endregion
+
   //#region "Cv upload fucntionality"
   openInput() {
     document.getElementById('fileInput').click();
@@ -320,12 +408,16 @@ export class AddNewCandidateComponent implements OnInit {
   //#endregion
   //#region "On form submission"
   onFormSubmit(data: any) {
-    if (this.attachmentCV.length === 0) {
-      this.toastr.warning('Please attach CV!');
-      return;
-    }
     if (this.addNewCandidateForm.valid) {
-      this.AddNewCandidate(data, this.attachmentCV[0][0]);
+      if (this.candidateId > 0) {
+        this.editCandidate(data);
+      } else {
+        if (this.attachmentCV.length === 0) {
+          this.toastr.warning('Please attach CV!');
+          return;
+        }
+        this.addNewCandidate(data, this.attachmentCV[0][0]);
+      }
     }
   }
   //#endregion

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace HumanitarianAssistance.Common.Enums {
@@ -187,12 +187,9 @@ namespace HumanitarianAssistance.Common.Enums {
         ProjectLogisticPurchase = 14,
         GoodsRecievedDocument = 15,
         LogisticSupplierInvoice = 16,
-        LogisticSupplierWarranty = 17,
-        [Description ("Proposal Document")]
-        TenderProposalDocument = 18,
-        [Description ("RFP Document")]
-        TenderRFPDocument = 19,
-        [Description ("Announcement Document")]
+        LogisticSupplierWarranty = 17, [Description ("Proposal Document")]
+        TenderProposalDocument = 18, [Description ("RFP Document")]
+        TenderRFPDocument = 19, [Description ("Announcement Document")]
         TenderAnnouncementDocument = 20,
         TenderBidContractLetter = 21
     }
@@ -242,43 +239,29 @@ namespace HumanitarianAssistance.Common.Enums {
 
     public enum LogisticRequestStatus {
         [Description ("New Request")]
-        NewRequest = 1,
-        [Description ("Cancelled")]
-        Cancelled = 2,
-        [Description ("Issue Purchase Order")]
-        IssuePurchaseOrder = 3,
-        [Description ("Purchase Submitted")]
-        CompletePurchase = 4,
-        [Description ("Control Approved")]
-        ControlApproved = 5,
-        [Description ("Control Rejected")]
-        ControlRejected = 6,
-        [Description ("Purchase Completed")]
+        NewRequest = 1, [Description ("Cancelled")]
+        Cancelled = 2, [Description ("Issue Purchase Order")]
+        IssuePurchaseOrder = 3, [Description ("Purchase Submitted")]
+        CompletePurchase = 4, [Description ("Control Approved")]
+        ControlApproved = 5, [Description ("Control Rejected")]
+        ControlRejected = 6, [Description ("Purchase Completed")]
         PurchaseCompleted = 7
     }
     public enum LogisticComparativeStatus {
         [Description ("Pending")]
-        Pending = 1,
-        [Description ("Cancelled")]
-        Cancelled = 2,
-        [Description ("Issued")]
-        Issued = 3,
-        [Description ("Statement Submitted")]
-        StatementSubmitted = 4,
-        [Description ("Statement Rejected")]
-        RejectStatement = 5,
-        [Description ("Statement Approved")]
+        Pending = 1, [Description ("Cancelled")]
+        Cancelled = 2, [Description ("Issued")]
+        Issued = 3, [Description ("Statement Submitted")]
+        StatementSubmitted = 4, [Description ("Statement Rejected")]
+        RejectStatement = 5, [Description ("Statement Approved")]
         ApproveStatement = 6,
     }
 
     public enum LogisticTenderStatus {
         [Description ("Pending")]
-        Pending = 1,
-        [Description ("Cancelled")]
-        Cancelled = 2,
-        [Description ("Issued")]
-        Issued = 3,
-        [Description ("Bid Selected")]
+        Pending = 1, [Description ("Cancelled")]
+        Cancelled = 2, [Description ("Issued")]
+        Issued = 3, [Description ("Bid Selected")]
         BidSelected = 4,
     }
     //#region "StoreItemGroups"
@@ -352,5 +335,43 @@ namespace HumanitarianAssistance.Common.Enums {
         Good = 2,
         VeryGood = 3,
         Excellent = 4
+    }
+    public enum MaritalStatus {
+        Single = 1,
+        Married = 2,
+        Divorced = 3,
+        Widow = 4
+
+    }
+     public enum AccumulatedSalaryHead {
+        Pension = 1,
+        GrossSalary = 2,
+        SalaryTax = 3,
+        AdvanceRecovery = 4,
+        CapacityBuilding = 5,
+        Security = 6
+    }
+    
+    public enum ResignationQuestionType {
+        [Description ("Feeling About Employee Aspects")]
+        FeelingAboutEmployeeAspects = 1,
+        [Description ("Reason Of Leaving")]
+        ReasonOfLeaving,
+        [Description ("The Department")]
+        TheDepartment,
+        [Description ("The Job Itself")]
+        TheJobItself,
+        [Description ("My Supervisor")]
+        MySupervisor,
+        [Description ("The Management")]
+        TheManagement
+
+    }
+
+    public enum ResignationStatus {
+        NotValid = 0,
+        Resigned = 1,
+        ResignationRevoked = 2,
+        Rehired = 3
     }
 }

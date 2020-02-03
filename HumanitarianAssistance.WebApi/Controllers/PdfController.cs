@@ -162,6 +162,9 @@ namespace HumanitarianAssistance.WebApi.Controllers
             }
         }
 
+
+
+
         [HttpPost]
         [Produces(contentType: "application/pdf")]
         public async Task<IActionResult> GetCandidateDetailReportPdf([FromBody]GetCandidateDetailReportPdfQuery model)
@@ -201,6 +204,58 @@ namespace HumanitarianAssistance.WebApi.Controllers
             model.LogisticRequestId = LogisticRequestId;
             var file = await _mediator.Send(model);
             return File(file, "application/pdf", "LogisticGoodsNoteReport.pdf");
+        }
+
+
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetEmployeePensionPdf([FromBody] GetEmployeePensionReportPdfQuery model)
+        {
+            try
+            {
+                var file = await _mediator.Send(model);
+                return File(file, "application/pdf", "EmployeePensionReport.pdf");
+            }
+            catch (Exception ex)
+            {
+                Response.Headers.Add("ExMessage", ex.Message);
+                return BadRequest();
+            }
+        }
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetEmployeeSalaryTaxPdf([FromBody] GetEmployeeSalaryTaxReportPdfQuery model)
+        {
+            try
+            {
+                var file = await _mediator.Send(model);
+                return File(file, "application/pdf", "EmployeeSalaryAndTaxReport.pdf");
+            }
+            catch (Exception ex)
+            {
+                Response.Headers.Add("ExMessage", ex.Message);
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetEmployeeContractReportPdf([FromBody]GetEmployeeContractReportPdfQuery model)
+        {
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "ContractDetailReport.pdf");
+        }
+
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> ExportEmployeeLeavePdf([FromBody]int id)
+        {
+            ExportEmployeeLeavePdfQuery model = new ExportEmployeeLeavePdfQuery
+            {
+                EmployeeId = id
+            };
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "EmployeeLeave.pdf");
         }
     }
 }

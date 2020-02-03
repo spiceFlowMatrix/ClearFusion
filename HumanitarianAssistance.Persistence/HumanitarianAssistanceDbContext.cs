@@ -148,6 +148,9 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<AttendanceGroupMaster> AttendanceGroupMaster { get; set; }
         public DbSet<EducationDegreeMaster> EducationDegreeMaster { get; set; }
         public DbSet<ExitInterviewQuestionsMaster> ExitInterviewQuestionsMaster { get; set; }
+        public DbSet<EmployeeResignationDetail> EmployeeResignationDetail { get; set; }
+        public DbSet<EmployeeResignationQuestionDetail> EmployeeResignationQuestionDetail { get; set; }
+
 
         //created by arjun singh
         public DbSet<ChatDetail> ChatDetail { get; set; }
@@ -277,6 +280,11 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<StoreLogger> StoreLogger { get; set; }
         public DbSet<ReturnProcurementDetail> ReturnProcurementDetail { get; set; }
         public DbSet<ConsolidatedGainLossAccounts> ConsolidatedGainLossAccounts { get; set; }
+        public DbSet<EmployeeBonusFineSalaryHead> EmployeeBonusFineSalaryHead { get; set; }
+        public DbSet<AccumulatedSalaryHeadDetail> AccumulatedSalaryHeadDetail { get; set; }
+        public DbSet<EmployeePayrollInfoDetail> EmployeePayrollInfoDetail { get; set; }
+         public DbSet<EmployeeBasicSalaryDetail> EmployeeBasicSalaryDetail { get; set; }
+         public DbSet<AdvanceHistoryDetail> AdvanceHistoryDetail { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

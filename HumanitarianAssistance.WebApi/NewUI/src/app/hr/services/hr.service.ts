@@ -321,7 +321,6 @@ export class HrService {
       data: 'delete',
       disableClose: false
     });
-
     dialogRef.componentInstance.confirmMessage =
       Delete_Confirmation_Texts.deleteText1;
 
@@ -381,7 +380,74 @@ export class HrService {
   }
   deleteDesignationDetail(data: any) {
     return this.globalService.post(
-      this.appurl.getApiUrl() + GLOBAL.API_HRConfiguration_DeleteDesignationDetail,
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HRConfiguration_DeleteDesignationDetail,
+      data
+    );
+  }
+
+  getAllHolidaysList(model: any) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_HR_GetAllHoliday,
+      model
+    );
+  }
+
+  //#region "addHoliday"
+  addHoliday(model: any): any {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_Hr_AddHoliday,
+      model
+    );
+  }
+  //#endregion
+
+  getAllOfficeCodeList() {
+    return this.globalService.getList(
+      this.appurl.getApiUrl() + GLOBAL.API_code_GetAllOffice
+    );
+  }
+
+  //#region "EditHoliday"
+  editHoliday(model: any): any {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_Hr_EditHoliday,
+      model
+    );
+  }
+  //#endregion
+  deleteHoliday(holidayId: any) {
+    return this.globalService.deleteById(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_Hr_DeleteHolidayDetails +
+        '?id=' +
+        holidayId
+    );
+  }
+  getWeeklyHolidaysList() {
+    return this.globalService.getList(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HR_GetAllHolidayWeeklyDetails
+    );
+  }
+  getAppraisalQuestions(officeId: number) {
+    return this.globalService.getList(
+      this.appurl.getApiUrl() +
+        'Code/GetAppraisalQuestions' +
+        '?OfficeId=' +
+        officeId
+    );
+  }
+
+  addAppraisalQuestion(data) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + 'Code/AddAppraisalQuestion',
+      data
+    );
+  }
+  editAppraisalQuestion(data) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + 'Code/EditAppraisalQuestion',
       data
     );
   }

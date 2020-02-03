@@ -11,5 +11,6 @@ namespace HumanitarianAssistance.Application.HR.Models
         public int? BlanceLeave { get; set; }
         public int FinancialYearId { get; set; }
         public string Description { get; set; }
+        public int AppliedUnit { get; set; }
     }
 }

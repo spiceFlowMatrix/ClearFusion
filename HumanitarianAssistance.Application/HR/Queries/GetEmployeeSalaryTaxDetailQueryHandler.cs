@@ -5,16 +5,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.HR.Models;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Domain.Entities.Accounting;
+using HumanitarianAssistance.Domain.Entities.HR;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Application.HR.Queries
 {
-    public class GetEmployeeSalaryTaxDetailQueryHandler: IRequestHandler<GetEmployeeSalaryTaxDetailQuery, ApiResponse>
+    public class GetEmployeeSalaryTaxDetailQueryHandler : IRequestHandler<GetEmployeeSalaryTaxDetailQuery, ApiResponse>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
 
@@ -34,26 +36,50 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                 if (financialYear.Any())
                 {
+
+                    EmployeeBasicSalaryDetail payrollDetail = await _dbContext.EmployeeBasicSalaryDetail
+                                                                    .Include(x => x.CurrencyDetails)
+                                                                    .FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                                                                      x.EmployeeId == request.EmployeeId);
+                    if (payrollDetail == null)
+                    {
+                        throw new Exception(StaticResource.EmployeePayrollCurrencyNotSet);
+                    }
+                    else if(payrollDetail.CurrencyDetails == null)
+                    {
+                        throw new Exception(StaticResource.EmployeePayrollCurrencyNotSet);
+                    }
                     // take distinct startyear and endyear else records may repeat itself
-                    var distinctFinancialYears= financialYear.Select(x=> new { StartYear= x.StartDate.Year, EndYear= x.EndDate.Year}).Distinct();
+                    var distinctFinancialYears = financialYear.Select(x => new { StartYear = x.StartDate.Year, EndYear = x.EndDate.Year }).Distinct();
 
                     List<SalaryTaxReportModel> salaryTaxReportListFinal = new List<SalaryTaxReportModel>();
+                    var employeeData = await _dbContext.EmployeeDetail.Include(x => x.EmployeeProfessionalDetail)
+                                                                .ThenInclude(x => x.OfficeDetail)
+                                                                .FirstOrDefaultAsync(x => x.EmployeeID == request.EmployeeId);
+
 
                     foreach (var financialYearDetail in distinctFinancialYears)
                     {
-                        List<SalaryTaxReportModel> salaryTaxReportList = _dbContext.EmployeePaymentTypes.Where(x => x.IsDeleted == false && x.IsApproved == true && x.OfficeId == request.OfficeId && x.EmployeeID == request.EmployeeId && x.PayrollYear == financialYearDetail.StartYear)
-                        .Select(x => new SalaryTaxReportModel
-                        {
-                            Currency = _dbContext.CurrencyDetails.Where(o => o.CurrencyId == x.CurrencyId).FirstOrDefault().CurrencyName,
-                            CurrencyId = x.CurrencyId,
-                            Office = _dbContext.OfficeDetail.Where(o => o.OfficeId == x.OfficeId).FirstOrDefault().OfficeName,
-                            Date = new DateTime(x.PayrollYear.Value, x.PayrollMonth.Value, 1),
-                            TotalTax = x.SalaryTax
-                        }).OrderBy(x => x.Date).ToList();
+                        List<SalaryTaxReportModel> salaryTaxReportList = await _dbContext.AccumulatedSalaryHeadDetail
+                                                                                   .Where(x => x.IsDeleted == false &&
+                                                                                              x.SalaryComponentId == (int)AccumulatedSalaryHead.SalaryTax &&
+                                                                                               x.EmployeeId == request.EmployeeId &&
+                                                                                               x.Year == financialYearDetail.StartYear)
+                                                                                    .Select(x => new SalaryTaxReportModel
+                                                                                    {
+                                                                                        Currency = payrollDetail.CurrencyDetails.CurrencyName,
+                                                                                        CurrencyId = payrollDetail.CurrencyId,
+                                                                                        Office = employeeData.EmployeeProfessionalDetail.OfficeDetail.OfficeName,
+                                                                                        Date = new DateTime(x.Year, x.Month, 1),
+                                                                                        TotalTax = x.SalaryDeduction
+                                                                                    }).OrderBy(x => x.Date).ToListAsync();
 
                         foreach (SalaryTaxReportModel item in salaryTaxReportList)
                         {
-                            ExchangeRateDetail exchangeRate = await _dbContext.ExchangeRateDetail.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.IsDeleted == false && x.FromCurrency == item.CurrencyId && x.ToCurrency == request.CurrencyId);
+                            ExchangeRateDetail exchangeRate = await _dbContext.ExchangeRateDetail.OrderByDescending(x => x.Date)
+                                                                                                 .FirstOrDefaultAsync(x => x.IsDeleted == false &&
+                                                                                                                           x.FromCurrency == item.CurrencyId &&
+                                                                                                                           x.ToCurrency == request.CurrencyId);
 
                             if (item.CurrencyId != request.CurrencyId)
                             {

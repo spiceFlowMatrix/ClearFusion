@@ -40,7 +40,7 @@
                             <td>{{ hiringRequestDetails.Office }}</td>
                         </tr>
                         <tr>
-                            <td>Profession/Position</td>
+                            <td>Position/Designation</td>
                             <td>{{ hiringRequestDetails.Position }}</td>
                         </tr>
                         <tr>
@@ -69,7 +69,11 @@
                         </tr>
                         <tr>
                             <td>Job Type</td>
-                            <td>{{ hiringRequestDetails.DepartmentName }}</td>
+                            <td>{{ hiringRequestDetails.JobType }}</td>
+                        </tr>
+                        <tr>
+                            <td>Job Category</td>
+                            <td>{{ hiringRequestDetails.JobCategory }}</td>
                         </tr>
                         <tr>
                             <td>Announcing Date</td>
@@ -140,7 +144,7 @@
                             </mat-select>
                         </mat-form-field>
                     </h5>
-                    <app-candidate-table [headers]="newCandidatesHeaders$" [isDefaultAction]="false" [items]="newCandidatesList2$" [subHeaders]="subListHeaders$" [subTitle]="'Other Details'" [actions]="actions" (actionClick)="newCandActionEvents($event)"></app-candidate-table>
+                    <app-candidate-table [headers]="newCandidatesHeaders$" [isDefaultAction]="false" [items]="newCandidatesList2$" [subHeaders]="subListHeaders$" [subTitle]="'Other Details'" [actions]="actionsNewCandidate" (actionClick)="newCandActionEvents($event)"></app-candidate-table>
                 </mat-tab>
                 <mat-tab label="Existing Candidates">
                     <h5>
@@ -159,7 +163,7 @@
                             </mat-select>
                         </mat-form-field>
                     </h5>
-                    <hum-table [headers]="existingCandidatesHeaders$" [isDefaultAction]="false" [items]="existingCandidatesList$" [actions]="actions" (actionClick)="empActionEvents($event)"></hum-table>
+                    <hum-table [headers]="existingCandidatesHeaders$" [isDefaultAction]="false" [items]="existingCandidatesList$" [actions]="actionsExistingCandidate" (actionClick)="empActionEvents($event)"></hum-table>
                 </mat-tab>
             </mat-tab-group>
         </div>

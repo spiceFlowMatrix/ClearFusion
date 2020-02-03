@@ -247,8 +247,8 @@ export class CriteriaEvaluationComponent
         PageId: x.PageId,
         Text: x.Text,
         Link:
-          '/project/my-project/' +
-          this.projectListService.selectedProject() +
+          // '/project/my-project/' +
+          // this.projectListService.selectedProject() +
           x.Link
       });
     });

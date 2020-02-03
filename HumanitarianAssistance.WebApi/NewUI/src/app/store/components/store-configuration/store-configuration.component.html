@@ -62,29 +62,28 @@
   </mat-card>
 </ng-template>
 <ng-template #unittype>
+  <form [formGroup]="unitTypeGroup" (ngSubmit)="saveUnit()">
   <div mat-dialog-content>
-    <div [formGroup]="unitTypeGroup">
-      <div class="row">
-        <div class="col-sm-6">
-          <mat-form-field>
-            <input matInput placeholder="Unit Type" formControlName="unitTypeName">
-            <mat-error *ngIf="unitTypeGroup.get('unitTypeName').required">Required</mat-error>
-          </mat-form-field>
-        </div>
-        <!-- <div class="col-sm-6" style="padding-top: 21px;">
+    <div class="row">
+      <div class="col-sm-6">
+        <mat-form-field>
+          <input matInput placeholder="Unit Type" formControlName="unitTypeName">
+          <mat-error *ngIf="unitTypeGroup.get('unitTypeName').hasError('required')">Required</mat-error>
+        </mat-form-field>
+      </div>
+      <!-- <div class="col-sm-6" style="padding-top: 21px;">
           <mat-checkbox value="unitTypeGroup.get('isDefault').value" formControlName="isDefault">Set As Default</mat-checkbox>
         </div> -->
-      </div>
     </div>
-
   </div>
   <div mat-dialog-actions>
-    <hum-button [disabled]="unitTypeGroup.invalid" [type]="'save'" [text]="'Save'" (click)="saveUnit()"></hum-button>
+    <hum-button [disabled]="unitTypeGroup.invalid" [type]="'save'" [text]="'Save'" [isSubmit]="'true'"></hum-button>
   </div>
+</form>
 </ng-template>
 <ng-template #sourceCode>
 
-  <form [formGroup]="sourCodeForm">
+  <form [formGroup]="sourCodeForm" (ngSubmit)="saveCode()">
     <div mat-dialog-content>
       <div class="code-container">
         <mat-form-field>
@@ -102,27 +101,27 @@
         </mat-form-field>
         <mat-form-field>
           <input matInput placeholder="Email Address" formControlName="emailAddress">
-
+          <mat-error *ngIf="sourCodeForm.controls['emailAddress'].errors?.required">Required</mat-error>
           <mat-error *ngIf="sourCodeForm.controls['emailAddress'].errors?.email">Invalid email</mat-error>
         </mat-form-field>
         <mat-form-field>
           <input matInput placeholder="Fax" formControlName="fax">
-
+          <mat-error *ngIf="sourCodeForm.controls['fax'].errors?.required">Required</mat-error>
         </mat-form-field>
         <mat-form-field>
           <input matInput placeholder="Guarantor" formControlName="guarantor">
-
+          <mat-error *ngIf="sourCodeForm.controls['guarantor'].errors?.required">Required</mat-error>
         </mat-form-field>
         <mat-form-field>
           <input matInput placeholder="Phone" formControlName="phone">
+          <mat-error *ngIf="sourCodeForm.controls['phone'].errors?.required">Required</mat-error>
           <mat-error *ngIf="sourCodeForm.controls['phone'].errors">Phone no should be between 10 - 14 characters
           </mat-error>
         </mat-form-field>
       </div>
     </div>
     <div mat-dialog-actions>
-      <hum-button [disabled]="sourCodeForm.invalid" [type]="'save'" [isSubmit]="'true'" [text]="'Save'"
-        (click)="saveCode()"></hum-button>
+      <hum-button [disabled]="sourCodeForm.invalid" [type]="'save'" [isSubmit]="'true'" [text]="'Save'"></hum-button>
     </div>
   </form>
 

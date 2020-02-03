@@ -128,8 +128,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int>("AccountLevelId");
 
-                    b.Property<string>("AccountName")
-                        .HasMaxLength(100);
+                    b.Property<string>("AccountName");
 
                     b.Property<int?>("AccountTypeId");
 
@@ -1809,6 +1808,76 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.ToTable("FinancialYearDetail");
                 });
 
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.AccumulatedSalaryHeadDetail", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int>("EmployeeId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int>("Month");
+
+                    b.Property<double>("SalaryAllowance");
+
+                    b.Property<int>("SalaryComponentId");
+
+                    b.Property<double>("SalaryDeduction");
+
+                    b.Property<int>("Year");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("AccumulatedSalaryHeadDetail");
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.AdvanceHistoryDetail", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AdvanceId");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int>("EmployeeId");
+
+                    b.Property<double>("InstallmentBalance");
+
+                    b.Property<double>("InstallmentPaid");
+
+                    b.Property<bool>("IsApproved");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<DateTime>("PaymentDate");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdvanceId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("AdvanceHistoryDetail");
+                });
+
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.Advances", b =>
                 {
                     b.Property<int>("AdvancesId")
@@ -1818,19 +1887,19 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime>("AdvanceDate");
 
-                    b.Property<DateTime>("AdvanceRecoveryDate");
+                    b.Property<DateTime?>("AdvanceRecoveryDate");
 
                     b.Property<DateTime>("AppraisalApprovedDate");
 
-                    b.Property<int>("ApprovedBy");
+                    b.Property<int?>("ApprovedBy");
 
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int>("CurrencyId");
+                    b.Property<int?>("CurrencyId");
 
-                    b.Property<DateTime>("DeductedDate");
+                    b.Property<DateTime?>("DeductedDate");
 
                     b.Property<string>("Description");
 
@@ -1840,7 +1909,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<bool>("IsAdvanceRecovery");
 
-                    b.Property<bool>("IsApproved");
+                    b.Property<bool?>("IsApproved");
 
                     b.Property<bool>("IsDeducted");
 
@@ -1854,15 +1923,17 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("NumberOfInstallments");
 
-                    b.Property<int>("OfficeId");
+                    b.Property<int?>("OfficeId");
 
                     b.Property<double>("RecoveredAmount");
 
                     b.Property<double>("RequestAmount");
 
-                    b.Property<long>("VoucherReferenceNo");
+                    b.Property<long?>("VoucherReferenceNo");
 
                     b.HasKey("AdvancesId");
+
+                    b.HasIndex("ApprovedBy");
 
                     b.HasIndex("CurrencyId");
 
@@ -1990,6 +2061,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 {
                     b.Property<long>("ApplyLeaveId")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AppliedLeaveCount");
 
                     b.Property<int?>("ApplyLeaveStatusId")
                         .HasMaxLength(30);
@@ -2189,6 +2262,76 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.ToTable("EmployeeAttendance");
                 });
 
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeBasicSalaryDetail", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<double>("BasicSalary");
+
+                    b.Property<double>("CapacityBuildingAmount");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int?>("CurrencyId");
+
+                    b.Property<int>("EmployeeId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<double>("SecurityAmount");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CurrencyId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("EmployeeBasicSalaryDetail");
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeBonusFineSalaryHead", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<double>("Amount");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<string>("Description");
+
+                    b.Property<int>("EmployeeId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int>("Month");
+
+                    b.Property<string>("SalaryHeadName");
+
+                    b.Property<int>("TransactionTypeId");
+
+                    b.Property<int>("Year");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("EmployeeBonusFineSalaryHead");
+                });
+
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeContract", b =>
                 {
                     b.Property<int>("EmployeeContractId")
@@ -2352,6 +2495,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<bool>("IsDeleted");
 
+                    b.Property<bool>("IsResigned");
+
                     b.Property<string>("IssuePlace");
 
                     b.Property<string>("Language");
@@ -2403,6 +2548,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<string>("RegCode");
 
                     b.Property<string>("Remarks");
+
+                    b.Property<int>("ResignationStatus");
 
                     b.Property<string>("Resume");
 
@@ -3183,6 +3330,40 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.ToTable("EmployeePayrollAccountHead");
                 });
 
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeePayrollInfoDetail", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int>("EmployeeId");
+
+                    b.Property<double>("GrossSalary");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("IsSalaryApproved");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int>("Month");
+
+                    b.Property<double>("NetSalary");
+
+                    b.Property<int>("Year");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("EmployeePayrollInfoDetail");
+                });
+
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeePayrollMonth", b =>
                 {
                     b.Property<long>("MonthlyPayrollId")
@@ -3379,6 +3560,66 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("EmployeeID");
 
                     b.ToTable("EmployeeRelativeInfo");
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeResignationDetail", b =>
+                {
+                    b.Property<long>("EmployeeResignationId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CommentsIssues");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int>("EmployeeID");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("IsIssueUnresolved");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<DateTime>("ResignDate");
+
+                    b.HasKey("EmployeeResignationId");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.ToTable("EmployeeResignationDetail");
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeResignationQuestionDetail", b =>
+                {
+                    b.Property<int>("ResignationQuestionId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Answer");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int>("QuestionId");
+
+                    b.Property<long>("ResignationId");
+
+                    b.HasKey("ResignationQuestionId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("ResignationId");
+
+                    b.ToTable("EmployeeResignationQuestionDetail");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeSalaryAnalyticalInfo", b =>
@@ -3796,7 +4037,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<int>("OfficeId");
+                    b.Property<int?>("OfficeId");
 
                     b.HasKey("HolidayWeeklyId");
 
@@ -6804,7 +7045,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("ContractDuration");
 
-                    b.Property<string>("ContractType");
+                    b.Property<int?>("ContractTypeId");
 
                     b.Property<int?>("CountryId");
 
@@ -6837,6 +7078,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<bool>("IsCompleted");
 
                     b.Property<bool>("IsDeleted");
+
+                    b.Property<int?>("JobCategoryId");
 
                     b.Property<long?>("JobId");
 
@@ -6889,6 +7132,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasIndex("EmployeeID");
 
                     b.HasIndex("GradeId");
+
+                    b.HasIndex("JobCategoryId");
 
                     b.HasIndex("JobId");
 
@@ -9493,12 +9738,36 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.AccumulatedSalaryHeadDetail", b =>
+                {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.AdvanceHistoryDetail", b =>
+                {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.Advances", "Advances")
+                        .WithMany()
+                        .HasForeignKey("AdvanceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.Advances", b =>
                 {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "ApprovedByEmployee")
+                        .WithMany()
+                        .HasForeignKey("ApprovedBy");
+
                     b.HasOne("HumanitarianAssistance.Domain.Entities.CurrencyDetails", "CurrencyDetails")
                         .WithMany()
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CurrencyId");
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
                         .WithMany()
@@ -9574,6 +9843,26 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.LeaveReasonDetail", "LeaveReasonDetail")
                         .WithMany()
                         .HasForeignKey("LeaveReasonId");
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeBasicSalaryDetail", b =>
+                {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.CurrencyDetails", "CurrencyDetails")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId");
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeBonusFineSalaryHead", b =>
+                {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeContract", b =>
@@ -9762,6 +10051,14 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeePayrollInfoDetail", b =>
+                {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeePayrollMonth", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.CurrencyDetails", "CurrencyDetails")
@@ -9827,6 +10124,27 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
                         .WithMany()
                         .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeResignationDetail", b =>
+                {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
+                        .WithMany()
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeResignationQuestionDetail", b =>
+                {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.ExitInterviewQuestionsMaster", "ExitInterviewQuestionsMaster")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeResignationDetail", "EmployeeResignationDetail")
+                        .WithMany()
+                        .HasForeignKey("ResignationId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -9934,8 +10252,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.OfficeDetail", "OfficeDetails")
                         .WithMany()
-                        .HasForeignKey("OfficeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("OfficeId");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.InterviewDetails", b =>
@@ -10684,6 +11001,10 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.HasOne("HumanitarianAssistance.Domain.Entities.JobGrade", "JobGrade")
                         .WithMany()
                         .HasForeignKey("GradeId");
+
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Department", "DepartmentDetails")
+                        .WithMany()
+                        .HasForeignKey("JobCategoryId");
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectJobHiringDetail", "ProjectJobHiringDetail")
                         .WithMany()

@@ -24,7 +24,9 @@ import {
   CandidateAction,
   Shift,
   HiringRequestStatus,
-  Gender
+  Gender,
+  ContractType,
+  JobType
 } from 'src/app/shared/enum';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
@@ -70,6 +72,7 @@ export class RequestDetailComponent implements OnInit {
     'Employee Status'
   ]);
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  candidateId: number;
   existingEmployeesList: any[] = [];
   newCandidatesList$: Observable<ICandidateDetailList[]>;
   newCandidatesList2$: Observable<ICandidateDetailList[]>;
@@ -86,7 +89,8 @@ export class RequestDetailComponent implements OnInit {
   screenHeight: any;
   screenWidth: any;
   scrollStyles: any;
-  actions: TableActionsModel;
+  actionsNewCandidate: TableActionsModel;
+  actionsExistingCandidate: TableActionsModel;
   CandidateStatusSelection = [0, 1, 2, 4];
   EmployeeStatusSelection = [0, 1, 2, 4];
   constructor(
@@ -119,7 +123,8 @@ export class RequestDetailComponent implements OnInit {
       PayRate: '',
       Status: '',
       Office: '',
-      DepartmentName: '',
+      JobType: '',
+      JobCategory: '',
       BudgetName: '',
       AnouncingDate: null,
       ClosingDate: null,
@@ -142,7 +147,20 @@ export class RequestDetailComponent implements OnInit {
     this.routeActive.parent.parent.parent.params.subscribe(params => {
       this.projectId = +params['id'];
     });
-    this.actions = {
+    this.actionsNewCandidate = {
+      items: {
+        button: { status: true, text: '' },
+        delete: false,
+        download: false,
+        edit: true
+      },
+      subitems: {
+        button: { status: false, text: '' },
+        delete: false,
+        download: false
+      }
+    };
+    this.actionsExistingCandidate = {
       items: {
         button: { status: true, text: '' },
         delete: false,
@@ -197,11 +215,12 @@ export class RequestDetailComponent implements OnInit {
                 PayRate: response.data.PayRate,
                 Office: response.data.Office,
                 OfficeId: response.data.OfficeId,
-                DepartmentName: response.data.DepartmentName,
+                JobType: JobType[response.data.JobType],
+                JobCategory: response.data.JobCategory,
                 BudgetName: response.data.BudgetName,
                 AnouncingDate: response.data.AnouncingDate,
                 ClosingDate: response.data.ClosingDate,
-                ContractType: response.data.ContractType,
+                ContractType: ContractType[response.data.ContractType],
                 ContractDuration: response.data.ContractDuration,
                 Shift: Shift[response.data.Shift],
                 EducationDegree: response.data.EducationDegree,
@@ -455,13 +474,12 @@ export class RequestDetailComponent implements OnInit {
         autoFocus: false,
         data: {
           hiringRequestId: this.hiringRequestDetails.HiringRequestId,
-          projectId: this.projectId
+          projectId: this.projectId,
+          candidateId: this.candidateId
         }
       });
       // refresh the list after new request created
       dialogRef.componentInstance.onAddCandidateListRefresh.subscribe(() => {
-        this.hiringRequestDetails.FilledVacancies =
-          this.hiringRequestDetails.FilledVacancies + 1;
         this.getAllCandidateList(this.filterValueModel);
       });
       dialogRef.afterClosed().subscribe(() => {});
@@ -474,6 +492,11 @@ export class RequestDetailComponent implements OnInit {
   // #region Changes Status of New candidate
   newCandActionEvents(data: any) {
     switch (data.type) {
+      case 'edit':
+        this.candidateId = data.item.CandidateId;
+        this.addNewCandidate();
+        this.candidateId = 0;
+        break;
       case 'Candidate Cv':
         this.getCandidateCvByCandidateId(data);
         break;
@@ -873,7 +896,8 @@ export class RequestDetailComponent implements OnInit {
     dialogRef.componentInstance.onAddAnalyticalInfoRefresh.subscribe(() => {
       this.selectEmployee(CandidateData);
     });
-    dialogRef.afterClosed().subscribe(() => {''
+    dialogRef.afterClosed().subscribe(() => {
+      '';
     });
   }
   //#endregion

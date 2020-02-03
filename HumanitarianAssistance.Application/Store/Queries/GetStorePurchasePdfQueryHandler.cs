@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Application.Store.Models;
-using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Common.Helpers; 
 using HumanitarianAssistance.Domain.Entities.Accounting;
 using HumanitarianAssistance.Persistence;
 using MediatR;
@@ -46,11 +46,27 @@ namespace HumanitarianAssistance.Application.Store.Queries
                                   .Include(x => x.ProjectDetail)
                                   .Include(x=> x.ProjectBudgetLineDetail)
                                   .Include(x=> x.OfficeDetail)
-                                  .Where(x => x.IsDeleted == false &&
-                                        x.StoreInventoryItem.Inventory.AssetType == request.InventoryTypeId &&
-                                        x.ReceiptTypeId == request.ReceiptTypeId &&
-                                        x.OfficeId == request.OfficeId &&
-                                        x.Currency == request.CurrencyId);
+                                  .Where(x => x.IsDeleted == false);
+
+                if(request.InventoryTypeId != 0)
+                {
+                    query= query.Where(x => x.StoreInventoryItem.Inventory.AssetType == request.InventoryTypeId);
+                }
+
+                 if(request.ReceiptTypeId != 0)
+                {
+                    query= query.Where(x => x.ReceiptTypeId == request.ReceiptTypeId);
+                }
+
+                 if(request.OfficeId != 0)
+                {
+                    query= query.Where(x => x.OfficeId == request.OfficeId);
+                }
+
+                if(request.CurrencyId != 0)
+                {
+                    query= query.Where(x => x.Currency == request.CurrencyId);
+                }
 
                 if (request.InventoryId != 0)
                 {
@@ -190,7 +206,7 @@ namespace HumanitarianAssistance.Application.Store.Queries
                     Status= x.StatusAtTimeOfIssue != null? x.StatusAtTimeOfIssue.StatusName : "",
                     DepreciatedCost = x.UnitCost * x.Quantity,
                     UnitCost= x.UnitCost
-                }).ToList();
+                }).OrderBy(y=> y.PurchaseId).ToList();
 
                 // Calculate Depreciation Cost when Depreciation Comparision Date is not null
                 if(model.StorePurchaseList.Any())
@@ -237,7 +253,9 @@ namespace HumanitarianAssistance.Application.Store.Queries
                 throw ex;
             }
 
-            return await _pdfExportService.ExportToPdf(model, "Pages/PdfTemplates/StorePurchaseReport.cshtml");
+           model.StorePurchaseList= model.StorePurchaseList.OrderBy(y=> y.PurchaseId).ToList();
+
+            return await _pdfExportService.ExportToPdf(model, "Pages/PdfTemplates/StorePurchaseReport.cshtml", true);
         }
     }
 }

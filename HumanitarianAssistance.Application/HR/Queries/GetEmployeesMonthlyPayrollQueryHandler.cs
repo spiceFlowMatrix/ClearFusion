@@ -107,7 +107,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                             obj.CurrencyId = payrollDetail.FirstOrDefault().CurrencyId;
                             obj.TotalAllowance = payrollDetail.Where(x => x.HeadTypeId == (int)SalaryHeadType.ALLOWANCE).Sum(s => s.MonthlyAmount);
                             obj.TotalDeduction = payrollDetail.Where(x => x.HeadTypeId == (int)SalaryHeadType.DEDUCTION).Sum(s => s.MonthlyAmount);
-                            obj.TotalGeneralAmount = payrollDetail.Where(x => x.HeadTypeId == (int)SalaryHeadType.GENERAL).Sum(s => s.MonthlyAmount);
+                            obj.TotalGeneralAmount = payrollDetail.Where(x => x.HeadTypeId == (int)SalaryHeadType.GENERAL).Sum(s => s.MonthlyAmount); 
 
                             // if (obj.TotalGeneralAmount == 0)
                             // {
@@ -177,14 +177,14 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                                     obj.AdvanceRecoveryAmount = Math.Round((Convert.ToDouble(xAdvances.AdvanceAmount / xAdvances.NumberOfInstallments ?? 1)), 2);
                                     obj.AdvanceAmount = xAdvances.AdvanceAmount;
-                                    obj.IsAdvanceApproved = xAdvances.IsApproved;
+                                    // obj.IsAdvanceApproved = xAdvances.IsApproved;
                                     obj.AdvanceBalanceAmount = xAdvances.AdvanceAmount;
                                 }
                                 else
                                 {
                                     Double iBalanceAmount = xAdvances.AdvanceAmount - xAdvances.RecoveredAmount;
                                     obj.AdvanceRecoveryAmount = Math.Round((Convert.ToDouble(iBalanceAmount / xAdvances.NumberOfInstallments)),2);
-                                    obj.IsAdvanceApproved = xAdvances.IsApproved;
+                                    // obj.IsAdvanceApproved = xAdvances.IsApproved;
                                     obj.AdvanceAmount = xAdvances.AdvanceAmount;
                                     obj.AdvanceBalanceAmount = iBalanceAmount;
                                 }

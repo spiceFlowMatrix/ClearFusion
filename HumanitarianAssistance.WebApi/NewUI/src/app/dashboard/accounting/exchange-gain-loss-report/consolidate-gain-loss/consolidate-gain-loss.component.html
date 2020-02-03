@@ -55,18 +55,7 @@
         </div>
         <div class="col-sm-12 transcation_container" >
           <div title> Transcations</div>
-          <hum-table [headers]="transactionHeaders$" [items]="transactionList$"></hum-table>
-        </div>
-        <div class="col-sm-12">
-          <div class ="col-sm-3">
-            Totals:
-          </div>
-          <div class ="col-sm-2">
-            {{totals}}
-          </div>
-          <div class ="col-sm-2">
-            {{totals}}
-          </div>
+          <hum-table [hideColums$]="hideColums" [headers]="transactionHeaders$" [items]="transactionList$"></hum-table>
         </div>
       </form>
     </div>
