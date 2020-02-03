@@ -30,7 +30,10 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 Advances advance = await _dbContext.Advances.OrderBy(x=> x.AdvanceDate).FirstOrDefaultAsync(x=> x.IsDeleted == false && x.IsApproved == true 
                                         && x.EmployeeId == request.EmployeeId && x.IsDeducted == false);
 
-                int installmentPaidCount = _dbContext.AdvanceHistoryDetail.Where(x=> x.IsDeleted == false && x.AdvanceId == advance.AdvancesId).Count();
+                int installmentPaidCount = _dbContext.AdvanceHistoryDetail.Where(x=> x.IsDeleted == false && x.AdvanceId == advance.AdvancesId && x.PaymentDate.Month < request.Month).Count();
+
+                AdvanceHistoryDetail advanceHistory = await _dbContext.AdvanceHistoryDetail.FirstOrDefaultAsync(x=> x.IsDeleted == false &&
+                                                      x.AdvanceId == advance.AdvancesId && x.PaymentDate.Month == request.Month);
                 
                 if(advance == null)
                 {
@@ -40,13 +43,22 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 }
                 else
                 {
-                    double recoveredAmount = _dbContext.AdvanceHistoryDetail.Where(x=> x.IsDeleted == false && x.AdvanceId == advance.AdvancesId)
+                    double recoveredAmount = _dbContext.AdvanceHistoryDetail.Where(x=> x.IsDeleted == false && x.AdvanceId == advance.AdvancesId &&
+                                                        x.PaymentDate.Month < request.Month)
                                                        .Select(x=> x.InstallmentPaid).DefaultIfEmpty(0).Sum();
 
                     model.AdvanceId = advance.AdvancesId;
                     model.AdvanceAmount = advance.AdvanceAmount;
                     model.BalanceAmount = advance.AdvanceAmount - recoveredAmount;
-                    model.InstallmentToBePaid = (model.BalanceAmount /(advance.NumberOfInstallments.Value - installmentPaidCount));
+
+                    if(advanceHistory == null)
+                    {
+                        model.InstallmentToBePaid = (model.BalanceAmount /(advance.NumberOfInstallments.Value - installmentPaidCount));
+                    }
+                    else
+                    {
+                        model.InstallmentToBePaid = advanceHistory.InstallmentPaid;
+                    }
                 }
 
                 response.Add("Advance", model);

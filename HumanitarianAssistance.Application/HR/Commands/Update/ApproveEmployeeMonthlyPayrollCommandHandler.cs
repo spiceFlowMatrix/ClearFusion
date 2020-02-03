@@ -62,6 +62,15 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                     await _dbContext.AccumulatedSalaryHeadDetail.AddRangeAsync(salaryHead);
                     await _dbContext.SaveChangesAsync();
 
+                    AdvanceHistoryDetail advanceHistory = await _dbContext.AdvanceHistoryDetail.FirstOrDefaultAsync(x=> x.IsDeleted == false && x.EmployeeId == request.EmployeeId &&
+                                             x.PaymentDate.Month == request.Month);
+
+                    if(advanceHistory != null)
+                    {
+                        advanceHistory.IsApproved = true;
+                        await _dbContext.SaveChangesAsync();
+                    }
+
                     tran.Commit();
                     success = true;
                 }
