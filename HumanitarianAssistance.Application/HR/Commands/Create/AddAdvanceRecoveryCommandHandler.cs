@@ -63,12 +63,6 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                         await _dbContext.SaveChangesAsync();
                     }
 
-                    if (advanceRecord.AdvanceAmount == (recoveredAmount + request.Amount))
-                    {
-                        advanceRecord.IsDeducted = true;
-                        await _dbContext.SaveChangesAsync();
-                    }
-
                     tran.Commit();
                     success = true;
                 }

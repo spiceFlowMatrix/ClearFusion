@@ -53,7 +53,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                     if(advanceHistory == null)
                     {
-                        model.InstallmentToBePaid = (model.BalanceAmount /(advance.NumberOfInstallments.Value - installmentPaidCount));
+                        model.InstallmentToBePaid = Math.Round(model.BalanceAmount /(advance.NumberOfInstallments.Value - installmentPaidCount), 2);
                     }
                     else
                     {
