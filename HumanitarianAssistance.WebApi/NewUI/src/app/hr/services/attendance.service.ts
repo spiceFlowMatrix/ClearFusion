@@ -43,5 +43,23 @@ export class AttendanceService {
         model
       );
   }
+
+  markWholeMonthAttendance(model) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Attendance_MarkWholeMonthEmployeeAttendance,
+        model
+      );
+  }
+
+  editEmployeeAttendance(model) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Attendance_EditEmployeeAttendanceByDate,
+        model
+      );
+  }
   //#endregion
 }

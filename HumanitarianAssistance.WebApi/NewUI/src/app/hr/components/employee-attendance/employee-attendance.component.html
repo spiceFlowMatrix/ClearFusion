@@ -15,6 +15,14 @@
       </div>
     </div>
   </div>
+  <div *ngIf="err !== null" class="alert alert-warning">{{err}}</div>
+  <div class="row" *ngIf="isNoAttendanceMarked">
+    <div class="col-md-12">
+        <p><strong>No Attendance found for selected month, mark attendance for whole month by clicking here</strong>
+          <hum-button [type]="'save'" [text]="'Mark Attendance'" (click)="markWholeMonthAttendance()"></hum-button>
+        </p>
+    </div>
+  </div>
   <div class="row">
     <div class="col-sm-12">
       <div class="responsive_table-responsive">
@@ -26,18 +34,18 @@
               <td>In Time</td>
               <td>Out Time</td>
               <td>Attended</td>
-              <td width="1%"></td>
+              <td></td>
             </tr>
 
             <tr *ngFor= 'let item of attendanceList' >
               <td></td>
               <td>
-                {{item.Date}}
+                {{item.DisplayDate}}
               </td>
               <td> {{item.InTime}}</td>
               <td> {{item.OutTime}}</td>
               <td>{{item.Attended}}</td>
-              <td width="1%"></td>
+              <td><i class="fas fa-edit" (click)="editAttendance(item.AttendanceId, item.Attended, item.Date, item.InTime, item.OutTime)"></i></td>
             </tr>
           </tbody>
         </table>

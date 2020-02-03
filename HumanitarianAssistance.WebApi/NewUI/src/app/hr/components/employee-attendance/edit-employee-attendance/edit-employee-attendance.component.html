@@ -1,0 +1,48 @@
+<h3 mat-dialog-title>Edit Employee Attendance</h3>
+<mat-dialog-content>
+  <div class="row">
+    <div class="col-md-12">
+      <form [formGroup]="editAttendanceForm">
+      <table class="table table-striped" style="table-layout: fixed;">
+        <tr>
+          <th>Date</th>
+          <th>In Time</th>
+          <th>Out Time</th>
+          <th>Attendance</th>
+        </tr>
+        <tr>
+          <td>{{data.Date | date:'dd/MM/yyyy'}}</td>
+          <td>
+            <mat-form-field style="width: 70%;margin-top: -16px;">
+              <input matInput aria-label="default time" [ngxTimepicker]="InTime"  [format]="24"  formControlName="InTime" [value]="editAttendanceForm.value.InTime"  readonly>
+              <ngx-material-timepicker #InTime></ngx-material-timepicker>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field style="width: 70%;margin-top: -16px;">
+              <input matInput aria-label="default time" [ngxTimepicker]="OutTime"  [format]="24"  formControlName="OutTime" [value]="editAttendanceForm.value.OutTime"  readonly>
+              <ngx-material-timepicker #OutTime></ngx-material-timepicker>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field style="width: 100%; margin-top: -16px;">
+              <mat-select formControlName="AttendanceTypeId">
+                <mat-option [value]="1">
+                  P
+                </mat-option>
+                <mat-option [value]="2">
+                  A
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </form>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <hum-button [type]="'save'" [text]="'Save'" (click)="saveAttendance(editAttendanceForm.value)"></hum-button>
+    <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="closePopup()" ></hum-button>
+</mat-dialog-actions>
