@@ -114,6 +114,7 @@
         <div class="col-md-12">
             <i class="fas fa-info-circle icon_color_yellow"></i>&nbsp;
             <b>{{errorMessage}}</b>
+            <hum-button *ngIf="showGenerateAttendanceButton" [type]="'save'" [text]="'Mark Attendance'" (click)="markWholeMonthAttendance()"></hum-button>
         </div>
     </div>
 </mat-card>

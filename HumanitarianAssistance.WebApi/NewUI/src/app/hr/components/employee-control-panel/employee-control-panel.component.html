@@ -25,7 +25,7 @@
             </mat-tab>
             <mat-tab label="ATTENDANCE">
                 <ng-template matTabContent>
-                    <app-employee-attendance></app-employee-attendance>
+                    <app-employee-attendance [officeId]="employeeDetail.employeeDetail.OfficeId"></app-employee-attendance>
                 </ng-template>
             </mat-tab>
             <mat-tab label="CONTRACT">

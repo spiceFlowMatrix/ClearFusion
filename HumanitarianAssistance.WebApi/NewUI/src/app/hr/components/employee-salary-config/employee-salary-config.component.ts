@@ -14,6 +14,8 @@ import { EmployeeSalaryConfigService } from '../../services/employee-salary-conf
 import { StaticUtilities } from 'src/app/shared/static-utilities';
 import 'rxjs/add/observable/empty';
 import { AddAdvanceRecoveryComponent } from './add-advance-recovery/add-advance-recovery.component';
+import { AttendanceService } from '../../services/attendance.service';
+import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 
 @Component({
   selector: 'app-employee-salary-config',
@@ -51,13 +53,15 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     items: ['SalaryComponent', 'SalaryAllowance', 'SalaryDeduction']
   });
   employeeCurrencyAndAmount: any;
-
+  showGenerateAttendanceButton = false;
 
   constructor(
     public dialog: MatDialog,
     private toastr: ToastrService,
     private activatedRoute: ActivatedRoute,
     private salaryConfigService: EmployeeSalaryConfigService,
+    private attendanceService: AttendanceService,
+    private commonLoader: CommonLoaderService
   ) {
     this.selectedMonth = { name: 'SELECT MONTH', value: 0 };
     this.activatedRoute.params.subscribe(params => {
@@ -288,6 +292,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     };
 
     this.salaryConfigService.getEmployeePayroll(model).subscribe(x => {
+      this.showGenerateAttendanceButton = false;
       if (x && x.payroll) {
         this.isNoError = true;
         this.monthlySalaryBreakdown.NetSalary = x.payroll.NetSalary;
@@ -326,6 +331,11 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       this.onInitForm();
       this.isNoError = false;
       this.errorMessage = error;
+      if (error === 'Employee has no attendance for payroll') {
+        this.showGenerateAttendanceButton = true;
+      } else {
+        this.showGenerateAttendanceButton = false;
+      }
       // this.toastr.warning(error);
 
       //Payroll Hours are not configured for this month. Please Add Payroll Hours for the selected month for this
@@ -421,6 +431,28 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     });
 
 
+  }
+
+  markWholeMonthAttendance() {
+    this.isNoError = true;
+    const model = {
+      EmployeeId: this.employeeId,
+      Month: this.selectedMonth.value
+    };
+    this.commonLoader.showLoader();
+    this.attendanceService.markWholeMonthAttendance(model).subscribe(res => {
+      if (res) {
+        this.toastr.success('Attendance Marked Successfully!');
+        this.getEmployeePayroll();
+        this.commonLoader.hideLoader();
+      } else {
+        this.commonLoader.hideLoader();
+      }
+    }, err => {
+      this.isNoError = false;
+      this.errorMessage = err;
+      this.commonLoader.hideLoader();
+    });
   }
 }
 

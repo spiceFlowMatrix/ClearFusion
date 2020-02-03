@@ -52,12 +52,15 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 List<EmployeeAttendance> queryResult = await _dbContext.EmployeeAttendance.Where(x => x.EmployeeId == request.EmployeeId &&
                                                                                                       x.Date.Year == request.Year &&
                                                                                                       x.Date.Month == request.Month && x.IsDeleted == false)
+                                                                                                    .OrderBy(x=>x.Date)
                                                                                                     .ToListAsync();
 
                 foreach(var attendance in queryResult) {
                     AttendanceListModel model = new AttendanceListModel()
                     {
-                        Date = attendance.Date.ToShortDateString(),
+                        AttendanceId = attendance.AttendanceId,
+                        Date = attendance.Date,
+                        DisplayDate = attendance.Date.ToShortDateString(),
                         InTime = attendance.InTime,
                         OutTime = attendance.OutTime,
                         Attended = (attendance.AttendanceTypeId == 1) ? "Yes" : "No"

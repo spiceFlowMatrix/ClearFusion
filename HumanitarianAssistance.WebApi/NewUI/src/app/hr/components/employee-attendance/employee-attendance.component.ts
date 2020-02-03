@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
-import { MatDatepicker } from '@angular/material';
+import { Component, OnInit, ViewChild, HostListener, Input } from '@angular/core';
+import { MatDatepicker, MatDialog } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { AttendanceService } from '../../services/attendance.service';
 import { ToastrService } from 'ngx-toastr';
@@ -7,6 +7,7 @@ import { IAttendanceModel } from '../../models/attendance-models';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
 import { DatePipe } from '@angular/common';
+import { EditEmployeeAttendanceComponent } from './edit-employee-attendance/edit-employee-attendance.component';
 
 @Component({
   selector: 'app-employee-attendance',
@@ -16,15 +17,15 @@ import { DatePipe } from '@angular/common';
 export class EmployeeAttendanceComponent implements OnInit {
   //#region "Input/Output"
   @ViewChild(MatDatepicker) picker;
-
+  @Input() officeId;
   //#endregion
-
+  err = null;
   // Variables
   maxDate = new Date();
   attendanceForm: any;
   employeeId: number;
   Month: any;
-
+  isNoAttendanceMarked = false;
   // screen
   screenHeight: any;
   screenWidth: any;
@@ -35,7 +36,8 @@ export class EmployeeAttendanceComponent implements OnInit {
     private attendanceService: AttendanceService,
     private toastr: ToastrService,
     public commonLoader: CommonLoaderService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    public dialog: MatDialog
   ) {
     this.getScreenSize();
   }
@@ -94,6 +96,8 @@ export class EmployeeAttendanceComponent implements OnInit {
         if (response != null && response.attendanceList.length > 0) {
           response.attendanceList.forEach(element => {
             this.attendanceList.push({
+              AttendanceId: element.AttendanceId,
+              DisplayDate: element.DisplayDate,
               Date: element.Date,
               InTime: this.datePipe.transform(StaticUtilities.setLocalDate(element.InTime), 'shortTime'),
               OutTime: this.datePipe.transform(StaticUtilities.setLocalDate(element.OutTime), 'shortTime'),
@@ -101,6 +105,11 @@ export class EmployeeAttendanceComponent implements OnInit {
             });
           });
           this.attendanceForm.TotalCount = response.TotalCount;
+        }
+        if (response.TotalCount === 0) {
+          this.isNoAttendanceMarked = true;
+        } else {
+          this.isNoAttendanceMarked = false;
         }
         this.commonLoader.hideLoader();
       },
@@ -127,7 +136,80 @@ export class EmployeeAttendanceComponent implements OnInit {
   }
 
   markWholeMonthAttendance() {
-
+    this.err = null;
+    const model = {
+      EmployeeId: this.employeeId,
+      Month: this.attendanceForm.Month,
+      Year: this.attendanceForm.Year
+    };
+    this.commonLoader.showLoader();
+    this.attendanceService.markWholeMonthAttendance(model).subscribe(res => {
+      if (res) {
+        this.toastr.success('Attendance Marked Successfully!');
+        this.getAttendanceList(this.employeeId);
+        this.commonLoader.hideLoader();
+      } else {
+        this.commonLoader.hideLoader();
+      }
+    }, err => {
+      this.err = err;
+      this.commonLoader.hideLoader();
+    });
   }
   //#endregion
+
+  editAttendance (attendanceId, attended, date, InTime, OutTime) {
+    const dialogRef = this.dialog.open(EditEmployeeAttendanceComponent, {
+      width: '500px',
+      data: {
+        EmployeeId: this.employeeId,
+        AttendanceId: attendanceId,
+        AttendanceTypeId: (attended === 'Yes') ? 1 : 2,
+        InTime: new Date(
+          new Date(date).getFullYear(),
+          new Date(date).getMonth(),
+          new Date(date).getDate(),
+          this.convert12hTimeToHours(InTime),
+          this.convert12hTimeToMinutes(InTime)
+        ),
+        OutTime: new Date(
+          new Date(date).getFullYear(),
+          new Date(date).getMonth(),
+          new Date(date).getDate(),
+          this.convert12hTimeToHours(OutTime),
+          this.convert12hTimeToMinutes(OutTime)
+        ),
+        Date: new Date(date),
+        OfficeId: this.officeId
+      }
+    });
+    // refresh the data after new request created
+    dialogRef.afterClosed().subscribe(() => {
+      this.getAttendanceList(this.employeeId);
+    });
+  }
+
+  convert12hTimeToHours(time12h): number {
+    const [time, modifier] = time12h.split(' ');
+    let [hours, minutes] = time.split(':');
+    if (hours === '12') {
+      hours = '00';
+    }
+    if (modifier === 'PM') {
+      hours = parseInt(hours, 10) + 12;
+    }
+    return hours;
+  }
+
+  convert12hTimeToMinutes(time12h): number {
+    const [time, modifier] = time12h.split(' ');
+    let [hours, minutes] = time.split(':');
+    if (hours === '12') {
+      hours = '00';
+    }
+    if (modifier === 'PM') {
+      hours = parseInt(hours, 10) + 12;
+    }
+    return minutes;
+  }
 }

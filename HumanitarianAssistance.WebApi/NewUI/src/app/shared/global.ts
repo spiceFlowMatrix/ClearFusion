@@ -734,6 +734,8 @@ export class GLOBAL {
   public static API_Attendance_GetFilteredAttendanceDetails = 'Attendance/GetFilteredAttendanceDetails';
   public static API_Attendance_GetPayrollDailyHourByEmployeeIds = 'Attendance/GetPayrollDailyHourByEmployeeIds';
   public static API_Attendance_AddEditEmployeeAttendance = 'Attendance/AddEditEmployeeAttendanceDetails';
+  public static API_Attendance_MarkWholeMonthEmployeeAttendance = 'Attendance/MarkWholeMonthAttendanceByEmployeeId';
+  public static API_Attendance_EditEmployeeAttendanceByDate = 'Attendance/EditEmployeeAttendanceByDate';
   static API_HR_GetEmployeeBasicPayAndCurrency = 'EmployeePayroll/GetEmployeeBasicPayAndCurrency';
   public static API_EmployeePayroll_GetAdvanceListByEmployeeId = 'EmployeePayroll/GetAdvanceListByEmployeeId';
 

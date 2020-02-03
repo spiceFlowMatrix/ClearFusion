@@ -42,7 +42,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                 {
                     throw new Exception("Office Not Found");
                 }
-                PayrollMonthlyHourDetail payrollDetail = await _dbContext.PayrollMonthlyHourDetail.FirstOrDefaultAsync(x => x.OfficeId == officeId && x.PayrollYear == request.Year && x.PayrollMonth == request.Month && x.IsDeleted == false);
+                var financiallist = await _dbContext.FinancialYearDetail.FirstOrDefaultAsync(x => x.IsDefault == true);
+                PayrollMonthlyHourDetail payrollDetail = await _dbContext.PayrollMonthlyHourDetail.FirstOrDefaultAsync(x => x.OfficeId == officeId && x.PayrollYear == financiallist.StartDate.Year && x.PayrollMonth == request.Month && x.IsDeleted == false);
 
                 if (payrollDetail == null)
                 {
@@ -51,12 +52,11 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                                                                                               ));
                 }
 
-                int monthDays = DateTime.DaysInMonth(request.Year, request.Month);
-                var financiallist = await _dbContext.FinancialYearDetail.FirstOrDefaultAsync(x => x.IsDefault == true);
+                int monthDays = DateTime.DaysInMonth(financiallist.StartDate.Year, request.Month);
                 DateTime date = new DateTime();
                 for (int i = 1; i <= monthDays; i++)
                 {
-                    date = new DateTime(request.Year, request.Month, i);
+                    date = new DateTime(financiallist.StartDate.Year, request.Month, i);
                     await _dbContext.EmployeeAttendance.AddAsync(new EmployeeAttendance{
                         CreatedById = request.CreatedById,
                         CreatedDate = request.CreatedDate,
