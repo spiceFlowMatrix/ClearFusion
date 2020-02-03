@@ -38,12 +38,12 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     throw new Exception("Some Employees don't have Attendance Group assigned to them!");
                 }
 
-                var payrollDetail = await _dbContext.PayrollMonthlyHourDetail.Where(x => x.OfficeId == request.OfficeId && x.PayrollYear == request.Date.Year && x.PayrollMonth == request.Date.Month && x.IsDeleted == false)
+                var payrollDetail = await _dbContext.PayrollMonthlyHourDetail.Where(x => x.OfficeId == request.OfficeId && x.PayrollYear == request.FromDate.Year && x.PayrollMonth == request.FromDate.Month && x.IsDeleted == false)
                                                         .ToListAsync();
 
                 if (payrollDetail.Count() == 0)
                 {
-                    throw new Exception(String.Format(StaticResource.PayrollDailyHoursNotSaved, CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(request.Date.Month),
+                    throw new Exception(String.Format(StaticResource.PayrollDailyHoursNotSaved, CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(request.FromDate.Month),
                                                                                                 await _dbContext.OfficeDetail.Where(x=>x.IsDeleted==false && x.OfficeId == request.OfficeId).Select(x=>x.OfficeName).FirstOrDefaultAsync()
                                                                                               ));
                 }
@@ -54,8 +54,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     var AttendanceGroupWithNoInOutTimeName = empDetails.Where(x=>AttendanceGroupWithNoInOutTimeId.Contains(x.EmployeeProfessionalDetail.AttendanceGroupId)).Select(x=>x.EmployeeProfessionalDetail.AttendanceGroupMaster.Name).ToList();
                     throw new Exception(String.Format(StaticResource.PayrollDailyHoursNotSetForAttendanceGroup, 
                     await _dbContext.OfficeDetail.Where(x=>x.IsDeleted==false && x.OfficeId == request.OfficeId).Select(x=>x.OfficeName).FirstOrDefaultAsync(),
-                    CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(request.Date.Month),
-                    (request.Date.Year),
+                    CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(request.FromDate.Month),
+                    (request.FromDate.Year),
                     String.Join(",", AttendanceGroupWithNoInOutTimeName)
                     ));
                 }
@@ -69,7 +69,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     AttendanceType = (int)AttendanceType.P
                 }).ToList();
 
-                var existingAttendanceDetail = await _dbContext.EmployeeAttendance.Where(x=>x.IsDeleted == false && employeeRecord.Select(y=>y.EmployeeID).Contains(x.EmployeeId) && x.Date.Date == request.Date.Date).ToListAsync();
+                var existingAttendanceDetail = await _dbContext.EmployeeAttendance.Where(x=>x.IsDeleted == false && employeeRecord.Select(y=>y.EmployeeID).Contains(x.EmployeeId) && x.Date.Date >= request.FromDate.Date && x.Date.Date <= request.ToDate.Date).ToListAsync();
                 foreach(var attendance in existingAttendanceDetail)
                 {
                     ExistingAttendanceDetailModel emp = employeeRecord.FirstOrDefault(x=>x.EmployeeID == attendance.EmployeeId);
