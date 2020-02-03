@@ -245,10 +245,7 @@ export class JobHiringDetailsComponent implements OnInit {
   getJobHiringDetails() {
     this.jobsLoading = true;
     const officeId = this.selectedOffice;
-console.log(officeId);
-    // tslint:disable-next-line:radix
    // this.OfficeId = parseInt(localStorage.getItem('EMPLOYEEOFFICEID'));
-
     this.jobHiringService
       .GetJobHiringDetailByOfficeId(
         this.setting.getBaseUrl() + GLOBAL.API_HR_GetAllJobHiringDetails,

@@ -33,4 +33,39 @@ export class EmployeeListService {
       model
     );
   }
+
+  addResignation(EmployeeID) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_EmployeeDetail_AddEmployeeResignation,
+      EmployeeID
+    );
+  }
+
+  saveResignation(model) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_EmployeeDetail_SaveEmployeeResignation,
+      model
+    );
+  }
+
+  getResignationDetailById(id) {
+    return this.globalService.getItemById(
+      this.appurl.getApiUrl() + GLOBAL.API_EmployeeDetail_GetEmployeeResignationById,
+      id
+    );
+  }
+
+  terminateEmployeeByEmployeeeId(id) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_EmployeeDetail_TerminateEmployeeByEmployeeId,
+      id
+    );
+  }
+
+  deleteEmployeeByEmployeeeId(id) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_EmployeeDetail_DeleteEmployeeByEmployeeId,
+      id
+    );
+  }
 }

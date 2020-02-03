@@ -938,7 +938,6 @@ export class EmployeesComponent implements OnInit {
   //#endregion "GET ALL COUNTRY"
 
   onValueChanged(event) {
-    console.log(this);
     this.getStateType(event.value);
   }
 
@@ -946,9 +945,6 @@ export class EmployeesComponent implements OnInit {
   getStateType(e) {
     // TODO: Set Value For Add Employee
     this.countryId = e;
-
-    console.log(this.hrService);
-
     this.hrService
       .GetAllProvinceDetails(
         this.setting.getBaseUrl() + GLOBAL.API_Code_GetAllProvinceDetails,
@@ -1960,7 +1956,6 @@ export class EmployeesComponent implements OnInit {
   //#endregion "Get All JobGrade"
 
   onFieldDataChanged(e) {
-    console.log('hsdfjk', this.pensionDetaildataSource);
     if (e.dataField === 'Phone') {
       if (e.value !== undefined && e.value != null) {
         const phone = e.value.toString();

@@ -47,7 +47,9 @@
     <div class="col-sm-12">
       <br>
       <br>
-      <h3 class="page-heading-report empProject pension-heading">Opening Pension Detail</h3>
+      <h3 class="page-heading-report empProject pension-heading">Opening Pension Detail
+      <dx-button text="Opening Pension" (click)="openPensionForm()" *ngIf="isEditingAllowed">
+      </dx-button></h3>
       <dx-data-grid id="openingPension" [dataSource]="openingPensionList" [allowColumnReordering]="true"
         [allowColumnResizing]="true" [showRowLines]="true">
         <dxo-paging [pageSize]="10"></dxo-paging>
@@ -62,6 +64,61 @@
     </div>
 
   </div>
+
+   <!-- pension popup -->
+   <dx-popup title="Opening Pension Detail" [dragEnabled]="false" [closeOnOutsideClick]="true"
+   [(visible)]="popupPensionDetail" [width]="500" [minHeight]="400">
+
+   <div *dxTemplate="let data of 'content'">
+       <div class="alert alert-warning" *ngIf="exchangeRateMessage != '' && exchangeRateMessage != null"
+           role="alert">
+           {{exchangeRateMessage}}
+       </div>
+       <dx-scroll-view showScrollbar="always" direction="both">
+           <form action="your-action" (submit)="submitPension(pensionForm)">
+               <dx-form id="formg" [formData]="pensionForm" [colCount]="2"  [readOnly]="false"
+                   [showColonAfterLabel]="true" [showValidationSummary]="true"
+                   validationGroup="addGeneralDetails" (onFieldDataChanged)="onFieldDataChanged($event)">
+                   <dxi-item dataField="PensionDate" editorType="dxDateBox" 
+                       [editorOptions]="{ type: 'date', value: currentDate, max : currentDate , displayFormat: 'dd/MM/yyyy'}">
+                       <dxi-validation-rule type="required"> </dxi-validation-rule>
+                   </dxi-item>
+               </dx-form>
+
+               <dx-data-grid id="gridContainer" [dataSource]="pensionDetaildataSource" keyExpr="ID"
+                   [allowColumnReordering]="true" [showBorders]="true">
+
+                   <dxo-paging [enabled]="true"></dxo-paging>
+                   <dxo-editing mode="row" [allowDeleting]="false" [allowAdding]="true">
+                       <dxo-texts addRow="Add Opening Pension"></dxo-texts>
+                   </dxo-editing>
+
+                   <dxi-column dataField="CurrencyId" caption="Currency" >
+                       <dxo-lookup [dataSource]="currencycodeList" displayExpr="CurrencyName"
+                           valueExpr="CurrencyId">
+                       </dxo-lookup>
+                       <dxi-validation-rule type="required"> </dxi-validation-rule>
+                   </dxi-column>
+                   <dxi-column dataField="Amount" editorType="dxNumberBox" dataType="number"
+                       [editorOptions]="{ min: 0 }">
+                       <dxi-validation-rule type="required"> </dxi-validation-rule>
+                   </dxi-column>
+
+               </dx-data-grid>
+               <br>
+               <div class="row">
+                   <div class="col-sm-12 align-right">
+                       <dx-button text="Save" type="success" [useSubmitBehavior]="true"
+                           [disabled]="disableSubmitFlag">
+                       </dx-button>
+                       <dx-button text="Cancel" (onClick)="popupPensionDetail = false">
+                       </dx-button>
+                   </div>
+               </div>
+           </form>
+       </dx-scroll-view>
+   </div>
+</dx-popup>
   <div *ngIf="employeePensionReportFlag; else pensionReport">
     <div class="row">
       <div class="col-md-12">
@@ -394,12 +451,6 @@
           <dx-button (click)="generateSalaryTaxPdf()" text="Export Pdf"></dx-button>
           <br>
           <br>
-
-
-
-
-
-
           <div id="salaryTaxPdf"
             style="width:100%; margin:0 auto; font-family:times new roman; font-size:12px; padding-left: 15px;padding-right: 15px;padding-top: 20px">
             <table cellpadding="0" width="100%" cellspacing="0" style="padding:20px 60px; border:2px solid #aaa;">
@@ -474,20 +525,15 @@
                         <table width="100%" cellpadding="0" cellspacing="0">
                           <!-- REPEAT -->
                           <tr>
-                            <td width="10"
-                              style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">
-                              1</td>
-                            <td width="30%"
-                              style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;">
-                              Employer Taxpayer Identification Number (Employer Organisation)
+                            <td width="10" style="border-top:2px solid #ddd; border-right:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">1</td>
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:left; padding:5px 6px; color:#222; font-size:13px;font-weight:600;">
+                              Employer Taxpayer Identification Number (Employer Organization)
                             </td>
                             <td width="33%"
                               style="border-top:2px solid #ddd;color:#222; padding:5px 6px;font-size:13px; text-align:right;font-weight:600; margin-top:0px;">
                             </td>
-                            <td width="30%"
-                              style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
-                              translate>
-                              Employer Taxpayer Identification Number (Employer Organisation)
+                            <td width="30%" style="border-top:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;" translate>
+                              Employer Taxpayer Identification Number (Employer Organization)
                             </td>
                             <td width="10"
                               style="border-top:2px solid #ddd; border-left:2px solid #ddd; text-align:left; padding:5px 8px; color:#222; font-size:13px;font-weight:600;">
@@ -866,11 +912,8 @@
                         print out must have the same 14 fields.</td>
                     </tr>
                     <tr>
-                      <td
-                        style="border-top:2px solid #ddd; border-bottom:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
-                        translate>It's not mandatory to use the actual four parts printed 'Annual and tax withholding
-                        statement'. Employers with computerized system may wish to print out information from payroll
-                        database. Any computerized print out must have the same 14 fields.</td>
+                      <td style="border-top:2px solid #ddd; border-bottom:2px solid #ddd; text-align:right; padding:5px 6px; color:#222; font-size:13px;font-weight:600;"
+                        translate>longtext</td>
                     </tr>
                     <tr>
                       <td>
@@ -895,9 +938,9 @@
                               <p style="margin:0px;">Yellow</p>
                             </td>
                             <td style="padding:10px 15px; text-align:center;">
-                              <p style="margin-top:0px;" translate>Organisation keep for record</p>
+                              <p style="margin-top:0px;" translate>Organization keep for record</p>
                               <p style="margin-bottom:40px;" translate>Blue</p>
-                              <p style="margin-bottom:0px;">Organisation keep for record</p>
+                              <p style="margin-bottom:0px;">Organization keep for record</p>
                               <p style="margin:0px;">Blue</p>
                             </td>
                           </tr>

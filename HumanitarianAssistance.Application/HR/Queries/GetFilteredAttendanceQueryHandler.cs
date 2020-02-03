@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.HR.Models;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.HR;
 using HumanitarianAssistance.Persistence;
@@ -50,7 +51,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 }
                 List<EmployeeAttendance> queryResult = await _dbContext.EmployeeAttendance.Where(x => x.EmployeeId == request.EmployeeId &&
                                                                                                       x.Date.Year == request.Year &&
-                                                                                                      x.Date.Month == request.Month && x.IsDeleted == false)
+                                                                                                      x.Date.Month == request.Month && x.IsDeleted == false
+                                                                                                      && x.AttendanceTypeId == (int)AttendanceType.P)
                                                                                            .ToListAsync();
 
                 int monthDays = DateTime.DaysInMonth(request.Year, request.Month);
@@ -61,8 +63,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     AttendanceListModel model = new AttendanceListModel()
                     {
                         Date = date.ToShortDateString(),
-                        InTime = payrollDetail.InTime.Value.ToString("h:mm tt"),
-                        OutTime = payrollDetail.OutTime?.ToString("h:mm tt"),
+                        InTime = (queryResult.Select(x => x.Date.Day).Contains(date.Day)) ? (queryResult.Where(x => x.Date.Day == date.Day).Select(x=>x.InTime).FirstOrDefault()) : payrollDetail.InTime,
+                        OutTime = (queryResult.Select(x => x.Date.Day).Contains(date.Day)) ? (queryResult.Where(x => x.Date.Day == date.Day).Select(x=>x.OutTime).FirstOrDefault()) : payrollDetail.OutTime,
                         Attended = queryResult.Select(x => x.Date.Day).Contains(date.Day) ? "Yes" : "No"
                     };
                     attendanceModel.attendanceList.Add(model);

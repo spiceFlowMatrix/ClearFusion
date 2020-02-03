@@ -766,3 +766,20 @@ export enum ContractType {
   'Part-time' = 2,
   'Permanent/Full-time' = 3
 }
+
+export enum TransactionType {
+  Credit = 1,
+  Debit = 2
+}
+
+export enum HolidayType {
+'ParticularDay'= 1,
+'Weekly' = 2
+}
+
+export enum AdvanceBtnStatus {
+  NEW = 1,
+  APPROVE= 2,
+  REJECT= 3,
+  EDIT= 4
+}

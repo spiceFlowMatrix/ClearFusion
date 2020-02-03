@@ -144,7 +144,6 @@ export class VehicleTrackerComponent implements OnInit {
         }
       },
         (error) => {
-          console.error(error);
         });
   }
 

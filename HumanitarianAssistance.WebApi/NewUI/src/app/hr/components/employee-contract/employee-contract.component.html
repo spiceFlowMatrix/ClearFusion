@@ -1,3 +1,15 @@
-<p>
-  employee-contract works!
-</p>
+<mat-card humAddScroll *ngIf="displayAddContract;else addContractFrom">
+    <div class="row header">
+        <span class="action_header">Contracts
+      <hum-button [type]="'add'" [text]="'Add Contract'" (click)="displayAddContractForm()"></hum-button>
+    </span>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <hum-table [headers]="contractListHeader$" [isDefaultAction]="false" [items]="contractList$" (actionClick)="actionEvents($event)" [actions]="actions"></hum-table>
+        </div>
+    </div>
+</mat-card>
+<ng-template #addContractFrom>
+    <app-add-contract (isDisplayContractForm)="hideAddContract()"></app-add-contract>
+</ng-template>

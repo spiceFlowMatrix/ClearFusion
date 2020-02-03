@@ -222,6 +222,41 @@ namespace HumanitarianAssistance.WebApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetEmployeeSalaryTaxPdf([FromBody] GetEmployeeSalaryTaxReportPdfQuery model)
+        {
+            try
+            {
+                var file = await _mediator.Send(model);
+                return File(file, "application/pdf", "EmployeeSalaryAndTaxReport.pdf");
+            }
+            catch (Exception ex)
+            {
+                Response.Headers.Add("ExMessage", ex.Message);
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetEmployeeContractReportPdf([FromBody]GetEmployeeContractReportPdfQuery model)
+        {
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "ContractDetailReport.pdf");
+        }
+
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> ExportEmployeeLeavePdf([FromBody]int id)
+        {
+            ExportEmployeeLeavePdfQuery model = new ExportEmployeeLeavePdfQuery
+            {
+                EmployeeId = id
+            };
+            var file = await _mediator.Send(model);
+            return File(file, "application/pdf", "EmployeeLeave.pdf");
+        }
     }
 }
 

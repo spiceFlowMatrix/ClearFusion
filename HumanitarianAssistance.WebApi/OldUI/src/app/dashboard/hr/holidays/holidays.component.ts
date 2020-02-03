@@ -369,7 +369,7 @@ export class HolidaysComponent implements OnInit {
   }
   //#endregion
 
-  //#region "Get All Holiday Weekly Details"
+  //#region "Get All Holiday Weekly Details"  
   getAllHolidayWeeklyDetails() {
     this.holidayWeeklyPopupLoading = true;
 

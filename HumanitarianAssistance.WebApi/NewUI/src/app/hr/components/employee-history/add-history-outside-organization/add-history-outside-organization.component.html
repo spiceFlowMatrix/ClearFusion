@@ -1,0 +1,59 @@
+<div>
+    <h1 mat-dialog-title>
+        Add Employeement History Outside of Organization
+        <button mat-icon-button [mat-dialog-close] class="pull-right">
+<mat-icon aria-label="clear">clear</mat-icon>
+</button>
+    </h1>
+    <form class="example-form" [formGroup]="historyOutsideOrganizationDetailForm" (ngSubmit)="onFormSubmit(historyOutsideOrganizationDetailForm.value)">
+        <div mat-dialog-content>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                            <mat-form-field class="example-full-width">
+                                <input matInput [matDatepicker]="EmploymentFromPicker" placeholder="Employment From" formControlName="EmploymentFrom" />
+                                <mat-datepicker-toggle matSuffix [for]="EmploymentFromPicker"></mat-datepicker-toggle>
+                                <mat-datepicker #EmploymentFromPicker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <mat-form-field class="example-full-width">
+                                <input matInput [matDatepicker]="EmploymentToPicker" placeholder="Employment To" formControlName="EmploymentTo" />
+                                <mat-datepicker-toggle matSuffix [for]="EmploymentToPicker"></mat-datepicker-toggle>
+                                <mat-datepicker #EmploymentToPicker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="Organization" placeholder="Organization" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="MonthlySalary" placeholder="Monthly Salary" type="number" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="ReasonForLeaving" placeholder="Reason For Leaving" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="Position" placeholder="Position" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div mat-dialog-actions class="pull-right">
+                <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+                <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
+                <hum-button (click)="onCancelPopup()" [type]="'cancel'" [text]="'cancel'"></hum-button>
+            </div>
+        </div>
+    </form>
+</div>

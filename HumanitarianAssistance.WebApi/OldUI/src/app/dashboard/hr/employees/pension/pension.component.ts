@@ -4,10 +4,11 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GLOBAL } from '../../../../shared/global';
 import { CodeService } from '../../../code/code.service';
-import { TranslateService } from '@ngx-translate/core';
 import { applicationPages } from '../../../../shared/application-pages-enum';
 import { CommonService } from '../../../../service/common.service';
 import { AppSettingsService } from '../../../../service/app-settings.service';
+import { DatePipe } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core/src/translate.service';
 
 declare let jsPDF;
 declare var $: any;
@@ -45,6 +46,12 @@ export class PensionComponent implements OnInit {
   salaryTaxReportForm: any;
   pensionReportList: PensionReportModel[] = [];
   fileName: any;
+  popupPensionDetail = false;
+  pensionForm: any;
+  exchangeRateMessage: string;
+  disableSubmitFlag = false;
+  pensionDetaildataSource: PensionDetailModel[] = [];
+
 
   constructor(
     private commonService: CommonService,
@@ -53,9 +60,11 @@ export class PensionComponent implements OnInit {
     private hrService: HrService,
     private router: Router,
     private setting: AppSettingsService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private transformDate: DatePipe
   ) {
     translate.setDefaultLang('fa');
+    this.pensionFormInitialize();
   }
 
   ngOnInit() {
@@ -70,6 +79,7 @@ export class PensionComponent implements OnInit {
       applicationPages.Employees
     );
     this.getOpeningPensionDetail(this.employeeId);
+    this.checkExchangeRateVerified(new Date());
   }
 
   initializeForm() {
@@ -105,6 +115,14 @@ export class PensionComponent implements OnInit {
       OfficerName: null,
       Position: null,
       Date: null
+    };
+  }
+
+  pensionFormInitialize() {
+    this.pensionForm = {
+      EmployeeId: this.employeeId,
+      PensionDate: new Date(),
+      PensionDetail: []
     };
   }
 
@@ -357,12 +375,12 @@ export class PensionComponent implements OnInit {
   //#endregion
 
   getAllSalaryTaxData(yearId: number, currencyId: number) {
-    const model = {
-      OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID'), 32),
-      EmployeeId: this.employeeId,
-      FinancialYearId: yearId,
-      CurrencyId: currencyId
-    };
+      const model = {
+        OfficeId: parseInt(localStorage.getItem('EMPLOYEEOFFICEID'), 32),
+        EmployeeId: this.employeeId,
+        FinancialYearId: yearId,
+        CurrencyId: currencyId
+      };
 
     this.showHideSalaryTaxInfoLoading(true);
     this.hrService
@@ -567,6 +585,85 @@ export class PensionComponent implements OnInit {
   showHideSalaryTaxInfoLoading(e: boolean) {
     this.salaryTaxReportloading = e;
   }
+
+  //#region "openPensionForm"
+  openPensionForm() {
+    this.popupPensionDetail = true;
+    this.pensionFormInitialize();
+  }
+  //#endregion
+  checkExchangeRateVerified(exchangeRateDate: any) {
+    this.pensionForm.PensionDate = exchangeRateDate;
+    const checkExchangeRateModel = {
+      ExchangeRateDate: new Date(
+        new Date(exchangeRateDate).getFullYear(),
+        new Date(exchangeRateDate).getMonth(),
+        new Date(exchangeRateDate).getDate(),
+        new Date().getHours(),
+        new Date().getMinutes(),
+        new Date().getSeconds()
+      )
+    };
+    this.hrService
+      .getExchaneRateVerified(
+        this.setting.getBaseUrl() +
+          GLOBAL.API_ExchangeRates_CheckExchangeRatesVerified,
+        checkExchangeRateModel
+      )
+      .subscribe(
+        data => {
+          if (data.StatusCode === 200) {
+            if (data.ResponseData) {
+              this.disableSubmitFlag = false;
+              this.exchangeRateMessage = '';
+            } else {
+              this.disableSubmitFlag = true;
+              this.exchangeRateMessage =
+                'No Exchange Rate set/verified for ' +
+                this.transformDate.transform(
+                  checkExchangeRateModel.ExchangeRateDate,
+                  'dd-MM-yyyy'
+                );
+            }
+          } else {
+            this.toastr.error(data.Message);
+          }
+        },
+        error => {}
+      );
+  }
+
+  submitPension(formdata: any) {
+    if (formdata !== undefined) {
+      this.pensionForm.EmployeeId = this.employeeId;
+      this.pensionForm.PensionDate = formdata.PensionDate;
+      this.pensionForm.PensionDetail = this.pensionDetaildataSource;
+      this.popupPensionDetail = false;
+      this.hrService
+      .EditEmployee(
+        this.setting.getBaseUrl() + GLOBAL.API_Hr_AddOpeningPensionDetail,
+        this.pensionForm
+      ).subscribe( response => {
+        if (response === true) {
+          this.toastr.success('Employee opening pension added successfully!!!');
+          this.pensionFormInitialize();
+          this.getOpeningPensionDetail(this.employeeId);
+          this.pensionDetaildataSource = [];
+        }
+      },
+      error => {
+          this.toastr.warning(error);
+      });
+    }
+  }
+
+  onFieldDataChanged(e) {
+    if (e.dataField === 'PensionDate') {
+      if (e.value !== undefined && e.value != null && e.value !== '') {
+        this.checkExchangeRateVerified(e.value);
+      }
+    }
+  }
 }
 
 export class CurrentFinancialYearModel {
@@ -644,4 +741,8 @@ export class EmployeePensionReportPdfModel {
   PensionDeductionTotal: any;
   PensionProfitTotal: any;
   Total: any;
+}
+export interface PensionDetailModel {
+  CurrencyId: any;
+  Amount: any;
 }

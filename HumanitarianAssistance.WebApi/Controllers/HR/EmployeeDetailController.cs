@@ -606,9 +606,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return await _mediator.Send(model);
         }
 
-        #endregion
+        #endregion 
 
-         [HttpPost]
+        [HttpPost]
         public async Task<ApiResponse> EmployeeTaxCalculation([FromBody]GetEmployeeTaxCalculationQuery model)
         {
             return await _mediator.Send(model);
@@ -617,8 +617,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpGet]
         public async Task<object> GetSelectedEmployeeContractByEmployeeId([FromQuery]int EmployeeId)
         {
-            return await _mediator.Send(new GetContractByEmployeeIdQuery {
-                EmployeeId= EmployeeId
+            return await _mediator.Send(new GetContractByEmployeeIdQuery
+            {
+                EmployeeId = EmployeeId
             });
         }
 
@@ -637,7 +638,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpGet]
         public async Task<IActionResult> CheckUserEmailAlreadyExists(string Email)
         {
-            if(!string.IsNullOrEmpty(Email))
+            if (!string.IsNullOrEmpty(Email))
             {
                 return Ok(await _mediator.Send(new CheckUserEmailAlreadyExistsQuery { Email = Email }));
             }
@@ -659,9 +660,10 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         [HttpPost]
         public async Task<IActionResult> GetEmployeeDetailById([FromBody] int id)
         {
-            var result= await _mediator.Send(new GetEmployeeDetailByIdQuery { EmployeeId = id });
+            var result = await _mediator.Send(new GetEmployeeDetailByIdQuery { EmployeeId = id });
             return Ok(result);
         }
+        [HttpPost]
         public async Task<IActionResult> GetAllEmployeeDetailList([FromBody]GetAllEmployeeDetailListQuery model)
         {
             var result = await _mediator.Send(model);
@@ -681,5 +683,104 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return Ok(result);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddEmployeeResignation([FromBody]int EmployeeID)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var result = await _mediator.Send(new AddEmployeeResignationCommand
+            {
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow,
+                EmployeeID = EmployeeID
+            });
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveEmployeeResignation([FromBody]SaveEmployeeResignationCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetEmployeeResignationById([FromQuery]int Id)
+        {
+            var result = await _mediator.Send(new GetEmployeeResignationByIdQuery {
+                EmployeeID = Id
+            });
+            return Ok(result);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddOpeningPensionDetail([FromBody] AddOpeningPensionDetailCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var result = await _mediator.Send(new AddOpeningPensionDetailCommand
+            {
+                CreatedById = userId,
+                CreatedDate = DateTime.UtcNow,
+                EmployeeID = model.EmployeeID,
+                PensionDate = model.PensionDate,
+                PensionDetail = model.PensionDetail
+            });
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetEmployeeDetailForContractById([FromBody] int EmployeeId)
+        {
+            var result = await _mediator.Send(new GetEmployeeDetailForContractByIdQuery { EmployeeId = EmployeeId });
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> AddNewEmployeeDetails([FromBody]AddNewEmployeeDetailsCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse> EditEmployeeDetails([FromBody]EditEmployeeDetailsCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> TerminateEmployeeByEmployeeId([FromBody] int EmployeeId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            TerminateEmployeeByEmployeeIdCommand model = new TerminateEmployeeByEmployeeIdCommand {
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow,
+                EmployeeId = EmployeeId
+            };
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteEmployeeByEmployeeId([FromBody] int EmployeeId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            DeleteEmployeeByEmployeeIdCommand model = new DeleteEmployeeByEmployeeIdCommand {
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow,
+                EmployeeId = EmployeeId
+            };
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
     }
 }

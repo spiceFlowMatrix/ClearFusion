@@ -1,0 +1,221 @@
+@model HumanitarianAssistance.Application.HR.Models.ContractDetailReportPdfModel
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .container {
+            margin: 0 auto;
+            max-width: 800px;
+        }
+        
+        .print {
+            .page-break {
+                page-break-after: always;
+                page-break-inside: avoid;
+                clear: both;
+            }
+            .page-break-before {
+                page-break-before: always;
+                page-break-inside: avoid;
+                clear: both;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+                    <table cellpadding="5" style="width:100%;">
+                        <tr>
+                            <td><img src="@Model.LogoPath" alt=""></td>
+                            <td style="text-align:left"> <img src = "@Model.PersianChaName" alt = ""> </td>
+                        </tr>
+                        <tr>
+                         <td colspan="2" align="center" style="font-size:20px;font-weight:500;">COORDINATION OF HUMANITARIAN ASSISTANCE(CHA)<br>Contract Report</td>
+                        </tr>
+                    </table>
+        </div>
+        <div class="row">
+            <p style="font-size: 17px;">
+               <b> Employment Contract</b>
+            </p>
+            <p>
+                This contract is between Coordination of Humanitarian Assistance (CHA) and employees for specific task, the details of the contract are as follow:
+            </p>
+        </div>
+        <div class="row">
+            <table style="width: 60%;" cellpadding="10">
+                <tbody>
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Employee's Name</b></td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid;">@Model.EmployeeName</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Father Name</b></td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">@Model.FatherName</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Employee Code</b></td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.EmployeeCode</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Designation</b></td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">@Model.Designation</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Contract Start Date</b></td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.ContractStartDate</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Contract End Date</b></td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.ContractEndDate</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Duration Of Contract</b></td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.DurationOfContract</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Salary</b></td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.Salary</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Grade</b></td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.Grade</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Project Name</b></td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">@Model.ProjectName</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Project Code</b></td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">@Model.ProjectCode</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Duty Station</b></td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">@Model.DutyStation</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Provicne</b></td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.Province</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Budget Line</b></td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">@Model.BudgetLine</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Job</b></td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.Job</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Work Time</b></td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left;border-bottom: 1px black solid; ">@Model.WorkTime</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; "><b>Work Day (Hours)</b></td>
+                        <td style="font-size: 15px; font-weight: 500; text-align: left; border-bottom: 1px black solid;">@Model.WorkDay</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div><br><br>
+        <div class="row">
+            <h4>
+  <b>
+  Conditions:
+  </b>
+  </h4>
+            <p>
+                <b>By signing of this contract the employee hereby agrees to:</b>
+            </p>
+            <ul>
+                <li>Fulfill the requirement detailed in the rule description.</li>
+                <li>Adhere to CHA’s procedure and policies</li>
+                <li>Conduct him/her self in ethical and honest way</li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <p><b>
+  Termination/ Extension of contract:
+  </b> </p>
+            <p>
+                This agreement can be terminated by either party with or without reason by submitting 30 days written notice, in special cases like termination of contact by donors, organization can terminate employees contact without any notice.
+            </p>
+            <p>
+                The contract may be extended in the case of project continuation and or the further availability of fund.
+            </p>
+            <ul>
+                <li>This contract can be terminated by the organization any time with a one month prior notice, in cases like contract termination by donors, the organization can terminate this contract any time without prior notice.
+                </li>
+                <li>In case project extends, contract with project staff will be extended, but this will be done if there is need for doing so, otherwise contract extension is not must</li>
+                <li>At the end of contract the organization is obliged to pay one month salary to the employee</li>
+                <li>Employees cannot take any type of loans under the name of CHA from any agency.
+                </li>
+                <li>
+                    On time payment of staff salaries depend on receipt of money from donors, and in case of delays, CHA cannot be taken responsible
+                </li>
+                <li>Besides the assigned tasks the organization can assign the employee to other official tasks or transfer him / her to other locations.
+                </li>
+                <li>The employee has to be present to duty location for the defined time period.
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <p><b>
+  The employee gives commitment toward the policy and
+procedure to:
+  </b></p>
+            <ul>
+                <li>
+                    To pay 4.5 % from monthly salary to the pension account according to the rules and procedure of the organization
+                </li>
+                <li>
+                    If leaves job in a wrong way, can take their money from this account by paying one month salary to the organization(CHA)
+                </li>
+                <li>
+                    Does not try to withdraw this amount while working in the organization
+                </li>
+                <li>
+                    Responsibility for safety measures against unexpected incidents such as traffic accidents, murder, theft, abduction, etc.during the performance of their duties, are related to the employee, and the CHA has no responsibility for it
+                </li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <p><b>
+Considering religious and moral principles, the
+employee promises to:
+  </b></p>
+            <ul>
+                <li>
+                    Perform tasks honestly, with integrity, neutrality, without any party, tribe, religion, gender, language and region related discriminations, protect organization & rsquo; s properties and belongings and does not prefer self - interests over organization & rsquo; s interests.
+
+                </li>
+                <li>
+                    Make efforts for attaining defined goals and objectives with all his / her abilities and strengths, use his / her strength and energy for the organization and in this way for sound development of Afghanistan.
+
+                </li>
+                <li>
+                    Accept all rules and regulations and considers them as a guidance.
+                </li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <p>
+                These terms are acceptable and will be followed.
+            </p>
+            <p><b>Contract singed by:</b></p>
+            <p><b>Name:</b></p>
+            <p><b>Signature: (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</b></p>
+        </div>
+    </div>
+</body>
+
+</html>

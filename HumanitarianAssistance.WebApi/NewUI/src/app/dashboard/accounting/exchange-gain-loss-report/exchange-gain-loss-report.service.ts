@@ -210,7 +210,7 @@ export class ExchangeGainLossReportService {
   //#endregion
 
   //#region "AddGainLossVoucher"
-  AddGainLossVoucher(data: IGainLossAddVoucherForm) {
+  AddGainLossVoucher(data: any) {
     return this.globalService
       .post(this.appurl.getApiUrl() + GLOBAL.API_GainLossReport_AddExchangeGainLossVoucher, data)
       .pipe(

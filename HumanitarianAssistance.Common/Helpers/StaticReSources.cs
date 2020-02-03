@@ -363,11 +363,13 @@ namespace HumanitarianAssistance.Common.Helpers
 
         //HR
         public const string PensionPaymentCreated = "Pension Payment Done On {0} for {1}";
+        public const string PayrollDailyHoursNotSetForAttendanceGroup = "Payroll Daily Hours not set for Office: {0}, Month: {1}, Year:{2}, Attendance Group: {3}";
         public const string NoAttendanceToAdd ="No Attendance to Add";
         public const string PensionPayment = "Pension Payment";
         public const string EmployeeRecordNotFound= "Employee Record Not Found";
         public const string EmployeePayrollCurrencyNotSet= "Employee Payroll Currency Not Set";
         public const string PayrollDailyHoursNotSaved = "Please Set Payroll Hours of Month {0} for Office {1}";
+        public const string PayrollDailyHoursNotSet = "Payroll daily hours not set";
         public const string LeavesNotDefined = "Leaves Not Defined";
 
         // Marketing
@@ -384,6 +386,7 @@ namespace HumanitarianAssistance.Common.Helpers
         public const string PayrollNotSet= "Payroll details not set for Employee code: ";
         public const string AttendanceGroupNotSet= "Attendance Group not set for Employee code: ";
         public const string BasicPayNotSet= "Basic Pay not set for Employee Code: ";
+        public const string AttendanceNotFound= "Employee has no attendance for payroll";
 
         public const string NameExist = "Name Already Exist";
         public const string SuccessText = "Success";

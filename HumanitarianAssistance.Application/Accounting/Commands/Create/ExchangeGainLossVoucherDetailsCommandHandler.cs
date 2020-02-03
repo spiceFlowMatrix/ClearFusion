@@ -62,30 +62,42 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
                     if (responseVoucher != null)
                     {
                         List<VoucherTransactionsModel> transactions = new List<VoucherTransactionsModel>();
+                        List<TransactionListModel> creditTransactions = new List<TransactionListModel>();
+                        List<TransactionListModel> debitTransactions = new List<TransactionListModel>();
+                        long [] accountIds = model.TransactionList.Select(x=> x.AccountId).ToArray();
 
+                        creditTransactions = model.TransactionList.Where(x=> x.DebitAmount ==0).ToList();
+                        debitTransactions = model.TransactionList.Where(x=> x.CreditAmount ==0).ToList();
+
+                        foreach(var item in creditTransactions)
+                        {
                         // Credit
                         transactions.Add(new VoucherTransactionsModel
                         {
                             TransactionId = 0,
                             VoucherNo = responseVoucher.VoucherNo,
-                            AccountNo = model.CreditAccount,
+                            AccountNo = item.AccountId,
                             Debit = 0,
-                            Credit = Math.Abs(model.Amount),
+                            Credit = Math.Abs(item.CreditAmount),
                             Description = "Gain-Loss-Voucher-Credit",
                             IsDeleted = false
                         });
+                        }
 
+                        foreach(var item in debitTransactions)
+                        {
                         // Debit
                         transactions.Add(new VoucherTransactionsModel
                         {
                             TransactionId = 0,
                             VoucherNo = responseVoucher.VoucherNo,
-                            AccountNo = model.DebitAccount,
-                            Debit = Math.Abs(model.Amount),
+                            AccountNo = item.AccountId,
+                            Debit = Math.Abs(item.DebitAmount),
                             Credit = 0,
                             Description = "Gain-Loss-Voucher-Debit",
                             IsDeleted = false
                         });
+                        }
 
                         AddEditTransactionListCommand transactionVoucherDetail = new AddEditTransactionListCommand
                         {
@@ -112,7 +124,7 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
                             throw new Exception(StaticResource.TransactionsNotSaved);
                         }
 
-                        AddConsolidatedAccountDetails(model.AccountIds, model.StartDate, model.EndDate, model.CreatedById);
+                        AddConsolidatedAccountDetails(accountIds, model.StartDate, model.EndDate, model.CreatedById);
                         tran.Commit();
                         response.StatusCode = StaticResource.successStatusCode;
                         response.Message = StaticResource.SuccessText;
