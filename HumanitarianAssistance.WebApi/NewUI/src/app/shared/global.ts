@@ -195,6 +195,7 @@ export class GLOBAL {
   public static API_Pdf_ExportEmployeeLeavePdf = 'Pdf/ExportEmployeeLeavePdf';
   public static API_HR_GetEmployeeWorkingTimeByMonth = 'Attendance/GetEmployeeWorkingTimeByMonth';
   public static API_HR_GetEmployeeAppliedLeaveHours = 'Attendance/GetEmployeeAppliedLeaveHours';
+  public static API_Attendance_GetAppliedLeaveDates = 'Attendance/GetAppliedLeaveDates';
   public static API_HR_ApproveRejectLeave = 'Attendance/ApproveRejectLeave';
   public static API_HR_AddEmployeeSalaryCurrencyAndBasicSalary = 'EmployeePayroll/AddEmployeeSalaryCurrencyAndBasicSalary';
   public static API_HR_EditEmployeeSalaryCurrencyAndBasicSalary = 'EmployeePayroll/EditEmployeeSalaryCurrencyAndBasicSalary';

@@ -91,7 +91,7 @@ export class EmployeeLeaveComponent implements OnInit {
             Id: element.LeaveReasonId,
             LeaveType: element.LeaveReasonName,
             AllowedHours: element.Unit,
-            ApprovedHours: element.AssignUnit,
+            ApprovedHours: element.AppliedUnit,
             HourBalance: element.BlanceLeave
           };
         })
