@@ -9,9 +9,16 @@
       <h5 [ngStyle]="{'color':  (this.selection.selected.length === 0) ? 'inherit' : '#0390D1' }">SET ATTENDANCE </h5>
     </button>
     <mat-form-field style="width:1px;visibility:hidden;">
-      <input matInput [matDatepicker]="picker" (dateChange)="onDateChanged($event)">
-      <mat-datepicker #picker ></mat-datepicker>
+      <!-- <input matInput [matDatepicker]="picker" (dateChange)="onDateChanged($event)"> -->
+      <!-- <mat-datepicker #picker ></mat-datepicker> -->
+      <input [matDatepickerFilter]="myFilter" matInput [satDatepicker]="picker" (dateChange)="onDateChanged($event)">
+      <sat-datepicker
+          #picker
+          [rangeMode]="true">
+      </sat-datepicker>
+      <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
     </mat-form-field>
+
     <button mat-button [disabled]="(this.selection.selected.length === 0)" [matMenuTriggerFor]="SalaryReconfigureMenu">
       <h5 [ngStyle]="{'color':  (this.selection.selected.length === 0) ? 'inherit' : '#0390D1' }">RECONFIGURE SALARY &nbsp;<i class="fas fa-caret-down"></i></h5>
     </button>
@@ -33,6 +40,7 @@
     <form [formGroup]="employeeListFilterForm" (ngSubmit)="filterEmployee(employeeListFilterForm.value)">
         <h4>Filters
             <hum-button class="pull-right" [type]="'filter'" [text]="'APPLY FILTER'" [isSubmit]="true"></hum-button>
+            <hum-button class="pull-right" [type]="'reset'" [text]="'RESET FILTER'" (click)="resetFilter()"></hum-button>
         </h4>
         <div class="row">
             <div class="col-md-2">
