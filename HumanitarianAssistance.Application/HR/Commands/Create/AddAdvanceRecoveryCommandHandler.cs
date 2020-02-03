@@ -48,7 +48,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                             EmployeeId = request.EmployeeId,
                             InstallmentBalance = advanceRecord.AdvanceAmount- (recoveredAmount + request.Amount),
                             IsDeleted = false,
-                            PaymentDate = DateTime.UtcNow
+                            PaymentDate = new DateTime(DateTime.UtcNow.Year, request.Month, DateTime.UtcNow.Day)
                         };
 
                         await _dbContext.AdvanceHistoryDetail.AddAsync(advanceHistory);
@@ -60,14 +60,12 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                         advanceRecordExist.InstallmentBalance = advanceRecord.AdvanceAmount- (recoveredAmount + request.Amount);
                         advanceRecordExist.ModifiedById = request.CreatedById;
                         advanceRecordExist.ModifiedDate = DateTime.UtcNow;
-                        _dbContext.AdvanceHistoryDetail.Update(advanceRecordExist);
                         await _dbContext.SaveChangesAsync();
                     }
 
                     if (advanceRecord.AdvanceAmount == (recoveredAmount + request.Amount))
                     {
                         advanceRecord.IsDeducted = true;
-                        _dbContext.Advances.Update(advanceRecord);
                         await _dbContext.SaveChangesAsync();
                     }
 

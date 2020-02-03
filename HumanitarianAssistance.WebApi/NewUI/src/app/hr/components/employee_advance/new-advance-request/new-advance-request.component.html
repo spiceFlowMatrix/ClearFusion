@@ -5,8 +5,15 @@
     </h4>
     <mat-divider></mat-divider>
     <div mat-dialog-content>
-      <div class="row">
-        <div class="col-sm-12">
+      <div class="alert alert-warning" *ngIf="errorMessage != '' && errorMessage != null" role="alert">
+        <p class="txt-center-align">{{errorMessage}}</p>
+      </div>
+      <div class="row" *ngIf="errorMessage == '' || errorMessage == null">
+        <div class="col-sm-12 margin_top_10">
+          <strong>Currency:</strong> {{newAdvanceRequestForm.get('CurrencyName').value}}
+        </div>
+        <br>
+        <div class="col-sm-12 margin_top_10">
           <mat-form-field>
             <input matInput formControlName="AdvanceDate" [matDatepicker]="picker" placeholder="Advance Date">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -52,8 +59,10 @@
       </div>
     </div>
     <div mat-dialog-actions class="items-float-right">
-      <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"
+      <div *ngIf="errorMessage == '' && !isFormSubmitted">
+        <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"
         [disabled]="!newAdvanceRequestForm.valid || !newAdvanceRequestForm.dirty"></hum-button>
+      </div>
       <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
       <hum-button (click)='closeDialog()' [type]="'cancel'" [text]="'cancel'"></hum-button>
     </div>

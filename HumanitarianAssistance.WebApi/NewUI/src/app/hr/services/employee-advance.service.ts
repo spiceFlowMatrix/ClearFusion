@@ -46,11 +46,11 @@ export class EmployeeAdvanceService {
   //#endregion
 
   //#region "getAdvanceDetailById"
-  getAdvanceDetailById(id) {
+  getAdvanceDetailById(model) {
     return this.globalService
-      .getDataById(
+      .post(
         this.appurl.getApiUrl() +
-          GLOBAL.API_EmployeePayroll_GetAdvanceDetailById + '?id=' + id
+          GLOBAL.API_EmployeePayroll_GetAdvanceDetailById, model
       );
   }
   //#endregion
@@ -91,6 +91,16 @@ export class EmployeeAdvanceService {
       .getDataById(
         this.appurl.getApiUrl() +
           GLOBAL.API_EmployeePayroll_GetAdvanceHistoryById + '?id=' + id
+      );
+  }
+  //#endregion
+
+  //#region "getEmployeePayrollCurrency"
+  getEmployeePayrollCurrency(id) {
+    return this.globalService
+      .getDataById(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_EmployeePayroll_GetEmployeePayrollCurrency + '?id=' + id
       );
   }
   //#endregion

@@ -22,6 +22,7 @@ export class NewAdvanceRequestComponent implements OnInit {
   headerText = 'Add Advance Request';
   advanceBtnStatus = AdvanceBtnStatus; // use enum in html
   employeeList$: Observable<IDropDownModel[]>;
+  errorMessage: string;
 
   constructor(private dialogRef: MatDialogRef<NewAdvanceRequestComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, private fb: FormBuilder,
@@ -34,6 +35,7 @@ export class NewAdvanceRequestComponent implements OnInit {
     this.getEmployeeList();
     if (this.data.btnStatus === AdvanceBtnStatus.NEW) {
       this.headerText = 'Add Advance Request';
+      this.getEmployeePayrollCurrency();
     } else if (this.data.btnStatus === AdvanceBtnStatus.APPROVE) {
       this.headerText = 'Approve Advance';
       const control = new FormControl();
@@ -48,6 +50,7 @@ export class NewAdvanceRequestComponent implements OnInit {
   onFormInIt() {
     this.newAdvanceRequestForm = this.fb.group({
       'AdvanceId': [null],
+      'CurrencyName': [null],
       'AdvanceDate': [new Date(), [Validators.required]],
       'ApprovedBy': [null, [Validators.required]],
       'NumberOfInstallments': [null, [Validators.required, Validators.min(1)]],
@@ -87,6 +90,7 @@ export class NewAdvanceRequestComponent implements OnInit {
   }
 
   addNewAdvance() {
+    this.errorMessage = '';
     this.isFormSubmitted = true;
 
     const model = {
@@ -108,6 +112,7 @@ export class NewAdvanceRequestComponent implements OnInit {
         this.isFormSubmitted = false;
       }
     }, error => {
+      this.errorMessage = error;
       this.isFormSubmitted = false;
       this.toastr.warning(error);
     });
@@ -162,12 +167,18 @@ export class NewAdvanceRequestComponent implements OnInit {
   }
 
   getAdvanceDetailById() {
-    this.advanceService.getAdvanceDetailById(this.data.Id).subscribe(x => {
+    this.errorMessage = '';
+    const model = {
+      Id: this.data.Id,
+      EmployeeId: this.data.EmployeeId
+    };
+    this.advanceService.getAdvanceDetailById(model).subscribe(x => {
       if (x && x.AdvanceDetail) {
 
         if (this.data.btnStatus === AdvanceBtnStatus.APPROVE) {
           this.newAdvanceRequestForm = this.fb.group({
             'AdvanceId': [{value: x.AdvanceDetail.AdvanceId, disabled: true}],
+            'CurrencyName': [x.AdvanceDetail.CurrencyName],
             'AdvanceDate':  [{value: x.AdvanceDetail.AdvanceDate, disabled: true}],
             'ApprovedBy': [{value: x.AdvanceDetail.ApprovedBy, disabled: true}],
             'NumberOfInstallments': [{value: x.AdvanceDetail.NumberOfInstallments, disabled: true}],
@@ -184,6 +195,7 @@ export class NewAdvanceRequestComponent implements OnInit {
         } else if (this.data.btnStatus === AdvanceBtnStatus.EDIT) {
           this.newAdvanceRequestForm.patchValue({
             'AdvanceId': x.AdvanceDetail.AdvanceId,
+            'CurrencyName': [x.AdvanceDetail.CurrencyName],
             'AdvanceDate': x.AdvanceDetail.AdvanceDate,
             'ApprovedBy': x.AdvanceDetail.ApprovedBy,
             'NumberOfInstallments': x.AdvanceDetail.NumberOfInstallments,
@@ -197,8 +209,20 @@ export class NewAdvanceRequestComponent implements OnInit {
         this.toastr.warning('Please try again');
       }
     }, error => {
+      this.errorMessage = error;
       this.isFormSubmitted = false;
       this.toastr.warning(error);
+    });
+  }
+
+  getEmployeePayrollCurrency() {
+    this.errorMessage = '';
+    this.advanceService.getEmployeePayrollCurrency(this.data.EmployeeId).subscribe(x => {
+      if (x) {
+        this.newAdvanceRequestForm.controls['CurrencyName'].setValue(x);
+      }
+    }, error => {
+      this.errorMessage = error;
     });
   }
 }
