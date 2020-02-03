@@ -1,6 +1,6 @@
 export interface IEmployeeDetail {
-  FirstName: string;
-  LastName: string;
+  Name: string;
+  FatherName: string;
   Email: string;
   Phone: string;
   Sex: string;

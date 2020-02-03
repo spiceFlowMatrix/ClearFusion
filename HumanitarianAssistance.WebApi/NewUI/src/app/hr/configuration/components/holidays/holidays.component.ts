@@ -163,6 +163,7 @@ export class HolidaysComponent implements OnInit {
   cfDateFilter = (d: Date): boolean => {
     const day = d.getDay();
     let x = false;
+    console.log(this.repeatWeeklyDay);
     // Prevent Saturday and Sunday from being selected.
     if (this.repeatWeeklyDay !== undefined && this.repeatWeeklyDay.length > 0) {
       for (const element of this.repeatWeeklyDay) {
@@ -173,6 +174,8 @@ export class HolidaysComponent implements OnInit {
           break;
         }
       }
+    } else {
+      x = true;
     }
 
     return x;
@@ -186,7 +189,8 @@ export class HolidaysComponent implements OnInit {
     this.hrservice.getAllHolidaysList(this.pageModel).subscribe(
       res => {
         console.log(res);
-        if (res.holidaylist.length > 0 && res !== undefined) {
+        if (res && res.holidaylist && res.holidaylist.length > 0) {
+          debugger;
           this.holidayList$ = of(
             res.holidaylist.map(element => {
               return {
@@ -204,6 +208,7 @@ export class HolidaysComponent implements OnInit {
           this.RecordCount = res.totalCount;
           this.commonLoader.hideLoader();
         }
+        this.commonLoader.hideLoader();
       },
       error => {
         this.toastr.warning(error);

@@ -704,5 +704,19 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR {
                     ModifiedDate = DateTime.UtcNow
             });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> RevokeEmployeeResignationById([FromBody] int EmployeeId)
+        {
+            var result = await _mediator.Send(new RevokeEmployeeResignationByIdCommand { EmployeeId = EmployeeId });
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RehireEmployeeById([FromBody] int EmployeeId)
+        {
+            var result = await _mediator.Send(new RehireEmployeeByIdCommand { EmployeeId = EmployeeId });
+            return Ok(result);
+        }
     }
 }

@@ -38,10 +38,10 @@ export class EmployeeDetailComponent implements OnInit {
       EmploymentStatusId: 0,
       ExperienceMonth: '',
       ExperienceYear: '',
-      FirstName: '',
+      Name: '',
       HiredOn: '',
       JobDescription: '',
-      LastName: '',
+      FatherName: '',
       PermanentAddress: '',
       Phone: '',
       PreviousWork: '',
@@ -82,10 +82,10 @@ export class EmployeeDetailComponent implements OnInit {
             EmploymentStatusId: x.EmployeeDetail.EmploymentStatusId,
             ExperienceMonth: x.EmployeeDetail.ExperienceMonth,
             ExperienceYear: x.EmployeeDetail.ExperienceYear,
-            FirstName: x.EmployeeDetail.FirstName,
+            Name: x.EmployeeDetail.Name,
             HiredOn: x.EmployeeDetail.HiredOn,
             JobDescription: x.EmployeeDetail.JobDescription,
-            LastName: x.EmployeeDetail.LastName,
+            FatherName: x.EmployeeDetail.FatherName,
             PermanentAddress: x.EmployeeDetail.PermanentAddress,
             Phone: x.EmployeeDetail.Phone,
             PreviousWork: x.EmployeeDetail.PreviousWork,
@@ -110,7 +110,7 @@ export class EmployeeDetailComponent implements OnInit {
           this.employeeDetail.OfficeId.toString()
         );
         const fullName =
-          this.employeeDetail.FirstName + ' ' + this.employeeDetail.LastName;
+          this.employeeDetail.Name;
         localStorage.setItem('selectedEmployeeName', fullName);
       },
       error => {

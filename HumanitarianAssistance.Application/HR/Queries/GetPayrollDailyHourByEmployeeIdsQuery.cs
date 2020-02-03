@@ -6,7 +6,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
     public class GetPayrollDailyHourByEmployeeIdsQuery: IRequest<object>
     {
         public int[] EmpIds { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
         public int OfficeId { get; set; }
     }
 
