@@ -190,7 +190,6 @@ export class EmployeeHistoryComponent implements OnInit {
     return this.employeeHistoryService.getHistoricalLogList(this.employeeId);
   }
   subscribeEmployeeHistoricalLogList(response: any) {
-    this.commonLoader.showLoader();
     if (response.data.EmployeeHistoryDetailList !== undefined) {
       this.historicalLogList$ = of(
         response.data.EmployeeHistoryDetailList.map(y => {
