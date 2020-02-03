@@ -274,5 +274,12 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return Ok(item);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GetAppliedLeaveDates([FromBody]GetAppliedLeaveDatesQuery model)
+        {
+            var item = await _mediator.Send(model);
+            return Ok(item);
+        }
+
     }
 }

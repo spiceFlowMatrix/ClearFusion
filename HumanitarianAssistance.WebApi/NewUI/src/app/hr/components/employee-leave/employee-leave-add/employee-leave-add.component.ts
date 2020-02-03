@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { HrLeaveService } from 'src/app/hr/services/hr-leave.service';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-employee-leave-add',
@@ -17,14 +18,16 @@ export class EmployeeLeaveAddComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<EmployeeLeaveAddComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, private fb: FormBuilder,
     private toastr: ToastrService, private hrLeaveService: HrLeaveService,
-    private commonLoader: CommonLoaderService) { }
+    private commonLoader: CommonLoaderService, private datePipe: DatePipe) { }
 
   isFormSubmitted = false;
   applyLeaveForm: FormGroup;
+  disabledDates: any[] = [];
   errorMessage = '';
 
   ngOnInit() {
     this.onFormInIt();
+    this.getAppliedLeaveDates();
   }
 
   onFormInIt() {
@@ -43,6 +46,9 @@ export class EmployeeLeaveAddComponent implements OnInit {
   applyLeave() {
     if (!this.applyLeaveForm.valid) {
       this.toastr.warning('Please correct errors in form and submit again');
+      return;
+    } else if (this.applyLeaveForm.getRawValue().LeaveApplied === 0) {
+      this.toastr.warning('Applied hours can not be 0');
       return;
     }
     this.isFormSubmitted = true;
@@ -63,14 +69,6 @@ export class EmployeeLeaveAddComponent implements OnInit {
       new Date().getMinutes(),
       new Date().getSeconds()
     );
-
-    // const difference = ((ToDate.getTime() - FromDate.getTime()) / (1000 * 3600 * 24));
-
-    // if ((this.applyLeaveForm.value.BalanceLeave - difference) < 0) {
-    //   this.toastr.warning('Applied leave exceeds Balance leave');
-    //   this.isFormSubmitted = false;
-    //   return;
-    // }
 
        const model = {
         LeaveReasonId: this.applyLeaveForm.getRawValue().LeaveReasonId,
@@ -95,31 +93,6 @@ export class EmployeeLeaveAddComponent implements OnInit {
     });
   }
 
-  // dateInput(event) {
-  //   debugger;
-  //   const model = {
-  //     EmployeeId: this.data.EmployeeId,
-
-  //   }
-  //   this.commonLoader.showLoader();
-  //   this.hrLeaveService.addEmployeeLeave(model).subscribe(x => {
-  //     if (x) {
-  //       this.commonLoader.hideLoader();
-  //     } else {
-  //       this.commonLoader.showLoader();
-  //       this.toastr.warning('Could not retrieve working hour for the selected month');
-  //     }
-  //   }, error => {
-  //     this.toastr.warning(error);
-  //     this.commonLoader.hideLoader();
-  //   });
-  // }
-
-  // onAppliedHourChange(event) {
-  //   this.applyLeaveForm.controls['BalanceLeave'].setValue(this.data.HourBalance - (+event.target.value));
-  //   this.applyLeaveForm.updateValueAndValidity();
-  // }
-
   closeDialog() {
     this.dialogRef.close();
   }
@@ -138,7 +111,8 @@ export class EmployeeLeaveAddComponent implements OnInit {
     };
 
     this.hrLeaveService.getAppliedLeaveHours(model).subscribe(x => {
-      if (x.AppliedHours) {
+      debugger;
+      if (x && x.AppliedHours !== undefined && x.AppliedHours !== null) {
         this.errorMessage = '';
         this.applyLeaveForm.controls['LeaveApplied'].setValue(x.AppliedHours);
         const value = this.data.HourBalance - x.AppliedHours;
@@ -158,4 +132,46 @@ export class EmployeeLeaveAddComponent implements OnInit {
       this.errorMessage = error;
     });
   }
+
+  getAppliedLeaveDates() {
+    debugger;
+    const model = {
+      LeaveReasonId: this.data.LeaveReasonId,
+      EmployeeId: this.data.EmployeeId
+    };
+
+    this.hrLeaveService.getAppliedLeaveDates(model).subscribe(x => {
+      debugger;
+      if (x && x.LeaveDates) {
+        this.disabledDates = x.LeaveDates;
+      } else {
+        this.errorMessage = 'Something went wrong, Please try again';
+      }
+    }, error => {
+      this.errorMessage = error;
+    });
+  }
+
+  // disableDates = (d: Date): boolean => {
+  //   const dates = [];
+
+  //   const date = this.datePipe.transform(d, 'M/d/yyyy');
+
+  //   for (let i = 0; i < this.disabledDates.length; i++) {
+  //     if (this.disabledDates[i].ToDate === this.disabledDates[i].FromDate) {
+  //       if (date === this.data.FromDate) {
+  //         dates.push(date);
+  //       }
+  //     } else {
+  //       if (date >= new Date(this.disabledDates[i].FromDate) && date <= new Date(this.disabledDates[i].ToDate)) {
+  //         dates.push(date);
+  //       }
+  //     }
+  //   }
+
+  //   const highlightDate = dates
+  //     .map(strDate => new Date(strDate))
+  //     .some(d => d.getDate() === date.getDate() && d.getMonth() === date.getMonth() && d.getFullYear() === date.getFullYear());
+  //   return highlightDate ? true : false;
+  // }
 }

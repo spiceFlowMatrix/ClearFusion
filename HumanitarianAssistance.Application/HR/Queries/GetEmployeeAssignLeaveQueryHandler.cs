@@ -41,8 +41,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                         LeaveId = x.LeaveId,
                         LeaveReasonId = x.LeaveReasonId,
                         LeaveReasonName = x.LeaveReasonDetails.ReasonName,
-                        Unit = x.LeaveReasonDetails.Unit,
-                        AssignUnit = x.AssignUnit,
+                        Unit = x.AssignUnit ?? 0,
+                        AppliedUnit = x.UsedLeaveUnit ?? 0,
                         BlanceLeave = (x.AssignUnit - (x.UsedLeaveUnit ?? 0)),
                         FinancialYearId = x.FinancialYearId,
                         Description = x.Description
