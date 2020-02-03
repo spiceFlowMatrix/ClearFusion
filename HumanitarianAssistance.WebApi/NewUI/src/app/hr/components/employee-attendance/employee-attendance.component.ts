@@ -125,5 +125,9 @@ export class EmployeeAttendanceComponent implements OnInit {
       this.getAttendanceList(this.employeeId);
     }
   }
+
+  markWholeMonthAttendance() {
+
+  }
   //#endregion
 }

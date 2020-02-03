@@ -15,6 +15,11 @@
       </div>
     </div>
   </div>
+  <div class="row" *ngIf="this.attendanceForm.TotalCount && this.attendanceForm.TotalCount == 0">
+    <p>No Attendance found for selected month, mark attendance for whole month by clicking here
+      <hum-button [type]="'save'" [text]="'Mark Attendance'" (click)="markWholeMonthAttendance()"></hum-button>
+    </p>
+  </div>
   <div class="row">
     <div class="col-sm-12">
       <div class="responsive_table-responsive">
