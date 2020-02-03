@@ -3,13 +3,16 @@
       <hum-button [type]="'add'" [text]="'ADD RESIGNATION'" (click)="addResignation()" [disabled]="employeeDetail.IsResigned"></hum-button>
       <hum-button [type]="'edit'" [text]="'SAVE CHANGES'" (click)="saveResignationForm(resignationForm.value)" *ngIf="employeeDetail.IsResigned"></hum-button>
       <hum-button [type]="'edit'" [text]="'SAVE CHANGES'" [disabled]="!employeeDetail.IsResigned" *ngIf="!employeeDetail.IsResigned"></hum-button>
-      <hum-button [type]="'minus'" [text]="'REHIRE EMPLOYEE'" [disabled]="!employeeDetail.IsResigned"></hum-button>
-      <hum-button [type]="'exclamation'" [text]="'REVOKE RESIGNATION'" [disabled]="!employeeDetail.IsResigned"></hum-button>
+      <hum-button [type]="'minus'" [text]="'REHIRE EMPLOYEE'" [disabled]="!employeeDetail.IsResigned" (click)="rehireEmployee()"></hum-button>
+      <hum-button [type]="'exclamation'" [text]="'REVOKE RESIGNATION'" [disabled]="!employeeDetail.IsResigned" (click)="revokeEmployeeResignation()"></hum-button>
     </h4>
     <h5 *ngIf="!employeeDetail.IsResigned"><i class="fas fa-info-circle icon_color_yellow"></i> &nbsp;There is no Active Resignation. Please Add one in order to see its details.</h5>
   <div class="row" *ngIf="employeeDetail.IsResigned" humAddScroll [height]="250">
     <div class="col-md-12">
       <form [formGroup]="resignationForm">
+        <div id="err">
+          <div *ngIf="err !== null" class="alert alert-warning">{{err}}</div>
+        </div>
         <p class="font_size_16">When did the employee resign?</p>
         <mat-form-field>
           <input #resignDate class="fixedWidth"
@@ -30,6 +33,11 @@
         <h4>Feeling About Employee Aspects</h4>
         <table class="table table-striped">
           <tbody formArrayName="QuestionType1">
+            <tr *ngIf="questionByType[1] && questionByType[1].length === 0">
+              <td>
+                <div class="alert alert-warning">There are no questions in this category.</div>
+              </td>
+            </tr>
             <tr *ngFor="let item of resignationForm.get('QuestionType1')['controls']; let i = index;" [formGroupName]="i">
               <td width="30%" class="font_size_16 font_weight_500">{{item.value.QuestionText}}</td>
               <td>
@@ -44,6 +52,7 @@
         </table>
         <h4>Reason for Leaving</h4>
         <div class="row" formArrayName="QuestionType2">
+          <div *ngIf="questionByType[2] && questionByType[2].length === 0" class="alert alert-warning">There are no questions in this category.</div>
           <div class="col-md-3" *ngFor="let item of resignationForm.get('QuestionType2')['controls']; let i = index;" [formGroupName]="i">
               <mat-checkbox formControlName="Answer" class="font_size_16 font_weight_500">{{item.value.QuestionText}}</mat-checkbox>
           </div>
@@ -51,6 +60,11 @@
         <h4>The Department</h4>
         <table class="table table-striped">
           <tbody formArrayName="QuestionType3">
+            <tr *ngIf="questionByType[3] && questionByType[3].length === 0">
+              <td>
+                <div class="alert alert-warning">There are no questions in this category.</div>
+              </td>
+            </tr>
             <tr *ngFor="let item of resignationForm.get('QuestionType3')['controls']; let i = index;" [formGroupName]="i">
               <td width="30%" class="font_size_16 font_weight_500">{{item.value.QuestionText}}</td>
               <td>
@@ -68,6 +82,11 @@
         <h4>The Job Itself</h4>
         <table class="table table-striped">
           <tbody formArrayName="QuestionType4">
+            <tr *ngIf="questionByType[4] && questionByType[4].length === 0">
+              <td>
+                <div class="alert alert-warning">There are no questions in this category.</div>
+              </td>
+            </tr>
             <tr *ngFor="let item of resignationForm.get('QuestionType4')['controls']; let i = index;" [formGroupName]="i">
               <td width="30%" class="font_size_16 font_weight_500">{{item.value.QuestionText}}</td>
               <td>
@@ -85,6 +104,11 @@
         <h4>My Supervisor</h4>
         <table class="table table-striped">
           <tbody formArrayName="QuestionType5">
+            <tr *ngIf="questionByType[5] && questionByType[5].length === 0">
+              <td>
+                <div class="alert alert-warning">There are no questions in this category.</div>
+              </td>
+            </tr>
             <tr *ngFor="let item of resignationForm.get('QuestionType5')['controls']; let i = index;" [formGroupName]="i">
               <td width="30%" class="font_size_16 font_weight_500">{{item.value.QuestionText}}</td>
               <td>
@@ -102,6 +126,11 @@
         <h4>The Management</h4>
         <table class="table table-striped">
           <tbody formArrayName="QuestionType6">
+            <tr *ngIf="questionByType[6] && questionByType[6].length === 0">
+              <td>
+                <div class="alert alert-warning">There are no questions in this category.</div>
+              </td>
+            </tr>
             <tr *ngFor="let item of resignationForm.get('QuestionType6')['controls']; let i = index;" [formGroupName]="i">
               <td width="30%" class="font_size_16 font_weight_500">{{item.value.QuestionText}}</td>
               <td>
