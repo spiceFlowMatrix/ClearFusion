@@ -367,4 +367,11 @@ namespace HumanitarianAssistance.Common.Enums {
         TheManagement
 
     }
+
+    public enum ResignationStatus {
+        NotValid = 0,
+        Resigned = 1,
+        ResignationRevoked = 2,
+        Rehired = 3
+    }
 }

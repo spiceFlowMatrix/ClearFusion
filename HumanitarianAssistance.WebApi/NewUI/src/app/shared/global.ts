@@ -600,6 +600,8 @@ export class GLOBAL {
   public static API_EmployeeDetail_GetEmployeeResignationById = 'EmployeeDetail/GetEmployeeResignationById';
   public static API_EmployeeDetail_TerminateEmployeeByEmployeeId = 'EmployeeDetail/TerminateEmployeeByEmployeeId';
   public static API_EmployeeDetail_DeleteEmployeeByEmployeeId = 'EmployeeDetail/DeleteEmployeeByEmployeeId';
+  public static API_EmployeeDetail_RevokeEmployeeResignationById = 'EmployeeDetail/RevokeEmployeeResignationById';
+  public static API_EmployeeDetail_RehireEmployeeById = 'EmployeeDetail/RehireEmployeeById';
 
   // pdf
   public static API_Pdf_GetAllChartOfAccountHierarchyPdf = 'Pdf/GetAllChartOfAccountHierarchyPdf';
