@@ -360,11 +360,10 @@ export class AddNewCandidateComponent implements OnInit {
                 this.attachmentCV[0][0]
               ).pipe(takeUntil(this.destroyed$))
               .subscribe(y => {
-                this.toastr.success('Candidate successfully updated');
                 this.isFormSubmitted = false;
-                this.AddCandidateListRefresh();
               });
             }
+            this.toastr.success('Candidate successfully updated');
             this.AddCandidateListRefresh();
           } else {
             this.toastr.error(response.message);
