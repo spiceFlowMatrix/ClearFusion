@@ -51,26 +51,38 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 }
                 List<EmployeeAttendance> queryResult = await _dbContext.EmployeeAttendance.Where(x => x.EmployeeId == request.EmployeeId &&
                                                                                                       x.Date.Year == request.Year &&
-                                                                                                      x.Date.Month == request.Month && x.IsDeleted == false
-                                                                                                      && x.AttendanceTypeId == (int)AttendanceType.P)
-                                                                                           .ToListAsync();
+                                                                                                      x.Date.Month == request.Month && x.IsDeleted == false)
+                                                                                                    .OrderBy(x=>x.Date)
+                                                                                                    .ToListAsync();
 
-                int monthDays = DateTime.DaysInMonth(request.Year, request.Month);
-                DateTime date = new DateTime();
-                for (int i = 1; i <= monthDays; i++)
-                {
-                    date = new DateTime(request.Year, request.Month, i);
+                foreach(var attendance in queryResult) {
                     AttendanceListModel model = new AttendanceListModel()
                     {
-                        Date = date.ToShortDateString(),
-                        InTime = (queryResult.Select(x => x.Date.Day).Contains(date.Day)) ? (queryResult.Where(x => x.Date.Day == date.Day).Select(x=>x.InTime).FirstOrDefault()) : payrollDetail.InTime,
-                        OutTime = (queryResult.Select(x => x.Date.Day).Contains(date.Day)) ? (queryResult.Where(x => x.Date.Day == date.Day).Select(x=>x.OutTime).FirstOrDefault()) : payrollDetail.OutTime,
-                        Attended = queryResult.Select(x => x.Date.Day).Contains(date.Day) ? "Yes" : "No"
+                        AttendanceId = attendance.AttendanceId,
+                        Date = attendance.Date,
+                        DisplayDate = attendance.Date.ToShortDateString(),
+                        InTime = attendance.InTime,
+                        OutTime = attendance.OutTime,
+                        Attended = (attendance.AttendanceTypeId == 1) ? "Yes" : "No"
                     };
                     attendanceModel.attendanceList.Add(model);
                 }
+                // int monthDays = DateTime.DaysInMonth(request.Year, request.Month);
+                // DateTime date = new DateTime();
+                // for (int i = 1; i <= monthDays; i++)
+                // {
+                //     date = new DateTime(request.Year, request.Month, i);
+                //     AttendanceListModel model = new AttendanceListModel()
+                //     {
+                //         Date = date.ToShortDateString(),
+                //         InTime = (queryResult.Select(x => x.Date.Day).Contains(date.Day)) ? (queryResult.Where(x => x.Date.Day == date.Day).Select(x=>x.InTime).FirstOrDefault()) : payrollDetail.InTime,
+                //         OutTime = (queryResult.Select(x => x.Date.Day).Contains(date.Day)) ? (queryResult.Where(x => x.Date.Day == date.Day).Select(x=>x.OutTime).FirstOrDefault()) : payrollDetail.OutTime,
+                //         Attended = queryResult.Select(x => x.Date.Day).Contains(date.Day) ? "Yes" : "No"
+                //     };
+                //     attendanceModel.attendanceList.Add(model);
+                // }
 
-                attendanceModel.TotalCount = monthDays;
+                attendanceModel.TotalCount = queryResult.Count();
                 attendanceModel.attendanceList = attendanceModel.attendanceList.Skip(request.PageSize.Value * request.PageIndex.Value).Take(request.PageSize.Value).ToList();
 
 

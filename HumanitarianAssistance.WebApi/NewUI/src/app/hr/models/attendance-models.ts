@@ -1,5 +1,7 @@
 export interface IAttendanceModel {
-  Date: string;
+  AttendanceId: number;
+  DisplayDate: string;
+  Date: Date;
   InTime: string;
   OutTime: string;
   Attended: string;
