@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Common.Helpers;
@@ -50,7 +51,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                             CreatedDate = DateTime.UtcNow,
                             IsDeleted = false,
                             Month = request.Month,
-                            Year= DateTime.UtcNow.Year,
+                            Year = DateTime.UtcNow.Year,
                             EmployeeId = request.EmployeeId,
                             SalaryAllowance = item.SalaryAllowance,
                             SalaryDeduction = item.SalaryDeduction,
@@ -61,6 +62,27 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
 
                     await _dbContext.AccumulatedSalaryHeadDetail.AddRangeAsync(salaryHead);
                     await _dbContext.SaveChangesAsync();
+
+                    AdvanceHistoryDetail advanceHistory = await _dbContext.AdvanceHistoryDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.EmployeeId == request.EmployeeId &&
+                                             x.PaymentDate.Month == request.Month);
+
+                    if (advanceHistory != null)
+                    {
+                        advanceHistory.IsApproved = true;
+                        await _dbContext.SaveChangesAsync();
+
+                        var advanceRecord = await _dbContext.Advances
+                                                 .FirstOrDefaultAsync(x => x.AdvancesId == advanceHistory.AdvanceId);
+                        
+                         double recoveredAmount = _dbContext.AdvanceHistoryDetail.Where(x => x.IsDeleted == false && x.AdvanceId == advanceHistory.AdvanceId && x.PaymentDate.Month <= request.Month)
+                                                      .Select(x => x.InstallmentPaid).DefaultIfEmpty(0).Sum();
+
+                        if (advanceRecord.AdvanceAmount == recoveredAmount)
+                        {
+                            advanceRecord.IsDeducted = true;
+                            await _dbContext.SaveChangesAsync();
+                        }
+                    }
 
                     tran.Commit();
                     success = true;

@@ -319,10 +319,10 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return Ok(result);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAdvanceDetailById([FromQuery] int id)
+        [HttpPost]
+        public async Task<IActionResult> GetAdvanceDetailById([FromBody] GetAdvanceDetailByIdQuery model)
         {
-            var result = await _mediator.Send(new GetAdvanceDetailByIdQuery() { Id = id });
+            var result = await _mediator.Send(model);
             return Ok(result);
         }
 
@@ -399,6 +399,13 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             model.CreatedById = userId;
             model.CreatedDate = DateTime.UtcNow;
             var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetEmployeePayrollCurrency([FromQuery] int id)
+        {
+            var result = await _mediator.Send(new GetEmployeePayrollCurrencyQuery() { EmployeeId = id });
             return Ok(result);
         }
     }
