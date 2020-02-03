@@ -6,6 +6,7 @@ using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using HumanitarianAssistance.Common.Enums;
 
 namespace HumanitarianAssistance.Application.HR.Commands.Update
 {
@@ -27,6 +28,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                 var employeeDetail = await _dbContext.EmployeeDetail.FirstOrDefaultAsync(x=>x.IsDeleted== false && x.EmployeeID == request.EmployeeID);
                 if(employeeDetail != null) {
                     employeeDetail.IsResigned = true;
+                    employeeDetail.ResignationStatus = (int)ResignationStatus.Resigned;
                     employeeDetail.ModifiedDate =request.ModifiedDate;
                     employeeDetail.ModifiedById =request.ModifiedById;
                     await _dbContext.SaveChangesAsync();

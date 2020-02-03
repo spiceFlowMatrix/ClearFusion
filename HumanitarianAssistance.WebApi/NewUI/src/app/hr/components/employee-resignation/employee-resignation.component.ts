@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { mergeMap, groupBy, map, reduce } from 'rxjs/operators';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { ToastrService } from 'ngx-toastr';
@@ -18,6 +18,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class EmployeeResignationComponent implements OnInit, OnChanges {
 
+  err = null;
   questionTypes = [
     {value: 1, name: 'Feeling About Employee Aspects'},
     {value: 2, name: 'Reason Of Leaving'},
@@ -27,6 +28,7 @@ export class EmployeeResignationComponent implements OnInit, OnChanges {
     {value: 6, name: 'The Management'},
   ];
   @Input() employeeDetail: IEmployeeDetail;
+  @Output() IsResigned: EventEmitter<boolean> = new EventEmitter();
   exitInterviewQuestionsList: any[];
   questionByType = [];
   employeeId;
@@ -41,28 +43,31 @@ export class EmployeeResignationComponent implements OnInit, OnChanges {
       this.activatedRoute.params.subscribe(params => {
         this.employeeId = +params['id'];
       });
-      this.resignationForm = this.fb.group({
-        ResignDate: ['', Validators.required],
-        IsIssueUnresolved: ['false'],
-        Issues: [''],
-        QuestionType1: this.fb.array([ this.createQuestion(null, null, null, null) ]),
-        QuestionType2: this.fb.array([ this.createQuestion(null, null, null, null)]),
-        QuestionType3: this.fb.array([ this.createQuestion(null, null, null, null)]),
-        QuestionType4: this.fb.array([this.createQuestion(null, null, null, null) ]),
-        QuestionType5: this.fb.array([this.createQuestion(null, null, null, null) ]),
-        QuestionType6: this.fb.array([this.createQuestion(null, null, null, null) ]),
-      });
+      this.initForm();
     }
 
   ngOnInit() {
     // this.getExitInterviewQuestionsList();
+  }
+
+  initForm() {
+    this.resignationForm = this.fb.group({
+      ResignDate: ['', Validators.required],
+      IsIssueUnresolved: ['false'],
+      Issues: [''],
+      QuestionType1: this.fb.array([ this.createQuestion(null, null, null, null) ]),
+      QuestionType2: this.fb.array([ this.createQuestion(null, null, null, null)]),
+      QuestionType3: this.fb.array([ this.createQuestion(null, null, null, null)]),
+      QuestionType4: this.fb.array([this.createQuestion(null, null, null, null) ]),
+      QuestionType5: this.fb.array([this.createQuestion(null, null, null, null) ]),
+      QuestionType6: this.fb.array([this.createQuestion(null, null, null, null) ]),
+    });
+  }
+  ngOnChanges() {
+    // console.log(this.employeeDetail);
     if (this.employeeDetail.IsResigned) {
       this.getResignationDetail();
     }
-  }
-
-  ngOnChanges() {
-    // console.log(this.employeeDetail);
   }
 
   createQuestion(QuestionId, QuestionText, QuestionTypeId, Answer): FormGroup {
@@ -93,7 +98,7 @@ export class EmployeeResignationComponent implements OnInit, OnChanges {
           };
         });
         this.groupedQuestions = StaticUtilities.groupBy(this.exitInterviewQuestionsList, y => y.QuestionType);
-        this.questionByType = [];
+        this.questionByType = [[], [], [], [], [], [], []];
         this.groupedQuestions.forEach((value: any, key: any) => {
           this.questionByType[key] = value;
         });
@@ -137,6 +142,14 @@ export class EmployeeResignationComponent implements OnInit, OnChanges {
   }
 
   saveResignationForm(value) {
+    this.err = null;
+    for (let i = 1; i <= 6 ; i++) {
+      if (this.questionByType[i].length === 0) {
+        this.err = 'Please ensure adding Questions in all categories before saving Resignation Form';
+        document.getElementById('err').scrollIntoView();
+        return;
+      }
+    }
     if (!this.resignationForm.valid) {
       this.toastr.warning('Please select Resign Date');
       return;
@@ -212,6 +225,50 @@ export class EmployeeResignationComponent implements OnInit, OnChanges {
       }
     }, err => {
       this.toastr.warning(err);
+    });
+  }
+
+  rehireEmployee() {
+    this.err = null;
+    if (!this.employeeDetail.IsResigned) {
+      return;
+    }
+    this.commonLoader.showLoader();
+    this.employeeService.rehireEmployeeByEmployeeId(this.employeeId).subscribe(res => {
+      if (res) {
+        this.commonLoader.hideLoader();
+        this.toastr.success('Employee rehired successfully!');
+        this.initForm();
+        this.IsResigned.emit(false);
+      } else {
+        this.commonLoader.hideLoader();
+        this.err = 'Something went wrong';
+      }
+    }, err => {
+      this.commonLoader.hideLoader();
+      this.err = err;
+    });
+  }
+
+  revokeEmployeeResignation() {
+    this.err = null;
+    if (!this.employeeDetail.IsResigned) {
+      return;
+    }
+    this.commonLoader.showLoader();
+    this.employeeService.revokeEmployeeResignationByEmployeeId(this.employeeId).subscribe(res => {
+      if (res) {
+        this.commonLoader.hideLoader();
+        this.toastr.success('Resignation revoked successfully!');
+        this.initForm();
+        this.IsResigned.emit(false);
+      } else {
+        this.commonLoader.hideLoader();
+        this.err = 'Something went wrong';
+      }
+    }, err => {
+      this.commonLoader.hideLoader();
+      this.err = err;
     });
   }
 }

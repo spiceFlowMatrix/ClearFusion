@@ -69,4 +69,8 @@ export class EmployeeControlPanelComponent implements OnInit {
   employeeStatusChange(value) {
     this.employeeStatus = value;
   }
+
+  resignationStatusChange(value) {
+    this.employeeDetail.employeeDetail.IsResigned = value;
+  }
 }
