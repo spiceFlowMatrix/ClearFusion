@@ -187,6 +187,7 @@ export class EmployeeListComponent implements OnInit {
   }
 
   onDateChanged(event) {
+    this.AttendanceDates = [];
     this.commonLoader.showLoader();
     // const attendanceDate = event.target.value;
     // const model = {
