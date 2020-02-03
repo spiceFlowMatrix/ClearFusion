@@ -41,8 +41,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                                 x.EmployeeID == request.EmployeeId)
                                         .Select(x=> new 
                                         {
-                                            FirstName = x.EmployeeName.Trim().Substring(0, ((x.EmployeeName.IndexOf(' ') != -1) ? x.EmployeeName.IndexOf(' ') :  x.EmployeeName.Length-1)),
-                                            LastName= (x.EmployeeName.IndexOf(' ') != -1) ? (x.EmployeeName.Trim().Substring(x.EmployeeName.IndexOf(' '), x.EmployeeName.Length-1)) : "",
+                                            Name = x.EmployeeName,
+                                            FatherName= x.FatherName,
                                             EmployeeCode = x.EmployeeCode,
                                             Email= x.Email,
                                             Phone = x.Phone,
