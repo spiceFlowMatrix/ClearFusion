@@ -2,98 +2,133 @@
     <div class="row">
         <lib-sub-header-template>
             <span class="action_header">Historical Log
-        <hum-button [type]="'add'" [text]="'ADD ENTRY'" (click)="addHistoricalLog()"></hum-button>
+        <hum-button
+          [type]="'add'"
+          [text]="'ADD ENTRY'"
+          (click)="addHistoricalLog()"
+        ></hum-button>
       </span>
         </lib-sub-header-template>
         <div class="col-md-6">
-            <hum-table [headers]="historicalLogHeader$" [isDefaultAction]="false" [items]="historicalLogList$" (actionClick)="actionEvents($event,'historicalLog')" [actions]="actions"></hum-table>
+            <hum-table [headers]="historicalLogHeader$" [isDefaultAction]="false" [items]="historicalLogList$" (actionClick)="actionEvents($event, 'historicalLog')" [actions]="actions"></hum-table>
         </div>
     </div>
 
     <div class="row">
         <lib-sub-header-template>
             <span class="action_header">Education
-        <hum-button [type]="'add'" [text]="'ADD ENTRY'" (click)="addEducation()"></hum-button>
+        <hum-button
+          [type]="'add'"
+          [text]="'ADD ENTRY'"
+          (click)="addEducation()"
+        ></hum-button>
       </span>
         </lib-sub-header-template>
         <div class="col-md-12">
-            <hum-table [headers]="educationHeader$" [isDefaultAction]="false" [items]="educationList$" (actionClick)="actionEvents($event,'education')" [actions]="actions"></hum-table>
-        </div>
-    </div>
-
-    <div class="row">
-        <lib-sub-header-template>
-            <span class="action_header">Employment History Outside of Country
-        <hum-button [type]="'add'" [text]="'ADD ENTRY'" (click)="addHistoryOutsideCountry()"></hum-button>
-      </span>
-        </lib-sub-header-template>
-        <div class="col-md-12">
-            <hum-table [headers]="employeeHistoryOCHeader$" [isDefaultAction]="false" [items]="employeeHistoryOCList$" (actionClick)="actionEvents($event,'outsideCountryHistory')" [actions]="actions"></hum-table>
+            <hum-table [headers]="educationHeader$" [isDefaultAction]="false" [items]="educationList$" (actionClick)="actionEvents($event, 'education')" [actions]="actions"></hum-table>
         </div>
     </div>
 
     <div class="row">
         <lib-sub-header-template>
             <span class="action_header">Employment History Outside of Organization
-      <hum-button [type]="'add'" [text]="'ADD ENTRY'" (click)="addHistoryOutsideOrganization()"></hum-button>
-    </span>
+        <hum-button
+          [type]="'add'"
+          [text]="'ADD ENTRY'"
+          (click)="addHistoryOutsideOrganization()"
+        ></hum-button>
+      </span>
         </lib-sub-header-template>
         <div class="col-md-12">
-            <hum-table [headers]="employeeHistoryOrgHeader$" [isDefaultAction]="false" [items]="employeeHistoryOrgList$" (actionClick)="actionEvents($event,'outsideOrganizationHistory')" [actions]="actions"></hum-table>
+            <hum-table [headers]="employeeHistoryOrgHeader$" [isDefaultAction]="false" [items]="employeeHistoryOrgList$" (actionClick)="actionEvents($event, 'outsideOrganizationHistory')" [actions]="actions"></hum-table>
         </div>
     </div>
-
+    <div class="row">
+        <lib-sub-header-template>
+            <span class="action_header">Employment History Outside of Country
+        <hum-button
+          [type]="'add'"
+          [text]="'ADD ENTRY'"
+          (click)="addHistoryOutsideCountry()"
+        ></hum-button>
+      </span>
+        </lib-sub-header-template>
+        <div class="col-md-12">
+            <hum-table [headers]="employeeHistoryOCHeader$" [isDefaultAction]="false" [items]="employeeHistoryOCList$" (actionClick)="actionEvents($event, 'outsideCountryHistory')" [actions]="actions"></hum-table>
+        </div>
+    </div>
 
     <div class="row">
         <lib-sub-header-template>
             <span class="action_header">Information Regarding Close Relatives
-        <hum-button [type]="'add'" [text]="'ADD ENTRY'" (click)="addCloseRelative()"></hum-button>
+        <hum-button
+          [type]="'add'"
+          [text]="'ADD ENTRY'"
+          (click)="addCloseRelative()"
+        ></hum-button>
       </span>
         </lib-sub-header-template>
         <div class="col-md-12">
-            <hum-table [headers]="infoOfCloseRelativeHeader$" [isDefaultAction]="false" [items]="employeeCloseRelativeList$" (actionClick)="actionEvents($event,'closeReletive')" [actions]="actions"></hum-table>
+            <hum-table [headers]="infoOfCloseRelativeHeader$" [isDefaultAction]="false" [items]="employeeCloseRelativeList$" (actionClick)="actionEvents($event, 'closeReletive')" [actions]="actions"></hum-table>
         </div>
     </div>
 
     <div class="row">
         <lib-sub-header-template>
             <span class="action_header">Information Three References Other Then Relatives
-        <hum-button [type]="'add'" [text]="'ADD ENTRY'" (click)="addThreeReference()"></hum-button>
+        <hum-button
+          [type]="'add'"
+          [text]="'ADD ENTRY'"
+          (click)="addThreeReference()"
+        ></hum-button>
       </span>
         </lib-sub-header-template>
         <div class="col-md-12">
-            <hum-table [headers]="infoOfThreeRefHeader$" [isDefaultAction]="false" [items]="employeeThreeReferenceList$" (actionClick)="actionEvents($event,'references')" [actions]="actions"></hum-table>
+            <hum-table [headers]="infoOfThreeRefHeader$" [isDefaultAction]="false" [items]="employeeThreeReferenceList$" (actionClick)="actionEvents($event, 'references')" [actions]="actions"></hum-table>
         </div>
     </div>
     <div class="row">
         <lib-sub-header-template>
             <span class="action_header">Other Skills
-        <hum-button [type]="'add'" [text]="'ADD ENTRY'" (click)="addOtherSkill()"></hum-button>
+        <hum-button
+          [type]="'add'"
+          [text]="'ADD ENTRY'"
+          (click)="addOtherSkill()"
+        ></hum-button>
       </span>
         </lib-sub-header-template>
         <div class="col-md-12">
-            <hum-table [headers]="otherSkillHeader$" [isDefaultAction]="false" [items]="employeeOtherSkillList$" (actionClick)="actionEvents($event,'otherSkill')" [actions]="actions"></hum-table>
+            <hum-table [headers]="otherSkillHeader$" [isDefaultAction]="false" [items]="employeeOtherSkillList$" (actionClick)="actionEvents($event, 'otherSkill')" [actions]="actions"></hum-table>
         </div>
     </div>
     <div class="row">
         <lib-sub-header-template>
             <span class="action_header">Salary Budget
-        <hum-button [type]="'add'" [text]="'ADD ENTRY'" (click)="addSalaryBudget()"></hum-button>
+        <hum-button
+          [type]="'add'"
+          [text]="'ADD ENTRY'"
+          (click)="addSalaryBudget()"
+        ></hum-button>
       </span>
         </lib-sub-header-template>
         <div class="col-md-12">
-            <hum-table [headers]="salarybudgetHeader$" [isDefaultAction]="false" [items]="employeeSalaryBudgetList$" (actionClick)="actionEvents($event,'salaryBudget')" [actions]="actions"></hum-table>
+            <hum-table [headers]="salarybudgetHeader$" [isDefaultAction]="false" [items]="employeeSalaryBudgetList$" (actionClick)="actionEvents($event, 'salaryBudget')" [actions]="actions"></hum-table>
         </div>
     </div>
 
     <div class="row">
         <lib-sub-header-template>
             <span class="action_header">Language Employee Can Speak
-        <hum-button [type]="'add'" [text]="'ADD ENTRY'" (click)="addLanguage()"></hum-button>
+        <hum-button
+          [type]="'add'"
+          [text]="'ADD ENTRY'"
+          (click)="addLanguage()"
+        ></hum-button>
       </span>
         </lib-sub-header-template>
         <div class="col-md-12">
-            <hum-table [headers]="languageHeader$" [isDefaultAction]="false" [items]="employeeLanguageList$" (actionClick)="actionEvents($event,'language')" [actions]="actions"></hum-table>
+            <hum-table [headers]="languageHeader$" [isDefaultAction]="false" [items]="employeeLanguageList$" (actionClick)="actionEvents($event, 'language')" [actions]="actions"></hum-table>
         </div>
-    </div><br><br><br>
+    </div>
+    <br /><br /><br />
 </mat-card>
