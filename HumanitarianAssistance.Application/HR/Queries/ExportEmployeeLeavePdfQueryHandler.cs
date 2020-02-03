@@ -89,6 +89,22 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                                 model.EmployeeLeaves.Add(leaveModel);
                             }
+                            else
+                            {
+                                var monthName = (Month)i;
+                                EmployeeMonthLeavesModel leaveModel = new EmployeeMonthLeavesModel
+                                {
+                                    Month = monthName.ToString(),
+                                    LeaveType = reason.ReasonName,
+                                    LeaveHours = reason.Unit,
+                                    AssignedHours = assignedLeaveToEmployee.FirstOrDefault(x=> x.LeaveReasonId == reason.LeaveReasonId).AssignUnit,
+                                    AppliedLeave = appliedLeaves.Where(x=> x.LeaveReasonId == reason.LeaveReasonId && x.FromDate.Month < i).Select(x=> x.AppliedLeaveCount).DefaultIfEmpty(0).Sum(),
+                                    BalanceLeave = assignedLeaveToEmployee.FirstOrDefault(x=> x.LeaveReasonId == reason.LeaveReasonId).AssignUnit - 
+                                                              appliedLeaves.Where(x=> x.LeaveReasonId == reason.LeaveReasonId && x.FromDate.Month < i).Select(x=> x.AppliedLeaveCount).DefaultIfEmpty(0).Sum()
+                                };
+
+                                model.EmployeeLeaves.Add(leaveModel);
+                            }
                         }
                     }
 
