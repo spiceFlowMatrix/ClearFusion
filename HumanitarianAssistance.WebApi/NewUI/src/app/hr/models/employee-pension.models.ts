@@ -60,3 +60,15 @@ export class EmployeeTaxReportModel {
   Position: any;
   Date: any;
 }
+
+export interface IPensionDetails {
+  EmployeeID?: number;
+  PensionDate?: Date;
+  PensionDetail?: IPensionList[];
+}
+
+export interface IPensionList {
+  PensionId?: number;
+  CurrencyId: number;
+  Amount: number;
+}

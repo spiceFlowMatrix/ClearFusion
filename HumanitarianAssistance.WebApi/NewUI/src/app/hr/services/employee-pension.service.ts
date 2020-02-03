@@ -1,3 +1,4 @@
+import { IPensionDetails } from './../models/employee-pension.models';
 import { Injectable } from '@angular/core';
 import { GlobalService } from 'src/app/shared/services/global-services.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
@@ -15,8 +16,7 @@ export class EmployeePensionService {
     private appurl: AppUrlService,
     private http: HttpClient,
     private dialog: MatDialog,
-    private globalSharedService: GlobalSharedService,
-
+    private globalSharedService: GlobalSharedService
   ) {}
 
   //#region "GetCurrencyList"
@@ -49,42 +49,77 @@ export class EmployeePensionService {
     );
   }
   //#endregion
- // #region "GetEmloyeeTaxcaluclution"
- GetEmployeeTaxCalculation(model: any) {
-  return this.globalService.post(
-    this.appurl.getApiUrl() + GLOBAL.API_Hr_EmployeeTaxCalculation,
-    model
-  );
- }
- //#endregion
-
- //#region "DownloadPDF"
- DownloadPDF(pdfmodel: any) {
-  if (pdfmodel != null && pdfmodel !== undefined) {
-    this.globalSharedService
-      .getFile(
-        this.appurl.getApiUrl() +
-          GLOBAL.API_Pdf_GetEmployeePensionPdf,
-        pdfmodel
-      )
-      .pipe()
-      .subscribe();
+  // #region "GetEmloyeeTaxcaluclution"
+  GetEmployeeTaxCalculation(model: any) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_Hr_EmployeeTaxCalculation,
+      model
+    );
   }
-}
-//#endregion
-//#region "DownloadPDF"
-DownloadTaxPDF(pdfmodel: any) {
- if (pdfmodel != null && pdfmodel !== undefined) {
-   this.globalSharedService
-     .getFile(
-       this.appurl.getApiUrl() +
-         GLOBAL.API_Pdf_GetEmployeeSalaryTaxPdf,
-       pdfmodel
-     )
-     .pipe()
-     .subscribe();
- }
-}
-//#endregion
+  //#endregion
 
+  //#region "DownloadPDF"
+  DownloadPDF(pdfmodel: any) {
+    if (pdfmodel != null && pdfmodel !== undefined) {
+      this.globalSharedService
+        .getFile(
+          this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetEmployeePensionPdf,
+          pdfmodel
+        )
+        .pipe()
+        .subscribe();
+    }
+  }
+  //#endregion
+  //#region "DownloadPDF"
+  DownloadTaxPDF(pdfmodel: any) {
+    if (pdfmodel != null && pdfmodel !== undefined) {
+      this.globalSharedService
+        .getFile(
+          this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetEmployeeSalaryTaxPdf,
+          pdfmodel
+        )
+        .pipe()
+        .subscribe();
+    }
+  }
+  //#endregion
+  //#region "Add By Model"
+  GetAllPensionDetailList(EmployeeId: any) {
+    return this.globalService.getDataById(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HR_GetEmployeeOpeningPensionDetail +
+        '?employeeId=' +
+        EmployeeId
+    );
+  }
+  //#endregion
+
+  EditPensionDetail(model: any) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_HR_EditPensionDetail,
+      model
+    );
+  }
+  AddPensionDetail(model: IPensionDetails) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_HR_AddPensionDetail,
+      model
+    );
+  }
+  DeletePensionDetail(PensionId: number) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() + GLOBAL.API_HR_DeletePensionDetail,
+      PensionId
+    );
+  }
+  //#region "CheckExchangeRatesVerified"
+  CheckExchangeRatesVerified(model: any): any {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_ExchangeRates_CheckExchangeRatesVerified,
+      model
+    );
+  }
+  //#endregion
 }
