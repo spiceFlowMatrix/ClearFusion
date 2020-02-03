@@ -195,6 +195,7 @@ export class GLOBAL {
   public static API_Pdf_ExportEmployeeLeavePdf = 'Pdf/ExportEmployeeLeavePdf';
   public static API_HR_GetEmployeeWorkingTimeByMonth = 'Attendance/GetEmployeeWorkingTimeByMonth';
   public static API_HR_GetEmployeeAppliedLeaveHours = 'Attendance/GetEmployeeAppliedLeaveHours';
+  public static API_Attendance_GetAppliedLeaveDates = 'Attendance/GetAppliedLeaveDates';
   public static API_HR_ApproveRejectLeave = 'Attendance/ApproveRejectLeave';
   public static API_HR_AddEmployeeSalaryCurrencyAndBasicSalary = 'EmployeePayroll/AddEmployeeSalaryCurrencyAndBasicSalary';
   public static API_HR_EditEmployeeSalaryCurrencyAndBasicSalary = 'EmployeePayroll/EditEmployeeSalaryCurrencyAndBasicSalary';
@@ -599,6 +600,8 @@ export class GLOBAL {
   public static API_EmployeeDetail_GetEmployeeResignationById = 'EmployeeDetail/GetEmployeeResignationById';
   public static API_EmployeeDetail_TerminateEmployeeByEmployeeId = 'EmployeeDetail/TerminateEmployeeByEmployeeId';
   public static API_EmployeeDetail_DeleteEmployeeByEmployeeId = 'EmployeeDetail/DeleteEmployeeByEmployeeId';
+  public static API_EmployeeDetail_RevokeEmployeeResignationById = 'EmployeeDetail/RevokeEmployeeResignationById';
+  public static API_EmployeeDetail_RehireEmployeeById = 'EmployeeDetail/RehireEmployeeById';
 
   // pdf
   public static API_Pdf_GetAllChartOfAccountHierarchyPdf = 'Pdf/GetAllChartOfAccountHierarchyPdf';
@@ -754,6 +757,9 @@ export class GLOBAL {
   public static API_Hr_GetEmployeeById = 'EmployeeDetail/GetEmployeeDetailsByEmployeeId';
   public static API_HR_GetEmployeeProfessionalDetail = 'EmployeeDetail/GetEmployeeProfessionalDetail';
   public static API_HR_GetEmployeeOpeningPensionDetail = 'EmployeePayroll/GetEmployeeOpeningPensionDetail';
+  public static API_HR_EditPensionDetail = 'EmployeeDetail/EditOpeningPensionDetails';
+  public static API_HR_AddPensionDetail = 'EmployeeDetail/AddOpeningPensionDetail';
+  public static API_HR_DeletePensionDetail = 'EmployeeDetail/DeleteOpeningPensionDetails';
 
   //#region  "hr employee salary and tax"
   public static API_Code_GetAllFinancialYearDetail = 'Code/GetAllFinancialYearDetail';

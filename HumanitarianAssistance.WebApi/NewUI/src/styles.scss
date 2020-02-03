@@ -69,6 +69,10 @@ $mat-blue-secondary: (
     A700: white
   )
 );
+.special-date {
+  background-color: rgb(155, 216, 155);
+  border-radius: 5em;
+}
 
 $my-app-primary: mat-palette($mat-blue-primary);
 $my-app-accent: mat-palette($mat-blue-secondary, A200, 300, A200);

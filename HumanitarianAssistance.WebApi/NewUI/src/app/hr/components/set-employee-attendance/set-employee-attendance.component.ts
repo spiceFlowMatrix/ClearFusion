@@ -44,7 +44,7 @@ export class SetEmployeeAttendanceComponent implements OnInit {
   }
 
   initializeAttendanceFormArray() {
-    this.attendanceForm.controls.AttendanceDate.setValue(this.data.AttendanceDate);
+   // this.attendanceForm.controls.AttendanceDate.setValue(this.data.AttendanceDate);
     (<FormArray>this.attendanceForm.get('EmployeeAttendance')).removeAt(0);
     this.data.EmployeeList.forEach(element => {
       (this.attendanceForm.controls['EmployeeAttendance'] as FormArray)
@@ -61,47 +61,51 @@ export class SetEmployeeAttendanceComponent implements OnInit {
 
   saveEmployeeAttendance(value) {
     this.commonLoader.showLoader();
-    const model = {
-      AttendanceDate: StaticUtilities.getLocalDate(value.AttendanceDate.toUTCString()),
-      OfficeId: this.data.OfficeId,
-      EmployeeAttendance: []
-    };
-    value.EmployeeAttendance.forEach(element => {
-      const obj = {
-        EmployeeId: element.EmployeeId,
-        AttendanceTypeId: element.Attendance,
-        InTime: new Date(
-          value.AttendanceDate.getFullYear(),
-          value.AttendanceDate.getMonth(),
-          value.AttendanceDate.getDate(),
-          this.convert12hTimeToHours(element.InTime),
-          this.convert12hTimeToMinutes(element.InTime)
-        ).toUTCString(),
-        OutTime: new Date(
-          value.AttendanceDate.getFullYear(),
-          value.AttendanceDate.getMonth(),
-          value.AttendanceDate.getDate(),
-          this.convert12hTimeToHours(element.OutTime),
-          this.convert12hTimeToMinutes(element.OutTime)
-        ).toUTCString(),
-        AttendanceGroupId: element.AttendanceGroupId,
-        Date: StaticUtilities.getLocalDate(value.AttendanceDate.toUTCString())
+    this.data.AttendanceDates.forEach(val => {
+     
+      const model = {
+        AttendanceDate: StaticUtilities.getLocalDate(val.toUTCString()),
+        OfficeId: this.data.OfficeId,
+        EmployeeAttendance: []
       };
-      model.EmployeeAttendance.push(obj);
-    });
-    this.attendanceService.saveEmployeeAttendance(model).subscribe(res => {
-      if (res) {
+      value.EmployeeAttendance.forEach(element => {
+        const obj = {
+          EmployeeId: element.EmployeeId,
+          AttendanceTypeId: element.Attendance,
+          InTime: new Date(
+            val.getFullYear(),
+            val.getMonth(),
+            val.getDate(),
+            this.convert12hTimeToHours(element.InTime),
+            this.convert12hTimeToMinutes(element.InTime)
+          ).toUTCString(),
+          OutTime: new Date(
+            val.getFullYear(),
+            val.getMonth(),
+            val.getDate(),
+            this.convert12hTimeToHours(element.OutTime),
+            this.convert12hTimeToMinutes(element.OutTime)
+          ).toUTCString(),
+          AttendanceGroupId: element.AttendanceGroupId,
+          Date: StaticUtilities.getLocalDate(val.toUTCString())
+        };
+        model.EmployeeAttendance.push(obj);
+      });
+      this.attendanceService.saveEmployeeAttendance(model).subscribe(res => {
+        if (res) {
+          this.commonLoader.hideLoader();
+          this.dialogRef.close();
+          this.toastr.success('Attendance Saved Successfully!');
+        } else {
+          this.commonLoader.hideLoader();
+          this.toastr.warning('Something went wrong!');
+        }
+      }, err => {
+        this.toastr.warning(err);
         this.commonLoader.hideLoader();
-        this.dialogRef.close();
-        this.toastr.success('Attendance Saved Successfully!');
-      } else {
-        this.commonLoader.hideLoader();
-        this.toastr.warning('Something went wrong!');
-      }
-    }, err => {
-      this.toastr.warning(err);
-      this.commonLoader.hideLoader();
+      });
     });
+    
   }
 
   convert12hTimeToHours(time12h): number {

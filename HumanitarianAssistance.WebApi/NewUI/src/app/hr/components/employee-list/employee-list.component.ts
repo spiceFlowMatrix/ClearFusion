@@ -24,7 +24,7 @@ import { IncrementDecrementSalaryComponent } from '../employee-salary-config/inc
 export class EmployeeListComponent implements OnInit {
 
   officeDropdown$: Observable<IDropDownModel[]>;
-  selectedOffice = {value: 0 , name: 'OFFICE'};
+  selectedOffice = { value: 0, name: 'OFFICE' };
   employeeListFilterForm: FormGroup;
   genderList$: Observable<IDropDownModel[]>;
   accountStatusList$: Observable<IDropDownModel[]>;
@@ -32,12 +32,15 @@ export class EmployeeListComponent implements OnInit {
   selection = new SelectionModel<EmployeeDetailList>(true, []);
   displayedColumns = ['select', 'Code', 'Name',
     'FatherName', 'EmploymentStatus', 'Profession'];
-  filterModel: EmployeeFilterModel = {EmployeeIdFilter: null, EmploymentStatusFilter: 0, NameFilter: null,
-    PageIndex: 0, PageSize: 10, OfficeId: 0, GenderFilter: 0};
+  filterModel: EmployeeFilterModel = {
+    EmployeeIdFilter: null, EmploymentStatusFilter: 0, NameFilter: null,
+    PageIndex: 0, PageSize: 10, OfficeId: 0, GenderFilter: 0
+  };
   employeeDataSource;
   TotalCount = 0;
 
   EmployeeAttendanceList: any[];
+  AttendanceDates: Date[] = []
 
   constructor(
     private employeeListService: EmployeeListService,
@@ -47,24 +50,24 @@ export class EmployeeListComponent implements OnInit {
     private router: Router,
     private commonLoader: CommonLoaderService,
     private dialog: MatDialog) {
-      this.accountStatusList$ = of([
-        { name: 'Prospective', value: 1 },
-        { name: 'Active', value: 2 },
-        { name: 'Terminated', value: 3 }
-      ] as IDropDownModel[]);
-      this.genderList$ = of([
-        { name: 'Male', value: 1 },
-        { name: 'Female', value: 2 },
-        { name: 'Other', value: 3 }
-      ] as IDropDownModel[]);
-      this.employeeListFilterForm = this.fb.group({
-        Name: [''],
-        // LastName: [''],
-        Sex: [''],
-        EmploymentStatus: [''],
-        EmployeeId: ['']
-      });
-    }
+    this.accountStatusList$ = of([
+      { name: 'Prospective', value: 1 },
+      { name: 'Active', value: 2 },
+      { name: 'Terminated', value: 3 }
+    ] as IDropDownModel[]);
+    this.genderList$ = of([
+      { name: 'Male', value: 1 },
+      { name: 'Female', value: 2 },
+      { name: 'Other', value: 3 }
+    ] as IDropDownModel[]);
+    this.employeeListFilterForm = this.fb.group({
+      Name: [''],
+      // LastName: [''],
+      Sex: [''],
+      EmploymentStatus: [''],
+      EmployeeId: ['']
+    });
+  }
 
   ngOnInit() {
     this.getOfficeList();
@@ -82,7 +85,7 @@ export class EmployeeListComponent implements OnInit {
                 name: y.OfficeName
               };
             }));
-            this.selectedOffice = {value: data.data.OfficeDetailsList[0].OfficeId, name: data.data.OfficeDetailsList[0].OfficeName};
+            this.selectedOffice = { value: data.data.OfficeDetailsList[0].OfficeId, name: data.data.OfficeDetailsList[0].OfficeName };
             this.filterModel.OfficeId = this.selectedOffice.value;
             this.getFilteredEmployeeList(this.filterModel);
           }
@@ -132,7 +135,8 @@ export class EmployeeListComponent implements OnInit {
   }
 
   filterEmployee(value) {
-    this.filterModel = {EmployeeIdFilter: value.EmployeeId, EmploymentStatusFilter: value.EmploymentStatus,
+    this.filterModel = {
+      EmployeeIdFilter: value.EmployeeId, EmploymentStatusFilter: value.EmploymentStatus,
       NameFilter: value.Name, PageIndex: 0, PageSize: 10, OfficeId: this.selectedOffice.value,
       GenderFilter: value.Sex
     };
@@ -183,17 +187,26 @@ export class EmployeeListComponent implements OnInit {
   }
 
   onDateChanged(event) {
+    this.AttendanceDates = [];
     this.commonLoader.showLoader();
-    const attendanceDate = event.target.value;
+    // const attendanceDate = event.target.value;
+    // const model = {
+    //   Date: StaticUtilities.getLocalDate(attendanceDate),
+    //   OfficeId: this.selectedOffice.value,
+    //   EmpIds: []
+    // };
+    const attendanceFromDate = event.target.value.begin;
+    const attendanceToDate = event.target.value.end;
     const model = {
-      Date: StaticUtilities.getLocalDate(attendanceDate),
+      FromDate: StaticUtilities.getLocalDate(attendanceFromDate),
+      ToDate: StaticUtilities.getLocalDate(attendanceToDate),
       OfficeId: this.selectedOffice.value,
       EmpIds: []
     };
     this.selection.selected.forEach(res => {
       model.EmpIds.push(res.EmployeeId);
     });
-    this.EmployeeAttendanceList =  this.selection.selected;
+    this.EmployeeAttendanceList = this.selection.selected;
     this.attendanceService.getPayrollHoursByEmployeeIds(model).subscribe(
       res => {
         this.EmployeeAttendanceList.forEach(e => {
@@ -201,11 +214,11 @@ export class EmployeeListComponent implements OnInit {
           if (emp.length !== 0) {
             e.InTime = new Date(
               new Date(emp[0].InTime).getTime() -
-                new Date().getTimezoneOffset() * 60000
+              new Date().getTimezoneOffset() * 60000
             );
             e.OutTime = new Date(
               new Date(emp[0].OutTime).getTime() -
-                new Date().getTimezoneOffset() * 60000
+              new Date().getTimezoneOffset() * 60000
             );
             e.Attendance = emp[0].AttendanceType;
             e.AttendanceGroupId = emp[0].AttendanceGroupId;
@@ -214,11 +227,13 @@ export class EmployeeListComponent implements OnInit {
         this.commonLoader.hideLoader();
         const dialogRef = this.dialog.open(SetEmployeeAttendanceComponent, {
           width: '600px',
-          data: {'AttendanceDate': attendanceDate, 'EmployeeList': this.EmployeeAttendanceList,
-          'errors': false, 'errorMessage': '', 'OfficeId': this.selectedOffice.value}
+          data: {
+            'AttendanceDates': this.getAllDates(attendanceFromDate, attendanceToDate), 'EmployeeList': this.EmployeeAttendanceList,
+            'errors': false, 'errorMessage': '', 'OfficeId': this.selectedOffice.value
+          }
         });
         dialogRef.afterClosed().subscribe(result => {
-          if (result !== undefined && result.data != null ) {
+          if (result !== undefined && result.data != null) {
           }
         });
       },
@@ -226,11 +241,13 @@ export class EmployeeListComponent implements OnInit {
         this.commonLoader.hideLoader();
         const dialogRef = this.dialog.open(SetEmployeeAttendanceComponent, {
           width: '600px',
-          data: {'AttendanceDate': attendanceDate, 'EmployeeList': this.EmployeeAttendanceList,
-          'errors': true, 'errorMessage': err, 'OfficeId': this.selectedOffice.value}
+          data: {
+            'AttendanceDates': this.getAllDates(attendanceFromDate, attendanceToDate), 'EmployeeList': this.EmployeeAttendanceList,
+            'errors': true, 'errorMessage': err, 'OfficeId': this.selectedOffice.value
+          }
         });
         dialogRef.afterClosed().subscribe(result => {
-          if (result !== undefined && result.data != null ) {
+          if (result !== undefined && result.data != null) {
           }
         });
       }
@@ -274,8 +291,8 @@ export class EmployeeListComponent implements OnInit {
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected() ?
-        this.selection.clear() :
-        this.employeeList.forEach(row => this.selection.select(row));
+      this.selection.clear() :
+      this.employeeList.forEach(row => this.selection.select(row));
   }
 
   /** The label for the checkbox on the passed row */
@@ -284,5 +301,26 @@ export class EmployeeListComponent implements OnInit {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.EmployeeId + 1}`;
+  }
+  resetFilter() {
+    this.filterModel = {
+      EmployeeIdFilter: null, EmploymentStatusFilter: 0, NameFilter: null,
+      PageIndex: 0, PageSize: 10, OfficeId: 0, GenderFilter: 0
+    };
+    this.filterModel.OfficeId = this.selectedOffice.value;
+    this.getFilteredEmployeeList(this.filterModel);
+    this.employeeListFilterForm.reset();
+  }
+  getAllDates(startDate, endDate) {
+    let currentDate = new Date(startDate);
+    while (currentDate <= endDate) {
+      this.AttendanceDates.push(currentDate);
+      currentDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate() + 1);
+    }
+    console.log(this.AttendanceDates);
+    return this.AttendanceDates;
   }
 }

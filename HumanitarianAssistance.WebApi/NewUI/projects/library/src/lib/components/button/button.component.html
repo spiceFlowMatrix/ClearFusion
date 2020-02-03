@@ -107,4 +107,10 @@
       {{text| uppercase}}
     </h5>
   </button>
+  <button *ngSwitchCase="'reset'" [disabled]="disabled" mat-flat-button class="blue" (click)="btnClick()" [type]="(isSubmit)?'submit':'button'">
+    <h5>
+      <i class="fas fa-redo"></i>
+      {{text | uppercase}}
+    </h5>
+  </button>
 </ng-container>

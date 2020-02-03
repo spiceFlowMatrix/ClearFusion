@@ -33,7 +33,12 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                 var financialyear = await _dbContext.FinancialYearDetail.FirstOrDefaultAsync(x => x.IsDefault == true);
                 if (financialyear != null)
                 {
-                    var holidayDetail = await _dbContext.HolidayWeeklyDetails.Where(x => x.IsDeleted == false).ToListAsync();
+                    List<HolidayWeeklyDetails> holidayDetail = await _dbContext.HolidayWeeklyDetails.Where(x => x.IsDeleted == false).ToListAsync();
+                    if(holidayDetail.Any())
+                    {
+                        holidayDetail.ForEach(x=> x.IsDeleted = true);
+                        await _dbContext.SaveChangesAsync();
+                    }
                     if (request.HolidayType == (int)HolidayType.REPEATWEEKLYDAY)
                     {
                         List<HolidayWeeklyDetails> holidayweeklylist = new List<HolidayWeeklyDetails>();
@@ -63,7 +68,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     else
                     {
                         List<HolidayDetails> existHolidayRecord = await _dbContext.HolidayDetails.Where(x => x.Date.Date == request.Date.Date &&
-                                                                                                      x.IsDeleted == false).ToListAsync();
+                                                                                                      x.IsDeleted == false && x.FinancialYearId == financialyear.FinancialYearId).ToListAsync();
                         List<HolidayDetails> listObj = new List<HolidayDetails>();
                         // edit the list according to office
                         if (existHolidayRecord.Any())
