@@ -14,6 +14,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public DateTime PaymentDate { get; set; }
         public double InstallmentPaid { get; set; }
         public double InstallmentBalance { get; set; }
+        public bool IsApproved { get; set; }
         public int EmployeeId { get; set; }
         [ForeignKey("AdvanceId")]
         public Advances Advances { get; set; }

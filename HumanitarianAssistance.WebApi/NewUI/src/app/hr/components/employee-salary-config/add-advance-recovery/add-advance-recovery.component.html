@@ -7,21 +7,17 @@
   </h1>
 
   <div mat-dialog-content>
-    <div class="row">
-      <div class="col-sm-6">
-        <span><strong>Requested Amount: </strong>{{advanceData.RequestedAmount}}</span>
-      </div>
-      <div class="col-sm-6">
-        <span><strong>Balance Amount: </strong>{{advanceData.BalanceAmount}}</span>
-      </div>
-    </div>
     <form class="example-form" [formGroup]="advanceRecoveryForm" (ngSubmit)="onFormSubmit()">
       <div class="row">
-        <div class="col-sm-7">
-              <mat-form-field class="example-full-width">
-                <input matInput formControlName="RecoveryAmount" placeholder="Recovery Amount" type="number"/>
-                <mat-error *ngIf="advanceRecoveryForm.controls['RecoveryAmount'].hasError('max')">Recovery Amount exceeds Balance Amount</mat-error>
-              </mat-form-field>
+        <div class="col-sm-6">
+          <span><strong>Balance Amount: </strong>{{advanceData.BalanceAmount}}</span>
+        </div>
+        <div class="col-sm-6">
+          <mat-form-field class="example-full-width">
+            <input matInput formControlName="RecoveryAmount" placeholder="Recovery Amount" type="number" />
+            <mat-error *ngIf="advanceRecoveryForm.controls['RecoveryAmount'].hasError('max')">Recovery Amount exceeds
+              Balance Amount</mat-error>
+          </mat-form-field>
         </div>
       </div>
       <button type="submit" style="display: none;" #btnSubmit></button>
@@ -29,7 +25,8 @@
   </div>
   <div mat-dialog-actions class="pull-right">
     <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
-    <hum-button *ngIf="!isFormSubmitted" [disabled]="!advanceRecoveryForm.valid" [type]="'save'" [text]="'save'" (click)="btnSubmit.click()"></hum-button>
+    <hum-button *ngIf="!isFormSubmitted" [disabled]="!advanceRecoveryForm.valid" [type]="'save'" [text]="'save'"
+      (click)="btnSubmit.click()"></hum-button>
     <hum-button (click)="closeDialog()" [type]="'cancel'" [text]="'cancel'"></hum-button>
   </div>
 </div>

@@ -167,6 +167,7 @@ export class GLOBAL {
   public static API_EmployeePayroll_RejectAdvanceRequest = 'EmployeePayroll/RejectAdvanceRequest';
   public static API_EmployeePayroll_EditAdvanceRequest = 'EmployeePayroll/EditAdvanceRequest';
   public static API_EmployeePayroll_GetAdvanceHistoryById = 'EmployeePayroll/GetAdvanceHistoryById';
+  public static API_EmployeePayroll_GetEmployeePayrollCurrency = 'EmployeePayroll/GetEmployeePayrollCurrency';
 
 
   public static API_Project_GetAllProvinceDetails = 'Project/GetAllProvinceDetails';
