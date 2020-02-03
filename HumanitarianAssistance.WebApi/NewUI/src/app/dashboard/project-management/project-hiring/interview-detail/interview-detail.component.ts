@@ -521,11 +521,11 @@ export class InterviewDetailComponent implements OnInit {
       if (result !== undefined) {
         (result.TraningStartDate = this.datePipe.transform(
           result.TraningStartDate,
-          'd/M/yyyy'
+          'dd-MM-yyyy'
         )),
           (result.TraningEndDate = this.datePipe.transform(
             result.TraningEndDate,
-            'd/M/yyyy'
+            'dd-MM-yyyy'
           ));
         if (this.traningList$ === undefined) {
           /** binding result data(traning details) to traning list*/
@@ -677,16 +677,6 @@ export class InterviewDetailComponent implements OnInit {
     this.traningList$.subscribe(res => {
       data.TraningList = res;
     });
-    // data.TraningList.forEach(element => {
-    //   (element.TraningStartDate = this.datePipe.transform(
-    //     StaticUtilities.getLocalDate(new Date(element.TraningStartDate)),
-    //     'dd-MM-yyyy'
-    //   )),
-    //     (element.TraningEndDate = this.datePipe.transform(
-    //       StaticUtilities.getLocalDate(new Date(element.TraningEndDate)),
-    //       'dd-MM-yyyy'
-    //     ));
-    // });
     data.ProfessionalCriteriaMark = this.professionalCriteriaMarks;
     data.MarksObtain = this.marksObtain;
     data.RatingBasedCriteriaList = this.ratingBasedCriteriaQuestionList;
@@ -694,6 +684,7 @@ export class InterviewDetailComponent implements OnInit {
     this.interviewerList$.subscribe(res => {
       data.InterviewerList = res;
     });
+    console.log(data.TraningList);
     this.hiringRequestService.EditInterviewDetails(data).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
@@ -793,6 +784,7 @@ export class InterviewDetailComponent implements OnInit {
     this.marksObtain = data.MarksObtain;
     this.professionalCriteriaMarks = data.ProfessionalCriteriaMark;
     this.languagesList$ = of(data.LanguageList);
+    console.log(data.TraningList);
     this.traningList$ = of(data.TraningList);
     this.interviewerList$ = of(data.InterviewerList);
        this.interviewDetails = data;
