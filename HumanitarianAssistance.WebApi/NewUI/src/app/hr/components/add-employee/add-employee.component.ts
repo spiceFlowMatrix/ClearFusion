@@ -32,8 +32,8 @@ export class AddEmployeeComponent implements OnInit {
   employeeProfessionalDetailForm: FormGroup;
   genderList$: Observable<IDropDownModel[]>;
   maritalStatusList$: Observable<IDropDownModel[]>;
-  previousYearsList$: Observable<IDropDownModel[]>;
-  monthsList$: Observable<IDropDownModel[]>;
+  // previousYearsList$: Observable<IDropDownModel[]>;
+  // monthsList$: Observable<IDropDownModel[]>;
   professionList$: Observable<IDropDownModel[]>;
   countryList$: Observable<IDropDownModel[]>;
   provinceList$: Observable<IDropDownModel[]>;
@@ -163,8 +163,8 @@ export class AddEmployeeComponent implements OnInit {
         this.subscribeContractTypeList(result[8]);
         this.subscribeAttendanceGroupList(result[9]);
       });
-    this.getAllMonthList();
-    this.getPreviousYearsList();
+    // this.getAllMonthList();
+    // this.getPreviousYearsList();
     this.employeeAllDetails = {
       EmployeeBasicDetail: {},
       EmployeeProfessionalDetails: {},
@@ -184,18 +184,18 @@ export class AddEmployeeComponent implements OnInit {
   }
 
   //#region "Get all month list for ExperienceInMonth dropdown"
-  getAllMonthList() {
-    const monthDropDown: IDropDownModel[] = [];
-    for (let i = Month['January']; i <= Month['December']; i++) {
-      monthDropDown.push({ name: Month[i], value: i });
-    }
-    this.monthsList$ = of(monthDropDown);
-  }
+  // getAllMonthList() {
+  //   const monthDropDown: IDropDownModel[] = [];
+  //   for (let i = Month['January']; i <= Month['December']; i++) {
+  //     monthDropDown.push({ name: Month[i], value: i });
+  //   }
+  //   this.monthsList$ = of(monthDropDown);
+  // }
   //#endregion
   //#region "Get all previous years list for ExperienceInYears dropdown"
-  getPreviousYearsList() {
-    this.previousYearsList$ = this.purchaseService.getPreviousYearsList(40);
-  }
+  // getPreviousYearsList() {
+  //   this.previousYearsList$ = this.purchaseService.getPreviousYearsList(40);
+  // }
   //#endregion
 
   //#region "Get all countries list for country dropdown"
