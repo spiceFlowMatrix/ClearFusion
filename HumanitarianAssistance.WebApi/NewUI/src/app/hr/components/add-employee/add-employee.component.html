@@ -35,13 +35,21 @@
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
                                     <input matInput formControlName="FullName" placeholder="Full Name" />
-                                    <mat-error *ngIf="employeeDetailForm.controls['FullName'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['FullName'].hasError(
+                        'required'
+                      )
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
                                     <input matInput formControlName="FatherName" placeholder="Father Name" />
-                                    <mat-error *ngIf="employeeDetailForm.controls['FatherName'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['FatherName'].hasError(
+                        'required'
+                      )
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -49,13 +57,19 @@
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
                                     <input matInput formControlName="Email" placeholder="Email" />
-                                    <mat-error *ngIf="employeeDetailForm.controls['Email'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['Email'].hasError('required')
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
                                     <input matInput formControlName="PhoneNo" placeholder="Phone Number" />
-                                    <mat-error *ngIf="employeeDetailForm.controls['PhoneNo'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['PhoneNo'].hasError(
+                        'required'
+                      )
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -63,13 +77,21 @@
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
                                     <input matInput formControlName="Password" placeholder="Password" type="password" />
-                                    <mat-error *ngIf="employeeDetailForm.controls['Password'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['Password'].hasError(
+                        'required'
+                      )
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
                                     <input matInput formControlName="ConfirmPassword" placeholder="Confirm Password" type="password" />
-                                    <mat-error *ngIf="employeeDetailForm.controls['ConfirmPassword'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['ConfirmPassword'].hasError(
+                        'required'
+                      )
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -85,7 +107,11 @@
                                     <input matInput [matDatepicker]="DateOfBirthPicker" placeholder="Date Of Birth" formControlName="DateOfBirth" />
                                     <mat-datepicker-toggle matSuffix [for]="DateOfBirthPicker"></mat-datepicker-toggle>
                                     <mat-datepicker #DateOfBirthPicker></mat-datepicker>
-                                    <mat-error *ngIf="employeeDetailForm.controls['DateOfBirth'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['DateOfBirth'].hasError(
+                        'required'
+                      )
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -119,13 +145,21 @@
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
                                     <input matInput formControlName="BirthPlace" placeholder="Birth Place" />
-                                    <mat-error *ngIf="employeeDetailForm.controls['BirthPlace'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['BirthPlace'].hasError(
+                        'required'
+                      )
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
                                     <input matInput formControlName="TinNumber" placeholder="Tin Number" />
-                                    <mat-error *ngIf="employeeDetailForm.controls['TinNumber'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['TinNumber'].hasError(
+                        'required'
+                      )
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -133,13 +167,21 @@
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
                                     <input matInput formControlName="PassportNumber" placeholder="Passport Number" />
-                                    <mat-error *ngIf="employeeDetailForm.controls['PassportNumber'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['PassportNumber'].hasError(
+                        'required'
+                      )
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
                                     <input matInput formControlName="University" placeholder="University" />
-                                    <mat-error *ngIf="employeeDetailForm.controls['University'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['University'].hasError(
+                        'required'
+                      )
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -168,18 +210,31 @@
                   " [options]="previousYearsList$" [placeHolder]="'Experience Year'"></lib-hum-dropdown> -->
                                 <mat-form-field class="example-full-width">
                                     <input matInput formControlName="ExperienceYear" placeholder="Experience Year" type="number" />
-                                    <mat-error *ngIf="employeeDetailForm.controls['ExperienceYear'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['ExperienceYear'].hasError(
+                        'required'
+                      )
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                             <div class="col-md-3">
-                                <!-- <lib-hum-dropdown formControlName="ExperienceMonth" [validation]="
+                                <!-- <lib-hum-dropdown
+                  formControlName="ExperienceMonth"
+                  [validation]="
                     employeeDetailForm.controls['ExperienceMonth'].hasError(
                       'required'
                     )
-                  " [options]="monthsList$" [placeHolder]="'Experience Month'"></lib-hum-dropdown> -->
+                  "
+                  [options]="monthsList$"
+                  [placeHolder]="'Experience Month'"
+                ></lib-hum-dropdown> -->
                                 <mat-form-field class="example-full-width">
                                     <input matInput formControlName="ExperienceMonth" placeholder="Experience Month" type="number" />
-                                    <mat-error *ngIf="employeeDetailForm.controls['ExperienceMonth'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['ExperienceMonth'].hasError(
+                        'required'
+                      )
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -187,13 +242,21 @@
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
                                     <input matInput formControlName="IssuePlace" placeholder="Issue Place" />
-                                    <mat-error *ngIf="employeeDetailForm.controls['IssuePlace'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['IssuePlace'].hasError(
+                        'required'
+                      )
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
                                     <input matInput formControlName="ReferBy" placeholder="Refer By" />
-                                    <mat-error *ngIf="employeeDetailForm.controls['ReferBy'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['ReferBy'].hasError(
+                        'required'
+                      )
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -201,7 +264,11 @@
                             <div class="col-md-6">
                                 <mat-form-field class="example-full-width">
                                     <textarea matInput rows="3" formControlName="PreviousWork" placeholder="Previous Work"></textarea>
-                                    <mat-error *ngIf="employeeDetailForm.controls['PreviousWork'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['PreviousWork'].hasError(
+                        'required'
+                      )
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -209,7 +276,11 @@
                             <div class="col-md-6">
                                 <mat-form-field class="example-full-width">
                                     <textarea matInput rows="3" formControlName="CurrentAddress" placeholder="Current Address"></textarea>
-                                    <mat-error *ngIf="employeeDetailForm.controls['CurrentAddress'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['CurrentAddress'].hasError(
+                        'required'
+                      )
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -217,7 +288,11 @@
                             <div class="col-md-6">
                                 <mat-form-field class="example-full-width">
                                     <textarea matInput rows="3" formControlName="PermanentAddress" placeholder="Permanent Address"></textarea>
-                                    <mat-error *ngIf="employeeDetailForm.controls['PermanentAddress'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeDetailForm.controls['PermanentAddress'].hasError(
+                        'required'
+                      )
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -284,7 +359,11 @@
                                     <input matInput [matDatepicker]="HiredOnPicker" placeholder="Hired On" formControlName="HiredOn" />
                                     <mat-datepicker-toggle matSuffix [for]="HiredOnPicker"></mat-datepicker-toggle>
                                     <mat-datepicker #HiredOnPicker></mat-datepicker>
-                                    <mat-error *ngIf="employeeProfessionalDetailForm.controls['HiredOn'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeProfessionalDetailForm.controls[
+                        'HiredOn'
+                      ].hasError('required')
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                             <div class="col-md-3">
@@ -307,7 +386,11 @@
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
                                     <input matInput formControlName="TrainingAndBenefits" placeholder="Training/Benefits" />
-                                    <mat-error *ngIf="employeeProfessionalDetailForm.controls['TrainingAndBenefits'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeProfessionalDetailForm.controls[
+                        'TrainingAndBenefits'
+                      ].hasError('required')
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -315,7 +398,11 @@
                             <div class="col-md-6">
                                 <mat-form-field class="example-full-width">
                                     <textarea matInput rows="3" formControlName="JobDescription" placeholder="Job Description"></textarea>
-                                    <mat-error *ngIf="employeeProfessionalDetailForm.controls['JobDescription'].hasError('required')">Required</mat-error>
+                                    <mat-error *ngIf="
+                      employeeProfessionalDetailForm.controls[
+                        'JobDescription'
+                      ].hasError('required')
+                    ">Required</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -359,10 +446,7 @@
                   (click)="addPension()"
                 ></hum-button>
 
-                <mat-form-field
-                  *ngIf="IsEditing"
-                  class="clsMatDatePicker"
-                >
+                <mat-form-field *ngIf="IsEditing" class="clsMatDatePicker">
                   <input
                     matInput
                     [matDatepicker]="picker"
@@ -391,7 +475,8 @@
                                         <td>
                                             <i class="fa fa-pencil" (click)="editPensionItem(data)"></i
                       >&nbsp;&nbsp;&nbsp;&nbsp;
-                      <i *ngIf="!IsEditing"
+                      <i
+                        *ngIf="!IsEditing"
                         class="fas fa-trash"
                         (click)="deletePensionItem(data)"
                       ></i>
