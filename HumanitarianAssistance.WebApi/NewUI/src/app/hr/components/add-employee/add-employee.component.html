@@ -161,18 +161,26 @@
                         </div>
                         <div class="row">
                             <div class="col-md-3">
-                                <lib-hum-dropdown formControlName="ExperienceYear" [validation]="
+                                <!-- <lib-hum-dropdown formControlName="ExperienceYear" [validation]="
                     employeeDetailForm.controls['ExperienceYear'].hasError(
                       'required'
                     )
-                  " [options]="previousYearsList$" [placeHolder]="'Experience Year'"></lib-hum-dropdown>
+                  " [options]="previousYearsList$" [placeHolder]="'Experience Year'"></lib-hum-dropdown> -->
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="ExperienceYear" placeholder="Experience Year" type="number" />
+                                    <mat-error *ngIf="employeeDetailForm.controls['ExperienceYear'].hasError('required')">Required</mat-error>
+                                </mat-form-field>
                             </div>
                             <div class="col-md-3">
-                                <lib-hum-dropdown formControlName="ExperienceMonth" [validation]="
+                                <!-- <lib-hum-dropdown formControlName="ExperienceMonth" [validation]="
                     employeeDetailForm.controls['ExperienceMonth'].hasError(
                       'required'
                     )
-                  " [options]="monthsList$" [placeHolder]="'Experience Month'"></lib-hum-dropdown>
+                  " [options]="monthsList$" [placeHolder]="'Experience Month'"></lib-hum-dropdown> -->
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="ExperienceMonth" placeholder="Experience Month" type="number" />
+                                    <mat-error *ngIf="employeeDetailForm.controls['ExperienceMonth'].hasError('required')">Required</mat-error>
+                                </mat-form-field>
                             </div>
                         </div>
                         <div class="row">

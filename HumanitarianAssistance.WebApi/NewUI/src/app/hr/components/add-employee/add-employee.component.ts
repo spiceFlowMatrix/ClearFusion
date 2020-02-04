@@ -1,8 +1,5 @@
 import { StaticUtilities } from 'src/app/shared/static-utilities';
-import { Response } from '@angular/http';
-import {
-  IEmployeePensionListModel,
-} from './../../models/employee-detail.model';
+import { IEmployeePensionListModel } from './../../models/employee-detail.model';
 import { AddEmployeeService } from './../../services/add-employee.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -11,8 +8,6 @@ import { IDropDownModel } from 'src/app/store/models/purchase';
 import { Observable, of, forkJoin, ReplaySubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
-import { PurchaseService } from 'src/app/store/services/purchase.service';
-import { Month } from 'src/app/shared/enum';
 import { IEmployeeAllDetails } from '../../models/employee-detail.model';
 import { MatDialog } from '@angular/material';
 import { AddOpeningPensionComponent } from './add-opening-pension/add-opening-pension.component';
@@ -32,8 +27,8 @@ export class AddEmployeeComponent implements OnInit {
   employeeProfessionalDetailForm: FormGroup;
   genderList$: Observable<IDropDownModel[]>;
   maritalStatusList$: Observable<IDropDownModel[]>;
-  previousYearsList$: Observable<IDropDownModel[]>;
-  monthsList$: Observable<IDropDownModel[]>;
+  // previousYearsList$: Observable<IDropDownModel[]>;
+  // monthsList$: Observable<IDropDownModel[]>;
   professionList$: Observable<IDropDownModel[]>;
   countryList$: Observable<IDropDownModel[]>;
   provinceList$: Observable<IDropDownModel[]>;
@@ -59,7 +54,6 @@ export class AddEmployeeComponent implements OnInit {
     private fb: FormBuilder,
     public dialog: MatDialog,
     private commonLoader: CommonLoaderService,
-    private purchaseService: PurchaseService,
     private employeeService: AddEmployeeService,
     private toastr: ToastrService,
     private routeActive: ActivatedRoute,
@@ -163,8 +157,8 @@ export class AddEmployeeComponent implements OnInit {
         this.subscribeContractTypeList(result[8]);
         this.subscribeAttendanceGroupList(result[9]);
       });
-    this.getAllMonthList();
-    this.getPreviousYearsList();
+    // this.getAllMonthList();
+    // this.getPreviousYearsList();
     this.employeeAllDetails = {
       EmployeeBasicDetail: {},
       EmployeeProfessionalDetails: {},
@@ -184,18 +178,18 @@ export class AddEmployeeComponent implements OnInit {
   }
 
   //#region "Get all month list for ExperienceInMonth dropdown"
-  getAllMonthList() {
-    const monthDropDown: IDropDownModel[] = [];
-    for (let i = Month['January']; i <= Month['December']; i++) {
-      monthDropDown.push({ name: Month[i], value: i });
-    }
-    this.monthsList$ = of(monthDropDown);
-  }
+  // getAllMonthList() {
+  //   const monthDropDown: IDropDownModel[] = [];
+  //   for (let i = Month['January']; i <= Month['December']; i++) {
+  //     monthDropDown.push({ name: Month[i], value: i });
+  //   }
+  //   this.monthsList$ = of(monthDropDown);
+  // }
   //#endregion
   //#region "Get all previous years list for ExperienceInYears dropdown"
-  getPreviousYearsList() {
-    this.previousYearsList$ = this.purchaseService.getPreviousYearsList(40);
-  }
+  // getPreviousYearsList() {
+  //   this.previousYearsList$ = this.purchaseService.getPreviousYearsList(40);
+  // }
   //#endregion
 
   //#region "Get all countries list for country dropdown"
@@ -602,8 +596,7 @@ export class AddEmployeeComponent implements OnInit {
       this.employeeProfessionalDetailForm.valid &&
       this.pensionList.length !== 0
     ) {
-      if(this.IsPensionDateSet === false)
-      {
+      if (this.IsPensionDateSet === false) {
         this.employeeAllDetails.EmployeePensionDetail.PensionDate = this.setPensionDate;
       }
       this.employeeDetailForm.controls['EmployeeId'].setValue(this.employeeId);
@@ -652,7 +645,9 @@ export class AddEmployeeComponent implements OnInit {
               Email: x.data.EmployeeDetailList[0].Email,
               PhoneNo: x.data.EmployeeDetailList[0].Phone,
               Gender: x.data.EmployeeDetailList[0].SexId,
-              DateOfBirth: StaticUtilities.setLocalDate(new Date(x.data.EmployeeDetailList[0].DateOfBirth)),
+              DateOfBirth: StaticUtilities.setLocalDate(
+                new Date(x.data.EmployeeDetailList[0].DateOfBirth)
+              ),
               MaritalStatus: x.data.EmployeeDetailList[0].MaritalStatus,
               Country: x.data.EmployeeDetailList[0].CountryId,
               Province: x.data.EmployeeDetailList[0].ProvinceId,
@@ -697,7 +692,9 @@ export class AddEmployeeComponent implements OnInit {
               Designation: x.data.EmployeeProfessionalList[0].DesignationId,
               EmployeeCotractType:
                 x.data.EmployeeProfessionalList[0].EmployeeContractTypeId,
-              HiredOn: StaticUtilities.setLocalDate(x.data.EmployeeProfessionalList[0].HiredOn),
+              HiredOn: StaticUtilities.setLocalDate(
+                x.data.EmployeeProfessionalList[0].HiredOn
+              ),
               AttendanceGroup:
                 x.data.EmployeeProfessionalList[0].AttendanceGroupId,
               DutyStation: x.data.EmployeeProfessionalList[0].DutyStation,
