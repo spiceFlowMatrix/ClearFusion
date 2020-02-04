@@ -275,6 +275,16 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         }
 
         [HttpPost]
+        public async Task<IActionResult> MarkWholeMonthAttendanceByEmployeeId([FromBody] MarkWholeMonthAttendanceByEmployeeIdCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            var item = await _mediator.Send(model);
+            return Ok(item);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> GetAppliedLeaveDates([FromBody]GetAppliedLeaveDatesQuery model)
         {
             var item = await _mediator.Send(model);
