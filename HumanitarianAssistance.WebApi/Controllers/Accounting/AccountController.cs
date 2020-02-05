@@ -270,5 +270,12 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         {
             return await _mediator.Send(new GetAllAccountListQuery());
         }
+        [HttpPost]
+        public async Task<IActionResult> GetGradeAssociatedAccount([FromBody] int GradeId)
+        {
+            var result = await _mediator.Send(new GetGradeAssociatedAccountQuery { GradeId = GradeId });
+            return Ok(result);
+        }
+        
     }
 }

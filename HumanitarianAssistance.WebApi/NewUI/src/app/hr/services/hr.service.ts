@@ -451,4 +451,11 @@ export class HrService {
       data
     );
   }
+
+  GetAccountList() {
+    return this.globalService
+      .getDataById(
+        this.appurl.getApiUrl() + GLOBAL.API_Accounting_GetAccountList
+      );
+  }
 }

@@ -10,7 +10,8 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string Office { get; set; }
         public int OfficeId { get; set; }
        // public string JobCode { get; set; }
-        public string JobGrade { get; set; }
+        public string JobGrade { get; set; }     
+        public int? GradeId { get; set; }
         public string Position { get; set; }
         public int? TotalVacancies { get; set; }
         public int? FilledVacancies { get; set; }
