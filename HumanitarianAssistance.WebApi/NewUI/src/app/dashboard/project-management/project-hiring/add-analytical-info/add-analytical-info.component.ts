@@ -1,19 +1,22 @@
-import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
-import { ReplaySubject, of, Observable, forkJoin } from 'rxjs';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
-import { ToastrService } from 'ngx-toastr';
-import { HiringRequestsService } from '../../project-list/hiring-requests/hiring-requests.service';
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
-import { IDropDownModel } from 'src/app/store/models/purchase';
-import { takeUntil } from 'rxjs/operators';
-import { IAnalyticalInfoList, TableActionsModel } from '../models/hiring-requests-models';
-import { IResponseData } from 'src/app/dashboard/accounting/vouchers/models/status-code.model';
+import { Component, OnInit, Inject, EventEmitter } from "@angular/core";
+import { ReplaySubject, of, Observable, forkJoin } from "rxjs";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
+import { CommonLoaderService } from "src/app/shared/common-loader/common-loader.service";
+import { ToastrService } from "ngx-toastr";
+import { HiringRequestsService } from "../../project-list/hiring-requests/hiring-requests.service";
+import { FormBuilder, FormGroup, Validators, FormArray } from "@angular/forms";
+import { IDropDownModel } from "src/app/store/models/purchase";
+import { takeUntil } from "rxjs/operators";
+import {
+  IAnalyticalInfoList,
+  TableActionsModel
+} from "../models/hiring-requests-models";
+import { IResponseData } from "src/app/dashboard/accounting/vouchers/models/status-code.model";
 
 @Component({
-  selector: 'app-add-analytical-info',
-  templateUrl: './add-analytical-info.component.html',
-  styleUrls: ['./add-analytical-info.component.scss']
+  selector: "app-add-analytical-info",
+  templateUrl: "./add-analytical-info.component.html",
+  styleUrls: ["./add-analytical-info.component.scss"]
 })
 export class AddAnalyticalInfoComponent implements OnInit {
   addAnalyticalInfoForm: FormGroup;
@@ -22,6 +25,8 @@ export class AddAnalyticalInfoComponent implements OnInit {
   employeeId: number;
   hiringRequestId: number;
   budgetLineId: number;
+  gradeId: number;
+  accountId: number;
   analyticalInfoList$: Observable<IAnalyticalInfoList[]>;
   accountList$: Observable<IDropDownModel[]>;
   budgetLineList$: Observable<IDropDownModel[]>;
@@ -31,10 +36,10 @@ export class AddAnalyticalInfoComponent implements OnInit {
   onAddAnalyticalInfoRefresh = new EventEmitter();
 
   analyticalInfoHeaders$ = of([
-    'Project',
-    'Budget Line',
-    'Account',
-    'Percentage'
+    "Project",
+    "Budget Line",
+    "Account",
+    "Percentage"
   ]);
   constructor(
     public dialogRef: MatDialogRef<AddAnalyticalInfoComponent>,
@@ -55,13 +60,16 @@ export class AddAnalyticalInfoComponent implements OnInit {
     });
     //#endregion
   }
-  get formData() { return this.addAnalyticalInfoForm.get('EditAnalyticalInfo'); }
+  get formData() {
+    return this.addAnalyticalInfoForm.get("EditAnalyticalInfo");
+  }
   ngOnInit() {
     this.projectId = this.data.projectId;
     this.hiringRequestId = this.data.hiringRequestId;
     this.employeeId = this.data.employeeId;
     this.budgetLineId = this.data.budgetLineId;
-    this.addAnalyticalInfoForm.controls['EmployeeID'].setValue(this.employeeId);
+    this.gradeId = this.data.gradeId;
+    this.addAnalyticalInfoForm.controls["EmployeeID"].setValue(this.employeeId);
     forkJoin([
       this.getProjectList(),
       this.getBudgetLineList(),
@@ -132,12 +140,13 @@ export class AddAnalyticalInfoComponent implements OnInit {
   //#region "Get all budget line list"
   getAccountList() {
     this.commonLoader.showLoader();
-    return this.hiringRequestService.GetAccountList();
+    return this.hiringRequestService.GetAccountList(this.gradeId);
   }
   subscribeAccountList(response: any) {
     this.commonLoader.hideLoader();
     this.accountList$ = of(
       response.data.map(y => {
+        this.accountId = y.AccountCode;
         return {
           value: y.AccountCode,
           name: y.AccountName
@@ -156,17 +165,20 @@ export class AddAnalyticalInfoComponent implements OnInit {
   subscribeAnalyticalInfo(response: any) {
     this.commonLoader.hideLoader();
     if (response.data !== undefined) {
-      const control = <FormArray>this.addAnalyticalInfoForm.controls.EditAnalyticalInfo;
+      const control = <FormArray>(
+        this.addAnalyticalInfoForm.controls.EditAnalyticalInfo
+      );
       this.analyticalInfoList$ = of(
         response.data.map(y => {
-            control.push(
-              this.fb.group({
-                EmployeeSalaryAnalyticalInfoId: y.EmployeeSalaryAnalyticalInfoId,
-                ProjectId: y.ProjectId,
-                BudgetlineId: y.BudgetLineId,
-                AccountCode: y.AccountCode,
-                SalaryPercentage: y.SalaryPercentage
-              }));
+          control.push(
+            this.fb.group({
+              EmployeeSalaryAnalyticalInfoId: y.EmployeeSalaryAnalyticalInfoId,
+              ProjectId: y.ProjectId,
+              BudgetlineId: y.BudgetLineId,
+              AccountCode: y.AccountCode,
+              SalaryPercentage: y.SalaryPercentage
+            })
+          );
           return {
             Project: y.ProjectId,
             Budgetline: y.BudgetLineName,
@@ -178,7 +190,8 @@ export class AddAnalyticalInfoComponent implements OnInit {
     }
     this.addAnalyticalInfoForm.patchValue({
       ProjectId: this.projectId,
-      BudgetlineId: this.budgetLineId
+      BudgetlineId: this.budgetLineId,
+      AccountCode: this.accountId
     });
   }
   //#region "Refresh candidate status after adding analytical"
@@ -193,11 +206,11 @@ export class AddAnalyticalInfoComponent implements OnInit {
   //#endregion
   //#region "On form submission"
   onFormSubmit(data: any) {
-   let allowedPercentage = 0;
+    let allowedPercentage = 0;
     if (data.EditAnalyticalInfo.length > 0) {
       data.EditAnalyticalInfo.forEach(element => {
-          allowedPercentage = allowedPercentage + (+element.SalaryPercentage);
-        });
+        allowedPercentage = allowedPercentage + +element.SalaryPercentage;
+      });
     }
     if (this.addAnalyticalInfoForm.valid) {
       if (data.SalaryPercentage + allowedPercentage === 100) {
@@ -205,7 +218,7 @@ export class AddAnalyticalInfoComponent implements OnInit {
         this.hiringRequestService.AddAnalyticalInfo(data).subscribe(
           (response: IResponseData) => {
             if (response.statusCode === 200) {
-              this.toastr.success('Analytical info added successfully');
+              this.toastr.success("Analytical info added successfully");
               this.AddAnalyticalInfoRefresh();
               this.isFormSubmitted = false;
             } else {
@@ -215,12 +228,12 @@ export class AddAnalyticalInfoComponent implements OnInit {
             this.onCancelPopup();
           },
           () => {
-            this.toastr.error('Someting went wrong. Please try again');
+            this.toastr.error("Someting went wrong. Please try again");
             this.isFormSubmitted = false;
           }
         );
       } else {
-        this.toastr.warning('Not Allowed');
+        this.toastr.warning("Not Allowed");
       }
     }
   }

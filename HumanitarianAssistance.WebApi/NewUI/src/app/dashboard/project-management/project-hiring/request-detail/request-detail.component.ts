@@ -139,7 +139,8 @@ export class RequestDetailComponent implements OnInit {
       SpecificDutiesAndResponsibilities: '',
       SubmissionGuidelines: '',
       HiringRequestCode: '',
-      BudgetLineId: null
+      BudgetLineId: null,
+      GradeId: null
     };
     this.routeActive.params.subscribe(params => {
       this.hiringRequestId = +params['id'];
@@ -232,7 +233,8 @@ export class RequestDetailComponent implements OnInit {
                   response.data.SpecificDutiesAndResponsibilities,
                 SubmissionGuidelines: response.data.SubmissionGuidelines,
                 HiringRequestCode: response.data.HiringRequestCode,
-                BudgetLineId: response.data.BudgetLineId
+                BudgetLineId: response.data.BudgetLineId,
+                GradeId: response.data.GradeId
               };
               if (
                 this.hiringRequestDetails.HiringRequestStatus ===
@@ -889,7 +891,8 @@ export class RequestDetailComponent implements OnInit {
         hiringRequestId: this.hiringRequestDetails.HiringRequestId,
         projectId: this.projectId,
         employeeId: CandidateData.item.EmployeeId,
-        budgetLineId: this.hiringRequestDetails.BudgetLineId
+        budgetLineId: this.hiringRequestDetails.BudgetLineId,
+        gradeId: this.hiringRequestDetails.GradeId
       }
     });
     // refresh the list after new request created

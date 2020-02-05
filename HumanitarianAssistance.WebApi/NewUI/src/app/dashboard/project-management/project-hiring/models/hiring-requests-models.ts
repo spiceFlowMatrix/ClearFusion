@@ -55,6 +55,7 @@ export interface HiringRequestDetailList {
   SpecificDutiesAndResponsibilities?: string;
   SubmissionGuidelines?: string;
   HiringRequestCode?: string;
+  GradeId?: number;
 }
 
 export interface OfficeDetailModel {
