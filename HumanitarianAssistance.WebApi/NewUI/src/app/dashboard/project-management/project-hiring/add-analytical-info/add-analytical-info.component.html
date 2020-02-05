@@ -27,7 +27,7 @@
                                             <lib-hum-dropdown formControlName="BudgetlineId" [options]="allBudgetLineList$" [placeHolder]="'Budget Line'" [disabled]="true"></lib-hum-dropdown>
                                         </div>
                                         <div class="col-lg-3 col-sm-3">
-                                            <lib-hum-dropdown formControlName="AccountCode" [options]="accountList$" [placeHolder]="'Account'"></lib-hum-dropdown>
+                                            <lib-hum-dropdown formControlName="AccountCode" [options]="accountList$" [placeHolder]="'Account'" [disabled]="true"></lib-hum-dropdown>
                                         </div>
                                         <div class="col-lg-3 col-sm-3">
                                             <mat-form-field class="example-full-width">
@@ -64,7 +64,7 @@
                           addAnalyticalInfoForm.controls['AccountCode'].hasError(
               'required'
             )
-          " [options]="accountList$" [placeHolder]="'Account'"></lib-hum-dropdown>
+          " [options]="accountList$" [placeHolder]="'Account'" [disabled]="true"></lib-hum-dropdown>
                     </div>
                     <div class="col-lg-3 col-sm-3">
                         <mat-form-field class="example-full-width">

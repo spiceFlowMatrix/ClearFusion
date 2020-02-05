@@ -70,8 +70,8 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                                HiringRequestStatus = hr.HiringRequestStatus,
                                                SpecificDutiesAndResponsibilities=hr.SpecificDutiesAndResponsblities,
                                                SubmissionGuidelines = hr.SubmissionGuidlines,
-                                               OfficeId = o.OfficeId
-
+                                               OfficeId = o.OfficeId,
+                                                GradeId = g.GradeId
                                            }).FirstOrDefaultAsync();
                 response.ResponseData = requestDetail;
                 response.StatusCode = StaticResource.successStatusCode;

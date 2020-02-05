@@ -569,7 +569,7 @@ export class GLOBAL {
      'HiringRequest/EditCandidateInterviewDetail';
 
 
-
+  public static API_EmployeeDetail_GetGradeAssociatedAccount = 'Account/GetGradeAssociatedAccount';
   public static API_EmployeeDetail_AddEmployeeSalaryAnalyticalInfo = 'EmployeeDetail/AddEmployeeSalaryAnalyticalInfo';
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
   public static API_Code_GetAllDesignation = 'Code/GetAllDesignation';
