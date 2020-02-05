@@ -48,7 +48,7 @@ export class AddEmployeeComponent implements OnInit {
   IsPensionDateSet = false;
   IsEditing = false;
   IsFormSubmitted = false;
-  setPensionDate = new Date();
+  setPensionDate: Date;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     private fb: FormBuilder,
@@ -510,16 +510,8 @@ export class AddEmployeeComponent implements OnInit {
 
   //#endregion
   checkExchangeRateVerified(exchangeRateDate: any) {
-    // this.pensionForm.PensionDate = exchangeRateDate;
     const checkExchangeRateModel = {
-      ExchangeRateDate: new Date(
-        new Date(exchangeRateDate).getFullYear(),
-        new Date(exchangeRateDate).getMonth(),
-        new Date(exchangeRateDate).getDate(),
-        new Date().getHours(),
-        new Date().getMinutes(),
-        new Date().getSeconds()
-      )
+      ExchangeRateDate: StaticUtilities.getLocalDate(exchangeRateDate)
     };
     this.employeeService
       .CheckExchangeRatesVerified(checkExchangeRateModel)
@@ -528,7 +520,10 @@ export class AddEmployeeComponent implements OnInit {
           if (data.StatusCode === 200) {
             if (data.ResponseData) {
               this.IsPensionDateSet = true;
-              this.employeeAllDetails.EmployeePensionDetail.PensionDate = exchangeRateDate;
+              this.employeeAllDetails.EmployeePensionDetail.PensionDate = StaticUtilities.getLocalDate(
+                exchangeRateDate
+              );
+              this.toastr.success('Date is verified');
             } else {
               this.toastr.warning(
                 'No Exchange Rate set/verified for this date'
