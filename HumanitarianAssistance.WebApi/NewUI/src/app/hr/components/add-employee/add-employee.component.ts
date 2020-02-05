@@ -51,7 +51,7 @@ export class AddEmployeeComponent implements OnInit {
   IsPensionDateSet = false;
   IsEditing = false;
   IsFormSubmitted = false;
-  setPensionDate = new Date();
+  setPensionDate: Date;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     private fb: FormBuilder,
