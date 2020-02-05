@@ -1,8 +1,6 @@
 import { StaticUtilities } from 'src/app/shared/static-utilities';
 import { Response } from '@angular/http';
-import {
-  IEmployeePensionListModel,
-} from './../../models/employee-detail.model';
+import { IEmployeePensionListModel } from './../../models/employee-detail.model';
 import { AddEmployeeService } from './../../services/add-employee.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -516,16 +514,8 @@ export class AddEmployeeComponent implements OnInit {
 
   //#endregion
   checkExchangeRateVerified(exchangeRateDate: any) {
-    // this.pensionForm.PensionDate = exchangeRateDate;
     const checkExchangeRateModel = {
-      ExchangeRateDate: new Date(
-        new Date(exchangeRateDate).getFullYear(),
-        new Date(exchangeRateDate).getMonth(),
-        new Date(exchangeRateDate).getDate(),
-        new Date().getHours(),
-        new Date().getMinutes(),
-        new Date().getSeconds()
-      )
+      ExchangeRateDate: StaticUtilities.getLocalDate(exchangeRateDate)
     };
     this.employeeService
       .CheckExchangeRatesVerified(checkExchangeRateModel)
@@ -534,7 +524,10 @@ export class AddEmployeeComponent implements OnInit {
           if (data.StatusCode === 200) {
             if (data.ResponseData) {
               this.IsPensionDateSet = true;
-              this.employeeAllDetails.EmployeePensionDetail.PensionDate = exchangeRateDate;
+              this.employeeAllDetails.EmployeePensionDetail.PensionDate = StaticUtilities.getLocalDate(
+                exchangeRateDate
+              );
+              this.toastr.success('Date is verified');
             } else {
               this.toastr.warning(
                 'No Exchange Rate set/verified for this date'
@@ -602,8 +595,7 @@ export class AddEmployeeComponent implements OnInit {
       this.employeeProfessionalDetailForm.valid &&
       this.pensionList.length !== 0
     ) {
-      if(this.IsPensionDateSet === false)
-      {
+      if (this.IsPensionDateSet === false) {
         this.employeeAllDetails.EmployeePensionDetail.PensionDate = this.setPensionDate;
       }
       this.employeeDetailForm.controls['EmployeeId'].setValue(this.employeeId);
@@ -652,7 +644,9 @@ export class AddEmployeeComponent implements OnInit {
               Email: x.data.EmployeeDetailList[0].Email,
               PhoneNo: x.data.EmployeeDetailList[0].Phone,
               Gender: x.data.EmployeeDetailList[0].SexId,
-              DateOfBirth: StaticUtilities.setLocalDate(new Date(x.data.EmployeeDetailList[0].DateOfBirth)),
+              DateOfBirth: StaticUtilities.setLocalDate(
+                new Date(x.data.EmployeeDetailList[0].DateOfBirth)
+              ),
               MaritalStatus: x.data.EmployeeDetailList[0].MaritalStatus,
               Country: x.data.EmployeeDetailList[0].CountryId,
               Province: x.data.EmployeeDetailList[0].ProvinceId,
@@ -697,7 +691,9 @@ export class AddEmployeeComponent implements OnInit {
               Designation: x.data.EmployeeProfessionalList[0].DesignationId,
               EmployeeCotractType:
                 x.data.EmployeeProfessionalList[0].EmployeeContractTypeId,
-              HiredOn: StaticUtilities.setLocalDate(x.data.EmployeeProfessionalList[0].HiredOn),
+              HiredOn: StaticUtilities.setLocalDate(
+                x.data.EmployeeProfessionalList[0].HiredOn
+              ),
               AttendanceGroup:
                 x.data.EmployeeProfessionalList[0].AttendanceGroupId,
               DutyStation: x.data.EmployeeProfessionalList[0].DutyStation,

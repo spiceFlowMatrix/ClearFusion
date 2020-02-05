@@ -714,14 +714,7 @@ export class EmployeePensionComponent implements OnInit {
   checkExchangeRateVerified(exchangeRateDate: any) {
     // this.pensionForm.PensionDate = exchangeRateDate;
     const checkExchangeRateModel = {
-      ExchangeRateDate: new Date(
-        new Date(exchangeRateDate).getFullYear(),
-        new Date(exchangeRateDate).getMonth(),
-        new Date(exchangeRateDate).getDate(),
-        new Date().getHours(),
-        new Date().getMinutes(),
-        new Date().getSeconds()
-      )
+      ExchangeRateDate: StaticUtilities.getLocalDate(exchangeRateDate)
     };
     this.employeePensionService
       .CheckExchangeRatesVerified(checkExchangeRateModel)
