@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace HumanitarianAssistance.Application.HR.Queries
 {
-    public class ExportEmployeeLeavePdfQueryHandler: IRequestHandler<ExportEmployeeLeavePdfQuery, byte[]>
+    public class ExportEmployeeLeavePdfQueryHandler : IRequestHandler<ExportEmployeeLeavePdfQuery, byte[]>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IPdfExportService _pdfExportService;
@@ -40,12 +40,12 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 //Get Employee Details
                 EmployeeDetail employeeDetail = await _dbContext.EmployeeDetail
                                                       .Include(x => x.EmployeeProfessionalDetail)
-                                                      .ThenInclude(x=> x.OfficeDetail)
+                                                      .ThenInclude(x => x.OfficeDetail)
                                                       .Include(x => x.EmployeeProfessionalDetail)
-                                                      .ThenInclude(x=> x.AttendanceGroupMaster)
+                                                      .ThenInclude(x => x.AttendanceGroupMaster)
                                                       .FirstOrDefaultAsync(x => !x.IsDeleted &&
                                                       x.EmployeeID == request.EmployeeId && x.EmployeeTypeId != (int)EmployeeTypeStatus.Prospective);
-                
+
 
                 var financialYear = await _dbContext.FinancialYearDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.IsDefault == true);
 
@@ -56,7 +56,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     model.Year = financialYear.StartDate.Year;
                     model.LogoPath = _env.WebRootFileProvider.GetFileInfo("ReportLogo/logo.jpg")?.PhysicalPath;
 
-                    var leaveReasons = await _dbContext.LeaveReasonDetail.Where(x=> x.IsDeleted == false).ToListAsync();
+                    var leaveReasons = await _dbContext.LeaveReasonDetail.Where(x => x.IsDeleted == false).ToListAsync();
 
                     var assignedLeaveToEmployee = await _dbContext.AssignLeaveToEmployee
                                                 .Include(x => x.LeaveReasonDetails)
@@ -64,51 +64,56 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                                 .OrderByDescending(a => a.LeaveId)
                                                 .ToListAsync();
 
-                    var appliedLeaves= await _dbContext.EmployeeApplyLeave
-                                             .Where(x=> x.IsDeleted == false && x.EmployeeId == request.EmployeeId &&
+                    var appliedLeaves = await _dbContext.EmployeeApplyLeave
+                                             .Where(x => x.IsDeleted == false && x.EmployeeId == request.EmployeeId &&
                                              x.FinancialYearId == financialYear.FinancialYearId && x.ApplyLeaveStatusId == (int)ApplyLeaveStatus.Approve).ToListAsync();
 
-                    for(int i=1; i<=12; i++) // loop for months
+                    for (int i = 1; i <= 12; i++) // loop for months
                     {
                         foreach (var reason in leaveReasons) //loop for leave reasons
                         {
-
-                            if(appliedLeaves.Where(x=> x.FromDate.Month == i).Select(x=> x.LeaveReasonId).Contains(reason.LeaveReasonId))
+                            // If Leave Type is assigned to the Employee
+                            if (assignedLeaveToEmployee.Select(x => x.LeaveReasonId).Contains(reason.LeaveReasonId))
                             {
-                                var monthName = (Month)i;
-                                EmployeeMonthLeavesModel leaveModel = new EmployeeMonthLeavesModel
+                                // If Leave Type is applied as leave by the Employee
+                                if (appliedLeaves.Where(x => x.FromDate.Month == i).Select(x => x.LeaveReasonId).Contains(reason.LeaveReasonId))
                                 {
-                                    Month = monthName.ToString(),
-                                    LeaveType = reason.ReasonName,
-                                    LeaveHours = reason.Unit,
-                                    AssignedHours = assignedLeaveToEmployee.FirstOrDefault(x=> x.LeaveReasonId == reason.LeaveReasonId).AssignUnit,
-                                    AppliedLeave = appliedLeaves.Where(x=> x.LeaveReasonId == reason.LeaveReasonId && x.FromDate.Month == i).Select(x=> x.AppliedLeaveCount).DefaultIfEmpty(0).Sum(),
-                                    BalanceLeave = assignedLeaveToEmployee.FirstOrDefault(x=> x.LeaveReasonId == reason.LeaveReasonId).AssignUnit - 
-                                                              appliedLeaves.Where(x=> x.LeaveReasonId == reason.LeaveReasonId && x.FromDate.Month <= i).Select(x=> x.AppliedLeaveCount).DefaultIfEmpty(0).Sum()
-                                };
+                                    var monthName = (Month)i;
+                                    EmployeeMonthLeavesModel leaveModel = new EmployeeMonthLeavesModel
+                                    {
+                                        Month = monthName.ToString(),
+                                        LeaveType = reason.ReasonName,
+                                        LeaveHours = reason.Unit,
+                                        AssignedHours = assignedLeaveToEmployee.FirstOrDefault(x => x.LeaveReasonId == reason.LeaveReasonId).AssignUnit,
+                                        AppliedLeave = appliedLeaves.Where(x => x.LeaveReasonId == reason.LeaveReasonId && x.FromDate.Month == i).Select(x => x.AppliedLeaveCount).DefaultIfEmpty(0).Sum(),
+                                        BalanceLeave = assignedLeaveToEmployee.FirstOrDefault(x => x.LeaveReasonId == reason.LeaveReasonId).AssignUnit -
+                                                                  appliedLeaves.Where(x => x.LeaveReasonId == reason.LeaveReasonId && x.FromDate.Month <= i).Select(x => x.AppliedLeaveCount).DefaultIfEmpty(0).Sum()
+                                    };
 
-                                model.EmployeeLeaves.Add(leaveModel);
-                            }
-                            else
-                            {
-                                var monthName = (Month)i;
-                                EmployeeMonthLeavesModel leaveModel = new EmployeeMonthLeavesModel
+                                    model.EmployeeLeaves.Add(leaveModel);
+                                }
+                                else
                                 {
-                                    Month = monthName.ToString(),
-                                    LeaveType = reason.ReasonName,
-                                    LeaveHours = reason.Unit,
-                                    AssignedHours = assignedLeaveToEmployee.FirstOrDefault(x=> x.LeaveReasonId == reason.LeaveReasonId).AssignUnit,
-                                    AppliedLeave = appliedLeaves.Where(x=> x.LeaveReasonId == reason.LeaveReasonId && x.FromDate.Month < i).Select(x=> x.AppliedLeaveCount).DefaultIfEmpty(0).Sum(),
-                                    BalanceLeave = assignedLeaveToEmployee.FirstOrDefault(x=> x.LeaveReasonId == reason.LeaveReasonId).AssignUnit - 
-                                                              appliedLeaves.Where(x=> x.LeaveReasonId == reason.LeaveReasonId && x.FromDate.Month < i).Select(x=> x.AppliedLeaveCount).DefaultIfEmpty(0).Sum()
-                                };
+                                    var monthName = (Month)i;
+                                    EmployeeMonthLeavesModel leaveModel = new EmployeeMonthLeavesModel
+                                    {
+                                        Month = monthName.ToString(),
+                                        LeaveType = reason.ReasonName,
+                                        LeaveHours = reason.Unit,
+                                        AssignedHours = assignedLeaveToEmployee.FirstOrDefault(x => x.LeaveReasonId == reason.LeaveReasonId).AssignUnit,
+                                        AppliedLeave = appliedLeaves.Where(x => x.LeaveReasonId == reason.LeaveReasonId && x.FromDate.Month < i).Select(x => x.AppliedLeaveCount).DefaultIfEmpty(0).Sum(),
+                                        BalanceLeave = assignedLeaveToEmployee.FirstOrDefault(x => x.LeaveReasonId == reason.LeaveReasonId).AssignUnit -
+                                                                  appliedLeaves.Where(x => x.LeaveReasonId == reason.LeaveReasonId && x.FromDate.Month < i).Select(x => x.AppliedLeaveCount).DefaultIfEmpty(0).Sum()
+                                    };
 
-                                model.EmployeeLeaves.Add(leaveModel);
+                                    model.EmployeeLeaves.Add(leaveModel);
+                                }
+
                             }
                         }
                     }
 
-                    
+
                 }
             }
             catch (Exception ex)
