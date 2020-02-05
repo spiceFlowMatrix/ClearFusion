@@ -73,6 +73,7 @@ import { AddOpeningPensionComponent } from './components/add-employee/add-openin
 import { IncrementDecrementSalaryComponent } from './components/employee-salary-config/increment-decrement-salary/increment-decrement-salary.component';
 import { AddHistoryOutsideOrganizationComponent } from './components/employee-history/add-history-outside-organization/add-history-outside-organization.component';
 import { EditEmployeeAttendanceComponent } from './components/employee-attendance/edit-employee-attendance/edit-employee-attendance.component';
+import { EmployeeTerminationComponent } from './components/employee-termination/employee-termination.component';
 
 @NgModule({
   declarations: [
@@ -111,7 +112,8 @@ import { EditEmployeeAttendanceComponent } from './components/employee-attendanc
     AddOpeningPensionComponent,
     IncrementDecrementSalaryComponent,
     AddHistoryOutsideOrganizationComponent,
-    EditEmployeeAttendanceComponent
+    EditEmployeeAttendanceComponent,
+    EmployeeTerminationComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -186,7 +188,8 @@ import { EditEmployeeAttendanceComponent } from './components/employee-attendanc
     AdvanceHistoryComponent,
     AddAdvanceRecoveryComponent,
     AddHistoryOutsideOrganizationComponent,
-    EditEmployeeAttendanceComponent
+    EditEmployeeAttendanceComponent,
+    EmployeeTerminationComponent
   ]
 })
 export class HrModule {
