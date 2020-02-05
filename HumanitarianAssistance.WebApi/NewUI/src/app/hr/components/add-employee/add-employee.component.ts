@@ -1,5 +1,4 @@
 import { StaticUtilities } from 'src/app/shared/static-utilities';
-import { Response } from '@angular/http';
 import { IEmployeePensionListModel } from './../../models/employee-detail.model';
 import { AddEmployeeService } from './../../services/add-employee.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
@@ -9,8 +8,6 @@ import { IDropDownModel } from 'src/app/store/models/purchase';
 import { Observable, of, forkJoin, ReplaySubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
-import { PurchaseService } from 'src/app/store/services/purchase.service';
-import { Month } from 'src/app/shared/enum';
 import { IEmployeeAllDetails } from '../../models/employee-detail.model';
 import { MatDialog } from '@angular/material';
 import { AddOpeningPensionComponent } from './add-opening-pension/add-opening-pension.component';
@@ -57,7 +54,6 @@ export class AddEmployeeComponent implements OnInit {
     private fb: FormBuilder,
     public dialog: MatDialog,
     private commonLoader: CommonLoaderService,
-    private purchaseService: PurchaseService,
     private employeeService: AddEmployeeService,
     private toastr: ToastrService,
     private routeActive: ActivatedRoute,
