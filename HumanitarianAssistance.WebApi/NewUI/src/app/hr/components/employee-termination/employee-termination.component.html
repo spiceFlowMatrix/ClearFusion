@@ -1,6 +1,7 @@
 <h3 mat-dialog-title>Termination Form</h3>
 <mat-dialog-content>
   <form [formGroup]="terminationForm" (ngSubmit)="formSubmit(terminationForm.value)">
+    <div class="alert alert-warning" *ngIf="err!==null">{{err}}</div>
     <mat-form-field>
       <input #resignDate class="fixedWidth"
         formControlName="TerminationDate" matInput [matDatepicker]="picker" placeholder="Termination Date" >

@@ -50,6 +50,7 @@ export class EmployeeTerminationComponent implements OnInit {
     this.employeeListService.terminateEmployeeByEmployeeeId(model).subscribe(res => {
       if (res) {
         this.commonLoader.hideLoader();
+        this.dialogRef.close();
         this.toastr.success('Employee Terminated Successfully!');
         this.router.navigate(['/hr/employees']);
       } else {
