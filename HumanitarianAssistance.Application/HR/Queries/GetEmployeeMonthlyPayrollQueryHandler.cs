@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using HumanitarianAssistance.Application.HR.Models;
 using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Domain.Entities.Accounting;
 using HumanitarianAssistance.Domain.Entities.HR;
 using HumanitarianAssistance.Persistence;
@@ -28,11 +29,18 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
             try
             {
+                FinancialYearDetail financialYear = await _dbContext.FinancialYearDetail.FirstOrDefaultAsync(x=> x.IsDeleted == false && x.IsDefault == true);
+
+                if(financialYear == null)
+                {
+                    throw new Exception(StaticResource.FinancialYearNotFound);
+                }
+
                 List<EmployeeAttendance> empPayrollAttendance = await _dbContext.EmployeeAttendance
                                                                                                   .Include(x => x.EmployeeDetails)
                                                                                                   .Include(x => x.EmployeeDetails.EmployeeProfessionalDetail)
                                                                                                   .Where(x => x.EmployeeId == request.EmployeeId &&
-                                                                                                  x.InTime.Value.Month == request.Month && x.InTime.Value.Year == DateTime.UtcNow.Year
+                                                                                                  x.Date.Month == request.Month && x.Date.Year == financialYear.StartDate.Year
                                                                                                   && x.IsDeleted == false && x.EmployeeDetails.IsDeleted == false).ToListAsync();
 
                 if (!empPayrollAttendance.Any())
@@ -41,7 +49,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 }
 
                 var payroll = _dbContext.EmployeePayrollInfoDetail.FirstOrDefault(x => x.IsDeleted == false && x.EmployeeId == request.EmployeeId &&
-                                                                                   x.Month == request.Month && x.Year == DateTime.UtcNow.Year);
+                                                                                   x.Month == request.Month && x.Year == financialYear.StartDate.Year);
 
                 if (payroll == null)
                 {
