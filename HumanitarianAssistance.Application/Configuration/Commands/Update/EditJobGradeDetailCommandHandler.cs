@@ -31,6 +31,7 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Update
                 if (existrecord != null)
                 {
                     existrecord.GradeName = request.GradeName;
+                    existrecord.ChartOfAccountNewId = request.ChartOfAccountNewId;
                     existrecord.ModifiedById = request.ModifiedById;
                     existrecord.ModifiedDate = request.ModifiedDate;
                     existrecord.IsDeleted = false;
