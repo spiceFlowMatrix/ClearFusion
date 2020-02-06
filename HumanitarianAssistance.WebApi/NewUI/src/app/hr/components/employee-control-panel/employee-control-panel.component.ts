@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeListService } from '../../services/employee-list.service';
 import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { EmployeeTerminationComponent } from '../employee-termination/employee-termination.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-employee-control-panel',
@@ -18,7 +20,8 @@ export class EmployeeControlPanelComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
     private employeeListService: EmployeeListService,
     private toastr: ToastrService,
-    private commonLoader: CommonLoaderService) {
+    private commonLoader: CommonLoaderService,
+    public dialog: MatDialog) {
     this.activatedRoute.params.subscribe(params => {
       this.employeeId = +params['id'];
     });
@@ -41,15 +44,14 @@ export class EmployeeControlPanelComponent implements OnInit {
     if (this.employeeStatus === 3) {
       return;
     }
-    this.commonLoader.showLoader();
-    this.employeeListService.terminateEmployeeByEmployeeeId(this.employeeId).subscribe(res => {
-      if (res) {
-        this.commonLoader.hideLoader();
-        this.toastr.success('Employee Terminated Successfully!');
-        this.router.navigate(['/hr/employees']);
+    const dialogRef = this.dialog.open(EmployeeTerminationComponent, {
+      width: '500px',
+      autoFocus: false,
+      data: {
+        EmployeeId: this.employeeId
       }
-    }, err => {
-      this.commonLoader.hideLoader();
+    });
+    dialogRef.afterClosed().subscribe(() => {
     });
   }
 
