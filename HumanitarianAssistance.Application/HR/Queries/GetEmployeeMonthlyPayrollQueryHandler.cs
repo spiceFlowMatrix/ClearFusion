@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -105,16 +106,33 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                 PayrollMonthlyHourDetail payrollHours = _dbContext.PayrollMonthlyHourDetail
                                                                                     .FirstOrDefault(x => x.IsDeleted == false && x.OfficeId == employeeDetail.EmployeeProfessionalDetail.OfficeId
-                                                                                    && x.PayrollMonth == request.Month && x.PayrollYear == DateTime.UtcNow.Year && x.AttendanceGroupId == employeeDetail.EmployeeProfessionalDetail.AttendanceGroupId);
+                                                                                    && x.PayrollMonth == request.Month && x.PayrollYear == DateTime.UtcNow.Year &&
+                                                                                    x.AttendanceGroupId == employeeDetail.EmployeeProfessionalDetail.AttendanceGroupId);
 
                 if (payrollHours == null)
                 {
                     throw new Exception(StaticResource.PayrollDailyHoursNotSet);
                 }
 
+                FinancialYearDetail financialYear = _dbContext.FinancialYearDetail.FirstOrDefault(x=> x.IsDeleted == false && x.IsDefault == true);
+
+                if(financialYear == null)
+                {
+                    throw new Exception(StaticResource.FinancialYearNotFound);
+                }
+
+                List<string> weeklyOff = _dbContext.HolidayWeeklyDetails.Where(x=> x.IsDeleted == false &&
+                                                        x.FinancialYearId ==financialYear.FinancialYearId)
+                                                        .Select(x=> x.Day).ToList();
+                
+                int weeklyOffDays = ParticularDayInMonth(new DateTime(financialYear.StartDate.Year, request.Month, 1), weeklyOff);
+
+                int payableDaysInAMonth = DateTime.DaysInMonth(DateTime.UtcNow.Year, request.Month) -weeklyOffDays;
+
+
                 int workingHours = payrollHours.OutTime.Value.Subtract(payrollHours.InTime.Value).Hours;
 
-                double dBasicPayPerhour = Math.Round(basicPay.BasicSalary / (DateTime.DaysInMonth(DateTime.UtcNow.Year, request.Month) * workingHours), 2);
+                double dBasicPayPerhour = Math.Round(basicPay.BasicSalary / (payableDaysInAMonth * workingHours), 2);
                 model.HourlyRate = dBasicPayPerhour;
 
                 //Note: default 0.045 i.e. (4.5 %)
@@ -272,6 +290,25 @@ namespace HumanitarianAssistance.Application.HR.Queries
             }
 
             return model;
+        }
+
+
+        public static int ParticularDayInMonth(DateTime time, List<string> dayNames)
+        {
+            int weekDaysInAMonth =0;
+
+            int daysInAMonth = DateTime.DaysInMonth(time.Year, time.Month);
+
+            for(int i=1; i<= daysInAMonth; i++)
+            {
+                DateTime date = new DateTime(time.Year, time.Month, i);
+                string dayName= CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(date.DayOfWeek);
+                if(dayNames.Contains(dayName))
+                {
+                    weekDaysInAMonth++;
+                }
+            }
+            return weekDaysInAMonth;
         }
     }
 }
