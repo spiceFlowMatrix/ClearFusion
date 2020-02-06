@@ -82,4 +82,8 @@ export class EmployeeListService {
       id
     );
   }
+  createAllEmployeesToUser() {
+    return this.globalService.getList(
+      this.appurl.getApiUrl() + GLOBAL.API_EmployeeDetail_EmployeesToUser);
+  }
 }
