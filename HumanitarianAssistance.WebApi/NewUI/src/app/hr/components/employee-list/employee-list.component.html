@@ -1,35 +1,49 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main2'">
-  <span class="action_header">Employees
-    <hum-button [type]="'add'" [text]="'ADD EMPLOYEE'" routerLink="/hr/addEmployee"></hum-button>
-    <hum-button [type]="'delete'" [text]="'DELETE EMPLOYEE'" (click)="deleteEmployee()"></hum-button>
-    <button mat-button [matMenuTriggerFor]="OfficeMenu">
-      <h5 style="color: #0390D1;">{{selectedOffice.name | uppercase}} &nbsp;<i class="fas fa-caret-down"></i></h5>
-    </button>
-    <button mat-button [disabled]="(this.selection.selected.length === 0)" (click)="setAttendance(picker)">
-      <h5 [ngStyle]="{'color':  (this.selection.selected.length === 0) ? 'inherit' : '#0390D1' }">SET ATTENDANCE </h5>
-    </button>
-    <mat-form-field style="width:1px;visibility:hidden;">
-      <!-- <input matInput [matDatepicker]="picker" (dateChange)="onDateChanged($event)"> -->
-      <!-- <mat-datepicker #picker ></mat-datepicker> -->
-      <input [matDatepickerFilter]="myFilter" matInput [satDatepicker]="picker" (dateChange)="onDateChanged($event)">
-      <sat-datepicker
-          #picker
-          [rangeMode]="true">
-      </sat-datepicker>
-      <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
-    </mat-form-field>
+    <span class="action_header">Employees
+        <hum-button [type]="'add'" [text]="'ADD EMPLOYEE'" routerLink="/hr/addEmployee"></hum-button>
+        <hum-button [type]="'delete'" [text]="'DELETE EMPLOYEE'" (click)="deleteEmployee()"></hum-button>
+        <button mat-button [matMenuTriggerFor]="OfficeMenu">
+            <h5 style="color: #0390D1;">{{selectedOffice.name | uppercase}} &nbsp;<i class="fas fa-caret-down"></i></h5>
+        </button>
+        <button mat-button [disabled]="(this.selection.selected.length === 0)" (click)="setAttendance(picker)">
+            <h5 [ngStyle]="{'color':  (this.selection.selected.length === 0) ? 'inherit' : '#0390D1' }">SET ATTENDANCE
+            </h5>
+        </button>
+        <mat-form-field style="width:1px;visibility:hidden;">
+            <!-- <input matInput [matDatepicker]="picker" (dateChange)="onDateChanged($event)"> -->
+            <!-- <mat-datepicker #picker ></mat-datepicker> -->
+            <input [matDatepickerFilter]="myFilter" matInput [satDatepicker]="picker"
+                (dateChange)="onDateChanged($event)">
+            <sat-datepicker #picker [rangeMode]="true">
+            </sat-datepicker>
+            <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
+        </mat-form-field>
 
-    <button mat-button [disabled]="(this.selection.selected.length === 0)" [matMenuTriggerFor]="SalaryReconfigureMenu">
-      <h5 [ngStyle]="{'color':  (this.selection.selected.length === 0) ? 'inherit' : '#0390D1' }">RECONFIGURE SALARY &nbsp;<i class="fas fa-caret-down"></i></h5>
-    </button>
-    <mat-menu #OfficeMenu="matMenu">
-      <button (click)="selectedOfficeChanged(office)" *ngFor="let office of officeDropdown$ | async" mat-menu-item>{{office.name}}</button>
-    </mat-menu>
-    <mat-menu #SalaryReconfigureMenu="matMenu">
-      <button (click)="setFixedSalary()" mat-menu-item>Set a Fixed Salary</button>
-      <button (click)="incrementDecrementSalary()" mat-menu-item>Increment/Decrement Salary</button>
-    </mat-menu>
-  </span>
+        <button mat-button [disabled]="(this.selection.selected.length === 0)"
+            [matMenuTriggerFor]="SalaryReconfigureMenu">
+            <h5 [ngStyle]="{'color':  (this.selection.selected.length === 0) ? 'inherit' : '#0390D1' }">RECONFIGURE
+                SALARY &nbsp;<i class="fas fa-caret-down"></i></h5>
+        </button>
+        <button *ngIf="!isLoading" mat-button [disabled]="(this.selection.selected.length != 0)"
+            (click)="createAllEmployeesToUser()" matTooltip="Create all employees to users">
+            <h5 [ngStyle]="{'color':  (this.selection.selected.length != 0) ? 'inherit' : '#0390D1' }">CREATE USERS</h5>
+        </button>
+        <label *ngIf="isLoading">
+
+            <h5>
+                <mat-spinner style="position: absolute !important;" [diameter]="15"></mat-spinner><span
+                    style="margin-left:20px;">CREATING USERS</span>
+            </h5>
+        </label>
+        <mat-menu #OfficeMenu="matMenu">
+            <button (click)="selectedOfficeChanged(office)" *ngFor="let office of officeDropdown$ | async"
+                mat-menu-item>{{office.name}}</button>
+        </mat-menu>
+        <mat-menu #SalaryReconfigureMenu="matMenu">
+            <button (click)="setFixedSalary()" mat-menu-item>Set a Fixed Salary</button>
+            <button (click)="incrementDecrementSalary()" mat-menu-item>Increment/Decrement Salary</button>
+        </mat-menu>
+    </span>
     <div class="action_section">
     </div>
 
@@ -40,7 +54,8 @@
     <form [formGroup]="employeeListFilterForm" (ngSubmit)="filterEmployee(employeeListFilterForm.value)">
         <h4>Filters
             <hum-button class="pull-right" [type]="'filter'" [text]="'APPLY FILTER'" [isSubmit]="true"></hum-button>
-            <hum-button class="pull-right" [type]="'reset'" [text]="'RESET FILTER'" (click)="resetFilter()"></hum-button>
+            <hum-button class="pull-right" [type]="'reset'" [text]="'RESET FILTER'" (click)="resetFilter()">
+            </hum-button>
         </h4>
         <div class="row">
             <div class="col-md-2">
@@ -55,11 +70,13 @@
       </div> -->
             <div class="col-md-2">
                 <lib-hum-dropdown formControlName="Sex" [validation]="
-        employeeListFilterForm.controls['Sex'].hasError()" [options]="genderList$" [placeHolder]="'Sex'"></lib-hum-dropdown>
+        employeeListFilterForm.controls['Sex'].hasError()" [options]="genderList$" [placeHolder]="'Sex'">
+                </lib-hum-dropdown>
             </div>
             <div class="col-md-2">
                 <lib-hum-dropdown formControlName="EmploymentStatus" [validation]="
-        employeeListFilterForm.controls['EmploymentStatus'].hasError()" [options]="accountStatusList$" [placeHolder]="'Employment Status'"></lib-hum-dropdown>
+        employeeListFilterForm.controls['EmploymentStatus'].hasError()" [options]="accountStatusList$"
+                    [placeHolder]="'Employment Status'"></lib-hum-dropdown>
             </div>
             <div class="col-md-2">
                 <mat-form-field class="example-full-width">
@@ -74,11 +91,14 @@
         <mat-table #table [dataSource]="employeeDataSource">
             <ng-container matColumnDef="select">
                 <th style="border-bottom-width:0px" mat-header-cell *matHeaderCellDef>
-                    <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
                     </mat-checkbox>
                 </th>
                 <td style="border-bottom-width:0px" mat-cell *matCellDef="let row">
-                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
                     </mat-checkbox>
                 </td>
             </ng-container>
@@ -112,6 +132,7 @@
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="navigateToDetails(row)"></mat-row>
         </mat-table>
-        <mat-paginator [length]="TotalCount" [pageSize]="filterModel.PageSize" [pageIndex]="filterModel.PageIndex" [pageSizeOptions]="[10, 25, 50, 100]" (page)="pageEvent($event)"></mat-paginator>
+        <mat-paginator [length]="TotalCount" [pageSize]="filterModel.PageSize" [pageIndex]="filterModel.PageIndex"
+            [pageSizeOptions]="[10, 25, 50, 100]" (page)="pageEvent($event)"></mat-paginator>
     </div>
 </div>
