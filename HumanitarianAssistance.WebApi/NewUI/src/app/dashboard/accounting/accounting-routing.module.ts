@@ -10,6 +10,7 @@ import { JournalReportComponent } from './journal-report/journal-report.componen
 import { LedgerStatementReportComponent } from './ledger-statement-report/ledger-statement-report.component';
 import { TrialBalanceReportComponent } from './trial-balance-report/trial-balance-report.component';
 import { ExchangeGainLossReportComponent } from './exchange-gain-loss-report/exchange-gain-loss-report.component';
+import { AddVoucherComponent } from './vouchers/components/add-voucher/add-voucher.component';
 
 const ModuleId: number = ApplicationModule.AccountingNew;
 
@@ -78,7 +79,7 @@ const routes: Routes = [
       {
         path: 'exchange-gain-loss-report',
         component: ExchangeGainLossReportComponent
-      },
+      }
 
       // {
       //   path: 'voucher-summary-report',

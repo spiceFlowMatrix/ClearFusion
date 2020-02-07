@@ -1,0 +1,269 @@
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/internal/Observable';
+import { IDropDownModel } from 'src/app/store/models/purchase';
+import { Month } from 'src/app/shared/enum';
+import { of } from 'rxjs/internal/observable/of';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { VoucherService } from '../../voucher.service';
+import { IResponseData } from '../../models/status-code.model';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
+import { DatePipe } from '@angular/common';
+import { Router, ActivatedRoute } from '@angular/router';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { ToastrService } from 'ngx-toastr';
+
+
+@Component({
+  selector: 'app-voucher-listing',
+  templateUrl: './voucher-listing.component.html',
+  styleUrls: ['./voucher-listing.component.scss']
+})
+export class VoucherListingComponent implements OnInit {
+
+  monthsList$: Observable<IDropDownModel[]>;
+  selectedMonth: IDropDownModel;
+  voucherFilterForm: FormGroup;
+  currency$: Observable<IDropDownModel[]>;
+  journalList$: Observable<IDropDownModel[]>;
+  operationalTypes$: Observable<IDropDownModel[]>;
+  ELEMENT_DATA: any[] = [];
+  voucherDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
+  pagingModel = {
+    pageIndex: 0,
+    pageSize: 10,
+    recordCount: 0
+  };
+
+  constructor(private fb: FormBuilder, private voucherService: VoucherService,
+    private datePipe: DatePipe, private router: Router, private routeActive: ActivatedRoute,
+    private toastr: ToastrService) {
+    this.selectedMonth = { name: 'SELECT MONTH', value: 0 };
+    this.voucherFilterForm = this.fb.group({
+      'Search': [null],
+      'Date': [{ 'begin': null, 'end':  null}],
+      'CurrencyId': [null],
+      'OperationalType': [null],
+      'JournalId': [null]
+    });
+    this.operationalTypes$ = of([
+      {name: 'Store', value: 1 },
+      {name: 'Direct Voucher', value: 2 },
+      {name: 'Logistics', value: 3 }
+    ]);
+  }
+
+  ngOnInit() {
+    this.getAllMonthList();
+    this.getAllCurrency();
+    this.getJournalList();
+    this.getVoucherList();
+  }
+
+
+  //#region "Get all month list for ExperienceInMonth dropdown"
+  getAllMonthList() {
+    const monthDropDown: IDropDownModel[] = [];
+    for (let i = Month['January']; i <= Month['December']; i++) {
+      monthDropDown.push({ name: Month[i], value: i });
+    }
+    this.monthsList$ = of(monthDropDown);
+  }
+  //#endregion
+
+  selectedMonthChanged(SelectedMonth) {
+    this.selectedMonth = {
+      name: SelectedMonth.name,
+      value: SelectedMonth.value
+    };
+  }
+
+  getAllCurrency() {
+    return this.voucherService.GetCurrencyList().subscribe(x => {
+      this.currency$ = of(x.data.map(y => {
+        return {
+          value: y.CurrencyId,
+          name: y.CurrencyCode + '-' + y.CurrencyName
+        };
+      }));
+    });
+  }
+
+  //#region "getJournalList"
+  getJournalList() {
+    this.voucherService.GetJournalList().subscribe(
+      (response: IResponseData) => {
+        if (response.statusCode === 200 && response.data !== null) {
+          this.journalList$ = of(response.data.map(y => {
+            return {
+              value: y.JournalCode,
+              name: y.JournalName
+            };
+          }));
+        }
+      },
+      error => { }
+    );
+  }
+  //#endregion
+
+  displayedColumns: string[] = ['select', 'ReferenceNo', 'Description', 'Journal', 'VoucherDate', 'Status'];
+
+  selection = new SelectionModel<any>(true, []);
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.voucherDataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.voucherDataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: any): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
+  //#region "getVoucherList"
+  getVoucherList() {
+   const model = {
+     FilterValue: this.voucherFilterForm.value.Search,
+     StartDate: this.voucherFilterForm.value.Date.begin != null ?
+                  StaticUtilities.getLocalDate(this.voucherFilterForm.value.Date.begin) : null,
+     EndDate: this.voucherFilterForm.value.Date.end != null ? StaticUtilities.getLocalDate(this.voucherFilterForm.value.Date.end) : null,
+     CurrencyId: this.voucherFilterForm.value.CurrencyId,
+     OperationalType: this.voucherFilterForm.value.OperationalType,
+     JournalId: this.voucherFilterForm.value.JournalId,
+     PageIndex: this.pagingModel.pageIndex,
+     pageSize: this.pagingModel.pageSize
+   };
+
+    this.voucherService.GetVoucherList(model).subscribe(
+      response => {
+        this.ELEMENT_DATA = [];
+        if (
+          response.StatusCode === 200 &&
+          response.data.VoucherDetailList != null
+        ) {
+          if (response.data.VoucherDetailList.length > 0) {
+            this.pagingModel.recordCount = response.data.TotalCount != null ? response.data.TotalCount : 0;
+            response.data.VoucherDetailList.forEach(element => {
+              this.ELEMENT_DATA.push({
+                VoucherNo: element.VoucherNo,
+                CurrencyCode: element.CurrencyCode,
+                CurrencyId: element.CurrencyId,
+                VoucherDate:
+                  element.VoucherDate != null
+                    ? this.datePipe.transform(new Date(
+                      new Date(element.VoucherDate).getTime() -
+                        new Date().getTimezoneOffset() * 60000
+                    ), 'dd-MM-yyyy')
+                    : null,
+                ChequeNo: element.ChequeNo,
+                ReferenceNo: element.ReferenceNo,
+                Description: element.Description,
+                Journal: element.JournalName,
+                JournalCode: element.JournalCode,
+                VoucherTypeId: element.VoucherTypeId,
+                OfficeId: element.OfficeId,
+                ProjectId: element.ProjectId,
+                BudgetLineId: element.BudgetLineId,
+                OfficeName: element.OfficeName,
+                Status: element.IsVoucherVerified ? 'Verified' : 'Unverified',
+                IsVoucherVerified: element.IsVoucherVerified
+              });
+            });
+            this.voucherDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
+            this.selection.clear();
+          } else {
+            this.ELEMENT_DATA = [];
+            this.voucherDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
+            this.selection.clear();
+          }
+        }
+        // this.commonLoader.hideLoader();
+      },
+      error => {
+        // this.commonLoader.hideLoader();
+      }
+    );
+  }
+  //#endregion
+
+  verifySelectedVouchers() {
+    const ids: any[] = [];
+    if (this.selection.selected.length > 0) {
+      for (let i = 0; i < this.selection.selected.length; i++ ) {
+        if (!this.selection.selected[i].IsVoucherVerified) {
+          ids.push(this.selection.selected[i].VoucherNo);
+        }
+      }
+    } else {
+      this.toastr.warning('Please select atleast 1 record to validate');
+      return;
+    }
+
+    if (ids.length <= 0) {
+      this.toastr.warning('Please select atleast 1 unverified voucher to validate');
+      return;
+    }
+
+    this.voucherService.verifySelectedVouchers(ids).subscribe(x => {
+      if (x) {
+        this.toastr.success('Verified successfully');
+        this.getVoucherList();
+      }
+    }, error => {
+      this.toastr.warning(error);
+    });
+  }
+
+  deleteSelectedVouchers() {
+    const ids: any[] = [];
+    if (this.selection.selected.length > 0) {
+      for (let i = 0; i < this.selection.selected.length; i++ ) {
+        if (!this.selection.selected[i].IsVoucherVerified) {
+          ids.push(this.selection.selected[i].VoucherNo);
+        }
+      }
+    } else {
+      this.toastr.warning('Please select atleast 1 record to delete');
+      return;
+    }
+
+    this.voucherService.verifySelectedVouchers(ids).subscribe(x => {
+      if (x) {
+        this.toastr.success('Verified successfully');
+        this.getVoucherList();
+      }
+    }, error => {
+      this.toastr.warning(error);
+    });
+
+  }
+
+  applyFilter() {
+    this.getVoucherList();
+  }
+
+  addVoucher() {
+    this.router.navigate(['../add-voucher'], { relativeTo: this.routeActive });
+  }
+
+  //#region "pageEvent"
+  pageEvent(e) {
+    this.pagingModel.pageIndex = e.pageIndex;
+    this.pagingModel.pageSize = e.pageSize;
+    this.getVoucherList();
+  }
+  //#endregion
+}

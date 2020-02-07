@@ -22,7 +22,7 @@ export class VoucherService {
   ) {}
 
   //#region "GetVoucherList"
-  GetVoucherList(data: IVoucherListFilterModel) {
+  GetVoucherList(data) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_GetAllVoucherList,
       data
@@ -312,6 +312,16 @@ export class VoucherService {
           };
           return responseData;
         })
+      );
+  }
+  //#endregion
+
+   //#region "VerifySelectedVouchers"
+   deleteVouchers(data) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_VerifySelectedVouchers,
+        data
       );
   }
   //#endregion

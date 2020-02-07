@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { VouchersComponent } from './vouchers.component';
-import { VoucherListingComponent } from './voucher-listing/voucher-listing.component';
+import { VoucherListingComponent } from './components/voucher-listing/voucher-listing.component';
+import { AddVoucherComponent } from './components/add-voucher/add-voucher.component';
+
 
 const routes: Routes = [
   {
@@ -11,7 +13,11 @@ const routes: Routes = [
       {
         path: '',
         component: VoucherListingComponent
-      }
+      },
+      {
+        path: 'add-voucher',
+        component: AddVoucherComponent
+      },
     ]
   }
 ];

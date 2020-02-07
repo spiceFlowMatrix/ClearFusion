@@ -21,7 +21,7 @@ namespace HumanitarianAssistance.Application.CommonModels
         public long? BudgetLineId { get; set; }
         public int? FinancialYearId { get; set; }
         public string FinancialYearName { get; set; }
-        public bool? IsVoucherVerified { get; set; }
+        public bool IsVoucherVerified { get; set; }
         public int? TimezoneOffset { get; set; }
         public bool IsExchangeGainLossVoucher { get; set; } = false;
     }

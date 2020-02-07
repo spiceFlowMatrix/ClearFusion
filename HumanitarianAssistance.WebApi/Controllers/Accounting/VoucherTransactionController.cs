@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System;
 using HumanitarianAssistance.Common.Enums;
+using System.Collections.Generic;
 
 namespace HumanitarianAssistance.WebApi.Controllers.Accounting
 {
@@ -82,6 +83,22 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
             model.ModifiedDate = DateTime.UtcNow;
 
             return await _mediator.Send(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> VerifySelectedVouchers([FromBody] List<long> VoucherNos)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            VerifySelectedVouchersCommand command = new VerifySelectedVouchersCommand
+            {
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow,
+                VoucherNos = VoucherNos
+            };
+
+            var result= await _mediator.Send(command);
+            return Ok(result);
         }
 
     }
