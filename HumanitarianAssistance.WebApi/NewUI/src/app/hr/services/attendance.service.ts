@@ -62,4 +62,22 @@ export class AttendanceService {
       );
   }
   //#endregion
+
+  getAttendanceGroupDetailById(id) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Attendance_GetAttendanceGroupDetailById,
+        id
+      );
+  }
+
+  setPayrollHoursToAttendanceGroup(model) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Attendance_AddPayrollDailyHoursToAttendanceGroups,
+          model
+      );
+  }
 }

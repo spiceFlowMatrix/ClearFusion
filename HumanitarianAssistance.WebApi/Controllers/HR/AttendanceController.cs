@@ -291,5 +291,35 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return Ok(item);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GetAttendanceGroupDetailById([FromBody]long AttendanceGroupId)
+        {
+            GetAttendanceGroupDetailByIdQuery model = new GetAttendanceGroupDetailByIdQuery{
+                AttendanceGroupId = AttendanceGroupId
+            };
+            var item = await _mediator.Send(model);
+            return Ok(item);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddPayrollDailyHoursToAttendanceGroups([FromBody]AddPayrollDailyHoursToAttendanceGroupsCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.CreatedById = userId;
+            model.CreatedDate = DateTime.UtcNow;
+            var item = await _mediator.Send(model);
+            return Ok(item);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetPayrollMonthlyHourByAttendanceGroupsQuery([FromBody]long AttendanceGroupId)
+        {
+            GetPayrollMonthlyHourByAttendanceGroupsQuery model = new GetPayrollMonthlyHourByAttendanceGroupsQuery{
+                AttendanceGroupId = AttendanceGroupId
+            };
+            var item = await _mediator.Send(model);
+            return Ok(item);
+        }
+
     }
 }

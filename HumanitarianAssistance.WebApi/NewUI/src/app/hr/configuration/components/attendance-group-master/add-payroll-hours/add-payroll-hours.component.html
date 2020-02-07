@@ -1,0 +1,25 @@
+<h4 mat-dialog-title>Add Payroll Daily Hours</h4>
+<mat-dialog-content>
+  <form [formGroup]="payrollForm" (ngSubmit)="submitPayrollForm()">
+    <div><strong>Office:</strong> {{(data && data.SelectedOffice)?data.SelectedOffice.name: 'All Offices'}}</div>
+    <div><strong>Attendance Group:</strong> {{(data && data.AttendanceGroupName)?data.AttendanceGroupName: ''}}</div>
+    <mat-form-field>
+      <input matInput [matDatepicker]="picker" formControlName="Date" placeholder="Date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker (monthSelected)="monthSelected($event)" startView="multi-year"></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field style="width: 70%;margin-top: -16px;">
+      <input matInput aria-label="default time" [ngxTimepicker]="InTime"  placeholder="InTime" [format]="24"  formControlName="InTime" [value]="payrollForm.value.InTime"  readonly>
+      <ngx-material-timepicker #InTime></ngx-material-timepicker>
+    </mat-form-field>
+    <mat-form-field style="width: 70%;margin-top: -16px;">
+      <input matInput aria-label="default time" [ngxTimepicker]="OutTime"  placeholder="OutTime" [format]="24" formControlName="OutTime" [value]="payrollForm.value.OutTime"  readonly>
+      <ngx-material-timepicker #OutTime></ngx-material-timepicker>
+    </mat-form-field>
+    <button type="submit" style="display: none;" #btnSubmit></button>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <hum-button [type]="'save'" [text]="'Save'" (click)="btnSubmit.click()"></hum-button>
+  <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+</mat-dialog-actions>

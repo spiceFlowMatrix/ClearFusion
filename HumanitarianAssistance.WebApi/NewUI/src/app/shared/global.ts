@@ -216,6 +216,8 @@ export class GLOBAL {
   public static API_HR_GetAllEmployeeAssignLeave = 'Attendance/GetAllEmployeeAssignLeave';
   public static API_HR_AddEmployeeApplyLeaveDetail = 'Attendance/AddEmployeeApplyLeaveDetail';
   public static API_HR_AddEmployeeLeave = 'Attendance/AddEmployeeLeave';
+  public static API_Attendance_GetAttendanceGroupDetailById = 'Attendance/GetAttendanceGroupDetailById';
+  public static API_Attendance_AddPayrollDailyHoursToAttendanceGroups = 'Attendance/AddPayrollDailyHoursToAttendanceGroups';
 
   public static API_Code_AddAttendanceGroups = 'Code/AddAttendanceGroups';
   public static API_Code_EditAttendanceGroups = 'Code/EditAttendanceGroups';
