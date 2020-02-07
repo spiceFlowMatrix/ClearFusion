@@ -42,6 +42,7 @@ namespace HumanitarianAssistance.Domain.Entities.Accounting
         public string VoucherType { get; set; }
         public string VoucherMode { get; set; }
         public string OfficeCode { get; set; }
+        public int? OperationalType { get; set; }
         public bool IsExchangeGainLossVoucher { get; set; } = false;
         public bool IsVoucherVerified { get; set; } = false;
     }
