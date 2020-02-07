@@ -101,5 +101,20 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
             return Ok(result);
         }
 
+        [HttpPost]
+        public async Task<object> DeleteSelectedVouchers([FromBody] List<long> voucherNos)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            DeleteSelectedVouchersCommand command = new DeleteSelectedVouchersCommand
+            {
+                ModifiedDate = DateTime.UtcNow,
+                ModifiedById= userId,
+                VoucherNoList = voucherNos
+            };
+
+            return await _mediator.Send(command);
+        }
+
     }
 }

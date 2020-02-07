@@ -5,6 +5,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { IAddVoucherModel } from '../../models/voucher.model';
 import { IResponseData } from '../../models/status-code.model';
+import { VoucherType } from 'src/app/shared/enum';
 
 @Component({
   selector: 'app-add-voucher',
@@ -65,7 +66,8 @@ export class AddVoucherComponent implements OnInit {
         JournalCode: data.JournalCode,
         VoucherTypeId: data.VoucherTypeId,
         OfficeId: data.OfficeId,
-        TimezoneOffset: data.TimezoneOffset
+        TimezoneOffset: data.TimezoneOffset,
+        OperationalType: VoucherType['Direct Voucher']
         // ProjectId: data.ProjectId,
         // BudgetLineId: data.value.BudgetLineId,
         // FinancialYearId: data.value.FinancialYearId, // calculate on backend

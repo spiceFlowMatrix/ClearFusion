@@ -51,6 +51,14 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                     query = query.Where(x => request.FilterValue.ToLower().Contains(x.ReferenceNo.ToLower()) ||
                             request.FilterValue.ToLower().Contains(x.Description.ToLower()));
                 }
+                if(request.OfficeIds != null && request.OfficeIds.Count >0)
+                {
+                    query = query.Where(x => request.OfficeIds.Contains(x.OfficeId));
+                }
+                if(request.OperationalType.HasValue) 
+                {
+                    query = query.Where(x => x.OperationalType == request.OperationalType);
+                }
 
                 int totalCount = await query.CountAsync();
                 var voucherList = await query
@@ -70,12 +78,14 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                           ProjectId = x.ProjectId,
                                           BudgetLineId = x.BudgetLineId,
                                           OfficeName = x.OfficeDetails.OfficeName,
-                                          IsVoucherVerified = x.IsVoucherVerified
+                                          IsVoucherVerified = x.IsVoucherVerified,
+                                          OperationalType = x.OperationalType
                                       })
                                       .Skip(request.PageSize.Value * request.PageIndex.Value)
                                       .Take(request.PageSize.Value)
                                       .AsNoTracking()
                                       .ToListAsync();
+
                 response.data.VoucherDetailList = voucherList;
                 response.data.TotalCount = totalCount;
                 response.StatusCode = StaticResource.successStatusCode;

@@ -30,6 +30,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                               .Include(j => j.JournalDetails)
                                               .Include(c => c.CurrencyDetail)
                                               .Include(f => f.FinancialYearDetails)
+                                              .Include(v=> v.VoucherTypes)
                                               .FirstOrDefaultAsync(v => v.IsDeleted == false && v.VoucherNo == request.VoucherId);
 
                 if (voucherDetail != null)
@@ -46,6 +47,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                     obj.JournalName = voucherDetail.JournalDetails?.JournalName ?? null;
                     obj.JournalCode = voucherDetail.JournalDetails?.JournalCode ?? null;
                     obj.VoucherTypeId = voucherDetail.VoucherTypeId;
+                    obj.VoucherTypeName = voucherDetail.VoucherTypes.VoucherTypeName;
                     obj.OfficeId = voucherDetail.OfficeId;
                     obj.ProjectId = voucherDetail.ProjectId;
                     obj.BudgetLineId = voucherDetail.BudgetLineId;

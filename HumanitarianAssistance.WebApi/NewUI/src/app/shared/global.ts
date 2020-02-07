@@ -338,6 +338,7 @@ export class GLOBAL {
   public static API_VoucherTransaction_GetAllTransactionsByVoucherId = 'VoucherTransaction/GetAllTransactionsByVoucherId';
   public static API_VoucherTransaction_AddEditTransactionList = 'VoucherTransaction/AddEditTransactionList';
   public static API_VoucherTransaction_VerifySelectedVouchers = 'VoucherTransaction/VerifySelectedVouchers';
+  public static API_VoucherTransaction_DeleteSelectedVouchers = 'VoucherTransaction/DeleteSelectedVouchers';
 
   // Exchange Rates
   public static API_ExchangeRates_GetSavedExchangeRates = 'ExchangeRates/GetSavedExchangeRates';

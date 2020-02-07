@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { IDropDownModel } from 'src/app/store/models/purchase';
-import { Month } from 'src/app/shared/enum';
+import { Month, VoucherType } from 'src/app/shared/enum';
 import { of } from 'rxjs/internal/observable/of';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, NgModel } from '@angular/forms';
 import { VoucherService } from '../../voucher.service';
 import { IResponseData } from '../../models/status-code.model';
 import { MatTableDataSource } from '@angular/material/table';
@@ -27,6 +27,8 @@ export class VoucherListingComponent implements OnInit {
   currency$: Observable<IDropDownModel[]>;
   journalList$: Observable<IDropDownModel[]>;
   operationalTypes$: Observable<IDropDownModel[]>;
+  selectedOffices: any[];
+  offices: any[];
   ELEMENT_DATA: any[] = [];
   voucherDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
   pagingModel = {
@@ -58,6 +60,7 @@ export class VoucherListingComponent implements OnInit {
     this.getAllCurrency();
     this.getJournalList();
     this.getVoucherList();
+    this.getOfficeList();
   }
 
 
@@ -135,6 +138,15 @@ export class VoucherListingComponent implements OnInit {
 
   //#region "getVoucherList"
   getVoucherList() {
+
+    const officeIds: any[] = [];
+
+    if (this.selectedOffices && this.selectedOffices.length > 0) {
+      this.selectedOffices.forEach(x => {
+        officeIds.push(x.OfficeId);
+      });
+    }
+
    const model = {
      FilterValue: this.voucherFilterForm.value.Search,
      StartDate: this.voucherFilterForm.value.Date.begin != null ?
@@ -143,6 +155,7 @@ export class VoucherListingComponent implements OnInit {
      CurrencyId: this.voucherFilterForm.value.CurrencyId,
      OperationalType: this.voucherFilterForm.value.OperationalType,
      JournalId: this.voucherFilterForm.value.JournalId,
+     OfficeIds: officeIds,
      PageIndex: this.pagingModel.pageIndex,
      pageSize: this.pagingModel.pageSize
    };
@@ -179,7 +192,8 @@ export class VoucherListingComponent implements OnInit {
                 BudgetLineId: element.BudgetLineId,
                 OfficeName: element.OfficeName,
                 Status: element.IsVoucherVerified ? 'Verified' : 'Unverified',
-                IsVoucherVerified: element.IsVoucherVerified
+                IsVoucherVerified: element.IsVoucherVerified,
+                OperationalType: element.OperationalType
               });
             });
             this.voucherDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
@@ -230,19 +244,30 @@ export class VoucherListingComponent implements OnInit {
   deleteSelectedVouchers() {
     const ids: any[] = [];
     if (this.selection.selected.length > 0) {
-      for (let i = 0; i < this.selection.selected.length; i++ ) {
-        if (!this.selection.selected[i].IsVoucherVerified) {
-          ids.push(this.selection.selected[i].VoucherNo);
+
+      const storeVouchers = this.selection.selected.filter(x => x.OperationalType ===  VoucherType.Logistics ||
+        x.OperationalType === VoucherType.Store);
+
+        if (storeVouchers.length > 0) {
+          let voucherCodes = '';
+
+          for (let i = 0; i < storeVouchers.length; i++) {
+            voucherCodes = voucherCodes + storeVouchers[i].ReferenceNo;
+          }
+           this.toastr.warning('Cannot delete purchase order vouchers ' + voucherCodes);
         }
+
+      for (let i = 0; i < this.selection.selected.length; i++ ) {
+          ids.push(this.selection.selected[i].VoucherNo);
       }
     } else {
       this.toastr.warning('Please select atleast 1 record to delete');
       return;
     }
 
-    this.voucherService.verifySelectedVouchers(ids).subscribe(x => {
+    this.voucherService.deleteSelectedVouchers(ids).subscribe(x => {
       if (x) {
-        this.toastr.success('Verified successfully');
+        this.toastr.success('deleted successfully');
         this.getVoucherList();
       }
     }, error => {
@@ -259,6 +284,29 @@ export class VoucherListingComponent implements OnInit {
     this.router.navigate(['../add-voucher'], { relativeTo: this.routeActive });
   }
 
+  //#region "getOfficeList"
+  getOfficeList() {
+    this.voucherService.GetOfficeList().subscribe(
+      (response: IResponseData) => {
+        this.offices = [];
+        if (response.statusCode === 200 && response.data !== null) {
+          response.data.forEach(element => {
+            this.offices.push({
+              OfficeId: element.OfficeId,
+              OfficeName: element.OfficeName
+            });
+          });
+        }
+      },
+      error => {}
+    );
+  }
+  //#endregion
+
+  navigateToDetails(detail) {
+    this.router.navigate(['../' + detail.VoucherNo], { relativeTo: this.routeActive });
+  }
+
   //#region "pageEvent"
   pageEvent(e) {
     this.pagingModel.pageIndex = e.pageIndex;
@@ -266,4 +314,18 @@ export class VoucherListingComponent implements OnInit {
     this.getVoucherList();
   }
   //#endregion
+
+  // toCheck: boolean =  false;
+
+  equals(objOne, objTwo) {
+    if (typeof objOne !== 'undefined' && typeof objTwo !== 'undefined') {
+      return objOne.id === objTwo.id;
+    }
+  }
+
+  onOpenedChange(event) {
+    if (!event) {
+      this.getVoucherList();
+    }
+  }
 }

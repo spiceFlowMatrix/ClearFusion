@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using HumanitarianAssistance.Application.Infrastructure;
 using MediatR;
 
@@ -12,6 +13,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
         public int? CurrencyId { get; set; }
         public int? OperationalType { get; set; }
         public int? JournalId { get; set; }
+        public List<int?> OfficeIds { get; set; }
         public int? PageIndex { get; set; }
         public int? PageSize { get; set; }
         public int? totalCount { get; set; }

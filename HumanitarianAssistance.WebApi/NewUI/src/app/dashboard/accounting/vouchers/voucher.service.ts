@@ -317,10 +317,20 @@ export class VoucherService {
   //#endregion
 
    //#region "VerifySelectedVouchers"
-   deleteVouchers(data) {
+   verifySelectedVouchers(data) {
     return this.globalService
       .post(
         this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_VerifySelectedVouchers,
+        data
+      );
+  }
+  //#endregion
+
+  //#region "deleteSelectedVouchers"
+  deleteSelectedVouchers(data) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_DeleteSelectedVouchers,
         data
       );
   }

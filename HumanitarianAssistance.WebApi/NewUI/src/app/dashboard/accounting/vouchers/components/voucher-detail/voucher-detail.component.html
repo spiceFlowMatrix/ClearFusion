@@ -1,0 +1,162 @@
+<lib-sub-header-template [headerClass]="'sub_header_template_main2'">
+  <span class="action_header">Voucher Control Panel
+    <hum-button [type]="'edit'" [text]="'EDIT DETAILS'" (click)="editVoucher()"></hum-button>
+    <hum-button [type]="'text'" [text]="'VALIDATE'" (click)="validateVoucher()"></hum-button>
+    <hum-button [type]="'pdf'" [text]="'EXPORT'" (click)="exportVoucher()"></hum-button>
+    <hum-button [type]="'remove'" [text]="'DELETE'" (click)="deleteVoucher()"></hum-button>
+  </span>
+  <div class="action_section">
+  </div>
+</lib-sub-header-template>
+
+<div humAddScroll [height]="150">
+  <div class="row container-fluid">
+    <div class="col-sm-12">
+      <h4>Voucher Details</h4>
+    </div>
+    <table class="table table-striped margin_top_20" style="width: 35%;">
+      <tr>
+        <td><strong>Id</strong></td>
+        <td>{{voucherDetail.VoucherNo}}</td>
+      </tr>
+      <tr>
+        <td><strong>Code</strong></td>
+        <td>{{voucherDetail.ReferenceNo}}</td>
+      </tr>
+      <tr>
+        <td><strong>Description</strong></td>
+        <td>{{voucherDetail.Description}}</td>
+      </tr>
+      <tr>
+        <td><strong>Date</strong></td>
+        <td>{{voucherDetail.VoucherDate | date: 'd/M/yyyy'}}</td>
+      </tr>
+      <tr>
+        <td><strong>Journal</strong></td>
+        <td>{{voucherDetail.JournalName}}</td>
+      </tr>
+      <tr>
+        <td><strong>Currency</strong></td>
+        <td>{{voucherDetail.CurrencyCode}}</td>
+      </tr>
+      <tr>
+        <td><strong>Voucher Type</strong></td>
+        <td>{{voucherDetail.VoucherTypeName}}</td>
+      </tr>
+      <tr>
+        <td><strong>Office</strong></td>
+        <td>{{voucherDetail.OfficeName}}</td>
+      </tr>
+      <tr>
+        <td><strong>Cheque No</strong></td>
+        <td>{{voucherDetail.ChequeNo}}</td>
+      </tr>
+      <tr>
+        <td><strong>Total Credit</strong></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><strong>Total Debit</strong></td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+  <div class="row container-fluid">
+    <div class="col-sm-1">
+      <h4>Transactions</h4>
+    </div>
+    <div class="col-sm-11" *ngIf="!isModifyTransactions">
+      <hum-button [type]="'edit'" [text]="'MODIFY TRANSACTIONS'" (click)="onModifyTransactionsClick()"></hum-button>
+    </div>
+    <div class="col-sm-11" *ngIf="isModifyTransactions">
+      <hum-button [type]="'add'" [text]="'ADD TRANSACTION'" (click)="onAddTransactionBtnClick()"></hum-button>
+      <hum-button [type]="'remove'" [text]="'DELETE'" (click)="deleteVoucher()"></hum-button>
+    </div>
+
+    <div class="row container-fluid" *ngIf="addEditTransaction">
+      <div class="row">
+        <div class="col-sm-2">
+          <h4>New Credit/Debit Details</h4>
+        </div>
+        <div class="col-sm-10">
+          <hum-button [type]="'add'" [text]="'ADD'" (click)="onAddTransactionBtnClick()"></hum-button>
+          <hum-button (click)='cancelButtonClicked()' [type]="'cancel'" [text]="'CANCEL'"></hum-button>
+        </div>
+
+      </div>
+
+      <div class="col-sm-12">
+
+      </div>
+    </div>
+
+    <table mat-table [dataSource]="transactionDataSource" class="mat-elevation-z8">
+
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select" *ngIf="isModifyTransactions">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()"
+                        [aria-label]="checkboxLabel()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)"
+                        [aria-label]="checkboxLabel(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- Type Column -->
+      <ng-container matColumnDef="Type">
+        <th mat-header-cell *matHeaderCellDef> Type </th>
+        <td mat-cell *matCellDef="let element"> {{element.Type}} </td>
+      </ng-container>
+
+      <!-- Account Column -->
+      <ng-container matColumnDef="AccountCode">
+        <th mat-header-cell *matHeaderCellDef> Account </th>
+        <td mat-cell *matCellDef="let element"> {{element.AccountCode}} </td>
+      </ng-container>
+
+      <!-- Description Column -->
+      <ng-container matColumnDef="Description">
+        <th mat-header-cell *matHeaderCellDef> Description </th>
+        <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
+      </ng-container>
+
+      <!-- Amount Column -->
+      <ng-container matColumnDef="Amount">
+        <th mat-header-cell *matHeaderCellDef> Amount </th>
+        <td mat-cell *matCellDef="let element"> {{element.Amount}} </td>
+      </ng-container>
+
+       <!-- Project Column -->
+       <ng-container matColumnDef="ProjectName">
+        <th mat-header-cell *matHeaderCellDef> Project </th>
+        <td mat-cell *matCellDef="let element"> {{element.ProjectName}} </td>
+      </ng-container>
+
+       <!-- Budget Line Column -->
+       <ng-container matColumnDef="BudgetLineName">
+        <th mat-header-cell *matHeaderCellDef> Budget Line </th>
+        <td mat-cell *matCellDef="let element"> {{element.BudgetLineName}} </td>
+      </ng-container>
+
+       <!-- Project Job Column -->
+       <ng-container matColumnDef="JobName">
+        <th mat-header-cell *matHeaderCellDef> Project Job </th>
+        <td mat-cell *matCellDef="let element"> {{element.JobName}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          (click)="selection.toggle(row)">
+      </tr>
+    </table>
+
+  </div>
+</div>

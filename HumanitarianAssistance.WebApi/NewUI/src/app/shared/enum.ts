@@ -783,3 +783,9 @@ export enum AdvanceBtnStatus {
   REJECT= 3,
   EDIT= 4
 }
+
+export enum VoucherType {
+  'Store' = 1,
+  'Direct Voucher'= 2,
+  'Logistics'= 3,
+}
