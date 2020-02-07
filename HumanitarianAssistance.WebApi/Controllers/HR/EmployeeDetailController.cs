@@ -752,17 +752,12 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         }
 
         [HttpPost]
-        public async Task<IActionResult> TerminateEmployeeByEmployeeId([FromBody] int EmployeeId)
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            TerminateEmployeeByEmployeeIdCommand model = new TerminateEmployeeByEmployeeIdCommand
-            {
-                ModifiedById = userId,
-                ModifiedDate = DateTime.UtcNow,
-                EmployeeId = EmployeeId
-            };
-            var result = await _mediator.Send(model);
-            return Ok(result);
+        public async Task<IActionResult> TerminateEmployeeByEmployeeId ([FromBody] TerminateEmployeeByEmployeeIdCommand model) {
+            var userId = User.FindFirst (ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            var result = await _mediator.Send (model);
+            return Ok (result);
         }
 
         [HttpPost]

@@ -55,10 +55,10 @@ export class EmployeeListService {
     );
   }
 
-  terminateEmployeeByEmployeeeId(id) {
+  terminateEmployeeByEmployeeeId(model) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_EmployeeDetail_TerminateEmployeeByEmployeeId,
-      id
+      model
     );
   }
 
