@@ -38,6 +38,7 @@ export class EmployeeListComponent implements OnInit {
   };
   employeeDataSource;
   TotalCount = 0;
+  isLoading = false;
 
   EmployeeAttendanceList: any[];
   AttendanceDates: Date[] = []
@@ -322,5 +323,16 @@ export class EmployeeListComponent implements OnInit {
     }
     console.log(this.AttendanceDates);
     return this.AttendanceDates;
+  }
+
+  createAllEmployeesToUser() {
+    this.isLoading = true;
+    this.employeeListService.createAllEmployeesToUser().subscribe(res => {
+      this.toastr.success("All Employees created as users");
+      this.isLoading = false
+    }, err => {
+      this.toastr.success("Something went wrong");
+      this.isLoading = false
+    })
   }
 }

@@ -38,7 +38,8 @@ import {
   MatOptionModule,
   MatTableModule,
   MatCheckboxModule,
-  MatRadioModule
+  MatRadioModule,
+  MatProgressSpinnerModule
 } from '@angular/material';
 import { AddHistoricalLogComponent } from './components/employee-history/add-historical-log/add-historical-log.component';
 import { AddEducationComponent } from './components/employee-history/add-education/add-education.component';
@@ -73,6 +74,7 @@ import { IncrementDecrementSalaryComponent } from './components/employee-salary-
 import { AddHistoryOutsideOrganizationComponent } from './components/employee-history/add-history-outside-organization/add-history-outside-organization.component';
 import { EditEmployeeAttendanceComponent } from './components/employee-attendance/edit-employee-attendance/edit-employee-attendance.component';
 import { EmployeeTerminationComponent } from './components/employee-termination/employee-termination.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -151,8 +153,9 @@ import { EmployeeTerminationComponent } from './components/employee-termination/
     MatTableModule,
     MatCheckboxModule,
     MatRadioModule,
+    MatProgressSpinnerModule,
     NgxMaterialTimepickerModule,
-
+    MatTooltipModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
