@@ -80,4 +80,23 @@ export class AttendanceService {
           model
       );
   }
+
+  getPayrollHoursByAttendanceGroup(model) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Attendance_GetPayrollMonthlyHourByAttendanceGroups,
+          model
+      );
+  }
+
+  editPayrollHoursById(model) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Attendance_EditPayrollMonthlyHourById,
+          model
+      );
+  }
+
 }

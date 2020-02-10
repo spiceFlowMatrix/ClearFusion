@@ -5,6 +5,9 @@ import { EmployeeListService } from 'src/app/hr/services/employee-list.service';
 import { AttendanceService } from 'src/app/hr/services/attendance.service';
 import { MatDialog } from '@angular/material';
 import { AddPayrollHoursComponent } from '../add-payroll-hours/add-payroll-hours.component';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { Month } from 'src/app/shared/enum';
+import { AddAttendanceGroupComponent } from '../add-attendance-group/add-attendance-group.component';
 
 @Component({
   selector: 'app-attendance-group-detail',
@@ -19,6 +22,7 @@ export class AttendanceGroupDetailComponent implements OnInit, OnChanges {
   attendanceGroupDetail: IAttendanceGroupDetail = {AttendanceGroupId: 0, CreatedBy: '', ModifiedBy: '', CreatedDate: null,
   ModifiedDate: null, Name: '', Description: ''};
   selectedOffice = { value: 0, name: 'ADD FOR SELECTED OFFICE' };
+  payrollList = [];
   constructor(private toastr: ToastrService,
     private employeeListService: EmployeeListService,
     private attendanceService: AttendanceService,
@@ -30,7 +34,9 @@ export class AttendanceGroupDetailComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     this.getAttendanceGroupDetailById();
+    this.getPayrollHoursByAttendanceGroup();
   }
+
   onBackClick() {
     this.backClick.emit();
   }
@@ -68,6 +74,7 @@ export class AttendanceGroupDetailComponent implements OnInit, OnChanges {
     });
 
     dialogRef.afterClosed().subscribe(x => {
+      this.getPayrollHoursByAttendanceGroup();
     });
   }
 
@@ -88,6 +95,62 @@ export class AttendanceGroupDetailComponent implements OnInit, OnChanges {
     });
 
     dialogRef.afterClosed().subscribe(x => {
+      this.getPayrollHoursByAttendanceGroup();
+    });
+  }
+
+  getPayrollHoursByAttendanceGroup() {
+    this.attendanceService.getPayrollHoursByAttendanceGroup(this.attendanceGroupId).subscribe(res => {
+      if (res && res.PayrollList) {
+        this.payrollList = [];
+        res.PayrollList.forEach(element => {
+          this.payrollList.push({
+            PayrollMonthlyHourId: element.PayrollMonthlyHourId,
+            Office: element.Office,
+            OfficeId: element.OfficeId,
+            InTime: StaticUtilities.setLocalDate(element.InTime),
+            OutTime: StaticUtilities.setLocalDate(element.OutTime),
+            PayrollMonth: Month[element.PayrollMonth],
+            Month: element.PayrollMonth,
+            PayrollYear: element.PayrollYear,
+            WorkingTime: element.WorkingTime,
+            AttendanceGroupId: element.AttendanceGroupId
+          });
+        });
+      }
+    }, err => {
+
+    });
+  }
+
+  editAttendanceGroup() {
+    const dialogRef = this.dialog.open(AddAttendanceGroupComponent, {
+      width: '450px',
+      data: {AttendanceGroupId: this.attendanceGroupDetail.AttendanceGroupId, Name: this.attendanceGroupDetail.Name,
+        Description: this.attendanceGroupDetail.Description}
+    });
+
+    dialogRef.afterClosed().subscribe(x => {
+      this.getAttendanceGroupDetailById();
+    });
+  }
+
+  editPayrollHours(PayrollMonthlyHourId, InTime, OutTime, PayrollMonth, PayrollYear, OfficeId, Office) {
+    const dialogRef = this.dialog.open(AddPayrollHoursComponent, {
+      width: '500px',
+      data: {SelectedOffice: {value: OfficeId, name: Office},
+        AttendanceGroupId: this.attendanceGroupId,
+        AttendanceGroupName: this.attendanceGroupDetail.Name,
+        PayrollMonthlyHourId: PayrollMonthlyHourId,
+        InTime: InTime,
+        OutTime: OutTime,
+        PayrollMonth: PayrollMonth,
+        PayrollYear: PayrollYear
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(x => {
+      this.getPayrollHoursByAttendanceGroup();
     });
   }
 }

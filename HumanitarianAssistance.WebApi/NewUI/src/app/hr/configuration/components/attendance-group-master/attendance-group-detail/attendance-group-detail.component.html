@@ -1,10 +1,10 @@
 
 <lib-sub-header-template>
   <span class="action_header"><i class="fas fa-arrow-left" (click)="onBackClick()"></i> &nbsp;Attendance Group
-      <hum-button [type]="'edit'" [text]="'EDIT'"></hum-button>
+      <hum-button [type]="'edit'" [text]="'EDIT'" (click)="editAttendanceGroup()"></hum-button>
   </span>
 </lib-sub-header-template>
-<div class="container-fluid" humAddScroll>
+<div class="container-fluid" humAddScroll [height]="250">
   <div class="row">
     <div class="col-md-12">
       <h5>Attendance Group Details</h5>
@@ -47,6 +47,24 @@
         </mat-menu>
         <hum-button [type]="'add'" [text]="'ADD FOR ALL OFFICE'" (click)="addForAllOffice()"></hum-button>
       </h4>
+      <table class="table table-striped">
+        <tr>
+          <th>Office</th>
+          <th>In Time</th>
+          <th>Out Time</th>
+          <th>Month</th>
+          <th>Total Attendance Hour in Month</th>
+          <th></th>
+        </tr>
+        <tr *ngFor="let item of payrollList">
+          <td>{{item.Office}}</td>
+          <td>{{item.InTime | date:'shortTime'}}</td>
+          <td>{{item.OutTime | date:'shortTime'}}</td>
+          <td>{{item.PayrollMonth}}</td>
+          <td>{{item.WorkingTime}}</td>
+          <td><i (click)="editPayrollHours(item.PayrollMonthlyHourId, item.InTime, item.OutTime, item.Month, item.PayrollYear, item.OfficeId, item.Office)" class="fas fa-pen"></i></td>
+        </tr>
+      </table>
     </div>
   </div>
 </div>

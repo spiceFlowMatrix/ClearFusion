@@ -312,7 +312,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetPayrollMonthlyHourByAttendanceGroupsQuery([FromBody]long AttendanceGroupId)
+        public async Task<IActionResult> GetPayrollMonthlyHourByAttendanceGroups([FromBody]long AttendanceGroupId)
         {
             GetPayrollMonthlyHourByAttendanceGroupsQuery model = new GetPayrollMonthlyHourByAttendanceGroupsQuery{
                 AttendanceGroupId = AttendanceGroupId
@@ -321,5 +321,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return Ok(item);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> EditPayrollMonthlyHourById([FromBody]EditPayrollMonthlyHourByIdCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ModifiedById = userId;
+            model.ModifiedDate = DateTime.UtcNow;
+            var item = await _mediator.Send(model);
+            return Ok(item);
+        }
     }
 }

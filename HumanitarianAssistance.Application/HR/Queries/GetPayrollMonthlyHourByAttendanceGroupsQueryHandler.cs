@@ -11,6 +11,7 @@ using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using HumanitarianAssistance.Common.Enums;
+using HumanitarianAssistance.Domain.Entities;
 
 namespace HumanitarianAssistance.Application.HR.Queries
 {
@@ -30,7 +31,21 @@ namespace HumanitarianAssistance.Application.HR.Queries
             {
                 var payrollinfo = await _dbContext.PayrollMonthlyHourDetail
                                     .Where(x => x.IsDeleted == false &&
-                                    x.AttendanceGroupId == request.AttendanceGroupId).ToListAsync();
+                                    x.AttendanceGroupId == request.AttendanceGroupId)
+                                    .Include(x=> x.OfficeDetails)
+                                    .Select(x=> new {
+                                      PayrollMonthlyHourId = x.PayrollMonthlyHourID,
+                                      OfficeId = x.OfficeId,
+                                      Office = x.OfficeDetails.OfficeName,
+                                      PayrollMonth = x.PayrollMonth,
+                                      PayrollYear = x.PayrollYear,
+                                      Hours= x.Hours,
+                                      InTime= x.InTime,
+                                      OutTime= x.OutTime,
+                                      WorkingTime= x.WorkingTime,
+                                      AttendanceGroupId= x.AttendanceGroupId
+                                    })
+                                    .ToListAsync();
 
                 result.Add("PayrollList", payrollinfo);
             }

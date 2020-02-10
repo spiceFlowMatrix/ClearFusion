@@ -1,4 +1,4 @@
-<h4 mat-dialog-title>Add Payroll Daily Hours</h4>
+<h4 mat-dialog-title>{{title}}</h4>
 <mat-dialog-content>
   <form [formGroup]="payrollForm" (ngSubmit)="submitPayrollForm()">
     <div><strong>Office:</strong> {{(data && data.SelectedOffice)?data.SelectedOffice.name: 'All Offices'}}</div>
