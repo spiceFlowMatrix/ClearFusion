@@ -791,6 +791,8 @@ export class GLOBAL {
 
 
   //#endregion
+// salary config
+public static API_Pdf_GetMonthlyPaySlipPdf = 'Pdf/GetMonthlyPaySlipPdf';
 
 }
 

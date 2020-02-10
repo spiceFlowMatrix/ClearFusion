@@ -4,7 +4,7 @@ import { AddSalaryConfigurationComponent } from './add-salary-configuration/add-
 import { IDropDownModel } from './../../../store/models/purchase';
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { of, observable, empty } from 'rxjs';
+import { of, observable, empty, ReplaySubject } from 'rxjs';
 import { TableActionsModel } from 'projects/library/src/public_api';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material';
@@ -16,6 +16,10 @@ import 'rxjs/add/observable/empty';
 import { AddAdvanceRecoveryComponent } from './add-advance-recovery/add-advance-recovery.component';
 import { AttendanceService } from '../../services/attendance.service';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { GLOBAL } from 'src/app/shared/global';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-employee-salary-config',
@@ -54,11 +58,13 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   });
   employeeCurrencyAndAmount: any;
   showGenerateAttendanceButton = false;
-
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     public dialog: MatDialog,
     private toastr: ToastrService,
+    private appurl: AppUrlService,
     private activatedRoute: ActivatedRoute,
+    private globalSharedService: GlobalSharedService,
     private salaryConfigService: EmployeeSalaryConfigService,
     private attendanceService: AttendanceService,
     private commonLoader: CommonLoaderService
@@ -338,8 +344,8 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       }
       // this.toastr.warning(error);
 
-      //Payroll Hours are not configured for this month. Please Add Payroll Hours for the selected month for this
-      //employee's Attendance Group.
+      // Payroll Hours are not configured for this month. Please Add Payroll Hours for the selected month for this
+      // employee's Attendance Group.
 
     });
   }
@@ -454,6 +460,22 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       this.commonLoader.hideLoader();
     });
   }
+
+  //#region "Download pdf of monthly pay slip"
+  onExportMonthlyPaySlipPdf() {
+    const data: any = {
+      EmployeeId: this.employeeId,
+      Month: this.selectedMonth.value
+    };
+    this.globalSharedService
+      .getFile(
+        this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetMonthlyPaySlipPdf,
+        data
+      )
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe();
+  }
+  //#endregion
 }
 
 export interface IMonthlySalaryBreakdown {
