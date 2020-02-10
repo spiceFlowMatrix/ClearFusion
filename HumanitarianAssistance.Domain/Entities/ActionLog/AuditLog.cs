@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HumanitarianAssistance.Domain.Entities.ErrorLog {
+namespace HumanitarianAssistance.Domain.Entities.ActionLog {
     public class AuditLog : BaseEntity {
         [Key]
         [DatabaseGenerated (DatabaseGeneratedOption.Identity)]

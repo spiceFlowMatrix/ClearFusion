@@ -8,6 +8,8 @@ using HumanitarianAssistance.Domain.Entities.Store;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
+using HumanitarianAssistance.Domain.Entities.ActionLog;
+
 namespace HumanitarianAssistance.Persistence
 {
     public class HumanitarianAssistanceDbContext : IdentityDbContext<AppUser>
