@@ -285,6 +285,7 @@ namespace HumanitarianAssistance.Persistence
         public DbSet<EmployeePayrollInfoDetail> EmployeePayrollInfoDetail { get; set; }
          public DbSet<EmployeeBasicSalaryDetail> EmployeeBasicSalaryDetail { get; set; }
          public DbSet<AdvanceHistoryDetail> AdvanceHistoryDetail { get; set; }
+         public DbSet<AuditLog> AuditLog { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
