@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Application.HR.Models;
 using HumanitarianAssistance.Application.Infrastructure;
-using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Domain.Entities.HR;
@@ -15,7 +14,8 @@ using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
-namespace HumanitarianAssistance.Application.HR.Queries {
+namespace HumanitarianAssistance.Application.HR.Queries
+{
     public class MonthlyPaySlipReportPdfQueryHandler : IRequestHandler<MonthlyPaySlipReportPdfQuery, byte[]> {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IPdfExportService _pdfExportService;
