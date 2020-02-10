@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200207053945_updateVoucherDetail")]
+    partial class updateVoucherDetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1759,34 +1761,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("EntitySourceDocumentDetails");
-                });
-
-            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.ErrorLog.AuditLog", b =>
-                {
-                    b.Property<long>("AuditLogId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ActionDescription");
-
-                    b.Property<int?>("ActionTypeId");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<DateTime?>("CreatedDate");
-
-                    b.Property<int?>("EntityId");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int?>("TypeOfEntity");
-
-                    b.HasKey("AuditLogId");
-
-                    b.ToTable("AuditLog");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.ErrorLogger", b =>
