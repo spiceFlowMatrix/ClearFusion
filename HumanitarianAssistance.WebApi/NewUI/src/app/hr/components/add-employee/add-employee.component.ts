@@ -1,5 +1,4 @@
 import { StaticUtilities } from 'src/app/shared/static-utilities';
-import { Response } from '@angular/http';
 import { IEmployeePensionListModel } from './../../models/employee-detail.model';
 import { AddEmployeeService } from './../../services/add-employee.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
@@ -10,7 +9,6 @@ import { Observable, of, forkJoin, ReplaySubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { PurchaseService } from 'src/app/store/services/purchase.service';
-import { Month } from 'src/app/shared/enum';
 import { IEmployeeAllDetails } from '../../models/employee-detail.model';
 import { MatDialog } from '@angular/material';
 import { AddOpeningPensionComponent } from './add-opening-pension/add-opening-pension.component';
@@ -30,8 +28,6 @@ export class AddEmployeeComponent implements OnInit {
   employeeProfessionalDetailForm: FormGroup;
   genderList$: Observable<IDropDownModel[]>;
   maritalStatusList$: Observable<IDropDownModel[]>;
-  // previousYearsList$: Observable<IDropDownModel[]>;
-  // monthsList$: Observable<IDropDownModel[]>;
   professionList$: Observable<IDropDownModel[]>;
   countryList$: Observable<IDropDownModel[]>;
   provinceList$: Observable<IDropDownModel[]>;
@@ -57,7 +53,6 @@ export class AddEmployeeComponent implements OnInit {
     private fb: FormBuilder,
     public dialog: MatDialog,
     private commonLoader: CommonLoaderService,
-    private purchaseService: PurchaseService,
     private employeeService: AddEmployeeService,
     private toastr: ToastrService,
     private routeActive: ActivatedRoute,
@@ -161,8 +156,6 @@ export class AddEmployeeComponent implements OnInit {
         this.subscribeContractTypeList(result[8]);
         this.subscribeAttendanceGroupList(result[9]);
       });
-    // this.getAllMonthList();
-    // this.getPreviousYearsList();
     this.employeeAllDetails = {
       EmployeeBasicDetail: {},
       EmployeeProfessionalDetails: {},
@@ -180,21 +173,6 @@ export class AddEmployeeComponent implements OnInit {
       this.getAllPensionList();
     }
   }
-
-  //#region "Get all month list for ExperienceInMonth dropdown"
-  // getAllMonthList() {
-  //   const monthDropDown: IDropDownModel[] = [];
-  //   for (let i = Month['January']; i <= Month['December']; i++) {
-  //     monthDropDown.push({ name: Month[i], value: i });
-  //   }
-  //   this.monthsList$ = of(monthDropDown);
-  // }
-  //#endregion
-  //#region "Get all previous years list for ExperienceInYears dropdown"
-  // getPreviousYearsList() {
-  //   this.previousYearsList$ = this.purchaseService.getPreviousYearsList(40);
-  // }
-  //#endregion
 
   //#region "Get all countries list for country dropdown"
   getAllCountryList() {
