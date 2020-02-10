@@ -8,7 +8,6 @@ import { IDropDownModel } from 'src/app/store/models/purchase';
 import { Observable, of, forkJoin, ReplaySubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
-import { PurchaseService } from 'src/app/store/services/purchase.service';
 import { IEmployeeAllDetails } from '../../models/employee-detail.model';
 import { MatDialog } from '@angular/material';
 import { AddOpeningPensionComponent } from './add-opening-pension/add-opening-pension.component';
