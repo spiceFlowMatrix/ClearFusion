@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.HR.Models;
 using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
+using HumanitarianAssistance.Domain.Entities;
 using HumanitarianAssistance.Domain.Entities.Accounting;
 using HumanitarianAssistance.Domain.Entities.HR;
 using HumanitarianAssistance.Persistence;
@@ -28,11 +30,18 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
             try
             {
+                FinancialYearDetail financialYear = await _dbContext.FinancialYearDetail.FirstOrDefaultAsync(x=> x.IsDeleted == false && x.IsDefault == true);
+
+                if(financialYear == null)
+                {
+                    throw new Exception(StaticResource.FinancialYearNotFound);
+                }
+
                 List<EmployeeAttendance> empPayrollAttendance = await _dbContext.EmployeeAttendance
                                                                                                   .Include(x => x.EmployeeDetails)
                                                                                                   .Include(x => x.EmployeeDetails.EmployeeProfessionalDetail)
                                                                                                   .Where(x => x.EmployeeId == request.EmployeeId &&
-                                                                                                  x.InTime.Value.Month == request.Month && x.InTime.Value.Year == DateTime.UtcNow.Year
+                                                                                                  x.Date.Month == request.Month && x.Date.Year == financialYear.StartDate.Year
                                                                                                   && x.IsDeleted == false && x.EmployeeDetails.IsDeleted == false).ToListAsync();
 
                 if (!empPayrollAttendance.Any())
@@ -41,7 +50,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 }
 
                 var payroll = _dbContext.EmployeePayrollInfoDetail.FirstOrDefault(x => x.IsDeleted == false && x.EmployeeId == request.EmployeeId &&
-                                                                                   x.Month == request.Month && x.Year == DateTime.UtcNow.Year);
+                                                                                   x.Month == request.Month && x.Year == financialYear.StartDate.Year);
 
                 if (payroll == null)
                 {
@@ -97,16 +106,33 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                 PayrollMonthlyHourDetail payrollHours = _dbContext.PayrollMonthlyHourDetail
                                                                                     .FirstOrDefault(x => x.IsDeleted == false && x.OfficeId == employeeDetail.EmployeeProfessionalDetail.OfficeId
-                                                                                    && x.PayrollMonth == request.Month && x.PayrollYear == DateTime.UtcNow.Year && x.AttendanceGroupId == employeeDetail.EmployeeProfessionalDetail.AttendanceGroupId);
+                                                                                    && x.PayrollMonth == request.Month && x.PayrollYear == DateTime.UtcNow.Year &&
+                                                                                    x.AttendanceGroupId == employeeDetail.EmployeeProfessionalDetail.AttendanceGroupId);
 
                 if (payrollHours == null)
                 {
                     throw new Exception(StaticResource.PayrollDailyHoursNotSet);
                 }
 
+                FinancialYearDetail financialYear = _dbContext.FinancialYearDetail.FirstOrDefault(x=> x.IsDeleted == false && x.IsDefault == true);
+
+                if(financialYear == null)
+                {
+                    throw new Exception(StaticResource.FinancialYearNotFound);
+                }
+
+                List<string> weeklyOff = _dbContext.HolidayWeeklyDetails.Where(x=> x.IsDeleted == false &&
+                                                        x.FinancialYearId ==financialYear.FinancialYearId)
+                                                        .Select(x=> x.Day).ToList();
+                
+                int weeklyOffDays = ParticularDayInMonth(new DateTime(financialYear.StartDate.Year, request.Month, 1), weeklyOff);
+
+                int payableDaysInAMonth = DateTime.DaysInMonth(DateTime.UtcNow.Year, request.Month) -weeklyOffDays;
+
+
                 int workingHours = payrollHours.OutTime.Value.Subtract(payrollHours.InTime.Value).Hours;
 
-                double dBasicPayPerhour = Math.Round(basicPay.BasicSalary / (DateTime.DaysInMonth(DateTime.UtcNow.Year, request.Month) * workingHours), 2);
+                double dBasicPayPerhour = Math.Round(basicPay.BasicSalary / (payableDaysInAMonth * workingHours), 2);
                 model.HourlyRate = dBasicPayPerhour;
 
                 //Note: default 0.045 i.e. (4.5 %)
@@ -264,6 +290,25 @@ namespace HumanitarianAssistance.Application.HR.Queries
             }
 
             return model;
+        }
+
+
+        public static int ParticularDayInMonth(DateTime time, List<string> dayNames)
+        {
+            int weekDaysInAMonth =0;
+
+            int daysInAMonth = DateTime.DaysInMonth(time.Year, time.Month);
+
+            for(int i=1; i<= daysInAMonth; i++)
+            {
+                DateTime date = new DateTime(time.Year, time.Month, i);
+                string dayName= CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(date.DayOfWeek);
+                if(dayNames.Contains(dayName))
+                {
+                    weekDaysInAMonth++;
+                }
+            }
+            return weekDaysInAMonth;
         }
     }
 }

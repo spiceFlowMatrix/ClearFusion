@@ -29,6 +29,7 @@ export interface IEmployeeDetail {
   OfficeId?: number;
   IsResigned: boolean;
   ResignationStatus: number;
+  Tenure: string;
 }
 export interface IEmployeeDetailModel {
   EmployeeID: number;

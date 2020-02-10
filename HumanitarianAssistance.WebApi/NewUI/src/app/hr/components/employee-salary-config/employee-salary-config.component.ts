@@ -1,37 +1,41 @@
-import { AddFineComponent } from './add-fine/add-fine.component';
-import { AddBonusComponent } from './add-bonus/add-bonus.component';
-import { AddSalaryConfigurationComponent } from './add-salary-configuration/add-salary-configuration.component';
-import { IDropDownModel } from './../../../store/models/purchase';
-import { Observable } from 'rxjs/Observable';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { of, observable, empty } from 'rxjs';
-import { TableActionsModel } from 'projects/library/src/public_api';
-import { ToastrService } from 'ngx-toastr';
-import { MatDialog } from '@angular/material';
-import { Month, TransactionType } from 'src/app/shared/enum';
-import { ActivatedRoute } from '@angular/router';
-import { EmployeeSalaryConfigService } from '../../services/employee-salary-config.service';
-import { StaticUtilities } from 'src/app/shared/static-utilities';
-import 'rxjs/add/observable/empty';
-import { AddAdvanceRecoveryComponent } from './add-advance-recovery/add-advance-recovery.component';
-import { AttendanceService } from '../../services/attendance.service';
-import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { AddFineComponent } from "./add-fine/add-fine.component";
+import { AddBonusComponent } from "./add-bonus/add-bonus.component";
+import { AddSalaryConfigurationComponent } from "./add-salary-configuration/add-salary-configuration.component";
+import { IDropDownModel } from "./../../../store/models/purchase";
+import { Observable } from "rxjs/Observable";
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
+import { of, observable, empty, ReplaySubject } from "rxjs";
+import { TableActionsModel } from "projects/library/src/public_api";
+import { ToastrService } from "ngx-toastr";
+import { MatDialog } from "@angular/material";
+import { Month, TransactionType } from "src/app/shared/enum";
+import { ActivatedRoute } from "@angular/router";
+import { EmployeeSalaryConfigService } from "../../services/employee-salary-config.service";
+import { StaticUtilities } from "src/app/shared/static-utilities";
+import "rxjs/add/observable/empty";
+import { AddAdvanceRecoveryComponent } from "./add-advance-recovery/add-advance-recovery.component";
+import { AttendanceService } from "../../services/attendance.service";
+import { CommonLoaderService } from "src/app/shared/common-loader/common-loader.service";
+import { AppUrlService } from "src/app/shared/services/app-url.service";
+import { GlobalSharedService } from "src/app/shared/services/global-shared.service";
+import { GLOBAL } from "src/app/shared/global";
+import { takeUntil } from "rxjs/operators";
 
 @Component({
-  selector: 'app-employee-salary-config',
-  templateUrl: './employee-salary-config.component.html',
-  styleUrls: ['./employee-salary-config.component.scss'],
+  selector: "app-employee-salary-config",
+  templateUrl: "./employee-salary-config.component.html",
+  styleUrls: ["./employee-salary-config.component.scss"]
 })
 export class EmployeeSalaryConfigComponent implements OnInit {
   accumulatedHeaders$ = of([
-    'Salary Component',
-    'Salary Allowance',
-    'Salary Deduction'
+    "Salary Component",
+    "Salary Allowance",
+    "Salary Deduction"
   ]);
   bonusAndFineHeaders$ = of([
-    'Salary Component',
-    'Salary Allowance',
-    'Salary Deduction'
+    "Salary Component",
+    "Salary Allowance",
+    "Salary Deduction"
   ]);
   accumulatedList$: Observable<any[]>;
   bonusAndFineList$: Observable<any[]>;
@@ -43,43 +47,44 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   employeeSalary: IEmployeeSalary;
   isSalaryApproved = false;
   isNoError = true;
-  errorMessage = '';
+  errorMessage = "";
   hideColumsBounusFine = of({
-    headers: ['Salary Component', 'Salary Allowance', 'Salary Deduction'],
-    items: ['SalaryComponent', 'SalaryAllowance', 'SalaryDeduction']
+    headers: ["Salary Component", "Salary Allowance", "Salary Deduction"],
+    items: ["SalaryComponent", "SalaryAllowance", "SalaryDeduction"]
   });
   hideColumsAccumulatedSalaryHeads = of({
-    headers: ['Salary Component', 'Salary Allowance', 'Salary Deduction'],
-    items: ['SalaryComponent', 'SalaryAllowance', 'SalaryDeduction']
+    headers: ["Salary Component", "Salary Allowance", "Salary Deduction"],
+    items: ["SalaryComponent", "SalaryAllowance", "SalaryDeduction"]
   });
   employeeCurrencyAndAmount: any;
   showGenerateAttendanceButton = false;
-
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(
     public dialog: MatDialog,
     private toastr: ToastrService,
+    private appurl: AppUrlService,
     private activatedRoute: ActivatedRoute,
+    private globalSharedService: GlobalSharedService,
     private salaryConfigService: EmployeeSalaryConfigService,
     private attendanceService: AttendanceService,
     private commonLoader: CommonLoaderService
   ) {
-    this.selectedMonth = { name: 'SELECT MONTH', value: 0 };
+    this.selectedMonth = { name: "SELECT MONTH", value: 0 };
     this.activatedRoute.params.subscribe(params => {
-      this.employeeId = +params['id'];
+      this.employeeId = +params["id"];
     });
   }
-
 
   ngOnInit() {
     this.actions = {
       items: {
-        button: { status: false, text: '' },
+        button: { status: false, text: "" },
         delete: true,
         download: false,
         edit: false
       },
       subitems: {
-        button: { status: false, text: '' },
+        button: { status: false, text: "" },
         delete: false,
         download: false
       }
@@ -87,7 +92,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     this.getAllMonthList();
     this.employeeCurrencyAndAmount = {
       CurrencyId: 0,
-      CurrencyName: '-',
+      CurrencyName: "-",
       MonthlyAmount: 0,
       PayrollId: 0
     };
@@ -105,7 +110,8 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     this.getEmployeeBasicPayAndCurrency();
     if (this.selectedMonth.value === 0) {
       this.isNoError = false;
-      this.errorMessage = 'Please select month for which payroll is to be generated';
+      this.errorMessage =
+        "Please select month for which payroll is to be generated";
     }
   }
 
@@ -113,10 +119,10 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     this.monthlySalaryBreakdown = {
       GrossSalary: 0,
       HourlyRate: 0,
-      Month: '',
+      Month: "",
       NetSalary: 0,
       SalaryPaidAmount: 0,
-      Status: ''
+      Status: ""
     };
     this.accumulatedList$ = of();
     this.bonusAndFineList$ = of();
@@ -126,7 +132,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   addSalaryConfiguration(): void {
     // NOTE: It open AddSalaryConfiguration dialog and passed the data into the AddSalaryConfigurationComponent Model
     const dialogRef = this.dialog.open(AddSalaryConfigurationComponent, {
-      width: '500px',
+      width: "500px",
       autoFocus: false,
       data: {
         PayrollId: this.employeeCurrencyAndAmount.PayrollId,
@@ -139,7 +145,9 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       }
     });
     // refresh the data after new request created
-    dialogRef.componentInstance.onAddSalaryConfigurationRefresh.subscribe(() => { });
+    dialogRef.componentInstance.onAddSalaryConfigurationRefresh.subscribe(
+      () => {}
+    );
     dialogRef.afterClosed().subscribe(() => {
       this.getEmployeeBasicPayAndCurrency();
     });
@@ -148,18 +156,17 @@ export class EmployeeSalaryConfigComponent implements OnInit {
 
   // #region Add Bonus
   addBonus(): void {
-
-    if (this.monthlySalaryBreakdown.Month === '' || this.isSalaryApproved) {
+    if (this.monthlySalaryBreakdown.Month === "" || this.isSalaryApproved) {
       return;
     }
 
     if (this.selectedMonth.value === 0) {
-      this.toastr.warning('Please select Month');
+      this.toastr.warning("Please select Month");
       return;
     }
     // NOTE: It open AddBonus dialog and passed the data into the AddBonusComponent Model
     const dialogRef = this.dialog.open(AddBonusComponent, {
-      width: '500px',
+      width: "500px",
       autoFocus: false,
       data: {
         EmployeeId: this.employeeId,
@@ -167,7 +174,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       }
     });
     // refresh the data after new request created
-    dialogRef.componentInstance.onAddBonusRefresh.subscribe(() => { });
+    dialogRef.componentInstance.onAddBonusRefresh.subscribe(() => {});
     dialogRef.afterClosed().subscribe(() => {
       this.getEmployeeBonusFineSalaryHead();
       this.getEmployeePayroll();
@@ -176,16 +183,16 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   //#endregion
   // #region Add Bonus
   addFine(): void {
-    if (this.monthlySalaryBreakdown.Month === '' || this.isSalaryApproved) {
+    if (this.monthlySalaryBreakdown.Month === "" || this.isSalaryApproved) {
       return;
     }
     if (this.selectedMonth.value === 0) {
-      this.toastr.warning('Please select Month');
+      this.toastr.warning("Please select Month");
       return;
     }
     // NOTE: It open AddFine dialog and passed the data into the AddFineComponent Model
     const dialogRef = this.dialog.open(AddFineComponent, {
-      width: '500px',
+      width: "500px",
       autoFocus: false,
       data: {
         EmployeeId: this.employeeId,
@@ -193,7 +200,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       }
     });
     // refresh the data after new request created
-    dialogRef.componentInstance.onAddFineRefresh.subscribe(() => { });
+    dialogRef.componentInstance.onAddFineRefresh.subscribe(() => {});
     dialogRef.afterClosed().subscribe(() => {
       this.getEmployeeBonusFineSalaryHead();
       this.getEmployeePayroll();
@@ -204,7 +211,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   //#region "Get all month list for ExperienceInMonth dropdown"
   getAllMonthList() {
     const monthDropDown: IDropDownModel[] = [];
-    for (let i = Month['January']; i <= Month['December']; i++) {
+    for (let i = Month["January"]; i <= Month["December"]; i++) {
       monthDropDown.push({ name: Month[i], value: i });
     }
     this.monthsList$ = of(monthDropDown);
@@ -221,16 +228,18 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   }
   empActionEvents(event: any) {
     console.log(event.item);
-  this.errorMessage = '';
-  this.isNoError = true;
+    this.errorMessage = "";
+    this.isNoError = true;
   }
 
   getEmployeeBasicPayAndCurrency() {
-    this.salaryConfigService.getEmployeeBasicPayAndCurrency(this.employeeId).subscribe(x => {
-      if (x && x.EmployeeCurrencyAmount) {
-        this.employeeCurrencyAndAmount = x.EmployeeCurrencyAmount;
-      }
-    });
+    this.salaryConfigService
+      .getEmployeeBasicPayAndCurrency(this.employeeId)
+      .subscribe(x => {
+        if (x && x.EmployeeCurrencyAmount) {
+          this.employeeCurrencyAndAmount = x.EmployeeCurrencyAmount;
+        }
+      });
   }
 
   getEmployeeBonusFineSalaryHead() {
@@ -238,51 +247,68 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       EmployeeId: this.employeeId,
       Month: this.selectedMonth.value
     };
-    this.salaryConfigService.getEmployeeBonusFineSalaryHead(model).subscribe(x => {
-      if (x && x.BonusFineSalaryHead && x.BonusFineSalaryHead.length > 0) {
-        this.bonusAndFineList$ = of(x.BonusFineSalaryHead.map(y => {
-          return {
-            Id: y.Id,
-            SalaryComponent: y.SalaryHeadName,
-            SalaryAllowance: y.TransactionTypeId === TransactionType.Debit ? y.Amount : 0,
-            SalaryDeduction: y.TransactionTypeId === TransactionType.Credit ? y.Amount : 0,
-          };
-        }));
-      } else {
-        this.bonusAndFineList$ =  of([]);
-      }
-    });
+    this.salaryConfigService
+      .getEmployeeBonusFineSalaryHead(model)
+      .subscribe(x => {
+        if (x && x.BonusFineSalaryHead && x.BonusFineSalaryHead.length > 0) {
+          this.bonusAndFineList$ = of(
+            x.BonusFineSalaryHead.map(y => {
+              return {
+                Id: y.Id,
+                SalaryComponent: y.SalaryHeadName,
+                SalaryAllowance:
+                  y.TransactionTypeId === TransactionType.Debit ? y.Amount : 0,
+                SalaryDeduction:
+                  y.TransactionTypeId === TransactionType.Credit ? y.Amount : 0
+              };
+            })
+          );
+        } else {
+          this.bonusAndFineList$ = of([]);
+        }
+      });
   }
 
   bonusFineEvents(event) {
-    if (event.type === 'delete') {
-      this.salaryConfigService.deleteEmployeeBonusFineSalaryHead(event.item.Id).subscribe(x => {
-        if (x) {
-          this.toastr.success('Item Deleted Successfully');
-          this.getEmployeeBonusFineSalaryHead();
-          this.getEmployeePayroll();
-        } else {
-          this.toastr.warning('Please try again');
-        }
-      }, error => {
-        this.toastr.warning(error);
-      });
+    if (event.type === "delete") {
+      this.salaryConfigService
+        .deleteEmployeeBonusFineSalaryHead(event.item.Id)
+        .subscribe(
+          x => {
+            if (x) {
+              this.toastr.success("Item Deleted Successfully");
+              this.getEmployeeBonusFineSalaryHead();
+              this.getEmployeePayroll();
+            } else {
+              this.toastr.warning("Please try again");
+            }
+          },
+          error => {
+            this.toastr.warning(error);
+          }
+        );
     }
   }
 
   getEmployeeAccumulatedSalaryHead() {
-    this.salaryConfigService.getEmployeeAccumulatedSalaryHead(this.employeeId).subscribe(x => {
-      if (x && x.BonusFineSalaryHead && x.BonusFineSalaryHead.length > 0) {
-        this.bonusAndFineList$ = of(x.BonusFineSalaryHead.map(y => {
-          return {
-            Id: y.Id,
-            SalaryComponent: y.SalaryHeadName,
-            SalaryAllowance: y.TransactionTypeId === TransactionType.Debit ? y.Amount : 0,
-            SalaryDeduction: y.TransactionTypeId === TransactionType.Credit ? y.Amount : 0,
-          };
-        }));
-      }
-    });
+    this.salaryConfigService
+      .getEmployeeAccumulatedSalaryHead(this.employeeId)
+      .subscribe(x => {
+        if (x && x.BonusFineSalaryHead && x.BonusFineSalaryHead.length > 0) {
+          this.bonusAndFineList$ = of(
+            x.BonusFineSalaryHead.map(y => {
+              return {
+                Id: y.Id,
+                SalaryComponent: y.SalaryHeadName,
+                SalaryAllowance:
+                  y.TransactionTypeId === TransactionType.Debit ? y.Amount : 0,
+                SalaryDeduction:
+                  y.TransactionTypeId === TransactionType.Credit ? y.Amount : 0
+              };
+            })
+          );
+        }
+      });
   }
 
   getEmployeePayroll() {
@@ -291,62 +317,69 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       Month: this.selectedMonth.value
     };
 
-    this.salaryConfigService.getEmployeePayroll(model).subscribe(x => {
-      this.showGenerateAttendanceButton = false;
-      if (x && x.payroll) {
-        this.isNoError = true;
-        this.monthlySalaryBreakdown.NetSalary = x.payroll.NetSalary;
-        this.monthlySalaryBreakdown.GrossSalary = x.payroll.GrossSalary;
-        this.monthlySalaryBreakdown.SalaryPaidAmount = x.payroll.SalaryPaid;
-        this.monthlySalaryBreakdown.Status = x.payroll.Status;
-        this.isSalaryApproved = x.payroll.IsSalaryApproved;
+    this.salaryConfigService.getEmployeePayroll(model).subscribe(
+      x => {
+        this.showGenerateAttendanceButton = false;
+        if (x && x.payroll) {
+          this.isNoError = true;
+          this.monthlySalaryBreakdown.NetSalary = x.payroll.NetSalary;
+          this.monthlySalaryBreakdown.GrossSalary = x.payroll.GrossSalary;
+          this.monthlySalaryBreakdown.SalaryPaidAmount = x.payroll.SalaryPaid;
+          this.monthlySalaryBreakdown.Status = x.payroll.Status;
+          this.isSalaryApproved = x.payroll.IsSalaryApproved;
 
-        this.monthlySalaryBreakdown.HourlyRate = x.payroll.HourlyRate;
+          this.monthlySalaryBreakdown.HourlyRate = x.payroll.HourlyRate;
           this.monthlySalaryBreakdown.Month = Month[this.selectedMonth.value];
 
-        if (!this.isSalaryApproved) {
-          this.accumulatedList$ = of(x.payroll.AccumulatedPayrollHeadList.map(y => {
-            return {
-              Id: y.Id,
-              SalaryComponent: y.PayrollHeadName,
-              SalaryAllowance: y.TransactionType === TransactionType.Debit ? y.Amount : 0,
-              SalaryDeduction: y.TransactionType === TransactionType.Credit ? y.Amount : 0,
-            };
-          }));
+          if (!this.isSalaryApproved) {
+            this.accumulatedList$ = of(
+              x.payroll.AccumulatedPayrollHeadList.map(y => {
+                return {
+                  Id: y.Id,
+                  SalaryComponent: y.PayrollHeadName,
+                  SalaryAllowance:
+                    y.TransactionType === TransactionType.Debit ? y.Amount : 0,
+                  SalaryDeduction:
+                    y.TransactionType === TransactionType.Credit ? y.Amount : 0
+                };
+              })
+            );
+          } else {
+            this.accumulatedList$ = of(
+              x.payroll.SavedAccumulatedPayrollHeadList.map(y => {
+                return {
+                  Id: y.Id,
+                  SalaryComponent: y.PayrollHeadName,
+                  SalaryAllowance: y.SalaryAllowance,
+                  SalaryDeduction: y.SalaryDeduction
+                };
+              })
+            );
+          }
         } else {
-          this.accumulatedList$ = of(x.payroll.SavedAccumulatedPayrollHeadList.map(y => {
-            return {
-              Id: y.Id,
-              SalaryComponent: y.PayrollHeadName,
-              SalaryAllowance: y.SalaryAllowance,
-              SalaryDeduction: y.SalaryDeduction,
-            };
-          }));
+          this.isNoError = false;
+          this.toastr.warning("Cannot retrieve data. Please try again");
         }
-      } else {
+      },
+      error => {
+        this.onInitForm();
         this.isNoError = false;
-        this.toastr.warning('Cannot retrieve data. Please try again');
-      }
-    }, error => {
-      this.onInitForm();
-      this.isNoError = false;
-      this.errorMessage = error;
-      if (error === 'Employee has no attendance for payroll') {
-        this.showGenerateAttendanceButton = true;
-      } else {
-        this.showGenerateAttendanceButton = false;
-      }
-      // this.toastr.warning(error);
+        this.errorMessage = error;
+        if (error === "Employee has no attendance for payroll") {
+          this.showGenerateAttendanceButton = true;
+        } else {
+          this.showGenerateAttendanceButton = false;
+        }
+        // this.toastr.warning(error);
 
-      //Payroll Hours are not configured for this month. Please Add Payroll Hours for the selected month for this
-      //employee's Attendance Group.
-
-    });
+        // Payroll Hours are not configured for this month. Please Add Payroll Hours for the selected month for this
+        // employee's Attendance Group.
+      }
+    );
   }
 
   approveSalary() {
-
-    if (this.monthlySalaryBreakdown.Month === '' || this.isSalaryApproved) {
+    if (this.monthlySalaryBreakdown.Month === "" || this.isSalaryApproved) {
       return;
     }
 
@@ -372,30 +405,33 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       });
     });
 
-    this.salaryConfigService.approvePayroll(this.employeeSalary).subscribe(x => {
-      if (x) {
-        this.getEmployeePayroll();
-        this.toastr.success('Salary Approved');
-      } else {
-        this.toastr.warning('Please try again');
+    this.salaryConfigService.approvePayroll(this.employeeSalary).subscribe(
+      x => {
+        if (x) {
+          this.getEmployeePayroll();
+          this.toastr.success("Salary Approved");
+        } else {
+          this.toastr.warning("Please try again");
+        }
+      },
+      error => {
+        this.toastr.warning(error);
       }
-    }, error => {
-      this.toastr.warning(error);
-    });
+    );
   }
 
   addAdvance() {
-    if (this.monthlySalaryBreakdown.Month === '' || this.isSalaryApproved) {
+    if (this.monthlySalaryBreakdown.Month === "" || this.isSalaryApproved) {
       return;
     }
 
     if (this.selectedMonth.value === 0) {
-      this.toastr.warning('Please select Month');
+      this.toastr.warning("Please select Month");
       return;
     }
     // NOTE: It open AddFine dialog and passed the data into the AddFineComponent Model
     const dialogRef = this.dialog.open(AddAdvanceRecoveryComponent, {
-      width: '500px',
+      width: "500px",
       autoFocus: false,
       data: {
         EmployeeId: this.employeeId,
@@ -419,18 +455,19 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       Month: this.selectedMonth.value
     };
 
-    this.salaryConfigService.revokeEmployeePayroll(model).subscribe(x => {
-      if (x) {
-        this.getEmployeePayroll();
-        this.toastr.success('Salary Revoked');
-      } else {
-        this.toastr.warning('Please try again');
+    this.salaryConfigService.revokeEmployeePayroll(model).subscribe(
+      x => {
+        if (x) {
+          this.getEmployeePayroll();
+          this.toastr.success("Salary Revoked");
+        } else {
+          this.toastr.warning("Please try again");
+        }
+      },
+      error => {
+        this.toastr.warning(error);
       }
-    }, error => {
-      this.toastr.warning(error);
-    });
-
-
+    );
   }
 
   markWholeMonthAttendance() {
@@ -440,20 +477,46 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       Month: this.selectedMonth.value
     };
     this.commonLoader.showLoader();
-    this.attendanceService.markWholeMonthAttendance(model).subscribe(res => {
-      if (res) {
-        this.toastr.success('Attendance Marked Successfully!');
-        this.getEmployeePayroll();
-        this.commonLoader.hideLoader();
-      } else {
+    this.attendanceService.markWholeMonthAttendance(model).subscribe(
+      res => {
+        if (res) {
+          this.toastr.success("Attendance Marked Successfully!");
+          this.getEmployeePayroll();
+          this.commonLoader.hideLoader();
+        } else {
+          this.commonLoader.hideLoader();
+        }
+      },
+      err => {
+        this.isNoError = false;
+        this.errorMessage = err;
         this.commonLoader.hideLoader();
       }
-    }, err => {
-      this.isNoError = false;
-      this.errorMessage = err;
-      this.commonLoader.hideLoader();
-    });
+    );
   }
+
+  //#region "Download pdf of monthly pay slip"
+  onExportMonthlyPaySlipPdf() {
+    if (this.monthlySalaryBreakdown.Month === "" || this.isSalaryApproved) {
+      return;
+    }
+
+    if (this.isSalaryApproved) {
+      return;
+    }
+    const data: any = {
+      EmployeeId: this.employeeId,
+      Month: this.selectedMonth.value
+    };
+    this.globalSharedService
+      .getFile(
+        this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetMonthlyPaySlipPdf,
+        data
+      )
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe();
+  }
+  //#endregion
 }
 
 export interface IMonthlySalaryBreakdown {

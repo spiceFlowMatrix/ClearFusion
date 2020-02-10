@@ -365,6 +365,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<int?>("OfficeId");
 
+                    b.Property<int?>("OperationalType");
+
                     b.Property<long?>("ProjectId");
 
                     b.Property<string>("ReferenceNo")
@@ -1757,6 +1759,34 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("EntitySourceDocumentDetails");
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.ErrorLog.AuditLog", b =>
+                {
+                    b.Property<long>("AuditLogId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ActionDescription");
+
+                    b.Property<int?>("ActionTypeId");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<int?>("EntityId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int?>("TypeOfEntity");
+
+                    b.HasKey("AuditLogId");
+
+                    b.ToTable("AuditLog");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.ErrorLogger", b =>
@@ -4541,6 +4571,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<int>("GradeId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<long?>("ChartOfAccountNewId");
+
                     b.Property<string>("CreatedById");
 
                     b.Property<DateTime?>("CreatedDate");
@@ -4554,6 +4586,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.HasKey("GradeId");
+
+                    b.HasIndex("ChartOfAccountNewId");
 
                     b.ToTable("JobGrade");
                 });
@@ -10358,6 +10392,13 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .WithMany("TechnicalQuestion")
                         .HasForeignKey("DesignationId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.JobGrade", b =>
+                {
+                    b.HasOne("HumanitarianAssistance.Domain.Entities.Accounting.ChartOfAccountNew", "ChartOfAccount")
+                        .WithMany()
+                        .HasForeignKey("ChartOfAccountNewId");
                 });
 
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.JobHiringDetails", b =>

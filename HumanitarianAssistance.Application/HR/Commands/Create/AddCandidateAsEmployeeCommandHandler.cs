@@ -59,11 +59,13 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                    EmployeeTypeId = (int)EmployeeTypeStatus.Active
                 };
                 response = await _hrService.AddNewEmployee(command);
+                if(response.StatusCode == 200) {
                 var candidateDetail = await _dbContext.CandidateDetails.Where(x=>x.CandidateId==request.CandidateId && x.IsDeleted==false).FirstOrDefaultAsync();
                 if(candidateDetail !=null)
                 {
                 candidateDetail.EmployeeID = response.data.EmployeeDetailModel.EmployeeID;
                 await _dbContext.SaveChangesAsync();
+                }
                 }
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

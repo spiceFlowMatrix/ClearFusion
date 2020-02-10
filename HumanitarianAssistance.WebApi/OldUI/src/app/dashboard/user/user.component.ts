@@ -169,8 +169,8 @@ export class UserComponent implements OnInit, OnDestroy {
       ],
       Email: [null, [Validators.required, Validators.email]],
       Phone: [null, Validators.compose([Validators.required,
-                Validators.minLength(10),
-                Validators.maxLength(14)])],
+      Validators.minLength(10),
+      Validators.maxLength(14)])],
       Password: [
         null,
         Validators.compose([
@@ -314,176 +314,179 @@ export class UserComponent implements OnInit, OnDestroy {
 
   getAllApplicationPage() {
     this.userService
-    .getPermissions(
-      this.setting.getBaseUrl() +
-       GLOBAL.API_Permissions_GetAllApplicationPages
-       )
-       .subscribe(data => {
-      if (data.StatusCode === 200) {
-      this.applicationPagePermissions.RoleName = '';
-      this.applicationPagePermissions.Permissions = [];
-      this.projectManagementPermissions = [];
-      this.agreeDisagreePermissions = [];
-      this.orderSchedulePermissions = [];
-      this.userPermission = [];
-      this.codePermission = [];
-      this.employeePermission = [];
-      this.storePermission = [];
-      this.projectsPermission = [];
-      this.marketingPermission = [];
-      this.accountingPermission = [];
+      .getPermissions(
+        this.setting.getBaseUrl() +
+        GLOBAL.API_Permissions_GetAllApplicationPages
+      )
+      .subscribe(data => {
+        if (data.StatusCode === 200) {
+          this.applicationPagePermissions.RoleName = '';
+          this.applicationPagePermissions.Permissions = [];
+          this.projectManagementPermissions = [];
+          this.agreeDisagreePermissions = [];
+          this.orderSchedulePermissions = [];
+          this.userPermission = [];
+          this.codePermission = [];
+          this.employeePermission = [];
+          this.storePermission = [];
+          this.projectsPermission = [];
+          this.marketingPermission = [];
+          this.accountingPermission = [];
 
-      data.data.ApplicationPagesList.forEach(element => {
-        this.applicationPagePermissions.Permissions.push({
-           PageId: element.PageId,
-          PageName: element.PageName,
-           Edit: false,
-            View: false,
-             ModuleName: element.ModuleName,
+          data.data.ApplicationPagesList.forEach(element => {
+            this.applicationPagePermissions.Permissions.push({
+              PageId: element.PageId,
+              PageName: element.PageName,
+              Edit: false,
+              View: false,
+              ModuleName: element.ModuleName,
               ModuleId: element.ModuleId
-        });
-      });
-
-      const userp = this.applicationPagePermissions.Permissions.filter(
-        z => z.ModuleId === applicationModule.Users
-      );
-      const codep = this.applicationPagePermissions.Permissions.filter(
-        z => z.ModuleId === applicationModule.Code
-      );
-      const hrp = this.applicationPagePermissions.Permissions.filter(
-        z => z.ModuleId === applicationModule.HR
-      );
-      const storep = this.applicationPagePermissions.Permissions.filter(
-        z => z.ModuleId === applicationModule.Store
-      );
-      const accountingp = this.applicationPagePermissions.Permissions.filter(
-        z =>
-          z.ModuleId === applicationModule.Accounting ||
-          z.ModuleId === applicationModule.AccountingNew
-      );
-      const marketingp = this.applicationPagePermissions.Permissions.filter(
-        z => z.ModuleId === applicationModule.Marketing
-      );
-      const projectsp = this.applicationPagePermissions.Permissions.filter(
-        z => z.ModuleId === applicationModule.Projects
-      );
-
-      userp.forEach(y => {
-        this.userPermission.push({
-          PageId: y.PageId,
-          PageName: y.PageName,
-          Edit: y.Edit,
-          View: y.View,
-          ModuleName: y.ModuleName,
-          ModuleId: y.ModuleId
-        });
-      });
-
-      codep.forEach(y => {
-        this.codePermission.push({
-          PageId: y.PageId,
-          PageName: y.PageName,
-          Edit: y.Edit,
-          View: y.View,
-          ModuleName: y.ModuleName,
-          ModuleId: y.ModuleId
-        });
-      });
-
-      storep.forEach(y => {
-          this.storePermission.push({
-            PageId: y.PageId,
-            PageName: y.PageName,
-            Edit: y.Edit,
-            View: y.View,
-            ModuleName: y.ModuleName,
-            ModuleId: y.ModuleId
-          });
-        });
-
-        hrp.forEach(y => {
-          this.employeePermission.push({
-            PageId: y.PageId,
-            PageName: y.PageName,
-            Edit: y.Edit,
-            View: y.View,
-            ModuleName: y.ModuleName,
-            ModuleId: y.ModuleId
-          });
-        });
-
-        accountingp.forEach(y => {
-          this.accountingPermission.push({
-            PageId: y.PageId,
-            PageName: y.PageName,
-            Edit: y.Edit,
-            View: y.View,
-            ModuleName: y.ModuleName,
-            ModuleId: y.ModuleId
-          });
-        });
-
-        marketingp.forEach(y => {
-          this.marketingPermission.push({
-            PageId: y.PageId,
-            PageName: y.PageName,
-            Edit: y.Edit,
-            View: y.View,
-            ModuleName: y.ModuleName,
-            ModuleId: y.ModuleId
-          });
-        });
-
-        projectsp.forEach(y => {
-          this.projectsPermission.push({
-            PageId: y.PageId,
-            PageName: y.PageName,
-            Edit: y.Edit,
-            View: y.View,
-            ModuleName: y.ModuleName,
-            ModuleId: y.ModuleId
-          });
-        });
-         const indexOne = this.projectsPermission.findIndex(x => x.PageId === 86);
-         const indexTwo = this.projectsPermission.findIndex(x => x.PageId === 81);
-         const indexThree = this.projectsPermission.findIndex(x => x.PageId === 75);
-         this.projectsPermission.splice(indexOne, 3);
-         this.projectsPermission.splice(indexTwo - 3, 2);
-         this.projectsPermission.splice(indexThree - 5, 4);
-
-        data.data.ApplicationPagesList.forEach(x => {
-          if (x.PageId === applicationPages.Contracts) {
-            this.projectManagementPermissions.push({
-               PageId: x.PageId,
-              PageName: x.PageName,
-              Approve: false,
-              Reject: false,
-              ModuleId: x.ModuleId, ModuleName: x.ModuleName
             });
-          }
-          if (x.PageId === applicationPages.MarketingJobs) {
-            this.projectManagementPermissions.push({ PageId: x.PageId,
-              PageName: x.PageName, Approve: false, Reject: false,
-              ModuleId: applicationModule.Marketing, ModuleName: 'Marketing'
-            });
-          }
-          if (x.PageId === applicationPages.MarketingJobs) {
-            this.agreeDisagreePermissions.push({ PageId: x.PageId,
-              PageName: x.PageName, Agree: false, Disagree: false,
-              ModuleId: applicationModule.Marketing, ModuleName: 'Marketing'
-            });
-          }
+          });
 
-          if (x.PageId === applicationPages.Policy) {
-            this.orderSchedulePermissions.push({ PageId: x.PageId,
-              PageName: x.PageName, OrderSchedule: false,
-              ModuleId: applicationModule.Marketing, ModuleName: 'Marketing'
+          const userp = this.applicationPagePermissions.Permissions.filter(
+            z => z.ModuleId === applicationModule.Users
+          );
+          const codep = this.applicationPagePermissions.Permissions.filter(
+            z => z.ModuleId === applicationModule.Code
+          );
+          const hrp = this.applicationPagePermissions.Permissions.filter(
+            z => z.ModuleId === applicationModule.HR
+          );
+          const storep = this.applicationPagePermissions.Permissions.filter(
+            z => z.ModuleId === applicationModule.Store
+          );
+          const accountingp = this.applicationPagePermissions.Permissions.filter(
+            z =>
+              z.ModuleId === applicationModule.Accounting ||
+              z.ModuleId === applicationModule.AccountingNew
+          );
+          const marketingp = this.applicationPagePermissions.Permissions.filter(
+            z => z.ModuleId === applicationModule.Marketing
+          );
+          const projectsp = this.applicationPagePermissions.Permissions.filter(
+            z => z.ModuleId === applicationModule.Projects
+          );
+
+          userp.forEach(y => {
+            this.userPermission.push({
+              PageId: y.PageId,
+              PageName: y.PageName,
+              Edit: y.Edit,
+              View: y.View,
+              ModuleName: y.ModuleName,
+              ModuleId: y.ModuleId
             });
-          }
-          localStorage.setItem('permissions', JSON.stringify(this.applicationPagePermissions.Permissions));
-          localStorage.setItem('approveRejectPermissions', JSON.stringify(this.projectManagementPermissions));
-          localStorage.setItem('agreeDisagreePermissions', JSON.stringify(this.agreeDisagreePermissions));
-          localStorage.setItem('orderSchedulePermissions', JSON.stringify(this.orderSchedulePermissions));
+          });
+
+          codep.forEach(y => {
+            this.codePermission.push({
+              PageId: y.PageId,
+              PageName: y.PageName,
+              Edit: y.Edit,
+              View: y.View,
+              ModuleName: y.ModuleName,
+              ModuleId: y.ModuleId
+            });
+          });
+
+          storep.forEach(y => {
+            this.storePermission.push({
+              PageId: y.PageId,
+              PageName: y.PageName,
+              Edit: y.Edit,
+              View: y.View,
+              ModuleName: y.ModuleName,
+              ModuleId: y.ModuleId
+            });
+          });
+
+          hrp.forEach(y => {
+            this.employeePermission.push({
+              PageId: y.PageId,
+              PageName: y.PageName,
+              Edit: y.Edit,
+              View: y.View,
+              ModuleName: y.ModuleName,
+              ModuleId: y.ModuleId
+            });
+          });
+
+          accountingp.forEach(y => {
+            this.accountingPermission.push({
+              PageId: y.PageId,
+              PageName: y.PageName,
+              Edit: y.Edit,
+              View: y.View,
+              ModuleName: y.ModuleName,
+              ModuleId: y.ModuleId
+            });
+          });
+
+          marketingp.forEach(y => {
+            this.marketingPermission.push({
+              PageId: y.PageId,
+              PageName: y.PageName,
+              Edit: y.Edit,
+              View: y.View,
+              ModuleName: y.ModuleName,
+              ModuleId: y.ModuleId
+            });
+          });
+
+          projectsp.forEach(y => {
+            this.projectsPermission.push({
+              PageId: y.PageId,
+              PageName: y.PageName,
+              Edit: y.Edit,
+              View: y.View,
+              ModuleName: y.ModuleName,
+              ModuleId: y.ModuleId
+            });
+          });
+          const indexOne = this.projectsPermission.findIndex(x => x.PageId === 86);
+          const indexTwo = this.projectsPermission.findIndex(x => x.PageId === 81);
+          const indexThree = this.projectsPermission.findIndex(x => x.PageId === 75);
+          this.projectsPermission.splice(indexOne, 3);
+          this.projectsPermission.splice(indexTwo - 3, 2);
+          this.projectsPermission.splice(indexThree - 5, 4);
+
+          data.data.ApplicationPagesList.forEach(x => {
+            if (x.PageId === applicationPages.Contracts) {
+              this.projectManagementPermissions.push({
+                PageId: x.PageId,
+                PageName: x.PageName,
+                Approve: false,
+                Reject: false,
+                ModuleId: x.ModuleId, ModuleName: x.ModuleName
+              });
+            }
+            if (x.PageId === applicationPages.MarketingJobs) {
+              this.projectManagementPermissions.push({
+                PageId: x.PageId,
+                PageName: x.PageName, Approve: false, Reject: false,
+                ModuleId: applicationModule.Marketing, ModuleName: 'Marketing'
+              });
+            }
+            if (x.PageId === applicationPages.MarketingJobs) {
+              this.agreeDisagreePermissions.push({
+                PageId: x.PageId,
+                PageName: x.PageName, Agree: false, Disagree: false,
+                ModuleId: applicationModule.Marketing, ModuleName: 'Marketing'
+              });
+            }
+
+            if (x.PageId === applicationPages.Policy) {
+              this.orderSchedulePermissions.push({
+                PageId: x.PageId,
+                PageName: x.PageName, OrderSchedule: false,
+                ModuleId: applicationModule.Marketing, ModuleName: 'Marketing'
+              });
+            }
+            localStorage.setItem('permissions', JSON.stringify(this.applicationPagePermissions.Permissions));
+            localStorage.setItem('approveRejectPermissions', JSON.stringify(this.projectManagementPermissions));
+            localStorage.setItem('agreeDisagreePermissions', JSON.stringify(this.agreeDisagreePermissions));
+            localStorage.setItem('orderSchedulePermissions', JSON.stringify(this.orderSchedulePermissions));
           });
         }
       });
@@ -500,7 +503,7 @@ export class UserComponent implements OnInit, OnDestroy {
     this.userService
       .getPermissionByRoleId(
         this.setting.getBaseUrl() +
-          GLOBAL.API_Permissions_GetPermissionsByRoleId,
+        GLOBAL.API_Permissions_GetPermissionsByRoleId,
         this.selectedRole
       )
       .subscribe(
@@ -631,7 +634,7 @@ export class UserComponent implements OnInit, OnDestroy {
     this.userService
       .getUserDetailByUserId(
         this.setting.getBaseUrl() +
-          GLOBAL.API_UserDetail_GetUserDetailsByUserId,
+        GLOBAL.API_UserDetail_GetUserDetailsByUserId,
         UserId
       )
       .subscribe(data => {
@@ -680,33 +683,41 @@ export class UserComponent implements OnInit, OnDestroy {
 
       this.applicationPagePermissions.Permissions.forEach(element => {
         if (element.Edit || element.View) {
-          filteredApplicationPages.Permissions.push({PageId: element.PageId, PageName: element.PageName,
+          filteredApplicationPages.Permissions.push({
+            PageId: element.PageId, PageName: element.PageName,
             ModuleName: element.ModuleName, ModuleId: element.ModuleId, Edit: element.Edit, View: element.View,
-            Approve: element.Approve, Reject: element.Reject} );
+            Approve: element.Approve, Reject: element.Reject
+          });
         }
       });
 
       this.projectManagementPermissions.forEach(element => {
         if (element.Approve || element.Reject) {
-          filteredApplicationPages.Permissions.push({PageId: element.PageId, PageName: element.PageName,
+          filteredApplicationPages.Permissions.push({
+            PageId: element.PageId, PageName: element.PageName,
             ModuleName: element.ModuleName, ModuleId: element.ModuleId,
-            Approve: element.Approve, Reject: element.Reject} );
+            Approve: element.Approve, Reject: element.Reject
+          });
         }
       });
 
       this.agreeDisagreePermissions.forEach(element => {
         if (element.Agree || element.Disagree) {
-          filteredApplicationPages.Permissions.push({PageId: element.PageId, PageName: element.PageName,
+          filteredApplicationPages.Permissions.push({
+            PageId: element.PageId, PageName: element.PageName,
             ModuleName: element.ModuleName, ModuleId: element.ModuleId,
-            Agree: element.Agree, Disagree: element.Disagree} );
+            Agree: element.Agree, Disagree: element.Disagree
+          });
         }
       });
 
       this.orderSchedulePermissions.forEach(element => {
         if (element.OrderSchedule) {
-          filteredApplicationPages.Permissions.push({PageId: element.PageId, PageName: element.PageName,
+          filteredApplicationPages.Permissions.push({
+            PageId: element.PageId, PageName: element.PageName,
             ModuleName: element.ModuleName, ModuleId: element.ModuleId,
-            OrderSchedule: element.OrderSchedule} );
+            OrderSchedule: element.OrderSchedule
+          });
         }
       });
 
@@ -816,7 +827,7 @@ export class UserComponent implements OnInit, OnDestroy {
       this.userService
         .PermissionsInRoles(
           this.setting.getBaseUrl() +
-            GLOBAL.API_Permissions_AddRoleWithPagePermissions,
+          GLOBAL.API_Permissions_AddRoleWithPagePermissions,
           filteredApplicationPages
         )
         .subscribe(data => {
@@ -1043,7 +1054,7 @@ export class UserComponent implements OnInit, OnDestroy {
       this.userService
         .getRolePermissions(
           this.setting.getBaseUrl() +
-            GLOBAL.API_Permissions_GetPermissionsOnSelectedRole,
+          GLOBAL.API_Permissions_GetPermissionsOnSelectedRole,
           this.ddnSelectedRole.id
         )
         .subscribe(data => {
@@ -1115,83 +1126,83 @@ export class UserComponent implements OnInit, OnDestroy {
               permissionsnotpresent.push(x);
             }
           },
-          permissionsApproveReject.forEach(x => {
-            if (!this.EditApproveRejectRolePermission.some(s => s.PageId === x.PageId)) {
-              permissionsnotpresentApproveReject.push(x);
-            }
-          },
-          permissionsAgreeDisagree.forEach(x => {
-            if (!this.EditAgreeDisagreeRolePermission.some(s => s.PageId === x.PageId)) {
-              permissionsnotpresentAgreeDisagree.push(x);
-            }
-          },
-          orderSchedulePermission.forEach(x => {
-            if (!this.EditOrderScheduleRolePermission.some(s => s.PageId === x.PageId)) {
-              permissionsnotpresentOrderSchedule.push(x);
-            }
-          })
-          ),
-          )
+            permissionsApproveReject.forEach(x => {
+              if (!this.EditApproveRejectRolePermission.some(s => s.PageId === x.PageId)) {
+                permissionsnotpresentApproveReject.push(x);
+              }
+            },
+              permissionsAgreeDisagree.forEach(x => {
+                if (!this.EditAgreeDisagreeRolePermission.some(s => s.PageId === x.PageId)) {
+                  permissionsnotpresentAgreeDisagree.push(x);
+                }
+              },
+                orderSchedulePermission.forEach(x => {
+                  if (!this.EditOrderScheduleRolePermission.some(s => s.PageId === x.PageId)) {
+                    permissionsnotpresentOrderSchedule.push(x);
+                  }
+                })
+              ),
+            )
           );
-        this.EditRolePermission = [...this.EditRolePermission, ...permissionsnotpresent];
-        this.EditApproveRejectRolePermission = [...this.EditApproveRejectRolePermission, ...permissionsnotpresentApproveReject];
-        this.EditAgreeDisagreeRolePermission = [...this.EditAgreeDisagreeRolePermission, ...permissionsnotpresentAgreeDisagree];
-        this.EditOrderScheduleRolePermission = [...this.EditOrderScheduleRolePermission, ...permissionsnotpresentOrderSchedule];
-        this.editUserPermission = [];
-        this.editCodePermission = [];
-        this.editStorePermission = [];
-        this.editAccountingPermission = [];
-        this.editEmployeePermission = [];
-        this.editProjectsPermission = [];
-        this.editMarketingPermission = [];
+          this.EditRolePermission = [...this.EditRolePermission, ...permissionsnotpresent];
+          this.EditApproveRejectRolePermission = [...this.EditApproveRejectRolePermission, ...permissionsnotpresentApproveReject];
+          this.EditAgreeDisagreeRolePermission = [...this.EditAgreeDisagreeRolePermission, ...permissionsnotpresentAgreeDisagree];
+          this.EditOrderScheduleRolePermission = [...this.EditOrderScheduleRolePermission, ...permissionsnotpresentOrderSchedule];
+          this.editUserPermission = [];
+          this.editCodePermission = [];
+          this.editStorePermission = [];
+          this.editAccountingPermission = [];
+          this.editEmployeePermission = [];
+          this.editProjectsPermission = [];
+          this.editMarketingPermission = [];
 
-        const userp = this.EditRolePermission.filter(
-          z => z.ModuleId === applicationModule.Users
-        );
-        const codep = this.EditRolePermission.filter(
-          z => z.ModuleId === applicationModule.Code
-        );
-        const hrp = this.EditRolePermission.filter(
-          z => z.ModuleId === applicationModule.HR
-        );
-        const storep = this.EditRolePermission.filter(
-          z => z.ModuleId === applicationModule.Store
-        );
-        const accountingp = this.EditRolePermission.filter(
-          z =>
-            z.ModuleId === applicationModule.Accounting ||
-            z.ModuleId === applicationModule.AccountingNew
-        );
-        const marketingp = this.EditRolePermission.filter(
-          z => z.ModuleId === applicationModule.Marketing
-        );
-        const projectsp = this.EditRolePermission.filter(
-          z => z.ModuleId === applicationModule.Projects
-        );
+          const userp = this.EditRolePermission.filter(
+            z => z.ModuleId === applicationModule.Users
+          );
+          const codep = this.EditRolePermission.filter(
+            z => z.ModuleId === applicationModule.Code
+          );
+          const hrp = this.EditRolePermission.filter(
+            z => z.ModuleId === applicationModule.HR
+          );
+          const storep = this.EditRolePermission.filter(
+            z => z.ModuleId === applicationModule.Store
+          );
+          const accountingp = this.EditRolePermission.filter(
+            z =>
+              z.ModuleId === applicationModule.Accounting ||
+              z.ModuleId === applicationModule.AccountingNew
+          );
+          const marketingp = this.EditRolePermission.filter(
+            z => z.ModuleId === applicationModule.Marketing
+          );
+          const projectsp = this.EditRolePermission.filter(
+            z => z.ModuleId === applicationModule.Projects
+          );
 
-        userp.forEach(y => {
-          this.editUserPermission.push({
-            PageId: y.PageId,
-            PageName: y.PageName,
-            Edit: y.Edit,
-            View: y.View,
-            ModuleName: y.ModuleName,
-            ModuleId: y.ModuleId
+          userp.forEach(y => {
+            this.editUserPermission.push({
+              PageId: y.PageId,
+              PageName: y.PageName,
+              Edit: y.Edit,
+              View: y.View,
+              ModuleName: y.ModuleName,
+              ModuleId: y.ModuleId
+            });
           });
-        });
 
-        codep.forEach(y => {
-          this.editCodePermission.push({
-            PageId: y.PageId,
-            PageName: y.PageName,
-            Edit: y.Edit,
-            View: y.View,
-            ModuleName: y.ModuleName,
-            ModuleId: y.ModuleId
+          codep.forEach(y => {
+            this.editCodePermission.push({
+              PageId: y.PageId,
+              PageName: y.PageName,
+              Edit: y.Edit,
+              View: y.View,
+              ModuleName: y.ModuleName,
+              ModuleId: y.ModuleId
+            });
           });
-        });
 
-        storep.forEach(y => {
+          storep.forEach(y => {
             this.editStorePermission.push({
               PageId: y.PageId,
               PageName: y.PageName,
@@ -1252,173 +1263,183 @@ export class UserComponent implements OnInit, OnDestroy {
           this.editProjectsPermission.splice(indexTwo - 3, 2);
           this.editProjectsPermission.splice(indexThree - 5, 4);
           this.loadingPermission = false;
+        }
+          ,
+          () => {
+            this.loadingPermission = false;
+          });
+    }
+  }
+
+  onRolesPermissionUpdate() {
+    this.loadingPermission = true;
+
+    const filteredRolePermissions: any = {
+      RoleId: '',
+      RoleName: '',
+      Permissions: []
+    };
+
+    this.editUserPermission.forEach(element => {
+      if (element.Edit || element.View) {
+        filteredRolePermissions.Permissions.push({
+          PageId: element.PageId,
+          PageName: element.PageName,
+          ModuleName: element.ModuleName,
+          ModuleId: element.ModuleId,
+          Edit: element.Edit,
+          View: element.View
+        });
       }
-      ,
-      () => {
-        this.loadingPermission = false;
-      });
-  }
-}
+    });
 
-onRolesPermissionUpdate() {
-  this.loadingPermission = true;
+    this.editCodePermission.forEach(element => {
+      if (element.Edit || element.View) {
+        filteredRolePermissions.Permissions.push({
+          PageId: element.PageId,
+          PageName: element.PageName,
+          ModuleName: element.ModuleName,
+          ModuleId: element.ModuleId,
+          Edit: element.Edit,
+          View: element.View
+        });
+      }
+    });
 
-  const filteredRolePermissions: any = {
-    RoleId: '',
-    RoleName: '',
-    Permissions: []
-  };
+    this.editAccountingPermission.forEach(element => {
+      if (element.Edit || element.View) {
+        filteredRolePermissions.Permissions.push({
+          PageId: element.PageId,
+          PageName: element.PageName,
+          ModuleName: element.ModuleName,
+          ModuleId: element.ModuleId,
+          Edit: element.Edit,
+          View: element.View
+        });
+      }
+    });
 
-  this.editUserPermission.forEach(element => {
-    if (element.Edit || element.View) {
-      filteredRolePermissions.Permissions.push({
-        PageId: element.PageId,
-        PageName: element.PageName,
-        ModuleName: element.ModuleName,
-        ModuleId: element.ModuleId,
-        Edit: element.Edit,
-        View: element.View
-      });
-    }
-  });
+    this.editStorePermission.forEach(element => {
+      if (element.Edit || element.View) {
+        filteredRolePermissions.Permissions.push({
+          PageId: element.PageId,
+          PageName: element.PageName,
+          ModuleName: element.ModuleName,
+          ModuleId: element.ModuleId,
+          Edit: element.Edit,
+          View: element.View
+        });
+      }
+    });
 
-  this.editCodePermission.forEach(element => {
-    if (element.Edit || element.View) {
-      filteredRolePermissions.Permissions.push({
-        PageId: element.PageId,
-        PageName: element.PageName,
-        ModuleName: element.ModuleName,
-        ModuleId: element.ModuleId,
-        Edit: element.Edit,
-        View: element.View
-      });
-    }
-  });
+    this.editEmployeePermission.forEach(element => {
+      if (element.Edit || element.View) {
+        filteredRolePermissions.Permissions.push({
+          PageId: element.PageId,
+          PageName: element.PageName,
+          ModuleName: element.ModuleName,
+          ModuleId: element.ModuleId,
+          Edit: element.Edit,
+          View: element.View
+        });
+      }
+    });
 
-  this.editAccountingPermission.forEach(element => {
-    if (element.Edit || element.View) {
-      filteredRolePermissions.Permissions.push({
-        PageId: element.PageId,
-        PageName: element.PageName,
-        ModuleName: element.ModuleName,
-        ModuleId: element.ModuleId,
-        Edit: element.Edit,
-        View: element.View
-      });
-    }
-  });
+    this.editProjectsPermission.forEach(element => {
+      if (element.Edit || element.View) {
+        filteredRolePermissions.Permissions.push({
+          PageId: element.PageId,
+          PageName: element.PageName,
+          ModuleName: element.ModuleName,
+          ModuleId: element.ModuleId,
+          Edit: element.Edit,
+          View: element.View
+        });
+      }
+    });
+    console.log(this.editProjectsPermission);
+    this.editMarketingPermission.forEach(element => {
+      if (element.Edit || element.View) {
+        filteredRolePermissions.Permissions.push({
+          PageId: element.PageId,
+          PageName: element.PageName,
+          ModuleName: element.ModuleName,
+          ModuleId: element.ModuleId,
+          Edit: element.Edit,
+          View: element.View
+        });
+      }
+    });
 
-  this.editStorePermission.forEach(element => {
-    if (element.Edit || element.View) {
-      filteredRolePermissions.Permissions.push({
-        PageId: element.PageId,
-        PageName: element.PageName,
-        ModuleName: element.ModuleName,
-        ModuleId: element.ModuleId,
-        Edit: element.Edit,
-        View: element.View
-      });
-    }
-  });
+    this.EditApproveRejectRolePermission.forEach(element => {
 
-  this.editEmployeePermission.forEach(element => {
-    if (element.Edit || element.View) {
-      filteredRolePermissions.Permissions.push({
-        PageId: element.PageId,
-        PageName: element.PageName,
-        ModuleName: element.ModuleName,
-        ModuleId: element.ModuleId,
-        Edit: element.Edit,
-        View: element.View
-      });
-    }
-  });
+      if (element.Approve || element.Reject) {
+        filteredRolePermissions.Permissions.push({
+          PageId: element.PageId, PageName: element.PageName,
+          Approve: element.Approve, Reject: element.Reject, ModuleId: applicationModule.Marketing,
+          ModuleName: 'Marketing'
+        });
+      }
+    });
 
-  this.editProjectsPermission.forEach(element => {
-    if (element.Edit || element.View) {
-      filteredRolePermissions.Permissions.push({
-        PageId: element.PageId,
-        PageName: element.PageName,
-        ModuleName: element.ModuleName,
-        ModuleId: element.ModuleId,
-        Edit: element.Edit,
-        View: element.View
-      });
-    }
-  });
-console.log(this.editProjectsPermission);
-  this.editMarketingPermission.forEach(element => {
-    if (element.Edit || element.View) {
-      filteredRolePermissions.Permissions.push({
-        PageId: element.PageId,
-        PageName: element.PageName,
-        ModuleName: element.ModuleName,
-        ModuleId: element.ModuleId,
-        Edit: element.Edit,
-        View: element.View
-      });
-  }
-});
+    this.EditAgreeDisagreeRolePermission.forEach(element => {
 
-this.EditApproveRejectRolePermission.forEach(element => {
+      if (element.Agree || element.Disagree) {
+        filteredRolePermissions.Permissions.push({
+          PageId: element.PageId, PageName: element.PageName,
+          Agree: element.Agree, Disagree: element.Disagree, ModuleId: applicationModule.Marketing,
+          ModuleName: 'Marketing'
+        });
+      }
+    });
 
-  if (element.Approve || element.Reject) {
-    filteredRolePermissions.Permissions.push({PageId: element.PageId, PageName: element.PageName,
-     Approve: element.Approve, Reject: element.Reject, ModuleId: applicationModule.Marketing,
-     ModuleName: 'Marketing'} );
-  }
-});
+    this.EditOrderScheduleRolePermission.forEach(element => {
 
-this.EditAgreeDisagreeRolePermission.forEach(element => {
+      if (element.OrderSchedule) {
+        filteredRolePermissions.Permissions.push({
+          PageId: element.PageId, PageName: element.PageName,
+          OrderSchedule: element.OrderSchedule, ModuleId: applicationModule.Marketing,
+          ModuleName: 'Marketing'
+        });
+      }
+    });
 
-  if (element.Agree || element.Disagree) {
-    filteredRolePermissions.Permissions.push({PageId: element.PageId, PageName: element.PageName,
-     Agree: element.Agree, Disagree: element.Disagree, ModuleId: applicationModule.Marketing,
-    ModuleName: 'Marketing'} );
-  }
-});
-
-this.EditOrderScheduleRolePermission.forEach(element => {
-
-  if (element.OrderSchedule) {
-    filteredRolePermissions.Permissions.push({PageId: element.PageId, PageName: element.PageName,
-      OrderSchedule: element.OrderSchedule, ModuleId: applicationModule.Marketing,
-    ModuleName: 'Marketing'} );
-  }
-});
-
-  if (
-    this.ddnSelectedRole.id !== undefined &&
-    this.ddnSelectedRole.id != null &&
-    this.ddnSelectedRole.id !== '' &&
-    this.ddnSelectedRole.name !== undefined &&
-    this.ddnSelectedRole.name !== '' &&
-    this.ddnSelectedRole.name != null &&
-    filteredRolePermissions.Permissions.length > 0
-  ) {
-    filteredRolePermissions.RoleId = this.ddnSelectedRole.id;
-    filteredRolePermissions.RoleName = this.ddnSelectedRole.name;
-    this.userService
-      .updateRolePermissions(
-        this.setting.getBaseUrl() +
+    if (
+      this.ddnSelectedRole.id !== undefined &&
+      this.ddnSelectedRole.id != null &&
+      this.ddnSelectedRole.id !== '' &&
+      this.ddnSelectedRole.name !== undefined &&
+      this.ddnSelectedRole.name !== '' &&
+      this.ddnSelectedRole.name != null &&
+      filteredRolePermissions.Permissions.length > 0
+    ) {
+      filteredRolePermissions.RoleId = this.ddnSelectedRole.id;
+      filteredRolePermissions.RoleName = this.ddnSelectedRole.name;
+      this.userService
+        .updateRolePermissions(
+          this.setting.getBaseUrl() +
           GLOBAL.API_Permissions_UpdatePermissionsOnSelectedRole,
-        filteredRolePermissions
-      )
-      .subscribe(() => {
-        this.editRole = false;
-        this.toastr.success('Permissions Updated Successfully!!!');
-        this.loadingPermission = false;
-        this.modalPermission.hide();
-        this.getUserRoles();
-      });
-  } else {
-    this.loadingPermission = false;
-    this.toastr.warning('Role Name Or Permissions Not Set!!!');
+          filteredRolePermissions
+        )
+        .subscribe(() => {
+          this.editRole = false;
+          this.toastr.success('Permissions Updated Successfully!!!');
+          this.loadingPermission = false;
+          this.modalPermission.hide();
+          this.getUserRoles();
+        });
+    } else {
+      this.loadingPermission = false;
+      this.toastr.warning('Role Name Or Permissions Not Set!!!');
+    }
   }
-}
 
   EditRole() {
     this.editRole = !this.editRole;
+  }
+  onSearchChange(value: string) {
+    const users =  [...this.userDetails];
+    this.userDetails = users.filter(val => val.FirstName.toLocaleLowerCase().includes(value.toLocaleLowerCase()));
   }
 
   ngOnDestroy(): void {
@@ -1429,8 +1450,8 @@ this.EditOrderScheduleRolePermission.forEach(element => {
 
 // tslint:disable-next-line:class-name
 export interface iPermissions {
- RoleName: string;
- Permissions: any[];
+  RoleName: string;
+  Permissions: any[];
 }
 
 // tslint:disable-next-line:class-name

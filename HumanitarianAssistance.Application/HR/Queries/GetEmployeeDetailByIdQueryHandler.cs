@@ -68,10 +68,11 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                             ResignedReason = x.EmployeeProfessionalDetail.ResignationReason,
                                             Terminated = x.EmployeeProfessionalDetail.FiredOn == null ? "No": "Yes",
                                             TerminatedOn = x.EmployeeProfessionalDetail.FiredOn != null ? x.EmployeeProfessionalDetail.FiredOn.Value.ToShortDateString() : "",
-                                            TerminationReason = x.EmployeeProfessionalDetail.ResignationReason,
+                                            TerminationReason = x.EmployeeProfessionalDetail.FiredReason,
                                             OfficeId =  x.EmployeeProfessionalDetail.OfficeId,
                                             IsResigned = x.IsResigned,
-                                            ResignationStatus = x.ResignationStatus
+                                            ResignationStatus = x.ResignationStatus,
+                                            Tenure = calculateTenure(x.EmployeeProfessionalDetail.HiredOn, x.EmployeeProfessionalDetail.FiredOn, x.IsResigned, x.EmployeeID)
                                         }).FirstOrDefaultAsync();
 
                 if(result == null)
@@ -88,5 +89,75 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
             return response;
         }
+
+        private string calculateTenure(DateTime? d1, DateTime? d2, bool IsResigned, int EmployeeId) {
+            if (d2 == null && !IsResigned) {
+                d2 = DateTime.Now;
+            } 
+            else if(d2 == null && IsResigned) 
+            {
+                var resignDetail = _dbContext.EmployeeResignationDetail.FirstOrDefault(x=>x.IsDeleted == false && x.EmployeeID == EmployeeId);
+                if(resignDetail != null) {
+                    d2 = resignDetail.ResignDate;
+                } else {
+                    d2 = DateTime.Now;
+                }
+            }
+            int[] monthDay = new int[12] { 31, -1, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+            DateTime fromDate;
+            DateTime toDate;
+            int year = 0;
+            int month = 0;
+            int day = 0;
+            
+            if (d1 > d2)
+            {
+                fromDate = d2.Value;
+                toDate = d1.Value;
+            }
+            else
+            {
+                fromDate = d1.Value;
+                toDate = d2.Value;
+            }
+            var increment = 0; 
+            if (fromDate.Day > toDate.Day)
+            { 
+                increment = monthDay[fromDate.Month - 1]; 
+            }
+            if (increment== -1)
+            {
+                if (DateTime.IsLeapYear(fromDate.Year))
+                {
+                    increment = 29;
+                } 
+                else
+                {
+                    increment = 28;
+                }
+            }
+            if (increment != 0)
+            {    
+                day = (toDate.Day+ increment) - fromDate.Day;
+                increment = 1; 
+            }
+            else
+            {       
+                day = toDate.Day - fromDate.Day;
+            }
+
+            if ((fromDate.Month + increment) > toDate.Month)
+            {   
+                month = (toDate.Month+ 12) - (fromDate.Month + increment);
+                increment = 1;
+            }
+            else
+            {    
+                month = (toDate.Month) - (fromDate.Month + increment);
+                increment = 0;
+            }
+            year = toDate.Year - (fromDate.Year + increment);
+            return $"{year} Years {month} Months {day} Days";
+        } 
     }
 }
