@@ -61,7 +61,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                             obj.IsDeleted = false;
                             obj.OfficeId = officeId;
                             obj.AttendanceGroupId = request.AttendanceGroupId;
-                            payrollMonthlyHourDetailsAdd.Add(obj);
+                            await _dbContext.PayrollMonthlyHourDetail.AddAsync(obj);
                         }
                         else
                         {

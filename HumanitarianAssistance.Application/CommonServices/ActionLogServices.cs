@@ -16,6 +16,8 @@ namespace HumanitarianAssistance.Application.CommonServices {
             try {
 
                 AuditLog auditDetails = new AuditLog () {
+                    CreatedById = model.EmployeeId.ToString(),
+                    CreatedDate = DateTime.UtcNow,
                     TypeOfEntity = model.TypeOfEntity,
                     EntityId = model.EntityId,
                     ActionTypeId = model.ActionTypeId,
