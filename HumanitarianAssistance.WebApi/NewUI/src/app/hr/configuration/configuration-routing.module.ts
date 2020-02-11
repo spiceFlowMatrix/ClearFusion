@@ -6,6 +6,7 @@ import { GeneralComponent } from './components/general/general.component';
 import { ExitInterviewQuestionsComponent } from './components/exit-interview-questions/exit-interview-questions.component';
 import { LeaveTypeComponent } from './components/leave-type/leave-type.component';
 import { AppraisalConfigComponent } from './components/appraisal-config/appraisal-config.component';
+import { AttendanceGroupMasterComponent } from './components/attendance-group-master/attendance-group-master.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,9 @@ const routes: Routes = [
       },
       {
         path: 'appraisal-questions', component: AppraisalConfigComponent
+      },
+      {
+        path: 'attendance-groups', component: AttendanceGroupMasterComponent
       },
       {
         path: '', redirectTo: 'general', pathMatch: 'full'

@@ -131,4 +131,10 @@ export class EmployeeSalaryConfigService {
         this.appurl.getApiUrl() + GLOBAL.API_HR_IncrementDecrementEmployeesSalary, model
       );
     }
+
+    getPayrollAdministrationDetailById(model) {
+      return this.globalService.post(
+        this.appurl.getApiUrl() + GLOBAL.API_HR_GetPayrollAdministrationDetailById, model
+      );
+    }
 }
