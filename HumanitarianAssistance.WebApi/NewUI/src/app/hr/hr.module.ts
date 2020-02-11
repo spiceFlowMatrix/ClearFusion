@@ -1,4 +1,4 @@
-import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
+
 import { AssignLeaveComponent } from './components/employee-leave/assign-leave/assign-leave.component';
 import { EmployeeLeaveAddComponent } from './components/employee-leave/employee-leave-add/employee-leave-add.component';
 import { NgModule } from '@angular/core';
@@ -58,11 +58,12 @@ import { AddBonusComponent } from './components/employee-salary-config/add-bonus
 import { AddFineComponent } from './components/employee-salary-config/add-fine/add-fine.component';
 import { EmployeePensionComponent } from './components/employee-pension/employee-pension.component';
 import { AddEmployeeComponent } from './components/add-employee/add-employee.component';
-import { SetEmployeeAttendanceComponent } from './components/set-employee-attendance/set-employee-attendance.component';
-import {NgxMaterialTimepickerModule} from '../../../node_modules/ngx-material-timepicker';
 import { EmployeeAdvanceListComponent } from './components/employee_advance/employee-advance-list/employee-advance-list.component';
 import { NewAdvanceRequestComponent } from './components/employee_advance/new-advance-request/new-advance-request.component';
 import { AdvanceHistoryComponent } from './components/employee_advance/advance-history/advance-history.component';
+import { SetEmployeeAttendanceComponent } from './components/set-employee-attendance/set-employee-attendance.component';
+import {NgxMaterialTimepickerModule} from '../../../node_modules/ngx-material-timepicker';
+import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
@@ -73,10 +74,11 @@ import { AddOpeningPensionComponent } from './components/add-employee/add-openin
 import { IncrementDecrementSalaryComponent } from './components/employee-salary-config/increment-decrement-salary/increment-decrement-salary.component';
 import { AddHistoryOutsideOrganizationComponent } from './components/employee-history/add-history-outside-organization/add-history-outside-organization.component';
 import { EditEmployeeAttendanceComponent } from './components/employee-attendance/edit-employee-attendance/edit-employee-attendance.component';
-import { EmployeeTerminationComponent } from './components/employee-termination/employee-termination.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { AdministerPayrollComponent } from './components/administer-payroll/administer-payroll.component';
 import { EmployeeAnalyticalComponent } from './components/employee-analytical/employee-analytical.component';
+import { EmployeeTerminationComponent } from './components/employee-termination/employee-termination.component';
+
 
 @NgModule({
   declarations: [
