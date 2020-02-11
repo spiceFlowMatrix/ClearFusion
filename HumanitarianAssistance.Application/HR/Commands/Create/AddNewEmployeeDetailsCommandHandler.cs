@@ -58,7 +58,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create {
                 //  SexName = request.SexName,
                 DateOfBirth = request.EmployeeBasicDetail.DateOfBirth.ToString (),
                 // Age = request.Age,
-                PlaceOfBirth = request.EmployeeBasicDetail.BirthPlace.ToString(),
+                PlaceOfBirth = request.EmployeeBasicDetail.BirthPlace,
                 HigherQualificationId = request.EmployeeBasicDetail.Qualification,
                 // HigherQualificationName = request.HigherQualificationName,
                 ProfessionId = request.EmployeeBasicDetail.Profession,
