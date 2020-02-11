@@ -62,4 +62,28 @@ export class StaticUtilities {
   // Here January is 0 based
   // return new Date(year, month+1, 0).getDate();
   };
+
+  convert12hTimeToHours(time12h): number {
+    const [time, modifier] = time12h.split(' ');
+    let [hours, minutes] = time.split(':');
+    if (hours === '12') {
+      hours = '00';
+    }
+    if (modifier === 'PM') {
+      hours = parseInt(hours, 10) + 12;
+    }
+    return hours;
+  }
+
+  convert12hTimeToMinutes(time12h): number {
+    const [time, modifier] = time12h.split(' ');
+    let [hours, minutes] = time.split(':');
+    if (hours === '12') {
+      hours = '00';
+    }
+    if (modifier === 'PM') {
+      hours = parseInt(hours, 10) + 12;
+    }
+    return minutes;
+  }
 }
