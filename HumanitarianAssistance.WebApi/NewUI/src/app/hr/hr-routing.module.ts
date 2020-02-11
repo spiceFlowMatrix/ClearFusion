@@ -1,10 +1,11 @@
 import { AddEmployeeComponent } from './components/add-employee/add-employee.component';
-import { AddContractComponent } from './components/employee-contract/add-contract/add-contract.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { EntryComponentComponent } from './components/entry-component/entry-component.component';
 import { EmployeeListComponent } from './components/employee-list/employee-list.component';
 import { EmployeeControlPanelComponent } from './components/employee-control-panel/employee-control-panel.component';
+import { AddEmployeeAppraisalComponent } from './components/employee-appraisal/add-employee-appraisal/add-employee-appraisal.component';
+import { EmployeeAppraisalComponent } from './components/employee-appraisal/employee-appraisal.component';
 
 const routes: Routes = [
   {
@@ -16,8 +17,15 @@ const routes: Routes = [
         component: EmployeeControlPanelComponent
       },
       { path: 'employees', component: EmployeeListComponent },
-      { path: 'addEmployee', component: AddEmployeeComponent }
-
+      { path: 'addEmployee', component: AddEmployeeComponent },
+      {
+        path: 'employee/:id/addAppraisal',
+        component: AddEmployeeAppraisalComponent
+      },
+      {
+        path: 'employee/:id/employeeAppraisal',
+        component: EmployeeAppraisalComponent
+      }
     ]
   },
   {
