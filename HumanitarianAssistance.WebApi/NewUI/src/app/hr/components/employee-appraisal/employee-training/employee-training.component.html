@@ -1,0 +1,75 @@
+<div>
+  <h1 mat-dialog-title>
+      Add Training
+      <button mat-icon-button [mat-dialog-close] class="pull-right">
+    <mat-icon aria-label="clear">clear</mat-icon>
+  </button>
+  </h1>
+  <form class="example-form" [formGroup]="trainingDetailForm" (ngSubmit)="onFormSubmit(trainingDetailForm.value)">
+      <div mat-dialog-content>
+          <div class="row">
+              <div class="col-sm-12">
+                  <div class="row">
+                      <div class="col-lg-4 col-sm-4">
+                          <mat-form-field>
+                            <mat-label>Training program based on</mat-label>
+                            <mat-select formControlName="TrainingProgramBasedOn" name="TrainingProgramBasedOn">
+                              <mat-option *ngFor="let item of trainingProgram" [value]="item.value">
+                                {{item.value}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                      </div>
+                      <div class="col-lg-4 col-sm-4">
+                          <mat-form-field class="example-full-width">
+                              <input matInput formControlName="Program" placeholder="Program" />
+                          </mat-form-field>
+                      </div>
+                      <div class="col-lg-4 col-sm-4">
+                          <mat-form-field>
+                            <mat-label>Participated</mat-label>
+                            <mat-select formControlName="Participated" name="Participated">
+                              <mat-option *ngFor="let item of yesNoItem" [value]="item.value">
+                                {{item.value}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-lg-4 col-sm-4">
+                          <mat-form-field>
+                            <mat-label>Catch Level</mat-label>
+                            <mat-select formControlName="CatchLevel" name="CatchLevel">
+                              <mat-option *ngFor="let item of catchLevelItem" [value]="item.value">
+                                {{item.value}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                      </div>
+                      <div class="col-lg-4 col-sm-4">
+                          <mat-form-field>
+                            <mat-label>Refresher trm</mat-label>
+                            <mat-select formControlName="RefresherTrm" name="RefresherTrm">
+                              <mat-option *ngFor="let item of yesNoItem" [value]="item.value">
+                                {{item.value}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                      </div>
+                      <div class="col-lg-4 col-sm-4">
+                          <mat-form-field class="example-full-width">
+                              <input matInput formControlName="OtherRecommemenedTraining" placeholder="Other Recommended Trainings"/>
+                          </mat-form-field>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div mat-dialog-actions class="pull-right">
+              <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+              <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
+              <hum-button (click)="onCancelPopup()" [type]="'cancel'" [text]="'cancel'"></hum-button>
+          </div>
+      </div>
+  </form>
+</div>

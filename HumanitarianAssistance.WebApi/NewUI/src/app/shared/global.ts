@@ -791,6 +791,13 @@ export class GLOBAL {
 
   //#endregion
 
+  //#region "employee APPRAISAL"
+  public static API_EmployeeDetail_GetEmployeeAppraisalByEmployeeId = 'EmployeeDetail/GetEmployeeAppraisalByEmployeeId';
+  public static API_Code_GetAppraisalQuestions = 'Code/GetAppraisalQuestions';
+  public static API_EmployeeDetail_GetFilteredEmployeeList = 'EmployeeDetail/GetFilteredEmployeeList';
+  public static API_EmployeeDetail_AddAppraisalDetail = 'EmployeeDetail/AddAppraisalDetail';
+
+  //#endregion
 }
 
 
