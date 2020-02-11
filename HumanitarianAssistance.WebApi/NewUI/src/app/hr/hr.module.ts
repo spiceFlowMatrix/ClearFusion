@@ -76,6 +76,7 @@ import { EditEmployeeAttendanceComponent } from './components/employee-attendanc
 import { EmployeeTerminationComponent } from './components/employee-termination/employee-termination.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { AdministerPayrollComponent } from './components/administer-payroll/administer-payroll.component';
+import { EmployeeAnalyticalComponent } from './components/employee-analytical/employee-analytical.component';
 
 @NgModule({
   declarations: [
@@ -116,7 +117,8 @@ import { AdministerPayrollComponent } from './components/administer-payroll/admi
     AddHistoryOutsideOrganizationComponent,
     EditEmployeeAttendanceComponent,
     EmployeeTerminationComponent,
-    AdministerPayrollComponent
+    AdministerPayrollComponent,
+    EmployeeAnalyticalComponent
   ],
   imports: [
     MatFormFieldModule,
