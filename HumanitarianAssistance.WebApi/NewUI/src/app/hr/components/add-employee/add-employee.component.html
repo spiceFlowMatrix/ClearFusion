@@ -143,9 +143,17 @@
                         </div>
                         <div class="row">
                             <div class="col-md-3">
-                                <lib-hum-dropdown formControlName="BirthPlace" [validation]="
+                                <!-- <lib-hum-dropdown formControlName="BirthPlace" [validation]="
                     employeeDetailForm.controls['BirthPlace'].hasError('required')
-                  " [options]="provinceList$" [placeHolder]="'Birth Place'"></lib-hum-dropdown>
+                  " [options]="provinceList$" [placeHolder]="'Birth Place'"></lib-hum-dropdown> -->
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="BirthPlace" placeholder="Birth Place" />
+                                    <mat-error *ngIf="
+      employeeDetailForm.controls['BirthPlace'].hasError(
+        'required'
+      )
+    ">Required</mat-error>
+                                </mat-form-field>
                             </div>
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">

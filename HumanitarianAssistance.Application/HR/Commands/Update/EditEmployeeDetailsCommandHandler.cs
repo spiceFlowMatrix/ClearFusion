@@ -59,7 +59,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update {
                         employeeinfo.MaritalStatusId = request.EmployeeBasicDetail.MaritalStatus;
                         employeeinfo.University = request.EmployeeBasicDetail.University;
                         employeeinfo.PassportNo = request.EmployeeBasicDetail.PassportNumber;
-                        employeeinfo.BirthPlace = request.EmployeeBasicDetail.BirthPlace.ToString();
+                        employeeinfo.BirthPlace = request.EmployeeBasicDetail.BirthPlace;
                         employeeinfo.IssuePlace = request.EmployeeBasicDetail.IssuePlace;
                         employeeinfo.GradeId = request.EmployeeProfessionalDetails.JobGrade;
                         await _dbContext.SaveChangesAsync ();
