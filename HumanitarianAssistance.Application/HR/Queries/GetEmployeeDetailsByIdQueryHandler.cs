@@ -87,7 +87,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                             DocumentGUID = x.DocumentGUID + x.Extension,
                             MaritalStatus = x.MaritalStatusId,
                             University = x.University,
-                            BirthPlace = x.BirthPlace,
+                            BirthPlace = Convert.ToInt32(x.BirthPlace),
                             IssuePlace = x.IssuePlace,
                             PassportNo = x.PassportNo,
                             TinNumber = x.EmployeeProfessionalDetail.TinNumber

@@ -1,41 +1,41 @@
-import { AddFineComponent } from "./add-fine/add-fine.component";
-import { AddBonusComponent } from "./add-bonus/add-bonus.component";
-import { AddSalaryConfigurationComponent } from "./add-salary-configuration/add-salary-configuration.component";
-import { IDropDownModel } from "./../../../store/models/purchase";
-import { Observable } from "rxjs/Observable";
-import { Component, OnInit, ViewEncapsulation } from "@angular/core";
-import { of, observable, empty, ReplaySubject } from "rxjs";
-import { TableActionsModel } from "projects/library/src/public_api";
-import { ToastrService } from "ngx-toastr";
-import { MatDialog } from "@angular/material";
-import { Month, TransactionType } from "src/app/shared/enum";
-import { ActivatedRoute } from "@angular/router";
-import { EmployeeSalaryConfigService } from "../../services/employee-salary-config.service";
-import { StaticUtilities } from "src/app/shared/static-utilities";
-import "rxjs/add/observable/empty";
-import { AddAdvanceRecoveryComponent } from "./add-advance-recovery/add-advance-recovery.component";
-import { AttendanceService } from "../../services/attendance.service";
-import { CommonLoaderService } from "src/app/shared/common-loader/common-loader.service";
-import { AppUrlService } from "src/app/shared/services/app-url.service";
-import { GlobalSharedService } from "src/app/shared/services/global-shared.service";
-import { GLOBAL } from "src/app/shared/global";
-import { takeUntil } from "rxjs/operators";
+import { AddFineComponent } from './add-fine/add-fine.component';
+import { AddBonusComponent } from './add-bonus/add-bonus.component';
+import { AddSalaryConfigurationComponent } from './add-salary-configuration/add-salary-configuration.component';
+import { IDropDownModel } from './../../../store/models/purchase';
+import { Observable } from 'rxjs/Observable';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { of, observable, empty, ReplaySubject } from 'rxjs';
+import { TableActionsModel } from 'projects/library/src/public_api';
+import { ToastrService } from 'ngx-toastr';
+import { MatDialog } from '@angular/material';
+import { Month, TransactionType } from 'src/app/shared/enum';
+import { ActivatedRoute } from '@angular/router';
+import { EmployeeSalaryConfigService } from '../../services/employee-salary-config.service';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
+import 'rxjs/add/observable/empty';
+import { AddAdvanceRecoveryComponent } from './add-advance-recovery/add-advance-recovery.component';
+import { AttendanceService } from '../../services/attendance.service';
+import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { GLOBAL } from 'src/app/shared/global';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: "app-employee-salary-config",
-  templateUrl: "./employee-salary-config.component.html",
-  styleUrls: ["./employee-salary-config.component.scss"]
+  selector: 'app-employee-salary-config',
+  templateUrl: './employee-salary-config.component.html',
+  styleUrls: ['./employee-salary-config.component.scss']
 })
 export class EmployeeSalaryConfigComponent implements OnInit {
   accumulatedHeaders$ = of([
-    "Salary Component",
-    "Salary Allowance",
-    "Salary Deduction"
+    'Salary Component',
+    'Salary Allowance',
+    'Salary Deduction'
   ]);
   bonusAndFineHeaders$ = of([
-    "Salary Component",
-    "Salary Allowance",
-    "Salary Deduction"
+    'Salary Component',
+    'Salary Allowance',
+    'Salary Deduction'
   ]);
   accumulatedList$: Observable<any[]>;
   bonusAndFineList$: Observable<any[]>;
@@ -47,14 +47,14 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   employeeSalary: IEmployeeSalary;
   isSalaryApproved = false;
   isNoError = true;
-  errorMessage = "";
+  errorMessage = '';
   hideColumsBounusFine = of({
-    headers: ["Salary Component", "Salary Allowance", "Salary Deduction"],
-    items: ["SalaryComponent", "SalaryAllowance", "SalaryDeduction"]
+    headers: ['Salary Component', 'Salary Allowance', 'Salary Deduction'],
+    items: ['SalaryComponent', 'SalaryAllowance', 'SalaryDeduction']
   });
   hideColumsAccumulatedSalaryHeads = of({
-    headers: ["Salary Component", "Salary Allowance", "Salary Deduction"],
-    items: ["SalaryComponent", "SalaryAllowance", "SalaryDeduction"]
+    headers: ['Salary Component', 'Salary Allowance', 'Salary Deduction'],
+    items: ['SalaryComponent', 'SalaryAllowance', 'SalaryDeduction']
   });
   employeeCurrencyAndAmount: any;
   showGenerateAttendanceButton = false;
@@ -69,22 +69,22 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     private attendanceService: AttendanceService,
     private commonLoader: CommonLoaderService
   ) {
-    this.selectedMonth = { name: "SELECT MONTH", value: 0 };
+    this.selectedMonth = { name: 'SELECT MONTH', value: 0 };
     this.activatedRoute.params.subscribe(params => {
-      this.employeeId = +params["id"];
+      this.employeeId = +params['id'];
     });
   }
 
   ngOnInit() {
     this.actions = {
       items: {
-        button: { status: false, text: "" },
+        button: { status: false, text: '' },
         delete: true,
         download: false,
         edit: false
       },
       subitems: {
-        button: { status: false, text: "" },
+        button: { status: false, text: '' },
         delete: false,
         download: false
       }
@@ -92,7 +92,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     this.getAllMonthList();
     this.employeeCurrencyAndAmount = {
       CurrencyId: 0,
-      CurrencyName: "-",
+      CurrencyName: '-',
       MonthlyAmount: 0,
       PayrollId: 0
     };
@@ -111,7 +111,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     if (this.selectedMonth.value === 0) {
       this.isNoError = false;
       this.errorMessage =
-        "Please select month for which payroll is to be generated";
+        'Please select month for which payroll is to be generated';
     }
   }
 
@@ -119,10 +119,10 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     this.monthlySalaryBreakdown = {
       GrossSalary: 0,
       HourlyRate: 0,
-      Month: "",
+      Month: '',
       NetSalary: 0,
       SalaryPaidAmount: 0,
-      Status: ""
+      Status: ''
     };
     this.accumulatedList$ = of();
     this.bonusAndFineList$ = of();
@@ -132,7 +132,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   addSalaryConfiguration(): void {
     // NOTE: It open AddSalaryConfiguration dialog and passed the data into the AddSalaryConfigurationComponent Model
     const dialogRef = this.dialog.open(AddSalaryConfigurationComponent, {
-      width: "500px",
+      width: '500px',
       autoFocus: false,
       data: {
         PayrollId: this.employeeCurrencyAndAmount.PayrollId,
@@ -156,17 +156,17 @@ export class EmployeeSalaryConfigComponent implements OnInit {
 
   // #region Add Bonus
   addBonus(): void {
-    if (this.monthlySalaryBreakdown.Month === "" || this.isSalaryApproved) {
+    if (this.monthlySalaryBreakdown.Month === '' || this.isSalaryApproved) {
       return;
     }
 
     if (this.selectedMonth.value === 0) {
-      this.toastr.warning("Please select Month");
+      this.toastr.warning('Please select Month');
       return;
     }
     // NOTE: It open AddBonus dialog and passed the data into the AddBonusComponent Model
     const dialogRef = this.dialog.open(AddBonusComponent, {
-      width: "500px",
+      width: '500px',
       autoFocus: false,
       data: {
         EmployeeId: this.employeeId,
@@ -183,16 +183,16 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   //#endregion
   // #region Add Bonus
   addFine(): void {
-    if (this.monthlySalaryBreakdown.Month === "" || this.isSalaryApproved) {
+    if (this.monthlySalaryBreakdown.Month === '' || this.isSalaryApproved) {
       return;
     }
     if (this.selectedMonth.value === 0) {
-      this.toastr.warning("Please select Month");
+      this.toastr.warning('Please select Month');
       return;
     }
     // NOTE: It open AddFine dialog and passed the data into the AddFineComponent Model
     const dialogRef = this.dialog.open(AddFineComponent, {
-      width: "500px",
+      width: '500px',
       autoFocus: false,
       data: {
         EmployeeId: this.employeeId,
@@ -211,7 +211,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   //#region "Get all month list for ExperienceInMonth dropdown"
   getAllMonthList() {
     const monthDropDown: IDropDownModel[] = [];
-    for (let i = Month["January"]; i <= Month["December"]; i++) {
+    for (let i = Month['January']; i <= Month['December']; i++) {
       monthDropDown.push({ name: Month[i], value: i });
     }
     this.monthsList$ = of(monthDropDown);
@@ -228,7 +228,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   }
   empActionEvents(event: any) {
     console.log(event.item);
-    this.errorMessage = "";
+    this.errorMessage = '';
     this.isNoError = true;
   }
 
@@ -270,17 +270,17 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   }
 
   bonusFineEvents(event) {
-    if (event.type === "delete") {
+    if (event.type === 'delete') {
       this.salaryConfigService
         .deleteEmployeeBonusFineSalaryHead(event.item.Id)
         .subscribe(
           x => {
             if (x) {
-              this.toastr.success("Item Deleted Successfully");
+              this.toastr.success('Item Deleted Successfully');
               this.getEmployeeBonusFineSalaryHead();
               this.getEmployeePayroll();
             } else {
-              this.toastr.warning("Please try again");
+              this.toastr.warning('Please try again');
             }
           },
           error => {
@@ -358,14 +358,14 @@ export class EmployeeSalaryConfigComponent implements OnInit {
           }
         } else {
           this.isNoError = false;
-          this.toastr.warning("Cannot retrieve data. Please try again");
+          this.toastr.warning('Cannot retrieve data. Please try again');
         }
       },
       error => {
         this.onInitForm();
         this.isNoError = false;
         this.errorMessage = error;
-        if (error === "Employee has no attendance for payroll") {
+        if (error === 'Employee has no attendance for payroll') {
           this.showGenerateAttendanceButton = true;
         } else {
           this.showGenerateAttendanceButton = false;
@@ -379,7 +379,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   }
 
   approveSalary() {
-    if (this.monthlySalaryBreakdown.Month === "" || this.isSalaryApproved) {
+    if (this.monthlySalaryBreakdown.Month === '' || this.isSalaryApproved) {
       return;
     }
 
@@ -409,9 +409,9 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       x => {
         if (x) {
           this.getEmployeePayroll();
-          this.toastr.success("Salary Approved");
+          this.toastr.success('Salary Approved');
         } else {
-          this.toastr.warning("Please try again");
+          this.toastr.warning('Please try again');
         }
       },
       error => {
@@ -421,17 +421,17 @@ export class EmployeeSalaryConfigComponent implements OnInit {
   }
 
   addAdvance() {
-    if (this.monthlySalaryBreakdown.Month === "" || this.isSalaryApproved) {
+    if (this.monthlySalaryBreakdown.Month === '' || this.isSalaryApproved) {
       return;
     }
 
     if (this.selectedMonth.value === 0) {
-      this.toastr.warning("Please select Month");
+      this.toastr.warning('Please select Month');
       return;
     }
     // NOTE: It open AddFine dialog and passed the data into the AddFineComponent Model
     const dialogRef = this.dialog.open(AddAdvanceRecoveryComponent, {
-      width: "500px",
+      width: '500px',
       autoFocus: false,
       data: {
         EmployeeId: this.employeeId,
@@ -459,9 +459,9 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       x => {
         if (x) {
           this.getEmployeePayroll();
-          this.toastr.success("Salary Revoked");
+          this.toastr.success('Salary Revoked');
         } else {
-          this.toastr.warning("Please try again");
+          this.toastr.warning('Please try again');
         }
       },
       error => {
@@ -480,7 +480,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
     this.attendanceService.markWholeMonthAttendance(model).subscribe(
       res => {
         if (res) {
-          this.toastr.success("Attendance Marked Successfully!");
+          this.toastr.success('Attendance Marked Successfully!');
           this.getEmployeePayroll();
           this.commonLoader.hideLoader();
         } else {
@@ -497,13 +497,13 @@ export class EmployeeSalaryConfigComponent implements OnInit {
 
   //#region "Download pdf of monthly pay slip"
   onExportMonthlyPaySlipPdf() {
-    if (this.monthlySalaryBreakdown.Month === "" || this.isSalaryApproved) {
-      return;
-    }
+    // if (this.monthlySalaryBreakdown.Month === '' || this.isSalaryApproved) {
+    //   return;
+    // }
 
-    if (this.isSalaryApproved) {
-      return;
-    }
+    // if (this.isSalaryApproved) {
+    //   return;
+    // }
     const data: any = {
       EmployeeId: this.employeeId,
       Month: this.selectedMonth.value
