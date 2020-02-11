@@ -75,6 +75,8 @@ import { AddHistoryOutsideOrganizationComponent } from './components/employee-hi
 import { EditEmployeeAttendanceComponent } from './components/employee-attendance/edit-employee-attendance/edit-employee-attendance.component';
 import { EmployeeTerminationComponent } from './components/employee-termination/employee-termination.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { AdministerPayrollComponent } from './components/administer-payroll/administer-payroll.component';
+import { EmployeeAnalyticalComponent } from './components/employee-analytical/employee-analytical.component';
 
 @NgModule({
   declarations: [
@@ -114,7 +116,9 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     IncrementDecrementSalaryComponent,
     AddHistoryOutsideOrganizationComponent,
     EditEmployeeAttendanceComponent,
-    EmployeeTerminationComponent
+    EmployeeTerminationComponent,
+    AdministerPayrollComponent,
+    EmployeeAnalyticalComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -191,7 +195,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     AddAdvanceRecoveryComponent,
     AddHistoryOutsideOrganizationComponent,
     EditEmployeeAttendanceComponent,
-    EmployeeTerminationComponent
+    EmployeeTerminationComponent,
+    AdministerPayrollComponent
   ]
 })
 export class HrModule {
