@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { IAddVoucherModel } from '../../models/voucher.model';
 import { IResponseData } from '../../models/status-code.model';
 import { VoucherType } from 'src/app/shared/enum';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
 
 @Component({
   selector: 'app-add-voucher',
@@ -20,14 +21,22 @@ export class AddVoucherComponent implements OnInit {
   journalList: any[];
   voucherTypeList: any[];
   isFormSubmitted = false;
+  voucherNo: any;
+  errorMessage: string;
 
   constructor(private router: Router, private routeActive: ActivatedRoute,
     public fb: FormBuilder,
     public voucherService: VoucherService,
-    public toastr: ToastrService) { }
+    public toastr: ToastrService) {
+
+    this.routeActive.url.subscribe(params => {
+      this.voucherNo = +params[0].path;
+    });
+  }
 
   ngOnInit() {
     this.addVoucherForm = this.fb.group({
+      VoucherNo: [null],
       CurrencyId: [''],
       ChequeNo: [''],
       VoucherDate: [new Date(), [Validators.required]],
@@ -43,12 +52,15 @@ export class AddVoucherComponent implements OnInit {
     this.getOfficeList();
     this.getJournalList();
     this.getVoucherTypeList();
+    if (this.voucherNo && this.voucherNo !== NaN) {
+      this.getVoucherByVoucherNo();
+    }
   }
 
   //#endregion
 
   cancelButtonClicked() {
-    this.router.navigate(['../../vouchers'], { relativeTo: this.routeActive });
+    window.history.back();
   }
 
   //#region "addVoucher"
@@ -82,12 +94,12 @@ export class AddVoucherComponent implements OnInit {
             this.toastr.success('Voucher is created successfully');
           } else {
             this.isFormSubmitted = false;
-            this.toastr.error(response.message);
+            this.errorMessage = response.message;
           }
         },
         (error) => {
           this.isFormSubmitted = false;
-          this.toastr.error('Someting went wrong');
+          this.errorMessage = error;
         }
       );
     }
@@ -98,7 +110,7 @@ export class AddVoucherComponent implements OnInit {
   onAddVoucher(data): void {
 
     const voucherData: IAddVoucherModel = {
-      VoucherNo: data.value.VoucherNo,
+      VoucherNo: this.voucherNo !== NaN ? this.voucherNo : 0,
       CurrencyId: data.value.CurrencyId,
       VoucherDate: data.value.VoucherDate,
       ChequeNo: data.value.ChequeNo,
@@ -107,13 +119,39 @@ export class AddVoucherComponent implements OnInit {
       VoucherTypeId: data.value.VoucherTypeId,
       OfficeId: data.value.OfficeId,
       TimezoneOffset: new Date().getTimezoneOffset()
-      // ProjectId: data.value.ProjectId,
-      // BudgetLineId: data.value.BudgetLineId,
-      // FinancialYearId: data.value.FinancialYearId, // calculate on backend
     };
-    this.addVoucher(voucherData);
+
+    if (this.voucherNo  && this.voucherNo !== NaN) {
+      this.editVoucherDetail(voucherData);
+    } else {
+      this.addVoucher(voucherData);
+    }
   }
   //#endregion
+
+  editVoucherDetail(data) {
+    if (this.addVoucherForm.valid) {
+
+      this.isFormSubmitted = true;
+      this.voucherService.EditVoucherDetailById(data).subscribe(
+        (response: IResponseData) => {
+          if (response.statusCode === 200) {
+            this.isFormSubmitted = false;
+            this.cancelButtonClicked();
+            this.toastr.success('Voucher updated successfully');
+            this.cancelButtonClicked();
+          } else {
+            this.isFormSubmitted = false;
+            this.errorMessage = response.message;
+          }
+        },
+        (error) => {
+          this.isFormSubmitted = false;
+          this.errorMessage = error;
+        }
+      );
+    }
+  }
 
   //#region "setDateTime"
   setDateTime(data): any {
@@ -130,7 +168,7 @@ export class AddVoucherComponent implements OnInit {
 
   getAllCurrency() {
     return this.voucherService.GetCurrencyList().subscribe(x => {
-      this.currencyList= [];
+      this.currencyList = [];
       x.data.forEach(ele => {
         this.currencyList.push({
           CurrencyId: ele.CurrencyId,
@@ -154,50 +192,79 @@ export class AddVoucherComponent implements OnInit {
           });
         }
       },
-      error => {}
+      error => { }
     );
   }
   //#endregion
 
   //#region "getJournalList"
- getJournalList() {
-  this.voucherService.GetJournalList().subscribe(
-    (response: IResponseData) => {
-      this.journalList = [];
-      if (response.statusCode === 200 && response.data !== null) {
-        response.data.forEach(element => {
-          this.journalList.push({
-            JournalCode: element.JournalCode,
-            JournalName: element.JournalName,
-            JournalType: element.JournalType
+  getJournalList() {
+    this.voucherService.GetJournalList().subscribe(
+      (response: IResponseData) => {
+        this.journalList = [];
+        if (response.statusCode === 200 && response.data !== null) {
+          response.data.forEach(element => {
+            this.journalList.push({
+              JournalCode: element.JournalCode,
+              JournalName: element.JournalName,
+              JournalType: element.JournalType
+            });
           });
-        });
-      }
-    },
-    error => {}
-  );
-}
-//#endregion
+        }
+      },
+      error => { }
+    );
+  }
+  //#endregion
 
-//#region "getVoucherTypeList"
-getVoucherTypeList() {
-  this.voucherService.GetVoucherTypeList().subscribe(
-    (response: IResponseData) => {
-      this.voucherTypeList = [];
-      if (response.statusCode === 200 && response.data !== null) {
-        response.data.forEach(element => {
-          this.voucherTypeList.push({
-            VoucherTypeId: element.VoucherTypeId,
-            VoucherTypeName: element.VoucherTypeName
+  //#region "getVoucherTypeList"
+  getVoucherTypeList() {
+    this.voucherService.GetVoucherTypeList().subscribe(
+      (response: IResponseData) => {
+        this.voucherTypeList = [];
+        if (response.statusCode === 200 && response.data !== null) {
+          response.data.forEach(element => {
+            this.voucherTypeList.push({
+              VoucherTypeId: element.VoucherTypeId,
+              VoucherTypeName: element.VoucherTypeName
+            });
           });
-        });
-      }
-    },
-    error => {}
-  );
-}
-//#endregion
+        }
+      },
+      error => { }
+    );
+  }
+  //#endregion
 
+  //#region "getVoucherByVoucherNo"
+  getVoucherByVoucherNo() {
+    this.errorMessage = '';
+    this.voucherService.GetVoucherDetailById(this.voucherNo).subscribe(
+      (response: IResponseData) => {
+        this.voucherTypeList = [];
+        if (response.statusCode === 200 && response.data !== null) {
+          this.addVoucherForm.patchValue({
+            VoucherNo: this.voucherNo,
+            CurrencyId: response.data.CurrencyId,
+            ChequeNo: response.data.ChequeNo,
+            VoucherDate: StaticUtilities.setLocalDate(response.data.VoucherDate),
+            Description: response.data.Description,
+            JournalCode: response.data.JournalCode,
+            VoucherTypeId: response.data.VoucherTypeId,
+            OfficeId: response.data.OfficeId,
+            ProjectId: response.data.ProjectId,
+          });
+        } else {
+          this.errorMessage = response.message;
+        }
+      },
+      error => {
+        this.toastr.warning(error);
+        this.errorMessage = error;
+      }
+    );
+  }
+  //#endregion
 }
 
 class DataSources {

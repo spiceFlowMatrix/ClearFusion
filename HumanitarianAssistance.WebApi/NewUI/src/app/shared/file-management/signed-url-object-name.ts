@@ -6,7 +6,7 @@ import { FileSourceEntityTypes } from '../enum';
 
     switch (pageId) {
       case FileSourceEntityTypes.Voucher:
-      objectName = 'voucher/';
+      objectName = 'voucher/' + entityId + '/';
       break;
       case FileSourceEntityTypes.StorePurchase:
       objectName = 'storepurchase/' + entityId + '/';

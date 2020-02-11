@@ -11,7 +11,9 @@
 </lib-sub-header-template>
 <mat-divider></mat-divider>
 
-
+<div class="alert alert-warning" *ngIf="errorMessage != '' && errorMessage != null" role="alert">
+  <p class="txt-center-align">{{errorMessage}}</p>
+</div>
 <div class="container-fluid">
   <form
     [formGroup]="addVoucherForm"

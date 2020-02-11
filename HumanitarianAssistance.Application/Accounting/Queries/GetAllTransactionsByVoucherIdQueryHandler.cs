@@ -38,9 +38,9 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                    .Select(x => new VoucherTransactionsModel
                                    {
                                        AccountNo = x.ChartOfAccountNewId,
-                                       Debit = (x.Debit != 0 && x.Debit != null) ? x.Debit : 0,
-                                       Credit = (x.Credit != 0 && x.Credit != null) ? x.Credit : 0,
-                                       Amount = (x.Debit != 0 && x.Debit != null) ? x.Debit : x.Credit,
+                                       Debit = (double)((x.Debit != 0 && x.Debit != null) ? Math.Round((decimal)x.Debit.Value, 2) : 0),
+                                       Credit = (double)((x.Credit != 0 && x.Credit != null) ? Math.Round((decimal)x.Credit.Value, 2) : 0),
+                                       Amount = (double)((x.Debit != 0 && x.Debit != null) ? Math.Round((decimal)x.Debit.Value,2 ) : Math.Round((decimal)x.Credit.Value, 2)),
                                        BudgetLineId = x.BudgetLineId,
                                        ProjectId = x.ProjectId,
                                        ProjectName= x.ProjectDetail != null ? x.ProjectDetail.ProjectName : "",

@@ -29,10 +29,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DocumentListingComponent } from 'projects/library/src/lib/components/document-listing/document-listing.component';
 import { AngularSplitModule } from 'angular-split';
 import { VoucherListingComponent } from './components/voucher-listing/voucher-listing.component';
-import { MatDividerModule, MatTableModule, MatListModule } from '@angular/material';
+import { MatDividerModule, MatTableModule, MatListModule, MatAutocompleteModule } from '@angular/material';
 import { SatDatepickerModule } from 'saturn-datepicker';
 import { AddVoucherComponent } from './components/add-voucher/add-voucher.component';
 import { VoucherDetailComponent } from './components/voucher-detail/voucher-detail.component';
+import { ModifyTransactionComponent } from './components/modify-transaction/modify-transaction.component';
+import { DocumentUploadComponent } from 'src/app/store/components/document-upload/document-upload.component';
+import { AddDocumentsComponent } from './components/add-documents/add-documents.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +47,9 @@ import { VoucherDetailComponent } from './components/voucher-detail/voucher-deta
     VoucherSummaryComponent,
     AddVoucherComponent,
     VoucherDetailComponent,
+    ModifyTransactionComponent,
+    DocumentUploadComponent,
+    AddDocumentsComponent,
   ],
   imports: [
     CommonModule,
@@ -75,6 +81,7 @@ import { VoucherDetailComponent } from './components/voucher-detail/voucher-deta
     SatDatepickerModule,
     MatTableModule,
     MatListModule,
+    MatAutocompleteModule,
     AngularSplitModule.forChild(),
   ],
   providers: [
@@ -82,7 +89,8 @@ import { VoucherDetailComponent } from './components/voucher-detail/voucher-deta
   ],
   entryComponents: [
     VoucherAddComponent,
-    DocumentListingComponent
+    DocumentListingComponent,
+    AddDocumentsComponent
   ]
 })
 export class VouchersModule { }

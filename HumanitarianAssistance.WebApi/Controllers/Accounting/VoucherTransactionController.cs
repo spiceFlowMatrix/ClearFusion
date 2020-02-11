@@ -97,7 +97,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
                 VoucherNos = VoucherNos
             };
 
-            var result= await _mediator.Send(command);
+            var result = await _mediator.Send(command);
             return Ok(result);
         }
 
@@ -109,12 +109,50 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
             DeleteSelectedVouchersCommand command = new DeleteSelectedVouchersCommand
             {
                 ModifiedDate = DateTime.UtcNow,
-                ModifiedById= userId,
+                ModifiedById = userId,
                 VoucherNoList = voucherNos
             };
 
             return await _mediator.Send(command);
         }
 
+        [HttpGet]
+        public async Task<object> GetFilteredInputLevelAccountList([FromQuery] string data)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            GetFilteredInputLevelAccountListQuery command = new GetFilteredInputLevelAccountListQuery
+            {
+                FilterValue = data
+            };
+
+            return await _mediator.Send(command);
+        }
+
+        [HttpGet]
+        public async Task<object> GetFilteredProjectList([FromQuery] string data)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            GetFilteredProjectListQuery command = new GetFilteredProjectListQuery
+            {
+                FilterValue = data
+            };
+            return await _mediator.Send(command);
+        }
+
+        [HttpPost]
+        public async Task<object> SaveTransactionList([FromBody] SaveTransactionListCommand transactions)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            transactions.CreatedById = userId;
+            return await _mediator.Send(transactions);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetFilteredBudgetLineList([FromBody] GetFilteredBudgetLineListQuery request)
+        {
+            var result =  await _mediator.Send(request);
+            return Ok(result);
+        }
     }
 }

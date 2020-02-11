@@ -1,9 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VoucherService } from '../../voucher.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ToastrService } from 'ngx-toastr';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
+import { startWith, map } from 'rxjs/operators';
+import { BudgetLineService } from 'src/app/dashboard/project-management/project-list/budgetlines/budget-line.service';
+import { IResponseData } from '../../models/status-code.model';
+import { TransactionType, VoucherType, FileSourceEntityTypes } from 'src/app/shared/enum';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
+import { GLOBAL } from 'src/app/shared/global';
+import { MatDialog } from '@angular/material/dialog';
+import { AddDocumentComponent } from 'src/app/store/components/document-upload/add-document.component';
+import { AddDocumentsComponent } from '../add-documents/add-documents.component';
+import { of } from 'rxjs/internal/observable/of';
+import { GlobalService } from 'src/app/shared/services/global-services.service';
 
 @Component({
   selector: 'app-voucher-detail',
@@ -19,26 +33,52 @@ export class VoucherDetailComponent implements OnInit {
   voucherDetail: any;
   displayedColumns: string[] = ['Type', 'AccountCode', 'Description', 'Amount', 'ProjectName', 'BudgetLineName', 'JobName'];
   ELEMENT_DATA: any[] = [];
+  documentList: any[] = [];
   isModifyTransactions = false;
   transactionDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
   selection = new SelectionModel<any>(true, []);
   addEditTransaction = false;
+  filterdOptionsAccountList: Observable<any[]>;
+  uploadedFiles: any[] = [];
+  accountList: any[] = [];
+  projectList: any[] = [];
+  budgetLineList: any[] = [];
+  typeList: any[] = [];
+  selectedAccount: any;
+  selectedProject: any;
+  VoucherTypeEnum = VoucherType;
+  filterdOptionsProjectList: Observable<any[]>;
+  hideUnitColums: Observable<{ headers?: string[], items?: string[] }>;
+
+  myControl = new FormControl();
+  options: string[] = ['One', 'Two', 'Three'];
+  filteredOptions: Observable<string[]>;
 
   constructor(private routeActive: ActivatedRoute,
     private router: Router, private voucherService: VoucherService,
-    private toastr: ToastrService) {
+    private toastr: ToastrService, private fb: FormBuilder,
+    private budgetLineService: BudgetLineService,
+    private globalSharedService: GlobalSharedService,
+    private appurl: AppUrlService, private dialog: MatDialog,
+    private globalService: GlobalService) {
     this.routeActive.url.subscribe(params => {
       this.voucherNo = +params[0].path;
     });
-    this.onFormInIt();
   }
 
   ngOnInit() {
+    this.onFormInIt();
     this.getDetailsByVoucherNo();
     this.getVoucherTransactionsByVoucherNo();
+    this.hideUnitColums = of({
+      headers: ['Name', 'Uploaded On'],
+      items: ['FileName', 'Date']
+    });
+    this.getDocumentList();
   }
 
   onFormInIt() {
+
     this.voucherDetail = {
       VoucherNo: null,
       CurrencyCode: null,
@@ -59,7 +99,13 @@ export class VoucherDetailComponent implements OnInit {
       FinancialYearName: null,
       IsVoucherVerified: null,
       IsExchangeGainLos: null,
+      OperationalType: null
     };
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
   }
 
   getDetailsByVoucherNo() {
@@ -91,16 +137,15 @@ export class VoucherDetailComponent implements OnInit {
   }
 
   onModifyTransactionsClick() {
-    this.isModifyTransactions = true;
-    this.displayedColumns = ['select', 'Type', 'AccountCode', 'Description', 'Amount', 'ProjectName', 'BudgetLineName', 'JobName'];
+    // this.isModifyTransactions = true;
+    // this.displayedColumns = ['select', 'Type', 'AccountCode', 'Description', 'Amount', 'ProjectName', 'BudgetLineName', 'JobName'];
+    this.router.navigate(['../../vouchers/' + this.voucherNo + '/transaction-detail'], { relativeTo: this.routeActive });
   }
 
   getVoucherTransactionsByVoucherNo() {
     this.voucherService.GetTransactionByVoucherId(this.voucherNo).subscribe(x => {
-      debugger;
       this.ELEMENT_DATA = [];
       if (x.statusCode === 200) {
-        debugger;
         this.ELEMENT_DATA = x.data;
         this.transactionDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
         this.selection.clear();
@@ -114,4 +159,219 @@ export class VoucherDetailComponent implements OnInit {
   onAddTransactionBtnClick() {
     this.addEditTransaction = true;
   }
+
+  cancelTransactionBtnClicked() {
+    this.addEditTransaction = false;
+  }
+
+  private filterAccountName(value: string): any[] {
+    const filterValue = value.toLowerCase();
+    if (value.length >= 3) {
+      this.getFilteredAccountList(filterValue);
+      return this.accountList;
+    }
+  }
+
+  private filterProjectName(value: string): any[] {
+    const filterValue = value.toLowerCase();
+    if (value.length >= 3) {
+      this.getFilteredProjectList(filterValue);
+      return this.projectList;
+    }
+  }
+
+  getFilteredAccountList(data: string) {
+    if (data !== undefined && data != null) {
+      this.voucherService
+        .GetFilteredInputLevelAccountList(data)
+        .subscribe(resp => {
+          this.accountList = [];
+          if (resp !== undefined && resp.AccountList.length > 0) {
+            resp.AccountList.forEach(element => {
+              this.accountList.push({
+                AccountId: element.ChartOfAccountNewId,
+                AccountName: element.ChartOfAccountNewCode + '-' + element.AccountName
+              });
+            });
+          }
+        });
+    }
+  }
+
+  getFilteredProjectList(data: string) {
+    if (data !== undefined && data != null) {
+      this.voucherService
+        .GetFilteredProjectList(data)
+        .subscribe(resp => {
+          this.projectList = [];
+          if (resp !== undefined && resp.projectList.length > 0) {
+            resp.projectList.forEach(element => {
+              this.projectList.push({
+                ProjectId: element.ProjectId,
+                ProjectName: element.ProjectCode + '-' + element.ProjectName
+              });
+            });
+          }
+        });
+    }
+  }
+
+  onChangeAccountValue(event: any, id: number) {
+    if (id !== undefined && id != null) {
+      // this.addEditTransactionForm.controls['AccountId'].setValue(id);
+      this.selectedAccount = id;
+    }
+  }
+
+  onChangeProjectValue(event: any, id: number) {
+    if (id !== undefined && id != null) {
+      this.selectedProject = id;
+      this.getBudgetLineByProjectId(id);
+    }
+  }
+
+  getBudgetLineByProjectId(id) {
+    this.budgetLineService.GetProjectBudgetLineList(id).subscribe(
+      (response: IResponseData) => {
+        if (response.statusCode === 200) {
+          this.budgetLineList = [];
+          response.data.forEach(x => this.budgetLineList.push({
+            Id: x.BudgetLineId,
+            Name: x.BudgetCodeName
+          }));
+        } else if (response.statusCode === 400) {
+          this.toastr.warning(response.message);
+        }
+      },
+      error => {
+        this.toastr.error(error);
+      }
+    );
+  }
+
+  backClick() {
+    this.router.navigate(['../'], { relativeTo: this.routeActive });
+  }
+
+  editVoucher() {
+    this.router.navigate(['../../vouchers/' + this.voucherNo + '/edit-voucher'], { relativeTo: this.routeActive });
+  }
+
+  validateVoucher() {
+    const ids: any[] = [];
+    ids.push(this.voucherNo);
+    this.voucherService.verifySelectedVouchers(ids).subscribe(x => {
+      if (x) {
+        this.toastr.success('Verified successfully');
+      }
+    }, error => {
+      this.toastr.warning(error);
+    });
+  }
+
+  deleteVoucher() {
+    const ids: any[] = [];
+    ids.push(this.voucherNo);
+    this.voucherService.deleteSelectedVouchers(ids).subscribe(x => {
+      if (x) {
+        this.toastr.success('deleted successfully');
+      }
+    }, error => {
+      this.toastr.warning(error);
+    });
+  }
+
+  exportVoucher() {
+    const model = {
+      VoucherIdList: []
+    };
+    model.VoucherIdList.push(this.voucherNo);
+    this.globalSharedService
+      .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetAllVoucherSummaryReportPdf,
+        model
+      )
+      .subscribe();
+  }
+
+  openAddDocumentDialog(): void {
+    const dialogRef = this.dialog.open(AddDocumentsComponent, {
+      width: '400px',
+      data: {
+        voucherNo: this.voucherNo
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.getDocumentList();
+      // console.log(result);
+      // if (result) {
+      //   this.uploadedPurchasedFiles.unshift({
+      //     Id: result.id,
+      //     Filename: result.file === undefined ? result.filename : result.file[0].name,
+      //     DocumentTypeName: result.documentName,
+      //     Date: this.datePipe.transform(result.uploadDate, 'dd-MM-yyyy'),
+      //     UploadedBy: result.uploadBy === undefined ? localStorage.getItem('LoggedInUserName') : result.uploadBy,
+      //     File: result.file,
+      //     DocumentTypeId: result.documentType,
+      //     SignedUrl: result.signedUrl
+      //   });
+
+      //   // For ngOnChanges on document-upload component
+      //   this.uploadedPurchasedFiles = this.uploadedPurchasedFiles.slice();
+      // }
+    });
+  }
+
+  //#region "getDocumentList"
+  getDocumentList() {
+    const documentData = {
+      RecordId: this.voucherNo,
+      PageId: FileSourceEntityTypes.Voucher
+    };
+
+    this.globalService
+      .post(this.appurl.getApiUrl() + GLOBAL.API_FileManagement_GetDocumentFiles, documentData)
+      .subscribe(response => {
+        if (response.StatusCode = 200 && response.data.DocumentFileList != null) {
+          this.documentList = [];
+          response.data.DocumentFileList.forEach((element) => {
+            this.documentList.push({
+              FileName: element.FileName,
+              Date: element.Date,
+              SignedUrl: element.FileSignedURL,
+              DocumentFileId: element.DocumentFileId
+            });
+          });
+        }
+      }, error => {
+      });
+  }
+  //#endregion
+
+  onDeleteDocument(item) {
+    if (item.DocumentFileId !== undefined) {
+
+      const DocumentData = {
+        DocumentFileId: item.DocumentFileId,
+        PageId: FileSourceEntityTypes.Voucher
+      };
+
+      this.globalService
+        .post(this.appurl.getApiUrl() + GLOBAL.API_FileManagement_DeleteDocumentFiles, DocumentData)
+        .subscribe(response => {
+          if (response.StatusCode = 200) {
+            const index = this.documentList.findIndex(x => x.DocumentFileId === item.DocumentFileId);
+          this.documentList.splice(index, 1);
+          }
+        });
+    }
+  }
+
+  onDownloadDocument(item) {
+    const doc = document.createElement('a');
+    doc.href = item.SignedUrl;
+    doc.target = '_blank';
+    doc.click();
+  }
+
 }

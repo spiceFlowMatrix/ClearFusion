@@ -25,6 +25,8 @@ namespace HumanitarianAssistance.Application.CommonModels
         public int? TimezoneOffset { get; set; }
         public int? OperationalType { get; set; }
         public string VoucherTypeName { get; set; }
+        public double? TotalCredit { get; set; }
+        public double? TotalDebit { get; set; }
         public bool IsExchangeGainLossVoucher { get; set; } = false;
     }
 }

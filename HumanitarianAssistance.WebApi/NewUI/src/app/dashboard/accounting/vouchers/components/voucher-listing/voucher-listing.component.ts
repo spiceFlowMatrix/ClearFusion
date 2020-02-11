@@ -12,6 +12,9 @@ import { DatePipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
 import { ToastrService } from 'ngx-toastr';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { GLOBAL } from 'src/app/shared/global';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
 
 
 @Component({
@@ -39,7 +42,8 @@ export class VoucherListingComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private voucherService: VoucherService,
     private datePipe: DatePipe, private router: Router, private routeActive: ActivatedRoute,
-    private toastr: ToastrService) {
+    private toastr: ToastrService, private globalSharedService: GlobalSharedService,
+    private appurl: AppUrlService,) {
     this.selectedMonth = { name: 'SELECT MONTH', value: 0 };
     this.voucherFilterForm = this.fb.group({
       'Search': [null],
@@ -323,9 +327,34 @@ export class VoucherListingComponent implements OnInit {
     }
   }
 
+  exportSelectedVouchers() {
+    const model = {
+      VoucherIdList: []
+    };
+
+    if (this.selection.selected.length === 0) {
+      this.toastr.warning('Please select atleast 1 record for pdf export');
+      return;
+    }
+
+    this.selection.selected.forEach(x => {
+      model.VoucherIdList.push(x.VoucherNo);
+    });
+    this.globalSharedService
+    .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetAllVoucherSummaryReportPdf,
+    model
+    )
+    .subscribe();
+  }
+
   onOpenedChange(event) {
     if (!event) {
       this.getVoucherList();
     }
+  }
+
+  resetFilter() {
+    this.voucherFilterForm.reset();
+    this.getVoucherList();
   }
 }

@@ -339,6 +339,11 @@ export class GLOBAL {
   public static API_VoucherTransaction_AddEditTransactionList = 'VoucherTransaction/AddEditTransactionList';
   public static API_VoucherTransaction_VerifySelectedVouchers = 'VoucherTransaction/VerifySelectedVouchers';
   public static API_VoucherTransaction_DeleteSelectedVouchers = 'VoucherTransaction/DeleteSelectedVouchers';
+  public static API_Account_GetFilteredInputLevelAccountList = 'VoucherTransaction/GetFilteredInputLevelAccountList';
+  public static API_Account_GetFilteredProjectList = 'VoucherTransaction/GetFilteredProjectList';
+  public static API_Account_GetFilteredBudgetLineList = 'VoucherTransaction/GetFilteredBudgetLineList';
+  public static API_VoucherTransaction_SaveTransactionList = 'VoucherTransaction/SaveTransactionList';
+
 
   // Exchange Rates
   public static API_ExchangeRates_GetSavedExchangeRates = 'ExchangeRates/GetSavedExchangeRates';
