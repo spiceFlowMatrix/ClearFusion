@@ -51,6 +51,7 @@ export class EmployeeTrainingComponent implements OnInit {
     if (this.trainingDetailForm.valid) {
       this.isFormSubmitted = true;
       this.trainingformDataEmit.emit(data);
+      this.dialogRef.close();
     }
   }
 

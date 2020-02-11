@@ -24,6 +24,7 @@ export class AddWeakPointsComponent implements OnInit {
   onFormSubmit(formdata: any){
     if (formdata !== undefined && formdata != null) {
       this.weakPointDataEmit.emit(formdata);
+      this.dialogRef.close();
     }
   }
   onCancelPopup() {

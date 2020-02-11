@@ -68,4 +68,5 @@ export interface IAppraisalDetailModel {
   AppraisalTraining: ITrainigDetailModel[];
   AppraisalStrongPoints: IAppraisalStrongPoints[];
   AppraisalWeakPoints: IAppraisalWeakPoints[];
+  GeneralProfessionalIndicatorQuestion: EmployeeAppraisalQuestionList[];
 }

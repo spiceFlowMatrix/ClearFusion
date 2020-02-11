@@ -783,3 +783,20 @@ export enum AdvanceBtnStatus {
   REJECT= 3,
   EDIT= 4
 }
+
+export enum AppraisalTrainingProgram {
+  'Organization vision & Objectives' = 1,
+  'Employee\'s Work' = 2
+}
+
+export enum AppraisalYesNoType {
+'Yes' = 1,
+'No' = 2
+}
+export enum AppraisalCatchLevelType {
+ '1 - Weak' = 1,
+ '2 - Satisfactory' = 2,
+ '3 - Average' = 3,
+ '4 - Good' = 4,
+ '5 - Excellent' = 5
+}

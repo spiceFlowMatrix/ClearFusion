@@ -5,6 +5,7 @@ import { EntryComponentComponent } from './components/entry-component/entry-comp
 import { EmployeeListComponent } from './components/employee-list/employee-list.component';
 import { EmployeeControlPanelComponent } from './components/employee-control-panel/employee-control-panel.component';
 import { AddEmployeeAppraisalComponent } from './components/employee-appraisal/add-employee-appraisal/add-employee-appraisal.component';
+import { EmployeeAppraisalComponent } from './components/employee-appraisal/employee-appraisal.component';
 
 const routes: Routes = [
   {
@@ -17,8 +18,14 @@ const routes: Routes = [
       },
       { path: 'employees', component: EmployeeListComponent },
       { path: 'addEmployee', component: AddEmployeeComponent },
-      { path: 'employee/:id/addAppraisal', component: AddEmployeeAppraisalComponent},
-
+      {
+        path: 'employee/:id/addAppraisal',
+        component: AddEmployeeAppraisalComponent
+      },
+      {
+        path: 'employee/:id/employeeAppraisal',
+        component: EmployeeAppraisalComponent
+      }
     ]
   },
   {

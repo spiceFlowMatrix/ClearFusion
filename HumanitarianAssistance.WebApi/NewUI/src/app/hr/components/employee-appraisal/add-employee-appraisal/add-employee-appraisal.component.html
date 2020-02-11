@@ -21,7 +21,7 @@
     >
       <div class="col-sm-12">
         <div class="col-sm-3">
-          <lib-hum-dropdown formControlName="AppraisalPeriod" [options]="appraisalPeriodDataSource$"
+          <lib-hum-dropdown formControlName="AppraisalPeriod" [validation]="employeeAppraisalForm.controls['AppraisalPeriod'].hasError('required')" [options]="appraisalPeriodDataSource$"
             [placeHolder]="'Appraisal Period'"></lib-hum-dropdown>
         </div>
         <div class="col-sm-3">
@@ -47,9 +47,9 @@
               <th  width="30%">Remarks</th>
             </tr>
           </thead>
-          <tbody formArrayName="GeneralProfessionalIndicator">
+          <tbody formArrayName="GeneralProfessionalIndicatorQuestion">
             <tr
-              *ngFor="let item of employeeAppraisalForm.get('GeneralProfessionalIndicator')['controls']; let i = index;"
+              *ngFor="let item of employeeAppraisalForm.get('GeneralProfessionalIndicatorQuestion')['controls']; let i = index;"
               [formGroupName]="i">
               <td width="15%" >
                 {{item.value.SequenceNumber}}
@@ -58,7 +58,7 @@
                 {{item.value.QuestionEnglish}}
               </td>
               <td width="20%">
-                <lib-hum-dropdown [options]="appraisalQuestionScore$" [placeHolder]="'Score'" formControlName="Score"
+                <lib-hum-dropdown [options]="appraisalQuestionScore$"  [placeHolder]="'Score'"  formControlName="Score"
                   (change)="getQuestionScoreeSelectedValue($event)">
                 </lib-hum-dropdown>
               </td>

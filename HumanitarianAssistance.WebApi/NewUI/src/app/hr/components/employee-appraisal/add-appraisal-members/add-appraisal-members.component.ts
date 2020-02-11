@@ -68,7 +68,6 @@ export class AddAppraisalMembersComponent implements OnInit {
   }
 
   getFilteredEmployeeList(data: string) {
-    debugger;
     if (data !== undefined && data != null) {
       this.employeeDetailModel.EmployeeName = data;
       this.appraisalService
@@ -96,7 +95,6 @@ export class AddAppraisalMembersComponent implements OnInit {
   }
 
   saveForm() {
-    debugger;
     if (this.addAppraisalMembersForm.valid) {
       this.isFormSubmitted = true;
       const filterEmlployee = this.employeeDetailList.filter(

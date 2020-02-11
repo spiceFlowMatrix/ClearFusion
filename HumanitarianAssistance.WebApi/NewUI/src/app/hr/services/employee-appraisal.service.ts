@@ -43,4 +43,13 @@ export class EmployeeAppraisalService {
         GLOBAL.API_EmployeeDetail_AddAppraisalDetail, data
     );
   }
+
+  editAppraisalForm(data: any) {
+    return this.globalService
+    .post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_EmployeeDetail_AddAppraisalDetail, data
+    );
+  }
+
 }

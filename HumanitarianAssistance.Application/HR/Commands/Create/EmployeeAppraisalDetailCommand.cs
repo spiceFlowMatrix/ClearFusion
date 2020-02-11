@@ -13,6 +13,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
             AppraisalTraining = new List<AppraisalTrainingList>();
             AppraisalStrongPoints = new List<AppraisalStrongPointsList>();
             AppraisalWeakPoints = new List<AppraisalWeakPointsList>();
+            GeneralProfessionalIndicatorQuestion = new List<GeneralProfessionalIndicatorQuestionList>();
         }
         public int EmployeeAppraisalDetailsId { get; set; }
         public int EmployeeId { get; set; }
@@ -23,11 +24,12 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
         public string FinalResultQues3 { get; set; }
         public string FinalResultQues4 { get; set; }
         public string FinalResultQues5 { get; set; }
-        public string FinalResultQues6 { get; set; }
+        public string CommnetByEmployee { get; set; }
         public List<AppraisalMemberList> AppraisalMembers { get; set; }
         public List<AppraisalTrainingList> AppraisalTraining { get; set; }
         public List<AppraisalStrongPointsList> AppraisalStrongPoints { get; set; }
         public List<AppraisalWeakPointsList> AppraisalWeakPoints { get; set; }
+        public List<GeneralProfessionalIndicatorQuestionList> GeneralProfessionalIndicatorQuestion { get; set; }
     }
     public class AppraisalMemberList
     {
@@ -38,11 +40,11 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
     }
     public class AppraisalTrainingList
     {
-        public string TrainingProgramBasedOn { get; set; }
+        public int TrainingProgramBasedOn { get; set; }
         public string Program { get; set; }
-        public string Participated { get; set; }
-        public string CatchLevel { get; set; }
-        public string RefresherTrm { get; set; }
+        public int Participated { get; set; }
+        public int CatchLevel { get; set; }
+        public int RefresherTrm { get; set; }
         public string OtherRecommemenedTraining { get; set; }
         public int EmployeeEvaluationTrainingId { get; set; }
     }
@@ -55,5 +57,17 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
     {
         public string WeakPoints { get; set; }
         public int AppraisalWeakPointsId { get; set; }
+    }
+
+    public class GeneralProfessionalIndicatorQuestionList
+    {
+        public int SequenceNumber { get; set; }
+        public string QuestionEnglish { get; set; }
+        public int Score { get; set; }
+        public string Remarks { get; set; }
+        public int AppraisalGeneralQuestionsId { get; set; }
+
+
+
     }
 }

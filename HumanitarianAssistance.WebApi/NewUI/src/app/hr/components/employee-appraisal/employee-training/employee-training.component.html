@@ -14,7 +14,7 @@
                           <mat-form-field>
                             <mat-label>Training program based on</mat-label>
                             <mat-select formControlName="TrainingProgramBasedOn" name="TrainingProgramBasedOn">
-                              <mat-option *ngFor="let item of trainingProgram" [value]="item.value">
+                              <mat-option *ngFor="let item of trainingProgram" [value]="item.id">
                                 {{item.value}}
                               </mat-option>
                             </mat-select>
@@ -29,7 +29,7 @@
                           <mat-form-field>
                             <mat-label>Participated</mat-label>
                             <mat-select formControlName="Participated" name="Participated">
-                              <mat-option *ngFor="let item of yesNoItem" [value]="item.value">
+                              <mat-option *ngFor="let item of yesNoItem" [value]="item.id">
                                 {{item.value}}
                               </mat-option>
                             </mat-select>
@@ -41,7 +41,7 @@
                           <mat-form-field>
                             <mat-label>Catch Level</mat-label>
                             <mat-select formControlName="CatchLevel" name="CatchLevel">
-                              <mat-option *ngFor="let item of catchLevelItem" [value]="item.value">
+                              <mat-option *ngFor="let item of catchLevelItem" [value]="item.id">
                                 {{item.value}}
                               </mat-option>
                             </mat-select>
@@ -51,7 +51,7 @@
                           <mat-form-field>
                             <mat-label>Refresher trm</mat-label>
                             <mat-select formControlName="RefresherTrm" name="RefresherTrm">
-                              <mat-option *ngFor="let item of yesNoItem" [value]="item.value">
+                              <mat-option *ngFor="let item of yesNoItem" [value]="item.id">
                                 {{item.value}}
                               </mat-option>
                             </mat-select>

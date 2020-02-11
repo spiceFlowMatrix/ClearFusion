@@ -17,6 +17,12 @@ import { TableActionsModel } from 'projects/library/src/lib/models/table-actions
 import { EmployeeTrainingComponent } from '../employee-training/employee-training.component';
 import { AddStrongPointsComponent } from '../add-strong-points/add-strong-points.component';
 import { AddWeakPointsComponent } from '../add-weak-points/add-weak-points.component';
+import {
+  AppraisalTrainingProgram,
+  AppraisalYesNoType,
+  AppraisalCatchLevelType
+} from 'src/app/shared/enum';
+import { StaticUtilities } from 'src/app/shared/static-utilities';
 
 @Component({
   selector: 'app-add-employee-appraisal',
@@ -41,11 +47,8 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   weakPointsList$: Observable<IAppraisalWeakPoints[]> = of([]);
 
   appraisalPeriodDataSource$ = of([
-    { value: 1, name: 'Weak' },
-    { value: 2, name: 'Satisfactory' },
-    { value: 3, name: 'Average' },
-    { value: 4, name: 'Good' },
-    { value: 5, name: 'Excellent' }
+    { value: 1, name: 'Annual' },
+    { value: 2, name: 'Probationary' }
   ]);
 
   appraisalQuestionScore$ = of([
@@ -100,11 +103,11 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
       'Other Recommended Trainings'
     ],
     items: [
-      'TrainingProgramBasedOn',
+      'TrainingProgramBasedOnName',
       'Program',
-      'Participated',
-      'CatchLevel',
-      'RefresherTrm',
+      'ParticipatedName',
+      'CatchLevelName',
+      'RefresherTrmName',
       'OtherRecommemenedTraining'
     ]
   });
@@ -118,7 +121,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
     headers: ['Strong Points'],
     items: ['StrongPoints']
   });
-
 
   constructor(
     private routeActive: ActivatedRoute,
@@ -148,6 +150,7 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
     this.routeActive.params.subscribe(params => {
       this.employeeId = +params['id'];
     });
+    console.log(this.employeeId);
     this.employeeAppraisalPeriod = [
       {
         PeriodId: 1,
@@ -178,7 +181,10 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
       EmployeeAppraisalDetailsId: [null],
       AppraisalPeriod: [null, Validators.required],
       CurrentAppraisalDate: [null, Validators.required],
-      GeneralProfessionalIndicator: this.fb.array([]),
+      GeneralProfessionalIndicatorQuestion: this.fb.array(
+        [],
+        Validators.required
+      ),
       AppraisalMembers: this.fb.array([]),
       AppraisalTraining: this.fb.array([]),
       AppraisalStrongPoints: this.fb.array([]),
@@ -188,13 +194,14 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
       FinalResultQues3: [null, Validators.required],
       FinalResultQues4: [null, Validators.required],
       FinalResultQues5: [null, Validators.required],
-      FinalResultQues6: [null, Validators.required]
+      FinalResultQues6: [null, Validators.required],
+      EmployeeId: this.employeeId
     });
   }
   // if apprasial question list is not null
   setAppraisalQuestion() {
     this.employeeAppraisalForm.setControl(
-      'GeneralProfessionalIndicator',
+      'GeneralProfessionalIndicatorQuestion',
       this.setGeneralProfessionalQuestion(this.questionSourceData)
     );
   }
@@ -203,10 +210,11 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
     sources: EmployeeAppraisalQuestionList[]
   ): FormArray {
     debugger;
-    const formArray = new FormArray([], [Validators.required]);
+    const formArray = new FormArray([]);
     sources.forEach(s => {
       formArray.push(
         this.fb.group({
+          AppraisalGeneralQuestionsId: s.AppraisalGeneralQuestionsId,
           SequenceNumber: s.SequenceNo,
           QuestionEnglish: s.QuestionEnglish,
           Score: s.Score,
@@ -220,7 +228,7 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   // to get appraisalGeneralQuestions sources controls html
   get appraisalGeneralQuestions(): FormArray {
     return this.employeeAppraisalForm.get(
-      'GeneralProfessionalIndicator'
+      'GeneralProfessionalIndicatorQuestion'
     ) as FormArray;
   }
 
@@ -377,10 +385,15 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
         dialogRef.componentInstance.isFormSubmitted = false;
         this.trainingDetailList.push({
           TrainingProgramBasedOn: element.TrainingProgramBasedOn,
+          TrainingProgramBasedOnName:
+            AppraisalTrainingProgram[element.TrainingProgramBasedOn],
           Program: element.Program,
           Participated: element.Participated,
+          ParticipatedName: AppraisalYesNoType[element.Participated],
           CatchLevel: element.CatchLevel,
+          CatchLevelName: AppraisalCatchLevelType[element.CatchLevel],
           RefresherTrm: element.RefresherTrm,
+          RefresherTrmName: AppraisalYesNoType[element.RefresherTrm],
           OtherRecommemenedTraining: element.OtherRecommemenedTraining
         });
       }
@@ -392,10 +405,14 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
         this.trainingDetailList.map(y => {
           return {
             TrainingProgramBasedOn: y.TrainingProgramBasedOn,
+            TrainingProgramBasedOnName: y.TrainingProgramBasedOnName,
             Program: y.Program,
             Participated: y.Participated,
+            ParticipatedName: y.ParticipatedName,
             CatchLevel: y.CatchLevel,
+            CatchLevelName: y.CatchLevelName,
             RefresherTrm: y.RefresherTrm,
+            RefresherTrmName: y.RefresherTrmName,
             OtherRecommemenedTraining: y.OtherRecommemenedTraining,
             EmployeeEvaluationTrainingId: y.EmployeeEvaluationTrainingId
           };
@@ -631,6 +648,10 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
         this.employeeAppraisalForm.controls['EmployeeAppraisalDetailsId'] !=
           null
       ) {
+        form.CurrentAppraisalDate = StaticUtilities.setLocalDate(
+          form.CurrentAppraisalDate
+        );
+        form.EmployeeId = this.employeeId;
         this.addAppraisalForm(form);
       }
     } else {
@@ -642,13 +663,21 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   //#region "addAppraisalForm"
   addAppraisalForm(form: IAppraisalDetailModel) {
     debugger;
-    this.appraisalService.addAppraisalForm(form).subscribe( res => {
-
+    this.appraisalService.addAppraisalForm(form).subscribe(res => {
+      console.log(res);
+      if (res ===  true) {
+        debugger;
+        this.router.navigate(['employeeAppraisal'], { relativeTo: this.routeActive });
+      }
     });
   }
   //#endregion
 
-  //#region "addAppraisalForm"
-  editAppraisalForm(form: IAppraisalDetailModel) {}
+  //#region "editAppraisalForm"
+  editAppraisalForm(form: IAppraisalDetailModel) {
+    debugger;
+    this.appraisalService.editAppraisalForm(form).subscribe(res=> {
+    });
+  }
   //#endregion
 }
