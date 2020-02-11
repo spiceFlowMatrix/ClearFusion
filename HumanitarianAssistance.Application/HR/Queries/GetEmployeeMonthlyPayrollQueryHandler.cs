@@ -162,7 +162,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 int overTimeMinutes = empPayrollAttendance.Select(x => x.OverTimeMinutes).DefaultIfEmpty(0).Sum();
 
                 double convertMinutesToHours = ((double)(workTimeMinutes + overTimeMinutes) / 60d);
-                model.GrossSalary = Math.Round((double)(dBasicPayPerhour * (workTimeHours + overtimehours + convertMinutesToHours) + totalBonus), 2);
+                model.GrossSalary = Math.Round((double)((dBasicPayPerhour * (workTimeHours + overtimehours + convertMinutesToHours) + totalBonus - totalFine) - (weeklyOffDays * dBasicPayPerhour) ), 2);
 
                 //Calculate pension
                 dPension = Math.Round(((double)(model.GrossSalary * pension.PensionRate) / 100), 2); // i.e. 4.5 % => 0.045
@@ -208,7 +208,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 AddEmployeeSalaryHeads((int)AccumulatedSalaryHead.GrossSalary, model.GrossSalary, "Gross Salary", (int)TransactionType.Credit, ref accumulatedSalaryHeads);
 
                 //Net Salary  = (Gross + Allowances) - Deductions
-                model.NetSalary = Math.Round((double)(model.GrossSalary - totalFine - dSalaryTax - dPension - advanceAmount - basicPay.SecurityAmount - basicPay.CapacityBuildingAmount), 2);
+                model.NetSalary = Math.Round((double)(model.GrossSalary  - dSalaryTax - dPension - advanceAmount - basicPay.SecurityAmount - basicPay.CapacityBuildingAmount), 2);
                 model.SalaryPaid = model.NetSalary;
 
                 model.AccumulatedPayrollHeadList = accumulatedSalaryHeads;

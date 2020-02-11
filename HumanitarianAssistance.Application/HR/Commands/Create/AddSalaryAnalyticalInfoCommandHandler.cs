@@ -26,7 +26,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create {
                 if (request.EditAnalyticalInfo.Count > 0) {
                     foreach (var item in request.EditAnalyticalInfo) {
                         var data = await _dbContext.EmployeeSalaryAnalyticalInfo.Where (x => x.EmployeeSalaryAnalyticalInfoId == item.EmployeeSalaryAnalyticalInfoId && x.IsDeleted == false).FirstOrDefaultAsync ();
-                     //   data.AccountNo = item.AccountCode;
+                        data.AccountNo = item.AccountCode;
                         data.SalaryPercentage = item.SalaryPercentage;                        
                     }
                     await _dbContext.SaveChangesAsync();
@@ -37,7 +37,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create {
                 obj.EmployeeID = request.EmployeeID;
                 obj.ProjectId = request.ProjectId;
                 obj.BudgetlineId = request.BudgetLineId;
-                // obj.AccountNo = request.AccountCode;
+                obj.AccountNo = request.AccountCode;
                 obj.SalaryPercentage = request.SalaryPercentage;
 
                 obj.IsDeleted = false;

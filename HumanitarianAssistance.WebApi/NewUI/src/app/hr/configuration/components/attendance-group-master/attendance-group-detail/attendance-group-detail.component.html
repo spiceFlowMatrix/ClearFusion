@@ -1,0 +1,73 @@
+
+<lib-sub-header-template>
+  <span class="action_header"><i class="fas fa-arrow-left" (click)="onBackClick()"></i> &nbsp;Attendance Group
+      <hum-button [type]="'edit'" [text]="'EDIT'" (click)="editAttendanceGroup()"></hum-button>
+  </span>
+</lib-sub-header-template>
+<div class="container-fluid" humAddScroll [height]="250">
+  <div class="row">
+    <div class="col-md-12">
+      <h5>Attendance Group Details</h5>
+      <table class="table table-striped margin_top_20" style="width: 35%;">
+        <tr>
+          <td><strong>Id</strong></td>
+          <td>{{attendanceGroupDetail.AttendanceGroupId}}</td>
+        </tr>
+        <tr>
+          <td><strong>Name</strong></td>
+          <td>{{attendanceGroupDetail.Name}}</td>
+        </tr>
+        <tr>
+          <td><strong>Description</strong></td>
+          <td>{{attendanceGroupDetail.Description}}</td>
+        </tr>
+        <tr>
+          <td><strong>Created By</strong></td>
+          <td>{{attendanceGroupDetail.CreatedBy}}</td>
+        </tr>
+        <tr>
+          <td><strong>Created On</strong></td>
+          <td>{{(attendanceGroupDetail.CreatedDate == null)?'N/A': attendanceGroupDetail.CreatedDate | date:'dd/MM/yyyy'}}</td>
+        </tr>
+        <tr>
+          <td><strong>Modified By</strong></td>
+          <td>{{(attendanceGroupDetail.ModifiedBy == '')?'N/A':attendanceGroupDetail.ModifiedBy}}</td>
+        </tr>
+        <tr>
+          <td><strong>Modified On</strong></td>
+          <td>{{(attendanceGroupDetail.ModifiedDate == null)? 'N/A': attendanceGroupDetail.ModifiedDate | date:'dd/MM/yyyy'}}</td>
+        </tr>
+      </table>
+      <h4>Payroll Daily Hours
+        <button mat-button [matMenuTriggerFor]="OfficeMenu" style="border: unset;">
+          <h5 style="color: #0390D1;"><i class="fas fa-plus"></i>&nbsp; ADD FOR SELECTED OFFICE &nbsp;<i class="fas fa-caret-down"></i></h5>
+        </button>
+        <mat-menu #OfficeMenu="matMenu" class="salaryConfigMonth">
+          <button (click)="selectedOfficeChanged(office)" *ngFor="let office of officeDropdown$ | async" mat-menu-item>{{office.name}}</button>
+        </mat-menu>
+        <hum-button [type]="'add'" [text]="'ADD FOR ALL OFFICE'" (click)="addForAllOffice()"></hum-button>
+      </h4>
+      <table class="table table-striped">
+        <tr>
+          <th>Office</th>
+          <th>In Time</th>
+          <th>Out Time</th>
+          <th>Month</th>
+          <th>Total Attendance Hour in Month</th>
+          <th></th>
+        </tr>
+        <tr *ngFor="let item of payrollList">
+          <td>{{item.Office}}</td>
+          <td>{{item.InTime | date:'shortTime'}}</td>
+          <td>{{item.OutTime | date:'shortTime'}}</td>
+          <td>{{item.PayrollMonth}}</td>
+          <td>{{item.WorkingTime}}</td>
+          <td><i (click)="editPayrollHours(item.PayrollMonthlyHourId, item.InTime, item.OutTime, item.Month, item.PayrollYear, item.OfficeId, item.Office)" class="fas fa-pen"></i></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
