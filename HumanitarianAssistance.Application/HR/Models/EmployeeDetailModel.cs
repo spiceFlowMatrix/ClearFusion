@@ -52,7 +52,7 @@ namespace HumanitarianAssistance.Application.HR.Models
         public int? MaritalStatus { get; set; }
         public string PassportNo { get; set; }
         public string University { get; set; }
-        public string BirthPlace { get; set; }
+        public int? BirthPlace { get; set; }
         public string IssuePlace { get; set; }
         public int? MaritalStatusId { get; set; }
         public string TinNumber { get; set; }
