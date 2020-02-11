@@ -12,7 +12,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <mat-tab-group>
+        <mat-tab-group [selectedIndex]="activeTabId">
             <mat-tab label="HISTORY">
                 <ng-template matTabContent>
                     <app-employee-history></app-employee-history>
@@ -57,6 +57,11 @@
               <ng-template matTabContent>
                 <app-employee-appraisal></app-employee-appraisal>
               </ng-template>
+            </mat-tab>
+            <mat-tab label="AUDIT LOG">
+                <ng-template matTabContent>
+                    <app-audit-logs></app-audit-logs>
+                </ng-template>
             </mat-tab>
             <mat-tab label="ANALYTICAL INFO">
                 <ng-template matTabContent>

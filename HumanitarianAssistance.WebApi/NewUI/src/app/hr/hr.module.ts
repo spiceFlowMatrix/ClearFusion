@@ -83,6 +83,7 @@ import { AddStrongPointsComponent } from './components/employee-appraisal/add-st
 import { AddWeakPointsComponent } from './components/employee-appraisal/add-weak-points/add-weak-points.component';
 import { EmployeeTerminationComponent } from './components/employee-termination/employee-termination.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { AuditLogsComponent } from './components/audit-logs/audit-logs.component';
 import { AdministerPayrollComponent } from './components/administer-payroll/administer-payroll.component';
 import { EmployeeAnalyticalComponent } from './components/employee-analytical/employee-analytical.component';
 
@@ -131,6 +132,7 @@ import { EmployeeAnalyticalComponent } from './components/employee-analytical/em
     AddStrongPointsComponent,
     AddWeakPointsComponent,
     EmployeeTerminationComponent,
+    AuditLogsComponent,
     AdministerPayrollComponent,
     EmployeeAnalyticalComponent
   ],

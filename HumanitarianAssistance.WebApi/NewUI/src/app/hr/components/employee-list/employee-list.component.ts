@@ -348,12 +348,13 @@ export class EmployeeListComponent implements OnInit {
 
   administerPayroll(month, monthName) {
     const dialogRef = this.dialog.open(AdministerPayrollComponent, {
-      width: '600px',
+      width: '950px',
       autoFocus: false,
       data: {
         SelectedEmployees: this.selection.selected,
         Month: month,
-        MonthName: monthName
+        MonthName: monthName,
+        OfficeId: this.selectedOffice.value
       }
     });
     dialogRef.afterClosed().subscribe(() => {
