@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HrService } from 'src/app/hr/services/hr.service';
 import { ToastrService } from 'ngx-toastr';
@@ -28,6 +28,7 @@ export class AddOfficeMasterComponent implements OnInit {
       'SupervisorName': [null, [Validators.required]],
       'FaxNo': [null, [Validators.required]],
       'PhoneNo': [null, [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern('[0-9]{0,10}')]],
+      'Department': this.fb.array([], Validators.required),
     });
 
     if (this.data) {
@@ -38,7 +39,34 @@ export class AddOfficeMasterComponent implements OnInit {
       this.addOfficeForm.get('SupervisorName').patchValue(this.data.SupervisorName);
       this.addOfficeForm.get('FaxNo').patchValue(this.data.FaxNo);
       this.addOfficeForm.get('PhoneNo').patchValue(this.data.PhoneNo);
+
+      if ( this.data.subItems === undefined && this.data.subItems.length < 0) {
+        this.addDepartment();
+      } else {
+        this.data.subItems.forEach(x=> {
+          this.editDepartmentPatchValue(x);
+        });
+      }
+    } else {
+      this.addDepartment();
     }
+  }
+
+  addDepartment() {
+    (<FormArray>this.addOfficeForm.get('Department')).push(this.fb.group({
+      DepartmentId: [''],
+      DepartmentName: ['', Validators.required]
+    }));
+  }
+  deleteDepartment(index: number) {
+    (<FormArray>this.addOfficeForm.get('Department')).removeAt(index);
+  }
+
+  editDepartmentPatchValue(item: any) {
+    (<FormArray>this.addOfficeForm.get('Department')).push(this.fb.group({
+      DepartmentId: [item.DepartmentId],
+      DepartmentName: [item.DepartmentName, Validators.required]
+    }));
   }
 
   addOffice() {

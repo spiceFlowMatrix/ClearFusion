@@ -1,16 +1,34 @@
-<div class="container width_100">
-  <div class="row">
-    <div class="col-md-12" class="items-float-right">
+<div *ngIf="!isDetailOpen">
+  <lib-sub-header-template>
+    <span class="action_header">Attendance Groups & Payroll Daily Hours
         <hum-button [type]="'add'" [text]="'ADD ATTENDANCE GROUP'" (click)="addAttendanceGroup()"></hum-button>
-    </div>
-    <div class="col-md-12">
-      <div class="departmentTable">
-      <hum-table [headers]="attendanceGroupHeaders$" [items]="attendanceGroupList$"
-         (actionClick)="actionEvents($event)" [actions]="actions"></hum-table>
+    </span>
+  </lib-sub-header-template>
+  <mat-card humAddScroll>
+    <div class="container width_100">
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table " >
+            <tr>
+              <th style="width: 20%;">Name</th>
+              <th style="width: 40%;">Description</th>
+              <th style="width: 40%;"></th>
+            </tr>
+            <tr *ngFor="let item of attendanceGroupList$" (click)="onRowClick(item.AttendanceGroupId)">
+              <td>{{item.Name}}</td>
+              <td>{{item.Description}}</td>
+              <td></td>
+            </tr>
+          </table>
+          <mat-paginator [length]="RecordCount" [pageSize]="pageModel.PageSize"
+            [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
+          </mat-paginator>
+        </div>
       </div>
-      <mat-paginator [length]="RecordCount" [pageSize]="pageModel.PageSize"
-        [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
-      </mat-paginator>
     </div>
-  </div>
+  </mat-card>
 </div>
+<div *ngIf="isDetailOpen">
+  <app-attendance-group-detail [attendanceGroupId]="selectedAttendanceGroup" (backClick)="onBackClicked($event)"></app-attendance-group-detail>
+</div>
+

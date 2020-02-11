@@ -11,6 +11,7 @@ using HumanitarianAssistance.Persistence;
 using System.Collections.Generic;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using HumanitarianAssistance.Domain.Entities.HR;
 
 namespace HumanitarianAssistance.Application.HR.Queries
 {
@@ -29,6 +30,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
             try
             {
+                var resignDetail = await _dbContext.EmployeeResignationDetail.FirstOrDefaultAsync(x=>x.IsDeleted == false && x.EmployeeID == request.EmployeeId);
                 var result = await _dbContext.EmployeeDetail
                                         .Include(x=> x.EmployeeProfessionalDetail)
                                         .ThenInclude(x=> x.EmployeeType)
@@ -72,7 +74,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                             OfficeId =  x.EmployeeProfessionalDetail.OfficeId,
                                             IsResigned = x.IsResigned,
                                             ResignationStatus = x.ResignationStatus,
-                                            Tenure = calculateTenure(x.EmployeeProfessionalDetail.HiredOn, x.EmployeeProfessionalDetail.FiredOn, x.IsResigned, x.EmployeeID)
+                                            Tenure = calculateTenure(x.EmployeeProfessionalDetail.HiredOn, x.EmployeeProfessionalDetail.FiredOn, x.IsResigned, x.EmployeeID, resignDetail)
                                         }).FirstOrDefaultAsync();
 
                 if(result == null)
@@ -90,13 +92,12 @@ namespace HumanitarianAssistance.Application.HR.Queries
             return response;
         }
 
-        private string calculateTenure(DateTime? d1, DateTime? d2, bool IsResigned, int EmployeeId) {
+        private string calculateTenure(DateTime? d1, DateTime? d2, bool IsResigned, int EmployeeId, EmployeeResignationDetail resignDetail) {
             if (d2 == null && !IsResigned) {
                 d2 = DateTime.Now;
             } 
             else if(d2 == null && IsResigned) 
             {
-                var resignDetail = _dbContext.EmployeeResignationDetail.FirstOrDefault(x=>x.IsDeleted == false && x.EmployeeID == EmployeeId);
                 if(resignDetail != null) {
                     d2 = resignDetail.ResignDate;
                 } else {
