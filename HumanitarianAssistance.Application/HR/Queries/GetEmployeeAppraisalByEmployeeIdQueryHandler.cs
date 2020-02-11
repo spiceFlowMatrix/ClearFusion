@@ -24,10 +24,15 @@ namespace HumanitarianAssistance.Application.HR.Queries
             try
             {
                 var empAppraisalDetails = await _dbContext.EmployeeAppraisalDetails
-                                                        .Include(x=> x.EmployeeAppraisalQuestions)
+                                                        .Include(x => x.EmployeeEvaluation)
+                                                        .Include(x => x.EmployeeAppraisalQuestions)
+                                                        .Include(x => x.EmployeeAppraisalTeamMember).
+                                                        Include(x => x.StrongandWeakPoints)
+                                                        .Include(x => x.EmployeeEvaluationTraining)
                 .Where(x => x.EmployeeId == request.EmployeeId && x.IsDeleted == false)
                 .OrderByDescending(x => x.CurrentAppraisalDate)
-                .Select(x => new EmployeeAppraisalDetailsModel {
+                .Select(x => new EmployeeAppraisalDetailNewModel
+                {
                     EmployeeAppraisalDetailsId = x.EmployeeAppraisalDetailsId,
                     EmployeeId = x.EmployeeId,
                     EmployeeCode = x.EmployeeCode,
@@ -41,13 +46,55 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     AppraisalPeriod = x.AppraisalPeriod,
                     CurrentAppraisalDate = x.CurrentAppraisalDate,
                     OfficeId = x.OfficeId,
-                    TotalScore = x.TotalScore,
+                    // TotalScore = x.TotalScore,
                     AppraisalStatus = x.AppraisalStatus,
-                    AppraisalScore =  (x.AppraisalScore != null ? Math.Round((double)x.AppraisalScore) : 0) + " - " + ((MarkedScores)(x.AppraisalScore != null ? Math.Round((double)x.AppraisalScore) : 0)).ToString(),
-                    EvaluationDisplayDate = x.CurrentAppraisalDate.ToShortDateString()
+                    AppraisalScore = (x.AppraisalScore != null ? Math.Round((double)x.AppraisalScore) : 0) + " - " + ((MarkedScores)(x.AppraisalScore != null ? Math.Round((double)x.AppraisalScore) : 0)).ToString(),
+                    EvaluationDisplayDate = x.CurrentAppraisalDate.ToShortDateString(),
+                    FinalResultQues1 = x.EmployeeEvaluation.FinalResultQues1,
+                    FinalResultQues2 = x.EmployeeEvaluation.FinalResultQues2,
+                    FinalResultQues3 = x.EmployeeEvaluation.FinalResultQues3,
+                    FinalResultQues4 = x.EmployeeEvaluation.FinalResultQues4,
+                    FinalResultQues5 = x.EmployeeEvaluation.FinalResultQues5,
+                    CommnetByEmployee = x.EmployeeEvaluation.CommentsByEmployee,
+                    AppraisalMembers = x.EmployeeAppraisalTeamMember.Select(y => new AppraisalMemberListModel
+                    {
+                        EmployeeId = y.EmployeeId,
+                        EmployeeAppraisalTeamMemberId = y.EmployeeAppraisalTeamMemberId
+
+                    }).ToList(),
+                    AppraisalTraining = x.EmployeeEvaluationTraining.Select(z => new AppraisalTrainingListModel
+                    {
+                        TrainingProgramBasedOn = z.TrainingProgram,
+                        Program = z.Program,
+                        Participated = z.Participated,
+                        CatchLevel = z.CatchLevel,
+                        RefresherTrm = z.RefresherTrm,
+                        OtherRecommemenedTraining = z.OthRecommendation,
+                        EmployeeEvaluationTrainingId = z.EmployeeEvaluationTrainingId,
+
+                    }).ToList(),
+                    AppraisalStrongPoints = x.StrongandWeakPoints.Select(a => new AppraisalStrongPointsListModel
+                    {
+                        StrongPoints = a.Point,
+                        AppraisalStrongPointsId = a.StrongPointsId,
+
+                    }).ToList(),
+                    AppraisalWeakPoints = x.StrongandWeakPoints.Select(s => new AppraisalWeakPointsListModel
+                    {
+                        WeakPoints = s.Point,
+                        AppraisalWeakPointsId = s.StrongPointsId
+                    }).ToList(),
+                    GeneralProfessionalIndicatorQuestion = x.EmployeeAppraisalQuestions.Select(d => new GeneralProfessionalIndicatorQuestionListModel
+                    {
+                        AppraisalGeneralQuestionsId = d.AppraisalGeneralQuestionsId,
+                        Score = d.Score.Value,
+                        Remarks = d.Remarks,
+                        // CurrentAppraisalDate = d.CurrentAppraisalDate,
+                    }).ToList()
+
                 })
                 .ToListAsync();
-                
+
                 // if (empAppraisalDetails != null)
                 // {
                 //     EmployeeAppraisalDetailsModel model = new EmployeeAppraisalDetailsModel();

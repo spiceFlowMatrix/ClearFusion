@@ -29,5 +29,12 @@ namespace HumanitarianAssistance.Domain.Entities.HR
 		public bool AppraisalStatus { get; set; }
 		public int? TotalScore { get; set; }
         public double? AppraisalScore { get; set; }  
+		public List<EmployeeAppraisalQuestions> EmployeeAppraisalQuestions{get;set;}
+		public List<EmployeeAppraisalTeamMember> EmployeeAppraisalTeamMember{get;set;}
+		public List<StrongandWeakPoints> StrongandWeakPoints{get;set;}
+		public EmployeeEvaluation EmployeeEvaluation{get;set;}
+		public List<EmployeeEvaluationTraining> EmployeeEvaluationTraining{get;set;}
+
+
     }
 }

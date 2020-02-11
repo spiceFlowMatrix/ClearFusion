@@ -32,7 +32,6 @@ namespace HumanitarianAssistance.Application.Configuration.Models
         public bool AppraisalStatus { get; set; }
         public string AppraisalScore { get; set; }  
         public int? DepartmentId { get; set; }
-        public string EvaluationDisplayDate { get; set; }
         public List<EmployeeAppraisalQuestionModel> EmployeeAppraisalQuestionList { get; set; }
 
 
