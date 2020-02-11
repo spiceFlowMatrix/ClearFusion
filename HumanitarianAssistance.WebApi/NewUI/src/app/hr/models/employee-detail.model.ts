@@ -70,7 +70,7 @@ export interface IEmployeeBasicDetail {
   Country?: number;
   Province?: number;
   District?: number;
-  BirthPlace?: string;
+  BirthPlace?: number;
   TinNumber?: string;
   PassportNumber?: string;
   University?: string;
