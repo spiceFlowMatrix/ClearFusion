@@ -44,6 +44,11 @@ export class ConfigurationComponent implements OnInit {
         link: './appraisal-questions',
         index: 4
       },
+      {
+        label: 'ATTENDANCE GROUPS',
+        link: './attendance-groups',
+        index: 5
+      },
     ];
   }
 

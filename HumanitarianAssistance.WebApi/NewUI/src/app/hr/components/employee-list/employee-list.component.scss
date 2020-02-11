@@ -8,3 +8,7 @@
 .cdk-overlay-pane {
   left: 790px !important;
 }
+::ng-deep .monthMenu {
+  height: 200px;
+  margin-left: 10px;
+}
