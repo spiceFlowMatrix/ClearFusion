@@ -62,7 +62,6 @@ export class SetEmployeeAttendanceComponent implements OnInit {
   saveEmployeeAttendance(value) {
     this.commonLoader.showLoader();
     this.data.AttendanceDates.forEach(val => {
-     
       const model = {
         AttendanceDate: StaticUtilities.getLocalDate(val.toUTCString()),
         OfficeId: this.data.OfficeId,
@@ -105,7 +104,7 @@ export class SetEmployeeAttendanceComponent implements OnInit {
         this.commonLoader.hideLoader();
       });
     });
-    
+
   }
 
   convert12hTimeToHours(time12h): number {

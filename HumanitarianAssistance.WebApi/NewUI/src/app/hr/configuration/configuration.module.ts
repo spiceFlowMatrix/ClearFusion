@@ -38,9 +38,12 @@ import { AddExitInterviewQuestionsComponent } from './components/exit-interview-
 import { LeaveTypeComponent } from './components/leave-type/leave-type.component';
 import { AddLeaveTypeComponent } from './components/leave-type/add-leave-type/add-leave-type.component';
 import { HolidaysComponent } from './components/holidays/holidays.component';
-import { MatDatepickerModule, MatSelectModule, MatCheckboxModule } from '@angular/material';
+import { MatDatepickerModule, MatSelectModule, MatCheckboxModule, MatMenuModule } from '@angular/material';
 import { AppraisalConfigComponent } from './components/appraisal-config/appraisal-config.component';
 import { AddAppraisalComponent } from './components/appraisal-config/add-appraisal/add-appraisal.component';
+import { AttendanceGroupDetailComponent } from './components/attendance-group-master/attendance-group-detail/attendance-group-detail.component';
+import { AddPayrollHoursComponent } from './components/attendance-group-master/add-payroll-hours/add-payroll-hours.component';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 @NgModule({
   declarations: [
@@ -70,6 +73,8 @@ import { AddAppraisalComponent } from './components/appraisal-config/add-apprais
     HolidaysComponent,
     AppraisalConfigComponent,
     AddAppraisalComponent,
+    AttendanceGroupDetailComponent,
+    AddPayrollHoursComponent
   ],
   imports: [
     CommonModule,
@@ -90,11 +95,13 @@ import { AddAppraisalComponent } from './components/appraisal-config/add-apprais
     LibraryModule,
     MatDatepickerModule,
     MatSelectModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatMenuModule,
+    NgxMaterialTimepickerModule
   ],
   entryComponents: [AddDesignationComponent, AddEducationDegreeComponent, AddOfficeMasterComponent,
                    AddDepartmentMasterComponent, AddJobGradeComponent, AddAttendanceGroupComponent,
                    AddProfessionComponent, AddQualificationComponent, AddExitInterviewQuestionsComponent,
-                  AddLeaveTypeComponent, AddAppraisalComponent]
+                  AddLeaveTypeComponent, AddAppraisalComponent, AddPayrollHoursComponent]
 })
 export class ConfigurationModule { }

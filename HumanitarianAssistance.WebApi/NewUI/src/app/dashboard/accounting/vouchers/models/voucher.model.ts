@@ -72,6 +72,7 @@ export interface IAddVoucherModel {
   BudgetLineId?: number;
   FinancialYearId?: number; // calculate on backend
   TimezoneOffset?: number;
+  OperationalType?: number;
 }
 
 export interface IVoucherDetailModel {
