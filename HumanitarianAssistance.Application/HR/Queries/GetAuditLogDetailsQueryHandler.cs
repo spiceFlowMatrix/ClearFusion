@@ -1,0 +1,38 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using HumanitarianAssistance.Common.Enums;
+using HumanitarianAssistance.Persistence;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+
+namespace HumanitarianAssistance.Application.HR.Queries {
+
+    public class GetAuditLogDetailsQueryHandler : IRequestHandler<GetAuditLogDetailsQuery, object> {
+        private HumanitarianAssistanceDbContext _dbContext;
+        public GetAuditLogDetailsQueryHandler (HumanitarianAssistanceDbContext dbContext) {
+            _dbContext = dbContext;
+        }
+        public async Task<object> Handle (GetAuditLogDetailsQuery request, CancellationToken cancellationToken) {
+            Dictionary<string, object> result = new Dictionary<string, object> ();
+
+            var query = _dbContext.AuditLog.OrderByDescending (x => x.CreatedById)
+                .Where (x => x.IsDeleted == false && x.CreatedById == request.EmployeeId.ToString ())
+                .Select (x => new {
+                    EmployeeId = x.CreatedById,
+                        AuditLogId = x.AuditLogId,
+                        TypeOfEntity = ((TypeOfEntity)x.TypeOfEntity).ToString(),
+                        EntityId = x.EntityId,
+                        ActionType = ((TypeOfEntity)x.ActionTypeId).ToString(),
+                        ActionDescription = x.ActionDescription
+                }).AsQueryable ();
+
+            long count = await query.CountAsync ();
+            result.Add ("AuditLogs", query);
+            result.Add ("RecordCount", count);
+            return result;
+        }
+    }
+
+}

@@ -75,6 +75,7 @@ import { AddHistoryOutsideOrganizationComponent } from './components/employee-hi
 import { EditEmployeeAttendanceComponent } from './components/employee-attendance/edit-employee-attendance/edit-employee-attendance.component';
 import { EmployeeTerminationComponent } from './components/employee-termination/employee-termination.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { AuditLogsComponent } from './components/audit-logs/audit-logs.component';
 
 @NgModule({
   declarations: [
@@ -114,7 +115,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     IncrementDecrementSalaryComponent,
     AddHistoryOutsideOrganizationComponent,
     EditEmployeeAttendanceComponent,
-    EmployeeTerminationComponent
+    EmployeeTerminationComponent,
+    AuditLogsComponent
   ],
   imports: [
     MatFormFieldModule,

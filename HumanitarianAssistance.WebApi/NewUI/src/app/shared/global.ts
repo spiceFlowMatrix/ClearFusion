@@ -792,7 +792,9 @@ export class GLOBAL {
 
   //#endregion
 // salary config
-public static API_Pdf_GetMonthlyPaySlipPdf = 'Pdf/GetMonthlyPaySlipPdf';
+  public static API_Pdf_GetMonthlyPaySlipPdf = 'Pdf/GetMonthlyPaySlipPdf';
+  public static API_HRConfiguration_GetAllAuditLogById = 'AuditLog/GetAuditLogDetails';
+
 
 }
 

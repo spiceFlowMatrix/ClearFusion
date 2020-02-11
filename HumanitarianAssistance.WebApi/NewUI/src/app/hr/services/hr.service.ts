@@ -458,4 +458,12 @@ export class HrService {
         this.appurl.getApiUrl() + GLOBAL.API_Accounting_GetAccountList
       );
   }
+
+  GetAllAuditLogById(EmployeeId: number) {
+    return this.globalService.post(
+      this.appurl.getApiUrl() +
+        GLOBAL.API_HRConfiguration_GetAllAuditLogById,
+        EmployeeId
+    );
+  }
 }
