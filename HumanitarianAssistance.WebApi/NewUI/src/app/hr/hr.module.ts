@@ -118,7 +118,7 @@ import { EmployeeAnalyticalComponent } from './components/employee-analytical/em
     AddHistoryOutsideOrganizationComponent,
     EditEmployeeAttendanceComponent,
     EmployeeTerminationComponent,
-    AuditLogsComponent
+    AuditLogsComponent,
     AdministerPayrollComponent,
     EmployeeAnalyticalComponent
   ],
