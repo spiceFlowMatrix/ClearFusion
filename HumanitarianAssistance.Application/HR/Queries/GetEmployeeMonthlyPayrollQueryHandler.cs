@@ -162,7 +162,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 int overTimeMinutes = empPayrollAttendance.Select(x => x.OverTimeMinutes).DefaultIfEmpty(0).Sum();
 
                 double convertMinutesToHours = ((double)(workTimeMinutes + overTimeMinutes) / 60d);
-                model.GrossSalary = Math.Round((double)((dBasicPayPerhour * (workTimeHours + overtimehours + convertMinutesToHours) + totalBonus - totalFine) ), 2);
+                model.GrossSalary = Math.Round((double)((dBasicPayPerhour * (workTimeHours + overtimehours + convertMinutesToHours) + totalBonus - totalFine) - (weeklyOffDays * dBasicPayPerhour) ), 2);
 
                 //Calculate pension
                 dPension = Math.Round(((double)(model.GrossSalary * pension.PensionRate) / 100), 2); // i.e. 4.5 % => 0.045
