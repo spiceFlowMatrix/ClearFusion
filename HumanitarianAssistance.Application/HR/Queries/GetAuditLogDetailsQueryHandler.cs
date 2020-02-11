@@ -24,7 +24,7 @@ namespace HumanitarianAssistance.Application.HR.Queries {
                         AuditLogId = x.AuditLogId,
                         TypeOfEntity = ((TypeOfEntity)x.TypeOfEntity).ToString(),
                         EntityId = x.EntityId,
-                        ActionType = ((TypeOfEntity)x.ActionTypeId).ToString(),
+                        ActionType = ((ActionType)x.ActionTypeId).ToString(),
                         ActionDescription = x.ActionDescription
                 }).AsQueryable ();
 
