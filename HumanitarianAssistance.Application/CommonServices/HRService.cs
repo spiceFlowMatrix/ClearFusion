@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoMapper;
-using HumanitarianAssistance.Application.Accounting.Commands.Create;
 using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Application.HR.Commands.Create;
 using HumanitarianAssistance.Application.HR.Models;
@@ -152,7 +152,7 @@ namespace HumanitarianAssistance.Application.CommonServices
                     foreach (var item in request.OfficeId)
                     {
                         UserDetailOffices obj = new UserDetailOffices();
-                        obj.OfficeId = item;
+                        obj.OfficeId = item.Value;
                         obj.UserId = user.UserID;
                         obj.CreatedById = request.CreatedById;
                         obj.CreatedDate = request.CreatedDate;
@@ -212,26 +212,28 @@ namespace HumanitarianAssistance.Application.CommonServices
 
                     if (request.PensionDetailModel != null)
                     {
-
-                        foreach (var item in request.PensionDetailModel.PensionDetail)
+                        if (request.PensionDetailModel.PensionDetail != null && request.PensionDetailModel.PensionDetail.Count > 0)
                         {
-                            MultiCurrencyOpeningPension detail = new MultiCurrencyOpeningPension()
+
+                            foreach (var item in request.PensionDetailModel.PensionDetail)
                             {
-                               EmployeeID = obj.EmployeeID,
-                                PensionStartDate = request.PensionDetailModel.PensionDate,
-                                Amount = item.Amount,
-                                CreatedById = request.CreatedById,
-                                CreatedDate = request.CreatedDate,
-                                IsDeleted = false,
-                                CurrencyId = item.CurrencyId,
-                            };
+                                MultiCurrencyOpeningPension detail = new MultiCurrencyOpeningPension()
+                                {
+                                    EmployeeID = obj.EmployeeID,
+                                    PensionStartDate = request.PensionDetailModel.PensionDate,
+                                    Amount = item.Amount,
+                                    CreatedById = request.CreatedById,
+                                    CreatedDate = request.CreatedDate,
+                                    IsDeleted = false,
+                                    CurrencyId = item.CurrencyId,
+                                };
 
-                            pensionDetail.Add(detail);
+                                pensionDetail.Add(detail);
+                            }
+                            await _dbContext.MultiCurrencyOpeningPension.AddRangeAsync(pensionDetail);
+                            await _dbContext.SaveChangesAsync();
+
                         }
-                        await _dbContext.MultiCurrencyOpeningPension.AddRangeAsync(pensionDetail);
-                        await _dbContext.SaveChangesAsync();
-
-
                     }
 
                     EmployeeProfessionalDetailModel empprofessional = new EmployeeProfessionalDetailModel
@@ -272,7 +274,7 @@ namespace HumanitarianAssistance.Application.CommonServices
                         }
                     }
 
-                    List<int> office = new List<int>();
+                    List<int?> office = new List<int?>();
                     office.Add(request.OfficeId);
 
                     //Add Employee to UserDetails Table
@@ -310,6 +312,85 @@ namespace HumanitarianAssistance.Application.CommonServices
                     response.Message = ex.Message;
                 }
             }
+            return response;
+        }
+        public async Task<ApiResponse> AddBulkUser()
+        {
+            ApiResponse response = new ApiResponse();
+
+            try
+            {
+                var employees = _dbContext.EmployeeDetail.Where(r => r.Email != null).Include(x => x.EmployeeProfessionalDetail).Select(r => new UserModel
+                {
+                    Email = r.Email,
+                    Phone = r.Phone,
+                    FirstName = r.EmployeeName,
+                    OfficeId = new List<int?>() { r.EmployeeProfessionalDetail.OfficeId },
+                    EmployeeId = r.EmployeeID,
+                    Status = (int)UserStatus.Active,
+                    Password = "12345",
+                    CreatedById = r.CreatedById,
+                    CreatedDate = r.CreatedDate
+                }).ToList();
+                var existingUsers = await _dbContext.Users.Select(x => x.Email).ToListAsync();
+                var users = employees.Where(r => !existingUsers.Contains(r.Email)).ToList();
+                foreach (var item in users)
+                {
+                    Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+                    Match match = regex.Match(item.Email);
+                    if (match.Success)
+                    {
+                        AppUser newUser = new AppUser
+                        {
+                            UserName = item.Email.Replace(" ", string.Empty),
+                            FirstName = item.FirstName,
+                            LastName = item.LastName,
+                            Email = item.Email,
+                            PhoneNumber = item.Phone
+                        };
+                        IdentityResult objNew = await _userManager.CreateAsync(newUser, item.Password);
+                        if (!objNew.Succeeded)
+                        {
+                            throw new Exception("Could Not Create App User");
+                        }
+                        UserDetails user = new UserDetails();
+                        user.FirstName = item.FirstName;
+                        user.LastName = item.LastName;
+                        user.Password = item.Password;
+                        user.Status = item.Status;
+                        user.Username = item.Email;
+                        user.CreatedById = item.CreatedById;
+                        user.CreatedDate = item.CreatedDate;
+                        user.UserType = item.UserType;
+                        user.AspNetUserId = newUser.Id;
+                        user.EmployeeId = item.EmployeeId;
+                        await _dbContext.UserDetails.AddAsync(user);
+                        await _dbContext.SaveChangesAsync();
+                        List<UserDetailOffices> lst = new List<UserDetailOffices>();
+                        foreach (var item1 in item.OfficeId)
+                        {
+                            UserDetailOffices obj = new UserDetailOffices();
+                            obj.OfficeId = item1.Value;
+                            obj.UserId = user.UserID;
+                            obj.CreatedById = item.CreatedById;
+                            obj.CreatedDate = item.CreatedDate;
+                            obj.IsDeleted = false;
+                            lst.Add(obj);
+                        }
+                        await _dbContext.UserDetailOffices.AddRangeAsync(lst);
+                        await _dbContext.SaveChangesAsync();
+                    }
+                }
+                response.StatusCode = StaticResource.successStatusCode;
+                response.Message = StaticResource.SuccessText;
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StaticResource.failStatusCode;
+                response.Message = ex.Message;
+            }
+
             return response;
         }
     }

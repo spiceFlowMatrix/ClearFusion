@@ -609,6 +609,7 @@ export class GLOBAL {
   public static API_EmployeeDetail_DeleteEmployeeByEmployeeId = 'EmployeeDetail/DeleteEmployeeByEmployeeId';
   public static API_EmployeeDetail_RevokeEmployeeResignationById = 'EmployeeDetail/RevokeEmployeeResignationById';
   public static API_EmployeeDetail_RehireEmployeeById = 'EmployeeDetail/RehireEmployeeById';
+  public static API_EmployeeDetail_EmployeesToUser = 'EmployeeDetail/CreateAllEmployeeTouser';
 
   // pdf
   public static API_Pdf_GetAllChartOfAccountHierarchyPdf = 'Pdf/GetAllChartOfAccountHierarchyPdf';
@@ -797,6 +798,8 @@ export class GLOBAL {
 
 
   //#endregion
+// salary config
+public static API_Pdf_GetMonthlyPaySlipPdf = 'Pdf/GetMonthlyPaySlipPdf';
 
 }
 

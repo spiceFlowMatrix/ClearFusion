@@ -38,7 +38,8 @@ import {
   MatOptionModule,
   MatTableModule,
   MatCheckboxModule,
-  MatRadioModule
+  MatRadioModule,
+  MatProgressSpinnerModule
 } from '@angular/material';
 import { AddHistoricalLogComponent } from './components/employee-history/add-historical-log/add-historical-log.component';
 import { AddEducationComponent } from './components/employee-history/add-education/add-education.component';
@@ -72,6 +73,8 @@ import { AddOpeningPensionComponent } from './components/add-employee/add-openin
 import { IncrementDecrementSalaryComponent } from './components/employee-salary-config/increment-decrement-salary/increment-decrement-salary.component';
 import { AddHistoryOutsideOrganizationComponent } from './components/employee-history/add-history-outside-organization/add-history-outside-organization.component';
 import { EditEmployeeAttendanceComponent } from './components/employee-attendance/edit-employee-attendance/edit-employee-attendance.component';
+import { EmployeeTerminationComponent } from './components/employee-termination/employee-termination.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -110,7 +113,8 @@ import { EditEmployeeAttendanceComponent } from './components/employee-attendanc
     AddOpeningPensionComponent,
     IncrementDecrementSalaryComponent,
     AddHistoryOutsideOrganizationComponent,
-    EditEmployeeAttendanceComponent
+    EditEmployeeAttendanceComponent,
+    EmployeeTerminationComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -149,8 +153,9 @@ import { EditEmployeeAttendanceComponent } from './components/employee-attendanc
     MatTableModule,
     MatCheckboxModule,
     MatRadioModule,
+    MatProgressSpinnerModule,
     NgxMaterialTimepickerModule,
-
+    MatTooltipModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -185,7 +190,8 @@ import { EditEmployeeAttendanceComponent } from './components/employee-attendanc
     AdvanceHistoryComponent,
     AddAdvanceRecoveryComponent,
     AddHistoryOutsideOrganizationComponent,
-    EditEmployeeAttendanceComponent
+    EditEmployeeAttendanceComponent,
+    EmployeeTerminationComponent
   ]
 })
 export class HrModule {

@@ -7,7 +7,7 @@ OR REPLACE FUNCTION public.get_detailofnote_pdf(
     notename character varying,
     accountid bigint,
     accountcode text,
-    accountname character varying,
+    accountname text,
     debit double precision,
     credit double precision
 ) LANGUAGE 'plpgsql' COST 100 VOLATILE ROWS 1000 AS $Body$ DECLARE _to_currency_id integer;
