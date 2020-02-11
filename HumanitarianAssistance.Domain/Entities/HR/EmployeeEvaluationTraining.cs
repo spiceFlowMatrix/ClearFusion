@@ -13,12 +13,14 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         [Column(Order = 1)]
         public int EmployeeEvaluationTrainingId { get; set; }
 
-        public string TrainingProgram { get; set; }
+        public int TrainingProgram { get; set; }
         public string Program { get; set; }
-        public string Participated { get; set; }
-        public string CatchLevel { get; set; }
-        public string RefresherTrm { get; set; }
+        public int Participated { get; set; }
+        public int CatchLevel { get; set; }
+        public int RefresherTrm { get; set; }
         public string OthRecommendation { get; set; }
         public int EmployeeAppraisalDetailsId { get; set; }
+        [ForeignKey("EmployeeAppraisalDetailsId")]
+        public EmployeeAppraisalDetails EmployeeAppraisalDetails { get; set; }
     }
 }
