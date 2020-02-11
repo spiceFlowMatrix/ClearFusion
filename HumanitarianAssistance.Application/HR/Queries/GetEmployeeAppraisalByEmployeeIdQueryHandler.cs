@@ -24,6 +24,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
             try
             {
                 var empAppraisalDetails = await _dbContext.EmployeeAppraisalDetails
+                                                        .Include(x=> x.EmployeeAppraisalQuestions)
                 .Where(x => x.EmployeeId == request.EmployeeId && x.IsDeleted == false)
                 .OrderByDescending(x => x.CurrentAppraisalDate)
                 .Select(x => new EmployeeAppraisalDetailsModel {

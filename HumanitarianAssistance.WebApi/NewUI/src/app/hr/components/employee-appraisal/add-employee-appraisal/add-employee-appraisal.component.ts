@@ -265,7 +265,9 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   //#endregion
 
   backClick() {
+    debugger;
     this.router.navigate(['/hr/employee/' + this.employeeId]);
+    // this.router.navigate(['/hr/employee/' + this.employeeId + '/employeeAppraisal']);
   }
 
   getQuestionScoreeSelectedValue(event: any) {}
@@ -665,9 +667,10 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
     debugger;
     this.appraisalService.addAppraisalForm(form).subscribe(res => {
       console.log(res);
-      if (res ===  true) {
-        debugger;
-        this.router.navigate(['employeeAppraisal'], { relativeTo: this.routeActive });
+      if (res === true) {
+        this.router.navigate([
+          '/hr/employee/' + this.employeeId + '/employeeAppraisal'
+        ]);
       }
     });
   }
@@ -676,8 +679,7 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   //#region "editAppraisalForm"
   editAppraisalForm(form: IAppraisalDetailModel) {
     debugger;
-    this.appraisalService.editAppraisalForm(form).subscribe(res=> {
-    });
+    this.appraisalService.editAppraisalForm(form).subscribe(res => {});
   }
   //#endregion
 }
