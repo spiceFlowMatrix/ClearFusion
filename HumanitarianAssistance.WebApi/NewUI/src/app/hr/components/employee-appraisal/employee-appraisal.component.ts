@@ -50,7 +50,6 @@ export class EmployeeAppraisalComponent implements OnInit {
 
 
   getAllAppraisalList() {
-    debugger;
     if (this.employeeId != undefined && this.employeeId != null) {
       this.appraisalService
         .getAllAppraisalListEmployeeId(this.employeeId)

@@ -47,7 +47,6 @@ export class EmployeeTrainingComponent implements OnInit {
   }
 
   onFormSubmit(data: any) {
-    debugger;
     if (this.trainingDetailForm.valid) {
       this.isFormSubmitted = true;
       this.trainingformDataEmit.emit(data);

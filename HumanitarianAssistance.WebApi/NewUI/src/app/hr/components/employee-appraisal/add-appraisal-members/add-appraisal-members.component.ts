@@ -57,7 +57,6 @@ export class AddAppraisalMembersComponent implements OnInit {
   }
 
   private _filter(value: string): IEmployeeListModel[] {
-    debugger;
     const filterValue = value.toLowerCase();
     if (value.length >= 3) {
       this.getFilteredEmployeeList(filterValue);
@@ -110,7 +109,6 @@ export class AddAppraisalMembersComponent implements OnInit {
   }
 
   onChangeEmployeeValue(event: any, id: number) {
-    debugger;
     console.log(event.value);
     console.log(id);
     if (id !== undefined && id != null) {

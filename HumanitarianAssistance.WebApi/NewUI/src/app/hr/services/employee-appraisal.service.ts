@@ -28,7 +28,6 @@ export class EmployeeAppraisalService {
   }
 
   getfilteredEmployeeList(data: any) {
-    debugger
     return this.globalService
     .post(
       this.appurl.getApiUrl() +
