@@ -44,11 +44,12 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Update {
               var data = _dbContext.Department.Where (x => x.IsDeleted == false && x.OfficeId == request.OfficeId).Select (x => new {DepartmentId = x.DepartmentId}).ToList ();
               foreach (var item in request.Department) {
                 var items= data.Where(x=>x.DepartmentId == item.DepartmentId).FirstOrDefault();
-                if(items == null)
+                if(items == null && item.DepartmentId != null)
                 {
                   departmentToBeRemoved.Add(item.DepartmentId);
                 }
               }
+
               foreach (int id in departmentToBeRemoved) {
                 Department department = _dbContext.Department.FirstOrDefault (x => x.DepartmentId == id);
 
@@ -60,8 +61,7 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Update {
                   _dbContext.Department.Update (department);
                   await _dbContext.SaveChangesAsync ();
                 }
-              }
-
+              }              
               foreach (var item in request.Department) {
                 // Add new Department
                 if (item.DepartmentId == null) {

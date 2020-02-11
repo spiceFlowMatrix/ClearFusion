@@ -1,0 +1,11 @@
+<mat-card humAddScroll>
+    <div class="row header">
+        <span class="action_header">Audit Logs
+  </span>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <hum-table [headers]="logListHeader$" [isDefaultAction]="false" [items]="logList$"></hum-table>
+        </div>
+    </div>
+</mat-card>
