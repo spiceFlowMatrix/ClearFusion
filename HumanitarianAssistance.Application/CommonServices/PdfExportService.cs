@@ -72,6 +72,7 @@ namespace HumanitarianAssistance.Application.CommonServices
                     // convert string to pdf in stream & then destroy the stream 
                     using (var pdfWriter = new PdfWriter(_stream))
                     {
+                        
                         pdfWriter.SetCloseStream(false);
                         ConverterProperties cp = new ConverterProperties();
                         PdfDocument doc = new PdfDocument(pdfWriter);

@@ -569,7 +569,7 @@ export class GLOBAL {
      'HiringRequest/EditCandidateInterviewDetail';
 
 
-
+  public static API_EmployeeDetail_GetGradeAssociatedAccount = 'Account/GetGradeAssociatedAccount';
   public static API_EmployeeDetail_AddEmployeeSalaryAnalyticalInfo = 'EmployeeDetail/AddEmployeeSalaryAnalyticalInfo';
   public static API_HREmployee_GetAllJobGrade = 'HRJobs/GetAllJobGrade';
   public static API_Code_GetAllDesignation = 'Code/GetAllDesignation';
@@ -602,6 +602,7 @@ export class GLOBAL {
   public static API_EmployeeDetail_DeleteEmployeeByEmployeeId = 'EmployeeDetail/DeleteEmployeeByEmployeeId';
   public static API_EmployeeDetail_RevokeEmployeeResignationById = 'EmployeeDetail/RevokeEmployeeResignationById';
   public static API_EmployeeDetail_RehireEmployeeById = 'EmployeeDetail/RehireEmployeeById';
+  public static API_EmployeeDetail_EmployeesToUser = 'EmployeeDetail/CreateAllEmployeeTouser';
 
   // pdf
   public static API_Pdf_GetAllChartOfAccountHierarchyPdf = 'Pdf/GetAllChartOfAccountHierarchyPdf';
@@ -790,6 +791,8 @@ export class GLOBAL {
 
 
   //#endregion
+// salary config
+public static API_Pdf_GetMonthlyPaySlipPdf = 'Pdf/GetMonthlyPaySlipPdf';
 
   //#region "employee APPRAISAL"
   public static API_EmployeeDetail_GetEmployeeAppraisalByEmployeeId = 'EmployeeDetail/GetEmployeeAppraisalByEmployeeId';

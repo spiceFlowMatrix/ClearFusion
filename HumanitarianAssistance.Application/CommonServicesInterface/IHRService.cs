@@ -7,8 +7,10 @@ namespace HumanitarianAssistance.Application.CommonServicesInterface
 {
     public interface IHRService
     {
-         Task<bool> AddEmployeePayrollDetails(int? EmployeeId);
-         Task<ApiResponse> AddUser(UserModel request);
-         Task<ApiResponse> AddNewEmployee(AddNewEmployeeCommand request);
+        Task<bool> AddEmployeePayrollDetails(int? EmployeeId);
+        Task<ApiResponse> AddUser(UserModel request);
+        Task<ApiResponse> AddNewEmployee(AddNewEmployeeCommand request);
+        Task<ApiResponse> AddBulkUser();
+
     }
 }

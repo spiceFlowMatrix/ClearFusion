@@ -9,7 +9,7 @@ namespace HumanitarianAssistance.Application.HR.Models
 
         public UserModel()
         {
-            OfficeId = new List<int>();
+            OfficeId = new List<int?>();
         }
         public int UserID { get; set; }
         public string Username { get; set; }
@@ -26,7 +26,7 @@ namespace HumanitarianAssistance.Application.HR.Models
         public byte? Status { get; set; }
         public string Phone { get; set; }
         public int EmployeeId { get; set; }
-        public List<int> OfficeId { get; set; }
+        public List<int?> OfficeId { get; set; }
 
         public List<UserOfficesModel> UserOfficesList { get; set; }
     }

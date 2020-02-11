@@ -54,10 +54,12 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
 
                 int monthDays = DateTime.DaysInMonth(financiallist.StartDate.Year, request.Month);
                 DateTime date = new DateTime();
+                int workTime = payrollDetail.OutTime.Value.Subtract(payrollDetail.InTime.Value).Hours;
                 for (int i = 1; i <= monthDays; i++)
                 {
                     date = new DateTime(financiallist.StartDate.Year, request.Month, i);
-                    await _dbContext.EmployeeAttendance.AddAsync(new EmployeeAttendance{
+                    await _dbContext.EmployeeAttendance.AddAsync(new EmployeeAttendance
+                    {
                         CreatedById = request.CreatedById,
                         CreatedDate = request.CreatedDate,
                         IsDeleted = false,
@@ -66,6 +68,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                         OutTime = payrollDetail.OutTime,
                         AttendanceTypeId = (int)AttendanceType.P,
                         Date = date,
+                        TotalWorkTime= workTime.ToString(),
                         FinancialYearId = financiallist.FinancialYearId
                     });
                 }

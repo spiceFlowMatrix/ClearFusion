@@ -35,6 +35,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                 {
                     empDetail.EmployeeTypeId = (int)EmployeeTypeStatus.Terminated;
                     empDetail.EmployeeProfessionalDetail.EmployeeTypeId = (int)EmployeeTypeStatus.Terminated;
+                    empDetail.EmployeeProfessionalDetail.FiredOn = request.TerminationDate;
+                    empDetail.EmployeeProfessionalDetail.FiredReason = request.ReasonOfTermination;
                     await _dbContext.SaveChangesAsync();
                 }
                 success = true;

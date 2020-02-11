@@ -977,10 +977,10 @@ GetAllBudgetLineList() {
       })
     );
   }
-  GetAccountList() {
+  GetAccountList(GradeId: number) {
     return this.globalService
-      .getDataById(
-        this.appurl.getApiUrl() + GLOBAL.API_Accounting_GetAccountList
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_EmployeeDetail_GetGradeAssociatedAccount, GradeId
       ).pipe(
       map(x => {
         const responseData: IResponseData = {

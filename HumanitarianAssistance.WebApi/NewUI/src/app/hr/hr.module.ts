@@ -81,6 +81,8 @@ import { AddAppraisalMembersComponent } from './components/employee-appraisal/ad
 import { EmployeeTrainingComponent } from './components/employee-appraisal/employee-training/employee-training.component';
 import { AddStrongPointsComponent } from './components/employee-appraisal/add-strong-points/add-strong-points.component';
 import { AddWeakPointsComponent } from './components/employee-appraisal/add-weak-points/add-weak-points.component';
+import { EmployeeTerminationComponent } from './components/employee-termination/employee-termination.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -125,7 +127,8 @@ import { AddWeakPointsComponent } from './components/employee-appraisal/add-weak
     AddAppraisalMembersComponent,
     EmployeeTrainingComponent,
     AddStrongPointsComponent,
-    AddWeakPointsComponent
+    AddWeakPointsComponent,
+    EmployeeTerminationComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -164,10 +167,12 @@ import { AddWeakPointsComponent } from './components/employee-appraisal/add-weak
     MatTableModule,
     MatCheckboxModule,
     MatRadioModule,
+    MatProgressSpinnerModule,
     NgxMaterialTimepickerModule,
     MatAutocompleteModule,
     MatProgressSpinnerModule,
 
+    MatTooltipModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -206,7 +211,8 @@ import { AddWeakPointsComponent } from './components/employee-appraisal/add-weak
     AddAppraisalMembersComponent,
     EmployeeTrainingComponent,
     AddWeakPointsComponent,
-    AddStrongPointsComponent
+    AddStrongPointsComponent,
+    EmployeeTerminationComponent
   ]
 })
 export class HrModule {
