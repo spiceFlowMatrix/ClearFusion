@@ -169,7 +169,7 @@ Below is a list of all the changes made to the scope of this issue and the exact
 >
 > ### Test Cases:
 >
-> 1. The Gross Salary Calculation should be **Gross salary** = (basic per hour salary \* no of worked hours + Allowances - Fines) - (basic per hour salary \* no of weekend hours)
+> 1. The Gross Salary Calculation should be **Gross salary** = (basic per hour salary \* no of worked hours + Allowances - Fines)
 > 2. Adding fine should add a deductible amount equal to the fine amount to the gross salary.
 > 3. Deleting fine should remove the deductible amount equal to the original fine amount from the gross salary.
 
@@ -178,6 +178,7 @@ Below is a list of all the changes made to the scope of this issue and the exact
 Below is a list of all the changes made to the scope of this issue and the exact source where the change originated from:
 
 1. Abdul Salam updated the issue description on Feb 11, 2020 [here](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/380#note_286141981) in order to clarify further the problem and add test cases.
+2. Description was updated by Hamza on 12 Feb, 2020, [here](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/358#note_286862866) in order to fix faulty test case for gross salary calculation
 
 
 ### Getting error in income expense report - 372
