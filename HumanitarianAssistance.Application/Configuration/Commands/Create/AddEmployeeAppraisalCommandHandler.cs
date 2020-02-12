@@ -32,7 +32,7 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Create
             try
             {
                 //var empAppraisalDetails = await _dbContext.EmployeeAppraisalDetails.Where(x => x.EmployeeId == request.EmployeeId && x.CurrentAppraisalDate.Date.Day == request.CurrentAppraisalDate.Date.Day && x.IsDeleted == false).OrderByDescending(x => x.CurrentAppraisalDate).FirstOrDefaultAsync();
-               var empAppraisalDetails = await _dbContext.EmployeeAppraisalDetails.Where(x => x.EmployeeId == request.EmployeeId && x.AppraisalStatus == false && x.IsDeleted == false).OrderByDescending(x => x.CurrentAppraisalDate).FirstOrDefaultAsync();
+                var empAppraisalDetails = await _dbContext.EmployeeAppraisalDetails.Where(x => x.EmployeeId == request.EmployeeId && x.AppraisalStatus == false && x.IsDeleted == false).OrderByDescending(x => x.CurrentAppraisalDate).FirstOrDefaultAsync();
                 if (empAppraisalDetails == null)
                 {
                     EmployeeAppraisalDetails obj = _mapper.Map<EmployeeAppraisalDetails>(request);

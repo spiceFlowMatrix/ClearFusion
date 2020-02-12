@@ -6,6 +6,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
 {
     public class GetEmployeeSalaryTaxReportPdfQuery: BaseModel, IRequest<byte[]>
     {
+		public int? EmployeeId { get; set; }
         public long TaxPayerIdentificationNumber { get; set; }
 		public string NameOfBusiness { get; set; }
 		public string AddressOfBusiness { get; set; }
