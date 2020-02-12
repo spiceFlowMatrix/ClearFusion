@@ -58,7 +58,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     CommnetByEmployee = x.EmployeeEvaluation.CommentsByEmployee,
                     AppraisalMembers = x.EmployeeAppraisalTeamMember.Select(y => new AppraisalMemberListModel
                     {
-                        EmployeeId = y.EmployeeId,
+                        //EmployeeId = y.EmployeeId,
                         EmployeeAppraisalTeamMemberId = y.EmployeeAppraisalTeamMemberId
 
                     }).ToList(),

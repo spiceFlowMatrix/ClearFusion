@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Application.Accounting.Queries
 {
-
     public class GetAllTransactionsByVoucherIdQueryHandler : IRequestHandler<GetAllTransactionsByVoucherIdQuery, ApiResponse>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
