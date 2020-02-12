@@ -26,6 +26,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project
 
         public int? ReviewerId { get; set; }
         public int? DirectorId { get; set; }
+        public ProjectSector ProjectSector { get; set; }
         public List<ProjectBudgetLineDetail> ProjectBudgetLineDetails { get; set; }
         public ProjectProposalDetail ProjectProposalDetail { get; set; }
         public List<ProjectJobDetail> ProjectJobDetail { get; set; }

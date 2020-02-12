@@ -1,54 +1,56 @@
 <div>
-    <h1 mat-dialog-title>
-        Add Education Detail
-        <button mat-icon-button [mat-dialog-close] class="pull-right">
-    <mat-icon aria-label="clear">clear</mat-icon>
-  </button>
-    </h1>
-    <form class="example-form" [formGroup]="educationForm" (ngSubmit)="onFormSubmit(educationForm.value)">
-        <div mat-dialog-content>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="row">
-                        <div class="col-lg-4 col-sm-4">
-                            <mat-form-field class="example-full-width">
-                                <input matInput [matDatepicker]="EducationFromPicker" placeholder="Education From" formControlName="EducationFrom" />
-                                <mat-datepicker-toggle matSuffix [for]="EducationFromPicker"></mat-datepicker-toggle>
-                                <mat-datepicker #EducationFromPicker></mat-datepicker>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-lg-4 col-sm-4">
-                            <mat-form-field class="example-full-width">
-                                <input matInput [matDatepicker]="EducationToPicker" placeholder="Education To" formControlName="EducationTo" />
-                                <mat-datepicker-toggle matSuffix [for]="EducationToPicker"></mat-datepicker-toggle>
-                                <mat-datepicker #EducationToPicker></mat-datepicker>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-lg-4 col-sm-4">
-                            <mat-form-field class="example-full-width">
-                                <input matInput formControlName="Degree" placeholder="Degree" />
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4 col-sm-4">
-                            <mat-form-field class="example-full-width">
-                                <input matInput formControlName="FieldOfStudy" placeholder="Field Of Study" />
-                            </mat-form-field>
-                        </div>
-                        <div class="col-lg-4 col-sm-4">
-                            <mat-form-field class="example-full-width">
-                                <input matInput formControlName="Institute" placeholder="Institute" />
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </div>
+  <h1 mat-dialog-title>
+    Add Education Detail
+    <button mat-icon-button [mat-dialog-close] class="pull-right">
+      <mat-icon aria-label="clear">clear</mat-icon>
+    </button>
+  </h1>
+  <form class="example-form" [formGroup]="educationForm" (ngSubmit)="onFormSubmit(educationForm.value)">
+    <div mat-dialog-content>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="row">
+            <div class="col-lg-4 col-sm-4">
+              <mat-form-field class="example-full-width">
+                <input matInput [matDatepicker]="EducationFromPicker" placeholder="Education From"
+                  formControlName="EducationFrom" />
+                <mat-datepicker-toggle matSuffix [for]="EducationFromPicker"></mat-datepicker-toggle>
+                <mat-datepicker #EducationFromPicker></mat-datepicker>
+              </mat-form-field>
             </div>
-            <div mat-dialog-actions class="pull-right">
-                <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
-                <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
-                <hum-button (click)="onCancelPopup()" [type]="'cancel'" [text]="'cancel'"></hum-button>
+            <div class="col-lg-4 col-sm-4">
+              <mat-form-field class="example-full-width">
+                <input matInput [matDatepicker]="EducationToPicker" placeholder="Education To"
+                  formControlName="EducationTo" />
+                <mat-datepicker-toggle matSuffix [for]="EducationToPicker"></mat-datepicker-toggle>
+                <mat-datepicker #EducationToPicker></mat-datepicker>
+              </mat-form-field>
             </div>
+            <div class="col-lg-4 col-sm-4">
+              <mat-form-field class="example-full-width">
+                <input matInput formControlName="Degree" placeholder="Degree" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-sm-4">
+              <mat-form-field class="example-full-width">
+                <input matInput formControlName="FieldOfStudy" placeholder="Field Of Study" />
+              </mat-form-field>
+            </div>
+            <div class="col-lg-4 col-sm-4">
+              <mat-form-field class="example-full-width">
+                <input matInput formControlName="Institute" placeholder="Institute" />
+              </mat-form-field>
+            </div>
+          </div>
         </div>
-    </form>
+      </div>
+      <div mat-dialog-actions class="pull-right">
+        <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+        <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
+        <hum-button (click)="onCancelPopup()" [type]="'cancel'" [text]="'cancel'"></hum-button>
+      </div>
+    </div>
+  </form>
 </div>

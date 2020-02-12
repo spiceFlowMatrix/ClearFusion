@@ -190,7 +190,6 @@ export class HolidaysComponent implements OnInit {
       res => {
         console.log(res);
         if (res && res.holidaylist && res.holidaylist.length > 0) {
-          debugger;
           this.holidayList$ = of(
             res.holidaylist.map(element => {
               return {

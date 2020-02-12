@@ -2,7 +2,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using HumanitarianAssistance.Application.CommonModels;
+using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.HR;
 using HumanitarianAssistance.Persistence;
@@ -14,11 +17,12 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IMapper _mapper;
-
-        public AddEmployeeLanguagesCommandHandler(HumanitarianAssistanceDbContext dbContext, IMapper mapper)
+        private readonly IActionLogService _actionLog;
+        public AddEmployeeLanguagesCommandHandler(HumanitarianAssistanceDbContext dbContext, IMapper mapper,IActionLogService actionLog)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _actionLog = actionLog;
         }
 
         public async Task<ApiResponse> Handle(AddEmployeeLanguagesCommand request, CancellationToken cancellationToken)
@@ -44,6 +48,14 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                 await _dbContext.SaveChangesAsync();
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
+                AuditLogModel logs = new AuditLogModel () {
+                    EmployeeId = (int) request.EmployeeId,
+                    TypeOfEntity = (int) TypeOfEntity.History,
+                    EntityId = null,
+                    ActionTypeId = (int) ActionType.Add,
+                    ActionDescription = (TypeOfEntity.History).GetDescription (),
+                };
+                bool isLoged = await _actionLog.AuditLog (logs);
             }
             catch (Exception ex)
             {

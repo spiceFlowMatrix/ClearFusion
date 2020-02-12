@@ -1,0 +1,20 @@
+<mat-card>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Account Code</th>
+        <th scope="col">Project</th>
+        <th scope="col">Budget line</th>
+        <th scope="col">Salary Percantage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let info of analyticalInfo">
+        <td>{{info.AccountName}}</td>
+        <td>{{info.ProjectName}}</td>
+        <td>{{info.BudgetLineName}}</td>
+        <td>{{info.SalaryPercentage}}</td>
+      </tr>
+    </tbody>
+  </table>
+</mat-card>

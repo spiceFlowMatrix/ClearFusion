@@ -21,6 +21,7 @@ import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { GLOBAL } from 'src/app/shared/global';
 import { takeUntil } from 'rxjs/operators';
 import { ReplaySubject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-voucher-listing',
@@ -61,7 +62,8 @@ export class VoucherListingComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private voucherService: VoucherService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private router: Router
   ) {
     this.getScreenSize();
   }
