@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System;
 using HumanitarianAssistance.Common.Enums;
+using System.Collections.Generic;
 
 namespace HumanitarianAssistance.WebApi.Controllers.Accounting
 {
@@ -84,5 +85,74 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
             return await _mediator.Send(model);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> VerifySelectedVouchers([FromBody] List<long> VoucherNos)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            VerifySelectedVouchersCommand command = new VerifySelectedVouchersCommand
+            {
+                ModifiedById = userId,
+                ModifiedDate = DateTime.UtcNow,
+                VoucherNos = VoucherNos
+            };
+
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<object> DeleteSelectedVouchers([FromBody] List<long> voucherNos)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            DeleteSelectedVouchersCommand command = new DeleteSelectedVouchersCommand
+            {
+                ModifiedDate = DateTime.UtcNow,
+                ModifiedById = userId,
+                VoucherNoList = voucherNos
+            };
+
+            return await _mediator.Send(command);
+        }
+
+        [HttpGet]
+        public async Task<object> GetFilteredInputLevelAccountList([FromQuery] string data)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            GetFilteredInputLevelAccountListQuery command = new GetFilteredInputLevelAccountListQuery
+            {
+                FilterValue = data
+            };
+
+            return await _mediator.Send(command);
+        }
+
+        [HttpGet]
+        public async Task<object> GetFilteredProjectList([FromQuery] string data)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            GetFilteredProjectListQuery command = new GetFilteredProjectListQuery
+            {
+                FilterValue = data
+            };
+            return await _mediator.Send(command);
+        }
+
+        [HttpPost]
+        public async Task<object> SaveTransactionList([FromBody] SaveTransactionListCommand transactions)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            transactions.CreatedById = userId;
+            return await _mediator.Send(transactions);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetFilteredBudgetLineList([FromBody] GetFilteredBudgetLineListQuery request)
+        {
+            var result =  await _mediator.Send(request);
+            return Ok(result);
+        }
     }
 }
